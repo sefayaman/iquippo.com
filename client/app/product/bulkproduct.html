@@ -1,0 +1,159 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <!-- Page Heading -->
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>
+          Bulk Upload
+            <div class="btn btn-success pull-right" ng-if="isAdmin()">
+                <span class="fileinput-button" >
+                   <i class="fa fa-file-excel-o"></i> Update Template
+                   <input type="file" name="template_update" onchange="angular.element(this).scope().updateTemplate(this.files,this)">
+                   </span>
+               </div>
+          </h3>
+          <hr>
+        </div>
+      </div>
+      <!-- /.row -->
+<!-- /.first block row -->
+  <div class="row" ng-if="bulkProduct.showDataSection">
+      
+    <div class="col-md-12">
+      
+                <div class="row">
+                       <div class="form-group col-sm-offset-1 col-sm-10" >
+                          <ul class="list-instrct">
+                            <li>Download the <a href="/download/templates/{{bulkProduct.template}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory.</li>
+                            <li>User need to ensure that combination of Category, Brand and Model exists in the Master data. In case of mismatch, system will reject that record respect to product data and will not upload in the system. </li>
+                            <li>Admin/Channel Partner needs to register seller in the system prior uploading products on their behalf.</li>
+                            <li>System will accept only 100 records in a single file.</li>
+                            <li>It is mandatory to fill Other_Category, Other_Brand and Other_Model fields if user has put Other in Category, Product Brand and Product Model fields.</li>
+                           
+                          </ul>
+                          
+                            <div class="input-group col-md-12">
+                                <input type="text" class="form-control input-md" disabled placeholder="Upload Excel">
+                              <div class="input-group-addon">
+                                <span class="btn btn-warning fileinput-button bulk-browse">
+                                  <span>Browse</span>
+                                  <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                              </span>
+                              </div>
+                            </div> 
+
+                            </div>
+                  </div>
+                  <div class="row">
+                       <div class="form-group col-sm-offset-1 col-sm-10" >
+                          <div class="row animate-show" ng-show="isSuccess" >
+                            <div class="col-sm-12">                
+                              <div class="alert alert-success alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                 {{successMessage}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                          
+                  <div class="form-group"></div>
+                  <div class="row">
+                      <div class=" col-md-10 col-md-offset-1">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr class="success">
+                              <th width="30%">Group</th>
+                              <th>Category</th>
+                              <th>Brand</th>
+                              <th>Model</th>
+                              <th>Variant</th>
+                              <th width="10%">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="prd in bulkProduct.products">
+                              <td>{{prd.group.name}}</td>
+                              <td>{{prd.category.name}}</td>
+                              <td>{{prd.brand.name}}</td>
+                              <td>{{prd.model.name}}</td>
+                              <td>{{prd.variant}}</td>
+                              <td> <a href="javascript:void(0);"  ng-click="bulkProduct.goToImageUpload($index)" class="btn btn-primary btn-xs" uib-popover="Add images" popover-trigger="mouseenter">
+                                  </i>Add Images
+                                </a></td>
+                            </tr>
+                          </tbody>
+                      </table>  
+                  </div>      
+                </div>
+        </div>
+       
+        </div>
+         <!-- /.closed first -->
+    <div class="row" ng-if="!bulkProduct.showDataSection">
+      <!-- /.second block -->
+      <div class="col-md-12"> 
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <input type="file" name="img[]" class="file">
+                <div class="input-group col-md-12">
+                  <input type="text" class="form-control input-md" disabled placeholder="Browse images to Upload">
+                    <div class="input-group-addon">
+                      <span class="btn btn-warning fileinput-button bulk-browse">
+                        <span>Browse</span>
+                        <input type="file" name="image" data-filetype="image" file-upload="" class="ng-scope" multiple>
+                      </span>
+                    </div>
+                </div> 
+                 <h5>You can upload multiple images</h5>
+              
+                    
+              <div class="form-group"></div>
+                <div class="row">
+                  <div class="col-sm-3 col-xs-6 form-group" ng-repeat="img in bulkProduct.images" style="padding-bottom: 20px;">
+                      <div class="browse-category text-center">
+                          <div class="icn3">
+                            <a href="javascript:void(0);" ng-click="bulkProduct.deleteImg($index)"><i class="fa fa-times-circle fa-2x" ng-if="img.src && !img.isPrimary"></i></a>
+                          </div>
+                          <span class="fileinput-button">
+                            <span><a href="javascript:void(0);" class="al2" ng-click="bulkProduct.openPreviewImg($index)"> <img ng-src="{{uploadImagePrefix}}{{bulkProduct.currentProduct.assetDir}}/{{img.src}}" class="img-responsive"></a></span>
+                            </span>
+                          <span ng-if="img.src">
+                            <input type="radio" name="prvRadio"  ng-click="bulkProduct.makePrimary($index)"  ng-checked="img.isPrimary"/> Primary
+                          </span>
+                      </div>                   
+                  </div>
+                </div>
+                
+                <div class="clearfix form-group"></div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <button class="btn btn-primary btn-md btn-block" ng-click="bulkProduct.backToData()">Back</button>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-primary btn-md btn-block" ng-click="bulkProduct.submitProduct()">Submit</button>
+                  </div>
+                </div>  
+                   
+                </div> 
+                            
+             </div>            
+                                
+            </div>
+              <!-- /.closed -->
+      </div>      
+      
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="prvImg.html">
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+  </div>
+  <div class="modal-body">
+    <img ng-src="{{src}}" class="img-responsive center-block" alt="">
+  </div>
+</div>
+</script>

@@ -1,0 +1,721 @@
+'use strict';
+
+var _ = require('lodash');
+var Seq = require('seq');
+var trim = require('trim');
+var Country = require('./country.model');
+var AppSetting = require('./setting.model');
+var email = require('./../../components/sendEmail.js');
+var sms = require('./../../components/sms.js');
+var handlebars = require('handlebars');
+var fs = require('fs');
+var gm = require("gm");
+var fsExtra = require('fs.extra');
+
+var User = require('./../user/user.model');
+var Group = require('./../group/group.model');
+var Category = require('./../category/category.model');
+var Brand = require('./../brand/brand.model');
+var Model = require('./../model/model.model');
+var Product = require('./../product/product.model');
+var config = require('./../../config/environment');
+
+var SearchSuggestion = require('./searchsuggestion.model');
+
+var importPath = config.uploadPath + config.importDir + "/";
+
+var  xslx = require('xlsx');
+
+// Get list of countries
+exports.getAllCountry = function(req, res) {
+  Country.find(function (err, countries) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(countries);
+  });
+};
+
+exports.sendOtp = function(req,res){
+	var isOnMobile = req.body.otpOn == 'mobile'?true:false;
+	var sendOtpToClient = req.body.sendToClient == 'y'?true:false;
+	 var otp = Math.round(Math.random() * 1000000) + "";
+	 var data = {};
+	 data.subject = 'OTP Message';
+	 data.content = req.body.content + otp;
+  	var fn = null; 
+	if(isOnMobile){
+		 data.to = req.body.mobile;
+		 fn = sms.sendSMS;
+	}else{
+		data.to = req.body.email;
+		fn = email.sendMail;
+	}
+	if(data.to){
+		fn(data,req,res,function(req1,res1,isSent){
+			if(isSent){
+				if(sendOtpToClient)
+					return res.status(200).send("" + otp);
+				else{
+					var otpObj = {};
+					otpObj['otp'] = otp;
+					otpObj.createdAt = new Date();
+					User.update({_id:req.body.userId},{$set:{otp:otpObj}},function(err,userObj){
+						if(err){
+							return handleError(res, err);
+						}
+						return res.status(200).send();
+					});
+					
+				}
+
+			}else{
+				return res.status(400).send("There is some issue.Please try again.");
+			}
+		});
+	}
+	else{
+		return res.status(400).send("Insufficient data");
+	}
+
+}
+
+exports.compileHtml = function(req,res){
+	var dataObj = req.body.data;
+	var tplName = req.body.templateName;
+	if(!tplName || !dataObj)
+		return res.status(404).send("template not found");
+	fs.readFile( __dirname + '/../../views/emailTemplates/' + tplName +".html", 'utf8', function (err,data) {
+	  if (err){ return handleError(res, err); }
+	  var tempFun = handlebars.compile(data);
+	  var text = tempFun(dataObj);
+	  return res.status(200).send(text);
+	});
+}
+
+exports.compileTemplate = function(dataObj, serverPath, tplName,cb){
+	if(!tplName || !dataObj)
+		return cb(false,"");
+	 fs.readFile( __dirname + '/../../views/emailTemplates/' + tplName +".html", 'utf8',function(err,data){
+		if(err){
+			console.log(err);
+			return cb(false,"");
+		} 
+		var tempFun = handlebars.compile(data);
+		dataObj.serverPath = serverPath;
+		var text = tempFun(dataObj);
+		cb(true,text);
+	});
+	
+}
+
+exports.getHelp = function(req,res){
+	var term = new RegExp("^" + req.body.txt, 'i');
+	var query = SearchSuggestion.find({ text: { $regex: term }});
+	console.log(req.body.txt);
+	query.exec(
+	   function (err, searchs) {
+	      if(err) { return handleError(res, err); }
+	      return res.status(200).json(searchs);
+	   }
+	);
+}
+
+exports.buildSuggestion = function(req,res){
+	var suggestions = req.body;
+	req.counter = 0;
+	if(!suggestions || suggestions.length == 0)
+		return res.status(400).send("No data found");
+	buildSuggestion(req,res,suggestions);
+}
+
+
+exports.upsertSetting = function(req,res){
+	var key = req.body.key;
+	if(!key)
+		return res.status(400).send("Invalid request");
+	AppSetting.find({key:key},function(err,dt){
+		if(err){return handleError(res,err)}
+		else if(dt.length == 0){
+			AppSetting.create(req.body,function(err,val){
+				if(err){return handleError(res,err)}
+				else{
+					console.log("created");
+					res.status(200).send("done");
+				}
+			});
+		}else{
+			AppSetting.update({key:key},{$set:{value:req.body.value}},function(err,val){
+				if(err){return handleError(res,err)}
+				else{
+					console.log("updated",dt);
+					res.status(200).send("done");
+				}
+			})
+		}
+	});
+
+}
+exports.getSettingByKey = function(req,res){
+	AppSetting.findOne({key:req.body.key},function(err,dt){
+		if(err){
+			return handleError(res,err)
+		}
+		else{
+			res.status(200).json(dt)
+		}
+		
+	});
+}
+
+exports.updateMasterData = function(req,res){
+	var reqData = req.body;
+	var type = reqData.type;
+	var _id = reqData._id;
+	delete reqData.type;
+	delete reqData._id;
+	var filter = {};
+	reqData.updatedAt = new Date();
+	switch(type){
+		case "Group":
+			Seq()
+			.seq(function(){
+				var self = this;
+				Group.update({_id:_id},{$set:reqData},function(err,gp){
+					 if(err) { return handleError(res, err); }
+					 self();
+				});
+			})
+			.seq(function(){
+				var self = this;
+				Category.update({"group._id":_id},{$set:{"group.name":reqData.name}},function(err,ct){
+					 if(err) { return handleError(res, err); }
+					 self();
+				});
+			})
+			.seq(function(){
+				var self = this;
+				Brand.update({"group._id":_id},{$set:{"group.name":reqData.name}},function(err,br){
+					 if(err) { return handleError(res, err); }
+					 self();
+				});
+			})
+			.seq(function(){
+				var self = this;
+				Model.update({"group._id":_id},{$set:{"group.name":reqData.name}},function(err,md){
+					 if(err) { return handleError(res, err); }
+					 res.status(200).send(type + " updated successfully");
+				});
+			})
+		break;
+		case "Category":
+			Seq()
+			.seq(function(){
+				var self = this;
+				Category.update({_id:_id},{$set:reqData},function(err,ct){
+					 if(err) { return handleError(res, err); }
+					 self();
+				});
+			})
+			.seq(function(){
+				var self = this;
+				Brand.update({"category._id":_id},{$set:{group:reqData.group,"category.name":reqData.name}},function(err,br){
+					 if(err) { return handleError(res, err); }
+					 self();
+				});
+			})
+			.seq(function(){
+				var self = this;
+				Model.update({"category._id":_id},{$set:{group:reqData.group,"category.name":reqData.name}},function(err,br){
+					 if(err) { return handleError(res, err); }
+					  res.status(200).send(type + " updated successfully");
+				});
+			})
+		break;
+		case "Brand":
+			Seq()
+			.seq(function(){
+				var self = this;
+				Brand.update({_id:_id},{$set:reqData},function(err,br){
+					 if(err) { return handleError(res, err); }
+					 self();
+				});
+			})
+			.seq(function(){
+				var self = this;
+				Model.update({"brand._id":_id},{$set:{group:reqData.group,category:reqData.category,"brand.name":reqData.name}},function(err,md){
+					 if(err) { return handleError(res, err); }
+					 res.status(200).send(type + " updated successfully");
+				});
+			})
+		break;
+		case "Model":
+			Model.update({_id:_id},{$set:reqData},function(err,md){
+				 if(err) { return handleError(res, err); }
+				  res.status(200).send(type + " updated successfully");
+			});
+		break;
+		default:
+		 return res.status(400).send("Invalid request");
+	}
+
+}
+
+exports.deleteMasterData = function(req,res){
+	var reqData = req.body;
+	var filter = {};
+	switch(reqData.type){
+		case "Group":
+			filter['group._id'] = reqData._id;
+			checkProductExistence(req,res,filter,checkCategoryExistence);
+		break;
+		case "Category":
+			filter['category._id'] = reqData._id;
+			checkProductExistence(req,res,filter,checkBrandExistence);
+		break;
+		case "Brand":
+			filter['brand._id'] = reqData._id;
+			checkProductExistence(req,res,filter,checkModelExistence);
+		break;
+		case "Model":
+			filter['model._id'] = reqData._id;
+			checkProductExistence(req,res,filter,deleteMasterData);
+		break;
+		default:
+		 return res.status(400).send("Invalid request");
+	}
+}
+
+function checkProductExistence(req,res,filter,next){
+	filter.deleted = false;
+	Product.find(filter,function(err,products){
+		if(err) return handleError(res, err);
+		else if(products.length > 0){
+			return res.status(400).send("Product is associated.Please delete product first");
+		}else{
+			delete filter.deleted; 
+			next(req,res,filter);
+		}
+	});
+}
+
+function checkCategoryExistence(req,res,filter,next){
+	Category.find(filter,function(err,categories){
+		if(err) return handleError(res, err);
+		else if(categories.length > 0){
+			return res.status(400).send("Category is associated.Please delete category first");
+		}else{
+			deleteMasterData(req,res);
+		}
+	});
+}
+
+function checkBrandExistence(req,res,filter,next){
+	Brand.find(filter,function(err,brands){
+		if(err) return handleError(res, err);
+		else if(brands.length > 0){
+			return res.status(400).send("Brand is associated.Please delete brand first");
+		}else{
+			deleteMasterData(req,res);
+		}
+	});
+}
+
+function checkModelExistence(req,res,filter,next){
+	Model.find(filter,function(err,models){
+		if(err) return handleError(res, err);
+		else if(models.length > 0){
+			return res.status(400).send("Model is associated.Please delete model first");
+		}else{
+			deleteMasterData(req,res);
+		}
+	});
+}
+
+function deleteMasterData(req,res){
+	var reqData = req.body;
+	var type = req.body.type;
+	var _id = req.body._id;
+	var modelRef = null;
+	switch(type){
+		case "Group":
+			modelRef = Group;
+		break;
+		case "Category":
+			modelRef = Category;
+		break;
+		case "Brand":
+			modelRef = Brand;
+		break;
+		case "Model":
+			modelRef = Model;
+		break;
+	}
+	modelRef.remove({_id:_id},function(err,data){
+		if(err){return handleError(res, err);}
+		else
+			res.status(200).send(type + " deleted successfully");
+
+	});
+}
+
+
+exports.importMasterData = function(req,res){
+  var fileName = req.body.fileName;
+  var workbook = null;
+  try{
+  	workbook = xslx.readFile(importPath + fileName);
+  }catch(e){
+  	console.log(e);
+  	return  handleError(res,"Error in file upload")
+  }
+  if(!workbook)
+  	return res.status(404).send("Error in file upload");
+  var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  //console.log("data",worksheet);
+  var data = xslx.utils.sheet_to_json(worksheet);
+  if(data.length == 0){
+  	return res.status(500).send("There is no data in the file.");
+  }
+  var hd = getHeaders(worksheet);
+  if(!validateHeader(hd)){
+  	return res.status(500).send("Wrong template");
+  }
+  //console.log("data",data);
+  req.counter = 0;
+  req.numberOfCount = data.length;
+  req.successCount = 0;
+  importData(req,res,data);
+}
+
+
+var MASTER_DATA_HEADER = ["Product_Group","Product_Category","Brand_Name","Model_No"];
+function validateHeader(headers){
+	var ret = true;
+	ret = headers.length == MASTER_DATA_HEADER.length;
+
+	for(var i=0; i < headers.length;i++){
+		var hd = headers[i];
+		if(MASTER_DATA_HEADER.indexOf(hd) == -1){
+			ret = false;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+function getHeaders(worksheet){
+	var headers = [];
+	for(var z in worksheet) {
+        if(z[0] === '!') continue;
+        //parse out the column, row, and value
+        var col = z.substring(0,1);
+        var row = parseInt(z.substring(1));
+        var value = worksheet[z].v;
+        //store header names
+        if(row == 1) {
+            headers[headers.length] = value;
+        }
+    }
+    console.log("gggg",headers);
+	return headers;
+}
+
+function importData(req,res,data){
+	if(req.counter < req.numberOfCount){
+		req.data = {};
+		upsertGroup(req,res,data);
+		/*var row = data[req.counter];
+		var groupName = trim(row["Product_Group"] || "");
+		var categoryName = trim(row["Product_Category"] || "");
+		var modelName = trim(row["Model_No"] || "");
+		var brandName = trim(row["Brand_Name"] || "");
+		if(!groupName){
+			req.counter ++;
+			importData(req,res,data)
+			return;
+		}else{
+			req.data = {};
+			upsertGroup(req,res,data);
+		}*/
+
+		
+	}else{
+		res.status(200).send(req.successCount + " out of " +  req.numberOfCount+ " records processed");
+	}
+}
+
+function upsertGroup(req,res,data){
+	var row = data[req.counter];
+	var groupName = trim(row["Product_Group"] || "");
+	if(!groupName){
+		req.counter ++;
+		importData(req,res,data)
+		return;
+	}
+	req.successCount ++;
+	var groupObj = req.data.group  = {};
+	Seq().
+	seq(function(){
+		var self = this;
+		var term = new RegExp("^" + groupName + "$", 'i');
+		Group.find({name:term},function(err,groups){
+			if(err) return handleError(res, err); 
+			if(groups.length > 0){
+				groupObj['_id'] = groups[0]['_id'] + "";
+				groupObj['name'] = groupName;
+				upsertCategory(req,res,data);
+			}else{
+				self();
+			}
+		})
+
+	})
+	.seq(function(){
+		var self = this;
+		var gpObject = {};
+		gpObject['name'] = groupName;
+		gpObject.createdAt = new Date();
+		gpObject.updatedAt = new Date();
+		Group.create(gpObject,function(err,gp){
+			if(err) return handleError(res, err);
+			groupObj['_id'] =  "" + gp['_id'];
+			groupObj['name'] = groupName;
+			upsertCategory(req,res,data);
+		})
+	})
+}
+
+function upsertCategory(req,res,data){
+	var row = data[req.counter];
+	var categoryName = trim(row["Product_Category"] || "");
+	if(!categoryName){
+		req.counter ++;
+		importData(req,res,data)
+		return;
+	}
+	var categoryObj = req.data.category  = {};
+	Seq().
+	seq(function(){
+		var self = this;
+		var term = new RegExp("^" + categoryName + "$", 'i');
+		var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
+		Category.find({name:term,"group.name":gpTerm},function(err,categories){
+			if(err) return handleError(res, err); 
+			if(categories.length > 0){
+				categoryObj['_id'] = categories[0]['_id'] + "";
+				categoryObj['name'] = categoryName;
+				upsertBrand(req,res,data);
+			}else{
+				self();
+			}
+		})
+
+	})
+	.seq(function(){
+		var self = this;
+		var catObj = {};
+		catObj['name'] = categoryName;
+		catObj.createdAt = new Date();
+		catObj.updatedAt = new Date();
+		catObj.group = req.data.group;
+		catObj['status'] = false;
+		catObj['deleted'] = false;
+		Category.create(catObj,function(err,cat){
+			if(err) return handleError(res, err);
+			categoryObj['_id'] = cat['_id'] + "";
+			categoryObj['name'] = categoryName;
+			upsertBrand(req,res,data);
+		})
+	})
+}
+
+function upsertBrand(req,res,data){
+	var row = data[req.counter];
+	var brandName = trim(row["Brand_Name"] || "");
+	if(!brandName){
+		req.counter ++;
+		importData(req,res,data)
+		return;
+	}
+	var brandObj = req.data.brand  = {};
+	Seq().
+	seq(function(){
+		var self = this;
+		var term = new RegExp("^" + brandName + "$", 'i');
+		var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
+		var catTerm = new RegExp("^" + req.data.category.name + "$", 'i');
+		Brand.find({name:term,'group.name':gpTerm,'category.name':catTerm},function(err,brands){
+			if(err) return handleError(res, err); 
+			if(brands.length > 0){
+				brandObj['_id'] = brands[0]['_id'] + "";
+				brandObj['name'] = brandName;
+				upsertModel(req,res,data);
+			}else{
+				self();
+			}
+		})
+
+	})
+	.seq(function(){
+		var self = this;
+		var brObj = {};
+		brObj['name'] = brandName;
+		brObj.createdAt = new Date();
+		brObj.updatedAt = new Date();
+		brObj.group = req.data.group;
+		brObj.category = req.data.category;
+		Brand.create(brObj,function(err,brd){
+			if(err) return handleError(res, err);
+			brandObj['_id'] = brd['_id'] + "";
+			brandObj['name'] = brandName;
+			upsertModel(req,res,data);
+		})
+	})
+}
+
+function upsertModel(req,res,data){
+	var row = data[req.counter];
+	var modelName = trim(row["Model_No"] || "");
+	if(!modelName){
+		req.counter ++;
+		importData(req,res,data)
+		return;
+	}
+	var modelObj = req.data.model  = {};
+	Seq().
+	seq(function(){
+		var self = this;
+		var term = new RegExp("^" + modelName + "$", 'i');
+		var brTerm = new RegExp("^" + req.data.brand.name + "$", 'i');
+		var gpTerm = new RegExp("^" + req.data.group.name + "$", 'i');
+		var catTerm = new RegExp("^" + req.data.category.name + "$", 'i');
+		Model.find({name:term,'category.name':catTerm,"group.name":gpTerm,"brand.name":brTerm},function(err,models){
+			if(err) return handleError(res, err); 
+			if(models.length > 0){
+				req.counter ++;
+				importData(req,res,data)
+				
+			}else{
+				self();
+			}
+		})
+	})
+	.seq(function(){
+		var self = this;
+		var mdObj = {};
+		mdObj['name'] = modelName;
+		mdObj.createdAt = new Date();
+		mdObj.updatedAt = new Date();
+		mdObj.group = req.data.group;
+		mdObj.category = req.data.category;
+		mdObj.brand = req.data.brand;
+		Model.create(mdObj,function(err,md){
+			if(err) return handleError(res, err);
+			req.counter ++;
+			//req.successCount ++;
+			importData(req,res,data)
+			
+		})
+	})
+}
+
+function buildSuggestion(req,res,suggestions){
+	if(req.counter >= suggestions.length)
+		return res.status(200).json({});
+	else{
+		var data = suggestions[req.counter];
+		SearchSuggestion.find({text:data.text},function(err,result){
+			if(err) {
+				console.log("error in checking suggestion",err);
+				req.counter ++;
+				buildSuggestion(req,res,suggestions);
+			}
+			if(result && result.length > 0){
+				console.log("recalled called " , result.length);
+				req.counter ++;
+				buildSuggestion(req,res,suggestions);
+				
+			}else{
+				 console.log("called create" , result.length);
+				SearchSuggestion.create(data,function(error,dt){
+					if(error)console.log("error in building suggestion",error);
+					req.counter ++;
+					buildSuggestion(req,res,suggestions);
+				});
+			}
+		
+		});
+	}
+}
+
+exports.rotate = function(req,res){
+  var imgPath = req.body.imgPath;
+  gm(config.uploadPath + imgPath)
+  .rotate("white",-90)
+  .write(config.uploadPath + imgPath, function(e){
+  	 if(e){
+  	 	return handleError(res,e);
+  	 }else
+      res.send("done");
+    });
+}
+
+exports.saveAsImage = function(req,res){
+	var fileName = req.body.filename;
+	var assetDir = req.body.assetdir;
+	var fileNameParts = fileName.split('.');
+	var extPart = fileNameParts[fileNameParts.length -1];
+	var namePart = fileNameParts[0];
+	var originalFilePath = config.uploadPath + assetDir + "/" + namePart +"_original." + extPart;
+	var filePath = config.uploadPath + assetDir + "/" + fileName;
+	if(fileExists(originalFilePath)){
+
+		saveImage(req,res,filePath,extPart);
+	}
+	else{
+
+		fsExtra.copy(filePath,originalFilePath,function(err,result){
+			console.log("-----------",err);
+			saveImage(req,res,filePath,extPart);
+		})
+
+	}
+		
+}
+
+function saveImage(req,res,filePath,ext){
+	var fileData = req.body.data;
+	var imgExt = ext.toLowerCase();
+	var regEx = "";
+	if(imgExt == "jpeg" || imgExt == "jpg")
+		regEx = /^data:image\/jpeg;base64,/;
+	else if(imgExt == "png")
+	  regEx = /^data:image\/png;base64,/;
+	else
+		return handleError(res, {});
+	var base64Data = fileData.replace(regEx, "");
+	fs.writeFile(filePath,base64Data,"base64" , function(err) {
+		  if(err) {
+		  	console.log("-----------",err);
+		    res.status(500).send(err);
+		  } else {
+		    res.status(200).send(err);
+		  }
+	 });
+}
+
+function fileExists(filePath)
+{
+    try
+    {
+        return fs.statSync(filePath).isFile();
+    }
+    catch (err)
+    {
+        return false;
+    }
+}
+
+function handleError(res, err) {
+  return res.status(500).send(err);
+}

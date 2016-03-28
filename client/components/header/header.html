@@ -1,0 +1,126 @@
+<div class="container" ng-controller="HeaderCtrl">
+        <div class="text-right">
+          <ul class="top-menu">
+            
+            <li><a href="javascript:void(0);" ng-click="openDialog('quote')"><i class="fa fa-edit"></i> <span class="hidden-xs">Request for a Quote</span></a></li>
+            <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
+            <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openDialog('login')"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
+            
+            <li><a href="javascript:void(0)" ng-click="openCart()" ng-class="{cart_item:cartCounter > 0}"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs">Cart </span></a></li>
+            <li>
+            </li>
+
+            <li ng-show="isLoggedIn()" class="dropdown" >
+              <a href class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ></i> {{ getCurrentUser().fname }}</a>
+              
+              <ul class="dropdown-menu">
+                  <li ng-show="isAdmin()">
+                    <a href="/productlisting">
+                      <i class="fa fa-user"></i> Admin
+                    </a>
+                  </li>  
+                  <li ng-show="isLoggedIn()" ><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
+                  <li ng-show="isLoggedIn()"><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+              </ul>
+            </li>
+            <li>
+              <div id="google_translate_element"></div>
+            </li>
+          </ul>
+        </div>
+        <script type="text/javascript">
+          function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ar,fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+          }
+          </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        
+        <div class="navbar ">
+          <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
+          <form class="navbar-form pull-left">
+              <div class="">
+                <div class="select-group">
+                  <div class="search-field select">
+                        <select  ng-change="onGroupCategoryChange()" ng-model="searchFilter.categoryGroup" id="groupCategory">
+                         <option value="">All Groups / Categories</option>
+                       <!--  <optgroup label="">
+                          <option value="">All Groups / Categories</option>
+                        </optgroup>  -->
+                        <optgroup label="Group">
+                          <option ng-repeat="group in allGroup" value="{{group.name}}" data-flag="1">{{group.name}}</option>
+                        </optgroup>
+                        <optgroup label="Category">
+                          <option ng-repeat="cat in allCategory" value="{{cat.name}}" data-flag="2">{{cat.name}}</option>
+                        </optgroup>
+                        </select>
+                        <span class="caret"></span>
+                    </div>
+                </div>
+                <!-- <div class="select-text input-group">
+                  <input type="text" class="form-control" placeholder="Search here ..."
+                  ng-model="srchStr" ng-change="startsearch()" ng-model-options="{debounce:1000}">
+                  <a href="javascript:;" type="button" ng-click="startsearch()" class="input-group-addon"><i class="fa fa-search"></i></a>
+                </div> -->
+                <div class="select-text input-group">
+                  <!-- <input type="text" class="form-control" placeholder="Search here ..."
+                  ng-model="searchFilter.searchText" ng-change="startsearch()" ng-model-options="{debounce:1000}">
+                  <a href="javascript:void(0);" type="button" ng-click="startsearch()" class="input-group-addon"><i class="fa fa-search"></i></a> -->
+                  <input type="text" ng-model="searchFilter.searchText" placeholder="Search here ..." uib-typeahead="address for address in getHelp($viewValue)"  class="form-control" ng-keypress="myFunct($event)" typeahead-focus-first = "false" typeahead-on-select="startsearch()" typeahead-wait-ms="500"/>
+                  <a href="javascript:void(0);" type="button" ng-click="startsearch()" class="input-group-addon"><i class="fa fa-search"></i></a>
+                    <div ng-show="noResults">
+                      <i class="glyphicon glyphicon-remove"></i> No Results Found
+                    </div>
+                </div>
+            
+            </div>
+
+          </form>
+          <ul class="nav navbar-nav navbar-right hidden-xs">
+            <li>
+              <a href="javascript:;" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
+            </li>
+            
+          </ul>
+        </div>
+        <!-- common modal container -->
+      </div>  
+
+      <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>           
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
+            <ul class="nav navbar-nav">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="/aboutus">About Us</a></li>
+              <li class="dropdown" uib-dropdown>
+                <a href="javascript:void(0);" id="single-button"  uib-dropdown-toggle >Services</a>
+                <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                 <!--  <li role="menuitem"><a href="/lease">Lease</a></li>
+                  <li role="menuitem"><a href="/insurance">Insurance</a></li> -->
+                  <li role="menuitem"><a href="/shipping">Shipping</a></li>
+                  <li role="menuitem"><a href="/valuation">Valuation</a></li>
+                  <li role="menuitem"><a href="/certifiedbyiquippo">Certified by iQuippo</a></li>
+                </ul>
+              </li>
+              <!-- <li><a href="/service">Services</a></li> -->
+              <!-- <li><a href="/product" ng-show="isLoggedIn()">Products</a></li> -->
+              <!-- <li ng-show="isLoggedIn()"><a href="/admin/masterdata">Dashboard</a></li> -->
+              <!-- <li><a href="/category">Group &amp; Category</a></li> -->
+              <li><a href="/contactus">Contact Us</a></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div>
+          <!--<script type="text/javascript">
+            setTimeout(function(){convertSelectToUL();},100);
+          </script>-->
+      </nav>

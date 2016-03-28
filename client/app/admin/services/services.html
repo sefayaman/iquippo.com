@@ -1,0 +1,249 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        
+        <div class="col-sm-12">
+          <div id="page-wrapper">
+            <!-- Page Heading -->
+            
+                <div id="products">
+                  <h3>
+                  <div class="row">
+                    <div class="col-sm-11">
+                        
+                            Services Information
+                    </div>
+                    <!-- <div class="col-sm-1">
+                        <button class="btn btn-md btn-success pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                    </div> -->
+                  </div>
+                        </h3>
+                        <hr>
+                        <div class="clearfix"></div>
+                    </div>
+                  </div>
+                  <div class="featured-pro">
+                    <input type="checkbox" id="" name="shipping" ng-model="shipping" ng-value="shipping" ng-click="serviceFilter()"> Shipping
+                  </div>
+                  <div class="featured-pro">
+                    <input type="checkbox" id="" name="valuation" ng-model="valuation" ng-value="valuation" ng-click="serviceFilter()"> Valuation
+                  </div>
+                  <div class="featured-pro">
+                    <input type="checkbox" id="" name="cetifiedByiQuippo" ng-model="cetifiedByiQuippo" ng-value="cetifiedByiQuippo" ng-click="serviceFilter()"> Cetified By iQuippo
+                  </div>
+                  <div class="table-responsive">
+                    <table datatable="ng" dt-options= "dtOptions" class="table table-bordred table-striped">
+
+                      <thead>
+                        <tr>
+                          <th>Service Type</th>
+                          <th>Name</th>
+                          <th>Country</th>                          
+                          <th>Company Name</th> 
+                          <th>Email</th>                         
+                          <th>Mobile</th>                          
+                        </tr>                      
+                      </thead>
+                      <tbody>
+
+                        <tr ng-repeat="service in servicesList" ng-class="{'info':product.featured}">
+                          <td>{{service.type}}</td>
+                          <td>{{service.quote.fname}}</td>
+                          <td>{{service.quote.country}}</td>
+                          <td>{{service.quote.companyname}}</td>                          
+                          <td>{{service.quote.email}}</td>
+                          <!-- <td><a href="javascript:void(0);" ng-click="previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} ({{product.seller.userType}})</a></td> -->
+                          
+                          <td>{{service.quote.mobile}}</td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div> 
+                </div>
+                
+                <!-- /#page-wrapper -->
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function(){
+    $('.dashboard-nav a').on('click', function(){
+      $('.dashboard-nav a').removeClass('active')
+      $(this).addClass('active')
+    });
+  });
+</script>
+<script type="text/ng-template" id="producthistory.html">
+      <div>
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Preview Product Upload</h4>
+        </div>
+        <div class="modal-body">
+          <h4>Basic Information</h4>
+          <table class="table table-bordered">
+            <tr>
+              <th>Product Group</th>
+              <td>{{product.group.name}}</td>
+            </tr>
+            <tr>
+              <th>Categories</th>
+              <td>{{product.category.name}}</td>
+            </tr>
+            <tr>
+              <th>Product Brand</th>
+              <td>{{product.brand.name}}</td>
+            </tr>
+            <tr>
+              <th>Product Model</th>
+              <td>{{product.model.name}}</td>
+            </tr>
+            <tr>
+              <th>Product Name</th>
+              <td>{{product.name}}</td>
+            </tr>
+            <tr>
+              <th>Manufacturing Year</th>
+              <td>{{product.mfgYear}}</td>
+            </tr>
+            <tr>
+              <th>Motor/Operating Hours</th>
+              <td>{{product.operatingHour}}</td>
+            </tr>
+            <tr>
+              <th>Mileage(KMs)</th>
+              <td>{{product.mileage}}</td>
+            </tr>
+            <tr>
+              <th>Machine Serial No.</th>
+              <td>{{product.serialNo}}</td>
+            </tr>
+            <tr>
+              <th>Gross Price</th>
+              <td>{{product.grossPrice}}</td>
+            </tr>
+            <tr>
+              <th>Country</th>
+              <td>{{product.country}}</td>
+            </tr>
+            <tr>
+              <th>City</th>
+              <td>{{product.city}}</td>
+            </tr>
+            <tr>
+              <th>Product Condition</th>
+              <td>{{product.productCondition}}</td>
+            </tr>
+            <tr>
+              <th>Primary Image</th>
+              <td>{{product.primaryImage}}</td>
+            </tr>
+            <tr>
+              <th>Video</th>
+              <td>{{product.videoName}}</td>
+            </tr>
+          </table>
+           <h4>Technical Information</h4>
+          <table class="table table-bordered">
+            <tr>
+              <th>Gross Weight</th>
+              <td>{{product.technicalInfo.grossWeight}}</td>
+            </tr>
+            <tr>
+              <th>Operating Weight</th>
+              <td>{{product.technicalInfo.operatingWeight}}</td>
+            </tr>
+            <tr>
+              <th>Bucket Capacity</th>
+              <td>{{product.technicalInfo.bucketCapacity}}</td>
+            </tr>
+            <tr>
+              <th>Engine Power</th>
+              <td>{{product.technicalInfo.enginePower}}</td>
+            </tr>
+            <tr>
+              <th>Lifting Capacity</th>
+              <td>{{product.technicalInfo.liftingCapacity}}</td>
+            </tr>
+            
+          </table>
+
+          <h4>Service information</h4>
+          <table class="table table-bordered">
+            <tr>
+              <th>Date</th>
+              <td>{{product.serviceInfo[0].servicedate}}</td>
+            </tr>
+            <tr>
+              <th>Operating hrs</th>
+              <td>{{product.serviceInfo[0].operatingHour}}</td>
+            </tr>
+            <tr>
+              <th>Service At</th>
+              <td>{{product.serviceInfo[0].serviceAt}}</td>
+            </tr>
+            <tr>
+              <th>Authorized Station</th>
+              <td>{{product.serviceInfo[0].authServiceStation}}</td>
+            </tr>
+            <tr>
+              <th>Engine Repaired/Overhauling</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Comment</th>
+              <td>{{product.comment}}</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td ng-if="product.status">Approved</td>
+              <td ng-if="!product.status">Not approved</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>              
+        </div>
+      </div>
+
+    </script>
+
+
+<script type="text/ng-template" id="sellerDetail.html">
+  <div>
+       <div class="modal-header">
+              <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Seller Detail</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Name :</div>
+                  <div class="col-xs-6 text-left">{{product.fname}} {{product.lname}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Email :</div>
+                  <div class="col-xs-6 text-left">{{product.email}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Phone No. :</div>
+                  <div class="col-xs-6 text-left">{{product.phone}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Mobile No. :</div>
+                  <div class="col-xs-6 text-left">{{product.mobile}}</div>
+                </div>
+                
+              </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>              
+            </div>
+  </div>
+</script>

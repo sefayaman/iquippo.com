@@ -1,0 +1,249 @@
+<div id="getquote-modal">
+        <div class="modal-header">
+              <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Get a Quote for Additional Services</h4>
+          </div>
+<form class="quote-form" name="form">
+    <div class="modal-body">                    
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+            <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="productQuote.fname" required>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-group">                                      
+            <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="productQuote.mname">
+          </div>
+        </div>
+      </div>  
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
+            <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="productQuote.lname" required>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+            <select class="form-control" ng-model="productQuote.country" name="country" required>
+              <option value="">*Select Country</option>
+              <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>  
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">
+            <input type="text" name="" class="form-control" placeholder="City" ng-model="productQuote.city">
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-group">                          
+            <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="productQuote.companyname">
+          </div>
+        </div>
+        
+      </div>  
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group">                          
+            <input type="text" name="" class="form-control" placeholder="Designation" ng-model="productQuote.designation">
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="form-group">                          
+            <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="productQuote.phone">
+          </div>
+        </div>        
+      </div>
+      
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
+          <div class="input-group">                      
+            <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="productQuote.mobile" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+            </div>
+            <!-- <p class="help-block"
+             ng-show="form.mobile.$error.pattern && form.submitted">
+             Mobile should not blank and 10 digit.
+            </p> -->
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+          <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="productQuote.email" required>
+          <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+          Please enter a valid email.
+          </p>
+          </div>
+        </div>
+      </div>    
+      <div class="form-group"></div>
+       <uib-accordion close-others="oneAtATime">
+              <!--shipping start -->
+                  <uib-accordion-group is-open="tstatus.open">
+                    <uib-accordion-heading>
+                       Get a shipping quote <i class="pull-right fa" ng-class="{'fa-minus': tstatus.open, 'fa-plus': !tstatus.open}"></i>
+                    </uib-accordion-heading>
+                      <div class="row text-left">
+                        <div class="col-xs-12 col-sm-6 form-group">Part shipment allowed</div>
+                        <div class="col-xs-6 col-sm-3 form-group">
+                          <!-- <input type="radio" name="allowed" id="allowed" > <label for="allowed">Yes </label>  -->  
+                          <input type="radio" checked="checked" placeholder=""  name="allowed" ng-model="productQuote.shippingQuote.allowed" value="yes"> Yes                  
+                        </div>
+                        <div class="col-xs-6 col-sm-3 form-group">
+                          <!-- <input type="radio" name="allowed" id="notallowed" > <label for="ntallowed">No</label> -->
+                          <input type="radio" placeholder=""  name="allowed" ng-model="productQuote.shippingQuote.allowed" value="no"> No
+                        </div>
+                      </div>
+                      <div class="row text-left">
+                        <div class="col-xs-12 col-sm-6 form-group">Packaging as per international standard</div>
+                        <div class="col-xs-6 col-sm-3 form-group">
+                          <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label>  -->   
+                          <input type="radio" checked="checked" placeholder=""  name="packaging" ng-model="productQuote.shippingQuote.packaging" value="yes"> Yes                    
+                        </div>
+                        <div class="col-xs-6 col-sm-3 form-group">
+                          <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label>  -->  
+                          <input type="radio" placeholder=""  name="packaging" ng-model="productQuote.shippingQuote.packaging" value="no"> No                     
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <textarea class="form-control" placeholder="Comments" ng-model="productQuote.shippingQuote.comment"></textarea>
+                      </div>
+                       
+                      
+                  </uib-accordion-group>
+              <!--shipping end -->
+
+              <!--valuation start -->
+              <uib-accordion-group is-open="vstatus.open">
+                  <uib-accordion-heading>
+                    Get a valuation quote <i class="pull-right fa" ng-class="{'fa-minus': vstatus.open, 'fa-plus': !vstatus.open}"></i>
+                  </uib-accordion-heading>                                   
+                    
+                    <div class="row text-left">
+                      <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.valuationQuote.valuation && !valuationQuote.valid && form.submitted}">
+                        <select class="form-control" ng-model="productQuote.valuationQuote.valuation" name="" required>
+                          <option value="" disabled>*Select Purpose</option>
+                          <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                        </select>
+                      </div>
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.valuationQuote.otherName && !valuationQuote.valid && form.submitted}">
+                        <input class="form-control" name="otherName" type="text" ng-model="productQuote.valuationQuote.otherName" ng-disabled ="productQuote.valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.valuationQuote.valuation == 'Other'">
+                      </div>
+                    </div>
+                    <div class="row text-left">
+                      <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
+                      <div class="col-xs-6 col-sm-4 form-group">
+                        <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
+                        <input type="radio" checked="checked" placeholder=""  name="schedule" ng-model="productQuote.valuationQuote.schedule" value="yes"> Yes 
+                      </div>
+                      <div class="col-xs-6 col-sm-4 form-group">
+                        <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
+                        <input type="radio" placeholder=""  name="schedule" ng-model="productQuote.valuationQuote.schedule" value="no"> No      
+                      </div>
+                      
+                      <div class="clerafix"></div>                                      
+                      <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.valuationQuote.schedule == 'yes'">
+                        <small>Pick Date</small> 
+                        <div class="input-group" ng-class="{'has-error': !productQuote.valuationQuote.scheduleDate && !valuationQuote.valid && form.submitted}">
+                        <input type="text" class="form-control" ng-model="productQuote.valuationQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                        <span class="input-group-addon">
+                          <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-2x"></i></a>
+                        </span>
+                      </div>                                     
+                      </div>
+                      
+                      <div class="col-xs-6 col-sm-4 form-group" ng-if="productQuote.valuationQuote.schedule == 'yes'"> 
+                        <small>Set Time</small>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="HH:MM" ng-model="productQuote.valuationQuote.scheduledTime" is-open=""  ng-value="{{productQuote.valuationQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+                          <span class="input-group-addon">
+                            <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></button>
+                          </span>
+                        </div>
+                        <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changedValuation(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                        <!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->   
+                      </div>
+                      
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" placeholder="Comments" ng-model="productQuote.valuationQuote.comment"></textarea>
+                    </div>
+                  
+              </uib-accordion-group>
+              <!-- valuation end -->
+
+              <!-- Certified By IQuippo start -->
+              <uib-accordion-group is-open="insStatus.open">
+                  <uib-accordion-heading>
+                   Get a Certified by iQuippo quote<i class="pull-right fa" ng-class="{'fa-minus': insStatus.open, 'fa-plus': !insStatus.open}"></i>
+                  </uib-accordion-heading>                                   
+                    <div class="row text-left">
+                      <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.valuation && !certifiedByIQuippoQuote.valid && form.submitted}">
+                        <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="valuation" required>
+                          <option value="" disabled="">*Select Purpose</option>
+                          <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                        </select>
+                      </div>
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && form.submitted}">
+                        <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
+                      </div>
+                    </div>                                   
+                    <div class="row text-left">
+                      <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
+                      <div class="col-xs-6 col-sm-4 form-group">
+                        <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
+                        <input type="radio" checked="checked" placeholder=""  name="schedule" ng-model="productQuote.certifiedByIQuippoQuote.schedule" value="yes"> Yes 
+                      </div>
+                      <div class="col-xs-6 col-sm-4 form-group">
+                        <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
+                        <input type="radio" placeholder=""  name="schedule" ng-model="productQuote.certifiedByIQuippoQuote.schedule" value="no"> No      
+                      </div>
+                      
+                      <div class="clerafix"></div>                                      
+                      <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.schedule == 'yes'">  
+                        <small>Pick Date</small>
+                        <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && form.submitted}">
+                          <input type="text" class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                          <span class="input-group-addon">
+                            <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-2x"></i></a>
+                          </span>
+                        </div>                                      
+                      </div>
+                      
+                      <div class="col-xs-6 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.schedule == 'yes'">
+                        <small>Set Time</small>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="HH:MM" ng-model="productQuote.certifiedByIQuippoQuote.scheduledTime" is-open=""  ng-value="{{productQuote.certifiedByIQuippoQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+                          <span class="input-group-addon">
+                            <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></button>
+                          </span>
+                        </div>
+                        <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changedCertified(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                        <!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->       
+                      </div>
+                      
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
+                    </div>
+                  
+              </uib-accordion-group>
+              <!-- Certified By IQuippo end -->
+        </uib-accordion>
+    </div>
+
+    <div class="modal-footer">
+      <button type="reset" class="btn btn-default">Reset</button>
+      <button type="button" class="btn btn-warning" ng-click="addProductQuote($event)">Submit</button>
+    </div>
+  </form>
+         
+</div>

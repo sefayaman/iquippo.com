@@ -1,0 +1,55 @@
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h4>View Cart</h4>
+      </div>
+      <div class="col-sm-12">
+           <table id="mytable" class="table table-bordred table-striped">                  
+            <thead>
+               <tr>
+                   <th>Image</th>
+                   <th>Product ID</th>
+                    <th>Group</th>
+                   <th>Product Categories</th>
+                   <th>Brand</th>
+                   <th>Model</th>
+                   <th>Manufacturing Year</th>
+                   <th>Location</th>
+                   <th>Product Condition</th>
+                    <th>Age </th>
+                    <th>Action</th>
+               </tr>
+            </thead>
+            <tbody>
+  
+              <tr ng-repeat="product in cart.products">
+  
+                <td><img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.images[0].src}}" width="50" height="50"></td>
+                <td>{{product.productId}}</td>
+                <td>{{product.group.name}}</td>
+                <td>{{product.category.name}}</td>
+                
+                <td>{{product.brand.name}}</td>
+                <td>{{product.model.name}}</td>
+                <td>{{product.mfgYear}}</td>
+                 <td>{{product.country}}</td>
+                 <td ng-if="product.productCondition == 'new'">New</td>
+                  <td ng-if="product.productCondition != 'new'">Old</td>
+                 <td>4 days</td>
+                 <td><a href="javascript:void(0)"  ng-click="deleteProductFromCart($index)" class="btn btn-default btn-md"><i class="fa fa-trash"></i></a>
+                 <a ng-href="/productdetail/{{product._id}}" class="btn btn-default btn-md"><i class="fa fa-eye"></i></a>
+                 </td>
+
+             
+             </tr>
+              <tr>
+                <td colspan="12" class="text-right">
+                <a href="#" class="btn btn-warning" ng-show="cart.products.length > 0" ng-click="clearCart()">Clear All</a>
+                </td>
+              </tr>   
+            </tbody>
+      
+          </table>
+      </div>
+    </div>   
+  </div>

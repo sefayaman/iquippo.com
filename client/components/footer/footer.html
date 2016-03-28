@@ -1,0 +1,93 @@
+<div class="container" ng-controller="FooterCtrl">
+          <div class="row">
+            <div class="col-sm-4 col-md-3">
+              
+              <ul class="nav">
+                <li><a href="/aboutus">About Us</a></li>
+                <!-- <li><a href="javascript:;">Quick Links</a></li>                -->
+                <!-- <li><a href="/termscondition">Terms &amp; Conditions</a></li> -->
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <!-- <li><a href="javascript:;">My account</a></li>  -->               
+
+              </ul>
+            </div>
+            <div class="col-sm-3 col-md-6">
+              <h5>Contact Us</h5>
+              <form class="form" name="form" novalidate>
+                <div class="form-group fill-info">
+                  <div class="row">
+                    <div class="col-md-4" ng-class="{'has-error': form.name.$invalid && form.submitted }">
+                      <input type="text" name="name" ng-model="contact.name" value="" class="form-control" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-4" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                      <input type="email" name="email" ng-model="contact.email" value="" class="form-control" placeholder="Email Address" required>
+                      <p class="help-block" ng-show="form.email.$error.email && form.submitted">
+                      Doesn't look like a valid email.
+                      </p>
+                      <p class="help-block" ng-show="form.email.$error.required && form.submitted">
+                      What's your email address?
+                      </p>
+                      <p class="help-block" ng-show="form.email.$error.mongoose">
+                        {{ errors.email }}
+                      </p>
+                    </div>
+                    <div class="col-md-4" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+                      <div class="input-group">
+                      <input type="text" name="mobile" ng-model="contact.mobile" value="" class="form-control" placeholder="Mobile No." uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      </div>
+                      <!-- <p class="help-block"
+                       ng-show="(form.mobile.$error.maxlength || form.mobile.$error.required) && 
+                       form.submitted">
+                      Mobile should not blank and 10 digit.
+                      </p> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': form.message.$invalid && form.submitted }">
+                  <textarea class="form-control" name="message" ng-model="contact.message"  placeholder="Comments" required></textarea>
+                </div>
+                <div class="form-group text-right">
+                  <input type="button" name="" ng-click="sendContact(contact)" class="btn btn-warning" value="Send">
+                </div>
+              </form>
+            </div>
+            <div class="col-sm-5 col-md-3">
+              <h5>Connect with us</h5>
+              <ul class="footer-icon">
+                <li><a href="javascript:void(0);" ><i class="fa fa-facebook"></i></a></li>
+                <li><a href="javascript:void(0);"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="javascript:void(0);"><i class="fa fa-linkedin"></i></a></li>
+                <li><a href="javascript:void(0);"><i class="fa fa-google-plus"></i></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="form-group"></div>
+        </div>
+        <div class="foot-bottom">
+          <div class="text-center">
+            <div class="copy">Copyrights © 2016. All Rights Reserved. - Auro International FZCO</div>
+          </div>
+                    <!-- BEGIN JIVOSITE CODE {literal} -->
+          <!--<script type='text/javascript'>
+          (function(){ var widget_id = 'sUW9ujniHZ';
+          var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);})();</script>-->
+          <!-- {/literal} END JIVOSITE CODE -->
+           <!-- BEGIN JIVOSITE CODE {literal} -->
+          <!--script type='text/javascript'>
+          (function(){ var widget_id = 'Oo5CDKSmVT';
+          var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = 
+          '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; 
+          ss.parentNode.insertBefore(s, ss);})();</script -->
+          <!-- {/literal} END JIVOSITE CODE -->
+
+          <!-- BEGIN JIVOSITE CODE {literal} -->
+            <script type='text/javascript'>
+              (function(){ var widget_id = 'XMIAwOHTwT';
+              var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);})();</script>
+            <!-- {/literal} END JIVOSITE CODE --> 
+
+        </div>
+        <!-- <div id="back-top" style="display: block;">
+          <a href="#top" class="btn btn-info page-scroll"><i class=" fa fa-chevron-up"></i></a>
+        </div> -->
+      

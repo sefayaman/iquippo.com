@@ -1,0 +1,459 @@
+<div id="wrapper">
+    <section class="wrapper">
+      <div class="container-fluid">
+        <div id="page-wrapper">
+          <div class="row">
+          <div class="col-sm-12">
+            <h3>
+              {{currentProduct.name}}
+              <button class="btn btn-success btn-md pull-right" ng-hide="currentProduct.isSold || !isActive()" ng-click="isCollapsed = !isCollapsed"> <i class="fa fa-plus"></i>Add sell info</button>
+            </h3> 
+            <hr>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-sm-offset-1 col-sm-10">            
+          <!-- success error start-->
+            <div class="row animate-show" ng-show="isSuccess" >
+              <div class="col-sm-12">                
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                   {{successMessage}}
+                </div>
+              </div>
+            </div>
+            <div class="row animate-show" ng-show="isError">
+              <div class="col-sm-12">                
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{errorMessage}}
+                </div>
+              </div>
+            </div>
+            <!-- success error end -->
+            <!-- Sell information -->
+            <form class="form" ng-submit="addSellProduct($event)" novalidate name="form">
+              <div uib-collapse="isCollapsed">
+                  <legend>Sell Information</legend>
+                  
+                  <div class="row">
+                      <div class="col-sm-4 form-group">
+                        <input type="date" name="saleDate" ng-model="sellProduct.saleDate" class="form-control" placeholder="Sale date" uib-datepicker-popup="{{format}}" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open1()">
+                      </div>
+                      <div class="col-sm-4 form-group"><input type="text" name="salePrice" ng-model="sellProduct.salePrice" class="form-control" placeholder="Sale price"></div>
+                      <div class="col-sm-4 form-group"><input type="text" name="saleCommission" ng-model="sellProduct.saleCommission" class="form-control" placeholder="Sale commission"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      <input type="text" class="form-control" placeholder="Buyer Name" name="buyerName" ng-model="sellProduct.buyerName">
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <input type="email" class="form-control" placeholder="Buyer Email" name="buyerEmail" ng-model="sellProduct.buyerEmail">
+                      <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                      Please enter a valid email.
+                      </p>
+                    </div>
+                    <div class="col-sm-4 form-group"  ng-class="{'has-error': form.buyerMobile.$invalid && form.submitted }">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Buyer Mobile No." name="buyerMobile" ng-model="sellProduct.buyerMobile" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      <select class="form-control" name="country" ng-model="sellProduct.country">
+                        <option value="" disabled>Select Country</option>
+                        <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                      <input type="text" class="form-control" placeholder="Buyer City" name="buyerCity" ng-model="sellProduct.buyerCity">
+                    </div>                    
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      Shipping availed
+                    </div>
+                    <div class="col-sm-2 form-group btn-group">
+                        <label class="btn btn-primary btn-md" name="shipping"  ng-change="pastShipping()" ng-model="sellProduct.shippingQuote.isPastShipping" uib-btn-radio="'yes'">Yes</label>
+                        <label class="btn btn-primary btn-md" name="shipping"  ng-change="pastShipping()" ng-model="sellProduct.shippingQuote.isPastShipping" uib-btn-radio="'no'">No</label>                        
+                    </div>    
+                    <div class="col-sm-3 form-group">
+                      <input type="text" class="form-control past-shipping-control" placeholder="Enter details" ng-model="sellProduct.shippingQuote.detail" name="detail">
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="date" class="form-control past-shipping-control" placeholder="Service date" ng-model="sellProduct.shippingQuote.serviceDate" name="serviceDate" uib-datepicker-popup="{{format}}" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()">
+                    </div>                
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      Valuation availed
+                    </div>
+                    <div class="col-sm-2 form-group btn-group">
+                        <label class="btn btn-primary btn-md" name="valuation"  ng-change="pastValuation()" ng-model="sellProduct.valuationQuote.isPastValuation" uib-btn-radio="'yes'">Yes</label>
+                        <label class="btn btn-primary btn-md" name="valuation"  ng-change="pastValuation()" ng-model="sellProduct.valuationQuote.isPastValuation" uib-btn-radio="'no'">No</label>                        
+                    </div>    
+                    <div class="col-sm-3 form-group">
+                      <input type="text" class="form-control past-valuation-control" placeholder="Enter details" ng-model="sellProduct.valuationQuote.detail" name="detail">
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="date" class="form-control past-valuation-control" placeholder="Service date" ng-model="sellProduct.valuationQuote.serviceDate" name="serviceDate" uib-datepicker-popup="{{format}}" is-open="popup3.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()">
+                    </div>                
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-sm-4 form-group">
+                      Certified by iQuippo availed
+                    </div>
+                    <div class="col-sm-2 form-group btn-group">
+                        <label class="btn btn-primary btn-md" name="certified"  ng-change="pastCertifiedByIQuippo()" ng-model="sellProduct.certifiedByIQuippoQuote.isCertifiedByIQuippo" uib-btn-radio="'yes'" checked>Yes</label>
+                        <label class="btn btn-primary btn-md" name="certified"  ng-change="pastCertifiedByIQuippo()" ng-model="sellProduct.certifiedByIQuippoQuote.isCertifiedByIQuippo" uib-btn-radio="'no'">No</label>                        
+                    </div>    
+                    <div class="col-sm-3 form-group">
+                      <input type="text" class="form-control past-certified-control" placeholder="Enter details" ng-model="sellProduct.certifiedByIQuippoQuote.detail" name="detail">
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <input type="date" class="form-control past-certified-control" placeholder="Service date" ng-model="sellProduct.certifiedByIQuippoQuote.serviceDate" name="serviceDate" uib-datepicker-popup="{{format}}" is-open="popup4.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open4()">
+                    </div>               
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-4 form-group pull-right text-right">
+                      <button class="btn btn-danger" type="submit">Save</button>
+                    </div>                                 
+                  </div>
+                </div>
+            </form>  
+            <uib-accordion class="information">   
+              <uib-accordion-group is-open="Sellstatus.open">
+                <uib-accordion-heading>
+                  Seller information  <i class="pull-right fa" ng-class="{'fa-minus': Sellstatus.open, 'fa-plus': !Sellstatus.open}"></i>
+                </uib-accordion-heading>
+                <table class="table table-striped">
+                    <tr>
+                      <th>Name</th>
+                      <th>Email Address</th>
+                      <th>Mobile No.</th>
+                      <th>Country</th>
+                      <th>City</th>
+                    </tr>                   
+                    <tr>
+                      <td>{{currentProduct.seller.fname}} {{currentProduct.seller.lname}}</td>
+                      <td>{{currentProduct.seller.email}}</td>
+                      <td>{{currentProduct.seller.mobile}}</td>
+                      <td>{{currentProduct.seller.country}}</td>
+                      <td>{{currentProduct.seller.city}}</td>
+                    </tr>
+                  </table>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="Buystatus.open" ng-hide="!isActive()">
+                <uib-accordion-heading>
+                  Buy Quotations  <i class="pull-right fa" ng-class="{'fa-minus': Buystatus.open, 'fa-plus': !Buystatus.open}"></i>
+                </uib-accordion-heading>
+                 <div class="table-responsive">
+                    <table datatable="ng" dt-options= "dtOptions" class="table table-bordred table-striped">
+                      <thead>
+                    <tr>
+                      <th width="10%">Name</th>
+                      <th width="15%">Email Address</th>
+                      <th width="10%">Mobile No.</th>
+                      <th width="10%">Country</th>
+                      <th width="15%">Method to contact</th>
+                      <th width="50%">Comments</th>
+                    </tr>        
+                    </thead>                  
+                    <tbody>           
+                    <tr ng-repeat="buyer in allBuyerRequest">
+                      <td>{{buyer.fname}} {{buyer.lname}}</td>
+                      <td>{{buyer.email}}</td>
+                      <td>{{buyer.mobile}}</td>
+                      <td>{{buyer.country}}</td>
+                      <td>{{buyer.contact}}</td>
+                      <td>{{buyer.message}}</td>
+                   </tbody>
+                    </table>
+                  </div>
+              </uib-accordion-group>
+              <uib-accordion-group is-open="servicestatus.open" ng-hide="!isActive()">
+                <uib-accordion-heading>
+                  Services Quotations  <i class="pull-right fa" ng-class="{'fa-minus': servicestatus.open, 'fa-plus': !servicestatus.open}"></i>
+                                </uib-accordion-heading>
+                  <table datatable="ng" dt-options= "dtOptions" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile No.</th>
+                        <th>Country</th>    
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="addService in allAdditionalService">
+                        <td>
+                          <a ng-click="previewQutation(addService)" href="javascript:void(0);">{{addService.fname}} {{addService.lname}}</a>
+                        </td>
+                        <td>{{addService.email}}</td>
+                        <td>{{addService.mobile}}</td>
+                        <td>{{addService.country}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </uib-accordion-group>
+            </uib-accordion>
+            <section ng-repeat="proHistory in allProductHistroyOnProductId">
+              <div class="row">
+                <div class="col-sm-12">
+                  <label>{{proHistory.type}} Date:</label>
+                  {{getDateTimeFormat(proHistory.updatedAt)}}
+                </div>
+              </div>
+              <uib-accordion class="information">                 
+                <uib-accordion-group is-open="status.Firstopen">
+                  <uib-accordion-heading>
+                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                    <tr>
+                      <td>Product Id</td>
+                      <td>{{proHistory.history.productId}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td>Listing Date</td>
+                      <td>{{proHistory.history.relistingDate}}</td>
+                    </tr> -->
+                    <tr>
+                      <td>Number of days (Age)</td>
+                      <td>{{dayDiff(proHistory.history.relistingDate)}} Days</td>
+                    </tr>
+                    <tr>
+                      <td>Brand / Model</td>
+                      <td>{{proHistory.history.brand.name}} / {{proHistory.history.model.name}}</td>
+                    </tr>                   
+                    <tr>
+                      <td>Category</td>
+                      <td>{{proHistory.history.category.name}}</td>
+                    </tr>                     
+                    <tr>
+                      <td>Manufacturing Year</td>
+                      <td>{{proHistory.history.mfgYear}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td>Equipment age (years)</td>
+                      <td>{{proHistory.history.equipmentage}}</td>
+                    </tr> -->
+                    <tr>
+                      <td>Motor/Operating Hours</td>
+                      <td>{{proHistory.history.operatingHour}}</td>
+                    </tr>
+                    <tr>
+                      <td>Mileage(KMs)</td>
+                      <td>{{proHistory.history.mileage}}</td>
+                    </tr>  
+                    <tr>
+                    <td>Machine Serial No.</td>
+                    <td>{{proHistory.history.serialNo}}</td>
+                  </tr>                  
+                    <tr>
+                      <td>Country</td>
+                      <td>{{proHistory.history.country}}</td>
+                    </tr>
+                    <tr>
+                      <td>City</td>
+                      <td>{{proHistory.history.city}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gross Price</td>
+                      <td>
+                      <b ng-if="proHistory.history.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                      <i class="fa fa-eur" ng-if="proHistory.history.currencyType == 'EUR'"></i>
+                      <i class="fa fa-gbp" ng-if="proHistory.history.currencyType == 'GBP'"></i>
+                      <i class="fa fa-usd" ng-if="proHistory.history.currencyType == 'USD'"></i>{{proHistory.history.grossPrice}}</td>
+                    </tr>
+                    <tr>
+                      <td>Product Condition</td>
+                      <td>{{proHistory.history.productCondition}}</td>
+                    </tr>
+                    
+                  </table>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="Techstatus.open">
+                  <uib-accordion-heading>
+                    Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                      <tr ng-repeat="techInfo in proHistory.history.technicalInfo.params">
+                        <td widtd="50%">{{techInfo.key}}</td>
+                        <td>{{techInfo.value}}</td>
+                      </tr>
+                      <tr>
+                        <td>Gross Weight</td>
+                        <td>{{proHistory.history.technicalInfo.grossWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td>Operating Weight</td>
+                        <td>{{proHistory.history.technicalInfo.operatingWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td>Bucket Capacity</td>
+                        <td>{{proHistory.history.technicalInfo.bucketCapacity}}</td>
+                      </tr>
+                      <tr>
+                        <td>Engine Power</td>
+                        <td>{{proHistory.history.technicalInfo.enginePower}}</td>
+                      </tr>
+                      <tr>
+                        <td>Lifting Capacity</td>
+                        <td>{{proHistory.history.technicalInfo.liftingCapacity}}</td>
+                      </tr>
+                  </table>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="Infostatus.open">
+                  <uib-accordion-heading>
+                    Service information  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                      <tr>
+                        <td>Service Date</td>
+                        <td>Operating hrs(km/m.hrs)</td>
+                        <td>Service at(KMs)</td>
+                        <td>Authorized Service Station</td>
+                      </tr>                   
+                      <tr ng-repeat="serviceInfo in proHistory.history.serviceInfo">
+                        <td>{{getDateFormat(serviceInfo.servicedate)}}</td>
+                        <td>{{serviceInfo.operatingHour}}</td>
+                        <td>{{serviceInfo.serviceAt}}</td>
+                        <td>{{serviceInfo.authServiceStation}}</td>
+                      </tr>
+                    </table>
+                </uib-accordion-group>                
+              </uib-accordion>
+            </section>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+</div>
+ <div class="form-group"></div>
+
+ <script type="text/ng-template" id="productPreview.html">
+  <div>
+       <div class="modal-header">
+              <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Quote Details</h4>
+            </div>
+            <div class="modal-body"> 
+                    <table class="table table-bordered">
+                      <tr>
+                        <td>Name</td>
+                        <td>Email Address</td>
+                        <td>Mobile No.</td>
+                        <td>Country</td>
+                        <td>City</td>
+                        <td>Company Name</td>
+                        <td>Designation</td>
+                      </tr>
+                      <tr>
+                        <td>{{allAdditionalService.fname}} {{allAdditionalService.lname}}</td>
+                        <td>{{allAdditionalService.email}}</td>
+                        <td>{{allAdditionalService.mobile}}</td>
+                        <td>{{allAdditionalService.country}}</td>
+                        <td>{{allAdditionalService.city}}</td>
+                        <td>{{allAdditionalService.companyname}}</td>
+                        <td>{{allAdditionalService.designation}}</td>
+                      </tr>
+                    </table>
+                      <div class="form-group"></div>
+                       <uib-accordion close-otders="oneAtATime">  
+                            
+                              <!--Shipping start -->
+                                 <uib-accordion-group is-open="tstatus.open">
+                                    <uib-accordion-heading>
+                                      Shipping  quote <i class="pull-right fa" ng-class="{'fa-minus': tstatus.open, 'fa-plus': !tstatus.open}"></i>
+                                    </uib-accordion-heading>
+                                      <table class="table table-bordered">
+                                        <tr>
+                                          <td>Part shipment allowed</td>
+                                          <td>Packaging as per international standard</td>
+                                        </tr>
+                                        <tr>
+                                          <td>{{allAdditionalService.shippingQuote.allowed}}</td>
+                                          <td>{{allAdditionalService.shippingQuote.packaging}}</td>
+                                        </tr>
+                                      </table>
+                                       
+                                        <div class="form-group">
+                                          <textarea class="form-control" placeholder={{allAdditionalService.shippingQuote.comment}} disabled></textarea>
+                                        </div>
+                                       
+                                  </uib-accordion-group>
+                              <!--Shipping end -->
+
+                              <!--valuation start -->
+                             <uib-accordion-group is-open="vstatus.open">
+                                  <uib-accordion-heading>
+                                    Valuation quote <i class="pull-right fa" ng-class="{'fa-minus': vstatus.open, 'fa-plus': !vstatus.open}"></i>
+                                  </uib-accordion-heading>
+                               
+                                   <table class="table table-bordered">
+                                      <tr>
+                                        <td>Purpose of valuation</td>
+                                        <td>Schedule a call</td>
+                                        <td>Date</td>
+                                        <td>Time</td>
+
+                                      </tr>
+                                      <tr>
+                                        <td>{{getValuation(allAdditionalService.valuationQuote.valuation, 'valuation')}}</td>
+                                        <td>{{allAdditionalService.valuationQuote.schedule}}</td>
+                                        <td>{{getDateFormat(allAdditionalService.valuationQuote.scheduleDate)}}</td>
+                                        <td>{{allAdditionalService.valuationQuote.scheduledTime}}</td>
+                                      </tr>
+                                    </table>
+
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder={{allAdditionalService.valuationQuote.comment}} disabled></textarea>
+                                      </div>
+                              </uib-accordion-group>
+                              <!-- valuation end -->
+
+                              <!--Certified start -->
+                            <uib-accordion-group is-open="status.open">
+                              <uib-accordion-heading>
+                                Certified by iQuippo quote<i class="pull-right fa" ng-class="{'fa-minus': status.open, 'fa-plus': !status.open}"></i>
+                              </uib-accordion-heading>
+                                <table class="table table-bordered">
+                                      <tr>
+                                        <td>Purpose of valuation</td>
+                                        <td>Schedule a call</td>
+                                        <td>Date</td>
+                                        <td>Time</td>
+                                      </tr>
+                                      <tr>
+                                        <td>{{getValuation(allAdditionalService.certifiedByIQuippoQuote.valuation, 'certified')}}</td>
+                                        <td>{{allAdditionalService.certifiedByIQuippoQuote.schedule}}</td>
+                                        <td>{{getDateFormat(allAdditionalService.certifiedByIQuippoQuote.scheduleDate)}}</td>
+                                        <td>{{allAdditionalService.certifiedByIQuippoQuote.scheduledTime}}</td>                                        
+                                      </tr>
+                                    </table>
+                                    
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder={{allAdditionalService.certifiedByIQuippoQuote.comment}} disabled></textarea>
+                                      </div>              
+                          </uib-accordion-group>
+                             <!--Certified end  -->
+                       </uib-accordion>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>              
+            </div>
+  </div>
+
+</script>

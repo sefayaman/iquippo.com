@@ -1,0 +1,74 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>
+            <!-- User Management
+            <button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button> -->
+            <div class="row">
+                    <div class="col-sm-10">
+                      User Management
+                    </div>
+                    <div class="col-sm-1">
+                    <button class="btn btn-success btn-md pull-right" ng-click="openDialog('adduser')"><i class="fa fa-plus"></i> Add User</button>
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                    </div>
+                  </div>
+          </h3>
+          <hr>
+        </div>
+
+       <div ng-if="isAdmin()" class="featured-pro1">
+        
+          <label>Channel Partners:</label>
+        <select ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user as (user.fname+' ('+user.email+')') for user in getUsersOnRole track by user._id" >
+          <option value="">Select User</option>
+        </select>
+       </div>
+
+          <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                 <th>User Type</th>
+                <th>Company Name</th>
+                <th>Mobile No.</th>                
+                <th>Country</th>                
+                <th width="6%">Status</th>
+                <th width="15%" ng-show="getCurrentUser().role == 'admin'">Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="user in users">                
+                <td>{{user.fname}} {{user.mname}} {{user.lname}}</td>
+                <td>{{user.email}}</td> 
+                <td ng-if="user.role == 'customer'">Customer</td>
+                <td ng-if="user.role == 'admin'">Admin</td>
+                <td ng-if="user.role == 'channelpartner'">Channel Partner</td>
+                <td ng-if="user.userType == 'individual'">Individual</td>
+                <td ng-if="user.userType == 'private'">Private Entrepreneur</td>
+                <td ng-if="user.userType == 'legalentity'">Legal Entity</td>
+                <td>{{user.company}}</td>               
+                <td>{{user.mobile}}</td>
+                <td>{{user.country}}</td>
+                <td ng-if="user.status">Active</td>
+                <td ng-if="!user.status">Inactive</td>
+                <td ng-show="getCurrentUser().role == 'admin'">
+                  <label  class="btn btn-warning" ng-model="user.status" uib-btn-checkbox ng-click="updateUser(user)" style="width:60%;"><span ng-if="!user.status">Activate</span> <span ng-if="user.status">Deactivate</span></label>    
+                  <button class="btn btn-sm btn-danger" ng-click="deleteUser(user)"><i class="fa fa-trash"></i></button></td>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>   
+    </div>
+  </div>
+</div>

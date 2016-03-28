@@ -1,0 +1,154 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>
+            Partner Registration
+            <button class="btn btn-success btn-md pull-right" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i> Add New Partner</button>
+          </h3>
+          <hr>
+        </div>
+        <div class="col-sm-12">
+          <!-- success error start-->
+              <div class="row animate-show" ng-show="isSuccess" >
+                <div class="col-sm-12">                
+                  <div class="alert alert-success alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                     {{successMessage}}
+                  </div>
+                </div>
+              </div>
+              <div class="row animate-show" ng-show="isError">
+                <div class="col-sm-12">                
+                  <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      {{errorMessage}}
+                  </div>
+                </div>
+              </div>
+              <!-- success error end -->
+          <div uib-collapse="isCollapsed">
+          <form class="form" name="form" >
+            <div class="form-group fill-info">
+  	        <div class="row">
+  	        	<div class="form-group">
+  					<div class="form-group col-sm-4" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
+                      <input type="text" class="form-control" name="fname" ng-model="vendorReg.fname" value="" placeholder="*First Name" required/>
+                    </div>
+                    <div class="form-group col-sm-4">
+                      <input type="text" class="form-control" name="mname" ng-model="vendorReg.mname" value="" placeholder="Middle Name"/>
+                    </div>
+                    <div class="form-group col-sm-4" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
+                      <input type="text" class="form-control" name="lname" ng-model="vendorReg.lname" value="" placeholder="*Last Name" required/>
+                    </div>
+  				</div>
+  	        </div>
+              <div class="row">
+                  <div class="col-sm-4" ng-class="{'has-error': form.entityName.$invalid && form.submitted }">
+                    <input type="text" class="form-control" name="entityName" ng-model="vendorReg.entityName" value="" placeholder="*Legal Entity Name" required/>
+                  </div>
+                <div class="form-group col-md-4" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                  <input class="form-control" name="email" ng-model="vendorReg.email" placeholder="* Email" type="email" value="" required>
+                  <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                  Please enter a valid email.
+                </p>
+                </div>
+                <!-- <div class="form-group col-sm-4" ng-class="{'has-error': form.password.$invalid && form.submitted }">
+  	                <input type="password" name="password" class="form-control" ng-model="vendorReg.password"
+  	                placeholder="Your Password" 
+  	                   ng-minlength="4"
+  	                   required
+  	                   mongoose-error/>
+  	                  <p class="help-block"
+  	                     ng-show="(form.password.$error.minlength || form.password.$error.required) && form.submitted">
+  	                    Password must be at least 4 characters.
+  	                  </p>
+  	                  <p class="help-block" ng-show="form.password.$error.mongoose">
+  	                    {{ errors.password }}
+  	                  </p>
+                  </div> -->
+                  </div>
+  				        <div class="row">
+                    <div class="form-group col-sm-4">
+                      <input type="text" class="form-control" name="phone" ng-model="vendorReg.phone" value="" placeholder="Phone No.">
+                    </div>
+                    <div class="form-group col-sm-4" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+                      <div class="input-group">
+    	                <input class="form-control" name="mobile" ng-model="vendorReg.mobile" placeholder="* Mobile No." type="text" value="" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      </div>
+  	              </div>
+              
+            <div class="col-xs-4">
+                        <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }">
+                            <select class="form-control" name="country" ng-model="vendorReg.country" required>
+                              <option value="" disabled>*Select Country</option>
+                              <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>                          
+                            </select>
+                            <i class="caret"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-3 form-group">
+                    <span class="btn btn-warning fileinput-button">
+                      <span>Browse Partner Logo...</span>
+                      <input type="file" image-upload="" data-filetype="image" data-index="0" name="files_0" class="ng-scope">
+                    </span>
+                    <div class="col-sm-2">
+                          {{vendorReg.imgsrc}}
+                    </div>
+                  </div>
+                  <div class="col-sm-7 form-group">
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <input type="checkbox" name="Shipping" ng-model="Shipping" ng-true-value="'Shipping'"> Shipping
+                      </div>
+                      <div class="col-sm-3">
+                        <input type="checkbox" name="Valuation" ng-model="Valuation" ng-true-value="'Valuation'"> Valuation
+                      </div>
+                      <div class="col-sm-3">
+                        <input type="checkbox"  name="CertifiedByIQuippo" ng-model="CertifiedByIQuippo" ng-true-value="'CertifiedByIQuippo'" ng-cha> Certified by iQuippo
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-2 form-group"><input class="btn btn-warning btn-block btn-mds" name="" type="button" ng-click="register(vendorReg)" value="Register"></div>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+
+          <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th width="8%">Image</th>
+                <th width="15%">Name</th>
+                <th width="10%">Legal Entity</th>
+                <th width="20%">Services</th>
+                <th width="20%">Email Id</th>
+                <th width="10%">Mobile No.</th>                
+                <th width="10%">Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="vendor in vendorList">
+                <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{vendor.imgsrc}}" alt="Image"></td>
+                <td>{{vendor.fname}}</td>
+                <td>{{vendor.entityName}}</td>
+                <td>{{getServiceString(vendor.services.join())}}</td>
+                <td>{{vendor.email}}</td>
+                <td>{{vendor.mobile}}</td>
+                <td>
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="editVendorClick(vendor)" ><i class="fa fa-pencil"></i> </a>
+                <button class="btn btn-sm btn-danger" ng-click="deleteVendor(vendor)"><i class="fa fa-trash"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>   
+    </div>
+  </div>
+</div>

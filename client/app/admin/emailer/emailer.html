@@ -1,0 +1,51 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      	<div class="row">
+	      <div class="col-sm-6">
+	      	<h3>Emailer</h3>
+	      </div>     
+	    </div>
+	    <hr>
+	    <div class="row">
+	    	<div class="col-sm-12">
+	        	<form name="form" novalidate>
+	        		
+	        		<div class="form-group" ng-class="{'has-error':form.subject.$invalid && submitted}">	        			
+	        			<input type="text" class="form-control" ng-model="mailData.subject" name="subject" placeholder="* Subject" required />
+	        		</div>
+	        		<div class="row form-group">	        			
+	        			<div class="col-sm-2">
+	        				<label>* Recipients</label>
+	        			</div>
+	        			<div class="col-sm-2">
+	        				<input type="checkbox" ng-model="mailData.ind"> All Individuals
+	        			</div>
+	        			<div class="col-sm-2">
+	        				<input type="checkbox" ng-model="mailData.pe"> All Private Entrepreneurs
+	        			</div>
+	        			<div class="col-sm-2">
+	        				<input type="checkbox" ng-model="mailData.le"> All Legal Entities
+	        			</div>
+	        		</div>
+					<div class="form-group" ng-class="{'has-error':form.content.$invalid && submitted}">
+						<textarea ui-tinymce ng-model="mailData.content" name="content" rows="10" ></textarea>
+					</div>
+					<div class="row form-group">						
+						<div class="col-sm-2">
+							<span class="btn btn-warning fileinput-button">
+                                <span><i class="fa fa-upload"></i> Upload Document</span>
+                                <input type="file" name="doc"  data-filetype="doc" file-upload>
+		                    </span>
+						</div>
+						<div class="col-sm-2">{{docObj.name}}</div>
+						<div class="col-sm-offset-6 col-sm-2">
+							<button class="btn btn-primary btn-block" ng-click="sendEmail()" ng-disabled="disabled">Send</button>
+						</div>
+					</div>
+				</form> 
+	      	</div> 
+	    </div>          
+    </div>
+  </div>
+</div>

@@ -1,0 +1,338 @@
+  <div class="view-content">
+<section class="wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-7 col-md-5">
+            <ol class="breadcrumb">
+              <li>{{currentProduct.name}}</li>         
+            </ol>
+            <ul class="list-inline list-unstyled">
+                <li><span><i class="fa fa-calendar"></i> {{currentProduct.mfgYear}} </span></li>
+                    <li>|</li>
+                    <span><i class="fa fa-dashboard"></i> {{currentProduct.operatingHour}} h</span>
+                    <li>|</li>
+                    <li>
+                       <span><i class="fa fa-map-marker"></i> {{currentProduct.country}}</span>
+                    </li>
+                    <li ng-if="currentProduct.documentName">|</li>
+                    <li ng-if="currentProduct.documentName">
+                      <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>                    
+                    </li>
+                    
+            </ul>
+            <div class="carousel slide article-slide" id="article-photo-carousel">
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner cont-slider">
+                <div class="mag item active" >
+                  <!-- <img alt="" title="" ng-src="{{uploadImagePrefix}}{{currentProduct.images[0].src}}" class="img-responsive"> -->
+                   <zoom mark-height="100" mark-width="100" ng-src="{{currentProduct.images[0].displaySrc}}" zoom-lvl="{{zoomLvl}}"></zoom>
+                </div>
+                <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-if="$index > 0">
+                 <!--  <img alt="" title="" ng-src="{{uploadImagePrefix}}{{thumbnailImage.src}}" class="img-responsive"> -->
+                  <zoom mark-height="100" mark-width="100" ng-src="{{thumbnailImage.displaySrc}}" zoom-lvl="{{zoomLvl}}"></zoom>
+                </div>
+              </div>
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == 0}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+                </li>
+              </ol>
+              <ul>
+                <li ng-if="currentProduct.videoName">
+                    <a href="/download/{{currentProduct.assetDir}}/{{currentProduct.videoName}}" class="text-muted" target="_blank"><span><i class="fa fa-video-camera fa-4x"></i></span></a>                    
+                  </li>
+              </ul>
+            </div>
+
+            <div class="form-group clearfix"></div>
+                            
+              <uib-accordion close-others="oneAtATime" class="information">                 
+                <uib-accordion-group is-open="status.Firstopen">
+                  <uib-accordion-heading>
+                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                    <tr>
+                      <td>Product Id</td>
+                      <td>{{currentProduct.productId}}</td>
+                    </tr>
+                    <tr>
+                      <td>Brand / Model</td>
+                      <td>{{currentProduct.brand.name}} / {{currentProduct.model.name}}</td>
+                    </tr>                   
+                    <tr>
+                      <td>Category</td>
+                      <td>{{currentProduct.category.name}}</td>
+                    </tr>                     
+                    <tr>
+                      <td>Manufacturing Year</td>
+                      <td>{{currentProduct.mfgYear}}</td>
+                    </tr>
+                    <!-- <tr>
+                      <td>Equipment age (years)</td>
+                      <td>{{dayDiff(currentProduct.relistingDate)}} Days</td>
+                    </tr> -->
+                    <tr>
+                      <td>Motor/Operating Hours</td>
+                      <td>{{currentProduct.operatingHour}}</td>
+                    </tr>
+                    <tr>
+                      <td>Mileage(KMs)</td>
+                      <td>{{currentProduct.mileage}}</td>
+                    </tr>  
+                    <tr>
+                    <td>Machine Serial No.</td>
+                    <td>{{currentProduct.serialNo}}</td>
+                  </tr>                  
+                    <tr>
+                      <td>Country</td>
+                      <td>{{currentProduct.country}}</td>
+                    </tr>
+                    <tr>
+                      <td>City</td>
+                      <td>{{currentProduct.city}}</td>
+                    </tr>
+                    <tr>
+                      <td>Gross Price</td>
+                      <td>
+                      <span ng-if="currentProduct.priceOnRequest">Price On Request</span>
+                      <span ng-if="!currentProduct.priceOnRequest"><b ng-if="currentProduct.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                      <i class="fa fa-eur" ng-if="currentProduct.currencyType == 'EUR'"></i>
+                      <i class="fa fa-gbp" ng-if="currentProduct.currencyType == 'GBP'"></i>
+                      <i class="fa fa-usd" ng-if="currentProduct.currencyType == 'USD'"></i>
+                       {{currentProduct.grossPrice}} </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Product Condition</td>
+                      <td>{{currentProduct.productCondition}}</td>
+                    </tr>
+                    
+                  </table>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="Techstatus.open">
+                  <uib-accordion-heading>
+                    Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                      <tr ng-repeat="techInfo in currentProduct.technicalInfo.params">
+                        <td widtd="50%">{{techInfo.key}}</td>
+                        <td>{{techInfo.value}}</td>
+                      </tr>
+                      <tr>
+                        <td>Gross Weight</td>
+                        <td>{{currentProduct.technicalInfo.grossWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td>Operating Weight</td>
+                        <td>{{currentProduct.technicalInfo.operatingWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td>Bucket Capacity</td>
+                        <td>{{currentProduct.technicalInfo.bucketCapacity}}</td>
+                      </tr>
+                      <tr>
+                        <td>Engine Power</td>
+                        <td>{{currentProduct.technicalInfo.enginePower}}</td>
+                      </tr>
+                      <tr>
+                        <td>Lifting Capacity</td>
+                        <td>{{currentProduct.technicalInfo.liftingCapacity}}</td>
+                      </tr>
+                      <tr>
+                        <td>Specification Document</td>
+                        <td><a href="{{uploadImagePrefix}}{{currentProduct.documentName}}" class="text-muted" target="_blank" >{{currentProduct.documentName}}</a></td>
+                      </tr>
+                      <!-- <tr>
+                        <td>Product Video</td>
+                        <td>{{currentProduct.videoName}}</td>
+                      </tr> -->
+                  </table>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="Infostatus.open">
+                  <uib-accordion-heading>
+                    Service information  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                      <tr>
+                        <td>Service Date</td>
+                        <td>Operating hrs(km/m.hrs)</td>
+                        <td>Service At</td>
+                        <td>Authorized Service Station</td>
+                      </tr>                   
+                      <tr ng-repeat="serviceInfo in currentProduct.serviceInfo">
+                        <td>{{serviceInfo.servicedate}}</td>
+                        <td>{{serviceInfo.operatingHour}}</td>
+                        <td>{{serviceInfo.serviceAt}}</td>
+                        <td>{{serviceInfo.authServiceStation}}</td>
+                      </tr>
+                    </table>
+                </uib-accordion-group>
+              </uib-accordion>
+            <button type="button" class="btn btn-warning" ng-click="addProductToCart()">Add to Cart</button>
+            <a class="btn btn-block btn-md btn-warning quote-btn pull-right" ng-click="openDialog('getquote')">Get a Quote for Additional Services</a>
+            
+          </div>
+          <div class="col-sm-5 col-md-4 padd-left panel-group">                   
+            <div class="panel panel-default seller-info hidden-xs">
+              <div class="panel-heading">
+                <h3 class="panel-title">To Buy Contact</h3>
+              </div>
+              <div class="panel-body">                            
+                <form  novalidate role="form" name="form">
+                  <table class="table table-striped">
+                    <tr>
+                      <td><i class="fa fa-phone"></i> Phone Number</td>
+                      <td>+971-562663959</td>
+                    </tr>
+                    <tr>
+                      <td><i class="fa fa-envelope"></i> Email</td>
+                      <td>info@auro.world</td>
+                    </tr>
+                  </table>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                          <input type="text" name="fname" ng-model="buycontact.fname" ng-value="buycontact.fname" class="form-control"  placeholder="* First Name" required>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">                                      
+                          <input type="text" name="mname" ng-model="buycontact.mname" ng-value="buycontact.mname" class="form-control" placeholder="Middle Name">
+                        </div>
+                      </div>
+                    </div> 
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">  
+                        <input type="text" name="lname" ng-model="buycontact.lname" ng-value="buycontact.lname" class="form-control" placeholder="* Last Name" required>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }">
+                          <select class="form-control" name="country" ng-model="buycontact.country" required>
+                            <option value="" disabled>* Select Country</option>
+                            <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>                          
+                          </select>
+                          <i class="caret"></i>
+                        </div>
+                      </div>
+                    </div>  
+                    
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group">                          
+                          <input type="text" name="phone" ng-model="buycontact.phone" ng-value="buycontact.phone" class="form-control" placeholder=" Phone No.">
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">  
+                        <div class="input-group">
+                          <input type="text" name="mobile" ng-model="buycontact.mobile" ng-value="buycontact.mobile" class="form-control" placeholder="* Mobile No." uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top"required>
+                          </div>
+                        </div>
+                      </div>
+                    </div>    
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                          
+                          <input type="email" name="email" ng-model="buycontact.email" ng-value="buycontact.email" class="form-control" placeholder="* Email Address" required>
+                          <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                          Please enter a valid email.
+                          </p>
+                        </div>
+                      </div>
+                    </div>                      
+                    
+                    <span>Method of contact </span>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                        
+                          <input type="radio" name="contact" ng-model="buycontact.contact" value="email"> E-mail
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <input type="radio" name="contact" ng-model="buycontact.contact" value="mobile"> Phone
+                        </div>
+                      </div>
+                    </div>    
+                    <div class="form-group">                      
+                      <textarea class="form-control" name="message" ng-model="buycontact.message" placeholder="Comments"></textarea>
+                    </div>            
+                    <button type="submit" ng-click="sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Send Message</button>
+                  </form>
+
+              
+              </div>
+            </div>
+            
+
+          </div>
+          <div class="col-md-3 hidden-xs hidden-sm padd-left">
+            
+            <div class="panel-group vendor-list">
+              
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h5 class="panel-title">Shipping Partner </h5>
+              </div>
+              <div class="panel-body">
+                <ul ng-show="!statusShipping.open">
+                  <li ng-repeat="shipping in shippingVendorList" ng-if="$index < 3">
+                    <a href="javascript:void(0)" target="_blank">
+                      <img class="img-thubnail" height="40" width="60" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{shipping.imgsrc}}" alt="Image">
+                      {{shipping.name}}
+                    </a>
+                  </li>
+                </ul>
+                <uib-accordion close-others="oneAtATime">  
+                  <uib-accordion-group is-open="statusShipping.open">
+                    <uib-accordion-heading>
+                      View all<i class="pull-right fa" ng-class="{'fa-chevron-down': statusShipping.open, 'fa-chevron-right': !statusShipping.open}"></i>
+                    </uib-accordion-heading>
+                    <ul>
+                      <li ng-repeat="shipping in shippingVendorList">
+                      <a href="javascript:void(0)" target="_blank">
+                        <img class="img-thubnail" height="40" width="60" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{shipping.imgsrc}}" alt="Image">
+                        {{shipping.name}}
+                      </a>
+                    </li>                 
+                    </ul> 
+                  </uib-accordion-group>
+                </uib-accordion>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hidden.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+        });
+      });
+    </script>
+    </div>
+ <script type="text/ng-template" id="magnifier.html">
+<div id="magnifier-modal">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>              
+    </div>
+    <div class="modal-body">
+      <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+        <uib-slide ng-repeat="thumbnailImage in currentProduct.images" active="slide.active">
+          <img  ng-src="{{uploadImagePrefix}}{{thumbnailImage.src}}" alt="Name" class="img-responsive pic">
+        </uib-slide>
+      </uib-carousel>
+    </div>
+</div>
+</script>

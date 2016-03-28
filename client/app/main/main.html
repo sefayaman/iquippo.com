@@ -1,0 +1,242 @@
+<section class="banner">
+  <div id="slides_control">
+    <div>
+      <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+        <uib-slide ng-repeat="slide in slides" active="slide.active">
+          <img  ng-src="assets/images/{{slide.image}}">
+        </uib-slide>
+      </uib-carousel>
+    </div>
+  </div>
+</section>
+
+<section class="wrapper">
+  <div class="container">
+    <div class="text-center main-services">
+      <a href="/viewproducts" class="btn btn-lg btn-warning">Buy</a>
+
+      <a href="javascript:void(0);" ng-click="redirectToProduct()" class="btn btn-lg btn-warning">Sell</a>
+    </div>
+    <div class="row main-container">
+      <div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
+        <img ng-if="imgLeftTop" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgLeftTop}}" class="img-responsive add1">
+        <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
+        <div class="form-group"></div>
+        <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
+        <img ng-if="imgLeftBottom" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgLeftBottom}}" class="img-responsive add1">
+      </div>
+      <div class="col-sm-9 col-md-8">
+        <div class="head">
+          <h4>Categories</h4>
+          <legend class="dull"></legend>
+          <legend class="dark"></legend>
+        </div>
+
+        <div class="cat cat-product text-center">
+          <ul class="cat-list">
+            <li  ng-repeat="category in globalCategoryList">
+              <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
+                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  {{category.name}}
+              </a>
+            </li>
+          </ul>
+          <div class="form-group"></div>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="head">
+          <h4>Services</h4>
+          <legend class="dull"></legend>
+          <legend class="dark"></legend>
+        </div>
+        <div class="cat text-center">
+          <ul class="cat-list">
+            <!-- <li>
+              <a href="/lease">
+                <img src="assets/images/lease.png"> Lease
+               
+              </a>
+            </li>
+            <li>
+              <a href="/insurance">
+                <img src="assets/images/insurance.png"> Insurance
+                
+              </a>
+            </li> -->
+            <li>
+              <a href="/shipping">
+                <img src="assets/images/transport.png"> Shipping
+                
+              </a>
+            </li>
+            <li>
+              <a href="/valuation">
+                <img src="assets/images/valuation.png"> Valuation
+              </a>
+            </li>
+            <li>
+              <a href="/certifiedbyiquippo">
+                <img src="assets/images/certified.png"> Certified by iQuippo
+              </a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-2 padd-left hidden-xs">
+        <div class="panel panel-warning">
+          <div class="panel-heading text-center">
+            <div class="panel-title">Featured Products</div>
+            <hr>
+          </div>
+          <div class="panel-body text-center">
+            <!--carousel start -->
+            <ul class="verContainer" drctv>
+              <li ng-repeat="slide in featuredslides">
+              <a  ng-href="/productdetail/{{slide._id}}" onmouseover="hover(this)" data-index="{{$index}}" onmouseout="leave()">
+                <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.image}}">
+              </a>
+                <div class="popover left" id="popover_{{$index}}"> <div class="arrow"></div> <h3 class="popover-title">{{slide.name}}</h3> <div class="popover-content"> 
+                  <div class="row">
+                      <div class="col-sm-4"><small>{{slide.brand}}</small></div>
+                      <div class="col-sm-8"><small>{{slide.model}}</small></div>
+                  </div>
+                </div> 
+                </div>
+               
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!--carousel close -->
+    </div>
+  </div>
+</section>
+<div class="container text-center form-group">
+<!-- <img src="assets/images/Ad_Banner_3.jpg" width="60%"> -->
+  <img ng-if="imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgBottomCentre}}" class="add2">
+</div>
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="head">
+          <h4>Testimonials</h4>
+          <legend class="dull"></legend>
+          <legend class="dark"></legend>
+        </div>
+
+        <section class="testimonial">
+          <div class="container-fluid">
+            <div class="feedback-clients text-center">
+             <!--  <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                    <uib-slide active="slide.active">                                        
+                        <img src="assets/images/testimonial1.png" class="img-circle">
+                        <br> Rafia
+                                           
+                      <div class="carousel-caption">                      
+                          iQuippo is amazing marketplace which provides me facility of not only buying a product but helps me out with other services as well like insurance, logistics etc. I had a wonderful experience of dealing with a seller and the website has given me enough visibility prior getting into a discussion with the seller.
+                        </div>
+                      
+                    </uib-slide>
+                    <uib-slide>
+                      <img src="assets/images/testimonial2.png" class="img-circle">
+                        <br> Rashida Ahmad
+                       
+                      <div class="carousel-caption">                        
+                        <p>
+                          The website is instant which helps me in displaying products on some clicks and in turn take me to the world of prospective buyers. The interface is quite a some user friendly and guides to move ahead step by step without any support from external person.
+                        </p>
+                      </div>
+                    </uib-slide>
+                    <uib-slide>
+                      <img src="assets/images/testimonial3.png" class="img-circle">
+                        <br> Qasim Sultan
+                      <div class="carousel-caption">                        
+                        <p>
+                          This is just not an another commerce platform but to my surprise a fantastic experience driven gateway which helps in developing more business in construction equipment industry. I think this is going to rock and revolutionize the way construction equipment industry works.
+                        </p>
+                      </div>
+                    </uib-slide>
+                  </uib-carousel> -->
+                  <h3>Coming Soon..</h3>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col-md-6">
+        <div class="head">
+          <h4>News</h4>
+          <legend class="dull"></legend>
+          <legend class="dark"></legend>
+        </div>
+        <div class="form-group"></div>
+        <div class="news-tab">
+          <uib-tabset>
+            <uib-tab>
+              <uib-tab-heading>
+                  News
+              </uib-tab-heading>
+                <!-- <div class="media">
+                <a class="pull-left" href="javascript:void(0);">
+                  <img class="media-object" src="assets/images/news-2.jpg" alt="Image" width="100%">
+                </a>
+                <div class="media-body">
+                  <p>Srei reports consolidated Profit After Tax worth Rs. 23.32 Crores during First Quarter 2015.</p>
+                </div>
+              </div>
+              <div class="media">
+                <a class="pull-left" href="javascript:void(0);">
+                  <img class="media-object" src="assets/images/news-1.jpg" alt="Image" width="100%">
+                </a>
+                <div class="media-body">
+                  <p>Mr Sunil Kanoria, Vice Chairman Srei Infrastructure Finance Ltd., has been elected as the President of ASSOCHAM.</p>
+                </div>
+              </div> -->
+              <h3 class="text-center">Coming Soon..</h3>
+            </uib-tab>
+            
+            <uib-tab>
+              <uib-tab-heading>
+                Events
+              </uib-tab-heading>
+              <!-- <div class="media">
+                <a class="pull-left" href="javascript:void(0);">
+                  <img class="media-object" src="assets/images/event1.jpg" alt="Image" width="100%">
+                </a>
+                <div class="media-body">
+                  <h5 class="media-heading"><strong>Srei BNP Paribas @ Excon</strong></h5>
+                  <p>Welcome to Srei BNP Paribas Mart, our outdoor pavilion at Excon. Explore the limitless world of infrastructure...</p>
+                </div>
+              </div> -->
+
+              <!-- <div class="media">
+                <a class="pull-left" href="javascript:void(0);">
+                  <img class="media-object" src="assets/images/event2.jpg" alt="Image" width="100%">
+                </a>
+                <div class="media-body">
+                  <h5 class="media-heading"><strong>Tranche 2 Issue Kolkata, July 1, 2015</strong></h5>
+                  <p>Srei Infrastructure Finance Limited ("Company" or "SIFL"), 
+                  one of the private sector infrastructure finance company in the country, is proposing a public...</p>
+                </div>
+              </div> -->
+              <h3 class="text-center">Coming Soon..</h3>
+            </uib-tab>
+          </uib-tabset>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<!--<script type="text/ng-template" id="popover.html">
+  <div ng-repeat="slide in featuredslides">
+    {{slide.name}}
+    <div class="row">
+      <div class="col-sm-6"><small>{{slide.brand}}</small></div>
+      <div class="col-sm-6"><small>{{slide.model}}</small></div>
+    </div>
+  </div>
+</script>-->

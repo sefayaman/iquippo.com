@@ -1,0 +1,235 @@
+  <div class="view-content">
+  <section class="wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 col-md-3">
+            <div class="well">
+              <h4>Equipment search</h4>
+                <form role="form">
+                <!-- <label for="" class="text-muted">Keyword</label>
+                <div class="form-group input-group">    
+                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.searchstr" placeholder="Enter Keywords">
+                  <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-angle-right"></i></a>
+                </div>   -->
+                
+                <label for="" class="text-muted">Product Group </label>
+                <div class="form-group">
+                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="fireCommand()">
+                <option value="">Select Group</option>
+                <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
+
+                </select>
+                <!-- <select class="form-control col-md-2" name="group" ng-model="selectedGroup" ng-options="group.name for group in allGroup track by group.name" ng-change="onGroupChange(selectedGroup)">
+                    <option value="">Select Group</option>
+                </select> -->
+                <i class="caret"></i>          
+                </div>  
+                <label for="" class="text-muted">Category</label>
+                <div class="form-group"> 
+                <select class="form-control col-md-2" name="category"  ng-model="selectedCategory" ng-change="onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
+                        <option value="">Select Category</option>
+                </select>
+                <i class="caret"></i>     
+
+                </div>
+                
+                <label for="" class="text-muted">Product Brand</label>
+                <div class="form-group">                  
+                  <select class="form-control col-md-2" name="brand" ng-model="selectedBrand" ng-change="onBrandChange(selectedBrand)" ng-options="brand.name for brand in brandList track by brand._id">
+                        <option value="" >Select Brand</option>
+                  </select>
+
+                  <i class="caret"></i>
+
+                </div>
+                <label for="" class="text-muted">Product Model</label>
+                <div class="form-group">                  
+                   <select class="form-control col-md-2" name="model" ng-model="selectedModel" ng-options="model.name for model in modelList track by model._id" ng-change="onModelChange(selectedModel)">
+                        <option value="" >Select Model</option>
+                  </select>
+                  
+                  <i class="caret"></i>
+
+                </div>
+                <label for="" class="text-muted">Operating hrs</label>
+                <div class="form-group">                  
+                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.operatingHour" placeholder="Operating hrs" ng-change="fireCommand()" ng-model-options="{debounce:1000}">
+                </div>
+                
+                <label for="" class="text-muted">Mileage(km)</label>
+                <div class="form-group">                  
+                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.mileage" placeholder="Mileage(km)" ng-change="fireCommand()" ng-model-options="{debounce:1000}">
+                </div>  
+
+                <label for="" class="text-muted">Price</label>
+                <div class="form-group">                  
+                  <div class="row">
+                    <div class="col-sm-5">
+                      <select class="form-control" ng-change="onCurrencyChange()" ng-model="currencyType">
+                            <option value="">Currency</option>
+                            <option value="AED">&#1583;.&#1573; AED</option>
+                            <option value="EUR">&#8364; EURO</option>
+                            <option value="GBP">&#163; GBP</option>
+                            <option value="USD">&#36; USD</option> 
+                          </select>    
+                          <i class="caret"></i>                     
+
+                    </div>
+                    <!-- <div class="col-sm-7">                    
+                      <select class="form-control" onchange="angular.element(this).scope().onCurrencyRangeChange()" id="pricerange">
+                            <option ng-if="!currencyType">Range!</option>
+                            <option ng-if="currencyType" ng-repeat="range in priceRange" data-min="{{range.min}}" data-max="{{range.max}}" ng-selected="range.selected">{{range.min}} - {{range.max}}</option>          
+                        </select>  
+                      <i class="caret"></i>
+                    </div> -->
+                  </div>  
+                   </div>
+                   <div class="form-group">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-5 col-md-5">
+                          <div class="input-group">
+                            <input type="number" class="form-control" name="" value="" ng-model="currency.minPrice" placeholder="Min"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-5 col-sm-5 col-md-5 padd-left">
+                          <div class="input-group">
+                            <input type="number" class="form-control" name="" value="" ng-model="currency.maxPrice" placeholder="Max"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 padd-left">
+                          <button class="btn btn-danger" ng-click="productSearchOnPrice($event)"><i class="fa fa-chevron-right"></i></button>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div class="form-group">
+                  <label for="" class="text-muted">Manufacturing Year</label>
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="productSearchOnMfg()"/>
+                    <a href class="input-group-addon" ng-click="open($event,'min')">
+                      <i class="fa fa-calendar-o"></i>
+                    </a>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="productSearchOnMfg()"/>
+                        <a href class="input-group-addon" ng-click="open($event,'max')">
+                          <i class="fa fa-calendar-o"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="form-group">
+                  <label for="" class="text-muted">Manufacturing Year</label>
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6"><input type="text" class="form-control" id="" placeholder="MIN"></div>
+                    <div class="col-xs-6 col-sm-6 col-md-6"><input type="text" class="form-control" id="" placeholder="MAX"></div>
+                  </div>
+                </div>    --> 
+                <label for="" class="text-muted">Country</label>
+                  <div class="list-group">
+                    <a href="javascript:void(0);" ng-click="fireSearchCommand(country.name)" ng-repeat="country in allCountries" class="list-group-item">{{country.name}}<span class="badge">{{country.count}}</span></a>                    
+                  </div> 
+              </form>
+            </div>
+            
+          </div>
+          <div class="col-sm-8 col-md-9" ng-if="refresh">
+            <table id="search-result"  dt-options="dtOptions" class="display results" datatable="ng" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th>Product catalogue</th>
+                </tr>
+              </thead>
+              <!-- other than search -->
+              <tbody >
+                <tr ng-repeat="product in productList" ng-if="!isSearch">
+                  <td>
+                    <div class="media">
+                      <div  class="pull-left result-products">
+                        <a ng-href="/productdetail/{{product._id}}" href="javascript:;">
+                          <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                        </a>
+                      </div>
+                      <div class="media-body">
+                        <h4 class="media-heading">
+                          {{product.name}}
+                          
+                          <span class="pull-right text-danger" ng-if="product.priceOnRequest">Price On Request</span>
+                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest">
+                          <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                          <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
+                          <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
+                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> 
+                      {{product.grossPrice}} </span>
+                        </h4>
+                        <p>{{product.brand.name}}</p>
+                        <p>{{product.model.name}}</p>
+                        <p>{{product.category.name}}</p>
+                        <span>{{product.country}}</span>
+                        <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning pull-right hvr-icon-wobble-horizontal" >View Details</a>
+                      </div>
+                    </div>
+                  </td>                 
+                </tr>
+				<tr ng-repeat="product in searchResults" ng-if="isSearch">
+                  <td>
+                    <div class="media">
+                      <div class="pull-left result-products">
+                        <a ng-href="/productdetail/{{product._id}}">
+                          <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                        </a>
+                      </div>
+                      <div class="media-body">
+                        <h4 class="media-heading">
+                          {{product.name}}
+                          <span class="pull-right text-danger" ng-if="product.priceOnRequest">Price On Request</span>
+                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest">
+                          <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                          <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
+                          <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
+                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> {{product.grossPrice}}</span>
+                        </h4>
+
+                        <p>{{product.brand.name}}</p>
+                        <p>{{product.model.name}}</p>
+                        <p>{{product.category.name}}</p>
+                        <span>{{product.country}}</span>
+                        <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning pull-right hvr-icon-wobble-horizontal" >View Details</a>
+                      </div>
+                    </div>
+                  </td>                 
+                </tr>
+              </tbody>
+            </table>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+      <script type="text/javascript">
+       /* $(document).ready(function() {
+          $('#search-result').DataTable({         
+            "bLengthChange" : false,
+            "aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+            "bFilter": false,
+            // "sDom":'fptip',
+            "oLanguage": {    "sLengthMenu": "_MENU_ records per page",
+                  "sSearch" : "Search records:",
+                  "oPaginate": {
+                      "sPrevious": '<i class="fa fa-angle-left"></i>',
+                      "sNext": '<i class="fa fa-angle-right"></i>'
+                  }
+              }         
+              
+          });
+          $('#search-result').removeClass( 'display' ).addClass('table table-striped table-bordered');
+          $('#search-result_info,#search-result_paginate').parent().parent().addClass('pos');
+        } );*/
+        
+    </script>
+    </div>

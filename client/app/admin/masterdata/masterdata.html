@@ -1,0 +1,234 @@
+<div id="wrapper">
+	<div id="page-wrapper">
+		<div class="container-fluid">
+			<!-- Page Heading -->
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>
+					Master Data
+						<div class="btn btn-success pull-right">
+					      <span class="fileinput-button">
+		                         <span><i class="fa fa-file-excel-o"></i> Import</span>
+		                         <input type="file" name="importfile" onchange="angular.element(this).scope().importMasterData(this.files,this)">
+		                     </span>
+					     </div>
+					</h3>
+					<hr>
+				</div>
+			</div>
+			<!-- /.row -->
+			<div class="row">
+				<div class="col-md-12">
+				<uib-tabset justified="true">
+				    <uib-tab heading="Product Group" select="reset()">
+				    	<form name="groupForm" novalidate class="form">
+				    		<h4>Add New Group</h4>
+				    		<legend></legend>
+                          <div class="row">
+                         	 <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
+                                <input id="groupName" name="groupName" ng-model="g.name" type="text" class="form-control" placeholder="Enter Group Name" required>
+                            </div>                           	
+                           	<div class="form-group col-sm-2 pull-right">
+                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Group')" ng-if="!groupEdit">Save</button>
+                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="update('Group')" ng-if="groupEdit">Update</button>
+                           	</div>
+                           	
+                          </div>
+                     	</form>	
+                     	<div ng-if="refresh">		    		
+						<table  datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped" >
+							<thead>
+								<th>Product Group</th>
+								<th>Actions</th>
+							</thead>
+							<tbody>												
+								<tr ng-repeat="group in allGroup">
+									<td>{{group.name}}</td>
+									<td>
+									    <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="editClick('Group',group)" ><i class="fa fa-pencil"></i> </a>
+  										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="delete('Group',group)"><i class="fa fa-trash"></i> </a>
+  									</td>
+								</tr>
+							</tbody>
+						</table>					
+						</div>
+				    </uib-tab>
+
+				    <uib-tab heading="Product Category" select="reset()">
+				    	<form name="categoryForm" role="form" novalidate class="form">
+				    		<h4>Add New Category</h4>
+				    		<legend></legend>
+                          <div class="row">
+                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+                                 <select class="form-control" ng-model="c.group" name="groupList" ng-options="group.name for group in allGroup track by group._id" required >
+	                                <option value="" disabled>Select Group</option>
+					                <!-- <option ng-repeat="group in allGroup" ng-selected="c.group._id == group._id" value="{{group._id}}">{{group.name}}</option> -->
+					             </select> 
+                            </div> 
+                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
+                                <input id="categoryName" ng-model="c.name" type="text"  name ="categoryName" class="form-control" placeholder="Enter Category Name" required>
+                            </div> 
+                            <div class="form-group col-sm-2">
+                            	<span class="btn btn-warning fileinput-button">
+	                                <span>Browse image...</span>
+	                                <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+			                    </span>
+                            </div>
+                            <div class="col-sm-2">
+		                      {{c.imgSrc}}
+		                    </div>                           	
+                           	<div class="form-group col-sm-2">
+                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Category')" ng-if="!categoryEdit">Save</button>
+                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="update('Category')" ng-if="categoryEdit">Update</button>
+                           	</div>
+                           	
+                          </div>
+                     	</form>					     	
+						<table dt-options="dtOptions" datatable="ng" class="table table-bordred table-striped" ng-if="refresh">
+							
+							<thead>	
+								<tr>
+									<th>Image</th>
+									<th>Product Category</th>
+									<th>Product Group</th>
+									<th>Status</th>
+									<th>Actions</th>
+								</tr>							
+							</thead>
+							<tbody>							
+								<tr ng-repeat="category in allCategory">
+									<td>
+										<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
+											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" alt="Image">
+										<input type="file" data-index="{{$index}}" onchange="angular.element(this).scope().updateCategoryImg(this.files,this)">
+										</span>
+									</td>
+									<td>{{category.name}}</td>
+									<td>{{category.group.name}}</td>
+									<td>{{getStatus(category.status)}}</td>
+									<td>
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="editClick('Category',category)" ><i class="fa fa-pencil"></i> </a>
+										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="delete('Category',category)"><i class="fa fa-trash"></i> </a>
+									<label class="btn btn-warning" ng-model="category.status" uib-btn-checkbox ng-click="updateCategoryStatus(category)"><span ng-if="!category.status">Activate</span> <span ng-if="category.status">Deactivate</span></label>
+									</td>
+								</tr>
+								</tbody>						
+							</table>
+							
+					    </uib-tab>
+					    <uib-tab heading="Brand" select="reset()">	
+					    	<form  name="brandForm" novalidate class="form">
+					    		<h4>Add New Brand</h4>
+					    		<legend></legend>
+	                          <div class="row">
+	                         	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+	                                <select class="form-control" ng-model="b.group" ng-change="onGroupChange(b.group)" ng-options="group.name for group in allGroup track by group._id" name="groupList" required>
+		                            <option value="" disabled>Select Group</option>
+					                <!-- <option ng-repeat="group in allGroup" ng-selected="b.group._id == group._id" value="{{group._id}}">{{group.name}}</option> -->
+					                </select> 
+	                            </div> 
+	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
+	                                <select class="form-control" ng-model="b.category" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required>
+		                            <option value="" disabled>Select Category</option>
+					                <!-- <option ng-repeat="category in categoryList" ng-selected="b.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
+					                </select> 
+	                            </div> 
+	                            <div class="form-group col-sm-3" ng-class="{'has-error': form.errorBrand && submitted}">
+	                                <input id="brandName" name="brandName" ng-model="b.name" type="text"  class="form-control" placeholder="Enter Brand Name" required>
+	                            </div>                           	
+	                           	<div class="form-group col-sm-2 pull-right">
+	                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Brand')" ng-if="!brandEdit">Save</button>
+	                           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="update('Brand')" ng-if="brandEdit">Update</button>
+	                           	</div>
+	                           	
+	                          </div>
+	                     	</form>					      
+					    	
+			               	<table dt-options="dtOptions" datatable="ng" class="table table-bordred table-striped" ng-if="refresh">
+				
+	                            <thead>
+                                    <th>Brand</th>
+                                    <th>Product Category</th>
+                                    <th>Product Group</th>                                    
+                                     <th>Actions</th>		
+                                </thead>
+                         		<tbody>
+                         		  <tr ng-repeat="brand in allBrand">
+									<td>{{brand.name}}</td>
+									<td>{{brand.category.name}}</td>
+									<td>{{brand.group.name}}</td>
+									 <td>
+									 	<a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="editClick('Brand',brand)" ><i class="fa fa-pencil"></i> </a>
+										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="delete('Brand',brand)"><i class="fa fa-trash"></i> </a>
+									</td> 
+								  </tr>
+                                </tbody>
+                            </table>
+                			
+					    </uib-tab>
+					    <uib-tab heading="Model" select="reset()">
+					    	<form role="form" name="modelForm" novalidate class="form">
+					    		<h4>Add New Model</h4>
+					    		<legend></legend>
+                              <div class="row">
+                              	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorGroup && submitted}">
+	                                <select class="form-control" ng-model="m.group" ng-change="onGroupChange(m.group)" name="groupList" ng-options="group.name for group in allGroup track by group._id" required>
+		                            	<option value="" disabled>Select Group</option>
+					                	<!-- <option ng-repeat="group in allGroup" ng-selected="m.group._id == group._id" value="{{group._id}}">{{group.name}}</option> -->
+					                </select> 
+	                            </div>
+                              	<div class="form-group col-sm-3" ng-class="{'has-error': form.errorCategory && submitted}">
+	                                <select class="form-control" ng-model="m.category" ng-change="onCategoryChange(m.category)" name="categoryList" ng-options="category.name for category in categoryList track by category._id" required>
+		                                <option value="" disabled>Select Category</option>
+					                	<!-- <option ng-repeat="category in categoryList" ng-selected="m.category._id == category._id" value="{{category._id}}">{{category.name}}</option> -->
+					                </select>
+	                            </div>
+                             	 <div class="form-group col-sm-2" ng-class="{'has-error': form.errorBrand && submitted}">
+                                    <select class="form-control" ng-model="m.brand" name="brandList" ng-options="brand.name for brand in brandList track by brand._id" required>
+                                        <option value= "" disabled>Select Brand</option>
+                                        <!-- <option ng-repeat="brand in brandList"  ng-selected="m.brand._id == brand._id"value="{{brand._id}}">{{brand.name}}</option> -->           
+                                    </select>
+                                </div>
+                               	<div class="form-group col-sm-2" ng-class="{'has-error': form.errorModel && submitted}">
+                                   <input id="modelName" ng-model="m.name" name="modelName" type="text" class="form-control" placeholder="Enter Model Name" required>
+                               	</div>
+                               	<div class="form-group col-sm-2">
+                               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Model')" ng-if="!modelEdit">Save</button>
+                               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="update('Model')" ng-if="modelEdit">Update</button>
+                               	</div>
+                               	
+                              </div>
+                         	</form>
+
+                            <table dt-options="dtOptions" datatable="ng" class="table table-bordred table-striped" ng-if="refresh">
+                                <thead>
+                                	<th>Model</th>
+                                    <th>Brand</th>
+                                    <th>Product Category</th>
+                                    <th>Product Group</th>
+                                    <th>Actions</th>
+                                </thead>
+                         		<tbody>
+                                  <tr ng-repeat="model in allModel">
+                                  	<td>{{model.name}}</td>
+									<td>{{model.brand.name}}</td>
+									<td>{{model.category.name}}</td>
+									<td>{{model.group.name}}</td>
+									<td>
+										 <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="editClick('Model',model)" ><i class="fa fa-pencil"></i> </a>
+										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="delete('Model',model)"><i class="fa fa-trash"></i> </a>
+									</td> 
+								  </tr>
+                                </tbody>
+                            </table>
+        							
+					    </uib-tab>
+				</uib-tabset>
+
+            </div>
+			</div>			
+			
+        </div>
+    </div>
+</div>
+    

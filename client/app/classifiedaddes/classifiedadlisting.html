@@ -1,0 +1,201 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">        
+        <div class="col-sm-12">
+          <div id="page-wrapper">
+            <!-- Page Heading -->
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>
+                      Classified Ad
+                  </h3>
+                  <hr>
+                </div>
+              </div>
+              <!-- /.row -->
+
+              <div class="table-responsive">
+                <table datatable="ng"  dt-options= "dtOptions" class="table table-bordred table-striped">
+
+                  <thead>
+                    <th width="10%">Image</th>
+                    <th width="20%">Name</th>
+                    <th width="15%">Mobile No.</th>
+                    <th width="20%">Email Id</th>
+                    <th>Position</th>
+                    <th width="10%">Status</th>
+                    <th width="5%">Action</th>
+                   
+                  </thead>
+                  <tbody>
+
+                    <tr ng-repeat="classified in classifiedAdList" >
+                      <td> <img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{classified.image}}" alt="Image"></td>
+                      <td>{{classified.fname}}</td>
+                      <td>{{classified.mobile}}</td>
+                      <td>{{classified.email}}</td>
+                      <td> 
+                          {{classified.position}}
+                       
+                      </td>
+                      <td> 
+                          <span ng-if="classified.status">Active</span><span ng-if="!classified.status">Inactive</span>
+                           
+                      </td>
+                      <td>
+                      <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="classified.status" uib-btn-checkbox ng-click="updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
+                      </td> 
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function(){
+    $('.dashboard-nav a').on('click', function(){
+      $('.dashboard-nav a').removeClass('active')
+      $(this).addClass('active')
+    });
+  });
+</script>
+<!--<script type="text/ng-template" id="producthistory.html">
+      <div>
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Preview Product Upload</h4>
+        </div>
+        <div class="modal-body">
+          <h4>Basic Information</h4>
+          <table class="table table-bordered">
+            <tr>
+              <th>Product Group</th>
+              <td>{{product.group.name}}</td>
+            </tr>
+            <tr>
+              <th>Categories</th>
+              <td>{{product.category.name}}</td>
+            </tr>
+            <tr>
+              <th>Product Brand</th>
+              <td>{{product.brand.name}}</td>
+            </tr>
+            <tr>
+              <th>Product Model</th>
+              <td>{{product.model.name}}</td>
+            </tr>
+            <tr>
+              <th>Product Name</th>
+              <td>{{product.name}}</td>
+            </tr>
+            <tr>
+              <th>Manufacturing Year</th>
+              <td>{{product.mfgYear}}</td>
+            </tr>
+            <tr>
+              <th>Motor/Operating Hours</th>
+              <td>{{product.operatingHour}}</td>
+            </tr>
+            <tr>
+              <th>Mileage(KMs)</th>
+              <td>{{product.mileage}}</td>
+            </tr>
+            <tr>
+              <th>Machine Serial No.</th>
+              <td>{{product.serialNo}}</td>
+            </tr>
+            <tr>
+              <th>Gross Price</th>
+              <td>{{product.grossPrice}}</td>
+            </tr>
+            <tr>
+              <th>Country</th>
+              <td>{{product.country}}</td>
+            </tr>
+            <tr>
+              <th>City</th>
+              <td>{{product.city}}</td>
+            </tr>
+            <tr>
+              <th>Product Condition</th>
+              <td>{{product.productCondition}}</td>
+            </tr>
+            <tr>
+              <th>Primary Image</th>
+              <td>{{product.primaryImage}}</td>
+            </tr>
+            <tr>
+              <th>Video</th>
+              <td>{{product.videoName}}</td>
+            </tr>
+          </table>
+           <h4>Technical Information</h4>
+          <table class="table table-bordered">
+            <tr>
+              <th>Gross Weight</th>
+              <td>{{product.technicalInfo.grossWeight}}</td>
+            </tr>
+            <tr>
+              <th>Operating Weight</th>
+              <td>{{product.technicalInfo.operatingWeight}}</td>
+            </tr>
+            <tr>
+              <th>Bucket Capacity</th>
+              <td>{{product.technicalInfo.bucketCapacity}}</td>
+            </tr>
+            <tr>
+              <th>Engine Power</th>
+              <td>{{product.technicalInfo.enginePower}}</td>
+            </tr>
+            <tr>
+              <th>Lifting Capacity</th>
+              <td>{{product.technicalInfo.liftingCapacity}}</td>
+            </tr>
+            
+          </table>
+
+          <h4>Service information</h4>
+          <table class="table table-bordered">
+            <tr>
+              <th>Date</th>
+              <td>{{product.serviceInfo[0].servicedate}}</td>
+            </tr>
+            <tr>
+              <th>Operating hrs</th>
+              <td>{{product.serviceInfo[0].operatingHour}}</td>
+            </tr>
+            <tr>
+              <th>Service At</th>
+              <td>{{product.serviceInfo[0].serviceAt}}</td>
+            </tr>
+            <tr>
+              <th>Authorized Station</th>
+              <td>{{product.serviceInfo[0].authServiceStation}}</td>
+            </tr>
+            <tr>
+              <th>Engine Repaired/Overhauling</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Comment</th>
+              <td>{{product.comment}}</td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td ng-if="product.status">Approved</td>
+              <td ng-if="!product.status">Not approved</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>              
+        </div>
+      </div>
+
+    </script>-->
