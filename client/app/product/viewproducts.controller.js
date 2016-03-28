@@ -27,8 +27,11 @@ angular.module('sreizaoApp')
   }*/
 
 $scope.onCategoryChange = function(category){
-    if(!category)
+    if(!category){
+      $scope.equipmentSearchFilter.category = "";
+      $scope.fireCommand();
       return;
+    }
     $scope.brandList = [];
     $scope.modelList = [];
     $scope.brandList = $rootScope.allBrand.filter(function(d){
@@ -39,8 +42,11 @@ $scope.onCategoryChange = function(category){
   }
 
   $scope.onBrandChange = function(brand){
-    if(!brand)
-       return;
+    if(!brand) {
+      $scope.equipmentSearchFilter.brand = "";
+      $scope.fireCommand();
+      return;
+    }
     $scope.modelList = [];
     $scope.modelList = $rootScope.allModel.filter(function(d){
         return brand._id == d.brand._id;// && d.category._id == brand.category._id && d.group._id && brand.group._id;
@@ -50,8 +56,11 @@ $scope.onCategoryChange = function(category){
   }
 
   $scope.onModelChange = function(model){
-  if(!model)
-     return;
+  if(!model) {
+    $scope.equipmentSearchFilter.model = "";
+    $scope.fireCommand();
+    return;
+   }
    $scope.equipmentSearchFilter.model = model.name;
    $scope.fireCommand();
   }
