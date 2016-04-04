@@ -41,7 +41,12 @@ angular.module('sreizaoApp')
     $scope.setPopover = function(evt){
         var index = $(evt.currentTarget).data('index');
         $scope.popoverData = $scope.featuredslides[index];
-    }
+    };
+    $scope.radioModel = 'Left';
+    // $scope.checkModel = {
+    //   left: true,
+    //   right: false
+    // };
     dataToSend["status"] = true; 
     var flag = true;
     $http.post('/api/classifiedad/search', dataToSend).success(function(srchres){

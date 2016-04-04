@@ -8,15 +8,42 @@
       </uib-carousel>
     </div>
   </div>
+  <div class="col-md-4 col-xs-12 col-md-offset-4 search-banner">
+   
+    <div class="search-tabs">
+
+      <!-- Nav tabs -->
+      <div class="btn-group">
+        <label class="btn btn-default btn-lg" ng-model="radioModel" btn-radio="'Left'" selected="">Buy</label>
+        <label class="btn btn-default btn-lg" ng-model="radioModel" btn-radio="'Right'">Rent</label>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <form>
+          <div class="select-text form-group">                 
+              <input type="text" ng-model="searchFilter.searchText" placeholder="Enter Category Name..." uib-typeahead="address for address in getHelp($viewValue)"  class="form-control" ng-keypress="myFunct($event)" typeahead-focus-first = "false" typeahead-on-select="startsearch()" typeahead-wait-ms="500"/>               
+            </div>
+            
+            <div class="select-text form-group">
+              <input type="text" class="form-control" placeholder="Enter Location..." />                
+                <div ng-show="noResults">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+            </div>
+            <div class="text-center">
+              <a href="javascript:;"  class="btn btn-lg btn-warning"><i class="fa fa-search"></i> Search</a>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </section>
+
 
 <section class="wrapper">
   <div class="container">
-    <div class="text-center main-services">
-      <a href="/viewproducts" class="btn btn-lg btn-warning">Buy</a>
-
-      <a href="javascript:void(0);" ng-click="redirectToProduct()" class="btn btn-lg btn-warning">Sell</a>
-    </div>
+   
     <div class="row main-container">
       <div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
         <img ng-if="imgLeftTop" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgLeftTop}}" class="img-responsive add1">
@@ -36,10 +63,13 @@
           <ul class="cat-list">
             <li  ng-repeat="category in globalCategoryList">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
-                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  {{category.name}}
+                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
+                   <span>{{category.name}}</span>
+                 
               </a>
             </li>
           </ul>
+          <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-arrow-down"></i> </button>
           <div class="form-group"></div>
         </div>
 
@@ -51,13 +81,13 @@
         </div>
         <div class="cat text-center">
           <ul class="cat-list">
-            <!-- <li>
+             <li>
               <a href="/lease">
-                <img src="assets/images/lease.png"> Lease
+                <img src="assets/images/lease.png"> Man Power
                
               </a>
             </li>
-            <li>
+            <!--<li>
               <a href="/insurance">
                 <img src="assets/images/insurance.png"> Insurance
                 

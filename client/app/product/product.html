@@ -38,9 +38,9 @@
             <!-- success error end -->
 
             <form name="form" novalidate>
-              <uib-tabset active="active" class="rental-upload">
-                <uib-tab index="0" heading="Seller Information" ng-show="isActive() || isChannelPartner()">
-                  <div class="row" ng-show="isActive() || isChannelPartner()">
+              <div class="seller_info form-group" ng-show="isActive() || isChannelPartner()">
+                <h3>Seller Information</h3>
+                <div class="row" ng-show="isActive() || isChannelPartner()">
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
                       <select ng-disabled="isEdit" class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
                         <option value="" disabled>* Customer Type</option>
@@ -82,12 +82,8 @@
                       Selection of Customer type and User/Company is must to upload your product.
                     </p>
                   </div>
-                  <div class="text-right">
-                    <button type="button" class="btn btn-primary btn-md">Next</button>
-                  </div>
-                  
-                </uib-tab>
-
+              </div>
+              <uib-tabset active="active" class="rental-upload">                
                 <uib-tab index="1" heading="Basic Information" active="tab.active">
                   <div class="row">
                     <div class="form-group col-sm-5"> Category<span class="text-warning">*</span></div>
@@ -313,10 +309,7 @@
                         </div>
                     </div>
                   </div>
-                  <div class="pull-right btn-group">
-                    <button type="button" class="btn btn-default btn-md">Back</button>
-                    <button type="button" class="btn btn-primary btn-md">Next</button>
-                  </div>
+                  
                 </uib-tab>
                 <uib-tab index="2" heading="Rental information">
                   <div class="row form-group">
@@ -391,10 +384,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <div class="pull-right btn-group">
-                    <button type="button" class="btn btn-default btn-md">Back</button>
-                    <button type="button" class="btn btn-primary btn-md">Next</button>
-                  </div>
+                  
                 </uib-tab>
                 <uib-tab index="3" heading="Technical Information">
                   <div class="row">
@@ -452,11 +442,7 @@
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
-                  </div>
-                  <div class="pull-right btn-group">
-                    <button type="button" class="btn btn-default btn-md">Back</button>
-                    <button type="button" class="btn btn-primary btn-md">Next</button>
-                  </div>
+                  </div>                  
                 </uib-tab>
                 <uib-tab index="4" heading="Service information">
                   <div class="form-group row" ng-repeat="serviceinfo in product.serviceInfo">
@@ -520,17 +506,16 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                  <div class="clearfix form-group"></div>
-                  <div class="form-group btn-group pull-right">
-                    <button class="btn btn-default">Back</button>
+                    </div>    
+                </uib-tab>
+              </uib-tabset>  
+                <div class="clearfix form-group"></div>  
+                 <div class="form-group btn-group pull-right">
                     <button class="btn" type="reset" ng-click="resetClick()" ng-show="!isEdit">Reset</button>
                     <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button>
                     <button ng-hide="enableButton" class="btn btn-danger" ng-click="addOrUpdateProduct(product)">Submit</button>
                     <button ng-show="enableButton" class="btn btn-danger" confirmed-click="addOrUpdateProduct(product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
-                  </div>
-                </uib-tab>
-              </uib-tabset>              
+                </div>            
             </form>
           </div>
         </div>
