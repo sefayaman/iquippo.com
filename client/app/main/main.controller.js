@@ -37,7 +37,33 @@ angular.module('sreizaoApp')
               $scope.featuredslides.push({image:$scope.featuredEnableProduct[i].images[0].src, _id:$scope.featuredEnableProduct[i]._id, name:$scope.featuredEnableProduct[i].name, brand:$scope.featuredEnableProduct[i].brand.name, model:$scope.featuredEnableProduct[i].model.name, mfgYear:$scope.featuredEnableProduct[i].mfgYear,assetDir:$scope.featuredEnableProduct[i].assetDir});
         }
     });
+    var dataToSend = {};
+   $scope.startsearch = function(){
+        /*if(!$scope.searchFilter.searchText && !$scope.searchFilter.categoryGroup) {
+            if($scope.previousState)
+              $state.go($scope.previousState,$scope.previousParams);
+            return;
+        }*/
+        $rootScope.equipmentSearchFilter = {};
+        dataToSend["status"] = true;
+        dataToSend["searchstr"] = $scope.searchFilter.searchText;
+        $rootScope.refresh = !$rootScope.refresh;
+        $http.post('/api/products/search', dataToSend).success(function(srchres){
+          $rootScope.refresh = !$rootScope.refresh;
+           $rootScope.searchResults = srchres;
+             $state.go('search');
+        });
 
+    };
+    
+    $scope.myFunct = function(keyEvent) {
+      if(keyEvent)
+          keyEvent.stopPropagation();
+      if (keyEvent.which === 13){
+        $scope.startsearch();
+      }
+    }
+    
     $scope.setPopover = function(evt){
         var index = $(evt.currentTarget).data('index');
         $scope.popoverData = $scope.featuredslides[index];

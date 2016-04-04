@@ -694,7 +694,13 @@ angular.module('sreizaoApp')
             $scope.timestamp = new Date().getTime();
           })
 
-      }
+      };
+
+      $scope.oneAtATime = true;
+      $scope.status = {
+        FirstOpen: true,
+        FirstDisabled: false
+      };
 
       function getImageArr(){
           var imgArr = [];
