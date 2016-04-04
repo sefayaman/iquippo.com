@@ -133,7 +133,8 @@ header{background:#fff;}
 .tab-content .media a{border:1px solid #999;margin-right:10px;padding:2px; width:80px;}
 .nav-tabs{}
 .nav-tabs > li,.nav-tabs > li.active{float:left;margin-bottom:-1px;text-align:center;width:50%;border:0;background:#FF4342;}
-.nav-tabs > li a,.nav-tabs > li.active a,.nav-tabs > li:hover a,.nav-tabs > li.active:hover a,.nav-tabs > li a:focus,.nav-tabs > li.active a:focus{border-radius:0;border:0!important;border-right:1px solid #ccc!important;background:transparent;color:#fff;border-bottom:1px solid #ccc!important;}
+.nav-tabs > li a,.nav-tabs > li.active a,.nav-tabs > li:hover a,.nav-tabs > li.active:hover a,.nav-tabs > li a:focus,.nav-tabs > li.active a:focus{border-radius:0;border:0!important;border-right:0 !important;background:transparent;color:#fff;border-bottom:1px solid #ccc!important;}
+.nav-tabs > li > a{margin-right:0 !important;}
 .nav-tabs > li:last-child a{border-right:0!important;}
 
 /*testimonials*/
@@ -296,13 +297,14 @@ ul.alert-dropdown{width:200px;}
 .navbar-default .navbar-nav > li > a{color:#fff}
 .navbar .navbar-nav.side-nav i{background:none;}
 
-/* Custom Colored Panels */
+/* Custom tabs Panels */
 .btn,.form-control{border-radius:0;}
 .navbar-default{background-color:#382516;border-color:#080808;}
 #wrapper{margin-top:45px;}
 #wrapper .nav-tabs{height:41px;}
 #wrapper .nav-tabs,#wrapper .nav-tabs > li{background:#ccc;}
 #wrapper .nav-tabs > li,#wrapper .nav-tabs > li.active{width:25%;display:inline-table;float:left;border-radius:0;border:0;border-right:1px solid #666;}
+#wrapper .rental-upload .nav-tabs > li,#wrapper .rental-upload .nav-tabs > li.active{width:20% !important;}
 #wrapper .nav-tabs > li a,#wrapper .nav-tabs > li.active a{outline:none;}
 #wrapper .nav-tabs > li:last-child{border:0;}
 .table{width:100%;max-width:100%;margin-bottom:20px;border:1px solid rgba(128,128,128,0.26);}

@@ -628,6 +628,12 @@ angular.module('sreizaoApp')
         $scope.open1 = function() {
           $scope.popup1.opened = true;
         };
+        $scope.open2 = function() {
+          $scope.popup2.opened = true;
+        };
+        $scope.open3 = function() {
+          $scope.popup3.opened = true;
+        };
 
         $scope.setDate = function(year, month, day) {
           $scope.mfgYear = new Date(year, month, day);
@@ -650,6 +656,12 @@ angular.module('sreizaoApp')
         };
 
         $scope.popup1 = {
+          opened: false
+        };
+        $scope.popup2 = {
+          opened: false
+        };
+        $scope.popup3 = {
           opened: false
         };
 
