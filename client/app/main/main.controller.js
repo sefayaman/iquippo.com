@@ -90,12 +90,6 @@ angular.module('sreizaoApp')
       }
     });
 
-$scope.redirectToProduct = function(){
-  if($rootScope.getCurrentUser()._id) 
-      $state.go('productlisting');
-    else
-      Modal.alert("Please Login/Register for uploading the products!", true);
-};
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = function() {
       $timeout(

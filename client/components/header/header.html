@@ -2,7 +2,7 @@
         <div class="text-right">
           <ul class="top-menu">
             
-            <li><a href="javascript:void(0);" ng-click="openDialog('quote')"><i class="fa fa-edit"></i> <span class="hidden-xs">Request for a Quote</span></a></li>
+            <li><a href="javascript:void(0);" ng-click="openDialog('quote')"><i class="fa fa-edit"></i> <span class="hidden-xs">Demand Fulfillment</span></a></li>
             <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openDialog('login')"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
             
@@ -23,17 +23,17 @@
                   <li ng-show="isLoggedIn()"><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
               </ul>
             </li>
-            <li>
+            <!-- <li>
               <div id="google_translate_element"></div>
-            </li>
+            </li> -->
           </ul>
         </div>
-        <script type="text/javascript">
+        <!--<script type="text/javascript">
           function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ar,fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
           }
           </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-        
+        -->
         <div class="navbar">
           <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
            
@@ -52,23 +52,20 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
                   <ul class="nav navbar-nav">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="/aboutus">About Us</a></li>
+                    <li ng-class="{active: isActive('/')}"><a href="index.html">Home</a></li>
+                    <li ng-class="{active: isActive('/aboutus')}"><a href="/aboutus">About Us</a></li>
                     <li class="dropdown" uib-dropdown>
                       <a href="javascript:void(0);" id="single-button"  uib-dropdown-toggle >Services</a>
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-                       <!--  <li role="menuitem"><a href="/lease">Lease</a></li>
-                        <li role="menuitem"><a href="/insurance">Insurance</a></li> -->
+                        <li role="menuitem"><a href="/lease">Man Power</a></li>
+                        <!--<li role="menuitem"><a href="/insurance">Insurance</a></li> -->
                         <li role="menuitem"><a href="/shipping">Shipping</a></li>
                         <li role="menuitem"><a href="/valuation">Valuation</a></li>
                         <li role="menuitem"><a href="/certifiedbyiquippo">Certified by iQuippo</a></li>
                       </ul>
                     </li>
-                    <!-- <li><a href="/service">Services</a></li> -->
-                    <!-- <li><a href="/product" ng-show="isLoggedIn()">Products</a></li> -->
-                    <!-- <li ng-show="isLoggedIn()"><a href="/admin/masterdata">Dashboard</a></li> -->
-                    <!-- <li><a href="/category">Group &amp; Category</a></li> -->
-                    <li><a href="/contactus">Contact Us</a></li>
+                    
+                    <li ng-class="{active: isActive('/contactus')}"><a href="/contactus">Contact Us</a></li>
                   </ul>
                 </div><!-- /.navbar-collapse -->
                 <!--<script type="text/javascript">
@@ -77,10 +74,10 @@
             </nav>
           <ul class="nav navbar-nav navbar-right hidden-xs">
             <li>
-              <a href="javascript:;">Upload Machine</a>
+              <a href="javascript:void(0);" ng-click="redirectToProduct()">Upload Machine</a>
             </li>
              <li>
-              <a href="javascript:;" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
+              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
             </li>
           </ul>
         </div>

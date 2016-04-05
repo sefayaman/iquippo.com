@@ -34,7 +34,7 @@
  <!--    <header class="">
       <ng-include src="'components/header/header.html'"></ng-include> 
     </header> -->
-<div ng-show="!isAdminLayout" ng-include="'components/header/header.html'"></div>
+<div ng-show="!isAdminLayout" ng-include="'components/header/header.html'" class="full-header"></div>
 <div ng-if="isAdminLayout" ng-include="'components/header/admin_header.html'"></div>
 
     <div id="view-container" ui-view="">

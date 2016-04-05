@@ -1,7 +1,7 @@
 <div  id="quote-modal">
           <div class="modal-header">
               <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Request for a Quote</h4>
+              <h4 class="modal-title">Demand Fulfillment</h4>
             </div>
             <div class="modal-body">
                 <form class="form-signin" name="form" novalidate>
@@ -64,12 +64,32 @@
                     <input type="text" class="form-control" name="model" ng-model="quote.model" value="" placeholder="Model No.">
                   </div>
                 </div>
+                <div class="row">
+                  <div class="form-group col-sm-6">
+                    <input type="text" class="form-control" name="price" ng-model="quote.brand" value="" placeholder="Expected Price">
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <select class="form-control">
+                      <option>Location</option>
+                      <option>Location1</option>
+                      <option>Location2</option>
+                      <option>Location3</option>
+                    </select>
+                  </div>
+                </div>
 
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <textarea class="form-control" name="comment" ng-model="quote.comment" placeholder="Comments"></textarea>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-sm-12 form-group text-left">
+                    <input type="checkbox">I Agree to the Terms &amp; Conditions.
+                  </div>
+                </div>
+
                 
               </form>
             </div>

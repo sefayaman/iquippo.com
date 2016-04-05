@@ -1,14 +1,13 @@
 <section class="banner">
-  <div id="slides_control">
-    <div>
-      <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-        <uib-slide ng-repeat="slide in slides" active="slide.active">
-          <img  ng-src="assets/images/{{slide.image}}">
-        </uib-slide>
-      </uib-carousel>
-    </div>
+  <div class="overlay"></div>
+  <div id="slides_control">    
+    <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+      <uib-slide ng-repeat="slide in slides" active="slide.active">
+        <img  ng-src="assets/images/{{slide.image}}">
+      </uib-slide>
+    </uib-carousel>
   </div>
-  <div class="col-md-4 col-xs-12 col-md-offset-4 search-banner">
+  <div class="col-md-5 col-xs-12 col-md-offset-3 search-banner">
    
     <div class="search-tabs">
 
@@ -64,12 +63,14 @@
             <li  ng-repeat="category in globalCategoryList">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
-                   <span>{{category.name}}</span>
+                  <span>{{category.name}}</span>
                  
               </a>
             </li>
           </ul>
-          <button type="button" class="btn btn-default" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-arrow-down"></i> </button>
+          <div class="show-more">
+            <button type="button" class="btn btn-default btn-lg" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-chevron-down"></i> </button>
+          </div>
           <div class="form-group"></div>
         </div>
 
@@ -114,14 +115,23 @@
         </div>
       </div>
       <div class="col-sm-3 col-md-2 padd-left hidden-xs">
-        <div class="panel panel-warning">
+        <div class="panel panel-primary">
           <div class="panel-heading text-center">
             <div class="panel-title">Featured Products</div>
             <hr>
           </div>
           <div class="panel-body text-center">
+            <div class="media" ng-repeat="slide in featuredslides">
+              <a class="pull-left" ng-href="/productdetail/{{slide._id}}">
+                <img class="media-object" ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.image}}" alt="Image" width="70" height="60">
+              </a>
+              <div class="media-body text-left">
+                <h5 class="media-heading text-left">{{slide.name}}</h5>
+                New Delhi
+              </div>
+            </div>
             <!--carousel start -->
-            <ul class="verContainer" drctv>
+            <!-- <ul class="verContainer" drctv>
               <li ng-repeat="slide in featuredslides">
               <a  ng-href="/productdetail/{{slide._id}}" onmouseover="hover(this)" data-index="{{$index}}" onmouseout="leave()">
                 <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.image}}">
@@ -135,7 +145,7 @@
                 </div>
                
               </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
       </div>
@@ -148,7 +158,7 @@
   <img ng-if="imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgBottomCentre}}" class="add2">
 </div>
 
-<section>
+<!-- <section>
   <div class="container">
     <div class="row">
       <div class="col-md-6">
@@ -161,7 +171,7 @@
         <section class="testimonial">
           <div class="container-fluid">
             <div class="feedback-clients text-center">
-             <!--  <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+              <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                     <uib-slide active="slide.active">                                        
                         <img src="assets/images/testimonial1.png" class="img-circle">
                         <br> Rafia
@@ -190,7 +200,7 @@
                         </p>
                       </div>
                     </uib-slide>
-                  </uib-carousel> -->
+                  </uib-carousel>
                   <h3>Coming Soon..</h3>
             </div>
           </div>
@@ -209,7 +219,7 @@
               <uib-tab-heading>
                   News
               </uib-tab-heading>
-                <!-- <div class="media">
+                <div class="media">
                 <a class="pull-left" href="javascript:void(0);">
                   <img class="media-object" src="assets/images/news-2.jpg" alt="Image" width="100%">
                 </a>
@@ -224,7 +234,7 @@
                 <div class="media-body">
                   <p>Mr Sunil Kanoria, Vice Chairman Srei Infrastructure Finance Ltd., has been elected as the President of ASSOCHAM.</p>
                 </div>
-              </div> -->
+              </div>
               <h3 class="text-center">Coming Soon..</h3>
             </uib-tab>
             
@@ -232,7 +242,7 @@
               <uib-tab-heading>
                 Events
               </uib-tab-heading>
-              <!-- <div class="media">
+              <div class="media">
                 <a class="pull-left" href="javascript:void(0);">
                   <img class="media-object" src="assets/images/event1.jpg" alt="Image" width="100%">
                 </a>
@@ -240,9 +250,9 @@
                   <h5 class="media-heading"><strong>Srei BNP Paribas @ Excon</strong></h5>
                   <p>Welcome to Srei BNP Paribas Mart, our outdoor pavilion at Excon. Explore the limitless world of infrastructure...</p>
                 </div>
-              </div> -->
+              </div>
 
-              <!-- <div class="media">
+              <div class="media">
                 <a class="pull-left" href="javascript:void(0);">
                   <img class="media-object" src="assets/images/event2.jpg" alt="Image" width="100%">
                 </a>
@@ -251,7 +261,7 @@
                   <p>Srei Infrastructure Finance Limited ("Company" or "SIFL"), 
                   one of the private sector infrastructure finance company in the country, is proposing a public...</p>
                 </div>
-              </div> -->
+              </div>
               <h3 class="text-center">Coming Soon..</h3>
             </uib-tab>
           </uib-tabset>
@@ -260,7 +270,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 <!--<script type="text/ng-template" id="popover.html">
   <div ng-repeat="slide in featuredslides">
     {{slide.name}}

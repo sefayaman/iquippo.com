@@ -30,7 +30,9 @@ angular.module('sreizaoApp')
         });
 
     };
-    
+    $scope.isActive = function(route) {
+      return route === $location.path();
+    };
     $scope.myFunct = function(keyEvent) {
       if(keyEvent)
           keyEvent.stopPropagation();
@@ -38,7 +40,12 @@ angular.module('sreizaoApp')
         $scope.startsearch();
       }
     }
-
+    $scope.redirectToProduct = function(){
+      if($rootScope.getCurrentUser()._id) 
+          $state.go('product');
+        else
+          Modal.alert("Please Login/Register for uploading the products!", true);
+    };
 
     $scope.onGroupCategoryChange = function(){
       delete dataToSend.group;
