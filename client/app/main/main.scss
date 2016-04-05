@@ -569,12 +569,13 @@ table.table{width:100% !important;}
 .fileinput-button.bulk-browse{height:40px; line-height:25px;}
 .pic-popover{padding-top:20px;}
 
-
+/* updated css */
+.full-header{box-shadow:0 2px 3px #ccc;}
 .search-banner{position: absolute;top:185px;z-index: 99;border-radius: 15px;}
 .search-banner .select-text{width:100%;}
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {height: 430px;margin-bottom: 20px;}
 
-.search-tabs .tab-content{background:rgba(0,0,0,0.7); border-radius:0 6px 6px 6px; padding:30px;}
+.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:30px;}
 .search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:4px;}
-.search-tabs .btn-default{border:0; background:transparent; color:#fff;}
-.search-tabs .btn-default.active{background:rgba(0,0,0,0.7); border-radius:6px 6px 0 0;}
+.search-tabs .btn-default{border:0; margin:0; background:rgba(0,0,0,0.75); border-radius:6px 6px 0 0; color:#fff; border-bottom:1px solid #ff4342;}
+.search-tabs .btn-default.active{color:#ff4342; border-bottom:1px solid #ff4342;}

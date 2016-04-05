@@ -221,7 +221,7 @@
                     </div>
                   </div>
 
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="form-group col-sm-5">Country<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
                       <select class="form-control" name="country" ng-model="product.country" required>
@@ -230,7 +230,7 @@
                       </select>
                       <i class="caret"></i>
                     </div>
-                  </div>
+                  </div> -->
 
                   <div class="row">
                     <div class="form-group col-sm-5">City<span class="text-warning">*</span></div>
@@ -241,7 +241,11 @@
                   <div class="row">
                     <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.location.$invalid && submitted}">
-                      <input type="text" placeholder="Enter Location" name="location" ng-value="product.location" ng-model="product.location"  class="form-control" required>
+                      <select class="form-control">
+                        <option>Select Location</option>
+                        <option>Location1</option>
+                        <option>Location2</option>
+                      </select>
                     </div>
                   </div>
                   <div class="row">
