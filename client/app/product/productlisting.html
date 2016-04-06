@@ -42,7 +42,6 @@
                           <th>Categories</th>
                           <th>Brand</th>
                           <th>Model</th>                          
-                          <!-- <th>Group</th> --> 
                           <th width="70">Price</th> 
                           <th>Image Count</th>
                           <th>Seller & Type</th>                         
@@ -67,14 +66,14 @@
                           <td>{{product.category.name}}</td>
                           <td>{{product.brand.name}}</td>
                           <td>{{product.model.name}}</td> 
-                          <td ng-if="!product.priceOnRequest">
+                          <td ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
                           <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
                           <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
                           <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
                           <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i>  
                           {{product.grossPrice}}</td>  
-                          <td ng-if="product.priceOnRequest">Price On Request</td>                       
-                          <!-- <td>{{product.group.name}}</td> -->
+                          <td ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</td>  
+                          <td ng-if="product.tradeType == 'RENT'"></td>                       
                           <td>{{product.images.length}}</td>
                           <td>
                               <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>

@@ -14,6 +14,11 @@ angular.module('sreizaoApp')
     $scope.product.country = "";
     $scope.product.status = false;
     $scope.product.featured = false;
+    $scope.product.rent = {};
+    $scope.product.rent.rateHours = {};
+    $scope.product.rent.rateDays = {};
+    $scope.product.rent.rateMonths = {};
+    $scope.product.rent.rateHours.rateType = 'hours';
     product.group = {};
     product.category = {};
     product.brand = {};
@@ -22,6 +27,7 @@ angular.module('sreizaoApp')
     $scope.relistingEnable = false;
     var videoObj = $scope.video = {};
     var docObj = $scope.doc = {};
+    var tcDocObj = $scope.tcDoc = {};
     $scope.productName;
     $scope.images = [{isPrimary:true}];
     $scope.primaryIndex = 0;
@@ -76,6 +82,7 @@ angular.module('sreizaoApp')
       $scope.product.country = $scope.product.country;
       videoObj.name = product.videoName;
       docObj.name = product.documentName;
+      tcDocObj.name = product.tcDocumentName;
       $scope.assetDir = product.assetDir;
       $scope.selectedCategory = categorySvc.getCategoryOnId($scope.product.category._id);
       $scope.selectedGroup = groupSvc.getGroupOnId($scope.product.group._id);
@@ -98,6 +105,8 @@ angular.module('sreizaoApp')
       $scope.onCategoryChange($scope.selectedCategory,true);
       $scope.onBrandChange($scope.selectedBrand,true);
       $scope.setDate($scope.product.mfgYear,1,1);
+      $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
+      $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
       if($scope.product.currencyType == "AED")
         $scope.product.currencyType = "";
       $scope.productName = $scope.product.name;
@@ -214,7 +223,9 @@ angular.module('sreizaoApp')
             $scope.images[parseInt(args.index)].src = result.data.filename;
           else if(args.type == "video")
             videoObj.name = result.data.filename;
-          else
+          else if(args.type == "tcDoc")
+            tcDocObj.name = result.data.filename;
+          else  
             docObj.name = result.data.filename;
         })
         .catch(function(err){
@@ -223,6 +234,16 @@ angular.module('sreizaoApp')
           
       });
   });
+
+  
+  $scope.clickHandler = function(type, val){
+    if(type == "hours" && !val)
+      delete $scope.product.rent.rateHours;
+    else if(type == "days" && !val)
+      delete $scope.product.rent.rateDays;
+    else if(type == "months" && !val)
+      delete $scope.product.rent.rateMonths;
+  }
 
   var suggestions = [];
 
@@ -326,6 +347,9 @@ angular.module('sreizaoApp')
 
      if(docObj.name)
        $scope.product.documentName = docObj.name;
+
+     if(tcDocObj.name)
+      $scope.product.tcDocumentName = tcDocObj.name;
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
       $scope.images.forEach(function(item,index){
@@ -514,6 +538,7 @@ angular.module('sreizaoApp')
     $scope.product.seller = product.seller = {};
     videoObj = $scope.video = {};
     docObj = $scope.doc = {};
+    tcDocObj = $scope.tcDoc = {};
     $scope.selectedUser = {};
     $scope.selectedCompany = {};
     $scope.selectedCategory = {};
@@ -636,7 +661,7 @@ angular.module('sreizaoApp')
         };
 
         $scope.setDate = function(year, month, day) {
-          $scope.mfgYear = new Date(year, month, day);
+            $scope.mfgYear = new Date(year, month, day);
         };
 
         $scope.datepickerOptions = {

@@ -13,6 +13,7 @@ var ProductSchema = new Schema({
   brand:{},
   group: {},
   category: {},
+  subcategory:{},
   mfgYear:String,
   operatingHour:String,
   mileage:String,
@@ -58,6 +59,11 @@ var ProductSchema = new Schema({
   //relisting:[{}],
   relistingDate: {type:Date,default:Date.now},
   assetDir:String,
+  tradeType:String,
+  location:String,
+  rateMyEquipment:String,
+  tcDocumentName:String,
+  rent:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

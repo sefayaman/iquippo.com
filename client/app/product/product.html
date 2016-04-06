@@ -84,11 +84,23 @@
                   </div>
               </div>
               <div class="clearfix"></div>
-              <uib-accordion close-others="oneAtATime" class="information">                 
-                <uib-accordion-group is-open="status.Firstopen" is-disabled="status.FirstDisabled">
-                  <uib-accordion-heading>
-                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
-                  </uib-accordion-heading>
+
+             <div class="panel panel-default">
+               <div class="panel-heading">
+                 <h3 class="panel-title">Basic Information</h3>
+               </div>
+               <div class="panel-body">
+                  <div class="row">
+                      <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-7" ng-class="{'has-error': form.tradeType.$invalid && submitted}">
+                        <select class="form-control" ng-model="product.tradeType" name="tradeType" required>
+                          <option value="" disabled>Select Trade Type</option>
+                          <option ng-repeat="trade in tradeType" value="{{trade.code}}">{{trade.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>
+                  </div>
+
                   <div class="row">
                     <div class="form-group col-sm-5"> Category<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
@@ -104,13 +116,13 @@
                   <div class="row">
                     <div class="form-group col-sm-5">Sub Category</div>
                     <div class="form-group col-sm-4">
-                      <select class="form-control">
+                      <select class="form-control" ng-disabled="relistingEnable" class="form-control" name="subcategory"  ng-model="selectedSubCategory" ng-options="subcategory.name for subcategory in allSubCategory track by subcategory._id">
                             <option value="" disabled>Select Sub Category</option>
                       </select>
                       <i class="caret"></i>
                     </div>
-                    <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherCategory.$invalid && submitted}">
-                      <input type="text" class="form-control" name="otherCategory" ng-model="selectedCategory.otherName" ng-value="{{selectedCategory.otherName}}" ng-disabled ="selectedCategory.name != 'Other'" placeholder="Other" ng-required= "selectedCategory.name == 'Other'">
+                    <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherSubCategory.$invalid && submitted}">
+                      <input type="text" class="form-control" name="otherCategory" ng-model="selectedSubCategory.otherName" ng-value="{{selectedSubCategory.otherName}}" ng-disabled ="selectedSubCategory.name != 'Other'" placeholder="Other" ng-required= "selectedCategory.name == 'Other'">
                     </div>
                   </div>
                    <div class="row">
@@ -198,7 +210,7 @@
                     </div>
                   </div>
 
-                  <div class="row">
+                  <div class="row" ng-if="product.tradeType != 'RENT'">
                     <div class="form-group col-sm-5">Gross Price<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-4">
                       <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
@@ -221,7 +233,7 @@
                     </div>
                   </div>
 
-                  <!-- <div class="row">
+                  <div class="row">
                     <div class="form-group col-sm-5">Country<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
                       <select class="form-control" name="country" ng-model="product.country" required>
@@ -230,7 +242,7 @@
                       </select>
                       <i class="caret"></i>
                     </div>
-                  </div> -->
+                  </div>
 
                   <div class="row">
                     <div class="form-group col-sm-5">City<span class="text-warning">*</span></div>
@@ -241,27 +253,14 @@
                   <div class="row">
                     <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.location.$invalid && submitted}">
-                      <select class="form-control">
-                        <option>Select Location</option>
-                        <option>Location1</option>
-                        <option>Location2</option>
-                        <option>Location3</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
-                    <div class="form-group col-sm-7">
-                      <select class="form-control">
-                        <option>Select Trade Type</option>
-                        <option>Rent</option>
-                        <option>Sell</option>
-                        <option>Both</option>
+                      <select class="form-control" name="location" ng-model="product.location" required>
+                        <option value="" disabled>Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                       </select>
                       <i class="caret"></i>
                     </div>
                   </div>
-
+                  
                   <div class="row">
                     <div class="form-group col-sm-5">Product Condition</div>
                     <div class="form-group col-sm-7">                  
@@ -275,14 +274,136 @@
                         </div>
                     </div>
                   </div>
+
+                  <div class="rental-info" ng-if="product.tradeType != 'SELL'">
+                    <div class="row form-group">
+                      <div class="col-sm-5">
+                        Availability of asset
+                      </div>
+                      <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-6" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
+                            <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL'">
+                          </div>
+                          <div class="col-sm-6" ng-class="{'has-error': form.toDate.$invalid && submitted}">
+                            <input type="date" placeholder="Date" class="form-control" name="toDate" ng-value="toDate" ng-model="product.rent.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup3.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()" ng-required="product.tradeType != 'SELL'">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col-sm-5">
+                        Check Rental Rate For
+                      </div>
+                      <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <input type="checkbox" name="hours" ng-model="product.rent.rateHours.rateType" ng-click="clickHandler('hours', product.rent.rateHours.rateType)" ng-true-value="'hours'" ng-false-value="false"> Hours
+                          </div>
+                          <div class="col-sm-4">
+                            <input type="checkbox" name="days" ng-model="product.rent.rateDays.rateType" ng-click="clickHandler('days', product.rent.rateDays.rateType)" ng-true-value="'days'" ng-false-value="false"> Days
+                          </div>
+                          <div class="col-sm-4">
+                            <input type="checkbox" name="month" ng-model="product.rent.rateMonths.rateType" ng-click="clickHandler('months', product.rent.rateMonths.rateType)" ng-true-value="'months'" ng-false-value="false"> Months
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <table class="table">
+                      <thead>
+                        <tr>   
+                          <th></th>
+                          <th>Min. Rental Period</th>                     
+                          <th>MAx. Rental Period</th>
+                          <th>Rent Amount</th>
+                          <th>Security Deposit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-if="product.rent.rateHours.rateType == 'hours'">
+                          <td><b>Hours</b></td>
+                          <td>
+                          <div ng-class="{'has-error': form.minPeriodH.$invalid && submitted}">
+                              <input type="number" placeholder="Min." class="form-control" name="minPeriodH" ng-model="product.rent.rateHours.minPeriodH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                          </div>
+                          </td>
+                          <td>
+                          <div ng-class="{'has-error': form.maxPeriodH.$invalid && submitted}">
+                              <input type="number" placeholder="Max." class="form-control" name="maxPeriodH" ng-model="product.rent.rateHours.maxPeriodH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                          </div>
+                          </td>
+                          <td>
+                          <div ng-class="{'has-error': form.rentAmountH.$invalid && submitted}">
+                              <input type="number" placeholder="Rent Amount" class="form-control" name="rentAmountH" ng-model="product.rent.rateHours.rentAmountH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                          </div>
+                          </td>
+                          <td>
+                          <div ng-class="{'has-error': form.seqDepositH.$invalid && submitted}">
+                              <input type="number" placeholder="Security Deposit" class="form-control" name="seqDepositH" ng-model="product.rent.rateHours.seqDepositH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                          </div>
+                          </td>
+                          
+                          
+                        </tr>
+                        <tr ng-if="product.rent.rateDays.rateType == 'days'">
+                          <td><b>Days</b></td>
+                          <td>
+                          <div ng-class="{'has-error': form.minPeriodD.$invalid && submitted}">
+                              <input type="number" placeholder="Min." class="form-control" name="minPeriodD" ng-model="product.rent.rateDays.minPeriodD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                          </div>
+                          </td>
+                          <td>
+                          <div ng-class="{'has-error': form.maxPeriodD.$invalid && submitted}">
+                              <input type="number" placeholder="Max." class="form-control" name="maxPeriodD" ng-model="product.rent.rateDays.maxPeriodD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                          </div>
+                          </td>
+                          <td>
+                          <div ng-class="{'has-error': form.rentAmountD.$invalid && submitted}">
+                              <input type="number" placeholder="Rent Amount" class="form-control" name="rentAmountD" ng-model="product.rent.rateDays.rentAmountD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                          </div>
+                          </td>
+                          <td>
+                          <div ng-class="{'has-error': form.seqDepositD.$invalid && submitted}">
+                              <input type="number" placeholder="Security Deposit" class="form-control" name="seqDepositD" ng-model="product.rent.rateDays.seqDepositD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                          </div>
+                          </td>
+
+                        </tr>
+                        <tr ng-if="product.rent.rateMonths.rateType == 'months'">
+                          <td><b>Months</b></td>                       
+                          <td>
+                            <div ng-class="{'has-error': form.minPeriodM.$invalid && submitted}">
+                              <input type="number" placeholder="Min." class="form-control" name="minPeriodM" ng-model="product.rent.rateMonths.minPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                            </div>
+                          </td>
+                          <td>
+                            <div ng-class="{'has-error': form.maxPeriodM.$invalid && submitted}">
+                              <input type="number" placeholder="Max." class="form-control" name="maxPeriodM" ng-model="product.rent.rateMonths.maxPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                            </div>
+                          </td>
+                          <td>
+                            <div ng-class="{'has-error': form.rentAmountM.$invalid && submitted}">
+                              <input type="number" placeholder="Rent Amount" class="form-control" name="rentAmountM" ng-model="product.rent.rateMonths.rentAmountM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                            </div>
+                          </td>
+                          <td>
+                            <div ng-class="{'has-error': form.seqDepositM.$invalid && submitted}">
+                              <input type="number" placeholder="Security Deposit" class="form-control" name="seqDepositM" ng-model="product.rent.rateMonths.seqDepositM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                            </div>
+                          </td>
+
+                        </tr>
+                        
+                      </tbody>
+                    </table> 
+                  </div>
+
                   <div class="row">
-                    <div class="form-group col-sm-5">Rate my Equipment</div>
+                    <div class="form-group col-sm-5">Rate Equipment</div>
                     <div class="form-group col-sm-7">                  
-                        <select class="form-control">
-                          <option>Select Rate my Equipment</option>
-                          <option>Average</option>
-                          <option>Good</option>
-                          <option>Excellent</option>
+                        <select class="form-control" name="rateMyEquipment" ng-model="product.rateMyEquipment">
+                          <option value="" disabled>Rate Equipment</option>
+                          <option ng-repeat="rateMyEquipment in rateMyEquipmentOpt" value="{{rateMyEquipment.name}}">{{rateMyEquipment.name}}</option>
                         </select>
                         <i class="caret"></i>
                     </div>
@@ -330,8 +451,10 @@
                         </div>
                     </div>
                   </div>
-                </uib-accordion-group>
+               </div>
+             </div>
 
+              <uib-accordion close-others="oneAtATime" class="information">
                 <uib-accordion-group is-open="Techstatus.open">
                   <uib-accordion-heading>
                     Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
@@ -409,13 +532,20 @@
                       <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div>
-                  <div class="row form-group">
+                </uib-accordion-group>                
+              </uib-accordion>
+
+                <div class="clearfix form-group"></div>  
+                <div class="row form-group">
                     <div class="col-sm-3">Upload Terms &amp; Conditions</div>
                     <div class="col-sm-2">
                       <span class="btn btn-success fileinput-button">
                         <span>Browse File...</span>
-                          <input type="file" name="t&c"  data-filetype="pdf" file-upload>
+                          <input type="file" name="tcDoc"  data-filetype="tcDoc" file-upload>
                       </span>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                      {{tcDoc.name}}
                     </div>
                   </div>
                   <div class="form-group">
@@ -436,103 +566,6 @@
                           </div>                      
                       </div>
                     </div>
-                </uib-accordion-group>
-                <uib-accordion-group is-open="Inforent.open">
-                  <uib-accordion-heading>
-                    Rental information  <i class="pull-right fa" ng-class="{'fa-minus': Inforent.open, 'fa-plus': !Inforent.open}"></i>
-                  </uib-accordion-heading>
-                  <div class="row form-group">
-                    <div class="col-sm-4">
-                      Availability of asset
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="date" placeholder="Date" class="form-control" ng-model="dt" uib-datepicker-popup="{{formats}}" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()">
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="date" placeholder="Date" class="form-control" ng-model="dt1" uib-datepicker-popup="{{formats}}" is-open="popup3.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()">
-                    </div>
-                  </div>
-                  <div class="row form-group">
-                    <div class="col-sm-4">
-                      Check Rental Rate For
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="checkbox" name=""> Hours
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="checkbox" name=""> Days
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="checkbox" name=""> Month
-                    </div>
-                  </div>
-                  <table class="table">
-                    <thead>
-                      <tr>   
-                        <th>Rental parameters</th>
-                        <th>Min. Rental Period</th>                     
-                        <th>Max. Rental Period</th>
-                        <th>Rent Amount</th>
-                        <th>Security Deposit</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><b>Hours</b></td>
-                        <td>
-                            <input type="number" placeholder="Hours" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Hours" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Hours" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Hours" class="form-control" />
-                        </td>
-                        
-                        
-                      </tr>
-                      <tr>
-                        <td><b>Days</b></td>
-                        <td>
-                            <input type="number" placeholder="Days" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Days" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Days" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Days" class="form-control" />
-                        </td>
-
-                      </tr>
-                      <tr>
-                        <td><b>Months</b></td>                       
-                        <td>
-                            <input type="number" placeholder="Months" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Months" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Months" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" placeholder="Months" class="form-control" />
-                        </td>
-
-                      </tr>
-                      
-                    </tbody>
-                  </table> 
-                </uib-accordion-group>
-              </uib-accordion>
-
-                <div class="clearfix form-group"></div>  
                   <div class="row" ng-show="isActive()">
                       <div class="col-sm-6">
                         <div class="row">

@@ -71,6 +71,45 @@ var classifiedAdDir = "classifiedad";
 var templateDir = "templates";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";
 
+var tradeType = [
+{
+  "name" : "Rent",
+  "code" : "RENT"
+},
+{
+  "name" : "Sell",
+  "code" : "SELL"
+},
+{
+  "name" : "Both",
+  "code" : "BOTH"
+}
+]
+
+var rateMyEquipmentOpt = [
+{
+  "name" : "Average"
+},
+{
+  "name" : "Good"
+},
+{
+  "name" : "Excellent"
+}
+]
+
+var locationList = [
+{
+  "name" : "Location1"
+},
+{
+  "name" : "Location2"
+},
+{
+  "name" : "Location3"
+}
+]
+
 var valuationList = [
 {
   "name" : "Compliance",
@@ -107,124 +146,8 @@ var valuationList = [
 ]
 var allCountries = [
 {
-    "name" : "Afghanistan",
-    "code" : "AF"
-},
-{
-    "name" : "Azerbaijan",
-    "code" : "AZ"
-},
-{
-    "name" : "Bahrain",
-    "code" : "BH"
-},
-{
-    "name" : "Belgium",
-    "code" : "BE"
-},
-{
-    "name" : "China",
-    "code" : "CN"
-},
-{
-    "name" : "Ethiopia",
-    "code" : "ET"
-},
-{
-    "name" : "France",
-    "code" : "FR"
-},
-{
-    "name" : "Hong Kong",
-    "code" : "HK"
-},
-{
     "name" : "India",
     "code" : "IN"
-},
-{
-    "name" : "Indonesia",
-    "code" : "ID"
-},
-{
-    "name" : "Japan",
-    "code" : "JP"
-},
-{
-    "name" : "Kazakhstan",
-    "code" : "KZ"
-},
-{
-    "name" : "Kenya",
-    "code" : "KE"
-},
-{
-    "name" : "Kuwait",
-    "code" : "KW"
-},
-{
-    "name" : "Mongolia",
-    "code" : "MN"
-},
-{
-    "name" : "Myanmar",
-    "code" : "MM"
-},
-{
-    "name" : "Nigeria",
-    "code" : "NG"
-},
-{
-    "name" : "Oman",
-    "code" : "OM"
-},
-{
-    "name" : "Qatar",
-    "code" : "QA"
-},
-{
-    "name" : "Russian Federation",
-    "code" : "RU"
-},
-{
-    "name" : "Saudi Arabia",
-    "code" : "SA"
-},
-{
-    "name" : "Singapore",
-    "code" : "SG"
-},
-{
-    "name" : "South Africa",
-    "code" : "ZA"
-},
-{
-    "name" : "Turkmenistan",
-    "code" : "TM"
-},
-{
-    "name" : "United Arab Emirates",
-    "code" : "AE"
-},
-{
-    "name" : "Uganda",
-    "code" : "UG"
-},
-{
-    "name" : "United Kingdom",
-    "code" : "GB"
-},
-{
-    "name" : "United Republic of Tanzania ",
-    "code" : "TZ"
-},
-{
-    "name" : "Uzbekistan",
-    "code" : "UZ"
-},
-{
-    "name" : "Yemen",
-    "code" : "YE"
 }
 ];
 
