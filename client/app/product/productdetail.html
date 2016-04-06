@@ -177,7 +177,7 @@
             
           </div>
           <div class="col-sm-5 col-md-4 padd-left panel-group">                   
-            <div class="panel panel-default seller-info hidden-xs">
+            <div class="panel panel-primary seller-info hidden-xs">
               <div class="panel-heading">
                 <h3 class="panel-title">To Buy Contact</h3>
               </div>
@@ -273,40 +273,44 @@
             
 
           </div>
-          <div class="col-md-3 hidden-xs hidden-sm padd-left">
-            
-            <div class="panel-group vendor-list">
-              
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h5 class="panel-title">Shipping Partner </h5>
-              </div>
-              <div class="panel-body">
-                <ul ng-show="!statusShipping.open">
-                  <li ng-repeat="shipping in shippingVendorList" ng-if="$index < 3">
-                    <a href="javascript:void(0)" target="_blank">
-                      <img class="img-thubnail" height="40" width="60" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{shipping.imgsrc}}" alt="Image">
-                      {{shipping.name}}
-                    </a>
-                  </li>
-                </ul>
-                <uib-accordion close-others="oneAtATime">  
-                  <uib-accordion-group is-open="statusShipping.open">
-                    <uib-accordion-heading>
-                      View all<i class="pull-right fa" ng-class="{'fa-chevron-down': statusShipping.open, 'fa-chevron-right': !statusShipping.open}"></i>
-                    </uib-accordion-heading>
-                    <ul>
-                      <li ng-repeat="shipping in shippingVendorList">
-                      <a href="javascript:void(0)" target="_blank">
-                        <img class="img-thubnail" height="40" width="60" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{shipping.imgsrc}}" alt="Image">
-                        {{shipping.name}}
-                      </a>
-                    </li>                 
-                    </ul> 
-                  </uib-accordion-group>
-                </uib-accordion>
+          <div class="col-md-3 hidden-xs hidden-sm padd-left">            
+            <div class="panel-group vendor-list">              
+              <div class="panel panel-primary calctr-info">
+                <div class="panel-heading">
+                  <h5 class="panel-title">Rent Calculator</h5>
                 </div>
-            </div>
+                <div class="panel-body bg-info">
+                  <h4>How do you want to Rent:</h4>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <input type="radio" name="rent"> <small>By Hours</small>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="radio" name="rent"> <small>By Day</small>
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="radio" name="rent"> <small>By Month</small>
+                    </div>
+                  </div>
+                  <hr>
+                  <h4>Specify your Rental duration:</h4>
+                  <div class="row form-group">
+                    <div class="col-sm-7">
+                      I require machine for
+                    </div>
+                    <div class="col-sm-5 padd-left">
+                      <div class="input-group">
+                        <input type="text" class="form-control">
+                        <span class="input-group-addon">Days</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="calctr-value text-center">
+                    <h4>print amount here</h4>
+                  </div>
+                  <button type="submit" ng-click="" class="btn btn-default btn-block">Calculate Now</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

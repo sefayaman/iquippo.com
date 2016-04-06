@@ -1,6 +1,8 @@
 $(window).bind('scroll', function() {
     var adInfo =200; // custom nav height   
-   ($(window).scrollTop() > adInfo) ? $('.seller-info').addClass('seller-info-fixed') : $('.seller-info').removeClass('seller-info-fixed');
+    var Calctr =200; // custom nav height   
+   ($(window).scrollTop() > adInfo) ? $('.seller-info').addClass('seller-info-fixed') : $('.seller-info').removeClass('seller-info-fixed');   
+   ($(window).scrollTop() > Calctr) ? $('.calctr-info').addClass('calctr-info-fixed') : $('.calctr-info').removeClass('calctr-info-fixed');
 });
 
     // On click out hide the UL
