@@ -1,10 +1,16 @@
+(function(){
+
 'use strict';
+angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
+  
+  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal) {
+    var vm = this;
 
-angular.module('sreizaoApp')
-  .controller('CallbackCtrl', function ($scope, $location, $window, $rootScope, $http, $uibModalInstance, notificationSvc, Modal) {
-    $scope.callback = {};
+    vm.callback = {};
+    vm.sendCallback = sendCallback;
+    vm.closeDialog = closeDialog;
 
-     $scope.sendCallback = function(callback) {
+    function sendCallback(callback) {
       var ret = false; 
       if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
@@ -20,8 +26,8 @@ angular.module('sreizaoApp')
       dataToSend['email'] = callback.email;
 
       $http.post('/api/callback',dataToSend).success(function(result) {
-        $scope.closeDialog();
-        $scope.callback = {};
+        closeDialog();
+        vm.callback = {};
         var data = {};
         Modal.alert(informationMessage.callbackSuccess,true);
         data['to'] = supportMail;
@@ -35,11 +41,13 @@ angular.module('sreizaoApp')
       });
   };
 
-  $scope.closeDialog = function () {
+  function closeDialog() {
    $uibModalInstance.dismiss('cancel');
   };
 
-});
+}
+
+})();
 
 
 

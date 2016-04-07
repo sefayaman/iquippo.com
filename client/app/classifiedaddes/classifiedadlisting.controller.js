@@ -1,43 +1,46 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('sreizaoApp')
- .controller('ClassifiedAdListingCtrl',['$scope','$rootScope', '$http', 'productSvc', 'classifiedSvc','Modal', 'DTOptionsBuilder', 'notificationSvc', function($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, notificationSvc) {
-  $scope.classifiedAdList = [];
+angular.module('classifiedAd').controller('ClassifiedAdListingCtrl',ClassifiedAdListingCtrl);
+
+function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, notificationSvc) {
+  
+  var vm = this;
+  vm.classifiedAdList = [];
   var dataToSend = {};
-  $scope.classified = {};
-$scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
+  vm.classified = {};
+  vm.updateClasifiedAd = updateClasifiedAd;
 
-   if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role != 'admin')
-      dataToSend["userid"] = $rootScope.getCurrentUser()._id;
-   $http.post('/api/classifiedad/search', dataToSend).success(function(srchres){
-         $scope.classifiedAdList = srchres;
-   });
+  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
 
-  $scope.getStatus = function(status){
-    if(status == true)
-      return "Active";
-    else
-      return "Inactive";
-    }
-    $scope.clasifiedAdActive =[];
+   if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
+      dataToSend["userid"] = Auth.getCurrentUser()._id;
+    
+    classifiedSvc.getClassifiedAdOnFilter(dataToSend)
+    .then(function(result){
+      vm.classifiedAdList = result;
+    });
+   
 
-    $scope.updateClasifiedAd = function(classified) {
+    function updateClasifiedAd(classified) {
+
       $rootScope.loading = true;
       if(classified.status){
         dataToSend['position'] = classified.position;
          dataToSend["status"] = true;
-        $http.post('/api/classifiedad/search', dataToSend).success(function(srchres){
-            if(srchres.length > 0) {
+        classifiedSvc.getClassifiedAdOnFilter(dataToSend)
+        .then(function(srchres){
+          if(srchres.length > 0) {
                 classified.status = false;
                 $rootScope.loading = false;
                 Modal.alert(classified.position + " is already occupied.Please empty this position first");
                 return;
             }else
               updateClassified(classified);
-          });
-      }else
+        });
+     }else{
         updateClassified(classified);
-     
+     }
       
   };
 
@@ -59,4 +62,6 @@ $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).wit
       });
   }
 
-}]);
+}
+
+})();

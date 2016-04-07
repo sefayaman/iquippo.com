@@ -69,7 +69,7 @@ angular.module('sreizaoApp')
       .state('classifiedadlisting', {
         url: '/classifiedadlisting',
         templateUrl: 'app/classifiedaddes/classifiedadlisting.html',
-        controller: 'ClassifiedAdListingCtrl',
+        controller: 'ClassifiedAdListingCtrl as classifiedadLstVm',
         authenticate:true,
         layout:'admin'
       })
@@ -156,7 +156,7 @@ angular.module('sreizaoApp')
       .state('cart', {
         url:"/cart/:id",
         templateUrl: 'app/cart/viewcart.html',
-        controller: 'ViewCartCtrl',
+        controller: 'ViewCartCtrl as cartVm',
         layout:'client'
       })
       .state('masterdata', {

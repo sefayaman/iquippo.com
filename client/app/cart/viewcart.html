@@ -36,7 +36,7 @@
                  <td ng-if="product.productCondition == 'new'">New</td>
                   <td ng-if="product.productCondition != 'new'">Old</td>
                  <td>4 days</td>
-                 <td><a href="javascript:void(0)"  ng-click="deleteProductFromCart($index)" class="btn btn-default btn-md"><i class="fa fa-trash"></i></a>
+                 <td><a href="javascript:void(0)"  ng-click="cartVm.deleteProductFromCart($index)" class="btn btn-default btn-md"><i class="fa fa-trash"></i></a>
                  <a ng-href="/productdetail/{{product._id}}" class="btn btn-default btn-md"><i class="fa fa-eye"></i></a>
                  </td>
 
@@ -44,7 +44,7 @@
              </tr>
               <tr>
                 <td colspan="12" class="text-right">
-                <a href="#" class="btn btn-warning" ng-show="cart.products.length > 0" ng-click="clearCart()">Clear All</a>
+                <a href="#" class="btn btn-warning" ng-show="cart.products.length > 0" ng-click="cartVm.clearCart()">Clear All</a>
                 </td>
               </tr>   
             </tbody>

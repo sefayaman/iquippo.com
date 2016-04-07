@@ -1,6 +1,6 @@
 'use strict';
 angular.module('sreizaoApp')
-  .controller('MainCtrl', function($scope, $rootScope, $http, $interval,$timeout, categorySvc, $window, $state, $compile, Modal) {
+  .controller('MainCtrl', function($scope, $rootScope, $http, $interval,$timeout, categorySvc,classifiedSvc, $window, $state, $compile, Modal) {
     $scope.globalCategoryList = [];
     $scope.imageUrl = "";
     $scope.myInterval = 5000;
@@ -75,7 +75,8 @@ angular.module('sreizaoApp')
     // };
     dataToSend["status"] = true; 
     var flag = true;
-    $http.post('/api/classifiedad/search', dataToSend).success(function(srchres){
+    classifiedSvc.getActiveClassifiedAd()
+    .then(function(srchres){
       if(flag == true) {
         for(var i=0 ; i < srchres.length; i++)
         {
