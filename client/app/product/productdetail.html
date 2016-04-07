@@ -279,29 +279,20 @@
                 <div class="panel-heading">
                   <h5 class="panel-title">Rent Calculator</h5>
                 </div>
-                <div class="panel-body bg-info">
-                  <h4>How do you want to Rent:</h4>
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <input type="radio" name="rent"> <small>By Hours</small>
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="radio" name="rent"> <small>By Day</small>
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="radio" name="rent"> <small>By Month</small>
-                    </div>
-                  </div>
-                  <hr>
-                  <h4>Specify your Rental duration:</h4>
+                <div class="panel-body bg-info">                  
+                  <h5><strong>Specify your Rental duration:</strong></h5>
+                  I require machine for
                   <div class="row form-group">
-                    <div class="col-sm-7">
-                      I require machine for
-                    </div>
-                    <div class="col-sm-5 padd-left">
+                    <div class="col-sm-12">
                       <div class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-addon">Days</span>
+                        <input type="text" class="form-control" placeholder="Enter value">
+                        <span class="input-group-addon">
+                          <select class="form-control">
+                            <option>Hours</option>
+                            <option>Days</option>
+                            <option>Months</option>
+                          </select>
+                        </span>
                       </div>
                     </div>
                   </div>
