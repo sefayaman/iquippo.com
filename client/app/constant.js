@@ -13,7 +13,7 @@ var Modals = {
   },
   callback:{
     tplUrl:"app/callback/callback.html",
-    Ctrl:'CallbackCtrl'
+    Ctrl:'CallbackCtrl as callbackVm'
   },
   quote:{
     tplUrl:"app/quote/quote.html",
@@ -29,7 +29,7 @@ var Modals = {
   },
   classifiedad:{
      tplUrl:"app/classifiedaddes/classifiedadd.html",
-    Ctrl:'ClassifiedAdCtrl'
+    Ctrl:'ClassifiedAdCtrl as classifiedadVm'
   },
   shippingquote:{
     tplUrl:"app/staticpages/shippingquote.html",

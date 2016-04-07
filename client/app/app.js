@@ -1,6 +1,10 @@
 'use strict';
-//Application submodule
+//Application sub Module
 angular.module("account",[]);
+angular.module("classifiedAd",[]);
+angular.module("product",[]);
+
+//Application module
 angular.module('sreizaoApp',[
   'ngCookies',
   'ngResource',
@@ -9,7 +13,9 @@ angular.module('sreizaoApp',[
   'ui.bootstrap',
   'datatables',
   'ui.tinymce',
-  "account"
+  "account",
+  'classifiedAd',
+  'product'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

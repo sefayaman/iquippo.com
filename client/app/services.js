@@ -243,26 +243,6 @@ angular.module('sreizaoApp')
       }
       return prdService;
   }])
-.factory("classifiedSvc",['$http','$rootScope',function($http,$rootScope){
-      var classifiedService = {};
-      var path = '/api/classifiedad';
-      classifiedService.getAllClassifiedAd = function(){
-        return $http.get(path)
-      };
-      classifiedService.getClassifiedAdOnId = function(id){
-        return $http.get(path + "/" + id)
-      };
-      classifiedService.addClassifiedAd = function(classified){
-        return $http.post(path,classified);
-      };
-      classifiedService.updateClassifiedAd = function(classified){
-        return $http.put(path + "/" + classified._id,classified);
-      };
-      classifiedService.deleteClassifiedAd = function(classified){
-        return $http.delete(path + "/" + classified._id);
-      };
-      return classifiedService;
-  }])
   .factory("countrySvc",['$http',function($http){
       var countryService = {};
       var path = '/api/common/countries';

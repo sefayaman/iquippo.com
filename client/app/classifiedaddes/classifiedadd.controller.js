@@ -1,25 +1,41 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('sreizaoApp')
-  .controller('ClassifiedAdCtrl', function ($scope, $location, $window, $rootScope, $http, uploadSvc, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc) {
-    $scope.classified = {};
-    $scope.classified.image = "";
-    if($rootScope.getCurrentUser()._id) {
-      $scope.classified.fname = $rootScope.getCurrentUser().fname;
-      $scope.classified.mname = $rootScope.getCurrentUser().mname;
-      $scope.classified.lname = $rootScope.getCurrentUser().lname;
-      $scope.classified.phone = $rootScope.getCurrentUser().phone;
+angular.module('classifiedAd').controller('ClassifiedAdCtrl', ClassifiedAdCtrl);
+
+//Controller function
+
+function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc) {
+    
+    var vm = this;
+    vm.classified = {};
+    vm.classified.image = "";
+
+    vm.addClassifiedAd = addClassifiedAd;
+    vm.reset = reset;
+    vm.resetImages = resetImages;
+    vm.previewImg = previewImg;
+    vm.closeDialog = closeDialog;
+
+    if(Auth.getCurrentUser()._id) {
+      vm.classified.fname = Auth.getCurrentUser().fname;
+      vm.classified.mname = Auth.getCurrentUser().mname;
+      vm.classified.lname = Auth.getCurrentUser().lname;
+      vm.classified.phone = Auth.getCurrentUser().phone;
       
-      $scope.classified.mobile = $rootScope.getCurrentUser().mobile;
-      $scope.classified.email = $rootScope.getCurrentUser().email;
+      vm.classified.mobile = Auth.getCurrentUser().mobile;
+      vm.classified.email = Auth.getCurrentUser().email;
+
     } else {
-      $scope.classified = {}
+      vm.classified = {}
     }
+
     $scope.checked = "";
     $scope.leftTopImg = "";
     $scope.leftBottomImg = "";
     $scope.bottomCentreImg = "";
 
+    
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
         if(args.length == 0)
@@ -35,21 +51,21 @@ angular.module('sreizaoApp')
         });
     });
 
-    $scope.reset = function(){
+    function reset(){
        $scope.checked = "";
       $scope.leftTopImg = "";
       $scope.leftBottomImg = "";
       $scope.bottomCentreImg = "";
-      $scope.classified = {};
+      vm.classified = {};
     }
 
-     $scope.resetImages = function(){
+     function resetImages(){
          $scope.leftTopImg = "";
          $scope.leftBottomImg = "";
          $scope.bottomCentreImg = "";
      }
 
-     $scope.previewImg = function(img){ 
+     function previewImg(img){ 
           var prevScope = $rootScope.$new();
           prevScope.img_src = $scope[img];
           if(!prevScope.img_src){
@@ -67,17 +83,9 @@ angular.module('sreizaoApp')
 
      }
 
-    $scope.uploadFile = function(files){
-      if(!files[0])
-        return;
-        uploadSvc.upload(files[0],classifiedAdDir).then(function(result){
-          $scope.classified.image = result.data.filename;
-        })
-    };
-
-     $scope.addClassifiedAd = function(classified) {
+     function addClassifiedAd() {
+      
       var ret = false; 
-
       if(!$scope[$scope.checked]){
         Modal.alert("Please upload image",true);
         return;
@@ -86,13 +94,14 @@ angular.module('sreizaoApp')
         $scope.form.submitted = true;
         return;
       }
+
       $rootScope.loading = true;
-      if($rootScope.getCurrentUser()._id)
-          $scope.classified.userid = $rootScope.getCurrentUser()._id;
-          $scope.classified.position = $scope.checked;
+      if(Auth.getCurrentUser()._id)
+          vm.classified.userid = Auth.getCurrentUser()._id;
+          vm.classified.position = $scope.checked;
           uploadSvc.upload($scope[$scope.checked],classifiedAdDir).then(function(result){
-          $scope.classified.image = result.data.filename;
-          classifiedSvc.addClassifiedAd(classified).then(function(result){
+          vm.classified.image = result.data.filename;
+          classifiedSvc.addClassifiedAd(vm.classified).then(function(result){
           $rootScope.loading = false;
           if(result.data.errorCode){
             Modal.alert(result.data.message,true);
@@ -101,23 +110,25 @@ angular.module('sreizaoApp')
             var data = {};
             data['to'] = supportMail;
             data['subject'] = 'Request for Classified Ad';
-            classified.serverPath = serverPath;
-            notificationSvc.sendNotification('classifiedaddEmailToAdmin', data, classified,'email');
-            data['to'] = classified.email;
+            vm.classified.serverPath = serverPath;
+            notificationSvc.sendNotification('classifiedaddEmailToAdmin', data, vm.classified,'email');
+            data['to'] = vm.classified.email;
             data['subject'] = 'Request for Classified Ad: Pending for activation';
-            notificationSvc.sendNotification('classifiedaddEmailToCustomer',data,{fname:classified.fname, serverPath:classified.serverPath},'email');
+            notificationSvc.sendNotification('classifiedaddEmailToCustomer',data,{fname:vm.classified.fname, serverPath:vm.classified.serverPath},'email');
             Modal.alert(informationMessage.classifiedSuccess,true);
-            $scope.closeDialog();
+            closeDialog();
           }
           });
 
       });
   };
 
-  $scope.closeDialog = function () {
+  function closeDialog() {
      $uibModalInstance.dismiss('cancel');
-    };
-});
+   };
+}
+
+})();
 
 
 

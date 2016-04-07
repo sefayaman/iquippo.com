@@ -1,26 +1,33 @@
-'use strict';
+(function(){
 
-angular.module('sreizaoApp')
-.controller('ViewCartCtrl', function ($scope,$rootScope,cartSvc, $http,Auth,Modal) {
+  'use strict';
+
+angular.module('sreizaoApp').controller('ViewCartCtrl',ViewCartCtrl)
+
+function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal) {
+    var vm = this;
+    vm.deleteProductFromCart = deleteProductFromCart;
+    vm.clearCart = clearCart;
+
     cartSvc.getCartData(Auth.getCurrentUser()._id);
-
-    $scope.deleteProductFromCart = function(index){
+    
+    function deleteProductFromCart(index){
       Modal.confirm(informationMessage.deleteCartProductConfirm,function(isGo){
           if(isGo == 'no')
             return;
-          deleteProductFromCart(index);
+          deleteFn(index);
       });
     };
 
-    $scope.clearCart = function(){
+    function clearCart(){
        Modal.confirm(informationMessage.clearCartConfirm,function(isGo){
           if(isGo == 'no')
             return;
-          clearCart();
+          clear();
       });
     }; 
 
-    function deleteProductFromCart(index){
+    function deleteFn(index){
          $rootScope.cart.products.splice(index,1);
       cartSvc.updateCart($rootScope.cart)
         .success(function(res){
@@ -32,7 +39,7 @@ angular.module('sreizaoApp')
         })
     }
 
-    function clearCart(){
+    function clear(){
         $rootScope.cart.products = []
       cartSvc.updateCart($rootScope.cart)
         .success(function(res){
@@ -43,8 +50,9 @@ angular.module('sreizaoApp')
              Modal.alert(res,true);
         })
     }
-})
-.factory("cartSvc",['$http','$rootScope',function($http,$rootScope){
+}
+
+angular.module('sreizaoApp').factory("cartSvc",['$http','$rootScope',function($http,$rootScope){
       var cartService = {};
       var path = '/api/cart';
       cartService.getCartData = function(id){
@@ -69,6 +77,9 @@ angular.module('sreizaoApp')
 
       return cartService;
   }])
+
+})();
+
 
 
 

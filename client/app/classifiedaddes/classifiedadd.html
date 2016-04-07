@@ -1,6 +1,6 @@
 <div>
        <div class="modal-header">
-              <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
+              <button type="button" class="close" ng-click="classifiedadVm.closeDialog()" aria-hidden="true">&times;</button>
               <h4 class="modal-title">Place a Classified Ad</h4>
             </div>
             <div class="modal-body">
@@ -8,27 +8,27 @@
               
                 <div class="row">
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
-                    <input type="text" class="form-control" name="fname" ng-model="classified.fname" ng-value="classified.fname" placeholder="* First Name" required>
+                    <input type="text" class="form-control" name="fname" ng-model="classifiedadVm.classified.fname" ng-value="classifiedadVm.classified.fname" placeholder="* First Name" required>
                   </div>
                   <div class="form-group col-sm-4">
-                    <input type="text" class="form-control" name="mname" ng-model="classified.mname"  ng-value="classified.mname" placeholder="Middle Name">
+                    <input type="text" class="form-control" name="mname" ng-model="classifiedadVm.classified.mname"  ng-value="classifiedadVm.classified.mname" placeholder="Middle Name">
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
-                    <input type="text" class="form-control" name="lname" ng-model="classified.lname" ng-value="classified.lname" placeholder="* Last Name" required>
+                    <input type="text" class="form-control" name="lname" ng-model="classifiedadVm.classified.lname" ng-value="classifiedadVm.classified.lname" placeholder="* Last Name" required>
                   </div>
                 </div>
                 <div class="row">
                   <div class="form-group col-sm-4">
-                    <input type="text" class="form-control" name="phone" ng-model="classified.phone" ng-value="classified.phone" placeholder="Phone No.">
+                    <input type="text" class="form-control" name="phone" ng-model="classifiedadVm.classified.phone" ng-value="classifiedadVm.classified.phone" placeholder="Phone No.">
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.mobile.$invalid &&
                    form.submitted }">
                    <div class="input-group">
-                    <input type="text" class="form-control" name="mobile" ng-model="classified.mobile" ng-value="classified.mobile" placeholder="* Mobile No." uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                    <input type="text" class="form-control" name="mobile" ng-model="classifiedadVm.classified.mobile" ng-value="classifiedadVm.classified.mobile" placeholder="* Mobile No." uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                     </div>
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.email.$invalid && form.submitted }">
-                          <input type="email" class="form-control" name="email" ng-model="classified.email" ng-value="classified.email" placeholder="* Email Address" required>
+                          <input type="email" class="form-control" name="email" ng-model="classifiedadVm.classified.email" ng-value="classifiedadVm.classified.email" placeholder="* Email Address" required>
                           <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
                           Please enter a valid email.
                           </p>
@@ -39,20 +39,20 @@
                 <div class="row">
                   <div class="col-sm-4">
                       <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="leftTop" ng-change="resetImages()" id="left-top" ng-model="checked"><label for="left-top">Left Top</label>
+                        <input type="radio" name="rad1" value="leftTop" ng-change="classifiedadVm.resetImages()" id="left-top" ng-model="checked"><label for="left-top">Left Top</label>
                         
                       </div>
                       
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="leftBottom" ng-change="resetImages()" id="left-bottom" ng-model="checked"><label for="left-bottom">Left Bottom</label>
+                        <input type="radio" name="rad1" value="leftBottom" ng-change="classifiedadVm.resetImages()" id="left-bottom" ng-model="checked"><label for="left-bottom">Left Bottom</label>
                       </div>
                       
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="bottomCentre" ng-change="resetImages()" id="bottom-center" ng-model="checked"><label for="bottom-center">Bottom Center</label>
+                        <input type="radio" name="rad1" value="bottomCentre" ng-change="classifiedadVm.resetImages()" id="bottom-center" ng-model="checked"><label for="bottom-center">Bottom Center</label>
                       </div>
                       
                   </div>
@@ -71,7 +71,7 @@
                           <img ng-src="{{leftTopImg}}" ng-show="leftTopImg" class="img-responsive">
                           </div>
 
-                          <button class="btn btn-primary btn-block" ng-click="previewImg('leftTopImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('leftTopImg')">Preview</button>
                     </div>
                     <div class="form-group col-sm-4">
                       <!-- <small>(Recommended size: 165 x 255px )</small> -->
@@ -84,7 +84,7 @@
                           <div class="browse-image">
 						                <img ng-src="{{leftBottomImg}}" ng-show="leftBottomImg" class="img-responsive">
                           </div>
-                          <button class="btn btn-primary btn-block" ng-click="previewImg('leftBottomImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('leftBottomImg')">Preview</button>
                     </div>
                     <div class="form-group col-sm-4">
                         <!-- <small>(Recommended size: 680 x 100px )</small> -->
@@ -97,7 +97,7 @@
                           <div class="browse-land">
 						                <img ng-src="{{bottomCentreImg}}" ng-show="bottomCentreImg" class="img-responsive">
                           </div>
-                          <button class="btn btn-primary btn-block" ng-click="previewImg('bottomCentreImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('bottomCentreImg')">Preview</button>
 
                     </div>
                 </div>
@@ -105,8 +105,8 @@
               </form>
             </div>
             <div class="modal-footer">
-              <input type="reset" ng-click = "reset()" class="btn btn-lg btn-default" data-dismiss="modal"></input>
-              <button type="button"  ng-click="addClassifiedAd(classified)" class="btn btn-lg btn-warning">Submit</button>
+              <input type="reset" ng-click = "classifiedadVm.reset()" class="btn btn-lg btn-default" data-dismiss="modal"></input>
+              <button type="button"  ng-click="classifiedadVm.addClassifiedAd(classified)" class="btn btn-lg btn-warning">Submit</button>
             </div>
 </div>
 <script type="text/ng-template" id="classifiedAdPreview.html">
