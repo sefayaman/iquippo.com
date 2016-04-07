@@ -67,10 +67,11 @@
                           <td>{{product.brand.name}}</td>
                           <td>{{product.model.name}}</td> 
                           <td ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
-                          <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                          <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
                           <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
                           <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i>  
+                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
+                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i>  
                           {{product.grossPrice}}</td>  
                           <td ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</td>  
                           <td ng-if="product.tradeType == 'RENT'"></td>                       
@@ -158,11 +159,11 @@
               <td>{{product.mfgYear}}</td>
             </tr>
             <tr>
-              <th>Motor/Operating Hours</th>
+              <th>Operating Hours/HMR</th>
               <td>{{product.operatingHour}}</td>
             </tr>
             <tr>
-              <th>Mileage(KMs)</th>
+              <th>Mileage/KMR</th>
               <td>{{product.mileage}}</td>
             </tr>
             <tr>
@@ -170,7 +171,7 @@
               <td>{{product.serialNo}}</td>
             </tr>
             <tr>
-              <th>Gross Price</th>
+              <th>Price (Excl. Tax).</th>
               <td>{{product.grossPrice}}</td>
             </tr>
             <tr>

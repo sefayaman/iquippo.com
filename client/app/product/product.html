@@ -192,15 +192,15 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form-group col-sm-5">Motor/Operating Hours</div>
+                    <div class="form-group col-sm-5">Operating Hours/HMR<span class="text-warning" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.opHour.$invalid && submitted}">
-                      <input type="text" name="opHour" placeholder="Motor/Operating Hours" ng-value="product.operatingHour" ng-model="product.operatingHour"  class="form-control">
+                      <input type="text" name="opHour" placeholder="Operating Hours/HMR" ng-value="product.operatingHour" ng-model="product.operatingHour"  class="form-control" ng-required="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form-group col-sm-5">Mileage(KMs)</div>
+                    <div class="form-group col-sm-5">Mileage/KMR<span class="text-warning" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.mileage.$invalid && submitted}">
-                      <input type="text" placeholder="Mileage" name="mileage" ng-value="product.mileage" ng-model="product.mileage"  class="form-control">
+                      <input type="text" placeholder="Mileage/KMR" name="mileage" ng-value="product.mileage" ng-model="product.mileage"  class="form-control" ng-required="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">
                     </div>
                   </div>
                   <div class="row">
@@ -211,16 +211,12 @@
                   </div>
 
                   <div class="row" ng-if="product.tradeType != 'RENT'">
-                    <div class="form-group col-sm-5">Gross Price<span class="text-warning">*</span></div>
+                    <div class="form-group col-sm-5">Price (Excl. Tax).<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-4">
                       <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
                         <span class="input-group-addon">
                           <select class="form-control" ng-disabled="product.priceOnRequest" name="currencyType" ng-model="product.currencyType">
-                           <option value="">&#1583;.&#1573; AED</option>
-                           <option value="EUR">&#8364; EURO</option>
-                           <option value="GBP">&#163; GBP</option>
-                           <option value="USD">&#36; USD</option>                       
-                                                   
+                           <option value="" selected>&#x20B9; Rupee</option>                       
                           </select>   
                           <i class="fa fa-facebook"></i>
                         </span>
@@ -636,8 +632,8 @@
                     <td>Product Model</td>
                     <td>Product Name</td>
                     <td>Mfg. Year</td>                    
-                    <td>Motor/Operating Hours</td>
-                    <td>Mileage(KMs)</td>
+                    <td>Operating Hours/HMR</td>
+                    <td>Mileage/KMR</td>
                     <td>Machine Serial No.</td>
                     <td>Gross Price</td>
                     <td>Country</td>

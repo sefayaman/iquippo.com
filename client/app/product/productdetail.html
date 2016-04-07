@@ -75,11 +75,11 @@
                       <td>{{dayDiff(currentProduct.relistingDate)}} Days</td>
                     </tr> -->
                     <tr>
-                      <td>Motor/Operating Hours</td>
+                      <td>Operating Hours/HMR</td>
                       <td>{{currentProduct.operatingHour}}</td>
                     </tr>
                     <tr>
-                      <td>Mileage(KMs)</td>
+                      <td>Mileage/KMR</td>
                       <td>{{currentProduct.mileage}}</td>
                     </tr>  
                     <tr>
@@ -95,13 +95,15 @@
                       <td>{{currentProduct.city}}</td>
                     </tr>
                     <tr>
-                      <td>Gross Price</td>
+                      <td>Price (Excl. Tax).</td>
                       <td>
-                      <span ng-if="currentProduct.priceOnRequest">Price On Request</span>
-                      <span ng-if="!currentProduct.priceOnRequest"><b ng-if="currentProduct.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
-                      <i class="fa fa-eur" ng-if="currentProduct.currencyType == 'EUR'"></i>
+                      <span ng-if="currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">Price On Request</span>
+                      <span ng-if="!currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">
+                      <!-- <b ng-if="currentProduct.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b> -->
+                      <i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i>
+                      <!-- <i class="fa fa-eur" ng-if="currentProduct.currencyType == 'EUR'"></i>
                       <i class="fa fa-gbp" ng-if="currentProduct.currencyType == 'GBP'"></i>
-                      <i class="fa fa-usd" ng-if="currentProduct.currencyType == 'USD'"></i>
+                      <i class="fa fa-usd" ng-if="currentProduct.currencyType == 'USD'"></i> -->
                        {{currentProduct.grossPrice}} </span>
                       </td>
                     </tr>
@@ -283,13 +285,13 @@
                   <h4>How do you want to Rent:</h4>
                   <div class="row">
                     <div class="col-sm-4">
-                      <input type="radio" name="rent"> <small>By Hours</small>
+                      <input type="radio" name="rateType" value="Hours" ng-model="calRent.rateType"> <small>By Hours</small>
                     </div>
                     <div class="col-sm-4">
-                      <input type="radio" name="rent"> <small>By Day</small>
+                      <input type="radio" name="rateType" value="Days" ng-model="calRent.rateType"> <small>By Days</small>
                     </div>
                     <div class="col-sm-4">
-                      <input type="radio" name="rent"> <small>By Month</small>
+                      <input type="radio" name="rateType" value="Months" ng-model="calRent.rateType"> <small>By Months</small>
                     </div>
                   </div>
                   <hr>
@@ -300,15 +302,15 @@
                     </div>
                     <div class="col-sm-5 padd-left">
                       <div class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-addon">Days</span>
+                        <input type="number" class="form-control" name="duration" ng-model="calRent.duration" >
+                        <span class="input-group-addon">{{calRent.rateType}}</span>
                       </div>
                     </div>
                   </div>
                   <div class="calctr-value text-center">
-                    <h4>print amount here</h4>
+                    <h4><i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i> {{totalRent}}</h4>
                   </div>
-                  <button type="submit" ng-click="" class="btn btn-default btn-block">Calculate Now</button>
+                  <button type="submit" ng-click="calculateRent(currentProduct.rent, calRent)" class="btn btn-default btn-block">Calculate Now</button>
                 </div>
               </div>
             </div>

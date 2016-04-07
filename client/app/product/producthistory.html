@@ -246,11 +246,11 @@
                       <td>{{proHistory.history.equipmentage}}</td>
                     </tr> -->
                     <tr>
-                      <td>Motor/Operating Hours</td>
+                      <td>Operating Hours/HMR</td>
                       <td>{{proHistory.history.operatingHour}}</td>
                     </tr>
                     <tr>
-                      <td>Mileage(KMs)</td>
+                      <td>Mileage/KMR</td>
                       <td>{{proHistory.history.mileage}}</td>
                     </tr>  
                     <tr>
@@ -266,12 +266,13 @@
                       <td>{{proHistory.history.city}}</td>
                     </tr>
                     <tr>
-                      <td>Gross Price</td>
+                      <td>Price (Excl. Tax).</td>
                       <td>
-                      <b ng-if="proHistory.history.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                     <!--  <b ng-if="proHistory.history.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
                       <i class="fa fa-eur" ng-if="proHistory.history.currencyType == 'EUR'"></i>
                       <i class="fa fa-gbp" ng-if="proHistory.history.currencyType == 'GBP'"></i>
-                      <i class="fa fa-usd" ng-if="proHistory.history.currencyType == 'USD'"></i>{{proHistory.history.grossPrice}}</td>
+                      <i class="fa fa-usd" ng-if="proHistory.history.currencyType == 'USD'"></i> -->
+                      <i class="fa fa-inr" ng-if="proHistory.history.currencyType == 'INR'"></i> {{proHistory.history.grossPrice}}</td>
                     </tr>
                     <tr>
                       <td>Product Condition</td>

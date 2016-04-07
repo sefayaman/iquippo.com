@@ -76,10 +76,7 @@
                     <div class="col-sm-12">
                       <select class="form-control" ng-change="onCurrencyChange()" ng-model="currencyType">
                             <option value="">Currency</option>
-                            <option value="AED">&#1583;.&#1573; AED</option>
-                            <option value="EUR">&#8364; EURO</option>
-                            <option value="GBP">&#163; GBP</option>
-                            <option value="USD">&#36; USD</option> 
+                            <option value="" selected>&#x20B9; Rupee</option> 
                           </select>    
                           <i class="caret"></i>                     
 
@@ -168,13 +165,13 @@
                         <h4 class="media-heading">
                           {{product.name}}
                           
-                          <span class="pull-right text-danger" ng-if="product.priceOnRequest">Price On Request</span>
-                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest">
-                          <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                          <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
+                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
+                          <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
                           <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
                           <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> 
-                      {{product.grossPrice}} </span>
+                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
+                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice}}</span>
                         </h4>
                         <p>{{product.brand.name}}</p>
                         <p>{{product.model.name}}</p>
@@ -196,12 +193,13 @@
                       <div class="media-body">
                         <h4 class="media-heading">
                           {{product.name}}
-                          <span class="pull-right text-danger" ng-if="product.priceOnRequest">Price On Request</span>
-                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest">
-                          <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                          <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
+                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
+                          <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
                           <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
                           <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> {{product.grossPrice}}</span>
+                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
+                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice}}</span>
                         </h4>
 
                         <p>{{product.brand.name}}</p>

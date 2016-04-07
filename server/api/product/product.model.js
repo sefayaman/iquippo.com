@@ -20,7 +20,7 @@ var ProductSchema = new Schema({
   serialNo:String,
   currencyType: {
     type: String,
-    default: "AED"
+    default: "INR"
   },
   grossPrice:Number,
   priceOnRequest:{type:Boolean,default:false},

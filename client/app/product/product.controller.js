@@ -107,7 +107,7 @@ angular.module('sreizaoApp')
       $scope.setDate($scope.product.mfgYear,1,1);
       $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
       $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
-      if($scope.product.currencyType == "AED")
+      if($scope.product.currencyType == "INR")
         $scope.product.currencyType = "";
       $scope.productName = $scope.product.name;
       if($scope.product.category.name == 'Other')
@@ -428,7 +428,7 @@ angular.module('sreizaoApp')
         product.seller = product.user;
       }
       if($scope.product.currencyType == "")
-        $scope.product.currencyType = "AED";
+        $scope.product.currencyType = "INR";
       /*adding seller info */ 
       productSvc.addProduct(product).then(function(result){
         $rootScope.loading = false;
@@ -475,7 +475,7 @@ angular.module('sreizaoApp')
       }
 
       if($scope.product.currencyType == "")
-        $scope.product.currencyType = "AED";
+        $scope.product.currencyType = "INR";
       productSvc.updateProduct(product).then(function(result){
         $rootScope.loading = false;
          setScroll(0);

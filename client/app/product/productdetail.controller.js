@@ -10,6 +10,8 @@ angular.module('sreizaoApp')
   $scope.zoomLvl = 3;
   $rootScope.searchFilter = {};
   $rootScope.equipmentSearchFilter = {};
+  $scope.calRent = {};
+  $scope.calRent.rateType = "Hours";
   $scope.status = {
     Firstopen: true
   };
@@ -43,6 +45,21 @@ angular.module('sreizaoApp')
       
 
     });
+  }
+
+
+  $scope.calculateRent = function(rentObj, calRent){
+    if(!calRent.duration) {
+      Modal.alert("Please enter duration.");
+      return;
+    }
+    if(calRent.rateType == 'Hours')
+      $scope.totalRent = (Number(rentObj.rateHours.rentAmountH) * Number(calRent.duration));
+    else if(calRent.rateType == 'Days')
+      $scope.totalRent = (Number(rentObj.rateDays.rentAmountD) * Number(calRent.duration));
+    else
+      $scope.totalRent = (Number(rentObj.rateMonths.rentAmountM) * Number(calRent.duration));
+    console.log("$scope.totalRent" + $scope.totalRent);
   }
 
 $scope.dayDiff = function(createdDate){

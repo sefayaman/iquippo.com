@@ -42,7 +42,7 @@ angular.module('sreizaoApp')
     }
     $scope.redirectToProduct = function(){
       if($rootScope.getCurrentUser()._id) 
-          $state.go('product');
+          $state.go('productlisting');
         else
           Modal.alert("Please Login/Register for uploading the products!", true);
     };
