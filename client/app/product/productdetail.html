@@ -275,42 +275,38 @@
             
 
           </div>
+          
           <div class="col-md-3 hidden-xs hidden-sm padd-left">            
             <div class="panel-group vendor-list">              
               <div class="panel panel-primary calctr-info">
                 <div class="panel-heading">
-                  <h5 class="panel-title">Rent Calculator</h5>
+                  <h5 class="panel-title">Rent Calculation</h5>
                 </div>
-                <div class="panel-body bg-info">
-                  <h4>How do you want to Rent:</h4>
+                <div class="panel-body">                  
+                  <h5><strong>Specify your Rental duration:</strong></h5>
+                  I require machine for
                   <div class="row">
-                    <div class="col-sm-4">
-                      <input type="radio" name="rateType" value="Hours" ng-model="calRent.rateType"> <small>By Hours</small>
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="radio" name="rateType" value="Days" ng-model="calRent.rateType"> <small>By Days</small>
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="radio" name="rateType" value="Months" ng-model="calRent.rateType"> <small>By Months</small>
-                    </div>
-                  </div>
-                  <hr>
-                  <h4>Specify your Rental duration:</h4>
-                  <div class="row form-group">
-                    <div class="col-sm-7">
-                      I require machine for
-                    </div>
-                    <div class="col-sm-5 padd-left">
-                      <div class="input-group">
-                        <input type="number" class="form-control" name="duration" ng-model="calRent.duration" >
-                        <span class="input-group-addon">{{calRent.rateType}}</span>
+                    <div class="col-sm-12 form-group">
+                      <div class="input-group">                       
+                        <input type="text" class="form-control" placeholder="Enter value" name="duration" ng-model="calRent.duration">
+                        <span class="input-group-addon">
+                          <select class="form-control" name="rateType" ng-model="calRent.rateType">
+                            <option value="Hours">Hours</option>
+                            <option value="Days">Days</option>
+                            <option value="Months">Months</option>
+                          </select>
+                          <i class="caret"></i>
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div class="calctr-value text-center">
                     <h4><i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i> {{totalRent}}</h4>
                   </div>
-                  <button type="submit" ng-click="calculateRent(currentProduct.rent, calRent)" class="btn btn-default btn-block">Calculate Now</button>
+                  <div class="text-center">
+                    <button type="submit" ng-click="calculateRent(currentProduct.rent, calRent)" class="btn btn-warning">Calculate Now</button>
+                  </div>
+                  
                 </div>
               </div>
             </div>
