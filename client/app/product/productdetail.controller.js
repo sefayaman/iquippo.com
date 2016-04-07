@@ -59,7 +59,6 @@ angular.module('sreizaoApp')
       $scope.totalRent = (Number(rentObj.rateDays.rentAmountD) * Number(calRent.duration));
     else
       $scope.totalRent = (Number(rentObj.rateMonths.rentAmountM) * Number(calRent.duration));
-    console.log("$scope.totalRent" + $scope.totalRent);
   }
 
 $scope.dayDiff = function(createdDate){

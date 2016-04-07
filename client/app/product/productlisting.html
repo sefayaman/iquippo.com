@@ -48,7 +48,8 @@
                           <th width="70">Mfg. Year</th>
                           <th>Location</th>                          
                           <th>Age</th>
-                          <th width="70">Expiry Date</th>
+                          <!-- <th width="70">Expiry Date</th> -->
+                          <th width="70">Trading Type</th>
                           <th>Status</th>
                           <th width="12%">Actions</th>
                         </tr>                      
@@ -89,7 +90,8 @@
                           <td>{{product.country}}</td>
                           <!-- <td>{{product.productCondition}}</td> -->
                           <td>{{dayDiff(product.relistingDate)}}</td>
-                          <td>{{getExpireDate(product.relistingDate)}}</td>
+                          <!-- <td>{{getExpireDate(product.relistingDate)}}</td> -->
+                          <td>{{product.tradeType}}</td>
                           <td>{{getStatus(product.status, product.isSold)}}</td>
                           <td>
                           <a href="javascript:void(0);" ng-click="productHistoryHandler(product)" type="button" class="btn btn-success btn-sm" uib-popover="View Detail" popover-trigger="mouseenter">

@@ -143,7 +143,6 @@ $scope.onCategoryChange = function(category){
       $scope.equipmentSearchFilter.currency.max = $scope.currency.maxPrice;
     else
       delete $scope.equipmentSearchFilter.currency.max;
-      console.log("------------",$scope.equipmentSearchFilter.currency);
       $scope.isSearch = true;
       $scope.fireCommand();
   }

@@ -105,8 +105,10 @@ angular.module('sreizaoApp')
       $scope.onCategoryChange($scope.selectedCategory,true);
       $scope.onBrandChange($scope.selectedBrand,true);
       $scope.setDate($scope.product.mfgYear,1,1);
-      $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
-      $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
+      if($scope.product.rent){
+        $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
+        $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
+      }
       if($scope.product.currencyType == "INR")
         $scope.product.currencyType = "";
       $scope.productName = $scope.product.name;
