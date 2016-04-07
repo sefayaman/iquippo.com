@@ -1,15 +1,22 @@
-'use strict';
+(function(){
+  'use strict';
+angular.module('account').controller('SettingsCtrl',SettingsCtrl);
 
-angular.module('sreizaoApp')
-  .controller('SettingsCtrl', function ($scope, $rootScope, User, Auth,$uibModalInstance,Modal) {
+function SettingsCtrl($scope, $rootScope, User, Auth,$uibModalInstance,Modal) {
+    var vm = this;
+
+    vm.data = {};
+    vm.changePassword = changePassword;
+    vm.closeDialog = closeDialog;
+
     $scope.errors = {};
-    $scope.changePassword = function(form) {
+  function changePassword(form) {
       $scope.submitted = true;
       if(form.$valid) {
-        Auth.changePassword($scope.user.oldPassword, $scope.user.newPassword)
+        Auth.changePassword(vm.data.oldPassword, vm.data.newPassword)
         .then( function() {
           $scope.message = 'Password successfully changed.';
-          $scope.closeDialog();
+          closeDialog();
           Modal.alert($scope.message,true);
         })
         .catch( function() {
@@ -18,9 +25,11 @@ angular.module('sreizaoApp')
           $scope.message = '';
         });
       }
-		};
+    };
 
-    $scope.closeDialog = function () {
+    function closeDialog() {
      $uibModalInstance.dismiss('cancel');
     };
-  });
+  }
+
+})();

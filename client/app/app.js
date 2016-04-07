@@ -1,16 +1,15 @@
 'use strict';
-//  'ngFileUpload'
-
+//Application submodule
+angular.module("account",[]);
 angular.module('sreizaoApp',[
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ui.router', 
   'ui.bootstrap',
-  'angularFileUpload',
   'datatables',
   'ui.tinymce',
-  'sotos.crop-image'
+  "account"
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

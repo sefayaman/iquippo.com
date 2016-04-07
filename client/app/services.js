@@ -298,6 +298,20 @@ angular.module('sreizaoApp')
       };
       return notificationSvc;
   }])
+  .factory("commonSvc",['$http',function($http){
+    var commonSvc = {};
+    var path = '/api/common';
+    commonSvc.sendOtp = function(data){
+      return $http.post(path + "/sendOtp",data)
+        .then(function(res){
+            return res.data;
+        })
+        .catch(function(err){
+            throw err;
+        });
+    }
+    return commonSvc;
+}])
  .factory("suggestionSvc",['$http',function($http){
     var suggestionService = {};
     var path = '/api/common/buildsuggestion';

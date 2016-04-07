@@ -1,24 +1,36 @@
-'use strict';
+(function(){
 
-angular.module('sreizaoApp')
-  .controller('SignupCtrl', function ($scope, $http, $rootScope, Auth, $location, $window,$uibModalInstance,Modal, notificationSvc) {
-    $scope.user = {};
-    $scope.errors = {};
-    $scope.otpCode;
-    $scope.isRegister = true;
-    $scope.user.activationOTP = "email";
+'use strict';
+angular.module('account').controller('SignupCtrl',SignupCtrl);
+
+//controller function
+function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uibModalInstance,Modal, notificationSvc) {
+    var vm = this;
+
+    vm.user = {};
+    vm.otpCode;
+    vm.user.activationOTP = "email";
+    vm.register = register;
+    vm.verify = verify;
+    vm.openLogin = openLogin;
+    vm.closeDialog = closeDialog;
+    vm.loginOauth = loginOauth;
+
     //$scope.phoneErrorMessage = "";
-    $scope.register = function() {
-      var ret = false;
+    $scope.errors = {};
+    $scope.isRegister = true;
+
+  function register() {
       //$scope.form.mobile.$invalid = false;
 
-      if($scope.form.$invalid ||ret){
+      if($scope.form.$invalid){
         $scope.submitted = true;
         return;
       }
-      if($scope.user.agree) 
+
+      if(vm.user.agree) 
       {
-        Auth.validateSignup({email:$scope.user.email,mobile:$scope.user.mobile}).then(function(data){
+        Auth.validateSignup({email:vm.user.email,mobile:vm.user.mobile}).then(function(data){
           if(data.errorCode == 1){
              Modal.alert("Email address already in use. Please use another email address",true);
              return;
@@ -26,37 +38,36 @@ angular.module('sreizaoApp')
             Modal.alert("Mobile number already in use. Please use another mobile number",true);
              return;
           }else{
-               $scope.sendOTP();
+               sendOTP();
           }
         });
       }else{
          Modal.alert("Please Agree to the Terms & Conditions",true);
       }
-      if($scope.user.country == 'Other')
-          $scope.user.country = $scope.user.otherCountry;
+
+      if(vm.user.country == 'Other')
+          vm.user.country = vm.user.otherCountry;
     };
 
+  function verify(form){
 
-$scope.verify = function(form){
-  if(!angular.isUndefined($scope.otpCode) 
-    && !angular.isUndefined($scope.user.otp) 
-    && $scope.otpCode == $scope.user.otp) 
+  if(!angular.isUndefined(vm.otpCode) && !angular.isUndefined(vm.user.otp) && vm.otpCode == vm.user.otp) 
     {
-        Auth.createUser($scope.user)
+        Auth.createUser(vm.user)
         .then( function(result) {
           var data = {};
-          data['to'] = $scope.user.email;
+          data['to'] = vm.user.email;
           data['subject'] = 'New User Registration: Success';
-          $scope.user.serverPath = serverPath;
-          notificationSvc.sendNotification('userRegEmail', data, $scope.user,'email');
-          $scope.closeDialog();
-          $scope.user = {};
+          vm.user.serverPath = serverPath;
+          notificationSvc.sendNotification('userRegEmail', data, vm.user,'email');
+          closeDialog();
+          vm.user = {};
         })
         .catch( function(err) {
           err = err.data;
           $scope.errors = {};
           $scope.isRegister = true;
-          $scope.otpCode = "";
+          vm.otpCode = "";
           // Update validity of form fields that match the mongoose errors
           angular.forEach(err.errors, function(error, field) {
             form[field].$setValidity('mongoose', false);
@@ -71,42 +82,58 @@ $scope.verify = function(form){
 
 }
 
-$scope.sendOTP = function(){
+function sendOTP(){
+
   var dataToSend = {};
   dataToSend['content'] = 'Your verification OTP is ';
-  dataToSend['otpOn'] = $scope.user.activationOTP;
+  dataToSend['otpOn'] = vm.user.activationOTP;
   dataToSend['sendToClient'] = 'y';
-  if($scope.user.activationOTP == 'email') {
-   if($scope.user.email) {
-       dataToSend['email'] = $scope.user.email;
+  if(vm.user.activationOTP == 'email') {
+   if(vm.user.email) {
+       dataToSend['email'] = vm.user.email;
     }else {
       Modal.alert('Please enter the email address',true);
       return;
     }
-  }
+  }else if(vm.user.activationOTP == 'mobile') {
+    if(vm.user.mobile) {
+       dataToSend['mobile'] = vm.user.mobile;
+    }else {
+      Modal.alert('Please enter the mobile number',true);
+      return;
+    }
+  }else{
+      Modal.alert('Please select otp option',true);
+      return;
+    }
   $scope.isRegister = false;
-  $http.post('/api/common/sendOtp',dataToSend).success(function(result) {
-      $scope.otpCode = result;
+  commonSvc.sendOtp(dataToSend)
+  .then(function(result){
+     vm.otpCode = result;
       Modal.alert('OTP has been sent successfully',true);
-    }).error(function(res){
-        Modal.alert(res,true);
-        $scope.isRegister = true;
-    });
+  })
+  .catch(function(res){
+    Modal.alert(res,true);
+    $scope.isRegister = true;
+  });
 
 }
 
-  $scope.loginOauth = function(provider) {
+  function loginOauth(provider) {
       $window.location.href = '/auth/' + provider;
     };
 
-    $scope.openLogin = function(){
-          $scope.closeDialog();
+    function openLogin(){
+          closeDialog();
          $scope.openDialog('login');
     };
 
 
-    $scope.closeDialog = function () {
+    function closeDialog() {
       $uibModalInstance.dismiss('cancel');
     };
     
-  });
+  }
+
+
+})()

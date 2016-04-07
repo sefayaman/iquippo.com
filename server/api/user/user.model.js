@@ -26,7 +26,7 @@ var UserSchema = new Schema({
   agree: Boolean,
   company: String,
   imgsrc: String,
-  activationOTP: String,
+  location: String,
   status:{
     type: Boolean,
     default: true
@@ -72,7 +72,8 @@ UserSchema
       'email': this.email,
       'phone' : this.phone,
       'country' : this.country,
-      'company' : this.company
+      'company' : this.company,
+      'location':this.location
     };
   });
 

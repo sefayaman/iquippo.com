@@ -1,23 +1,32 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('sreizaoApp')
-  .controller('LoginCtrl', function ($scope, Auth, $location, cartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state) {
-    $scope.user = {};
+angular.module('account').controller('LoginCtrl', LoginCtrl);
+
+  function LoginCtrl($scope, Auth, $location, cartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state) {
+    var vm = this;
+    vm.user = {};
+    vm.login = login;
+    vm.loginOauth = loginOauth;
+    vm.openRegister = openRegister;
+    vm.forgotPassword = forgotPassword;
+    vm.closeDialog = closeDialog;
+
     $scope.errors = {};
 
-    $scope.login = function(form) {
+    function login(form) {
       $scope.submitted = true;
-
       if(form.$valid) {
         Auth.login({
-          email: $scope.user.email,
-          password: $scope.user.password
+          email: vm.user.email,
+          password: vm.user.password
         })
         .then( function() {
-          $scope.closeDialog();
-         $scope.user = {};
+          closeDialog();
+          vm.user = {};
+
           /*Loading cart and other data if user is logged in*/
-          $rootScope.loading = true;
+        $rootScope.loading = true;
          Auth.isLoggedInAsync(function(loggedIn){
            $rootScope.loading = false;
            if(loggedIn){
@@ -36,22 +45,25 @@ angular.module('sreizaoApp')
       }
     };
 
-    $scope.loginOauth = function(provider) {
+    function loginOauth(provider) {
       $window.location.href = '/auth/' + provider;
     };
 
-     $scope.openRegister = function(){
-          $scope.closeDialog();
+     function openRegister(){
+          closeDialog();
           $scope.openDialog('signup');
     };
 
-    $scope.forgotPassword = function(){
-         $scope.closeDialog();
-          $scope.openDialog('forgotpassword');
+    function forgotPassword(){
+        closeDialog();
+        $scope.openDialog('forgotpassword');
     };
 
-    $scope.closeDialog = function () {
+    function closeDialog() {
      $uibModalInstance.dismiss('cancel');
     };
     
-  });
+  }
+
+
+})();

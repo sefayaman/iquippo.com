@@ -1,15 +1,15 @@
 var Modals = {
   login:{
     tplUrl:"app/account/login/login.html",
-    Ctrl:'LoginCtrl'
+    Ctrl:'LoginCtrl as loginVm'
   },
    signup:{
     tplUrl:"app/account/signup/signup.html",
-    Ctrl:'SignupCtrl'
+    Ctrl:'SignupCtrl as signupVm'
   },
   settings:{
     tplUrl:"app/account/settings/settings.html",
-    Ctrl:'SettingsCtrl'
+    Ctrl:'SettingsCtrl as settingsVm'
   },
   callback:{
     tplUrl:"app/callback/callback.html",
@@ -25,7 +25,7 @@ var Modals = {
   },
   forgotpassword:{
     tplUrl:"app/account/forgotpassword/forgotpassword.html",
-    Ctrl:'ForgotPasswordCtrl'
+    Ctrl:'ForgotPasswordCtrl as forgetPassVm'
   },
   classifiedad:{
      tplUrl:"app/classifiedaddes/classifiedadd.html",
