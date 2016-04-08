@@ -68,51 +68,89 @@ angular.module('sreizaoApp')
   }])
   .factory("categorySvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
       var catService = {};
+      var categoryCache = [];
       var path = '/api/category';
-      catService.getAllCategory = function(){
+      catService.getAllCategory = getAllCategory;
+      catService.getCategoryForMain = getCategoryForMain;
+      catService.getCategoryOnId = getCategoryOnId;
+      catService.getCategoryOnFilter = getCategoryOnFilter;
+      catService.getCategoryByName = getCategoryByName;
+      
+      function getAllCategory(){
 
         var deferred = $q.defer();
-        $http.get(path).then(function(res){
-
+        if(categoryCache && categoryCache.length > 0){
+          deferred,resolve(categoryCache);
+        }else{
+          $http.get(path).then(function(res){
           $rootScope.allCategory = _.sortBy(res.data, function(n) {
               return n.name == 'Other';
           });
+          categoryCache = $rootScope.allCategory;
           deferred.resolve(res.data);
 
           },function(errors){
             console.log("Errors in Category fetch list :"+ JSON.stringify(errors));
           });
-          return deferred.promise; 
+          
+        }
+        return deferred.promise; 
       };
 
-      catService.getCategoryOnId = function(id){
+      function getCategoryForMain(){
+        var filter = {};
+        var deferred = $q.defer();
+        if(categoryCache && categoryCache.length > 0){
+          deferred.resolve(categoryCache);
+        }else{
+            $http.post(path + "/search",filter).
+            then(function(res){
+              $rootScope.allCategory = _.sortBy(res.data, function(n) {
+              return n.name == 'Other';
+              });
+              categoryCache = $rootScope.allCategory;
+              deferred.resolve(res.data);
+            })
+            .catch(function(res){
+               console.log("Errors in Category fetch list :"+ JSON.stringify(res));
+               deferred.reject(res);
+            });
+          }
+          return deferred.promise;
+        }
+
+        function getCategoryOnFilter(filter){
+          return $http.post(path + "/search",filter).
+                  then(function(res){
+                    return res.data;
+                  })
+                  .catch(function(res){
+                     
+                     throw res;
+                  });
+          }
+
+      function getCategoryOnId(id){
         var cat;
-        for(var i = 0; i < $rootScope.allCategory.length ; i++){
-          if($rootScope.allCategory[i]._id == id){
-            cat = $rootScope.allCategory[i];
+        for(var i = 0; i < categoryCache.length ; i++){
+          if(categoryCache[i]._id == id){
+            cat = categoryCache[i];
             break;
           }
         }
         return cat;
       };
-      catService.getCategoryOnName = function(name){
-      var cat;
-      for(var i = 0; i < $rootScope.allCategory.length ; i++){
-        if($rootScope.allCategory[i].name == name){
-          cat = $rootScope.allCategory[i];
-          break;
-        }
-      }
-      return cat;
-    };
 
-    catService.updateCategory = function(category){
-        return $http.put(path + "/" + category._id,category);
-    };
-    
-    catService.deleteCategory = function(category){
-        return $http.delete(path + "/" + category._id);
-    };
+      function getCategoryByName(name){
+        var cat;
+        for(var i = 0; i < categoryCache.length ; i++){
+          if(categoryCache[i].name == name){
+            cat = categoryCache[i];
+            break;
+          }
+        }
+        return cat;
+      };
 
       return catService;
   }])
@@ -189,60 +227,6 @@ angular.module('sreizaoApp')
       return userService;
   }])
 
-  .factory("productSvc",['$http','$rootScope',function($http,$rootScope){
-      var prdService = {};
-      var path = '/api/products';
-      prdService.getAllProducts = function(){
-        return $http.get(path)
-      };
-      prdService.getProductOnId = function(id){
-        return $http.get(path + "/" + id)
-      };
-      prdService.addProduct = function(product){
-        return $http.post(path,product);
-      };
-      prdService.addProductInHistory = function(product){
-        return $http.post(path + "/createhistory",product);
-      };
-      prdService.countryWiseCount = function(){
-        return $http.post(path + "/countrywiseCount").then(function(res){
-            if(res && res.data && res.data.length > 0){
-              for(var i = 0; i < $rootScope.allCountries.length;i++){
-                  for(var j = 0;j < res.data.length;j++){
-                    if(res.data[j]['_id'] == $rootScope.allCountries[i]["name"]){
-                        $rootScope.allCountries[i]['count'] = res.data[j]['total_products'];
-                    }
-                  }
-              }
-
-              $rootScope.allCountries.sort(function(a,b){
-                return b.count - a.count;
-              });
-            }
-        });
-      };
-      prdService.updateProduct = function(product){
-        return $http.put(path + "/" + product._id,product);
-      };
-
-      prdService.setExpiry = function(ids){
-        return $http.post(path + "/setexpiry", ids)
-      };
-      
-      prdService.deleteProduct = function(product){
-        return $http.delete(path + "/" + product._id);
-      };
-      prdService.loadUploadedBulkProduct = function(fileName){
-        return $http.post(path + "/import",{filename:fileName})
-                .then(function(res){
-                  return res.data;
-                })
-                .catch(function(res){
-                  throw res;
-                })
-      }
-      return prdService;
-  }])
   .factory("countrySvc",['$http',function($http){
       var countryService = {};
       var path = '/api/common/countries';

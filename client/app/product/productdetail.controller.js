@@ -29,8 +29,8 @@ angular.module('sreizaoApp')
     }
 
   if($stateParams.id) {
-    productSvc.getProductOnId($stateParams.id).then(function(response){
-      $scope.currentProduct = response.data;
+    productSvc.getProductOnId($stateParams.id).then(function(result){
+      $scope.currentProduct = result;
       $rootScope.currentProduct = $scope.currentProduct;
       if($rootScope.currentProduct.serviceInfo.length > 0){
         for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){

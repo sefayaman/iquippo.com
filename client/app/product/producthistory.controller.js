@@ -14,8 +14,8 @@ angular.module('sreizaoApp')
 
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false);
     if($stateParams.id) {
-    productSvc.getProductOnId($stateParams.id).then(function(response){
-      $scope.currentProduct = response.data;
+    productSvc.getProductOnId($stateParams.id).then(function(result){
+      $scope.currentProduct = result;
       $rootScope.currentProduct = $scope.currentProduct;
       if($rootScope.currentProduct.serviceInfo.length > 0){
         for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
@@ -24,9 +24,9 @@ angular.module('sreizaoApp')
         }
       }
       getAllRequestOnProductId($stateParams.id);
-      if(response.data.productId) {
-        getAllProductHistoryOnProductId(response.data.productId);
-        getAllAdditionalServiceOnProductId(response.data.productId);
+      if(result.productId) {
+        getAllProductHistoryOnProductId(result.productId);
+        getAllAdditionalServiceOnProductId(result.productId);
       }
     });
   }

@@ -57,22 +57,23 @@
       };
 
       function getActiveClassifiedAd(){
-
+        
+        var deferred = $q.defer();
       	if(classifiedService.activeAds && classifiedService.activeAds.length){
-      		var deferred = $q.defer();
       		deferred.resolve(classifiedService.activeAds);
-   			return deferred.promise;
       	}else{
 
-      		return $http.post(path + "/search",{status:true})
+      		$http.post(path + "/search",{status:true})
       			.then(function(res){
       			   classifiedService.activeAds = res.data;
-      				return res.data;
+      				deferred.resolve(res.data);
       			})
       			.catch(function(res){
-      				throw res;
+      				deferred.reject(res);
       			})
       	}
+
+        return deferred.promise; 
       	
       }
 

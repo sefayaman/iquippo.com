@@ -72,14 +72,16 @@ exports.search = function(req, res) {
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
-  
+  if(req.body.searchStr){
+    var term = new RegExp("^" + req.body.searchStr, 'i');
+    filter['name'] = { $regex: term };
+  }
   var query = Category.find(filter);
-  console.log(req.body.searchstr);
   query.exec(
-               function (err, category) {
-                      if(err) { return handleError(res, err); }
-                      return res.status(200).json(category);
-               }
+       function (err, category) {
+              if(err) { return handleError(res, err); }
+              return res.status(200).json(category);
+       }
   );
 
 };
