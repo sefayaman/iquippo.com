@@ -60,7 +60,9 @@
                     </tr>
                     <tr>
                       <td>Brand / Model</td>
-                      <td>{{currentProduct.brand.name}} / {{currentProduct.model.name}}</td>
+                      <td ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name != 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.name}}</td>
+                      <td ng-if="currentProduct.brand.name == 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.otherName}} / {{currentProduct.model.otherName}}</td>
+                      <td ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.otherName}}</td>
                     </tr>                   
                     <tr>
                       <td>Category</td>
