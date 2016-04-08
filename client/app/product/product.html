@@ -657,9 +657,12 @@
 
                     <td>{{product.tradeType}}</td>
                     <td>{{product.group.name}}</td>
-                    <td>{{product.category.name}}</td>
-                    <td>{{product.brand.name}}</td>
-                    <td>{{product.model.name}}</td>
+                    <td ng-if="product.category.name != 'Other'">{{product.category.name}}</td>
+                    <td ng-if="product.category.name == 'Other'">{{product.category.otherName}}</td>
+                    <td ng-if="product.brand.name != 'Other'">{{product.brand.name}}</td>
+                    <td ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</td>
+                    <td ng-if="product.brand.name != 'Other'">{{product.model.name}}</td> 
+                    <td ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</td> 
                     <td>{{product.name}}</td>
                     <td>{{product.mfgYear | date:'yyyy'}}</td>
                     <td>{{product.operatingHour}}</td>

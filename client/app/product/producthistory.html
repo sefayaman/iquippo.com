@@ -231,11 +231,14 @@
                     </tr>
                     <tr>
                       <td>Brand / Model</td>
-                      <td>{{proHistory.history.brand.name}} / {{proHistory.history.model.name}}</td>
+                      <td ng-if="proHistory.history.brand.name != 'Other' && proHistory.history.model.name != 'Other'">{{proHistory.history.brand.name}} / {{proHistory.history.model.name}}</td>
+                      <td ng-if="proHistory.history.brand.name == 'Other' && proHistory.history.model.name == 'Other'">{{proHistory.history.brand.otherName}} / {{proHistory.history.model.otherName}}</td>
+                      <td ng-if="proHistory.history.brand.name != 'Other' && proHistory.history.model.name == 'Other'">{{proHistory.history.brand.name}} / {{proHistory.history.model.otherName}}</td>
                     </tr>                   
                     <tr>
                       <td>Category</td>
-                      <td>{{proHistory.history.category.name}}</td>
+                      <td ng-if="proHistory.history.category.name != 'Other'">{{proHistory.history.category.name}}</td>
+                      <td ng-if="proHistory.history.category.name == 'Other'">{{proHistory.history.category.otherName}}</td>
                     </tr>                     
                     <tr>
                       <td>Manufacturing Year</td>
