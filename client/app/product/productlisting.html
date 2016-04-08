@@ -94,9 +94,9 @@
                           <!-- <td>{{getExpireDate(product.relistingDate)}}</td> -->
                           <td>{{getStatus(product.status, product.isSold)}}</td>
                           <td>
-                          <a href="javascript:void(0);" ng-click="productHistoryHandler(product)" type="button" class="btn btn-success btn-sm" uib-popover="View Detail" popover-trigger="mouseenter">
+                          <!-- <a href="javascript:void(0);" ng-click="productHistoryHandler(product)" type="button" class="btn btn-success btn-sm" uib-popover="View Detail" popover-trigger="mouseenter">
                             <i class="fa fa-eye"></i>
-                          </a>
+                          </a> -->
                            <a href="javascript:void(0);" ng-disabled="product.isSold" ng-click="productEditHandler(product)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
                             <i class="fa fa-pencil"></i>
                           </a>
@@ -181,7 +181,7 @@
               <td>{{product.country}}</td>
             </tr>
             <tr>
-              <th>City</th>
+              <th>Location</th>
               <td>{{product.city}}</td>
             </tr>
             <tr>

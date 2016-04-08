@@ -48,6 +48,12 @@ angular.module('sreizaoApp')
     });
   }
 
+  $scope.getDateFormat = function(date){
+    if(!date)
+      return;
+    return moment(date).format('DD/MM/YYYY');
+  }
+
 
   $scope.calculateRent = function(rentObj, calRent){
     if(!calRent.duration) {

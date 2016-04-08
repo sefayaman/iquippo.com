@@ -107,6 +107,9 @@ var locationList = [
 },
 {
   "name" : "Location3"
+},
+{
+  "name" : "Location4"
 }
 ]
 

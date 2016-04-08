@@ -91,7 +91,7 @@
                       <td>{{currentProduct.country}}</td>
                     </tr>
                     <tr>
-                      <td>City</td>
+                      <td>Location</td>
                       <td>{{currentProduct.city}}</td>
                     </tr>
                     <tr>
@@ -113,6 +113,64 @@
                     </tr>
                     
                   </table>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="rentstatus.open">
+                  <uib-accordion-heading>
+                    Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
+                  </uib-accordion-heading>
+                  <div class="row form-group">
+                    <div class="col-sm-4"><strong>Availability of asset</strong></div>
+                    <div class="col-sm-4">{{getDateFormat(currentProduct.rent.fromDate)}}</div>
+                    <div class="col-sm-4">{{getDateFormat(currentProduct.rent.toDate)}}</div>
+                  </div>
+                  <table class="table table-striped">
+                      <thead>
+                        <tr>   
+                          <th></th>
+                          <th>Min. Rental Period</th>                     
+                          <th>MAx. Rental Period</th>
+                          <th>Rent Amount</th>
+                          <th>Security Deposit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
+                          <td><b>Hours</b></td>
+                          <td>{{currentProduct.rent.rateHours.minPeriodH}}</td>
+                          <td>{{currentProduct.rent.rateHours.maxPeriodH}}</td>
+                          <td>{{currentProduct.rent.rateHours.rentAmountH}}</td>
+                          <td>{{currentProduct.rent.rateHours.seqDepositH}}</td>
+                        </tr>
+                        <tr ng-if="currentProduct.rent.rateDays.rateType == 'days'">
+                          <td><b>Days</b></td>
+                          <td>{{currentProduct.rent.rateDays.minPeriodD}}</td>
+                          <td>{{currentProduct.rent.rateDays.maxPeriodD}}</td>
+                          <td>{{currentProduct.rent.rateDays.rentAmountD}}</td>
+                          <td>{{currentProduct.rent.rateDays.seqDepositD}}</td>
+                        </tr>
+                        <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
+                          <td><b>Months</b></td>                       
+                          <td>{{currentProduct.rent.rateMonths.minPeriodM}}</td>
+                          <td>{{currentProduct.rent.rateMonths.maxPeriodM}}</td>
+                          <td>{{currentProduct.rent.rateMonths.rentAmountM}}</td>
+                          <td>{{currentProduct.rent.rateMonths.seqDepositM}}</td>
+                        </tr>
+                      </tbody>
+                      <!-- <tr>
+                        <th></th>
+                        <td>Min. Rental Period</td>
+                        <td>Max. Rental Period</td>
+                        <td>Rent Amount</td>
+                        <td>Security Deposit</td>
+                      </tr>                   
+                      <tr ng-repeat="rentInfo in currentProduct.rent">
+                        <td>{{rentInfo.rateHours.minPeriodH}}</td>
+                        <td>{{rentInfo.rateHours.maxPeriodH}}</td>
+                        <td>{{rentInfo.rateHours.rentAmountH}}</td>
+                        <td>{{rentInfo.rateHours.seqDepositH}}</td>
+                      </tr> -->
+                    </table>
                 </uib-accordion-group>
 
                 <uib-accordion-group is-open="Techstatus.open">

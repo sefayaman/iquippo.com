@@ -26,6 +26,7 @@ var UserSchema = new Schema({
   agree: Boolean,
   company: String,
   imgsrc: String,
+  city:String,
   location: String,
   status:{
     type: Boolean,
