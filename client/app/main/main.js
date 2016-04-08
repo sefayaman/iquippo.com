@@ -126,19 +126,19 @@ angular.module('sreizaoApp')
       .state('certifiedbyiquippo', {
         url:"/certifiedbyiquippo",
         templateUrl: 'app/staticpages/certifiedByiQuippo.html',
-        controller:"StaticCtrl",
+        controller:"CetifiedByiQuippoCtrl",
     	  layout:'client'
       })
       .state('shipping', {
         url:"/shipping",
         templateUrl: 'app/staticpages/shipping.html',
-        controller:"StaticCtrl",
+        controller:"ShippingCtrl",
     	  layout:'client'
       })
       .state('valuation', {
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
-        controller:"StaticCtrl",
+        controller:"ValuationCtrl",
     	  layout:'client'
       })
       .state('privacy', {
@@ -194,6 +194,13 @@ angular.module('sreizaoApp')
         url: '/emailer',
         templateUrl: 'app/admin/emailer/emailer.html',
         controller: 'EmailerCtrl',
+        authenticate:true,
+        layout:'admin',
+        restrict:true
+      })
+      .state('gSettings', {
+        url: '/gsettings',
+        templateUrl: 'app/admin/gsettings/gsettings.html',
         authenticate:true,
         layout:'admin',
         restrict:true

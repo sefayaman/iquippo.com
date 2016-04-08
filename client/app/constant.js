@@ -31,18 +31,6 @@ var Modals = {
      tplUrl:"app/classifiedaddes/classifiedadd.html",
     Ctrl:'ClassifiedAdCtrl as classifiedadVm'
   },
-  shippingquote:{
-    tplUrl:"app/staticpages/shippingquote.html",
-    Ctrl:'ShippingCtrl'
-  },
-  valuationquote:{
-    tplUrl:"app/staticpages/valuationquote.html",
-    Ctrl:'ValuationCtrl'
-  },
-  certifiedbyiquippoquote:{
-    tplUrl:"app/staticpages/certifiedbyiquippoquote.html",
-    Ctrl:'CetifiedByiQuippoCtrl'
-  },
   adduser:{
     tplUrl:"app/admin/usermanagement/adduser.html",
     Ctrl:'AddUserCtrl'

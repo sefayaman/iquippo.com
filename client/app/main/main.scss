@@ -70,7 +70,7 @@ select::-ms-expand {
 .main-container .panel.panel-primary a{color:#fff;}
 .main-container .panel.panel-primary hr{margin-top:10px;margin-bottom:0;}
 .main-container .panel.panel-primary .panel-body{padding:5px;}
-.main-container{overflow:hidden;padding-bottom: 20px; }
+.main-container{overflow:hidden;padding-bottom: 5px; }
 ul.verContainer{width:170px; height:360px;list-style-type:none outside none;padding-left:0px;font-smoothing:antialiased;margin:0 auto;}
 ul.verContainer li{position: relative; list-style:none;padding:5px 5px 10px; border-bottom:1px solid #ccc;}
 ul.verContainer li a{margin-right:5px;}
@@ -155,7 +155,7 @@ header{background:#fff;}
 #view-container{min-height:400px;margin-bottom:15px;}
 .discription{font-size:12px;}
 .padd-left{padding-left:0;}
-.product-gallery{margin-top:30px;}
+.product-gallery{margin-top:0px;}
 .news-tab{border:1px solid #999;margin-top:30px;}
 .tab-content{padding:10px;}
 .tab-content .media a{border:1px solid #999;margin-right:10px;padding:2px; width:80px;}
@@ -196,7 +196,8 @@ header{background:#fff;}
 .pagination > li:first-child > a,.pagination > li:first-child > span,.pagination > li:last-child > a,.pagination > li:last-child > span{border-radius:0;}
 .pagination > .active > a,.pagination > .active > a:focus,.pagination > .active > a:hover,.pagination > .active > span,.pagination > .active > span:focus,.pagination > .active > span:hover{background-color:#382516;border-color:#382516;}
 .result-products img{width:150px;height:130px;}
-.input-group .input-group-addon{padding:0; border:none; border-radius:0; width:80px;}
+.input-group .input-group-addon{padding:0; border:none; border-radius:0; width:40px;}
+.calctr-info .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:80px;}
 .modal-content .input-group{width:100%;}
 .modal-content .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:50px;}
 .seller-info .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:50px;}
@@ -217,15 +218,16 @@ header{background:#fff;}
 
 /*vendors*/
 .panel-group .panel{border-radius:0;}
-.panel-group .panel.panel-primary{border-radius:0; border-color:#104095;}
-.panel-group .panel .panel-heading{border-radius:0; background-color:#104095; border-color:#104095;}
+.panel-group .panel.panel-primary{border-radius:0; border:0;}
+.panel-group .panel.panel-primary .panel-heading{border-radius:0; background-color:#104095; border-color:#104095;}
+.panel-group .panel.panel-primary .panel-body{border:1px solid #ddd; border-top:0;}
 .information .panel-group .panel .panel-heading{background-color:#e4e4e4;border-radius:0;padding:0;}
 .information .panel-group .panel .panel-heading a{display:block;outline:none;text-decoration:none;padding:10px;}
 .information .panel-group .panel .panel-body{padding-bottom:0px;}
 .vendor-list ul{padding:0;}
 .vendor-list ul li{list-style:none;margin-top:10px;}
 .vendor-list ul li a{color:#666;text-decoration:none;}
-.add1{border:1px solid #eee; margin-bottom: 40px;}
+.add1{border:1px solid #eee; margin-bottom: 15px;}
 .add2{width: 60%; height: 100px;}
 
 /*dashboard*/
@@ -601,4 +603,15 @@ table.table{width:100% !important;}
 .search-tabs .btn-default.active{color:#e3000f; border-bottom:2px solid #e3000f;}
 .calctr-info .input-group-addon i{right:10px;}
 
-
+/* magnifier */
+.product-gallery .modal-dialog.modal-lg{width:95%; margin:5px auto;}
+.product-gallery .modal-content{background:transparent;box-shadow:none; border:0;}
+.product-gallery .modal-header{border:0;padding:0; padding-bottom:30px;}
+.product-gallery .modal-dialog .modal-body{overflow:inherit;height: 500px;max-height: inherit; padding:0; }
+.product-gallery .article-slide .carousel-indicators{ position: absolute;left: auto;;margin:auto;width: 100%;z-index: 3;display: block; text-align: center;}
+.product-gallery .article-slide .carousel-indicators li{ float:none; width:60px;height:50px;}
+.product-gallery .article-slide .carousel-indicators img{width:60px; border:0; height:50px;}
+.product-gallery .carousel-inner{ max-height:100%; height:600px;}
+.product-gallery .close{color:#fff; text-shadow:none; font-size:28px; opacity:1; font-weight:bold; height:35px; width:35px;  display:block; position: relative; top:-5px;}
+#magnifier-modal .carousel-inner .item{max-width:100%; max-height:100%; height:100%;}
+#magnifier-modal .carousel-inner .item img{display:inline; margin:auto; height:100%;}

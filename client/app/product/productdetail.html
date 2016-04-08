@@ -24,13 +24,9 @@
 
               <!-- Wrapper for slides -->
               <div class="carousel-inner cont-slider">
-                <div class="mag item active" >
-                  <!-- <img alt="" title="" ng-src="{{uploadImagePrefix}}{{currentProduct.images[0].src}}" class="img-responsive"> -->
-                   <zoom mark-height="100" mark-width="100" ng-src="{{currentProduct.images[0].displaySrc}}" zoom-lvl="{{zoomLvl}}"></zoom>
-                </div>
-                <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-if="$index > 0">
-                 <!--  <img alt="" title="" ng-src="{{uploadImagePrefix}}{{thumbnailImage.src}}" class="img-responsive"> -->
-                  <zoom mark-height="100" mark-width="100" ng-src="{{thumbnailImage.displaySrc}}" zoom-lvl="{{zoomLvl}}"></zoom>
+                <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':$index == 0}">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="previewProduct(currentProduct.images, $index)">
+                  
                 </div>
               </div>
               <!-- Indicators -->
@@ -121,11 +117,17 @@
                   <uib-accordion-heading>
                     Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
                   </uib-accordion-heading>
-                  <div class="row form-group">
-                    <div class="col-sm-4"><strong>Availability of asset</strong></div>
-                    <div class="col-sm-4">{{getDateFormat(currentProduct.rent.fromDate)}}</div>
-                    <div class="col-sm-4">{{getDateFormat(currentProduct.rent.toDate)}}</div>
-                  </div>
+                    <h5 class="text-left"><strong>Availability of asset</strong></h5>
+                      <div class="row">
+                        <div class="col-sm-6 text-left">
+                          <label>From </label>
+                          <p>{{getDateFormat(currentProduct.rent.fromDate)}}</p>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                          <label>To</label>
+                          <p>{{getDateFormat(currentProduct.rent.toDate)}}</p>
+                        </div>
+                      </div>
                   <table class="table table-striped">
                       <thead>
                         <tr>   
@@ -159,19 +161,6 @@
                           <td>{{currentProduct.rent.rateMonths.seqDepositM}}</td>
                         </tr>
                       </tbody>
-                      <!-- <tr>
-                        <th></th>
-                        <td>Min. Rental Period</td>
-                        <td>Max. Rental Period</td>
-                        <td>Rent Amount</td>
-                        <td>Security Deposit</td>
-                      </tr>                   
-                      <tr ng-repeat="rentInfo in currentProduct.rent">
-                        <td>{{rentInfo.rateHours.minPeriodH}}</td>
-                        <td>{{rentInfo.rateHours.maxPeriodH}}</td>
-                        <td>{{rentInfo.rateHours.rentAmountH}}</td>
-                        <td>{{rentInfo.rateHours.seqDepositH}}</td>
-                      </tr> -->
                     </table>
                 </uib-accordion-group>
 
@@ -293,7 +282,7 @@
                       <div class="col-xs-6">
                         <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">  
                         <div class="input-group">
-                          <input type="text" name="mobile" ng-model="buycontact.mobile" ng-value="buycontact.mobile" class="form-control" placeholder="* Mobile No." uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top"required>
+                          <input type="text" name="mobile" ng-model="buycontact.mobile" ng-value="buycontact.mobile" class="form-control" placeholder="* Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top"required>
                           </div>
                         </div>
                       </div>
@@ -382,6 +371,9 @@
         $(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
         });
       });
+      function goTo(dir){
+           $('#article-photo').carousel(dir);
+      }
     </script>
     </div>
  <script type="text/ng-template" id="magnifier.html">
@@ -390,11 +382,31 @@
         <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>              
     </div>
     <div class="modal-body">
-      <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-        <uib-slide ng-repeat="thumbnailImage in currentProduct.images" active="slide.active">
-          <img  ng-src="{{uploadImagePrefix}}{{thumbnailImage.src}}" alt="Name" class="img-responsive pic">
-        </uib-slide>
-      </uib-carousel>
+      <div class="carousel slide article-slide" id="article-photo">
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner cont-slider">
+                <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+                </div>
+              </div>
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+                </li>
+              </ol> 
+
+              <!-- Controls -->
+              <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>             
+      </div>
     </div>
 </div>
 </script>

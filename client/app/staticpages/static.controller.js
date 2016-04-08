@@ -6,7 +6,7 @@ angular.module('sreizaoApp')
     
   }])
 
-  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$uibModalInstance', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $uibModalInstance, Modal, notificationSvc) {
+  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http' , 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, Modal, notificationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.shippingService = {};
@@ -41,8 +41,7 @@ angular.module('sreizaoApp')
       data['to'] = $scope.shippingService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.shippingService.serverPath},'email');
-      
-      $scope.closeDialog();
+
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -52,12 +51,8 @@ angular.module('sreizaoApp')
     $scope.resetClick = function () {
        $scope.shippingQuote = {};
     };
-
-    $scope.closeDialog = function () {
-       $uibModalInstance.dismiss('cancel');
-    };
   }])
-  .controller('ValuationCtrl', ['$scope', '$rootScope', 'Auth', '$http','$uibModalInstance', '$log', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $uibModalInstance, $log, Modal, notificationSvc) {
+  .controller('ValuationCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.valuationQuote = {};
@@ -107,8 +102,7 @@ angular.module('sreizaoApp')
       data['to'] = $scope.valuationService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.valuationService.serverPath},'email');
-      
-      $scope.closeDialog();
+
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -117,10 +111,6 @@ angular.module('sreizaoApp')
 
     $scope.resetClick = function () {
        $scope.valuationQuote = {};
-    };
-
-    $scope.closeDialog = function () {
-       $uibModalInstance.dismiss('cancel');
     };
 
     $scope.changed = function (mytime) {
@@ -178,7 +168,7 @@ angular.module('sreizaoApp')
   };
   }])
 
-  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$uibModalInstance', '$log', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $uibModalInstance, $log, Modal, notificationSvc) {
+  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.cetifiedByiQuippoQuote = {};
@@ -231,7 +221,6 @@ angular.module('sreizaoApp')
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.cetifiedByiQuippoService.serverPath},'email');
       
-      $scope.closeDialog();
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -241,11 +230,6 @@ angular.module('sreizaoApp')
     $scope.resetClick = function () {
        $scope.cetifiedByiQuippoQuote = {};
     };
-
-    $scope.closeDialog = function () {
-       $uibModalInstance.dismiss('cancel');
-    };
-
 
   $scope.changed = function (mytime) {
       if(mytime) {

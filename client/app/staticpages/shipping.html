@@ -1,5 +1,5 @@
 <div class="container">
-		<div class="col-sm-12 text-justify">
+		<div class="col-sm-6 text-justify">
 			<h3>Shipping</h3>
 			<legend></legend>
 
@@ -9,8 +9,114 @@
 				requirements. We work with modern freighters to provide an efficient and reliable marine transportation service taking care of all vital Pre and Post shipping requirements.
 			</p>
 
-			<div class="serve text-center">
+			<!-- <div class="serve text-center">
 					<a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('shippingquote')">Request a Quote</a>
-			</div>
+			</div> -->
 		</div>
+		<div class="col-sm-6">
+			<h3>Shipping Quote</h3>
+      		<legend></legend>
+     
+			<form class="form" ng-submit="addShippingQuote($event)" novalidate name="form">
+        <div class="form-group">                    
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="shippingQuote.fname" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">                                      
+                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="shippingQuote.mname">
+              </div>
+            </div>
+          </div>  
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
+                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="shippingQuote.lname" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+                <select class="form-control" ng-model="shippingQuote.country" name="country" required>
+                  <option value="">*Select Country</option>
+                  <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>  
+
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <input type="text" name="" class="form-control" placeholder="City" ng-model="shippingQuote.city">
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="shippingQuote.companyname">
+              </div>
+            </div>
+            
+          </div>  
+
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="shippingQuote.designation">
+              </div>
+            </div>
+
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="shippingQuote.phone">
+              </div>
+            </div>
+            
+          </div>
+          
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
+               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+              <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="shippingQuote.email" required>
+              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+              Please enter a valid email.
+              </p>
+              </div>
+            </div>
+          </div>    
+          <div class="row text-left">
+                <div class="col-xs-12 col-sm-6 form-group">Part shipment allowed</div>
+                <div class="col-xs-6 col-sm-3 form-group">
+                  <input type="radio" checked="checked" name="allowed" ng-model="shippingQuote.allowed" value="yes"> Yes                  
+                </div>
+                <div class="col-xs-6 col-sm-3 form-group">
+                  <input type="radio" name="allowed" ng-model="shippingQuote.allowed" value="no"> No
+                </div>
+          </div>
+          <div class="row text-left">
+              <div class="col-xs-12 col-sm-6 form-group">Packaging as per international standard</div>
+              <div class="col-xs-6 col-sm-3 form-group">
+                <input type="radio" checked="checked" name="packaging" ng-model="shippingQuote.packaging" value="yes"> Yes                    
+              </div>
+              <div class="col-xs-6 col-sm-3 form-group">
+                <input type="radio" name="packaging" ng-model="shippingQuote.packaging" value="no"> No                     
+              </div>
+          </div>
+           <div class="form-group">                      
+            <textarea class="form-control" placeholder="Comments if any" ng-model="shippingQuote.comment"></textarea>
+          </div> 
+        </div>
+
+        <div class="modal-footer">
+          <button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
+          <button type="submit" class="btn btn-warning">Submit</button>
+        </div>
+      </form>
 </div>

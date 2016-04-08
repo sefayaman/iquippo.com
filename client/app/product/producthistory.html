@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-sm-4 form-group"  ng-class="{'has-error': form.buyerMobile.$invalid && form.submitted }">
                     <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Buyer Mobile No." name="buyerMobile" ng-model="sellProduct.buyerMobile" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      <input type="text" class="form-control" placeholder="Buyer Mobile No." name="buyerMobile" ng-model="sellProduct.buyerMobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                       </div>
                       
                     </div>
@@ -280,6 +280,57 @@
                     </tr>
                     
                   </table>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="rentstatus.open">
+                  <uib-accordion-heading>
+                    Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
+                  </uib-accordion-heading>
+                    <h5 class="text-left"><strong>Availability of asset</strong></h5>
+                      <div class="row">
+                        <div class="col-sm-2 text-left">
+                          <label>From </label>
+                          <p>{{getDateFormat(proHistory.history.rent.fromDate)}}</p>
+                        </div>
+                        <div class="col-sm-2 text-left">
+                          <label>To</label>
+                          <p>{{getDateFormat(proHistory.history.rent.toDate)}}</p>
+                        </div>
+                      </div>
+                  <table class="table table-striped">
+                      <thead>
+                        <tr>   
+                          <th></th>
+                          <th>Min. Rental Period</th>                     
+                          <th>MAx. Rental Period</th>
+                          <th>Rent Amount</th>
+                          <th>Security Deposit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-if="proHistory.history.rent.rateHours.rateType == 'hours'">
+                          <td><b>Hours</b></td>
+                          <td>{{proHistory.history.rent.rateHours.minPeriodH}}</td>
+                          <td>{{proHistory.history.rent.rateHours.maxPeriodH}}</td>
+                          <td>{{proHistory.history.rent.rateHours.rentAmountH}}</td>
+                          <td>{{proHistory.history.rent.rateHours.seqDepositH}}</td>
+                        </tr>
+                        <tr ng-if="proHistory.history.rent.rateDays.rateType == 'days'">
+                          <td><b>Days</b></td>
+                          <td>{{proHistory.history.rent.rateDays.minPeriodD}}</td>
+                          <td>{{proHistory.history.rent.rateDays.maxPeriodD}}</td>
+                          <td>{{proHistory.history.rent.rateDays.rentAmountD}}</td>
+                          <td>{{proHistory.history.rent.rateDays.seqDepositD}}</td>
+                        </tr>
+                        <tr ng-if="proHistory.history.rent.rateMonths.rateType == 'months'">
+                          <td><b>Months</b></td>                       
+                          <td>{{proHistory.history.rent.rateMonths.minPeriodM}}</td>
+                          <td>{{proHistory.history.rent.rateMonths.maxPeriodM}}</td>
+                          <td>{{proHistory.history.rent.rateMonths.rentAmountM}}</td>
+                          <td>{{proHistory.history.rent.rateMonths.seqDepositM}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                 </uib-accordion-group>
 
                 <uib-accordion-group is-open="Techstatus.open">

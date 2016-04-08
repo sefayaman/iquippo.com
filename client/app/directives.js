@@ -74,8 +74,8 @@ angular.module('sreizaoApp')
             });
         }
     };
-})
- .directive('zoom', function(){
+});
+/* .directive('zoom', function(){
     function link(scope, element, attrs){
       var $ = angular.element;
       var original = $(element[0].querySelector('.original'));
@@ -183,4 +183,4 @@ angular.module('sreizaoApp')
       link: link
     };
   });
-  
+  */

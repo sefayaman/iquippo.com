@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('productDetailCtrl', function ($scope, $stateParams, $rootScope, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
+  .controller('productDetailCtrl', function ($scope, $stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
   $scope.currentProduct = {};
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
@@ -133,7 +133,22 @@ $scope.dayDiff = function(createdDate){
         Modal.alert(res);
     });
   };
+  $scope.previewProduct = function(currentProductImages, idx){ 
+  var prevScope = $rootScope.$new();
+  prevScope.images = currentProductImages;
+  prevScope.idx = idx;
+  var prvProductModal = $uibModal.open({
+      templateUrl: "magnifier.html",
+      scope: prevScope,
+      windowTopClass:'product-gallery',
+      size: 'lg'
+  });
 
+  prevScope.close = function(){
+    prvProductModal.close();
+  }
+ 
+}
   $scope.addProductToCart = function(){
       if(!Auth.getCurrentUser()._id){
         Modal.alert(informationMessage.cartLoginError,true);

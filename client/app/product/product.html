@@ -74,7 +74,7 @@
                       <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
                     </div>
                     <div class="col-sm-4">
-                      <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top">
+                      <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top">
                     </div>
                   </div>
                   <div class="row col-sm-12 form-group" ng-show="isActive() || isChannelPartner()">
@@ -239,7 +239,18 @@
                       <i class="caret"></i>
                     </div>
                   </div>
-
+                  <div class="row">
+                    <div class="form-group col-sm-5">State<span class="text-warning">*</span></div>
+                    <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
+                      <select class="form-control" name="country" ng-model="product.country" required>
+                            <option value="" disabled>Select State</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                  </div>
                   <!-- <div class="row">
                     <div class="form-group col-sm-5">City<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.city.$invalid && submitted}">
@@ -626,6 +637,7 @@
               <div class="table-responsive">                
                 <table class="table table-bordered" align="left">
                   <tr>
+                    <td>Trading Type</td>
                     <td>Product Group</td>
                     <td>Categories</td>
                     <td>Product Brand</td>
@@ -642,6 +654,8 @@
                     <td>Video</td>
                   </tr>
                   <tr>
+
+                    <td>{{product.tradeType}}</td>
                     <td>{{product.group.name}}</td>
                     <td>{{product.category.name}}</td>
                     <td>{{product.brand.name}}</td>
@@ -675,8 +689,53 @@
                  -->
                 </table>
               </div>
-
-               <h4 class="text-left">Technical Information</h4>
+              <h4 class="text-left">Renting information</h4>
+                <h5 class="text-left">Availability of asset</h5>
+                <div class="row">
+                  <div class="col-sm-2 text-left">
+                    <label>From </label>
+                    <p>{{getDateFormat(product.rent.fromDate)}}</p>
+                  </div>
+                  <div class="col-sm-2 text-left">
+                    <label>To</label>
+                    <p>{{getDateFormat(product.rent.fromDate)}}</p>
+                  </div>
+                </div>
+              <table class="table">
+                <thead>
+                      <tr>   
+                        <th></th>
+                        <th>Min. Rental Period</th>                     
+                        <th>MAx. Rental Period</th>
+                        <th>Rent Amount</th>
+                        <th>Security Deposit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-if="product.rent.rateHours.rateType == 'hours'">
+                        <td><b>Hours</b></td>
+                        <td>{{product.rent.rateHours.minPeriodH}}</td>
+                        <td>{{product.rent.rateHours.maxPeriodH}}</td>
+                        <td>{{product.rent.rateHours.rentAmountH}}</td>
+                        <td>{{product.rent.rateHours.seqDepositH}}</td>
+                      </tr>
+                      <tr ng-if="product.rent.rateDays.rateType == 'days'">
+                        <td><b>Days</b></td>
+                        <td>{{product.rent.rateDays.minPeriodD}}</td>
+                        <td>{{product.rent.rateDays.maxPeriodD}}</td>
+                        <td>{{product.rent.rateDays.rentAmountD}}</td>
+                        <td>{{product.rent.rateDays.seqDepositD}}</td>
+                      </tr>
+                      <tr ng-if="product.rent.rateMonths.rateType == 'months'">
+                        <td><b>Months</b></td>                       
+                        <td>{{product.rent.rateMonths.minPeriodM}}</td>
+                        <td>{{product.rent.rateMonths.maxPeriodM}}</td>
+                        <td>{{product.rent.rateMonths.rentAmountM}}</td>
+                        <td>{{product.rent.rateMonths.seqDepositM}}</td>
+                      </tr>
+                    </tbody>
+                </table>
+              <h4 class="text-left">Technical Information</h4>
               <div class="table-responsive">               
                 <table class="table table-bordered">
                   <tr>
