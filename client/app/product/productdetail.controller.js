@@ -12,6 +12,7 @@ angular.module('sreizaoApp')
   $rootScope.equipmentSearchFilter = {};
   $scope.calRent = {};
   $scope.calRent.rateType = "Hours";
+  $scope.totalRent = 0;
   $scope.status = {
     Firstopen: true
   };

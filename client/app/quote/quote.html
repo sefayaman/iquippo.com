@@ -29,30 +29,37 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-sm-12 form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
-                <input type="email" class="form-control" name="email" ng-model="quote.email" ng-value="quote.email" placeholder="* Email Address" required>
-                <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
-                  Please enter a valid email.
-                </p>
-                
-              </div>
+                  <div class="col-sm-6 form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                    <input type="email" class="form-control" name="email" ng-model="quote.email" ng-value="quote.email" placeholder="* Email Address" required>
+                    <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                      Please enter a valid email.
+                    </p>
+                    
+                  </div>
+                   <div class="form-group col-sm-6">
+                      <select class="form-control col-md-2" name="groupName" ng-model="quote.groupName">
+                      <option value="" disabled>Select Group</option>
+                      <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
+                      </select>   
+                      <i class="caret"></i>                    
+                    </div>
                 </div>
                
 
-                <div class="row">
-                  <div class="form-group col-sm-6">
-                    <select class="form-control col-md-2" name="groupName" ng-model="quote.groupName">
-                  <option value="" disabled>Select Group</option>
-                  <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
-                  </select>   
-                  <i class="caret"></i>                    
-                  </div>
+                <div class="row">                  
                   <div class="form-group col-sm-6">
                     <select class="form-control" name="catName" ng-model="quote.catName">
-                <option value="" disabled>Select Category</option>
-                <option ng-repeat="category in allCategory"  value="{{category.name}}">{{category.name}}</option>
-                </select>  
-                <i class="caret"></i> 
+                    <option value="" disabled>Select Category</option>
+                    <option ng-repeat="category in allCategory"  value="{{category.name}}">{{category.name}}</option>
+                    </select>  
+                    <i class="caret"></i> 
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <select class="form-control col-md-2" name="subcategory" ng-model="quote.subcategory">
+                    <option value="" disabled>Select Subcategory</option>
+                    <option ng-repeat="category in allCategory"  value="{{category.name}}">{{category.name}}</option>
+                    </select>   
+                    <i class="caret"></i>                    
                   </div>
                 </div>
 
@@ -66,15 +73,16 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" name="price" ng-model="quote.brand" value="" placeholder="Expected Price">
+                    <input type="text" class="form-control" name="expPrice" ng-model="quote.expPrice" value="" placeholder="Expected Price">
                   </div>
                   <div class="form-group col-sm-6">
-                    <select class="form-control">
-                      <option>Location</option>
-                      <option>Location1</option>
-                      <option>Location2</option>
-                      <option>Location3</option>
-                    </select>
+                    <div class="form-group" ng-class="{'has-error': form.location.$invalid && form.submitted}">
+                      <select class="form-control" name="location" ng-model="quote.city" required>
+                        <option value="" disabled>*Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
                   </div>
                 </div>
 
@@ -86,7 +94,7 @@
 
                 <div class="row">
                   <div class="col-sm-12 form-group text-left">
-                    <input type="checkbox">I Agree to the Terms &amp; Conditions.
+                    <input type="checkbox" name="agree" ng-model="quote.agree" value="">I Agree to the Terms &amp; Conditions.
                   </div>
                 </div>
 

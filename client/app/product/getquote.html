@@ -31,12 +31,19 @@
             </select>
           </div>
         </div>
-      </div>  
+      </div> 
 
       <div class="row">
         <div class="col-xs-6">
           <div class="form-group">
-            <input type="text" name="" class="form-control" placeholder="City" ng-model="productQuote.city">
+            <!-- <input type="text" name="" class="form-control" placeholder="City" ng-model="productQuote.city"> -->
+            <div class="form-group" ng-class="{'has-error': form.location.$invalid && form.submitted}">
+              <select class="form-control" name="location" ng-model="product.city" required>
+                <option value="" disabled>*Select Location</option>
+                <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+              </select>
+              <i class="caret"></i>
+            </div>
           </div>
         </div>
         <div class="col-xs-6">

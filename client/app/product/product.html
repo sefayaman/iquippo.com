@@ -240,16 +240,16 @@
                     </div>
                   </div>
 
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="form-group col-sm-5">City<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.city.$invalid && submitted}">
                       <input type="text" placeholder="Enter City" name="city" ng-value="product.city" ng-model="product.city"  class="form-control" required>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row">
                     <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.location.$invalid && submitted}">
-                      <select class="form-control" name="location" ng-model="product.location" required>
+                      <select class="form-control" name="location" ng-model="product.city" required>
                         <option value="" disabled>Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                       </select>
