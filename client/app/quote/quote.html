@@ -47,8 +47,8 @@
                
 
                 <div class="row">                  
-                  <div class="form-group col-sm-6">
-                    <select class="form-control" name="catName" ng-model="quote.catName">
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.catName.$invalid && form.submitted}">
+                    <select class="form-control" name="catName" ng-model="quote.catName" required>
                     <option value="" disabled>Select Category</option>
                     <option ng-repeat="category in allCategory"  value="{{category.name}}">{{category.name}}</option>
                     </select>  
@@ -75,14 +75,12 @@
                   <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="expPrice" ng-model="quote.expPrice" value="" placeholder="Expected Price">
                   </div>
-                  <div class="form-group col-sm-6">
-                    <div class="form-group" ng-class="{'has-error': form.location.$invalid && form.submitted}">
-                      <select class="form-control" name="location" ng-model="quote.city" required>
-                        <option value="" disabled>*Select Location</option>
-                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                      </select>
-                      <i class="caret"></i>
-                    </div>
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.location.$invalid && form.submitted}">
+                    <select class="form-control" name="location" ng-model="quote.city" required>
+                      <option value="" disabled>*Select Location</option>
+                      <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
                   </div>
                 </div>
 
