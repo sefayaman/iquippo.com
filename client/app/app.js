@@ -3,7 +3,7 @@
 angular.module("account",[]);
 angular.module("classifiedAd",[]);
 angular.module("product",[]);
-
+angular.module("admin",[]);
 //Application module
 angular.module('sreizaoApp',[
   'ngCookies',
@@ -15,7 +15,8 @@ angular.module('sreizaoApp',[
   'ui.tinymce',
   "account",
   'classifiedAd',
-  'product'
+  'product',
+  'admin'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

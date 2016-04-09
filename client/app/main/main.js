@@ -201,6 +201,7 @@ angular.module('sreizaoApp')
       .state('gSettings', {
         url: '/gsettings',
         templateUrl: 'app/admin/gsettings/gsettings.html',
+         controller: 'GSettingCtrl as gsettingVm',
         authenticate:true,
         layout:'admin',
         restrict:true
