@@ -1,0 +1,138 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      	<div class="row">
+	      <div class="col-sm-6">
+	      	<h3>General Settings</h3>
+	      </div>     
+	    </div>
+	    <hr>
+	    <div class="row form-group">
+	    	<div class="col-sm-4">
+	        	<select class="form-control">
+	        		<option>Select</option>
+	        		<option>Sub Category</option>
+	        		<option>Location</option>
+	        	</select>
+	        	<i class="caret"></i>
+	      	</div> 
+	    </div> 
+	   	<form name="groupForm" novalidate class="form">
+    		<h4>Add New Sub Category</h4>
+    		<legend></legend>
+          <div class="row">
+         	 <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
+                <input id="groupName" name="groupName" ng-model="g.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
+            </div>                           	
+           	<div class="form-group col-sm-2 pull-right">
+           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Group')" ng-if="!groupEdit">Save</button>
+           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="update('Group')" ng-if="groupEdit">Update</button>
+           	</div>
+           	
+          </div>
+     	</form>	
+	    <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th>Sub Category</th>                                
+                <th>Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="vendor in vendorList">
+                <td>Sub Category</td>
+                <td>
+                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="editClick('Category',category)" ><i class="fa fa-pencil"></i> </a>
+					<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="delete('Category',category)"><i class="fa fa-trash"></i> </a>
+                </td>
+               </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="clearfix form-group"></div>
+        <!--Select Location  -->
+        <uib-tabset justified="true">
+			<uib-tab heading="State" select="reset()">
+		        <form name="groupForm" novalidate class="form">
+		    		<h4>Add New State</h4>
+		    		<legend></legend>
+		          <div class="row">
+		         	 <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
+		                <input id="groupName" name="groupName" ng-model="g.name" type="text" class="form-control" placeholder="Enter State Name" required>
+		            </div>                           	
+		           	<div class="form-group col-sm-2 pull-right">
+		           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Group')" ng-if="!groupEdit">Save</button>
+		           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="update('Group')" ng-if="groupEdit">Update</button>
+		           	</div>
+		           	
+		          </div>
+		     	</form>	
+			    <div class="table-responsive">
+		            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+		              <thead>
+		                <th>State</th>                                
+		                <th>Action</th>
+		               
+		              </thead>
+		              <tbody>
+		              <tr ng-repeat="vendor in vendorList">
+		                <td>Haryana</td>
+		                <td>
+		                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="editClick('Category',category)" ><i class="fa fa-pencil"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="delete('Category',category)"><i class="fa fa-trash"></i> </a>
+		                </td>
+		               </tr>
+		              </tbody>
+		            </table>
+		        </div>
+		    </uib-tab>
+		    <uib-tab heading="Location" select="reset()">
+		        <form name="groupForm" novalidate class="form">
+		    		<h4>Add Location</h4>
+		    		<legend></legend>
+		          <div class="row">
+		         	 <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
+		                <select class="form-control">
+		                	<option>State1</option>
+		                	<option>State2</option>
+		                	<option>State3</option>
+		                </select>
+		                <i class="caret"></i>
+		            </div>  
+		            <div class="form-group col-sm-4" ng-class="{'has-error': form.errorGroup && submitted}">
+		                <input class="form-control" placeholder="Enter Location" />
+		            </div>                           	
+		           	<div class="form-group col-sm-2 pull-right">
+		           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="Save('Group')" ng-if="!groupEdit">Save</button>		           		
+		           	</div>
+		           	
+		          </div>
+		     	</form>	
+			    <div class="table-responsive">
+		            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+		              <thead>
+		                <th>State</th>                                
+		                <th>Location</th>
+		                <th>Action</th>
+		               
+		              </thead>
+		              <tbody>
+		              <tr ng-repeat="vendor in vendorList">
+		                <td>Delhi</td>
+		                <td>Delhi</td>
+		                <td>
+		                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="editClick('Category',category)" ><i class="fa fa-pencil"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="delete('Category',category)"><i class="fa fa-trash"></i> </a>
+		                </td>
+		               </tr>
+		              </tbody>
+		            </table>
+		        </div>
+		    </uib-tab>
+		</uib-tabset>
+    </div>
+  </div>
+</div>
