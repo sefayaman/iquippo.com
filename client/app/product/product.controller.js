@@ -65,13 +65,13 @@ angular.module('sreizaoApp')
   if($stateParams.id) {
     $scope.isEdit = true;
     productSvc.getProductOnId($stateParams.id).then(function(response){
-      if(response.data.serviceInfo.length > 0){
-        for(var i =0; i < response.data.serviceInfo.length; i++){
-          if(response.data.serviceInfo[i] && response.data.serviceInfo[i].servicedate)
-            response.data.serviceInfo[i].servicedate = moment(response.data.serviceInfo[i].servicedate).toDate();
+      if(response.serviceInfo.length > 0){
+        for(var i =0; i < response.serviceInfo.length; i++){
+          if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
+            response.serviceInfo[i].servicedate = moment(response.serviceInfo[i].servicedate).toDate();
         }
       }
-      product = $scope.product = response.data;
+      product = $scope.product = response;
       angular.copy($scope.product.images,$scope.images);
       $scope.images.forEach(function(item,index){
         if(item.isPrimary)

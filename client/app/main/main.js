@@ -6,7 +6,7 @@ angular.module('sreizaoApp')
       .state('main', {
         url: '/',
         templateUrl: 'app/main/main.html',
-        controller: 'MainCtrl',
+        controller: 'MainCtrl as mainVm',
         layout:'client'
       })
       .state('contactus', {

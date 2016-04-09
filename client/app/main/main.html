@@ -2,7 +2,7 @@
   <div class="overlay"></div>
   <div id="slides_control">    
     <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-      <uib-slide ng-repeat="slide in slides" active="slide.active">
+      <uib-slide ng-repeat="slide in mainVm.slides" active="slide.active">
         <img  ng-src="assets/images/{{slide.image}}">
       </uib-slide>
     </uib-carousel>
@@ -13,25 +13,25 @@
 
       <!-- Nav tabs -->
       <div class="btn-group">
-        <label class="btn btn-default btn-lg" ng-model="radioModel" btn-radio="'Left'" selected="">Buy</label>
-        <label class="btn btn-default btn-lg" ng-model="radioModel" btn-radio="'Right'">Rent</label>
+        <label class="btn btn-default btn-lg" ng-model="mainVm.radioModel" btn-radio="'Left'" selected="">Buy</label>
+        <label class="btn btn-default btn-lg" ng-model="mainVm.radioModel" btn-radio="'Right'">Rent</label>
       </div>
 
       <!-- Tab panes -->
       <div class="tab-content">
         <form>
           <div class="select-text form-group">                 
-              <input type="text" ng-model="searchFilter.searchText" placeholder="Enter Category Name..." uib-typeahead="address for address in getHelp($viewValue)"  class="form-control" ng-keypress="myFunct($event)" typeahead-focus-first = "false" typeahead-on-select="startsearch()" typeahead-wait-ms="500"/>               
+              <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="500"/>               
             </div>
             
             <div class="select-text form-group">
-              <input type="text" class="form-control" placeholder="Enter Location..." />                
-                <div ng-show="noResults">
+              <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location..." />                
+                <div ng-show="mainVm.noResults">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>
             </div>
             <div class="text-center">
-              <a href="javascript:;"  class="btn btn-lg btn-warning"><i class="fa fa-search"></i> Search</a>
+              <a href="javascript:;"  class="btn btn-lg btn-warning" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search</a>
             </div>
         </form>
       </div>
@@ -45,11 +45,11 @@
    
     <div class="row main-container">
       <div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
-        <img ng-if="imgLeftTop" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgLeftTop}}" class="img-responsive add1">
+        <img ng-if="mainVm.imgLeftTop" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop}}" class="img-responsive add1">
         <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
         <div class="form-group"></div>
         <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
-        <img ng-if="imgLeftBottom" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgLeftBottom}}" class="img-responsive add1">
+        <img ng-if="mainVm.imgLeftBottom" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftBottom}}" class="img-responsive add1">
       </div>
       <div class="col-sm-9 col-md-8">
         <div class="head">
@@ -59,8 +59,17 @@
         </div>
 
         <div class="cat cat-product text-center">
-          <ul class="cat-list">
-            <li  ng-repeat="category in globalCategoryList">
+          <ul class="cat-list" ng-if="mainVm.isCollapsed">
+            <li  ng-repeat="category in mainVm.allCategoryList" ng-if="$index < 8">
+              <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
+                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
+                  <span>{{category.name}}</span>
+                 
+              </a>
+            </li>
+          </ul>
+          <ul class="cat-list" ng-if="!mainVm.isCollapsed">
+            <li  ng-repeat="category in mainVm.allCategoryList">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span>{{category.name}}</span>
@@ -69,7 +78,7 @@
             </li>
           </ul>
           <div class="show-more">
-            <button type="button" class="btn btn-default btn-lg" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-chevron-down"></i> </button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="mainVm.isCollapsed = !mainVm.isCollapsed"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
           </div>
         </div>
 
@@ -132,9 +141,9 @@
             </div> -->
             <!--carousel start -->
             <ul class="verContainer" drctv>
-              <li ng-repeat="slide in featuredslides" class="media">
+              <li ng-repeat="slide in mainVm.featuredslides" class="media">
                 <a class="pull-left" ng-href="/productdetail/{{slide._id}}">
-                  <img class="media-object" ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.image}}" alt="Image">
+                  <img class="media-object" ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" alt="Image">
                 </a>
                 <div class="media-body text-left">
                   <h5 class="media-heading text-left">{{slide.name}}</h5>
@@ -159,128 +168,5 @@
 </section>
 <div class="container text-center form-group">
 <!-- <img src="assets/images/Ad_Banner_3.jpg" width="60%"> -->
-  <img ng-if="imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{imgBottomCentre}}" class="add2">
+  <img ng-if="mainVm.imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomCentre}}" class="add2">
 </div>
-
-<!-- <section>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="head">
-          <h4>Testimonials</h4>
-          <legend class="dull"></legend>
-          <legend class="dark"></legend>
-        </div>
-
-        <section class="testimonial">
-          <div class="container-fluid">
-            <div class="feedback-clients text-center">
-              <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-                    <uib-slide active="slide.active">                                        
-                        <img src="assets/images/testimonial1.png" class="img-circle">
-                        <br> Rafia
-                                           
-                      <div class="carousel-caption">                      
-                          iQuippo is amazing marketplace which provides me facility of not only buying a product but helps me out with other services as well like insurance, logistics etc. I had a wonderful experience of dealing with a seller and the website has given me enough visibility prior getting into a discussion with the seller.
-                        </div>
-                      
-                    </uib-slide>
-                    <uib-slide>
-                      <img src="assets/images/testimonial2.png" class="img-circle">
-                        <br> Rashida Ahmad
-                       
-                      <div class="carousel-caption">                        
-                        <p>
-                          The website is instant which helps me in displaying products on some clicks and in turn take me to the world of prospective buyers. The interface is quite a some user friendly and guides to move ahead step by step without any support from external person.
-                        </p>
-                      </div>
-                    </uib-slide>
-                    <uib-slide>
-                      <img src="assets/images/testimonial3.png" class="img-circle">
-                        <br> Qasim Sultan
-                      <div class="carousel-caption">                        
-                        <p>
-                          This is just not an another commerce platform but to my surprise a fantastic experience driven gateway which helps in developing more business in construction equipment industry. I think this is going to rock and revolutionize the way construction equipment industry works.
-                        </p>
-                      </div>
-                    </uib-slide>
-                  </uib-carousel>
-                  <h3>Coming Soon..</h3>
-            </div>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-6">
-        <div class="head">
-          <h4>News</h4>
-          <legend class="dull"></legend>
-          <legend class="dark"></legend>
-        </div>
-        <div class="form-group"></div>
-        <div class="news-tab">
-          <uib-tabset>
-            <uib-tab>
-              <uib-tab-heading>
-                  News
-              </uib-tab-heading>
-                <div class="media">
-                <a class="pull-left" href="javascript:void(0);">
-                  <img class="media-object" src="assets/images/news-2.jpg" alt="Image" width="100%">
-                </a>
-                <div class="media-body">
-                  <p>Srei reports consolidated Profit After Tax worth Rs. 23.32 Crores during First Quarter 2015.</p>
-                </div>
-              </div>
-              <div class="media">
-                <a class="pull-left" href="javascript:void(0);">
-                  <img class="media-object" src="assets/images/news-1.jpg" alt="Image" width="100%">
-                </a>
-                <div class="media-body">
-                  <p>Mr Sunil Kanoria, Vice Chairman Srei Infrastructure Finance Ltd., has been elected as the President of ASSOCHAM.</p>
-                </div>
-              </div>
-              <h3 class="text-center">Coming Soon..</h3>
-            </uib-tab>
-            
-            <uib-tab>
-              <uib-tab-heading>
-                Events
-              </uib-tab-heading>
-              <div class="media">
-                <a class="pull-left" href="javascript:void(0);">
-                  <img class="media-object" src="assets/images/event1.jpg" alt="Image" width="100%">
-                </a>
-                <div class="media-body">
-                  <h5 class="media-heading"><strong>Srei BNP Paribas @ Excon</strong></h5>
-                  <p>Welcome to Srei BNP Paribas Mart, our outdoor pavilion at Excon. Explore the limitless world of infrastructure...</p>
-                </div>
-              </div>
-
-              <div class="media">
-                <a class="pull-left" href="javascript:void(0);">
-                  <img class="media-object" src="assets/images/event2.jpg" alt="Image" width="100%">
-                </a>
-                <div class="media-body">
-                  <h5 class="media-heading"><strong>Tranche 2 Issue Kolkata, July 1, 2015</strong></h5>
-                  <p>Srei Infrastructure Finance Limited ("Company" or "SIFL"), 
-                  one of the private sector infrastructure finance company in the country, is proposing a public...</p>
-                </div>
-              </div>
-              <h3 class="text-center">Coming Soon..</h3>
-            </uib-tab>
-          </uib-tabset>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section> -->
-<!--<script type="text/ng-template" id="popover.html">
-  <div ng-repeat="slide in featuredslides">
-    {{slide.name}}
-    <div class="row">
-      <div class="col-sm-6"><small>{{slide.brand}}</small></div>
-      <div class="col-sm-6"><small>{{slide.model}}</small></div>
-    </div>
-  </div>
-</script>-->

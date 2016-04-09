@@ -142,6 +142,18 @@ var allCountries = [
 }
 ];
 
+var HOME_BANNER =  [{
+      image: 'Banner.jpg'
+    }, {
+      image: 'Banner1.jpg'
+    }, {
+      image: 'Banner2.jpg'
+    }, {
+      image: 'Banner3.jpg'
+    }, {
+      image: 'Banner4.jpg'
+    }];
+    
 var serverPath = location.protocol +"//" + location.host; 
 //var serverPath = "http://14.141.64.180:8100"; 
 //var supportMail = "info@auro.world";

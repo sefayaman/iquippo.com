@@ -1,62 +1,105 @@
-'use strict';
-angular.module('sreizaoApp')
-  .controller('MainCtrl', function($scope, $rootScope, $http, $interval,$timeout, categorySvc,classifiedSvc, $window, $state, $compile, Modal) {
-    $scope.globalCategoryList = [];
-    $scope.imageUrl = "";
-    $scope.myInterval = 5000;
-    $scope.noWrapSlides = false;
-    $scope.featuredEnableProduct = [];
-    $scope.imgTopLeft = "";
-    $scope.imgBottomLeft = "";
-    $scope.imgBottomCenter = "";
-    var dataToSend = {};
-    $scope.slides = [{
-      image: 'Banner.jpg'
-    }, {
-      image: 'Banner1.jpg'
-    }, {
-      image: 'Banner2.jpg'
-    }, {
-      image: 'Banner3.jpg'
-    }, {
-      image: 'Banner4.jpg'
-    }];
-    
-    $rootScope.searchFilter = {};
-    $rootScope.equipmentSearchFilter = {};
-    $scope.featuredslides = [];
-    var dataToSend = {};
-    dataToSend["featured"] = true;
-    dataToSend["status"] = true;
-    $http.post('/api/products/search', dataToSend).success(function(srchres){
-        $scope.featuredEnableProduct = srchres;
-        $scope.featuredslides = [];
-        for(var i=0 ; i < $scope.featuredEnableProduct.length; i++)
-        {
-          if($scope.featuredEnableProduct[i].images[0].src)
-              $scope.featuredslides.push({image:$scope.featuredEnableProduct[i].images[0].src, _id:$scope.featuredEnableProduct[i]._id, name:$scope.featuredEnableProduct[i].name, brand:$scope.featuredEnableProduct[i].brand.name, model:$scope.featuredEnableProduct[i].model.name, mfgYear:$scope.featuredEnableProduct[i].mfgYear,assetDir:$scope.featuredEnableProduct[i].assetDir});
-        }
-    });
-    var dataToSend = {};
-   $scope.startsearch = function(){
-        /*if(!$scope.searchFilter.searchText && !$scope.searchFilter.categoryGroup) {
-            if($scope.previousState)
-              $state.go($scope.previousState,$scope.previousParams);
-            return;
-        }*/
-        $rootScope.equipmentSearchFilter = {};
-        dataToSend["status"] = true;
-        dataToSend["searchstr"] = $scope.searchFilter.searchText;
-        $rootScope.refresh = !$rootScope.refresh;
-        $http.post('/api/products/search', dataToSend).success(function(srchres){
-          $rootScope.refresh = !$rootScope.refresh;
-           $rootScope.searchResults = srchres;
-             $state.go('search');
-        });
+(function(){
 
-    };
+'use strict';
+angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
+  
+  function MainCtrl($scope, $rootScope, $http,$timeout,productSvc, categorySvc,classifiedSvc,$state, Modal) {
+    var vm = this;
+    vm.allCategoryList = [];
+    vm.myInterval = 5000;
+    vm.noWrapSlides = false;
+    vm.slides = HOME_BANNER;
+    vm.featuredslides = [];
+    vm.imgLeftTop = "";
+    vm.imgLeftBottom = "";
+    vm.imgBottomCentre = "";
+    vm.radioModel = 'Left';
+    vm.isCollapsed = true;
     
-    $scope.myFunct = function(keyEvent) {
+    vm.doSearch = doSearch;
+    vm.myFunct = myFunct;
+    vm.setPopover = setPopover;
+    vm.getCategoryHelp = getCategoryHelp;
+
+    $scope.ConfigureList = function() {};
+    $scope.beginVertScroll = beginVertScroll;
+
+    function getFeaturedProduct(){
+
+      productSvc.getFeaturedProduct().
+      then(function(result){
+         vm.featuredslides = result;
+      })
+      .catch(function(res){
+        //error handling
+      })
+      
+    }
+
+    function getCategories(){
+
+      categorySvc.getCategoryForMain()
+      .then(function(result){
+          vm.allCategoryList = result;
+      })
+      .catch(function(res){
+        //error handling
+      });
+
+    }
+
+    var flag = true;
+    function getActiveClassifiedAd(){
+      classifiedSvc.getActiveClassifiedAd()
+      .then(function(srchres){
+        if(flag == true) {
+          for(var i=0 ; i < srchres.length; i++)
+          {
+            if(srchres[i].position == 'leftTop')
+              vm.imgLeftTop = srchres[i].image;
+            if(srchres[i].position == 'leftBottom')
+              vm.imgLeftBottom = srchres[i].image;
+            if(srchres[i].position == 'bottomCentre')
+              vm.imgBottomCentre = srchres[i].image;
+            flag = false;
+          }
+        }
+      });
+    }
+
+    getFeaturedProduct();
+    getCategories();
+    getActiveClassifiedAd();
+
+    function doSearch(){
+      if(!vm.categorySearchText && !vm.locationSearchStr){
+        Modal.alert("Please enter category and location");
+        return;
+      }
+      if(!validateCategory()){
+        Modal.alert("Please enter valid category");
+        return;
+      }
+
+      vm.categorySearchText = vm.categorySearchText.trim();
+      var filter = {};
+      filter['category'] = vm.categorySearchText;
+      productSvc.setFilter(filter);
+      $state.go('viewproduct');
+    }
+
+    function validateCategory(){
+      var ret = false;
+      for(var i =0; i < vm.allCategoryList.length ; i++){
+        if(vm.allCategoryList[i].name == vm.categorySearchText){
+          ret  = true;
+          break;
+        }
+      }
+      return ret;
+    }
+
+    function myFunct(keyEvent) {
       if(keyEvent)
           keyEvent.stopPropagation();
       if (keyEvent.which === 13){
@@ -64,35 +107,12 @@ angular.module('sreizaoApp')
       }
     }
     
-    $scope.setPopover = function(evt){
+    function setPopover(evt){
         var index = $(evt.currentTarget).data('index');
         $scope.popoverData = $scope.featuredslides[index];
     };
-    $scope.radioModel = 'Left';
-    // $scope.checkModel = {
-    //   left: true,
-    //   right: false
-    // };
-    dataToSend["status"] = true; 
-    var flag = true;
-    classifiedSvc.getActiveClassifiedAd()
-    .then(function(srchres){
-      if(flag == true) {
-        for(var i=0 ; i < srchres.length; i++)
-        {
-          if(srchres[i].position == 'leftTop')
-            $scope.imgLeftTop = srchres[i].image;
-          if(srchres[i].position == 'leftBottom')
-            $scope.imgLeftBottom = srchres[i].image;
-          if(srchres[i].position == 'bottomCentre')
-            $scope.imgBottomCentre = srchres[i].image;
-          flag = false;
-        }
-      }
-    });
-
-    $scope.ConfigureList = function() {};
-    $scope.beginVertScroll = function() {
+    
+    function beginVertScroll() {
       $timeout(
         function() {
           var firstElement = $('ul.verContainer li:first');
@@ -103,10 +123,6 @@ angular.module('sreizaoApp')
           if(!cntnt)
             return;
           var HtmlStr = "<li>" + cntnt + "</li>";
-          //var contElemFun = $compile(HtmlStr);
-          //var prevScope = $rootScope.$new();
-          //prevScope.setPopover = $scope.setPopover;
-          //prevScope.popoverData = $scope.popoverData;
           $("ul.verContainer").append(HtmlStr);
           cntnt = "";
           firstElement.animate({
@@ -118,7 +134,7 @@ angular.module('sreizaoApp')
               "color": $(this).css("color")
             });
             $(this).remove();
-            $scope.beginVertScroll();
+            beginVertScroll();
           });
           //alert(hgt);
         },
@@ -126,12 +142,27 @@ angular.module('sreizaoApp')
       );
     };
 
-   /* categorySvc.getAllCategory().then(function(response){
-    $scope.globalCategoryList = response;
-  });*/
 
-    dataToSend["status"] = true;
-    $http.post('/api/category/search', dataToSend).success(function(srchres){
-         $scope.globalCategoryList = srchres;
-   });
-  });
+    function getCategoryHelp(val) {
+      var serData = {};
+      serData['searchStr'] = vm.categorySearchText;
+      return categorySvc.getCategoryOnFilter(serData)
+      .then(function(result){
+         return result.map(function(item){
+              return item.name;
+        });
+      })
+    };
+
+    /*function getLocationHelp(val) {
+      var serData = {};
+      serData['txt'] = $scope.searchFilter.searchText;
+      return $http.post('/api/common/gethelp',serData)
+      .then(function(response){
+        return response.data.map(function(item){
+          return item.text;
+        });
+      });
+    };*/
+  }
+})();
