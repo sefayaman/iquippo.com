@@ -49,6 +49,24 @@ exports.create = function(req, res) {
     
   });
 };
+
+exports.getModelOnFilter = function(req,res){
+  var data = req.body;
+ var tempFilter = {};
+  var filter = {};
+  filter['$or'] = [{name:'Other'}];
+  if(data.modelId)
+    tempFilter['_id'] = data.modelId;
+  if(data.brandId)
+    tempFilter['brand._id'] = data.brandId;
+  filter['$or'].push(tempFilter);
+  Model.find(filter,function(err,result){
+   if(err) { return handleError(res, err); }
+    return res.status(200).json(result);
+
+  })
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

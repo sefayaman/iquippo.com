@@ -9,6 +9,7 @@ function GSettingCtrl($scope, $uibModalInstance, $uibModal, Modal) {
     
     var vm = this;
     vm.gsetting = {};
+}
     
 
 })();

@@ -13,19 +13,17 @@
                 </div>   -->
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
-                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="fireCommand()">
-                <option value="">Select Type</option>
-                <option value="">Sell</option>
-                <option value="">Rent</option>
+                <select class="form-control col-md-2" name="tradeType" ng-model="selectedTradeType" ng-change="viewproductVm.fireCommand()">
                 <option value="">Both</option>
-
+                <option value="BUY">Buy</option>
+                <option value="RENT">Rent</option>
                 </select>
                 
                 <i class="caret"></i>          
                 </div>  
                 <label for="" class="text-muted">Product Group </label>
                 <div class="form-group">
-                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="fireCommand()">
+                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.fireCommand()">
                 <option value="">Select Group</option>
                 <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
 
@@ -37,7 +35,7 @@
                 </div>  
                 <label for="" class="text-muted">Category</label>
                 <div class="form-group"> 
-                <select class="form-control col-md-2" name="category"  ng-model="selectedCategory" ng-change="onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
+                <select class="form-control col-md-2" name="category"  ng-model="selectedCategory" ng-change="viewproductVm.onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
                         <option value="">Select Category</option>
                 </select>
                 <i class="caret"></i>     
@@ -46,7 +44,7 @@
 
                 <label for="" class="text-muted">Sub Category</label>
                 <div class="form-group"> 
-                <select class="form-control col-md-2" name="category"  ng-model="selectedCategory" ng-change="onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
+                <select class="form-control col-md-2" name="category"  ng-model="selectedSubCategory" ng-change="viewproductVm.onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
                         <option value="">Select Sub Category</option>
                 </select>
                 <i class="caret"></i>     
@@ -55,7 +53,7 @@
                 
                 <label for="" class="text-muted">Product Brand</label>
                 <div class="form-group">                  
-                  <select class="form-control col-md-2" name="brand" ng-model="selectedBrand" ng-change="onBrandChange(selectedBrand)" ng-options="brand.name for brand in brandList track by brand._id">
+                  <select class="form-control col-md-2" name="brand" ng-model="selectedBrand" ng-change="viewproductVm.onBrandChange(selectedBrand)" ng-options="brand.name for brand in brandList track by brand._id">
                         <option value="" >Select Brand</option>
                   </select>
 
@@ -64,7 +62,7 @@
                 </div>
                 <label for="" class="text-muted">Product Model</label>
                 <div class="form-group">                  
-                   <select class="form-control col-md-2" name="model" ng-model="selectedModel" ng-options="model.name for model in modelList track by model._id" ng-change="onModelChange(selectedModel)">
+                   <select class="form-control col-md-2" name="model" ng-model="selectedModel" ng-options="model.name for model in modelList track by model._id" ng-change="viewproductVm.onModelChange(selectedModel)">
                         <option value="" >Select Model</option>
                   </select>
                   
@@ -73,21 +71,21 @@
                 </div>
                 <label for="" class="text-muted">Operating hrs</label>
                 <div class="form-group">                  
-                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.operatingHour" placeholder="Operating hrs" ng-change="fireCommand()" ng-model-options="{debounce:1000}">
+                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.operatingHour" placeholder="Operating hrs" ng-change="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
                 </div>
                 
                 <label for="" class="text-muted">Mileage(km)</label>
                 <div class="form-group">                  
-                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.mileage" placeholder="Mileage(km)" ng-change="fireCommand()" ng-model-options="{debounce:1000}">
+                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.mileage" placeholder="Mileage(km)" ng-change="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
                 </div>  
 
                 <label for="" class="text-muted">Price</label>
                 <div class="form-group">                  
                   <div class="row">
                     <div class="col-sm-12">
-                      <select class="form-control" ng-change="onCurrencyChange()" ng-model="currencyType">
+                      <select class="form-control" ng-change="viewproductVm.onCurrencyChange()" ng-model="currencyType">
                             <option value="">Currency</option>
-                            <option value="" selected>&#x20B9; Rupee</option> 
+                            <option value="INR" selected>&#x20B9; Rupee</option> 
                           </select>    
                           <i class="caret"></i>                     
 
@@ -114,7 +112,7 @@
                           </div>
                         </div>
                         <div class="col-xs-2 col-sm-2 col-md-2 padd-left">
-                          <button class="btn btn-danger btn-md" ng-click="productSearchOnPrice($event)"><i class="fa fa-chevron-right"></i></button>
+                          <button class="btn btn-danger btn-md" ng-click="viewproductVm.productSearchOnPrice($event)"><i class="fa fa-chevron-right"></i></button>
                         </div>
                       </div>
                     </div>
@@ -124,7 +122,7 @@
                   <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                       <div class="input-group">
-                        <input type="text" class="form-control" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="productSearchOnMfg()"/>
+                        <input type="text" class="form-control" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="viewproductVm.productSearchOnMfg()"/>
                     <a href class="input-group-addon" ng-click="open($event,'min')">
                       <i class="fa fa-calendar-o"></i>
                     </a>
@@ -132,7 +130,7 @@
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
                       <div class="input-group">
-                        <input type="text" class="form-control" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="productSearchOnMfg()"/>
+                        <input type="text" class="form-control" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="viewproductVm.productSearchOnMfg()"/>
                         <a href class="input-group-addon" ng-click="open($event,'max')">
                           <i class="fa fa-calendar-o"></i>
                         </a>
@@ -164,7 +162,7 @@
               </thead>
               <!-- other than search -->
               <tbody >
-                <tr ng-repeat="product in productList" ng-if="!isSearch">
+                <tr ng-repeat="product in productList">
                   <td>
                     <div class="media">
                       <div  class="pull-left result-products">
@@ -193,35 +191,6 @@
                     </div>
                   </td>                 
                 </tr>
-				<tr ng-repeat="product in searchResults" ng-if="isSearch">
-                  <td>
-                    <div class="media">
-                      <div class="pull-left result-products">
-                        <a ng-href="/productdetail/{{product._id}}">
-                          <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
-                        </a>
-                      </div>
-                      <div class="media-body">
-                        <h4 class="media-heading">
-                          {{product.name}}
-                          <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
-                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
-                          <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
-                          <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
-                          <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
-                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice}}</span>
-                        </h4>
-
-                        <p>{{product.brand.name}}</p>
-                        <p>{{product.model.name}}</p>
-                        <p>{{product.category.name}}</p>
-                        <span>{{product.country}}</span>
-                        <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning pull-right hvr-icon-wobble-horizontal" >View Details</a>
-                      </div>
-                    </div>
-                  </td>                 
-                </tr>
               </tbody>
             </table>
             
@@ -229,25 +198,4 @@
         </div>
       </div>
     </section>
-      <script type="text/javascript">
-       /* $(document).ready(function() {
-          $('#search-result').DataTable({         
-            "bLengthChange" : false,
-            "aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
-            "bFilter": false,
-            // "sDom":'fptip',
-            "oLanguage": {    "sLengthMenu": "_MENU_ records per page",
-                  "sSearch" : "Search records:",
-                  "oPaginate": {
-                      "sPrevious": '<i class="fa fa-angle-left"></i>',
-                      "sNext": '<i class="fa fa-angle-right"></i>'
-                  }
-              }         
-              
-          });
-          $('#search-result').removeClass( 'display' ).addClass('table table-striped table-bordered');
-          $('#search-result_info,#search-result_paginate').parent().parent().addClass('pos');
-        } );*/
-        
-    </script>
     </div>

@@ -49,6 +49,25 @@ exports.create = function(req, res) {
   });
 };
 
+exports.getBrandOnFilter = function(req,res){
+  var data = req.body;
+  var tempFilter = {};
+  var filter = {};
+  filter['$or'] = [{name:'Other'}];
+   if(data.brandId)
+    tempFilter['_id'] = data.brandId;
+  
+  if(data.categoryId)
+    tempFilter['category._id'] = data.categoryId;
+  filter['$or'].push(tempFilter);
+  console.log("vvv",filter);
+  Brand.find(filter,function(err,result){
+   if(err) { return handleError(res, err); }
+    return res.status(200).json(result);
+
+  })
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

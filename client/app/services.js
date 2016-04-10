@@ -30,40 +30,57 @@ angular.module('sreizaoApp')
   .factory("groupSvc",['$http','$rootScope','$q',function($http,$rootScope,$q){
     var gpService = {};
     var path = '/api/group';
-    gpService.getAllGroup = function(){
-       var deferred = $q.defer();
-       $http.get(path).then(function(res){
+    var groupCache = [];
+    gpService.getAllGroup =  getAllGroup;
+    gpService.getGroupOnId = getGroupOnId;
+    gpService.getGroupOnName = getGroupOnName;
+    gpService.clearCache = clearCache;
 
-          $rootScope.allGroup = _.sortBy(res.data, function(n) {
+    function getAllGroup(){
+
+       var deferred = $q.defer();
+       if(groupCache && groupCache.length > 0){
+        deferred.resolve(groupCache);
+       }else{
+
+          $http.get(path).then(function(res){
+          var groups = _.sortBy(res.data, function(n) {
               return n.name == 'Other';
           });
-          deferred.resolve(res.data);
+          groupCache = groups;
+          deferred.resolve(groups);
 
         },function(errors){
           console.log("Errors in Groups fetch list :"+ JSON.stringify(errors));
+          deferred.reject(errors);
         });
+       }
+      
         return deferred.promise; 
     };
-    gpService.getGroupOnId = function(id){
+    function getGroupOnId(id){
       var gp;
-      for(var i = 0; i < $rootScope.allGroup.length ; i++){
-        if($rootScope.allGroup[i]._id == id){
-          gp = $rootScope.allGroup[i];
+      for(var i = 0; i < groupCache.length ; i++){
+        if(groupCache[i]._id == id){
+          gp = groupCache[i];
           break;
         }
       }
       return gp;
     };
-    gpService.getGroupOnName = function(name){
+    function getGroupOnName(name){
       var gp;
-      for(var i = 0; i < $rootScope.allGroup.length ; i++){
-        if($rootScope.allGroup[i].name == name){
-          gp = $rootScope.allGroup[i];
+      for(var i = 0; i < groupCache.length ; i++){
+        if(groupCache[i].name == name){
+          gp = groupCache[i];
           break;
         }
       }
       return gp;
     };
+    function clearCache(){
+      groupCache = [];
+    }
     return gpService;
   }])
   .factory("categorySvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
@@ -75,19 +92,21 @@ angular.module('sreizaoApp')
       catService.getCategoryOnId = getCategoryOnId;
       catService.getCategoryOnFilter = getCategoryOnFilter;
       catService.getCategoryByName = getCategoryByName;
+      catService.clearCache = clearCache;
+      catService.updateCategory = updateCategory;
       
       function getAllCategory(){
 
         var deferred = $q.defer();
         if(categoryCache && categoryCache.length > 0){
-          deferred,resolve(categoryCache);
+          deferred.resolve(categoryCache);
         }else{
           $http.get(path).then(function(res){
-          $rootScope.allCategory = _.sortBy(res.data, function(n) {
+          var allCategory = _.sortBy(res.data, function(n) {
               return n.name == 'Other';
           });
-          categoryCache = $rootScope.allCategory;
-          deferred.resolve(res.data);
+          categoryCache = allCategory;
+          deferred.resolve(allCategory);
 
           },function(errors){
             console.log("Errors in Category fetch list :"+ JSON.stringify(errors));
@@ -151,44 +170,82 @@ angular.module('sreizaoApp')
         }
         return cat;
       };
-
-      return catService;
-  }])
-  .factory("vendorSvc",['$http', '$q', '$rootScope',function($http, $q, $rootScope){
-      var vendorService = {};
-      var path = '/api/vendor';
-      vendorService.getAllVendors = function(){
-        var deferred = $q.defer();
-        $http.get(path).then(function(res){
-            $rootScope.sortVendors(res.data);
-            deferred.resolve(res.data);
-          },function(errors){
-            console.log("Errors in vendor fetch list :"+ JSON.stringify(errors));
-          });
-          return deferred.promise; 
-      };
-
-      vendorService.deleteVendor = function(vendor){
-          return $http.delete(path + "/" + vendor._id)
-          .then(function(res){
-            return res.data.vendor + 1;
-          })
-          .catch(function(err){
-              throw err;
-          });
-      };
-
-      vendorService.updateVendor = function(vendor){
-        return $http.put(path + "/" + vendor._id, vendor)
+      function updateCategory(category){
+        return $http.put( path + "/" + category._id,category)
         .then(function(res){
           return res.data;
         })
-        .catch(function(err){
-          throw err;
-        });
+        .catch(function(res){
+          throw res;
+        })
+      }
+      function clearCache(){
+        categoryCache = [];
+      }
+      return catService;
+  }])
+  .factory("brandSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
+      var brandService = {};
+      var path = '/api/brand';
+      brandService.getAllBrand = getAllBrand;
+      brandService.getBrandOnFilter = getBrandOnFilter;
+      
+      function getAllBrand(){
+
+          var deferred = $q.defer();
+         $http.get(path).then(function(res){
+            deferred.resolve(res.data);
+
+          },function(errors){
+            console.log("Errors in brand fetch list :"+ JSON.stringify(errors));
+            deferred.reject(errors);
+          });
+          return deferred.promise;
       };
 
-      return vendorService;
+      function getBrandOnFilter(filter){
+          return $http.post(path + "/search",filter)
+                .then(function(res){
+                   var brands = _.sortBy(res.data, function(n) {
+                        return n.name == 'Other';
+                    });
+                  return brands;
+                })
+                .catch(function(ex){
+                  throw ex;
+                })
+      };
+      return brandService;
+  }])
+.factory("modelSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
+      var modelService = {};
+      var path = '/api/model';
+      modelService.getAllModel = getAllModel;
+      modelService.getModelOnFilter = getModelOnFilter;
+      function getAllModel(){
+        var deferred = $q.defer();
+         $http.get(path).then(function(res){
+            deferred.resolve(res.data);
+
+          },function(errors){
+            console.log("Errors in brand fetch list :"+ JSON.stringify(errors));
+            deferred.reject(errors);
+          });
+          return deferred.promise;
+      };
+     function getModelOnFilter(filter){
+         return $http.post(path + "/search",filter)
+                .then(function(res){
+                  var models = _.sortBy(res.data, function(n) {
+                        return n.name == 'Other';
+                    });
+                  return models;
+                })
+                .catch(function(ex){
+                  throw ex;
+                })
+      };
+      return modelService;
   }])
   .factory("userSvc",['$http',function($http){
       var userService = {};
@@ -226,7 +283,6 @@ angular.module('sreizaoApp')
 
       return userService;
   }])
-
   .factory("countrySvc",['$http',function($http){
       var countryService = {};
       var path = '/api/common/countries';
@@ -290,80 +346,6 @@ angular.module('sreizaoApp')
     };
     return suggestionService;
 }])
-.factory("brandSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
-      var brandService = {};
-      var path = '/api/brand';
-      brandService.getAllBrand = function(){
-        //return $http.get(path)
-        var deferred = $q.defer();
-         $http.get(path).then(function(res){
-
-            $rootScope.allBrand = res.data;
-            deferred.resolve(res.data);
-
-          },function(errors){
-            console.log("Errors in brand fetch list :"+ JSON.stringify(errors));
-          });
-          return deferred.promise;
-      };
-      brandService.getBrandOnId = function(id){
-         var brand;
-        for(var i = 0; i < $rootScope.allBrand.length ; i++){
-          if($rootScope.allBrand[i]._id == id){
-            brand = $rootScope.allBrand[i];
-            break;
-          }
-        }
-        return brand;
-      };
-      brandService.getBrandOnName = function(name){
-        var brand;
-        for(var i = 0; i < $rootScope.allBrand.length ; i++){
-          if($rootScope.allBrand[i].name == name){
-            brand = $rootScope.allBrand[i];
-            break;
-          }
-        }
-        return brand;
-    };
-      return brandService;
-  }])
-.factory("modelSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
-      var modelService = {};
-      var path = '/api/model';
-      modelService.getAllModel = function(){
-        var deferred = $q.defer();
-         $http.get(path).then(function(res){
-            $rootScope.allModel = res.data;
-            deferred.resolve(res.data);
-
-          },function(errors){
-            console.log("Errors in brand fetch list :"+ JSON.stringify(errors));
-          });
-          return deferred.promise;
-      };
-      modelService.getModelOnId = function(id){
-       var model;
-      for(var i = 0; i < $rootScope.allModel.length ; i++){
-        if($rootScope.allModel[i]._id == id){
-          model = $rootScope.allModel[i];
-          break;
-        }
-      }
-      return model;
-      };
-      modelService.getModelOnName = function(name){
-      var model;
-      for(var i = 0; i < $rootScope.allModel.length ; i++){
-        if($rootScope.allModel[i].name == name){
-          model = $rootScope.allModel[i];
-          break;
-        }
-      }
-      return model;
-    };
-      return modelService;
-  }])
 .factory("settingSvc",['$http',function($http){
     var settingSvc = {};
     var path = '/api/common';

@@ -60,7 +60,6 @@ exports.search = function(req, res) {
     arr[arr.length] = { "brand.name": { $regex: term }};
     filter['$or'] = arr;
   }
-  console.log("serch regex ", arr);
   if(req.body.group)
     filter["group.name"] = req.body.group;
   if(req.body.category)
@@ -75,23 +74,36 @@ exports.search = function(req, res) {
     filter["mileage"] = req.body.mileage;
   if(req.body.country)
     filter["country"] = req.body.country;
+   var currencyFilter = {};
+   var isCFilter = false;
   if(req.body.currency && req.body.currency.type){
-    filter["currencyType"] = req.body.currency.type;
-    var currencyFilter = {};
-    if(req.body.currency.min)
+    if(req.body.currency.min){
       currencyFilter['$gte'] = req.body.currency.min;
-    if(req.body.currency.max)
+      isCFilter = true;
+    }
+    if(req.body.currency.max){
       currencyFilter['$lte'] = req.body.currency.max;
+      isCFilter = true;
+    }
+  }
+  if(isCFilter){
+    filter["currencyType"] = req.body.currency.type;
     filter["grossPrice"] = currencyFilter;
   }
+
  if(req.body.mfgYear){
-  
+    var mfgYear = false;
     var mfgFilter = {};
-    if(req.body.mfgYear.min)
+    if(req.body.mfgYear.min){
       mfgFilter['$gte'] = req.body.mfgYear.min;
-    if(req.body.mfgYear.max)
+      mfgYear = true;
+    }
+    if(req.body.mfgYear.max){
       mfgFilter['$lte'] = req.body.mfgYear.max;
-    filter["mfgYear"] = mfgFilter;
+      mfgYear = true;
+    }
+    if(mfgYear)
+      filter["mfgYear"] = mfgFilter;
  }
 
   if(req.body.categoryId)
@@ -105,9 +117,8 @@ exports.search = function(req, res) {
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
   }
-
+  console.log("----------",filter);
   var query = Product.find(filter).sort( { createdAt: -1 } );
-  console.log("filetr ",filter);
   query.exec(
                function (err, products) {
                       if(err) { return handleError(res, err); }

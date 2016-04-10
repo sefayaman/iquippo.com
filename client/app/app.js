@@ -33,7 +33,7 @@ angular.module('sreizaoApp',[
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';    
   })
-  .run(function ($rootScope, $location, Auth, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc) {
+  .run(function ($rootScope, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -50,102 +50,44 @@ angular.module('sreizaoApp',[
     $rootScope.cartCounter = 0;
     $rootScope.cart = null;
 
-    
-    $rootScope.searchFilter = {};
-    $rootScope.searchFilter.searchText = "";
-    $rootScope.searchFilter.categoryGroup = "";
-    $rootScope.searchResults = [];
+
     $rootScope.currentProduct = null;
     $rootScope.currentProductListingPage = 0;
-
-    // equipment search filter container
-    $rootScope.equipmentSearchFilter = {};
 
     // Get all global data
     $rootScope.loadingCount = 0;
     $rootScope.loading = true;
-  
-    $rootScope.allCategory = [];
-    $rootScope.allGroup = [];
-    $rootScope.allBrand = [];
-    $rootScope.allModel = [];
-    $rootScope.allCountries = [];
-    $rootScope.allUsers = [];
+
     $rootScope.allCountries = allCountries;
     $rootScope.valuationList = valuationList;
     $rootScope.tradeType = tradeType;
     $rootScope.locationList = locationList;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
-    $rootScope.loadingCount = $rootScope.loadingCount + 6;
+
+    $rootScope.loadingCount = $rootScope.loadingCount + 2;
 
     if($rootScope.allCountries.length > 0) {
       for(var i=0; i< $rootScope.allCountries.length; i++)
           $rootScope.allCountries[i]['count'] = 0;
     }
 
-    countrySvc.getAllCountries().then(function(response){
+   /* countrySvc.getAllCountries().then(function(response){
         $rootScope.loadingCount --;
         $rootScope.loading = $rootScope.loadingCount !=0;
-        /*$rootScope.allCountries = response.data;
+        $rootScope.allCountries = response.data;
         for(var i=0; i< $rootScope.allCountries.length; i++)
-          $rootScope.allCountries[i]['count'] = 0;*/
-    });
+          $rootScope.allCountries[i]['count'] = 0;
+    });*/
 
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
       //$rootScope.allGroup = response.data;
     });
+
    categorySvc.getAllCategory().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
-      //$rootScope.allCategory = response.data;
-    });
-
-   brandSvc.getAllBrand().then(function(response){
-      $rootScope.loadingCount --;
-      $rootScope.loading = $rootScope.loadingCount !=0;
-      //$rootScope.allBrand = response.data;
-    });
-   
-   modelSvc.getAllModel().then(function(response){
-      $rootScope.loadingCount --;
-      $rootScope.loading = $rootScope.loadingCount !=0;
-      //$rootScope.allModel = response.data;
-    });
-
-  $rootScope.vendorList = [];
-  
-  $rootScope.sortVendors = function(data){
-    $rootScope.vendorList = data;
-    $rootScope.shippingVendorList = [];
-    $rootScope.valuationVendorList = [];
-    $rootScope.certifiedByIQuippoVendorList = [];
-      for(var i=0; i < $rootScope.vendorList.length; i++)
-      {
-        for(var j=0; j < $rootScope.vendorList[i].services.length; j++)
-        {
-            var vd = {};
-            vd._id =  $rootScope.vendorList[i]._id;
-            vd.name =  $rootScope.vendorList[i].entityName;
-            vd.imgsrc = $rootScope.vendorList[i].imgsrc;
-          if($rootScope.vendorList[i].services[j] == 'Shipping'){
-            $rootScope.shippingVendorList.push(vd);
-          }
-          else if($rootScope.vendorList[i].services[j] == "Valuation"){
-            $rootScope.valuationVendorList.push(vd);
-          }
-          else if($rootScope.vendorList[i].services[j] == 'CertifiedByIQuippo'){
-            $rootScope.certifiedByIQuippoVendorList.push(vd);
-          }
-        }
-      }
-  }
-
-  vendorSvc.getAllVendors().then(function(response){
-      $rootScope.loadingCount --;
-      $rootScope.loading = $rootScope.loadingCount !=0;
-      //$rootScope.sortVendors(response.data);
     });
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
@@ -189,15 +131,8 @@ angular.module('sreizaoApp',[
     $rootScope.isBulkUpload = Auth.isBulkUpload;
     $rootScope.isChannelPartner = Auth.isChannelPartner;
     $rootScope.getCurrentUser = Auth.getCurrentUser;
-    
-    $rootScope.openDialog = function(modalType){
-      var modalInstance = $uibModal.open({
-          animation: true,
-          templateUrl: Modals[modalType].tplUrl,
-          controller: Modals[modalType].Ctrl,
-          size: 'lg'
-      });
-    };
+    $rootScope.openDialog = Modal.openDialog;
+    $rootScope.logout = Auth.logout;
 
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

@@ -67,6 +67,14 @@ angular.module('sreizaoApp')
               del(param);
           });
          
-      }
+      },
+      openDialog :function(modalType){
+          var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: Modals[modalType].tplUrl,
+          controller: Modals[modalType].Ctrl,
+          size: 'lg'
+      });
+    }
     };
   });

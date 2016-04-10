@@ -187,18 +187,6 @@ angular.module('sreizaoApp')
       });
   }
 
-/*  $scope.imgsrc = "";
-  //listen for the file selected event
-      $scope.$on("fileSelected", function (event, args) {
-          $scope.$apply(function () {            
-              //add the file object to the scope's files collection
-              $scope.editImage = true;
-              $scope.imgsrc = "";
-              $scope[$scope.imgsrc] = args.files[0];
-              $scope.newUser.imgsrc = args.files[0].name;
-          });
-      });*/
-
     $scope.closeDialog = function () {
        $uibModalInstance.dismiss('cancel');
     };

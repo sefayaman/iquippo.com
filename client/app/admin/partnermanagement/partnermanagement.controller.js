@@ -11,7 +11,15 @@ angular.module('sreizaoApp')
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
-	  $scope.register = function(form){
+	  
+    function loadVendors(){
+      vendorSvc.getAllVendors()
+      .then(function(result){
+        $scope.vendorList = result;
+      })  
+    }
+    loadVendors();
+    $scope.register = function(form){
     var ret = false;
     if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
@@ -41,7 +49,31 @@ angular.module('sreizaoApp')
         return;
       uploadSvc.upload($scope[$scope.imgsrc],avatarDir).then(function(result){
         $scope.vendorReg.imgsrc = result.data.filename;
-        $http.post('/api/vendor',$scope.vendorReg).success(function(result) {
+        vendorSvc.saveVendor($scope.vendorReg)
+        .then(function(result){
+          if(result && result.errorCode == 1){
+          Modal.alert(result.message, true);
+        } else {
+          $scope.successMessage = "Partner added successfully";
+          $scope.autoSuccessMessage(20);
+          $scope.editImage = false;
+          var data = {};
+          data['to'] = $scope.vendorReg.email;
+          data['subject'] = 'Partner Registration';
+          $scope.vendorReg.serverPath = serverPath;
+          notificationSvc.sendNotification('vendorRegEmail', data, $scope.vendorReg,'email');
+          loadVendors();
+          $scope.vendorReg = {};
+          $scope.Shipping = "";
+          $scope.Valuation = "";
+          $scope[$scope.imgsrc] = null;
+          $scope.CertifiedByIQuippo = "";
+          } 
+        })
+        .catch(function(res){
+          Modal.alert(res,true);
+        })
+       /* $http.post('/api/vendor',$scope.vendorReg).success(function(result) {
         if(result && result.errorCode == 1){
           Modal.alert(result.message, true);
         } else {
@@ -53,7 +85,7 @@ angular.module('sreizaoApp')
           data['subject'] = 'Partner Registration';
           $scope.vendorReg.serverPath = serverPath;
           notificationSvc.sendNotification('vendorRegEmail', data, $scope.vendorReg,'email');
-          vendorSvc.getAllVendors();
+          loadVendors();
           $scope.vendorReg = {};
           $scope.Shipping = "";
           $scope.Valuation = "";
@@ -62,7 +94,7 @@ angular.module('sreizaoApp')
           } 
         }).error(function(res){
             Modal.alert(res,true);
-        });
+        });*/
       });
     } else {
       if($scope.editImage) {
@@ -108,7 +140,7 @@ function updateVendor(vendor) {
     $scope.Valuation = "";
     $scope.CertifiedByIQuippo = "";
     $scope.isCollapsed = true;
-    vendorSvc.getAllVendors();
+    loadVendors();
   })
   .catch(function(err){
     console.log("error in vendor update",err);
@@ -122,7 +154,6 @@ $scope.imgsrc = "file";
         $scope.$apply(function () {            
             //add the file object to the scope's files collection
             $scope.editImage = true;
-            //$scope.imgsrc = "";
             $scope[$scope.imgsrc] = args.files[0];
             $scope.vendorReg.imgsrc = args.files[0].name;
         });
@@ -135,7 +166,7 @@ $scope.imgsrc = "file";
         if(isGo == 'no')
           return;
         vendorSvc.deleteVendor(vendor).then(function(result){
-        vendorSvc.getAllVendors();
+        loadVendors();
       })
       .catch(function(err){
         console.log("error in vendor delete",err.data);

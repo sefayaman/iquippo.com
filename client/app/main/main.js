@@ -44,7 +44,7 @@ angular.module('sreizaoApp')
       .state('categoryproduct', {
         url: '/viewproducts/:id',
         templateUrl: 'app/product/viewproducts.html',
-        controller: 'ViewProductsCtrl',
+        controller: 'ViewProductsCtrl as viewproductVm',
         layout:'client'
       })
       .state('productdetail', {
@@ -100,16 +100,16 @@ angular.module('sreizaoApp')
         controller: 'QuoteRequestCtrl',
         layout:'client'
       })
-      .state('search', {
+      /*.state('search', {
         url:"/search",
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl',
          layout:'client'
-      })
+      })*/
       .state('viewproduct', {
         url:"/viewproducts",
         templateUrl: 'app/product/viewproducts.html',
-        controller: 'ViewProductsCtrl',
+        controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
       })
       .state('aboutus', {

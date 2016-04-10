@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope, $http, $uibModalInstance, notificationSvc, Modal) {
+  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc, $http, $uibModalInstance, notificationSvc, Modal) {
     $scope.currntUserInfo = {};
     $scope.quote = {};
     $scope.categoryList = [];
@@ -16,25 +16,26 @@ angular.module('sreizaoApp')
       $scope.quote = {}
     }
 
-  $scope.onGroupChange = function(group){
-    $scope.categoryList = [];  
-    $scope.categoryList = $rootScope.allCategory.filter(function(d){
-        return name == d.group.name;
-    }); 
-  }
+  groupSvc.getAllGroup()
+  .then(function(result){
+    $scope.allGroup = result;
+  });
 
-/*$scope.onGroupChange = function(group){
-    if(!group)
-      return;
+  categorySvc.getAllCategory()
+    .then(function(result){
+      $scope.allCategory = result;
+    }) 
+
+  $scope.onGroupChange = function(group){
     $scope.categoryList = [];
-    $scope.brandList = [];
-    $scope.modelList = [];
-    $scope.categoryList = $rootScope.allCategory.filter(function(d){
-          return group._id == d.group._id;
-    });
-    $scope.equipmentSearchFilter.group = group.name;
-   $scope.fireCommand();
-  }*/
+    categorySvc.getAllCategory()
+    .then(function(result){
+      $scope.categoryList = result.filter(function(d){
+          return name == d.group.name;
+      }); 
+    })  
+    
+  }
   
   $scope.sendQuoteRequest = function(quote) {
       var ret = false;

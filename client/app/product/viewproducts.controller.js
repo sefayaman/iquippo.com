@@ -3,23 +3,83 @@
   'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, $http, productSvc,categorySvc, DTOptionsBuilder, Modal) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,categorySvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
   
   var vm = this;
-  $scope.user = {};
-  $scope.errors = {};
+
   $scope.productList = [];
   $scope.equipmentSearchFilter = {};
 
   var minPrice = 0;
   var maxPrice = 0;
-  $scope.priceRange = clonePrice(priceRange);
-  //$scope.searchFilter = {};
   $scope.currentCategroy = 'All Product';
+  $scope.currencyType = "";
+  $scope.currency = {};
+  $scope.mfgyr = {};
+  $scope.selectedCategory = "";
+  $scope.selectedSubCategory = "";
+  $scope.selectedBrand = "";
+  $scope.selectedModel = "";
+  $scope.selectedTradeType = "";
+
+
+  vm.onCategoryChange = onCategoryChange;
+  vm.onBrandChange = onBrandChange;
+  vm.onModelChange = onModelChange;
+  //vm.onGroupChange = onGroupChange;
+  vm.onCurrencyChange = onCurrencyChange;
+  vm.productSearchOnMfg = productSearchOnMfg;
+  vm.productSearchOnPrice = productSearchOnPrice;
+  vm.fireCommand = fireCommand;
+
 
   $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false);
 
-/*$scope.onGroupChange = function(group){
+  function init(){
+      categorySvc.getAllCategory()
+      .then(function(result){
+        $scope.allCategory = result;
+      });
+      groupSvc.getAllGroup()
+      .then(function(result){
+        $scope.allGroup = result;
+      });
+      if($state.current.name == "viewproduct"){
+       $scope.equipmentSearchFilter = {};
+       if(productSvc.getFilter()){
+        var filter = productSvc.getFilter();
+        console.log("sffffwf",filter);
+        if(filter.location)
+          $scope.equipmentSearchFilter['location'] = filter.location;
+        if(filter.tradeType)
+          $scope.equipmentSearchFilter['tradeType'] = filter.tradeType;
+        if(filter.category){
+          $scope.equipmentSearchFilter['category'] = filter.category;
+           $scope.selectedCategory = categorySvc.getCategoryByName(filter.category);
+           $scope.selectedTradeType = filter.tradeType;
+           onCategoryChange(categorySvc.getCategoryByName(filter.category),true);
+        }
+        productSvc.setFilter(null)
+       }    
+      fireCommand();
+
+    }else if($state.current.name == "categoryproduct"){
+        $scope.equipmentSearchFilter = {};
+        productSvc.getProductOnCategoryId($stateParams.id)
+        .then(function(result){
+          $scope.productList = result;
+        })
+        .catch(function(){
+          //error handling
+        })
+    }else{
+      $state.go('main');
+    }
+  }
+
+  init();
+
+/*function onGroupChange(group){
     if(!group)
       return;
     $scope.categoryList = [];
@@ -32,60 +92,67 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, $http, produc
    $scope.fireCommand();
   }*/
 
-$scope.onCategoryChange = function(category,noAction){
+  function onCategoryChange(category,noAction){
+      $scope.brandList = [];
+      $scope.modelList = [];
+      $scope.selectedBrand = "";
+      $scope.selectedModel = "";
     if(!category){
       $scope.equipmentSearchFilter.category = "";
-      $scope.fireCommand();
+      fireCommand();
       return;
     }
-    $scope.brandList = [];
-    $scope.modelList = [];
-    $scope.brandList = $rootScope.allBrand.filter(function(d){
-          return category._id == d.category._id;
+   var filter = {};
+   filter['categoryId'] = category._id;
+    brandSvc.getBrandOnFilter(filter)
+    .then(function(result){
+      $scope.brandList = result;
     });
     $scope.equipmentSearchFilter.category = category.name;
    if(!noAction)
-      $scope.fireCommand();
+        fireCommand();
   }
 
-  $scope.onBrandChange = function(brand){
+  function onBrandChange(brand){
+    $scope.modelList = [];
+    $scope.selectedModel = "";
     if(!brand) {
       $scope.equipmentSearchFilter.brand = "";
-      $scope.fireCommand();
+      fireCommand();
       return;
     }
-    $scope.modelList = [];
-    $scope.modelList = $rootScope.allModel.filter(function(d){
-        return brand._id == d.brand._id;
-    });
+    var filter = {};
+   filter['brandId'] = brand._id;
+    modelSvc.getModelOnFilter(filter)
+    .then(function(result){
+      $scope.modelList = result;
+    })
    $scope.equipmentSearchFilter.brand = brand.name;
-   $scope.fireCommand();
+   fireCommand();
   }
 
-  $scope.onModelChange = function(model){
+function onModelChange(model){
   if(!model) {
     $scope.equipmentSearchFilter.model = "";
-    $scope.fireCommand();
+    fireCommand();
     return;
    }
    $scope.equipmentSearchFilter.model = model.name;
-   $scope.fireCommand();
-  }
+   fireCommand();
+}
 
-  $scope.fireCommand = function(isCategoryId){
+  function fireCommand(){
 
     if($scope.currency && !$scope.currency.minPrice && !$scope.currency.maxPrice)
       delete $scope.equipmentSearchFilter.currency;
-  
-    /*if(isCategoryId && $stateParams.id)
-       filter['categoryId'] = $stateParams.id;
-     else{*/
+    if(!$scope.mfgyr.min && !$scope.mfgyr.max)
+       delete $scope.equipmentSearchFilter.mfgYear;
+
       var filter = $scope.equipmentSearchFilter;
       if($state.current.name != "viewproduct"){
          productSvc.setFilter(filter);
          $state.go("viewproduct");
       } 
-     //}
      filter['status'] = true;
       productSvc.getProductOnFilter(filter)
       .then(function(result){
@@ -96,45 +163,13 @@ $scope.onCategoryChange = function(category,noAction){
       })
   };
 
-  $scope.fireSearchCommand = function(countrySearch){
+  function fireSearchCommand(countrySearch){
     $scope.equipmentSearchFilter.country = countrySearch;
-    $scope.isSearch = true;
-    $scope.fireCommand();
+    fireCommand();
   }
 
   productSvc.countryWiseCount();
-
-  if($state.current.name == "viewproduct"){
-       $scope.equipmentSearchFilter = {};
-       if(productSvc.getFilter()){
-        var filter = productSvc.getFilter();
-        if(filter.location)
-          $scope.equipmentSearchFilter['location'] = filter.location;
-        if(filter.tradeType)
-          $scope.equipmentSearchFilter['tradeType'] = filter.tradeType;
-        if(filter.category){
-          $scope.equipmentSearchFilter['category'] = filter.category;
-           $scope.selectedCategory = categorySvc.getCategoryByName(filter.category);
-           $scope.onCategoryChange(categorySvc.getCategoryByName(filter.category),true);
-        }
-        productSvc.setFilter(null)
-       }    
-      $scope.fireCommand();
-
-  }else if($state.current.name == "categoryproduct"){
-      $scope.equipmentSearchFilter = {};
-      productSvc.getProductOnCategoryId($stateParams.id)
-      .then(function(result){
-        $scope.productList = result;
-      })
-      .catch(function(){
-        //error handling
-      })
-  }else{
-    $state.go('main');
-  }
-
-  $scope.productSearchOnPrice = function(evt){
+  function productSearchOnPrice(evt){
     if(evt){
       evt.preventDefault();
     }
@@ -145,8 +180,7 @@ $scope.onCategoryChange = function(category,noAction){
 
     if(!$scope.currency.minPrice && !$scope.currency.maxPrice){
       delete $scope.equipmentSearchFilter.currency;
-      $scope.isSearch = true;
-      $scope.fireCommand();
+      fireCommand();
       return;
     }
 
@@ -161,25 +195,16 @@ $scope.onCategoryChange = function(category,noAction){
       $scope.equipmentSearchFilter.currency.max = $scope.currency.maxPrice;
     else
       delete $scope.equipmentSearchFilter.currency.max;
-      $scope.isSearch = true;
-      $scope.fireCommand();
+      fireCommand();
   }
 
-var pcRange = clonePrice(priceRange);
-//var url = "http://api.fixer.io/latest?base=RUB";
-$scope.currencyType = "";
-$scope.currencyRange = "";
-$scope.onCurrencyChange = function(){
-
-  if(!$scope.currencyType){
-    delete  $scope.equipmentSearchFilter.currency;
-    $scope.isSearch = true;
-    $scope.fireCommand();
-    return;
-  }
+function onCurrencyChange(){
+  $scope.currency.minPrice = "";
+  $scope.currency.maxPrice = "";
+  fireCommand();
 }
 
-// date picker
+// date picker start
 
 $scope.today = function() {
     $scope.mfgyr = new Date();
@@ -229,11 +254,13 @@ $scope.today = function() {
     opened: false
   };
   
-  $scope.productSearchOnMfg = function(){
+  //date picker end
+
+  function productSearchOnMfg(){
+
     if(!$scope.mfgyr.min && !$scope.mfgyr.max){
       delete $scope.equipmentSearchFilter.mfgYear;
-      $scope.isSearch = true;
-      $scope.fireCommand();
+      fireCommand();
       return;
     }
 
@@ -247,25 +274,10 @@ $scope.today = function() {
       $scope.equipmentSearchFilter.mfgYear.max = $scope.mfgyr.max.getFullYear();
     else
       delete $scope.equipmentSearchFilter.mfgYear.max;
-      console.log("------------",$scope.equipmentSearchFilter);
-      $scope.isSearch = true;
-      $scope.fireCommand();
+      fireCommand();
   }
-  
 
 }
-
-function clonePrice(oldObjArr){
-  var newObjArr = [];
-  for(var i =0; i < oldObjArr.length; i++){
-    var obj = {};
-    for(var prop in oldObjArr[i]){
-      obj[prop] = oldObjArr[i][prop];
-    }
-    newObjArr[newObjArr.length] = obj;
-  }
-  return newObjArr;
- }
 
 })();
 

@@ -86,8 +86,19 @@ angular.module('sreizaoApp')
       $scope.assetDir = product.assetDir;
       $scope.selectedCategory = categorySvc.getCategoryOnId($scope.product.category._id);
       $scope.selectedGroup = groupSvc.getGroupOnId($scope.product.group._id);
-      $scope.selectedBrand = brandSvc.getBrandOnId($scope.product.brand._id);
-      $scope.selectedModel = modelSvc.getModelOnId($scope.product.model._id);
+      brandSvc.getBrandOnFilter({brandId:$scope.product.brand._id})
+      .then(function(result){
+        if(result.length > 0)
+        $scope.selectedBrand = result[0];
+        $scope.onBrandChange($scope.selectedBrand,true);
+      });
+
+      modelSvc.getModelOnFilter({modelIdId:$scope.product.model._id})
+      .then(function(result){
+        if(result.length > 0)
+        $scope.selectedModel = result[0];
+      })
+
       $scope.getUsersOnUserType = [];
       $scope.getUsersOnUserType[0] = $scope.product.seller;
       
@@ -103,7 +114,6 @@ angular.module('sreizaoApp')
         $scope.compRequiredFlag = false;
       }
       $scope.onCategoryChange($scope.selectedCategory,true);
-      $scope.onBrandChange($scope.selectedBrand,true);
       $scope.setDate($scope.product.mfgYear,1,1);
       if($scope.product.rent){
         $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
@@ -136,50 +146,47 @@ angular.module('sreizaoApp')
   $scope.onCategoryChange = function(category,noChange){
     if(!category)
       return;
-    $scope.brandList = [];
-    $scope.modelList = [];
-    var otherBrand = null;  
-    $scope.brandList = $rootScope.allBrand.filter(function(d){
-       if(d.name == 'Other'){
-          if(d.category.name == "Other")
-              otherBrand = d;
-          return false;
-        }
-        else
-          return category._id == d.category._id;
-    });
-    if(otherBrand)
-      $scope.brandList[$scope.brandList.length] = otherBrand;
-    if(!noChange){
+     if(!noChange)
+    {
       $scope.productName = "";
       $scope.selectedBrand = {}
       $scope.selectedModel = {}
       $scope.selectedGroup = groupSvc.getGroupOnId(category.group._id);
-     
     }
-   
+    $scope.brandList = [];
+    $scope.modelList = [];
+    var otherBrand = null;
+    var filter = {};
+    filter['categoryId'] = category._id;
+    brandSvc.getBrandOnFilter(filter)
+    .then(function(result){
+      $scope.brandList = result;
+
+    })
+    .catch(function(res){
+      console.log("error in fetching brand",res);
+    })
   }
 
   $scope.onBrandChange = function(brand,noChange){
     if(!brand)
        return;
-    $scope.modelList = [];
-    var otherModel = null;  
-    $scope.modelList = $rootScope.allModel.filter(function(d){
-      if(d.name == 'Other'){
-        if(d.category.name == "Other" && d.brand.name == "Other")
-              otherModel = d;
-          return false;
-        }
-        else
-        return brand._id == d.brand._id;    
-    });
-    if(otherModel)
-      $scope.modelList[$scope.modelList.length] = otherModel;
-    if(!noChange){
+    if(!noChange)
+    {
       $scope.productName = "";
       $scope.selectedModel = {}
     }
+    $scope.modelList = [];
+    var otherModel = null;
+    var filter = {};
+    filter['brandId'] = brand._id;
+    modelSvc.getModelOnFilter(filter)
+    .then(function(result){
+      $scope.modelList = result;
+    })
+    .catch(function(res){
+      console.log("error in fetching model",res);
+    })  
    
   }
 

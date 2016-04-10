@@ -13,12 +13,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.imgLeftTop = "";
     vm.imgLeftBottom = "";
     vm.imgBottomCentre = "";
-    vm.radioModel = 'Left';
+    vm.radioModel = 'BUY';
     vm.isCollapsed = true;
     
     vm.doSearch = doSearch;
-    vm.myFunct = myFunct;
-    vm.setPopover = setPopover;
     vm.getCategoryHelp = getCategoryHelp;
 
     $scope.ConfigureList = function() {};
@@ -84,6 +82,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       vm.categorySearchText = vm.categorySearchText.trim();
       var filter = {};
       filter['category'] = vm.categorySearchText;
+      filter['tradeType'] = vm.radioModel;
+      filter['location'] = vm.locationSearchText;
       productSvc.setFilter(filter);
       $state.go('viewproduct');
     }
@@ -99,19 +99,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       return ret;
     }
 
-    function myFunct(keyEvent) {
-      if(keyEvent)
-          keyEvent.stopPropagation();
-      if (keyEvent.which === 13){
-        $scope.startsearch();
-      }
-    }
-    
-    function setPopover(evt){
-        var index = $(evt.currentTarget).data('index');
-        $scope.popoverData = $scope.featuredslides[index];
-    };
-    
     function beginVertScroll() {
       $timeout(
         function() {

@@ -25,6 +25,42 @@ angular.module('sreizaoApp')
 	$scope.brandEdit = false;
 	$scope.modelEdit = false;
 
+	function loadAllGroup(fromCache){
+		if(!fromCache)
+			groupSvc.clearCache();
+		groupSvc.getAllGroup()
+		.then(function(result){
+			$scope.allGroup = result;
+		})
+	}
+
+	function loadAllCategory(fromCache){
+		if(!fromCache)
+			categorySvc.clearCache();
+		categorySvc.getAllCategory()
+		.then(function(result){
+			$scope.allCategory = result;
+		})
+	}
+
+	function loadAllBrand(){
+		brandSvc.getAllBrand()
+		.then(function(result){
+			$scope.allBrand = result;
+		})
+	}
+
+	function loadAllModel(){
+		modelSvc.getAllModel()
+		.then(function(result){
+			$scope.allModel = result;
+		})
+	}
+	loadAllGroup(true);
+	loadAllCategory(true);
+	loadAllBrand();
+	loadAllModel();
+
     $scope.onGroupChange = function(group){
     //$scope.c={};
     //$scope.b={};
@@ -34,7 +70,7 @@ angular.module('sreizaoApp')
       return;
     //$scope.categoryList = [];
     var otherCategory = null;  
-    $scope.categoryList = $rootScope.allCategory.filter(function(d){
+    $scope.categoryList = $scope.allCategory.filter(function(d){
         if(d.name == 'Other'){
           otherCategory = d;
           return false;
@@ -60,7 +96,7 @@ angular.module('sreizaoApp')
       return;
     //$scope.brandList = [];
     var otherBrand = null;  
-    $scope.brandList = $rootScope.allBrand.filter(function(d){
+    $scope.brandList = $scope.allBrand.filter(function(d){
        if(d.name == 'Other'){
           otherBrand = d;
           return false;
@@ -81,7 +117,7 @@ angular.module('sreizaoApp')
 		{	
 			case "Group":
 				MasterDataService.SaveGroup($scope.g).then(function(Info) {
-					groupSvc.getAllGroup();
+					loadAllGroup();
 				if(Info.Code=="SUCCESS"){
 					$scope.g={};
 				}
@@ -106,7 +142,7 @@ angular.module('sreizaoApp')
 				break;
 			case "Brand":
 				MasterDataService.SaveBrand($scope.b).then(function(Info) {
-				brandSvc.getAllBrand();
+				loadAllBrand();
 				if(Info.Code=="SUCCESS"){
 				    $scope.b={};
 				   
@@ -118,7 +154,7 @@ angular.module('sreizaoApp')
 			break;
 			case "Model":
 				MasterDataService.SaveModel($scope.m).then(function(Info) {
-					modelSvc.getAllModel();
+					loadAllModel();
 					if(Info.Code=="SUCCESS"){
 					 $scope.m= {};
 				}
@@ -189,7 +225,7 @@ angular.module('sreizaoApp')
 	
 	function saveCategory(){
 		 MasterDataService.SaveCategory($scope.c).then(function(Info) {
-			categorySvc.getAllCategory();
+			loadAllCategory();
 			if(Info.Code=="SUCCESS"){
 				$scope.c={};
 			}
@@ -244,11 +280,11 @@ angular.module('sreizaoApp')
   function updateCategory(category){
       categorySvc.updateCategory(category).then(function(result){
         $rootScope.loading = false;
-       if(result.data.errorCode){
-          Modal.alert(result.data.message);
+       if(result.errorCode){
+          Modal.alert(result.message);
         }
         else{
-        	categorySvc.getAllCategory();
+        	loadAllCategory();
            Modal.alert("Category Updated",true);
         }
       });
@@ -282,10 +318,10 @@ angular.module('sreizaoApp')
 
 	        $http.post('/api/common/importMasterData',{fileName : result.data.filename})
 	    	.then(function(res){
-	    		groupSvc.getAllGroup();
-	    		categorySvc.getAllCategory();
-	    		modelSvc.getAllModel();
-	    		brandSvc.getAllBrand();
+	    		loadAllGroup();
+	    		loadAllCategory();
+				loadAllBrand();
+				loadAllModel();
 	    		$rootScope.loading = false;
 	    		Modal.alert(res.data,true);
 	    	},function(res){
@@ -300,8 +336,8 @@ angular.module('sreizaoApp')
 	 		return;
 	 	var index = parseInt($(_this).data('index'));
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
-	 		$rootScope.allCategory[index].imgSrc = result.data.filename;
-	 		updateCategory($rootScope.allCategory[index]);
+	 		$scope.allCategory[index].imgSrc = result.data.filename;
+	 		updateCategory($scope.allCategory[index]);
 	    })
 	 }
 
@@ -321,16 +357,16 @@ angular.module('sreizaoApp')
 	 			Modal.alert( type + " deleted successfully.");
 	 			switch(type){
 					case "Group":
-						groupSvc.getAllGroup();
+						loadAllGroup();
 					break;
 					case "Category":
-						categorySvc.getAllCategory();
+						loadAllCategory();
 					break;
 					case "Brand":
-						brandSvc.getAllBrand();
+						loadAllBrand();
 					break;
 					case "Model":
-						modelSvc.getAllModel();
+						loadAllModel();
 					break;
 				}
 
@@ -339,6 +375,7 @@ angular.module('sreizaoApp')
 	 			Modal.alert(res);
 	 		})
 	 }
+
 	 $scope.editClick = function(type,val){
  		switch(type){
 
@@ -407,10 +444,10 @@ angular.module('sreizaoApp')
 	 	$http.post("/api/common/updateMasterData",dataToSend)
  		.success(function(){
  			Modal.alert( dataToSend.type + " updated successfully.",true);
- 			groupSvc.getAllGroup();
-			brandSvc.getAllBrand();
-			modelSvc.getAllModel();
-			categorySvc.getAllCategory();
+ 			loadAllGroup();
+ 			loadAllCategory();
+ 			loadAllBrand();
+ 			loadAllModel();
 			$scope.reset();
  		})
  		.error(function(res){

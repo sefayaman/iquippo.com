@@ -8,5 +8,6 @@ var router = express.Router();
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/saveModel', controller.create);
+router.post('/search', controller.getModelOnFilter);
 
 module.exports = router;
