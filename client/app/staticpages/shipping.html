@@ -4,9 +4,7 @@
 			<legend></legend>
 
 			<p>
-				We work with professional service providers globally. We have transport
-				service tie-ups equipped to meet a broad range of distribution
-				requirements. We work with modern freighters to provide an efficient and reliable marine transportation service taking care of all vital Pre and Post shipping requirements.
+				Coming soon...
 			</p>
 
 			<!-- <div class="serve text-center">
@@ -49,9 +47,11 @@
 
           <div class="row">
             <div class="col-xs-6">
-              <div class="form-group">
-                <input type="text" name="" class="form-control" placeholder="City" ng-model="shippingQuote.city">
-              </div>
+                    <select class="form-control" name="location" ng-model="shippingQuote.city">
+                      <option value="" disabled>Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
             </div>
             <div class="col-xs-6">
               <div class="form-group">                          
@@ -79,7 +79,7 @@
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
-               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="+971-XX-XXXXXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
               </div>
             </div>
             <div class="col-xs-6">

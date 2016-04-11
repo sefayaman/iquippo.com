@@ -72,7 +72,7 @@ var tradeType = [
   "name" : "Both",
   "code" : "BOTH"
 }
-]
+];
 
 var rateMyEquipmentOpt = [
 {
@@ -84,22 +84,7 @@ var rateMyEquipmentOpt = [
 {
   "name" : "Excellent"
 }
-]
-
-var locationList = [
-{
-  "name" : "Location1"
-},
-{
-  "name" : "Location2"
-},
-{
-  "name" : "Location3"
-},
-{
-  "name" : "Location4"
-}
-]
+];
 
 var valuationList = [
 {

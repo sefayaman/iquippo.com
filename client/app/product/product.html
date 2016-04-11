@@ -114,18 +114,6 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form-group col-sm-5">Sub Category</div>
-                    <div class="form-group col-sm-4">
-                      <select class="form-control" ng-disabled="relistingEnable" class="form-control" name="subcategory"  ng-model="selectedSubCategory" ng-options="subcategory.name for subcategory in allSubCategory track by subcategory._id">
-                            <option value="" disabled>Select Sub Category</option>
-                      </select>
-                      <i class="caret"></i>
-                    </div>
-                    <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherSubCategory.$invalid && submitted}">
-                      <input type="text" class="form-control" name="otherCategory" ng-model="selectedSubCategory.otherName" ng-value="{{selectedSubCategory.otherName}}" ng-disabled ="selectedSubCategory.name != 'Other'" placeholder="Other">
-                    </div>
-                  </div>
-                   <div class="row">
                     <div class="form-group col-sm-5">Product Brand<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
                        <select ng-disabled="relistingEnable" class="form-control" name="brand" ng-model="selectedBrand" ng-change="onBrandChange(selectedBrand)" ng-options="brand.name for brand in brandList track by brand._id" required>
@@ -137,7 +125,6 @@
                       <input type="text" class="form-control" name="otherBrand" ng-model="selectedBrand.otherName" ng-value="{{selectedBrand.otherName}}" ng-disabled ="selectedBrand.name != 'Other'" placeholder="Other" ng-required= "selectedBrand.name == 'Other'">
                     </div>
                   </div>
-
                   <div class="row">
                     <div class="form-group col-sm-5">Product Model<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
@@ -150,7 +137,18 @@
                       <input type="text" class="form-control" name="otherModel" ng-model="selectedModel.otherName" ng-value="{{selectedMoodel.otherName}}" ng-disabled ="selectedModel.name != 'Other'" placeholder="Other" ng-required= "selectedModel.name == 'Other'">
                     </div>
                   </div>
-
+                  <div class="row">
+                    <div class="form-group col-sm-5">Sub Category</div>
+                    <div class="form-group col-sm-4">
+                      <select class="form-control" ng-disabled="relistingEnable" class="form-control" name="subcategory"  ng-model="selectedSubCategory" ng-options="subcategory.name for subcategory in allSubCategory track by subcategory._id">
+                            <option value="" disabled>Select Sub Category</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                    <!-- <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherSubCategory.$invalid && submitted}">
+                      <input type="text" class="form-control" name="otherCategory" ng-model="selectedSubCategory.otherName" ng-value="{{selectedSubCategory.otherName}}" ng-disabled ="selectedSubCategory.name != 'Other'" placeholder="Other">
+                    </div> -->
+                  </div>
                   <div class="row">
                     <div class="form-group col-sm-5">Variant</div>
                     <div class="form-group col-sm-7">

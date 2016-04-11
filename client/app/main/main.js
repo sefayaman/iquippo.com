@@ -118,11 +118,11 @@ angular.module('sreizaoApp')
          controller:"StaticCtrl",
          layout:'client'
       })
-      /*.state('service', {
-        url:"/service",
-        templateUrl: 'app/staticpages/service.html',
+      .state('manPower', {
+        url:"/manpower",
+        templateUrl: 'app/staticpages/manpower.html',
          layout:'client'
-      })*/
+      })
       .state('certifiedbyiquippo', {
         url:"/certifiedbyiquippo",
         templateUrl: 'app/staticpages/certifiedByiQuippo.html',
