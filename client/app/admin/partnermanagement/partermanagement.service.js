@@ -27,7 +27,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
 	            deferred.resolve(res.data);
           },function(errors){
             console.log("Errors in vendor fetch list :"+ JSON.stringify(errors));
-            deferred.reject(vendorCache);
+            deferred.reject(errors);
           });
         }
        

@@ -4,6 +4,8 @@ var _ = require('lodash');
 var Seq = require('seq');
 var trim = require('trim');
 var Country = require('./country.model');
+var State = require('./location.model').State;
+var City = require('./location.model').City;
 var AppSetting = require('./setting.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
@@ -715,6 +717,132 @@ function fileExists(filePath)
         return false;
     }
 }
+
+//location functions
+
+// Get list of State
+exports.getAllState = function(req, res) {
+  State.find(function (err, st) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(st);
+  });
+};
+
+
+// Creates a new state in the DB.
+exports.createState = function(req, res) {
+  req.body.createdAt = new Date();
+  req.body.updatedAt = req.body.createdAt;
+  var filter = {};
+  filter["name"] =req.body.name;
+  State.find(filter,function (err, sts) {
+    if(err) { return handleError(res, err); }
+    else
+    {
+    	if(sts.length>0)
+    	{
+    		return res.status(201).json({message:"State already exits!!!"});
+    	}
+        else{
+        	State.create(req.body, function(err, st) {
+              if(err) { return handleError(res, err); }
+               return res.status(200).json({message:"State save sucessfully"});
+             });
+        }  
+    
+    }
+    
+  });
+  
+};
+// Updates an existing state in the DB.
+exports.updateState = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  if(req.body.user) { delete req.body.user; }
+  req.body.updatedAt = new Date();
+  State.findById(req.params.id, function (err, st) {
+    if (err) { return handleError(res, err); }
+    if(!st) { return res.status(404).send('Not Found'); }
+    State.update({_id:req.params.id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(req.body);
+    });
+  });
+};
+
+// Deletes a state from the DB.
+exports.deleteState = function(req, res) {
+  State.findById(req.params.id, function (err, st) {
+    if(err) { return handleError(res, err); }
+    if(!st) { return res.status(404).send('State Not Found'); }
+    st.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send({message:"State deleted sucessfully!!!"});
+    });
+  });
+};
+
+// Get list of city
+exports.getAllCity = function(req, res) {
+  City.find(function (err, ct) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(ct);
+  });
+};
+
+
+// Creates a new city in the DB.
+exports.createCity = function(req, res) {
+  req.body.createdAt = new Date();
+  req.body.updatedAt = req.body.createdAt;
+  var filter = {};
+  filter["name"] =req.body.name;
+  City.find(filter,function (err, cts) {
+    if(err) { return handleError(res, err); }
+    else
+    {
+    	if(cts.length>0)
+    	{
+    		return res.status(201).json({message:"City already exits!!!"});
+    	}
+        else{
+        	City.create(req.body, function(err, ct) {
+              if(err) { return handleError(res, err); }
+               return res.status(200).json({message:"City save sucessfully"});
+             });
+        }  
+    
+    }
+    
+  });
+  
+};
+// Updates an existing city in the DB.
+exports.updateCity = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  if(req.body.user) { delete req.body.user; }
+  req.body.updatedAt = new Date();
+  City.findById(req.params.id, function (err, ct) {
+    if (err) { return handleError(res, err); }
+    if(!ct) { return res.status(404).send('Not Found'); }
+    City.update({_id:req.params.id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(req.body);
+    });
+  });
+};
+
+// Deletes a city from the DB.
+exports.deleteCity = function(req, res) {
+  City.findById(req.params.id, function (err, ct) {
+    if(err) { return handleError(res, err); }
+    if(!ct) { return res.status(404).send('City Not Found'); }
+    ct.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send({message:"City deleted sucessfully!!!"});
+    });
+  });
+};
 
 function handleError(res, err) {
   return res.status(500).send(err);

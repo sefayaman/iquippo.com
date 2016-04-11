@@ -86,7 +86,7 @@ angular.module('sreizaoApp')
   .factory("categorySvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
       var catService = {};
       var categoryCache = [];
-      var path = '/api/category';
+      var path = '/api/category/category';
       catService.getAllCategory = getAllCategory;
       catService.getCategoryForMain = getCategoryForMain;
       catService.getCategoryOnId = getCategoryOnId;

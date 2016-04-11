@@ -53,7 +53,7 @@ angular.module('sreizaoApp')
 			var name=c.name;
 			name=$.trim(name);
 			c.group=self.filterObject(c.group);
-			$http.post('/api/category/saveCategory', c)
+			$http.post('/api/category/category/save', c)
 			.then(function(Data){
 			 if(Data.status==200)
 			 {      	

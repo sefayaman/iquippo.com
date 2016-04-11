@@ -5,11 +5,14 @@ var controller = require('./category.controller');
 
 var router = express.Router();
 
-router.get('/', controller.getAll);
-router.get('/:id', controller.getOnId);
-router.post('/saveCategory', controller.create);
-router.put('/:id', controller.update);
-router.delete('/:id', controller.destroy);
-router.post('/search', controller.search);
+router.get('/category', controller.getAllCategory);
+router.post('/category/save', controller.createCategory);
+router.put('/category/:id', controller.updateCategory);
+router.post('/category/search', controller.searchCategory);
+
+router.get('/subcategory', controller.getAllSubCategory);
+router.post('/subcategory/save', controller.createSubCategory);
+router.put('/subcategory/:id', controller.updateSubCategory);
+router.delete('/subcategory/:id', controller.destroySubCategory);
 
 module.exports = router;

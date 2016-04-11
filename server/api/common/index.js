@@ -18,4 +18,14 @@ router.post('/saveasimage', controller.saveAsImage);
 router.post('/upsertsetting', controller.upsertSetting);
 router.post('/getsettingonkey', controller.getSettingByKey);
 
+router.get('/state', controller.getAllState);
+router.post('/state', controller.createState);
+router.put('/state/:id', controller.updateState);
+router.delete('/state/:id', controller.deleteState);
+
+router.get('/city', controller.getAllCity);
+router.post('/city', controller.createCity);
+router.put('/city/:id', controller.updateCity);
+router.delete('/city/:id', controller.deleteCity);
+
 module.exports = router;
