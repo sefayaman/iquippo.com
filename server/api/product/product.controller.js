@@ -64,13 +64,16 @@ exports.search = function(req, res) {
     var locRegEx = new RegExp(req.body.location, 'i');
     filter["city"] = {$regex:locRegEx};
   }
-  if(req.body.tradeType)
-   filter["tradeType"] = req.body.tradeType;
+  if(req.body.tradeType){
+   filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
+  }
     
   if(req.body.group)
     filter["group.name"] = req.body.group;
   if(req.body.category)
     filter["category.name"] = req.body.category;
+  if(req.body.subCategory)
+    filter["subcategory.name"] = req.body.subCategory;
   if(req.body.brand)
     filter["brand.name"] = req.body.brand;
   if(req.body.model)

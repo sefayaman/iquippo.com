@@ -53,7 +53,6 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
        $scope.equipmentSearchFilter = {};
        if(productSvc.getFilter()){
         var filter = productSvc.getFilter();
-        console.log("sffffwf",filter);
         if(filter.location)
           $scope.equipmentSearchFilter['location'] = filter.location;
         if(filter.tradeType)

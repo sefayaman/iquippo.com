@@ -13,7 +13,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.imgLeftTop = "";
     vm.imgLeftBottom = "";
     vm.imgBottomCentre = "";
-    vm.radioModel = 'BUY';
+    vm.radioModel = 'SELL';
     vm.isCollapsed = true;
     
     vm.doSearch = doSearch;
