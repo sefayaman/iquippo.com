@@ -71,6 +71,8 @@ exports.search = function(req, res) {
     filter["group.name"] = req.body.group;
   if(req.body.category)
     filter["category.name"] = req.body.category;
+  if(req.body.subCategory)
+    filter["subcategory.name"] = req.body.subCategory;
   if(req.body.brand)
     filter["brand.name"] = req.body.brand;
   if(req.body.model)
