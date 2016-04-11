@@ -6,7 +6,7 @@ angular.module('sreizaoApp')
     
   }])
 
-  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http' , 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, Modal, notificationSvc) {
+  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http' , 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.shippingService = {};
@@ -23,6 +23,11 @@ angular.module('sreizaoApp')
       $scope.shippingQuote.phone = currUser.phone;
       $scope.shippingQuote.country = currUser.country;
     }
+
+    LocationSvc.getAllLocation()
+     .then(function(result){
+      $scope.locationList = result;
+    });
 
     $scope.addShippingQuote = function(evt) {
       if($scope.form.$invalid){
@@ -52,7 +57,7 @@ angular.module('sreizaoApp')
        $scope.shippingQuote = {};
     };
   }])
-  .controller('ValuationCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc) {
+  .controller('ValuationCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.valuationQuote = {};
@@ -73,6 +78,12 @@ angular.module('sreizaoApp')
     $scope.hstep = 1;
     $scope.mstep = 1;
     $scope.ismeridian = true;
+
+    LocationSvc.getAllLocation()
+     .then(function(result){
+      $scope.locationList = result;
+    });
+
     $scope.addValuationQuote = function(evt) {
       
       if($scope.valuationQuote.schedule == 'yes') {
@@ -168,7 +179,7 @@ angular.module('sreizaoApp')
   };
   }])
 
-  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc) {
+  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.cetifiedByiQuippoQuote = {};
@@ -189,6 +200,11 @@ angular.module('sreizaoApp')
       $scope.cetifiedByiQuippoQuote.phone = currUser.phone;
       $scope.cetifiedByiQuippoQuote.country = currUser.country;
     }
+    
+    LocationSvc.getAllLocation()
+     .then(function(result){
+      $scope.locationList = result;
+    });
 
     $scope.addCetifiedByiQuippoQuote = function(evt) {
 

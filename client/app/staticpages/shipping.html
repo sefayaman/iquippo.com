@@ -49,9 +49,11 @@
 
           <div class="row">
             <div class="col-xs-6">
-              <div class="form-group">
-                <input type="text" name="" class="form-control" placeholder="City" ng-model="shippingQuote.city">
-              </div>
+                    <select class="form-control" name="location" ng-model="shippingQuote.city">
+                      <option value="" disabled>Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
             </div>
             <div class="col-xs-6">
               <div class="form-group">                          
