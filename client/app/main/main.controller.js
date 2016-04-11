@@ -144,7 +144,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     function getLocationHelp(val) {
       var serData = {};
-      serData['searchStr'] = $scope.locationSearchText;
+      serData['searchStr'] = vm.locationSearchText;
      return LocationSvc.getLocationOnFilter(serData)
       .then(function(result){
          return result.map(function(item){
