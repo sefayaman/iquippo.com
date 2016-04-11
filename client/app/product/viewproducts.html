@@ -174,7 +174,8 @@
                       <div class="media-body">
                         <h4 class="media-heading">
                           {{product.name}}
-                          
+                          <span class="label label-primary" ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'">Rent</span>
+                          <span class="label label-danger" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">Sell</span>
                           <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
                           <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
                           <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
