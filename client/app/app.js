@@ -61,7 +61,7 @@ angular.module('sreizaoApp',[
     $rootScope.allCountries = allCountries;
     $rootScope.valuationList = valuationList;
     $rootScope.tradeType = tradeType;
-    $rootScope.locationList = locationList;
+   // $rootScope.locationList = locationList;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
 
     $rootScope.loadingCount = $rootScope.loadingCount + 2;

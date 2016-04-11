@@ -3,7 +3,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,categorySvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,categorySvc,SubCategorySvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
   
   var vm = this;
 
@@ -20,7 +20,6 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   $scope.selectedSubCategory = "";
   $scope.selectedBrand = "";
   $scope.selectedModel = "";
-  $scope.selectedTradeType = "";
 
 
   vm.onCategoryChange = onCategoryChange;
@@ -44,6 +43,12 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
       .then(function(result){
         $scope.allGroup = result;
       });
+
+      SubCategorySvc.getAllSubCategory()
+      .then(function(result){
+        $scope.allSubcategory = result;
+      });
+      
       if($state.current.name == "viewproduct"){
        $scope.equipmentSearchFilter = {};
        if(productSvc.getFilter()){
@@ -56,7 +61,6 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
         if(filter.category){
           $scope.equipmentSearchFilter['category'] = filter.category;
            $scope.selectedCategory = categorySvc.getCategoryByName(filter.category);
-           $scope.selectedTradeType = filter.tradeType;
            onCategoryChange(categorySvc.getCategoryByName(filter.category),true);
         }
         productSvc.setFilter(null)

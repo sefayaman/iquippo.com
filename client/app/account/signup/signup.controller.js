@@ -4,7 +4,7 @@
 angular.module('account').controller('SignupCtrl',SignupCtrl);
 
 //controller function
-function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uibModalInstance,Modal, notificationSvc) {
+function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uibModalInstance,Modal,LocationSvc, notificationSvc) {
     var vm = this;
 
     vm.user = {};
@@ -20,6 +20,13 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     $scope.errors = {};
     $scope.isRegister = true;
 
+    function init(){
+      LocationSvc.getAllLocation()
+      .then(function(result){
+        $scope.locationList = result;
+      })
+    }
+    init();
   function register() {
       //$scope.form.mobile.$invalid = false;
 

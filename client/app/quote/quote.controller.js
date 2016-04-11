@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc, $http, $uibModalInstance, notificationSvc, Modal) {
+  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal) {
     $scope.currntUserInfo = {};
     $scope.quote = {};
     $scope.categoryList = [];
@@ -26,6 +26,7 @@ angular.module('sreizaoApp')
       $scope.allCategory = result;
     }) 
 
+
   $scope.onGroupChange = function(group){
     $scope.categoryList = [];
     categorySvc.getAllCategory()
@@ -37,6 +38,16 @@ angular.module('sreizaoApp')
     
   }
   
+  SubCategorySvc.getAllSubCategory()
+   .then(function(result){
+    $scope.allSubcategory = result;
+  });
+
+  LocationSvc.getAllLocation()
+   .then(function(result){
+    $scope.locationList = result;
+  });
+
   $scope.sendQuoteRequest = function(quote) {
       var ret = false;
       if($scope.form.$invalid || ret){

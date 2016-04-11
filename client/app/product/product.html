@@ -242,11 +242,10 @@
                   <div class="row">
                     <div class="form-group col-sm-5">State<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
-                      <select class="form-control" name="country" ng-model="product.country" required>
-                            <option value="" disabled>Select State</option>
-                            <option>A</option>
-                            <option>B</option>
-                            <option>C</option>
+                      <select class="form-control" name="country" ng-model="product.state" ng-change="onStateChange()" required >
+                            <option value="">Select State</option>
+                            <option value="{{st.name}}" ng-repeat="st in stateList">{{st.name}}</option>
+                            
                       </select>
                       <i class="caret"></i>
                     </div>

@@ -25,6 +25,7 @@ var ProductSchema = new Schema({
   grossPrice:Number,
   priceOnRequest:{type:Boolean,default:false},
   country:String,
+  state:String,
   city:String,
   productCondition:String,
   images:[{}],

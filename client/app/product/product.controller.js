@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
- .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout',  function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout) {
+ .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout',  function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout) {
     $scope.categoryList = [];
     var product = $scope.product = {};
     $rootScope.isSuccess = false;
@@ -38,7 +38,48 @@ angular.module('sreizaoApp')
   $scope.userRequiredFlag = true;
   $scope.compRequiredFlag = false;
 
+
   // get all user based on role
+  function init(){
+
+    groupSvc.getAllGroup()
+    .then(function(result){
+      $scope.allGroup = result;
+    });
+
+    categorySvc.getAllCategory()
+    .then(function(result){
+      $scope.allCategory = result;
+    });
+
+     SubCategorySvc.getAllSubCategory()
+    .then(function(result){
+      $scope.allSubCategory = result;
+    });
+
+     LocationSvc.getAllState()
+    .then(function(result){
+      $scope.stateList = result;
+    });
+    //LocationSvc.getAllLocation()
+  }
+  init();
+  $scope.onStateChange = function(noReset){
+    
+    $scope.locationList = [];
+    if(!noReset)
+        product.city = "";
+    if(!$scope.product.state)
+      return;
+
+    LocationSvc.getAllLocation().
+    then(function(result){
+      $scope.locationList = result.filter(function(item){
+        return item.state.name == $scope.product.state;
+      });
+    });
+  } 
+
   $scope.onRoleChange = function(userType){
     if(!userType)
       return;
@@ -79,6 +120,7 @@ angular.module('sreizaoApp')
         item.isEdit = true;
         item.name = item.src;
       });
+
       $scope.product.country = $scope.product.country;
       videoObj.name = product.videoName;
       docObj.name = product.documentName;
@@ -86,6 +128,7 @@ angular.module('sreizaoApp')
       $scope.assetDir = product.assetDir;
       $scope.selectedCategory = categorySvc.getCategoryOnId($scope.product.category._id);
       $scope.selectedGroup = groupSvc.getGroupOnId($scope.product.group._id);
+      $scope.selectedSubCategory = $scope.product.subcategory;
       brandSvc.getBrandOnFilter({brandId:$scope.product.brand._id})
       .then(function(result){
         if(result.length > 0)
@@ -93,10 +136,10 @@ angular.module('sreizaoApp')
         $scope.onBrandChange($scope.selectedBrand,true);
       });
 
-      modelSvc.getModelOnFilter({modelIdId:$scope.product.model._id})
+      modelSvc.getModelOnFilter({modelId:$scope.product.model._id})
       .then(function(result){
         if(result.length > 0)
-        $scope.selectedModel = result[0];
+          $scope.selectedModel = result[0];
       })
 
       $scope.getUsersOnUserType = [];
@@ -114,6 +157,7 @@ angular.module('sreizaoApp')
         $scope.compRequiredFlag = false;
       }
       $scope.onCategoryChange($scope.selectedCategory,true);
+      $scope.onStateChange(true);
       $scope.setDate($scope.product.mfgYear,1,1);
       if($scope.product.rent){
         $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
@@ -141,7 +185,6 @@ angular.module('sreizaoApp')
   }else{
     prepareImgArr();
   }
-
   $scope.isCollapsed = true;
   $scope.onCategoryChange = function(category,noChange){
     if(!category)
@@ -350,6 +393,13 @@ angular.module('sreizaoApp')
 	          product.relistingDate = new Date();
 	        }
 	    
+      if($scope.selectedSubCategory){
+         product.subcategory = {};
+         product.subcategory['_id'] = $scope.selectedSubCategory['_id'];
+         product.subcategory['name'] = $scope.selectedSubCategory['name'];
+      }
+     
+
       $rootScope.loading = true;
       if(videoObj.name)
        $scope.product.videoName = videoObj.name;
@@ -445,31 +495,31 @@ angular.module('sreizaoApp')
         $scope.successMessage = "Product added successfully";
         $scope.autoSuccessMessage(20);
         suggestionSvc.buildSuggestion(suggestions);
-        if(result.data.errorCode){
-          alert(result.data.message);
-          console.log("error reason",result.data.message);
+        if(result.errorCode){
+          alert(result.message);
+          console.log("error reason",result.message);
         }
         else {
-          if(result.data.productId) {
+          if(result.productId) {
             productHistory.history = {};
             productHistory.user = {};
     
             productHistory.type = "Create";
-            productHistory.history = result.data;
+            productHistory.history = result;
             productHistory.user = $rootScope.getCurrentUser();
             productSvc.addProductInHistory(productHistory).then(function(result){
             $rootScope.loading = false;
             });
           }
           if(Auth.isAdmin()) {
-            mailToCustomerForApprovedAndFeatured(result.data, product);
+            mailToCustomerForApprovedAndFeatured(result, product);
             } else {
             var data = {};
             data['to'] = supportMail;
             data['subject'] = 'Product Upload: Request for activation';
-            result.data.serverPath = serverPath;
-            notificationSvc.sendNotification('productUploadEmailToAdmin', data, result.data,'email');
-            console.log("Product added",result.data);
+            result.serverPath = serverPath;
+            notificationSvc.sendNotification('productUploadEmailToAdmin', data, result,'email');
+            console.log("Product added",result);
         }
         $state.go('productlisting');
       }
@@ -491,12 +541,12 @@ angular.module('sreizaoApp')
         $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
         suggestionSvc.buildSuggestion(suggestions);
-        if(result.data.errorCode){
-          alert(result.data.message);
-          console.log("error reason",result.data.message);
+        if(result.errorCode){
+          alert(result.message);
+          console.log("error reason",result.message);
         }
         else {
-          mailToCustomerForApprovedAndFeatured(result.data, product);
+          mailToCustomerForApprovedAndFeatured(result, product);
           }
            $state.go('productlisting');
       });
