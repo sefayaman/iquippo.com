@@ -258,8 +258,13 @@ angular.module('sreizaoApp')
 	}, true);
 
     $scope.updateCategoryStatus = function(category) {
-      $rootScope.loading = true;
-      if(category.status){
+      //$rootScope.loading = true;
+      if(!category.imgSrc){
+      	  Modal.alert("Please upload category image to make it active.");
+      	return;
+      }
+       updateCategory(category);
+      /*if(category.status){
         //dataToSend['position'] = category.position;
          dataToSend["status"] = true;
         $http.post('/api/category/search', dataToSend).success(function(srchres){
@@ -272,7 +277,7 @@ angular.module('sreizaoApp')
               updateCategory(category);
           });
       }else
-        updateCategory(category);
+        updateCategory(category);*/
      
       
   };

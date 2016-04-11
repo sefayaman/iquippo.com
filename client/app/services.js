@@ -86,6 +86,7 @@ angular.module('sreizaoApp')
   .factory("categorySvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
       var catService = {};
       var categoryCache = [];
+      var homeCategoryCache = [];
       var path = '/api/category/category';
       catService.getAllCategory = getAllCategory;
       catService.getCategoryForMain = getCategoryForMain;
@@ -118,16 +119,17 @@ angular.module('sreizaoApp')
 
       function getCategoryForMain(){
         var filter = {};
+        filter['status'] = true;
         var deferred = $q.defer();
-        if(categoryCache && categoryCache.length > 0){
-          deferred.resolve(categoryCache);
+        if(homeCategoryCache && homeCategoryCache.length > 0){
+          deferred.resolve(homeCategoryCache);
         }else{
             $http.post(path + "/search",filter).
             then(function(res){
-              $rootScope.allCategory = _.sortBy(res.data, function(n) {
+              var allCats = _.sortBy(res.data, function(n) {
               return n.name == 'Other';
               });
-              categoryCache = $rootScope.allCategory;
+              homeCategoryCache = allCats;
               deferred.resolve(res.data);
             })
             .catch(function(res){
@@ -173,14 +175,17 @@ angular.module('sreizaoApp')
       function updateCategory(category){
         return $http.put( path + "/" + category._id,category)
         .then(function(res){
+          clearCache();
           return res.data;
         })
         .catch(function(res){
           throw res;
         })
       }
+
       function clearCache(){
         categoryCache = [];
+        homeCategoryCache = [];
       }
       return catService;
   }])
