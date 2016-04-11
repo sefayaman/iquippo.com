@@ -12,6 +12,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.updateLocation = updateLocation;
       lServices.clearCache = clearCache;
       lServices.saveLocation = saveLocation;
+      lServices.getLocationOnFilter = getLocationOnFilter;
 
       lServices.getAllState = getAllState;
       lServices.deleteState = deleteState;
@@ -117,7 +118,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         });
       };
 
-   
+    function getLocationOnFilter(data){
+       return $http.post(path + "/city/search",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
     function clearCache(){
     	 stateCache = [];
        locationCache = [];

@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
   
-  function MainCtrl($scope, $rootScope, $http,$timeout,productSvc, categorySvc,classifiedSvc,$state, Modal) {
+  function MainCtrl($scope, $rootScope, $http,$timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
     var vm = this;
     vm.allCategoryList = [];
     vm.myInterval = 5000;
@@ -18,6 +18,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
+    vm.getLocationHelp = getLocationHelp;
 
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = beginVertScroll;
@@ -141,15 +142,15 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       })
     };
 
-    /*function getLocationHelp(val) {
+    function getLocationHelp(val) {
       var serData = {};
-      serData['txt'] = $scope.searchFilter.searchText;
-      return $http.post('/api/common/gethelp',serData)
-      .then(function(response){
-        return response.data.map(function(item){
-          return item.text;
+      serData['searchStr'] = $scope.locationSearchText;
+     return LocationSvc.getLocationOnFilter(serData)
+      .then(function(result){
+         return result.map(function(item){
+              return item.name;
         });
       });
-    };*/
+    };
   }
 })();
