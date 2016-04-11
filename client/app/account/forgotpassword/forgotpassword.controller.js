@@ -38,7 +38,7 @@ function ForgotPasswordCtrl($scope, Auth,$rootScope,$uibModal,$uibModalInstance,
             $scope.user = res.user;
             data['userId'] = res.user._id;
             data['content'] = 'Your verification OTP is ';
-            commonSvc.sendOTP(data)
+            commonSvc.sendOtp(data)
             .then(function(){
               Modal.alert('OTP has been sent successfully!',true);
             })
@@ -57,7 +57,7 @@ function ForgotPasswordCtrl($scope, Auth,$rootScope,$uibModal,$uibModalInstance,
 
       function validateOtp(){
         var data = {};
-        data['otp'] = $scope.otp;
+        data['otp'] = vm.data.otp;
         Auth.validateOtp(data).
         success(function(res){
           $scope.isApproved = true;
