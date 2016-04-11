@@ -27,5 +27,6 @@ router.get('/city', controller.getAllCity);
 router.post('/city', controller.createCity);
 router.put('/city/:id', controller.updateCity);
 router.delete('/city/:id', controller.deleteCity);
+router.post('/city/search', controller.searchCity);
 
 module.exports = router;

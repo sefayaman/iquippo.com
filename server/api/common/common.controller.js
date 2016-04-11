@@ -844,6 +844,21 @@ exports.deleteCity = function(req, res) {
   });
 };
 
+exports.searchCity = function(req,res){
+	var filter = {};
+  if(req.body.searchStr){
+    var term = new RegExp("^" + req.body.searchStr, 'i');
+    filter['name'] = { $regex: term };
+  }
+  var query = City.find(filter);
+  query.exec(
+       function (err, ct) {
+              if(err) { return handleError(res, err); }
+              return res.status(200).json(ct);
+       }
+  );
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }
