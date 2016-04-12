@@ -72,6 +72,8 @@ a.text-muted{position:absolute; top:10px; right:5px; font-size:18px;}
 .main-container .panel.panel-primary a{color:#fff;}
 .main-container .panel.panel-primary hr{margin-top:10px;margin-bottom:0;}
 .main-container .panel.panel-primary .panel-body{padding:5px;}
+.main-container .panel.panel-primary .panel-footer{position: absolute;width: 178px;bottom: 0;background: #fff;
+    border: 0;}
 .main-container{overflow:hidden;padding-bottom: 5px; }
 ul.verContainer{width:170px; height:360px;list-style-type:none outside none;padding-left:0px;font-smoothing:antialiased;margin:0 auto;}
 ul.verContainer li{position: relative; list-style:none;padding:8px 8px 15px; border-bottom:1px solid #ccc;}
@@ -231,7 +233,7 @@ header{background:#fff;}
 .vendor-list ul{padding:0;}
 .vendor-list ul li{list-style:none;margin-top:10px;}
 .vendor-list ul li a{color:#666;text-decoration:none;}
-.add1{border:1px solid #eee; margin-bottom: 15px;}
+.add1{border:1px solid #eee; margin-bottom: 0px;}
 .add2{width: 60%; height: 100px;}
 
 /*dashboard*/
