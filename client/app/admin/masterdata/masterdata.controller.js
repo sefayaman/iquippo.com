@@ -259,9 +259,10 @@ angular.module('sreizaoApp')
 
     $scope.updateCategoryStatus = function(category) {
       //$rootScope.loading = true;
-      if(!category.imgSrc){
+      if(!category.imgSrc && category.status){
       	  Modal.alert("Please upload category image to make it active.");
-      	return;
+      	  category.status = false;
+      	  return;
       }
        updateCategory(category);
       /*if(category.status){
