@@ -14,6 +14,7 @@ var ProductHistory = require('./producthistory.model');
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
 var Category = require('./../category/category.model');
+var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
@@ -867,7 +868,6 @@ exports.importProducts = function(req,res){
 }
 
 function importProducts(req,res,data){
-
   if(req.counter < req.numberOfCount){
     var row = data[req.counter];
     var product = {};
@@ -1061,6 +1061,21 @@ function importProducts(req,res,data){
     })
     .seq(function(){
       var self = this;
+
+      var subCategoryName  = row["Sub_Category"];
+      subCategoryName  = trim(subCategoryName);
+      SubCategory.find({name:subCategoryName},function(err,subcategorys){
+        if(err) return handleError(res, err); 
+        if(subcategorys.length > 0){
+          product.subcategory = {};
+          product.subcategory['_id'] = subcategorys[0]['_id'] + "";
+          product.subcategory['name'] = subCategoryName;
+          self();
+        }
+      })
+    })
+    .seq(function(){
+      var self = this;
       var sellerEmail = row["Seller_Email_Address*"];
        if(!sellerEmail){
         var errorObj = {};
@@ -1088,7 +1103,6 @@ function importProducts(req,res,data){
          product.seller["_id"] = usrs[0]['_id'] + "";
          self();
         }else{
-          //console.log("seller not found");
           var errorObj = {};
           errorObj["rowCount"] = req.counter + 2;
           errorObj["message"] = "Seller email id is not found";
@@ -1117,42 +1131,73 @@ function importProducts(req,res,data){
         product["operatingHour"] = trim(row["Motor_Operating_Hours"] || "");
         product["mileage"]  = trim(row["Mileage"] || "");
         product["serialNo"] = trim(row["Machine_Serial_No"] || "");
-        var gp = row["Grosss_Price*"];
-        var prOnReq = row["Price_on_Request*"];
-        var cr = row["Currency*"];
-        if(gp && cr){
-            product["grossPrice"] = trim(gp);
-            product["currencyType"] = trim(cr);
 
-        }else if(prOnReq){
-            prOnReq = trim(prOnReq).toLowercase();
-            product["priceOnRequest"] = prOnReq == 'yes' || prOnReq == 'y'?true:false; 
-        }else{
+        var tradeType = row["Trade_Type*"];
+        if(!tradeType){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "Currency/Gross Price is not found. In case, price on request, please select Yes.";
+          errorObj['message'] = "Trade type is not found.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
           return;
         }
-        var city = row["City*"];
-        if(!city){
-          var errorObj = {};
-          errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "Field marked with * are mandatory";
-          req.errors[req.errors.length] = errorObj;
-          req.counter ++;
-          importProducts(req,res,data);
-          return;
+        product["tradeType"] = trim(tradeType);
+
+        if(tradeType != "RENT") {
+          var gp = row["Gross_Price*"];
+          var prOnReq = trim(row["Price_on_Request*"]).toLowerCase();
+          var cr = row["Currency*"];
+          if(prOnReq == 'yes' || prOnReq == 'y') {
+            product["priceOnRequest"] = true; 
+            console.log("priceOnRequest", product["priceOnRequest"]);
+          } else {
+            product["priceOnRequest"] = false;
+            console.log("priceOnRequest", product["priceOnRequest"], Number(gp), cr);
+            if(gp && cr){
+              product["grossPrice"] = Number(trim(gp));
+              product["currencyType"] = trim(cr);
+              console.log("grossPrice", product["grossPrice"], product["currencyType"]);
+            } else {
+              console.log("error price", product["grossPrice"], product["currencyType"]);
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Currency/Gross Price is not found. In case, price on request, please select Yes.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+          }
         }
-        product["city"] = trim(city);
 
         product["productCondition"] = trim(row["Product_Condition"] || "").toLowerCase();
 
         var engRepOver = trim(row["Engine_Repaired_Overhauling"] || "").toLowerCase();
         product["isEngineRepaired"] = engRepOver == 'yes' || engRepOver == 'y'?true:false;
+        var state = row["State*"];
+        if(!state){
+          var errorObj = {};
+          errorObj['rowCount'] = req.counter + 2;
+          errorObj['message'] = "State is not found.";
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          importProducts(req,res,data);
+          return;
+        }
+        product["state"] = trim(state);
 
+        var location = row["Location*"];
+        if(!location){
+          var errorObj = {};
+          errorObj['rowCount'] = req.counter + 2;
+          errorObj['message'] = "State is not found.";
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          importProducts(req,res,data);
+          return;
+        }
+        product["city"] = trim(location);
         product["comment"] = trim(row["Comments"] || "");
         var mfgYear = trim(row["Manufacturing_Year*"]|| "");
         if(!mfgYear || mfgYear.length != 4){
@@ -1174,6 +1219,204 @@ function importProducts(req,res,data){
         product["deleted"] = false;
         var featured = trim(row["Featured"] || "").toLowerCase();
         product["featured"] =  featured == 'yes' || featured == 'y'?true:false;
+
+        //rent info
+
+        if(tradeType != "SELL") {
+          product["rent"] = {};
+
+        var rateTypeH = trim(row["Rent_Hours"] || "").toLowerCase();
+        if(rateTypeH == "yes" || rateTypeH == 'y'){
+          product["rent"].rateHours = {};
+          product["rent"].rateHours.rateType =  "hours";
+        }
+
+        var rateTypeD = trim(row["Rent_Days"] || "").toLowerCase();
+        if(rateTypeD == "yes" || rateTypeD == 'y') {
+          product["rent"].rateDays = {};
+          product["rent"].rateDays.rateType =  "days";
+        }
+
+        var rateTypeM = trim(row["Rent_Months"] || "").toLowerCase();
+        if(rateTypeM == "yes" || rateTypeM == 'y') {
+          product["rent"].rateMonths ={};
+          product["rent"].rateMonths.rateType = "months";
+        }
+          var fromDate = row["Availability_of_Asset_From"];
+          if(!fromDate){
+            var errorObj = {};
+            errorObj['rowCount'] = req.counter + 2;
+            errorObj['message'] = "Availability of asset from date is not found.";
+            req.errors[req.errors.length] = errorObj;
+            req.counter ++;
+            importProducts(req,res,data);
+            return;
+          }
+          product["rent"].fromDate = trim(fromDate);
+          var toDate = row["Availability_of_Asset_To"];
+          if(!fromDate){
+            var errorObj = {};
+            errorObj['rowCount'] = req.counter + 2;
+            errorObj['message'] = "Availability of asset to date is not found.";
+            req.errors[req.errors.length] = errorObj;
+            req.counter ++;
+            importProducts(req,res,data);
+            return;
+          }
+          product["rent"].toDate = trim(toDate);
+          //rent hours
+          if(rateTypeH == "yes" || rateTypeH == 'y') {
+            var minPeriodH = row["Min_Rental_Period_Hours"];
+            if(!minPeriodH){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Min rental period hours is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateHours.minPeriodH = Number(trim(minPeriodH));
+
+            var maxPeriodH = row["Max_Rental_Period_Hours"];
+            if(!maxPeriodH){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Max rental period hours is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateHours.maxPeriodH = Number(trim(maxPeriodH));
+
+            var rentAmountH = row["Rent_Amount_Hours"];
+            if(!rentAmountH){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Rent amount hours is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateHours.rentAmountH = Number(trim(rentAmountH));
+
+            var seqDepositH = row["Security_Deposit_Hours"];
+            if(!seqDepositH){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Security deposi hours is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateHours.seqDepositH = Number(trim(seqDepositH));
+          }
+          // rent days
+          if(rateTypeD == "yes" || rateTypeD == 'y') {
+            var minPeriodD = row["Min_Rental_Period_Days"];
+            if(!minPeriodD){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Min rental period days is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateDays.minPeriodD = Number(trim(minPeriodD));
+
+            var maxPeriodD = row["Max_Rental_Period_Days"];
+            if(!maxPeriodD){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Max rental period days is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateDays.maxPeriodD = Number(trim(maxPeriodD));
+
+            var rentAmountD = row["Rent_Amount_Days"];
+            if(!rentAmountD){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Rent amount days is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateDays.rentAmountD = Number(trim(rentAmountD));
+
+            var seqDepositD = row["Security_Deposit_Days"];
+            if(!seqDepositD){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Security deposi days is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateDays.seqDepositD = Number(trim(seqDepositD));
+          }
+          //rent months
+          if(rateTypeM == "yes" || rateTypeM == 'y') {
+            var minPeriodM = row["Min_Rental_Period_Months"];
+            if(!minPeriodM){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Min rental period months is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateMonths.minPeriodM = Number(trim(minPeriodM));
+
+            var maxPeriodM = row["Max_Rental_Period_Months"];
+            if(!maxPeriodM){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Max rental period months is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateMonths.maxPeriodM = Number(trim(maxPeriodM));
+
+            var rentAmountM = row["Rent_Amount_Months"];
+            if(!rentAmountM){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Rent amount months is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateMonths.rentAmountM = Number(trim(rentAmountM));
+
+            var seqDepositM = row["Security_Deposit_Months"];
+            if(!seqDepositM){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['message'] = "Security deposi months is not found.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }
+            product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
+          }
+        }
+        
+        product["rateMyEquipment"] = trim(row["Rate_My_Equipment"] || "");
 
         // technical info
         product["technicalInfo"] = {};

@@ -25,6 +25,7 @@
       prdService.getFeaturedProduct = getFeaturedProduct;
       prdService.getSearchResult = getSearchResult;
       prdService.setSearchResult = setSearchResult;
+      prdService.loadUploadedBulkProduct = loadUploadedBulkProduct;
       prdService.getFilter = getFilter;
       prdService.setFilter = setFilter;
 

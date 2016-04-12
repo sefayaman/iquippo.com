@@ -61,7 +61,6 @@ var ProductSchema = new Schema({
   relistingDate: {type:Date,default:Date.now},
   assetDir:String,
   tradeType:String,
-  location:String,
   rateMyEquipment:String,
   tcDocumentName:String,
   rent:{},

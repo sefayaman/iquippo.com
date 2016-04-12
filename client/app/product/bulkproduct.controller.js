@@ -241,7 +241,7 @@ function submitProduct(){
 
       $rootScope.loading = false;
       suggestionSvc.buildSuggestion(suggestions);
-        if(result.data.productId) {
+        if(result && result.productId) {
           var productHistory = {}
           productHistory.history = {};
           productHistory.user = {};
@@ -255,7 +255,7 @@ function submitProduct(){
         }
 
         if(Auth.isAdmin()) {
-          mailToCustomerForApprovedAndFeatured(result.data, vm.currentProduct);
+          mailToCustomerForApprovedAndFeatured(result, vm.currentProduct);
           } else {
           var data = {};
           data['to'] = supportMail;
@@ -281,7 +281,7 @@ function backToData(){
 }
 
 function mailToCustomerForApprovedAndFeatured(result, product) {
-    if(result.status)
+    if(result && result.status)
     {
       var data = {};
       data['to'] = product.seller.email;
@@ -289,7 +289,7 @@ function mailToCustomerForApprovedAndFeatured(result, product) {
       product.serverPath = serverPath;
       notificationSvc.sendNotification('productUploadEmailToCustomerActive', data, product,'email');
     }
-    if(result.featured)
+    if(result && result.featured)
     {
       var data = {};
       data['to'] = product.seller.email;
