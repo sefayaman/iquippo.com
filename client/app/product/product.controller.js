@@ -349,6 +349,7 @@ angular.module('sreizaoApp')
       
       if($scope.form.$invalid ||ret){
         $scope.submitted = true;
+        angular.element("[name='" + $scope.form.$name + "']").find('.ng-invalid:visible:first').focus();
         return;
       }
 
