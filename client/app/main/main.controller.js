@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
   
-  function MainCtrl($scope, $rootScope, $http,$timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
+  function MainCtrl($scope, $rootScope, $http, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
     var vm = this;
     vm.allCategoryList = [];
     vm.myInterval = 5000;
@@ -71,10 +71,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getActiveClassifiedAd();
 
     function doSearch(){
-      if(!vm.categorySearchText && !vm.locationSearchStr){
-        Modal.alert("Please enter category and location");
+      if(!vm.categorySearchText){
+        Modal.alert("Please enter category");
         return;
       }
+
+      if(!vm.locationSearchText){
+        Modal.alert("Please enter location");
+        return;
+      }
+
       if(!validateCategory()){
         Modal.alert("Please enter valid category");
         return;
@@ -152,5 +158,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         });
       });
     };
+
+     $scope.setPopover = function(evt){
+        var index = $(evt.currentTarget).data('index');
+        $scope.popoverData = $scope.featuredslides[index];
+    }
   }
 })();

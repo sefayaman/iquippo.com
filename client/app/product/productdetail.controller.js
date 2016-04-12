@@ -48,6 +48,7 @@ angular.module('sreizaoApp')
     });
   }
 
+
   $scope.getDateFormat = function(date){
     if(!date)
       return;
@@ -201,7 +202,7 @@ $scope.dayDiff = function(createdDate){
   $scope.statusInsurance.open = false;*/
 
   })
-.controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {
+.controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {
     $scope.productQuote = {};
     if(Auth.getCurrentUser()._id){
     var currUser = Auth.getCurrentUser();
@@ -230,6 +231,15 @@ $scope.dayDiff = function(createdDate){
     $scope.hstep = 1;
     $scope.mstep = 1;
     $scope.ismeridian = true;
+
+    function loadLocatons(){
+      LocationSvc.getAllLocation()
+      .then(function(result){
+        $scope.locationList = result;
+      })
+    }
+
+    loadLocatons();
 
     $scope.addProductQuote = function(evt){
     var ret = false;
