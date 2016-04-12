@@ -113,7 +113,7 @@
                   </table>
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="rentstatus.open">
+                <uib-accordion-group is-open="rentstatus.open" ng-if="currentProduct.tradeType != 'SELL'">
                   <uib-accordion-heading>
                     Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
                   </uib-accordion-heading>

@@ -133,6 +133,8 @@ angular.module('sreizaoApp')
       .then(function(result){
         if(result.length > 0)
         $scope.selectedBrand = result[0];
+      if($scope.product.brand.name == 'Other')
+          $scope.selectedBrand['otherName'] = $scope.product.brand.otherName;
         $scope.onBrandChange($scope.selectedBrand,true);
       });
 
@@ -140,6 +142,9 @@ angular.module('sreizaoApp')
       .then(function(result){
         if(result.length > 0)
           $scope.selectedModel = result[0];
+        if($scope.product.model.name == 'Other')
+          $scope.selectedModel['otherName'] = $scope.product.model.otherName;
+
       })
 
       $scope.getUsersOnUserType = [];
@@ -168,10 +173,6 @@ angular.module('sreizaoApp')
       $scope.productName = $scope.product.name;
       if($scope.product.category.name == 'Other')
           $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
-      if($scope.product.brand.name == 'Other')
-          $scope.selectedBrand['otherName'] = $scope.product.brand.otherName;
-      if($scope.product.model.name == 'Other')
-          $scope.selectedModel['otherName'] = $scope.product.model.otherName;
 	  
 	    if($state.current.name == "productrelisting") {
         $scope.relistingEnable = true;
@@ -345,7 +346,7 @@ angular.module('sreizaoApp')
             ret = true;
         }
       }
-
+      
       if($scope.form.$invalid ||ret){
         $scope.submitted = true;
         return;
