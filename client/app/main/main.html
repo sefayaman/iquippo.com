@@ -129,34 +129,24 @@
             <div class="panel-title">Featured Products</div>
             <hr>
           </div>
-          <div class="panel-body text-center">
-            <!-- <div class="media" ng-repeat="slide in featuredslides">
-              <a class="pull-left" ng-href="/productdetail/{{slide._id}}">
-                <img class="media-object" ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.image}}" alt="Image" width="70" height="60">
-              </a>
-              <div class="media-body text-left">
-                <h5 class="media-heading text-left">{{slide.name}}</h5>
-                New Delhi
-              </div>
-            </div> -->
+          <div class="panel-body text-center">           
             <!--carousel start -->
             <ul class="verContainer" drctv>
-              <li ng-repeat="slide in mainVm.featuredslides" class="media">
-                <a class="pull-left" ng-href="/productdetail/{{slide._id}}">
-                  <img class="media-object" ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" alt="Image">
-                </a>
-                <div class="media-body text-left">
-                  <h5 class="media-heading text-left">{{slide.name}}</h5>
-                  New Delhi
-                </div>
-                <!-- <div class="popover left" id="popover_{{$index}}"> <div class="arrow"></div> <h3 class="popover-title">{{slide.name}}</h3> <div class="popover-content"> 
+              <li ng-repeat="slide in mainVm.featuredslides">
+              <a  ng-href="/productdetail/{{slide._id}}" onmouseover="hover(this)" data-index="{{$index}}" onmouseout="leave()">
+                <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}">
+              </a>
+                <div class="popover left" id="popover_{{$index}}"> <div class="arrow"></div> <h3 class="popover-title">{{slide.name}}</h3> <div class="popover-content"> 
+                  <div class="row form-group">
+                      <div class="col-sm-6"><small>{{slide.brand.name}}</small></div>
+                      <div class="col-sm-6"><small>{{slide.model.name}}</small></div>
+                  </div>
                   <div class="row">
-                      <div class="col-sm-4"><small>{{slide.brand}}</small></div>
-                      <div class="col-sm-8"><small>{{slide.model}}</small></div>
+                      <div class="col-sm-6"><small>{{slide.city}}</small></div>
+                      <div class="col-sm-6"><small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">BUY</small><small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small></div>
                   </div>
                 </div> 
-                </div> -->
-               
+                </div>               
               </li>
             </ul>
           </div>

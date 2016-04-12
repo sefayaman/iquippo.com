@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
   
-  function MainCtrl($scope, $rootScope, $http,$timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
+  function MainCtrl($scope, $rootScope, $http, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
     var vm = this;
     vm.allCategoryList = [];
     vm.myInterval = 5000;
@@ -152,5 +152,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         });
       });
     };
+
+     $scope.setPopover = function(evt){
+        var index = $(evt.currentTarget).data('index');
+        $scope.popoverData = $scope.featuredslides[index];
+    }
   }
 })();
