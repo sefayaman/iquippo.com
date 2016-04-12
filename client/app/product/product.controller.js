@@ -717,6 +717,8 @@ angular.module('sreizaoApp')
           $scope.opened = true;
         };
         
+        $scope.popups = [{opened:false}]
+
         $scope.open1 = function() {
           $scope.popup1.opened = true;
         };
@@ -725,6 +727,16 @@ angular.module('sreizaoApp')
         };
         $scope.open3 = function() {
           $scope.popup3.opened = true;
+        };
+
+        $scope.popup1 = {
+          opened: false
+        };
+        $scope.popup2 = {
+          opened: false
+        };
+        $scope.popup3 = {
+          opened: false
         };
 
         $scope.setDate = function(year, month, day) {
@@ -747,15 +759,6 @@ angular.module('sreizaoApp')
           opened: false
         };
 
-        $scope.popup1 = {
-          opened: false
-        };
-        $scope.popup2 = {
-          opened: false
-        };
-        $scope.popup3 = {
-          opened: false
-        };
 
         $scope.timestamp = new Date().getTime();
         $scope.rotate = function(idx){
