@@ -346,7 +346,13 @@ angular.module('sreizaoApp')
             ret = true;
         }
       }
-      
+
+      if(angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
+        ret = true;
+        Modal.alert("Please select at-least one check box in rental information.",true);
+        return;
+      }
+
       if($scope.form.$invalid ||ret){
         $scope.submitted = true;
         angular.element("[name='" + $scope.form.$name + "']").find('.ng-invalid:visible:first').focus();
