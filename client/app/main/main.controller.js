@@ -71,10 +71,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getActiveClassifiedAd();
 
     function doSearch(){
-      if(!vm.categorySearchText && !vm.locationSearchStr){
-        Modal.alert("Please enter category and location");
+      if(!vm.categorySearchText){
+        Modal.alert("Please enter category");
         return;
       }
+
+      if(!vm.locationSearchText){
+        Modal.alert("Please enter location");
+        return;
+      }
+
       if(!validateCategory()){
         Modal.alert("Please enter valid category");
         return;

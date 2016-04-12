@@ -73,7 +73,7 @@
 
                 <label for="" class="text-muted">Location</label>
                 <div class="form-group">                  
-                  <input type="text" class="form-control" placeholder="Location" >
+                  <input type="text" class="form-control" placeholder="Location"  ng-model="equipmentSearchFilter.location"  uib-typeahead="address for address in viewproductVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
                 </div>
 
                 <label for="" class="text-muted">Operating hrs</label>
@@ -190,7 +190,7 @@
                         <p>{{product.brand.name}}</p>
                         <p>{{product.model.name}}</p>
                         <p>{{product.category.name}}</p>
-                        <span>{{product.country}}</span>
+                        <span>{{product.city}}</span>
                         <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning pull-right hvr-icon-wobble-horizontal" >View Details</a>
                       </div>
                     </div>
