@@ -3,7 +3,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,categorySvc,SubCategorySvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
   
   var vm = this;
 
@@ -30,6 +30,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
   vm.fireCommand = fireCommand;
+  vm.getLocationHelp = getLocationHelp
 
 
   $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false);
@@ -154,7 +155,7 @@ function onModelChange(model){
       var filter = $scope.equipmentSearchFilter;
       if($state.current.name != "viewproduct"){
          productSvc.setFilter(filter);
-         $state.go("viewproduct");
+         $state.go("viewproduct",{},{notify:false});
       } 
      filter['status'] = true;
       productSvc.getProductOnFilter(filter)
@@ -279,6 +280,17 @@ $scope.today = function() {
       delete $scope.equipmentSearchFilter.mfgYear.max;
       fireCommand();
   }
+
+  function getLocationHelp(val) {
+      var serData = {};
+      serData['searchStr'] = vm.locationSearchText;
+     return LocationSvc.getLocationOnFilter(serData)
+      .then(function(result){
+         return result.map(function(item){
+              return item.name;
+        });
+      });
+    };
 
 }
 

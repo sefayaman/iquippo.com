@@ -21,11 +21,11 @@
       <div class="tab-content">
         <form>
           <div class="select-text form-group">                 
-              <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="500"/>               
+              <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200"/>               
             </div>
             
             <div class="select-text form-group">
-              <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="500"/>                
+              <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200"/>                
                 <div ng-show="mainVm.noResults">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>
