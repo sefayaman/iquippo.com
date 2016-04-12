@@ -69,6 +69,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
 
     }else if($state.current.name == "categoryproduct"){
         $scope.equipmentSearchFilter = {};
+        var cat = categorySvc.getCategoryOnId($stateParams.id);
+        if(cat){
+          $scope.selectedCategory = cat;
+          onCategoryChange(cat,true);
+        }
         productSvc.getProductOnCategoryId($stateParams.id)
         .then(function(result){
           $scope.productList = result;
