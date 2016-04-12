@@ -154,7 +154,7 @@ function onModelChange(model){
 
       var filter = $scope.equipmentSearchFilter;
       if($state.current.name != "viewproduct"){
-         productSvc.setFilter(filter);
+         //productSvc.setFilter(filter);
          $state.go("viewproduct",{},{notify:false});
       } 
      filter['status'] = true;
