@@ -212,11 +212,11 @@
                     <div class="form-group col-sm-5">Price (Excl. Tax).<span class="text-warning">*</span></div>
                     <div class="form-group col-sm-4">
                       <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
-                        <span class="input-group-addon">
+                        <span class="input-group-addon currency-width">
                           <select class="form-control" ng-disabled="product.priceOnRequest" name="currencyType" ng-model="product.currencyType">
                            <option value="" selected>&#x20B9; Rupee</option>                       
                           </select>   
-                          <i class="fa fa-facebook"></i>
+                          <!-- <i class="caret"></i> -->
                         </span>
                           <input type="number" ng-disabled="product.priceOnRequest" placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
                         </div>
@@ -449,10 +449,11 @@
                                   <span>Browse Video...</span>
                                   <input type="file" name="video"  data-filetype="video" file-upload>
                               </span>
-                        <div>
-                        <span ng-if="!isActive()">{{video.name}}</span>
-                        <a ng-if="isActive()" href="/download/{{product.assetDir}}/{{video.name}}" class="text-muted" target="_blank" >{{video.name}}</a>
-                        </div>
+                        
+                    </div>
+                    <div class="col-sm-4">
+                      <span ng-if="!isActive()">{{video.name}}</span>
+                      <a ng-if="isActive()" href="/download/{{product.assetDir}}/{{video.name}}" target="_blank" >{{video.name}}</a>
                     </div>
                   </div>
                </div>
