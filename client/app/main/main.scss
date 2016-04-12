@@ -67,16 +67,16 @@ a.text-muted{position:absolute; top:10px; right:5px; font-size:18px;}
 
 .navbar-toggle{margin:4px 25px 4px;}
 .navbar-inverse .navbar-toggle{border-color:transparent;border-radius:0;}
-.main-container .panel.panel-primary{min-height:500px;border-radius:0;background-size:cover; margin-bottom: 0; position:relative; z-index:0; border-color:#104095;}
+.main-container .panel.panel-primary{height:520px;border-radius:0;background-size:cover; margin-bottom: 0; position:relative; z-index:0; border-color:#104095;}
 .main-container .panel.panel-primary .panel-heading{color:#fff;border-radius:0; position: relative; z-index: 5; background-color:#104095; border-color:#104095;}
 .main-container .panel.panel-primary a{color:#fff;}
 .main-container .panel.panel-primary hr{margin-top:10px;margin-bottom:0;}
 .main-container .panel.panel-primary .panel-body{padding:5px;}
 .main-container{overflow:hidden;padding-bottom: 5px; }
 ul.verContainer{width:170px; height:360px;list-style-type:none outside none;padding-left:0px;font-smoothing:antialiased;margin:0 auto;}
-ul.verContainer li{position: relative; list-style:none;padding:5px 5px 10px; border-bottom:1px solid #ccc;}
+ul.verContainer li{position: relative; list-style:none;padding:8px 8px 15px; border-bottom:1px solid #ccc;}
 ul.verContainer li a{margin-right:5px;}
-ul.verContainer li img{width:100%;height:130px;}
+ul.verContainer li img{width:100%;height:135px;}
 ul.verContainer .popover{left: -165%; right: 0;}
 
 .accordion-toggle{text-align:left;display:block;outline:none;}
@@ -250,7 +250,7 @@ header{background:#fff;}
 img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
 
 /*footer*/
-footer.foot{padding-top:5px;background:url(/assets/images/foot-image.jpg); background-size:cover;color:#fff;}
+footer .foot{padding-top:5px;background:url(/assets/images/foot-image.jpg); background-size:cover;color:#fff;}
 footer .form-control{border-radius:0;margin-bottom:10px;background:transparent;color:#fff;}
 footer .form-control{border-radius:0;margin-bottom:10px;background:transparent; color:#fff;}
 footer .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:50px; background:transparent;}
