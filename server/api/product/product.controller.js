@@ -1062,7 +1062,7 @@ function importProducts(req,res,data){
     .seq(function(){
       var self = this;
 
-      var subCategoryName  = row["Sub_Category"];
+      var subCategoryName  = row["Sub_Category"] || "";
       subCategoryName  = trim(subCategoryName);
       SubCategory.find({name:subCategoryName},function(err,subcategorys){
         if(err) return handleError(res, err); 
