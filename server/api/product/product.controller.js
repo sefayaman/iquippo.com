@@ -1123,6 +1123,8 @@ function importProducts(req,res,data){
         }
 
         product["country"] = trim(country);
+        product["operatingHour"] = trim(row["Motor_Operating_Hours"] || "");
+        product["mileage"]  = trim(row["Mileage"] || "");
         product["serialNo"] = trim(row["Machine_Serial_No"] || "");
 
         var tradeType = row["Trade_Type*"];
@@ -1157,33 +1159,7 @@ function importProducts(req,res,data){
               return;
             }
           }
-          var operatingHour = row["Motor_Operating_Hours"];
-          if(!operatingHour){
-            var errorObj = {};
-            errorObj['rowCount'] = req.counter + 2;
-            errorObj['message'] = "Operating Hours/HMR is not found.";
-            req.errors[req.errors.length] = errorObj;
-            req.counter ++;
-            importProducts(req,res,data);
-            return;
-          }
-          product["operatingHour"] = trim(operatingHour);
-
-          var mileage = row["Mileage"];
-          if(!mileage){
-            var errorObj = {};
-            errorObj['rowCount'] = req.counter + 2;
-            errorObj['message'] = "Mileage/KMR is not found.";
-            req.errors[req.errors.length] = errorObj;
-            req.counter ++;
-            importProducts(req,res,data);
-            return;
-          }
-          product["mileage"] = trim(mileage);
-        } else {
-          product["operatingHour"] = trim(row["Motor_Operating_Hours"] || "");
-          product["mileage"]  = trim(row["Mileage"] || "");
-        }
+        }          
 
         product["productCondition"] = trim(row["Product_Condition"] || "").toLowerCase();
 

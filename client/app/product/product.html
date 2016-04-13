@@ -190,15 +190,15 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form-group col-sm-5">Operating Hours/HMR<span class="text-warning" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">*</span></div>
+                    <div class="form-group col-sm-5">Operating Hours/HMR</div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.opHour.$invalid && submitted}">
-                      <input type="text" name="opHour" placeholder="Operating Hours/HMR" ng-value="product.operatingHour" ng-model="product.operatingHour"  class="form-control" ng-required="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">
+                      <input type="text" name="opHour" placeholder="Operating Hours/HMR" ng-value="product.operatingHour" ng-model="product.operatingHour"  class="form-control">
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form-group col-sm-5">Mileage/KMR<span class="text-warning" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">*</span></div>
+                    <div class="form-group col-sm-5">Mileage/KMR</div>
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.mileage.$invalid && submitted}">
-                      <input type="text" placeholder="Mileage/KMR" name="mileage" ng-value="product.mileage" ng-model="product.mileage"  class="form-control" ng-required="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">
+                      <input type="text" placeholder="Mileage/KMR" name="mileage" ng-value="product.mileage" ng-model="product.mileage"  class="form-control">
                     </div>
                   </div>
                   <div class="row">
