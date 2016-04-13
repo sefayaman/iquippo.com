@@ -286,10 +286,13 @@
                       </div>
                       <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-6" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
+                          <div class="col-sm-1"><span class="text-muted">From</span></div>
+                          <div class="col-sm-5" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
                             <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL'">
                           </div>
-                          <div class="col-sm-6" ng-class="{'has-error': form.toDate.$invalid && submitted}">
+
+                          <div class="col-sm-1 text-right"><span class="text-muted">To</span></div>                          
+                          <div class="col-sm-5" ng-class="{'has-error': form.toDate.$invalid && submitted}">
                             <input type="date" placeholder="Date" class="form-control" name="toDate" ng-value="toDate" ng-model="product.rent.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup3.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()" ng-required="product.tradeType != 'SELL'">
                           </div>
                         </div>
@@ -318,7 +321,7 @@
                         <tr>   
                           <th></th>
                           <th>Min. Rental Period</th>                     
-                          <th>MAx. Rental Period</th>
+                          <th>Max. Rental Period</th>
                           <th>Rent Amount</th>
                           <th>Security Deposit</th>
                         </tr>
