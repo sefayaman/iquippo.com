@@ -128,7 +128,6 @@ exports.search = function(req, res) {
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
   }
-  console.log("----------",filter);
   var query = Product.find(filter).sort( { createdAt: -1 } );
   query.exec(
                function (err, products) {
@@ -309,12 +308,10 @@ exports.getHistory = function(req, res) {
   //var term = new RegExp(req.body.searchstr, 'i');
   var filter = {};
   filter["history.deleted"] = false;
-  console.log("product Id::", req.body.productId);
-  if(req.body.productId)
+ if(req.body.productId)
     filter["history.productId"] = req.body.productId;
 
   var query = ProductHistory.find(filter);
-  console.log("filetr ",filter);
   query.exec(
                function (err, product) {
                       if(err) { return handleError(res, err); }
@@ -823,7 +820,6 @@ exports.exportProducts = function(req,res){
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
-  console.log("seller id:::", req.body.userid);
   var isAdmin = true;
   if(req.body.userid){
     filter["seller._id"] = req.body.userid;
@@ -1070,8 +1066,8 @@ function importProducts(req,res,data){
           product.subcategory = {};
           product.subcategory['_id'] = subcategorys[0]['_id'] + "";
           product.subcategory['name'] = subCategoryName;
-          self();
         }
+        self();
       })
     })
     .seq(function(){
@@ -1090,7 +1086,6 @@ function importProducts(req,res,data){
        User.find({email:sellerEmail},function(err,usrs){
         if(err) return handleError(res, err); 
         if(usrs.length > 0){
-          console.log("seller found---" + req.counter);
          product.seller = {};
          product.seller["country"] = usrs[0]['country'];
          product.seller["email"] = usrs[0]['email'];
@@ -1141,7 +1136,6 @@ function importProducts(req,res,data){
           return;
         }
         product["tradeType"] = trim(tradeType);
-        console.log("Trade Type:::", tradeType);
         if(tradeType != "RENT") {
           var gp = row["Gross_Price*"];
           var prOnReq = trim(row["Price_on_Request*"]).toLowerCase();
