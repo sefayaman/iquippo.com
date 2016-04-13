@@ -94,14 +94,18 @@ angular.module('sreizaoApp')
     self.getAllUser();
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance',
-   function ($scope, $rootScope, $http, Auth, Modal, uploadSvc, notificationSvc, userSvc, $uibModalInstance) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance',
+   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance) {
     var self = this;
     $scope.newUser ={};
     $scope.errors = {};
     //$scope.editImage = false;
     $scope.users = [];
-
+    $scope.locationList = [];
+    LocationSvc.getAllLocation()
+    .then(function(result){
+      $scope.locationList = result;
+    });
     self.getAllUser = function(){
       var filter = {};
       userSvc.getUsers(filter)

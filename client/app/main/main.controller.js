@@ -71,22 +71,18 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getActiveClassifiedAd();
 
     function doSearch(){
-      if(!vm.categorySearchText){
-        Modal.alert("Please enter category");
+
+      if(!vm.categorySearchText && !vm.locationSearchText){
+        Modal.alert("Please enter category name or location");
         return;
       }
 
-      if(!vm.locationSearchText){
-        Modal.alert("Please enter location");
-        return;
-      }
-
-      if(!validateCategory()){
+      if(vm.categorySearchText && !validateCategory()){
         Modal.alert("Please enter valid category");
         return;
       }
-
-      vm.categorySearchText = vm.categorySearchText.trim();
+      if(vm.categorySearchText)
+        vm.categorySearchText = vm.categorySearchText.trim();
       var filter = {};
       filter['category'] = vm.categorySearchText;
       filter['tradeType'] = vm.radioModel;
