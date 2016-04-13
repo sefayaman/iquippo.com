@@ -1148,16 +1148,12 @@ function importProducts(req,res,data){
           var cr = row["Currency*"];
           if(prOnReq == 'yes' || prOnReq == 'y') {
             product["priceOnRequest"] = true; 
-            console.log("priceOnRequest", product["priceOnRequest"]);
           } else {
             product["priceOnRequest"] = false;
-            console.log("priceOnRequest", product["priceOnRequest"], Number(gp), cr);
             if(gp && cr){
               product["grossPrice"] = Number(trim(gp));
               product["currencyType"] = trim(cr);
-              console.log("grossPrice", product["grossPrice"], product["currencyType"]);
             } else {
-              console.log("error price", product["grossPrice"], product["currencyType"]);
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
               errorObj['message'] = "Currency/Gross Price is not found. In case, price on request, please select Yes.";
