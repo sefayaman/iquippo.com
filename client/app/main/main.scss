@@ -377,8 +377,8 @@ border-radius:63%;width:20px;height:18px;text-align:center;padding:1px;  /*color
 div[data-role="editor-toolbar"]{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
 .dropdown-menu a{cursor:pointer;}
 .btn-group{position:relative;display:inline-block;font-size:0;vertical-align:middle;white-space:nowrap;top: 2px;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    border: 2px solid #bbb;
+    border-radius: 8px;
     border-bottom: 0;}
 .nav-tabs>li.active>a,.nav-tabs>li.active>a:focus,.nav-tabs>li.active>a:hover{color:#F5F5F5;cursor:default;background-color:#e3000f!important;border:1px solid #ddd;border-bottom-color:transparent;}
 .nav-tabs>li.active>a,.nav-tabs>li.active>a:focus,.nav-tabs>li.active>a:hover{color:#F5F5F5;cursor:default;background-color:#e3000f!important;border:1px solid #ddd;border-bottom-color:transparent;}
@@ -604,9 +604,9 @@ table.table{width:100% !important;}
 .search-banner{position: absolute;top:150px;z-index: 99;border-radius: 15px; left:30px;}
 .search-banner .select-text{width:100%;}
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {height: 430px;margin-bottom: 20px;}
-.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:30px; border: 2px solid #fff;}
+.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:30px; border: 2px solid #bbb;}
 .search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:4px; height:45px;}
-.search-tabs .btn.btn-default{border:0; margin:0; background:rgba(0,0,0,0.75); border-radius:6px 6px 0 0; color:#3F79E0; border-right:1px solid rgba(0,0,0,1); padding:12px 25px; margin-left:0;}
+.search-tabs .btn.btn-default{border:0; margin:0; background:rgba(0,0,0,0.75); border-radius:6px 6px 0 0; color:#bbb; border-right:1px solid rgba(0,0,0,1); padding:12px 25px; margin-left:0;}
 .search-tabs .btn-default.active{color:#fff; border-bottom:2px solid #ffffff;}
 .calctr-info .input-group-addon i{right:10px;}
 
