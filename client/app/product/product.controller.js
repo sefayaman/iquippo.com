@@ -347,10 +347,12 @@ angular.module('sreizaoApp')
         }
       }
 
-      if(angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
-        ret = true;
-        Modal.alert("Please select at-least one check box in rental information.",true);
-        return;
+      if($scope.product.tradeType != "SELL") {
+        if(angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
+          ret = true;
+          Modal.alert("Please select at-least one check box in 'Check Rental Rate For'.",true);
+          return;
+        }
       }
 
       if($scope.form.$invalid ||ret){

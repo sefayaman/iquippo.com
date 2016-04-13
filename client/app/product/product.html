@@ -297,7 +297,7 @@
                     </div>
                     <div class="row form-group">
                       <div class="col-sm-5">
-                        Check Rental Rate For
+                        Check Rental Rate For<span class="text-warning">*</span>
                       </div>
                       <div class="col-sm-7">
                         <div class="row">
@@ -328,22 +328,22 @@
                           <td><b>Hours</b></td>
                           <td>
                           <div ng-class="{'has-error': form.minPeriodH.$invalid && submitted}">
-                              <input type="number" placeholder="Min." class="form-control" name="minPeriodH" ng-model="product.rent.rateHours.minPeriodH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                              <input type="number" placeholder="Min." min="1" class="form-control" name="minPeriodH" ng-model="product.rent.rateHours.minPeriodH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
                           </div>
                           </td>
                           <td>
                           <div ng-class="{'has-error': form.maxPeriodH.$invalid && submitted}">
-                              <input type="number" placeholder="Max." class="form-control" name="maxPeriodH" ng-model="product.rent.rateHours.maxPeriodH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                              <input type="number" placeholder="Max." min="1" class="form-control" name="maxPeriodH" ng-model="product.rent.rateHours.maxPeriodH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
                           </div>
                           </td>
                           <td>
                           <div ng-class="{'has-error': form.rentAmountH.$invalid && submitted}">
-                              <input type="number" placeholder="Rent Amount" class="form-control" name="rentAmountH" ng-model="product.rent.rateHours.rentAmountH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                              <input type="number" placeholder="Rent Amount" min="1" class="form-control" name="rentAmountH" ng-model="product.rent.rateHours.rentAmountH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
                           </div>
                           </td>
                           <td>
                           <div ng-class="{'has-error': form.seqDepositH.$invalid && submitted}">
-                              <input type="number" placeholder="Security Deposit" class="form-control" name="seqDepositH" ng-model="product.rent.rateHours.seqDepositH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
+                              <input type="number" placeholder="Security Deposit" min="1" class="form-control" name="seqDepositH" ng-model="product.rent.rateHours.seqDepositH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
                           </div>
                           </td>
                           
@@ -353,22 +353,22 @@
                           <td><b>Days</b></td>
                           <td>
                           <div ng-class="{'has-error': form.minPeriodD.$invalid && submitted}">
-                              <input type="number" placeholder="Min." class="form-control" name="minPeriodD" ng-model="product.rent.rateDays.minPeriodD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                              <input type="number" placeholder="Min." class="form-control" min="1" name="minPeriodD" ng-model="product.rent.rateDays.minPeriodD" ng-required="product.rent.rateDays.rateType == 'days'"/>
                           </div>
                           </td>
                           <td>
                           <div ng-class="{'has-error': form.maxPeriodD.$invalid && submitted}">
-                              <input type="number" placeholder="Max." class="form-control" name="maxPeriodD" ng-model="product.rent.rateDays.maxPeriodD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                              <input type="number" placeholder="Max." class="form-control" min="1" name="maxPeriodD" ng-model="product.rent.rateDays.maxPeriodD" ng-required="product.rent.rateDays.rateType == 'days'"/>
                           </div>
                           </td>
                           <td>
                           <div ng-class="{'has-error': form.rentAmountD.$invalid && submitted}">
-                              <input type="number" placeholder="Rent Amount" class="form-control" name="rentAmountD" ng-model="product.rent.rateDays.rentAmountD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                              <input type="number" placeholder="Rent Amount" class="form-control" min="1" name="rentAmountD" ng-model="product.rent.rateDays.rentAmountD" ng-required="product.rent.rateDays.rateType == 'days'"/>
                           </div>
                           </td>
                           <td>
                           <div ng-class="{'has-error': form.seqDepositD.$invalid && submitted}">
-                              <input type="number" placeholder="Security Deposit" class="form-control" name="seqDepositD" ng-model="product.rent.rateDays.seqDepositD" ng-required="product.rent.rateDays.rateType == 'days'"/>
+                              <input type="number" placeholder="Security Deposit" class="form-control" min="1" name="seqDepositD" ng-model="product.rent.rateDays.seqDepositD" ng-required="product.rent.rateDays.rateType == 'days'"/>
                           </div>
                           </td>
 
@@ -377,22 +377,22 @@
                           <td><b>Months</b></td>                       
                           <td>
                             <div ng-class="{'has-error': form.minPeriodM.$invalid && submitted}">
-                              <input type="number" placeholder="Min." class="form-control" name="minPeriodM" ng-model="product.rent.rateMonths.minPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                              <input type="number" placeholder="Min." class="form-control" min="1" name="minPeriodM" ng-model="product.rent.rateMonths.minPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
                             </div>
                           </td>
                           <td>
                             <div ng-class="{'has-error': form.maxPeriodM.$invalid && submitted}">
-                              <input type="number" placeholder="Max." class="form-control" name="maxPeriodM" ng-model="product.rent.rateMonths.maxPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                              <input type="number" placeholder="Max." class="form-control" min="1" name="maxPeriodM" ng-model="product.rent.rateMonths.maxPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
                             </div>
                           </td>
                           <td>
                             <div ng-class="{'has-error': form.rentAmountM.$invalid && submitted}">
-                              <input type="number" placeholder="Rent Amount" class="form-control" name="rentAmountM" ng-model="product.rent.rateMonths.rentAmountM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                              <input type="number" placeholder="Rent Amount" class="form-control" min="1" name="rentAmountM" ng-model="product.rent.rateMonths.rentAmountM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
                             </div>
                           </td>
                           <td>
                             <div ng-class="{'has-error': form.seqDepositM.$invalid && submitted}">
-                              <input type="number" placeholder="Security Deposit" class="form-control" name="seqDepositM" ng-model="product.rent.rateMonths.seqDepositM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
+                              <input type="number" placeholder="Security Deposit" class="form-control" min="1" name="seqDepositM" ng-model="product.rent.rateMonths.seqDepositM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
                             </div>
                           </td>
 
