@@ -106,10 +106,14 @@ angular.module('sreizaoApp')
     .then(function(result){
       $scope.locationList = result;
     });
+
     self.getAllUser = function(){
       var filter = {};
-      userSvc.getUsers(filter)
-      .then(function(data){
+
+      if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
+        filter["userId"] = Auth.getCurrentUser()._id;
+      }
+      userSvc.getUsers(filter).then(function(data){
         $rootScope.users = data;
       })
       .catch(function(err){
