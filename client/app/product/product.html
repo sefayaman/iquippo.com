@@ -459,27 +459,27 @@
                </div>
              </div>
 
-              <uib-accordion close-others="oneAtATime" class="information">
-                <uib-accordion-group is-open="Techstatus.open">
-                  <uib-accordion-heading>
-                    Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
-                  </uib-accordion-heading>
-                  <div class="row">
-                    <div class="col-sm-5"><h4></h4></div>
-                    <div ng-if="!isActive()" class="col-sm-6 text-right">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Technical information</h3>
+                   <div class="row">                    
+                    <div ng-if="!isActive()" class="col-sm-offset-4 col-sm-5 text-right">
                       {{doc.name}}
                     </div>
                     <div ng-if="isActive()" class="col-sm-6 text-right">
-                      <a ng-if="isActive()" href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="text-muted" target="_blank" >{{doc.name}}</a> 
+                      <a ng-if="isActive()" href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
                     </div>
-                    <div class="col-sm-1 text-right">                  
+                    <div class="col-sm-1 text-right pull-right">                  
                       <span class="text-right text-danger fileinput-button">
                               <span><i class="fa fa-file-text fa-2x"></i></span>
                               <input type="file" name="doc"  data-filetype="doc" file-upload>
                       </span>
                     </div>
                   </div>
-                  <legend></legend>
+                </div>
+                <div class="panel-body">
+                 
+                  
                   <div class="row">
                     <div class="col-sm-5 form-group">Gross Weight</div>
                     <div class="col-sm-7 form-group">
@@ -512,33 +512,37 @@
                   </div>
                   <div class="form-group row" ng-repeat=" param in product.technicalInfo.params">
                     <div class="col-sm-4 col-md-5">
-                      <input type="text" placeholder="Parameter" ng-value="param[$index].key" ng-model="product.technicalInfo.params[$index].key" class="form-control" name="">
+                      <input type="text" placeholder="Parameter" ng-value="param.key" ng-model="param.key" class="form-control" name="">
                     </div>
-                    <div class="col-sm-4 col-md-4"><input type="text" placeholder="Value" ng-value="param[$index].value" ng-model="product.technicalInfo.params[$index].value" class="form-control" name=""></div>
+                    <div class="col-sm-4 col-md-4"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
                     <div class="col-sm-4 col-md-3">
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div> 
-                </uib-accordion-group>
-                <uib-accordion-group is-open="Infostatus.open">
-                  <uib-accordion-heading>
-                    Service information  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
-                  </uib-accordion-heading>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Service information</h3>
+                </div>
+                <div class="panel-body">
                   <div class="form-group row" ng-repeat="serviceinfo in product.serviceInfo">
                     <div class="col-sm-3 col-md-3">
-                      <input type="date" placeholder="Date" class="form-control" ng-model="product.serviceInfo[$index].servicedate" uib-datepicker-popup="{{formats1}}" is-open="popup1.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open1()">
+                      <input type="date" placeholder="Date" class="form-control" ng-model="serviceinfo.servicedate" uib-datepicker-popup="{{formats1}}" is-open="popups[$index].opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="popups[$index].opened = !popups[$index].opened">
                     </div>
-                    <div class="col-sm-2 col-md-2"><input type="text" placeholder="Operating Hours" ng-value="serviceinfo[$index].operatingHour" class="form-control" ng-model="product.serviceInfo[$index].operatingHour"></div>
-                    <div class="col-sm-2 col-md-2"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo[$index].serviceat" class="form-control" ng-model="product.serviceInfo[$index].serviceAt"></div>
-                    <div class="col-sm-2 col-md-3"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo[$index].authServiceStation" class="form-control" ng-model="product.serviceInfo[$index].authServiceStation"></div>
+                    <div class="col-sm-2 col-md-2"><input type="text" placeholder="Operating Hours" ng-value="serviceinfo.operatingHour" class="form-control" ng-model="serviceinfo.operatingHour"></div>
+                    <div class="col-sm-2 col-md-2"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo.serviceat" class="form-control" ng-model="serviceinfo.serviceAt"></div>
+                    <div class="col-sm-2 col-md-3"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo.authServiceStation" class="form-control" ng-model="serviceinfo.authServiceStation"></div>
                     <div class="col-sm-3 col-md-2">
                       <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div>
-                </uib-accordion-group>                
-              </uib-accordion>
+                </div>
+              </div>
+              
 
                 <div class="clearfix form-group"></div>  
                 <div class="row form-group">
@@ -699,7 +703,7 @@
                   </div>
                   <div class="col-sm-2 text-left">
                     <label>To</label>
-                    <p>{{getDateFormat(product.rent.fromDate)}}</p>
+                    <p>{{getDateFormat(product.rent.toDate)}}</p>
                   </div>
                 </div>
               <table class="table">
