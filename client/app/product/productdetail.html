@@ -62,7 +62,8 @@
                     </tr>                   
                     <tr>
                       <td>Category</td>
-                      <td>{{currentProduct.category.name}}</td>
+                      <td ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</td>
+                      <td ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</td>
                     </tr>                     
                     <tr>
                       <td>Manufacturing Year</td>
