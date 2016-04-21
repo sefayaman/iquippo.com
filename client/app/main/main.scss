@@ -151,7 +151,8 @@ header{background:#fff;}
      -o-transition: all 1s ease;
         transition: all 1s ease;
 }
-.cat .cat-list li a span{position: absolute;color: #fff; z-index:5px; bottom: 0px; width: 100%; display:block; text-align:center; padding:5px; background:rgba(0,0,0,0.4);}
+.cat .cat-list li a span{position: absolute;color: #fff; z-index:5px; bottom: 0px; width: 100%; display:block; text-align:center; padding:5px; background:rgba(0,0,0,0.8);}
+.cat .cat-list li a span.overlayer{background:rgba(0,0,0,0.3); height: 100%;}
 .show-more{position:absolute; bottom:120px; text-align:center; width:97%;}
 
 

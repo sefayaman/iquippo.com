@@ -445,20 +445,21 @@
                     </div>
                    
                   </div>
-                  <div class="row form-group">
-                    <div class="col-sm-5">Upload Video</div>
-                    <div class="col-sm-3">
-                      <span class="btn btn-warning fileinput-button">
-                            <span>Browse Video...</span>
-                            <input type="file" name="video"  data-filetype="video" file-upload>
-                        </span>
-                        
+                  
+                  <div class="form-group row" ng-repeat=" param in product.technicalInfo.params">
+                    <div class="col-sm-4 col-md-5">
+                      Upload Video Link
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 col-md-3"><input type="text" placeholder="Video Url" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
+                    <div class="col-sm-3">
                       <span ng-if="!isActive()">{{video.name}}</span>
                       <a ng-if="isActive()" href="/download/{{product.assetDir}}/{{video.name}}" target="_blank" >{{video.name}}</a>
                     </div>
-                  </div>
+                    <div class="col-sm-4 col-md-2 pull-right">
+                      <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
+                      <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                    </div>
+                  </div>        
                </div>
              </div>
 

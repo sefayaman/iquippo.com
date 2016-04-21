@@ -1,7 +1,7 @@
 <section class="banner">
   <div class="overlay"></div>
   <div id="slides_control">    
-    <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+    <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide ng-repeat="slide in mainVm.slides" active="slide.active">
         <img  ng-src="assets/images/{{slide.image}}">
       </uib-slide>
@@ -63,7 +63,7 @@
             <li  ng-repeat="category in mainVm.allCategoryList" ng-if="$index < 8">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
-                  <span>{{category.name}}</span>
+                  <span class="overlayer"></span><span>{{category.name}}</span>
                  
               </a>
             </li>
@@ -72,7 +72,7 @@
             <li  ng-repeat="category in mainVm.allCategoryList">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
-                  <span>{{category.name}}</span>
+                  <span class="overlayer"></span><span>{{category.name}}</span>
                  
               </a>
             </li>
