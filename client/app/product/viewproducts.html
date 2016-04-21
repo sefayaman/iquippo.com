@@ -1,6 +1,10 @@
   <div class="view-content">
   <section class="wrapper">
       <div class="container">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li><a class="active">View Products</a></li>          
+        </ol>
         <div class="row">
           <div class="col-sm-4 col-md-3">
             <div class="well">
@@ -161,7 +165,7 @@
             <table id="search-result"  dt-options="dtOptions" class="display results" datatable="ng" cellspacing="0" width="100%">
               <thead>
                 <tr>
-                  <th>Product catalogue</th>
+                  <th></th>
                 </tr>
               </thead>
               <!-- other than search -->
@@ -170,7 +174,7 @@
                   <td>
                     <div class="media">
                       <div  class="pull-left result-products">
-                        <a ng-href="/productdetail/{{product._id}}" href="javascript:;">
+                        <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
                           <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
                         </a>
                       </div>
@@ -204,3 +208,8 @@
       </div>
     </section>
     </div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+        <h4>{{product.name}}</h4>
+        <div>{{product.category.name}}</div>
+        
+    </script>

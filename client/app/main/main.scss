@@ -383,8 +383,9 @@ div[data-role="editor-toolbar"]{-webkit-user-select:none;-moz-user-select:none;-
 .pagination{border-radius:4px;display:inline-block;margin:0 0;padding-left:0;float:right;}
 .nav-tabs>li>a{color:#000;}
 .panel-default{border-color:#ddd;border-radius:0;}
-.breadcrumb{border-radius:0;background:transparent;margin-bottom:15px;padding:0; border-bottom: 2px solid #104095;}
-.breadcrumb li{padding:8px 15px;background:#104095;color:#fff;}
+.breadcrumb{border-radius:0;margin-bottom:15px;}
+.breadcrumb li a{text-decoration: none;}
+.breadcrumb li a.active{color:#000; cursor: text; }
 .charts{height:340px;}
 .panel-heading.calendar{padding:5px 10px;}
 .panel-heading.calendar .panel-title{margin-top:5px;}
@@ -547,8 +548,8 @@ overflow: hidden;
 }
 .table-responsive{overflow:inherit;}
 .dataTables_paginate{position:absolute; left:0px; margin-bottom:30px;}
-.dataTables_info{position:absolute; right:0px; left:600px !important;}
-
+.dataTables_info{position:absolute; right:0px; left:600px !important; text-align: right;}
+.dataTables_wrapper .top{height: 30px;}
 .cart_item{color:#FF0000 !important;}
 
 .ln{padding-top:10px;}
@@ -609,6 +610,7 @@ table.table{width:100% !important;}
     border-bottom: 0;}
 .search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:4px; height:45px;}
 .search-tabs .btn.btn-default{border:0; margin:0; background:rgba(0,0,0,0.75); border-radius:6px 6px 0 0; color:#666; border-right:1px solid rgba(0,0,0,1); padding:12px 25px; margin-left:0;}
+.search-tabs .btn.btn-default:hover{color: #fff;}
 .search-tabs .btn-default.active{color:#fff; border-bottom:2px solid #ffffff;}
 .calctr-info .input-group-addon i{right:10px;}
 

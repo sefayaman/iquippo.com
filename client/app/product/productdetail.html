@@ -1,11 +1,20 @@
   <div class="view-content">
 <section class="wrapper">
       <div class="container">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li><a href="/viewproducts">View Products</a></li>
+          <li><a class="active">Product Detail</a></li>          
+        </ol>
         <div class="row">
           <div class="col-sm-7 col-md-5">
-            <ol class="breadcrumb">
-              <li>{{currentProduct.name}}</li>         
-            </ol>
+            <div class="panel-group">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">{{currentProduct.name}}</h3>
+                </div>
+              </div>
+            </div>
             <ul class="list-inline list-unstyled">
                 <li><span><i class="fa fa-calendar"></i> {{currentProduct.mfgYear}} </span></li>
                     <li>|</li>

@@ -33,8 +33,10 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   vm.getLocationHelp = getLocationHelp
 
 
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false);
-
+  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false).withOption('dom','<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>');
+  $scope.dynamicPopover = {
+    templateUrl: 'myPopoverTemplate.html'
+  };
   function init(){
       categorySvc.getAllCategory()
       .then(function(result){
