@@ -32,6 +32,7 @@ var ProductSchema = new Schema({
   primaryImg: String,
   technicalInfo:{},
   serviceInfo:[{}],
+  videoLinks:[{}],
   isEngineRepaired:String,
   comment:String,
   videoName:String,

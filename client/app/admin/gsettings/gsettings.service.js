@@ -18,6 +18,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.deleteState = deleteState;
       lServices.updateState = updateState;
       lServices.saveState = saveState;
+      lServices.getLocationHelp = getLocationHelp;
 
       function getAllLocation(){
         var deferred = $q.defer();
@@ -122,6 +123,27 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
        return $http.post(path + "/city/search",data)
         .then(function(res){
           return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+     function getLocationHelp(data){
+       return $http.post(path + "/location/search",data)
+        .then(function(res){
+          var filterdArr = [];
+
+          res.data.forEach(function(item){
+           if(item.name.indexOf(data.searchStr) != -1 && item.state.name.indexOf(data.searchStr) != -1){
+             filterdArr[filterdArr.length] = item.name;
+             filterdArr[filterdArr.length] = item.state.name;
+            }else if(item.name.indexOf(data.searchStr) != -1)
+               filterdArr[filterdArr.length] = item.name;
+            else if(item.state.name.indexOf(data.searchStr) != -1)
+              filterdArr[filterdArr.length] = item.state.name;
+          });
+          return filterdArr;
         })
         .catch(function(err){
           throw err

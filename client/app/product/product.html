@@ -213,12 +213,12 @@
                     <div class="form-group col-sm-4">
                       <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
                         <span class="input-group-addon currency-width">
-                          <select class="form-control" ng-disabled="product.priceOnRequest" name="currencyType" ng-model="product.currencyType">
+                          <select class="form-control"  name="currencyType" ng-model="product.currencyType">
                            <option value="" selected>&#x20B9; Rupee</option>                       
                           </select>   
                           <!-- <i class="caret"></i> -->
                         </span>
-                          <input type="number" ng-disabled="product.priceOnRequest" placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
+                          <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="product.tradeType != 'RENT'">
                         </div>
                     </div>
                     <div class="form-group checkbox col-sm-3">
@@ -446,18 +446,18 @@
                    
                   </div>
                   
-                  <div class="form-group row" ng-repeat=" param in product.technicalInfo.params">
+                  <div class="form-group row" ng-repeat=" link in product.videoLinks">
                     <div class="col-sm-4 col-md-5">
                       Upload Video Link
                     </div>
-                    <div class="col-sm-4 col-md-3"><input type="text" placeholder="Video Url" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
+                    <div class="col-sm-4 col-md-3"><input type="text" placeholder="Video Url" ng-value="link.uri" ng-model="link.uri" class="form-control" name=""></div>
                     <div class="col-sm-3">
                       <span ng-if="!isActive()">{{video.name}}</span>
-                      <a ng-if="isActive()" href="/download/{{product.assetDir}}/{{video.name}}" target="_blank" >{{video.name}}</a>
+                      <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a>
                     </div>
                     <div class="col-sm-4 col-md-2 pull-right">
-                      <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
-                      <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                      <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
+                      <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div>        
                </div>

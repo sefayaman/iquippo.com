@@ -65,21 +65,22 @@
                           </td>
                           <td>{{product.productId}}</td>
                           <td>{{product.tradeType}}</td>
-                          <td ng-if="product.category.name != 'Other'">{{product.category.name}}</td>
-                          <td ng-if="product.category.name == 'Other'">{{product.category.otherName}}</td>
-                          <td ng-if="product.brand.name != 'Other'">{{product.brand.name}}</td>
-                          <td ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</td>
-                          <td ng-if="product.brand.name != 'Other'">{{product.model.name}}</td> 
-                          <td ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</td> 
-                          <td ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
-                          <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
-                          <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
-                          <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
-                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i>  
-                          {{product.grossPrice}}</td>  
-                          <td ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</td>  
-                          <td ng-if="product.tradeType == 'RENT'"></td>                       
+                          <td>
+                            <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
+                            <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
+                          </td>
+                          <td>
+                            <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
+                            <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
+                          </td>
+                          <td>
+                            <span ng-if="product.brand.name != 'Other'">{{product.model.name}}</span>
+                            <span ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</span>
+                          </td>
+                          <td>
+                            <span ng-if="product.tradeType != 'RENT'"><i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i>{{product.grossPrice}}</span>
+                            <span ng-if="product.priceOnRequest && product.tradeType != 'RENT'">(Price On Request)</span>
+                          </td>                      
                           <td>{{product.images.length}}</td>
                           <td>
                               <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>
@@ -130,141 +131,6 @@
     });
   });
 </script>
-<script type="text/ng-template" id="producthistory.html">
-      <div>
-        <div class="modal-header">
-          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Preview Product Upload</h4>
-        </div>
-        <div class="modal-body">
-          <h4>Basic Information</h4>
-          <table class="table table-bordered">
-            <tr>
-              <th>Product Group</th>
-              <td>{{product.group.name}}</td>
-            </tr>
-            <tr>
-              <th>Categories</th>
-              <td>{{product.category.name}}</td>
-            </tr>
-            <tr>
-              <th>Product Brand</th>
-              <td>{{product.brand.name}}</td>
-            </tr>
-            <tr>
-              <th>Product Model</th>
-              <td>{{product.model.name}}</td>
-            </tr>
-            <tr>
-              <th>Product Name</th>
-              <td>{{product.name}}</td>
-            </tr>
-            <tr>
-              <th>Manufacturing Year</th>
-              <td>{{product.mfgYear}}</td>
-            </tr>
-            <tr>
-              <th>Operating Hours/HMR</th>
-              <td>{{product.operatingHour}}</td>
-            </tr>
-            <tr>
-              <th>Mileage/KMR</th>
-              <td>{{product.mileage}}</td>
-            </tr>
-            <tr>
-              <th>Machine Serial No.</th>
-              <td>{{product.serialNo}}</td>
-            </tr>
-            <tr>
-              <th>Price (Excl. Tax).</th>
-              <td>{{product.grossPrice}}</td>
-            </tr>
-            <tr>
-              <th>Country</th>
-              <td>{{product.country}}</td>
-            </tr>
-            <tr>
-              <th>Location</th>
-              <td>{{product.city}}</td>
-            </tr>
-            <tr>
-              <th>Product Condition</th>
-              <td>{{product.productCondition}}</td>
-            </tr>
-            <tr>
-              <th>Primary Image</th>
-              <td>{{product.primaryImage}}</td>
-            </tr>
-            <tr>
-              <th>Video</th>
-              <td>{{product.videoName}}</td>
-            </tr>
-          </table>
-           <h4>Technical Information</h4>
-          <table class="table table-bordered">
-            <tr>
-              <th>Gross Weight</th>
-              <td>{{product.technicalInfo.grossWeight}}</td>
-            </tr>
-            <tr>
-              <th>Operating Weight</th>
-              <td>{{product.technicalInfo.operatingWeight}}</td>
-            </tr>
-            <tr>
-              <th>Bucket Capacity</th>
-              <td>{{product.technicalInfo.bucketCapacity}}</td>
-            </tr>
-            <tr>
-              <th>Engine Power</th>
-              <td>{{product.technicalInfo.enginePower}}</td>
-            </tr>
-            <tr>
-              <th>Lifting Capacity</th>
-              <td>{{product.technicalInfo.liftingCapacity}}</td>
-            </tr>
-            
-          </table>
-
-          <h4>Service information</h4>
-          <table class="table table-bordered">
-            <tr>
-              <th>Date</th>
-              <td>{{product.serviceInfo[0].servicedate}}</td>
-            </tr>
-            <tr>
-              <th>Operating hrs</th>
-              <td>{{product.serviceInfo[0].operatingHour}}</td>
-            </tr>
-            <tr>
-              <th>Service At</th>
-              <td>{{product.serviceInfo[0].serviceAt}}</td>
-            </tr>
-            <tr>
-              <th>Authorized Station</th>
-              <td>{{product.serviceInfo[0].authServiceStation}}</td>
-            </tr>
-            <tr>
-              <th>Engine Repaired/Overhauling</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>Comment</th>
-              <td>{{product.comment}}</td>
-            </tr>
-            <tr>
-              <th>Status</th>
-              <td ng-if="product.status">Approved</td>
-              <td ng-if="!product.status">Not approved</td>
-            </tr>
-          </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>              
-        </div>
-      </div>
-
-    </script>
-
 
 <script type="text/ng-template" id="sellerDetail.html">
   <div>

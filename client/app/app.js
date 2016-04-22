@@ -61,7 +61,6 @@ angular.module('sreizaoApp',[
     $rootScope.allCountries = allCountries;
     $rootScope.valuationList = valuationList;
     $rootScope.tradeType = tradeType;
-   // $rootScope.locationList = locationList;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
 
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
@@ -71,18 +70,9 @@ angular.module('sreizaoApp',[
           $rootScope.allCountries[i]['count'] = 0;
     }
 
-   /* countrySvc.getAllCountries().then(function(response){
-        $rootScope.loadingCount --;
-        $rootScope.loading = $rootScope.loadingCount !=0;
-        $rootScope.allCountries = response.data;
-        for(var i=0; i< $rootScope.allCountries.length; i++)
-          $rootScope.allCountries[i]['count'] = 0;
-    });*/
-
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
-      //$rootScope.allGroup = response.data;
     });
 
    categorySvc.getAllCategory().then(function(response){

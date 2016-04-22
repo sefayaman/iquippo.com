@@ -1,21 +1,33 @@
-'use strict';
+(function(){
+  'use strict';
+angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
+function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
+  var vm = this;
 
-angular.module('sreizaoApp')
-  .controller('productDetailCtrl', function ($scope, $stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
   $scope.currentProduct = {};
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "email";
   $scope.zoomLvl = 3;
-  $rootScope.searchFilter = {};
-  $rootScope.equipmentSearchFilter = {};
   $scope.calRent = {};
   $scope.calRent.rateType = "Hours";
+  $scope.statusShipping = {};
+  $scope.statusShipping.open = false;
+
   $scope.totalRent = 0;
   $scope.status = {
     Firstopen: true
   };
+
+  vm.getDateFormat = getDateFormat;
+  vm.calculateRent = calculateRent;
+  vm.sendBuyRequest = sendBuyRequest;
+  vm.previewProduct = previewProduct;
+  vm.addProductToCart = addProductToCart;
+
+  function loadUserDetail(){
+
     if($rootScope.getCurrentUser()._id) {
       $scope.buycontact.fname = $rootScope.getCurrentUser().fname;
       $scope.buycontact.mname = $rootScope.getCurrentUser().mname;
@@ -27,36 +39,47 @@ angular.module('sreizaoApp')
     } else {
       $scope.quote = {}
     }
-
-  if($stateParams.id) {
-    productSvc.getProductOnId($stateParams.id).then(function(result){
-      $scope.currentProduct = result;
-      $rootScope.currentProduct = $scope.currentProduct;
-      if($rootScope.currentProduct.serviceInfo.length > 0){
-        for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
-          if($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)
-            $rootScope.currentProduct.serviceInfo[i].servicedate = moment($rootScope.currentProduct.serviceInfo[i].servicedate).format('DD/MM/YYYY');
-        }
-      }
-      if($scope.currentProduct.images.length > 0){
-        $scope.currentProduct.images.forEach(function(img,index,arr){
-          img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir+"/" +img.src;
-        });  
-      }
-      
-
-    });
   }
 
+  function init(){
+   if(!Auth.isLoggedIn()){
+      Modal.openDialog('login');
+      Auth.doNotRedirect = true;
+      Auth.postLoginCallback = loadUserDetail;
+    }
 
-  $scope.getDateFormat = function(date){
+    if($stateParams.id) {
+      productSvc.getProductOnId($stateParams.id).then(function(result){
+        $scope.currentProduct = result;
+        $rootScope.currentProduct = $scope.currentProduct;
+        if($rootScope.currentProduct.serviceInfo.length > 0){
+          for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
+            if($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)
+              $rootScope.currentProduct.serviceInfo[i].servicedate = moment($rootScope.currentProduct.serviceInfo[i].servicedate).format('DD/MM/YYYY');
+          }
+        }
+        if($scope.currentProduct.images.length > 0){
+          $scope.currentProduct.images.forEach(function(img,index,arr){
+            img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir+"/" +img.src;
+          });  
+        }
+        
+
+      });
+    }
+  }
+
+  init();
+  loadUserDetail();
+
+
+  function getDateFormat(date){
     if(!date)
       return;
     return moment(date).format('DD/MM/YYYY');
   }
 
-
-  $scope.calculateRent = function(rentObj, calRent){
+  function calculateRent(rentObj, calRent){
     if(!calRent.duration) {
       Modal.alert("Please enter duration.");
       return;
@@ -69,16 +92,7 @@ angular.module('sreizaoApp')
       $scope.totalRent = (Number(rentObj.rateMonths.rentAmountM) * Number(calRent.duration));
   }
 
-$scope.dayDiff = function(createdDate){
-  var date2 = new Date(createdDate);
-  var date1 = new Date();
-  var timeDiff = Math.abs(date2.getTime() - date1.getTime());   
-  var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-  
-  return dayDifference;
-  }
-  
-  $scope.sendBuyRequest = function(buycontact) {
+  function sendBuyRequest(buycontact) {
     var ret = false;
     
     if($scope.form.$invalid || ret){
@@ -134,23 +148,25 @@ $scope.dayDiff = function(createdDate){
         Modal.alert(res);
     });
   };
-  $scope.previewProduct = function(currentProductImages, idx){ 
-  var prevScope = $rootScope.$new();
-  prevScope.images = currentProductImages;
-  prevScope.idx = idx;
-  var prvProductModal = $uibModal.open({
-      templateUrl: "magnifier.html",
-      scope: prevScope,
-      windowTopClass:'product-gallery',
-      size: 'lg'
-  });
 
-  prevScope.close = function(){
-    prvProductModal.close();
+  function previewProduct(currentProductImages, idx){ 
+    var prevScope = $rootScope.$new();
+    prevScope.images = currentProductImages;
+    prevScope.idx = idx;
+    var prvProductModal = $uibModal.open({
+        templateUrl: "magnifier.html",
+        scope: prevScope,
+        windowTopClass:'product-gallery',
+        size: 'lg'
+    });
+
+    prevScope.close = function(){
+      prvProductModal.close();
+    }
+   
   }
- 
-}
-  $scope.addProductToCart = function(){
+
+  function addProductToCart(){
       if(!Auth.getCurrentUser()._id){
         Modal.alert(informationMessage.cartLoginError,true);
         return;
@@ -196,13 +212,9 @@ $scope.dayDiff = function(createdDate){
       }
     }
 
-  $scope.statusShipping = {};
-  $scope.statusShipping.open = false;
-  /*$scope.statusInsurance = {};
-  $scope.statusInsurance.open = false;*/
+  }
 
-  })
-.controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {
+angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {
     $scope.productQuote = {};
     if(Auth.getCurrentUser()._id){
     var currUser = Auth.getCurrentUser();
@@ -354,3 +366,5 @@ $scope.dayDiff = function(createdDate){
     opened: false
   };
 });
+
+})();

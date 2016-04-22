@@ -197,6 +197,8 @@ angular.module('sreizaoApp')
        */
       getToken: function() {
         return $cookieStore.get('token');
-      }
+      },
+      doNotRedirect:false,
+      postLoginCallback : null
     };
   });

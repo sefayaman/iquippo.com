@@ -50,7 +50,7 @@ angular.module('sreizaoApp')
       .state('productdetail', {
         url: '/productdetail/:id',
         templateUrl: 'app/product/productdetail.html',
-        controller: 'productDetailCtrl',
+        controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'
       })
       .state('getquote', {

@@ -4,42 +4,12 @@ angular.module('sreizaoApp')
   .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http, $location, Auth,$uibModal,Modal,notificationSvc) {
 
     $scope.isCollapsed = true;
- 
-    //$rootScope.getCurrentUser = Auth.getCurrentUser;
-    $rootScope.productLists = [];
-    $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
-    }];
+    var dataToSend = {};
 
-  var dataToSend = {};
-   $scope.startsearch = function(){
-        /*if(!$scope.searchFilter.searchText && !$scope.searchFilter.categoryGroup) {
-            if($scope.previousState)
-              $state.go($scope.previousState,$scope.previousParams);
-            return;
-        }*/
-        $rootScope.equipmentSearchFilter = {};
-        dataToSend["status"] = true;
-        dataToSend["searchstr"] = $scope.searchFilter.searchText;
-        $rootScope.refresh = !$rootScope.refresh;
-        $http.post('/api/products/search', dataToSend).success(function(srchres){
-          $rootScope.refresh = !$rootScope.refresh;
-           $rootScope.searchResults = srchres;
-             $state.go('search');
-        });
-
-    };
     $scope.isActive = function(route) {
       return route === $location.path();
     };
-    $scope.myFunct = function(keyEvent) {
-      if(keyEvent)
-          keyEvent.stopPropagation();
-      if (keyEvent.which === 13){
-        $scope.startsearch();
-      }
-    }
+
     $scope.redirectToProduct = function(){
       if($rootScope.getCurrentUser()._id) 
           $state.go('product');
@@ -47,16 +17,10 @@ angular.module('sreizaoApp')
           Modal.alert("Please Login/Register for uploading the products!", true);
     };
 
-    $scope.onGroupCategoryChange = function(){
-      delete dataToSend.group;
-      delete dataToSend.category;
-       var flag = $("#groupCategory option:selected").data("flag");
-        if(flag == 1)
-          dataToSend["group"] = $scope.searchFilter.categoryGroup;
-        else
-          dataToSend["category"] = $scope.searchFilter.categoryGroup;
-        $scope.startsearch();
-
+    $scope.openLogin = function(){
+      Auth.doNotRedirect = false;
+      Auth.postLoginCallback = null;
+      Modal.openDialog('login');
     };
 
     $scope.logout = function() {
@@ -99,15 +63,4 @@ angular.module('sreizaoApp')
       }
     }
     
-    $scope.getHelp = function(val) {
-      var serData = {};
-      serData['txt'] = $scope.searchFilter.searchText;
-      return $http.post('/api/common/gethelp',serData)
-      .then(function(response){
-        return response.data.map(function(item){
-          return item.text;
-        });
-      });
-    };
-
   })

@@ -147,10 +147,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     function getLocationHelp(val) {
       var serData = {};
       serData['searchStr'] = vm.locationSearchText;
-     return LocationSvc.getLocationOnFilter(serData)
+     return LocationSvc.getLocationHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              return item.name;
+             return item;
         });
       });
     };

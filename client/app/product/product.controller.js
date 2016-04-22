@@ -11,6 +11,7 @@ angular.module('sreizaoApp')
     $scope.product.technicalInfo = {};
     $scope.product.technicalInfo.params = [{}];
     $scope.product.serviceInfo = [{}];
+    $scope.product.videoLinks = [{}];
     $scope.product.country = "";
     $scope.product.status = false;
     $scope.product.featured = false;
@@ -120,6 +121,8 @@ angular.module('sreizaoApp')
         item.isEdit = true;
         item.name = item.src;
       });
+      if(!$scope.product.videoLinks)
+         $scope.product.videoLinks = [{}];
 
       $scope.product.country = $scope.product.country;
       videoObj.name = product.videoName;

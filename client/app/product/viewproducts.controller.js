@@ -63,6 +63,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
         if(filter.category){
           $scope.equipmentSearchFilter['category'] = filter.category;
            $scope.selectedCategory = categorySvc.getCategoryByName(filter.category);
+           $scope.equipmentSearchFilter.group = $scope.selectedCategory.group.name;
            onCategoryChange(categorySvc.getCategoryByName(filter.category),true);
         }
         productSvc.setFilter(null)
@@ -74,6 +75,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
         var cat = categorySvc.getCategoryOnId($stateParams.id);
         if(cat){
           $scope.selectedCategory = cat;
+          $scope.equipmentSearchFilter.group = $scope.selectedCategory.group.name; 
           onCategoryChange(cat,true);
         }
         productSvc.getProductOnCategoryId($stateParams.id)
@@ -290,11 +292,11 @@ $scope.today = function() {
 
   function getLocationHelp(val) {
       var serData = {};
-      serData['searchStr'] = vm.locationSearchText;
-     return LocationSvc.getLocationOnFilter(serData)
+      serData['searchStr'] = $scope.equipmentSearchFilter.location;
+     return LocationSvc.getLocationHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              return item.name;
+              return item;
         });
       });
     };

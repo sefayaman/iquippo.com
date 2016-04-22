@@ -33,8 +33,13 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
                if(Auth.getCurrentUser()._id){
                  cartSvc.getCartData(Auth.getCurrentUser()._id);
               }
-              if(Auth.isAdmin())
-                $state.go('productlisting');
+              if(Auth.isAdmin()){
+                if(!Auth.doNotRedirect)
+                    $state.go('productlisting');
+              }
+              if(Auth.postLoginCallback)
+                  Auth.postLoginCallback();
+
            }
          });
         

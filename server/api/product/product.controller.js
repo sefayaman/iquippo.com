@@ -52,19 +52,23 @@ exports.search = function(req, res) {
     filter["status"] = req.body.status;
   if(req.body.featured)
     filter["featured"] = req.body.featured;
+  var arr = [];
   if(req.body.searchstr){
-    var arr = [];
     arr[arr.length] = { name: { $regex: term }};
     arr[arr.length] = { "group.name": { $regex: term }};
     arr[arr.length] = { "category.name": { $regex: term }};
     arr[arr.length] = { "model.name": { $regex: term }};
     arr[arr.length] = { "brand.name": { $regex: term }};
-    filter['$or'] = arr;
+    
   }
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
-    filter["city"] = {$regex:locRegEx};
+    arr[arr.length] = {city:{$regex:locRegEx}};
+    arr[arr.length] = {state:{$regex:locRegEx}};
   }
+  if(arr.length > 0)
+    filter['$or'] = arr;
+  
   if(req.body.tradeType){
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
   }
@@ -1139,14 +1143,11 @@ function importProducts(req,res,data){
         }
         product["tradeType"] = trim(tradeType);
         if(tradeType != "RENT") {
+          
           var gp = row["Gross_Price*"];
           var prOnReq = trim(row["Price_on_Request*"]).toLowerCase();
           var cr = row["Currency*"];
-          if(prOnReq == 'yes' || prOnReq == 'y') {
-            product["priceOnRequest"] = true; 
-          } else {
-            product["priceOnRequest"] = false;
-            if(gp && cr){
+          if(gp && cr){
               product["grossPrice"] = Number(trim(gp));
               product["currencyType"] = trim(cr);
             } else {
@@ -1158,7 +1159,11 @@ function importProducts(req,res,data){
               importProducts(req,res,data);
               return;
             }
-          }
+            if(prOnReq == 'yes' || prOnReq == 'y') {
+              product["priceOnRequest"] = true; 
+            }else {
+              product["priceOnRequest"] = false;
+            }
         }          
 
         product["productCondition"] = trim(row["Product_Condition"] || "").toLowerCase();

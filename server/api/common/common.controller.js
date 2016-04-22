@@ -859,6 +859,24 @@ exports.searchCity = function(req,res){
   );
 }
 
+exports.searchLocation = function(req,res){
+  var filter = {};
+  if(req.body.searchStr){
+    var term = new RegExp("^" + req.body.searchStr, 'i');
+    var arr = [];
+    arr[arr.length] = {name:{ $regex: term }}
+    arr[arr.length] = {'state.name':{ $regex: term }}
+    filter['$or'] = arr;
+  }
+  var query = City.find(filter);
+  query.exec(
+       function (err, ct) {
+              if(err) { return handleError(res, err); }
+              return res.status(200).json(ct);
+       }
+  );
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }
