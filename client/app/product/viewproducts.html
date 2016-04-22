@@ -189,7 +189,7 @@
                           <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
                           <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
                           <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
-                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice}}</span>
+                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
                         </h4>
                         <p>{{product.brand.name}}</p>
                         <p>{{product.model.name}}</p>
