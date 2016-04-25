@@ -452,8 +452,9 @@
                     </div>
                     <div class="col-sm-4 col-md-3"><input type="text" placeholder="Video Url" ng-value="link.uri" ng-model="link.uri" class="form-control" name=""></div>
                     <div class="col-sm-3">
-                      <span ng-if="!isActive()">{{video.name}}</span>
-                      <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a>
+                     <!--  <span ng-if="!isActive()">{{video.name}}</span>
+                      <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a> -->
+                      <a class="btn btn-danger" ng-href="{{link.uri}}" target="_blank"><i class="fa fa-play"></i></a>
                     </div>
                     <div class="col-sm-4 col-md-2 pull-right">
                       <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>

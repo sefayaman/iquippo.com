@@ -1,8 +1,9 @@
-'use strict';
+(function(){
 
-angular.module('sreizaoApp')
-.controller('MasterDataCtrl',['$scope','$rootScope', '$http', 'MasterDataService', 'DTOptionsBuilder','groupSvc','modelSvc','categorySvc','brandSvc', 'Modal', 'uploadSvc', 
-	function($scope, $rootScope, $http, MasterDataService, DTOptionsBuilder, groupSvc, modelSvc, categorySvc, brandSvc, Modal, uploadSvc) {
+'use strict';
+angular.module('admin').controller('MasterDataCtrl',MasterDataCtrl);
+
+function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, groupSvc, modelSvc, categorySvc, brandSvc, Modal, uploadSvc) {
 	$scope.groupList = [];
 	$scope.categoryList = [];
 	$scope.brandList = [];
@@ -15,7 +16,6 @@ angular.module('sreizaoApp')
     var dataToSend = {};
     $scope.fileObj = {};
     $scope.refresh1 = false;
-    var vm = this;
  	$scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withPaginationType('full_numbers')
         .withDisplayLength(100);
 
@@ -24,6 +24,24 @@ angular.module('sreizaoApp')
 	$scope.categoryEdit = false;
 	$scope.brandEdit = false;
 	$scope.modelEdit = false;
+
+	var vm = this;
+
+	//public methods
+	vm.onGroupChange = onGroupChange;
+	vm.onCategoryChange = onCategoryChange;
+	vm.Save = Save;
+	vm.reset = reset;
+	vm.updateCategoryStatus = updateCategoryStatus;
+	vm.update = update;
+	vm.deleteClick = deleteClick;
+	vm.editClick = editClick;
+	vm.exportMasterData = exportMasterData;
+
+	//methods in scope
+	$scope.updateCategoryImg = updateCategoryImg;
+	$scope.importMasterData = importMasterData;
+	$scope.getStatus = getStatus;
 
 	function loadAllGroup(fromCache){
 		if(!fromCache)
@@ -61,14 +79,11 @@ angular.module('sreizaoApp')
 	loadAllBrand();
 	loadAllModel();
 
-    $scope.onGroupChange = function(group){
-    //$scope.c={};
-    //$scope.b={};
+   function onGroupChange(group){
     $scope.categoryList = [];
     $scope.brandList = [];
     if(!group)
       return;
-    //$scope.categoryList = [];
     var otherCategory = null;  
     $scope.categoryList = $scope.allCategory.filter(function(d){
         if(d.name == 'Other'){
@@ -82,19 +97,18 @@ angular.module('sreizaoApp')
       $scope.categoryList[$scope.categoryList.length] = otherCategory;
   }
 
- 	$scope.getStatus = function(status){
+ function getStatus(status){
     if(status == true)
       return "Active";
     else 
       return "Inactive";
     }
 
-  $scope.onCategoryChange = function(category){
-  	//$scope.b={};
+  function onCategoryChange(category){
+  	
   	$scope.brandList = [];
     if(!category)
       return;
-    //$scope.brandList = [];
     var otherBrand = null;  
     $scope.brandList = $scope.allBrand.filter(function(d){
        if(d.name == 'Other'){
@@ -109,7 +123,7 @@ angular.module('sreizaoApp')
       $scope.brandList[$scope.brandList.length] = otherBrand;
   }
   
-	$scope.Save =function(Type)
+	function Save(Type)
 	{	$scope.submitted = true;
 		if(!validateMasterData(Type))
 			return;
@@ -236,7 +250,7 @@ angular.module('sreizaoApp')
 	}
 
 
-	$scope.reset = function(){
+	function reset(){
 		$scope.groupList = [];
 		$scope.categoryList = [];
 		$scope.brandList = [];
@@ -257,30 +271,13 @@ angular.module('sreizaoApp')
 	  $scope.form = {};
 	}, true);
 
-    $scope.updateCategoryStatus = function(category) {
-      //$rootScope.loading = true;
+    function updateCategoryStatus(category) {
       if(!category.imgSrc && category.status){
       	  Modal.alert("Please upload category image to make it active.");
       	  category.status = false;
       	  return;
       }
        updateCategory(category);
-      /*if(category.status){
-        //dataToSend['position'] = category.position;
-         dataToSend["status"] = true;
-        $http.post('/api/category/search', dataToSend).success(function(srchres){
-            if(srchres.length > 7) {
-                category.status = false;
-                $rootScope.loading = false;
-                Modal.alert("Eight categories are already selected for display. Please deactivate any one to select another.");
-                return;
-            }else
-              updateCategory(category);
-          });
-      }else
-        updateCategory(category);*/
-     
-      
   };
 
   function updateCategory(category){
@@ -301,8 +298,6 @@ angular.module('sreizaoApp')
     	if(args.files.length == 0)
         	return;
         $scope.$apply(function () {            
-            //add the file object to the scope's files collection
-            //$scope.imgSrc = "";
             $scope.fileObj.file = args.files[0];
             $scope.fileObj.imgSrc = args.files[0].name;
             $scope.c.imgSrc = args.files[0].name;
@@ -310,7 +305,7 @@ angular.module('sreizaoApp')
     });
 
 
-    $scope.importMasterData = function(files,_this){
+    function importMasterData(files,_this){
     	if(!files[0])
     		return;
     	if(files[0].name.indexOf('.xlsx') == -1){
@@ -321,23 +316,23 @@ angular.module('sreizaoApp')
     	}
     	$rootScope.loading = true;
 	    uploadSvc.upload(files[0],importDir).then(function(result){
-
-	        $http.post('/api/common/importMasterData',{fileName : result.data.filename})
-	    	.then(function(res){
+	        MasterDataService.importMasterData({fileName : result.data.filename})
+	    	.then(function(result){
 	    		loadAllGroup();
 	    		loadAllCategory();
 				loadAllBrand();
 				loadAllModel();
 	    		$rootScope.loading = false;
-	    		Modal.alert(res.data,true);
-	    	},function(res){
+	    		Modal.alert(result,true);
+	    	})
+	    	.catch(function(res){
 	    		$rootScope.loading = false;
 	    		Modal.alert(res.data,true);
 	    	})
 	     })
 	 }
 
-	 $scope.updateCategoryImg = function(files,_this){
+	 function updateCategoryImg(files,_this){
 	 	if(!files[0])
 	 		return;
 	 	var index = parseInt($(_this).data('index'));
@@ -347,42 +342,42 @@ angular.module('sreizaoApp')
 	    })
 	 }
 
-	 $scope.delete = function(type,val){
+	 function deleteClick(type,val){
 	 		var dataToSend = {};
 	 		dataToSend["type"] = type;
 	 		dataToSend["_id"] = val._id;
 	 		Modal.confirm("Are you sure want to delete?",function(ret){
 	 			if(ret == "yes")
-	 				vm.delete(type,dataToSend);
+	 				deleteMasterData(type,dataToSend);
 	 		});
 	 }
 
-	 vm.delete = function(type,dataToSend){
-	 	$http.post("/api/common/deleteMasterData",dataToSend)
-	 		.success(function(){
-	 			Modal.alert( type + " deleted successfully.");
-	 			switch(type){
-					case "Group":
-						loadAllGroup();
-					break;
-					case "Category":
-						loadAllCategory();
-					break;
-					case "Brand":
-						loadAllBrand();
-					break;
-					case "Model":
-						loadAllModel();
-					break;
-				}
+	 function deleteMasterData(type,dataToSend){
+	 	MasterDataService.deleteMasterData(dataToSend)
+	 	.then(function(){
+ 			Modal.alert( type + " deleted successfully.");
+ 			switch(type){
+				case "Group":
+					loadAllGroup();
+				break;
+				case "Category":
+					loadAllCategory();
+				break;
+				case "Brand":
+					loadAllBrand();
+				break;
+				case "Model":
+					loadAllModel();
+				break;
+			}
 
 	 		})
-	 		.error(function(res){
-	 			Modal.alert(res);
+	 		.catch(function(res){
+	 			Modal.alert(res.data);
 	 		})
 	 }
 
-	 $scope.editClick = function(type,val){
+	 function editClick(type,val){
  		switch(type){
 
 			case "Group":
@@ -396,19 +391,19 @@ angular.module('sreizaoApp')
 			case "Brand":
 				$scope.brandEdit = true;
 				 $scope.b = jQuery.extend(true, {}, val);
-				 $scope.onGroupChange($scope.b.group);
-				 $scope.onCategoryChange($scope.b.category);
+				 onGroupChange($scope.b.group);
+				 onCategoryChange($scope.b.category);
 			break;
 			case "Model":
 				$scope.modelEdit = true;
 				$scope.m = jQuery.extend(true, {}, val);
-				 $scope.onGroupChange($scope.m.group);
-				 $scope.onCategoryChange($scope.m.category);
+				 onGroupChange($scope.m.group);
+				 onCategoryChange($scope.m.category);
 			break;
 		}
 	 };
 
-	 $scope.update = function(type){
+	 function update(type){
 
 	 	$scope.submitted = true;
 	 	var dataToSend = {};
@@ -439,27 +434,38 @@ angular.module('sreizaoApp')
 			uploadSvc.upload($scope.fileObj.file,categoryDir).then(function(result){
 				  $scope.fileObj = {};
 		          dataToSend.imgSrc = result.data.filename;
-		          vm.updateMasterData(dataToSend);
+		          updateMasterData(dataToSend);
 		    });
 		}else
-			vm.updateMasterData(dataToSend);
+			updateMasterData(dataToSend);
  		
 	 }
 
-	 vm.updateMasterData = function(dataToSend){
-	 	$http.post("/api/common/updateMasterData",dataToSend)
- 		.success(function(){
+	 function updateMasterData(dataToSend){
+	 	MasterDataService.updateMasterData(dataToSend)
+	 	.then(function(){
  			Modal.alert( dataToSend.type + " updated successfully.",true);
  			loadAllGroup();
  			loadAllCategory();
  			loadAllBrand();
  			loadAllModel();
-			$scope.reset();
+			reset();
  		})
- 		.error(function(res){
- 			Modal.alert(res);
+ 		.catch(function(res){
+ 			Modal.alert(res.data);
  		})
 	 }
+
+	 function exportMasterData(level){
+	 	MasterDataService.exportMasterData({level:level})
+	 	.then(function(result){
+	 		saveAs(new Blob([s2ab(result)],{type:"application/octet-stream"}), "masterdatalist_"+ Math.ceil(Math.random()*100) +".xlsx")
+	 	})
+	 	.catch(function(res){
+	 		//error handling
+	 	})
+	 }
+
 	function filterObject(obj)
 	{
 		var retObject = {};
@@ -468,4 +474,6 @@ angular.module('sreizaoApp')
 		return retObject;
 	}
 
-}]);
+}
+
+})();

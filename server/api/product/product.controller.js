@@ -878,7 +878,7 @@ function importProducts(req,res,data){
       if(!categoryName){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Field marked with * are mandatory.";
+        errorObj['message'] = "Category is mandatory to be filled";//"Field marked with * are mandatory.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -900,7 +900,7 @@ function importProducts(req,res,data){
             if(!othCat){
                var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Field marked with * are mandatory.";
+              errorObj['message'] = "Other_Category is mandatory to be filled";//"Field marked with * are mandatory.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -916,7 +916,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
            errorObj['rowCount'] = req.counter + 2;
-          errorObj["message"] = "Category, Brand, Model relation does not exist in Master Data.";
+          errorObj["message"] = "Category '" + categoryName + "' does not exist in master data.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -931,7 +931,7 @@ function importProducts(req,res,data){
       if(!brandName){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Field marked with * are mandatory";
+        errorObj['message'] = "Product_Brand is mandatory to be filled";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -942,7 +942,7 @@ function importProducts(req,res,data){
       if(product.category['name'] == "Other" && brandName != "Other"){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Field marked with * are mandatory.";
+        errorObj['message'] = "Category '"+ product.category['name'] +"' and  Brand '" + brandName +"' relation does not exist.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -964,7 +964,7 @@ function importProducts(req,res,data){
             if(!othBrand){
                var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Field marked with * are mandatory.";
+              errorObj['message'] = "Other_Brand is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -982,7 +982,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
            errorObj['rowCount'] = req.counter + 2;
-          errorObj["message"] = "Category, Brand, Model relation does not exist in Master Data.";
+          errorObj["message"] = "Category, Brand relation does not exist in Master Data.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -996,7 +996,7 @@ function importProducts(req,res,data){
        if(!modelName){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Field marked with * are mandatory";
+        errorObj['message'] = "Product_Model is mandatory to be filled.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -1006,7 +1006,7 @@ function importProducts(req,res,data){
       if(product.brand['name'] == "Other" && modelName != "Other"){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Field marked with * are mandatory.";
+        errorObj['message'] = "Brand, Model relation does not exist in Master Data.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -1030,7 +1030,7 @@ function importProducts(req,res,data){
             if(!othModel){
                var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Field marked with * are mandatory.";
+              errorObj['message'] = "Other_Model is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1080,7 +1080,7 @@ function importProducts(req,res,data){
        if(!sellerEmail){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Field marked with * are mandatory";
+        errorObj['message'] = "Seller_Email_Address is mandatory to be filled.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -1104,7 +1104,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
           errorObj["rowCount"] = req.counter + 2;
-          errorObj["message"] = "Seller email id is not found";
+          errorObj["message"] = "Seller_Email_Address does not exist in the syatem.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -1119,7 +1119,7 @@ function importProducts(req,res,data){
         if(!country){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "Field marked with * are mandatory";
+          errorObj['message'] = "Country is mandatory to be filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -1132,18 +1132,28 @@ function importProducts(req,res,data){
         product["serialNo"] = trim(row["Machine_Serial_No"] || "");
 
         var tradeType = row["Trade_Type*"];
-        if(!tradeType){
+        if(!tradeType ){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "Trade type is not found.";
+          errorObj['message'] = "Trade_Type is mandatory to be filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
           return;
         }
+        tradeType = trim(tradeType);
+        if(['RENT','SELL','BOTH'].indexOf(tradeType) == -1){
+          var errorObj = {};
+          errorObj['rowCount'] = req.counter + 2;
+          errorObj['message'] = "Trade_Type should have a value selected from its picklist only.";
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          importProducts(req,res,data);
+          return;
+        }
+
         product["tradeType"] = trim(tradeType);
         if(tradeType != "RENT") {
-          
           var gp = row["Gross_Price*"];
           var prOnReq = trim(row["Price_on_Request*"]).toLowerCase();
           var cr = row["Currency*"];
@@ -1153,7 +1163,7 @@ function importProducts(req,res,data){
             } else {
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Currency/Gross Price is not found. In case, price on request, please select Yes.";
+              errorObj['message'] = "Gross_Price and Currency is mandatory to filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1174,7 +1184,7 @@ function importProducts(req,res,data){
         if(!state){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "State is not found.";
+          errorObj['message'] = "State is mandatory to filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -1186,7 +1196,7 @@ function importProducts(req,res,data){
         if(!location){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "State is not found.";
+          errorObj['message'] = "Location is mandatory to be filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -1198,7 +1208,7 @@ function importProducts(req,res,data){
         if(!mfgYear || mfgYear.length != 4){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = " Manufacturing Year should be in YYYY format.";
+          errorObj['message'] = " Manufacturing_Year should be in YYYY format.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);
@@ -1241,7 +1251,7 @@ function importProducts(req,res,data){
           if(!fromDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
-            errorObj['message'] = "Availability of asset from date is not found.";
+            errorObj['message'] = "Availability_of_Asset_From is required to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             importProducts(req,res,data);
@@ -1252,7 +1262,7 @@ function importProducts(req,res,data){
           if(!fromDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
-            errorObj['message'] = "Availability of asset to date is not found.";
+            errorObj['message'] = "Availability_of_Asset_To is required to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             importProducts(req,res,data);
@@ -1265,7 +1275,7 @@ function importProducts(req,res,data){
             if(!minPeriodH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Min rental period hours is not found.";
+              errorObj['message'] = "Min_Rental_Period_Hours is required to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1277,7 +1287,7 @@ function importProducts(req,res,data){
             if(!maxPeriodH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Max rental period hours is not found.";
+              errorObj['message'] = "Max_Rental_Period_Hours is required to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1289,7 +1299,7 @@ function importProducts(req,res,data){
             if(!rentAmountH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Rent amount hours is not found.";
+              errorObj['message'] = "Rent_Amount_Hours is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1301,7 +1311,7 @@ function importProducts(req,res,data){
             if(!seqDepositH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Security deposi hours is not found.";
+              errorObj['message'] = "Security_Deposit_Hours is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1315,7 +1325,7 @@ function importProducts(req,res,data){
             if(!minPeriodD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Min rental period days is not found.";
+              errorObj['message'] = "Min_Rental_Period_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1327,7 +1337,7 @@ function importProducts(req,res,data){
             if(!maxPeriodD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Max rental period days is not found.";
+              errorObj['message'] = "Max_Rental_Period_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1339,7 +1349,7 @@ function importProducts(req,res,data){
             if(!rentAmountD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Rent amount days is not found.";
+              errorObj['message'] = "Rent_Amount_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1351,7 +1361,7 @@ function importProducts(req,res,data){
             if(!seqDepositD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Security deposi days is not found.";
+              errorObj['message'] = "Security_Deposit_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1365,7 +1375,7 @@ function importProducts(req,res,data){
             if(!minPeriodM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Min rental period months is not found.";
+              errorObj['message'] = "Min_Rental_Period_Months is mandatory to filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1377,7 +1387,7 @@ function importProducts(req,res,data){
             if(!maxPeriodM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Max rental period months is not found.";
+              errorObj['message'] = "Max_Rental_Period_Months is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1389,7 +1399,7 @@ function importProducts(req,res,data){
             if(!rentAmountM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Rent amount months is not found.";
+              errorObj['message'] = "Rent_Amount_Months is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1401,7 +1411,7 @@ function importProducts(req,res,data){
             if(!seqDepositM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Security deposi months is not found.";
+              errorObj['message'] = "Security_Deposit_Months is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);

@@ -115,7 +115,10 @@
                       <td>Product Condition</td>
                       <td>{{currentProduct.productCondition}}</td>
                     </tr>
-                    
+                    <tr ng-repeat="link in currentProduct.videoLinks">
+                      <td>Video Link</td>
+                      <td><a ng-href="{{link.uri}}" target="_blank">{{link.uri}}</a></td>
+                    </tr>
                   </table>
                 </uib-accordion-group>
 

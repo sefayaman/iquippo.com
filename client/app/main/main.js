@@ -162,7 +162,7 @@ angular.module('sreizaoApp')
       .state('masterdata', {
         url: '/masterdata',
         templateUrl: 'app/admin/masterdata/masterdata.html',
-        controller: 'MasterDataCtrl',
+        controller: 'MasterDataCtrl as masterDataVm',
         authenticate:true,
         layout:'admin',
         restrict:true

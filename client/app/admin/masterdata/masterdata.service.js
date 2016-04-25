@@ -1,3 +1,6 @@
+(function(){
+	'use strict';
+
 angular.module('sreizaoApp')
 .service('MasterDataService',[ '$q', '$http','$rootScope',
 	function($q,$http,$rootScope) {
@@ -113,7 +116,47 @@ angular.module('sreizaoApp')
 					deferred.reject({"Message":JSON.stringify(errors),"Code":"FAILED"});
 			});
 			return deferred.promise;       
+	    },
+
+	    this.importMasterData = function(serData){	
+	    	return $http.post('/api/common/importMasterData',serData)
+	    			.then(function(res){
+	    				return res.data;
+	    			})
+	    			.catch(function(res){
+	    				throw res;
+	    			})
+	    },
+
+	    this.deleteMasterData = function(serData){	
+	    	return $http.post('/api/common/deleteMasterData',serData)
+	    			.then(function(res){
+	    				return res.data;
+	    			})
+	    			.catch(function(res){
+	    				throw res;
+	    			})
+	    },
+	    this.updateMasterData = function(serData){	
+	    	return $http.post('/api/common/updateMasterData',serData)
+	    			.then(function(res){
+	    				return res.data;
+	    			})
+	    			.catch(function(res){
+	    				throw res;
+	    			})
+	    },
+	    this.exportMasterData = function(serData){	
+	    	return $http.post('/api/common/exportMasterData',serData)
+	    			.then(function(res){
+	    				return res.data;
+	    			})
+	    			.catch(function(res){
+	    				throw res;
+	    			})
 	    }
 		
 	}
 ]);
+
+})();

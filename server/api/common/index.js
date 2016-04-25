@@ -11,6 +11,7 @@ router.post('/notificationTemplate', controller.compileHtml);
 router.post('/gethelp', controller.getHelp);
 router.post('/buildsuggestion', controller.buildSuggestion);
 router.post('/importMasterData', controller.importMasterData);
+router.post('/exportMasterData', controller.exportMasterData);
 router.post('/deleteMasterData', controller.deleteMasterData);
 router.post('/updateMasterData', controller.updateMasterData);
 router.post('/rotate', controller.rotate);

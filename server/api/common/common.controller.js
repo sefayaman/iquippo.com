@@ -359,6 +359,116 @@ function deleteMasterData(req,res){
 	});
 }
 
+exports.exportMasterData = function(req,res){
+	var level = req.body.level;
+	var collectionRef = null;
+	if(level == 'category')
+		collectionRef = Category;
+	else
+		collectionRef = Model;
+	collectionRef.find({},function(err,data){
+		if(err){return handleError(res, err)}
+		else{
+	        var ws_name = "masterData"
+	        var wb = new Workbook();
+	        var ws = excel_from_data(data,level);
+	        wb.SheetNames.push(ws_name);
+	        wb.Sheets[ws_name] = ws;
+	        var wbout = xslx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+	        res.end(wbout);
+		}
+	});
+}
+
+function Workbook() {
+  if(!(this instanceof Workbook)) return new Workbook();
+  this.SheetNames = [];
+  this.Sheets = {};
+}
+
+function datenum(v, date1904) {
+  if(date1904) v+=1462;
+  var epoch = Date.parse(v);
+  return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
+}
+ 
+function setType(cell){
+  if(typeof cell.v === 'number')
+    cell.t = 'n';
+  else if(typeof cell.v === 'boolean')
+      cell.t = 'b';
+  else if(cell.v instanceof Date)
+   {
+        cell.t = 'n'; cell.z = xslx.SSF._table[14];
+        cell.v = datenum(cell.v);
+    }
+    else cell.t = 's';
+}
+
+function excel_from_data(data, level) {
+  var ws = {};
+  var range;
+  if(level == 'category')
+    range = {s: {c:0, r:0}, e: {c:2, r:data.length }};
+  else
+    range = {s: {c:0, r:0}, e: {c:4, r:data.length }};
+
+  for(var R = 0; R != data.length + 1 ; ++R){
+    var C = 0;
+    var dt = null;
+    if(R != 0)
+      dt = data[R-1];
+    var cell = null;
+    if(R == 0)
+      cell = {v: "Product_Group"};
+    else{
+      if(dt)
+        cell =  {v: dt.group.name};
+    }
+    setType(cell);
+    var cell_ref = xslx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+     if(R == 0)
+      cell = {v: "Product_Category"};
+    else{
+      if(dt){
+      	if(level == 'category')
+      		cell =  {v: dt.name};
+      	else{
+      		cell =  {v: dt.category.name};
+      	}
+      }
+    }
+    setType(cell);
+    var cell_ref = xslx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+    if(level == 'category')
+    	continue;
+
+     if(R == 0)
+      cell = {v: "Brand_Name"};
+    else{
+      if(dt)
+        cell =  {v: dt.brand.name};
+    }
+    setType(cell);
+    var cell_ref = xslx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+     if(R == 0)
+      cell = {v: "Model_No"};
+    else{
+      if(dt)
+        cell =  {v: dt.name};
+    }
+    setType(cell);
+    var cell_ref = xslx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+  }
+  ws['!ref'] = xslx.utils.encode_range(range);
+  return ws;
+}
 
 exports.importMasterData = function(req,res){
   var fileName = req.body.fileName;
