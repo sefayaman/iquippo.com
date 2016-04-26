@@ -64,6 +64,7 @@
                         <table class="table table-bordered">
                           <thead>
                             <tr class="success">
+                              <th>Asset ID</th>
                               <th width="30%">Group</th>
                               <th>Category</th>
                               <th>Brand</th>
@@ -74,6 +75,7 @@
                           </thead>
                           <tbody>
                             <tr ng-repeat="prd in bulkProduct.products">
+                              <td>{{prd.assetId}}</td>
                               <td>{{prd.group.name}}</td>
                               <td>{{prd.category.name}}</td>
                               <td>{{prd.brand.name}}</td>
@@ -96,6 +98,7 @@
       <div class="col-md-12"> 
             <div class="row">
               <div class="col-md-10 col-md-offset-1">
+                <h4>Asset Id: {{bulkProduct.currentProduct.assetId}}</h4>
                 <input type="file" name="img[]" class="file">
                 <div class="input-group col-md-12">
                   <input type="text" class="form-control input-md" disabled placeholder="Browse images to Upload">

@@ -1217,6 +1217,18 @@ function importProducts(req,res,data){
         }
         product["mfgYear"] = mfgYear;
 
+        var assetId = row["Asset_ID*"];
+        if(!assetId){
+          var errorObj = {};
+          errorObj['rowCount'] = req.counter + 2;
+          errorObj['message'] = "Asset_ID is mandatory to be filled.";
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          importProducts(req,res,data);
+          return;
+        }
+        product["assetId"] = trim(assetId);
+
         product["isSold"] = false;
         product["status"] = true;
         product["expiryAlert"] = false;
