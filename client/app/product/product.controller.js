@@ -121,7 +121,7 @@ angular.module('sreizaoApp')
         item.isEdit = true;
         item.name = item.src;
       });
-      if(!$scope.product.videoLinks)
+      if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
          $scope.product.videoLinks = [{}];
 
       $scope.product.country = $scope.product.country;
@@ -176,8 +176,8 @@ angular.module('sreizaoApp')
       $scope.productName = $scope.product.name;
       if($scope.product.category.name == 'Other')
           $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
-	  
-	    if($state.current.name == "productrelisting") {
+    
+      if($state.current.name == "productrelisting") {
         $scope.relistingEnable = true;
       } else if($state.current.name == "productedit"){
         $scope.enableButton = !Auth.isAdmin() && product.status;
@@ -401,11 +401,11 @@ angular.module('sreizaoApp')
         suggestions[suggestions.length] = {text:$scope.selectedBrand.otherName};
        if($scope.selectedModel.otherName)
         suggestions[suggestions.length] = {text:$scope.selectedModel.otherName}; 
-	     if($state.current.name == "productrelisting") {
-	          product.expired = false;
-	          product.relistingDate = new Date();
-	        }
-	    
+       if($state.current.name == "productrelisting") {
+            product.expired = false;
+            product.relistingDate = new Date();
+          }
+      
       if($scope.selectedSubCategory){
          product.subcategory = {};
          product.subcategory['_id'] = $scope.selectedSubCategory['_id'];
@@ -441,6 +441,10 @@ angular.module('sreizaoApp')
             $scope.product.images[$scope.product.images.length] = imgObj;
           }
           
+      });
+
+      $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item,idx){
+          return item.uri;
       });
 
       if($scope.product.images.length == 0){

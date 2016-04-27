@@ -271,6 +271,7 @@ function searchUtil(item,toSearch, type)
         productSvc.bulkProductUpdate(serData)
         .then(function(result){
           loadProducts();
+          selectedIds = [];
           $rootScope.loading = false;
         })
         .catch(function(res){

@@ -8,6 +8,7 @@ angular.module("admin",[]);
 angular.module('sreizaoApp',[
   'ngCookies',
   'ngResource',
+  'ngAnimate',
   'ngSanitize',
   'ui.router', 
   'ui.bootstrap',

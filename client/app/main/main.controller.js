@@ -20,9 +20,21 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
     vm.getLocationHelp = getLocationHelp;
+    vm.toggleCategory = toggleCategory;
 
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = beginVertScroll;
+    $scope.categoryList = [{},{},{}];
+
+    function toggleCategory(){
+      vm.isCollapsed = !vm.isCollapsed;
+      if(vm.isCollapsed)
+         $scope.categoryList = vm.activeCategoryList.slice(0,9);
+       else
+        $scope.categoryList = vm.activeCategoryList;
+
+
+    }
 
     function getFeaturedProduct(){
 
@@ -40,6 +52,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       categorySvc.getCategoryForMain()
       .then(function(result){
           vm.activeCategoryList = result;
+          $scope.categoryList = vm.activeCategoryList.slice(0,9);
       })
       .catch(function(res){
         //error handling

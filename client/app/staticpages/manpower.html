@@ -1,36 +1,114 @@
 <div class="container">
-		<div class="col-sm-12 text-justify">
-			<h3>Manpower</h3>
-			<legend></legend>
+    <div class="col-sm-6 text-justify">
+      <h3>Manpower</h3>
+      <legend></legend>
 
-			<p>
-				Operators are essential to run equipment both effectively and efficiently. This portal would help you find the best and trained operators for your assets. Furthermore, the portal offers this as a service in and with its Wet Lease products. 
-			</p>
-
-      <p>
-        This section of the websites - provides the following services:
-      </p>
+      <h5>Trusted Services, One Portal</h5>
 
       <ul>
-        <li>Let the Operators enrol themselves, get listed and viewed, serving as a specialized job portal.</li>
-
-        <li>We collaborate with Operator Training Institutes and manufacturers to get them work with us on iQuippo.</li>
+        <li>
+          Operators are essential to run equipment both effectively and efficiently. This portal would help you find the best and trained operators for your assets. 
+        </li>  
+        <li>
+          Furthermore, the portal offers this as a service in and with its Wet Lease products. This section of the websites - provides the following services:
+        </li> 
       </ul>
+
+      <p>
+        <strong>Operators</strong>: Enroll themselves -> Get listed -> Viewed 
+        Serves as a specialised job portal
+
+      </p>
+      <p>
+        <strong>Operator Training Institutes and Manufacturers</strong>: Collaboration with us on iQuippo.
+      </p>
 
       <p>
         This hand-on-service from getting operators to get the machines running to search a job and also to get trained in it is unique to the iQuippo platform.
       </p>
 
-			<!-- <div class="serve text-center">
-					<a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('shippingquote')">Request a Quote</a>
-			</div> -->
-		</div>
-		<!-- <div class="col-sm-6">
-			<h3>Man Power Quote</h3>
-      		<legend></legend>
+      <!-- <div class="serve text-center">
+          <a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('shippingquote')">Request a Quote</a>
+      </div> -->
+    </div>
+    <div class="col-sm-6">
+      <h3>Man Power Quote</h3>
+          <legend></legend>
      
-			<form class="form" ng-submit="addShippingQuote($event)" novalidate name="form">
-        <div class="form-group">                    
+      <form class="form" ng-submit="addShippingQuote($event)" novalidate name="form">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="shippingQuote.fname" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">                                      
+                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="shippingQuote.mname">
+              </div>
+            </div>
+          </div>  
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
+                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="shippingQuote.lname" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+                <select class="form-control" ng-model="shippingQuote.country" name="country" required>
+                  <option value="">*Select Country</option>
+                  <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>  
+          <div class="row">
+            <div class="col-xs-6">
+                    <select class="form-control" name="location" ng-model="shippingQuote.city">
+                      <option value="" disabled>Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="shippingQuote.companyname">
+              </div>
+            </div>
+            
+          </div>  
+
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="shippingQuote.designation">
+              </div>
+            </div>
+
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="shippingQuote.phone">
+              </div>
+            </div>
+            
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
+               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+              <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="shippingQuote.email" required>
+              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+              Please enter a valid email.
+              </p>
+              </div>
+            </div>
+          </div>                     
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
@@ -77,4 +155,4 @@
           <button type="submit" class="btn btn-warning">Submit</button>
         </div>
       </form>
-</div> -->
+</div>
