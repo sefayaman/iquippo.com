@@ -3,8 +3,10 @@
       <div class="container">
         <ol class="breadcrumb">
           <li><a href="/">Home</a></li>
-          <li><a href="/viewproducts">View Products</a></li>
-          <li><a class="active">Product Detail</a></li>          
+          <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
+          <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
+          <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
+          <li><a class="active">{{currentProduct.name}}</a></li>          
         </ol>
         <div class="row">
           <div class="col-sm-7 col-md-5">

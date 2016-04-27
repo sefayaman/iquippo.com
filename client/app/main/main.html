@@ -44,14 +44,14 @@
   <div class="container">
    
     <div class="row main-container">
-      <div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
+    <div class="col-sm-2 col-md-2 hidden-xs">
         <img ng-if="mainVm.imgLeftTop" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop}}" class="img-responsive add1">
         <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
         <div class="form-group"></div>
         <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
         <img ng-if="mainVm.imgLeftBottom" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftBottom}}" class="img-responsive add1">
       </div>
-      <div class="col-sm-9 col-md-8">
+      <div class="col-sm-10 col-md-7 padd-left">
         <div class="head">
           <h4>Categories</h4>
           <legend class="dull"></legend>
@@ -60,7 +60,7 @@
 
         <div class="cat cat-product text-center">
           <ul class="cat-list" ng-if="mainVm.isCollapsed">
-            <li  ng-repeat="category in mainVm.activeCategoryList" ng-if="$index < 8">
+            <li  ng-repeat="category in mainVm.allCategoryList" ng-if="$index < 9">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>
@@ -69,7 +69,7 @@
             </li>
           </ul>
           <ul class="cat-list" ng-if="!mainVm.isCollapsed">
-            <li  ng-repeat="category in mainVm.activeCategoryList">
+            <li  ng-repeat="category in mainVm.allCategoryList">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>
@@ -82,14 +82,14 @@
           </div>
         </div>
 
-        <div class="form-group"></div>
+        <!-- <div class="form-group"></div>
         <div class="form-group clearfix"></div>
         <div class="head">
           <h4>Services</h4>
           <legend class="dull"></legend>
           <legend class="dark"></legend>
-        </div>
-        <div class="cat text-center">
+        </div> -->
+        <!-- <div class="cat text-center form-group">
           <ul class="cat-list">
              <li>
               <a href="/manpower">
@@ -97,12 +97,6 @@
                
               </a>
             </li>
-            <!--<li>
-              <a href="/insurance">
-                <img src="assets/images/insurance.png"> Insurance
-                
-              </a>
-            </li> -->
             <li>
               <a href="/shipping">
                 <img src="assets/images/transport.png"> Shipping
@@ -121,40 +115,128 @@
             </li>
           </ul>
 
-        </div>
+        </div> -->
       </div>
-      <div class="col-sm-3 col-md-2 padd-left hidden-xs">
+      
+      <div class="col-sm-2 col-md-3 hidden-xs padd-left">
         <div class="panel panel-primary">
-          <div class="panel-heading text-center">
-            <div class="panel-title">Featured Products</div>
-            <hr>
+            <div class="panel-heading">
+              <h3 class="panel-title">News &amp; Events</h3>
+            </div>
+            <div class="panel-body">
+              <div class="media form-group">
+                <a class="pull-left" href="#">
+                  <img src="assets/images/best-offer.jpg" width="100">
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">News heading</h4>
+                  <p>
+                    <small>
+                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
+                    </small>
+
+                  </p>
+                </div>
+              </div>
+
+              <div class="media form-group">
+                <a class="pull-left" href="#">
+                  <img src="assets/images/best-offer.jpg" width="100">
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">News heading</h4>
+                  <p>
+                    <small>
+                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
+                    </small>
+
+                  </p>
+                </div>
+              </div>
+              <div class="media form-group">
+                <a class="pull-left" href="#">
+                  <img src="assets/images/best-offer.jpg" width="100">
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">News heading</h4>
+                  <p>
+                    <small>
+                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
+                    </small>
+
+                  </p>
+                </div>
+              </div>
+              <div class="media form-group">
+                <a class="pull-left" href="#">
+                  <img src="assets/images/best-offer.jpg" width="100">
+                </a>
+                <div class="media-body">
+                  <h4 class="media-heading">News heading</h4>
+                  <p>
+                    <small>
+                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
+                    </small>
+
+                  </p>
+                </div>
+              </div>
+            </div>  
           </div>
-          <div class="panel-body text-center">           
-            <!--carousel start -->
-            <ul class="verContainer" drctv>
-              <li ng-repeat="slide in mainVm.featuredslides">
-              <a  ng-href="/productdetail/{{slide._id}}" onmouseover="hover(this)" data-index="{{$index}}" onmouseout="leave()">
-                <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}">
-              </a>
-                <div class="popover left" id="popover_{{$index}}"> <div class="arrow"></div> <h3 class="popover-title">{{slide.name}}</h3> <div class="popover-content"> 
-                  <div class="row form-group">
-                      <div class="col-sm-6"><small>{{slide.brand.name}}</small></div>
-                      <div class="col-sm-6"><small>{{slide.model.name}}</small></div>
-                  </div>
-                  <div class="row">
-                      <div class="col-sm-6"><small>{{slide.city}}</small></div>
-                      <div class="col-sm-6"><small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</small><small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small></div>
-                  </div>
-                </div> 
-                </div>               
-              </li>
-            </ul>
-          </div>
-          <div class="panel-footer"></div>
-        </div>
       </div>
-      <!--carousel close -->
+     
     </div>
+        <div class="form-group"></div>
+        <div class="form-group clearfix"></div>
+
+          <div class="head clear-fix">
+            <h4>Feature Products</h4>
+            <legend class="dull"></legend>
+            <legend class="dark"></legend>
+          </div>
+          <!-- <ul class="verContainer" drctv>
+            <li ng-repeat="slide in mainVm.featuredslides">
+            <a  ng-href="/productdetail/{{slide._id}}" onmouseover="hover(this)" data-index="{{$index}}" onmouseout="leave()">
+              <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}">
+            </a>
+              <div class="popover left" id="popover_{{$index}}"> <div class="arrow"></div> <h3 class="popover-title">{{slide.name}}</h3> <div class="popover-content"> 
+                <div class="row form-group">
+                    <div class="col-sm-6"><small>{{slide.brand.name}}</small></div>
+                    <div class="col-sm-6"><small>{{slide.model.name}}</small></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6"><small>{{slide.city}}</small></div>
+                    <div class="col-sm-6"><small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</small><small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small></div>
+                </div>
+              </div> 
+              </div>               
+            </li>
+          </ul> -->
+          <data-owl-carousel class="owl-carousel" data-options="{navigation: true, pagination: false, rewindNav : false}" owlCarouselItem>
+            <div owl-carousel-item="" ng-repeat="slide in mainVm.featuredslides" class="item">
+              <div class="panel panel-default">  
+                    <a ng-href="/productdetail/{{slide._id}}">
+                      <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
+                    </a> 
+                    <div class="panel-heading">
+                      <h3 class="panel-title">{{slide.name}}</h3>
+                    </div>                  
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class="col-xs-6 form-group">{{slide.brand.name}}</div>
+                        <div class="col-xs-6 form-group">{{slide.model.name}}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-6 form-group">{{slide.city}}</div>
+                        <div class="col-xs-6 form-group">
+                          <small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</small>
+                          <small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small>
+                        </div>
+                      </div>
+                    </div>
+                </div>              
+            </div>
+          </data-owl-carousel>
   </div>
 </section>
 <div class="container text-center form-group">
