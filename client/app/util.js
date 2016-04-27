@@ -52,10 +52,15 @@ function leave(){
 angular.module('sreizaoApp').
 factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
     var UploadFile = {};
-    UploadFile.upload = function(file,assetDir){
+    UploadFile.upload = function(file,assetDir,resizeParam){
       var uploadPath = '/api/uploads';
       if(assetDir)
         uploadPath += "?assetDir=" + assetDir;
+      if(resizeParam && resizeParam.resize){
+        if(assetDir)
+          uploadPath += "&";
+        uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height;
+      }
       var fd = new FormData();
       fd.append("file", file);
       //$rootScope.loading = true;
@@ -75,10 +80,13 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
     };
     
      //the save with files as array method
-    UploadFile.saveFiles = function(fileObj,assetDir) {
+    UploadFile.saveFiles = function(fileObj,assetDir,resizeParam) {
        var uploadPath = "/api/multiplefile/upload";
       if(assetDir)
         uploadPath += "?assetDir=" + assetDir;
+      if(resizeParam && resizeParam.resize){
+        uploadPath += "&resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height;
+      }
        //$rootScope.loading = true;
        return $http({
             method: 'POST',

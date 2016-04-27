@@ -14,14 +14,8 @@
                         
                             Product Information
                     </div>
-                    <!-- <div class="col-sm-1">
-                        <span class="btn btn-success fileinput-button pull-right" ng-if="isAdmin()">
-                            <i class="fa fa-file-excel-o"></i><span> Import</span>
-                            <input type="file" name="file" onchange="angular.element(this).scope().importProducts(this.files,this)">
-                        </span>
-                    </div> -->
                     <div class="col-sm-1">
-                        <button class="btn btn-md btn-success pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                        <button class="btn btn-md btn-success pull-right" ng-click="productListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
                     </div>
                   </div>
                         </h3>
@@ -29,14 +23,21 @@
                         <div class="clearfix"></div>
                     </div>
                   </div>
+                  <div class="btn-group pull-right form-group">
+                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('active')">Activate</button>
+                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('deactive')">Deactivate</button>
+                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('delete')">Delete</button>
+                  </div>
+
                   <div class="featured-pro">
-                    <input type="checkbox" id="" name="featured" ng-model="featured" ng-value="featured" ng-click="featuredCommand(featured)"> Featured
+                    <input type="checkbox" id="" name="featured" ng-model="featured" ng-value="featured" ng-click="productListingVm.featuredCommand(featured)"> Featured
                   </div>
                   <div class="table-responsive">
                     <table datatable="ng" id="product_listing_table" dt-options= "dtOptions" dt-instance="tableRef" class="table table-bordred table-striped">
 
                       <thead>
                         <tr>
+                          <th>Select</th>
                           <th width="8"></th>
                           <th width="65">Product ID</th>
                           <th width="70">Trading Type</th>
@@ -45,20 +46,21 @@
                           <th>Model</th>                          
                           <th width="70">Price</th> 
                           <th>Image Count</th>
-                          <th>Seller & Type</th>                         
+                          <th>Seller &amp; Type</th>                         
                           <th width="70">Mfg. Year</th>
                           <th>Location</th>                          
                           <th>Age</th>
                           <!-- <th width="70">Expiry Date</th> -->
                           <th>Status</th>
-                          <th width="12%">Actions</th>
+                          <th width="10%">Actions</th>
                         </tr>                      
                       </thead>
                       <tbody>
 
                         <tr ng-repeat="product in globalProductList" ng-class="{'info':product.featured}">
+                          <td><input type="checkbox" ng-click="productListingVm.updateSelection($event,product._id)"/></td>
                           <td ng-disabled="!product.expired">
-                              <a ng-disabled="!product.expired" href="javascript:void(0);" ng-click="productRelistingHandler(product)" class="btn btn-primary btn-sm" uib-popover="Relisting" popover-trigger="mouseenter">
+                              <a ng-disabled="!product.expired" href="javascript:void(0);" ng-click="productListingVm.productRelistingHandler(product)" class="btn btn-primary btn-sm" uib-popover="Relisting" popover-trigger="mouseenter">
                                 <i class="fa fa-retweet"></i>
                               </a>
                             
@@ -83,28 +85,28 @@
                           </td>                      
                           <td>{{product.images.length}}</td>
                           <td>
-                              <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>
+                              <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="productListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>
 
-                              <a ng-if="product.seller.userType == 'private'" href="javascript:void(0);" ng-click="previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Private Entrepreneur)</a>
+                              <a ng-if="product.seller.userType == 'private'" href="javascript:void(0);" ng-click="productListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Private Entrepreneur)</a>
 
-                              <a  ng-if="product.seller.userType == 'legalentity'" href="javascript:void(0);" ng-click="previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Legal Entity)</a>
+                              <a  ng-if="product.seller.userType == 'legalentity'" href="javascript:void(0);" ng-click="productListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Legal Entity)</a>
 
                           </td>
                           
                           <td>{{product.mfgYear}}</td>
                           <td>{{product.country}}</td>
                           <!-- <td>{{product.productCondition}}</td> -->
-                          <td>{{dayDiff(product.relistingDate)}}</td>
-                          <!-- <td>{{getExpireDate(product.relistingDate)}}</td> -->
-                          <td>{{getStatus(product.status, product.isSold)}}</td>
+                          <td>{{productListingVm.dayDiff(product.relistingDate)}}</td>
+                          <!-- <td>{{productListingVm.getExpireDate(product.relistingDate)}}</td> -->
+                          <td>{{productListingVm.getStatus(product.status, product.isSold)}}</td>
                           <td>
-                          <!-- <a href="javascript:void(0);" ng-click="productHistoryHandler(product)" type="button" class="btn btn-success btn-sm" uib-popover="View Detail" popover-trigger="mouseenter">
+                          <!-- <a href="javascript:void(0);" ng-click="productListingVm.productHistoryHandler(product)" type="button" class="btn btn-success btn-sm" uib-popover="View Detail" popover-trigger="mouseenter">
                             <i class="fa fa-eye"></i>
                           </a> -->
-                           <a href="javascript:void(0);" ng-disabled="product.isSold" ng-click="productEditHandler(product)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+                           <a href="javascript:void(0);" ng-disabled="product.isSold" ng-click="productListingVm.productEditHandler(product)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
                             <i class="fa fa-pencil"></i>
                           </a>
-                            <button class="btn btn-danger btn-sm" ng-disabled="product.isSold" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="deleteProduct(product)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
+                            <button class="btn btn-danger btn-sm" ng-disabled="product.isSold" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="productListingVm.deleteProduct(product)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
                                 </span>
                               </button>
                           </td>

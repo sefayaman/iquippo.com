@@ -1,10 +1,30 @@
+(function(){
 'use strict';
+angular.module('product').controller('ProductListingCtrl',ProductListingCtrl);
 
-angular.module('sreizaoApp')
- .controller('ProductListingCtrl',['$scope','$rootScope', '$http', 'productSvc', 'classifiedSvc','Modal', 'DTOptionsBuilder', '$uibModal', '$state','Auth', 'notificationSvc','uploadSvc','$timeout','$stateParams', function($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+  var vm  = this;
+
+  vm.featuredCommand = featuredCommand;
+  vm.dayDiff = dayDiff;
+  //vm.getExpireDate = getExpireDate;
+  vm.getStatus = getStatus;
+  vm.deleteProduct = deleteProduct;
+  vm.productRelistingHandler = productRelistingHandler;
+  vm.productEditHandler = productEditHandler;
+  vm.productHistoryHandler = productHistoryHandler;
+  vm.previewSellerDetail = previewSellerDetail;
+  vm.exportExcel = exportExcel;
+  vm.updateSelection = updateSelection;
+  vm.bulkUpdate = bulkUpdate;
+
+
+  var selectedIds = [];
+
   $scope.globalProductList = [];
   var dataToSend = {};
-  //$rootScope.enableButton = false;
+  
+
   $scope.tableRef = {};
   $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withOption('stateSave',true)
   .withOption('stateLoaded',function(){
@@ -12,56 +32,64 @@ angular.module('sreizaoApp')
       $timeout(function(){
           $scope.tableRef.DataTable.page($rootScope.currentProductListingPage).draw(false);
           $rootScope.currentProductListingPage = 0;
-      },10)
-      
+      },10)  
   });
 
-  if(Auth.getCurrentUser()._id){
-    if(Auth.getCurrentUser().role != 'admin') {
-      if(Auth.getCurrentUser().role == 'channelpartner')
-        dataToSend["role"] = Auth.getCurrentUser().role;
-      dataToSend["userid"] = Auth.getCurrentUser()._id;
-     }
-     getProducts();
-  }else{
-      //refresh case
-      Auth.isLoggedInAsync(function(loggedIn){
-         if(loggedIn){
-            if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') {
-              if(Auth.getCurrentUser().role == 'channelpartner')
-                dataToSend["role"] = Auth.getCurrentUser().role;
-              dataToSend["userid"] = Auth.getCurrentUser()._id;
-             }
-             getProducts();
-         }
-      });
-  }
-  
-   function getProducts(){
-      $http.post('/api/products/search', dataToSend).success(function(srchres){
-         $scope.globalProductList = srchres;
-   });
-   }
+  function loadProducts(){
 
-  $scope.featuredCommand = function(featured){
+    if(Auth.getCurrentUser()._id){
+      if(Auth.getCurrentUser().role != 'admin') {
+        if(Auth.getCurrentUser().role == 'channelpartner')
+          dataToSend["role"] = Auth.getCurrentUser().role;
+        dataToSend["userid"] = Auth.getCurrentUser()._id;
+       }
+       productSvc.getProductOnFilter(dataToSend)
+       .then(function(result){
+          $scope.globalProductList = result;
+       })
+    }else{
+        //refresh case
+        Auth.isLoggedInAsync(function(loggedIn){
+           if(loggedIn){
+              if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') {
+                if(Auth.getCurrentUser().role == 'channelpartner')
+                  dataToSend["role"] = Auth.getCurrentUser().role;
+                dataToSend["userid"] = Auth.getCurrentUser()._id;
+               }
+                productSvc.getProductOnFilter(dataToSend)
+               .then(function(result){
+                  $scope.globalProductList = result;
+               })
+           }
+        });
+    }
+  }
+
+  loadProducts();
+  
+  function featuredCommand(featured){
     dataToSend["featured"] = featured;
-    getProducts();
+    productSvc.getProductOnFilter(dataToSend)
+     .then(function(result){
+        $scope.globalProductList = result;
+     })
   }
 
-  $scope.expiredProduct = []; 
-  $scope.dayDiff = function(createdDate){
-  var date2 = new Date(createdDate);
-  var date1 = new Date();
-  var timeDiff = Math.abs(date2.getTime() - date1.getTime());   
-  var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-  
-  if(dayDifference > 1)
-    return dayDifference + 'Days';
-  else
-    return dayDifference + 'Day';
+  $scope.expiredProduct = [];
+
+  function dayDiff(createdDate){
+    var date2 = new Date(createdDate);
+    var date1 = new Date();
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());   
+    var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+    
+    if(dayDifference > 1)
+      return dayDifference + 'Days';
+    else
+      return dayDifference + 'Day';
   }
 
-  $scope.getExpireDate = function(createdDate){
+  function getExpireDate(createdDate){
     if(!createdDate)
       return;
 
@@ -72,7 +100,7 @@ angular.module('sreizaoApp')
     return moment(dateFormated).format('DD/MM/YYYY');
   }
 
-  $scope.getStatus = function(status, sold){
+  function getStatus(status, sold){
     if(sold == true && status == false)
       return "Sold";
     else if(sold == false && status == true)
@@ -82,7 +110,7 @@ angular.module('sreizaoApp')
     }
    
 
-  $scope.deleteProduct = function(product){
+  function deleteProduct(product){
     product.deleted = true;
     productSvc.updateProduct(product).then(function(result){
         //console.log("Product Deleted",result.data);
@@ -96,27 +124,26 @@ angular.module('sreizaoApp')
       });
   }
 
-  $scope.productRelistingHandler = function(product){
+  function productRelistingHandler(product){
     $rootScope.currentProductListingPage = $scope.tableRef.DataTable.page();
     $state.go('productrelisting', {id:product._id});
   }
 
-  $scope.productEditHandler = function(product){
+  function productEditHandler(product){
    $rootScope.currentProductListingPage = $scope.tableRef.DataTable.page();
    $state.go('productedit', {id:product._id});
   }
 
-  $scope.productHistoryHandler = function(product){
+  function productHistoryHandler(product){
     $rootScope.currentProductListingPage = $scope.tableRef.DataTable.page();
      $state.go('producthistory', {id:product._id});
     }
 
        // preview uploaded images
-  $scope.previewSellerDetail = function(selectedProduct){ 
+  function previewSellerDetail(selectedProduct){ 
           var prevScope = $rootScope.$new();
           var prvProduct = {};
           angular.copy($scope.product,prvProduct);
-
           prvProduct.fname = selectedProduct.seller.fname;
           prvProduct.lname = selectedProduct.seller.lname;
           prvProduct.email = selectedProduct.seller.email;
@@ -144,54 +171,40 @@ angular.module('sreizaoApp')
           }
      }
 
-     $scope.exportExcel = function(){
-      var dataToSend ={};
-      if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') 
+     function exportExcel(){
+        var dataToSend ={};
+        if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') 
         dataToSend["userid"] = Auth.getCurrentUser()._id;
-   
-      $http.post('/api/products/export', dataToSend)
-      .then(function(res){
-        var data = res.data;
-        saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
-      },
-      function(res){
-      })
+        productSvc.exportProduct(dataToSend)
+        .then(function(buffData){
+          saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
+        });
      }
 
-     //bulk product upload
+     function updateSelection(event,id){
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add' && selectedIds.indexOf(id) == -1)
+          selectedIds.push(id)
+        if(action == 'remove' && selectedIds.indexOf(id) != -1)
+          selectedIds.splice(selectedIds.indexOf(id),1);
+     }
 
-     $scope.importProducts = function(files,_this){
-      if(files[0].name.indexOf('.xlsx') == 0){
-        Modal.alert('Please upload a valid file');
-        $(_this).val('')
-        return;
-
-      }
-      $rootScope.loading = true;
-      var user = {};
-      user._id = $rootScope.getCurrentUser()._id;
-      user.fname = $rootScope.getCurrentUser().fname;
-      user.mname = $rootScope.getCurrentUser().mname;
-      user.lname = $rootScope.getCurrentUser().lname;
-      user.role = $rootScope.getCurrentUser().role;
-      user.userType = $rootScope.getCurrentUser().userType;
-      user.phone = $rootScope.getCurrentUser().phone;
-      user.mobile = $rootScope.getCurrentUser().mobile;
-      user.email = $rootScope.getCurrentUser().email;
-      user.country = $rootScope.getCurrentUser().country;
-      user.company = $rootScope.getCurrentUser().company;
-      uploadSvc.upload(files[0]).then(function(result){
-
-        $http.post('/api/products/import',{fileName : result.data,user: user})
-        .then(function(res){
-          $rootScope.loading = false;
-          Modal.alert('Products uploaded successfully',true);
-          getProducts();
-        },function(res){
-          $rootScope.loading = false;
-          Modal.alert(res.data,true);
+     function bulkUpdate(action){
+        if(selectedIds.length == 0)
+          return;
+        var serData = {};
+        serData.action = action;
+        serData.selectedIds = selectedIds;
+        productSvc.bulkProductUpdate(serData)
+        .then(function(result){
+          loadProducts();
         })
-       })
-   }
+        .catch(function(res){
+          //error handling
+        })
+     }
 
-}]);
+}
+
+})();

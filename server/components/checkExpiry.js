@@ -59,7 +59,7 @@ function sendNotification(data,expired){
                   console.log("error in template");
               }else{
                   emailData.content =  res;
-                  console.log('email data',emailData);
+                  //console.log('email data',emailData);
                   notification.pushNotification(emailData);
                   updateProduct(data,expired);
               }

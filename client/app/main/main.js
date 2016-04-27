@@ -62,7 +62,7 @@ angular.module('sreizaoApp')
       .state('productlisting', {
         url: '/productlisting',
         templateUrl: 'app/product/productlisting.html',
-        controller: 'ProductListingCtrl',
+        controller: 'ProductListingCtrl as productListingVm',
         authenticate:true,
         layout:'admin'
       })

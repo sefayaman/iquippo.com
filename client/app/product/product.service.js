@@ -28,6 +28,8 @@
       prdService.loadUploadedBulkProduct = loadUploadedBulkProduct;
       prdService.getFilter = getFilter;
       prdService.setFilter = setFilter;
+      prdService.exportProduct = exportProduct;
+      prdService.bulkProductUpdate = bulkProductUpdate;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -178,6 +180,26 @@
                 })
       }
 
+      function exportProduct(dataToSend){
+        return $http.post('/api/products/export', dataToSend)
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(res){
+                 throw res;
+            })
+      }
+
+      function bulkProductUpdate(data){
+        return $http.post('/api/products/bulkupdate', data)
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(res){
+                 throw res;
+            })
+      }
+
       function addToCache(prd){
         productCache[prd._id] = prd;
       }
@@ -211,6 +233,7 @@
       function setFilter(filter){
          searchFilter = filter;
       }
+
      return prdService;
   }
 

@@ -60,7 +60,7 @@
 
         <div class="cat cat-product text-center">
           <ul class="cat-list" ng-if="mainVm.isCollapsed">
-            <li  ng-repeat="category in mainVm.allCategoryList" ng-if="$index < 8">
+            <li  ng-repeat="category in mainVm.activeCategoryList" ng-if="$index < 8">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>
@@ -69,7 +69,7 @@
             </li>
           </ul>
           <ul class="cat-list" ng-if="!mainVm.isCollapsed">
-            <li  ng-repeat="category in mainVm.allCategoryList">
+            <li  ng-repeat="category in mainVm.activeCategoryList">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>

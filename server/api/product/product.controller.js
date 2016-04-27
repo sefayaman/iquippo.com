@@ -142,13 +142,80 @@ exports.search = function(req, res) {
 
 };
 
+//bulk product update
+exports.bulkUpdate = function(req,res){
+  var bodyData = req.body;
+  console.log("sgdsgdg",bodyData)
+  var dataToSet = {};
+  dataToSet.updatedAt = new Date();
+  switch(bodyData.action){
+    case 'delete':
+      dataToSet.deleted = true;
+    case 'deactive':
+        dataToSet.status = false;
+        dataToSet.featured = false;
+        console.log("------- ",dataToSet);
+         Product.update({_id : {"$in":bodyData.selectedIds}}, {$set:dataToSet}, {multi: true} , function(err, product) {
+            if(err) { 
+              console.log("------- ",err);
+              return handleError(res, err); 
+            }
+            return res.status(200).json({});
+          });
+      break;
+      case 'active':
+       req.prdCounter = 0;
+       req.totalPrd = bodyData.selectedIds.length;
+       bulkActive(req,res);
+       break;
+       default:
+         return res.status(404).send('Not Found');
+  }
+}
+
+function bulkActive(req,res){
+  if(req.prdCounter < req.totalPrd){
+    var id = req.body.selectedIds[req.prdCounter];
+    Product.findById(id,function(err,product){
+      if(err){return handleError(res, err)}
+      else{
+          req.imgCounter = 0;
+          req.totalImages = product.images.length;
+          req.images = product.images;
+          req.assetDir = product.assetDir;
+          req.product = product;
+          checkAndCopyImage(req,res,singleProductActive);
+        //singleProductUpload(req,res,prdoduct);
+      }
+
+    })
+  }else{
+    return res.status(200).json({});
+  }
+}
+
+function singleProductActive(req,res){
+   var product = req.product;
+   var productId = product._id;
+   if(product._id) { delete product._id; }
+   product.status = true;
+   Product.update({_id:productId},{$set:product},function(err){
+      if (err) { return handleError(res, err); }
+        req.prdCounter ++;
+        bulkActive(req,res);
+        //return res.status(200).json(req.body);
+  });
+}
+
 // Updates an existing product in the DB.
 exports.update = function(req, res) {
   req.isEdit = true;
   if(req.body.applyWaterMark){
-      req.counter = 0;
+      req.imgCounter = 0;
       req.totalImages = req.body.images.length;
-      checkAndCopyImage(req,res);
+       req.images = req.body.images;
+       req.assetDir = req.body.assetDir;
+       checkAndCopyImage(req,res,null);
   }else{
     updateProduct(req,res)    
   }
@@ -159,45 +226,52 @@ exports.update = function(req, res) {
 exports.create = function(req, res) {
   req.isEdit = false;
   if(req.body.applyWaterMark){
-      req.counter = 0;
+      req.imgCounter = 0;
       req.totalImages = req.body.images.length;
-      checkAndCopyImage(req,res);
+      req.images = req.body.images;
+      req.assetDir = req.body.assetDir;
+      checkAndCopyImage(req,res,null);
   }else{
     addProduct(req,res)    
   }
 };
 
-function checkAndCopyImage(req,res){
-   if(req.counter < req.totalImages){
-      var imgObj = req.body.images[req.counter];
-      var imgPath = config.uploadPath + req.body.assetDir + "/" + imgObj.src;
+function checkAndCopyImage(req,res,cb){
+  
+   if(req.imgCounter < req.totalImages){
+      var imgObj = req.images[req.imgCounter];
+      var imgPath = config.uploadPath + req.assetDir + "/" + imgObj.src;
       if(imgObj.waterMarked)
       {
-        req.counter ++;
-        checkAndCopyImage(req,res);
+        req.imgCounter ++;
+        checkAndCopyImage(req,res,cb);
       }else{
         var fileNameParts = imgObj.src.split('.');
         var extPart = fileNameParts[fileNameParts.length -1];
         var namePart = fileNameParts[0];
-        var originalFilePath = config.uploadPath + req.body.assetDir + "/" + namePart +"_original." + extPart;
+        var originalFilePath = config.uploadPath + req.assetDir + "/" + namePart +"_original." + extPart;
         if(fileExists(originalFilePath)){
-            placeWatermark(req,res,imgPath);
+            placeWatermark(req,res,imgPath,cb);
         }else{
             fsExtra.copy(imgPath,originalFilePath,function(err,result){
-              placeWatermark(req,res,imgPath);
+              placeWatermark(req,res,imgPath,cb);
             })
         }
       }
 
    }else{
-      if(req.isEdit)
-        updateProduct(req,res);
-      else
-        addProduct(req,res);  
+      if(cb)
+        cb(req,res);
+      else{
+        if(req.isEdit)
+          updateProduct(req,res);
+        else
+          addProduct(req,res);  
+      }
    }
 }
 
-function placeWatermark(req,res,imgPath){
+function placeWatermark(req,res,imgPath,cb){
       var waterMarkWidth = 144;
       var waterMarkHeight = 86;
       try{
@@ -214,9 +288,9 @@ function placeWatermark(req,res,imgPath){
             if(e){
               return handleError(res, err);
             }
-            req.body.images[req.counter].waterMarked = true;
-            req.counter ++;
-            checkAndCopyImage(req,res);
+            req.images[req.imgCounter].waterMarked = true;
+            req.imgCounter ++;
+            checkAndCopyImage(req,res,cb);
           });
         })
       }catch(e){

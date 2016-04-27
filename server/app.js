@@ -20,6 +20,8 @@ var sms = require('./components/sms.js');
 var notification = require('./components/notification.js');
 var checkExpiryService = require('./components/checkExpiry.js');
 var http = require('http');
+var fsExtra = require('fs.extra');
+ var gm = require('gm');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -56,6 +58,7 @@ var upload = multer({ storage: storage}).any();
 
 app.post('/api/uploads',function(req,res){
   var assetDir = req.query.assetDir;
+  var resize = req.query.resize;
   if(!assetDir)
     assetDir = new Date().getTime();
   var relativePath = config.uploadPath + assetDir +"/";
@@ -65,12 +68,23 @@ app.post('/api/uploads',function(req,res){
     if(err) {
       return res.end("Error uploading file.");
     }
-    res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+    if(resize == 'y'){
+      var dimension = {};
+      dimension.width = req.query.width;
+      dimension.height = req.query.height;
+      req.counter = 0;
+      req.total = 1;
+      resizeImg(req,res,assetDir,dimension,false)
+    }
+    else
+      res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+
   });
 });
 
 app.post('/api/multiplefile/upload',function(req,res){
   var assetDir = req.query.assetDir;
+  var resize = req.query.resize;
   if(!assetDir)
     assetDir = new Date().getTime();
   var relativePath = config.uploadPath + assetDir +"/";
@@ -80,9 +94,61 @@ app.post('/api/multiplefile/upload',function(req,res){
     if(err) {
       return res.end("Error uploading file.");
     }
-    res.status(200).json({assetDir:assetDir,files:req.files});
+     if(resize == 'y'){
+        var dimension = {};
+        dimension.width = req.query.width;
+        dimension.height = req.query.height;
+        req.counter = 0;
+        req.total = req.files.length;
+        resizeImg(req,res,assetDir,dimension,true);
+     }
+      else
+        res.status(200).json({assetDir:assetDir,files:req.files});
   });
 });
+
+function resizeImg(req,res,assetDir,dimension,isMultiple){
+  try{
+      if(req.counter < req.total){
+          var fileName = req.files[req.counter].filename;
+          var imgPath = config.uploadPath + assetDir +"/" + fileName;
+          var imgRef = gm(imgPath);
+          imgRef.identify(function(err,val){
+          var resizeToW = dimension.width;
+          var resizeToH = dimension.height;   
+          if(val.size.width <= dimension.width)
+            resizeToW = null;
+          if(val.size.height <= dimension.height)
+            resizeToH = null;
+          if(!resizeToW && !resizeToH){
+            req.counter ++;
+            resizeImg(req,res,assetDir,dimension,isMultiple);
+          }else{
+                var fileNameParts = fileName.split('.');
+                var extPart = fileNameParts[fileNameParts.length -1];
+                var namePart = fileNameParts[0];
+                var originalFilePath = config.uploadPath + assetDir + "/" + namePart +"_original." + extPart;
+                fsExtra.copy(imgPath,originalFilePath,function(err,result){
+                    imgRef.resize(resizeToW,resizeToH)
+                    .write(imgPath, function(e){
+                        req.counter ++;
+                        resizeImg(req,res,assetDir,dimension,isMultiple);
+                    });
+                });
+          }
+        })
+
+      }else{
+        if(isMultiple){
+            res.status(200).json({assetDir:assetDir,files:req.files});
+        }else{
+            res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+        }
+      }
+  }catch(err){
+    handleError(res, err);
+  }
+}
 
 var otp;
 app.post('/api/sms',function(req,res){
@@ -124,6 +190,10 @@ function checkDirectorySync(directory) {
   } catch(e) {
     fs.mkdirSync(directory);
   }
+}
+
+function handleError(res, err) {
+  return res.status(500).send(err);
 }
 
 // Start server

@@ -65,10 +65,10 @@
                               <br>
                               Browse Image
                               </span>
-                              <input type="file"  data-height="255" data-width="165" name="file" ng-disabled="checked != 'leftTop'" image-upload>
+                              <input type="file" name="file" ng-disabled="checked != 'leftTop'" image-upload>
                           </span>
                           <div class="browse-image">
-                          <img ng-src="{{leftTopImg}}" ng-show="leftTopImg" class="img-responsive">
+                          <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftTop'&& classifiedadVm.classified.image" class="img-responsive">
                           </div>
 
                           <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('leftTopImg')">Preview</button>
@@ -79,10 +79,10 @@
                               <span><small>165px x 255px</small>
                               <br>
                               Browse Image</span>
-                              <input type="file"  data-height="255" data-width="165"  name="file"  ng-disabled="checked != 'leftBottom'" image-upload>
+                              <input type="file" name="file"  ng-disabled="checked != 'leftBottom'" image-upload>
                           </span>
                           <div class="browse-image">
-						                <img ng-src="{{leftBottomImg}}" ng-show="leftBottomImg" class="img-responsive">
+						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftBottom'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
                           <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('leftBottomImg')">Preview</button>
                     </div>
@@ -92,10 +92,10 @@
                               <span><small>680px x 100px</small>
                               <br>
                               Browse Image</span>
-                              <input type="file" data-width="680" data-height="100" name="file" ng-disabled="checked != 'bottomCentre'" image-upload>
+                              <input type="file" name="file" ng-disabled="checked != 'bottomCentre'" image-upload>
                           </span>
                           <div class="browse-land">
-						                <img ng-src="{{bottomCentreImg}}" ng-show="bottomCentreImg" class="img-responsive">
+						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomCentre'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
                           <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('bottomCentreImg')">Preview</button>
 
