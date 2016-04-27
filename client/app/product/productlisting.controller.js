@@ -200,6 +200,7 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
         productSvc.bulkProductUpdate(serData)
         .then(function(result){
           loadProducts();
+          selectedIds = [];
           $rootScope.loading = false;
         })
         .catch(function(res){
