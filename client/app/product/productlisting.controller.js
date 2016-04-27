@@ -2,7 +2,7 @@
 'use strict';
 angular.module('product').controller('ProductListingCtrl',ProductListingCtrl);
 
-function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, DTColumnDefBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   vm.featuredCommand = featuredCommand;
@@ -17,11 +17,14 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
   vm.exportExcel = exportExcel;
   vm.updateSelection = updateSelection;
   vm.bulkUpdate = bulkUpdate;
-
-
+  vm.searchType = "";
+  vm.showFilter = showFilter;
+  vm.searchFilter = searchFilter;
   var selectedIds = [];
 
   $scope.globalProductList = [];
+  $scope.orgGlobalProductList = [];
+  $scope.productSearchFilter = {};
   var dataToSend = {};
   
 
@@ -35,6 +38,24 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
       },10)  
   });
 
+  $scope.dtColumnDefs = [
+    DTColumnDefBuilder.newColumnDef(0).notSortable(),
+    DTColumnDefBuilder.newColumnDef(1).notSortable(),
+    DTColumnDefBuilder.newColumnDef(2).notSortable(),
+    DTColumnDefBuilder.newColumnDef(3).notSortable(),
+    DTColumnDefBuilder.newColumnDef(4).notSortable(),
+    DTColumnDefBuilder.newColumnDef(5).notSortable(),
+    DTColumnDefBuilder.newColumnDef(6).notSortable(),
+    DTColumnDefBuilder.newColumnDef(7).notSortable(),
+    DTColumnDefBuilder.newColumnDef(8).notSortable(),
+    DTColumnDefBuilder.newColumnDef(9).notSortable(),
+    DTColumnDefBuilder.newColumnDef(10).notSortable(),
+    DTColumnDefBuilder.newColumnDef(11).notSortable(),
+    DTColumnDefBuilder.newColumnDef(12).notSortable(),
+    DTColumnDefBuilder.newColumnDef(13).notSortable(),
+    DTColumnDefBuilder.newColumnDef(14).notSortable()
+  ];
+
   function loadProducts(){
 
     if(Auth.getCurrentUser()._id){
@@ -45,7 +66,7 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
        }
        productSvc.getProductOnFilter(dataToSend)
        .then(function(result){
-          $scope.globalProductList = result;
+          $scope.globalProductList = $scope.orgGlobalProductList = result;
        })
     }else{
         //refresh case
@@ -58,7 +79,7 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
                }
                 productSvc.getProductOnFilter(dataToSend)
                .then(function(result){
-                  $scope.globalProductList = result;
+                  $scope.globalProductList = $scope.orgGlobalProductList = result;
                })
            }
         });
@@ -71,9 +92,59 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
     dataToSend["featured"] = featured;
     productSvc.getProductOnFilter(dataToSend)
      .then(function(result){
-        $scope.globalProductList = result;
+        $scope.globalProductList = $scope.orgGlobalProductList = result;
      })
   }
+
+  function showFilter(type)
+  {
+    $scope.productSearchFilter  = {};
+    $scope.globalProductList = $scope.orgGlobalProductList;
+    /*if(type == 'tradeType')
+      vm.searchType = 'tradeType';
+    else if(type == 'category')
+      vm.searchType = 'category';
+    else if(type == 'brand')
+      vm.searchType = 'brand';
+    else if(type == 'model')
+      vm.searchType = 'model';
+    else if(type == 'location')
+      vm.searchType = 'location'; */  
+  }
+function searchFilter(type)
+{ 
+    $scope.globalProductList  = _.filter($scope.globalProductList,
+    function(item){  
+      return searchUtil(item, $scope.productSearchFilter.searchTxt, type); 
+    });
+    if($scope.productSearchFilter.searchTxt == '')
+      $scope.globalProductList = $scope.orgGlobalProductList;
+}  
+ 
+function searchUtil(item,toSearch, type)
+{
+  if(type == 'tradeType'){
+    return ( item.tradeType.toLowerCase().indexOf(toSearch.toLowerCase()) > -1) ? true : false ;
+  } else if(type == 'category'){
+    var categoryName = item.category.name + "";
+    var otherCategoryName = item.category.otherName + "";
+    return ( categoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
+            || otherCategoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
+  } else if(type == 'brand'){
+    var brandName = item.brand.name + "";
+    var otherBrandName = item.brand.otherName + "";
+    return ( brandName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
+      || otherBrandName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
+  } else if(type == 'model'){
+    var modelName = item.model.name + "";
+    var otherModelName = item.model.otherName + "";
+    return ( modelName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
+      || otherModelName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
+  } else if(type == 'location'){
+    var country = item.country + "";
+    return ( item.country.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false ;
+  }
+}
 
   $scope.expiredProduct = [];
 
