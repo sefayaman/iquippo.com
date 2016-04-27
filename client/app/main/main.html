@@ -59,17 +59,8 @@
         </div>
 
         <div class="cat cat-product text-center">
-          <ul class="cat-list" ng-if="mainVm.isCollapsed">
-            <li  ng-repeat="category in mainVm.allCategoryList" ng-if="$index < 9">
-              <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
-                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
-                  <span class="overlayer"></span><span>{{category.name}}</span>
-                 
-              </a>
-            </li>
-          </ul>
-          <ul class="cat-list" ng-if="!mainVm.isCollapsed">
-            <li  ng-repeat="category in mainVm.allCategoryList">
+          <ul class="cat-list">
+            <li  ng-repeat="category in categoryList" class"animate-repeat">
               <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>
@@ -78,7 +69,7 @@
             </li>
           </ul>
           <div class="show-more">
-            <button type="button" class="btn btn-default btn-lg" ng-click="mainVm.isCollapsed = !mainVm.isCollapsed"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
           </div>
         </div>
 

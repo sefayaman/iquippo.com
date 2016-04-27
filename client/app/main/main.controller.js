@@ -6,7 +6,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
   function MainCtrl($scope, $rootScope, $http, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
     var vm = this;
     vm.allCategoryList = [];
-    vm.myInterval = 5000;
+    vm.activeCategoryList = [];
+    vm.myInterval = 4000;
     vm.noWrapSlides = false;
     vm.slides = HOME_BANNER;
     vm.featuredslides = [];
@@ -19,10 +20,21 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
     vm.getLocationHelp = getLocationHelp;
+    vm.toggleCategory = toggleCategory;
 
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = beginVertScroll;
-    // $scope.items = [1,2,3,4,5,6,7,8,9,10];
+    $scope.categoryList = [{},{},{}];
+
+    function toggleCategory(){
+      vm.isCollapsed = !vm.isCollapsed;
+      if(vm.isCollapsed)
+         $scope.categoryList = vm.activeCategoryList.slice(0,9);
+       else
+        $scope.categoryList = vm.activeCategoryList;
+
+
+    }
 
     function getFeaturedProduct(){
 
@@ -37,8 +49,20 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     }
 
     function getCategories(){
-
       categorySvc.getCategoryForMain()
+      .then(function(result){
+          vm.activeCategoryList = result;
+          $scope.categoryList = vm.activeCategoryList.slice(0,9);
+      })
+      .catch(function(res){
+        //error handling
+      });
+
+    }
+
+     function getAllCategories(){
+
+      categorySvc.getAllCategory()
       .then(function(result){
           vm.allCategoryList = result;
       })
@@ -70,6 +94,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getFeaturedProduct();
     getCategories();
     getActiveClassifiedAd();
+    getAllCategories();
 
     function doSearch(){
 

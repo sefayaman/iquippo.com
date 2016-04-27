@@ -21,7 +21,8 @@
     "moment": "~2.10.6",
     "angular-datatables": "~0.5.1",
     "angularjs-scroll-glue": "~0.0.1",
-    "angular-ui-tinymce": "latest"
+    "angular-ui-tinymce": "latest",
+    "angular-animate":"~1.5.5"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
