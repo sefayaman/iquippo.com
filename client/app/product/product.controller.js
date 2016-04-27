@@ -455,8 +455,8 @@ angular.module('sreizaoApp')
         product.applyWaterMark = false;
       }
 
-      if(product.priceOnRequest)
-        product.grossPrice = '';
+     /* if(product.priceOnRequest)
+        product.grossPrice = '';*/
       if(!$scope.isEdit && !$scope.relistingEnable)
           addProduct();
       else

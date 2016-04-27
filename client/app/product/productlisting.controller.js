@@ -196,11 +196,14 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
         var serData = {};
         serData.action = action;
         serData.selectedIds = selectedIds;
+        $rootScope.loading = true;
         productSvc.bulkProductUpdate(serData)
         .then(function(result){
           loadProducts();
+          $rootScope.loading = false;
         })
         .catch(function(res){
+          $rootScope.loading = false;
           //error handling
         })
      }

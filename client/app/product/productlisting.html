@@ -24,8 +24,8 @@
                     </div>
                   </div>
                   <div class="btn-group pull-right form-group">
-                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('active')">Activate</button>
-                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('deactive')">Deactivate</button>
+                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
+                    <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>
                     <button class="btn btn-default" ng-click="productListingVm.bulkUpdate('delete')">Delete</button>
                   </div>
 
