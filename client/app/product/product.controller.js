@@ -121,7 +121,7 @@ angular.module('sreizaoApp')
         item.isEdit = true;
         item.name = item.src;
       });
-      if(!$scope.product.videoLinks)
+      if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
          $scope.product.videoLinks = [{}];
 
       $scope.product.country = $scope.product.country;
@@ -441,6 +441,10 @@ angular.module('sreizaoApp')
             $scope.product.images[$scope.product.images.length] = imgObj;
           }
           
+      });
+
+      $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item,idx){
+          return item.uri;
       });
 
       if($scope.product.images.length == 0){
