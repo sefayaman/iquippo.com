@@ -180,30 +180,39 @@
         <div class="form-group"></div>
         <div class="form-group clearfix"></div>
 
+        <div class="horizontal-crsl">
           <div class="head clear-fix">
             <h4>Feature Products</h4>
             <legend class="dull"></legend>
             <legend class="dark"></legend>
           </div>
-          <!-- <ul class="verContainer" drctv>
+          <ul class="verContainer" drctv>
             <li ng-repeat="slide in mainVm.featuredslides">
-            <a  ng-href="/productdetail/{{slide._id}}" onmouseover="hover(this)" data-index="{{$index}}" onmouseout="leave()">
-              <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}">
-            </a>
-              <div class="popover left" id="popover_{{$index}}"> <div class="arrow"></div> <h3 class="popover-title">{{slide.name}}</h3> <div class="popover-content"> 
-                <div class="row form-group">
-                    <div class="col-sm-6"><small>{{slide.brand.name}}</small></div>
-                    <div class="col-sm-6"><small>{{slide.model.name}}</small></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6"><small>{{slide.city}}</small></div>
-                    <div class="col-sm-6"><small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</small><small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small></div>
-                </div>
-              </div> 
-              </div>               
+              <div class="panel panel-default">  
+                    <a ng-href="/productdetail/{{slide._id}}">
+                      <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
+                    </a> 
+                    <div class="panel-heading">
+                      <h3 class="panel-title">{{slide.name}}</h3>
+                    </div>                  
+                    <div class="panel-body">
+                      <div class="row">
+                        <div class="col-xs-6 form-group">{{slide.brand.name}}</div>
+                        <div class="col-xs-6 form-group">{{slide.model.name}}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-6 form-group">{{slide.city}}</div>
+                        <div class="col-xs-6 form-group">
+                          <small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</small>
+                          <small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small>
+                        </div>
+                      </div>
+                    </div>
+                </div>              
             </li>
-          </ul> -->
-          <data-owl-carousel class="owl-carousel" data-options="{navigation: false, pagination: false, rewindNav : true}" owlCarouselItem>
+          </ul>
+        </div>
+          <!-- <data-owl-carousel class="owl-carousel" data-options="{navigation: false, pagination: false, rewindNav : false}" owlCarouselItem>
             <div owl-carousel-item="" ng-repeat="slide in mainVm.featuredslides" class="item">
               <div class="panel panel-default">  
                     <a ng-href="/productdetail/{{slide._id}}">
@@ -227,7 +236,7 @@
                     </div>
                 </div>              
             </div>
-          </data-owl-carousel>
+          </data-owl-carousel> -->
   </div>
 </section>
 <div class="container text-center form-group">

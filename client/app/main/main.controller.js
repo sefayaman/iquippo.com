@@ -132,9 +132,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       $timeout(
         function() {
           var firstElement = $('ul.verContainer li:first');
-          var hgt = firstElement.height() +
-            parseInt(firstElement.css("paddingTop"), 10) + parseInt(firstElement.css("paddingBottom"), 10) +
-            parseInt(firstElement.css("marginTop"), 10) + parseInt(firstElement.css("marginBottom"), 10);
+          var wdth = firstElement.width();
           var cntnt = firstElement.html();
           if(!cntnt)
             return;
@@ -142,7 +140,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
           $("ul.verContainer").append(HtmlStr);
           cntnt = "";
           firstElement.animate({
-            "marginTop": -hgt
+            "marginLeft": -wdth
           }, 600, function() {
             $scope.itemToremove = $(this);
             $('ul.verContainer li').last().css({
@@ -152,7 +150,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
             $(this).remove();
             beginVertScroll();
           });
-          //alert(hgt);
+          // alert(wdth);
         },
         1000*5
       );
