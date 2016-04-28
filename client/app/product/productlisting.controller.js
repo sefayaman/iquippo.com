@@ -81,26 +81,17 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
   function showFilter(type)
   {
     $scope.productSearchFilter  = {};
-    $scope.globalProductList = $scope.orgGlobalProductList;
-    /*if(type == 'tradeType')
-      vm.searchType = 'tradeType';
-    else if(type == 'category')
-      vm.searchType = 'category';
-    else if(type == 'brand')
-      vm.searchType = 'brand';
-    else if(type == 'model')
-      vm.searchType = 'model';
-    else if(type == 'location')
-      vm.searchType = 'location'; */  
   }
 function searchFilter(type)
 { 
+    $scope.globalProductList = {};
+    $scope.globalProductList = $scope.orgGlobalProductList;
     $scope.globalProductList  = _.filter($scope.globalProductList,
     function(item){  
       return searchUtil(item, $scope.productSearchFilter.searchTxt, type); 
     });
-    if($scope.productSearchFilter.searchTxt == '')
-      $scope.globalProductList = $scope.orgGlobalProductList;
+    /*if($scope.productSearchFilter.searchTxt == '')
+      $scope.globalProductList = $scope.orgGlobalProductList;*/
 }  
  
 function searchUtil(item,toSearch, type)
