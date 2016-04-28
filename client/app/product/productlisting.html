@@ -32,8 +32,21 @@
                   <div class="featured-pro">
                     <input type="checkbox" id="" name="featured" ng-model="featured" ng-value="featured" ng-click="productListingVm.featuredCommand(featured)"> Featured
                   </div>
+                  <div class="featured-pro">
+                    <select ng-model="productListingVm.searchType" ng-change="productListingVm.showFilter(productListingVm.searchType)">
+                      <option value="">Select</option>
+                      <option value="tradeType">Trading Type</option>
+                      <option value="category">Category</option>
+                      <option value="brand">Brand</option>
+                      <option value="model">Model</option>
+                      <option value="location">Location</option>
+                    </select>
+                  </div>
+                  <div class="featured-pro">
+                    <input type="text" ng-if="productListingVm.searchType != ''" name="searchTxt" ng-model="productSearchFilter.searchTxt" ng-change="productListingVm.searchFilter(productListingVm.searchType)" ng-model-options="{debounce:500}" placeholder="Search text..." class="form-input-width" />
+                  </div>
                   <div class="table-responsive">
-                    <table datatable="ng" id="product_listing_table" dt-options= "dtOptions" dt-instance="tableRef" class="table table-bordred table-striped">
+                    <table datatable="ng" id="product_listing_table" dt-column-defs="dtColumnDefs" dt-options= "dtOptions" dt-instance="tableRef" class="table table-bordred table-striped nosort">
 
                       <thead>
                         <tr>

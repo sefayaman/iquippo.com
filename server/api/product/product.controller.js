@@ -145,7 +145,6 @@ exports.search = function(req, res) {
 //bulk product update
 exports.bulkUpdate = function(req,res){
   var bodyData = req.body;
-  console.log("sgdsgdg",bodyData)
   var dataToSet = {};
   dataToSet.updatedAt = new Date();
   switch(bodyData.action){
@@ -153,11 +152,19 @@ exports.bulkUpdate = function(req,res){
       dataToSet.deleted = true;
     case 'deactive':
         dataToSet.status = false;
-        dataToSet.featured = false;
-        console.log("------- ",dataToSet);
+        //dataToSet.featured = false;
          Product.update({_id : {"$in":bodyData.selectedIds}}, {$set:dataToSet}, {multi: true} , function(err, product) {
             if(err) { 
               console.log("------- ",err);
+              return handleError(res, err); 
+            }
+            return res.status(200).json({});
+          });
+      break;
+      case 'priceonrequest':
+         dataToSet.priceOnRequest = true;
+          Product.update({_id : {"$in":bodyData.selectedIds},tradeType:{$ne:'RENT'}}, {$set:dataToSet}, {multi: true} , function(err, product) {
+            if(err) { 
               return handleError(res, err); 
             }
             return res.status(200).json({});
