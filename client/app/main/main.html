@@ -2,7 +2,7 @@
   <div class="overlay"></div>
   <div id="slides_control">    
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
-      <uib-slide ng-repeat="slide in mainVm.slides" active="slide.active">
+      <uib-slide ng-repeat="slide in mainVm.slides">
         <img  ng-src="assets/images/{{slide.image}}">
       </uib-slide>
     </uib-carousel>
