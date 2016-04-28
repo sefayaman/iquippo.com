@@ -296,7 +296,7 @@ $scope.today = function() {
      return LocationSvc.getLocationHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              return item;
+              return item.name;
         });
       });
     };

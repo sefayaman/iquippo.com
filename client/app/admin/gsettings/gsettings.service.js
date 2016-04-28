@@ -132,22 +132,25 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
      function getLocationHelp(data){
        return $http.post(path + "/location/search",data)
         .then(function(res){
-          var filterdArr = [];
+          //var filterdArr = [];
 
-          res.data.forEach(function(item){
+        /*  res.data.forEach(function(item){
            if(item.name.indexOf(data.searchStr) != -1 && item.state.name.indexOf(data.searchStr) != -1){
-             if(filterdArr.indexOf(item.name) == -1)
+             if(filterdArr.indexOf(item.name) == -1){
                 filterdArr[filterdArr.length] = item.name;
               if(filterdArr.indexOf(item.state.name) == -1)
                   filterdArr[filterdArr.length] = item.state.name;
-            }else if(item.name.indexOf(data.searchStr) != -1)
+
+            }else if(item.name.indexOf(data.searchStr) != -1){
               if(filterdArr.indexOf(item.name) == -1)
                   filterdArr[filterdArr.length] = item.name;
-            else if(item.state.name.indexOf(data.searchStr) != -1)
+            }
+            else if(item.state.name.indexOf(data.searchStr) != -1){
               if(filterdArr.indexOf(item.state.name) == -1)
                     filterdArr[filterdArr.length] = item.state.name;
-          });
-          return filterdArr;
+            }
+          });*/
+          return res.data;
         })
         .catch(function(err){
           throw err

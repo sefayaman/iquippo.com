@@ -61,7 +61,7 @@
         <div class="cat cat-product text-center">
           <ul class="cat-list">
             <li  ng-repeat="category in categoryList" class"animate-repeat">
-              <a href="/viewproducts/{{category._id}}" ng-if="category.name != 'Other'">
+              <a href="/viewproducts/{{category._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>
                  

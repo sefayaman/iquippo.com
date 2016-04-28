@@ -2,7 +2,7 @@
 'use strict';
 angular.module('product').controller('ProductListingCtrl',ProductListingCtrl);
 
-function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, DTColumnDefBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   vm.featuredCommand = featuredCommand;
@@ -37,24 +37,6 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
           $rootScope.currentProductListingPage = 0;
       },10)  
   });
-
-  $scope.dtColumnDefs = [
-    DTColumnDefBuilder.newColumnDef(0).notSortable(),
-    DTColumnDefBuilder.newColumnDef(1).notSortable(),
-    DTColumnDefBuilder.newColumnDef(2).notSortable(),
-    DTColumnDefBuilder.newColumnDef(3).notSortable(),
-    DTColumnDefBuilder.newColumnDef(4).notSortable(),
-    DTColumnDefBuilder.newColumnDef(5).notSortable(),
-    DTColumnDefBuilder.newColumnDef(6).notSortable(),
-    DTColumnDefBuilder.newColumnDef(7).notSortable(),
-    DTColumnDefBuilder.newColumnDef(8).notSortable(),
-    DTColumnDefBuilder.newColumnDef(9).notSortable(),
-    DTColumnDefBuilder.newColumnDef(10).notSortable(),
-    DTColumnDefBuilder.newColumnDef(11).notSortable(),
-    DTColumnDefBuilder.newColumnDef(12).notSortable(),
-    DTColumnDefBuilder.newColumnDef(13).notSortable(),
-    DTColumnDefBuilder.newColumnDef(14).notSortable()
-  ];
 
   function loadProducts(){
 

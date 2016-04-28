@@ -971,22 +971,27 @@ exports.searchCity = function(req,res){
 
 exports.searchLocation = function(req,res){
   var filter = {};
+  if(!req.body.searchStr)
+  	res.status(200).json([]);
   if(req.body.searchStr){
     var term = new RegExp("^" + req.body.searchStr, 'i');
-    var arr = [];
-    arr[arr.length] = {name:{ $regex: term }}
-    arr[arr.length] = {'state.name':{ $regex: term }}
-    filter['$or'] = arr;
+    filter['name'] = {$regex:term};
   }
-  var query = City.find(filter);
-  query.exec(
-       function (err, ct) {
-              if(err) { return handleError(res, err); }
-              return res.status(200).json(ct);
-       }
-  );
+  var cityQry = City.find(filter);
+  var stateQry = State.find(filter);
+
+  cityQry.exec(
+	   function (err, ctArr) {
+	    if(err) { return handleError(res, err); }
+	     stateQry.exec(function(err,stArr){
+	     	if(err) { return handleError(res, err); }
+	     	var finalArr = ctArr.concat(stArr);
+	     	return res.status(200).json(finalArr);
+	     })    
+   });
 }
 
 function handleError(res, err) {
+console.log(err);
   return res.status(500).send(err);
 }
