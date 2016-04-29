@@ -60,11 +60,10 @@
 
         <div class="cat cat-product text-center">
           <ul class="cat-list">
-            <li  ng-repeat="category in categoryList" class"animate-repeat">
+            <li ng-repeat="category in categoryList">
               <a href="/viewproducts/{{category._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
                   <span class="overlayer"></span><span>{{category.name}}</span>
-                 
               </a>
             </li>
           </ul>
@@ -72,41 +71,7 @@
             <button type="button" class="btn btn-default btn-lg" ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
           </div>
         </div>
-
-        <!-- <div class="form-group"></div>
-        <div class="form-group clearfix"></div>
-        <div class="head">
-          <h4>Services</h4>
-          <legend class="dull"></legend>
-          <legend class="dark"></legend>
-        </div> -->
-        <!-- <div class="cat text-center form-group">
-          <ul class="cat-list">
-             <li>
-              <a href="/manpower">
-                <img src="assets/images/lease.png"> Manpower
-               
-              </a>
-            </li>
-            <li>
-              <a href="/shipping">
-                <img src="assets/images/transport.png"> Shipping
-                
-              </a>
-            </li>
-            <li>
-              <a href="/valuation">
-                <img src="assets/images/valuation.png"> Valuation
-              </a>
-            </li>
-            <li>
-              <a href="/certifiedbyiquippo">
-                <img src="assets/images/certified.png"> Certified by iQuippo
-              </a>
-            </li>
-          </ul>
-
-        </div> -->
+        
       </div>
       
       <div class="col-sm-2 col-md-3 hidden-xs padd-left">        

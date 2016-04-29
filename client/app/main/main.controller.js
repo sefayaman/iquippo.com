@@ -20,19 +20,18 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
     vm.getLocationHelp = getLocationHelp;
-    vm.toggleCategory = toggleCategory;
+    // vm.toggleCategory = toggleCategory;
 
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = beginVertScroll;
     $scope.categoryList = [{},{},{}];
 
-    function toggleCategory(){
+    vm.toggleCategory = function(){
       vm.isCollapsed = !vm.isCollapsed;
       if(vm.isCollapsed)
          $scope.categoryList = vm.activeCategoryList.slice(0,9);
        else
         $scope.categoryList = vm.activeCategoryList;
-
 
     }
 
