@@ -23,19 +23,12 @@
                         <div class="clearfix"></div>
                     </div>
                   </div>
-                  <div class="btn-group pull-right form-group">
-                    <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('priceonrequest')">Price on request</button>
-                    <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
-                    <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>
-                    <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('delete')">Delete</button>
-                  </div>
-
                   <div class="featured-pro">
                     <input type="checkbox" id="" name="featured" ng-model="featured" ng-value="featured" ng-click="productListingVm.featuredCommand(featured)"> Featured
                   </div>
                   <div class="featured-pro">
                     <select ng-model="productListingVm.searchType" ng-change="productListingVm.showFilter(productListingVm.searchType)">
-                      <option value="">Select</option>
+                      <option value="">Column filters</option>
                       <option value="tradeType">Trading Type</option>
                       <option value="category">Category</option>
                       <option value="brand">Brand</option>
@@ -45,6 +38,13 @@
                   </div>
                   <div class="featured-pro">
                     <input type="text" ng-if="productListingVm.searchType != ''" name="searchTxt" ng-model="productSearchFilter.searchTxt" ng-change="productListingVm.searchFilter(productListingVm.searchType)" ng-model-options="{debounce:500}" placeholder="Search text..." class="form-input-width" />
+                  </div>
+
+                  <div class="featured-pro">
+                    <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('priceonrequest')">Price on request</button>
+                      <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
+                      <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>
+                      <button class="btn btn-primary" ng-click="productListingVm.bulkUpdate('delete')">Delete</button>
                   </div>
                   <div class="table-responsive">
                     <table datatable="ng" id="product_listing_table" dt-options= "dtOptions" dt-instance="tableRef" class="table table-bordred table-striped nosort">

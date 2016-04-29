@@ -2,7 +2,7 @@
         <div class="text-right">
           <ul class="top-menu">
             
-            <li><a href="javascript:void(0);" ng-click="openDialog('quote')"><i class="fa fa-edit"></i> <span class="hidden-xs">Demand Fulfillment</span></a></li>
+            <li><a href="javascript:void(0);" ng-click="openDialog('quote')"><i class="fa fa-edit"></i> <span class="hidden-xs">Quick Query</span></a></li>
             <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
             
@@ -54,7 +54,7 @@
                   <ul class="nav navbar-nav">
                     <li ng-class="{active: isActive('/')}"><a href="index.html">Home</a></li>
                     <li ng-class="{active: isActive('/aboutus')}"><a href="/aboutus">About Us</a></li>
-                    <li class="dropdown" uib-dropdown>
+                    <li class="submenu">
                       <a href="javascript:void(0);" id="single-button"  uib-dropdown-toggle >Services</a>
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
                         <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png"> Shipping</a></li>

@@ -109,8 +109,9 @@
         </div> -->
       </div>
       
-      <div class="col-sm-2 col-md-3 hidden-xs padd-left">
-        <div class="panel panel-primary">
+      <div class="col-sm-2 col-md-3 hidden-xs padd-left">        
+        <div class="panel-group">
+          <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">News &amp; Events</h3>
             </div>
@@ -120,10 +121,10 @@
                   <img src="assets/images/best-offer.jpg" width="100">
                 </a>
                 <div class="media-body">
-                  <h4 class="media-heading">News heading</h4>
+                  <h4 class="media-heading">iQuippo</h4>
                   <p>
                     <small>
-                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
+                      Marketplace for High-end Equipments launched (14-Apr-2016). 
                     </small>
 
                   </p>
@@ -135,38 +136,10 @@
                   <img src="assets/images/best-offer.jpg" width="100">
                 </a>
                 <div class="media-body">
-                  <h4 class="media-heading">News heading</h4>
+                  <h4 class="media-heading">Event</h4>
                   <p>
                     <small>
-                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
-                    </small>
-
-                  </p>
-                </div>
-              </div>
-              <div class="media form-group">
-                <a class="pull-left" href="#">
-                  <img src="assets/images/best-offer.jpg" width="100">
-                </a>
-                <div class="media-body">
-                  <h4 class="media-heading">News heading</h4>
-                  <p>
-                    <small>
-                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
-                    </small>
-
-                  </p>
-                </div>
-              </div>
-              <div class="media form-group">
-                <a class="pull-left" href="#">
-                  <img src="assets/images/best-offer.jpg" width="100">
-                </a>
-                <div class="media-body">
-                  <h4 class="media-heading">News heading</h4>
-                  <p>
-                    <small>
-                      Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum 
+                      X number of assets uploaded and Available for Sale
                     </small>
 
                   </p>
@@ -174,6 +147,26 @@
               </div>
             </div>  
           </div>
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Partners</h3>
+              </div>
+              <div class="panel-body text-center">
+                <div class="form-group">
+                  <a href="javascript:void(0);">
+                    <img src="assets/images/srei-logo-img.png">
+                  </a>                  
+                </div>
+                <hr>
+                <div class="form-group">
+                  <a href="javascript:void(0);">
+                    <img src="assets/images/srei-logo.png" height="80">
+                  </a>
+                  
+                </div>
+              </div>  
+          </div>
+        </div>
       </div>
      
     </div>
@@ -182,7 +175,7 @@
 
         <div class="horizontal-crsl">
           <div class="head clear-fix">
-            <h4>Feature Products</h4>
+            <h4>Featured Products</h4>
             <legend class="dull"></legend>
             <legend class="dark"></legend>
           </div>
@@ -197,14 +190,14 @@
                     </div>                  
                     <div class="panel-body">
                       <div class="row">
-                        <div class="col-xs-6 form-group">{{slide.brand.name}}</div>
-                        <div class="col-xs-6 form-group">{{slide.model.name}}</div>
+                        <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
+                        <div class="col-xs-6 form-group"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
                       </div>
                       <div class="row">
-                        <div class="col-xs-6 form-group">{{slide.city}}</div>
+                        <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
                         <div class="col-xs-6 form-group">
-                          <small ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</small>
-                          <small ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</small>
+                          <span  class="label label-danger" ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
+                          <span  class="label label-primary" ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
                         </div>
                       </div>
                     </div>
