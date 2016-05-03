@@ -636,3 +636,10 @@ table.table{width:100% !important;}
 .panel-title,.text-ellips{white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;}
+.back-color .btn{background-color:#3A5795;border:1px solid #3A5795;}
+.back-color1 .btn{background-color: #2CA2EA;border:1px solid #2CA2EA;}
+.select-recipent .form-control{padding-left:30px;}
+.select-recipent .left, .select-recipent .right{position:absolute; top:12px;}
+.select-recipent .left{left:25px;}
+.select-recipent a{color:#666;}
+.select-recipent .right{right:25px; left:auto;}

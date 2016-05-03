@@ -31,7 +31,7 @@ exports.create = function(req,res){
   });
 }
 
-exports.emailer = function(req,res){
+/*exports.emailer = function(req,res){
   var mailData = req.body;
   var userTypeArr = [];
  
@@ -56,16 +56,31 @@ exports.emailer = function(req,res){
       data.document = mailData.document;
     data.createdAt = new Date();
      req.counter = 0;
+     console.log("email users:", users);
     req.users = users;
     createEmail(req,res,data);
    
   });
+}*/
 
+exports.emailer = function(req,res){
+  var mailData = req.body;
+  var data = {};
+  data.subject = mailData.subject;
+  data.content = "<head><meta charset='utf-8' content='width=divice-width, initial-screen=1'/></head><body>" + mailData.content +"<body>";
+  data.counter = 0;
+  data.notificationType = "email";
+  if(mailData.document)
+    data.document = mailData.document;
+  data.createdAt = new Date();
+  req.counter = 0;
+  req.users = mailData.allToEmails;
+  createEmail(req,res,data);
 }
 
 function createEmail(req,res,data){
   if(req.counter < req.users.length){
-     data.to = req.users[req.counter].email;
+     data.to = req.users[req.counter];
      notification.create(data, function(err, dt){
       if(err) { return handleError(res, err); }
       else{

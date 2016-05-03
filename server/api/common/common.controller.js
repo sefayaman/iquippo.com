@@ -6,6 +6,7 @@ var trim = require('trim');
 var Country = require('./country.model');
 var State = require('./location.model').State;
 var City = require('./location.model').City;
+var Subscribe = require('./subscribe.model');
 var AppSetting = require('./setting.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
@@ -827,6 +828,40 @@ function fileExists(filePath)
         return false;
     }
 }
+
+//subscriber
+
+exports.getAllSubscriber = function(req, res) {
+  Subscribe.find(function (err, subscribers) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(subscribers);
+  });
+};
+
+exports.createSubscribe = function(req, res) {
+  req.body.createdAt = new Date();
+  var filter = {};
+  filter["email"] =req.body.email;
+  Subscribe.find(filter,function (err, subscriber) {
+    if(err) { return handleError(res, err); }
+    else
+    {
+    	if(subscriber.length>0)
+    	{
+    		return res.status(201).json({errorCode:1, message:"This email ID is already registered. Please enter different email ID for new subscription."});
+    	}
+        else{
+        	Subscribe.create(req.body, function(err, subscriber) {
+			    if(err) { return handleError(res, err); }
+			    return res.status(200).json({errorCode:0, message:"Thanks for subscribing to our Newsletter!"});
+			});
+        }  
+    
+    }
+    
+  });
+};
+
 
 //location functions
 

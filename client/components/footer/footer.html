@@ -33,14 +33,14 @@
             </div>
             <div class="col-sm-3 col-md-4">
               <h5>Subscribe</h5>
-              <form role="form">
-                <div class="row">
-                  <div class="col-xs-10">
-                    <input type="email" class="form-control" id="" placeholder="Enter email or username">
+              <form class="form" name="form" novalidate>
+                <div class="form-group row">
+                  <div class="col-xs-10" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                    <input type="email" class="form-control" name="email" ng-model="subscribe.email" placeholder="Enter email" required>
                   </div>
                   
                   <div class="col-xs-2 padd-left">
-                    <button class="btn btn-primary btn-block subscribe">Go</button>
+                    <button class="btn btn-primary btn-block subscribe" ng-click="createSubscribe(subscribe)">Go</button>
                   </div>
                 </div>                
               </form>

@@ -121,6 +121,7 @@ angular.module('sreizaoApp')
       .state('manPower', {
         url:"/manpower",
         templateUrl: 'app/staticpages/manpower.html',
+        controller:"ManpowerCtrl",
          layout:'client'
       })
       .state('certifiedbyiquippo', {

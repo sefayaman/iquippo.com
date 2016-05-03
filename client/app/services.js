@@ -288,6 +288,31 @@ angular.module('sreizaoApp')
 
       return userService;
   }])
+  .factory("subscribeSvc",['$http',function($http){
+    var subscribeService = {};
+    var path = '/api/common';
+    subscribeService.getAllSubscribeUsers = function(data){
+      return $http.get(path + "/subscribe")
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(err){
+              throw err;
+            });
+    };
+
+    subscribeService.createSubscribeUsers = function(subscribe){
+    return $http.post(path + "/subscribe",subscribe)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(ex){
+      throw ex;
+    })
+  };
+
+      return subscribeService;
+  }])
   .factory("countrySvc",['$http',function($http){
       var countryService = {};
       var path = '/api/common/countries';

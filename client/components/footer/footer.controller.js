@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('FooterCtrl', function ($scope, $http, $location, Auth,Modal, notificationSvc) {
+  .controller('FooterCtrl', function ($scope, $http, $location, Auth,Modal, notificationSvc, subscribeSvc) {
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
@@ -12,6 +12,8 @@ angular.module('sreizaoApp')
     $scope.isAdmin = Auth.isAdmin;
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.contact = {};
+    $scope.subscribe ={};
+    var path = '/api/common';
 
     $scope.logout = function() {
       Auth.logout();
@@ -22,38 +24,30 @@ angular.module('sreizaoApp')
       return route === $location.path();
     };
 
-    $scope.sendContact = function(contact) {
-      var ret = false;
+  $scope.createSubscribe = function(subscribe) {
+    if($scope.form.$invalid){
+      $scope.form.submitted = true;
+      return;
+    }
 
-      if($scope.form.$invalid || ret){
-        $scope.form.submitted = true;
-        return;
-      }
-      
-        var dataToSend = {};
-        dataToSend['name'] = contact.name;
-        dataToSend['email'] = contact.email;
-        dataToSend['mobile'] = contact.mobile;
-        dataToSend['message'] = contact.message;
-
-        $http.post('/api/contactus', dataToSend).success(function(result) {
-          $scope.contact = {};
-          $scope.form.submitted = false;
-          var data = {};
-          data['to'] = supportMail;
-          data['subject'] = 'Request for contact';
-          dataToSend['serverPath'] = serverPath;
-          notificationSvc.sendNotification('contactusEmailToAdmin', data, dataToSend,'email');
-          /*data['to'] = dataToSend['mobile'];
-          notificationSvc.sendNotification('contactusSms',data,dataToSend,'sms');*/
-          data['to'] = dataToSend.email;
-          data['subject'] = 'No reply: contact request received';
-          notificationSvc.sendNotification('contactusEmailToCustomer', data, {fname:dataToSend.name},'email');
-          Modal.alert(informationMessage.contactUsSuccess,true);
-          
-        }).error(function(res){
-          Modal.alert(res,true);
-        });
-  };
-
-  })
+    var dataToSend = {};
+    dataToSend['email'] = subscribe.email;
+    subscribeSvc.createSubscribeUsers(subscribe).then(function(result){
+      if(result && result.errorCode == 1){
+        Modal.alert(result.message, true);
+      } else { 
+        $scope.subscribe = {};
+        $scope.form.submitted = false;
+/*        var data = {};
+        data['to'] = supportMail;
+        data['subject'] = 'Request for Subscribe';
+        dataToSend['serverPath'] = serverPath;
+        notificationSvc.sendNotification('subscribeEmailToAdmin', data, dataToSend,'email');
+        data['to'] = dataToSend.email;
+        data['subject'] = 'No reply: Subscribe request received';
+        notificationSvc.sendNotification('subscribeEmailToCustomer', data, {fname:dataToSend.name},'email');*/
+        Modal.alert(result.message,true);
+      }      
+    });
+  }
+});

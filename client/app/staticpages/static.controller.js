@@ -299,4 +299,127 @@ angular.module('sreizaoApp')
   $scope.popup2 = {
     opened: false
   };
+  }])
+  .controller('ManpowerCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
+    $rootScope.searchFilter = {};
+    $rootScope.equipmentSearchFilter = {};
+    $scope.manpowerQuote = {};
+    $scope.manpowerService = {};
+    $scope.manpowerQuote.usedBy = "Operators";
+    /*$scope.mytime = new Date();
+    $scope.hstep = 1;
+    $scope.mstep = 1;
+    $scope.ismeridian = true;*/
+
+    if(Auth.getCurrentUser()._id){
+      var currUser = Auth.getCurrentUser();
+      $scope.manpowerQuote.fname = currUser.fname;
+      $scope.manpowerQuote.mname = currUser.mname; 
+      $scope.manpowerQuote.lname = currUser.lname;
+      
+      $scope.manpowerQuote.mobile = currUser.mobile;
+      $scope.manpowerQuote.email = currUser.email;
+      $scope.manpowerQuote.phone = currUser.phone;
+      $scope.manpowerQuote.country = currUser.country;
+    }
+    
+    LocationSvc.getAllLocation()
+     .then(function(result){
+      $scope.locationList = result;
+    });
+
+    $scope.addManpowerQuote = function(evt) {
+
+      /*if($scope.manpowerQuote.schedule == 'yes') {
+        if(angular.isUndefined($scope.manpowerQuote.scheduleDate))
+          $scope.form.scheduleDate.$invalid = true;
+         else 
+          $scope.form.scheduleDate.$invalid = false;
+      }*/
+
+      if($scope.form.$invalid){
+        $scope.form.submitted = true;
+        return;
+      }
+
+      /*if(!$scope.manpowerQuote.scheduledTime 
+        && $scope.manpowerQuote.schedule == "yes")
+        $scope.changed($scope.mytime);*/
+      $scope.manpowerService.type = "manpowerQuote";
+      $scope.manpowerService.quote = $scope.manpowerQuote;
+      $http.post('/api/services', $scope.manpowerService).then(function(res){
+      //var data = {};
+      //data['to'] = supportMail;
+      //data['subject'] = 'Request for a Quote: Manpower Quote';
+      //$scope.manpowerService.serverPath = serverPath;
+      //$scope.manpowerService.quote.date = moment($scope.manpowerService.quote.scheduleDate).format('DD/MM/YYYY');
+      //notificationSvc.sendNotification('enquiriesQuoteCertifiedByiQuippoEmailToAdmin', data, $scope.manpowerService.quote,'email');
+
+      //data['to'] = $scope.cetifiedByiQuippoService.quote.email;
+      //data['subject'] = 'No reply: Request a Quote';
+      //notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.manpowerService.serverPath},'email');
+      
+      Modal.alert(informationMessage.productQuoteSuccess,true);
+      },function(res){
+          Modal.alert(res,true);
+      });
+    }
+
+    $scope.resetClick = function () {
+       $scope.manpowerQuote = {};
+       $scope.manpowerQuote.usedBy = "Operators";
+    };
+
+  /*$scope.changed = function (mytime) {
+      if(mytime) {
+        var hours = mytime.getHours();
+        var minutes = mytime.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        $scope.cetifiedByiQuippoQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
+      }
+    };*/
+
+  /*$scope.toggleMode = function() {
+    $scope.isShow = ! $scope.isShow;
+  };*/
+    // date picker
+  /*$scope.today = function() {
+    $scope.scheduleDate = new Date();
+  };
+  $scope.today();
+
+  $scope.clear = function() {
+    $scope.scheduleDate = null;
+  };
+
+  $scope.toggleMin = function() {
+    $scope.minDate = $scope.minDate ? null : new Date();
+  };
+
+  $scope.toggleMin();
+  $scope.maxDate = new Date(2020, 5, 22);
+  $scope.minDate = new Date();
+
+  $scope.open2 = function() {
+    $scope.popup2.opened = true;
+  };
+
+   $scope.setDate = function(year, month, day) {
+    $scope.scheduleDate = new Date(year, month, day);
+  };
+
+  $scope.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1
+  };
+
+  $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+  $scope.format = $scope.formats[0];
+
+  $scope.popup2 = {
+    opened: false
+  };*/
   }]);
