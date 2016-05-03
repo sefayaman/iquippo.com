@@ -40,7 +40,7 @@ var UserSchema = new Schema({
   updatedAt: Date, 
   salt: String,
   google: {},
-  github: {},
+  facebook: {},
   otp:{}
 });
 

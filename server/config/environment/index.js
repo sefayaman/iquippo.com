@@ -45,9 +45,14 @@ var all = {
   },
 
   google: {
-    clientID:     process.env.GOOGLE_ID || 'id',
-    clientSecret: process.env.GOOGLE_SECRET || 'secret',
+    clientID: "989503215697-dajf3iluqgp9trp20vqrvrduc5v7v3j2.apps.googleusercontent.com",//process.env.GOOGLE_ID || 'id',
+    clientSecret: process.env.GOOGLE_SECRET || 'PhsAWwerGD2bep-qiUxGEAEZ',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+  },
+  facebook: {
+    clientID:    "270271773315178",
+    clientSecret:"f60977ed21f817c39b7bd253d87c4ee1",
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
   },
   importDir:"import",
 };
