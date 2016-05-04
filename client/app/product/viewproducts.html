@@ -160,8 +160,14 @@
           <div class="col-sm-8 col-md-9">
 
             <div class="row pull-right">
-            <div class="col-sm-4">Sort by:</div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
+                  <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter">
+                     <small class="badge">4</small>
+                     <img src="assets/images/campare-icon.png" width="20">
+                   </a>
+                </div>
+                <div class="col-sm-3">Sort by:</div>
+                <div class="col-sm-3">
                   <select>
                     <option value="">Relevance</option>
                     <option value="">Price : Low to High</option>
@@ -172,14 +178,12 @@
               </div>
             </div>
           </div>
-          <div class="pull-right compare1">
-            <ul >
+            <!-- <ul >
               <li ng-repeat="comp in viewproductVm.productListToCompare">
                <a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a>
               </li>
-            </ul>
-             <a href="javascript:void(0);" class="btn btn-success btn-xs">Compare <strong>2</strong> Items</a>
-            </div>
+            </ul> -->
+
              <div ng-if="!noResult">
                  <uib-pagination total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage"></uib-pagination> 
                 <div id="search-result_wrapper" class="search-result">
