@@ -133,6 +133,7 @@ function EmailerCtrl($scope, $location, $window, $rootScope, $http, Modal, uploa
       }else{
         vm.mailData = {};
         $scope.docObj = {};
+        $scope.submitted = false;
         Modal.alert("news letter posted successfully.",true);
       }
 

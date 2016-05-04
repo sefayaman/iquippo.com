@@ -27,11 +27,11 @@
       		<div class="row">
       			<div class="col-sm-5 col-sm-offset-2">
       				<div ng-if="regUser == 'registered'">
-      					<div class="select-recipent">
+      					<!-- <div class="select-recipent">
 		      				<i class="fa fa-search left"> </i>
 		      				<input type="text" class="form-control" placeholder="Search" value="">
 		      				<a href="javascript:void(0);"><i class="fa fa-close right"> </i></a>
-	      				</div>
+	      				</div> -->
 	      				<!-- <select class=" form-control" ng-model="selectedValues" ng-options="regUser.email for regUser in regUsers track by regUser._id" multiple>
 						</select> -->
 	      				<select class=" form-control" ng-model="emailerVm.selectedRegValues" ng-change="emailerVm.onChangedRegUser(emailerVm.selectedRegValues)" ng-multiple="true" multiple>
@@ -39,11 +39,11 @@
 						</select>
       				</div>
       				<div ng-if="regUser == 'newsletter'"  >
-      					<div class="select-recipent">
+      					<!-- <div class="select-recipent">
 		      				<i class="fa fa-search left"> </i>
 		      				<input type="text" class="form-control" placeholder="Search" value="">
 		      				<a href="javascript:void(0);"><i class="fa fa-close right"> </i></a>
-	      				</div>     				
+	      				</div> -->     				
 	      				<select name="" class="form-control" ng-model="emailerVm.selectedSubValues" ng-change="emailerVm.onChangedSubUser(emailerVm.selectedSubValues)" multiple>
 						 <option ng-repeat="subUser in subscribeUsers"  value="{{subUser.email}}" ng-selected="{{emailerVm.selectedSubValues.indexOf(subUser.email.toString())!=-1}}">{{subUser.email}}</option>
 						</select>
