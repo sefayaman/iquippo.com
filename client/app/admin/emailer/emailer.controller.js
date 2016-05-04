@@ -74,12 +74,19 @@ function EmailerCtrl($scope, $location, $window, $rootScope, $http, Modal, uploa
     });
 
    function sendEmail(){
+    var ret = false;
+    
     if(!$scope.selectedRegValuesArr && !$scope.selectedSubValuesArr){
       Modal.alert("Please select recipient",true);
       return;
     }
 
-    if(form.$invalid){
+    if(!vm.mailData.subject){
+      form.subject.$invalid = true;
+      ret = true;
+    }
+
+    if(form.$invalid || ret){
       $scope.submitted = true;
       return;
     }
