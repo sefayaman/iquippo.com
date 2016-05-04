@@ -23,11 +23,13 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   $scope.noResult = true;
 
   /* pagination flag */
-  vm.itemsPerPage = 1;
+  vm.itemsPerPage = 10;
   vm.currentPage = 1;
   vm.totalItems = 0;
+  vm.maxSize = 10;
+  vm.sortByFlag = "";
  
-  vm.productListToCompare = [{},{},{},{}]
+  vm.productListToCompare = []
 
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
@@ -37,7 +39,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
   vm.fireCommand = fireCommand;
-  vm.getLocationHelp = getLocationHelp
+  vm.getLocationHelp = getLocationHelp;
+  vm.sortBy = sortBy;
+  vm.updateSelection = updateSelection;
+  vm.compare = compare;
+
 
 
    $scope.dynamicPopover = {
@@ -89,6 +95,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
         productSvc.getProductOnCategoryId($stateParams.id)
         .then(function(result){
           $scope.noResult = false;
+          vm.productListToCompare = [];
           if(result.length > 0){
             vm.currentPage = 1;
             vm.totalItems = result.length;
@@ -185,6 +192,7 @@ function onModelChange(model){
       productSvc.getProductOnFilter(filter)
       .then(function(result){
         $scope.noResult = false;
+        vm.productListToCompare = [];
         if(result.length > 0){
           vm.currentPage = 1;
           vm.totalItems = result.length;
@@ -322,6 +330,62 @@ $scope.today = function() {
         });
       });
     };
+
+  function sortBy(){
+    switch(vm.sortByFlag){
+      case "lh":
+         var list = _.orderBy($scope.productList,['grossPrice'],['asc']);
+         $scope.productList = _.sortBy(list, function(n) {
+              return n.tradeType == 'RENT' || n.priceOnRequest;
+        });
+      break;
+      case 'hl':
+         var list  = _.orderBy($scope.productList,['grossPrice'],['desc']);
+         $scope.productList = _.sortBy(list, function(n) {
+              return n.tradeType == 'RENT' || n.priceOnRequest;
+        });
+      break;
+      case 'por':
+       $scope.productList = _.sortBy($scope.productList, function(n) {
+              return !n.priceOnRequest;
+        });
+      break;
+      default:
+         fireCommand();
+    }
+  }
+
+  function compare(){
+     if(vm.productListToCompare.length == 0){
+          Modal.alert("Please select products that you want to compare.",true);
+          return;
+      }
+      console.log(vm.productListToCompare);
+  }
+
+  function updateSelection(event,prd){
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if( action == 'add' && vm.productListToCompare.length >= 4){
+          Modal.alert("You can compare upto 4 product.",true);
+          return;
+        }
+        var index = getIndex(prd);
+        if(action == 'add' && index == -1)
+          vm.productListToCompare.push(prd)
+        if(action == 'remove' && index != -1)
+          vm.productListToCompare.splice(index,1);
+  }
+
+  function getIndex(prd){
+    var index = -1;
+    vm.productListToCompare.forEach(function(item,idx){
+      if(item._id == prd._id)
+        index = idx;
+    });
+    return index;
+  }
+
 
 }
 
