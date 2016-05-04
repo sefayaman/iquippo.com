@@ -20,7 +20,14 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   $scope.selectedSubCategory = "";
   $scope.selectedBrand = "";
   $scope.selectedModel = "";
+  $scope.noResult = true;
 
+  /* pagination flag */
+  vm.itemsPerPage = 1;
+  vm.currentPage = 1;
+  vm.totalItems = 0;
+ 
+  vm.productListToCompare = [{},{},{},{}]
 
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
@@ -33,10 +40,11 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   vm.getLocationHelp = getLocationHelp
 
 
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', false).withOption('lengthChange', false).withOption('dom','<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>');
-  $scope.dynamicPopover = {
+   $scope.dynamicPopover = {
     templateUrl: 'myPopoverTemplate.html'
   };
+
+
   function init(){
       categorySvc.getAllCategory()
       .then(function(result){
@@ -80,6 +88,13 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
         }
         productSvc.getProductOnCategoryId($stateParams.id)
         .then(function(result){
+          $scope.noResult = false;
+          if(result.length > 0){
+            vm.currentPage = 1;
+            vm.totalItems = result.length;
+          }else{
+            $scope.noResult = true;
+          }
           $scope.productList = result;
         })
         .catch(function(){
@@ -169,6 +184,13 @@ function onModelChange(model){
      filter['status'] = true;
       productSvc.getProductOnFilter(filter)
       .then(function(result){
+        $scope.noResult = false;
+        if(result.length > 0){
+          vm.currentPage = 1;
+          vm.totalItems = result.length;
+        }else{
+          $scope.noResult = true;
+        }
         $scope.productList = result;
       })
       .catch(function(){

@@ -100,12 +100,12 @@ angular.module('sreizaoApp')
         controller: 'QuoteRequestCtrl',
         layout:'client'
       })
-      /*.state('search', {
-        url:"/search",
-        templateUrl: 'app/product/viewproducts.html',
-        controller: 'ViewProductsCtrl',
+      .state('myaccount', {
+        url:"/myaccount",
+        templateUrl: 'app/account/myaccount/myaccount.html',
+        controller: 'MyAccountCtrl as myAccountVm',
          layout:'client'
-      })*/
+      })
       .state('viewproduct', {
         url:"/viewproducts",
         templateUrl: 'app/product/viewproducts.html',

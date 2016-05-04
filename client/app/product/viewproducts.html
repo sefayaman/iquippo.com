@@ -157,49 +157,67 @@
             </div>
             
           </div>
-          <div class="col-sm-8 col-md-9" ng-if="refresh">
-            <table id="search-result"  dt-options="dtOptions" class="display results" datatable="ng" cellspacing="0" width="100%">
-              <thead>
-                <tr>
-                  <th></th>
-                </tr>
-              </thead>
-              <!-- other than search -->
-              <tbody >
-                <tr ng-repeat="product in productList">
-                  <td>
-                    <div class="media">
-                      <div  class="pull-left result-products">
-                        <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
-                          <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
-                        </a>
-                      </div>
-                      <div class="media-body">
-                        <h4 class="media-heading">
-                          {{product.name}}
-                          <span class="label label-primary" ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'">Rent</span>
-                          <span class="label label-danger" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">Sell</span>
-                          <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
-                          <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
-                          <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
-                          <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
-                          <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
-                          <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
-                          <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
-                        </h4>
-                        <p>{{product.brand.name}}</p>
-                        <p>{{product.model.name}}</p>
-                        <p>{{product.category.name}}</p>
-                        <span>{{product.city}}</span>
-                        <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning pull-right hvr-icon-wobble-horizontal" >View Details</a>
-                      </div>
-                    </div>
-                  </td>                 
-                </tr>
-              </tbody>
-            </table>
-            
+          <div class="col-sm-8 col-md-9">
+
+            <div class="row pull-right">
+            <div class="col-sm-4">Sort by:</div>
+                <div class="col-sm-4">
+                  <select>
+                    <option value="">Relevance</option>
+                    <option value="">Price : Low to High</option>
+                    <option value="">Price : High to Low</option>
+                    <option value="">Price on Request</option>
+                  </select>
+                <div>
+              </div>
+            </div>
           </div>
+          <div class="pull-right compare1">
+            <ul >
+              <li ng-repeat="comp in viewproductVm.productListToCompare">
+               <a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a>
+              </li>
+            </ul>
+             <a href="javascript:void(0);" class="btn btn-success btn-xs">Compare <strong>2</strong> Items</a>
+            </div>
+             <div ng-if="!noResult">
+                 <uib-pagination total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage"></uib-pagination> 
+                <div id="search-result_wrapper" class="search-result">
+                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
+                      <div class="media">
+                        <div  class="pull-left result-products">
+                          <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
+                            <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                          </a>
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">
+                            {{product.name}}
+                            <span class="label label-primary" ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'">Rent</span>
+                            <span class="label label-danger" ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'">Sell</span>
+                            <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
+                            <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
+                            <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                            <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
+                            <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
+                            <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
+                            <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
+                          </h4>
+                          <p>{{product.brand.name}}</p>
+                          <p>{{product.model.name}}</p>
+                          <p>{{product.category.name}}</p>
+                          <span>{{product.city}}</span>
+                          <span class="compare">
+                          <input type="checkbox"> <label>Compare</label></span>
+                          <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning pull-right hvr-icon-wobble-horizontal" >View Details</a>
+                        </div>
+                      </div>
+                 
+              </div>
+           </div>
+           <uib-pagination total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage"></uib-pagination>
+          </div>
+          <div ng-if="noResult">No results found</div>
         </div>
       </div>
     </section>

@@ -1,0 +1,119 @@
+<div class="view-content">
+  <section class="wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="panel panel-default myaccount">
+            <div class = "panel-heading job-filter text-left">
+              My Accounts
+            </div>
+            <ul class="list-group">
+              <a href="javascript:void(0);" class="list-group-item" ng-click="myAccountVm.currentTab= 'basic'">Basic Details</a>
+              <a href="javascript:void(0);" class="list-group-item" ng-click="myAccountVm.currentTab= 'product'">My Products</a>
+              <!-- <a href="javascript:void(0);" class="list-group-item">My Transaction</a> -->
+              
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="account-detail" ng-if="myAccountVm.currentTab== 'basic'">
+            <h4><b>Hello, User</b></h4>
+            <p>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</p>
+           <br>
+            <h4>Basic Details</h4>
+            <legend></legend>
+            <div class="row">
+              <div class="col-sm-3 form-group"><label>Name:</label></div>
+              <div class="col-sm-4 form-group">
+                {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3 form-group"><label>Mobile No:</label></div>
+              <div class="col-sm-5 form-group">
+                +91-{{myAccountVm.userInfo.mobile}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3 form-group"><label>Email:</label></div>
+              <div class="col-sm-5 form-group">
+                +91-{{myAccountVm.userInfo.email}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3 form-group"><label>Country:</label></div>
+              <div class="col-sm-5 form-group">
+               {{myAccountVm.userInfo.country}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3 form-group"><label>Location:</label></div>
+              <div class="col-sm-5 form-group">
+               {{myAccountVm.userInfo.city}}
+              </div>
+            </div>
+          </div>
+
+          <div class="my-product" ng-if="myAccountVm.currentTab == 'product'">
+            <h4>My Products</h4>
+            <legend></legend>
+            <div class="row">
+                <div class="col-sm-5">
+                <div class="rented">
+                <a href="javascript:void(0);"> 
+                    Rented Items
+                </a>
+                    </div> 
+                  <div class="bg-primary text-center rented-item">
+                    50
+                   
+                  </div> 
+                   
+                </div>
+                <div class="col-sm-5">
+                 <div class="rented">
+                  <a href="javascript:void(0);"> 
+                    Listed Items
+                  </a>
+                    </div> 
+                  <div class="bg-success text-center rented-item">
+                   80
+                   
+                  </div>
+                   
+                </div>
+               </div>
+               <div class="form-group"></div>
+              <div class="row">
+                <div class="col-sm-5">
+                <div class="rented">
+                  <a href="javascript:void(0);"> 
+                    Sold Items
+                  </a>
+                    </div> 
+                  <div class="bg-info text-center rented-item">
+                    85
+                    
+                  </div> 
+                  
+                </div>
+                <div class="col-sm-5">
+                <div class="rented">
+                   <a href="javascript:void(0);"> Product Upload</a>
+                    </div> 
+                  <div class="bg-danger text-center rented-item">
+                    120
+                    
+                  </div> 
+                  
+                </div>
+              </div>
+           
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
