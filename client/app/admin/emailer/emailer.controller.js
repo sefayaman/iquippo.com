@@ -1,15 +1,23 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('sreizaoApp')
-  .controller('EmailerCtrl', function ($scope, $location, $window, $rootScope, $http, Modal, uploadSvc, userSvc, subscribeSvc) {
-  	$scope.mailData = {};
+angular.module('admin').controller('EmailerCtrl', EmailerCtrl);
+function EmailerCtrl($scope, $location, $window, $rootScope, $http, Modal, uploadSvc, userSvc, subscribeSvc) {
+    var vm = this;
+  	vm.mailData = {};
     $scope.docObj = {};
     $scope.regUsers = [];
     $scope.subscribeUsers =[];
     $scope.allToEmails =[];
-    var self = this;
+    vm.getAllRegUser = getAllRegUser;
+    vm.getAllSubscribeUser = getAllSubscribeUser;
+    vm.onChangedRegUser = onChangedRegUser;
+    vm.onChangedSubUser = onChangedSubUser;
+    vm.sendEmail = sendEmail;
+    vm.save = save;
+    //var self = this;
 
-    self.getAllRegUser = function(){
+    function getAllRegUser(){
       var filter = {};
 
       userSvc.getUsers(filter).then(function(data){
@@ -20,9 +28,9 @@ angular.module('sreizaoApp')
       })
     }
 
-    self.getAllRegUser();
+    getAllRegUser();
 
-    self.getAllSubscribeUser = function(){
+    function getAllSubscribeUser(){
       var filter = {};
 
       subscribeSvc.getAllSubscribeUsers(filter).then(function(data){
@@ -33,9 +41,9 @@ angular.module('sreizaoApp')
       })
     }
 
-    self.getAllSubscribeUser();
+    getAllSubscribeUser();
 
-    $scope.onChangedRegUser = function(selectedRegValues){
+    function onChangedRegUser(selectedRegValues){
       $scope.selectedRegValuesArr = [];
       if (angular.isUndefined(selectedRegValues)){
         return;
@@ -45,7 +53,7 @@ angular.module('sreizaoApp')
        });
       };
 
-      $scope.onChangedSubUser = function(selectedSubValues){
+    function onChangedSubUser(selectedSubValues){
       $scope.selectedSubValuesArr = [];
       if (angular.isUndefined(selectedSubValues)){
         return;
@@ -65,18 +73,18 @@ angular.module('sreizaoApp')
         });
     });
 
-   $scope.sendEmail = function(){
+   function sendEmail(){
     if(!$scope.selectedRegValuesArr && !$scope.selectedSubValuesArr){
       Modal.alert("Please select recipient",true);
       return;
     }
 
-    if($scope.form.$invalid){
+    if(form.$invalid){
       $scope.submitted = true;
       return;
     }
 
-    if(!$scope.mailData.content){
+    if(!vm.mailData.content){
        Modal.alert("Please enter content",true);
       return;
     }
@@ -91,15 +99,15 @@ angular.module('sreizaoApp')
     }
     
 
-    console.log("Emails All:: " + $scope.allToEmails);
-    $scope.mailData.allToEmails = $scope.allToEmails.slice(0);
+    //console.log("Emails All:: " + vm.allToEmails);
+    vm.mailData.allToEmails = $scope.allToEmails.slice(0);
     $scope.disabled = true;
     if(!$scope.docObj.file){
       save();
       return;
     }
     uploadSvc.upload($scope.docObj.file,importDir).then(function(res){
-      $scope.mailData.document = res.data.filename;
+      vm.mailData.document = res.data.filename;
       save();
     })
     .catch(function(res){
@@ -110,13 +118,13 @@ angular.module('sreizaoApp')
 
   function save(){
     $rootScope.loading = true;
-  	$http.post("/api/emailer",$scope.mailData)
+  	$http.post("/api/emailer",vm.mailData)
   	.then(function(res){
       $rootScope.loading = false;
       if(res.data.errorCode != 0){
          Modal.alert(res.data.message,true);
       }else{
-        $scope.mailData = {};
+        vm.mailData = {};
         $scope.docObj = {};
         Modal.alert("news letter posted successfully.",true);
       }
@@ -129,7 +137,8 @@ angular.module('sreizaoApp')
   		$scope.disabled = false;
   	});
   }
-});
+}
+})();
 
 
 

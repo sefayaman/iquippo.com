@@ -12,6 +12,7 @@ var QuoteSchema = new Schema({
   email: { type: String, lowercase: true },
   group: String,
   category: String,
+  otherCategory: String,
   subcategory:String,
   brand: String,
   model: String,

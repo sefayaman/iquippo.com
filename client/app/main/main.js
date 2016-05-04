@@ -194,7 +194,7 @@ angular.module('sreizaoApp')
       .state('emailer', {
         url: '/emailer',
         templateUrl: 'app/admin/emailer/emailer.html',
-        controller: 'EmailerCtrl',
+        controller: 'EmailerCtrl as emailerVm',
         authenticate:true,
         layout:'admin',
         restrict:true

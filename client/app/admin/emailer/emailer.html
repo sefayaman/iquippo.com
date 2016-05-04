@@ -33,8 +33,8 @@
       				</div> -->
       				<!-- <select class=" form-control" ng-model="selectedValues" ng-options="regUser.email for regUser in regUsers track by regUser._id" multiple>
 					</select> -->
-      				<select class=" form-control" ng-model="selectedRegValues" ng-change="onChangedRegUser(selectedRegValues)" ng-multiple="true" multiple>
-					  <option ng-repeat="regUser in regUsers"  value="{{regUser.email}}" ng-selected="{{selectedValues.indexOf(regUser.email.toString())!=-1}}">{{regUser.fname}} {{regUser.lname}} ({{regUser.email}})</option>
+      				<select class=" form-control" ng-model="emailerVm.selectedRegValues" ng-change="emailerVm.onChangedRegUser(emailerVm.selectedRegValues)" ng-multiple="true" multiple>
+					  <option ng-repeat="regUser in regUsers"  value="{{regUser.email}}" ng-selected="{{emailerVm.selectedRegValues.indexOf(regUser.email.toString())!=-1}}">{{regUser.fname}} {{regUser.lname}} ({{regUser.email}})</option>
 					</select>
 				</div>
       			<div class="col-sm-4 col-sm-offset-5" ng-if="regUser == 'newsletter'"  >
@@ -43,18 +43,18 @@
 	      				<input type="text" class="form-control" placeholder="Search" value="">
 	      				<a href="javascript:void(0);"><i class="fa fa-close right"> </i></a>
       				</div> -->     				
-      				<select name="" class="form-control" ng-model="selectedSubValues" ng-change="onChangedSubUser(selectedSubValues)" multiple>
-					 <option ng-repeat="subUser in subscribeUsers"  value="{{subUser.email}}" ng-selected="{{selectedSubValues.indexOf(subUser.email.toString())!=-1}}">{{subUser.email}}</option>
+      				<select name="" class="form-control" ng-model="emailerVm.selectedSubValues" ng-change="emailerVm.onChangedSubUser(emailerVm.selectedSubValues)" multiple>
+					 <option ng-repeat="subUser in subscribeUsers"  value="{{subUser.email}}" ng-selected="{{emailerVm.selectedSubValues.indexOf(subUser.email.toString())!=-1}}">{{subUser.email}}</option>
 					</select>	
       			</div>
       		</div>
       		<div class="form-group"></div>
 	        		<div class="form-group" ng-class="{'has-error':form.subject.$invalid && submitted}">	        			
-	        			<input type="text" class="form-control" ng-model="mailData.subject" name="subject" placeholder="* Subject" required />
+	        			<input type="text" class="form-control" ng-model="emailerVm.mailData.subject" name="subject" placeholder="* Subject" required />
 	        		</div>
 	        		
 					<div class="form-group" ng-class="{'has-error':form.content.$invalid && submitted}">
-						<textarea ui-tinymce ng-model="mailData.content" name="content" rows="10" ></textarea>
+						<textarea ui-tinymce ng-model="emailerVm.mailData.content" name="content" rows="10" ></textarea>
 					</div>
 					<div class="row form-group">						
 						<div class="col-sm-2">
@@ -65,7 +65,7 @@
 						</div>
 						<div class="col-sm-2">{{docObj.name}}</div>
 						<div class="col-sm-offset-6 col-sm-2">
-							<button class="btn btn-primary btn-block" ng-click="sendEmail()" ng-disabled="disabled">Send</button>
+							<button class="btn btn-primary btn-block" ng-click="emailerVm.sendEmail()" ng-disabled="disabled">Send</button>
 						</div>
 					</div>
 				</form> 

@@ -68,7 +68,8 @@ angular.module('sreizaoApp')
       dataToSend['mobile'] = quote.mobile;
       dataToSend['email']= quote.email; 
       dataToSend['group']= quote.groupName; 
-      dataToSend['category']= quote.catName; 
+      dataToSend['category']= quote.catName;
+      dataToSend['otherCategory']= quote.otherCategory; 
       dataToSend['subcategory']= quote.subcategory; 
       dataToSend['brand']= quote.brand; 
       dataToSend['model']= quote.model; 
