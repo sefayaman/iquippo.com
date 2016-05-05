@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var BuyerSchema = new Schema({
   seller: {},
-  product: {},
+  product: [],
   fname: String,
   mname: String,
   lname: String,

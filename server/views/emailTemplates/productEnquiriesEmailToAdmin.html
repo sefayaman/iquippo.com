@@ -11,10 +11,17 @@
 	</tr>
     <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-         This is to notify you that a prospective buyer has shown interest for buying  <b>{{productId}} {{productName}}</b> with the following details:
+         This is to notify you that a prospective buyer has shown interest for buying with the following details:
 	
         </td>
     </tr>
+    {{#each product}}
+      <tr>
+          <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+           <b>{{productId}}  {{name}}</b>
+          </td>
+      </tr>
+     {{/each}}
 <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
       First name: {{fname}}

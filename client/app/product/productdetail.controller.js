@@ -107,7 +107,8 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
       
     var dataToSend = {};
     dataToSend['seller'] = $scope.currentProduct.seller;
-    dataToSend['product'] =  productObj, 
+    dataToSend.product =  [];
+    dataToSend.product[dataToSend.product.length] = productObj 
     dataToSend['fname'] =  buycontact.fname;
     dataToSend['mname'] = buycontact.mname;
     dataToSend['lname'] = buycontact.lname; 
@@ -134,8 +135,8 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
       emailDynamicData['mobile'] = dataToSend.mobile;
       emailDynamicData['message'] = dataToSend.message;
       emailDynamicData['contact'] = dataToSend.contact;
-      emailDynamicData['productId'] = dataToSend.product.productId;
-      emailDynamicData['productName'] = dataToSend.product.name;
+      emailDynamicData['product'] = dataToSend.product;
+      //emailDynamicData['productName'] = dataToSend.product.name;
       notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
 
       if(result.contact == "email") {

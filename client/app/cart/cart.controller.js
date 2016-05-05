@@ -4,13 +4,15 @@
 
 angular.module('sreizaoApp').controller('ViewCartCtrl',ViewCartCtrl)
 
-function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal) {
+function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http) {
     var vm = this;
     vm.productListToCompare = [];
     vm.deleteProductFromCart = deleteProductFromCart;
     vm.clearCart = clearCart;
     vm.updateSelection = updateSelection;
     vm.compare = compare;
+    vm.sendBuyRequest = sendBuyRequest;
+
     cartSvc.getCartData(Auth.getCurrentUser()._id);
     
     function deleteProductFromCart(index){
@@ -57,6 +59,58 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal) {
              Modal.alert(res,true);
         })
     }
+
+    function sendBuyRequest(buycontact) {
+      var products = [];
+      var dataToSend = {};
+      dataToSend.product =  [];
+      vm.productListToCompare.forEach(function(item,index){
+        var obj = {};
+        obj._id = item._id;
+        obj.name = item.name;
+        obj.productId = item.productId;
+        obj.seller = item.seller;
+        dataToSend.product[dataToSend.product.length] = obj;
+      });
+
+      dataToSend['fname'] =  Auth.getCurrentUser().fname;
+      dataToSend['mname'] = Auth.getCurrentUser().mname;
+      dataToSend['lname'] = Auth.getCurrentUser().lname; 
+      dataToSend['country'] = Auth.getCurrentUser().country; 
+      dataToSend['phone'] = Auth.getCurrentUser().phone; 
+      dataToSend['mobile'] = Auth.getCurrentUser().mobile; 
+      dataToSend['email'] = Auth.getCurrentUser().email;
+      dataToSend['contact'] = Auth.getCurrentUser().contact; 
+
+      $http.post('/api/buyer', dataToSend)
+      .success(function(result) {
+        $scope.buycontact = {};
+        var data = {};
+        data['to'] = "subhash.patel@bharatconnect.com";//supportMail;
+        data['subject'] = 'Request for buy a product';
+        var emailDynamicData = {};
+        emailDynamicData['serverPath'] = serverPath;
+        emailDynamicData['fname'] = dataToSend.fname;
+        emailDynamicData['lname'] = dataToSend.lname; 
+        emailDynamicData['country'] = dataToSend.country; 
+        emailDynamicData['email'] = dataToSend.email;
+        emailDynamicData['mobile'] = dataToSend.mobile;
+        emailDynamicData['message'] = dataToSend.message;
+        emailDynamicData['contact'] = dataToSend.contact;
+        emailDynamicData['product'] = dataToSend.product;
+        notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
+
+        if(result.contact == "email") {
+          data['to'] = "subhash.patel@bharatconnect.com";//emailDynamicData.email;
+          data['subject'] = 'No reply: Product Enquiry request received';
+          notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
+        }
+        Modal.alert(informationMessage.buyRequestSuccess,true);
+      }).error(function(res){
+          Modal.alert(res);
+      });
+  }
+
   function compare(){
 
      if(vm.productListToCompare.length < 2){
