@@ -16,6 +16,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.imgBottomCentre = "";
     vm.radioModel = 'SELL';
     vm.isCollapsed = true;
+    vm.sortedFeaturedProduct = [];
     
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
@@ -40,6 +41,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       productSvc.getFeaturedProduct().
       then(function(result){
          vm.featuredslides = result;
+         sortProduct(result);
       })
       .catch(function(res){
         //error handling
@@ -181,6 +183,24 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
      $scope.setPopover = function(evt){
         var index = $(evt.currentTarget).data('index');
         $scope.popoverData = $scope.featuredslides[index];
+    }
+
+    function sortProduct(products){
+        if(products.length == 0){
+          return;
+        }
+        vm.sortedFeaturedProduct[vm.sortedFeaturedProduct.length] = [];
+        var colCounter = 0;
+        var rowCounter = 0;
+        products.forEach(function(item){
+            vm.sortedFeaturedProduct[rowCounter][colCounter] = item;
+            colCounter ++;
+            if(colCounter == 4){
+                colCounter = 0;
+                vm.sortedFeaturedProduct[vm.sortedFeaturedProduct.length] = [];
+                rowCounter++;
+            }
+        })
     }
   }
 })();

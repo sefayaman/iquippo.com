@@ -146,9 +146,9 @@
           </div>
           <div id="slides_control">    
             <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
-              <uib-slide ng-repeat="slide in mainVm.featuredslides">
+              <uib-slide ng-repeat="gpSlide in mainVm.sortedFeaturedProduct">
                 <div class="row">
-                  <div class="col-sm-3">
+                  <div class="col-sm-3" ng-repeat="slide in gpSlide">
                     <div class="panel panel-default">  
                       <a ng-href="/productdetail/{{slide._id}}">
                         <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
@@ -172,79 +172,6 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-3">
-                    <div class="panel panel-default">  
-                      <a ng-href="/productdetail/{{slide._id}}">
-                        <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
-                      </a> 
-                      <div class="panel-heading">
-                        <h3 class="panel-title">{{slide.name}}</h3>
-                      </div>                  
-                      <div class="panel-body">
-                        <div class="row">
-                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
-                          <div class="col-xs-6 form-group"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
-                        </div>
-                        <div class="row">
-                          <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
-                          <div class="col-xs-6 form-group">
-                            <i class="fa fa-ticket"></i>
-                            <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                            <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="panel panel-default">  
-                      <a ng-href="/productdetail/{{slide._id}}">
-                        <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
-                      </a> 
-                      <div class="panel-heading">
-                        <h3 class="panel-title">{{slide.name}}</h3>
-                      </div>                  
-                      <div class="panel-body">
-                        <div class="row">
-                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
-                          <div class="col-xs-6 form-group"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
-                        </div>
-                        <div class="row">
-                          <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
-                          <div class="col-xs-6 form-group">
-                            <i class="fa fa-ticket"></i>
-                            <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                            <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="panel panel-default">  
-                      <a ng-href="/productdetail/{{slide._id}}">
-                        <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
-                      </a> 
-                      <div class="panel-heading">
-                        <h3 class="panel-title">{{slide.name}}</h3>
-                      </div>                  
-                      <div class="panel-body">
-                        <div class="row">
-                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
-                          <div class="col-xs-6 form-group"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
-                        </div>
-                        <div class="row">
-                          <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
-                          <div class="col-xs-6 form-group">
-                            <i class="fa fa-ticket"></i>
-                            <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                            <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                 </div>
               </uib-slide>
             </uib-carousel>
