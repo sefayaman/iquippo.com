@@ -161,8 +161,9 @@
                       <div class="row">
                         <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
                         <div class="col-xs-6 form-group">
-                          <span  class="label label-danger" ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                          <span  class="label label-primary" ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
+                          <i class="fa fa-ticket"></i>
+                          <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
+                          <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
                         </div>
                       </div>
                     </div>
