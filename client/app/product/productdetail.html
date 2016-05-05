@@ -52,6 +52,17 @@
                   </li>
               </ul>
             </div>
+            <div class="form-group clearfix"></div>
+            <div class="video-link">
+              <ul>
+                <li ng-repeat="link in currentProduct.videoLinks">
+                  <a ng-href="{{link.uri}}" target="_blank">
+                    <!-- {{link.uri}} -->
+                    <i class="fa fa-youtube-play fa-4x"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
 
             <div class="form-group clearfix"></div>
                             
@@ -117,10 +128,10 @@
                       <td>Product Condition</td>
                       <td>{{currentProduct.productCondition}}</td>
                     </tr>
-                    <tr ng-repeat="link in currentProduct.videoLinks">
+                    <!-- <tr ng-repeat="link in currentProduct.videoLinks">
                       <td>Video Link</td>
                       <td><a ng-href="{{link.uri}}" target="_blank">{{link.uri}}</a></td>
-                    </tr>
+                    </tr> -->
                   </table>
                 </uib-accordion-group>
 
