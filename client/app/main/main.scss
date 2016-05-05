@@ -685,3 +685,9 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .bordered{border-right:1px solid rgba(204, 204, 204, 0.18);
     border-bottom: 1px solid rgba(204, 204, 204, 0.18);
     padding: 10px;text-align: left;}
+
+/*cart changes css*/
+.compare-cart-item{float: right;background: #004394;border: 1px solid  #004394;}
+.compare-cart-item:hover{background: #004394;border: 1px solid  #004394;}
+.send-message{  float: right;margin-left: 20px;background: #E3000F;border: 1px solid  #E3000F;} 
+.send-message:hover{background: #E3000F;border: 1px solid  #E3000F;}

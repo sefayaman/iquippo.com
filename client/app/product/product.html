@@ -451,7 +451,7 @@
                       Upload Video Link
                     </div>
                     <div class="col-sm-4 col-md-3"><input type="text" placeholder="Video Url" ng-value="link.uri" ng-model="link.uri" class="form-control" name=""></div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                      <!--  <span ng-if="!isActive()">{{video.name}}</span>
                       <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a> -->
                       <a class="btn btn-danger" ng-href="{{link.uri}}" target="_blank"><i class="fa fa-play"></i></a>
@@ -460,7 +460,20 @@
                       <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
-                  </div>        
+                  </div> 
+                  <div class="row">
+                    <div class="form-group col-sm-5">Asset Status</div>
+                    <div class="form-group col-sm-4">
+                     <select class="form-control">
+                            <option value="">Asset Status</option>
+                            <option value="">Rented</option>
+                            <option value="">Sold</option>
+                            <option value="">Listed</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                    
+                  </div>       
                </div>
              </div>
 
@@ -474,12 +487,12 @@
                     <div ng-if="isActive()" class="col-sm-6 text-right">
                       <a ng-if="isActive()" href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
                     </div>
-                    <div class="col-sm-1 text-right pull-right">                  
+                   <!--  <div class="col-sm-1 text-right pull-right">                  
                       <span class="text-right text-danger fileinput-button">
                               <span><i class="fa fa-file-text fa-2x"></i></span>
                               <input type="file" name="doc"  data-filetype="doc" file-upload>
                       </span>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="panel-body">
@@ -525,6 +538,19 @@
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div> 
+                  <div class="row">
+                    <div class="col-sm-5 form-group">Upload Document</div>
+                    <div class="col-sm-2">
+                      <span class="btn btn-warning fileinput-button">
+                       <input type="file" name="doc"  data-filetype="doc" file-upload>
+                        <span><i class="fa fa-upload"></i> Upload Document</span>
+                      </span>
+                    </div>
+                    <div class="col-sm-1 text-right">
+                      adydwygdcccccccccccccccccc
+                    </div>
+
+                  </div>
                 </div>
               </div>
 
@@ -548,6 +574,45 @@
                 </div>
               </div>
               
+               <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Doc Upload and Categorization</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="form-group row" ng-repeat="serviceinfo in product.serviceInfo">
+                     <div class="col-sm-3 form-group">Document Category</div>
+                   
+                    
+                    <div class="col-sm-3 form-group">
+                      <select class="form-control">
+                        <option value="">Policy</option>
+                        <option value="">Certification</option>
+                        <option value="">Other</option>
+                      </select>
+                       <i class="caret"></i>
+                    </div>
+                    <div class="col-sm-2">
+                  <span class="btn btn-warning fileinput-button">
+                   <input type="file" name="doc"  data-filetype="doc" file-upload>
+                    <span><i class="fa fa-upload"></i> Upload Document</span>
+                               
+                  </span>
+            </div>
+            <div class="col-sm-1 text-right">
+                      vdvdjhdddddkkvjdkbjoooooooo
+                    </div>
+                    <div class="col-sm-3 col-md-2 pull-right">
+                      <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
+                      <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+
+
+
 
                 <div class="clearfix form-group"></div>  
                 <div class="row form-group">
@@ -558,7 +623,7 @@
                           <input type="file" name="tcDoc"  data-filetype="tcDoc" file-upload>
                       </span>
                     </div>
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-1 text-right">
                       {{tcDoc.name}}
                     </div>
                   </div>

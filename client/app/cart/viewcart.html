@@ -7,6 +7,7 @@
            <table id="mytable" class="table table-bordred table-striped">                  
             <thead>
                <tr>
+                  <th></th>
                    <th>Image</th>
                    <th>Product ID</th>
                     <th>Group</th>
@@ -23,7 +24,7 @@
             <tbody>
   
               <tr ng-repeat="product in cart.products">
-  
+              <td><input type="checkbox" ng-click="cartVm.updateSelection($event,product)"></td>
                 <td><img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.images[0].src}}" width="50" height="50"></td>
                 <td>{{product.productId}}</td>
                 <td>{{product.group.name}}</td>
@@ -45,7 +46,10 @@
               <tr>
                 <td colspan="12" class="text-right">
                 <a href="#" class="btn btn-warning" ng-show="cart.products.length > 0" ng-click="cartVm.clearCart()">Clear All</a>
-                </td>
+                <a href="javascript:void(0);" class="btn btn-success send-message">Send Message</a>
+                
+                <a href="javascript:void(0);" class="btn btn-success compare-cart-item" ng-click="cartVm.compare()">Compare</a>
+                 </td>
               </tr>   
             </tbody>
       
