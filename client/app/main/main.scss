@@ -679,3 +679,9 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .my-product .bg-info{background: #61b5ce;}
 .my-product .bg-warning{background: #ee9b0a;}
 .count-compare{position: absolute;left: 30px; top:-12px; background: #E3000F; padding: 1px 3px; font-size: 10px; color: #fff;}
+.big {
+    width: 90%;
+}
+.bordered{border-right:1px solid rgba(204, 204, 204, 0.18);
+    border-bottom: 1px solid rgba(204, 204, 204, 0.18);
+    padding: 10px;text-align: left;}

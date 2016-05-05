@@ -3,7 +3,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
   
   var vm = this;
 
@@ -29,7 +29,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope, productSvc,ca
   vm.maxSize = 10;
   vm.sortByFlag = "";
  
-  vm.productListToCompare = []
+  vm.productListToCompare = [];
 
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
@@ -332,6 +332,7 @@ $scope.today = function() {
     };
 
   function sortBy(){
+
     switch(vm.sortByFlag){
       case "lh":
          var list = _.orderBy($scope.productList,['grossPrice'],['asc']);
@@ -356,18 +357,31 @@ $scope.today = function() {
   }
 
   function compare(){
-     if(vm.productListToCompare.length == 0){
-          Modal.alert("Please select products that you want to compare.",true);
+
+     if(vm.productListToCompare.length < 2){
+          Modal.alert("Please select atleat two products to compare.",true);
           return;
       }
-      console.log(vm.productListToCompare);
+       var prevScope = $rootScope.$new();
+       prevScope.productList = vm.productListToCompare;
+       prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;     
+       var prvProductModal = $uibModal.open({
+            templateUrl: "app/product/productcompare.html",
+            scope: prevScope,
+            windowTopClass:'product-preview',
+            size: 'lg'
+        });
+         prevScope.dismiss = function () {
+          prvProductModal.dismiss('cancel');
+        };
   }
 
   function updateSelection(event,prd){
         var checkbox = event.target;
         var action = checkbox.checked?'add':'remove';
         if( action == 'add' && vm.productListToCompare.length >= 4){
-          Modal.alert("You can compare upto 4 product.",true);
+          angular.element(checkbox).prop("checked",false);
+          Modal.alert("You can compare upto 4 products.",true);
           return;
         }
         var index = getIndex(prd);
