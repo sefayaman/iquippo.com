@@ -25,6 +25,22 @@ angular.module('sreizaoApp')
                 }
             };
 }])
+.directive('youTube', function($sce) {
+  return {
+    restrict: 'EA',
+    scope: { videoid:'=' },
+    replace: true,
+    template: '<iframe width="420" height="315" src="{{url}}" frameborder="0" allowfullscreen></iframe>',
+    link: function (scope) {
+      scope.$watch('videoid', function (newVal) {
+           if (newVal) {
+               scope.url = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + newVal+"?autoplay=1");
+           }
+        });
+       //scope.url = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + scope.videoId);
+    }
+  };
+})
 .directive('imageUpload', function (Modal) {
     return {
         scope: true,        //create a new scope
@@ -70,6 +86,8 @@ angular.module('sreizaoApp')
                      emitObj.type = attrs.filetype;
                  if(files.length == 0)
                    return;
+                  if(attrs.index)
+                      emitObj.index = attrs.index;
                 scope.$emit("fileSelected", emitObj);                                   
             });
         }

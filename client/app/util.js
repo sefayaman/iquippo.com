@@ -40,6 +40,19 @@ function hover(_this){
 function leave(){
     $('.popover').hide();
 }
+
+function youtube_parser(url){
+  if(!url)
+    return "";
+  var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+  var match = url.match(regExp);
+  if (match&&match[7].length==11){
+      var b=match[7];
+      return b;
+  }else{
+      return "";
+  }
+}
 // pop overs
 
 // Force hiding of "original text" popup for menus, etc. (very annoying)

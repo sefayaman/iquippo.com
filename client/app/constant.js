@@ -59,6 +59,20 @@ var classifiedAdDir = "classifiedad";
 var templateDir = "templates";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";
 
+var assetStatuses = [
+{
+  name:"Listed",
+  code:"listed"
+},
+{
+  name:"Rented",
+  code:"rented"
+},
+{
+  name:"Sold",
+  code:"sold"
+}
+]
 var tradeType = [
 {
   "name" : "Rent",

@@ -220,6 +220,15 @@ function submitProduct(){
     vm.currentProduct.status = false;
     vm.currentProduct.applyWaterMark = false;
   }
+  
+  vm.product.assetStatus = assetStatuses[0].code;
+  vm.product.assetStatuses = [];
+  var stObj = {};
+  stObj.userId = product.user._id;
+  stObj.status = assetStatuses[0].code;
+  stObj.createdAt = new Date();
+  vm.product.assetStatuses[vm.product.assetStatuses.length] = stObj;
+
   vm.currentProduct.images = [];
   vm.images.forEach(function(item,idx){
     if(item.src){

@@ -25,6 +25,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
   vm.sendBuyRequest = sendBuyRequest;
   vm.previewProduct = previewProduct;
   vm.addProductToCart = addProductToCart;
+  vm.playVideo = playVideo;
 
   function loadUserDetail(){
 
@@ -72,7 +73,23 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
   init();
   loadUserDetail();
 
+  function playVideo(idx){
+      var videoScope = $rootScope.$new();
+      videoScope.productName = $scope.currentProduct.name;
+      var videoId = youtube_parser($scope.currentProduct.videoLinks[idx].uri);
+      if(!videoId)
+        return;
+      videoScope.videoid = videoId;
+      var playerModal = $uibModal.open({
+          templateUrl: "app/product/youtubeplayer.html",
+          scope: videoScope,
+          size: 'lg'
+      });
+    videoScope.close = function(){
+      playerModal.dismiss('cancel');
+    }
 
+  };
   function getDateFormat(date){
     if(!date)
       return;

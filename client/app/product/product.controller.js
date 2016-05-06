@@ -1,19 +1,24 @@
-'use strict';
+(function(){
 
+'use strict';
 angular.module('sreizaoApp')
- .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout',  function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout) {
+ .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout','$sce' , function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout,$sce) {
     $scope.categoryList = [];
+    var prevAssetStatus = assetStatuses[0].code;
     var product = $scope.product = {};
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
     $scope.product.images = [];
     $scope.assetDir = "";
+    $scope.assetStatuses = assetStatuses;
     $scope.product.technicalInfo = {};
     $scope.product.technicalInfo.params = [{}];
     $scope.product.serviceInfo = [{}];
+    $scope.product.miscDocuments = [{}];
     $scope.product.videoLinks = [{}];
     $scope.product.country = "";
     $scope.product.status = false;
+    $scope.product.assetStatus = assetStatuses[0].code;
     $scope.product.featured = false;
     $scope.product.rent = {};
     $scope.product.rent.rateHours = {};
@@ -123,6 +128,10 @@ angular.module('sreizaoApp')
       });
       if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
          $scope.product.videoLinks = [{}];
+       if(product.assetStatus)
+            prevAssetStatus = product.assetStatus;
+        else
+          prevAssetStatus = product.assetStatus = "";
 
       $scope.product.country = $scope.product.country;
       videoObj.name = product.videoName;
@@ -281,6 +290,9 @@ angular.module('sreizaoApp')
             videoObj.name = result.data.filename;
           else if(args.type == "tcDoc")
             tcDocObj.name = result.data.filename;
+          else if(args.type == "mdoc"){
+            $scope.product.miscDocuments[args.index].name = result.data.filename;
+          }
           else  
             docObj.name = result.data.filename;
         })
@@ -505,6 +517,14 @@ angular.module('sreizaoApp')
       }
       if($scope.product.currencyType == "")
         $scope.product.currencyType = "INR";
+      
+      $scope.product.assetStatuses = [];
+      var stObj = {};
+      stObj.userId = product.user._id;
+      stObj.status = assetStatuses[0].code;
+      stObj.createdAt = new Date();
+      $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
+
       /*adding seller info */ 
       productSvc.addProduct(product).then(function(result){
         $rootScope.loading = false;
@@ -549,9 +569,23 @@ angular.module('sreizaoApp')
         product.status = false;
         product.featured = false;
       }
-
       if($scope.product.currencyType == "")
         $scope.product.currencyType = "INR";
+        if(!$scope.product.assetStatuses)
+            $scope.product.assetStatuses = [];
+        if(prevAssetStatus != $scope.product.assetStatus){
+            var stObj = {};
+            stObj.userId = $scope.product.user._id;
+            stObj.status = $scope.product.assetStatus;
+            stObj.createdAt = new Date();
+            $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj; 
+            if($scope.product.assetStatus == assetStatuses[2].code){
+              $scope.product.isSold = true;
+              $scope.product.status = false;
+            }
+        }
+       
+
       productSvc.updateProduct(product).then(function(result){
         $rootScope.loading = false;
          setScroll(0);
@@ -800,6 +834,24 @@ angular.module('sreizaoApp')
 
       };
 
+      $scope.playVideo = function(idx){
+          var videoScope = $rootScope.$new();
+          videoScope.productName = $scope.product.name;
+          var videoId = youtube_parser($scope.product.videoLinks[idx].uri);
+          if(!videoId)
+            return;
+          videoScope.videoid = videoId;
+          var playerModal = $uibModal.open({
+              templateUrl: "app/product/youtubeplayer.html",
+              scope: videoScope,
+              size: 'lg'
+          });
+        videoScope.close = function(){
+          playerModal.dismiss('cancel');
+        }
+
+      };
+
       $scope.oneAtATime = true;
       $scope.status = {
         FirstOpen: true,
@@ -876,3 +928,6 @@ angular.module('sreizaoApp')
            
   });
 
+
+
+})();

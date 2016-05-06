@@ -37,6 +37,9 @@ var ProductSchema = new Schema({
   comment:String,
   videoName:String,
   documentName:String,
+  miscDocuments:[{}],
+  assetStatus:{type:String,default:'listed'},
+  assetStatuses:[{}],
   featured: {type:Boolean,default:false},
   deleted: {
     type: Boolean,

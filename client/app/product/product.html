@@ -454,21 +454,19 @@
                     <div class="col-sm-2">
                      <!--  <span ng-if="!isActive()">{{video.name}}</span>
                       <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a> -->
-                      <a class="btn btn-danger" ng-href="{{link.uri}}" target="_blank"><i class="fa fa-play"></i></a>
+                      <a class="btn btn-danger" href="javascript:void(0)" ng-if="link.uri" ng-click="playVideo($index)"><i class="fa fa-play"></i></a>
                     </div>
                     <div class="col-sm-4 col-md-2 pull-right">
                       <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div> 
-                  <div class="row">
+                  <div class="row" ng-if="isAdmin() && isEdit">
                     <div class="form-group col-sm-5">Asset Status</div>
                     <div class="form-group col-sm-4">
-                     <select class="form-control">
+                     <select class="form-control" ng-model="product.assetStatus">
                             <option value="">Asset Status</option>
-                            <option value="">Rented</option>
-                            <option value="">Sold</option>
-                            <option value="">Listed</option>
+                            <option value="{{st.code}}" ng-repeat="st in assetStatuses">{{st.name}}</option>
                       </select>
                       <i class="caret"></i>
                     </div>
@@ -480,20 +478,20 @@
               <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title pull-left">Technical information</h3>
-                   <div class="row">                    
+                   <!-- <div class="row">                    
                     <div ng-if="!isActive()" class="col-sm-offset-4 col-sm-5 text-right">
                       {{doc.name}}
                     </div>
                     <div ng-if="isActive()" class="col-sm-6 text-right">
                       <a ng-if="isActive()" href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
                     </div>
-                   <!--  <div class="col-sm-1 text-right pull-right">                  
+                    <div class="col-sm-1 text-right pull-right">                  
                       <span class="text-right text-danger fileinput-button">
                               <span><i class="fa fa-file-text fa-2x"></i></span>
                               <input type="file" name="doc"  data-filetype="doc" file-upload>
                       </span>
-                    </div> -->
-                  </div>
+                    </div>
+                  </div> -->
                 </div>
                 <div class="panel-body">
                  
@@ -547,7 +545,12 @@
                       </span>
                     </div>
                     <div class="col-sm-1 text-right">
-                      adydwygdcccccccccccccccccc
+                      <div class="col-sm-offset-4 col-sm-5 text-right">
+                        {{doc.name}}
+                      </div>
+                      <div ng-if="isActive() && isEdit" class="col-sm-6 text-right">
+                        <a  href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
+                      </div>
                     </div>
 
                   </div>
@@ -579,31 +582,31 @@
                   <h3 class="panel-title">Doc Upload and Categorization</h3>
                 </div>
                 <div class="panel-body">
-                  <div class="form-group row" ng-repeat="serviceinfo in product.serviceInfo">
+                  <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
                      <div class="col-sm-3 form-group">Document Category</div>
                    
                     
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-3 form-group" ng-model="miscDoc.type">
                       <select class="form-control">
-                        <option value="">Policy</option>
-                        <option value="">Certification</option>
-                        <option value="">Other</option>
+                        <option value="policy">Policy</option>
+                        <option value="ertification">Certification</option>
+                        <option value="other">Other</option>
                       </select>
                        <i class="caret"></i>
                     </div>
                     <div class="col-sm-2">
                   <span class="btn btn-warning fileinput-button">
-                   <input type="file" name="doc"  data-filetype="doc" file-upload>
+                   <input type="file" data-index="{{$index}}" name="doc"  data-filetype="mdoc" file-upload>
                     <span><i class="fa fa-upload"></i> Upload Document</span>
                                
                   </span>
             </div>
-            <div class="col-sm-1 text-right">
-                      vdvdjhdddddkkvjdkbjoooooooo
+                <div class="col-sm-1 text-right">
+                      {{miscDoc.name}}
                     </div>
                     <div class="col-sm-3 col-md-2 pull-right">
-                      <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
-                      <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
+                      <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
+                      <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
                   </div>
                 </div>

@@ -56,7 +56,7 @@
             <div class="video-link">
               <ul>
                 <li ng-repeat="link in currentProduct.videoLinks">
-                  <a ng-href="{{link.uri}}" target="_blank">
+                  <a href="javascript:void(0)" ng-click="productDetailVm.playVideo($index)">
                     <!-- {{link.uri}} -->
                     <i class="fa fa-youtube-play fa-4x"></i>
                   </a>
