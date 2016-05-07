@@ -68,8 +68,10 @@ angular.module('sreizaoApp')
       dataToSend['mobile'] = quote.mobile;
       dataToSend['email']= quote.email; 
       dataToSend['group']= quote.groupName; 
-      dataToSend['category']= quote.catName;
-      dataToSend['otherCategory']= quote.otherCategory; 
+      if(quote.catName != 'Other')
+        dataToSend['category']= quote.catName;
+      else
+        dataToSend['category']= quote.otherCategory;
       dataToSend['subcategory']= quote.subcategory; 
       dataToSend['brand']= quote.brand; 
       dataToSend['model']= quote.model; 
@@ -84,13 +86,14 @@ angular.module('sreizaoApp')
         $scope.form.submitted = false;
         Modal.alert(informationMessage.quoteSuccess,true);
         dataToSend['serverPath']= serverPath;
+        dataToSend['supportContact']= supportContact;
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Request for a Quote: New Product';
         notificationSvc.sendNotification('productEnquiriesRequestForQuoteToAdmin', data, dataToSend, 'email');
         data['to'] = dataToSend.email;
         data['subject'] = 'No reply: Request for a Quote received';
-        notificationSvc.sendNotification('productEnquiriesRequestForQuoteToCustomer', data, {fname:dataToSend.fname, serverPath:dataToSend.serverPath},'email');
+        notificationSvc.sendNotification('productEnquiriesRequestForQuoteToCustomer', data, dataToSend,'email');
       }).error(function(res){
         Modal.alert(res,true);
       });

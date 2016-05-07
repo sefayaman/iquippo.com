@@ -19,6 +19,7 @@ var email = require('./components/sendEmail.js');
 var sms = require('./components/sms.js');
 var notification = require('./components/notification.js');
 var checkExpiryService = require('./components/checkExpiry.js');
+var checkQuickQueryNotificationService = require('./components/checkQuickQueryNotification.js');
 var http = require('http');
 var fsExtra = require('fs.extra');
  var gm = require('gm');
@@ -201,6 +202,7 @@ server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   notification.startNotification();
   checkExpiryService.start();
+  checkQuickQueryNotificationService.start();
 });
 
 // Expose app
