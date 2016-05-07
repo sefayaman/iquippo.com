@@ -24,6 +24,17 @@ $(document).ready(function () {
 
     });
 });
+
+window.onbeforeunload = function (event) {
+  var message = 'Would you like to review our website? Please go to the following link: ....';
+  if (typeof event == 'undefined') {
+    event = window.event;
+  }
+  if (event) {
+    event.returnValue = message;
+  }
+  return message;
+}
  
 function setScroll(val){
 
