@@ -1352,7 +1352,7 @@ function importProducts(req,res,data){
           }
           product["rent"].fromDate = trim(fromDate);
           var toDate = row["Availability_of_Asset_To"];
-          if(!fromDate){
+          if(!toDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
             errorObj['message'] = "Availability_of_Asset_To is required to be filled.";
