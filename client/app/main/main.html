@@ -145,7 +145,7 @@
             <legend class="dark"></legend>
           </div>
           <div id="slides_control">    
-            <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
+            <uib-carousel no-wrap="noWrapSlides">
               <uib-slide ng-repeat="gpSlide in mainVm.sortedFeaturedProduct">
                 <div class="row">
                   <div class="col-sm-3" ng-repeat="slide in gpSlide">
@@ -159,11 +159,11 @@
                       <div class="panel-body">
                         <div class="row">
                           <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
-                          <div class="col-xs-6 form-group"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
+                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
                         </div>
                         <div class="row">
-                          <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
-                          <div class="col-xs-6 form-group">
+                          <div class="col-xs-6 form-group text-ellips"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
+                          <div class="col-xs-6 form-group text-ellips">
                             <i class="fa fa-ticket"></i>
                             <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
                             <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>

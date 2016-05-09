@@ -7,7 +7,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
-    vm.myInterval = 4000;
+    vm.myInterval = 7000;
     vm.noWrapSlides = false;
     vm.slides = HOME_BANNER;
     vm.featuredslides = [];
