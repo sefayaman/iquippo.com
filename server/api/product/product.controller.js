@@ -377,6 +377,23 @@ exports.countryWiseProductCount = function(req,res){
   );
 }
 
+exports.userWiseProductCount = function(req,res){
+  var filter = {};
+  if(req.body.userId)
+    filter["seller._id"] = req.body.userId;
+  
+  Product.aggregate(
+    { $match: filter },
+    { $group: 
+      { _id: '$assetStatus', total_assetStatus: { $sum: 1 } } 
+    },
+    function (err, result) {
+      if (err) return handleError(err);
+      return res.status(200).json(result);
+    }
+  );
+}
+
 // Creates a new product History in the DB.
 exports.createHistory = function(req, res) {
   req.body.createdAt = new Date();

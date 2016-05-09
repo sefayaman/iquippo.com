@@ -129,7 +129,7 @@ angular.module('sreizaoApp')
     }
 
     if($scope.newUser.agree) {
-      Auth.validateSignup({email:$scope.newUser.email,mobile:$scope.newUser.mobile}).then(function(data){
+      Auth.validateSignup({email:$scope.newUser.email,mobile:$scope.newUser.mobile,userUpdate:false}).then(function(data){
         if(data.errorCode == 1){
            Modal.alert("Email address already in use. Please use another email address",true);
            return;

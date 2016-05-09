@@ -28,14 +28,14 @@
                 </a>
 
                 <div class="pull-right">
-                  <button class="btn btn-success"><i class="fa fa-edit"></i></button>
+                  <button class="btn btn-success" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-edit"></i></button>
                 </div>                
                 <div class="media-body">
                   <h3 class="media-heading">
                     {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}} <small>(Privet Entrepreneur)</small>
                   </h3>
                   <h4><i class="fa fa-map-marker"></i> {{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}</h4>
-                  <h5><i class="fa fa-building"></i> Bharat Connect Technologies Pvt. Ltd</h5>
+                  <span ng-if="myAccountVm.userInfo.company"><h5><i class="fa fa-building"></i> myAccountVm.userInfo.company</h5></span> 
                   <h5><i class="fa fa-envelope"></i> {{myAccountVm.userInfo.email}}</h5>
                   <h5><i class="fa fa-phone"></i> {{myAccountVm.userInfo.mobile}}</h5>
                   
@@ -43,57 +43,57 @@
                 
               </div>
 
-              <div class="well">
+              <div class="well" uib-collapse="isCollapsed">
                 <h4>Edit Basic Information</h4>
                 <form class="form-signin" name="form" novalidate>
                   <div class="">
                     <div class="row">
-                      <div class="form-group col-sm-4" >
-                        <input type="text" class="form-control" name="fname" placeholder="*First Name" required/>
+                      <div class="form-group col-sm-4" ng-class="{'has-error': form.fname.$invalid && submitted }">
+                        <input type="text" class="form-control" name="fname" ng-model="myAccountVm.userInfo.fname" value="" placeholder="*First Name" required/>
                       </div>
                       <div class="form-group col-sm-4">
-                        <input type="text" class="form-control" name="mname" placeholder="Middle Name"/>
+                        <input type="text" class="form-control" name="mname" ng-model="myAccountVm.userInfo.mname" value="" placeholder="Middle Name"/>
                       </div>
-                      <div class="form-group col-sm-4">
-                        <input type="text" class="form-control" name="lname"  placeholder="*Last Name" required/>
+                      <div class="form-group col-sm-4" ng-class="{'has-error': form.lname.$invalid && submitted }">
+                        <input type="text" class="form-control" name="lname" ng-model="myAccountVm.userInfo.lname" value="" placeholder="*Last Name" required/>
                       </div>
                     </div>
 
                     <div class="row">
                       <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" name="phone" placeholder="Phone No.">
+                        <input type="text" class="form-control" name="phone" ng-model="myAccountVm.userInfo.phone" value="" placeholder="Phone No.">
                       </div>
-                      <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" name="mobile"  value="" placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
+                        <input type="text" class="form-control" name="mobile" ng-model="myAccountVm.userInfo.mobile" value="" placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required disabled>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form-group col-sm-6">
-                        <select class="form-control" name="country"  required>
+                      <div class="form-group col-sm-6" ng-class="{'has-error': form.country.$invalid && submitted }">
+                        <select class="form-control" name="country" ng-model="myAccountVm.userInfo.country" required>
                           <option value="" disabled>*Select Country</option>
-                          <option  ng-repeat ="countrys in allCountries" value="{{country.name}}">{{country.name}}</option>
+                          <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
                           <option value="Other">Other</option>
                         </select>
                         <i class="caret"></i>
                       </div>
                       <div class="form-group col-sm-6"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                        <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
+                        <input class="form-control" type="text" name="otherCountry" ng-model="myAccountVm.userInfo.otherCountry" placeholder="*Other Country" ng-required= "myAccountVm.userInfo.country == 'Other'" ng-disabled="myAccountVm.userInfo.country != 'Other'">
                       </div>
                     </div>
                     <div class="row">
                       <div class="form-group col-sm-6" ng-class="{'has-error': form.location.$invalid && submitted }">
-                        <select class="form-control" name="location" ng-model="signupVm.user.city" required>
+                        <select class="form-control" name="location" ng-model="myAccountVm.userInfo.city" required>
                           <option value="" disabled>Select Location</option>
                             <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                         </select>
                         <i class="caret"></i>
                       </div>
                       <div class="form-group col-sm-6">
-                        <input class="form-control" type="text" name="otherCountry" placeholder="Comapany Name">
+                        <input type="text" class="form-control" name="company" ng-model="myAccountVm.userInfo.company" placeholder="*Company Name" ng-required= "myAccountVm.userInfo.userType == 'legalentity'" ng-disabled="myAccountVm.userInfo.userType != 'legalentity'">
                       </div>
                     </div>
                     <div class="form-group text-right">
-                          <button type="button" class="btn btn-lg btn-warning" ng-click="signupVm.register()">Save</button>
+                          <button type="button" class="btn btn-lg btn-warning" ng-click="myAccountVm.editUser()">Save</button>
                     </div>                    
                   </div>
                   <!-- </div> -->
@@ -153,7 +153,7 @@
                           <span class="sr-only">40% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>50</h4>
+                      <h4>{{myAccountVm.rentedCounts}}</h4>
                     </a>
                   </div>
                 </div>  
@@ -168,7 +168,7 @@
                           <span class="sr-only">40% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>50</h4>
+                      <h4>{{myAccountVm.listedCounts}}</h4>
                     </a>
                   </div>
                 </div>  
@@ -183,7 +183,7 @@
                           <span class="sr-only">40% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>50</h4>
+                      <h4>{{myAccountVm.soldCounts}}</h4>
                     </a>
                   </div>
                 </div>  
@@ -198,7 +198,7 @@
                           <span class="sr-only">40% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>50</h4>
+                      <h4>{{myAccountVm.totalProducts}}</h4>
                     </a>
                   </div>
                 </div>  
