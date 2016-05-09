@@ -53,27 +53,31 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
         return;
       }
 
-      Auth.validateSignup({email:vm.userInfo.email,mobile:vm.userInfo.mobile,userUpdate:true}).then(function(data){
-         /*if(data.errorCode == 2){
+      /*Auth.validateSignup({email:vm.userInfo.email,mobile:vm.userInfo.mobile,userUpdate:true}).then(function(data){
+         if(data.errorCode == 2){
             Modal.alert("Mobile number already in use. Please use another mobile number",true);
              return;
-          }else{*/
+          }else{
                updateUser(vm.userInfo);
-          //}
-        });
+          }
+        });*/
 
       if(vm.userInfo.country == 'Other')
           vm.userInfo.country = vm.userInfo.otherCountry;
+
+      userSvc.updateUser(vm.userInfo).then(function(result){
+        Modal.alert("User Updated.",true);
+        $scope.isCollapsed = true;
+      });  
     }
 
-    function updateUser(user) {
+    /*function updateUser(user) {
         userSvc.updateUser(user).then(function(result){
         $scope.successMessage = "Product updated successfully";
         Modal.alert("User Updated.",true);
         $scope.isCollapsed = true;
       });
-    }
-
+    }*/
   }
 
 })()
