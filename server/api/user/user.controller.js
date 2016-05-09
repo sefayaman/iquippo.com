@@ -46,7 +46,7 @@ exports.validateSignup = function(req, res){
   filter['deleted'] = false;
   User.find(filter,function(err,users){
     if(err){ return handleError(res, err); }
-    else if(users.length > 0 && !req.body.userUpdate){
+    else if(users.length > 0){
       return res.status(200).json({errorCode:1,message:"Email is already in used"});
     }
     else{
