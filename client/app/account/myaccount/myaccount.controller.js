@@ -54,12 +54,12 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
       }
 
       Auth.validateSignup({email:vm.userInfo.email,mobile:vm.userInfo.mobile,userUpdate:true}).then(function(data){
-         if(data.errorCode == 2){
+         /*if(data.errorCode == 2){
             Modal.alert("Mobile number already in use. Please use another mobile number",true);
              return;
-          }else{
+          }else{*/
                updateUser(vm.userInfo);
-          }
+          //}
         });
 
       if(vm.userInfo.country == 'Other')
