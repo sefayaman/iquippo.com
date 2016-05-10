@@ -2,163 +2,116 @@
   <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
 </head>
 <body>
-<table style="width:60%; margin:0 auto; padding:15px; /* [disabled]font-family:Verdana, Geneva, sans-serif; */ border: 5px solid rgba(128, 128, 128, 0.28);">
-  <tr>
-    <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
-  </tr>
+  <table style="width:60%; margin:0 auto; padding:15px; /* [disabled]font-family:Verdana, Geneva, sans-serif; */ border: 5px solid rgba(128, 128, 128, 0.28);">
     <tr>
-    <td style="font-size:20px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear User, </td>  
-  </tr>
-    <tr>
-        <td colspan="3" style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
-     In response to your query on {{this.date}}, the following equipment posted might be of interest to you:
-  
-        </td>
-</tr>
-{{#if best}}
- <tr>
-    <td colspan="3" align="center" style="font-size: 16px;
-    padding: 5px;background:#104295;color:#fff;
-    font-family:Verdana, Geneva, sans-serif;">Best Match</td>  
-  </tr>
-<tr>
-  <td style="width:36%;">&nbsp;</td>
-	<td width="250" align="center" style=" padding-top: 10px;padding-bottom: 10px;">
-  <table style="background:#ccc;border-radius:4px; font-family:Verdana, Geneva, sans-serif;" border="0" cellspacing="0" cellpadding="0" width="33%" bgcolor="#ffffff" align="center">
-  <tbody>
-  <tr>
-  <td width="10">&nbsp;</td>
-  <td style="padding-top:5px;">
-  	<table style="font-size:11px;line-height:14px" border="0" cellspacing="0" cellpadding="0" width="33%" bgcolor="#ffffff">
-    <tbody>
-    <tr>
-    <td>
-    
-     <img width="200" src="{{serverPath}}/assets/uploads/{{best.assetDir}}/{{best.primaryImg}}" >
-      
-       </td>
-       </tr>
-       <tr>
-       <td style="line-height:0;font-size:0" height="10">&nbsp;</td>
-       </tr>
-       <tr>
-       <td style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;  font-family:Verdana, Geneva, sans-serif;" align="center">{{best.name}}
-       
-       </td>
-       </tr>
-       <tr>
-       <td  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Product Brand :</b> {{best.brand.name}}</td>
-       </tr>
-       <tr>
-       <td  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Location</b> {{best.city}}</td>
-       </tr>
-       <tr>
-       <td  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Model No :</b> {{best.model.name}}</td>
-       </tr>
-       <tr>
-       <td style="font-size:12px;line-height:22px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Call Now :</b> {{this.contactNumber}}</td>
-       </tr>
-      <tr>
-       <td align="center" style="padding-bottom:6px;padding-top:6px;background:#ccc; "><a href="{{serverPath}}/productdetail/{{best._id}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >Click to View</a></td>
-       </tr>
-       
-       </tbody>
-       </table>
-  
-  </td>
-  <td width="10">&nbsp;</td>
-  
- </tr>
- </tbody>
- </table>
- </td>
- 
- </tr> 
-{{/if}}
-{{#if similar}}
-<tr>
-    <td colspan="3" align="center"  style="font-size: 16px;
-    padding:5px;color:#fff;
-     font-family:Verdana, Geneva, sans-serif;
-    background: #104295;">Similar Match</td>  
-  </tr>
-{{#each this.similar}}  
- <tr>
-	<td width="270" style=" padding-top: 10px;padding-bottom: 10px;width:35%;">
-  <table style="background:#ccc;border-radius:4px; font-family:Verdana, Geneva, sans-serif;" border="0" cellspacing="0" cellpadding="0" width="44%" bgcolor="#ffffff">
-  <tbody>
-  <tr>
-  <td width="10">&nbsp;</td>
-  <td style="padding-top:5px;">
-  	<table style="font-size:11px;line-height:14px" border="0" cellspacing="0" cellpadding="0" width="44%" bgcolor="#ffffff">
-    <tbody>
-    <tr>
-    <td style="line-height:0;font-size:0" colspan="2">
-    <a style="display:block" href="#" target="_blank">
-     <img width="200" src="../{{serverPath}}/assets/uploads/{{this.assetDir}}/{{this.primaryImg}}">
-      </a>
-       </td>
-       </tr>
-       <tr>
-       <td style="line-height:0;font-size:0" height="10">&nbsp;</td>
-       </tr>
-       <tr>
-       <td style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;  font-family:Verdana, Geneva, sans-serif;" align="center">{{this.name}}
-       
-       </td>
-       </tr>
-       <tr>
-       <td  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Product Brand :</b>{{this.brand.name}}</td>
-       </tr>
-       <tr>
-       <td  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Location :</b> {{this.city}}</td>
-       </tr>
-       <tr>
-       <td  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Model No :</b>{{this.model.name}}</td>
-       </tr>
-       <tr>
-       <td style="font-size:12px;line-height:22px;color:#333333; font-family:Verdana, Geneva, sans-serif;" align="center"><b>Call Now :</b>{{this.contactNumber}}</td>
-       </tr>
-      <tr>
-       <td align="center" style="padding-bottom:6px;padding-top:6px;background:#ccc; "><a href="../{{serverPath}}/productdetail/{{this._id}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >Click to View</a></td>
-       </tr>
-       
-       
-       </tbody>
-       </table>
-  
-  </td>
-   <td width="10">&nbsp;</td>
-  
- </tr>
- </tbody>
- </table>
- </td>
-
- </tr>
-{{/each}} 
-{{/if}}
-<tr>
-<td colspan="3" style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-top:10px; padding-bottom:10px;">
-      
-  Please feel free to get in touch with us on {{this.contactNumber}} and/or email us at: <a href
-  = "javascript:void(0);"> info@iquippo.com </a>
-      
-        </td>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
     </tr>
-<tr>
-        <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px;">
-        Regards, 
-       
-      
-        </td>
-    </tr> 
     <tr>
-        <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
+      <td style="font-size:20px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear User, </td>
+    </tr>
+    <tr>
+      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
+        In response to your query on {{this.date}}, the following equipment posted might be of interest to you:
+        
+      </td>
+    </tr>
+    {{#if best}}
+    <tr>
+      <td align="center" style="font-size: 16px;
+        padding: 10px;background:#104295;color:#fff;
+      font-family:Verdana, Geneva, sans-serif;">Best Match</td>
+    </tr>
+    <tr>
+      <td align="center" style=" padding-top: 10px;padding-bottom: 10px;">
+        <table style="font-size:11px;line-height:14px; border:3px solid #ccc;" border="0" cellspacing="0" cellpadding="0" width="65%" bgcolor="#ffffff">
+              <tbody>
+                <tr>
+                  <td>                    
+                    <img width="200" src="{{serverPath}}/assets/uploads/{{best.assetDir}}/{{best.primaryImg}}">
+                  </td>
+                  <td>
+                    <p style="font-size:14px;line-height:22px;color:#104295;font-weight:bold; font-family:Verdana, Geneva, sans-serif; text-align:left; margin-bottom: 5px;">
+                      {{best.name}}
+                    </p>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Product Brand :</b> {{best.brand.name}}
+                    </p>
+                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Location</b> {{best.city}}
+                    </p>
+                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Model No :</b> {{best.model.name}}</p>
+                    <p style="font-size:12px;line-height:22px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                      <b>Call Now :</b> {{this.contactNumber}}
+                    </p>
+                    <p style="padding-bottom:6px;padding-top:6px;background:#ccc; text-align: center; margin: 5px 15px 5px 0;">
+                      <a href="{{serverPath}}/productdetail/{{best._id}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif;" > Click to View </a>
+                    </p>
+                    
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+      </td>
+      
+    </tr>
+    {{/if}}
+    {{#if similar}}
+    <tr>
+      <td align="center"  style="font-size: 16px;
+        padding:10px;color:#fff;
+        font-family:Verdana, Geneva, sans-serif;
+      background: #104295;">Similar Match</td>
+    </tr>
+    {{#each similar}}
+    <tr>
+      <td align="center" style=" padding-top: 10px;padding-bottom:">
+       <table style="font-size:11px;line-height:14px; border:3px solid #ccc;" border="0" cellspacing="0" cellpadding="0" width="65%">
+                  <tbody>
+                    <tr>
+                      <td style="line-height:0;font-size:0">
+                        <a style="display:block" href="#" target="_blank">
+                          <img width="200" src="{{../serverPath}}/assets/uploads/{{assetDir}}/{{primaryImg}}">
+                        </a>
+                      </td>
+                      <td>
+                        <p style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;  font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
+                          {{name}}
+                        </p>
+                        <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;text-align: left; margin: 5px 0;"><b>Product Brand :</b>{{brand.name}}</p>
+                        <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;text-align: left; margin: 5px 0;"><b>Location :</b> {{city}}</p>
+                        <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif;text-align: left; margin: 5px 0;"><b>Model No :</b>{{model.name}}</p>
+                        <p style="font-size:12px;line-height:22px;color:#333333; font-family:Verdana, Geneva, sans-serif;text-align: left; margin: 5px 0;"><b>Call Now :</b>{{../this.contactNumber}}</p>
+                        <p align="center" style="padding-bottom:6px;padding-top:6px;background:#ccc; margin: 5px 15px 5px 5px;"><a href="{{../serverPath}}/productdetail/{{_id}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >Click to View</a></p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+      </td>
+    </tr>
+    {{/each}}
+    {{/if}}
+    <tr>
+      <td colspan="3" style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-top:10px; padding-bottom:10px;">
+        
+        Please feel free to get in touch with us on {{this.contactNumber}} and/or email us at: <a href
+        = "javascript:void(0);"> info@iquippo.com </a>
+        
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px;">
+        Regards,
+        
+        
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;">
         
         <b>iQuippo Team</b>
-      
-        </td>
-    </tr>   
-</table>
+        
+      </td>
+    </tr>
+  </table>
 </body>

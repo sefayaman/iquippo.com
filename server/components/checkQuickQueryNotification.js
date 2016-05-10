@@ -59,7 +59,7 @@ if(qr.category && qr.brand){
           return;
         }
         else {
-            console.log("products.length---", products.length);
+            ///console.log("products.length---", products.length);
             if(products.length > 0){
               var sortedProducts = {};
               sortedProducts.similar = [];
@@ -68,7 +68,6 @@ if(qr.category && qr.brand){
                 delete sortedProducts.similar;
               sortedProducts.date = new Date();
               sortedProducts.contactNumber = config.contactNumber;
-              console.log("sortedProducts", sortedProducts);
               pushNotification(data,qr,sortedProducts);
             }else{
               data.splice(0,1);
@@ -78,11 +77,19 @@ if(qr.category && qr.brand){
     });
   } else {
      setTimeout(function () { getAllQuery(); }, 7*24*60*60*1000); //sleep 
-      //console.log("completed");
   }
 }
 
 function sortProduct(products,qr,sortedProducts){
+  products.forEach(function(item){
+    if(!sortedProducts.best && item.category.name == qr.category && item.brand.name == qr.brand && item.model.name == qr.model){
+      sortedProducts.best = item;
+    }else{
+      sortedProducts.similar[sortedProducts.similar.length] = item;
+      }
+  });
+}
+/*function sortProduct(products,qr,sortedProducts){
   var colCounter = 0;
   var rowCounter = 0;
   sortedProducts.similar[sortedProducts.similar.length] = [];
@@ -99,7 +106,7 @@ function sortProduct(products,qr,sortedProducts){
         }
       }
   });
-}
+}*/
 
 function pushNotification(data,qr,sortedProduct){
    try{
@@ -114,7 +121,7 @@ function pushNotification(data,qr,sortedProduct){
               getMatchingProductList(data); 
           }else{
               emailData.content =  res;
-              //console.log('email data',emailData);
+              ////console.log('email data',emailData);
               notification.pushNotification(emailData);
               updateQuoteQuery(data,qr);
           }
