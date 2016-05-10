@@ -4,18 +4,20 @@
           <h4 class="modal-title" id="myModalLabel">Products Information</h4>
         </div>
         <div class="modal-body">
-          <table width="100%" style="border:1px solid rgba(204, 204, 204, 0.18);">
+          <table width="100%">
             <tbody>
               <tr>
                 <td  colspan="5">
                   <table border="0" width="100%" height="15" >
                     <tbody>
-                      <tr align="right">
-                        <th></th>
-                        <td ng-repeat="prd in productList">
-                          <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="200">
+                     
+                      <tr>
+                        <td width="20%" class="compares"><img src="assets/images/srei-logo-img.png" width="150"></td>
+                        <td width="20%" class="compares" ng-repeat="prd in productList">
+                          <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" class="compare-img">
                         </td>
                       </tr>
+                     
                     </tbody>
                   </table>
                 </td>
@@ -25,52 +27,52 @@
                   <table border="0" width="100%" height="15" >
                     <tbody>
                       <tr style="background:#EFEEEE;">
-                        <td colspan="5" align="left" style="font-size:20px;padding:7px;">&nbsp;<font color="#000">Basic Information</font></td>
+                        <td colspan="5" align="left" style="font-size:20px;padding:7px;"><font color="#000">Basic Information</font></td>
                       </tr>
                       
                       <tr>
-                        <th  class="bordered" style="padding-bottom: 10px;color:#000;">&nbsp; Product Id&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.productId}}</td>
+                        <td  class="bordered1">Product Id</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.productId}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;color:#000;" >&nbsp;Brand / Model&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList"> {{prd.brand.name}} / {{prd.model.name}}</td>
+                        <td class="bordered1" >Brand / Model</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList"> {{prd.brand.name}} / {{prd.model.name}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Category&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.category.name}}</td>
+                        <td class="bordered1">Category</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.category.name}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Manufacturing Year&nbsp;</th>
-                        <td  class="bordered" ng-repeat="prd in productList"> {{prd.mfgYear}}</td>
+                        <td class="bordered1">Manufacturing Year</td>
+                        <td  class="bordered" width="20%" ng-repeat="prd in productList"> {{prd.mfgYear}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Operating Hours/HMR&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.operatingHour}}</td>
+                        <td class="bordered1">Operating Hours/HMR</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.operatingHour}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Mileage/KMR&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.mileage}}</td>
+                        <td class="bordered1">Mileage/KMR</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.mileage}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Machine Serial No.&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.serialNo}}</td>
+                        <td class="bordered1">Machine Serial No.</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.serialNo}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Country</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.country}}</td>
+                        <td class="bordered1">Country</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.country}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Location&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.city}}</td>
+                        <td class="bordered1">Location</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.city}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Price (Excl. Tax).</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.grossPrice}}<span ng-if="prd.priceOnRequest">(Price On Request)</span></td>
+                        <td class="bordered1">Price (Excl. Tax).</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.grossPrice}}<span ng-if="prd.priceOnRequest">(Price On Request)</span></td>
                       </tr>
                       <tr>
-                        <th class="bordered" style="padding-bottom: 10px;">&nbsp;Product Condition</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.productCondition | uppercase}}</td>
+                        <td class="bordered1">Product Condition</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.productCondition | uppercase}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -81,37 +83,37 @@
                   <table border="0" width="100%" height="15" >
                     <tbody>
                       <tr style="background:#EFEEEE;">
-                        <td align="left" colspan="5" style="font-size:20px;padding:7px;">&nbsp;<font color="#000">Technical Information</font></td>
+                        <td align="left" colspan="5" style="font-size:20px;padding:7px;"><font color="#000">Technical Information</font></td>
                       </tr>
                       <tr>
-                        <th class="bordered" width="15%" style="padding-bottom: 10px;font-weight:bold;">&nbsp;
-                        Gross Weight&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.technicalInfo.grossWeight}}</td>
+                        <td class="bordered1" width="20%">
+                        Gross Weight</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.technicalInfo.grossWeight}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" width="15%" style="padding-bottom: 10px;font-weight:bold;">&nbsp;
-                        Operating Weight&nbsp;</th>
-                       <td class="bordered" ng-repeat="prd in productList">{{prd.technicalInfo.operatingWeight}}</td>
+                        <td class="bordered1" width="20%">
+                        Operating Weight</td>
+                       <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.technicalInfo.operatingWeight}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" width="15%" style="padding-bottom: 10px;font-weight:bold;">&nbsp;
-                        Bucket Capacity&nbsp;</th>
-                       <td class="bordered" ng-repeat="prd in productList">{{prd.technicalInfo.bucketCapacity}}</td>
+                        <td class="bordered1" width="20%" style="padding-bottom: 10px;font-  weight:bold;">Bucket Capacity
+                        </td>
+                       <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.technicalInfo.bucketCapacity}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered"width="15%" style="padding-bottom: 10px;font-weight:bold;">&nbsp;
-                        Engine Power&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.technicalInfo.enginePower}}</td>
+                        <td class="bordered1" width="20%" style="padding-bottom: 10px;font-weight:bold;">
+                        Engine Power</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.technicalInfo.enginePower}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" width="15%" style="padding-bottom: 10px;font-weight:bold;">&nbsp;
-                        Lifting Capacity&nbsp;</th>
-                       <td class="bordered" ng-repeat="prd in productList">{{prd.technicalInfo.liftingCapacity}}</td>
+                        <td class="bordered1" width="20%" style="padding-bottom: 10px;font-weight:bold;">
+                        Lifting Capacity</td>
+                       <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.technicalInfo.liftingCapacity}}</td>
                       </tr>
                       <tr>
-                        <th class="bordered" width="15%" style="padding-bottom: 10px;font-weight:bold;">&nbsp;
-                        Specification Document&nbsp;</th>
-                        <td class="bordered" ng-repeat="prd in productList">{{prd.documentName}}</td>
+                        <td class="bordered1" width="20%" style="padding-bottom: 10px;font-weight:bold;">
+                        Specification Document</td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.documentName}}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -120,8 +122,6 @@
             </tbody>
           </table>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" ng-click="dismiss()">Close</button>
-        </div>
+       
 </div>
         

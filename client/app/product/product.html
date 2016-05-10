@@ -477,8 +477,9 @@
 
               <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title pull-left">Technical information</h3>
-                   <!-- <div class="row">                    
+                    <h3 class="panel-title">Technical information</h3>
+                  
+                  <!--  <div class="row">                    
                     <div ng-if="!isActive()" class="col-sm-offset-4 col-sm-5 text-right">
                       {{doc.name}}
                     </div>
@@ -544,10 +545,10 @@
                         <span><i class="fa fa-upload"></i> Upload Document</span>
                       </span>
                     </div>
-                    <div class="col-sm-1 text-right">
-                      <div class="col-sm-offset-4 col-sm-5 text-right">
+                    <div class="col-sm-2 uploads-doc">
+                      
                         {{doc.name}}
-                      </div>
+                     
                       <div ng-if="isActive() && isEdit" class="col-sm-6 text-right">
                         <a  href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
                       </div>
@@ -601,7 +602,7 @@
                                
                   </span>
             </div>
-                <div class="col-sm-1 text-right">
+                <div class="col-sm-2 uploads-doc">
                       {{miscDoc.name}}
                     </div>
                     <div class="col-sm-3 col-md-2 pull-right">
@@ -626,7 +627,7 @@
                           <input type="file" name="tcDoc"  data-filetype="tcDoc" file-upload>
                       </span>
                     </div>
-                    <div class="col-sm-1 text-right">
+                    <div class="col-sm-2 uploads-doc">
                       {{tcDoc.name}}
                     </div>
                   </div>
