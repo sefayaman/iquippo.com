@@ -116,6 +116,12 @@ function searchUtil(item,toSearch, type)
   } else if(type == 'location'){
     var country = item.country + "";
     return ( item.country.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false ;
+  } else if(type == 'seller'){
+    var sellerName = item.seller.fname + "";
+    return ( sellerName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false ;
+  } else if(type == 'group'){
+    var groupName = item.group.name + "";
+    return ( groupName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
   }
 }
 

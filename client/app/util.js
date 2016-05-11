@@ -25,7 +25,7 @@ $(document).ready(function () {
     });
 });
 
-window.onbeforeunload = function (event) {
+/*window.onbeforeunload = function (event) {
   var message = 'Would you like to review our website? Please go to the following link: ....';
   if (typeof event == 'undefined') {
     event = window.event;
@@ -34,7 +34,7 @@ window.onbeforeunload = function (event) {
     event.returnValue = message;
   }
   return message;
-}
+}*/
  
 function setScroll(val){
 

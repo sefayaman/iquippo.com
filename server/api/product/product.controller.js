@@ -920,7 +920,7 @@ else
 //export data into excel
 exports.exportProducts = function(req,res){
   var filter = {};
-  //filter["status"] = true;
+  filter["status"] = true;
   filter["deleted"] = false;
   var isAdmin = true;
   if(req.body.userid){
