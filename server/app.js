@@ -130,7 +130,7 @@ function resizeImg(req,res,assetDir,dimension,isMultiple){
                 var namePart = fileNameParts[0];
                 var originalFilePath = config.uploadPath + assetDir + "/" + namePart +"_original." + extPart;
                 fsExtra.copy(imgPath,originalFilePath,function(err,result){
-                    imgRef.resize(resizeToW,resizeToH)
+                    imgRef.resize(resizeToW,resizeToH,"!")
                     .write(imgPath, function(e){
                         req.counter ++;
                         resizeImg(req,res,assetDir,dimension,isMultiple);
