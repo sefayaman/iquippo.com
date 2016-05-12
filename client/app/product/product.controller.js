@@ -278,11 +278,18 @@ angular.module('sreizaoApp')
   },true);
 
   //listen for the file selected event
+  var imgDim = {width:700,height:459};
   $scope.$on("fileSelected", function (event, args) {
     if(args.files.length == 0)
         return;
-      $scope.$apply(function () {           
-        uploadSvc.upload(args.files[0],$scope.assetDir).then(function(result){
+      $scope.$apply(function () {   
+        if(args.type == "image") { 
+          var resizeParam = {};
+          resizeParam.resize = true;
+          resizeParam.width = imgDim.width;
+          resizeParam.height = imgDim.height; 
+        }      
+        uploadSvc.upload(args.files[0],$scope.assetDir, resizeParam).then(function(result){
           $scope.assetDir = result.data.assetDir;
           if(args.type == "image")
             $scope.images[parseInt(args.index)].src = result.data.filename;

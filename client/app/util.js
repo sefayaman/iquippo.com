@@ -83,6 +83,8 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       if(resizeParam && resizeParam.resize){
         if(assetDir)
           uploadPath += "&";
+        else
+          uploadPath += "?";
         uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height;
       }
       var fd = new FormData();
@@ -109,7 +111,11 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       if(assetDir)
         uploadPath += "?assetDir=" + assetDir;
       if(resizeParam && resizeParam.resize){
-        uploadPath += "&resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height;
+        if(assetDir)
+          uploadPath += "&";
+        else
+          uploadPath += "?";
+        uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height;
       }
        //$rootScope.loading = true;
        return $http({

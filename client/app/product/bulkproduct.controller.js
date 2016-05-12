@@ -19,6 +19,7 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
   vm.submitProduct = submitProduct;
   vm.backToData = backToData;
   vm.openPreviewImg = openPreviewImg;
+  $scope.assetStatuses = assetStatuses;
   vm.images = [];
 
   $scope.updateTemplate = updateTemplate;
@@ -124,8 +125,12 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
        Modal.alert("error in file upload",true);
     });
   }
-
+  var imgDim = {width:700,height:459};
   function uploadProductImages(files){
+    var resizeParam = {};
+    resizeParam.resize = true;
+    resizeParam.width = imgDim.width;
+    resizeParam.height = imgDim.height; 
     if(files.length == 0)
       return;
     if(files.length > 8){
@@ -144,7 +149,7 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
     var assetDir = "";
     if(vm.currentProduct.assetDir)
       assetDir = vm.currentProduct.assetDir;
-    uploadSvc.saveFiles(files,assetDir)
+    uploadSvc.saveFiles(files,assetDir,resizeParam)
     .then(function(result){
        var fileRes = result.data.files;
        vm.currentProduct.assetDir = result.data.assetDir;
@@ -220,14 +225,13 @@ function submitProduct(){
     vm.currentProduct.status = false;
     vm.currentProduct.applyWaterMark = false;
   }
-  
-  vm.product.assetStatus = assetStatuses[0].code;
-  vm.product.assetStatuses = [];
+  vm.currentProduct.assetStatuses = [];
+  vm.currentProduct.assetStatus = assetStatuses[0].code;
   var stObj = {};
-  stObj.userId = product.user._id;
+  stObj.userId = vm.currentProduct.user._id;
   stObj.status = assetStatuses[0].code;
   stObj.createdAt = new Date();
-  vm.product.assetStatuses[vm.product.assetStatuses.length] = stObj;
+  vm.currentProduct.assetStatuses[vm.currentProduct.assetStatuses.length] = stObj;
 
   vm.currentProduct.images = [];
   vm.images.forEach(function(item,idx){
