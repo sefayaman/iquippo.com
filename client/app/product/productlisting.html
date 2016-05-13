@@ -56,6 +56,7 @@
                           <th>Select</th>
                           <th width="8"></th>
                           <th width="65">Product ID</th>
+                          <th width="65">Asset ID</th>
                           <th width="70">Trading Type</th>
                           <th>Categories</th>
                           <th>Brand</th>
@@ -82,6 +83,7 @@
                             
                           </td>
                           <td>{{product.productId}}</td>
+                          <td>{{product.assetId}}</td>
                           <td>{{product.tradeType}}</td>
                           <td>
                             <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>

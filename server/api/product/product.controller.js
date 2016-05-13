@@ -454,9 +454,9 @@ function excel_from_data(data, isAdmin) {
   var ws = {};
   var range;
   if(isAdmin)
-    range = {s: {c:0, r:0}, e: {c:35, r:data.length }};
+    range = {s: {c:0, r:0}, e: {c:36, r:data.length }};
   else
-    range = {s: {c:0, r:0}, e: {c:21, r:data.length }};
+    range = {s: {c:0, r:0}, e: {c:22, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     var C = 0;
@@ -469,6 +469,19 @@ function excel_from_data(data, isAdmin) {
     else{
       if(product)
         cell =  {v: product.productId};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R != 0)
+      product = data[R-1];
+    var cell = null;
+    if(R == 0)
+      cell = {v: "Asset Id"};
+    else{
+      if(product)
+        cell =  {v: product.assetId};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 

@@ -64,6 +64,7 @@ var ProductSchema = new Schema({
   //relisting:[{}],
   relistingDate: {type:Date,default:Date.now},
   assetDir:String,
+  assetId:String,
   tradeType:String,
   rateMyEquipment:String,
   tcDocumentName:String,

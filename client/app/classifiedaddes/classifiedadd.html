@@ -71,7 +71,7 @@
                           <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftTop'&& classifiedadVm.classified.image" class="img-responsive">
                           </div>
 
-                          <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('leftTopImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'leftTop'" ng-click="classifiedadVm.previewImg('leftTopImg')">Preview</button>
                     </div>
                     <div class="form-group col-sm-4">
                       <!-- <small>(Recommended size: 165 x 255px )</small> -->
@@ -84,7 +84,7 @@
                           <div class="browse-image">
 						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftBottom'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
-                          <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('leftBottomImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'leftBottom'" ng-click="classifiedadVm.previewImg('leftBottomImg')">Preview</button>
                     </div>
                     <div class="form-group col-sm-4">
                         <!-- <small>(Recommended size: 680 x 100px )</small> -->
@@ -97,7 +97,7 @@
                           <div class="browse-land">
 						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomCentre'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
-                          <button class="btn btn-primary btn-block" ng-click="classifiedadVm.previewImg('bottomCentreImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'bottomCentre'" ng-click="classifiedadVm.previewImg('bottomCentreImg')">Preview</button>
 
                     </div>
                 </div>

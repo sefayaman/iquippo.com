@@ -116,10 +116,11 @@ function resizeImg(req,res,assetDir,dimension,isMultiple){
           var imgRef = gm(imgPath);
           imgRef.identify(function(err,val){
           var resizeToW = dimension.width;
-          var resizeToH = dimension.height;   
-          if(val.size.width <= dimension.width)
+          var resizeToH = dimension.height; 
+
+          if(val.size && val.size.width <= dimension.width)
             resizeToW = null;
-          if(val.size.height <= dimension.height)
+          if(val.size && val.size.height <= dimension.height)
             resizeToH = null;
           if(!resizeToW && !resizeToH){
             req.counter ++;

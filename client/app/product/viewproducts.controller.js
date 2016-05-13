@@ -359,7 +359,7 @@ $scope.today = function() {
   function compare(){
 
      if(vm.productListToCompare.length < 2){
-          Modal.alert("Please select atleat two products to compare.",true);
+          Modal.alert("Please select atleast two products to compare.",true);
           return;
       }
        var prevScope = $rootScope.$new();
