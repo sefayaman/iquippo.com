@@ -40,6 +40,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
     } else {
       $scope.quote = {}
     }
+    init();
   }
 
   function init(){
@@ -70,7 +71,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
     }
   }
 
-  init();
+  //init();
   loadUserDetail();
 
   function playVideo(idx){
