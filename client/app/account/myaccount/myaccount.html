@@ -32,7 +32,7 @@
                 </div>                
                 <div class="media-body">
                   <h3 class="media-heading">
-                    {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}} <small>(Privet Entrepreneur)</small>
+                    {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}} <small><span ng-if="myAccountVm.userInfo.userType == 'individual'">(Individual)</span><span ng-if="myAccountVm.userInfo.userType == 'private'">(Private Entrepreneur)</span><span ng-if="myAccountVm.userInfo.userType == 'legalentity'">(Legal Entity)</span></small>
                   </h3>
                   <h4><i class="fa fa-map-marker"></i> {{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}</h4>
                   <span ng-if="myAccountVm.userInfo.company"><h5><i class="fa fa-building"></i> {{myAccountVm.userInfo.company}}</h5></span> 
