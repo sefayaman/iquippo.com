@@ -36,8 +36,8 @@ body{top:0 !important;}
 .navbar-text {
   margin-left: 15px;
 }
-.banner{min-height:230px;}
-.overlay{position:absolute; background:rgba(0,0,0,0.2); height:400px; z-index:10; width:100%;}
+.banner{min-height:230px; position: relative;}
+.overlay{position:absolute; background:rgba(0,0,0,0.2); height:370px; z-index:10; width:100%;}
 .goog-te-gadget-simple{border:transparent !important;}
 .goog-tooltip.skiptranslate{display:none !important;}
 .goog-text-highlight{background:none !important; box-shadow:none !important;}
@@ -611,10 +611,10 @@ table.table{width:100% !important;}
 
 /* updated css */
 .full-header{box-shadow:0 2px 3px #ccc;}
-.search-banner{position: absolute;top:150px;z-index: 99;border-radius: 15px; left:30px;}
+.search-banner{position: absolute;top:200px;z-index: 99;border-radius: 15px;}
 .search-banner .select-text{width:100%;}
-.carousel-inner > .item > img, .carousel-inner > .item > a > img {height: 400px;margin-bottom: 20px;}
-.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:30px; border: 2px solid #bbb;}
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {margin-bottom: 20px; height: 370px;}
+.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:20px 50px 20px 20px; border: 2px solid #bbb;}
 .search-tabs .btn-group{position:relative;display:inline-block;font-size:0;vertical-align:middle;white-space:nowrap;top: 2px;
     border: 2px solid #bbb;
     border-radius: 8px 8px 0 0;
@@ -706,3 +706,4 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 
 .video-link ul li a i{color:#E3000F;}
 .input-group .pick-width{font-size:12px;}
+.no-result{text-align: center; margin-top: 200px; font-weight: bold;}

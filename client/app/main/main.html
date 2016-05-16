@@ -7,7 +7,7 @@
       </uib-slide>
     </uib-carousel>
   </div>
-  <div class="col-xs-12 col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-5 search-banner">
+  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">
    
     <div class="search-tabs">
 
@@ -20,18 +20,23 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <form>
-          <div class="select-text form-group">                 
-              <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200"/>               
-            </div>
-            
-            <div class="select-text form-group">
-              <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200"/>                
-                <div ng-show="mainVm.noResults">
-                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+            <div class="row">
+              <div class="col-sm-5">
+                <div class="select-text">                 
+                  <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200"/>               
                 </div>
-            </div>
-            <div class="text-center">
-              <a href="javascript:;"  class="btn btn-lg btn-warning" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search</a>
+              </div>
+              <div class="col-sm-5">
+                <div class="select-text">
+                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200"/>                
+                    <div ng-show="mainVm.noResults">
+                      <i class="glyphicon glyphicon-remove"></i> No Results Found
+                    </div>
+                </div>
+              </div>
+              <div class="col-sm-2 text-center">
+                <a href="javascript:;"  class="btn btn-lg btn-warning" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search</a>
+              </div>
             </div>
         </form>
       </div>
