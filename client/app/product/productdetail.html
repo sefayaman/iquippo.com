@@ -191,7 +191,7 @@
                     Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
                   </uib-accordion-heading>
                   <table class="table table-striped">
-                      <tr ng-repeat="techInfo in currentProduct.technicalInfo.params">
+                      <tr ng-repeat="techInfo in currentProduct.technicalInfo.params" ng-if="techInfo.key">
                         <td widtd="50%">{{techInfo.key}}</td>
                         <td>{{techInfo.value}}</td>
                       </tr>

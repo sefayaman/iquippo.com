@@ -550,9 +550,9 @@
                     </div>
                     <div class="col-sm-4">
                       
-                        <!-- {{doc.name}} -->
+                      <span ng-if="!isEdit">{{doc.name}}</span>
                      
-                      <div ng-if="isActive() && isEdit" class="uploads-doc">
+                      <div ng-if="isEdit" class="uploads-doc">
                         <a  href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
                       </div>
                     </div>
