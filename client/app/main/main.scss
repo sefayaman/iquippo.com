@@ -615,6 +615,7 @@ table.table{width:100% !important;}
 .search-banner{position: absolute;top:200px;z-index: 99;border-radius: 15px;}
 .search-banner .select-text{width:100%;}
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {margin-bottom: 20px; height: 380px;}
+.carousel-inner.cont-slider > .item > img, .carousel-inner.cont-slider > .item > a > img {margin-bottom: 20px; height: auto;}
 .search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:20px; border: 2px solid #bbb;}
 .search-tabs .btn-group{position:relative;display:inline-block;font-size:0;vertical-align:middle;white-space:nowrap;top: 2px;
     border: 2px solid #bbb;

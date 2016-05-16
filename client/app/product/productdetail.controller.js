@@ -44,11 +44,20 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
   }
 
   function init(){
-   if(!Auth.isLoggedIn()){
+    
+     Auth.isLoggedInAsync(function(loggedIn){
+        if(!loggedIn){
+            Modal.openDialog('login');
+            Auth.doNotRedirect = true;
+            Auth.postLoginCallback = loadUserDetail;
+        }
+     });
+
+   /*if(!Auth.isLoggedIn()){
       Modal.openDialog('login');
       Auth.doNotRedirect = true;
       Auth.postLoginCallback = loadUserDetail;
-    }
+    }*/
 
     if($stateParams.id) {
       productSvc.getProductOnId($stateParams.id).then(function(result){
