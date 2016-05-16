@@ -29,6 +29,7 @@
                   <div class="featured-pro">
                     <select ng-model="productListingVm.searchType" ng-change="productListingVm.showFilter(productListingVm.searchType)">
                       <option value="">Column filters</option>
+                      <option value="assetId">Asset Id</option>
                       <option value="seller">Seller</option>
                       <option value="tradeType">Trading Type</option>
                       <option value="group">Group</option>
@@ -55,7 +56,7 @@
                         <tr>
                           <th>Select</th>
                           <th width="8"></th>
-                          <th width="65">Product ID</th>
+                          <!-- <th width="65">Product ID</th> -->
                           <th width="65">Asset ID</th>
                           <th width="70">Trading Type</th>
                           <th>Categories</th>
@@ -82,7 +83,7 @@
                               </a>
                             
                           </td>
-                          <td>{{product.productId}}</td>
+                          <!-- <td>{{product.productId}}</td> -->
                           <td>{{product.assetId}}</td>
                           <td>{{product.tradeType}}</td>
                           <td>

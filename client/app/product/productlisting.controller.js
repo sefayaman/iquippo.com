@@ -96,7 +96,9 @@ function searchFilter(type)
  
 function searchUtil(item,toSearch, type)
 {
-  if(type == 'tradeType'){
+  if(type == 'assetId'){
+    return ( item.assetId == toSearch) ? true : false ;
+  } else if(type == 'tradeType'){
     return ( item.tradeType.toLowerCase().indexOf(toSearch.toLowerCase()) > -1) ? true : false ;
   } else if(type == 'category'){
     var categoryName = item.category.name + "";

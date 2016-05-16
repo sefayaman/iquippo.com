@@ -72,7 +72,9 @@ exports.search = function(req, res) {
   if(req.body.tradeType){
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
   }
-    
+  
+  if(req.body.assetId)
+    filter["assetId"] = req.body.assetId;
   if(req.body.group)
     filter["group.name"] = req.body.group;
   if(req.body.category)
