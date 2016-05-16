@@ -90,8 +90,8 @@ function searchFilter(type)
     function(item){  
       return searchUtil(item, $scope.productSearchFilter.searchTxt, type); 
     });
-    /*if($scope.productSearchFilter.searchTxt == '')
-      $scope.globalProductList = $scope.orgGlobalProductList;*/
+    if($scope.productSearchFilter.searchTxt == '')
+      $scope.globalProductList = $scope.orgGlobalProductList;
 }  
  
 function searchUtil(item,toSearch, type)

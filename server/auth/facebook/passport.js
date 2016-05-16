@@ -24,7 +24,10 @@ passport.use('facebook', new FacebookStrategy({
             newUser.password = "12345";
             newUser.fname  = profile.name.givenName;
             newUser.lname = profile.name.familyName;
-            newUser.email = profile.emails[0].value;
+            //newUser.phone = profile.contact_info.phone_number;
+            //newUser.email = profile.email;
+            if(profile.emails)
+              newUser.email = profile.emails[0].value;
             newUser.facebook    = profile._json;                
             newUser.facebook.access_token = access_token;    
             newUser.save(function(err) {
