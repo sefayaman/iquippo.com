@@ -285,7 +285,7 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       && $scope.productQuote.valuationQuote.schedule == "yes")
       $scope.changedValuation($scope.mytime);
     if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
-      && $scope.productQuote.certifiedByIQuippoQuote.schedule == "yes")
+      && $scope.productQuote.certifiedByIQuippoQuote.scheduleC == "yes")
       $scope.changedCertified($scope.mytime);
     $http.post('/api/productquote',$scope.productQuote).then(function(res){
         var data = {};
