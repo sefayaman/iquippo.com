@@ -86,7 +86,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
       .success(function(result) {
         $scope.buycontact = {};
         var data = {};
-        data['to'] = "subhash.patel@bharatconnect.com";//supportMail;
+        data['to'] = supportMail;
         data['subject'] = 'Request for buy a product';
         var emailDynamicData = {};
         emailDynamicData['serverPath'] = serverPath;
@@ -101,7 +101,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
         notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
 
         if(result.contact == "email") {
-          data['to'] = "subhash.patel@bharatconnect.com";//emailDynamicData.email;
+          data['to'] = emailDynamicData.email;
           data['subject'] = 'No reply: Product Enquiry request received';
           notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
         }
