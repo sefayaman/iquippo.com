@@ -381,7 +381,7 @@ ul.alert-dropdown{width:200px;}
 .modal-body{position:relative;padding:15px;text-align:center;font-size:16px;}
 .modal-footer{padding:15px;border-top:1px solid #e5e5e5;}
 .btn-warning:hover{background-color:#C7100E}
-.btn-default{color:#333;background-color:#fff;border-color:#ccc;margin-right:3px;}
+.btn-default{color:#333;background-color:#fff;border-color:#ccc;margin-right:3px; padding: 5px 12px;}
 #res{width:33%;height:20px;margin-left:-29px;margin-bottom:-18px;}
 .nav i{      /*background-color: #ccc;*/
 border-radius:63%;width:20px;height:18px;text-align:center;padding:1px;  /*color: black;*/}
@@ -709,3 +709,5 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .video-link ul li a i{color:#E3000F;}
 .input-group .pick-width{font-size:12px;}
 .no-result{text-align: center; margin-top: 200px; font-weight: bold;}
+.modal-open{padding-right: 17px !important;}
+div#jivo_close_button{position: absolute; right: -20px;}
