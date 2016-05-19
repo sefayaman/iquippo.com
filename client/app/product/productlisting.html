@@ -84,7 +84,7 @@
                               </a>
                             
                           </td> -->
-                          <td><img src="assets/uploads/1461922231533/tractor1_5.jpg" width="50"></td>
+                          <td><img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" width="50" height="50"></td>
                           <!-- <td>{{product.productId}}</td> -->
                           <td>{{product.assetId}}</td>
                           <td>{{product.tradeType}}</td>
@@ -100,11 +100,11 @@
                             <span ng-if="product.brand.name != 'Other'">{{product.model.name}}</span>
                             <span ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</span>
                           </td>
-                          <!-- <td>
-                            <span ng-if="product.tradeType != 'RENT'"><i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i>{{product.grossPrice |number:0}}</span>
+                          <td>
+                            <span ng-if="product.tradeType != 'RENT'"><i class="fa fa-inr" ng-if="product.currencyType == 'INR' && product.grossPrice"></i>{{product.grossPrice |number:0}}</span>
                             <span ng-if="product.priceOnRequest && product.tradeType != 'RENT'">(Price On Request)</span>
-                          </td>   -->                    
-                          <td>{{product.images.length}}</td>
+                          </td>                      
+                          <!-- <td>{{product.images.length}}</td> -->
                           <td>Rented</td>
                           <td>
                               <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="productListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>
