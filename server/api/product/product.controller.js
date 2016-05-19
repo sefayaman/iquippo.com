@@ -979,19 +979,25 @@ exports.importProducts = function(req,res){
   req.errors = [];
   //req.user = user;
   req.successProductArr = [];
-  //req.assetIdCache = {};
+  req.assetIdCache = {};
   importProducts(req,res,data);
 }
 
 function importProducts(req,res,data){
   if(req.counter < req.numberOfCount){
     var row = data[req.counter];
-    /*console.log("row####", row);
-    if(req.assetIdCache[row.Asset_ID*]){
-
+    var assetIdVal = row["Asset_ID*"];
+    if(req.assetIdCache[assetIdVal]){
+      var errorObj = {};
+        errorObj['rowCount'] = req.counter + 2;
+        errorObj['message'] = assetIdVal + " Asset_ID already exist in excal file. Please correct it.";//"Field marked with * are mandatory.";
+        req.errors[req.errors.length] = errorObj;
+        req.counter ++;
+        importProducts(req,res,data);
+        return;
     }else{
-      req.assetIdCache[row.Asset_ID*] = true;      
-    }*/
+      req.assetIdCache[assetIdVal] = true;      
+    }
     var product = {};
     Seq()
     .seq(function(){
