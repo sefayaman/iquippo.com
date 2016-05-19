@@ -701,7 +701,8 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .compare-cart ul{display: inline-block;height: 28px;margin: 0;padding: 0;list-style-type: none;}
 .compare-cart ul li{background: #fff;border: 1px dotted #999;display: inline-block;margin: 0 7px 0 0;position: relative;text-align: center;width: 26px;height: 26px;line-height: 50px;padding: 0;}
 .clear-all{width:110px;}
-.compare-cart ul li a i{position: absolute;font-size: 9px;background: #E3000F;left: 20px;height: 10px;top: -4px;width: 10px;color: #fff;border-radius: 50%;}
+.compare-cart ul li img{position:absolute;margin:0 -12px;}
+.compare-cart ul li a i{position: absolute;font-size: 9px;background: #E3000F;left: 19px;height: 10px;top: -4px;width: 10px;color: #fff;border-radius: 50%;}
 
 .clear-all{width:110px;}
 .send-message{width:110px;}
