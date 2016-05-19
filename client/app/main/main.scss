@@ -200,6 +200,7 @@ header{background:#fff;}
 
 .wrapper .well h4{margin-top:0;}
 .wrapper .well form .form-group{position: relative; height:40px;}
+.wrapper .well form .row.form-group,.wrapper .well form .row.form-group .form-group{position: inherit; height:auto;}
 .wrapper .well a.input-group-addon{border-radius:0;background:#e3000f;border-color:#e3000f;color:#fff;outline:none;}
 .featured-pro{position:relative; left:160px; top:22px; margin-right:20px; z-index:9; float:left;}
 .featured-pro .btn{padding: 0px 5px;}
@@ -711,3 +712,8 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .no-result{text-align: center; margin-top: 200px; font-weight: bold;}
 .modal-open{padding-right: 17px !important;}
 div#jivo_close_button{position: absolute; right: -20px;}
+.myProfileDetail input{padding-left: 10px;}
+.myProfileDetail .input-group-addon{padding: 5px; width: 20px;}
+.profilePic-button .fa-camera{cursor: pointer;}
+.profilePic-button img{overflow: hidden; position: relative; width: 100px; height: 100px; margin-right: 30px; }
+.profilePic-button input{cursor: pointer; direction: ltr;font-size: 50px;margin: 0; opacity: 0; position: absolute; left: 10px; top:20px; width: 50px; overflow: hidden;}

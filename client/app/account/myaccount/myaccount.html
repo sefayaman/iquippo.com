@@ -23,80 +23,319 @@
                <h4>My Profile</h4>
                 <legend></legend>
               <div class="media well">
-                <a class="pull-left" href="">
-                  <img class="media-object img-rounded" src="assets/images/news-1.jpg" alt="Image" width="200">
-                </a>
-
-                <div class="pull-right">
-                  <button class="btn btn-success" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-edit"></i></button>
-                </div>                
-                <div class="media-body">
-                  <h3 class="media-heading">
+                <div class="pull-left profilePic-button">
+                  <i class="fa fa-camera"></i>
+                  <img class="media-object img-rounded" src="assets/images/profile.png" alt="Image">
+                  <input type="file">
+                </div>       
+                <div class="media-body myProfileDetail">
+                  <!--Full Name -->
+                  <h3 class="media-heading" ng-if="!editName">
                     {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}} <small><span ng-if="myAccountVm.userInfo.userType == 'individual'">(Individual)</span><span ng-if="myAccountVm.userInfo.userType == 'private'">(Private Entrepreneur)</span><span ng-if="myAccountVm.userInfo.userType == 'legalentity'">(Legal Entity)</span></small>
-                  </h3>
-                  <h4><i class="fa fa-map-marker"></i> {{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}</h4>
-                  <span ng-if="myAccountVm.userInfo.company"><h5><i class="fa fa-building"></i> {{myAccountVm.userInfo.company}}</h5></span> 
-                  <h5><i class="fa fa-envelope"></i> {{myAccountVm.userInfo.email}}</h5>
-                  <h5><i class="fa fa-phone"></i> {{myAccountVm.userInfo.mobile}}</h5>
+                    <small><i class="fa fa-pencil" ng-click="editFun('name')"></i></small>
+                  </h3>                
+                  <div class="row form-group" ng-if="editName">
+                    <div class="col-sm-4">
+                      <div class="input-group">
+                        <input type="text" name="" value="{{myAccountVm.userInfo.fname}}" placeholder="First Name*">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                  
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="input-group">
+                        <input type="text" name="" value="{{myAccountVm.userInfo.mname}}" placeholder="Middle Name">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                  
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="input-group">
+                        <input type="text" name="" value="{{myAccountVm.userInfo.lname}}" placeholder="Last Name*">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Full Name end -->
+
+                  <!-- Location start -->
+                  <h4 ng-if="!editCountry"><i class="fa fa-map-marker"></i> {{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}
+                  <small><i class="fa fa-pencil" ng-click="editFun('country')"></i></small>
+                  </h4>
+                  <div class="row" ng-if="editCountry">
+                    <div class="col-sm-3">
+                      <div class="input-group">
+                        <select>
+                          <option>Select Country</option>
+                          <option>india</option>
+                        </select>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <div class="input-group">
+                        <select>
+                          <option>Select City</option>
+                          <option>india</option>
+                        </select>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Location end -->
+
+                  <!-- Company Name Start-->
+                  <div ng-if="myAccountVm.userInfo.company">
+                    <h5 ng-if="!editCompany"><i class="fa fa-building"></i> {{myAccountVm.userInfo.company}}
+                      <small><i class="fa fa-pencil" ng-click="editFun('company')"></i></small>
+                    </h5>
+
+                      <div ng-if="editCompany" class="input-group">
+                        <input type="text" name="" value="{{myAccountVm.userInfo.company}}" placeholder="Company Name">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                  </div> 
+                  <!-- Company Name end -->
+
+                  <!-- email start -->
+                  <h5 ng-if="!editEmail"><i class="fa fa-envelope"></i> {{myAccountVm.userInfo.email}}
+                  <small><i class="fa fa-pencil" ng-click="editFun('email')"></i></small>
+                  </h5>
+                    <div ng-if="editEmail" class="input-group">
+                      <input type="text" name="" value="{{myAccountVm.userInfo.email}}" placeholder="Email*">
+                      <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                      <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                    </div>
+                  <!-- email end -->
+                  <h5 ng-if="!editMobile">
+                    <i class="fa fa-phone"></i> {{myAccountVm.userInfo.mobile}}
+                    <small><i class="fa fa-pencil" ng-click="editFun('mobile')"></i></small>
+                  </h5>
+                  <div ng-if="editMobile" class="input-group">
+                    <input type="text" name="" value="{{myAccountVm.userInfo.mobile}}" placeholder="Mobile No.*">
+                    <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                    <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                  </div>
                   
                 </div>
-                
+                <div class="text-center">
+                  <a class="btn btn-success" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i> View Full Details </a>
+                </div>
               </div>
 
-              <div class="well" uib-collapse="isCollapsed">
-                <h4>Edit Basic Information</h4>
+              <div class="well myProfileDetail" uib-collapse="isCollapsed">                
                 <form class="form-signin" name="form" novalidate>
-                  <div class="">
-                    <div class="row">
-                      <div class="form-group col-sm-4" ng-class="{'has-error': form.fname.$invalid && submitted }">
-                        <input type="text" class="form-control" name="fname" ng-model="myAccountVm.userInfo.fname" value="" placeholder="*First Name" required/>
-                      </div>
-                      <div class="form-group col-sm-4">
-                        <input type="text" class="form-control" name="mname" ng-model="myAccountVm.userInfo.mname" value="" placeholder="Middle Name"/>
-                      </div>
-                      <div class="form-group col-sm-4" ng-class="{'has-error': form.lname.$invalid && submitted }">
-                        <input type="text" class="form-control" name="lname" ng-model="myAccountVm.userInfo.lname" value="" placeholder="*Last Name" required/>
+                  <h4>Personal Information</h4>
+                  <legend></legend>
+                  <div class="row form-group">
+                    <div class="col-sm-3 form-group">
+                      <div><label>Date of Birth</label></div>
+                      <span ng-if="!editDOB" ng-click="editFun('DOB')">Add Date of Birth <small><i class="fa fa-pencil"></i></small></span>
+                      <div ng-if="editDOB" class="input-group">
+                        <input type="text" name="" value="{{}}" placeholder="Date of Birth">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
                       </div>
                     </div>
+                    <div class="col-sm-8 form-group">
+                      <div><label>Marital Status</label></div>
 
-                    <div class="row">
-                      <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" name="phone" ng-model="myAccountVm.userInfo.phone" value="" placeholder="Phone No.">
-                      </div>
-                      <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
-                        <input type="text" class="form-control" name="mobile" ng-model="myAccountVm.userInfo.mobile" value="" placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required disabled>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="form-group col-sm-6" ng-class="{'has-error': form.country.$invalid && submitted }">
-                        <select class="form-control" name="country" ng-model="myAccountVm.userInfo.country" required>
-                          <option value="" disabled>*Select Country</option>
-                          <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
-                          <option value="Other">Other</option>
-                        </select>
-                        <i class="caret"></i>
-                      </div>
-                      <div class="form-group col-sm-6"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                        <input class="form-control" type="text" name="otherCountry" ng-model="myAccountVm.userInfo.otherCountry" placeholder="*Other Country" ng-required= "myAccountVm.userInfo.country == 'Other'" ng-disabled="myAccountVm.userInfo.country != 'Other'">
+                      <span ng-if="!editMarital" ng-click="editFun('marital')">Add Marital Status <small><i class="fa fa-pencil"></i></small></span>
+                      <div ng-if="editMarital" class="row">
+                        <div class="col-sm-2">
+                          <input type="radio" name="marital"> Married
+                        </div>
+                        <div class="col-sm-5">
+                          <div class="input-group">
+                            <input type="text" placeholder="Anniversary Date">
+                            <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                            <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <input type="radio" name="marital"> Unmarried
+                        </div>
+                        
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="form-group col-sm-6" ng-class="{'has-error': form.location.$invalid && submitted }">
-                        <select class="form-control" name="location" ng-model="myAccountVm.userInfo.city" required>
-                          <option value="" disabled>Select Location</option>
-                            <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                        </select>
-                        <i class="caret"></i>
+                    <div class="col-sm-12 form-group">
+                      <div><label>Education</label></div>
+
+                      <span ng-if="!editEducation" ng-click="editFun('education')">Add Education <small><i class="fa fa-pencil"></i></small></span>
+
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <span>Collage Name</span>
+                        </div>
+                        <div class="col-sm-6">
+                          <span>Dates Attended</span>
+                        </div>
+                        <div class="col-sm-3">
+                          <span>Degree</span>
+                        </div>
                       </div>
-                      <div class="form-group col-sm-6">
-                        <input type="text" class="form-control" name="company" ng-model="myAccountVm.userInfo.company" placeholder="*Company Name" ng-required= "myAccountVm.userInfo.userType == 'legalentity'" ng-disabled="myAccountVm.userInfo.userType != 'legalentity'">
+                      <div ng-if="editEducation" class="row form-group">
+                        <div class="col-sm-3">
+                          <div class="input-group">                          
+                            <input type="text" placeholder="Collage Name">
+                            <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                            <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <input type="text" placeholder="Start Year">
+                             <span class="input-group-addon">to</span> 
+                            <input type="text" placeholder="End Year">
+                            <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                            <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="input-group">
+                            <select>
+                              <option>Select Degree</option>
+                              <option>Graduation</option>
+                              <option>Post Graduation</option>
+                            </select>
+                            <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                            <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                          </div>
+                        </div>
                       </div>
+
                     </div>
-                    <div class="form-group text-right">
-                          <button type="button" class="btn btn-lg btn-warning" ng-click="myAccountVm.editUser()">Save</button>
-                    </div>                    
                   </div>
-                  <!-- </div> -->
+
+                  <h4>Social Media Information</h4>
+                  <legend></legend>
+                  <div class="row form-group">
+                    <div class="col-sm-3 form-group">
+                      <div><label>Facebook URL</label></div>
+
+                      <span ng-if="!editFacebook" ng-click="editFun('facebook')">Add URL <small><i class="fa fa-pencil"></i></small></span>
+                      <div ng-if="editFacebook" class="input-group">
+                        <input type="url" placeholder="Enter url">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>                      
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <div>
+                        <label>LinkedIn URL</label>
+                      </div>
+                      <span ng-if="!editLinkedIn" ng-click="editFun('linkedin')">Add URL <small><i class="fa fa-pencil"></i></small></span>
+                      <div ng-if="editLinkedIn" class="input-group">
+                        <input type="url" placeholder="Enter url">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <div>
+                        <label>Twitter URL</label>
+                      </div>
+
+                      <span ng-if="!editTwitter" ng-click="editFun('twitter')">Add URL <small><i class="fa fa-pencil"></i></small></span>
+                      <div ng-if="editTwitter" class="input-group">
+                        <input type="url" placeholder="Enter url">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <div>
+                        <label>Google Plus URL</label>
+                      </div>
+
+                      <span ng-if="!editGoogle" ng-click="editFun('google')">Add URL <small><i class="fa fa-pencil"></i></small></span>
+                      <div ng-if="editGoogle" class="input-group">
+                        <input type="url" placeholder="Enter url">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4>Professional Information</h4>
+                  <legend></legend>
+                  <div class="row form-group">
+                    <div class="col-sm-3 form-group">
+                      <div>
+                        <label>
+                          Profession<small>(Business)</small>
+                        </label>
+                      </div>
+
+                      <span ng-if="!editBusiness" ng-click="editFun('business')">
+                       Add Profession<small>(Business)</small> <small><i class="fa fa-pencil"></i></small>
+                      </span>
+                      <div ng-if="editBusiness" class="input-group">
+                        <input type="url" placeholder="Business Name">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <div><label>Annual Income</label></div>
+
+                      <span ng-if="!editIncome" ng-click="editFun('income')">
+                       Add Annual Income <small><i class="fa fa-pencil"></i></small>
+                      </span>
+                      <div ng-if="editIncome" class="input-group">
+                        <input type="url" placeholder="Annual Income">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <div>
+                        <label> Company Name </label>
+                      </div>
+                      <span ng-if="!editCompany" ng-click="editFun('company')"> 
+                       Add Company Name <small><i class="fa fa-pencil"></i></small>
+                      </span>
+                      <div ng-if="editCompany" class="input-group">
+                        <input type="url" placeholder="Company Name">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                      <div>
+                        <label> Designation</label>
+                      </div>
+
+                      <span ng-if="!editDesignation" ng-click="editFun('designation')">
+                        Designation <small><i class="fa fa-pencil"></i></small>
+                      </span>
+                      <div ng-if="editDesignation" class="input-group">
+                        <input type="url" placeholder="Designation">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 form-group">
+                      <div>
+                        <label>Website</label>
+                      </div>
+
+                      <span  ng-if="!editWebsite" ng-click="editFun('website')">
+                        Website <small><i class="fa fa-pencil"></i></small>
+                      </span>
+                      <div ng-if="editWebsite" class="input-group">
+                        <input type="url" placeholder="Website">
+                        <span class="input-group-addon"><a href=""><i class="fa fa-times"></i></a></span>
+                        <span class="input-group-addon"><a href=""><i class="fa fa-check"></i></a></span>
+                      </div>
+                    </div>
+                  </div>
                 </form>
                 
               </div>

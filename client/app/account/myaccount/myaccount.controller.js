@@ -10,7 +10,77 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
     vm.userInfo = {};
     vm.editUser = editUser;
     $scope.isCollapsed = true;
+    $scope.editName = false;
+    $scope.editEmail = false;
+    $scope.editCountry = false;
+    $scope.editCompany = false;
+    $scope.editMobile = false;
+    $scope.editDOB = false;
+    $scope.editMarital = false;
+    $scope.editEducation = false;
+    $scope.editFacebook = false;
+    $scope.editLinkedIn = false;
+    $scope.editTwitter = false;
+    $scope.editGoogle = false;
+    $scope.editBusiness = false;
+    $scope.editIncome = false;
+    $scope.editDesignation = false;
+    $scope.editWebsite = false;
     var path = '/api/products';
+    $scope.editFun = function(param){
+      switch(param){
+        case 'name':
+          $scope.editName = true;
+          break;
+          case 'email':
+            $scope.editEmail = true;
+          break;
+          case 'country':
+            $scope.editCountry = true;
+          break;
+          case 'company':
+            $scope.editCompany = true;
+          break;
+          case 'mobile':
+            $scope.editMobile = true;
+          break;
+          case 'DOB':
+            $scope.editDOB = true;
+          break;
+          case 'marital':
+            $scope.editMarital = true;
+          break;
+          case 'education':
+            $scope.editEducation = true;
+          break;
+          case 'facebook':
+            $scope.editFacebook = true;
+          break;
+          case 'linkedin':
+            $scope.editLinkedIn = true;
+          break;
+          case 'twitter':
+            $scope.editTwitter = true;
+          break;
+          case 'google':
+            $scope.editGoogle = true;
+          break;
+          case 'business':
+            $scope.editBusiness = true;
+          break;
+          case 'income':
+            $scope.editIncome = true;
+          break;
+          case 'designation':
+            $scope.editDesignation = true;
+          break;
+          case 'website':
+            $scope.editWebsite = true;
+          break;
+      }
+      $scope.edit = true;
+    }
+
     function inti(){
         LocationSvc.getAllLocation()
             .then(function(result){
