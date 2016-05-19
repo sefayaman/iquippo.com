@@ -53,6 +53,7 @@ a:focus,.btn{outline: none;}
 .footer-border{border-color:#EC7358;border-width:3px;}
 .btn-warning{background:#e3000f;border:1px solid #fff;border-radius:0;width:180px;}
 .btn-warning.btn-block{width: 100%;}
+.btn-primary{background: #004394; border:1px solid #004394; margin-right: 5px;}
 .serve .quote-btn{width: 300px;margin: 135px 0 7px 0;float: left;}
 .btn-warning:hover,.btn-warning:focus,.btn-warning.active.focus,.btn-warning.active:focus,.btn-warning.active:hover,.btn-warning.focus:active,.btn-warning:active:focus,.btn-warning:active:hover{background:#E03C3C;border:1px solid #e3000f;}
 .btn{border-radius:0;}
@@ -680,7 +681,7 @@ table.table{width:100% !important;}
 .search-result h4{font-size:16px;}
 .sorts{padding:10px;border-bottom: 1px solid #ccc;}
 .sorts:hover{background-color: #eee;}
-.search-result .btn-warning {padding: 5px 20px;text-align: left;width: 125px;}
+.search-result .btn-warning {text-align: left;width: 125px;}
 a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .my-product .panel.panel-default{border:0;}
 .my-product .progress{height:5px;}
@@ -722,5 +723,5 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .myProfileDetail input{padding-left: 10px;}
 .myProfileDetail .input-group-addon{padding: 5px; width: 20px;}
 .profilePic-button img{width: 150px; height: 150px; margin-right: 30px; }
-.profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 30px;bottom: 15px; overflow: hidden; width: 150px;}
+.profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 30px;top: 195px; overflow: hidden; width: 150px;}
 .profilePic-button .fileinput-button:hover{background: rgba(255,255,255,1);}
