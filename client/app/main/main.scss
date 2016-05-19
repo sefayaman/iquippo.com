@@ -680,7 +680,7 @@ table.table{width:100% !important;}
 .search-result h4{font-size:16px;}
 .sorts{padding:10px;border-bottom: 1px solid #ccc;}
 .sorts:hover{background-color: #eee;}
-.search-result .btn-warning {padding: 8px 20px;text-align: left;width: 125px;}
+.search-result .btn-warning {padding: 5px 20px;text-align: left;width: 125px;}
 a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
 .my-product .panel.panel-default{border:0;}
 .my-product .progress{height:5px;}
@@ -697,6 +697,12 @@ a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
     padding: 10px;text-align: left;}
 
 /*cart changes css*/
+.compare-cart{float: right;margin-right: 10px;z-index: 140;}
+.compare-cart ul{display: inline-block;height: 28px;margin: 0;padding: 0;list-style-type: none;}
+.compare-cart ul li{background: #fff;border: 1px dotted #999;display: inline-block;margin: 0 7px 0 0;position: relative;text-align: center;width: 26px;height: 26px;line-height: 50px;padding: 0;}
+.clear-all{width:110px;}
+.compare-cart ul li a i{position: absolute;font-size: 9px;background: #E3000F;left: 20px;height: 10px;top: -4px;width: 10px;color: #fff;border-radius: 50%;}
+
 .clear-all{width:110px;}
 .send-message{width:110px;}
 .compare-cart-item{background: #004394;border: 1px solid  #004394;}
