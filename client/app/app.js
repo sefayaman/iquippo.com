@@ -100,6 +100,7 @@ angular.module('sreizaoApp',[
              $rootScope.isAdminLayout = false;
              $state.go('main');
           }
+
         }else
           $rootScope.isAdminLayout = false;
       });
@@ -124,6 +125,7 @@ angular.module('sreizaoApp',[
     $rootScope.getCurrentUser = Auth.getCurrentUser;
     $rootScope.openDialog = Modal.openDialog;
     $rootScope.logout = Auth.logout;
+    $rootScope.isProfileIncomplete = Auth.isProfileIncomplete;
 
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;
@@ -149,6 +151,11 @@ angular.module('sreizaoApp',[
      if(loggedIn){
          if(Auth.getCurrentUser()._id){
            cartSvc.getCartData(Auth.getCurrentUser()._id);
+        }
+
+       if(Auth.isProfileIncomplete()){
+           $rootScope.isAdminLayout = false;
+          $state.go('myaccount');
         }
      }
    });

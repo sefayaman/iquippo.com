@@ -12,27 +12,68 @@ passport.use('facebook', new FacebookStrategy({
   function(access_token, refresh_token, profile, done) {
     console.log(profile);
     process.nextTick(function() {
+        findByFacebookId(User,profile,access_token,done);
+    });
+  }));
+};
 
-      User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
- 
+function findByFacebookId(User,profile,token,done){
+   User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
         if (err)
           return done(err);
           if (user) {
             return done(null, user); 
           } else {
-            var newUser = new User();
-            newUser.password = "12345";
-            newUser.fname  = profile.name.givenName;
-            newUser.lname = profile.name.familyName;
-            newUser.email = profile.emails[0].value;
-            newUser.facebook    = profile._json;                
-            newUser.facebook.access_token = access_token;    
-            newUser.save(function(err) {
-              if (err){ return done(err);}
-               return done(null, newUser);
-            });
+            if(profile.emails.length > 0 && profile.emails[0].value)
+                findByEmailId(User,profile,token,done);
+            else
+              createUser(User,profile,token,done);
          } 
       });
+}
+
+function findByEmailId(User,profile,token,done){
+   User.findOne({ email : profile.emails[0].value}, function(err, user) {
+        if (err)
+          return done(err);
+          if (user) {
+            user.facebook    = {};
+            user.facebook.id    = profile.id;                  
+            user.facebook.fname  = profile.name.givenName;
+            user.facebook.lname = profile.name.familyName;
+            user.facebook.email = profile.emails[0].value; 
+            user.facebook.token = token;    
+            user.save(function(err) {
+              if (err){ return done(err);}
+               return done(null, user);
+            });
+          } else {
+            createUser(User,profile,token,done);
+         } 
     });
-  }));
-};
+}
+
+function createUser(User,profile,token,done){
+    
+    var newUser = new User();
+    newUser.fname  = profile.name.givenName;
+    newUser.lname = profile.name.familyName;
+    if(profile.emails.length > 0 && profile.emails[0].value)
+      newUser.email = profile.emails[0].value;
+    else
+      newUser.profileStatus = 'incomplete';
+    newUser.facebook    = {};
+    newUser.facebook.id    = profile.id;                  
+    newUser.facebook.firstName  = profile.name.givenName;
+    newUser.facebook.lastName = profile.name.familyName;
+    if(profile.emails.length > 0 && profile.emails[0].value)
+      newUser.facebook.email = profile.emails[0].value; 
+    newUser.facebook.token = token;
+    newUser.provider = "facebook";    
+    newUser.save(function(err) {
+      if (err){ return done(err);}
+       return done(null, newUser);
+    });
+
+}
+

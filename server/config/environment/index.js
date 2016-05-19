@@ -45,14 +45,19 @@ var all = {
   },
 
   google: {
-    clientID: "989503215697-dajf3iluqgp9trp20vqrvrduc5v7v3j2.apps.googleusercontent.com",//process.env.GOOGLE_ID || 'id',
-    clientSecret: process.env.GOOGLE_SECRET || 'PhsAWwerGD2bep-qiUxGEAEZ',
+    clientID: "408562441208-t4ulp2ro7b5qiti5b8bfm3lorvldm589.apps.googleusercontent.com",
+    clientSecret: process.env.GOOGLE_SECRET || 'sMG9pd85gQ520VVhh_FjQPVN',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   },
   facebook: {
     clientID:    "270271773315178",
     clientSecret:"f60977ed21f817c39b7bd253d87c4ee1",
     callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
+  },
+  twitter: {
+    clientID:    "mHXky7ESaikENzjQ1GVKWXdu7",
+    clientSecret:"RZLEPjvduP8l0u4MYEgt6jOnmIDxlseqOiJ4ThfD9o7XiHBvDM",
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback'
   },
   importDir:"import",
 };

@@ -15,6 +15,7 @@ var errorHandler = require('errorhandler');
 var path = require('path');
 var config = require('./environment');
 var passport = require('passport');
+var expressSession = require('express-session');
 
 module.exports = function(app) {
   var env = app.get('env');
@@ -28,7 +29,10 @@ module.exports = function(app) {
   app.use(bodyParser({ keepExtensions: true, uploadDir: 'c:/temp',limit:'5mb' }));
   app.use(methodOverride());
   app.use(cookieParser());
+  //app.use(passport.initialize());
+  app.use(expressSession({secret: config.secrets.session}));
   app.use(passport.initialize());
+  app.use(passport.session());
   //app.use(require('connect-livereload')({ignore: ['.pdf','.docx']}));
   console.log(config.root);
   if ('production' === env) {

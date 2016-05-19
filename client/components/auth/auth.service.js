@@ -191,6 +191,9 @@ angular.module('sreizaoApp')
        
         return currentUser.role === 'channelpartner';
       },
+      isProfileIncomplete:function(){
+        return currentUser.profileStatus === 'incomplete';
+      },
 
       /**
        * Get auth token

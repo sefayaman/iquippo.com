@@ -9,34 +9,66 @@ exports.setup = function (User, config) {
       callbackURL: config.google.callbackURL
     },
     function(accessToken, refreshToken, profile, done) {
-      //console.log("google profile",profile);
-      User.findOne({
-        'google.id': profile.id
-      }, function(err, user) {
-        if (!user) {
-          console.log('user not found');
-          var userObj = {};
-          var names = profile.displayName.split(" ");
-          userObj["fname"] = names[0];
-          if(names[1])
-            userObj["lanme"] = names[1];
-          userObj["email"] = profile.emails[0].value;
-          userObj["password"] = "1234";
-          userObj["google"] = profile._json;
-          userObj.createdAt = new Date();
-          userObj.updatedAt = new Date();
-          user = new User(userObj);
-          user.save(function(err) {
-            if (err){ 
-              console.log('error in creating user');
-              done(err)
-            };
-            return done(err, user);
-          });
-        } else {
-          return done(err, user);
-        }
-      });
+      findUserByGoogleId(User,profile,accessToken,done);
     }
   ));
 };
+
+function findUserByGoogleId(User,profile,token,done){
+  User.findOne({
+      'google.id': profile.id
+    }, function(err, user) {
+      if (!user) {
+        findUserByEmail(User,profile,token,done);
+      } else {
+
+        return done(err, user);
+      }
+    });
+}
+
+function findUserByEmail(User,profile,token,done){
+  User.findOne({
+      'email': profile.emails[0].value
+    }, function(err, user) {
+      if (!user) {
+        createUser(User,profile,token,done);
+      } else {
+        user.google = {};
+        user.google.id = profile.id;
+        user.google.name = profile.name;
+        user.google.token = token;
+        user.provider = "google";
+        user.updatedAt = new Date();
+        user.save(function(err){
+          if (err){ 
+            console.log('error in creating user');
+            return done(err)
+          };
+          return done(err, user);
+        });
+      }
+    });
+}
+
+function createUser(User,profile,token,done){
+    var userObj = {};
+    userObj["fname"] = profile.name.givenName;
+    userObj["lanme"] = profile.name.familyName;
+    userObj["email"] = profile.emails[0].value; 
+    userObj.google = {};
+    userObj.google.id = profile.id;
+    userObj.google.name = profile.name;
+    userObj.google.token = token;
+    userObj.provider = "google";
+    userObj.createdAt = new Date();
+    userObj.updatedAt = new Date();
+    user = new User(userObj);
+    user.save(function(err) {
+      if (err){ 
+        console.log('error in creating user');
+       return done(err)
+      };
+      return done(err, user);
+    });
+}

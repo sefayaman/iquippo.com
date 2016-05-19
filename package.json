@@ -27,6 +27,7 @@
     "passport-facebook": "^2.1.0",
     "passport-google-oauth": "latest",
     "passport-local": "~0.1.6",
+    "passport-twitter": "^1.0.4",
     "request": "~2.65.0",
     "seq": "^0.3.5",
     "serve-favicon": "~2.0.1",
