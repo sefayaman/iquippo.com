@@ -306,10 +306,10 @@ angular.module('sreizaoApp')
     $scope.manpowerQuote = {};
     $scope.manpowerService = {};
     $scope.manpowerQuote.usedBy = "Operators";
-    /*$scope.mytime = new Date();
+    $scope.mytime = new Date();
     $scope.hstep = 1;
     $scope.mstep = 1;
-    $scope.ismeridian = true;*/
+    $scope.ismeridian = true;
 
     if(Auth.getCurrentUser()._id){
       var currUser = Auth.getCurrentUser();
@@ -328,23 +328,23 @@ angular.module('sreizaoApp')
       $scope.locationList = result;
     });
 
-    $scope.addManpowerQuote = function(evt) {
+    $scope.addManpowerQuote = function() {
 
-      /*if($scope.manpowerQuote.schedule == 'yes') {
+      if($scope.manpowerQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.manpowerQuote.scheduleDate))
           $scope.form.scheduleDate.$invalid = true;
          else 
           $scope.form.scheduleDate.$invalid = false;
-      }*/
+      }
 
       if($scope.form.$invalid){
         $scope.form.submitted = true;
         return;
       }
 
-      /*if(!$scope.manpowerQuote.scheduledTime 
+      if(!$scope.manpowerQuote.scheduledTime 
         && $scope.manpowerQuote.schedule == "yes")
-        $scope.changed($scope.mytime);*/
+        $scope.changed($scope.mytime);
       $scope.manpowerService.type = "manpowerQuote";
       $scope.manpowerService.quote = $scope.manpowerQuote;
       $http.post('/api/services', $scope.manpowerService).then(function(res){
@@ -370,7 +370,7 @@ angular.module('sreizaoApp')
        $scope.manpowerQuote.usedBy = "Operators";
     };
 
-  /*$scope.changed = function (mytime) {
+  $scope.changed = function (mytime) {
       if(mytime) {
         var hours = mytime.getHours();
         var minutes = mytime.getMinutes();
@@ -378,15 +378,15 @@ angular.module('sreizaoApp')
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        $scope.cetifiedByiQuippoQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
+        $scope.manpowerQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
       }
-    };*/
-
-  /*$scope.toggleMode = function() {
+    };
+  //$scope.isShow = false;
+  $scope.toggleMode = function() {
     $scope.isShow = ! $scope.isShow;
-  };*/
+  };
     // date picker
-  /*$scope.today = function() {
+  $scope.today = function() {
     $scope.scheduleDate = new Date();
   };
   $scope.today();
@@ -421,5 +421,5 @@ angular.module('sreizaoApp')
 
   $scope.popup2 = {
     opened: false
-  };*/
+  };
   }]);

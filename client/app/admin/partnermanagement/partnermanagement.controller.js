@@ -41,6 +41,8 @@ angular.module('sreizaoApp')
         $scope.services.push($scope.Valuation);
       if($scope.CertifiedByIQuippo)
         $scope.services.push($scope.CertifiedByIQuippo);
+      if($scope.ManPower)
+        $scope.services.push($scope.ManPower);
       
       $scope.vendorReg.services = $scope.services;
 
@@ -68,6 +70,7 @@ angular.module('sreizaoApp')
           $scope.Valuation = "";
           $scope[$scope.imgsrc] = null;
           $scope.CertifiedByIQuippo = "";
+          $scope.ManPower = "";
           } 
         })
         .catch(function(res){
@@ -127,6 +130,8 @@ angular.module('sreizaoApp')
         serviceArr.push('Valuation');
       else if(tempArr[i] == 'CertifiedByIQuippo')
          serviceArr.push('Certified by iQuippo');
+       else if(tempArr[i] == 'ManPower')
+         serviceArr.push('ManPower');
     }
     return serviceArr.join();
   }
@@ -139,6 +144,7 @@ function updateVendor(vendor) {
     $scope.Shipping = "";
     $scope.Valuation = "";
     $scope.CertifiedByIQuippo = "";
+    $scope.ManPower = "";
     $scope.isCollapsed = true;
     loadVendors();
   })
@@ -182,6 +188,7 @@ $scope.imgsrc = "file";
     $scope.Shipping = "";
     $scope.Valuation = "";
     $scope.CertifiedByIQuippo = "";
+    $scope.ManPower = "";
     for (var i=0; i< vendor.services.length; i++) {
       if(vendor.services[i] == 'Shipping')
         $scope.Shipping = vendor.services[i];
@@ -189,6 +196,8 @@ $scope.imgsrc = "file";
         $scope.Valuation = vendor.services[i];
       else if(vendor.services[i] == 'CertifiedByIQuippo')
         $scope.CertifiedByIQuippo = vendor.services[i];
+      else if(vendor.services[i] == 'ManPower')
+        $scope.ManPower = vendor.services[i];
     }
     $scope.isEdit = true;
   }

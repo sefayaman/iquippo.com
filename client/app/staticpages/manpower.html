@@ -39,7 +39,7 @@
         </div>
         <div class="panel-body">
      
-      <form class="form" ng-submit="addManpowerQuote($event)" novalidate name="form">
+      <form class="form" novalidate name="form">
         <div class="form-group">
           <div class="row">
             <div class="col-xs-6">
@@ -162,16 +162,16 @@
                 </div>
                 
                 <div class="col-xs-6 col-sm-4 form-group " ng-if="manpowerQuote.schedule == 'yes'">
-                        <small>Set Time</small>
-                        <div class="input-group">
-                          <input type="text" class="form-control" placeholder="HH:MM" ng-model="manpowerQuote.scheduledTime" is-open=""  ng-value="{{manpowerQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-                          <span class="input-group-addon">
-                            <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></button>
-                          </span>
-                        </div>
-                        <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-                    <!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre>-->
-                    </div>
+                <small>Set Time</small>
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="HH:MM" ng-model="manpowerQuote.scheduledTime" is-open=""  ng-value="{{manpowerQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+                  <span class="input-group-addon">
+                    <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></button>
+                  </span>
+                </div>
+                <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                <!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->
+                </div>
             </div>
           
            <div class="form-group">                      
@@ -181,7 +181,7 @@
 
         <div class="modal-footer">
           <button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
-          <button type="submit" class="btn btn-warning">Submit</button>
+          <button type="button" ng-click="addManpowerQuote()" class="btn btn-warning">Submit</button>
         </div>
       </form>
 </div>

@@ -259,6 +259,9 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     $scope.productQuote.shippingQuote = {};
     $scope.productQuote.valuationQuote = {};
     $scope.productQuote.certifiedByIQuippoQuote = {};
+    $scope.productQuote.manpowerQuote = {};
+
+    $scope.productQuote.manpowerQuote.usedBy = "Operators";
     /*$scope.productQuote.valuationQuote.vendors = $scope.valuationVendorList;
     $scope.productQuote.shippingQuote.vendors = $scope.shippingVendorList;
     $scope.productQuote.certifiedByIQuippoQuote.vendors = $scope.certifiedByIQuippoVendorList;*/
@@ -296,6 +299,9 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
       && $scope.productQuote.certifiedByIQuippoQuote.scheduleC == "yes")
       $scope.changedCertified($scope.mytime);
+    if(!$scope.productQuote.manpowerQuote.scheduledTime
+      && $scope.productQuote.manpowerQuote.scheduleM == "yes")
+      $scope.changedManpower($scope.mytime);
     $http.post('/api/productquote',$scope.productQuote).then(function(res){
         var data = {};
         data['to'] = supportMail;
@@ -327,6 +333,10 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       getTime(mytime, 'certified');
     };
 
+    $scope.changedManpower = function (mytime) {
+      getTime(mytime, 'manpower');
+    };
+
     function getTime(mytime, type) {
       if(mytime) {
         var hours = mytime.getHours();
@@ -336,8 +346,10 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
         if(type == 'valuation')
-            $scope.productQuote.valuationQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
-          else
+          $scope.productQuote.valuationQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
+        else if(type == 'manpower')
+          $scope.productQuote.manpowerQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
+        else
             $scope.productQuote.certifiedByIQuippoQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
       }
     }
@@ -374,6 +386,9 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
   $scope.open2 = function() {
     $scope.popup2.opened = true;
   };
+  $scope.open3 = function() {
+    $scope.popup3.opened = true;
+  };
 
    $scope.setDate = function(year, month, day) {
     $scope.scheduleDate = new Date(year, month, day);
@@ -391,6 +406,9 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     opened: false
   };
   $scope.popup2 = {
+    opened: false
+  };
+  $scope.popup3 = {
     opened: false
   };
 });

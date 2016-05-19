@@ -19,6 +19,7 @@ var ProductQuoteSchema = new Schema({
   shippingQuote:{},
   valuationQuote:{},
   certifiedByIQuippoQuote:{},
+  manpowerQuote:{},
   createdAt: Date
 });
 

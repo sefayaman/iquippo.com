@@ -13,7 +13,7 @@ function getAllQuery(){
  Quote.find(filter).exec(function (err, data) {
       if (err) { 
         return console.log(err);
-        setTimeout(function () { getAllQuery(); }, 7*24*60*60*1000); //sleep 
+        setTimeout(function () { getAllQuery(); }, 1*24*60*60*1000); //sleep 
       }
       else {
           getMatchingProductList(data);
@@ -76,7 +76,7 @@ if(qr.category && qr.brand){
         }
     });
   } else {
-     setTimeout(function () { getAllQuery(); }, 7*24*60*60*1000); //sleep 
+     setTimeout(function () { getAllQuery(); }, 1*24*60*60*1000); //sleep 
   }
 }
 
