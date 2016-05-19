@@ -149,6 +149,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
     $http.post('/api/buyer', dataToSend)
     .success(function(result) {
       $scope.buycontact = {};
+      $scope.buycontact.contact = "email";
       $scope.form.submitted = false;
       var data = {};
       data['to'] = supportMail;

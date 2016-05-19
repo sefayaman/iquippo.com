@@ -73,6 +73,8 @@ exports.search = function(req, res) {
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
   }
   
+  if(req.body.assetStatus)
+    filter["assetStatus"] = req.body.assetStatus;
   if(req.body.assetId)
     filter["assetId"] = req.body.assetId;
   if(req.body.group)
@@ -977,12 +979,19 @@ exports.importProducts = function(req,res){
   req.errors = [];
   //req.user = user;
   req.successProductArr = [];
+  //req.assetIdCache = {};
   importProducts(req,res,data);
 }
 
 function importProducts(req,res,data){
   if(req.counter < req.numberOfCount){
     var row = data[req.counter];
+    /*console.log("row####", row);
+    if(req.assetIdCache[row.Asset_ID*]){
+
+    }else{
+      req.assetIdCache[row.Asset_ID*] = true;      
+    }*/
     var product = {};
     Seq()
     .seq(function(){
@@ -1225,6 +1234,36 @@ function importProducts(req,res,data){
       })
     })
     .seq(function(){
+      var self = this;
+      var assetId = row["Asset_ID*"];
+       if(!assetId){
+        var errorObj = {};
+        errorObj['rowCount'] = req.counter + 2;
+        errorObj['message'] =  "Asset_ID is mandatory to be filled.";
+        req.errors[req.errors.length] = errorObj;
+        req.counter ++;
+        importProducts(req,res,data);
+        return;
+      }
+      assetId = trim(assetId);
+       Product.find({assetId:assetId},function(err,products){
+        if(err) return handleError(res, err); 
+        if(products.length > 0){
+          var errorObj = {};
+          errorObj['rowCount'] = req.counter + 2;
+          errorObj['message'] = assetId + " Asset_ID is already exist.";
+          //console.log("Asset_ID is already exist.", assetId);
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          importProducts(req,res,data);
+          return;
+        }else{
+          product["assetId"] = trim(assetId);
+          self();        
+        }
+      })
+    })
+    .seq(function(){
         product["createdAt"] = new Date();
         product["updatedAt"] = new Date();
         product["relistingDate"] = new Date();
@@ -1329,18 +1368,6 @@ function importProducts(req,res,data){
          
         }
         product["mfgYear"] = mfgYear;
-
-        var assetId = row["Asset_ID*"];
-        if(!assetId){
-          var errorObj = {};
-          errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = "Asset_ID is mandatory to be filled.";
-          req.errors[req.errors.length] = errorObj;
-          req.counter ++;
-          importProducts(req,res,data);
-          return;
-        }
-        product["assetId"] = trim(assetId);
 
         product["isSold"] = false;
         product["status"] = true;

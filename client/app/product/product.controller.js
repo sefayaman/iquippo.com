@@ -531,6 +531,7 @@ angular.module('sreizaoApp')
       stObj.status = assetStatuses[0].code;
       stObj.createdAt = new Date();
       $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
+      $scope.product.assetId = $scope.assetDir;
 
       /*adding seller info */ 
       productSvc.addProduct(product).then(function(result){
@@ -591,8 +592,8 @@ angular.module('sreizaoApp')
               $scope.product.status = false;
             }
         }
-       
-
+      if(!$scope.product.assetId)
+        $scope.product.assetId = $scope.assetDir; 
       productSvc.updateProduct(product).then(function(result){
         $rootScope.loading = false;
          setScroll(0);
@@ -648,6 +649,7 @@ angular.module('sreizaoApp')
     $scope.product.technicalInfo = {};
     $scope.product.technicalInfo.params = [{}];
     $scope.product.serviceInfo = [{}];
+    $scope.product.miscDocuments = [{}];
     $scope.product.group = product.group = {};
     $scope.product.category = product.category = {};
     $scope.product.brand = product.brand = {};
@@ -667,6 +669,7 @@ angular.module('sreizaoApp')
     $scope.images = [{isPrimary:true}];
     prepareImgArr();
     productHistory = $scope.productHistory = {};
+    $scope.product.seller = product.seller = {};
     $scope.mfgYear = null;
     //$scope.today();
   }

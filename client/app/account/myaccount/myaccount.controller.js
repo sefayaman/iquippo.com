@@ -88,7 +88,8 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
         })
         var dataToSend = {};
         console.log(Auth.getCurrentUser()._id);
-        dataToSend["userId"] = Auth.getCurrentUser()._id;
+        if(Auth.getCurrentUser().role != 'admin')
+          dataToSend["userId"] = Auth.getCurrentUser()._id;
         $http.post(path + "/userwiseproductcount", dataToSend).then(function(res){
           vm.rentedCounts = 0;
           vm.soldCounts = 0;

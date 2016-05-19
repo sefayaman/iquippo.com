@@ -305,7 +305,7 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-danger text-center">
-                    <a href="" class="product-bars">
+                    <a ng-href="/productlisting?assetStatus=rented" class="product-bars">
                       <h4>Rented Products</h4>
                       <div class="progress">
                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
@@ -320,11 +320,11 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-success text-center">
-                    <a href="" class="product-bars">
+                    <a ng-href="/productlisting?assetStatus=listed" class="product-bars">
                       <h4>Listed Products</h4>
                       <div class="progress">
                         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                          <span class="sr-only">40% Complete (success)</span>
+                          <span class="sr-only">{{myAccountVm.listedCounts}}% Complete (success)</span>
                         </div>
                       </div>
                       <h4>{{myAccountVm.listedCounts}}</h4>
@@ -335,11 +335,11 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-info text-center">
-                    <a href="" class="product-bars">
+                    <a ng-href="/productlisting?assetStatus=sold" class="product-bars">
                       <h4>Sold Products</h4>
                       <div class="progress">
                         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                          <span class="sr-only">40% Complete (success)</span>
+                          <span class="sr-only">{{myAccountVm.soldCounts}}% Complete (success)</span>
                         </div>
                       </div>
                       <h4>{{myAccountVm.soldCounts}}</h4>
@@ -350,11 +350,11 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-warning text-center">
-                    <a href="" class="product-bars">
+                    <a ng-href="/productlisting" class="product-bars">
                       <h4>All Products</h4>
                       <div class="progress">
                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                          <span class="sr-only">40% Complete (success)</span>
+                          <span class="sr-only">{{myAccountVm.totalProducts}}% Complete (success)</span>
                         </div>
                       </div>
                       <h4>{{myAccountVm.totalProducts}}</h4>

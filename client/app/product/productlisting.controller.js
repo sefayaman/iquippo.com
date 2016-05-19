@@ -2,7 +2,7 @@
 'use strict';
 angular.module('product').controller('ProductListingCtrl',ProductListingCtrl);
 
-function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
   vm.featuredCommand = featuredCommand;
@@ -46,6 +46,9 @@ function ProductListingCtrl($scope, $rootScope, $http, productSvc, classifiedSvc
           dataToSend["role"] = Auth.getCurrentUser().role;
         dataToSend["userid"] = Auth.getCurrentUser()._id;
        }
+       var assetVal = $location.search().assetStatus;
+       if(assetVal)
+        dataToSend["assetStatus"] = assetVal;
        productSvc.getProductOnFilter(dataToSend)
        .then(function(result){
           $scope.globalProductList = $scope.orgGlobalProductList = result;
