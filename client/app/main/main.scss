@@ -53,7 +53,7 @@ a:focus,.btn{outline: none;}
 .footer-border{border-color:#EC7358;border-width:3px;}
 .btn-warning{background:#e3000f;border:1px solid #fff;border-radius:0;width:180px;}
 .btn-warning.btn-block{width: 100%;}
-.btn-primary{background: #004394; border:1px solid #004394; margin-right: 5px;}
+.btn-primary{background: #004394; border:1px solid #004394; }
 .serve .quote-btn{width: 300px;margin: 135px 0 7px 0;float: left;}
 .btn-warning:hover,.btn-warning:focus,.btn-warning.active.focus,.btn-warning.active:focus,.btn-warning.active:hover,.btn-warning.focus:active,.btn-warning:active:focus,.btn-warning:active:hover{background:#E03C3C;border:1px solid #e3000f;}
 .btn{border-radius:0;}
@@ -249,7 +249,7 @@ header{background:#fff;}
 .vendor-list ul li{list-style:none;margin-top:10px;}
 .vendor-list ul li a{color:#666;text-decoration:none;}
 .add1{border:1px solid #eee; margin-bottom: 0px;}
-.add2{width: 60%; height: 100px;}
+.add2{width: 100%; height: 100px;}
 
 /*dashboard*/
 .dashboard-left{padding-left:0;}
@@ -309,8 +309,8 @@ footer .subscribe{height: 40px;}
 
 
 .fileinput-button{display:block;overflow:hidden;position:relative;width:100%;}
-.smallImg{height:150px;border:1px solid #ccc;background:#eee;text-align:center;padding-top:45px;line-height:22px;}
-.largeImg{height:80px;margin-top:30px;padding-top:15px;margin-bottom:42px;border:1px solid #ccc;background:#eee;text-align:center;}
+.smallImg{height:100px;border:1px solid #ccc;background:#eee;text-align:center;padding-top:30px;line-height:22px;}
+.largeImg{height:80px;margin-top:12px;padding-top:15px;margin-bottom:10px;border:1px solid #ccc;background:#eee;text-align:center;}
 .fileinput-button input{cursor:pointer;direction:ltr;font-size:200px;margin:0;opacity:0;position:absolute;right:0;top:0;}
 .browse-image{position:absolute;top:0;}
 .browse-image img{width:153px;height:150px;}
@@ -672,6 +672,7 @@ table.table{width:100% !important;}
 /*view products*/
 
 .compare{float: right;margin: -51px 0;}
+.compare input{vertical-align: middle; margin: 0;}
 .compare1{margin-right: 10px;}
 .compare1 ul{display: inline-block;margin: 0;padding: 0;}   
 .compare1 ul li{background: #fff;border: 1px dotted #999;display: inline-block;top:7px; margin: -11px 7px 0 0;position: relative;text-align: center;width: 26px;height: 26px;line-height: 50px;padding: 0;zoom: 1;}

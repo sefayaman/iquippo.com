@@ -54,29 +54,18 @@
                   Please enter a valid email.
                 </p>
                 </div>
-                <!-- <div class="form-group col-sm-4" ng-class="{'has-error': form.password.$invalid && form.submitted }">
-  	                <input type="password" name="password" class="form-control" ng-model="vendorReg.password"
-  	                placeholder="Your Password" 
-  	                   ng-minlength="4"
-  	                   required
-  	                   mongoose-error/>
-  	                  <p class="help-block"
-  	                     ng-show="(form.password.$error.minlength || form.password.$error.required) && form.submitted">
-  	                    Password must be at least 4 characters.
-  	                  </p>
-  	                  <p class="help-block" ng-show="form.password.$error.mongoose">
-  	                    {{ errors.password }}
-  	                  </p>
-                  </div> -->
-                  </div>
+                <div class="form-group col-sm-4" ng-class="{'has-error': form.password.$invalid && form.submitted }">
+  	                <input type="url" name="url" class="form-control" ng-model=""
+  	                placeholder="Your URL" />
+  	                  
+                </div>
+              </div>
   				        <div class="row">
                     <div class="form-group col-sm-4">
                       <input type="text" class="form-control" name="phone" ng-model="vendorReg.phone" value="" placeholder="Phone No.">
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
-                      <div class="input-group">
-    	                <input class="form-control" name="mobile" ng-model="vendorReg.mobile" placeholder="* Mobile No." type="text" value="" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
-                      </div>
+                      <input class="form-control" name="mobile" ng-model="vendorReg.mobile" placeholder="* Mobile No." type="text" value="" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
   	              </div>
               
             <div class="col-xs-4">

@@ -123,13 +123,13 @@
               </div>
               <div class="panel-body text-center">
                 <div class="form-group">
-                  <a href="javascript:void(0);">
+                  <a href="http://quippoauctions.com/" target="_blank">
                     <img src="assets/images/partner-logo-img.jpg">
                   </a>                  
                 </div>
                 <hr>
                 <div class="form-group">
-                  <a href="javascript:void(0);">
+                  <a href="http://srei.com/" target="_blank">
                     <img src="assets/images/srei-logo.png">
                   </a>
                   
@@ -212,6 +212,12 @@
   </div>
 </section>
 <div class="container text-center form-group">
-<!-- <img src="assets/images/Ad_Banner_3.jpg" width="60%"> -->
-  <img ng-if="mainVm.imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomCentre}}" class="add2">
+  <div class="row">
+    <div class="col-sm-6">
+      <img ng-if="mainVm.imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomCentre}}" class="add2 img-responsive">
+    </div>
+    <div class="col-sm-6">
+      <img ng-if="mainVm.imgBottomCentre" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomCentre}}" class="add2 img-responsive">
+    </div>
+  </div>
 </div>
