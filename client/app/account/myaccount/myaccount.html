@@ -28,9 +28,12 @@
                 <legend></legend>
               <div class="media well">
                 <div class="pull-left profilePic-button">
-                  <i class="fa fa-camera"></i>
+                  <!-- <i class="fa fa-camera"></i> -->
                   <img class="media-object img-rounded" src="assets/images/profile.png" alt="Image">
-                  <input type="file">
+                  <span class="btn btn-default fileinput-button">
+                     <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                      <span><i class="fa fa-camera"></i> Change Image</span>
+                    </span>
                 </div>
                 <small class="pull-right" ng-if="!editName" ng-click="editFun('name')"><i class="fa fa-pencil"></i></small>       
                 <div class="media-body myProfileDetail">
