@@ -14,6 +14,7 @@ var VendorSchema = new Schema({
   country: String,
   services: [String],
   imgsrc: String,
+  url: String,
   createdAt: Date,
   updatedAt: Date
 });
