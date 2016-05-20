@@ -313,9 +313,9 @@ footer .subscribe{height: 40px;}
 .largeImg{height:80px;margin-top:12px;padding-top:15px;margin-bottom:10px;border:1px solid #ccc;background:#eee;text-align:center;}
 .fileinput-button input{cursor:pointer;direction:ltr;font-size:200px;margin:0;opacity:0;position:absolute;right:0;top:0;}
 .browse-image{position:absolute;top:0;}
-.browse-image img{width:153px;height:150px;}
-.browse-land{position:absolute;top:30px;}
-.browse-land img{width:153px;height:80px;}
+.browse-image img{width:107px;height:100px;}
+.browse-land{position:absolute;top:13px;}
+.browse-land img{width:107px;height:80px;}
 .master-browse{display:inline-block;overflow:hidden;position:relative;width:100%;text-align:center;}
 .master-browse input{cursor:pointer;font-size:35px;width:100%;position:absolute;top:0;direction:ltr;opacity:0;}
 
@@ -726,3 +726,4 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .profilePic-button img{width: 150px; height: 150px; margin-right: 30px; }
 .profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 30px;top: 195px; overflow: hidden; width: 150px;}
 .profilePic-button .fileinput-button:hover{background: rgba(255,255,255,1);}
+.has-error .basic-detail{border-color: #f00;}

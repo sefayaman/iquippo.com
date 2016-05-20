@@ -51,23 +51,23 @@
                   <form novalidate name="basicInfoForm">
                       <!--Full Name -->              
                       <div class="row form-group">
-                        <div class="col-sm-4" ng-class="{'has-error': basicInfoForm.fname.$invalid && submitted}">
-                          <input type="text" name="fname" ng-model="myAccountVm.userInfo.fname" value="{{myAccountVm.userInfo.fname}}" placeholder="First Name*" required>
+                        <div class="col-sm-3" ng-class="{'has-error': basicInfoForm.fname.$invalid && submitted}">
+                          <input type="text" name="fname" class="basic-detail" ng-model="myAccountVm.userInfo.fname" value="{{myAccountVm.userInfo.fname}}" placeholder="First Name*" required>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                           <input type="text" name="mname" ng-model="myAccountVm.userInfo.mname" value="{{myAccountVm.userInfo.mname}}" placeholder="Middle Name">                  
                         </div>
-                        <div class="col-sm-4" ng-class="{'has-error': basicInfoForm.lname.$invalid && submitted}">
-                          <input type="text" name="lname" ng-model="myAccountVm.userInfo.lname" value="{{myAccountVm.userInfo.lname}}" placeholder="Last Name*" required>
+                        <div class="col-sm-3" ng-class="{'has-error': basicInfoForm.lname.$invalid && submitted}">
+                          <input type="text" name="lname" class="basic-detail" ng-model="myAccountVm.userInfo.lname" value="{{myAccountVm.userInfo.lname}}" placeholder="Last Name*" required>
                         </div>
                       </div>
                       <!-- Full Name end -->
 
                       <!-- Location start -->
-                      <div class="row">
+                      <div class="row form-group">
                         <div class="col-sm-3">
                           <div class="input-group" ng-class="{'has-error': basicInfoForm.country.$invalid && submitted}">
-                            <select ng-model="myAccountVm.userInfo.country" name="country" required>
+                            <select class="basic-detail" ng-model="myAccountVm.userInfo.country" name="country" required>
                               <option value="">Select Country*</option>
                               <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
                             </select>                       
@@ -85,18 +85,28 @@
                       <!-- Location end -->
 
                       <!-- Company Name Start-->
-                      <div>
-                        <div>
+                      <div class="row form-group">
+                        <div class="col-sm-12">
                           <input type="text" name="company" value="{{myAccountVm.userInfo.company}}" placeholder="Company Name">
                         </div>
                       </div> 
                       <!-- Company Name end -->
 
                       <!-- email start -->
-                        <div ng-class="{'has-error': basicInfoForm.email.$invalid && submitted}"><input type="email" name="email" ng-model="myAccountVm.userInfo.email" value="{{myAccountVm.userInfo.email}}" placeholder="Email*" required></div>
+                        <div class="row form-group">
+                          <div class="col-sm-12">
+                            <div ng-class="{'has-error': basicInfoForm.email.$invalid && submitted}">
+                              <input type="email" name="email" class="basic-detail" ng-model="myAccountVm.userInfo.email" value="{{myAccountVm.userInfo.email}}" placeholder="Email*" required>
+                            </div>
+                          </div>
+                        </div>
                       <!-- email end -->
-                      <div class="form-group" ng-class="{'has-error': basicInfoForm.mobile.$invalid && submitted}">
-                        <input type="text" name="mobile" ng-model="myAccountVm.userInfo.mobile" value="{{myAccountVm.userInfo.mobile}}" placeholder="Mobile No.*" required>
+                      <div class="row form-group">
+                        <div class="col-sm-12">
+                          <div class="form-group" ng-class="{'has-error': basicInfoForm.mobile.$invalid && submitted}">
+                            <input type="text" name="mobile" class="basic-detail" ng-model="myAccountVm.userInfo.mobile" value="{{myAccountVm.userInfo.mobile}}" placeholder="Mobile No.*" required>
+                          </div>
+                        </div>
                       </div>
                       <div>
                         <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save(basicInfoForm)">Save</button>
@@ -150,8 +160,8 @@
                   <!-- lable end -->
 
                   <!-- form start -->
-                  <div  ng-if="myAccountVm.editPersonalInfo" class="row form-group">
-                    <form>
+                    <form  ng-if="myAccountVm.editPersonalInfo">
+                      <div class="row form-group">
                         <div class="col-sm-3 form-group">
                           <div><label>Date of Birth</label></div>                      
                           <div class="input-group">
@@ -174,31 +184,35 @@
                             
                           </div>
                         </div>
-                        <div class="col-sm-12 form-group">
-                          <div class="row form-group" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
-                            <div class="col-sm-3">
-                              <input type="text" placeholder="Collage Name" ng-model="college.name" >
-                            </div>
-                            <div class="col-sm-6">
-                              <div class="input-group">
-                                <input type="text" placeholder="Start Year" ng-model="college.startYear">
-                                 <span class="input-group-addon">to</span> 
-                                <input type="text" placeholder="End Year" ng-model="college.endYear">                            
-                              </div>
-                            </div>
-                            <div class="col-sm-3">
-                              <select  ng-model="college.degree">
-                                <option value="">Select Degree</option>
-                                <option value="Graduation">Graduation</option>
-                                <option value="Post Graduation">Post Graduation</option>
-                              </select>
-                            </div>                                                  
+                      </div>
+                      <div class="row form-group" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
+                        <div class="col-sm-3">
+                          <input type="text" placeholder="Collage Name" ng-model="college.name" >
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="input-group">
+                            <input type="text" placeholder="Start Year" ng-model="college.startYear">
+                             <span class="input-group-addon">to</span> 
+                            <input type="text" placeholder="End Year" ng-model="college.endYear">                            
                           </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <select  ng-model="college.degree">
+                            <option value="">Select Degree</option>
+                            <option value="Graduation">Graduation</option>
+                            <option value="Post Graduation">Post Graduation</option>
+                          </select>
+                        </div>                                                  
+                      </div>
+                      <div class="row form-group">
+                        <div class="col-sm-12">
+                          
                           <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save()">Save</button>
                           <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('personal')">Cancel</button>
                         </div>
-                      </form>
-                  </div>
+                      </div>
+                    </form>
+                  
                   <!-- form end -->
 
                   <h4>Social Media Information
