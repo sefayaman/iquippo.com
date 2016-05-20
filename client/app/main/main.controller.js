@@ -21,6 +21,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
     vm.getLocationHelp = getLocationHelp;
+    vm.myFunct = myFunct;
     // vm.toggleCategory = toggleCategory;
 
     $scope.ConfigureList = function() {};
@@ -96,6 +97,14 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getCategories();
     getActiveClassifiedAd();
     getAllCategories();
+
+     function myFunct(keyEvent) {
+      if(keyEvent)
+          keyEvent.stopPropagation();
+      if (keyEvent.which === 13){
+        doSearch();
+      }
+    }
 
     function doSearch(){
 

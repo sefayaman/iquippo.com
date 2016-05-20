@@ -169,7 +169,7 @@ function searchUtil(item,toSearch, type)
     product.deleted = true;
     productSvc.updateProduct(product).then(function(result){
         //console.log("Product Deleted",result.data);
-        getProducts();
+        loadProducts();
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Product Deleted';
