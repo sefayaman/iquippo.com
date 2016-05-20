@@ -3,7 +3,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, cartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
   
   var vm = this;
 
@@ -42,6 +42,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, pro
   vm.getLocationHelp = getLocationHelp;
   vm.sortBy = sortBy;
   vm.updateSelection = updateSelection;
+  vm.addProductToCart = addProductToCart;
   vm.compare = compare;
 
 
@@ -126,6 +127,52 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, pro
     $scope.equipmentSearchFilter.group = group.name;
    $scope.fireCommand();
   }*/
+
+  function addProductToCart(product){
+      if(!Auth.getCurrentUser()._id){
+        Modal.alert(informationMessage.cartLoginError,true);
+        return;
+      }
+      if(!$rootScope.cart){
+        var cart = {};
+        cart.user = {};
+        cart.user['_id'] = Auth.getCurrentUser()._id;
+        cart.user['name'] = Auth.getCurrentUser().fname;
+        cart.products = [];
+        cart.products[cart.products.length] = product;
+        cartSvc.createCart(cart)
+        .success(function(res){
+          $rootScope.cart = res;
+            Modal.alert(informationMessage.cartAddedSuccess,true);
+            $rootScope.cartCounter = $rootScope.cart.products.length;
+        })
+        .error(function(res){
+             Modal.alert(informationMessage.cartAddedError,true);
+        })
+
+      }else{
+        var prd = []
+        prd = $rootScope.cart.products.filter(function(d){
+            return d._id === product._id;
+        });
+        if(prd.length > 0){
+          Modal.alert(informationMessage.productAlreadyInCart,true);
+          return;
+        }
+
+        $rootScope.cart.products[$rootScope.cart.products.length] = product;
+
+         cartSvc.updateCart($rootScope.cart)
+        .success(function(res){
+            //$scope.closeDialog();
+            Modal.alert(informationMessage.cartAddedSuccess,true);
+            $rootScope.cartCounter = $rootScope.cart.products.length;
+        })
+        .error(function(res){
+             Modal.alert(informationMessage.cartAddedError,true);
+        })
+      }
+    }
 
   function onCategoryChange(category,noAction){
       $scope.brandList = [];
