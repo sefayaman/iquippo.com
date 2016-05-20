@@ -52,13 +52,13 @@
                   </div>
                   <div class="col-sm-3">
                     <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="bottomCentre" ng-change="classifiedadVm.resetImages()" id="bottom-center" ng-model="checked"><label for="bottom-center">Bottom Left</label>
+                        <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked"><label for="bottom-left">Bottom Left</label>
                       </div>
                       
                   </div>
                   <div class="col-sm-3">
                     <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="bottomCentre" ng-change="classifiedadVm.resetImages()" id="bottom-center" ng-model="checked"><label for="bottom-center">Bottom right</label>
+                        <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked"><label for="bottom-right">Bottom right</label>
                       </div>
                       
                   </div>
@@ -98,12 +98,12 @@
                               <span><small>680px x 100px</small>
                               <br>
                               Browse Image</span>
-                              <input type="file" name="file" ng-disabled="checked != 'bottomCentre'" image-upload>
+                              <input type="file" name="file" ng-disabled="checked != 'bottomLeft'" image-upload>
                           </span>
                           <div class="browse-land">
-						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomCentre'&&classifiedadVm.classified.image" class="img-responsive">
+						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomLeft'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
-                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'bottomCentre'" ng-click="classifiedadVm.previewImg('bottomCentreImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'bottomLeft'" ng-click="classifiedadVm.previewImg('bottomLeftImg')">Preview</button>
 
                     </div>
                     <div class="form-group col-sm-3">
@@ -112,12 +112,12 @@
                               <span><small>680px x 100px</small>
                               <br>
                               Browse Image</span>
-                              <input type="file" name="file" ng-disabled="checked != 'bottomCentre'" image-upload>
+                              <input type="file" name="file" ng-disabled="checked != 'bottomRight'" image-upload>
                           </span>
                           <div class="browse-land">
-                            <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomCentre'&&classifiedadVm.classified.image" class="img-responsive">
+                            <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomRight'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
-                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'bottomCentre'" ng-click="classifiedadVm.previewImg('bottomCentreImg')">Preview</button>
+                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'bottomRight'" ng-click="classifiedadVm.previewImg('bottomRightImg')">Preview</button>
 
                     </div>
                 </div>

@@ -13,7 +13,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.featuredslides = [];
     vm.imgLeftTop = "";
     vm.imgLeftBottom = "";
-    vm.imgBottomCentre = "";
+    vm.imgBottomLeft = "";
+    vm.imgBottomRight = "";
     vm.radioModel = 'SELL';
     vm.isCollapsed = true;
     vm.sortedFeaturedProduct = [];
@@ -85,8 +86,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
               vm.imgLeftTop = srchres[i].image;
             if(srchres[i].position == 'leftBottom')
               vm.imgLeftBottom = srchres[i].image;
-            if(srchres[i].position == 'bottomCentre')
-              vm.imgBottomCentre = srchres[i].image;
+            if(srchres[i].position == 'bottomLeft')
+              vm.imgBottomLeft = srchres[i].image;
+            if(srchres[i].position == 'bottomRight')
+              vm.imgBottomRight = srchres[i].image;
             flag = false;
           }
         }

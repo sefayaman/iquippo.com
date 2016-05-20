@@ -33,7 +33,8 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
     $scope.checked = "";
     var leftTopDim = {width:165,height:255};
     var leftBottomDim = {width:165,height:255};
-    var bottomCentreDim = {width:680,height:100};
+    var bottomLeftDim = {width:680,height:100};
+    var bottomRightDim = {width:680,height:100};
     
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
@@ -52,9 +53,12 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
              resizeParam.width = leftBottomDim.width;
              resizeParam.height = leftBottomDim.height;
             break;
-            case 'bottomCentre':
-              resizeParam.width = bottomCentreDim.width;
-              resizeParam.height = bottomCentreDim.height;
+            case 'bottomLeft':
+              resizeParam.width = bottomLeftDim.width;
+              resizeParam.height = bottomLeftDim.height;
+            case 'bottomRight':
+              resizeParam.width = bottomRightDim.width;
+              resizeParam.height = bottomRightDim.height;
             break;
 
            }
