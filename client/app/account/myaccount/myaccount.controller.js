@@ -9,85 +9,25 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
     vm.currentTab = "basic";
     vm.userInfo = {};
     vm.editUser = editUser;
-    $scope.isCollapsed = true;
-    $scope.editName = false;
-    $scope.editEmail = false;
-    $scope.editCountry = false;
-    $scope.editCompany = false;
-    $scope.editMobile = false;
-    $scope.editDOB = false;
-    $scope.editMarital = false;
-    $scope.editEducation = false;
-    $scope.editFacebook = false;
-    $scope.editLinkedIn = false;
-    $scope.editTwitter = false;
-    $scope.editGoogle = false;
-    $scope.editBusiness = false;
-    $scope.editIncome = false;
-    $scope.editDesignation = false;
-    $scope.editWebsite = false;
-    var path = '/api/products';
-    $scope.editFun = function(param){
-      switch(param){
-        case 'name':
-          $scope.editName = true;
-          break;
-          case 'email':
-            $scope.editEmail = true;
-          break;
-          case 'country':
-            $scope.editCountry = true;
-          break;
-          case 'company':
-            $scope.editCompany = true;
-          break;
-          case 'mobile':
-            $scope.editMobile = true;
-          break;
-          case 'DOB':
-            $scope.editDOB = true;
-          break;
-          case 'marital':
-            $scope.editMarital = true;
-          break;
-          case 'education':
-            $scope.editEducation = true;
-          break;
-          case 'facebook':
-            $scope.editFacebook = true;
-          break;
-          case 'linkedin':
-            $scope.editLinkedIn = true;
-          break;
-          case 'twitter':
-            $scope.editTwitter = true;
-          break;
-          case 'google':
-            $scope.editGoogle = true;
-          break;
-          case 'business':
-            $scope.editBusiness = true;
-          break;
-          case 'income':
-            $scope.editIncome = true;
-          break;
-          case 'designation':
-            $scope.editDesignation = true;
-          break;
-          case 'website':
-            $scope.editWebsite = true;
-          break;
-      }
-      $scope.edit = true;
-    }
+    vm.editOrAddClick = editOrAddClick;
+    vm.cancelEditOrAdd = cancelEditOrAdd;
+    vm.save=save;
 
+    vm.editBasicInfo = false;
+    vm.editPersonalInfo = false;
+    vm.editProfessionalInfo = false;
+    vm.editSocialInfo = false;
+
+    var path = '/api/products';
+
+  
     function inti(){
         LocationSvc.getAllLocation()
             .then(function(result){
             $scope.locationList = result;
         })
         var dataToSend = {};
-        console.log(Auth.getCurrentUser()._id);
+
         if(Auth.getCurrentUser().role != 'admin')
           dataToSend["userId"] = Auth.getCurrentUser()._id;
         $http.post(path + "/userwiseproductcount", dataToSend).then(function(res){
@@ -110,12 +50,62 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
 
         if(Auth.getCurrentUser()._id){
     		vm.userInfo = Auth.getCurrentUser();
+        if(!vm.userInfo.personalInfo){
+            vm.userInfo.personalInfo = {};
+            vm.userInfo.personalInfo.educations = [{}];
+        }
+        if(!vm.userInfo.professionalInfo)
+          vm.userInfo.professionalInfo = {};
+        if(!vm.userInfo.socialInfo)
+          vm.userInfo.socialInfo = {};
+        
     	}else{
     		$state.go("main");
     	}
     }
-
     inti();
+
+    function save(form){
+      if(form && form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+      console.log("user information",vm.userInfo)
+    }
+
+    function editOrAddClick(param){
+        switch(param){
+          case 'basic':
+            vm.editBasicInfo = true; 
+          break;
+          case 'personal':
+          vm.editPersonalInfo = true;
+          break;
+          case 'professional':
+           vm.editProfessionalInfo = true;
+          break;
+          case 'social':
+              vm.editSocialInfo = true;
+          break;
+        }
+    }
+
+    function cancelEditOrAdd(param){
+        switch(param){
+          case 'basic':
+            vm.editBasicInfo = false; 
+          break;
+          case 'personal':
+          vm.editPersonalInfo = false;
+          break;
+          case 'professional':
+           vm.editProfessionalInfo = false;
+          break;
+          case 'social':
+              vm.editSocialInfo = false;
+          break;
+        }
+    }
 
     function editUser() {
       
@@ -138,7 +128,6 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
 
       userSvc.updateUser(vm.userInfo).then(function(result){
         Modal.alert("User Updated.",true);
-        $scope.isCollapsed = true;
       });  
     }
 

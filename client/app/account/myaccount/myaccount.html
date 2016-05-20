@@ -2,25 +2,12 @@
   <section class="wrapper">
     <div class="container">
       <div class="row">        
-        <!-- <div class="col-sm-3">
-          <div class="panel panel-default myaccount">
-            <div class = "panel-heading job-filter text-left">
-              My Accounts
-            </div>
-            <ul class="list-group">
-              <a href="javascript:void(0);" class="list-group-item" ng-click="myAccountVm.currentTab= 'basic'">Basic Details</a>
-              <a href="javascript:void(0);" class="list-group-item" ng-click="myAccountVm.currentTab= 'product'">My Products</a>
-              <a href="javascript:void(0);" class="list-group-item">My Transaction</a>
-              
-            </ul>
-          </div>
-        </div> -->
         <div class="col-sm-10 col-sm-offset-1">
           <h3>My Account</h3>
           <legend></legend>
-          <div class="alert alert-danger">
+          <div class="alert alert-danger" ng-if="isProfileIncomplete()">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            Please fill all the required fields <strong>email</strong> and <strong>mobile no.</strong> 
+            Please add <span ng-if="!getCurrentUser().mobile">mobile number </span> <span ng-if="!getCurrentUser().mobile && !getCurrentUser().email">and</span><span <span ng-if="!getCurrentUser().email"> email.</span>
           </div>
           <div class="row form-group">           
             <div class="col-sm-12">
@@ -28,275 +15,337 @@
                 <legend></legend>
               <div class="media well">
                 <div class="pull-left profilePic-button">
-                  <!-- <i class="fa fa-camera"></i> -->
                   <img class="media-object img-rounded" src="assets/images/profile.png" alt="Image">
                   <span class="btn btn-default fileinput-button">
-                     <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
-                      <span><i class="fa fa-camera"></i> Change Image</span>
-                    </span>
+                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                    <span><i class="fa fa-camera"></i> Change Image</span>
+                  </span>
                 </div>
-                <small class="pull-right" ng-if="!editName" ng-click="editFun('name')"><i class="fa fa-pencil"></i></small>       
-                <div class="media-body myProfileDetail">
-                  <!--Full Name -->
+                <small class="pull-right"  ng-click="myAccountVm.editOrAddClick('basic')" ng-if="!myAccountVm.editBasicInfo"><i class="fa fa-pencil"></i></small>       
+                <div class="media-body myProfileDetail" ng-if="!myAccountVm.editBasicInfo">
+
                   <h3 class="media-heading">
                     {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}} <small><span ng-if="myAccountVm.userInfo.userType == 'individual'">(Individual)</span><span ng-if="myAccountVm.userInfo.userType == 'private'">(Private Entrepreneur)</span><span ng-if="myAccountVm.userInfo.userType == 'legalentity'">(Legal Entity)</span></small>                    
-                  </h3>                
-                  <div class="row form-group" ng-if="editName">
-                    <div class="col-sm-4">
-                      <input type="text" name="" value="{{myAccountVm.userInfo.fname}}" placeholder="First Name*">
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="text" name="" value="{{myAccountVm.userInfo.mname}}" placeholder="Middle Name">                  
-                    </div>
-                    <div class="col-sm-4">
-                      <input type="text" name="" value="{{myAccountVm.userInfo.lname}}" placeholder="Last Name*">
-                    </div>
-                  </div>
+                  </h3>  
                   <!-- Full Name end -->
 
                   <!-- Location start -->
-                  <h4><i class="fa fa-map-marker"></i> {{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}
+                  <h4><i class="fa fa-map-marker"></i> <span ng-if="myAccountVm.userInfo.country || myAccountVm.userInfo.city">{{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}</span><span ng-if="!myAccountVm.userInfo.country && !myAccountVm.userInfo.city">Add country and location</span></h4>
                   
-                  </h4>
-                  <div class="row" ng-if="editName">
-                    <div class="col-sm-3">
-                      <div class="input-group">
-                        <select>
-                          <option>Select Country</option>
-                          <option>india</option>
-                        </select>                       
-                      </div>
-                    </div>
-                    <div class="col-sm-3">
-                      <div class="input-group">
-                        <select>
-                          <option>Select City</option>
-                          <option>india</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
                   <!-- Location end -->
 
                   <!-- Company Name Start-->
                   <div ng-if="myAccountVm.userInfo.company">
-                    <h5><i class="fa fa-building"></i> {{myAccountVm.userInfo.company}}
-                    </h5>
-                    <div ng-if="editName">
-                      <input type="text" name="" value="{{myAccountVm.userInfo.company}}" placeholder="Company Name">
-                    </div>
+                    <h5><i class="fa fa-building"></i> {{myAccountVm.userInfo.company}}</h5>
                   </div> 
                   <!-- Company Name end -->
 
                   <!-- email start -->
-                  <h5><i class="fa fa-envelope"></i> {{myAccountVm.userInfo.email}}
-                  </h5>
-                    <div ng-if="editName"><input type="text" name="" value="{{myAccountVm.userInfo.email}}" placeholder="Email*"></div>
+                  <h5><i class="fa fa-envelope"></i> <span ng-if="myAccountVm.userInfo.email">{{myAccountVm.userInfo.email}}</span><span ng-if="!myAccountVm.userInfo.email">Add Email</span></h5>
+                   
                   <!-- email end -->
                   <h5>
-                    <i class="fa fa-phone"></i> {{myAccountVm.userInfo.mobile}}                    
-                  </h5>
-                  <div ng-if="editName" class="form-group">
-                    <input type="text" name="" value="{{myAccountVm.userInfo.mobile}}" placeholder="Mobile No.*">
-                  </div>
-                  <div ng-if="editName">
-                    <button class="btn btn-sm btn-primary">Save</button>
-                    <button class="btn btn-sm btn-default">Cancel</button>
-                  </div>
+                    <i class="fa fa-phone"></i> <span ng-if="myAccountVm.userInfo.mobile">{{myAccountVm.userInfo.mobile}}</span><span ng-if="!myAccountVm.userInfo.mobile">Add Mobile Number</span></h5>
                 </div>
-                <div class="text-center">
-                  <a class="btn btn-success" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i> View Full Details </a>
+                <div class="media-body myProfileDetail"  ng-if="myAccountVm.editBasicInfo">
+                  <form novalidate name="basicInfoForm">
+                      <!--Full Name -->              
+                      <div class="row form-group">
+                        <div class="col-sm-4" ng-class="{'has-error': basicInfoForm.fname.$invalid && submitted}">
+                          <input type="text" name="fname" ng-model="myAccountVm.userInfo.fname" value="{{myAccountVm.userInfo.fname}}" placeholder="First Name*" required>
+                        </div>
+                        <div class="col-sm-4">
+                          <input type="text" name="mname" ng-model="myAccountVm.userInfo.mname" value="{{myAccountVm.userInfo.mname}}" placeholder="Middle Name">                  
+                        </div>
+                        <div class="col-sm-4" ng-class="{'has-error': basicInfoForm.lname.$invalid && submitted}">
+                          <input type="text" name="lname" ng-model="myAccountVm.userInfo.lname" value="{{myAccountVm.userInfo.lname}}" placeholder="Last Name*" required>
+                        </div>
+                      </div>
+                      <!-- Full Name end -->
+
+                      <!-- Location start -->
+                      <div class="row">
+                        <div class="col-sm-3">
+                          <div class="input-group" ng-class="{'has-error': basicInfoForm.country.$invalid && submitted}">
+                            <select ng-model="myAccountVm.userInfo.country" name="country" required>
+                              <option value="">Select Country*</option>
+                              <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                            </select>                       
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="input-group">
+                            <select ng-model="myAccountVm.userInfo.city">
+                              <option value="">Select City</option>
+                              <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Location end -->
+
+                      <!-- Company Name Start-->
+                      <div>
+                        <div>
+                          <input type="text" name="company" value="{{myAccountVm.userInfo.company}}" placeholder="Company Name">
+                        </div>
+                      </div> 
+                      <!-- Company Name end -->
+
+                      <!-- email start -->
+                        <div ng-class="{'has-error': basicInfoForm.email.$invalid && submitted}"><input type="email" name="email" ng-model="myAccountVm.userInfo.email" value="{{myAccountVm.userInfo.email}}" placeholder="Email*" required></div>
+                      <!-- email end -->
+                      <div class="form-group" ng-class="{'has-error': basicInfoForm.mobile.$invalid && submitted}">
+                        <input type="text" name="mobile" ng-model="myAccountVm.userInfo.mobile" value="{{myAccountVm.userInfo.mobile}}" placeholder="Mobile No.*" required>
+                      </div>
+                      <div>
+                        <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save(basicInfoForm)">Save</button>
+                        <button class="btn btn-sm btn-default"  ng-click="myAccountVm.cancelEditOrAdd('basic')">Cancel</button>
+                      </div>
+                  </form>
                 </div>
               </div>
-
-              <div class="well myProfileDetail" uib-collapse="isCollapsed">                
-                <form class="form-signin" name="form" novalidate>
+              <div class="well myProfileDetail">                
                   <h4>Personal Information
-                  <span ng-if="!editDOB" ng-click="editFun('DOB')">
-                    <small><i class="fa fa-pencil"></i></small> 
-                    <small><i class="fa fa-plus"></i></small>
+                  <span>
+                    <small><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('personal')" ng-if="!myAccountVm.editPersonalInfo"></i></small> 
                   </span>
                   </h4>
                   <legend></legend>
-                  <div  ng-if="editDOB" class="row form-group">
+                  <!-- lable start -->
+                  <div  class="row form-group" ng-if="!myAccountVm.editPersonalInfo">
                     <div class="col-sm-3 form-group">
-                      <div><label>Date of Birth</label></div>                      
-                      <div class="input-group">
-                        <input type="text" name="" value="{{}}" placeholder="Date of Birth">
-                      </div>
+                      <div><label>Date of Birth</label></div>
+                      <span ng-if="!myAccountVm.userInfo.personalInfo.dob">Add DOB</span>
+                      <span ng-if="myAccountVm.userInfo.personalInfo.dob">{{myAccountVm.userInfo.personalInfo.dob}}</span>
                     </div>
                     <div class="col-sm-8 form-group">
                       <div><label>Marital Status</label></div>
-
-                      <div class="row">
-                        <div class="col-sm-2">
-                          <input type="radio" name="marital"> Married
-                        </div>
-                        <div class="col-sm-5">
-                          <input type="text" placeholder="Anniversary Date">
-                        </div>
-                        <div class="col-sm-4">
-                          <input type="radio" name="marital"> Unmarried
-                        </div>
-                        
-                      </div>
+                      <span ng-if="!myAccountVm.userInfo.personalInfo.maritalStatus">Add Status</span>
+                      <span ng-if="myAccountVm.userInfo.personalInfo.maritalStatus">{{myAccountVm.userInfo.personalInfo.maritalStatus}}</span>
                     </div>
                     <div class="col-sm-12 form-group">
                       <div>
                         <label>Education</label> 
                       </div>
-                      <div class="row">
+                      <div class="row" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
                         <div class="col-sm-3">
-                          <span>Collage Name</span>
+                          <span>College Name</span><br>
+                          <span ng-if="!college.name">Add College Name</span>
+                          <span ng-if="college.name">{{college.name}}</span>
                         </div>
                         <div class="col-sm-6">
-                          <span>Dates Attended</span>
+                          <span>Dates Attended</span><br>
+                          <span ng-if="!college.startYear && !college.endYear">Add Year</span>
+                          <div ng-if="college.startYear || college.endYear"><span>{{college.startYear}}</span> to <span>{{college.endYear}}</span></div>
                         </div>
                         <div class="col-sm-3">
-                          <span>Degree</span>
+                          <span>Degree</span><br>
+                          <span ng-if="!college.degree">Add Degree</span>
+                          <span ng-if="college.degree">{{college.degree}}</span>
                         </div>
                       </div>
-                      <div class="row form-group">
-                        <div class="col-sm-3">
-                          <input type="text" placeholder="Collage Name">
-                        </div>
-                        <div class="col-sm-6">
-                          <div class="input-group">
-                            <input type="text" placeholder="Start Year">
-                             <span class="input-group-addon">to</span> 
-                            <input type="text" placeholder="End Year">                            
-                          </div>
-                        </div>
-                        <div class="col-sm-3">
-                          <select>
-                            <option>Select Degree</option>
-                            <option>Graduation</option>
-                            <option>Post Graduation</option>
-                          </select>
-                        </div>                                                  
-                      </div>
-                      <button class="btn btn-sm btn-primary">Save</button>
-                      <button class="btn btn-sm btn-default">Cancel</button>
                     </div>
                   </div>
+                  <!-- lable end -->
+
+                  <!-- form start -->
+                  <div  ng-if="myAccountVm.editPersonalInfo" class="row form-group">
+                    <form>
+                        <div class="col-sm-3 form-group">
+                          <div><label>Date of Birth</label></div>                      
+                          <div class="input-group">
+                            <input type="text" name="dob" ng-model="myAccountVm.userInfo.personalInfo.dob" value="{{myAccountVm.userInfo.personalInfo.dob}}" placeholder="Date of Birth">
+                          </div>
+                        </div>
+                        <div class="col-sm-8 form-group">
+                          <div><label>Marital Status</label></div>
+
+                          <div class="row">
+                            <div class="col-sm-2">
+                              <input type="radio" ng-model="myAccountVm.userInfo.personalInfo.maritalStatus" name="marital" value="Married"> Married
+                            </div>
+                            <div class="col-sm-5" ng-if="myAccountVm.userInfo.personalInfo.maritalStatus == 'Married'">
+                              <input type="text" placeholder="Anniversary Date" ng-model="myAccountVm.userInfo.personalInfo.anniversyDate" value="myAccountVm.userInfo.personalInfo.anniversyDate">
+                            </div>
+                            <div class="col-sm-4">
+                              <input type="radio" ng-model="myAccountVm.userInfo.personalInfo.maritalStatus" name="marital" value="Unmarried"> Unmarried
+                            </div>
+                            
+                          </div>
+                        </div>
+                        <div class="col-sm-12 form-group">
+                          <div class="row form-group" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
+                            <div class="col-sm-3">
+                              <input type="text" placeholder="Collage Name" ng-model="college.name" >
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="input-group">
+                                <input type="text" placeholder="Start Year" ng-model="college.startYear">
+                                 <span class="input-group-addon">to</span> 
+                                <input type="text" placeholder="End Year" ng-model="college.endYear">                            
+                              </div>
+                            </div>
+                            <div class="col-sm-3">
+                              <select  ng-model="college.degree">
+                                <option value="">Select Degree</option>
+                                <option value="Graduation">Graduation</option>
+                                <option value="Post Graduation">Post Graduation</option>
+                              </select>
+                            </div>                                                  
+                          </div>
+                          <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save()">Save</button>
+                          <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('personal')">Cancel</button>
+                        </div>
+                      </form>
+                  </div>
+                  <!-- form end -->
 
                   <h4>Social Media Information
-                  <span ng-if="!editFacebook" ng-click="editFun('facebook')">
-                    <small><i class="fa fa-pencil"></i></small>
-                    <small><i class="fa fa-plus"></i></small>
+                  <span>
+                    <small><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('social')" ng-if="!myAccountVm.editSocialInfo"></i></small>
                   </span>
                   </h4>
                   <legend></legend>
-                  <div class="row form-group" ng-if="editFacebook">
+                  <div class="row form-group" ng-if="!myAccountVm.editSocialInfo">
                     <div class="col-sm-3 form-group">
                       <div><label>Facebook URL</label></div>
-                      <input type="url" placeholder="Enter url">                
+                      <span ng-if="!myAccountVm.userInfo.socialInfo.facebookUrl">Add url</span>
+                      <span ng-if="myAccountVm.userInfo.socialInfo.facebookUrl">{{myAccountVm.userInfo.socialInfo.facebookUrl}}</span>                
                     </div>
                     <div class="col-sm-3 form-group">
                       <div><label>LinkedIn URL</label></div>
-                      <input type="url" placeholder="Enter url">
+                      <span ng-if="!myAccountVm.userInfo.socialInfo.linkedInUrl">Add url</span>
+                      <span ng-if="myAccountVm.userInfo.socialInfo.linkedInUrl">{{myAccountVm.userInfo.socialInfo.linkedInUrl}}</span>
                     </div>
                     <div class="col-sm-3 form-group">
                       <div><label>Twitter URL</label></div>
-                      <input type="url" placeholder="Enter url">
+                      <span ng-if="!myAccountVm.userInfo.socialInfo.twitterUrl">Add url</span>
+                      <span ng-if="myAccountVm.userInfo.socialInfo.twitterUrl">{{myAccountVm.userInfo.socialInfo.twitterUrl}}</span>
                     </div>
                     <div class="col-sm-3 form-group">
                       <div><label>Google Plus URL</label></div>
-                      <input type="url" placeholder="Enter url">
+                      <span ng-if="!myAccountVm.userInfo.socialInfo.googleUrl">Add url</span>
+                      <span ng-if="myAccountVm.userInfo.socialInfo.googleUrl">{{myAccountVm.userInfo.socialInfo.googleUrl}}</span>
                     </div>
-                    <div class="col-sm-12 form-group">
-                      <button class="btn btn-sm btn-primary">Save</button>
-                      <button class="btn btn-sm btn-default">Cancel</button>
-                    </div>
+                    
+                  </div>
+                  <div class="row form-group" ng-if="myAccountVm.editSocialInfo">
+                      <form>
+                       <div class="col-sm-3 form-group">
+                        <div><label>Facebook URL</label></div>
+                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.facebookUrl" value="{{myAccountVm.userInfo.socialInfo.facebookUrl}}">                
+                      </div>
+                      <div class="col-sm-3 form-group">
+                        <div><label>LinkedIn URL</label></div>
+                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.linkedInUrl" value="myAccountVm.userInfo.socialInfo.linkedInUrl">
+                      </div>
+                      <div class="col-sm-3 form-group">
+                        <div><label>Twitter URL</label></div>
+                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.twitterUrl" value="myAccountVm.userInfo.socialInfo.twitterUrl">
+                      </div>
+                      <div class="col-sm-3 form-group">
+                        <div><label>Google Plus URL</label></div>
+                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.googleUrl" value="myAccountVm.userInfo.socialInfo.googleUrl">
+                      </div>
+                      <div class="col-sm-12 form-group">
+                        <button class="btn btn-sm btn-primary" ng-click="save()">Save</button>
+                        <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('social')">Cancel</button>
+                      </div>
+                    </form>
                   </div>
 
                   <h4>Professional Information
-                    <span ng-if="!editBusiness" ng-click="editFun('business')">
-                      <small><i class="fa fa-pencil"></i></small>
-                      <small><i class="fa fa-plus"></i></small>
+                    <span>
+                      <small><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('professional')" ng-if="!myAccountVm.editProfessionalInfo"></i></small>
                     </span>
                   </h4>
                   <legend></legend>
-                  <div class="row form-group" ng-if="editBusiness">
+                  <div class="row form-group" ng-if="!myAccountVm.editProfessionalInfo">
                     <div class="col-sm-3 form-group">
                       <div>
                         <label>
                           Profession<small>(Business)</small>
                         </label>
                       </div>
-                      <input type="url" placeholder="Business Name">
+                      <span>Add Profession</span>
                     </div>
                     <div class="col-sm-3 form-group">
                       <div><label>Annual Income</label></div>
 
-                      <input type="url" placeholder="Annual Income">
+                      <span ng-if="!myAccountVm.userInfo.professionalInfo.annualIncome">Add Annual Income</span>
+                      <span ng-if="myAccountVm.userInfo.professionalInfo.annualIncome">{{myAccountVm.userInfo.professionalInfo.annualIncome}}</span>  
                       
                     </div>
                     <div class="col-sm-3 form-group">
                       <div>
                         <label> Company Name </label>
                       </div>
-                      <input type="url" placeholder="Company Name">
+                      <span ng-if="!myAccountVm.userInfo.professionalInfo.companyName">Add Company Name</span>
+                      <span ng-if="myAccountVm.userInfo.professionalInfo.companyName">{{myAccountVm.userInfo.professionalInfo.companyName}}</span>   
                       
                     </div>
                     <div class="col-sm-3 form-group">
                       <div>
                         <label> Designation</label>
                       </div>
-                      <input type="url" placeholder="Designation">                      
+                      <span ng-if="!myAccountVm.userInfo.professionalInfo.desination">Add Designation</span>
+                       <span ng-if="myAccountVm.userInfo.professionalInfo.desination">{{myAccountVm.userInfo.professionalInfo.desination}}</span>                      
                     </div>
                     <div class="col-sm-12 form-group">
                       <div>
                         <label>Website</label>
                       </div>
-                      <input type="url" placeholder="Website">                      
+                      <span ng-if="!myAccountVm.userInfo.professionalInfo.website">Add website</span>
+                      <span ng-if="myAccountVm.userInfo.professionalInfo.website">{{myAccountVm.userInfo.professionalInfo.website}}</span>                     
                     </div>
-                    <div class="col-sm-6 form-group">
-                      <button class="btn btn-sm btn-primary">Save</button>
-                      <button class="btn btn-sm btn-default">Cancel</button>
-                    </div>
+                   
                   </div>
-                </form>
+                  <div class="row form-group" ng-if="myAccountVm.editProfessionalInfo">
+                    <form>
+                      <div class="col-sm-3 form-group">
+                        <div>
+                          <label>
+                            Profession<small>(Business)</small>
+                          </label>
+                        </div>
+                        <input type="url" placeholder="Business Name">
+                      </div>
+                      <div class="col-sm-3 form-group">
+                        <div><label>Annual Income</label></div>
+
+                        <input type="text" placeholder="Annual Income" ng-model="myAccountVm.userInfo.professionalInfo.annualIncome" value="{{myAccountVm.userInfo.professionalInfo.annualIncome}}">
+                        
+                      </div>
+                      <div class="col-sm-3 form-group">
+                        <div>
+                          <label> Company Name </label>
+                        </div>
+                        <input type="text" placeholder="Company Name" ng-model="myAccountVm.userInfo.professionalInfo.companyName" value="{{myAccountVm.userInfo.professionalInfo.companyName}}">
+                        
+                      </div>
+                      <div class="col-sm-3 form-group">
+                        <div>
+                          <label> Designation</label>
+                        </div>
+                        <input type="text" placeholder="Designation" ng-model="myAccountVm.userInfo.professionalInfo.desination" value="{{myAccountVm.userInfo.professionalInfo.desination}}">                      
+                      </div>
+                      <div class="col-sm-12 form-group">
+                        <div>
+                          <label>Website</label>
+                        </div>
+                        <input type="url" placeholder="Website" ng-model="myAccountVm.userInfo.professionalInfo.website" value="{{myAccountVm.userInfo.professionalInfo.website}}">                      
+                      </div>
+                      <div class="col-sm-6 form-group">
+                        <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save()">Save</button>
+                        <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('professional')">Cancel</button>
+                      </div>
+                      </form>
+                    </div>
                 
               </div>
             </div>
           </div>
-          <!-- <div class="account-detail well" ng-if="myAccountVm.currentTab== 'basic'">            
-            <h4>Basic Details</h4>
-            <legend></legend>
-            <div class="row">
-              <div class="col-sm-3 form-group"><label>Name:</label></div>
-              <div class="col-sm-4 form-group">
-                {{myAccountVm.userInfo.fname}} {{myAccountVm.userInfo.mname}} {{myAccountVm.userInfo.lname}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3 form-group"><label>Mobile No:</label></div>
-              <div class="col-sm-5 form-group">
-                +91-{{myAccountVm.userInfo.mobile}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3 form-group"><label>Email:</label></div>
-              <div class="col-sm-5 form-group">
-                +91-{{myAccountVm.userInfo.email}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3 form-group"><label>Country:</label></div>
-              <div class="col-sm-5 form-group">
-               {{myAccountVm.userInfo.country}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-3 form-group"><label>Location:</label></div>
-              <div class="col-sm-5 form-group">
-               {{myAccountVm.userInfo.city}}
-              </div>
-            </div>
-          </div>
- -->
-          <!-- <div class="my-product well" ng-if="myAccountVm.currentTab == 'product'"> -->
           <div class="form-group"></div>
           <div class="my-product">
             <h4>My Products</h4>
@@ -309,7 +358,7 @@
                       <h4>Rented Products</h4>
                       <div class="progress">
                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                          <span class="sr-only">40% Complete (success)</span>
+                          <span class="sr-only">{{myAccountVm.rentedCounts}}% Complete (success)</span>
                         </div>
                       </div>
                       <h4>{{myAccountVm.rentedCounts}}</h4>
@@ -363,58 +412,6 @@
                 </div>  
               </div>
             </div>
-            <!-- <div class="row">
-                <div class="col-sm-5">
-                <div class="rented">
-                  <a href="javascript:void(0);"> 
-                      Rented Items
-                  </a>
-                  <div class="bg-primary text-center rented-item">
-                    50
-                   
-                  </div>
-                </div> 
-                   
-                   
-                </div>
-                <div class="col-sm-5">
-                 <div class="rented">
-                  <a href="javascript:void(0);"> 
-                    Listed Items
-                  </a>
-                    </div> 
-                  <div class="bg-success text-center rented-item">
-                   80
-                   
-                  </div>
-                   
-                </div>
-               </div> -->
-               <!-- <div class="form-group"></div> -->
-              <!-- <div class="row">
-                <div class="col-sm-5">
-                <div class="rented">
-                  <a href="javascript:void(0);"> 
-                    Sold Items
-                  </a>
-                    </div> 
-                  <div class="bg-info text-center rented-item">
-                    85
-                    
-                  </div> 
-                  
-                </div>
-                <div class="col-sm-5">
-                <div class="rented">
-                   <a href="javascript:void(0);"> Product Upload</a>
-                    </div> 
-                  <div class="bg-danger text-center rented-item">
-                    120
-                    
-                  </div> 
-                  
-                </div>
-              </div> -->
            
           </div>
         </div>

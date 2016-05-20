@@ -47,7 +47,10 @@ var UserSchema = new Schema({
   facebook: {},
   twitter:{},
   provider:String,
-  otp:{}
+  otp:{},
+  personalInfo:{},
+  professionalInfo:{},
+  socialInfo:{}
 });
 
 /**
