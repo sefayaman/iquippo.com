@@ -10,6 +10,7 @@ passport.use('facebook', new FacebookStrategy({
   profileFields: ['id', 'displayName','name' ,'link', 'photos', 'email']
 },
   function(access_token, refresh_token, profile, done) {
+    //console.log(profile);
     process.nextTick(function() {
         findByFacebookId(User,profile,access_token,done);
     });

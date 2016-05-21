@@ -104,7 +104,10 @@ function searchFilter(type)
 function searchUtil(item,toSearch, type)
 {
   if(type == 'assetId'){
-    return ( item.assetId == toSearch) ? true : false ;
+    assetIdArr = toSearch.split(",");
+    if(!assetIdArr || assetIdArr.length > 0)
+      return;
+    return ( assetIdArr.indexOf(item.assetId) != -1) ? true : false ;
   } else if(type == 'tradeType'){
     return ( item.tradeType.toLowerCase().indexOf(toSearch.toLowerCase()) > -1) ? true : false ;
   } else if(type == 'category'){

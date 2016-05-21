@@ -50,8 +50,8 @@ var all = {
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   },
   facebook: {
-    clientID:    "270271773315178",
-    clientSecret:"f60977ed21f817c39b7bd253d87c4ee1",
+    clientID:    "1144004112307890",
+    clientSecret:"bfb1123f4f6d548fa2a8751a1e009488",
     callbackURL:  (process.env.DOMAIN || '') + '/auth/facebook/callback'
   },
   twitter: {

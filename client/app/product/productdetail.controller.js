@@ -246,35 +246,39 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
 angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {
     $scope.productQuote = {};
     if(Auth.getCurrentUser()._id){
-    var currUser = Auth.getCurrentUser();
-    $scope.productQuote.fname = currUser.fname;
-    $scope.productQuote.mname = currUser.mname; 
-    $scope.productQuote.lname = currUser.lname;
-    
-    $scope.productQuote.mobile = currUser.mobile;
-    $scope.productQuote.email = currUser.email;
-    $scope.productQuote.phone = currUser.phone;
-    $scope.productQuote.country = currUser.country;
+      var currUser = Auth.getCurrentUser();
+      $scope.productQuote.fname = currUser.fname;
+      $scope.productQuote.mname = currUser.mname; 
+      $scope.productQuote.lname = currUser.lname;
+      
+      $scope.productQuote.mobile = currUser.mobile;
+      $scope.productQuote.email = currUser.email;
+      $scope.productQuote.phone = currUser.phone;
+      $scope.productQuote.country = currUser.country;
     }
 
-    $scope.productQuote.shippingQuote = {};
-    $scope.productQuote.valuationQuote = {};
-    $scope.productQuote.certifiedByIQuippoQuote = {};
-    $scope.productQuote.manpowerQuote = {};
+    function setQuote(){
 
-    $scope.productQuote.manpowerQuote.usedBy = "Operators";
-    /*$scope.productQuote.valuationQuote.vendors = $scope.valuationVendorList;
-    $scope.productQuote.shippingQuote.vendors = $scope.shippingVendorList;
-    $scope.productQuote.certifiedByIQuippoQuote.vendors = $scope.certifiedByIQuippoVendorList;*/
-    $scope.productQuote.product = {};
-    $scope.productQuote.product._id = $scope.currentProduct._id;
-    $scope.productQuote.product.name = $scope.currentProduct.name;
-    $scope.productQuote.product.productId = $scope.currentProduct.productId;
-    $scope.productQuote.seller = $scope.currentProduct.seller;
-    $scope.mytime = new Date();
-    $scope.hstep = 1;
-    $scope.mstep = 1;
-    $scope.ismeridian = true;
+      $scope.productQuote.shippingQuote = {};
+      $scope.productQuote.valuationQuote = {};
+      $scope.productQuote.certifiedByIQuippoQuote = {};
+      $scope.productQuote.manpowerQuote = {};
+
+      $scope.productQuote.manpowerQuote.usedBy = "Operators";
+      /*$scope.productQuote.valuationQuote.vendors = $scope.valuationVendorList;
+      $scope.productQuote.shippingQuote.vendors = $scope.shippingVendorList;
+      $scope.productQuote.certifiedByIQuippoQuote.vendors = $scope.certifiedByIQuippoVendorList;*/
+      $scope.productQuote.product = {};
+      $scope.productQuote.product._id = $scope.currentProduct._id;
+      $scope.productQuote.product.name = $scope.currentProduct.name;
+      $scope.productQuote.product.productId = $scope.currentProduct.productId;
+      $scope.productQuote.seller = $scope.currentProduct.seller;
+      $scope.mytime = new Date();
+      $scope.hstep = 1;
+      $scope.mstep = 1;
+      $scope.ismeridian = true;
+    }
+   
 
     function loadLocatons(){
       LocationSvc.getAllLocation()
@@ -284,6 +288,11 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     }
 
     loadLocatons();
+    setQuote();
+    $scope.resetQuote = function(){
+      $scope.productQuote = {};
+      setQuote();
+    }
 
     $scope.addProductQuote = function(evt){
     var ret = false;

@@ -664,7 +664,7 @@ angular.module('sreizaoApp')
     tcDocObj = $scope.tcDoc = {};
     $scope.selectedUser = {};
     $scope.selectedCompany = {};
-    $scope.selectedCategory = {};
+    $scope.selectedCategory = {_id:""};
     $scope.selectedGroup = {};
     $scope.selectedBrand = {};
     $scope.selectedModel = {};
@@ -675,6 +675,14 @@ angular.module('sreizaoApp')
     productHistory = $scope.productHistory = {};
     $scope.product.seller = product.seller = {};
     $scope.mfgYear = null;
+
+    //rent reset fields
+
+    $scope.product.rent = {};
+    $scope.product.rent.rateHours = {};
+    $scope.product.rent.rateDays = {};
+    $scope.product.rent.rateMonths = {};
+    $scope.product.rent.rateHours.rateType = 'hours';
     //$scope.today();
   }
 

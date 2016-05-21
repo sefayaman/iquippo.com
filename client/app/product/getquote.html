@@ -39,7 +39,7 @@
             <!-- <input type="text" name="" class="form-control" placeholder="City" ng-model="productQuote.city"> -->
             <div class="form-group" ng-class="{'has-error': form.location.$invalid && form.submitted}">
               <select class="form-control" name="location" ng-model="product.city" required>
-                <option value="" disabled>*Select Location</option>
+                <option value="">*Select Location</option>
                 <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
               </select>
               <i class="caret"></i>
@@ -100,7 +100,7 @@
                         <div class="col-xs-12 col-sm-6 form-group">Part shipment allowed</div>
                         <div class="col-xs-6 col-sm-3 form-group">
                           <!-- <input type="radio" name="allowed" id="allowed" > <label for="allowed">Yes </label>  -->  
-                          <input type="radio" checked="checked" placeholder=""  name="allowed" ng-model="productQuote.shippingQuote.allowed" value="yes"> Yes                  
+                          <input type="radio"  placeholder=""  name="allowed" ng-model="productQuote.shippingQuote.allowed" value="yes"> Yes                  
                         </div>
                         <div class="col-xs-6 col-sm-3 form-group">
                           <!-- <input type="radio" name="allowed" id="notallowed" > <label for="ntallowed">No</label> -->
@@ -111,7 +111,7 @@
                         <div class="col-xs-12 col-sm-6 form-group">Packaging as per international standard</div>
                         <div class="col-xs-6 col-sm-3 form-group">
                           <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label>  -->   
-                          <input type="radio" checked="checked" placeholder=""  name="packaging" ng-model="productQuote.shippingQuote.packaging" value="yes"> Yes                    
+                          <input type="radio"  placeholder=""  name="packaging" ng-model="productQuote.shippingQuote.packaging" value="yes"> Yes                    
                         </div>
                         <div class="col-xs-6 col-sm-3 form-group">
                           <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label>  -->  
@@ -136,11 +136,11 @@
                       <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
                       <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.valuationQuote.valuation && !valuationQuote.valid && form.submitted}">
                         <select class="form-control" ng-model="productQuote.valuationQuote.valuation" name="" required>
-                          <option value="" disabled>*Select Purpose</option>
+                          <option value="">*Select Purpose</option>
                           <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                         </select>
                       </div>
-                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.valuationQuote.otherName && !valuationQuote.valid && form.submitted}">
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.valuationQuote.valuation == 'Other' && !productQuote.valuationQuote.otherName && !valuationQuote.valid && form.submitted}">
                         <input class="form-control" name="otherName" type="text" ng-model="productQuote.valuationQuote.otherName" ng-disabled ="productQuote.valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.valuationQuote.valuation == 'Other'">
                       </div>
                     </div>
@@ -148,7 +148,7 @@
                       <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
                       <div class="col-xs-6 col-sm-4 form-group">
                         <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
-                        <input type="radio" checked="checked" placeholder=""  name="schedule" ng-model="productQuote.valuationQuote.schedule" value="yes"> Yes 
+                        <input type="radio"  placeholder=""  name="schedule" ng-model="productQuote.valuationQuote.schedule" value="yes"> Yes 
                       </div>
                       <div class="col-xs-6 col-sm-4 form-group">
                         <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
@@ -195,11 +195,11 @@
                       <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
                       <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.valuation && !certifiedByIQuippoQuote.valid && form.submitted}">
                         <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="valuation" required>
-                          <option value="" disabled="">*Select Purpose</option>
+                          <option value="">*Select Purpose</option>
                           <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                         </select>
                       </div>
-                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && form.submitted}">
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && form.submitted}">
                         <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
                       </div>
                     </div>                                   
@@ -207,7 +207,7 @@
                       <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
                       <div class="col-xs-6 col-sm-4 form-group">
                         <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
-                        <input type="radio" checked="checked" placeholder=""  name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes"> Yes 
+                        <input type="radio"  placeholder=""  name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes"> Yes 
                       </div>
                       <div class="col-xs-6 col-sm-4 form-group">
                         <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
@@ -280,7 +280,7 @@
                       <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
                       <div class="col-xs-6 col-sm-4 form-group">
                         <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
-                        <input type="radio" checked="checked" placeholder=""  name="scheduleM" ng-model="productQuote.manpowerQuote.scheduleM" value="yes"> Yes 
+                        <input type="radio" placeholder=""  name="scheduleM" ng-model="productQuote.manpowerQuote.scheduleM" value="yes"> Yes 
                       </div>
                       <div class="col-xs-6 col-sm-4 form-group">
                         <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
@@ -321,7 +321,7 @@
     </div>
 
     <div class="modal-footer">
-      <button type="reset" class="btn btn-default">Reset</button>
+      <button type="button" class="btn btn-default" ng-click="resetQuote()">Reset</button>
       <button type="button" class="btn btn-warning" ng-click="addProductQuote($event)">Submit</button>
     </div>
   </form>
