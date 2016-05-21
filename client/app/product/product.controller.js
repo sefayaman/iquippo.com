@@ -67,6 +67,10 @@ angular.module('sreizaoApp')
     .then(function(result){
       $scope.stateList = result;
     });
+    if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+      $state.go('myaccount');
+      return;
+    }
     //LocationSvc.getAllLocation()
   }
   init();

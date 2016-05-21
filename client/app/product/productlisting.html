@@ -105,7 +105,7 @@
                             <span ng-if="product.priceOnRequest && product.tradeType != 'RENT'">(Price On Request)</span>
                           </td>                      
                           <!-- <td>{{product.images.length}}</td> -->
-                          <td>Rented</td>
+                          <td>{{product.assetStatus}}</td>
                           <td>
                               <a ng-if="product.seller.userType == 'individual'" href="javascript:void(0);" ng-click="productListingVm.previewSellerDetail(product)" uib-popover="Seller Information" popover-trigger="mouseenter">{{product.seller.fname}} (Individual)</a>
 

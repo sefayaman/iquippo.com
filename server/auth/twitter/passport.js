@@ -33,7 +33,6 @@ function createUser(User,profile,token,done){
 
     userObj["fname"] = profile.displayName;
     userObj.profileStatus = "incomplete";
-
      userObj['twitter'] = {};
     userObj.twitter.id          = profile.id;
     userObj.twitter.token       = token;

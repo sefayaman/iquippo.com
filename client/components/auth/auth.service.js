@@ -201,6 +201,11 @@ angular.module('sreizaoApp')
       getToken: function() {
         return $cookieStore.get('token');
       },
+      refreshUser:function(){
+        if($cookieStore.get('token')) {
+          currentUser = User.get();
+        }
+      },
       doNotRedirect:false,
       postLoginCallback : null
     };

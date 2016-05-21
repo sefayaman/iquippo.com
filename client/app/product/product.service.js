@@ -30,6 +30,7 @@
       prdService.setFilter = setFilter;
       prdService.exportProduct = exportProduct;
       prdService.bulkProductUpdate = bulkProductUpdate;
+      prdService.userWiseProductCount = userWiseProductCount;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -198,6 +199,30 @@
             .catch(function(res){
                  throw res;
             })
+      }
+
+      function userWiseProductCount(dataToSend){
+         return $http.post(path + "/userwiseproductcount", dataToSend).then(function(res){
+          var countObj = {};
+          if(res && res.data && res.data.length > 0){
+            for(var i = 0; i < res.data.length; i++){
+              if(res.data[i]['_id'] == 'listed')
+                countObj.listedCounts = res.data[i]['total_assetStatus'];
+              else if(res.data[i]['_id'] == 'sold')
+                countObj.soldCounts = res.data[i]['total_assetStatus'];
+              else if(res.data[i]['_id'] == 'rented')
+                countObj.rentedCounts = res.data[i]['total_assetStatus'];
+              else if(res.data[i]['_id'] == 'RENT')
+                countObj.listedWithRent = res.data[i]['total_tradeType'];
+              else if(res.data[i]['_id'] == 'SELL')
+                countObj.listedWithSell = res.data[i]['total_tradeType'];
+              else if(res.data[i]['_id'] == 'BOTH')
+                countObj.listedWithBoth = res.data[i]['total_tradeType'];
+            }
+            countObj.totalProducts = Number(countObj.listedCounts) + Number(countObj.soldCounts) + Number(countObj.rentedCounts);
+          }
+          return countObj;
+        });
       }
 
       function addToCache(prd){

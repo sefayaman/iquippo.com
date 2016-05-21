@@ -59,8 +59,7 @@ function createUser(User,profile,token,done){
     newUser.lname = profile.name.familyName;
     if(profile.emails.length > 0 && profile.emails[0].value)
       newUser.email = profile.emails[0].value;
-    else
-      newUser.profileStatus = 'incomplete';
+    newUser.profileStatus = 'incomplete';
     newUser.facebook    = {};
     newUser.facebook.id    = profile.id;                  
     newUser.facebook.firstName  = profile.name.givenName;

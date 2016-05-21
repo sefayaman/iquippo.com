@@ -61,6 +61,7 @@ function createUser(User,profile,token,done){
     userObj.google.name = profile.name;
     userObj.google.token = token;
     userObj.provider = "google";
+    userObj.profileStatus = 'incomplete';
     userObj.createdAt = new Date();
     userObj.updatedAt = new Date();
     user = new User(userObj);

@@ -4,7 +4,7 @@
 
 angular.module('sreizaoApp').controller('ViewCartCtrl',ViewCartCtrl)
 
-function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http) {
+function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http,$state) {
     var vm = this;
     vm.productListToCompare = [];
     vm.deleteProductFromCart = deleteProductFromCart;
@@ -61,6 +61,11 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
     }
 
     function sendBuyRequest(buycontact) {
+      if(Auth.getCurrentUser().profileStatus == 'incomplete')
+      {
+        $state.go('myaccount');
+        return;
+      }
       var products = [];
       var dataToSend = {};
       dataToSend.product =  [];

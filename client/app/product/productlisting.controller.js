@@ -27,7 +27,11 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   $scope.productSearchFilter = {};
   var dataToSend = {};
   
-
+ if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+      $state.go('myaccount');
+      return;
+  }
+  
   $scope.tableRef = {};
   $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withOption('stateSave',true)
   .withOption('stateLoaded',function(){

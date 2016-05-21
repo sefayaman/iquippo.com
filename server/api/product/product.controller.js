@@ -383,9 +383,9 @@ exports.countryWiseProductCount = function(req,res){
 
 exports.userWiseProductCount = function(req,res){
   var filter = {};
+  filter['deleted'] = false;
   if(req.body.userId)
     filter["seller._id"] = req.body.userId;
-  
   Product.aggregate(
     { $match: filter },
     { $group: 
@@ -393,7 +393,19 @@ exports.userWiseProductCount = function(req,res){
     },
     function (err, result) {
       if (err) return handleError(err);
-      return res.status(200).json(result);
+      filter['assetStatus'] = 'listed';
+       Product.aggregate(
+        { $match: filter },
+        { $group: 
+          { _id: '$tradeType', total_tradeType: { $sum: 1 } } 
+        },
+        function (err, data) {
+          if (err) return handleError(err);
+          console.log(data);
+          result = result.concat(data);
+          return res.status(200).json(result);
+        }
+      );
     }
   );
 }

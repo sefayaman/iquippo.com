@@ -7,7 +7,7 @@
           <legend></legend>
           <div class="alert alert-danger" ng-if="isProfileIncomplete()">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            Please add <span ng-if="!getCurrentUser().mobile">mobile number </span> <span ng-if="!getCurrentUser().mobile && !getCurrentUser().email">and</span><span <span ng-if="!getCurrentUser().email"> email.</span>
+            <span>Please complete your profile first.</span> 
           </div>
           <div class="row form-group">           
             <div class="col-sm-12">
@@ -15,9 +15,10 @@
                 <legend></legend>
               <div class="media well">
                 <div class="pull-left profilePic-button">
-                  <img class="media-object img-rounded" src="assets/images/profile.png" alt="Image">
+                  <img class="media-object img-rounded" ng-if="myAccountVm.userInfo.imgsrc" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{myAccountVm.userInfo.imgsrc}}" alt="Image">
+                  <img class="media-object img-rounded" ng-if="!myAccountVm.userInfo.imgsrc" src="assets/images/profile.png" alt="Image">
                   <span class="btn btn-default fileinput-button">
-                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                    <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope">
                     <span><i class="fa fa-camera"></i> Change Image</span>
                   </span>
                 </div>
@@ -109,7 +110,7 @@
                         </div>
                       </div>
                       <div>
-                        <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save(basicInfoForm)">Save</button>
+                        <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save(basicInfoForm,true)">Save</button>
                         <button class="btn btn-sm btn-default"  ng-click="myAccountVm.cancelEditOrAdd('basic')">Cancel</button>
                       </div>
                   </form>
@@ -187,13 +188,13 @@
                       </div>
                       <div class="row form-group" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
                         <div class="col-sm-3">
-                          <input type="text" placeholder="Collage Name" ng-model="college.name" >
+                          <input type="text" placeholder="Collage Name" ng-model="college.name" value="{{college.name}}">
                         </div>
                         <div class="col-sm-6">
                           <div class="input-group">
-                            <input type="text" placeholder="Start Year" ng-model="college.startYear">
+                            <input type="text" placeholder="Start Year" ng-model="college.startYear" value="{{college.startYear}}">
                              <span class="input-group-addon">to</span> 
-                            <input type="text" placeholder="End Year" ng-model="college.endYear">                            
+                            <input type="text" placeholder="End Year" ng-model="college.endYear" value="{{college.endYear}}">                            
                           </div>
                         </div>
                         <div class="col-sm-3">
@@ -245,25 +246,25 @@
                     
                   </div>
                   <div class="row form-group" ng-if="myAccountVm.editSocialInfo">
-                      <form>
+                      <form novalidate>
                        <div class="col-sm-3 form-group">
                         <div><label>Facebook URL</label></div>
-                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.facebookUrl" value="{{myAccountVm.userInfo.socialInfo.facebookUrl}}">                
+                        <input type="text" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.facebookUrl" value="{{myAccountVm.userInfo.socialInfo.facebookUrl}}">                
                       </div>
                       <div class="col-sm-3 form-group">
                         <div><label>LinkedIn URL</label></div>
-                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.linkedInUrl" value="myAccountVm.userInfo.socialInfo.linkedInUrl">
+                        <input type="text" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.linkedInUrl" value="myAccountVm.userInfo.socialInfo.linkedInUrl">
                       </div>
                       <div class="col-sm-3 form-group">
                         <div><label>Twitter URL</label></div>
-                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.twitterUrl" value="myAccountVm.userInfo.socialInfo.twitterUrl">
+                        <input type="text" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.twitterUrl" value="myAccountVm.userInfo.socialInfo.twitterUrl">
                       </div>
                       <div class="col-sm-3 form-group">
                         <div><label>Google Plus URL</label></div>
-                        <input type="url" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.googleUrl" value="myAccountVm.userInfo.socialInfo.googleUrl">
+                        <input type="text" placeholder="Enter url" ng-model="myAccountVm.userInfo.socialInfo.googleUrl" value="myAccountVm.userInfo.socialInfo.googleUrl">
                       </div>
                       <div class="col-sm-12 form-group">
-                        <button class="btn btn-sm btn-primary" ng-click="save()">Save</button>
+                        <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save()">Save</button>
                         <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('social')">Cancel</button>
                       </div>
                     </form>
@@ -282,7 +283,8 @@
                           Profession<small>(Business)</small>
                         </label>
                       </div>
-                      <span>Add Profession</span>
+                      <span ng-if="!myAccountVm.userInfo.professionalInfo.profession">Add Profession</span>
+                      <span ng-if="myAccountVm.userInfo.professionalInfo.profession">{{myAccountVm.userInfo.professionalInfo.profession}}</span>
                     </div>
                     <div class="col-sm-3 form-group">
                       <div><label>Annual Income</label></div>
@@ -316,14 +318,14 @@
                    
                   </div>
                   <div class="row form-group" ng-if="myAccountVm.editProfessionalInfo">
-                    <form>
+                    <form novalidate>
                       <div class="col-sm-3 form-group">
                         <div>
                           <label>
                             Profession<small>(Business)</small>
                           </label>
                         </div>
-                        <input type="url" placeholder="Business Name">
+                        <input type="text" placeholder="Business Name" ng-model="myAccountVm.userInfo.professionalInfo.profession" value="{{myAccountVm.userInfo.professionalInfo.profession}}">
                       </div>
                       <div class="col-sm-3 form-group">
                         <div><label>Annual Income</label></div>
@@ -348,7 +350,7 @@
                         <div>
                           <label>Website</label>
                         </div>
-                        <input type="url" placeholder="Website" ng-model="myAccountVm.userInfo.professionalInfo.website" value="{{myAccountVm.userInfo.professionalInfo.website}}">                      
+                        <input type="text" placeholder="Website" ng-model="myAccountVm.userInfo.professionalInfo.website" value="{{myAccountVm.userInfo.professionalInfo.website}}">                      
                       </div>
                       <div class="col-sm-6 form-group">
                         <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save()">Save</button>
@@ -375,7 +377,7 @@
                           <span class="sr-only">{{myAccountVm.rentedCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.rentedCounts}}</h4>
+                      <h4>{{myAccountVm.count.rentedCounts}}</h4>
                     </a>
                   </div>
                 </div>  
@@ -390,7 +392,20 @@
                           <span class="sr-only">{{myAccountVm.listedCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.listedCounts}}</h4>
+                      <h4>{{myAccountVm.count.listedCounts}}</h4>
+                      <div class="row">
+                        <div class="col-sm-4">
+                            <h6 ng-if="myAccountVm.count.listedWithRent">Rent : {{myAccountVm.count.listedWithRent}}</h6>
+                      
+                        </div>
+                        <div class="col-sm-4">
+                          <h6 ng-if="myAccountVm.count.listedWithSell">Sell : {{myAccountVm.count.listedWithSell}}</h6>
+                      
+                        </div>
+                        <div class="col-sm-4">
+                          <h6 ng-if="myAccountVm.count.listedWithBoth">Both : {{myAccountVm.count.listedWithBoth}}</h6>
+                        </div>
+                      </div>
                     </a>
                   </div>
                 </div>  
@@ -405,7 +420,7 @@
                           <span class="sr-only">{{myAccountVm.soldCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.soldCounts}}</h4>
+                      <h4>{{myAccountVm.count.soldCounts}}</h4>
                     </a>
                   </div>
                 </div>  
@@ -420,7 +435,7 @@
                           <span class="sr-only">{{myAccountVm.totalProducts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.totalProducts}}</h4>
+                      <h4>{{myAccountVm.count.totalProducts}}</h4>
                     </a>
                   </div>
                 </div>  

@@ -41,6 +41,8 @@ exports.validateSignup = function(req, res){
   var filter = {}
   if(!req.body.email || !req.body.mobile)
     return res.status(401).send('Insufficient data');
+  if(req.body.userid)
+     filter['_id'] = {$ne:req.body.userid}; 
    if(req.body.email)
      filter['email'] = req.body.email;
   filter['deleted'] = false;
@@ -51,6 +53,8 @@ exports.validateSignup = function(req, res){
     }
     else{
       filter = {}
+       if(req.body.userid)
+          filter['_id'] = {$ne:req.body.userid}; 
       if(req.body.mobile)
         filter['mobile'] = req.body.mobile;
       filter['deleted'] = false;

@@ -4,14 +4,14 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
+function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc) {
     var vm = this;
     vm.currentTab = "basic";
     vm.userInfo = {};
-    vm.editUser = editUser;
     vm.editOrAddClick = editOrAddClick;
     vm.cancelEditOrAdd = cancelEditOrAdd;
     vm.save=save;
+    $scope.updateAvatar = updateAvatar;
 
     vm.editBasicInfo = false;
     vm.editPersonalInfo = false;
@@ -30,50 +30,43 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
 
         if(Auth.getCurrentUser().role != 'admin')
           dataToSend["userId"] = Auth.getCurrentUser()._id;
-        $http.post(path + "/userwiseproductcount", dataToSend).then(function(res){
-          vm.rentedCounts = 0;
-          vm.soldCounts = 0;
-          vm.listedCounts = 0;
-          vm.totalProducts = 0;
-          if(res && res.data && res.data.length > 0){
-            for(var i = 0; i < res.data.length; i++){
-              if(res.data[i]['_id'] == 'listed')
-                vm.listedCounts = res.data[i]['total_assetStatus'];
-              else if(res.data[i]['_id'] == 'sold')
-                vm.soldCounts = res.data[i]['total_assetStatus'];
-              else if(res.data[i]['_id'] == 'rented')
-                vm.rentedCounts = res.data[i]['total_assetStatus'];
-            }
-            vm.totalProducts = Number(vm.listedCounts) + Number(vm.soldCounts) + Number(vm.rentedCounts);
-          }
-        });
-
-        if(Auth.getCurrentUser()._id){
-    		vm.userInfo = Auth.getCurrentUser();
-        if(!vm.userInfo.personalInfo){
-            vm.userInfo.personalInfo = {};
-            vm.userInfo.personalInfo.educations = [{}];
-        }
-        if(!vm.userInfo.professionalInfo)
-          vm.userInfo.professionalInfo = {};
-        if(!vm.userInfo.socialInfo)
-          vm.userInfo.socialInfo = {};
-        
-    	}else{
-    		$state.go("main");
-    	}
+        productSvc.userWiseProductCount(dataToSend)
+        .then(function(count){
+          vm.count = count;
+        })
+        cloneUser();
+        if(Auth.getCurrentUser().profileStatus == 'incomplete')
+          vm.editBasicInfo = true;
     }
     inti();
 
-    function save(form){
+    function save(form,isBasic){
       if(form && form.$invalid){
         $scope.submitted = true;
         return;
       }
-      console.log("user information",vm.userInfo)
+      if(isBasic){
+        Auth.validateSignup({email:vm.userInfo.email,mobile:vm.userInfo.mobile,userid:vm.userInfo._id}).then(function(data){
+         if(data.errorCode != 0){
+            Modal.alert(data.message,true);
+             return;
+          }else{
+                vm.userInfo.profileStatus = 'complete';
+               updateUser(vm.userInfo);
+          }
+        });
+      }else{
+        updateUser();
+      }
+      //console.log("user information",vm.userInfo)
     }
 
     function editOrAddClick(param){
+        vm.editBasicInfo = false;
+        vm.editPersonalInfo = false;
+        vm.editProfessionalInfo = false;
+        vm.editSocialInfo = false;
+        cloneUser();
         switch(param){
           case 'basic':
             vm.editBasicInfo = true; 
@@ -105,39 +98,51 @@ function MyAccountCtrl($scope,$http,Auth,$state,Modal,LocationSvc,userSvc) {
               vm.editSocialInfo = false;
           break;
         }
+        cloneUser();
+
     }
 
-    function editUser() {
-      
-      if($scope.form.$invalid){
-        $scope.submitted = true;
-        return;
-      }
-
-      /*Auth.validateSignup({email:vm.userInfo.email,mobile:vm.userInfo.mobile,userUpdate:true}).then(function(data){
-         if(data.errorCode == 2){
-            Modal.alert("Mobile number already in use. Please use another mobile number",true);
-             return;
-          }else{
-               updateUser(vm.userInfo);
-          }
-        });*/
-
-      if(vm.userInfo.country == 'Other')
-          vm.userInfo.country = vm.userInfo.otherCountry;
-
-      userSvc.updateUser(vm.userInfo).then(function(result){
-        Modal.alert("User Updated.",true);
-      });  
-    }
-
-    /*function updateUser(user) {
-        userSvc.updateUser(user).then(function(result){
-        $scope.successMessage = "Product updated successfully";
-        Modal.alert("User Updated.",true);
-        $scope.isCollapsed = true;
+     function updateUser(noAlert){
+      //console.log("user info",vm.userInfo);
+       userSvc.updateUser(vm.userInfo).then(function(result){
+        Auth.refreshUser();
+        vm.editBasicInfo = false;
+        vm.editPersonalInfo = false;
+        vm.editProfessionalInfo = false;
+        vm.editSocialInfo = false;
+        if(!noAlert)
+          Modal.alert("User Updated.",true);
       });
-    }*/
+    }
+
+    function updateAvatar(files){
+      if(files.length == 0)
+        return;
+      editOrAddClick();
+      uploadSvc.upload(files[0],avatarDir).then(function(result){
+          vm.userInfo.imgsrc = result.data.filename;
+          updateUser(true);
+        });
+        
+    }
+
+    function cloneUser(){
+       if(Auth.getCurrentUser()._id){
+        angular.copy(Auth.getCurrentUser(), vm.userInfo);
+      if(!vm.userInfo.personalInfo){
+          vm.userInfo.personalInfo = {};
+          vm.userInfo.personalInfo.educations = [{}];
+      }
+      if(!vm.userInfo.professionalInfo)
+        vm.userInfo.professionalInfo = {};
+      if(!vm.userInfo.socialInfo)
+        vm.userInfo.socialInfo = {};
+      
+      }else{
+        $state.go("main");
+      }
+    }
+
   }
 
 })()

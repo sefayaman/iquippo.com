@@ -42,6 +42,10 @@ angular.module('sreizaoApp')
 
     $scope.sendCallback = function(){
       if(Auth.getCurrentUser()._id) {
+        if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+          $state.go('myaccount');
+          return;
+        }
         var dataToServer = {};
         dataToServer['fname'] = Auth.getCurrentUser().fname;
         dataToServer['mname'] = Auth.getCurrentUser().mname;
