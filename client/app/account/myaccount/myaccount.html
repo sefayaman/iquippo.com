@@ -393,17 +393,15 @@
                         </div>
                       </div>
                       <h4>{{myAccountVm.count.listedCounts}}</h4>
-                      <div class="row">
+                      <div class="row text-center">
                         <div class="col-sm-4">
-                            <h6 ng-if="myAccountVm.count.listedWithRent">Rent : {{myAccountVm.count.listedWithRent}}</h6>
-                      
+                            <h6 ng-if="myAccountVm.count.listedWithRent"><label>Rent</label> <br> {{myAccountVm.count.listedWithRent}}</h6>
                         </div>
                         <div class="col-sm-4">
-                          <h6 ng-if="myAccountVm.count.listedWithSell">Sell : {{myAccountVm.count.listedWithSell}}</h6>
-                      
+                          <h6 ng-if="myAccountVm.count.listedWithSell"><label>Sell</label> <br> {{myAccountVm.count.listedWithSell}}</h6>
                         </div>
                         <div class="col-sm-4">
-                          <h6 ng-if="myAccountVm.count.listedWithBoth">Both : {{myAccountVm.count.listedWithBoth}}</h6>
+                          <h6 ng-if="myAccountVm.count.listedWithBoth"><label>Both</label> <br>{{myAccountVm.count.listedWithBoth}}</h6>
                         </div>
                       </div>
                     </a>
