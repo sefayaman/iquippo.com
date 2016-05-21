@@ -64,7 +64,7 @@
           <div class="row">
             <div class="col-xs-6">
                     <select class="form-control" name="location" ng-model="shippingQuote.city">
-                      <option value="" disabled>Select Location</option>
+                      <option value="">Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                     </select>
                     <i class="caret"></i>
@@ -110,7 +110,7 @@
           <div class="row text-left">
                 <div class="col-xs-12 col-sm-6 form-group">Part shipment allowed</div>
                 <div class="col-xs-6 col-sm-3 form-group">
-                  <input type="radio" checked="checked" name="allowed" ng-model="shippingQuote.allowed" value="yes"> Yes                  
+                  <input type="radio" name="allowed" ng-model="shippingQuote.allowed" value="yes"> Yes                  
                 </div>
                 <div class="col-xs-6 col-sm-3 form-group">
                   <input type="radio" name="allowed" ng-model="shippingQuote.allowed" value="no"> No

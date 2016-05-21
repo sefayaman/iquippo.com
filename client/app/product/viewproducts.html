@@ -180,10 +180,7 @@
           </div>
           <div class="compare-cart">
                 <ul>
-                <li><img src="assets/uploads/1461922231533/tractor1_5.jpg" width="24" height="24"><a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a></li>
-                <li><img src="assets/uploads/1461922231533/tractor1_5.jpg" width="24" height="24"><a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a></li>
-                <li><img src="assets/uploads/1461922231533/tractor1_5.jpg" width="24" height="24"><a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a></li>
-                <li><img src="assets/uploads/1461922231533/tractor1_5.jpg" width="24" height="24"><a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a></li>
+                <li ng-repeat="prd in viewproductVm.productListToCompare"><img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a></li>
                 </ul>
               </div>
             <!-- <ul >
@@ -220,7 +217,7 @@
                           <p>{{product.category.name}}</p>
                           <p>{{product.city}}
                             <span class="compare">
-                              <input type="checkbox" ng-click="viewproductVm.updateSelection($event,product)"> <label>Compare</label>
+                              <input type="checkbox" ng-click="viewproductVm.updateSelection($event,product)" id="product_{{product._id}}"> <label>Compare</label>
                             </span>
                           
                             <div class="pull-right">

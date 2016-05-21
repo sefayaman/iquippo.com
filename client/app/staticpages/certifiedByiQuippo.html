@@ -61,7 +61,7 @@
 			<div class="row">
 				<div class="col-xs-6">
                     <select class="form-control" name="location" ng-model="cetifiedByiQuippoQuote.city">
-                      <option value="" disabled>Select Location</option>
+                      <option value="">Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                     </select>
                     <i class="caret"></i>
@@ -118,7 +118,7 @@
 			<div class="row text-left">
               <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
               <div class="col-xs-6 col-sm-4 form-group">
-                <input type="radio" checked="checked" placeholder=""  name="schedule" ng-model="cetifiedByiQuippoQuote.schedule" value="yes"> Yes 
+                <input type="radio"  placeholder=""  name="schedule" ng-model="cetifiedByiQuippoQuote.schedule" value="yes"> Yes 
               </div>
               <div class="col-xs-6 col-sm-4 form-group">
                 <input type="radio" placeholder=""  name="schedule" ng-model="cetifiedByiQuippoQuote.schedule" value="no"> No      

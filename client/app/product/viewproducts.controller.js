@@ -44,6 +44,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.updateSelection = updateSelection;
   vm.addProductToCart = addProductToCart;
   vm.compare = compare;
+  vm.removeProductFromCompList = removeProductFromCompList;
 
 
 
@@ -445,6 +446,12 @@ $scope.today = function() {
         index = idx;
     });
     return index;
+  }
+
+  function removeProductFromCompList(index){
+     var removedProduct = vm.productListToCompare.splice(index,1);
+     if(removedProduct && removedProduct.length > 0)
+        angular.element('#product_' + removedProduct[0]._id).prop('checked',false);
   }
 
 

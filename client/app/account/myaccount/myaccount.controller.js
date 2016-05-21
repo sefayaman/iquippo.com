@@ -34,9 +34,16 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         .then(function(count){
           vm.count = count;
         })
-        cloneUser();
-        if(Auth.getCurrentUser().profileStatus == 'incomplete')
-          vm.editBasicInfo = true;
+        Auth.isLoggedInAsync(function(loggedIn){
+         if(loggedIn){
+            cloneUser();
+          if(Auth.getCurrentUser().profileStatus == 'incomplete')
+            vm.editBasicInfo = true;
+           }else{
+            $state.go("main");
+          }
+       });
+        
     }
     inti();
 
@@ -138,8 +145,6 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       if(!vm.userInfo.socialInfo)
         vm.userInfo.socialInfo = {};
       
-      }else{
-        $state.go("main");
       }
     }
 

@@ -59,7 +59,10 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
   function verify(form){
 
   if(!angular.isUndefined(vm.otpCode) && !angular.isUndefined(vm.user.otp) && vm.otpCode == vm.user.otp) 
-    {
+    {   if(vm.user.activationOTP == 'email')
+            vm.user.emailVerified = true;
+        if(vm.user.activationOTP == 'mobile')
+            vm.user.mobileVerified = true;
         Auth.createUser(vm.user)
         .then( function(result) {
           var data = {};

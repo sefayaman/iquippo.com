@@ -42,11 +42,11 @@
                   <!-- Company Name end -->
 
                   <!-- email start -->
-                  <h5><i class="fa fa-envelope"></i> <span ng-if="myAccountVm.userInfo.email">{{myAccountVm.userInfo.email}}</span><span ng-if="!myAccountVm.userInfo.email">Add Email</span></h5>
+                  <h5><i class="fa fa-envelope"></i> <span ng-if="myAccountVm.userInfo.email">{{myAccountVm.userInfo.email}}<span ng-if="myAccountVm.userInfo.emailVerified">(verified)</span></span><span ng-if="!myAccountVm.userInfo.email">Add Email</span></h5>
                    
                   <!-- email end -->
                   <h5>
-                    <i class="fa fa-phone"></i> <span ng-if="myAccountVm.userInfo.mobile">{{myAccountVm.userInfo.mobile}}</span><span ng-if="!myAccountVm.userInfo.mobile">Add Mobile Number</span></h5>
+                    <i class="fa fa-phone"></i> <span ng-if="myAccountVm.userInfo.mobile">{{myAccountVm.userInfo.mobile}}<span ng-if="myAccountVm.userInfo.mobileVerified">(verified)</span></span><span ng-if="!myAccountVm.userInfo.mobile">Add Mobile Number</span></h5>
                 </div>
                 <div class="media-body myProfileDetail"  ng-if="myAccountVm.editBasicInfo">
                   <form novalidate name="basicInfoForm">

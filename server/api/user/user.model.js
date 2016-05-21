@@ -32,6 +32,14 @@ var UserSchema = new Schema({
     type: Boolean,
     default: true
   },
+  emailVerified:{
+    type:Boolean,
+    default:false
+  },
+  mobileVerified:{
+    type:Boolean,
+    default:false
+  },
   profileStatus:{
     type: String,
     default: 'complete'
