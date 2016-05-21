@@ -23,7 +23,7 @@ function findByFacebookId(User,profile,token,done){
           if (user) {
             return done(null, user); 
           } else {
-            if(profile.emails.length > 0 && profile.emails[0].value)
+            if(profile.emails && profile.emails.length > 0 && profile.emails[0].value)
                 findByEmailId(User,profile,token,done);
             else
               createUser(User,profile,token,done);
@@ -57,14 +57,14 @@ function createUser(User,profile,token,done){
     var newUser = new User();
     newUser.fname  = profile.name.givenName;
     newUser.lname = profile.name.familyName;
-    if(profile.emails.length > 0 && profile.emails[0].value)
+    if(profile.emails && profile.emails.length > 0 && profile.emails[0].value)
       newUser.email = profile.emails[0].value;
     newUser.profileStatus = 'incomplete';
     newUser.facebook    = {};
     newUser.facebook.id    = profile.id;                  
     newUser.facebook.firstName  = profile.name.givenName;
     newUser.facebook.lastName = profile.name.familyName;
-    if(profile.emails.length > 0 && profile.emails[0].value)
+    if(profile.emails && profile.emails.length > 0 && profile.emails[0].value)
       newUser.facebook.email = profile.emails[0].value; 
     newUser.facebook.token = token;
     newUser.provider = "facebook";    
