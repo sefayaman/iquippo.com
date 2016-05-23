@@ -28,14 +28,14 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         })
         var dataToSend = {};
 
-        if(Auth.getCurrentUser().role != 'admin')
-          dataToSend["userId"] = Auth.getCurrentUser()._id;
-        productSvc.userWiseProductCount(dataToSend)
-        .then(function(count){
-          vm.count = count;
-        })
         Auth.isLoggedInAsync(function(loggedIn){
          if(loggedIn){
+            if(Auth.getCurrentUser().role != 'admin')
+                dataToSend["userId"] = Auth.getCurrentUser()._id;
+              productSvc.userWiseProductCount(dataToSend)
+              .then(function(count){
+                vm.count = count;
+              });
             cloneUser();
           if(Auth.getCurrentUser().profileStatus == 'incomplete')
             vm.editBasicInfo = true;
@@ -138,8 +138,16 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         angular.copy(Auth.getCurrentUser(), vm.userInfo);
       if(!vm.userInfo.personalInfo){
           vm.userInfo.personalInfo = {};
-          vm.userInfo.personalInfo.educations = [{}];
+          
       }
+      if(!vm.userInfo.personalInfo.educations)
+          vm.userInfo.personalInfo.educations = [{}];
+      vm.userInfo.personalInfo.educations.forEach(function(item,index){
+        if(!item){
+           vm.userInfo.personalInfo.educations.splice(index,1);
+           vm.userInfo.personalInfo.educations.push({});
+        }
+      })
       if(!vm.userInfo.professionalInfo)
         vm.userInfo.professionalInfo = {};
       if(!vm.userInfo.socialInfo)

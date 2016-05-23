@@ -295,6 +295,9 @@ angular.module('sreizaoApp')
         }      
         uploadSvc.upload(args.files[0],$scope.assetDir, resizeParam).then(function(result){
           $scope.assetDir = result.data.assetDir;
+          if(!$scope.product.assetId)
+            $scope.product.assetId = $scope.assetDir;
+
           if(args.type == "image")
             $scope.images[parseInt(args.index)].src = result.data.filename;
           else if(args.type == "video")

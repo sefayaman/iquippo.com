@@ -68,7 +68,9 @@
                       </tr>
                       <tr>
                         <td class="bordered1">Price (Excl. Tax).</td>
-                        <td class="bordered" width="20%" ng-repeat="prd in productList">{{prd.grossPrice}}<span ng-if="prd.priceOnRequest">(Price On Request)</span></td>
+                        <td class="bordered" width="20%" ng-repeat="prd in productList">
+                          <span  ng-if="!prd.priceOnRequest">{{prd.grossPrice}}</span><span ng-if="prd.priceOnRequest">Price On Request</span>
+                        </td>
                       </tr>
                       <tr>
                         <td class="bordered1">Product Condition</td>

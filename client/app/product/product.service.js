@@ -219,7 +219,7 @@
               else if(res.data[i]['_id'] == 'BOTH')
                 countObj.listedWithBoth = res.data[i]['total_tradeType'];
             }
-            countObj.totalProducts = Number(countObj.listedCounts) + Number(countObj.soldCounts) + Number(countObj.rentedCounts);
+            countObj.totalProducts = (Number(countObj.listedCounts)) || 0 + (Number(countObj.soldCounts) || 0) + (Number(countObj.rentedCounts) || 0);
           }
           return countObj;
         });

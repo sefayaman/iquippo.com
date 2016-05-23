@@ -109,7 +109,7 @@
 						<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
 						<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
 							<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
-		                      <option value="" disabled>*Select Purpose</option>
+		                      <option value="">*Select Purpose</option>
 		                      <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
 		                    </select>
 						</div>
