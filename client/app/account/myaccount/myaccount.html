@@ -141,17 +141,17 @@
                       </div>
                       <div class="row" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
                         <div class="col-sm-3">
-                          <span>College Name</span><br>
+                          <span>College Name :</span><br>
                           <span ng-if="!college.name">Add College Name</span>
                           <span ng-if="college.name">{{college.name}}</span>
                         </div>
                         <div class="col-sm-6">
-                          <span>Dates Attended</span><br>
+                          <span>Dates Attended :</span><br>
                           <span ng-if="!college.startYear && !college.endYear">Add Year</span>
                           <div ng-if="college.startYear || college.endYear"><span>{{college.startYear}}</span> to <span>{{college.endYear}}</span></div>
                         </div>
                         <div class="col-sm-3">
-                          <span>Degree</span><br>
+                          <span>Degree :</span><br>
                           <span ng-if="!college.degree">Add Degree</span>
                           <span ng-if="college.degree">{{college.degree}}</span>
                         </div>
@@ -166,7 +166,7 @@
                         <div class="col-sm-3 form-group">
                           <div><label>Date of Birth</label></div>                      
                           <div class="input-group">
-                            <input type="text" name="dob" ng-model="myAccountVm.userInfo.personalInfo.dob" value="{{myAccountVm.userInfo.personalInfo.dob}}" placeholder="Date of Birth">
+                            <input type="text" name="dob" ng-model="myAccountVm.userInfo.personalInfo.dob" value="{{myAccountVm.userInfo.personalInfo.dob}}" placeholder="dd/mm/yyyy">
                           </div>
                         </div>
                         <div class="col-sm-8 form-group">
@@ -176,10 +176,11 @@
                             <div class="col-sm-2">
                               <input type="radio" ng-model="myAccountVm.userInfo.personalInfo.maritalStatus" name="marital" value="Married"> Married
                             </div>
-                            <div class="col-sm-5" ng-if="myAccountVm.userInfo.personalInfo.maritalStatus == 'Married'">
-                              <input type="text" placeholder="Anniversary Date" ng-model="myAccountVm.userInfo.personalInfo.anniversyDate" value="myAccountVm.userInfo.personalInfo.anniversyDate">
+                            <div class="col-sm-3" ng-if="myAccountVm.userInfo.personalInfo.maritalStatus == 'Married'">Anniversary Date :</div>
+                            <div class="col-sm-4" ng-if="myAccountVm.userInfo.personalInfo.maritalStatus == 'Married'">
+                              <input type="text" placeholder="dd/mm/yyyy" ng-model="myAccountVm.userInfo.personalInfo.anniversyDate" value="myAccountVm.userInfo.personalInfo.anniversyDate">
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                               <input type="radio" ng-model="myAccountVm.userInfo.personalInfo.maritalStatus" name="marital" value="Unmarried"> Unmarried
                             </div>
                             
@@ -223,25 +224,33 @@
                   </h4>
                   <legend></legend>
                   <div class="row form-group" ng-if="!myAccountVm.editSocialInfo">
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-3 form-group text-ellips">
                       <div><label>Facebook URL</label></div>
                       <span ng-if="!myAccountVm.userInfo.socialInfo.facebookUrl">Add url</span>
-                      <span ng-if="myAccountVm.userInfo.socialInfo.facebookUrl">{{myAccountVm.userInfo.socialInfo.facebookUrl}}</span>                
+                      <a href="{{myAccountVm.userInfo.socialInfo.facebookUrl}}" target="_blank" ng-if="myAccountVm.userInfo.socialInfo.facebookUrl">
+                        <span>{{myAccountVm.userInfo.socialInfo.facebookUrl}}</span>
+                      </a>                
                     </div>
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-3 form-group text-ellips">
                       <div><label>LinkedIn URL</label></div>
                       <span ng-if="!myAccountVm.userInfo.socialInfo.linkedInUrl">Add url</span>
-                      <span ng-if="myAccountVm.userInfo.socialInfo.linkedInUrl">{{myAccountVm.userInfo.socialInfo.linkedInUrl}}</span>
+                      <a href="{{myAccountVm.userInfo.socialInfo.linkedInUrl}}" ng-if="myAccountVm.userInfo.socialInfo.linkedInUrl" target="_blank">
+                        <span>{{myAccountVm.userInfo.socialInfo.linkedInUrl}}</span>
+                      </a>
                     </div>
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-3 form-group text-ellips">
                       <div><label>Twitter URL</label></div>
                       <span ng-if="!myAccountVm.userInfo.socialInfo.twitterUrl">Add url</span>
-                      <span ng-if="myAccountVm.userInfo.socialInfo.twitterUrl">{{myAccountVm.userInfo.socialInfo.twitterUrl}}</span>
+                      <a href="{{myAccountVm.userInfo.socialInfo.twitterUrl}}" ng-if="myAccountVm.userInfo.socialInfo.twitterUrl" target="_blank">
+                        <span>{{myAccountVm.userInfo.socialInfo.twitterUrl}}</span>
+                      </a>
                     </div>
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-3 form-group text-ellips">
                       <div><label>Google Plus URL</label></div>
                       <span ng-if="!myAccountVm.userInfo.socialInfo.googleUrl">Add url</span>
-                      <span ng-if="myAccountVm.userInfo.socialInfo.googleUrl">{{myAccountVm.userInfo.socialInfo.googleUrl}}</span>
+                      <a href="{{myAccountVm.userInfo.socialInfo.googleUrl}}" ng-if="myAccountVm.userInfo.socialInfo.googleUrl" target="_blank">
+                        <span>{{myAccountVm.userInfo.socialInfo.googleUrl}}</span>
+                      </a>
                     </div>
                     
                   </div>
