@@ -450,6 +450,7 @@ angular.module('sreizaoApp')
       $scope.product.tcDocumentName = tcDocObj.name;
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
+      var primaryFound = false;
       $scope.images.forEach(function(item,index){
           if(item.src){
             var imgObj = {};
@@ -457,6 +458,7 @@ angular.module('sreizaoApp')
             if(item.isPrimary){
               imgObj.isPrimary = true;
               product.primaryImg = item.src;
+              primaryFound = true;
             }else{
                imgObj.isPrimary = false;
             }
@@ -477,6 +479,11 @@ angular.module('sreizaoApp')
         Modal.alert("Please upload atleast one image.",true);
         $rootScope.loading = false;
         return;
+      }
+
+      if(!primaryFound){
+        $scope.product.primaryImg = $scope.product.images[0].src;
+        $scope.product.images[0].isPrimary = true;
       }
 
       if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role == 'admin' && product.status) {

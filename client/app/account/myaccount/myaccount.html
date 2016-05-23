@@ -386,7 +386,8 @@
                           <span class="sr-only">{{myAccountVm.rentedCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.count.rentedCounts}}</h4>
+                      <h4 ng-if="myAccountVm.count.rentedCounts">{{myAccountVm.count.rentedCounts}}</h4>
+                      <h4 ng-if="!myAccountVm.count.rentedCounts">0</h4>
                     </a>
                   </div>
                 </div>  
@@ -401,16 +402,20 @@
                           <span class="sr-only">{{myAccountVm.listedCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.count.listedCounts}}</h4>
+                      <h4 ng-if="myAccountVm.count.listedCounts">{{myAccountVm.count.listedCounts}}</h4>
+                      <h4 ng-if="!myAccountVm.count.listedCounts">0</h4>
                       <div class="row text-center">
                         <div class="col-sm-4">
                             <h6 ng-if="myAccountVm.count.listedWithRent"><label>Rent</label> <br> {{myAccountVm.count.listedWithRent}}</h6>
+                            <h6 ng-if="!myAccountVm.count.listedWithRent"><label>Rent</label> <br> 0</h6>
                         </div>
                         <div class="col-sm-4">
                           <h6 ng-if="myAccountVm.count.listedWithSell"><label>Sell</label> <br> {{myAccountVm.count.listedWithSell}}</h6>
+                          <h6 ng-if="!myAccountVm.count.listedWithSell"><label>Sell</label> <br> 0</h6>
                         </div>
                         <div class="col-sm-4">
                           <h6 ng-if="myAccountVm.count.listedWithBoth"><label>Both</label> <br>{{myAccountVm.count.listedWithBoth}}</h6>
+                          <h6 ng-if="!myAccountVm.count.listedWithBoth"><label>Both</label> <br> 0</h6>
                         </div>
                       </div>
                     </a>
@@ -427,7 +432,8 @@
                           <span class="sr-only">{{myAccountVm.soldCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.count.soldCounts}}</h4>
+                      <h4 ng-if="myAccountVm.count.soldCounts">{{myAccountVm.count.soldCounts}}</h4>
+                      <h4 ng-if="!myAccountVm.count.soldCounts">0</h4>
                     </a>
                   </div>
                 </div>  
@@ -442,7 +448,8 @@
                           <span class="sr-only">{{myAccountVm.totalProducts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4>{{myAccountVm.count.totalProducts}}</h4>
+                      <h4 ng-if="myAccountVm.count.totalProducts">{{myAccountVm.count.totalProducts}}</h4>
+                      <h4 ng-if="!myAccountVm.count.totalProducts">0</h4>
                     </a>
                   </div>
                 </div>  
