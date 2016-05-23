@@ -18,7 +18,8 @@ passport.use('twitter', new TwitterStrategy({
 
 function findUserByTwitterId(User,profile,token,done){
   User.findOne({
-      'twitter.id': profile.id
+      'twitter.id': profile.id,
+      deleted:false
     }, function(err, user) {
       if (!user) {
         createUser(User,profile,token,done);

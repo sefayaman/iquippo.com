@@ -59,6 +59,11 @@ var all = {
     clientSecret:"RZLEPjvduP8l0u4MYEgt6jOnmIDxlseqOiJ4ThfD9o7XiHBvDM",
     callbackURL:  (process.env.DOMAIN || '') + '/auth/twitter/callback'
   },
+  linkedIn: {
+    clientID:    "75z3xqeyc2omxj",
+    clientSecret:"HPFwYtCUt46A0LbV",
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/linkedin/callback'
+  },
   importDir:"import",
 };
 

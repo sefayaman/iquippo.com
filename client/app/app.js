@@ -152,7 +152,11 @@ angular.module('sreizaoApp',[
          if(Auth.getCurrentUser()._id){
            cartSvc.getCartData(Auth.getCurrentUser()._id);
         }
-
+        if(!Auth.getCurrentUser().status){
+          Modal.alert("This account is deactivated by admin.Please contact our support team.");
+          Auth.logout();
+          return;
+        }
        if(Auth.isProfileIncomplete()){
            $rootScope.isAdminLayout = false;
           $state.go('myaccount');

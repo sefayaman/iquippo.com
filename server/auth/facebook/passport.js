@@ -18,7 +18,7 @@ passport.use('facebook', new FacebookStrategy({
 };
 
 function findByFacebookId(User,profile,token,done){
-   User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
+   User.findOne({ 'facebook.id' : profile.id,deleted:false }, function(err, user) {
         if (err)
           return done(err);
           if (user) {
@@ -33,7 +33,7 @@ function findByFacebookId(User,profile,token,done){
 }
 
 function findByEmailId(User,profile,token,done){
-   User.findOne({ email : profile.emails[0].value}, function(err, user) {
+   User.findOne({ email : profile.emails[0].value,deleted:false}, function(err, user) {
         if (err)
           return done(err);
           if (user) {

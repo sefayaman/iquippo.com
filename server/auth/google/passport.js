@@ -16,7 +16,8 @@ exports.setup = function (User, config) {
 
 function findUserByGoogleId(User,profile,token,done){
   User.findOne({
-      'google.id': profile.id
+      'google.id': profile.id,
+      deleted:false
     }, function(err, user) {
       if (!user) {
         findUserByEmail(User,profile,token,done);
@@ -29,7 +30,8 @@ function findUserByGoogleId(User,profile,token,done){
 
 function findUserByEmail(User,profile,token,done){
   User.findOne({
-      'email': profile.emails[0].value
+      'email': profile.emails[0].value,
+      deleted:false
     }, function(err, user) {
       if (!user) {
         createUser(User,profile,token,done);
