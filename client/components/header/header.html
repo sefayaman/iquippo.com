@@ -12,8 +12,8 @@
 
             <li ng-show="isLoggedIn()" class="dropdown" >
               <a href class="dropdown-toggle" data-toggle="dropdown">
-                <!-- <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ></i> -->
-              <img src="{{uploadImagePrefix}}{{avatarDir}}/{{myAccountVm.userInfo.imgsrc}}"> 
+                 <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
+              <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
                 {{ getCurrentUser().fname }}</a>
               
               <ul class="dropdown-menu">

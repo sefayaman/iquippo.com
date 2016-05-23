@@ -12,7 +12,9 @@
         <!-- Top Menu Items -->
         <ul class="nav navbar-right top-nav">               
             <li class="dropdown">
-                <a href class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user" style="background-color:#ccc;color:black;"></i> {{ getCurrentUser().fname }}</a>
+                <a href class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user" style="background-color:#ccc;color:black;" ng-if="!getCurrentUser().imgsrc"></i>
+                <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+                {{ getCurrentUser().fname }}</a>
                 <ul class="dropdown-menu">
                      <li ng-show="isLoggedIn()" ><a href="/myaccount"><span class="fa fa-key"></span> My Account</a></li>                        
                     <li ng-show="isLoggedIn()" ><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
