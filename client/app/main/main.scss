@@ -683,7 +683,8 @@ table.table{width:100% !important;}
 .sorts{padding:10px;border-bottom: 1px solid #ccc;}
 .sorts:hover{background-color: #eee;}
 .search-result .btn-warning {text-align: left;width: 125px;}
-a.product-bars{text-decoration: none; color: #fff;padding: 20px;}
+.product-bars {color: #fff;}
+.product-bars a{text-decoration: none; color: #fff; display: block; padding-bottom: 15px;}
 .my-product .panel.panel-default{border:0;}
 .my-product .panel.panel-default .panel-body{height: 180px;}
 .my-product .progress{height:5px;}

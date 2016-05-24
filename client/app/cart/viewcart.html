@@ -17,7 +17,7 @@
                    <th>Manufacturing Year</th>
                    <th>Location</th>
                    <th>Product Condition</th>
-                    <th>Age </th>
+                    <!-- <th>Age </th> -->
                     <th>Action</th>
                </tr>
             </thead>
@@ -25,7 +25,11 @@
   
               <tr ng-repeat="product in cart.products">
               <td><input type="checkbox" ng-click="cartVm.updateSelection($event,product)"></td>
-                <td><img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.images[0].src}}" width="50" height="50"></td>
+                <td>
+                  <a ng-href="/productdetail/{{product._id}}">
+                    <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.images[0].src}}" width="50" height="50">
+                  </a>  
+                </td>
                 <td>{{product.productId}}</td>
                 <td>{{product.group.name}}</td>
                 <td>{{product.category.name}}</td>
@@ -36,7 +40,7 @@
                  <td>{{product.country}}</td>
                  <td ng-if="product.productCondition == 'new'">New</td>
                   <td ng-if="product.productCondition != 'new'">Old</td>
-                 <td>4 days</td>
+                 <!-- <td>4 days</td> -->
                  <td><a href="javascript:void(0)"  ng-click="cartVm.deleteProductFromCart($index)" class="btn btn-default btn-md"><i class="fa fa-trash"></i></a>
                  <a ng-href="/productdetail/{{product._id}}" class="btn btn-default btn-md"><i class="fa fa-eye"></i></a>
                  </td>
