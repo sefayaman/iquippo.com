@@ -20,6 +20,7 @@ router.post('/export', controller.exportProducts);
 router.post('/import', controller.importProducts);
 router.post('/bulkupdate', controller.bulkUpdate);
 router.post('/userwiseproductcount', controller.userWiseProductCount);
+router.post('/updateinquiry', controller.updateInquiryCounter);
 
 
 

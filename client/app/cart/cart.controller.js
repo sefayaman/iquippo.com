@@ -4,7 +4,7 @@
 
 angular.module('sreizaoApp').controller('ViewCartCtrl',ViewCartCtrl)
 
-function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http,$state) {
+function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http,$state,productSvc) {
     var vm = this;
     vm.selectedProducts = [];
     vm.deleteProductFromCart = deleteProductFromCart;
@@ -73,6 +73,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
       var products = [];
       var dataToSend = {};
       dataToSend.product =  [];
+      var ids = [];
       vm.selectedProducts.forEach(function(item,index){
         var obj = {};
         obj._id = item._id;
@@ -80,6 +81,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
         obj.productId = item.productId;
         obj.seller = item.seller;
         dataToSend.product[dataToSend.product.length] = obj;
+        ids[ids.length] = item._id;
       });
 
       dataToSend['fname'] =  Auth.getCurrentUser().fname;
@@ -114,6 +116,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
           data['subject'] = 'No reply: Product Enquiry request received';
           notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
         }
+        productSvc.updateInquiryCounter(ids);
         Modal.alert(informationMessage.buyRequestSuccess,true);
       }).error(function(res){
           Modal.alert(res);

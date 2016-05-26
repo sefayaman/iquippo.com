@@ -379,7 +379,7 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-danger text-center product-bars">
-                      <a ng-href="/productlisting?assetStatus=rented">
+                      <a ng-href="javascript:void(0)">
                         <h4>Rented and Sold</h4>
                       </a>
                       <div class="progress">
@@ -387,20 +387,20 @@
                           <span class="sr-only">{{myAccountVm.rentedCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4 ng-if="myAccountVm.count.rentedCounts">{{myAccountVm.count.rentedCounts}}</h4>
+                      <h4 ng-if="myAccountVm.count.rentedCounts">{{myAccountVm.count.rentedCounts + myAccountVm.count.soldCounts}}</h4>
                       <h4 ng-if="!myAccountVm.count.rentedCounts">0</h4>
 
                       <div class="row text-center">
                         <div class="col-sm-6">
-                            <a href="">
-                              <h6 ng-if="myAccountVm.count.listedWithRent"><label>Rented</label> <br> {{myAccountVm.count.listedWithRent}}</h6>
-                              <h6 ng-if="!myAccountVm.count.listedWithRent"><label>Rented</label> <br> 0</h6>
+                            <a ng-href="/productlisting?assetStatus=rented">
+                              <h6 ng-if="myAccountVm.count.rentedCounts"><label>Rented</label> <br> {{myAccountVm.count.rentedCounts}}</h6>
+                              <h6 ng-if="!myAccountVm.count.rentedCounts"><label>Rented</label> <br> 0</h6>
                             </a>
                         </div>
                         <div class="col-sm-6">
-                          <a href="">
-                            <h6 ng-if="myAccountVm.count.listedWithBoth"><label>Sold</label> <br>{{myAccountVm.count.listedWithBoth}}</h6>
-                            <h6 ng-if="!myAccountVm.count.listedWithBoth"><label>Sold</label> <br> 0</h6>
+                          <a ng-href="/productlisting?assetStatus=sold">
+                            <h6 ng-if="myAccountVm.count.soldCounts"><label>Sold</label> <br>{{myAccountVm.count.soldCounts}}</h6>
+                            <h6 ng-if="!myAccountVm.count.soldCounts"><label>Sold</label> <br> 0</h6>
                           </a>
                         </div>
                       </div>
@@ -424,19 +424,19 @@
                       <h4 ng-if="!myAccountVm.count.listedCounts">0</h4>
                       <div class="row text-center">
                         <div class="col-sm-4">
-                            <a href="">
+                            <a ng-href="/productlisting?assetStatus=listed&tradeType=RENT">
                               <h6 ng-if="myAccountVm.count.listedWithRent"><label>Rent</label> <br> {{myAccountVm.count.listedWithRent}}</h6>
                               <h6 ng-if="!myAccountVm.count.listedWithRent"><label>Rent</label> <br> 0</h6>
                             </a>
                         </div>
                         <div class="col-sm-4">
-                          <a href="">
+                          <a ng-href="/productlisting?assetStatus=listed&tradeType=SELL">
                             <h6 ng-if="myAccountVm.count.listedWithSell"><label>Sell</label> <br> {{myAccountVm.count.listedWithSell}}</h6>
                             <h6 ng-if="!myAccountVm.count.listedWithSell"><label>Sell</label> <br> 0</h6>
                           </a>
                         </div>
                         <div class="col-sm-4">
-                          <a href="">
+                          <a ng-href="/productlisting?assetStatus=listed&tradeType=BOTH">
                             <h6 ng-if="myAccountVm.count.listedWithBoth"><label>Both</label> <br>{{myAccountVm.count.listedWithBoth}}</h6>
                             <h6 ng-if="!myAccountVm.count.listedWithBoth"><label>Both</label> <br> 0</h6>
                           </a>
@@ -448,7 +448,7 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-info text-center product-bars">
-                      <a ng-href="/productlisting?assetStatus=sold">
+                      <a ng-href="javascript:void(0)">
                         <h4>Inquiries Received</h4>
                       </a>
                       <div class="progress">
@@ -456,7 +456,7 @@
                           <span class="sr-only">{{myAccountVm.soldCounts}}% Complete (success)</span>
                         </div>
                       </div>
-                      <h4 ng-if="myAccountVm.count.soldCounts">{{myAccountVm.count.soldCounts}}</h4>
+                      <h4 ng-if="myAccountVm.count.soldCounts">{{myAccountVm.count.inquiryCount}}</h4>
                       <h4 ng-if="!myAccountVm.count.soldCounts">0</h4>
                     
                   </div>
@@ -466,7 +466,7 @@
                 <div class="panel panel-default">
                   <div class="panel-body bg-warning text-center product-bars">
                       <a ng-href="/productlisting">
-                        <h4>Quick Query</h4>
+                        <h4>Total Products</h4>
                       </a>
                       <div class="progress">
                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">

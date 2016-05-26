@@ -51,8 +51,11 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
         dataToSend["userid"] = Auth.getCurrentUser()._id;
        }
        var assetVal = $location.search().assetStatus;
+       var tradeType = $location.search().tradeType;
        if(assetVal)
         dataToSend["assetStatus"] = assetVal;
+      if(tradeType)
+        dataToSend["tradeValue"] = tradeType;
        productSvc.getProductOnFilter(dataToSend)
        .then(function(result){
           $scope.globalProductList = $scope.orgGlobalProductList = result;

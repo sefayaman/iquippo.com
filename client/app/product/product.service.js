@@ -31,6 +31,7 @@
       prdService.exportProduct = exportProduct;
       prdService.bulkProductUpdate = bulkProductUpdate;
       prdService.userWiseProductCount = userWiseProductCount;
+      prdService.updateInquiryCounter = updateInquiryCounter;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -218,11 +219,25 @@
                 countObj.listedWithSell = res.data[i]['total_tradeType'];
               else if(res.data[i]['_id'] == 'BOTH')
                 countObj.listedWithBoth = res.data[i]['total_tradeType'];
+               else if(res.data[i]['_id'] == 'inquiryCount')
+                countObj.inquiryCount = res.data[i]['inquiryCount'];
             }
-            countObj.totalProducts = (Number(countObj.listedCounts)) || 0 + (Number(countObj.soldCounts) || 0) + (Number(countObj.rentedCounts) || 0);
+            countObj.totalProducts = (Number(countObj.listedCounts) || 0) + (Number(countObj.soldCounts) || 0) + (Number(countObj.rentedCounts) || 0);
           }
           return countObj;
         });
+      }
+
+      function updateInquiryCounter(ids){
+        if(ids.length == 0)
+          return;
+        return $http.post(path + "/updateinquiry",ids)
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(err){
+                  //error handling
+                })
       }
 
       function addToCache(prd){

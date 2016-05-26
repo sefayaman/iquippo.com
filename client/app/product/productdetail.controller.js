@@ -172,6 +172,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
         data['subject'] = 'No reply: Product Enquiry request received';
         notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
       }
+      productSvc.updateInquiryCounter([productObj._id]);
       Modal.alert(informationMessage.buyRequestSuccess,true);
     }).error(function(res){
         Modal.alert(res);

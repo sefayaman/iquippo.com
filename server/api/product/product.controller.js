@@ -72,7 +72,8 @@ exports.search = function(req, res) {
   if(req.body.tradeType){
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
   }
-  
+  if(req.body.tradeValue)
+   filter["tradeType"] = req.body.tradeValue; 
   if(req.body.assetStatus)
     filter["assetStatus"] = req.body.assetStatus;
   if(req.body.assetId)
@@ -353,6 +354,12 @@ exports.setExpiry = function(req, res) {
   
 };
 
+exports.updateInquiryCounter = function(req,res){
+  var ids = req.body;
+  Product.update({_id:{$in:ids}},{$inc:{inquiryCounter:1}},{multi:true},function(err,data){
+    res.status(200).send('');
+  });
+}
 // Deletes a product from the DB.
 exports.destroy = function(req, res) {
   Product.findById(req.params.id, function (err, product) {
@@ -401,9 +408,22 @@ exports.userWiseProductCount = function(req,res){
         },
         function (err, data) {
           if (err) return handleError(err);
-          console.log(data);
+          //console.log(data);
           result = result.concat(data);
-          return res.status(200).json(result);
+          //return res.status(200).json(result);
+          delete filter.assetStatus;
+           Product.aggregate(
+            { $match: filter },
+            { $group: 
+              { _id: 'inquiryCount', inquiryCount: { $sum: '$inquiryCounter' } } 
+            },
+            function (err, inCount) {
+              if (err) return handleError(err);
+              console.log(data);
+              result = result.concat(inCount);
+              return res.status(200).json(result);
+            }
+          );
         }
       );
     }

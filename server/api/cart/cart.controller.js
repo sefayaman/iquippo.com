@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Cart = require('./cart.model');
+var Product = require('./../product/product.model');
 
 // Get list of buyer
 exports.getAll = function(req, res) {
@@ -16,10 +17,28 @@ exports.getOnId = function(req, res) {
   Cart.findOne({'user._id':req.params.id}, function (err, cart){
     if(err) { return handleError(res, err); }
     if(!cart) { return res.status(404).send('Not Found'); }
+
     addNoCacheHeader(res);
-    return res.json(cart);
+    updateCartProduct(cart,res);
+    //return res.json(cart);
   });
 };
+
+function updateCartProduct(cart,res){
+  var ids = [];
+  cart.products.forEach(function(item){
+    ids[ids.length] = item._id;    
+  });
+  var filter = {};
+  filter['deleted'] = false;
+  filter['status'] = true;
+  filter['_id'] = {$in:ids};
+  Product.find(filter,function(err,products){
+    if(!err)
+      cart.products = products;
+    return res.json(cart);
+  });
+}
 
 // Creates a new cart in the DB.
 exports.create = function(req, res) {
