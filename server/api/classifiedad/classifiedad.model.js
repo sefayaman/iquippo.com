@@ -12,6 +12,7 @@ var ClassifiedadSchema = new Schema({
   mobile: String,
   email: String,
   image: String,
+  websiteUrl:String,
   //position: String,
   position: {
     type: String,
@@ -24,7 +25,8 @@ var ClassifiedadSchema = new Schema({
   deleted: {
     type: Boolean,
     default: false
-  }, 
+  },
+  updatedByUserId:String, 
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

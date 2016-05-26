@@ -24,7 +24,7 @@
             <tbody>
   
               <tr ng-repeat="product in cart.products">
-              <td><input type="checkbox" ng-click="cartVm.updateSelection($event,product)"></td>
+              <td><input type="checkbox" ng-click="cartVm.updateSelection($event,product)" id="product_{{product._id}}"></td>
                 <td>
                   <a ng-href="/productdetail/{{product._id}}">
                     <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.images[0].src}}" width="50" height="50">

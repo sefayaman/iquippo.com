@@ -162,7 +162,7 @@
             <div class="row pull-right">
                 <div class="col-sm-2">
                   <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="viewproductVm.compare()">
-                     <span class="count-compare" ng-if="viewproductVm.productListToCompare.length != 0">{{viewproductVm.productListToCompare.length}}</span>
+                     <span class="count-compare" ng-if="viewproductVm.compareCount != 0">{{viewproductVm.compareCount}}</span>
                      <img src="assets/images/campare-icon.png" width="20">
                    </a>
                 </div>
@@ -180,7 +180,9 @@
           </div>
           <div class="compare-cart">
                 <ul>
-                <li ng-repeat="prd in viewproductVm.productListToCompare"><img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a></li>
+                  <li ng-repeat="prd in viewproductVm.productListToCompare" ng-if="prd._id">
+                    <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a>
+                  </li>
                 </ul>
               </div>
             <!-- <ul >
@@ -216,11 +218,11 @@
                           <p>{{product.model.name}}</p>
                           <p>{{product.category.name}}</p>
                           <p>{{product.city}}
-                            <span class="compare">
-                              <input type="checkbox" ng-click="viewproductVm.updateSelection($event,product)" id="product_{{product._id}}"> <label>Compare</label>
-                            </span>
-                          
+                           
                             <div class="pull-right">
+                              <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">
+                               Add to Compare
+                              </a>
                               <a href="javascript:void(0);" ng-click="viewproductVm.addProductToCart(product)" class="btn btn-primary" >Add to Cart</a>
                               <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning hvr-icon-wobble-horizontal" >View Details</a>
 

@@ -38,6 +38,7 @@
 
         return $http.put(path + "/" + classified._id,classified)
         		.then(function(res){
+              classifiedService.activeAds = [];
         			return res
         		})
         		.catch(function(res){
@@ -76,6 +77,7 @@
         return deferred.promise; 
       	
       }
+
 
       return classifiedService;
   }

@@ -50,14 +50,14 @@
    
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
-       <a href="" target="_blank">
-          <img ng-if="mainVm.imgLeftTop" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop}}" class="img-responsive add1">
+       <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank">
+          <img ng-if="mainVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop.src}}" class="img-responsive add1">
        </a>
         <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
         <div class="form-group"></div>
         <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
-        <a href="" target="_blank">
-          <img ng-if="mainVm.imgLeftBottom" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftBottom}}" class="img-responsive add1">
+        <a ng-href="{{mainVm.imgLeftBottom.websiteUrl}}" target="_blank">
+          <img ng-if="mainVm.imgLeftBottom.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftBottom.src}}" class="img-responsive add1">
         </a>
       </div>
       <div class="col-sm-10 col-md-7 padd-left">
@@ -218,12 +218,12 @@
 <div class="container text-center form-group">
   <div class="row">
     <div class="col-sm-6">
-      <a href="" target="_blank">
-        <img ng-if="mainVm.imgBottomLeft" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomLeft}}" class="add2 img-responsive">
+      <a ng-href="{{mainVm.imgBottomLeft.websiteUrl}}" target="_blank">
+        <img ng-if="mainVm.imgBottomLeft.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomLeft.src}}" class="add2 img-responsive">
       </a>
     <div class="col-sm-6">
-      <a href="" target="_blank">
-        <img ng-if="mainVm.imgBottomRight" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomRight}}" class="add2 img-responsive">
+      <a ng-href="{{mainVm.imgBottomRight.websiteUrl}}" target="_blank">
+        <img ng-if="mainVm.imgBottomRight.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomRight.src}}" class="add2 img-responsive">
       </a>
     </div>
   </div>

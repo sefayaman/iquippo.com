@@ -6,7 +6,7 @@ angular.module('sreizaoApp').controller('ViewCartCtrl',ViewCartCtrl)
 
 function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http,$state) {
     var vm = this;
-    vm.productListToCompare = [];
+    vm.selectedProducts = [];
     vm.deleteProductFromCart = deleteProductFromCart;
     vm.clearCart = clearCart;
     vm.updateSelection = updateSelection;
@@ -40,7 +40,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
             $rootScope.cartCounter = $rootScope.cart.products.length;
             var idx = getIndex(prd);
             if(idx != -1)
-              vm.productListToCompare.splice(idx,1);
+              vm.selectedProducts.splice(idx,1);
         })
         .error(function(res){
              Modal.alert(res,true);
@@ -53,7 +53,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
         .success(function(res){
             Modal.alert(informationMessage.clearCartSuccess,true);
             $rootScope.cartCounter = $rootScope.cart.products.length;
-            vm.productListToCompare = [];
+            vm.selectedProducts = [];
         })
         .error(function(res){
              Modal.alert(res,true);
@@ -66,10 +66,14 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
         $state.go('myaccount');
         return;
       }
+      if(vm.selectedProducts.length == 0){
+         Modal.alert("Please select product.",true);
+        return;
+      }
       var products = [];
       var dataToSend = {};
       dataToSend.product =  [];
-      vm.productListToCompare.forEach(function(item,index){
+      vm.selectedProducts.forEach(function(item,index){
         var obj = {};
         obj._id = item._id;
         obj.name = item.name;
@@ -117,13 +121,24 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
   }
 
   function compare(){
-
-     if(vm.productListToCompare.length < 2){
-          Modal.alert("Please select atleat two products to compare.",true);
+    if(vm.selectedProducts.length > 4){
+         Modal.alert("You can compare upto 4 products.",true);
           return;
+    }
+    if(vm.selectedProducts.length < 2){
+          Modal.alert("Please select at least two products to compare.",true);
+          return;
+    }
+
+      var prevScope = $rootScope.$new();
+      prevScope.productList = [];
+      for(var i=0;i < 4;i++){
+        if(vm.selectedProducts[i])
+          prevScope.productList[i] = vm.selectedProducts[i];
+        else
+            prevScope.productList[i] = []; 
       }
-       var prevScope = $rootScope.$new();
-       prevScope.productList = vm.productListToCompare;
+
        prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;     
        var prvProductModal = $uibModal.open({
             templateUrl: "app/product/productcompare.html",
@@ -134,26 +149,28 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
          prevScope.dismiss = function () {
           prvProductModal.dismiss('cancel');
         };
+        prevScope.removeProductFromCompList = function(index){
+          var removedProduct = vm.selectedProducts.splice(index,1);
+          angular.element("#product_" + removedProduct[0]._id).prop("checked",false);
+          prevScope.productList[index] = {};
+        }
   }
+
+ 
 
   function updateSelection(event,prd){
         var checkbox = event.target;
         var action = checkbox.checked?'add':'remove';
-        if( action == 'add' && vm.productListToCompare.length >= 4){
-          angular.element(checkbox).prop("checked",false);
-          Modal.alert("You can compare upto 4 products.",true);
-          return;
-        }
         var index = getIndex(prd);
         if(action == 'add' && index == -1)
-          vm.productListToCompare.push(prd)
+          vm.selectedProducts.push(prd)
         if(action == 'remove' && index != -1)
-          vm.productListToCompare.splice(index,1);
+          vm.selectedProducts.splice(index,1);
   }
 
   function getIndex(prd){
     var index = -1;
-    vm.productListToCompare.forEach(function(item,idx){
+    vm.selectedProducts.forEach(function(item,idx){
       if(item._id == prd._id)
         index = idx;
     });

@@ -8,33 +8,47 @@ angular.module('classifiedAd').controller('ClassifiedAdCtrl', ClassifiedAdCtrl);
 function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc) {
     
     var vm = this;
-    vm.classified = {};
-    vm.classified.image = "";
-
-    vm.addClassifiedAd = addClassifiedAd;
-    vm.reset = reset;
-    vm.resetImages = resetImages;
-    vm.previewImg = previewImg;
-    vm.closeDialog = closeDialog;
-
-    if(Auth.getCurrentUser()._id) {
-      vm.classified.fname = Auth.getCurrentUser().fname;
-      vm.classified.mname = Auth.getCurrentUser().mname;
-      vm.classified.lname = Auth.getCurrentUser().lname;
-      vm.classified.phone = Auth.getCurrentUser().phone;
-      
-      vm.classified.mobile = Auth.getCurrentUser().mobile;
-      vm.classified.email = Auth.getCurrentUser().email;
-
-    } else {
-      vm.classified = {}
-    }
 
     $scope.checked = "";
     var leftTopDim = {width:165,height:255};
     var leftBottomDim = {width:165,height:255};
     var bottomLeftDim = {width:680,height:100};
     var bottomRightDim = {width:680,height:100};
+    vm.classified = {};
+    vm.classified.image = "";
+
+
+    //vm.addClassifiedAd = addClassifiedAd;
+    vm.addOrUpdate = addOrUpdate;
+    vm.reset = reset;
+    vm.resetImages = resetImages;
+    vm.previewImg = previewImg;
+    vm.closeDialog = closeDialog;
+
+    function init(){
+
+      if(!$scope.edit){
+          if(Auth.getCurrentUser()._id) {
+          vm.classified.fname = Auth.getCurrentUser().fname;
+          vm.classified.mname = Auth.getCurrentUser().mname;
+          vm.classified.lname = Auth.getCurrentUser().lname;
+          vm.classified.phone = Auth.getCurrentUser().phone;
+          
+          vm.classified.mobile = Auth.getCurrentUser().mobile;
+          vm.classified.email = Auth.getCurrentUser().email;
+
+        } else {
+          vm.classified = {}
+        }
+    
+      }else{
+        vm.classified = $scope.classified;
+        $scope.checked = $scope.classified.position;
+        //vm.classified.image = $scope.classified.image;        
+      }
+    }
+    init();
+    
     
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
@@ -96,9 +110,8 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
 
      }
 
-     function addClassifiedAd() {
-
-      if(!vm.classified.image){
+    function addOrUpdate(){
+       if(!vm.classified.image){
         Modal.alert("Please upload image",true);
         return;
       }
@@ -106,6 +119,14 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
         $scope.form.submitted = true;
         return;
       }
+      if(!$scope.edit){
+        addClassifiedAd();   
+      }else{
+        updateClassifiedAd();
+      }
+
+    }
+     function addClassifiedAd() {
 
       $rootScope.loading = true;
       if(Auth.getCurrentUser()._id)
@@ -130,6 +151,24 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
             }
           });
   };
+
+  function updateClassifiedAd(){
+      vm.classified.position = $scope.checked;
+      if(Auth.getCurrentUser()._id)
+        vm.classified.updatedByUserId = Auth.getCurrentUser()._id;
+      $rootScope.loading = true;
+      classifiedSvc.updateClassifiedAd(vm.classified).then(function(result){
+        $rootScope.loading = false;
+       if(result.data.errorCode){
+          Modal.alert(result.data.message);
+        }
+        else {
+           $uibModalInstance.close();
+           Modal.alert("ClassifiedAd Updated",true);
+         }
+      });
+  }
+
 
   function closeDialog() {
      $uibModalInstance.dismiss('cancel');

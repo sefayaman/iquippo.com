@@ -3,7 +3,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, cartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, cartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout) {
   
   var vm = this;
 
@@ -29,7 +29,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.maxSize = 10;
   vm.sortByFlag = "";
  
-  vm.productListToCompare = [];
+  vm.productListToCompare = [{},{},{},{}];
+  vm.compareCount = 0;
 
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
@@ -41,8 +42,9 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.fireCommand = fireCommand;
   vm.getLocationHelp = getLocationHelp;
   vm.sortBy = sortBy;
-  vm.updateSelection = updateSelection;
+  //vm.updateSelection = updateSelection;
   vm.addProductToCart = addProductToCart;
+  vm.addToCompare = addToCompare;
   vm.compare = compare;
   vm.removeProductFromCompList = removeProductFromCompList;
 
@@ -97,7 +99,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
         productSvc.getProductOnCategoryId($stateParams.id)
         .then(function(result){
           $scope.noResult = false;
-          vm.productListToCompare = [];
+          //vm.productListToCompare = [];
+
           if(result.length > 0){
             vm.currentPage = 1;
             vm.totalItems = result.length;
@@ -112,6 +115,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
     }else{
       $state.go('main');
     }
+    updateCompareCount();
   }
 
   init();
@@ -240,7 +244,7 @@ function onModelChange(model){
       productSvc.getProductOnFilter(filter)
       .then(function(result){
         $scope.noResult = false;
-        vm.productListToCompare = [];
+        //vm.productListToCompare = [];
         if(result.length > 0){
           vm.currentPage = 1;
           vm.totalItems = result.length;
@@ -407,7 +411,7 @@ $scope.today = function() {
   function compare(){
 
      if(vm.productListToCompare.length < 2){
-          Modal.alert("Please select atleast two products to compare.",true);
+          Modal.alert("Please select at least two products to compare.",true);
           return;
       }
        var prevScope = $rootScope.$new();
@@ -422,22 +426,45 @@ $scope.today = function() {
          prevScope.dismiss = function () {
           prvProductModal.dismiss('cancel');
         };
+        prevScope.removeProductFromCompList = removeProductFromCompList;
   }
 
-  function updateSelection(event,prd){
+  function addToCompare(prd){
+    if(vm.compareCount == 4){
+       Modal.alert("You have already 4 product into compare list.",true);
+      return;
+    }
+    var idx = getIndex(prd);
+    if(idx != -1){
+       Modal.alert("Product is already added to compare list.",true);
+      return;
+    }
+    var freeIndex = getIndexFree();
+    vm.productListToCompare[freeIndex] = prd;
+    updateCompareCount();
+  }
+
+  /*function updateSelection(event,prd){
         var checkbox = event.target;
         var action = checkbox.checked?'add':'remove';
-        if( action == 'add' && vm.productListToCompare.length >= 4){
+        if( action == 'add' && vm.compareCount >= 4){
           angular.element(checkbox).prop("checked",false);
           Modal.alert("You can compare upto 4 products.",true);
           return;
         }
         var index = getIndex(prd);
-        if(action == 'add' && index == -1)
-          vm.productListToCompare.push(prd)
-        if(action == 'remove' && index != -1)
-          vm.productListToCompare.splice(index,1);
-  }
+        if(action == 'add' && index == -1){
+          var freeIndex = getIndexFree();
+          if(freeIndex == -1)
+              return;
+          vm.productListToCompare[freeIndex] = prd;
+        }
+        if(action == 'remove' && index != -1){
+          vm.productListToCompare[index] = {};
+          //vm.productListToCompare.splice(index,1);
+        }
+        updateCompareCount();
+  }*/
 
   function getIndex(prd){
     var index = -1;
@@ -448,12 +475,39 @@ $scope.today = function() {
     return index;
   }
 
-  function removeProductFromCompList(index){
-     var removedProduct = vm.productListToCompare.splice(index,1);
-     if(removedProduct && removedProduct.length > 0)
-        angular.element('#product_' + removedProduct[0]._id).prop('checked',false);
+  function getIndexFree(){
+    var index = -1;
+    for(var i =0;i < vm.productListToCompare.length;i++){
+      if(!vm.productListToCompare[i]._id){
+        index = i;
+        break;
+      }
+    }
+    return index;
   }
 
+  function removeProductFromCompList(index){
+     var removedProduct = vm.productListToCompare[index];
+     vm.productListToCompare[index] = {};
+      updateCompareCount();
+  }
+
+ /* function setProductSelected(){
+    $timeout(function(){
+       vm.productListToCompare.forEach(function(item,index){
+          angular.element('#product_' + item._id).prop('checked',true);   
+        });
+     },100);
+  }*/
+
+  function updateCompareCount(){
+    vm.compareCount = 0;
+    vm.productListToCompare.forEach(function(item,index){
+      if(item._id)
+         vm.compareCount ++;  
+    });
+   
+  }
 
 }
 

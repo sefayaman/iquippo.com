@@ -36,7 +36,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-sm-8">
-                    <input type="text" class="form-control" placeholder="Website Url">
+                    <input type="text" class="form-control" placeholder="Website Url" ng-model="classifiedadVm.classified.websiteUrl" ng-value="classifiedadVm.classified.websiteUrl">
                   </div>
                  
                 </div>
@@ -131,9 +131,9 @@
               </form>
             </div>
             <div class="modal-footer">
-              <input type="reset" ng-click = "classifiedadVm.reset()" class="btn btn-lg btn-default" data-dismiss="modal"></input>
-              <button type="button"  ng-click="classifiedadVm.addClassifiedAd(classified)" class="btn btn-lg btn-warning">Submit</button>
-            </div>
+              <input type="reset" ng-click = "classifiedadVm.reset()" class="btn btn-lg btn-default" ng-if="!edit"></input>
+              <button type="button"  ng-click="classifiedadVm.addOrUpdate()" class="btn btn-lg btn-warning">Submit</button>
+              </div>
 </div>
 <script type="text/ng-template" id="classifiedAdPreview.html">
   <div class="modal-header">

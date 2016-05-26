@@ -45,7 +45,7 @@
                       </td>
                       <td>
                         <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="classified.status" uib-btn-checkbox ng-click="classifiedadLstVm.updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
-                        <button class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                        <button class="btn btn-primary"><i class="fa fa-edit" ng-click="classifiedadLstVm.editClassifiedAdd(classified)"></i></button>
                       </td> 
                     </tr>
 

@@ -82,14 +82,26 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         if(flag == true) {
           for(var i=0 ; i < srchres.length; i++)
           {
-            if(srchres[i].position == 'leftTop')
-              vm.imgLeftTop = srchres[i].image;
-            if(srchres[i].position == 'leftBottom')
-              vm.imgLeftBottom = srchres[i].image;
-            if(srchres[i].position == 'bottomLeft')
-              vm.imgBottomLeft = srchres[i].image;
-            if(srchres[i].position == 'bottomRight')
-              vm.imgBottomRight = srchres[i].image;
+            if(srchres[i].position == 'leftTop'){
+              vm.imgLeftTop = {};
+              vm.imgLeftTop.src = srchres[i].image;
+              vm.imgLeftTop.websiteUrl = srchres[i].websiteUrl;
+            }
+            if(srchres[i].position == 'leftBottom'){
+              vm.imgLeftBottom = {};
+              vm.imgLeftBottom.src = srchres[i].image;
+              vm.imgLeftBottom.websiteUrl = srchres[i].websiteUrl;
+            }
+            if(srchres[i].position == 'bottomLeft'){
+              vm.imgBottomLeft = {};
+              vm.imgBottomLeft.src = srchres[i].image;
+              vm.imgBottomLeft.websiteUrl = srchres[i].websiteUrl;
+            }
+            if(srchres[i].position == 'bottomRight'){
+              vm.imgBottomRight = {};
+              vm.imgBottomRight.src = srchres[i].image;
+              vm.imgBottomRight.websiteUrl = srchres[i].websiteUrl;
+            }
             flag = false;
           }
         }

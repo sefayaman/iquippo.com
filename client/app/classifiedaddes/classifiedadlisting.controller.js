@@ -3,25 +3,28 @@
 
 angular.module('classifiedAd').controller('ClassifiedAdListingCtrl',ClassifiedAdListingCtrl);
 
-function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, notificationSvc) {
+function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, classifiedSvc, Modal, DTOptionsBuilder, notificationSvc,$uibModal) {
   
   var vm = this;
   vm.classifiedAdList = [];
   var dataToSend = {};
   vm.classified = {};
   vm.updateClasifiedAd = updateClasifiedAd;
+  vm.editClassifiedAdd = editClassifiedAdd;
 
   $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
 
-   if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
+   
+   function getClassifiedData(){
+    if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
       dataToSend["userid"] = Auth.getCurrentUser()._id;
     
     classifiedSvc.getClassifiedAdOnFilter(dataToSend)
     .then(function(result){
       vm.classifiedAdList = result;
     });
-   
-
+   }
+   getClassifiedData();
     function updateClasifiedAd(classified) {
 
       $rootScope.loading = true;
@@ -45,6 +48,8 @@ function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, cla
   };
 
   function updateClassified(classified){
+     if(Auth.getCurrentUser()._id)
+        classified.updatedByUserId = Auth.getCurrentUser()._id;
       classifiedSvc.updateClassifiedAd(classified).then(function(result){
         $rootScope.loading = false;
        if(result.data.errorCode){
@@ -60,6 +65,25 @@ function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, cla
            Modal.alert("ClassifiedAd Updated",true);
          }
       });
+  }
+
+  function editClassifiedAdd(classifiedData){
+       var scope = $rootScope.$new();
+       scope.edit = true;
+       scope.classified = {};
+       angular.copy(classifiedData, scope.classified);
+       scope.uploadImagePrefix = $rootScope.uploadImagePrefix;     
+       var classifedAdModal = $uibModal.open({
+            templateUrl: Modals['classifiedad'].tplUrl,
+            scope: scope,
+            controller:Modals['classifiedad'].Ctrl,
+            size: 'lg'
+        });
+
+       classifedAdModal.result.then(function(param) {
+              console.log('vfdgfd',param);
+              getClassifiedData();
+        });
   }
 
 }
