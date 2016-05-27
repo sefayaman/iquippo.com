@@ -379,7 +379,7 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-danger text-center product-bars">
-                      <a ng-href="javascript:void(0)">
+                      <a href="javascript:void(0)">
                         <h4>Rented and Sold</h4>
                       </a>
                       <div class="progress">
@@ -448,12 +448,12 @@
               <div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-body bg-info text-center product-bars">
-                      <a ng-href="javascript:void(0)">
+                      <a href="javascript:void(0)">
                         <h4>Inquiries Received</h4>
                       </a>
                       <div class="progress">
                         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                          <span class="sr-only">{{myAccountVm.soldCounts}}% Complete (success)</span>
+                          <span class="sr-only">{{myAccountVm.count.inquiryCount}}% Complete (success)</span>
                         </div>
                       </div>
                       <h4 ng-if="myAccountVm.count.soldCounts">{{myAccountVm.count.inquiryCount}}</h4>
