@@ -678,6 +678,7 @@ angular.module('sreizaoApp')
     $scope.selectedGroup = {};
     $scope.selectedBrand = {};
     $scope.selectedModel = {};
+    $scope.selectedSubCategory = {};
     $scope.productName = "";
     $scope.selectedGroup.name = "";
     $scope.images = [{isPrimary:true}];
