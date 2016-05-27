@@ -387,7 +387,24 @@ exports.countryWiseProductCount = function(req,res){
     }
   );
 }
-
+exports.categoryWiseCount = function(req,res){
+    var filter = {};
+    filter['deleted'] = false;
+    filter['status'] = true;
+    if(req.body.categoryIds)
+      filter['category._id'] = {$in:req.body.categoryIds};
+    Product.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: '$category._id', count: { $sum: 1 } } 
+    },
+    {$sort:{count:-1}},
+    function (err, result) {
+      if (err) return handleError(err);
+      return res.status(200).json(result);
+    }
+  );
+}
 exports.userWiseProductCount = function(req,res){
   var filter = {};
   filter['deleted'] = false;

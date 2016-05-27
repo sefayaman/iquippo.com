@@ -50,7 +50,6 @@ if(qr.category && qr.brand){
       filter['$or'].push(similarComb);
    }
 
-    console.log("filter::", filter);
     Product.find(filter).exec(function (err, products) {
         if (err) { 
           console.log(err);

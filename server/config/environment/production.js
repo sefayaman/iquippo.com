@@ -22,6 +22,6 @@ module.exports = {
   },
   uploadPath: "./../public/assets/uploads/",
   contactNumber: "011 66025672",
-  serverPath: "http://54.255.186.7:9010"
-  //serverPath: "http://iquippo.com"
+  //serverPath: "http://54.255.186.7:9010"
+  serverPath: "http://iquippo.com"
 };

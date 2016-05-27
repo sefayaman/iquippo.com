@@ -53,12 +53,6 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
         }
      });
 
-   /*if(!Auth.isLoggedIn()){
-      Modal.openDialog('login');
-      Auth.doNotRedirect = true;
-      Auth.postLoginCallback = loadUserDetail;
-    }*/
-
     if($stateParams.id) {
       productSvc.getProductOnId($stateParams.id).then(function(result){
         $scope.currentProduct = result;

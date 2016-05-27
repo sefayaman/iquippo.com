@@ -32,6 +32,7 @@
       prdService.bulkProductUpdate = bulkProductUpdate;
       prdService.userWiseProductCount = userWiseProductCount;
       prdService.updateInquiryCounter = updateInquiryCounter;
+      prdService.categoryWiseCount = categoryWiseCount;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -144,6 +145,16 @@
             }
         });
       };
+
+      function categoryWiseCount(filter){
+        return $http.post(path + "/categorywisecount",filter)
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(res){
+                  throw res;
+                })
+      }
 
       function updateProduct(product){
 

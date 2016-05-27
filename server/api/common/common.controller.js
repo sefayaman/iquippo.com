@@ -917,16 +917,25 @@ exports.updateState = function(req, res) {
 
 // Deletes a state from the DB.
 exports.deleteState = function(req, res) {
-  State.findById(req.params.id, function (err, st) {
+  City.find({'state._id':req.params.id},function(err,cities){
+  	 if(err) { return handleError(res, err); }
+  	 if(cities && cities.length > 0){
+  	 	return res.status(200).json({errorCode:1,message:'Cities are associated with this state'});
+  	 }else
+  	 	deleteState(req,res);
+  })
+};
+
+function deleteState(req,res){
+	State.findById(req.params.id, function (err, st) {
     if(err) { return handleError(res, err); }
     if(!st) { return res.status(404).send('State Not Found'); }
     st.remove(function(err) {
       if(err) { return handleError(res, err); }
-      return res.status(204).send({message:"State deleted sucessfully!!!"});
+      return res.status(204).json({message:"State deleted sucessfully!!!"});
     });
   });
-};
-
+}
 // Get list of city
 exports.getAllCity = function(req, res) {
   City.find(function (err, ct) {

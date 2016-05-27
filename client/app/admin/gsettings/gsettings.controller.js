@@ -130,7 +130,13 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
  	function deleteState(idx){
 		LocationSvc.deleteState(vm.stateList[idx])
 		.then(function(result){
-			 loadAllState();
+			if(!result.errorCode)
+			 	loadAllState();
+			 else
+			 	Modal.alert(result.message,true);
+		})
+		.catch(function(res){
+			//error handling
 		})
     }
 

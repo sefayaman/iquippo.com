@@ -83,7 +83,7 @@ angular.module('sreizaoApp')
     }
     return gpService;
   }])
-  .factory("categorySvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
+  .factory("categorySvc",['$http', '$rootScope','$q','productSvc',function($http, $rootScope,$q,productSvc){
       var catService = {};
       var categoryCache = [];
       var homeCategoryCache = [];
@@ -126,11 +126,39 @@ angular.module('sreizaoApp')
         }else{
             $http.post(path + "/search",filter).
             then(function(res){
-              var allCats = _.sortBy(res.data, function(n) {
+             /* var allCats = _.sortBy(res.data, function(n) {
               return n.name == 'Other';
+              });*/
+              var catIds = [];
+              var allCats = res.data;
+              allCats.forEach(function(item){
+                  catIds[catIds.length] = item._id;
               });
-              homeCategoryCache = allCats;
-              deferred.resolve(res.data);
+              productSvc.categoryWiseCount({categoryIds:catIds})
+              .then(function(sortedRes){
+                for(var i=0;i < allCats.length;i++){
+                  for(var j=0;j < sortedRes.length;j++){
+                    if(allCats[i]._id == sortedRes[j]._id){
+                      if(sortedRes[j].count){
+                        allCats[i].count = sortedRes[j].count;
+                        break;
+                      }
+                    }
+                  }
+                  if(!allCats[i].count)
+                    allCats[i].count = 0;
+                }
+                allCats.sort(function(a,b){
+                  return b.count - a.count;
+                });
+                homeCategoryCache = allCats;
+                deferred.resolve(homeCategoryCache);
+              })
+              .catch(function(errRes){
+                 deferred.resolve(res.data);
+              })
+              //homeCategoryCache = allCats;
+             
             })
             .catch(function(res){
                console.log("Errors in Category fetch list :"+ JSON.stringify(res));
