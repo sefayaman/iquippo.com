@@ -325,7 +325,9 @@
                           <label>Website</label>
                         </div>
                         <span ng-if="!myAccountVm.userInfo.professionalInfo.website">Add website</span>
-                        <span ng-if="myAccountVm.userInfo.professionalInfo.website">{{myAccountVm.userInfo.professionalInfo.website}}</span>                     
+                        <a href="{{myAccountVm.userInfo.professionalInfo.website}}" ng-if="myAccountVm.userInfo.professionalInfo.website" target="_blank">
+                          <span>{{myAccountVm.userInfo.professionalInfo.website}}</span>
+                        </a>                    
                       </div>
                      
                     </div>
