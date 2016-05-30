@@ -7,8 +7,7 @@ angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
     var vm = this;
     vm.tabValue = 'sc';
-    vm.onSettingChange = onSettingChange;
-
+   
     vm.subCategory = {};
     vm.subCatEdit = false;
     vm.saveSubCategory = saveSubCategory;
@@ -54,10 +53,6 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
     loadAllLocation();
     loadAllSubcategory();
 
-    function onSettingChange(){
-
-    }
-
     //subcategory functions
     function saveSubCategory(form){
 		if(form.$invalid){
@@ -90,7 +85,15 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
     }
  	
  	function deleteSubCategory(idx){
-		SubCategorySvc.deleteSubCategory(vm.subCategoryList[idx])
+ 		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeleteSubCategory(idx);
+	 	});
+		
+    }
+
+    function submitDeleteSubCategory(idx){
+    	SubCategorySvc.deleteSubCategory(vm.subCategoryList[idx])
 		.then(function(result){
 			 loadAllSubcategory();
 		})
@@ -128,6 +131,13 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
     }
  	
  	function deleteState(idx){
+ 		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeleteState(idx);
+ 		});
+ 	}
+
+ 	function submitDeleteState(idx){
 		LocationSvc.deleteState(vm.stateList[idx])
 		.then(function(result){
 			if(!result.errorCode)
@@ -139,6 +149,7 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
 			//error handling
 		})
     }
+
 
     //location functions
 	function saveLocation(form){
@@ -172,6 +183,13 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
     }
  	
  	function deleteLocation(idx){
+ 		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeleteLocation(idx);
+ 		});
+ 	}
+
+ 	function submitDeleteLocation(idx){
 		LocationSvc.deleteLocation(vm.locationList[idx])
 		.then(function(result){
 			 loadAllLocation();
