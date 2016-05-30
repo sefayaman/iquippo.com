@@ -355,7 +355,7 @@ angular.module('sreizaoApp')
       $scope.manpowerService.quote.date = moment($scope.manpowerService.quote.scheduleDate).format('DD/MM/YYYY');
       notificationSvc.sendNotification('enquiriesQuoteManpowerQuoteEmailToAdmin', data, $scope.manpowerService.quote,'email');
 
-      data['to'] = $scope.cetifiedByiQuippoService.quote.email;
+      data['to'] = $scope.manpowerService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.manpowerService.serverPath},'email');
       
