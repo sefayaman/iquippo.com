@@ -348,16 +348,16 @@ angular.module('sreizaoApp')
       $scope.manpowerService.type = "manpowerQuote";
       $scope.manpowerService.quote = $scope.manpowerQuote;
       $http.post('/api/services', $scope.manpowerService).then(function(res){
-      //var data = {};
-      //data['to'] = supportMail;
-      //data['subject'] = 'Request for a Quote: Manpower Quote';
-      //$scope.manpowerService.serverPath = serverPath;
-      //$scope.manpowerService.quote.date = moment($scope.manpowerService.quote.scheduleDate).format('DD/MM/YYYY');
-      //notificationSvc.sendNotification('enquiriesQuoteCertifiedByiQuippoEmailToAdmin', data, $scope.manpowerService.quote,'email');
+      var data = {};
+      data['to'] = supportMail;
+      data['subject'] = 'Request for a Quote: Manpower Quote';
+      $scope.manpowerService.serverPath = serverPath;
+      $scope.manpowerService.quote.date = moment($scope.manpowerService.quote.scheduleDate).format('DD/MM/YYYY');
+      notificationSvc.sendNotification('enquiriesQuoteManpowerQuoteEmailToAdmin', data, $scope.manpowerService.quote,'email');
 
-      //data['to'] = $scope.cetifiedByiQuippoService.quote.email;
-      //data['subject'] = 'No reply: Request a Quote';
-      //notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.manpowerService.serverPath},'email');
+      data['to'] = $scope.cetifiedByiQuippoService.quote.email;
+      data['subject'] = 'No reply: Request a Quote';
+      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.manpowerService.serverPath},'email');
       
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
