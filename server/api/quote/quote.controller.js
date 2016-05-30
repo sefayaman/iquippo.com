@@ -55,7 +55,7 @@ function findBestMatch(req,res){
 function pushNotification(req,res,product){
    try{
         var emailData = {};
-        emailData.to = "subhash.patel@bharatconnect.com";//req.body.email;
+        emailData.to = req.body.email;
         var tmplName = FEEDBACK_TEMPLATE_NAME;
         emailData.notificationType = "email";
         emailData.subject = "Product Exist Now";
