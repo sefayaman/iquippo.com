@@ -124,7 +124,7 @@
                         Personal Information
                         <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>                        
                         </uib-accordion-heading>
-                        <span class="pull-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('personal')" ng-if="!myAccountVm.editPersonalInfo"></i></span> 
+                        <div class="text-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('personal')" ng-if="!myAccountVm.editPersonalInfo"></i></div> 
                         <!-- lable start -->
                         <div  class="row form-group" ng-if="!myAccountVm.editPersonalInfo">
                           <div class="col-sm-3 form-group">
@@ -224,7 +224,7 @@
                       Social Media Information
                       <i class="pull-right fa" ng-class="{'fa-minus': status.Secdopen, 'fa-plus': !status.Secdopen}"></i>  
                   </uib-accordion-heading>
-                    <span class="pull-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('social')" ng-if="!myAccountVm.editSocialInfo"></i></span>
+                    <div class="text-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('social')" ng-if="!myAccountVm.editSocialInfo"></i></div>
                     <div class="row form-group" ng-if="!myAccountVm.editSocialInfo">
                       <div class="col-sm-3 form-group text-ellips">
                         <div><label>Facebook URL</label></div>
@@ -286,7 +286,7 @@
                     Professional Information
                     <i class="pull-right fa" ng-class="{'fa-minus': status.Thirdopen, 'fa-plus': !status.Thirdopen}"></i>
                   </uib-accordion-heading>
-                    <span class="pull-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('professional')" ng-if="!myAccountVm.editProfessionalInfo"></i></span>
+                    <div class="text-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('professional')" ng-if="!myAccountVm.editProfessionalInfo"></i></div>
 
                     <div class="row form-group" ng-if="!myAccountVm.editProfessionalInfo">
                       <div class="col-sm-3 form-group">
