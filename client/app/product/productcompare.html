@@ -147,7 +147,11 @@
                         <td class="bordered">{{prd.technicalInfo.liftingCapacity}}</td>
                       </tr>
                       <tr>
-                        <td class="bordered"><a  href="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.documentName}}" class="" target="_blank" >{{prd.documentName}}</a></td>
+                        <td class="bordered">
+                          <div class="text-ellips">
+                            <a  href="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.documentName}}"  target="_blank" >{{prd.documentName}}</a>
+                          </div>
+                        </td>
                       </tr>
                     </tbody>
                   </table>

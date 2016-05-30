@@ -412,6 +412,7 @@ div[data-role="editor-toolbar"]{-webkit-user-select:none;-moz-user-select:none;-
 table.table thead .sorting_desc::before,table.table thead .sorting_asc::before{content:none;}
 table.dataTable thead .sorting:first-child,table.dataTable thead .sorting_asc:first-child,table.dataTable thead .sorting_desc:first-child,table.dataTable thead .sorting:last-child,table.dataTable thead .sorting_asc:last-child,table.dataTable thead .sorting_desc:last-child{background:none;}
 .product-preview .modal-dialog.modal-lg{width:95%;}
+.product-preview table{table-layout: fixed;}
 .img-magnifier{padding:0;}
 .img-magnifier li{display:inline-block;margin:0 10px;}
 .img-magnifier img{cursor:pointer;-webkit-transition:all .50s ease-in-out;-moz-transition:all .50s ease-in-out;-ms-transition:all .50s ease-in-out;-o-transition:all .50s ease-in-out;transition:all .50s ease-in-out;z-index:100;}
@@ -727,8 +728,8 @@ table.table{width:100% !important;}
 .no-result{text-align: center; margin-top: 200px; font-weight: bold;}
 .modal-open{padding-right: 17px !important;}
 div#jivo_close_button{position: absolute; right: -20px;}
-.myProfileDetail input{padding-left: 10px;}
-.myProfileDetail .input-group-addon{padding: 5px; width: 20px;}
+/*.myProfileDetail input{padding-left: 10px;}
+.myProfileDetail .input-group-addon{padding: 5px; width: 20px;}*/
 .profilePic-button img{width: 150px; height: 150px; margin-right: 30px; }
 .profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 31px;top: 195px; overflow: hidden; width: 150px;}
 .profilePic-button .fileinput-button:hover{background: rgba(255,255,255,1);}
