@@ -360,6 +360,8 @@ angular.module('sreizaoApp')
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.manpowerService.serverPath},'email');
       
       Modal.alert(informationMessage.productQuoteSuccess,true);
+      $scope.manpowerQuote = {};
+      $scope.manpowerQuote.usedBy = "Operators";
       },function(res){
           Modal.alert(res,true);
       });
