@@ -131,11 +131,15 @@ angular.module('sreizaoApp')
         item.name = item.src;
       });
       if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
-         $scope.product.videoLinks = [{}];
-       if(product.assetStatus)
-            prevAssetStatus = product.assetStatus;
-        else
-          prevAssetStatus = product.assetStatus = "";
+        $scope.product.videoLinks = [{}];
+
+      if(!$scope.product.miscDocuments || $scope.product.miscDocuments.length == 0)
+        $scope.product.miscDocuments = [{}];
+
+      if(product.assetStatus)
+          prevAssetStatus = product.assetStatus;
+      else
+        prevAssetStatus = product.assetStatus = "";
 
       $scope.product.country = $scope.product.country;
       videoObj.name = product.videoName;
@@ -664,6 +668,7 @@ angular.module('sreizaoApp')
     $scope.product.technicalInfo.params = [{}];
     $scope.product.serviceInfo = [{}];
     $scope.product.miscDocuments = [{}];
+    $scope.product.videoLinks = [{}];
     $scope.product.group = product.group = {};
     $scope.product.category = product.category = {};
     $scope.product.brand = product.brand = {};
