@@ -135,7 +135,14 @@
                           <div class="col-sm-8 form-group">
                             <div><label>Marital Status</label></div>
                             <span ng-if="!myAccountVm.userInfo.personalInfo.maritalStatus">Add Status</span>
-                            <span ng-if="myAccountVm.userInfo.personalInfo.maritalStatus">{{myAccountVm.userInfo.personalInfo.maritalStatus}}</span>
+                            <div class="row">
+                              <div class="col-sm-2">
+                                <span ng-if="myAccountVm.userInfo.personalInfo.maritalStatus">{{myAccountVm.userInfo.personalInfo.maritalStatus}}</span>
+                              </div>
+                              <div class="col-sm-9" ng-if="myAccountVm.userInfo.personalInfo.maritalStatus == 'Married'">Anniversary Date : <span ng-if="myAccountVm.userInfo.personalInfo.maritalStatus">{{myAccountVm.userInfo.personalInfo.anniversyDate}}</span></div>
+                            </div>
+
+                            
                           </div>
                           <div class="col-sm-12 form-group">
                             <div>
