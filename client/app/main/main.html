@@ -61,12 +61,16 @@
         </a>
       </div>
       <div class="col-sm-10 col-md-7 padd-left">
-        <div class="head">
-          <h4>Categories</h4>
+        <!-- <div class="head">
+          
           <legend class="dull"></legend>
           <legend class="dark"></legend>
+        </div> -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-th"></i> Categories</h4>
+          </div>
         </div>
-
         <div class="cat cat-product text-center">
           <ul class="cat-list">
             <li ng-repeat="category in categoryList">
@@ -87,7 +91,7 @@
         <div class="panel-group">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">News &amp; Events</h3>
+              <h3 class="panel-title"><i class="fa fa-newspaper-o"></i> News &amp; Events</h3>
             </div>
             <div class="panel-body">
               <div class="media form-group">
@@ -123,7 +127,7 @@
           </div>
           <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Partners</h3>
+                <h3 class="panel-title"><i class="fa fa-link"></i> Partners</h3>
               </div>
               <div class="panel-body text-center">
                 <div class="form-group">
@@ -148,10 +152,15 @@
         <div class="form-group clearfix"></div>
 
         <div class="horizontal-crsl">
-          <div class="head clear-fix">
+          <!-- <div class="head clear-fix">
             <h4>Featured Products</h4>
             <legend class="dull"></legend>
             <legend class="dark"></legend>
+          </div> -->
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa fa-star"></i> Featured Products</h4>
+            </div>
           </div>
           <div id="slides_control_feature">    
             <uib-carousel no-wrap="noWrapSlides">
