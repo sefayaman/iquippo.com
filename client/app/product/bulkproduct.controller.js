@@ -5,7 +5,7 @@ angular.module('sreizaoApp')
 
 /* Controller function */
 
-function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingSvc,Modal,Auth,notificationSvc,$uibModal,suggestionSvc){
+function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingSvc,Modal,Auth,notificationSvc,$uibModal,suggestionSvc,commonSvc){
   var vm = this;
   var imageCounter = 0;
   
@@ -13,16 +13,17 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
   vm.goToImageUpload = goToImageUpload;
   vm.products = [];
   vm.currentProduct = null;
-  vm.currentProductIndex = -1;
   vm.deleteImg = deleteImg;
   vm.makePrimary = makePrimary;
   vm.submitProduct = submitProduct;
   vm.backToData = backToData;
   vm.openPreviewImg = openPreviewImg;
+  vm.deleteProduct = deleteProduct;
   $scope.assetStatuses = assetStatuses;
   vm.images = [];
 
   $scope.updateTemplate = updateTemplate;
+  $scope.uploadZip = uploadZip;
 
   //listen for the file selected event
   $scope.$on("fileSelected", function (event, args) {
@@ -30,17 +31,33 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
         return;
       $scope.$apply(function () { 
         if(args.type == "image")
-          uploadProductImages(args.files);
+           uploadProductImages(args.files);
         else
           uploadExcel(args.files[0]);       
       });
   });
 
-  function goToImageUpload(idx){
-    vm.currentProduct = vm.products[idx];
-    vm.currentProductIndex = idx;
-    vm.images = [{isPrimary:true},{},{},{},{},{},{},{}];
-    vm.showDataSection = false;
+  function loadIncomingProduct(){
+    productSvc.loadIncomingProduct()
+    .then(function(result){
+      vm.products = result;
+    });
+  }
+
+  loadIncomingProduct();
+  function goToImageUpload(productId){
+    productSvc.getIncomingProduct(productId)
+    .then(function(prd){
+      vm.currentProduct = prd; 
+      vm.images = [{isPrimary:true},{},{},{},{},{},{},{}];
+      vm.showDataSection = false; 
+    })
+    .catch(function(res){
+      if(res.data.errorCode == 1)
+          Modal.alert('This product is deleted or locked by the system');
+    })
+
+    
   }
    
   function updateTemplate(files){
@@ -51,7 +68,6 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
         return;
 
       }
-
       uploadSvc.upload(files[0],templateDir)
       .then(function(res){
         var serData = {};
@@ -76,7 +92,6 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
     settingSvc.get(UPLOAD_TEMPLATE_KEY)
     .then(function(res){
          vm.template = res.value;
-         console.log(res);
 
       })
       .catch(function(stRes){
@@ -97,12 +112,13 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
     .then(function(result){
       var fileName = result.data.filename;
       $rootScope.loading = true;
-      productSvc.loadUploadedBulkProduct(fileName)
+      productSvc.parseExcel(fileName)
       .then(function(res){
+
+          loadIncomingProduct();
           $rootScope.loading = false;
-          vm.products = vm.products.concat(res.successList);
-          var totalRecord = res.successList.length + res.errorList.length;
-          var message =  res.successList.length + " out of "+ totalRecord  + " records are  processed successfully.";
+          var totalRecord = res.successCount + res.errorList.length;
+          var message =  res.successCount + " out of "+ totalRecord  + " records are  processed successfully.";
           if(res.errorList.length > 0){
              var data = {};
             data['to'] = Auth.getCurrentUser().email;
@@ -125,6 +141,36 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
        Modal.alert("error in file upload",true);
     });
   }
+
+  function uploadZip(files){
+    if(files.length == 0)
+      return;
+    if(files[0].name.indexOf('.zip') == -1){
+        Modal.alert('Please upload a zip file');
+        return;
+
+      }
+     uploadSvc.upload(files[0],tempDir)
+    .then(function(result){
+       var task = {};
+       task['taskType'] = "bulkproduct";
+       task.user = {};
+       task.user._id = Auth.getCurrentUser()._id;
+       task.user.email = Auth.getCurrentUser().email;
+       task.taskInfo = {};
+       task.taskInfo.filename = result.data.filename;
+       commonSvc.createTask(task)
+       .then(function(dt){
+          Modal.alert("your bulk product request is submitted successfully.");
+       });
+
+    })
+    .catch(function(res){
+      $rootScope.loading = false;
+       alert("error in file upload");
+    })
+  }
+
   var imgDim = {width:700,height:459};
   function uploadProductImages(files){
     var resizeParam = {};
@@ -201,18 +247,6 @@ function submitProduct(){
     //Adding user info
   if(!Auth.getCurrentUser()._id)
     return;
-  vm.currentProduct.user = {};
-  vm.currentProduct.user._id = Auth.getCurrentUser()._id;
-  vm.currentProduct.user.fname = Auth.getCurrentUser().fname;
-  vm.currentProduct.user.mname = Auth.getCurrentUser().mname;
-  vm.currentProduct.user.lname = Auth.getCurrentUser().lname;
-  vm.currentProduct.user.role = Auth.getCurrentUser().role;
-  vm.currentProduct.user.userType = Auth.getCurrentUser().userType;
-  vm.currentProduct.user.phone = Auth.getCurrentUser().phone;
-  vm.currentProduct.user.mobile = Auth.getCurrentUser().mobile;
-  vm.currentProduct.user.email = Auth.getCurrentUser().email;
-  vm.currentProduct.user.country = Auth.getCurrentUser().country;
-  vm.currentProduct.user.company = Auth.getCurrentUser().company;
   var suggestions = [];
   suggestions[suggestions.length] = {text:vm.currentProduct.group.name}
   suggestions[suggestions.length] = {text:vm.currentProduct.category.name}
@@ -250,9 +284,13 @@ function submitProduct(){
   }
 
   $rootScope.loading = true;
+  var idToDelete = delete vm.currentProduct._id;
   productSvc.addProduct(vm.currentProduct).then(function(result){
-
       $rootScope.loading = false;
+      productSvc.deleteIncomingProduct(idToDelete)
+      .then(function(result){
+        loadIncomingProduct();
+      });
       suggestionSvc.buildSuggestion(suggestions);
         if(result && result.productId) {
           var productHistory = {}
@@ -277,20 +315,23 @@ function submitProduct(){
           notificationSvc.sendNotification('productUploadEmailToAdmin', data, result.data,'email');
       }
       vm.showDataSection = true;
-      vm.products.splice(vm.currentProductIndex,1);
       vm.currentProduct = null;
-      vm.currentProductIndex = -1;
   })
   .catch(function(res){
     $rootScope.loading = false;
-    Modal.alert("There are some issue.Please try later.",true);
+    if(res.data.errorCode == 1){
+       Modal.alert("Asset_Id is already exist.",true);
+    }else
+      Modal.alert("There are some issue.Please try later.",true);
   });
 }
 
 function backToData(){
-  vm.showDataSection = true;
-  vm.currentProduct = null;
-  vm.currentProductIndex = -1;
+ vm.showDataSection = true;
+  productSvc.unlockIncomingProduct(vm.currentProduct._id)
+  .then(function(res){
+    vm.currentProduct = null;
+  });
 }
 
 function mailToCustomerForApprovedAndFeatured(result, product) {
@@ -325,6 +366,21 @@ function mailToCustomerForApprovedAndFeatured(result, product) {
         localScope.close = function(){
           prvModal.close();  
         }
+  }
+
+  function deleteProduct(productId){
+    Modal.confirm("Are you sure want to delete?",function(ret){
+        if(ret == "yes")
+          productSvc.deleteIncomingProduct(productId)
+          .then(function(result){
+            loadIncomingProduct();
+          })
+          .catch(function(res){
+            if(res.data.errorCode == 1){
+              Modal.alert("This product is locked by sytem.")
+            }
+          });
+      });
   }
 
 }

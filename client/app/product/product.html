@@ -42,7 +42,7 @@
                 <h3>Seller Information</h3>
                 <div class="row" ng-show="isActive() || isChannelPartner()">
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                      <select ng-disabled="isEdit" class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
+                      <select ng-disabled="isEdit" class="form-control" name="userType" ng-model="userType" ng-change="onRoleChange(userType)" ng-required="isActive() || isChannelPartner()">
                         <option value="">* Customer Type</option>
                         <option value="individual">Individual</option>
                         <option value="private">Private Entrepreneur</option>
@@ -682,7 +682,7 @@
                     </div> 
                 <div class="clearfix form-group"></div>                  
                  <div class="form-group pull-right">
-                    <button class="btn" type="button" ng-click="resetClick()" ng-show="!isEdit">Reset</button>
+                    <button class="btn" type="button" ng-click="resetClick(form)" ng-show="!isEdit">Reset</button>
                     <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button>
                     <button ng-hide="enableButton" class="btn btn-danger" ng-click="addOrUpdateProduct(product)">Submit</button>
                     <button ng-show="enableButton" class="btn btn-danger" confirmed-click="addOrUpdateProduct(product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>

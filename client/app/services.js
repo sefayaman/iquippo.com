@@ -387,6 +387,15 @@ angular.module('sreizaoApp')
         .catch(function(err){
             throw err;
         });
+    },
+    commonSvc.createTask = function(data){
+      return $http.post("api/createtask",data)
+        .then(function(res){
+            return res.data;
+        })
+        .catch(function(err){
+            throw err;
+        });
     }
     return commonSvc;
 }])

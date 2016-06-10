@@ -23,6 +23,9 @@ var checkQuickQueryNotificationService = require('./components/checkQuickQueryNo
 var http = require('http');
 var fsExtra = require('fs.extra');
  var gm = require('gm');
+ var task = require('./components/task.js');
+  var taskRunner = require('./components/taskRunner.js');
+
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -170,6 +173,9 @@ app.post('/api/emailer',function(req,res){
    notification.emailer(req,res);
 });
 
+app.post('/api/createtask',function(req,res){
+   task.create(req,res);
+});
 
 app.post('/api/currency',function(req,response){
     var url = "http://api.fixer.io/latest?base=RUB";
@@ -202,6 +208,7 @@ function handleError(res, err) {
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   notification.startNotification();
+  taskRunner.startTaskRunner();
   checkExpiryService.start();
   checkQuickQueryNotificationService.start();
 });

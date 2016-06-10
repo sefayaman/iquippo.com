@@ -91,8 +91,10 @@ angular.module('sreizaoApp')
   } 
 
   $scope.onRoleChange = function(userType){
-    if(!userType)
+    if(!userType){
+      $scope.getUsersOnUserType = "";
       return;
+    }
     var dataToSend = {};
     dataToSend["status"] = true;
     if(userType) {
@@ -140,7 +142,7 @@ angular.module('sreizaoApp')
           prevAssetStatus = product.assetStatus;
       else
         prevAssetStatus = product.assetStatus = "";
-
+      $scope.userType = product.seller.userType;
       $scope.product.country = $scope.product.country;
       videoObj.name = product.videoName;
       docObj.name = product.documentName;
@@ -208,17 +210,20 @@ angular.module('sreizaoApp')
   }
   $scope.isCollapsed = true;
   $scope.onCategoryChange = function(category,noChange){
-    if(!category)
-      return;
      if(!noChange)
     {
       $scope.productName = "";
       $scope.selectedBrand = {}
       $scope.selectedModel = {}
-      $scope.selectedGroup = groupSvc.getGroupOnId(category.group._id);
+      if(category)
+          $scope.selectedGroup = groupSvc.getGroupOnId(category.group._id);
+        else
+          $scope.selectedGroup = {};
     }
     $scope.brandList = [];
     $scope.modelList = [];
+     if(!category)
+      return;
     var otherBrand = null;
     var filter = {};
     filter['categoryId'] = category._id;
@@ -233,14 +238,14 @@ angular.module('sreizaoApp')
   }
 
   $scope.onBrandChange = function(brand,noChange){
-    if(!brand)
-       return;
     if(!noChange)
     {
       $scope.productName = "";
       $scope.selectedModel = {}
     }
     $scope.modelList = [];
+    if(!brand)
+       return;
     var otherModel = null;
     var filter = {};
     filter['brandId'] = brand._id;
@@ -390,7 +395,8 @@ angular.module('sreizaoApp')
 
       if($scope.form.$invalid ||ret){
         $scope.submitted = true;
-        angular.element("[name='" + $scope.form.$name + "']").find('.ng-invalid:visible:first').focus();
+        //angular.element("[name='" + $scope.form.$name + "']").find('.ng-invalid:visible:first').focus();
+        $timeout(function(){angular.element(".has-error").find('input,select').first().focus();},20);
         return;
       }
 
@@ -506,8 +512,10 @@ angular.module('sreizaoApp')
   }
   product.seller = {};
   $scope.onUserChange = function(user){
-    if(angular.isUndefined(user))
+    if(angular.isUndefined(user)){
+      product.seller = {};
       return;
+    }
     product.seller._id = user._id;
     product.seller.fname = user.fname;
     product.seller.mname = user.mname;
@@ -660,7 +668,7 @@ angular.module('sreizaoApp')
     }
   }
 
-  $scope.resetClick = function(){
+  $scope.resetClick = function(form){
     product = $scope.product = {};
     $scope.brandList = [];
     $scope.modelList = [];
@@ -685,6 +693,7 @@ angular.module('sreizaoApp')
     $scope.selectedModel = {};
     $scope.selectedSubCategory = {};
     $scope.productName = "";
+    $scope.userType = "";
     $scope.selectedGroup.name = "";
     $scope.images = [{isPrimary:true}];
     prepareImgArr();
