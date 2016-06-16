@@ -152,9 +152,9 @@ var HOME_BANNER =  [{
     }, {
       image: 'Banner4.jpg'
     }];
-    
-var serverPath = location.protocol +"//" + location.host; 
-//var serverPath = "http://14.141.64.180:8100"; 
+
+var serverPath = location.protocol +"//" + location.host;
+//var serverPath = "http://14.141.64.180:8100";
 var supportMail = "info@iquippo.com";
 var supportContact = "011 66025672";
 //var supportMail = "bharat.hinduja@bharatconnect.com";
@@ -199,11 +199,269 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 /*channel partner messsage */
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this channel partner?";
 
-
-
-
-
-
-
-
-
+/*
+Date: 06/06/2016
+DevloperName : Nishnat
+Purpose: declare Constant for Google Tag Manager
+*/
+var gaMasterObject = {
+quickQueryClose:{
+  event: 'Click',
+  eventCategory: 'quickQuery',
+  eventAction: 'close',
+  eventLabel: 'Product Query Close'
+},
+quickQueryOpen:{
+  event: 'Click',
+  eventCategory: 'quickQuery',
+  eventAction: 'open',
+  eventLabel: 'Product Query Open'
+},
+quickQuerySubmit:{
+  event: 'Click',
+  eventCategory: 'quickQuery',
+  eventAction: 'submit',
+  eventLabel: 'Product Query Submit'
+},
+callbackClose:{
+  event: 'Click',
+  eventCategory: 'callback',
+  eventAction: 'close',
+  eventLabel: 'callback Close'
+},
+callBackOpen:{
+  event: 'Click',
+  eventCategory: 'callback',
+  eventAction: 'open',
+  eventLabel: 'callBack Open'
+},
+callBackSubmit:{
+  event: 'Click',
+  eventCategory: 'callback',
+  eventAction: 'submit',
+  eventLabel: 'callBack Submit'
+},
+aboutusPage:{
+  event: 'pageview',
+  page: '/aboutus'
+},
+contactUsPage:{
+  event: 'pageview',
+  page: '/contactus'
+},
+contactUsSend:{
+  event: 'Click',
+  eventCategory: 'contactUs',
+  eventAction: 'click',
+  eventLabel: 'Contact Send'
+},
+shippingPage:{
+  event: 'pageview',
+  page: '/shipping'
+},
+valuationPage:{
+  event: 'pageview',
+  page: '/valuation'
+},
+certifiedbyiquippoPage:{
+  event: 'pageview',
+  page: '/certifiedbyiquippo'
+},
+manpowerPage:{
+  event: 'pageview',
+  page: '/manpower'
+},
+shippingSubmit:{
+  event: 'Click',
+  eventCategory: 'shipping',
+  eventAction: 'submit',
+  eventLabel: 'Shipping Submit'
+},
+shippingReset:{
+  event: 'Click',
+  eventCategory: 'shipping',
+  eventAction: 'reset',
+  eventLabel: 'Shipping Reset'
+},
+valuationSubmit:{
+  event: 'Click',
+  eventCategory: 'valuation',
+  eventAction: 'submit',
+  eventLabel: 'Valuation Submit'
+},
+valuationReset:{
+  event: 'Click',
+  eventCategory: 'valuation',
+  eventAction: 'reset',
+  eventLabel: 'Valuation Reset'
+},
+certifiedbyiquippoSubmit:{
+  event: 'Click',
+  eventCategory: 'certifiedbyiquippo',
+  eventAction: 'submit',
+  eventLabel: 'Certified By Iquippo Submit'
+},
+certifiedbyiquippoReset:{
+  event: 'Click',
+  eventCategory: 'certifiedbyiquippo',
+  eventAction: 'reset',
+  eventLabel: 'Certified By Iquippo Reset'
+},
+manpowerSubmit:{
+  event: 'Click',
+  eventCategory: 'manpower',
+  eventAction: 'submit',
+  eventLabel: 'Manpower Submit'
+},
+manpowerReset:{
+  event: 'Click',
+  eventCategory: 'manpower',
+  eventAction: 'reset',
+  eventLabel: 'Manpower Reset'
+},
+classifiedAdClick:{
+  event: 'Click',
+  eventCategory: 'classifiedAd',
+  eventAction: 'open',
+  eventLabel: 'Place a Classified Ad'
+},
+classifiedAdReset:{
+  event: 'Click',
+  eventCategory: 'classifiedAd',
+  eventAction: 'reset',
+  eventLabel: 'classifiedAd Reset'
+},
+classifiedAdClose:{
+  event: 'Click',
+  eventCategory: 'classifiedAd',
+  eventAction: 'close',
+  eventLabel: 'classifiedAd Close'
+},
+classifiedAdSubmit:{
+  event: 'Click',
+  eventCategory: 'classifiedAd',
+  eventAction: 'submit',
+  eventLabel: 'classifiedAd Submit'
+},
+uploadProductClick:{
+  event: 'Click',
+  eventCategory: 'uploadProduct',
+  eventAction: 'open',
+  eventLabel: 'uploadProduct Click'
+},
+uploadProductSubmit:{
+  event: 'Click',
+  eventCategory: 'uploadProduct',
+  eventAction: 'submit',
+  eventLabel: 'uploadProduct Submit'
+},
+uploadProductReset:{
+  event: 'Click',
+  eventCategory: 'uploadProduct',
+  eventAction: 'reset',
+  eventLabel: 'uploadProduct Reset'
+},
+uploadProductPreview:{
+  event: 'Click',
+  eventCategory: 'uploadProduct',
+  eventAction: 'preview',
+  eventLabel: 'uploadProduct Preview'
+},
+addToCartSendMessage:{
+  event: 'Click',
+  eventCategory: 'Send Message',
+  eventAction: 'click',
+  eventLabel: 'Send Message'
+},
+addToCartCompare:{
+  event: 'Click',
+  eventCategory: 'Compare',
+  eventAction: 'click',
+  eventLabel: 'Compare'
+},
+viewCategory: {
+  'name': '',       // name
+  'id': '', //ProductID
+  'price': '',//grossPrice
+  'brand': '',      //brand.name
+  'category': '',//category.name
+  'list': '',
+  'position': '',
+  'dimension3':'',
+  'dimension4':''
+},
+EquipmentSearch:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch',
+  eventAction: 'click',
+  eventLabel: ''
+},
+productDetails: {
+  'name': '',                      // Name or ID is required.
+  'id':'',
+  'price':'',
+  'brand': '',
+  'category': '',
+  'position': '',
+  'dimension3':'',
+  'dimension4':''
+},
+addToCart:{
+  'name': '',
+  'id': '',
+  'price': '',
+  'brand': '',
+  'category': ''
+},
+removeToCart:{
+  'name': '',
+  'id': '',
+  'price': '',
+  'brand': '',
+  'category': ''
+},
+toBuyContact:{
+  event: 'Click',
+  eventCategory: 'toBuyContact',
+  eventAction: 'click',
+  eventLabel: 'Send Message'
+},
+calculateNow:{
+  event: 'Click',
+  eventCategory: 'calculateNow',
+  eventAction: 'click',
+  eventLabel: 'Calculate Now'
+},
+getaQuoteforAdditionalServices:{
+  event: 'Click',
+  eventCategory: 'getaQuoteforAdditionalServices',
+  eventAction: 'Open',
+  eventLabel: 'getaQuoteforAdditionalServicesOpen'
+},
+getaQuoteforAdditionalServicesReset:{
+  event: 'Click',
+  eventCategory: 'getaQuoteforAdditionalServices',
+  eventAction: 'Reset',
+  eventLabel: 'getaQuoteforAdditionalServicesReset'
+},
+getaQuoteforAdditionalServicesSubmit:{
+  event: 'Click',
+  eventCategory: 'getaQuoteforAdditionalServices',
+  eventAction: 'Submit',
+  eventLabel: 'getaQuoteforAdditionalServicesSubmit'
+},
+getaQuoteforAdditionalServicesClose:{
+  event: 'Click',
+  eventCategory: 'getaQuoteforAdditionalServices',
+  eventAction: 'Close',
+  eventLabel: 'getaQuoteforAdditionalServicesClose'
+},
+sendMessage:{
+  'name': '',
+  'dimension2': '1',
+  'id': '',
+  'price': '',
+  'brand': '',
+  'category': ''
+}
+};
