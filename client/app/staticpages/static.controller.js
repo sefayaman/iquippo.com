@@ -1,23 +1,22 @@
 'use strict';
 angular.module('sreizaoApp')
-  .controller('StaticCtrl', ['$scope', '$rootScope', function($scope, $rootScope) {
+  .controller('StaticCtrl', ['$scope', '$rootScope',function($scope, $rootScope) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
-    
   }])
 
-  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http' , 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc) {
+  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http' , 'Modal', 'notificationSvc', 'LocationSvc',function($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.shippingService = {};
     $scope.shippingQuote = {};
-    
+
     if(Auth.getCurrentUser()._id){
       var currUser = Auth.getCurrentUser();
       $scope.shippingQuote.fname = currUser.fname;
-      $scope.shippingQuote.mname = currUser.mname; 
+      $scope.shippingQuote.mname = currUser.mname;
       $scope.shippingQuote.lname = currUser.lname;
-      
+
       $scope.shippingQuote.mobile = currUser.mobile;
       $scope.shippingQuote.email = currUser.email;
       $scope.shippingQuote.phone = currUser.phone;
@@ -37,6 +36,11 @@ angular.module('sreizaoApp')
       $scope.shippingService.type = "shipping";
       $scope.shippingService.quote = $scope.shippingQuote;
       $http.post('/api/services', $scope.shippingService).then(function(res){
+
+      //Start NJ : push shippingSubmit object in GTM dataLayer
+      dataLayer.push(gaMasterObject.shippingSubmit);
+      //End
+
       var data = {};
       data['to'] = supportMail;
       data['subject'] = 'Request for a Quote: Shipping';
@@ -54,6 +58,10 @@ angular.module('sreizaoApp')
     }
 
     $scope.resetClick = function () {
+        //Start NJ : push shippingReset object in GTM dataLayer
+        dataLayer.push(gaMasterObject.shippingReset);
+        //End
+
        $scope.shippingQuote = {};
     };
   }])
@@ -62,13 +70,13 @@ angular.module('sreizaoApp')
     $rootScope.equipmentSearchFilter = {};
     $scope.valuationQuote = {};
     $scope.valuationService = {};
-    
+
     if(Auth.getCurrentUser()._id){
       var currUser = Auth.getCurrentUser();
       $scope.valuationQuote.fname = currUser.fname;
-      $scope.valuationQuote.mname = currUser.mname; 
+      $scope.valuationQuote.mname = currUser.mname;
       $scope.valuationQuote.lname = currUser.lname;
-      
+
       $scope.valuationQuote.mobile = currUser.mobile;
       $scope.valuationQuote.email = currUser.email;
       $scope.valuationQuote.phone = currUser.phone;
@@ -85,11 +93,11 @@ angular.module('sreizaoApp')
     });
 
     $scope.addValuationQuote = function(evt) {
-      
+
       if($scope.valuationQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.valuationQuote.scheduleDate))
           $scope.form.scheduleDate.$invalid = true;
-         else 
+         else
           $scope.form.scheduleDate.$invalid = false;
       }
 
@@ -103,6 +111,9 @@ angular.module('sreizaoApp')
       $scope.valuationService.type = "valuation";
       $scope.valuationService.quote = $scope.valuationQuote;
       $http.post('/api/services', $scope.valuationService).then(function(res){
+      //Start NJ : push valuationSubmit object in GTM dataLayer
+      dataLayer.push(gaMasterObject.valuationSubmit);
+      //End
       var data = {};
       data['to'] = supportMail;
       data['subject'] = 'Request for a Quote: Valuation';
@@ -121,6 +132,9 @@ angular.module('sreizaoApp')
     }
 
     $scope.resetClick = function () {
+      //Start NJ : push valuationReset object in GTM dataLayer
+      dataLayer.push(gaMasterObject.valuationReset);
+      //End
        $scope.valuationQuote = {};
     };
 
@@ -135,7 +149,7 @@ angular.module('sreizaoApp')
         $scope.valuationQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
       }
     };
-    
+
     $scope.toggleMode = function() {
       $scope.isShow = ! $scope.isShow;
     };
@@ -179,7 +193,7 @@ angular.module('sreizaoApp')
   };
   }])
 
-  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
+  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc',function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
     $scope.cetifiedByiQuippoQuote = {};
@@ -192,15 +206,15 @@ angular.module('sreizaoApp')
     if(Auth.getCurrentUser()._id){
       var currUser = Auth.getCurrentUser();
       $scope.cetifiedByiQuippoQuote.fname = currUser.fname;
-      $scope.cetifiedByiQuippoQuote.mname = currUser.mname; 
+      $scope.cetifiedByiQuippoQuote.mname = currUser.mname;
       $scope.cetifiedByiQuippoQuote.lname = currUser.lname;
-      
+
       $scope.cetifiedByiQuippoQuote.mobile = currUser.mobile;
       $scope.cetifiedByiQuippoQuote.email = currUser.email;
       $scope.cetifiedByiQuippoQuote.phone = currUser.phone;
       $scope.cetifiedByiQuippoQuote.country = currUser.country;
     }
-    
+
     LocationSvc.getAllLocation()
      .then(function(result){
       $scope.locationList = result;
@@ -211,7 +225,7 @@ angular.module('sreizaoApp')
       if($scope.cetifiedByiQuippoQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.cetifiedByiQuippoQuote.scheduleDate))
           $scope.form.scheduleDate.$invalid = true;
-         else 
+         else
           $scope.form.scheduleDate.$invalid = false;
       }
 
@@ -220,12 +234,15 @@ angular.module('sreizaoApp')
         return;
       }
 
-      if(!$scope.cetifiedByiQuippoQuote.scheduledTime 
+      if(!$scope.cetifiedByiQuippoQuote.scheduledTime
         && $scope.cetifiedByiQuippoQuote.schedule == "yes")
         $scope.changed($scope.mytime);
       $scope.cetifiedByiQuippoService.type = "cetifiedByiQuippo";
       $scope.cetifiedByiQuippoService.quote = $scope.cetifiedByiQuippoQuote;
       $http.post('/api/services', $scope.cetifiedByiQuippoService).then(function(res){
+      //Start NJ : push certifiedbyiquippoSubmit object in GTM dataLayer
+      dataLayer.push(gaMasterObject.certifiedbyiquippoSubmit);
+      //End
       var data = {};
       data['to'] = supportMail;
       data['subject'] = 'Request for a Quote: Certified by iQuippo';
@@ -236,7 +253,7 @@ angular.module('sreizaoApp')
       data['to'] = $scope.cetifiedByiQuippoService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.cetifiedByiQuippoService.serverPath},'email');
-      
+
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -244,6 +261,9 @@ angular.module('sreizaoApp')
     }
 
     $scope.resetClick = function () {
+      //Start NJ : push certifiedbyiquippoReset object in GTM dataLayer
+      dataLayer.push(gaMasterObject.certifiedbyiquippoReset);
+      //End
        $scope.cetifiedByiQuippoQuote = {};
     };
 
@@ -314,15 +334,15 @@ angular.module('sreizaoApp')
     if(Auth.getCurrentUser()._id){
       var currUser = Auth.getCurrentUser();
       $scope.manpowerQuote.fname = currUser.fname;
-      $scope.manpowerQuote.mname = currUser.mname; 
+      $scope.manpowerQuote.mname = currUser.mname;
       $scope.manpowerQuote.lname = currUser.lname;
-      
+
       $scope.manpowerQuote.mobile = currUser.mobile;
       $scope.manpowerQuote.email = currUser.email;
       $scope.manpowerQuote.phone = currUser.phone;
       $scope.manpowerQuote.country = currUser.country;
     }
-    
+
     LocationSvc.getAllLocation()
      .then(function(result){
       $scope.locationList = result;
@@ -333,7 +353,7 @@ angular.module('sreizaoApp')
       if($scope.manpowerQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.manpowerQuote.scheduleDate))
           $scope.form.scheduleDate.$invalid = true;
-         else 
+         else
           $scope.form.scheduleDate.$invalid = false;
       }
 
@@ -342,12 +362,15 @@ angular.module('sreizaoApp')
         return;
       }
 
-      if(!$scope.manpowerQuote.scheduledTime 
+      if(!$scope.manpowerQuote.scheduledTime
         && $scope.manpowerQuote.schedule == "yes")
         $scope.changed($scope.mytime);
       $scope.manpowerService.type = "manpowerQuote";
       $scope.manpowerService.quote = $scope.manpowerQuote;
       $http.post('/api/services', $scope.manpowerService).then(function(res){
+      //Start NJ : push manpowerSubmit object in GTM dataLayer
+      dataLayer.push(gaMasterObject.manpowerSubmit);
+      //End
       var data = {};
       data['to'] = supportMail;
       data['subject'] = 'Request for a Quote: Manpower Quote';
@@ -358,7 +381,7 @@ angular.module('sreizaoApp')
       data['to'] = $scope.manpowerService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.manpowerService.serverPath},'email');
-      
+
       Modal.alert(informationMessage.productQuoteSuccess,true);
       $scope.manpowerQuote = {};
       $scope.manpowerQuote.usedBy = "Operators";
@@ -368,6 +391,9 @@ angular.module('sreizaoApp')
     }
 
     $scope.resetClick = function () {
+      //Start NJ : push manpowerReset object in GTM dataLayer
+      dataLayer.push(gaMasterObject.manpowerReset);
+      //End
        $scope.manpowerQuote = {};
        $scope.manpowerQuote.usedBy = "Operators";
     };

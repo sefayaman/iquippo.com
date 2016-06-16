@@ -5,6 +5,7 @@
 angular.module('sreizaoApp').controller('ViewCartCtrl',ViewCartCtrl)
 
 function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificationSvc,$http,$state,productSvc) {
+
     var vm = this;
     vm.selectedProducts = [];
     vm.deleteProductFromCart = deleteProductFromCart;
@@ -14,8 +15,9 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
     vm.sendBuyRequest = sendBuyRequest;
 
     cartSvc.getCartData(Auth.getCurrentUser()._id);
-    
+
     function deleteProductFromCart(index){
+
       Modal.confirm(informationMessage.deleteCartProductConfirm,function(isGo){
           if(isGo == 'no')
             return;
@@ -29,10 +31,35 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
             return;
           clear();
       });
-    }; 
+    };
 
     function deleteFn(index){
-      var prd = $rootScope.cart.products[index]; 
+      /*
+      Date: 10/06/2016
+      Devleoper Name : Nishant
+      Purpose:remove add to cart event in GTM
+      */
+      var prd = $rootScope.cart.products[index];
+      var data = prd;
+      var removeListArray = [];
+      var removeListObject={};
+      gaMasterObject.removeToCart.name = data.name;
+      gaMasterObject.removeToCart.id = data.productId;
+      gaMasterObject.removeToCart.price = data.grossPrice;
+      gaMasterObject.removeToCart.brand = data.brand.name;
+      gaMasterObject.removeToCart.category = data.category.name;
+       $.extend( true,removeListObject,gaMasterObject.removeToCart );
+      removeListArray.push(removeListObject);
+      dataLayer.push({
+        'event': 'removeFromCart',
+        'ecommerce': {
+          'currencyCode': 'INR',
+          'remove': {                                // 'add' actionFieldObject measures.
+          'products': removeListArray
+        }
+      }
+    });
+
       $rootScope.cart.products.splice(index,1);
       cartSvc.updateCart($rootScope.cart)
         .success(function(res){
@@ -61,6 +88,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
     }
 
     function sendBuyRequest(buycontact) {
+
       if(Auth.getCurrentUser().profileStatus == 'incomplete')
       {
         $state.go('myaccount');
@@ -86,15 +114,46 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
 
       dataToSend['fname'] =  Auth.getCurrentUser().fname;
       dataToSend['mname'] = Auth.getCurrentUser().mname;
-      dataToSend['lname'] = Auth.getCurrentUser().lname; 
-      dataToSend['country'] = Auth.getCurrentUser().country; 
-      dataToSend['phone'] = Auth.getCurrentUser().phone; 
-      dataToSend['mobile'] = Auth.getCurrentUser().mobile; 
+      dataToSend['lname'] = Auth.getCurrentUser().lname;
+      dataToSend['country'] = Auth.getCurrentUser().country;
+      dataToSend['phone'] = Auth.getCurrentUser().phone;
+      dataToSend['mobile'] = Auth.getCurrentUser().mobile;
       dataToSend['email'] = Auth.getCurrentUser().email;
-      dataToSend['contact'] = Auth.getCurrentUser().contact; 
+      dataToSend['contact'] = Auth.getCurrentUser().contact;
+
+      $scope.productSendMessage =   vm.selectedProducts;
 
       $http.post('/api/buyer', dataToSend)
       .success(function(result) {
+        //Start NJ: addToCartSendMessage object push in GTM dataLayer
+        dataLayer.push(gaMasterObject.addToCartSendMessage);
+        //End
+        /*
+        Date: 10/06/2016
+        Developer Name : Nishant
+        Purpose:insert sendMessage event in GTM
+        */
+        var data = $scope.productSendMessage[0];
+        var pSMListArray = [];
+        var pSMObject={};
+        gaMasterObject.sendMessage.name = data.name;
+        gaMasterObject.sendMessage.id = data.productId;
+        gaMasterObject.sendMessage.price = data.grossPrice;
+        gaMasterObject.sendMessage.brand = data.brand.name;
+        gaMasterObject.sendMessage.category = data.category.name;
+        var list = data.category.name;
+        $.extend( true,pSMObject,gaMasterObject.sendMessage );
+        pSMListArray.push(pSMObject);
+        dataLayer.push({
+        'event': 'sendMessage',
+        'ecommerce': {
+          'click': {
+            'actionField': {'list': list},      // Optional list property.
+            'products': pSMListArray
+           }
+         }
+      });
+      //End
         $scope.buycontact = {};
         var data = {};
         data['to'] = supportMail;
@@ -102,8 +161,8 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
         var emailDynamicData = {};
         emailDynamicData['serverPath'] = serverPath;
         emailDynamicData['fname'] = dataToSend.fname;
-        emailDynamicData['lname'] = dataToSend.lname; 
-        emailDynamicData['country'] = dataToSend.country; 
+        emailDynamicData['lname'] = dataToSend.lname;
+        emailDynamicData['country'] = dataToSend.country;
         emailDynamicData['email'] = dataToSend.email;
         emailDynamicData['mobile'] = dataToSend.mobile;
         emailDynamicData['message'] = dataToSend.message;
@@ -132,17 +191,19 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
           Modal.alert("Please select at least two products to compare.",true);
           return;
     }
-
+    //Start NJ: addToCartCompare object push in GTM dataLayer
+    dataLayer.push(gaMasterObject.addToCartCompare);
+    //End
       var prevScope = $rootScope.$new();
       prevScope.productList = [];
       for(var i=0;i < 4;i++){
         if(vm.selectedProducts[i])
           prevScope.productList[i] = vm.selectedProducts[i];
         else
-            prevScope.productList[i] = []; 
+            prevScope.productList[i] = [];
       }
 
-       prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;     
+       prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;
        var prvProductModal = $uibModal.open({
             templateUrl: "app/product/productcompare.html",
             scope: prevScope,
@@ -159,7 +220,7 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
         }
   }
 
- 
+
 
   function updateSelection(event,prd){
         var checkbox = event.target;
@@ -195,7 +256,7 @@ angular.module('sreizaoApp').factory("cartSvc",['$http','$rootScope',function($h
               $rootScope.cartCounter = 0;
         })
         .error(function(res){
-          
+
         });
       };
       cartService.createCart = function(cart){
@@ -209,8 +270,3 @@ angular.module('sreizaoApp').factory("cartSvc",['$http','$rootScope',function($h
   }])
 
 })();
-
-
-
-
-  

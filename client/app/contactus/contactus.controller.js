@@ -16,6 +16,9 @@ angular.module('sreizaoApp')
     dataToSend['mobile'] = contact.mobile;
     dataToSend['message'] = contact.message;
     $http.post('/api/contactus', dataToSend).success(function(result) {
+        //Start > NJ :push contactUsSend object in GTM dataLayer
+        dataLayer.push(gaMasterObject.contactUsSend);
+        //End
         $scope.contact = {};
         $scope.form.submitted = false;
         var data = {};
@@ -33,7 +36,3 @@ angular.module('sreizaoApp')
   };
 
 });
-
-
-
-  

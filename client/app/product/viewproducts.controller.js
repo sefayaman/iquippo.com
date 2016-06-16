@@ -4,11 +4,10 @@
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
 function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, cartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout) {
-  
   var vm = this;
-
   $scope.productList = [];
   $scope.equipmentSearchFilter = {};
+  $scope.filterType = $state.current.name;
 
   var minPrice = 0;
   var maxPrice = 0;
@@ -23,12 +22,12 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   $scope.noResult = true;
 
   /* pagination flag */
-  vm.itemsPerPage = 10;
+  vm.itemsPerPage = 2;
   vm.currentPage = 1;
   vm.totalItems = 0;
   vm.maxSize = 10;
   vm.sortByFlag = "";
- 
+
   vm.productListToCompare = [{},{},{},{}];
   vm.compareCount = 0;
 
@@ -69,7 +68,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       .then(function(result){
         $scope.allSubcategory = result;
       });
-      
+
       if($state.current.name == "viewproduct"){
        $scope.equipmentSearchFilter = {};
        if(productSvc.getFilter()){
@@ -85,7 +84,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
            onCategoryChange(categorySvc.getCategoryByName(filter.category),true);
         }
         productSvc.setFilter(null)
-       }    
+       }
       fireCommand();
 
     }else if($state.current.name == "categoryproduct"){
@@ -93,11 +92,17 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
         var cat = categorySvc.getCategoryOnId($stateParams.id);
         if(cat){
           $scope.selectedCategory = cat;
-          $scope.equipmentSearchFilter.group = $scope.selectedCategory.group.name; 
+          $scope.equipmentSearchFilter.group = $scope.selectedCategory.group.name;
           onCategoryChange(cat,true);
         }
         productSvc.getProductOnCategoryId($stateParams.id)
         .then(function(result){
+           $scope.TotalRecordPerPage = result.slice(0,vm.itemsPerPage);
+
+           //Star NJ : call categorylistPageLoad function with total recod in page parameter
+           $scope.categorylistPageLoad($scope.TotalRecordPerPage,'category');
+           //End
+
           $scope.noResult = false;
           //vm.productListToCompare = [];
 
@@ -134,6 +139,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   }*/
 
   function addProductToCart(product){
+
       if(!Auth.getCurrentUser()._id){
         Modal.alert(informationMessage.cartLoginError,true);
         return;
@@ -170,6 +176,30 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
          cartSvc.updateCart($rootScope.cart)
         .success(function(res){
             //$scope.closeDialog();
+            /*
+            Date: 10/06/2016
+            Developer Name : Nishnat
+            Purpose:insert add to cart event in GTM
+            */
+            var data = res.products[res.products.length-1];
+            var cardListArray = [];
+            var cardListObject={};
+            gaMasterObject.addToCart.name = data.name;
+            gaMasterObject.addToCart.id = data.productId;
+            gaMasterObject.addToCart.price = data.grossPrice;
+            gaMasterObject.addToCart.brand = data.brand.name;
+            gaMasterObject.addToCart.category = data.category.name;
+            $.extend( true,cardListObject,gaMasterObject.addToCart );
+            cardListArray.push(cardListObject);
+            dataLayer.push({
+              'event': 'addToCart',
+              'ecommerce': {
+               'currencyCode': 'INR',
+                'add': {                                // 'add' actionFieldObject measures.
+                'products': cardListArray
+              }
+            }
+          });
             Modal.alert(informationMessage.cartAddedSuccess,true);
             $rootScope.cartCounter = $rootScope.cart.products.length;
         })
@@ -229,7 +259,9 @@ function onModelChange(model){
 }
 
   function fireCommand(){
+  if ($scope.equipmentSearchFilter.subCategory) {
 
+  }
     if($scope.currency && !$scope.currency.minPrice && !$scope.currency.maxPrice)
       delete $scope.equipmentSearchFilter.currency;
     if(!$scope.mfgyr.min && !$scope.mfgyr.max)
@@ -239,12 +271,14 @@ function onModelChange(model){
       if($state.current.name != "viewproduct"){
          //productSvc.setFilter(filter);
          $state.go("viewproduct",{},{notify:false});
-      } 
+      }
      filter['status'] = true;
       productSvc.getProductOnFilter(filter)
       .then(function(result){
         $scope.noResult = false;
-        //vm.productListToCompare = [];
+        //Start NJ : call categorylistPageLoad function.
+        $scope.categorylistPageLoad(result,'Search Result');
+        //End
         if(result.length > 0){
           vm.currentPage = 1;
           vm.totalItems = result.length;
@@ -348,7 +382,7 @@ $scope.today = function() {
   $scope.status = {
     opened: false
   };
-  
+
   //date picker end
 
   function productSearchOnMfg(){
@@ -416,7 +450,7 @@ $scope.today = function() {
       }
        var prevScope = $rootScope.$new();
        prevScope.productList = vm.productListToCompare;
-       prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;     
+       prevScope.uploadImagePrefix = $rootScope.uploadImagePrefix;
        var prvProductModal = $uibModal.open({
             templateUrl: "app/product/productcompare.html",
             scope: prevScope,
@@ -495,7 +529,7 @@ $scope.today = function() {
  /* function setProductSelected(){
     $timeout(function(){
        vm.productListToCompare.forEach(function(item,index){
-          angular.element('#product_' + item._id).prop('checked',true);   
+          angular.element('#product_' + item._id).prop('checked',true);
         });
      },100);
   }*/
@@ -504,13 +538,86 @@ $scope.today = function() {
     vm.compareCount = 0;
     vm.productListToCompare.forEach(function(item,index){
       if(item._id)
-         vm.compareCount ++;  
+         vm.compareCount ++;
     });
-   
+  }
+
+  /*
+  Date: 10/06/2016
+  Developer Name : Nishant
+  Purpose:To track product impressions on pagination event
+  */
+  $scope.categorylistPageClick = function()
+  {
+    productSvc.getProductOnCategoryId($stateParams.id)
+    .then(function(result){
+      var totalProduct = $('.productID');
+      var productIDArray= [];
+      for (var i = 0; i < totalProduct.length; i++) {
+        productIDArray.push(totalProduct[i].value);
+      }
+      var finalListOfProduct = result.filter(function(d){
+        if (productIDArray.indexOf(d._id) != -1) {
+          return d;
+        }
+      })
+      var productListArray = [];
+      for (var i = 0; i < finalListOfProduct.length; i++) {
+        var productListObject={};
+        gaMasterObject.viewCategory.name = result[i].name;
+        gaMasterObject.viewCategory.id = result[i].productId;
+        gaMasterObject.viewCategory.price = result[i].grossPrice;
+        gaMasterObject.viewCategory.brand = result[i].brand.name;
+        gaMasterObject.viewCategory.category = result[i].category.name;
+        gaMasterObject.viewCategory.position = i;
+        $.extend( true,productListObject,gaMasterObject.viewCategory );
+        productListArray.push(productListObject);
+      }
+        dataLayer.push({
+        'ecommerce': {                     // Local currency is optional.
+          'impressions':productListArray
+        }
+      });
+    });
+  }
+
+
+  /*
+  Date: 10/06/2016
+  Developer Name : Nishant
+  Purpose:To track product impressions on pageLoad.
+  */
+  $scope.categorylistPageLoad = function(data,list)
+  {
+      var productListArray = [];
+      for (var i = 0; i < data.length; i++) {
+        var productListObject={};
+        gaMasterObject.viewCategory.name = data[i].name;
+        gaMasterObject.viewCategory.id = data[i].productId;
+        gaMasterObject.viewCategory.price = data[i].grossPrice;
+        gaMasterObject.viewCategory.brand = data[i].brand.name;
+        gaMasterObject.viewCategory.category = data[i].category.name;
+        gaMasterObject.viewCategory.dimension3 = data[i].country;
+        gaMasterObject.viewCategory.dimension4 = data[i].city;
+        if (list == 'Search Result') {
+          gaMasterObject.viewCategory.list = list;
+        }
+        else {
+          gaMasterObject.viewCategory.list = data[i].category.name;
+        }
+
+        gaMasterObject.viewCategory.position = i;
+        $.extend( true,productListObject,gaMasterObject.viewCategory );
+        productListArray.push(productListObject);
+      }
+        dataLayer.push({
+        'event': 'categoryClick',
+        'ecommerce': {
+          'currencyCode': 'INR',                     // Local currency is optional.
+          'impressions':productListArray
+        }
+      });
   }
 
 }
-
 })();
-
-  

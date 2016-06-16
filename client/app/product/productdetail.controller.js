@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
-function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
+function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
   var vm = this;
 
   $scope.currentProduct = {};
@@ -43,8 +43,48 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
     init();
   }
 
+  /*
+  Date: 13/06/2016
+  Developer Name: Nishant
+  Purpose: To track product detail view event in GA
+  */
+
+  function productDetails(list,data)
+  {
+      var productList = '';
+      if (list == 'FeatureProduct') {
+        productList = list
+      }
+      else if (list == 'viewproduct') {
+        productList = 'Search Result'
+      }else{
+        productList = data.category.name;
+      }
+      var productDetailsArray = [];
+        gaMasterObject.productDetails.name = data.name;
+        gaMasterObject.productDetails.id = data.productId;
+        gaMasterObject.productDetails.price = data.grossPrice;
+        gaMasterObject.productDetails.brand = data.brand.name;
+        gaMasterObject.productDetails.category = data.category.name;
+        gaMasterObject.productDetails.position = 0;
+        gaMasterObject.productDetails.dimension3 = data.country;
+        gaMasterObject.productDetails.dimension4 = data.city;
+        productDetailsArray.push(gaMasterObject.productDetails);
+
+      dataLayer.push({
+        'event': 'productClick',
+        'ecommerce': {
+          'currencyCode': 'INR',
+          'click': {
+            'actionField': {'list':productList},      // Optional list property.
+            'products':[gaMasterObject.productDetails]
+          }
+        }
+      });
+  }
+
   function init(){
-    
+
      Auth.isLoggedInAsync(function(loggedIn){
         if(!loggedIn){
             Modal.openDialog('login');
@@ -55,6 +95,18 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
 
     if($stateParams.id) {
       productSvc.getProductOnId($stateParams.id).then(function(result){
+      //Start NJ : call productDetails function.
+      $scope.location = (window.location.href).split('?');
+      if ($scope.location[1] == 'FeatureProduct') {
+        productDetails($scope.location[1],result);
+      }
+      else if ($scope.location[1] == 'viewproduct') {
+        productDetails($scope.location[1],result);
+      }
+      else {
+        productDetails($scope.location[1],result);
+      }
+      //End
         $scope.currentProduct = result;
         $rootScope.currentProduct = $scope.currentProduct;
         if($rootScope.currentProduct.serviceInfo.length > 0){
@@ -66,9 +118,9 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
         if($scope.currentProduct.images.length > 0){
           $scope.currentProduct.images.forEach(function(img,index,arr){
             img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir+"/" +img.src;
-          });  
+          });
         }
-        
+
 
       });
     }
@@ -105,6 +157,9 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
       Modal.alert("Please enter duration.");
       return;
     }
+    //Start NJ : push calculateNow object in GTM dataLayer
+    dataLayer.push(gaMasterObject.calculateNow);
+    //End
     if(calRent.rateType == 'Hours')
       $scope.totalRent = (Number(rentObj.rateHours.rentAmountH) * Number(calRent.duration));
     else if(calRent.rateType == 'Days')
@@ -115,33 +170,36 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
 
   function sendBuyRequest(buycontact) {
     var ret = false;
-    
+
     if($scope.form.$invalid || ret){
       $scope.form.submitted = true;
       return;
     }
     var productObj = {};
-    
+
     productObj._id = $scope.currentProduct._id;
     productObj.name = $scope.currentProduct.name;
     productObj.productId = $scope.currentProduct.productId;
-      
+
     var dataToSend = {};
     dataToSend['seller'] = $scope.currentProduct.seller;
     dataToSend.product =  [];
-    dataToSend.product[dataToSend.product.length] = productObj 
+    dataToSend.product[dataToSend.product.length] = productObj
     dataToSend['fname'] =  buycontact.fname;
     dataToSend['mname'] = buycontact.mname;
-    dataToSend['lname'] = buycontact.lname; 
-    dataToSend['country'] = buycontact.country; 
-    dataToSend['phone'] = buycontact.phone; 
-    dataToSend['mobile'] = buycontact.mobile; 
+    dataToSend['lname'] = buycontact.lname;
+    dataToSend['country'] = buycontact.country;
+    dataToSend['phone'] = buycontact.phone;
+    dataToSend['mobile'] = buycontact.mobile;
     dataToSend['email'] = buycontact.email;
-    dataToSend['contact'] = buycontact.contact; 
+    dataToSend['contact'] = buycontact.contact;
     dataToSend['message'] = buycontact.message;
 
     $http.post('/api/buyer', dataToSend)
     .success(function(result) {
+      //Start NJ : push toBuyContact object in GTM dataLayer
+      dataLayer.push(gaMasterObject.toBuyContact);
+      //End
       $scope.buycontact = {};
       $scope.buycontact.contact = "email";
       $scope.form.submitted = false;
@@ -151,8 +209,8 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
       var emailDynamicData = {};
       emailDynamicData['serverPath'] = serverPath;
       emailDynamicData['fname'] = dataToSend.fname;
-      emailDynamicData['lname'] = dataToSend.lname; 
-      emailDynamicData['country'] = dataToSend.country; 
+      emailDynamicData['lname'] = dataToSend.lname;
+      emailDynamicData['country'] = dataToSend.country;
       emailDynamicData['email'] = dataToSend.email;
       emailDynamicData['mobile'] = dataToSend.mobile;
       emailDynamicData['message'] = dataToSend.message;
@@ -173,7 +231,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
     });
   };
 
-  function previewProduct(currentProductImages, idx){ 
+  function previewProduct(currentProductImages, idx){
     var prevScope = $rootScope.$new();
     prevScope.images = currentProductImages;
     prevScope.idx = idx;
@@ -187,7 +245,7 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
     prevScope.close = function(){
       prvProductModal.close();
     }
-   
+
   }
 
   function addProductToCart(){
@@ -226,7 +284,31 @@ function ProductDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, A
 
          cartSvc.updateCart($rootScope.cart)
         .success(function(res){
-            //$scope.closeDialog();
+
+            //Start NJ : Insert Add to cart details in GTM
+            var data = res.products[res.products.length-1];
+            var cardListArray = [];
+            var cardListObject={};
+            gaMasterObject.addToCart.name = data.name;
+            gaMasterObject.addToCart.id = data.productId;
+            gaMasterObject.addToCart.price = data.grossPrice;
+            gaMasterObject.addToCart.brand = data.brand.name;
+            gaMasterObject.addToCart.category = data.category.name;
+            $.extend(true,cardListObject,gaMasterObject.addToCart );
+            cardListArray.push(cardListObject);
+            dataLayer.push({
+              'event': 'addToCart',
+              'ecommerce': {
+               'currencyCode': 'INR',
+                'add': {                                // 'add' actionFieldObject measures.
+                'products': cardListArray
+              }
+            }
+          });
+
+          //End
+
+        //$scope.closeDialog();
             Modal.alert(informationMessage.cartAddedSuccess,true);
             $rootScope.cartCounter = $rootScope.cart.products.length;
         })
@@ -243,9 +325,9 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     if(Auth.getCurrentUser()._id){
       var currUser = Auth.getCurrentUser();
       $scope.productQuote.fname = currUser.fname;
-      $scope.productQuote.mname = currUser.mname; 
+      $scope.productQuote.mname = currUser.mname;
       $scope.productQuote.lname = currUser.lname;
-      
+
       $scope.productQuote.mobile = currUser.mobile;
       $scope.productQuote.email = currUser.email;
       $scope.productQuote.phone = currUser.phone;
@@ -273,7 +355,7 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       $scope.mstep = 1;
       $scope.ismeridian = true;
     }
-   
+
 
     function loadLocatons(){
       LocationSvc.getAllLocation()
@@ -285,13 +367,16 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     loadLocatons();
     setQuote();
     $scope.resetQuote = function(){
+      //Start NJ: getaQuoteforAdditionalServicesReset object push in GTM dataLayer
+      dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesReset);
+      //End
       $scope.productQuote = {};
       setQuote();
     }
 
     $scope.addProductQuote = function(evt){
     var ret = false;
-     
+
     if($scope.form.$invalid || ret){
      $scope.form.submitted = true;
       return;
@@ -308,6 +393,9 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       && $scope.productQuote.manpowerQuote.scheduleM == "yes")
       $scope.changedManpower($scope.mytime);
     $http.post('/api/productquote',$scope.productQuote).then(function(res){
+      //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
+      dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesSubmit);
+      //End
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Request for buy a product';
@@ -327,9 +415,12 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
     }
 
     $scope.closeDialog = function () {
+      //Start NJ : getaQuoteforAdditionalServicesClose object push in GTM dataLayer
+        dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesClose);
+        //End
        $uibModalInstance.dismiss('cancel');
     };
-    
+
     $scope.changedValuation = function (mytime) {
       getTime(mytime, 'valuation');
     };
@@ -359,6 +450,7 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       }
     }
     $scope.toggleMode = function() {
+
       $scope.isShow = ! $scope.isShow;
     };
   // date picker
@@ -385,6 +477,7 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
   $scope.minDate = new Date();
 
   $scope.open1 = function() {
+
     $scope.popup1.opened = true;
   };
 
@@ -416,6 +509,10 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
   $scope.popup3 = {
     opened: false
   };
+
+
+
+
 });
 
 })();

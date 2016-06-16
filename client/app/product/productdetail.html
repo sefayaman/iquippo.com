@@ -6,7 +6,7 @@
           <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
           <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
           <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
-          <li><a class="active">{{currentProduct.name}}</a></li>          
+          <li><a class="active">{{currentProduct.name}}</a></li>
         </ol>
         <div class="row">
           <div class="col-sm-7 col-md-5">
@@ -27,9 +27,9 @@
                     </li>
                     <li ng-if="currentProduct.documentName">|</li>
                     <li ng-if="currentProduct.documentName">
-                      <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>                    
+                      <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>
                     </li>
-                    
+
             </ul>
             <div class="carousel slide article-slide" id="article-photo-carousel">
 
@@ -37,7 +37,7 @@
               <div class="carousel-inner cont-slider">
                 <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':thumbnailImage.isPrimary}">
                   <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
-                  
+
                 </div>
               </div>
               <!-- Indicators -->
@@ -48,7 +48,7 @@
               </ol>
               <ul>
                 <li ng-if="currentProduct.videoName">
-                    <a href="/download/{{currentProduct.assetDir}}/{{currentProduct.videoName}}" class="text-muted" target="_blank"><span><i class="fa fa-video-camera fa-4x"></i></span></a>                    
+                    <a href="/download/{{currentProduct.assetDir}}/{{currentProduct.videoName}}" class="text-muted" target="_blank"><span><i class="fa fa-video-camera fa-4x"></i></span></a>
                   </li>
               </ul>
             </div>
@@ -67,8 +67,8 @@
             </div>
 
             <div class="form-group clearfix"></div>
-                            
-              <uib-accordion close-others="oneAtATime" class="information">                 
+
+              <uib-accordion close-others="oneAtATime" class="information">
                 <uib-accordion-group is-open="status.Firstopen">
                   <uib-accordion-heading>
                     Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
@@ -83,12 +83,12 @@
                       <td ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name != 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.name}}</td>
                       <td ng-if="currentProduct.brand.name == 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.otherName}} / {{currentProduct.model.otherName}}</td>
                       <td ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.otherName}}</td>
-                    </tr>                   
+                    </tr>
                     <tr>
                       <td>Category</td>
                       <td ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</td>
                       <td ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</td>
-                    </tr>                     
+                    </tr>
                     <tr>
                       <td>Manufacturing Year</td>
                       <td>{{currentProduct.mfgYear}}</td>
@@ -100,11 +100,11 @@
                     <tr>
                       <td>Mileage/KMR</td>
                       <td>{{currentProduct.mileage}}</td>
-                    </tr>  
+                    </tr>
                     <tr>
                     <td>Machine Serial No.</td>
                     <td>{{currentProduct.serialNo}}</td>
-                  </tr>                  
+                  </tr>
                     <tr>
                       <td>Country</td>
                       <td>{{currentProduct.country}}</td>
@@ -154,9 +154,9 @@
                       </div>
                   <table class="table table-striped">
                       <thead>
-                        <tr>   
+                        <tr>
                           <th></th>
-                          <th>Min. Rental Period</th>                     
+                          <th>Min. Rental Period</th>
                           <th>Max. Rental Period</th>
                           <th>Rent Amount</th>
                           <th>Security Deposit</th>
@@ -178,7 +178,7 @@
                           <td>{{currentProduct.rent.rateDays.seqDepositD}}</td>
                         </tr>
                         <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
-                          <td><b>Months</b></td>                       
+                          <td><b>Months</b></td>
                           <td>{{currentProduct.rent.rateMonths.minPeriodM}}</td>
                           <td>{{currentProduct.rent.rateMonths.maxPeriodM}}</td>
                           <td>{{currentProduct.rent.rateMonths.rentAmountM}}</td>
@@ -237,7 +237,7 @@
                         <td>Operating hrs(km/m.hrs)</td>
                         <td>Service At</td>
                         <td>Authorized Service Station</td>
-                      </tr>                   
+                      </tr>
                       <tr ng-repeat="serviceInfo in currentProduct.serviceInfo">
                         <td>{{serviceInfo.servicedate}}</td>
                         <td>{{serviceInfo.operatingHour}}</td>
@@ -249,20 +249,20 @@
               </uib-accordion>
               <div class="row">
                 <div class="col-sm-4">
-                  <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>              
+                  <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>
                 </div>
                 <div class="col-sm-8">
-                  <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')">Get a Quote for Additional Services</a>
+                  <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>
                 </div>
               </div>
-            
+
           </div>
-          <div class="col-sm-5 col-md-4 padd-left panel-group">                   
+          <div class="col-sm-5 col-md-4 padd-left panel-group">
             <div class="panel panel-primary seller-info hidden-xs">
               <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-envelope"></i> To Buy Contact</h3>
               </div>
-              <div class="panel-body">                            
+              <div class="panel-body">
                 <form  novalidate role="form" name="form">
                   <table class="table table-striped">
                     <tr>
@@ -276,19 +276,19 @@
                   </table>
                     <div class="row">
                       <div class="col-xs-6">
-                        <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                        <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
                           <input type="text" name="fname" ng-model="buycontact.fname" ng-value="buycontact.fname" class="form-control"  placeholder="* First Name" required>
                         </div>
                       </div>
                       <div class="col-xs-6">
-                        <div class="form-group">                                      
+                        <div class="form-group">
                           <input type="text" name="mname" ng-model="buycontact.mname" ng-value="buycontact.mname" class="form-control" placeholder="Middle Name">
                         </div>
                       </div>
-                    </div> 
+                    </div>
                     <div class="row">
                       <div class="col-xs-6">
-                        <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">  
+                        <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
                         <input type="text" name="lname" ng-model="buycontact.lname" ng-value="buycontact.lname" class="form-control" placeholder="* Last Name" required>
                         </div>
                       </div>
@@ -296,43 +296,43 @@
                         <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }">
                           <select class="form-control" name="country" ng-model="buycontact.country" required>
                             <option value="" disabled>* Select Country</option>
-                            <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>                          
+                            <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
                           </select>
                           <i class="caret"></i>
                         </div>
                       </div>
-                    </div>  
-                    
+                    </div>
+
                     <div class="row">
                       <div class="col-xs-6">
-                        <div class="form-group">                          
+                        <div class="form-group">
                           <input type="text" name="phone" ng-model="buycontact.phone" ng-value="buycontact.phone" class="form-control" placeholder=" Phone No.">
                         </div>
                       </div>
                       <div class="col-xs-6">
-                        <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">  
+                        <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
                         <div class="input-group">
                           <input type="text" name="mobile" ng-model="buycontact.mobile" ng-value="buycontact.mobile" class="form-control" placeholder="* Mobile No." uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top"required>
                           </div>
                         </div>
                       </div>
-                    </div>    
+                    </div>
                     <div class="row">
                       <div class="col-xs-6">
-                        <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                          
+                        <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
                           <input type="email" name="email" ng-model="buycontact.email" ng-value="buycontact.email" class="form-control" placeholder="* Email Address" required>
                           <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
                           Please enter a valid email.
                           </p>
                         </div>
                       </div>
-                    </div>                      
-                    
+                    </div>
+
                     <span>Method of contact </span>
                     <div class="row">
                       <div class="col-xs-6">
                         <div class="form-group">
-                        
+
                           <input type="radio" name="contact" ng-model="buycontact.contact" value="email"> E-mail
                         </div>
                       </div>
@@ -341,32 +341,32 @@
                           <input type="radio" name="contact" ng-model="buycontact.contact" value="mobile"> Phone
                         </div>
                       </div>
-                    </div>    
-                    <div class="form-group">                      
+                    </div>
+                    <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="buycontact.message" placeholder="Comments"></textarea>
-                    </div>            
+                    </div>
                     <button type="submit" ng-click="productDetailVm.sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Send Message</button>
                   </form>
 
-              
+
               </div>
             </div>
-            
+
 
           </div>
-          
-          <div class="col-md-3 hidden-xs hidden-sm padd-left">            
-            <div class="panel-group vendor-list">              
+
+          <div class="col-md-3 hidden-xs hidden-sm padd-left">
+            <div class="panel-group vendor-list">
               <div class="panel panel-primary calctr-info">
                 <div class="panel-heading">
                   <h5 class="panel-title"><i class="fa fa-calculator"></i> Rent Calculation</h5>
                 </div>
-                <div class="panel-body">                  
+                <div class="panel-body">
                   <h5><strong>Specify your Rental duration:</strong></h5>
                   I require machine for
                   <div class="row">
                     <div class="col-sm-12 form-group">
-                      <div class="input-group">                       
+                      <div class="input-group">
                         <input type="text" class="form-control" placeholder="Enter value" name="duration" ng-model="calRent.duration">
                         <span class="input-group-addon">
                           <select class="form-control" name="rateType" ng-model="calRent.rateType">
@@ -385,7 +385,7 @@
                   <div class="text-center">
                     <button type="submit" ng-click="productDetailVm.calculateRent(currentProduct.rent, calRent)" class="btn btn-warning">Calculate Now</button>
                   </div>
-                  
+
                 </div>
               </div>
             </div>
@@ -409,7 +409,7 @@
  <script type="text/ng-template" id="magnifier.html">
 <div id="magnifier-modal">
     <div class="modal-header">
-        <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>              
+        <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
     </div>
     <div class="modal-body">
       <div class="carousel slide article-slide" id="article-photo">
@@ -425,7 +425,7 @@
                 <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
                     <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
                 </li>
-              </ol> 
+              </ol>
 
               <!-- Controls -->
               <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
@@ -435,7 +435,7 @@
               <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
                 <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
-              </a>             
+              </a>
       </div>
     </div>
 </div>

@@ -6,9 +6,10 @@ angular.module('classifiedAd').controller('ClassifiedAdCtrl', ClassifiedAdCtrl);
 //Controller function
 
 function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc) {
-    
+    //Start NJ : classifiedAdClick object push in GTM dataLayer
+    dataLayer.push(gaMasterObject.classifiedAdClick);
+    //End
     var vm = this;
-
     $scope.checked = "";
     var leftTopDim = {width:165,height:255};
     var leftBottomDim = {width:165,height:255};
@@ -33,28 +34,28 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
           vm.classified.mname = Auth.getCurrentUser().mname;
           vm.classified.lname = Auth.getCurrentUser().lname;
           vm.classified.phone = Auth.getCurrentUser().phone;
-          
+
           vm.classified.mobile = Auth.getCurrentUser().mobile;
           vm.classified.email = Auth.getCurrentUser().email;
 
         } else {
           vm.classified = {}
         }
-    
+
       }else{
         vm.classified = $scope.classified;
         $scope.checked = $scope.classified.position;
-        //vm.classified.image = $scope.classified.image;        
+        //vm.classified.image = $scope.classified.image;
       }
     }
     init();
-    
-    
+
+
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
         if(args.length == 0)
           return;
-        $scope.$apply(function () {            
+        $scope.$apply(function () {
             //add the file object to the scope's files collection
            var resizeParam = {};
            resizeParam.resize = true;
@@ -83,17 +84,23 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
     });
 
     function reset(){
+      //Start NJ : classifiedAdReset object push in GTM dataLayer
+      dataLayer.push(gaMasterObject.classifiedAdReset);
+      //End
       $scope.checked = "";
       vm.classified = {};
     }
 
      function resetImages(){
+       //Start NJ : classifiedAdReset object push in GTM dataLayer
+         dataLayer.push(gaMasterObject.classifiedAdReset);
+         //End
          vm.classified.image = "";
      }
 
-     function previewImg(img){ 
+     function previewImg(img){
           var prevScope = $rootScope.$new();
-          
+
           if(!vm.classified.image){
             Modal.alert("image is not uploaded for  this section");
             return;
@@ -120,14 +127,13 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
         return;
       }
       if(!$scope.edit){
-        addClassifiedAd();   
+        addClassifiedAd();
       }else{
         updateClassifiedAd();
       }
 
     }
      function addClassifiedAd() {
-
       $rootScope.loading = true;
       if(Auth.getCurrentUser()._id)
           vm.classified.userid = Auth.getCurrentUser()._id;
@@ -138,6 +144,9 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
               Modal.alert(result.data.message,true);
             }
             else {
+              //Start NJ : classifiedAdSubmit object object push in GTM dataLayer
+              dataLayer.push(gaMasterObject.classifiedAdSubmit);
+              //End
               var data = {};
               data['to'] = supportMail;
               data['subject'] = 'Request for Classified Ad';
@@ -171,12 +180,11 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
 
 
   function closeDialog() {
+     //Start NJ : classifiedAdClose object push in GTM dataLayer
+     dataLayer.push(gaMasterObject.classifiedAdClose);
+     //End
      $uibModalInstance.dismiss('cancel');
    };
 }
 
 })();
-
-
-
-  

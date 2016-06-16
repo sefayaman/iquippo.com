@@ -2,6 +2,10 @@
 
 angular.module('sreizaoApp')
   .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal) {
+    //Start > NJ : push quickQueryOpen object in GTM data layer
+    dataLayer.push(gaMasterObject.quickQueryOpen);
+    //End
+    $scope.constant = gaMasterObject.quickQueryClose.eventLabel;
     $scope.currntUserInfo = {};
     $scope.quote = {};
     $scope.categoryList = [];
@@ -24,7 +28,7 @@ angular.module('sreizaoApp')
   categorySvc.getAllCategory()
     .then(function(result){
       $scope.allCategory = result;
-    }) 
+    })
 
 
   $scope.onGroupChange = function(group){
@@ -33,11 +37,11 @@ angular.module('sreizaoApp')
     .then(function(result){
       $scope.categoryList = result.filter(function(d){
           return name == d.group.name;
-      }); 
-    })  
-    
+      });
+    })
+
   }
-  
+
   SubCategorySvc.getAllSubCategory()
    .then(function(result){
     $scope.allSubcategory = result;
@@ -63,24 +67,27 @@ angular.module('sreizaoApp')
       var dataToSend = {};
       dataToSend['fname'] =  quote.fname;
       dataToSend['mname']= quote.mname;
-      dataToSend['lname'] = quote.lname; 
+      dataToSend['lname'] = quote.lname;
       dataToSend['phone'] = quote.phone;
       dataToSend['mobile'] = quote.mobile;
-      dataToSend['email']= quote.email; 
-      dataToSend['group']= quote.groupName; 
+      dataToSend['email']= quote.email;
+      dataToSend['group']= quote.groupName;
       if(quote.catName != 'Other')
         dataToSend['category']= quote.catName;
       else
         dataToSend['category']= quote.otherCategory;
-      dataToSend['subcategory']= quote.subcategory; 
-      dataToSend['brand']= quote.brand; 
-      dataToSend['model']= quote.model; 
-      dataToSend['expPrice']= quote.expPrice; 
+      dataToSend['subcategory']= quote.subcategory;
+      dataToSend['brand']= quote.brand;
+      dataToSend['model']= quote.model;
+      dataToSend['expPrice']= quote.expPrice;
       dataToSend['city']= quote.city;
-      dataToSend['agree']= quote.agree; 
+      dataToSend['agree']= quote.agree;
 
       dataToSend['comment']= quote.comment;
       $http.post('/api/quote',dataToSend).success(function(result) {
+        //  Start > NJ : push quickQuerySubmit object in GTM data layer
+        dataLayer.push(gaMasterObject.quickQuerySubmit);
+        // End
         $scope.closeDialog();
         $scope.quote = {};
         $scope.form.submitted = false;
@@ -100,10 +107,9 @@ angular.module('sreizaoApp')
   };
 
   $scope.closeDialog = function () {
+    //Start > NJ  : push quickQueryClose object in GTM data layer
+    dataLayer.push(gaMasterObject.quickQueryClose);
+    //End
    $uibModalInstance.dismiss('cancel');
   };
 });
-
-
-
-  

@@ -3,6 +3,9 @@
 'use strict';
 angular.module('sreizaoApp')
  .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout','$sce' , function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout,$sce) {
+    //Start NJ : uploadProductClick object push in GTM dataLayer
+    dataLayer.push(gaMasterObject.uploadProductClick);
+    //End
     $scope.categoryList = [];
     var prevAssetStatus = assetStatuses[0].code;
     var product = $scope.product = {};
@@ -75,7 +78,7 @@ angular.module('sreizaoApp')
   }
   init();
   $scope.onStateChange = function(noReset){
-    
+
     $scope.locationList = [];
     if(!noReset)
         product.city = "";
@@ -88,7 +91,7 @@ angular.module('sreizaoApp')
         return item.state.name == $scope.product.state;
       });
     });
-  } 
+  }
 
   $scope.onRoleChange = function(userType){
     if(!userType)
@@ -169,7 +172,7 @@ angular.module('sreizaoApp')
 
       $scope.getUsersOnUserType = [];
       $scope.getUsersOnUserType[0] = $scope.product.seller;
-      
+
       if($scope.product.seller.userType == "legalentity") {
         $scope.selectedCompany = $scope.product.seller;
         //$scope.requiredFlag = true;
@@ -193,7 +196,7 @@ angular.module('sreizaoApp')
       $scope.productName = $scope.product.name;
       if($scope.product.category.name == 'Other')
           $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
-    
+
       if($state.current.name == "productrelisting") {
         $scope.relistingEnable = true;
       } else if($state.current.name == "productedit"){
@@ -250,8 +253,8 @@ angular.module('sreizaoApp')
     })
     .catch(function(res){
       console.log("error in fetching model",res);
-    })  
-   
+    })
+
   }
 
     $scope.$watch('[selectedModel,selectedCategory,selectedBrand, product.variant]',function(){
@@ -269,7 +272,7 @@ angular.module('sreizaoApp')
         else
           name += " " +  ($scope.selectedBrand.name || "");
       }
-      
+
       if($scope.selectedModel){
 
       if($scope.selectedModel.name == 'Other')
@@ -290,13 +293,13 @@ angular.module('sreizaoApp')
   $scope.$on("fileSelected", function (event, args) {
     if(args.files.length == 0)
         return;
-      $scope.$apply(function () {   
-        if(args.type == "image") { 
+      $scope.$apply(function () {
+        if(args.type == "image") {
           var resizeParam = {};
           resizeParam.resize = true;
           resizeParam.width = imgDim.width;
-          resizeParam.height = imgDim.height; 
-        }      
+          resizeParam.height = imgDim.height;
+        }
         uploadSvc.upload(args.files[0],$scope.assetDir, resizeParam).then(function(result){
           $scope.assetDir = result.data.assetDir;
           if(!$scope.product.assetId)
@@ -311,17 +314,17 @@ angular.module('sreizaoApp')
           else if(args.type == "mdoc"){
             $scope.product.miscDocuments[args.index].name = result.data.filename;
           }
-          else  
+          else
             docObj.name = result.data.filename;
         })
         .catch(function(err){
           Modal.alert("Error in file upload.",true);
         });
-          
+
       });
   });
 
-  
+
   $scope.clickHandler = function(type, val){
     if(type == "hours" && !val)
       delete $scope.product.rent.rateHours;
@@ -340,7 +343,7 @@ angular.module('sreizaoApp')
         $scope.form.category.$invalid = true;
         ret = true;
       }
-     
+
      if(!$scope.selectedBrand || !$scope.selectedBrand._id){
         $scope.form.brand.$invalid = true;
         ret = true;
@@ -394,23 +397,23 @@ angular.module('sreizaoApp')
         return;
       }
 
-      product.group._id = $scope.selectedGroup._id; 
+      product.group._id = $scope.selectedGroup._id;
       product.group.name = $scope.selectedGroup.name;
       suggestions[suggestions.length] = {text:product.group.name};
 
-      
+
       product.category._id = $scope.selectedCategory._id;
       product.category.name = $scope.selectedCategory.name;
       suggestions[suggestions.length] = {text:product.category.name};
       product.name = $scope.productName;
       suggestions[suggestions.length] = {text:product.name};
 
-      
+
       product.brand._id = $scope.selectedBrand._id;
       product.brand.name = $scope.selectedBrand.name;
       suggestions[suggestions.length] = {text:product.brand.name};
 
-      
+
       product.model._id = $scope.selectedModel._id;
       product.model.name = $scope.selectedModel.name;
       suggestions[suggestions.length] = {text:product.model.name};
@@ -422,7 +425,7 @@ angular.module('sreizaoApp')
          product.brand.otherName = $scope.selectedBrand.otherName;
 
        if($scope.selectedModel.name == "Other")
-          product.model.otherName = $scope.selectedModel.otherName; 
+          product.model.otherName = $scope.selectedModel.otherName;
 
       if($scope.selectedCategory.otherName)
         suggestions[suggestions.length] = {text:$scope.selectedCategory.otherName};
@@ -430,18 +433,18 @@ angular.module('sreizaoApp')
        if($scope.selectedBrand.otherName)
         suggestions[suggestions.length] = {text:$scope.selectedBrand.otherName};
        if($scope.selectedModel.otherName)
-        suggestions[suggestions.length] = {text:$scope.selectedModel.otherName}; 
+        suggestions[suggestions.length] = {text:$scope.selectedModel.otherName};
        if($state.current.name == "productrelisting") {
             product.expired = false;
             product.relistingDate = new Date();
           }
-      
+
       if($scope.selectedSubCategory){
          product.subcategory = {};
          product.subcategory['_id'] = $scope.selectedSubCategory['_id'];
          product.subcategory['name'] = $scope.selectedSubCategory['name'];
       }
-     
+
 
       $rootScope.loading = true;
       if(videoObj.name)
@@ -458,7 +461,7 @@ angular.module('sreizaoApp')
       $scope.images.forEach(function(item,index){
           if(item.src){
             var imgObj = {};
-            imgObj.src = item.src; 
+            imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
               product.primaryImg = item.src;
@@ -472,7 +475,7 @@ angular.module('sreizaoApp')
               imgObj.waterMarked = false;
             $scope.product.images[$scope.product.images.length] = imgObj;
           }
-          
+
       });
 
       $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item,idx){
@@ -502,7 +505,7 @@ angular.module('sreizaoApp')
           addProduct();
       else
         updateProduct();
-    
+
   }
   product.seller = {};
   $scope.onUserChange = function(user){
@@ -535,14 +538,14 @@ angular.module('sreizaoApp')
       product.user.email = $rootScope.getCurrentUser().email;
       product.user.country = $rootScope.getCurrentUser().country;
       product.user.company = $rootScope.getCurrentUser().company;
-      if((!$scope.selectedUser && !$scope.selectedCompany) 
+      if((!$scope.selectedUser && !$scope.selectedCompany)
           || ($.isEmptyObject($scope.selectedUser) && $.isEmptyObject($scope.selectedCompany))) {
-        product.seller = {};  
+        product.seller = {};
         product.seller = product.user;
       }
       if($scope.product.currencyType == "")
         $scope.product.currencyType = "INR";
-      
+
       $scope.product.assetStatuses = [];
       var stObj = {};
       stObj.userId = product.user._id;
@@ -551,8 +554,11 @@ angular.module('sreizaoApp')
       $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
       $scope.product.assetId = $scope.assetDir;
 
-      /*adding seller info */ 
+      /*adding seller info */
       productSvc.addProduct(product).then(function(result){
+        //Start NJ : uploadProductSubmit object push in GTM dataLayer
+        dataLayer.push(gaMasterObject.uploadProductSubmit);
+        //End
         $rootScope.loading = false;
         setScroll(0);
         $scope.successMessage = "Product added successfully";
@@ -566,7 +572,7 @@ angular.module('sreizaoApp')
           if(result.productId) {
             productHistory.history = {};
             productHistory.user = {};
-    
+
             productHistory.type = "Create";
             productHistory.history = result;
             productHistory.user = $rootScope.getCurrentUser();
@@ -589,7 +595,7 @@ angular.module('sreizaoApp')
       product = $scope.product ={};
       });
   }
-  
+
   function updateProduct(){
       if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role != 'admin') {
         product.status = false;
@@ -604,14 +610,14 @@ angular.module('sreizaoApp')
             stObj.userId = $scope.product.user._id;
             stObj.status = $scope.product.assetStatus;
             stObj.createdAt = new Date();
-            $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj; 
+            $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
             if($scope.product.assetStatus == assetStatuses[2].code){
               $scope.product.isSold = true;
               $scope.product.status = false;
             }
         }
       if(!$scope.product.assetId)
-        $scope.product.assetId = $scope.assetDir; 
+        $scope.product.assetId = $scope.assetDir;
       productSvc.updateProduct(product).then(function(result){
         $rootScope.loading = false;
          setScroll(0);
@@ -661,6 +667,9 @@ angular.module('sreizaoApp')
   }
 
   $scope.resetClick = function(){
+    //Start NJ : uploadProductReset object push in GTM dataLayer
+    dataLayer.push(gaMasterObject.uploadProductReset);
+    //End
     product = $scope.product = {};
     $scope.brandList = [];
     $scope.modelList = [];
@@ -702,7 +711,7 @@ angular.module('sreizaoApp')
     //$scope.today();
   }
 
-  $scope.makePrimary = function(val){ 
+  $scope.makePrimary = function(val){
     $scope.primaryIndex = val;
      $scope.images.forEach(function(item,index,arr){
       if($scope.primaryIndex == index)
@@ -724,8 +733,11 @@ angular.module('sreizaoApp')
   }
 
      // preview uploaded images
-  $scope.previewProduct = function(){ 
-          var prevScope = $rootScope.$new();     
+  $scope.previewProduct = function(){
+      //Start NJ : uploadProductPreview object push in GTM dataLayer
+      dataLayer.push(gaMasterObject.uploadProductPreview);
+      //End
+          var prevScope = $rootScope.$new();
           prevScope.selectedRadio = $scope.primaryIndex;
           prevScope.images = $scope.images;//getImageArr();
           prevScope.prefix = $rootScope.uploadImagePrefix;
@@ -754,7 +766,7 @@ angular.module('sreizaoApp')
               windowTopClass:'product-preview',
               size: 'lg'
           });
-          
+
           prevScope.deleteImg = $scope.deleteImg
           prevScope.makePrimary = $scope.makePrimary;
           prevScope.getDateFormat = function(serviceDate){
@@ -797,7 +809,7 @@ angular.module('sreizaoApp')
         $scope.open = function($event) {
           $scope.opened = true;
         };
-        
+
         $scope.popups = [{opened:false}]
 
         $scope.open1 = function() {
@@ -835,7 +847,7 @@ angular.module('sreizaoApp')
         $scope.format = $scope.formats[0];
         $scope.formats1 = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
         $scope.format1 = $scope.formats1[0];
-        
+
         $scope.status = {
           opened: false
         };
@@ -925,10 +937,10 @@ angular.module('sreizaoApp')
       $scope.options.viewShowRotateBtn= false;
       $scope.options.rotateRadiansLock= false;
 
-      $scope.options.outputImageWidth= 0 ; 
+      $scope.options.outputImageWidth= 0 ;
       $scope.options.outputImageHeight= 0;
-      $scope.options.outputImageRatioFixed= false;            
-      $scope.options.outputImageType= imgExt; 
+      $scope.options.outputImageRatioFixed= false;
+      $scope.options.outputImageType= imgExt;
       $scope.options.outputImageSelfSizeCrop= true;
       $scope.options.viewShowCropTool= true;
       $scope.options.inModal = true;
@@ -963,7 +975,7 @@ angular.module('sreizaoApp')
        $scope.dismissModal = function(){
         $uibModalInstance.dismiss();
       }
-           
+
   });
 
 

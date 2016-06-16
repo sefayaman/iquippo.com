@@ -2,21 +2,23 @@
 
 'use strict';
 angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
-  
-  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal) {
-    var vm = this;
 
+  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal) {
+    //Start > NJ:push callBackOpen object in GTM dataLayer
+    dataLayer.push(gaMasterObject.callBackOpen);
+    //End
+    var vm = this;
     vm.callback = {};
     vm.sendCallback = sendCallback;
     vm.closeDialog = closeDialog;
 
     function sendCallback(callback) {
-      var ret = false; 
+      var ret = false;
       if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }
-      
+
       var dataToSend = {};
       dataToSend['fname'] = callback.fname;
       dataToSend['mname'] = callback.mname;
@@ -26,6 +28,9 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
       dataToSend['email'] = callback.email;
 
       $http.post('/api/callback',dataToSend).success(function(result) {
+        //Start > NJ :push callBackOpen object in GTM dataLayer
+        dataLayer.push(gaMasterObject.callBackSubmit);
+        //End
         closeDialog();
         vm.callback = {};
         var data = {};
@@ -42,13 +47,12 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
   };
 
   function closeDialog() {
-   $uibModalInstance.dismiss('cancel');
+    //Start > NJ :push callBackOpen object in GTM dataLayer
+    dataLayer.push(gaMasterObject.callbackClose);
+    //End
+    $uibModalInstance.dismiss('cancel');
   };
 
 }
 
 })();
-
-
-
-  
