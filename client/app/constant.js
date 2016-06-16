@@ -207,39 +207,39 @@ Purpose: declare Constant for Google Tag Manager
 var gaMasterObject = {
 quickQueryClose:{
   event: 'Click',
-  eventCategory: 'quickQuery',
-  eventAction: 'close',
-  eventLabel: 'Product Query Close'
+  eventCategory: 'Home_QuickQuery',
+  eventAction: 'Home_QuickQuery_Close',
+  eventLabel: 'Home Quick Query Close'
 },
 quickQueryOpen:{
   event: 'Click',
-  eventCategory: 'quickQuery',
-  eventAction: 'open',
-  eventLabel: 'Product Query Open'
+  eventCategory: 'Home_QuickQuery',
+  eventAction: 'Home_QuickQuery_Open',
+  eventLabel: 'Home Quick Query Open'
 },
 quickQuerySubmit:{
   event: 'Click',
-  eventCategory: 'quickQuery',
-  eventAction: 'submit',
-  eventLabel: 'Product Query Submit'
+  eventCategory: 'Home_QuickQuery',
+  eventAction: 'Home_QuickQuery_Submit',
+  eventLabel: 'Home Quick Query Submit'
 },
 callbackClose:{
   event: 'Click',
-  eventCategory: 'callback',
-  eventAction: 'close',
-  eventLabel: 'callback Close'
+  eventCategory: 'Home_Callback',
+  eventAction: 'Home_Callback_Close',
+  eventLabel: 'Home Callback Close'
 },
 callBackOpen:{
   event: 'Click',
-  eventCategory: 'callback',
-  eventAction: 'open',
-  eventLabel: 'callBack Open'
+  eventCategory: 'Home_Callback',
+  eventAction: 'Home_Callback_Open',
+  eventLabel: 'Home Callback Open'
 },
 callBackSubmit:{
   event: 'Click',
-  eventCategory: 'callback',
-  eventAction: 'submit',
-  eventLabel: 'callBack Submit'
+  eventCategory: 'Home_Callback',
+  eventAction: 'Home_Callback_Submit',
+  eventLabel: 'Home Callback Submit'
 },
 aboutusPage:{
   event: 'pageview',
@@ -251,9 +251,9 @@ contactUsPage:{
 },
 contactUsSend:{
   event: 'Click',
-  eventCategory: 'contactUs',
-  eventAction: 'click',
-  eventLabel: 'Contact Send'
+  eventCategory: 'Contact_Us',
+  eventAction: 'Contact_Us_Send',
+  eventLabel: 'Contact_Us_Send'
 },
 shippingPage:{
   event: 'pageview',
@@ -273,99 +273,99 @@ manpowerPage:{
 },
 shippingSubmit:{
   event: 'Click',
-  eventCategory: 'shipping',
-  eventAction: 'submit',
-  eventLabel: 'Shipping Submit'
+  eventCategory: 'Services_Shipping',
+  eventAction: 'Services_Shipping_Submit',
+  eventLabel: 'Services_Shipping_Submit'
 },
 shippingReset:{
   event: 'Click',
-  eventCategory: 'shipping',
-  eventAction: 'reset',
-  eventLabel: 'Shipping Reset'
+  eventCategory: 'Services_Shipping',
+  eventAction: 'Services_Shipping_Reset',
+  eventLabel: 'Services_Shipping_Reset'
 },
 valuationSubmit:{
   event: 'Click',
-  eventCategory: 'valuation',
-  eventAction: 'submit',
-  eventLabel: 'Valuation Submit'
+  eventCategory: 'Services_Valuation',
+  eventAction: 'Services_Valuation_Submit',
+  eventLabel: 'Services_Valuation_Submit'
 },
 valuationReset:{
   event: 'Click',
-  eventCategory: 'valuation',
-  eventAction: 'reset',
-  eventLabel: 'Valuation Reset'
+  eventCategory: 'Services_Valuation',
+  eventAction: 'Services_Valuation_Reset',
+  eventLabel: 'Services_Valuation_Reset'
 },
 certifiedbyiquippoSubmit:{
   event: 'Click',
-  eventCategory: 'certifiedbyiquippo',
-  eventAction: 'submit',
-  eventLabel: 'Certified By Iquippo Submit'
+  eventCategory: 'Services_CertifiedByiQuippo',
+  eventAction: 'Services_CertifiedByiQuippo_Submit',
+  eventLabel: 'Services_CertifiedByiQuippo_Submit'
 },
 certifiedbyiquippoReset:{
   event: 'Click',
-  eventCategory: 'certifiedbyiquippo',
-  eventAction: 'reset',
-  eventLabel: 'Certified By Iquippo Reset'
+  eventCategory: 'Services_CertifiedByiQuippo',
+  eventAction: 'Services_CertifiedByiQuippo_Reset',
+  eventLabel: 'Services_CertifiedByiQuippo_Reset'
 },
 manpowerSubmit:{
   event: 'Click',
-  eventCategory: 'manpower',
-  eventAction: 'submit',
-  eventLabel: 'Manpower Submit'
+  eventCategory: 'Services_Manpower',
+  eventAction: 'Services_Manpower_Submit',
+  eventLabel: 'Services_Manpower_Submit'
 },
 manpowerReset:{
   event: 'Click',
-  eventCategory: 'manpower',
-  eventAction: 'reset',
-  eventLabel: 'Manpower Reset'
+  eventCategory: 'Services_Manpower',
+  eventAction: 'Services_Manpower_Reset',
+  eventLabel: 'Services_Manpower_Reset'
 },
 classifiedAdClick:{
   event: 'Click',
-  eventCategory: 'classifiedAd',
-  eventAction: 'open',
-  eventLabel: 'Place a Classified Ad'
+  eventCategory: 'Home_Classified_Ad',
+  eventAction: 'Home_Classified_Ad_Click',
+  eventLabel: 'Home_Classified_Ad_Click'
 },
 classifiedAdReset:{
   event: 'Click',
-  eventCategory: 'classifiedAd',
-  eventAction: 'reset',
-  eventLabel: 'classifiedAd Reset'
+  eventCategory: 'Home_Classified_Ad',
+  eventAction: 'Home_Classified_Ad_Reset',
+  eventLabel: 'Home_Classified_Ad_Reset'
 },
 classifiedAdClose:{
   event: 'Click',
-  eventCategory: 'classifiedAd',
-  eventAction: 'close',
-  eventLabel: 'classifiedAd Close'
+  eventCategory: 'Home_Classified_Ad',
+  eventAction: 'Home_Classified_Ad_Close',
+  eventLabel: 'Home_Classified_Ad_Close'
 },
 classifiedAdSubmit:{
   event: 'Click',
-  eventCategory: 'classifiedAd',
-  eventAction: 'submit',
-  eventLabel: 'classifiedAd Submit'
+  eventCategory: 'Home_Classified_Ad',
+  eventAction: 'Home_Classified_Ad_Submit',
+  eventLabel: 'Home_Classified_Ad_Submit'
 },
 uploadProductClick:{
   event: 'Click',
-  eventCategory: 'uploadProduct',
-  eventAction: 'open',
-  eventLabel: 'uploadProduct Click'
+  eventCategory: 'Home_Upload_Product',
+  eventAction: 'Home_Upload_Product_Click',
+  eventLabel: 'Home_Upload_Product_Click'
 },
 uploadProductSubmit:{
   event: 'Click',
-  eventCategory: 'uploadProduct',
-  eventAction: 'submit',
-  eventLabel: 'uploadProduct Submit'
+  eventCategory: 'Home_Upload_Product',
+  eventAction: 'Home_Upload_Product_Submit',
+  eventLabel: 'Home_Upload_Product_Submit'
 },
 uploadProductReset:{
   event: 'Click',
-  eventCategory: 'uploadProduct',
-  eventAction: 'reset',
-  eventLabel: 'uploadProduct Reset'
+  eventCategory: 'Home_Upload_Product',
+  eventAction: 'Home_Upload_Product_Reset',
+  eventLabel: 'Home_Upload_Product_Reset'
 },
 uploadProductPreview:{
   event: 'Click',
-  eventCategory: 'uploadProduct',
-  eventAction: 'preview',
-  eventLabel: 'uploadProduct Preview'
+  eventCategory: 'Home_Upload_Product',
+  eventAction: 'Home_Upload_Product_Preview',
+  eventLabel: 'Home_Upload_Product_Preview'
 },
 addToCartSendMessage:{
   event: 'Click',
@@ -422,15 +422,15 @@ removeToCart:{
 },
 toBuyContact:{
   event: 'Click',
-  eventCategory: 'toBuyContact',
-  eventAction: 'click',
-  eventLabel: 'Send Message'
+  eventCategory: 'Product_ToBuyContact',
+  eventAction: 'Product_ToBuyContact_Click',
+  eventLabel: 'Product_ToBuyContact_Click'
 },
 calculateNow:{
   event: 'Click',
-  eventCategory: 'calculateNow',
-  eventAction: 'click',
-  eventLabel: 'Calculate Now'
+  eventCategory: 'Product_Rent_CalculateNow',
+  eventAction: 'Product_Rent_CalculateNow_Click',
+  eventLabel: 'Product_Rent_CalculateNow_Click'
 },
 getaQuoteforAdditionalServices:{
   event: 'Click',
