@@ -99,6 +99,16 @@ exports.search = function(req, res) {
     arr[arr.length] = {city:{$regex:locRegEx}};
     arr[arr.length] = {state:{$regex:locRegEx}};
   }
+  if(req.body.cityName){
+    var cityRegex = new RegExp(req.body.cityName, 'i');
+    filter['city'] = {$regex:cityRegex};
+  }
+
+  if(req.body.stateName){
+    var stateRegex = new RegExp(req.body.stateName, 'i');
+    filter['state'] = {$regex:stateRegex};
+  }
+
   if(arr.length > 0)
     filter['$or'] = arr;
   
@@ -1435,7 +1445,7 @@ function importProducts(req,res,data){
         product["tradeType"] = trim(tradeType);
         if(tradeType != "RENT") {
           var gp = row["Gross_Price*"];
-          var prOnReq = trim(row["Price_on_Request*"]).toLowerCase();
+           var prOnReq = row["Price_on_Request*"];
           var cr = row["Currency*"];
           if(gp && cr){
               product["grossPrice"] = Number(trim(gp));
@@ -1450,11 +1460,18 @@ function importProducts(req,res,data){
               importProducts(req,res,data);
               return;
             }
-            if(prOnReq == 'yes' || prOnReq == 'y') {
-              product["priceOnRequest"] = true; 
-            }else {
+            if(!prOnReq){
               product["priceOnRequest"] = false;
+            }else{
+
+                prOnReq = trim(prOnReq).toLowerCase();
+                if(prOnReq == 'yes' || prOnReq == 'y') {
+                  product["priceOnRequest"] = true; 
+                }else {
+                  product["priceOnRequest"] = false;
+                }
             }
+            
         }          
 
         product["productCondition"] = trim(row["Product_Condition"] || "").toLowerCase();

@@ -59,6 +59,8 @@ exports.getBrandOnFilter = function(req,res){
   
   if(data.categoryId)
     tempFilter['category._id'] = data.categoryId;
+  if(data.categoryName)
+    tempFilter['category.name'] = data.categoryName;
   filter['$or'].push(tempFilter);
   console.log("vvv",filter);
   Brand.find(filter,function(err,result){
