@@ -67,8 +67,8 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
         gaMasterObject.productDetails.brand = data.brand.name;
         gaMasterObject.productDetails.category = data.category.name;
         gaMasterObject.productDetails.position = 0;
-        gaMasterObject.productDetails.dimension3 = data.country;
-        gaMasterObject.productDetails.dimension4 = data.city;
+        gaMasterObject.productDetails.dimension2 = data.country;
+        gaMasterObject.productDetails.dimension3 = data.city;
         productDetailsArray.push(gaMasterObject.productDetails);
 
       dataLayer.push({

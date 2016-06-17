@@ -570,6 +570,8 @@ $scope.today = function() {
         gaMasterObject.viewCategory.brand = result[i].brand.name;
         gaMasterObject.viewCategory.category = result[i].category.name;
         gaMasterObject.viewCategory.position = i;
+        gaMasterObject.viewCategory.dimension2 = data[i].country;
+        gaMasterObject.viewCategory.dimension3 = data[i].city;
         $.extend( true,productListObject,gaMasterObject.viewCategory );
         productListArray.push(productListObject);
       }
@@ -597,8 +599,8 @@ $scope.today = function() {
         gaMasterObject.viewCategory.price = data[i].grossPrice;
         gaMasterObject.viewCategory.brand = data[i].brand.name;
         gaMasterObject.viewCategory.category = data[i].category.name;
-        gaMasterObject.viewCategory.dimension3 = data[i].country;
-        gaMasterObject.viewCategory.dimension4 = data[i].city;
+        gaMasterObject.viewCategory.dimension2 = data[i].country;
+        gaMasterObject.viewCategory.dimension3 = data[i].city;
         if (list == 'Search Result') {
           gaMasterObject.viewCategory.list = list;
         }
