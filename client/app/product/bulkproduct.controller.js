@@ -377,7 +377,7 @@ function mailToCustomerForApprovedAndFeatured(result, product) {
           })
           .catch(function(res){
             if(res.data.errorCode == 1){
-              Modal.alert("This product is locked by sytem.")
+              Modal.alert("This product is already uploaded or removed by system.")
             }
           });
       });

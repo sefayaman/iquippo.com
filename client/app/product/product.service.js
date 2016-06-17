@@ -210,7 +210,8 @@
       }
 
     function loadIncomingProduct(){
-        return $http.post(path + '/incomingproducts',{})
+
+        return $http.post(path + '/incomingproducts',{userId:Auth.getCurrentUser()._id})
           .then(function(res){
             return res.data;
           })

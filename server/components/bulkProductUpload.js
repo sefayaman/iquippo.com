@@ -38,7 +38,7 @@ bulkProductUpload.commitProduct = function(taskData,cb){
 function getProduct(assetIds,zipEntryObj,taskData,cb){
     if(assetIds.length > 0){
       var assetId = assetIds[0];
-      IncomingProduct.findOneAndUpdate({assetId:assetId,lock:{$ne:true}},{ $set: {lock:true}},function(err,incPrd){
+      IncomingProduct.findOneAndUpdate({assetId:assetId,'user._id':taskData.user._id,lock:{$ne:true}},{ $set: {lock:true}},function(err,incPrd){
         if(err || !incPrd){
             assetIds.splice(0,1);
             getProduct(assetIds,zipEntryObj,taskData,cb);

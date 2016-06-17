@@ -45,14 +45,14 @@ exports.getOnId = function(req, res) {
 //incoming products
 
 exports.incomingProduct = function(req,res){
-   IncomingProduct.find({}, function (err, products) {
+   IncomingProduct.find({'user._id':req.body.userId}, function (err, products) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(products);
   });
 }
 
 exports.deleteIncomingProduct = function(req,res){
-  IncomingProduct.findOneAndRemove({_id:req.body.productId,lock:false},function(err,dt){
+  IncomingProduct.findOneAndRemove({_id:req.body.productId},function(err,dt){
     if(err) { return handleError(res, err); }
     if(!dt){ res.status(404).json({errorCode:1});}
     else
