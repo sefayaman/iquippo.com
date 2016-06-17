@@ -387,8 +387,8 @@ viewCategory: {
   'category': '',//category.name
   'list': '',
   'position': '',
-  'dimension3':'',
-  'dimension4':''
+  'dimension2':'',
+  'dimension3':''
 },
 EquipmentSearch:{
   event: 'Click',
@@ -403,8 +403,8 @@ productDetails: {
   'brand': '',
   'category': '',
   'position': '',
-  'dimension3':'',
-  'dimension4':''
+  'dimension2':'',
+  'dimension3':''
 },
 addToCart:{
   'name': '',
