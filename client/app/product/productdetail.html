@@ -43,7 +43,7 @@
               <!-- Indicators -->
               <ol class="carousel-indicators">
                 <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images">
-                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
                 </li>
               </ol>
               <ul>
@@ -69,7 +69,7 @@
             <div class="form-group clearfix"></div>
 
               <uib-accordion close-others="oneAtATime" class="information">
-                <uib-accordion-group is-open="status.Firstopen">
+                <uib-accordion-group is-open="status.Firstopen" ng-click="informationTag('basicInformation')">
                   <uib-accordion-heading>
                     Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
                   </uib-accordion-heading>
@@ -137,7 +137,7 @@
                   </table>
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="rentstatus.open" ng-if="currentProduct.tradeType != 'SELL'">
+                <uib-accordion-group is-open="rentstatus.open" ng-if="currentProduct.tradeType != 'SELL'"  ng-click="informationTag('RentInformation')">
                   <uib-accordion-heading>
                     Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
                   </uib-accordion-heading>
@@ -188,7 +188,7 @@
                     </table>
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="Techstatus.open">
+                <uib-accordion-group is-open="Techstatus.open" ng-click="informationTag('technicalInformation')">
                   <uib-accordion-heading>
                     Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
                   </uib-accordion-heading>
@@ -227,7 +227,7 @@
                       </tr> -->
                   </table>
                 </uib-accordion-group>
-                <uib-accordion-group is-open="Infostatus.open">
+                <uib-accordion-group is-open="Infostatus.open" ng-click="informationTag('ServiceInformation')">
                   <uib-accordion-heading>
                     Service information  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
                   </uib-accordion-heading>

@@ -3,7 +3,6 @@
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
 function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
   var vm = this;
-
   $scope.currentProduct = {};
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
@@ -317,7 +316,40 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
         })
       }
     }
-
+    /*
+    Date: 17/06/2016
+    Developer Name: Nishant
+    Purpose: To track product Information
+    */
+    $scope.informationTag = function(tabName)
+  {
+      if (tabName == 'basicInformation') {
+         gaMasterObject.basicInformation.eventLabel =this.currentProduct.name;
+         gaMasterObject.basicInformation.eventCategory = "productDetails_BasicInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      }
+      else if (tabName == 'technicalInformation') {
+        gaMasterObject.basicInformation.eventLabel =this.currentProduct.name;
+          gaMasterObject.basicInformation.eventCategory = "productDetails_TechnicalInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      }
+      else if(tabName == 'ServiceInformation') {
+        gaMasterObject.basicInformation.eventLabel =this.currentProduct.name;
+        gaMasterObject.basicInformation.eventCategory = "productDetails_ServiceInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      }
+      else {
+        gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
+        gaMasterObject.basicInformation.eventCategory = "productDetails_RentInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      }
+  }
+  //Start NJ : image click event for GTM
+    $scope.imageClick = function(){
+      gaMasterObject.imageview.eventLabel = this.currentProduct.name;
+      dataLayer.push(gaMasterObject.imageview);
+    }
+  //End
   }
 
 angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {

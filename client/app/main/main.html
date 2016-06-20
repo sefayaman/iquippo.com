@@ -1,6 +1,6 @@
 <section class="banner">
   <div class="overlay"></div>
-  <div id="slides_control">    
+  <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide ng-repeat="slide in mainVm.slides">
         <img  ng-src="assets/images/{{slide.image}}">
@@ -8,7 +8,7 @@
     </uib-carousel>
   </div>
   <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">
-   
+
     <div class="search-tabs">
 
       <!-- Nav tabs -->
@@ -22,13 +22,13 @@
         <form>
             <div class="row">
               <div class="col-sm-5">
-                <div class="select-text">                 
-                  <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>               
+                <div class="select-text">
+                  <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                 </div>
               </div>
               <div class="col-sm-5">
                 <div class="select-text">
-                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>                
+                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                     <div ng-show="mainVm.noResults">
                       <i class="glyphicon glyphicon-remove"></i> No Results Found
                     </div>
@@ -47,7 +47,7 @@
 
 <section class="wrapper">
   <div class="container">
-   
+
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
        <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank">
@@ -62,7 +62,7 @@
       </div>
       <div class="col-sm-10 col-md-7 padd-left">
         <!-- <div class="head">
-          
+
           <legend class="dull"></legend>
           <legend class="dark"></legend>
         </div> -->
@@ -75,7 +75,7 @@
           <ul class="cat-list">
             <li ng-repeat="category in categoryList">
               <a href="/viewproducts/{{category._id}}">
-                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
+                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">
                   <span class="overlayer"></span><span>{{category.name}}</span>
               </a>
             </li>
@@ -84,10 +84,10 @@
             <button type="button" class="btn btn-default" ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
           </div>
         </div>
-        
+
       </div>
-      
-      <div class="col-sm-2 col-md-3 hidden-xs padd-left">        
+
+      <div class="col-sm-2 col-md-3 hidden-xs padd-left">
         <div class="panel-group">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -102,7 +102,7 @@
                   <h4 class="media-heading">iQuippo</h4>
                   <p>
                     <small>
-                      Marketplace for High-end Equipments launched (14-Apr-2016). 
+                      Marketplace for High-end Equipments launched (14-Apr-2016).
                     </small>
 
                   </p>
@@ -123,7 +123,7 @@
                   </p>
                 </div>
               </div>
-            </div>  
+            </div>
           </div>
           <div class="panel panel-default">
               <div class="panel-heading">
@@ -133,20 +133,20 @@
                 <div class="form-group">
                   <a href="http://quippoauctions.com/" target="_blank">
                     <img src="assets/images/partner-logo-img.jpg">
-                  </a>                  
+                  </a>
                 </div>
                 <hr>
                 <div class="form-group">
                   <a href="http://srei.com/" target="_blank">
                     <img src="assets/images/srei-logo.png">
                   </a>
-                  
+
                 </div>
-              </div>  
+              </div>
           </div>
         </div>
       </div>
-     
+
     </div>
         <div class="form-group"></div>
         <div class="form-group clearfix"></div>
@@ -159,21 +159,21 @@
           </div> -->
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4 class="panel-title"><i class="fa fa-star"></i> Featured Products</h4>
+              <h4 class="panel-title"><i class="fa fa-star"></i>Featured Products</h4>
             </div>
           </div>
-          <div id="slides_control_feature">    
+          <div id="slides_control_feature">
             <uib-carousel no-wrap="noWrapSlides">
               <uib-slide ng-repeat="gpSlide in mainVm.sortedFeaturedProduct">
                 <div class="row">
                   <div class="col-sm-3" ng-repeat="slide in gpSlide">
-                    <div class="panel panel-default">  
-                      <a ng-href="/productdetail/{{slide._id}}">
-                        <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
-                      </a> 
+                    <div class="panel panel-default">
+                      <a ng-href="/productdetail/{{slide._id}}?FeatureProduct">
+                        <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
+                      </a>
                       <div class="panel-heading">
                         <h3 class="panel-title">{{slide.name}}</h3>
-                      </div>                  
+                      </div>
                       <div class="panel-body">
                         <div class="row">
                           <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
@@ -196,13 +196,13 @@
           </div>
           <!-- <ul class="verContainer" drctv>
             <li ng-repeat="slide in mainVm.featuredslides">
-              <div class="panel panel-default">  
+              <div class="panel panel-default">
                     <a ng-href="/productdetail/{{slide._id}}">
-                      <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">                
-                    </a> 
+                      <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
+                    </a>
                     <div class="panel-heading">
                       <h3 class="panel-title">{{slide.name}}</h3>
-                    </div>                  
+                    </div>
                     <div class="panel-body">
                       <div class="row">
                         <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
@@ -217,11 +217,11 @@
                         </div>
                       </div>
                     </div>
-                </div>              
+                </div>
             </li>
           </ul> -->
         </div>
-          
+
   </div>
 </section>
 <div class="container text-center form-group">

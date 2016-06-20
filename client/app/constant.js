@@ -458,10 +458,24 @@ getaQuoteforAdditionalServicesClose:{
 },
 sendMessage:{
   'name': '',
-  'dimension2': '1',
+  'dimension1': '',
+  'dimension5': '',
+  'dimension6': '',
   'id': '',
   'price': '',
   'brand': '',
   'category': ''
+},
+basicInformation:{
+  event: 'Click',
+  eventCategory: '',
+  eventAction: 'Click',
+  eventLabel: ''
+},
+imageview:{
+  event: 'Click',
+  eventCategory: 'Product_Images',
+  eventAction: 'Click',
+  eventLabel: ''
 }
 };
