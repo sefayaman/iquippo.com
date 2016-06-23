@@ -47,7 +47,7 @@ var storage = multer.diskStorage({
     cb(null, req.uplPath);
   },
   filename: function (req, file, cb) {
-    var arr = file.originalname.split(".");
+    var arr = decodeURI(file.originalname).split(".");
     var extPart = arr[arr.length - 1];
     arr.splice(arr.length - 1,1);
     var namePart = arr.join('_');
