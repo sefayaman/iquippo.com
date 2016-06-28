@@ -13,14 +13,26 @@
                 </div>   -->
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
-                <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
-                <option value="">Both</option>
-                <option value="SELL">Buy</option>
-                <option value="RENT">Rent</option>
-                </select>
-                
-                <i class="caret"></i>          
+                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
+                  <option value="">Both</option>
+                  <option value="SELL">Buy</option>
+                  <option value="RENT">Rent</option>
+                  </select>
+                  
+                  <i class="caret"></i>          
                 </div>  
+
+                <label for="" class="text-muted">Asset Status </label>
+                <div class="form-group">
+                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
+                  <option value="">Rented</option>
+                  <option value="">Sold</option>
+                  <option value="">Listed</option>
+                  </select>
+                  
+                  <i class="caret"></i>          
+                </div>  
+
                 <label for="" class="text-muted">Product Group </label>
                 <div class="form-group">
                 <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.fireCommand()">
