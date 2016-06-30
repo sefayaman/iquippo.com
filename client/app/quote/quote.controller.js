@@ -4,6 +4,8 @@ angular.module('sreizaoApp')
   .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal) {
     //Start > NJ : push quickQueryOpen object in GTM data layer
     dataLayer.push(gaMasterObject.quickQueryOpen);
+    //NJ: set quickQuery Start Time
+    $scope.qcOpenStartTime = new Date();
     //End
     $scope.constant = gaMasterObject.quickQueryClose.eventLabel;
     $scope.currntUserInfo = {};
@@ -87,7 +89,12 @@ angular.module('sreizaoApp')
       $http.post('/api/quote',dataToSend).success(function(result) {
         //  Start > NJ : push quickQuerySubmit object in GTM data layer
         dataLayer.push(gaMasterObject.quickQuerySubmit);
-        // End
+        //NJ: set quick query Submit Time
+        var qcSubmitTime = new Date();
+        var timeDiff = Math.floor(((qcSubmitTime - $scope.qcOpenStartTime)/1000)*1000);
+        gaMasterObject.quickQuerySubmitTime.timingValue = timeDiff;
+        ga('send', gaMasterObject.quickQuerySubmitTime);
+        //End
         $scope.closeDialog();
         $scope.quote = {};
         $scope.form.submitted = false;
@@ -109,6 +116,11 @@ angular.module('sreizaoApp')
   $scope.closeDialog = function () {
     //Start > NJ  : push quickQueryClose object in GTM data layer
     dataLayer.push(gaMasterObject.quickQueryClose);
+    //NJ: set quick query Close Time 
+    var qcCloseTime = new Date();
+    var timeDiff = Math.floor(((qcCloseTime - $scope.qcOpenStartTime)/1000)*1000);
+    gaMasterObject.quickQueryCloseTime.timingValue = timeDiff;
+    ga('send', gaMasterObject.quickQueryCloseTime);
     //End
    $uibModalInstance.dismiss('cancel');
   };

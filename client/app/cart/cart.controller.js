@@ -37,28 +37,12 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
       /*
       Date: 10/06/2016
       Devleoper Name : Nishant
-      Purpose:remove add to cart event in GTM
+      Purpose:remove add to cart event in  GTM
       */
       var prd = $rootScope.cart.products[index];
       var data = prd;
-      var removeListArray = [];
-      var removeListObject={};
-      gaMasterObject.removeToCart.name = data.name;
-      gaMasterObject.removeToCart.id = data.productId;
-      gaMasterObject.removeToCart.price = data.grossPrice;
-      gaMasterObject.removeToCart.brand = data.brand.name;
-      gaMasterObject.removeToCart.category = data.category.name;
-       $.extend( true,removeListObject,gaMasterObject.removeToCart );
-      removeListArray.push(removeListObject);
-      dataLayer.push({
-        'event': 'removeFromCart',
-        'ecommerce': {
-          'currencyCode': 'INR',
-          'remove': {                                // 'add' actionFieldObject measures.
-          'products': removeListArray
-        }
-      }
-    });
+      gaMasterObject.removeToCart.eventLabel = data.name;
+      dataLayer.push(gaMasterObject.removeToCart);
 
       $rootScope.cart.products.splice(index,1);
       cartSvc.updateCart($rootScope.cart)
@@ -75,7 +59,13 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
     }
 
     function clear(){
-        $rootScope.cart.products = []
+      //NJ start: remove to cart Product
+      for (var i = 0; i < $rootScope.cart.products.length; i++) {
+        gaMasterObject.removeToCart.eventLabel = $rootScope.cart.products[i].name;
+        dataLayer.push(gaMasterObject.removeToCart);
+      }
+      //End
+      $rootScope.cart.products = []
       cartSvc.updateCart($rootScope.cart)
         .success(function(res){
             Modal.alert(informationMessage.clearCartSuccess,true);
@@ -125,35 +115,37 @@ function ViewCartCtrl($scope,$rootScope,cartSvc,Auth,Modal,$uibModal,notificatio
 
       $http.post('/api/buyer', dataToSend)
       .success(function(result) {
-        //Start NJ: addToCartSendMessage object push in GTM dataLayer
-        dataLayer.push(gaMasterObject.addToCartSendMessage);
-        //End
-        /*
-        Date: 10/06/2016
-        Developer Name : Nishant
-        Purpose:insert sendMessage event in GTM
-        */
-        var data = $scope.productSendMessage[0];
-        var pSMListArray = [];
-        var pSMObject={};
-        gaMasterObject.sendMessage.name = data.name;
-        gaMasterObject.sendMessage.id = data.productId;
-        gaMasterObject.sendMessage.price = data.grossPrice;
-        gaMasterObject.sendMessage.brand = data.brand.name;
-        gaMasterObject.sendMessage.category = data.category.name;
-        var list = data.category.name;
-        $.extend( true,pSMObject,gaMasterObject.sendMessage );
-        pSMListArray.push(pSMObject);
-        dataLayer.push({
-        'event': 'sendMessage',
-        'ecommerce': {
-          'click': {
-            'actionField': {'list': list},      // Optional list property.
-            'products': pSMListArray
-           }
-         }
-      });
-      //End
+        var count = 0;
+        for (var i = 0; i < result.product.length; i++) {
+            count++;
+            /*
+            Date: 10/06/2016
+            Developer Name : Nishant
+            Purpose:insert sendMessage event in GTM
+            */
+            var data = $scope.productSendMessage[count-1];
+            var pSMListArray = [];
+            var pSMObject={};
+            gaMasterObject.sendMessage.name = data.name;
+            gaMasterObject.sendMessage.id = data.productId;
+            gaMasterObject.sendMessage.price = data.grossPrice;
+            gaMasterObject.sendMessage.brand = data.brand.name;
+            gaMasterObject.sendMessage.category = data.category.name;
+            gaMasterObject.sendMessage.metric1 = 1;
+            var list = data.category.name;
+            $.extend( true,pSMObject,gaMasterObject.sendMessage );
+            pSMListArray.push(pSMObject);
+            dataLayer.push({
+            'event': 'sendMessage',
+            'ecommerce': {
+              'click': {
+                'actionField': {'list': list},      // Optional list property.
+                'products': pSMListArray
+               }
+             }
+          });
+        }
+
         $scope.buycontact = {};
         var data = {};
         data['to'] = supportMail;

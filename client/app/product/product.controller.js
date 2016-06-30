@@ -5,6 +5,8 @@ angular.module('sreizaoApp')
  .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout','$sce' , function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout,$sce) {
     //Start NJ : uploadProductClick object push in GTM dataLayer
     dataLayer.push(gaMasterObject.uploadProductClick);
+    //NJ: set upload product Start Time
+    $scope.productUploadStartTime = new Date();
     //End
     $scope.categoryList = [];
     var prevAssetStatus = assetStatuses[0].code;
@@ -558,6 +560,11 @@ angular.module('sreizaoApp')
       productSvc.addProduct(product).then(function(result){
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
         dataLayer.push(gaMasterObject.uploadProductSubmit);
+        //NJ : set upload product Start time
+        var productUploadSubmitTime = new Date();
+        var timeDiff = Math.floor(((productUploadSubmitTime - $scope.productUploadStartTime)/1000)*1000);
+        gaMasterObject.uploadProductSubmitTime.timingValue = timeDiff;
+        ga('send', gaMasterObject.uploadProductSubmitTime);
         //End
         $rootScope.loading = false;
         setScroll(0);
@@ -669,6 +676,11 @@ angular.module('sreizaoApp')
   $scope.resetClick = function(){
     //Start NJ : uploadProductReset object push in GTM dataLayer
     dataLayer.push(gaMasterObject.uploadProductReset);
+    //NJ: set upload product Reset time
+    var productUploadResetTime = new Date();
+    var timeDiff = Math.floor(((productUploadResetTime - $scope.productUploadStartTime)/1000)*1000);
+    gaMasterObject.uploadProductResetTime.timingValue = timeDiff;
+    ga('send', gaMasterObject.uploadProductResetTime);
     //End
     product = $scope.product = {};
     $scope.brandList = [];
@@ -736,6 +748,11 @@ angular.module('sreizaoApp')
   $scope.previewProduct = function(){
       //Start NJ : uploadProductPreview object push in GTM dataLayer
       dataLayer.push(gaMasterObject.uploadProductPreview);
+      //NJ: set upload product Preview time
+      var productUploadPreviewTime = new Date();
+      var timeDiff = Math.floor(((productUploadPreviewTime - $scope.productUploadStartTime)/1000)*1000);
+      gaMasterObject.uploadProductPreviewTime.timingValue = timeDiff;
+      ga('send', gaMasterObject.uploadProductPreviewTime);
       //End
           var prevScope = $rootScope.$new();
           prevScope.selectedRadio = $scope.primaryIndex;

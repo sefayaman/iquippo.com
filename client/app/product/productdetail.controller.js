@@ -68,8 +68,9 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
         gaMasterObject.productDetails.position = 0;
         gaMasterObject.productDetails.dimension2 = data.country;
         gaMasterObject.productDetails.dimension3 = data.city;
+        gaMasterObject.productDetails.dimension4 = data.user.fname;
+        gaMasterObject.productDetails.dimension5 = data.user.lname;
         productDetailsArray.push(gaMasterObject.productDetails);
-
       dataLayer.push({
         'event': 'productClick',
         'ecommerce': {
@@ -283,7 +284,6 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
 
          cartSvc.updateCart($rootScope.cart)
         .success(function(res){
-
             //Start NJ : Insert Add to cart details in GTM
             var data = res.products[res.products.length-1];
             var cardListArray = [];
@@ -293,13 +293,15 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
             gaMasterObject.addToCart.price = data.grossPrice;
             gaMasterObject.addToCart.brand = data.brand.name;
             gaMasterObject.addToCart.category = data.category.name;
+            // gaMasterObject.addToCart.metric1 = '1';
             $.extend(true,cardListObject,gaMasterObject.addToCart );
             cardListArray.push(cardListObject);
             dataLayer.push({
               'event': 'addToCart',
               'ecommerce': {
                'currencyCode': 'INR',
-                'add': {                                // 'add' actionFieldObject measures.
+                'add': {
+                // 'actionField': {'list': data.category.name},                               // 'add' actionFieldObject measures.
                 'products': cardListArray
               }
             }

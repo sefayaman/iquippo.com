@@ -8,6 +8,8 @@ angular.module('classifiedAd').controller('ClassifiedAdCtrl', ClassifiedAdCtrl);
 function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc) {
     //Start NJ : classifiedAdClick object push in GTM dataLayer
     dataLayer.push(gaMasterObject.classifiedAdClick);
+    //NJ :set Start Time of classifiedAd Start Time
+    $scope.classifiedAdStartTime = new Date();
     //End
     var vm = this;
     $scope.checked = "";
@@ -86,6 +88,11 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
     function reset(){
       //Start NJ : classifiedAdReset object push in GTM dataLayer
       dataLayer.push(gaMasterObject.classifiedAdReset);
+      //NJ:set classifiedAd Reset Time
+      var classifiedAdResetTime = new Date();
+      var timeDiff = Math.floor(((classifiedAdResetTime - $scope.classifiedAdStartTime)/1000)*1000);
+      gaMasterObject.classifiedAdResetTime.timingValue = timeDiff;
+      ga('send', gaMasterObject.classifiedAdResetTime);
       //End
       $scope.checked = "";
       vm.classified = {};
@@ -94,6 +101,11 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
      function resetImages(){
        //Start NJ : classifiedAdReset object push in GTM dataLayer
          dataLayer.push(gaMasterObject.classifiedAdReset);
+         //NJ:set classifiedAd Reset Time
+         var classifiedAdResetTime = new Date();
+         var timeDiff = Math.floor(((classifiedAdResetTime - $scope.classifiedAdStartTime)/1000)*1000);
+         gaMasterObject.classifiedAdResetTime.timingValue = timeDiff;
+         ga('send', gaMasterObject.classifiedAdResetTime);
          //End
          vm.classified.image = "";
      }
@@ -146,6 +158,12 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
             else {
               //Start NJ : classifiedAdSubmit object object push in GTM dataLayer
               dataLayer.push(gaMasterObject.classifiedAdSubmit);
+              //NJ:set classifiedAd Reset Time
+              var classifiedAdSubmitTime = new Date();
+              var timeDiff = Math.floor(((classifiedAdSubmitTime - $scope.classifiedAdStartTime)/1000)*1000);
+              gaMasterObject.classifiedAdSubmitTime.timingValue = timeDiff;
+              ga('send', gaMasterObject.classifiedAdSubmitTime);
+              //End
               //End
               var data = {};
               data['to'] = supportMail;

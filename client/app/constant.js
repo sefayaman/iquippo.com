@@ -367,12 +367,12 @@ uploadProductPreview:{
   eventAction: 'Home_Upload_Product_Preview',
   eventLabel: 'Home_Upload_Product_Preview'
 },
-addToCartSendMessage:{
-  event: 'Click',
-  eventCategory: 'Send Message',
-  eventAction: 'click',
-  eventLabel: 'Send Message'
-},
+// addToCartSendMessage:{
+//   event: 'Click',
+//   eventCategory: 'Send Message',
+//   eventAction: 'click',
+//   eventLabel: 'Send Message'
+// },
 addToCartCompare:{
   event: 'Click',
   eventCategory: 'Compare',
@@ -388,7 +388,9 @@ viewCategory: {
   'list': '',
   'position': '',
   'dimension2':'',
-  'dimension3':''
+  'dimension3':'',
+  'dimension4':'',
+  'dimension5':''
 },
 EquipmentSearch:{
   event: 'Click',
@@ -404,21 +406,23 @@ productDetails: {
   'category': '',
   'position': '',
   'dimension2':'',
-  'dimension3':''
+  'dimension3':'',
+  'dimension4':'',
+  'dimension5':''
 },
 addToCart:{
   'name': '',
   'id': '',
   'price': '',
   'brand': '',
-  'category': ''
+  'category': '',
+  'quantity': 1
 },
 removeToCart:{
-  'name': '',
-  'id': '',
-  'price': '',
-  'brand': '',
-  'category': ''
+  event: 'Click',
+  eventCategory: 'Remove To Cart',
+  eventAction: 'Remove',
+  eventLabel: ''
 },
 toBuyContact:{
   event: 'Click',
@@ -458,13 +462,12 @@ getaQuoteforAdditionalServicesClose:{
 },
 sendMessage:{
   'name': '',
-  'dimension1': '',
-  'dimension5': '',
-  'dimension6': '',
   'id': '',
   'price': '',
   'brand': '',
-  'category': ''
+  'category': '',
+  'metric1' : '',
+  'quantity': 1
 },
 basicInformation:{
   event: 'Click',
@@ -477,5 +480,118 @@ imageview:{
   eventCategory: 'Product_Images',
   eventAction: 'Click',
   eventLabel: ''
+},
+senndSMS:{
+  event: 'Click',
+  eventCategory: 'Send Message',
+  eventAction: 'Click'
+  // dimension2:'',
+  // dimension5:'',
+  // dimension6:''
+},
+shippingSubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_Shipping',
+    timingVar: 'Services_Shipping_Submit',
+    timingLabel: 'Services_Shipping_Submit',
+    timingValue: ''
+},
+shippingResetTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_Shipping',
+    timingVar: 'Services_Shipping_Reset',
+    timingLabel: 'Services_Shipping_Reset',
+    timingValue: ''
+},
+valuationSubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_Valuation',
+    timingVar: 'Services_Valuation_Submit',
+    timingLabel: 'Services_Valuation_Submit',
+    timingValue: ''
+},
+valuationResetTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_Valuation',
+    timingVar: 'Services_Valuation_Reset',
+    timingLabel: 'Services_Valuation_Reset',
+    timingValue: ''
+},
+certifiedbyiquippoSubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_certifiedbyiquippo',
+    timingVar: 'Services_certifiedbyiquippo_Submit',
+    timingLabel: 'Services_certifiedbyiquippo_Submit',
+    timingValue: ''
+},
+certifiedbyiquippoResetTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_certifiedbyiquippo',
+    timingVar: 'Services_certifiedbyiquippo_Reset',
+    timingLabel: 'Services_certifiedbyiquippo_Reset',
+    timingValue: ''
+},
+manpowerSubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_manpower',
+    timingVar: 'Services_manpower_Submit',
+    timingLabel: 'Services_manpower_Submit',
+    timingValue: ''
+},
+manpowerResetTime: {
+    hitType: 'timing',
+    timingCategory: 'Services_manpower',
+    timingVar: 'Services_manpower_Reset',
+    timingLabel: 'Services_manpower_Reset',
+    timingValue: ''
+},
+uploadProductSubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_Upload_Product',
+    timingVar: 'Home_Upload_Product_Submit',
+    timingLabel: 'Home_Upload_Product_Submit',
+    timingValue: ''
+},
+uploadProductResetTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_Upload_Product',
+    timingVar: 'Home_Upload_Product_Reset',
+    timingLabel: 'Home_Upload_Product_Reset',
+    timingValue: ''
+},
+uploadProductPreviewTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_Upload_Product',
+    timingVar: 'Home_Upload_Product_Preview',
+    timingLabel: 'Home_Upload_Product_Preview',
+    timingValue: ''
+},
+classifiedAdResetTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_Classified_Ad',
+    timingVar: 'Home_Classified_Ad_Reset',
+    timingLabel: 'Home_Classified_Ad_Reset',
+    timingValue: ''
+},
+classifiedAdSubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_Classified_Ad',
+    timingVar: 'Home_Classified_Ad_Submit',
+    timingLabel: 'Home_Classified_Ad_Submit',
+    timingValue: ''
+},
+quickQueryCloseTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_QuickQuery',
+    timingVar: 'Home_QuickQuery_Close',
+    timingLabel: 'Home_QuickQuery_Close',
+    timingValue: ''
+},
+quickQuerySubmitTime: {
+    hitType: 'timing',
+    timingCategory: 'Home_QuickQuery',
+    timingVar: 'Home_QuickQuery_Submit',
+    timingLabel: 'Home_QuickQuery_Submit',
+    timingValue: ''
 }
 };

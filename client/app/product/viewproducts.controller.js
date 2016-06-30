@@ -189,17 +189,22 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
             gaMasterObject.addToCart.price = data.grossPrice;
             gaMasterObject.addToCart.brand = data.brand.name;
             gaMasterObject.addToCart.category = data.category.name;
+            // gaMasterObject.addToCart.metric1 = '1';
             $.extend( true,cardListObject,gaMasterObject.addToCart );
             cardListArray.push(cardListObject);
             dataLayer.push({
               'event': 'addToCart',
               'ecommerce': {
                'currencyCode': 'INR',
-                'add': {                                // 'add' actionFieldObject measures.
+                'add': {
+                // 'actionField': {'list': data.category.name},
                 'products': cardListArray
               }
             }
           });
+//           ga('set', {
+//   'metric5': 'custom metric data'
+// });
             Modal.alert(informationMessage.cartAddedSuccess,true);
             $rootScope.cartCounter = $rootScope.cart.products.length;
         })
@@ -570,8 +575,10 @@ $scope.today = function() {
         gaMasterObject.viewCategory.brand = result[i].brand.name;
         gaMasterObject.viewCategory.category = result[i].category.name;
         gaMasterObject.viewCategory.position = i;
-        gaMasterObject.viewCategory.dimension2 = data[i].country;
-        gaMasterObject.viewCategory.dimension3 = data[i].city;
+        gaMasterObject.viewCategory.dimension2 = result[i].country;
+        gaMasterObject.viewCategory.dimension3 = result[i].city;
+        gaMasterObject.viewCategory.dimension4 = result[i].user.fname;
+        gaMasterObject.viewCategory.dimension5 = result[i].user.lname;
         $.extend( true,productListObject,gaMasterObject.viewCategory );
         productListArray.push(productListObject);
       }
@@ -601,6 +608,8 @@ $scope.today = function() {
         gaMasterObject.viewCategory.category = data[i].category.name;
         gaMasterObject.viewCategory.dimension2 = data[i].country;
         gaMasterObject.viewCategory.dimension3 = data[i].city;
+        gaMasterObject.viewCategory.dimension4 = data[i].user.fname;
+        gaMasterObject.viewCategory.dimension5 = data[i].user.lname;
         if (list == 'Search Result') {
           gaMasterObject.viewCategory.list = list;
         }
