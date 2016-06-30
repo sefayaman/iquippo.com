@@ -1004,6 +1004,8 @@ exports.searchCity = function(req,res){
     var term = new RegExp("^" + req.body.searchStr, 'i');
     filter['name'] = { $regex: term };
   }
+  if(req.body.stateName)
+  	filter['state.name'] = req.body.stateName;	
   var query = City.find(filter);
   query.exec(
        function (err, ct) {

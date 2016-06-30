@@ -2,7 +2,7 @@
  'use strict';
  angular.module("product").factory("productSvc",productSvc);
 
- function productSvc($http,$rootScope,$q){
+ function productSvc($http,$rootScope,$q,Auth){
       var prdService = {};
       var path = '/api/products';
       
@@ -25,7 +25,7 @@
       prdService.getFeaturedProduct = getFeaturedProduct;
       prdService.getSearchResult = getSearchResult;
       prdService.setSearchResult = setSearchResult;
-      prdService.loadUploadedBulkProduct = loadUploadedBulkProduct;
+      prdService.parseExcel = parseExcel;
       prdService.getFilter = getFilter;
       prdService.setFilter = setFilter;
       prdService.exportProduct = exportProduct;
@@ -33,6 +33,10 @@
       prdService.userWiseProductCount = userWiseProductCount;
       prdService.updateInquiryCounter = updateInquiryCounter;
       prdService.categoryWiseCount = categoryWiseCount;
+      prdService.loadIncomingProduct = loadIncomingProduct;
+      prdService.deleteIncomingProduct = deleteIncomingProduct;
+      prdService.getIncomingProduct = getIncomingProduct;
+      prdService.unlockIncomingProduct = unlockIncomingProduct;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -183,13 +187,64 @@
               });
       };
 
-      function loadUploadedBulkProduct(fileName){
-        return $http.post(path + "/import",{filename:fileName})
+      function parseExcel(fileName){
+        var user = {};
+        user._id = Auth.getCurrentUser()._id;
+        user.fname = Auth.getCurrentUser().fname;
+        user.mname = Auth.getCurrentUser().mname;
+        user.lname = Auth.getCurrentUser().lname;
+        user.role = Auth.getCurrentUser().role;
+        user.userType = Auth.getCurrentUser().userType;
+        user.phone = Auth.getCurrentUser().phone;
+        user.mobile = Auth.getCurrentUser().mobile;
+        user.email = Auth.getCurrentUser().email;
+        user.country = Auth.getCurrentUser().country;
+        user.company = Auth.getCurrentUser().company;
+          return $http.post(path + "/import",{filename:fileName,user:user})
                 .then(function(res){
                   return res.data;
                 })
                 .catch(function(res){
                   throw res;
+                })
+      }
+
+    function loadIncomingProduct(){
+
+        return $http.post(path + '/incomingproducts',{userId:Auth.getCurrentUser()._id})
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(res){
+               throw res;
+          })
+    }
+    function deleteIncomingProduct(productId){
+       return $http.post(path + '/deleteincomingproduct',{productId:productId})
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(res){
+               throw res;
+          })
+    }
+    function getIncomingProduct(productId){
+              return $http.post(path + '/incomingproduct',{productId:productId})
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(res){
+                     throw res;
+                })
+      }
+
+      function unlockIncomingProduct(productId){
+              return $http.post(path + '/unlockincomingproduct',{productId:productId})
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(res){
+                     throw res;
                 })
       }
 

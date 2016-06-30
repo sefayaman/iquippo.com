@@ -46,6 +46,19 @@
                             </div>
                   </div>
                   <div class="row">
+                      <div class="col-lg-12">
+                        <h3>
+                          <div class="btn btn-success pull-right" ng-if="bulkProduct.products.length > 0">
+                              <span class="fileinput-button" >
+                                 <i class="fa fa-file-excel-o"></i>Upload Zip file
+                                 <input type="file" name="template_update" onchange="angular.element(this).scope().uploadZip(this.files,this)">
+                                 </span>
+                             </div>
+                        </h3>
+                        <hr>
+                      </div>
+                    </div>
+                  <div class="row">
                        <div class="form-group col-sm-offset-1 col-sm-10" >
                           <div class="row animate-show" ng-show="isSuccess" >
                             <div class="col-sm-12">                
@@ -81,9 +94,13 @@
                               <td>{{prd.brand.name}}</td>
                               <td>{{prd.model.name}}</td>
                               <td>{{prd.variant}}</td>
-                              <td> <a href="javascript:void(0);"  ng-click="bulkProduct.goToImageUpload($index)" class="btn btn-primary btn-xs" uib-popover="Add images" popover-trigger="mouseenter">
+                              <td> <!-- <a href="javascript:void(0);"  ng-click="bulkProduct.goToImageUpload(prd._id)" class="btn btn-primary btn-xs" uib-popover="Add images" popover-trigger="mouseenter">
                                   </i>Add Images
-                                </a></td>
+                                </a> -->
+                                  <a href="javascript:void(0);"  ng-click="bulkProduct.deleteProduct(prd._id)" class="btn btn-warning btn-xs">
+                                  </i>Delete
+                                </a> 
+                                </td>
                             </tr>
                           </tbody>
                       </table>  

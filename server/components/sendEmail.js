@@ -2,8 +2,8 @@ var nodemailer = require('nodemailer');
 var config = require('./../config/environment');
 var fs = require('fs');
 // configuration ===============================================================
-var mailConfig = { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "info@iquippo.com", Mailpassword: "Quippo123#@!",from:"info@iquippo.com"};
-//var mailConfig = { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "bharat.hinduja@bharatconnect.com", Mailpassword: "dumpy@180980", from:"bharat.hinduja@bharatconnect.com"};
+//var mailConfig = { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "info@iquippo.com", Mailpassword: "Quippo123#@!",from:"info@iquippo.com"};
+var mailConfig = { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "bharat.hinduja@bharatconnect.com", Mailpassword: "dumpy@180980", from:"bharat.hinduja@bharatconnect.com"};
 var email = {};
 var transport = null;
 // create reusable transporter object using SMTP transport

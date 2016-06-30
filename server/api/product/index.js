@@ -22,6 +22,14 @@ router.post('/bulkupdate', controller.bulkUpdate);
 router.post('/userwiseproductcount', controller.userWiseProductCount);
 router.post('/updateinquiry', controller.updateInquiryCounter);
 router.post('/categorywisecount', controller.categoryWiseCount);
+router.post('/incomingproducts', controller.incomingProduct);
+router.post('/deleteincomingproduct', controller.deleteIncomingProduct);
+router.post('/incomingproduct', controller.getIncomingProduct);
+router.post('/unlockincomingproduct', controller.unIncomingProduct);
+
+
+
+
 
 
 

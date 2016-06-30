@@ -11,16 +11,16 @@
                       <a href="/bulkproduct" class="btn btn-success"><i class="fa fa-database"></i> Bulk Product Upload</a>
                    </span>
                </div>
-            </h3> 
+            </h3>
             <hr>
           </div>
         </div>
-        
+
         <div class="row">
-          <div class="col-sm-12">            
+          <div class="col-sm-12">
           <!-- success error start-->
             <div class="row animate-show" ng-show="isSuccess" >
-              <div class="col-sm-12">                
+              <div class="col-sm-12">
                 <div class="alert alert-success alert-dismissible fade in" role="alert">
                   <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
                    {{successMessage}}
@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="row animate-show" ng-show="isError">
-              <div class="col-sm-12">                
+              <div class="col-sm-12">
                 <div class="alert alert-danger alert-dismissible fade in" role="alert">
                   <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
                     {{errorMessage}}
@@ -42,7 +42,7 @@
                 <h3>Seller Information</h3>
                 <div class="row" ng-show="isActive() || isChannelPartner()">
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                      <select ng-disabled="isEdit" class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
+                      <select ng-disabled="isEdit" class="form-control" name="userType" ng-model="userType" ng-change="onRoleChange(userType)" ng-required="isActive() || isChannelPartner()">
                         <option value="">* Customer Type</option>
                         <option value="individual">Individual</option>
                         <option value="private">Private Entrepreneur</option>
@@ -182,7 +182,7 @@
                     <div class="form-group col-sm-7" ng-class="{'has-error': form.productName.$invalid && submitted}">
                       <input ng-disabled="true" type="text" placeholder="Product Name" ng-value="productName" ng-model="productName" name="productName" class="form-control" required>
                     </div>
-                  </div>            
+                  </div>
 
                   <div class="row">
                     <div class="form-group col-sm-5">Manufacturing Year<span class="text-warning">*</span></div>
@@ -220,8 +220,8 @@
                       <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
                         <span class="input-group-addon currency-width">
                           <select class="form-control"  name="currencyType" ng-model="product.currencyType">
-                           <option value="" selected>&#x20B9; Rupee</option>                       
-                          </select>   
+                           <option value="" selected>&#x20B9; Rupee</option>
+                          </select>
                           <!-- <i class="caret"></i> -->
                         </span>
                           <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="product.tradeType != 'RENT'">
@@ -249,7 +249,7 @@
                       <select class="form-control" name="country" ng-model="product.state" ng-change="onStateChange()" required >
                             <option value="">Select State</option>
                             <option value="{{st.name}}" ng-repeat="st in stateList">{{st.name}}</option>
-                            
+
                       </select>
                       <i class="caret"></i>
                     </div>
@@ -270,11 +270,11 @@
                       <i class="caret"></i>
                     </div>
                   </div>
-                  
+
                   <div class="row">
                     <div class="form-group col-sm-5">Product Condition</div>
-                    <div class="form-group col-sm-7">                  
-                        <div class="row">                      
+                    <div class="form-group col-sm-7">
+                        <div class="row">
                           <div class="col-sm-6">
                             <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="product.productCondition" value="used"> Used</span>
                           </div>
@@ -291,13 +291,13 @@
                         Availability of asset<span class="text-warning">*</span>
                       </div>
                       <div class="col-sm-7">
-                        <div class="row">                          
+                        <div class="row">
                           <div class="col-sm-5">
                             <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
                               <span class="input-group-addon">From</span>
                               <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL'">
                             </div>
-                          </div>                          
+                          </div>
                           <div class="col-sm-5">
                             <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
                               <span class="input-group-addon">To</span>
@@ -327,9 +327,9 @@
                     </div>
                     <table class="table">
                       <thead>
-                        <tr>   
+                        <tr>
                           <th></th>
-                          <th>Min. Rental Period</th>                     
+                          <th>Min. Rental Period</th>
                           <th>Max. Rental Period</th>
                           <th>Rent Amount</th>
                           <th>Security Deposit</th>
@@ -358,8 +358,8 @@
                               <input type="number" placeholder="Security Deposit" min="1" class="form-control" name="seqDepositH" ng-model="product.rent.rateHours.seqDepositH" ng-required="product.rent.rateHours.rateType == 'hours'"/>
                           </div>
                           </td>
-                          
-                          
+
+
                         </tr>
                         <tr ng-if="product.rent.rateDays.rateType == 'days'">
                           <td><b>Days</b></td>
@@ -386,7 +386,7 @@
 
                         </tr>
                         <tr ng-if="product.rent.rateMonths.rateType == 'months'">
-                          <td><b>Months</b></td>                       
+                          <td><b>Months</b></td>
                           <td>
                             <div ng-class="{'has-error': form.minPeriodM.$invalid && submitted}">
                               <input type="number" placeholder="Min." class="form-control" min="1" name="minPeriodM" ng-model="product.rent.rateMonths.minPeriodM" ng-required="product.rent.rateMonths.rateType == 'months'"/>
@@ -409,14 +409,14 @@
                           </td>
 
                         </tr>
-                        
+
                       </tbody>
-                    </table> 
+                    </table>
                   </div>
 
                   <div class="row">
                     <div class="form-group col-sm-5">Rate Equipment</div>
-                    <div class="form-group col-sm-7">                  
+                    <div class="form-group col-sm-7">
                         <select class="form-control" name="rateMyEquipment" ng-model="product.rateMyEquipment">
                           <option value="" disabled>Rate Equipment</option>
                           <option ng-repeat="rateMyEquipment in rateMyEquipmentOpt" value="{{rateMyEquipment.name}}">{{rateMyEquipment.name}}</option>
@@ -442,7 +442,7 @@
                                <div class="icn">
                                   <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
                                </div>
-                                <span class="fileinput-button"><a href="javascript:void(0);"  class="al2"> 
+                                <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
                                     <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
                                   </a>
                                 </span>
@@ -452,9 +452,9 @@
                         </div>
                     </div>
                     </div>
-                   
+
                   </div>
-                  
+
                   <div class="form-group row" ng-repeat=" link in product.videoLinks">
                     <div class="col-sm-4 col-md-5">
                       Upload Video Link
@@ -469,7 +469,7 @@
                       <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
-                  </div> 
+                  </div>
                   <div class="row" ng-if="isAdmin() && isEdit">
                     <div class="form-group col-sm-5">Asset Status</div>
                     <div class="form-group col-sm-4">
@@ -479,23 +479,23 @@
                       </select>
                       <i class="caret"></i>
                     </div>
-                    
-                  </div>       
+
+                  </div>
                </div>
              </div>
 
               <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Technical information</h3>
-                  
-                  <!--  <div class="row">                    
+
+                  <!--  <div class="row">
                     <div ng-if="!isActive()" class="col-sm-offset-4 col-sm-5 text-right">
                       {{doc.name}}
                     </div>
                     <div ng-if="isActive()" class="col-sm-6 text-right">
-                      <a ng-if="isActive()" href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
+                      <a ng-if="isActive()" href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a>
                     </div>
-                    <div class="col-sm-1 text-right pull-right">                  
+                    <div class="col-sm-1 text-right pull-right">
                       <span class="text-right text-danger fileinput-button">
                               <span><i class="fa fa-file-text fa-2x"></i></span>
                               <input type="file" name="doc"  data-filetype="doc" file-upload>
@@ -504,8 +504,8 @@
                   </div> -->
                 </div>
                 <div class="panel-body">
-                 
-                  
+
+
                   <div class="row">
                     <div class="col-sm-5 form-group">Gross Weight</div>
                     <div class="col-sm-7 form-group">
@@ -545,7 +545,7 @@
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
-                  </div> 
+                  </div>
                   <div class="row">
                     <div class="col-sm-5 form-group">Upload Document</div>
                     <div class="col-sm-2">
@@ -555,11 +555,11 @@
                       </span>
                     </div>
                     <div class="col-sm-4">
-                      
+
                       <span ng-if="!isEdit">{{doc.name}}</span>
-                     
+
                       <div ng-if="isEdit" class="uploads-doc">
-                        <a  href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a> 
+                        <a  href="{{uploadImagePrefix}}{{product.assetDir}}/{{doc.name}}" class="" target="_blank" >{{doc.name}}</a>
                       </div>
                     </div>
 
@@ -586,7 +586,7 @@
                   </div>
                 </div>
               </div>
-              
+
                <div class="panel panel-default">
                 <div class="panel-heading">
                   <h3 class="panel-title">Doc Upload and Categorization</h3>
@@ -594,8 +594,8 @@
                 <div class="panel-body">
                   <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
                      <div class="col-sm-3 form-group">Document Category</div>
-                   
-                    
+
+
                     <div class="col-sm-3 form-group" ng-model="miscDoc.type">
                       <select class="form-control">
                         <option value="policy">Policy</option>
@@ -608,7 +608,7 @@
                   <span class="btn btn-warning fileinput-button">
                    <input type="file" data-index="{{$index}}" name="doc"  data-filetype="mdoc" file-upload>
                     <span><i class="fa fa-upload"></i> Upload Document</span>
-                               
+
                   </span>
             </div>
                 <div class="col-sm-2 uploads-doc">
@@ -621,13 +621,13 @@
                   </div>
                 </div>
               </div>
-              
 
 
 
 
 
-                <div class="clearfix form-group"></div>  
+
+                <div class="clearfix form-group"></div>
                 <div class="row form-group">
                     <div class="col-sm-3">Upload Terms &amp; Conditions</div>
                     <div class="col-sm-2">
@@ -645,7 +645,7 @@
                       <tbody>
                         <tr>
                           <td width="20%">Engine Repaired/Overhauling</td>
-                          <td width="30%"><input type="radio" id="yesCheck" name="enginstatus" ng-model="product.isEngineRepaired" value="true"> Yes                                          
+                          <td width="30%"><input type="radio" id="yesCheck" name="enginstatus" ng-model="product.isEngineRepaired" value="true"> Yes
                           </td>
                           <td width="20%"><input type="radio" id="noCheck" name="enginstatus" ng-model="product.isEngineRepaired" value="false"> No</td>
                         </tr>
@@ -653,16 +653,16 @@
                     </table>
                     <div class="form-group"></div>
                       <div class="row">
-                          <div class="col-sm-12">                       
+                          <div class="col-sm-12">
                             <textarea class="form-control" placeholder="Comments" ng-value="product.comment" ng-model="product.comment"></textarea>
-                          </div>                      
+                          </div>
                       </div>
                     </div>
                   <div class="row" ng-show="isActive()">
                       <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-1">
-                        <input type="checkbox" id="" name="featured" ng-model="product.featured" ng-value="product.featured"> 
+                        <input type="checkbox" id="" name="featured" ng-model="product.featured" ng-value="product.featured">
                       </div>
                       <div class="col-sm-5">
                         Featured
@@ -672,21 +672,21 @@
                       <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-1">
-                          <input type="checkbox" id="" name="status"  ng-model="product.status" ng-value="product.status"> 
+                          <input type="checkbox" id="" name="status"  ng-model="product.status" ng-value="product.status">
                           </div>
                           <div class="col-sm-5">
                             Active
                           </div>
                         </div>
                       </div>
-                    </div> 
-                <div class="clearfix form-group"></div>                  
+                    </div>
+                <div class="clearfix form-group"></div>
                  <div class="form-group pull-right">
-                    <button class="btn" type="button" ng-click="resetClick()" ng-show="!isEdit">Reset</button>
+                    <button class="btn" type="button" ng-click="resetClick(form)" ng-show="!isEdit">Reset</button>
                     <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button>
                     <button ng-hide="enableButton" class="btn btn-danger" ng-click="addOrUpdateProduct(product)">Submit</button>
                     <button ng-show="enableButton" class="btn btn-danger" confirmed-click="addOrUpdateProduct(product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
-                </div>            
+                </div>
             </form>
           </div>
         </div>
@@ -701,7 +701,7 @@
               <button type="button" class="close" ng-click="dismiss()" aria-hidden="true">&times;</button>
               <h4 class="modal-title">Preview Product Upload</h4>
             </div>
-            <div class="modal-body">              
+            <div class="modal-body">
               <div class="form-group">
               <ul class="img-magnifier text-center">
                   <li ng-repeat="img in images" ng-if="img.src">
@@ -719,7 +719,7 @@
               </div>
              <div class="form-group"></div>
              <h4 class="text-left">Basic Information</h4>
-              <div class="table-responsive">                
+              <div class="table-responsive">
                 <table class="table table-bordered" align="left">
                   <tr>
                     <td>Trading Type</td>
@@ -728,7 +728,7 @@
                     <td>Product Brand</td>
                     <td>Product Model</td>
                     <td>Product Name</td>
-                    <td>Mfg. Year</td>                    
+                    <td>Mfg. Year</td>
                     <td>Operating Hours/HMR</td>
                     <td>Mileage/KMR</td>
                     <td>Machine Serial No.</td>
@@ -746,8 +746,8 @@
                     <td ng-if="product.category.name == 'Other'">{{product.category.otherName}}</td>
                     <td ng-if="product.brand.name != 'Other'">{{product.brand.name}}</td>
                     <td ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</td>
-                    <td ng-if="product.brand.name != 'Other'">{{product.model.name}}</td> 
-                    <td ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</td> 
+                    <td ng-if="product.brand.name != 'Other'">{{product.model.name}}</td>
+                    <td ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</td>
                     <td>{{product.name}}</td>
                     <td>{{product.mfgYear | date:'yyyy'}}</td>
                     <td>{{product.operatingHour}}</td>
@@ -756,7 +756,7 @@
                     <td>{{product.grossPrice}}</td>
                     <td>{{product.country}}</td>
                     <td>{{product.city}}</td>
-                    <td>{{product.productCondition}}</td>                  
+                    <td>{{product.productCondition}}</td>
                     <td>{{product.videoName}}</td>
                   </tr>
               <!--<tr>
@@ -791,9 +791,9 @@
                 </div>
               <table class="table">
                 <thead>
-                      <tr>   
+                      <tr>
                         <th></th>
-                        <th>Min. Rental Period</th>                     
+                        <th>Min. Rental Period</th>
                         <th>MAx. Rental Period</th>
                         <th>Rent Amount</th>
                         <th>Security Deposit</th>
@@ -815,7 +815,7 @@
                         <td>{{product.rent.rateDays.seqDepositD}}</td>
                       </tr>
                       <tr ng-if="product.rent.rateMonths.rateType == 'months'">
-                        <td><b>Months</b></td>                       
+                        <td><b>Months</b></td>
                         <td>{{product.rent.rateMonths.minPeriodM}}</td>
                         <td>{{product.rent.rateMonths.maxPeriodM}}</td>
                         <td>{{product.rent.rateMonths.rentAmountM}}</td>
@@ -824,7 +824,7 @@
                     </tbody>
                 </table>
               <h4 class="text-left">Technical Information</h4>
-              <div class="table-responsive">               
+              <div class="table-responsive">
                 <table class="table table-bordered">
                   <tr>
                     <td>Document</td>
@@ -834,7 +834,7 @@
                     <td>Engine Power</td>
                     <td>Lifting Capacity</td>
                     <td ng-repeat="techInfo in product.technicalInfo.params">{{techInfo.key}}</td>
-                    
+
 
                   </tr>
                   <tr>
@@ -850,7 +850,7 @@
               </div>
 
               <h4 class="text-left">Service information</h4>
-              <div class="table-responsive">                
+              <div class="table-responsive">
                 <table class="table table-bordered">
                   <tr>
                     <td>Date</td>
@@ -863,7 +863,7 @@
                     <td>{{serviceinfo.operatingHour}}</td>
                     <td>{{serviceinfo.serviceAt}}</td>
                     <td>{{serviceinfo.authServiceStation}}</td>
-                    
+
                   </tr>
                 </table>
                 <table class="table table-bordered">

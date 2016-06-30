@@ -19,6 +19,7 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
 var config = require('./../../config/environment');
+var IncomingProduct = require('./../../components/incomingproduct.model');
 var  xlsx = require('xlsx');
 var importPath = config.uploadPath + config.importDir +"/";
 
@@ -41,6 +42,38 @@ exports.getOnId = function(req, res) {
     return res.json(product);
   });
 };
+//incoming products
+
+exports.incomingProduct = function(req,res){
+   IncomingProduct.find({'user._id':req.body.userId}, function (err, products) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(products);
+  });
+}
+
+exports.deleteIncomingProduct = function(req,res){
+  IncomingProduct.findOneAndRemove({_id:req.body.productId},function(err,dt){
+    if(err) { return handleError(res, err); }
+    if(!dt){ res.status(404).json({errorCode:1});}
+    else
+      res.status(200).json({});
+  })
+}
+
+exports.getIncomingProduct = function(req,res){
+  IncomingProduct.findOneAndUpdate({_id:req.body.productId,lock:false},{$set:{lock:true}},function(err,dt){
+    if(err) { return handleError(res, err); }
+    if(!dt){return res.status(404).json({errorCode:1});}
+    return res.status(200).json(dt);
+  })
+}
+
+exports.unIncomingProduct = function(req,res){
+  IncomingProduct.update({_id:req.body.productId},{$set:{lock:false}},function(err,dt){
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(dt);
+  })
+}
 
 //search products
 exports.search = function(req, res) {
@@ -66,6 +99,16 @@ exports.search = function(req, res) {
     arr[arr.length] = {city:{$regex:locRegEx}};
     arr[arr.length] = {state:{$regex:locRegEx}};
   }
+  if(req.body.cityName){
+    var cityRegex = new RegExp(req.body.cityName, 'i');
+    filter['city'] = {$regex:cityRegex};
+  }
+
+  if(req.body.stateName){
+    var stateRegex = new RegExp(req.body.stateName, 'i');
+    filter['state'] = {$regex:stateRegex};
+  }
+
   if(arr.length > 0)
     filter['$or'] = arr;
   
@@ -237,15 +280,21 @@ exports.update = function(req, res) {
 // Creates a new product in the DB.
 exports.create = function(req, res) {
   req.isEdit = false;
-  if(req.body.applyWaterMark){
-      req.imgCounter = 0;
-      req.totalImages = req.body.images.length;
-      req.images = req.body.images;
-      req.assetDir = req.body.assetDir;
-      checkAndCopyImage(req,res,null);
-  }else{
-    addProduct(req,res)    
-  }
+  Product.find({assetId:req.body.assetId},function(err,pds){
+    if (err) { return handleError(res, err); }
+    else if(pds.length > 0){return res.status(404).json({errorCode:1});}
+    else{
+      if(req.body.applyWaterMark){
+        req.imgCounter = 0;
+        req.totalImages = req.body.images.length;
+        req.images = req.body.images;
+        req.assetDir = req.body.assetDir;
+        checkAndCopyImage(req,res,null);
+      }else{
+        addProduct(req,res)    
+      }
+    } 
+  });
 };
 
 function checkAndCopyImage(req,res,cb){
@@ -258,7 +307,8 @@ function checkAndCopyImage(req,res,cb){
         req.imgCounter ++;
         checkAndCopyImage(req,res,cb);
       }else{
-        var fileNameParts = imgObj.src.split('.');
+        placeWatermark(req,res,imgPath,cb);
+       /* var fileNameParts = imgObj.src.split('.');
         var extPart = fileNameParts[fileNameParts.length -1];
         var namePart = fileNameParts[0];
         var originalFilePath = config.uploadPath + req.assetDir + "/" + namePart +"_original." + extPart;
@@ -268,9 +318,8 @@ function checkAndCopyImage(req,res,cb){
             fsExtra.copy(imgPath,originalFilePath,function(err,result){
               placeWatermark(req,res,imgPath,cb);
             })
-        }
+        }*/
       }
-
    }else{
       if(cb)
         cb(req,res);
@@ -1036,10 +1085,21 @@ function importProducts(req,res,data){
   if(req.counter < req.numberOfCount){
     var row = data[req.counter];
     var assetIdVal = row["Asset_ID*"];
+    if(!assetIdVal){
+      var errorObj = {};
+      errorObj['rowCount'] = req.counter + 2;
+      errorObj['message'] =  "Asset_ID is mandatory to be filled.";
+      req.errors[req.errors.length] = errorObj;
+      req.counter ++;
+      importProducts(req,res,data);
+      return;
+    }
+    assetIdVal = trim(assetIdVal);
     if(req.assetIdCache[assetIdVal]){
       var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = assetIdVal + " Asset_ID already exist in excal file. Please correct it.";//"Field marked with * are mandatory.";
+        errorObj['AssetId'] = assetIdVal;
+        errorObj['message'] = "Duplicate Asset_ID " + assetIdVal + " in excel.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -1051,11 +1111,48 @@ function importProducts(req,res,data){
     Seq()
     .seq(function(){
       var self = this;
+       Product.find({assetId:assetIdVal},function(err,products){
+        if(err) return handleError(res, err); 
+        if(products.length > 0){
+          var errorObj = {};
+          errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
+          errorObj['message'] = assetIdVal + " Asset_ID is already exist.";
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          importProducts(req,res,data);
+          return;
+        }else{
+
+          //product["assetId"] = trim(assetId);
+          //self();
+          IncomingProduct.find({assetId:assetIdVal},function(err,prds){ 
+            if(err) return handleError(res, err);
+            if(prds.length > 0){
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
+              errorObj['message'] =  "Product with this Asset_Id is already exist in waiting queue.";
+              req.errors[req.errors.length] = errorObj;
+              req.counter ++;
+              importProducts(req,res,data);
+              return;
+            }else{
+              product.assetId = assetIdVal;
+              self();
+            }
+          });      
+        }
+      })
+    })
+    .seq(function(){
+      var self = this;
        var categoryName = row["Category*"];
       if(!categoryName){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] = "Category is mandatory to be filled";//"Field marked with * are mandatory.";
+        errorObj['AssetId'] = assetIdVal;
+        errorObj['message'] = "Category is mandatory to be filled";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
@@ -1077,7 +1174,8 @@ function importProducts(req,res,data){
             if(!othCat){
                var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
-              errorObj['message'] = "Other_Category is mandatory to be filled";//"Field marked with * are mandatory.";
+              errorObj['AssetId'] = assetIdVal;
+              errorObj['message'] = "Other_Category is mandatory to be filled";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
@@ -1093,6 +1191,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
            errorObj['rowCount'] = req.counter + 2;
+           errorObj['AssetId'] = assetIdVal;
           errorObj["message"] = "Category '" + categoryName + "' does not exist in master data.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1108,6 +1207,7 @@ function importProducts(req,res,data){
       if(!brandName){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
+        errorObj['AssetId'] = assetIdVal;
         errorObj['message'] = "Product_Brand is mandatory to be filled";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
@@ -1119,6 +1219,7 @@ function importProducts(req,res,data){
       if(product.category['name'] == "Other" && brandName != "Other"){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
+        errorObj['AssetId'] = assetIdVal;
         errorObj['message'] = "Category '"+ product.category['name'] +"' and  Brand '" + brandName +"' relation does not exist.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
@@ -1141,6 +1242,7 @@ function importProducts(req,res,data){
             if(!othBrand){
                var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Other_Brand is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1159,6 +1261,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
            errorObj['rowCount'] = req.counter + 2;
+           errorObj['AssetId'] = assetIdVal;
           errorObj["message"] = "Category, Brand relation does not exist in Master Data.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1173,6 +1276,7 @@ function importProducts(req,res,data){
        if(!modelName){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
+        errorObj['AssetId'] = assetIdVal;
         errorObj['message'] = "Product_Model is mandatory to be filled.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
@@ -1183,6 +1287,7 @@ function importProducts(req,res,data){
       if(product.brand['name'] == "Other" && modelName != "Other"){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
+        errorObj['AssetId'] = assetIdVal;
         errorObj['message'] = "Brand, Model relation does not exist in Master Data.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
@@ -1207,6 +1312,7 @@ function importProducts(req,res,data){
             if(!othModel){
                var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Other_Model is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1229,6 +1335,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
            errorObj['rowCount'] = req.counter + 2;
+           errorObj['AssetId'] = assetIdVal;
           errorObj["message"] = "Category, Brand, Model relation does not exist in Master Data.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1257,6 +1364,7 @@ function importProducts(req,res,data){
        if(!sellerEmail){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
+        errorObj['AssetId'] = assetIdVal;
         errorObj['message'] = "Seller_Email_Address is mandatory to be filled.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
@@ -1281,6 +1389,7 @@ function importProducts(req,res,data){
         }else{
           var errorObj = {};
           errorObj["rowCount"] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj["message"] = "Seller_Email_Address does not exist in the syatem.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1289,36 +1398,7 @@ function importProducts(req,res,data){
       })
     })
     .seq(function(){
-      var self = this;
-      var assetId = row["Asset_ID*"];
-       if(!assetId){
-        var errorObj = {};
-        errorObj['rowCount'] = req.counter + 2;
-        errorObj['message'] =  "Asset_ID is mandatory to be filled.";
-        req.errors[req.errors.length] = errorObj;
-        req.counter ++;
-        importProducts(req,res,data);
-        return;
-      }
-      assetId = trim(assetId);
-       Product.find({assetId:assetId},function(err,products){
-        if(err) return handleError(res, err); 
-        if(products.length > 0){
-          var errorObj = {};
-          errorObj['rowCount'] = req.counter + 2;
-          errorObj['message'] = assetId + " Asset_ID is already exist.";
-          //console.log("Asset_ID is already exist.", assetId);
-          req.errors[req.errors.length] = errorObj;
-          req.counter ++;
-          importProducts(req,res,data);
-          return;
-        }else{
-          product["assetId"] = trim(assetId);
-          self();        
-        }
-      })
-    })
-    .seq(function(){
+        var self = this;
         product["createdAt"] = new Date();
         product["updatedAt"] = new Date();
         product["relistingDate"] = new Date();
@@ -1326,6 +1406,7 @@ function importProducts(req,res,data){
         if(!country){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj['message'] = "Country is mandatory to be filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1342,6 +1423,7 @@ function importProducts(req,res,data){
         if(!tradeType ){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj['message'] = "Trade_Type is mandatory to be filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1352,6 +1434,7 @@ function importProducts(req,res,data){
         if(['RENT','SELL','BOTH'].indexOf(tradeType) == -1){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj['message'] = "Trade_Type should have a value selected from its picklist only.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1362,7 +1445,7 @@ function importProducts(req,res,data){
         product["tradeType"] = trim(tradeType);
         if(tradeType != "RENT") {
           var gp = row["Gross_Price*"];
-          var prOnReq = trim(row["Price_on_Request*"]).toLowerCase();
+           var prOnReq = row["Price_on_Request*"];
           var cr = row["Currency*"];
           if(gp && cr){
               product["grossPrice"] = Number(trim(gp));
@@ -1370,17 +1453,25 @@ function importProducts(req,res,data){
             } else {
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Gross_Price and Currency is mandatory to filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
               importProducts(req,res,data);
               return;
             }
-            if(prOnReq == 'yes' || prOnReq == 'y') {
-              product["priceOnRequest"] = true; 
-            }else {
+            if(!prOnReq){
               product["priceOnRequest"] = false;
+            }else{
+
+                prOnReq = trim(prOnReq).toLowerCase();
+                if(prOnReq == 'yes' || prOnReq == 'y') {
+                  product["priceOnRequest"] = true; 
+                }else {
+                  product["priceOnRequest"] = false;
+                }
             }
+            
         }          
 
         product["productCondition"] = trim(row["Product_Condition"] || "").toLowerCase();
@@ -1391,6 +1482,7 @@ function importProducts(req,res,data){
         if(!state){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj['message'] = "State is mandatory to filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1403,6 +1495,7 @@ function importProducts(req,res,data){
         if(!location){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj['message'] = "Location is mandatory to be filled.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1415,6 +1508,7 @@ function importProducts(req,res,data){
         if(!mfgYear || mfgYear.length != 4){
           var errorObj = {};
           errorObj['rowCount'] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
           errorObj['message'] = " Manufacturing_Year should be in YYYY format.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
@@ -1458,6 +1552,7 @@ function importProducts(req,res,data){
           if(!fromDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
+            errorObj['AssetId'] = assetIdVal;
             errorObj['message'] = "Availability_of_Asset_From is required to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
@@ -1469,6 +1564,7 @@ function importProducts(req,res,data){
           if(!toDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
+            errorObj['AssetId'] = assetIdVal;
             errorObj['message'] = "Availability_of_Asset_To is required to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
@@ -1482,6 +1578,7 @@ function importProducts(req,res,data){
             if(!minPeriodH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Min_Rental_Period_Hours is required to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1494,6 +1591,7 @@ function importProducts(req,res,data){
             if(!maxPeriodH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Max_Rental_Period_Hours is required to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1506,6 +1604,7 @@ function importProducts(req,res,data){
             if(!rentAmountH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Rent_Amount_Hours is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1518,6 +1617,7 @@ function importProducts(req,res,data){
             if(!seqDepositH){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Security_Deposit_Hours is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1532,6 +1632,7 @@ function importProducts(req,res,data){
             if(!minPeriodD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Min_Rental_Period_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1544,6 +1645,7 @@ function importProducts(req,res,data){
             if(!maxPeriodD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Max_Rental_Period_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1556,6 +1658,7 @@ function importProducts(req,res,data){
             if(!rentAmountD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Rent_Amount_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1568,6 +1671,7 @@ function importProducts(req,res,data){
             if(!seqDepositD){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Security_Deposit_Days is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1582,6 +1686,7 @@ function importProducts(req,res,data){
             if(!minPeriodM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Min_Rental_Period_Months is mandatory to filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1594,6 +1699,7 @@ function importProducts(req,res,data){
             if(!maxPeriodM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Max_Rental_Period_Months is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1606,6 +1712,7 @@ function importProducts(req,res,data){
             if(!rentAmountM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Rent_Amount_Months is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1618,6 +1725,7 @@ function importProducts(req,res,data){
             if(!seqDepositM){
               var errorObj = {};
               errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
               errorObj['message'] = "Security_Deposit_Months is mandatory to be filled.";
               req.errors[req.errors.length] = errorObj;
               req.counter ++;
@@ -1645,14 +1753,27 @@ function importProducts(req,res,data){
         product["serviceInfo"][0].serviceAt = trim(row["Service_at_KMs"] || "");
         product["serviceInfo"][0].operatingHour = trim(row["Operating_Hours"] || "");
         product["serviceInfo"][0].servicedate =  new Date(trim(row["Service_Date"] || "")) || "";
-
-        req.successProductArr[req.successProductArr.length] = product;
-        req.counter ++;
-         importProducts(req,res,data);
+        product.user = req.body.user;
+        product.images = [{}];
+        IncomingProduct.create(product,function(err,pd){
+          if(err){
+            console.log("error in pushing prduct in queue",err);
+              var errorObj = {};
+              errorObj['rowCount'] = req.counter + 2;
+              errorObj['AssetId'] = assetIdVal;
+              errorObj['message'] = "Unknown error.";
+              req.errors[req.errors.length] = errorObj;
+          }else{
+            req.successProductArr[req.successProductArr.length] = product;
+          }
+          req.counter ++;
+          importProducts(req,res,data);
+        });
+        //req.counter ++;
+        //importProducts(req,res,data);
     })
-
   }else{
-    res.status(200).json({successList:req.successProductArr,errorList:req.errors});
+    res.status(200).json({successCount:req.successProductArr.length,errorList:req.errors});
   }
   
 }
@@ -1701,5 +1822,6 @@ function fileExists(filePath)
 }
 
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }
