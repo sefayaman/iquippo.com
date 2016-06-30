@@ -1,8 +1,14 @@
 
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var jwt = require('jsonwebtoken');
+var UserModel = null;
+var configObj = null;
+
 
 exports.setup = function (User, config) {
+  UserModel = User;
+  configObj = config;
   passport.use(new GoogleStrategy({
       clientID: config.google.clientID,
       clientSecret: config.google.clientSecret,
@@ -13,6 +19,25 @@ exports.setup = function (User, config) {
     }
   ));
 };
+
+exports.login = function(req,res){
+  var bodyData = req.body;
+  var profile = {};
+  profile.id = bodyData.id;
+  profile.emails = [{}];
+  profile.emails[0].value = bodyData.email;
+  profile.name = bodyData.name;
+  profile.givenName = bodyData.given_name;
+  profile.familyName = bodyData.family_name;
+  findUserByGoogleId(UserModel,profile,"",function(err,user){
+    if(err){
+        return handleError(res,err);
+    }else{
+      var token = jwt.sign({_id: user._id }, configObj.secrets.session, { expiresInMinutes: 60*5 });
+      res.json({ token: token });
+    }
+  });
+}
 
 function findUserByGoogleId(User,profile,token,done){
   User.findOne({
@@ -74,4 +99,8 @@ function createUser(User,profile,token,done){
       };
       return done(err, user);
     });
+}
+
+function handleError(res, err) {
+  return res.status(500).send(err);
 }
