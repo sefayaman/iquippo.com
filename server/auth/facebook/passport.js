@@ -1,8 +1,13 @@
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 
-exports.setup = function (User, config) {
+var jwt = require('jsonwebtoken');
+var UserModel = null;
+var configObj = null;
 
+exports.setup = function (User, config) {
+UserModel = User;
+configObj = config;
 passport.use('facebook', new FacebookStrategy({
   clientID: config.facebook.clientID,
   clientSecret: config.facebook.clientSecret,
@@ -16,6 +21,27 @@ passport.use('facebook', new FacebookStrategy({
     });
   }));
 };
+
+exports.login = function(req,res){
+  var bodyData = req.body;
+  var profile = {};
+  profile.id = bodyData.id;
+  if(bodyData.email){
+     profile.emails = [{}];
+     profile.emails[0].value = bodyData.email;
+  }
+  profile.name = {};
+  profile.name.givenName = bodyData.first_name;
+  profile.name.familyName = bodyData.last_name;
+  findByFacebookId(UserModel,profile,"",function(err,user){
+    if(err){
+        return handleError(res,err);
+    }else{
+      var token = jwt.sign({_id: user._id }, configObj.secrets.session, { expiresInMinutes: 60*5 });
+      res.json({ token: token });
+    }
+  });
+}
 
 function findByFacebookId(User,profile,token,done){
    User.findOne({ 'facebook.id' : profile.id,deleted:false }, function(err, user) {

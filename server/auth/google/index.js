@@ -3,7 +3,7 @@
 var express = require('express');
 var passport = require('passport');
 var auth = require('../auth.service');
-
+var controller = require("./passport");
 var router = express.Router();
 
 router
@@ -19,5 +19,6 @@ router
     failureRedirect: '/',
     session: false
   }), auth.setTokenCookie);
-
+  
+router.post('/mobilelogin', controller.login);
 module.exports = router;
