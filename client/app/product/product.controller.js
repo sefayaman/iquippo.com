@@ -139,6 +139,12 @@ angular.module('sreizaoApp')
 
       if(!$scope.product.miscDocuments || $scope.product.miscDocuments.length == 0)
         $scope.product.miscDocuments = [{}];
+      
+      if(!$scope.product.technicalInfo){
+           $scope.product.technicalInfo = {};
+            $scope.product.technicalInfo.params = [{}];
+      }
+        
 
       if(product.assetStatus)
           prevAssetStatus = product.assetStatus;
