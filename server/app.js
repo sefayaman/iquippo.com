@@ -47,7 +47,11 @@ var storage = multer.diskStorage({
     cb(null, req.uplPath);
   },
   filename: function (req, file, cb) {
-    var arr = decodeURI(file.originalname).split(".");
+     var decodedFname = decodeURI(file.originalname);
+    if(decodedFname.indexOf('%20') != -1)
+      decodedFname = decodedFname.replace(/%20/g,'');
+   // var arr = decodeURI(file.originalname).split(".");
+   var arr = decodedFname.split(".");
     var extPart = arr[arr.length - 1];
     arr.splice(arr.length - 1,1);
     var namePart = arr.join('_');
@@ -80,8 +84,9 @@ app.post('/api/uploads',function(req,res){
       req.total = 1;
       resizeImg(req,res,assetDir,dimension,false)
     }
-    else
-      res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+    else{
+       res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+    }
 
   });
 });

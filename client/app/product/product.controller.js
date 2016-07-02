@@ -123,6 +123,8 @@ angular.module('sreizaoApp')
           if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
             response.serviceInfo[i].servicedate = moment(response.serviceInfo[i].servicedate).toDate();
         }
+      } else {
+        $scope.product.serviceInfo = [{}];
       }
       product = $scope.product = response;
       angular.copy($scope.product.images,$scope.images);
@@ -482,7 +484,11 @@ angular.module('sreizaoApp')
       });
 
       $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item,idx){
-          return item.uri;
+          if(item && item.uri)  
+              return true;
+          else
+            return false;
+
       });
 
       if($scope.product.images.length == 0){
