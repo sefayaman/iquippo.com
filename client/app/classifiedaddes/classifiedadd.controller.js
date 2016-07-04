@@ -200,6 +200,11 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
   function closeDialog() {
      //Start NJ : classifiedAdClose object push in GTM dataLayer
      dataLayer.push(gaMasterObject.classifiedAdClose);
+     //NJ:set classifiedAd Close Time
+     var classifiedAdCloseTime = new Date();
+     var timeDiff = Math.floor(((classifiedAdCloseTime - $scope.classifiedAdStartTime)/1000)*1000);
+     gaMasterObject.classifiedAdCloseTime.timingValue = timeDiff;
+     ga('send', gaMasterObject.classifiedAdCloseTime);
      //End
      $uibModalInstance.dismiss('cancel');
    };
