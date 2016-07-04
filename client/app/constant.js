@@ -586,7 +586,7 @@ classifiedAdCloseTime: {
     timingVar: 'Home_Classified_Ad_Close',
     timingLabel: 'Home_Classified_Ad_Close',
     timingValue: ''
-}
+},
 quickQueryCloseTime: {
     hitType: 'timing',
     timingCategory: 'Home_QuickQuery',
