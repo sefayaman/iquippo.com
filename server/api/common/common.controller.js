@@ -938,7 +938,8 @@ function deleteState(req,res){
 }
 // Get list of city
 exports.getAllCity = function(req, res) {
-  City.find(function (err, ct) {
+	var query = City.find({}).sort({name:1});
+  query.exec(function (err, ct) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(ct);
   });

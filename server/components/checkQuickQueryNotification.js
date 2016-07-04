@@ -13,7 +13,7 @@ function getAllQuery(){
  Quote.find(filter).exec(function (err, data) {
       if (err) { 
         return console.log(err);
-        setTimeout(function () { getAllQuery(); }, 1*24*60*60*1000); //sleep 
+        setTimeout(function () { getAllQuery(); }, 1*24*60*60*1000); //sleep 1*24*60*60*1000
       }
       else {
           getMatchingProductList(data);
@@ -32,24 +32,33 @@ function getMatchingProductList(data){
   var bestComb = {};
   var bestSimilarComb = {};
   var similarComb = {};
+  var found = false;
   if(qr.category && qr.brand && qr.model){
     bestComb['category.name'] = qr.category;
     bestComb['brand.name'] = qr.brand;
     bestComb['model.name'] = qr.model;
     filter['$or'].push(bestComb);
+    found = true;
   }
 
 if(qr.category && qr.brand){
     bestSimilarComb['category.name'] = qr.category;
     bestSimilarComb['brand.name'] = qr.brand;
     filter['$or'].push(bestSimilarComb);
+    found = true;
   }
 
   if(qr.category){
       similarComb['category.name'] = qr.category;
       filter['$or'].push(similarComb);
+      found = true;
    }
 
+  if(!found){
+    data.splice(0,1);
+    getMatchingProductList(data);
+    return;
+  }
     Product.find(filter).exec(function (err, products) {
         if (err) { 
           console.log(err);
@@ -75,7 +84,7 @@ if(qr.category && qr.brand){
         }
     });
   } else {
-     setTimeout(function () { getAllQuery(); }, 1*24*60*60*1000); //sleep 
+     setTimeout(function () { getAllQuery(); }, 1*24*60*60*1000); //sleep 1*24*60*60*1000
   }
 }
 
