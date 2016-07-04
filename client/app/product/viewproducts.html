@@ -13,12 +13,12 @@
                 </div>   -->
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
-                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
+                  <select class="form-control col-md-2" name="type" ng-model="type" ng-change="viewproductVm.onTypeChange(type)">
                     <option value="">Both</option>
                     <option value="SELL">Buy</option>
                     <option value="RENT">Rent</option>
-                    <option value="">Rented</option>
-                    <option value="">Sold</option>
+                    <option value="rented">Rented</option>
+                    <option value="sold">Sold</option>
                   </select>
                   
                   <i class="caret"></i>          
@@ -202,8 +202,8 @@
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
                             <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
-                            <div class="sold-tag"><span>Sold</span></div>
-                            <!-- <div class="rent-tag"><span>Rented</span></div> -->
+                            <div class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></div>
+                            <div class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></div>
                           </a>
 
                         </div>

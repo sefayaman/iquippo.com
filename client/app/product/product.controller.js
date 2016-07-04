@@ -627,7 +627,7 @@ angular.module('sreizaoApp')
             $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj; 
             if($scope.product.assetStatus == assetStatuses[2].code){
               $scope.product.isSold = true;
-              $scope.product.status = false;
+              //$scope.product.status = false;
             }
         }
       if(!$scope.product.assetId)

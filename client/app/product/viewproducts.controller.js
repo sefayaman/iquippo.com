@@ -47,7 +47,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.addToCompare = addToCompare;
   vm.compare = compare;
   vm.removeProductFromCompList = removeProductFromCompList;
-
+  vm.onTypeChange = onTypeChange;
 
 
    $scope.dynamicPopover = {
@@ -257,6 +257,19 @@ function onModelChange(model){
         //error handling
       })
   };
+
+  function onTypeChange(type){
+    if(type == 'rented' || type == 'sold') {
+      $scope.equipmentSearchFilter.assetStatus = type;
+      if($scope.equipmentSearchFilter.tradeType)
+        delete $scope.equipmentSearchFilter.tradeType;
+    } else {
+      $scope.equipmentSearchFilter.tradeType = type;
+      if($scope.equipmentSearchFilter.assetStatus)
+        delete $scope.equipmentSearchFilter.assetStatus;
+    }
+    fireCommand();
+  }
 
   function fireSearchCommand(countrySearch){
     $scope.equipmentSearchFilter.country = countrySearch;

@@ -87,7 +87,7 @@ function updateProduct(data,expired){
     if(expired){
       product.expired = true;
       product.status = false;
-      product.featured = false;
+      //product.featured = false;
     }else{
       product.expiryAlert = true;
     }
