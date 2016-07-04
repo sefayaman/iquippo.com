@@ -202,7 +202,10 @@
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
                             <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                            <div class="sold-tag"><span>Sold</span></div>
+                            <!-- <div class="rent-tag"><span>Rented</span></div> -->
                           </a>
+
                         </div>
                         <div class="media-body">
                           <h4 class="media-heading">
