@@ -14,24 +14,15 @@
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
                   <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
-                  <option value="">Both</option>
-                  <option value="SELL">Buy</option>
-                  <option value="RENT">Rent</option>
+                    <option value="">Both</option>
+                    <option value="SELL">Buy</option>
+                    <option value="RENT">Rent</option>
+                    <option value="">Rented</option>
+                    <option value="">Sold</option>
                   </select>
                   
                   <i class="caret"></i>          
-                </div>  
-
-                <label for="" class="text-muted">Asset Status </label>
-                <div class="form-group">
-                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
-                  <option value="">Rented</option>
-                  <option value="">Sold</option>
-                  <option value="">Listed</option>
-                  </select>
-                  
-                  <i class="caret"></i>          
-                </div>  
+                </div>   
 
                 <label for="" class="text-muted">Product Group </label>
                 <div class="form-group">
@@ -211,7 +202,10 @@
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
                             <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                            <div class="sold-tag"><span>Sold</span></div>
+                            <!-- <div class="rent-tag"><span>Rented</span></div> -->
                           </a>
+
                         </div>
                         <div class="media-body">
                           <h4 class="media-heading">

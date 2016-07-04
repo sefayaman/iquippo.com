@@ -734,3 +734,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 31px;top: 195px; overflow: hidden; width: 150px;}
 .profilePic-button .fileinput-button:hover{background: rgba(255,255,255,1);}
 .has-error .basic-detail{border:1px solid #f00;}
+.sold-tag,.rent-tag{display: block;position: absolute;color:#fff;top:78px;bottom: 0;border-right:50px solid transparent;border-top:50px solid #E3000F;}
+.sold-tag span, .rent-tag span{-webkit-transform:rotate(318deg);-moz-transform:rotate(350deg);-ms-transform:rotate(318deg);-o-transform:rotate(318deg);transform:rotate(318deg);position: absolute;top: -40px;font-size: 11px; left: 3px;}
+.sold-tag span{left: 5px;}
+.rent-tag{border-top:50px solid #004394;}
