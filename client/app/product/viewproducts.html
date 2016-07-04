@@ -202,8 +202,8 @@
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right">
                             <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
-                            <div class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></div>
-                            <div class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></div>
+                            <span class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></span>
+                            <span class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></span>
                           </a>
 
                         </div>
