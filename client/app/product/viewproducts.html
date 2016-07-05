@@ -220,9 +220,18 @@
                             <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
                             <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
                           </h4>
-                          <p>{{product.brand.name}}</p>
-                          <p>{{product.model.name}}</p>
-                          <p>{{product.category.name}}</p>
+                          <p>
+                            <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
+                            <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
+                          </p>
+                          <p>
+                            <span ng-if="product.model.name != 'Other'">{{product.model.name}}</span>
+                            <span ng-if="product.model.name == 'Other'">{{product.model.otherName}}</span>
+                          </p>
+                          <p>
+                            <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
+                            <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
+                          </p>
                           <p>{{product.city}}
                            
                             <div class="pull-right">

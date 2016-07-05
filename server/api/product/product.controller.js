@@ -1684,30 +1684,33 @@ function importProducts(req,res,data){
           product["rent"].rateMonths ={};
           product["rent"].rateMonths.rateType = "months";
         }
-          var fromDate = row["Availability_of_Asset_From"];
-          if(!fromDate){
+          var fromDate = new Date(row["Availability_of_Asset_From"]);
+          var validDate = isValid(fromDate);
+          
+          if(!fromDate || !validDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
             errorObj['AssetId'] = assetIdVal;
-            errorObj['message'] = "Availability_of_Asset_From is required to be filled.";
+            errorObj['message'] = "Availability_of_Asset_From date is blank or invalid to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             importProducts(req,res,data);
             return;
           }
-          product["rent"].fromDate = trim(fromDate);
-          var toDate = row["Availability_of_Asset_To"];
-          if(!toDate){
+          product["rent"].fromDate = fromDate;
+          var toDate = new Date(row["Availability_of_Asset_To"]);
+          validDate = isValid(fromDate);
+          if(!toDate || !validDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
             errorObj['AssetId'] = assetIdVal;
-            errorObj['message'] = "Availability_of_Asset_To is required to be filled.";
+            errorObj['message'] = "Availability_of_Asset_To date is blank or invalid to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             importProducts(req,res,data);
             return;
           }
-          product["rent"].toDate = trim(toDate);
+          product["rent"].toDate = toDate;
           //rent hours
           if(rateTypeH == "yes" || rateTypeH == 'y') {
             var minPeriodH = row["Min_Rental_Period_Hours"];
@@ -1913,6 +1916,10 @@ function importProducts(req,res,data){
   }
   
 }
+
+function isValid(d) {
+  return d.getTime() === d.getTime();
+}; 
 
 function getOtherObj(arr,term){
   var objRef = null;

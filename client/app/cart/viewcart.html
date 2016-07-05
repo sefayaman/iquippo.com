@@ -32,10 +32,18 @@
                 </td>
                 <td>{{product.productId}}</td>
                 <td>{{product.group.name}}</td>
-                <td>{{product.category.name}}</td>
-                
-                <td>{{product.brand.name}}</td>
-                <td>{{product.model.name}}</td>
+                <td>
+                  <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
+                  <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
+                </td>
+                <td>
+                  <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
+                  <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
+                </td>
+                <td>
+                  <span ng-if="product.brand.name != 'Other'">{{product.model.name}}</span>
+                  <span ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</span>
+                </td>
                 <td>{{product.mfgYear}}</td>
                  <td>{{product.country}}</td>
                  <td ng-if="product.productCondition == 'new'">New</td>
