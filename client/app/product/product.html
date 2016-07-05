@@ -8,8 +8,10 @@
               Product Upload
                 <div class="pull-right" ng-if="isBulkUpload()">
                   <span class="fileinput-button" >
-                      <a href="/bulkproduct" class="btn btn-warning"><i class="fa fa-database"></i> Bulk Status Update</a>
-                   </span>
+                    <button class="btn btn-warning"><i class="fa fa-database"></i> Bulk Status Update
+                      <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetStatusTemp(this.files,this)">
+                    </button>
+                  </span>
                </div>
                <div class="pull-right" ng-if="isBulkUpload()">
                   <span class="fileinput-button" >

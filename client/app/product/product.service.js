@@ -30,6 +30,7 @@
       prdService.setFilter = setFilter;
       prdService.exportProduct = exportProduct;
       prdService.bulkProductUpdate = bulkProductUpdate;
+      prdService.bulkProductStatusUpdate = bulkProductStatusUpdate;
       prdService.userWiseProductCount = userWiseProductCount;
       prdService.updateInquiryCounter = updateInquiryCounter;
       prdService.categoryWiseCount = categoryWiseCount;
@@ -187,7 +188,17 @@
               });
       };
 
-      function parseExcel(fileName){
+      function bulkProductStatusUpdate(fileName){
+        return $http.post(path + "/bulkproductstatusupdate",{filename:fileName})
+              .then(function(res){
+                return res.data;
+              })
+              .catch(function(res){
+                throw res;
+              })
+      }
+
+    function parseExcel(fileName){
         var user = {};
         user._id = Auth.getCurrentUser()._id;
         user.fname = Auth.getCurrentUser().fname;
@@ -208,7 +219,6 @@
                   throw res;
                 })
       }
-
     function loadIncomingProduct(){
 
         return $http.post(path + '/incomingproducts',{userId:Auth.getCurrentUser()._id})

@@ -43,7 +43,7 @@ angular.module('sreizaoApp')
 
   $scope.userRequiredFlag = true;
   $scope.compRequiredFlag = false;
-
+  $scope.updateAssetStatusTemp = updateAssetStatusTemp;
 
   // get all user based on role
   function init(){
@@ -334,7 +334,43 @@ angular.module('sreizaoApp')
       });
   });
 
-  
+  function updateAssetStatusTemp(files){
+    if(!files[0])
+      return;
+    if(files[0].name.indexOf('.xlsx') == -1){
+        Modal.alert('Please upload a valid file');
+        return;
+    }
+    uploadSvc.upload(files[0],importDir)
+    .then(function(result){
+      var fileName = result.data.filename;
+      $rootScope.loading = true;
+      productSvc.bulkProductStatusUpdate(fileName)
+      .then(function(res){
+          $rootScope.loading = false;
+          var totalRecord = res.successCount + res.errorList.length;
+          var message =  res.successCount + " out of "+ totalRecord  + " records are updated successfully.";
+          if(res.errorList.length > 0){
+             var data = {};
+            data['to'] = Auth.getCurrentUser().email;
+            data['subject'] = 'Bulk produt status update error details.';
+            var serData = {};
+            serData.serverPath = serverPath;
+            serData.errorList = res.errorList;
+            notificationSvc.sendNotification('BulkProductStatusUpdateError', data, serData,'email');
+            message += "Error details have been sent on registered email id.";
+          }
+          Modal.alert(message,true);          
+      })
+      .catch(function(res){
+        $rootScope.loading = false;
+        Modal.alert("error in parsing data",true);
+      })
+    })
+    .catch(function(res){
+       Modal.alert("error in file upload",true);
+    });
+  }
   $scope.clickHandler = function(type, val){
     if(type == "hours" && !val)
       delete $scope.product.rent.rateHours;
@@ -627,7 +663,11 @@ angular.module('sreizaoApp')
             $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj; 
             if($scope.product.assetStatus == assetStatuses[2].code){
               $scope.product.isSold = true;
+              $scope.product.featured = false;
               //$scope.product.status = false;
+            } else if($scope.product.assetStatus == assetStatuses[1].code){
+              $scope.product.isSold = true;
+              $scope.product.featured = false;
             }
         }
       if(!$scope.product.assetId)
