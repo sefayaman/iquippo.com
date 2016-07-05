@@ -211,6 +211,7 @@ angular.module('sreizaoApp')
         $scope.relistingEnable = false;
         $scope.isEdit = true;
       }
+      $scope.onTradeTypeChange($scope.product.tradeType);
        prepareImgArr();
     });
   }else{
@@ -267,6 +268,17 @@ angular.module('sreizaoApp')
    
   }
 
+    $scope.onTradeTypeChange = function(tradeType){
+      $scope.assetList = [];
+      for(var i=0;i<assetStatuses.length;i++){
+        if(tradeType == 'SELL' && assetStatuses[i].code == 'rented')
+          continue;
+        if(tradeType == 'RENT' && assetStatuses[i].code == 'sold')
+          continue;
+
+        $scope.assetList[$scope.assetList.length] = assetStatuses[i];
+      }
+    }
     $scope.$watch('[selectedModel,selectedCategory,selectedBrand, product.variant]',function(){
       var name = "";
       if($scope.selectedCategory){
@@ -426,6 +438,14 @@ angular.module('sreizaoApp')
         else{
             $scope.form.mfgyear.$invalid = true;
             ret = true;
+        }
+      }
+
+      if($scope.product.tradeType != "SELL") {
+        if(angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
+          ret = true;
+          Modal.alert("Please select at-least one check box in 'Check Rental Rate For'.",true);
+          return;
         }
       }
 

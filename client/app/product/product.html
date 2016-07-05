@@ -106,7 +106,7 @@
                   <div class="row">
                       <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
                       <div class="form-group col-sm-7" ng-class="{'has-error': form.tradeType.$invalid && submitted}">
-                        <select class="form-control" ng-model="product.tradeType" name="tradeType" required>
+                        <select class="form-control" ng-model="product.tradeType" name="tradeType" required ng-change = "onTradeTypeChange(product.tradeType)">
                           <option value="">Select Trade Type</option>
                           <option ng-repeat="trade in tradeType" value="{{trade.code}}">{{trade.name}}</option>
                         </select>
@@ -482,7 +482,7 @@
                     <div class="form-group col-sm-4">
                      <select class="form-control" ng-model="product.assetStatus">
                             <option value="">Asset Status</option>
-                            <option value="{{st.code}}" ng-repeat="st in assetStatuses">{{st.name}}</option>
+                            <option value="{{st.code}}" ng-repeat="st in assetList">{{st.name}}</option>
                       </select>
                       <i class="caret"></i>
                     </div>
