@@ -14,7 +14,7 @@
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
 
-                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
+                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.onTradingType(equipmentSearchFilter.tradeType)">
                   <option value="">Both</option>
                   <option value="SELL">Buy</option>
                   <option value="RENT">Rent</option>
@@ -36,7 +36,7 @@
 
                 <label for="" class="text-muted">Product Group </label>
                 <div class="form-group">
-                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.fireCommand()">
+                <select class="form-control col-md-2" name="groupName" ng-model="selectedgroupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange()">
                 <option value="">Select Group</option>
                 <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
 

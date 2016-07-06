@@ -392,12 +392,6 @@ viewCategory: {
   'dimension4':'',
   'dimension5':''
 },
-EquipmentSearch:{
-  event: 'Click',
-  eventCategory: 'EquipmentSearch',
-  eventAction: 'click',
-  eventLabel: ''
-},
 productDetails: {
   'name': '',                      // Name or ID is required.
   'id':'',
@@ -600,5 +594,47 @@ quickQuerySubmitTime: {
     timingVar: 'Home_QuickQuery_Submit',
     timingLabel: 'Home_QuickQuery_Submit',
     timingValue: ''
+},
+EquipmentSearchProductBrand:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_ProductBrand',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
+},
+EquipmentSearchProductModel:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_ProductModel',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
+},
+EquipmentSearchProductSubCategory:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_SubCategory',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
+},
+EquipmentSearchProductCategory:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_Category',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
+},
+EquipmentSearchProductGroup:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_ProductGroup',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
+},
+EquipmentSearchTradingType:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_TradingType',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
+},
+EquipmentSearchAssetStatus:{
+  event: 'Click',
+  eventCategory: 'EquipmentSearch_AssetStatus',
+  eventAction: 'dropDownChange',
+  eventLabel: ''
 }
 };

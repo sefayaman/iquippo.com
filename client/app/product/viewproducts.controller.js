@@ -1,6 +1,5 @@
 (function(){
-
-  'use strict';
+'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
 function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, cartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout) {
@@ -34,7 +33,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
   vm.onModelChange = onModelChange;
-  //vm.onGroupChange = onGroupChange;
+  vm.onGroupChange = onGroupChange;
   vm.onCurrencyChange = onCurrencyChange;
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
@@ -46,13 +45,12 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.addToCompare = addToCompare;
   vm.compare = compare;
   vm.removeProductFromCompList = removeProductFromCompList;
-
-
+  //NJ: Add onTradingType function to get change event of TradingType
+  vm.onTradingType = onTradingType;
 
    $scope.dynamicPopover = {
     templateUrl: 'myPopoverTemplate.html'
   };
-
 
   function init(){
       categorySvc.getAllCategory()
@@ -125,18 +123,36 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
 
   init();
 
-/*function onGroupChange(group){
+  /*
+  Date: 06/07/2016
+  Developer Name : Nishant
+  Purpose:get change event of productGroup and pass this data to google tag manager.
+  */
+function onGroupChange(group){
     if(!group)
       return;
     $scope.categoryList = [];
     $scope.brandList = [];
     $scope.modelList = [];
-    $scope.categoryList = $rootScope.allCategory.filter(function(d){
-          return group._id == d.group._id;
-    });
-    $scope.equipmentSearchFilter.group = group.name;
-   $scope.fireCommand();
-  }*/
+    // $scope.categoryList = $rootScope.allCategory.filter(function(d){
+    //       return group._id == d.group._id;
+    // });
+    $scope.equipmentSearchFilter.group = group;
+    gaMasterObject.EquipmentSearchProductGroup.eventLabel = $scope.equipmentSearchFilter.group;
+    dataLayer.push(gaMasterObject.EquipmentSearchProductGroup);
+    fireCommand();
+  }
+  /*
+  Date: 06/07/2016
+  Developer Name : Nishant
+  Purpose:get change event of TradingType and pass this data to google tag manager.
+  */
+  function onTradingType(TradingType){
+    gaMasterObject.EquipmentSearchTradingType.eventLabel = TradingType;
+    dataLayer.push(gaMasterObject.EquipmentSearchTradingType);
+    fireCommand();
+  }
+
 
   function addProductToCart(product){
 
@@ -202,9 +218,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
               }
             }
           });
-//           ga('set', {
-//   'metric5': 'custom metric data'
-// });
+
             Modal.alert(informationMessage.cartAddedSuccess,true);
             $rootScope.cartCounter = $rootScope.cart.products.length;
         })
@@ -231,6 +245,10 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       $scope.brandList = result;
     });
     $scope.equipmentSearchFilter.category = category.name;
+    //NJ start: pass Product Category dropdown change data to GTM
+    gaMasterObject.EquipmentSearchProductCategory.eventLabel =$scope.equipmentSearchFilter.category;
+    dataLayer.push(gaMasterObject.EquipmentSearchProductCategory);
+    //End
    if(!noAction)
         fireCommand();
   }
@@ -250,6 +268,10 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       $scope.modelList = result;
     })
    $scope.equipmentSearchFilter.brand = brand.name;
+    //NJ start: pass Product Brand dropdown change data to GTM
+   gaMasterObject.EquipmentSearchProductBrand.eventLabel =$scope.equipmentSearchFilter.category + "-" + $scope.equipmentSearchFilter.brand;
+   dataLayer.push(gaMasterObject.EquipmentSearchProductBrand);
+   //End
    fireCommand();
   }
 
@@ -260,12 +282,19 @@ function onModelChange(model){
     return;
    }
    $scope.equipmentSearchFilter.model = model.name;
+     //NJ start: pass Product Model dropdown change data to GTM
+   gaMasterObject.EquipmentSearchProductModel.eventLabel = $scope.equipmentSearchFilter.brand + "-" + $scope.equipmentSearchFilter.model;
+   dataLayer.push(gaMasterObject.EquipmentSearchProductModel);
+   //End
    fireCommand();
 }
 
   function fireCommand(){
   if ($scope.equipmentSearchFilter.subCategory) {
-
+    //NJ start: pass Product SubCategory dropdown change data to GTM
+    gaMasterObject.EquipmentSearchProductSubCategory.eventLabel = $scope.equipmentSearchFilter.category + "-" + $scope.equipmentSearchFilter.subCategory;
+    dataLayer.push(gaMasterObject.EquipmentSearchProductSubCategory);
+    //End
   }
     if($scope.currency && !$scope.currency.minPrice && !$scope.currency.maxPrice)
       delete $scope.equipmentSearchFilter.currency;
