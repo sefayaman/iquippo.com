@@ -46,16 +46,16 @@
                             </div>
                   </div>
                   <div class="row">
-                      <div class="col-lg-12">
-                        <h3>
-                          <div class="btn btn-success pull-right" ng-if="bulkProduct.products.length > 0">
+                      <div class="form-group col-sm-offset-1 col-sm-10">
+                        <hr>
+                        <h3 class="text-right">
+                          <div class="btn btn-success" ng-if="bulkProduct.products.length > 0">
                               <span class="fileinput-button" >
-                                 <i class="fa fa-file-excel-o"></i>Upload Zip file
+                                 <i class="fa fa-file-excel-o"></i> Upload Zip file
                                  <input type="file" name="template_update" onchange="angular.element(this).scope().uploadZip(this.files,this)">
                                  </span>
                              </div>
-                        </h3>
-                        <hr>
+                        </h3>                        
                       </div>
                     </div>
                   <div class="row">

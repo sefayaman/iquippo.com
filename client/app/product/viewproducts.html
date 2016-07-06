@@ -13,22 +13,12 @@
                 </div>   -->
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
-
-                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.onTradingType(equipmentSearchFilter.tradeType)">
-                  <option value="">Both</option>
-                  <option value="SELL">Buy</option>
-                  <option value="RENT">Rent</option>
-                  </select>
-
-                  <i class="caret"></i>
-                </div>
-
-                <label for="" class="text-muted">Asset Status </label>
-                <div class="form-group">
-                  <select class="form-control col-md-2" name="tradeType" ng-model="equipmentSearchFilter.tradeType" ng-change="viewproductVm.fireCommand()">
-                  <option value="">Rented</option>
-                  <option value="">Sold</option>
-                  <option value="">Listed</option>
+                  <select class="form-control col-md-2" name="type" ng-model="type" ng-change="viewproductVm.onTypeChange(type)">
+                    <option value="">Both</option>
+                    <option value="SELL">Buy</option>
+                    <option value="RENT">Rent</option>
+                    <option value="rented">Rented</option>
+                    <option value="sold">Sold</option>
                   </select>
 
                   <i class="caret"></i>
@@ -212,7 +202,10 @@
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}?{{filterType}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right" >
                             <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                            <span class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></span>
+                            <span class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></span>
                           </a>
+
                         </div>
                         <div class="media-body">
                           <h4 class="media-heading">
@@ -227,9 +220,18 @@
                             <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
                             <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
                           </h4>
-                          <p><input type="hidden" class="productID" value="{{product._id}}">{{product.brand.name}}</p>
-                          <p>{{product.model.name}}</p>
-                          <p>{{product.category.name}}</p>
+                          <p>
+                            <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
+                            <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
+                          </p>
+                          <p>
+                            <span ng-if="product.model.name != 'Other'">{{product.model.name}}</span>
+                            <span ng-if="product.model.name == 'Other'">{{product.model.otherName}}</span>
+                          </p>
+                          <p>
+                            <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
+                            <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
+                          </p>
                           <p>{{product.city}}
 
                             <div class="pull-right">

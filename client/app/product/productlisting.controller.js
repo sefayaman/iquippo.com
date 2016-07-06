@@ -166,9 +166,10 @@ function searchUtil(item,toSearch, type)
   }
 
   function getStatus(status, sold){
-    if(sold == true && status == false)
+    /*if(sold == true && status == true)
       return "Sold";
-    else if(sold == false && status == true)
+    else if(sold == false && status == true)*/
+    if(status == true)
       return "Active";
     else 
       return "Inactive";

@@ -45,8 +45,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.addToCompare = addToCompare;
   vm.compare = compare;
   vm.removeProductFromCompList = removeProductFromCompList;
-  //NJ: Add onTradingType function to get change event of TradingType
-  vm.onTradingType = onTradingType;
+  vm.onTypeChange = onTypeChange;
 
    $scope.dynamicPopover = {
     templateUrl: 'myPopoverTemplate.html'
@@ -140,16 +139,6 @@ function onGroupChange(group){
     $scope.equipmentSearchFilter.group = group;
     gaMasterObject.EquipmentSearchProductGroup.eventLabel = $scope.equipmentSearchFilter.group;
     dataLayer.push(gaMasterObject.EquipmentSearchProductGroup);
-    fireCommand();
-  }
-  /*
-  Date: 06/07/2016
-  Developer Name : Nishant
-  Purpose:get change event of TradingType and pass this data to google tag manager.
-  */
-  function onTradingType(TradingType){
-    gaMasterObject.EquipmentSearchTradingType.eventLabel = TradingType;
-    dataLayer.push(gaMasterObject.EquipmentSearchTradingType);
     fireCommand();
   }
 
@@ -325,6 +314,27 @@ function onModelChange(model){
         //error handling
       })
   };
+
+  function onTypeChange(type){
+    if(type == 'rented' || type == 'sold') {
+      //NJ start: pass Product TradingType dropdown change data to GTM
+      gaMasterObject.EquipmentSearchAssetStatus.eventLabel = type;
+      dataLayer.push(gaMasterObject.EquipmentSearchAssetStatus);
+      //End
+      $scope.equipmentSearchFilter.assetStatus = type;
+      if($scope.equipmentSearchFilter.tradeType)
+        delete $scope.equipmentSearchFilter.tradeType;
+    } else {
+      //NJ start: pass Product TradingType dropdown change data to GTM
+      gaMasterObject.EquipmentSearchTradingType.eventLabel = type;
+      dataLayer.push(gaMasterObject.EquipmentSearchTradingType);
+      //End
+      $scope.equipmentSearchFilter.tradeType = type;
+      if($scope.equipmentSearchFilter.assetStatus)
+        delete $scope.equipmentSearchFilter.assetStatus;
+    }
+    fireCommand();
+  }
 
   function fireSearchCommand(countrySearch){
     $scope.equipmentSearchFilter.country = countrySearch;

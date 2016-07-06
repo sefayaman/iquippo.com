@@ -8,6 +8,13 @@
               Product Upload
                 <div class="pull-right" ng-if="isBulkUpload()">
                   <span class="fileinput-button" >
+                    <button class="btn btn-warning"><i class="fa fa-database"></i> Bulk Status Update
+                      <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetStatusTemp(this.files,this)">
+                    </button>
+                  </span>
+               </div>
+               <div class="pull-right" ng-if="isBulkUpload()">
+                  <span class="fileinput-button" >
                       <a href="/bulkproduct" class="btn btn-success"><i class="fa fa-database"></i> Bulk Product Upload</a>
                    </span>
                </div>
@@ -99,7 +106,7 @@
                   <div class="row">
                       <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
                       <div class="form-group col-sm-7" ng-class="{'has-error': form.tradeType.$invalid && submitted}">
-                        <select class="form-control" ng-model="product.tradeType" name="tradeType" required>
+                        <select class="form-control" ng-model="product.tradeType" name="tradeType" required ng-change = "onTradeTypeChange(product.tradeType)">
                           <option value="">Select Trade Type</option>
                           <option ng-repeat="trade in tradeType" value="{{trade.code}}">{{trade.name}}</option>
                         </select>
@@ -224,7 +231,7 @@
                           </select>
                           <!-- <i class="caret"></i> -->
                         </span>
-                          <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="product.tradeType != 'RENT'">
+                          <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
                         </div>
                     </div>
                     <div class="form-group checkbox col-sm-3">
@@ -475,7 +482,7 @@
                     <div class="form-group col-sm-4">
                      <select class="form-control" ng-model="product.assetStatus">
                             <option value="">Asset Status</option>
-                            <option value="{{st.code}}" ng-repeat="st in assetStatuses">{{st.name}}</option>
+                            <option value="{{st.code}}" ng-repeat="st in assetList">{{st.name}}</option>
                       </select>
                       <i class="caret"></i>
                     </div>

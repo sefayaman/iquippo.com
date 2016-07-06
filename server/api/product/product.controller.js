@@ -1055,7 +1055,143 @@ exports.exportProducts = function(req,res){
         res.end(wbout);
      });
 }
+//Bulk product status update
+exports.bulkProductStatusUpdate = function(req,res){
+  var fileName = req.body.filename;
+  //var user = req.body.user;
+  var workbook = null;
+  try{
+    workbook = xlsx.readFile(importPath + fileName);
+  }catch(e){
+    console.log(e);
+    return  handleError(res,"Error in file upload")
+  }
+  if(!workbook)
+    return res.status(404).send("Error in file upload");
+  var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
+  var data = xlsx.utils.sheet_to_json(worksheet);
+  req.counter = 0;
+  req.numberOfCount = data.length;
+  req.errors = [];
+  req.successProductArr = [];
+  req.assetIdCache = {};
+  bulkProductStatusUpdate(req,res,data);
+}
+
+function bulkProductStatusUpdate(req,res,data){
+  if(req.counter < req.numberOfCount){
+    var row = data[req.counter];
+    var assetIdVal = Number(row["Asset_ID*"]);
+    if(!assetIdVal){
+      var errorObj = {};
+      errorObj['rowCount'] = req.counter + 2;
+      errorObj['message'] =  "Asset_ID is mandatory to be filled.";
+      req.errors[req.errors.length] = errorObj;
+      req.counter ++;
+      bulkProductStatusUpdate(req,res,data);
+      return;
+    }
+    assetIdVal = assetIdVal + '';
+    //console.log("AssetID:",assetIdVal);
+      Product.findOne({assetId:assetIdVal},function(err,product){
+        if(err){
+          var errorObj = {};
+          errorObj["rowCount"] = req.counter + 2;
+          errorObj['AssetId'] = assetIdVal;
+          errorObj["message"] = "Unknown Error.";
+          req.errors[req.errors.length] = errorObj;
+          req.counter ++;
+          bulkProductStatusUpdate(req,res,data); 
+          return;
+        }else if(!product){
+            var errorObj = {};
+            errorObj["rowCount"] = req.counter + 2;
+            errorObj['AssetId'] = assetIdVal;
+            errorObj["message"] = "Asset_ID does not exist in the syatem.";
+            req.errors[req.errors.length] = errorObj;
+            req.counter ++;
+            bulkProductStatusUpdate(req,res,data);
+            return; 
+        }else{
+             var assetStatus = row["Asset_Status*"];
+            if(!assetStatus){
+               var errorObj = {};
+                errorObj["rowCount"] = req.counter + 2;
+                errorObj['AssetId'] = assetIdVal;
+                errorObj["message"] = "Status not found.";
+                req.errors[req.errors.length] = errorObj;
+                req.counter ++;
+                bulkProductStatusUpdate(req,res,data);
+                return; 
+            }
+            assetStatus = trim(assetStatus).toLowerCase();
+            if(['listed','sold','rented'].indexOf(assetStatus) == -1){
+               var errorObj = {};
+                errorObj["rowCount"] = req.counter + 2;
+                errorObj['AssetId'] = assetIdVal;
+                errorObj["message"] = "Not valid status.";
+                req.errors[req.errors.length] = errorObj;
+                req.counter ++;
+                bulkProductStatusUpdate(req,res,data);
+                return; 
+            }
+            var ret = checkValidTransition(product.tradeType,assetStatus);
+
+            if(!ret){
+                var errorObj = {};
+                errorObj["rowCount"] = req.counter + 2;
+                errorObj['AssetId'] = assetIdVal;
+                errorObj["message"] = "Not valid status.";
+                req.errors[req.errors.length] = errorObj;
+                req.counter ++;
+                bulkProductStatusUpdate(req,res,data);
+                return;
+            }else{
+                var dataToSet = {};
+                dataToSet.updatedAt = new Date();
+                dataToSet.assetStatus = assetStatus;
+                if(assetStatus != 'listed') {
+                  dataToSet.featured = false;
+                  dataToSet.isSold = true;
+                }
+                //console.log(assetIdVal);
+                Product.update({assetId:assetIdVal},{$set:dataToSet},function(err){
+                  if (err) { var errorObj = {};
+                    errorObj["rowCount"] = req.counter + 2;
+                    errorObj['AssetId'] = assetIdVal;
+                    errorObj["message"] = "Unknown Error.";
+                    req.errors[req.errors.length] = errorObj;
+                    req.counter ++;
+                    bulkProductStatusUpdate(req,res,data);
+                    return; 
+                  } else {
+                    req.successProductArr[req.successProductArr.length] = product;
+                  }
+                  req.counter ++;
+                  bulkProductStatusUpdate(req,res,data);
+              });
+            }
+        }; 
+
+      })
+  }else{
+    res.status(200).json({successCount:req.successProductArr.length,errorList:req.errors});
+  }
+}
+
+function checkValidTransition(tradeType,assetStatus){
+  console.log(tradeType, assetStatus);
+  var ret = false;
+  if(tradeType == 'BOTH')
+      ret = true;
+  else if(tradeType =='RENT' && assetStatus != 'sold')
+    ret = true;
+  else if(tradeType =='SELL' && assetStatus != 'rented')
+    ret = true;
+  return ret;
+
+}
 //product import functionality
 exports.importProducts = function(req,res){
   var fileName = req.body.filename;
@@ -1548,30 +1684,33 @@ function importProducts(req,res,data){
           product["rent"].rateMonths ={};
           product["rent"].rateMonths.rateType = "months";
         }
-          var fromDate = row["Availability_of_Asset_From"];
-          if(!fromDate){
+          var fromDate = new Date(row["Availability_of_Asset_From"]);
+          var validDate = isValid(fromDate);
+          
+          if(!fromDate || !validDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
             errorObj['AssetId'] = assetIdVal;
-            errorObj['message'] = "Availability_of_Asset_From is required to be filled.";
+            errorObj['message'] = "Availability_of_Asset_From date is blank or invalid to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             importProducts(req,res,data);
             return;
           }
-          product["rent"].fromDate = trim(fromDate);
-          var toDate = row["Availability_of_Asset_To"];
-          if(!toDate){
+          product["rent"].fromDate = fromDate;
+          var toDate = new Date(row["Availability_of_Asset_To"]);
+          validDate = isValid(fromDate);
+          if(!toDate || !validDate){
             var errorObj = {};
             errorObj['rowCount'] = req.counter + 2;
             errorObj['AssetId'] = assetIdVal;
-            errorObj['message'] = "Availability_of_Asset_To is required to be filled.";
+            errorObj['message'] = "Availability_of_Asset_To date is blank or invalid to be filled.";
             req.errors[req.errors.length] = errorObj;
             req.counter ++;
             importProducts(req,res,data);
             return;
           }
-          product["rent"].toDate = trim(toDate);
+          product["rent"].toDate = toDate;
           //rent hours
           if(rateTypeH == "yes" || rateTypeH == 'y') {
             var minPeriodH = row["Min_Rental_Period_Hours"];
@@ -1777,6 +1916,10 @@ function importProducts(req,res,data){
   }
   
 }
+
+function isValid(d) {
+  return d.getTime() === d.getTime();
+}; 
 
 function getOtherObj(arr,term){
   var objRef = null;
