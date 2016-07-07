@@ -51,7 +51,6 @@
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
   ga('create', 'UA-76399485-1', 'auto');
-  // ga('send', 'pageview');
 
 </script>
   </head>
@@ -79,6 +78,13 @@
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-KT5NKB');</script>
+
+        <!-- NJ: get login user id -->
+        <script>
+          if (window.sessionStorage.currentUser != undefined) {
+            dataLayer.push({'userID': window.sessionStorage.currentUser});
+          }
+        </script>
         <!-- End Google Tag Manager -->
 
 <!-- Hotjar Tracking Code for http://iq.com -->

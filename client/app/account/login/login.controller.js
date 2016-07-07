@@ -31,7 +31,9 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
            $rootScope.loading = false;
            if(loggedIn){
                if(Auth.getCurrentUser()._id){
-                 dataLayer.push({'userID': Auth.getCurrentUser()._id});
+                 //NJ: set currentUser id in sessionStorage and pass into GTM
+                  $window.sessionStorage.currentUser = Auth.getCurrentUser()._id;
+                  dataLayer.push({'userID': $window.sessionStorage.currentUser});
                  cartSvc.getCartData(Auth.getCurrentUser()._id);
               }
               if(Auth.isAdmin()){
