@@ -198,6 +198,7 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     $http.post('/api/buyer', dataToSend)
     .success(function(result) {
       //Start NJ : push toBuyContact object in GTM dataLayer
+      gaMasterObject.toBuyContact.eventLabel = result.product[0].name;
       dataLayer.push(gaMasterObject.toBuyContact);
       //End
       $scope.buycontact = {};

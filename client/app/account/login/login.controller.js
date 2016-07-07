@@ -31,6 +31,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
            $rootScope.loading = false;
            if(loggedIn){
                if(Auth.getCurrentUser()._id){
+                 dataLayer.push({'userID': Auth.getCurrentUser()._id});
                  cartSvc.getCartData(Auth.getCurrentUser()._id);
               }
               if(Auth.isAdmin()){
@@ -42,7 +43,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
 
            }
          });
-        
+
         })
         .catch( function(err) {
           $scope.errors.other = err.message;
@@ -67,7 +68,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
     function closeDialog() {
      $uibModalInstance.dismiss('cancel');
     };
-    
+
   }
 
 

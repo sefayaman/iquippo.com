@@ -424,7 +424,7 @@ toBuyContact:{
   event: 'Click',
   eventCategory: 'Product_ToBuyContact',
   eventAction: 'Product_ToBuyContact_Click',
-  eventLabel: 'Product_ToBuyContact_Click'
+  eventLabel: ''
 },
 calculateNow:{
   event: 'Click',
