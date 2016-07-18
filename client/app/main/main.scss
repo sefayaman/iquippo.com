@@ -741,16 +741,16 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .rent-tag{border-top:50px solid #004394;}
 /*updated*/
 .no-list{float: right;margin: -20px 0;width: 100%;}
-.assets-uploaded{border: 1px solid #004394;height: 110px;margin-left: 22px;padding: 0;border-radius: 50%;}
-.uploded-asset{background: #004394;height: 100px;width: 105px;position: relative;top: -16px;left: 4px;
+.assets-uploaded{border: 1px solid #004394;height: 120px;width:120px;padding: 0;border-radius: 50%;}
+.uploded-asset{background: #004394;height: 110px;width: 110px;position: relative;top: 4px;padding: 7px;left: 4px;border-radius: 50%;}
+.uploded-asset a,.listed-assets a,.sold-assets a{color:#fff;font-size: 12px;text-decoration: none;}
+.uploded-asset a:hover,.listed-assets a:hover,.sold-assets a:hover{text-decoration: none;}
+.listed-assets strong,.sold-assets strong{font-size: 36px;text-shadow: 3px 4px 1px #b10000;}
+.uploded-asset strong{font-size: 36px;text-shadow: 3px 4px 1px #002c63;}
+.assets-listed,.assets-sold{border: 1px solid #fe0000;left:-5px;height: 120px;width:120px;border-radius: 50%;}
+.listed-assets,.sold-assets{background: #fe0000;padding:7px;height: 110px;width: 110px;position: relative;top: 4px;left:-11px;
 border-radius: 50%;}
-.uploded-asset a,.listed-assets a,.sold-assets a{color:#fff;font-size: 12px;}
-.uploded-asset h3,.listed-assets h3,.sold-assets h3{padding: 6px;}
-.assets-listed,.assets-sold{border: 1px solid #e31e24;height: 110px;border-radius: 50%;}
-.listed-assets,.sold-assets{background: #e31e24;height: 100px;width: 105px;position: relative;top: -16px;left:-11px;
-border-radius: 50%;}
-.sold-top{position: relative;top: -16px;left: 10px;}
-
+.sold-top{position: relative;top: -20px;left: 16px;}
 
    
    
