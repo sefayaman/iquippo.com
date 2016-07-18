@@ -739,3 +739,18 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .sold-tag span, .rent-tag span{-webkit-transform:rotate(318deg);-moz-transform:rotate(350deg);-ms-transform:rotate(318deg);-o-transform:rotate(318deg);transform:rotate(318deg);position: absolute;top: -40px;font-size: 11px; left: 3px;}
 .sold-tag span{left: 5px;}
 .rent-tag{border-top:50px solid #004394;}
+/*updated*/
+.no-list{float: right;margin: -20px 0;width: 100%;}
+.assets-uploaded{border: 1px solid #004394;height: 110px;margin-left: 22px;padding: 0;border-radius: 50%;}
+.uploded-asset{background: #004394;height: 100px;width: 105px;position: relative;top: -16px;left: 4px;
+border-radius: 50%;}
+.uploded-asset a,.listed-assets a,.sold-assets a{color:#fff;font-size: 12px;}
+.uploded-asset h3,.listed-assets h3,.sold-assets h3{padding: 6px;}
+.assets-listed,.assets-sold{border: 1px solid #e31e24;height: 110px;border-radius: 50%;}
+.listed-assets,.sold-assets{background: #e31e24;height: 100px;width: 105px;position: relative;top: -16px;left:-11px;
+border-radius: 50%;}
+.sold-top{position: relative;top: -16px;left: 10px;}
+
+
+   
+   

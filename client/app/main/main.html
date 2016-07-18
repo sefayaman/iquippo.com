@@ -76,8 +76,10 @@
             <li ng-repeat="category in categoryList">
               <a href="/viewproducts/{{category._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">  
-                  <span class="overlayer"></span><span>{{category.name}}</span>
+                  <span class="overlayer"></span><span>{{category.name}} <b>(5)</b></span>
+
               </a>
+
             </li>
           </ul>
           <div class="show-more">
@@ -91,10 +93,40 @@
         <div class="panel-group">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title"><i class="fa fa-hourglass-2"></i> Assets Status</h3>
+              <h3 class="panel-title"><i class="fa fa-hourglass-2"></i> Assets Snapshots</h3>
             </div>
             <div class="panel-body">
-              <img src="assets/images/update-product.jpg" class="img-responsive">
+             <!--  <img src="assets/images/update-product.jpg" class="img-responsive"> -->
+
+             <div class="row">
+             <div class="col-sm-5 assets-uploaded text-center">
+              <div class="uploded-asset">
+              <a href="javascript:void(0);">
+                <h3><strong>380</strong></h3>
+                <p>Number of Assets Uploaded</p>
+              </a>
+             </div>
+             </div>
+             <div class="col-sm-5 assets-listed text-center">
+             <div class="listed-assets">
+              <a href="javascript:void(0);">
+                <h3><strong>300</strong></h3>
+                <p>Number of Assets Listed</p>
+              </a>
+             </div>
+             </div>
+             
+             </div>
+             <div class="row sold-top">
+             <div class="col-sm-5 col-sm-offset-3 assets-sold text-center">
+             <div class="sold-assets">
+              <a href="javascript:void(0);">
+                <h3><strong>80</strong></h3>
+                <p>Number of Assets Sold</p>
+              </a>
+             </div>
+             </div>
+             </div>
             </div>  
           </div>
           <div class="panel panel-default">
