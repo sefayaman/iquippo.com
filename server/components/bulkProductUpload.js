@@ -4,7 +4,8 @@ var bulkProductUpload = {};
 
 var fs = require('fs');
 var fsExtra = require('fs.extra');
-var gm = require('gm');
+// var gm = require('gm');
+gm = require('gm').subClass({imageMagick: true});
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
 var IncomingProduct = require('./incomingproduct.model');
