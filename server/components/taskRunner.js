@@ -11,14 +11,16 @@ var Uploaded_TEMPLATE_NAME = "BulkProductUploaded"
 function getTask(){
   Task.find({counter:{$lte:3}}).exec(function (err, data) {
       if (err) { 
-        console.log(err);
-         setTimeout(function () { getTask(); }, 1*60*60*1000); //sleep 
+        console.error(err);
+         setTimeout(function () { getTask(); }, 6*1000); //sleep 
       }
       else {
-        if(data.length > 0)
+        if(data.length > 0){
+console.log(data[0]);          
           executeTask(data[0]);
-        else
-           setTimeout(function () { getTask(); }, 1*24*60*60*1000);
+        }else
+           // setTimeout(function () { getTask(); }, 6*1000);
+         setTimeout(function () { getTask(); }, 6*1000);
       }
   });
 }
@@ -40,7 +42,7 @@ function updateTask(result,data){
                 console.log("Error in removing task");
             }
             pushNotification(data);
-           setTimeout(function () { getTask(); }, 1*24*60*60*1000); //sleep
+           setTimeout(function () { getTask(); }, 6*1000); //sleep
         });
     }
     else {
@@ -49,7 +51,7 @@ function updateTask(result,data){
                 console.log("Error in while updating task");
             }
             pushNotification(data);
-            setTimeout(function () { getTask(); }, 1*24*60*60*1000); //sleep
+            setTimeout(function () { getTask(); }, 6*1000); //sleep
         })
     }
 }
