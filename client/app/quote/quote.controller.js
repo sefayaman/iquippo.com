@@ -4,6 +4,7 @@ angular.module('sreizaoApp')
   .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal) {
     //Start > NJ : push quickQueryOpen object in GTM data layer
     dataLayer.push(gaMasterObject.quickQueryOpen);
+      // ga('set', 'userId', 'abc-123-xyz');
     //NJ: set quickQuery Start Time
     $scope.qcOpenStartTime = new Date();
     //End
@@ -116,7 +117,7 @@ angular.module('sreizaoApp')
   $scope.closeDialog = function () {
     //Start > NJ  : push quickQueryClose object in GTM data layer
     dataLayer.push(gaMasterObject.quickQueryClose);
-    //NJ: set quick query Close Time 
+    //NJ: set quick query Close Time
     var qcCloseTime = new Date();
     var timeDiff = Math.floor(((qcCloseTime - $scope.qcOpenStartTime)/1000)*1000);
     gaMasterObject.quickQueryCloseTime.timingValue = timeDiff;

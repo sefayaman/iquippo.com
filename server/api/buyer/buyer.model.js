@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
@@ -21,5 +21,6 @@ var BuyerSchema = new Schema({
   createdAt: Date,
   updatedAt: Date
 });
+
 
 module.exports = mongoose.model('Buyer', BuyerSchema);

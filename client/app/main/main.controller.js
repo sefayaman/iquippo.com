@@ -2,8 +2,8 @@
 
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
-  
-  function MainCtrl($scope, $rootScope, $http, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
+
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -18,7 +18,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.radioModel = 'SELL';
     vm.isCollapsed = true;
     vm.sortedFeaturedProduct = [];
-    
+
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
     vm.getLocationHelp = getLocationHelp;
@@ -48,7 +48,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       .catch(function(res){
         //error handling
       })
-      
+
     }
 
     function getCategories(){

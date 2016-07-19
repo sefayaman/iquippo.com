@@ -10,7 +10,7 @@ angular.module('sreizaoApp',[
   'ngResource',
   'ngAnimate',
   'ngSanitize',
-  'ui.router', 
+  'ui.router',
   'ui.bootstrap',
   'datatables',
   'ui.tinymce',
@@ -25,14 +25,14 @@ angular.module('sreizaoApp',[
 
     $locationProvider.html5Mode(true);
     if (!$httpProvider.defaults.headers.get) {
-        $httpProvider.defaults.headers.get = {};    
+        $httpProvider.defaults.headers.get = {};
     }
     //disable IE ajax request caching
     $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
-    
+
     $httpProvider.interceptors.push('authInterceptor');
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
-    tinyMCE.suffix = '.min';    
+    tinyMCE.suffix = '.min';
   })
   .run(function ($rootScope, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc) {
     // Redirect to login if route requires auth and you're not logged in
@@ -45,7 +45,7 @@ angular.module('sreizaoApp',[
 
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
-    
+
     $rootScope.successMessage = "";
     $rootScope.errorMessage = "";
     $rootScope.cartCounter = 0;
@@ -169,6 +169,5 @@ angular.module('sreizaoApp',[
       Auth.logout();
       $state.go("main");
     };
- 
+
   });
-  

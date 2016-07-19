@@ -20,6 +20,7 @@ var sms = require('./components/sms.js');
 var notification = require('./components/notification.js');
 var checkExpiryService = require('./components/checkExpiry.js');
 var checkQuickQueryNotificationService = require('./components/checkQuickQueryNotification.js');
+var checkSearchMatchingNotificationService = require('./components/checkSearchMatchingNotification.js');
 var http = require('http');
 var fsExtra = require('fs.extra');
  var gm = require('gm');
@@ -216,6 +217,7 @@ server.listen(config.port, config.ip, function () {
   taskRunner.startTaskRunner();
   checkExpiryService.start();
   checkQuickQueryNotificationService.start();
+  checkSearchMatchingNotificationService.start();
 });
 
 // Expose app

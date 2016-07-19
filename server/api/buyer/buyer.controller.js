@@ -26,10 +26,10 @@ exports.create = function(req, res) {
   req.body.createdAt = new Date();
   req.body.updatedAt = new Date();
   Buyer.create(req.body, function(err, buyer) {
-    if(err) { return handleError(res, err); }
-    return res.status(201).json(buyer);
+        return res.status(201).json(buyer);
   });
 };
+
 //search based on product _id
 exports.search = function(req, res) {
   //var term = new RegExp(req.body.searchstr, 'i');
