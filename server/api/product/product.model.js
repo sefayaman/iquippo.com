@@ -29,6 +29,7 @@ var ProductSchema = new Schema({
   city:String,
   productCondition:String,
   images:[{}],
+  videos:[{}],
   primaryImg: String,
   technicalInfo:{},
   serviceInfo:[{}],

@@ -34,4 +34,9 @@ router.post('/location/search', controller.searchLocation);
 router.get('/subscribe', controller.getAllSubscriber);
 router.post('/subscribe', controller.createSubscribe);
 
+router.get('/savesearch/:id', controller.getOnId);
+router.post('/savesearch', controller.createSearch);
+router.put('/savesearch/:id', controller.updateSaveSearch);
+router.delete('/savesearch/:id', controller.deleteSaveSearch);
+
 module.exports = router;

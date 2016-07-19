@@ -24,6 +24,7 @@ var Product = require('./../product/product.model');
 var config = require('./../../config/environment');
 
 var SearchSuggestion = require('./searchsuggestion.model');
+var SaveSearch = require('./savesearch.model');
 
 var importPath = config.uploadPath + config.importDir + "/";
 
@@ -1037,6 +1038,71 @@ exports.searchLocation = function(req,res){
 	     })    
    });
 }
+
+// save search
+
+// Get a single user save search
+exports.getOnId = function(req, res) {
+	console.log("getOnId search",req.params.id);
+  SaveSearch.find({'user._id':req.params.id}, function (err, searchData) {
+    if(err) { return handleError(res, err); }
+    if(!searchData) { return res.status(404).send('Not Found'); }
+    return res.json(searchData);
+  });
+};
+
+// Creates a new search in the DB.
+exports.createSearch = function(req, res) {
+  req.body.createdAt = new Date();
+  req.body.updatedAt = new Date();
+  var filter = {};
+  filter["user._id"] = req.body.user._id;
+  filter["text"] = req.body.text;
+  SaveSearch.find(filter,function (err, searchData) {
+    if(err) { return handleError(res, err); }
+    else
+    {	if(searchData.length>0)
+    	{	
+    		return res.status(200).json({errorCode:1,message:"Search already exits!!!"});
+    	}
+        else{
+        	SaveSearch.create(req.body, function(err, searchData) {
+              if(err) { return handleError(res, err); }
+               return res.status(200).json({errorCode:0,message:"Search save sucessfully"});
+             });
+        }  
+    
+    }
+    
+  });
+  
+};
+// Updates an existing search in the DB.
+exports.updateSaveSearch = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  if(req.body.user) { delete req.body.user; }
+  req.body.updatedAt = new Date();
+  SaveSearch.findById(req.params.id, function (err, searchData) {
+    if (err) { return handleError(res, err); }
+    if(!searchData) { return res.status(404).send('Not Found'); }
+    SaveSearch.update({_id:req.params.id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(req.body);
+    });
+  });
+};
+
+// Deletes a save search from the DB.
+exports.deleteSaveSearch = function(req, res) {
+  SaveSearch.findById(req.params.id, function (err, searchData) {
+    if(err) { return handleError(res, err); }
+    if(!searchData) { return res.status(404).send('Search Not Found'); }
+    searchData.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send({message:"Search deleted sucessfully!!!"});
+    });
+  });
+};
 
 function handleError(res, err) {
 console.log(err);
