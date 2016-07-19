@@ -21,7 +21,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   $scope.noResult = true;
 
   /* pagination flag */
-  vm.itemsPerPage = 2;
+  vm.itemsPerPage = 10;
   vm.currentPage = 1;
   vm.totalItems = 0;
   vm.maxSize = 10;
