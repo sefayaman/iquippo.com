@@ -1,7 +1,6 @@
 'use strict';
 
 var Product = require('../api/product/product.model');
-//var Quote = require('../api/quote/quote.model');
 var SaveSearch = require('../api/common/savesearch.model');
 var config = require('../config/environment');
 var commonController = require('../api/common/common.controller');
@@ -56,7 +55,6 @@ function getMatchingProductList(data){
           return;
         }
         else {
-            //console.log("products.length---", products.length);
             if(products.length > 0){
               var productArr = {};
               productArr.productLists = [];
