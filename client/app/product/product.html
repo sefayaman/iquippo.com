@@ -6,7 +6,7 @@
           <div class="col-sm-12">
             <h3>
               Product Upload
-                <div class="pull-right" ng-if="isBulkUpload()">
+                <div class="pull-right bulks" ng-if="isBulkUpload()">
                   <span class="fileinput-button" >
                     <button class="btn btn-warning"><i class="fa fa-database"></i> Bulk Status Update
                       <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetStatusTemp(this.files,this)">
@@ -77,10 +77,10 @@
                     </div>
                   </div>
                   <div class="row" ng-show="isActive() || isChannelPartner()">
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 form-group">
                       <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 form-group">
                       <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top">
                     </div>
                   </div>
@@ -193,10 +193,10 @@
 
                   <div class="row">
                     <div class="form-group col-sm-5">Manufacturing Year<span class="text-warning">*</span></div>
-                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mfgyear.$invalid && submitted}">
+                    <div class="form-group col-xs-10 col-sm-6" ng-class="{'has-error': form.mfgyear.$invalid && submitted}">
                       <input type="text" name="mfgyear" ng-value="mfgYear" ng-model="mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="opened" max-date="maxDate" min-date="minDate" date-disabled="disabled(date, mode)" close-text="Close" required disabled ngMinlength="4" ngMaxlength="4"/>
                     </div>
-                    <div class="form-group col-sm-1 text-center padd-left">
+                    <div class="form-group col-xs-2 col-sm-1 text-center padd">
                       <a href class="form-control" ng-click="open($event, 'mfgYear')">
                         <i class="fa fa-calendar-o fa-2x"></i>
                       </a>
@@ -234,7 +234,7 @@
                           <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
                         </div>
                     </div>
-                    <div class="form-group checkbox col-sm-3">
+                    <div class="form-group checkbox col-sm-3 check">
                       <input type="checkbox" name="" ng-value="true" ng-model="product.priceOnRequest">
                       Price on Request
                     </div>
@@ -282,10 +282,10 @@
                     <div class="form-group col-sm-5">Product Condition</div>
                     <div class="form-group col-sm-7">                  
                         <div class="row">                      
-                          <div class="col-sm-6">
+                          <div class="col-xs-6 col-sm-6">
                             <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="product.productCondition" value="used"> Used</span>
                           </div>
-                          <div class="col-sm-6">
+                          <div class="col-xs-6 col-sm-6">
                             <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="product.productCondition" value="new"> New</span>
                           </div>
                         </div>
@@ -299,13 +299,13 @@
                       </div>
                       <div class="col-sm-7">
                         <div class="row">                          
-                          <div class="col-sm-5">
+                          <div class="col-sm-5 form-group">
                             <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
                               <span class="input-group-addon">From</span>
                               <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL'">
                             </div>
                           </div>                          
-                          <div class="col-sm-5">
+                          <div class="col-sm-5 form-group">
                             <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
                               <span class="input-group-addon">To</span>
                               <input type="date" placeholder="Date" class="form-control" name="toDate" ng-value="toDate" ng-model="product.rent.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup3.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()" ng-required="product.tradeType != 'SELL'">
@@ -315,18 +315,18 @@
                       </div>
                     </div>
                     <div class="row form-group">
-                      <div class="col-sm-5">
+                      <div class="col-sm-5 form-group">
                         Check Rental Rate For<span class="text-warning">*</span>
                       </div>
                       <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-xs-4 col-sm-4">
                             <input type="checkbox" name="hours" ng-model="product.rent.rateHours.rateType" ng-click="clickHandler('hours', product.rent.rateHours.rateType)" ng-true-value="'hours'" ng-false-value="false"> Hours
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-xs-4 col-sm-4">
                             <input type="checkbox" name="days" ng-model="product.rent.rateDays.rateType" ng-click="clickHandler('days', product.rent.rateDays.rateType)" ng-true-value="'days'" ng-false-value="false"> Days
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-xs-4 col-sm-4">
                             <input type="checkbox" name="month" ng-model="product.rent.rateMonths.rateType" ng-click="clickHandler('months', product.rent.rateMonths.rateType)" ng-true-value="'months'" ng-false-value="false"> Months
                           </div>
                         </div>
@@ -463,16 +463,16 @@
                   </div>
                   
                   <div class="form-group row" ng-repeat=" link in product.videoLinks">
-                    <div class="col-sm-4 col-md-5">
+                    <div class="col-sm-4 col-md-5 form-group">
                       Upload Video Link
                     </div>
-                    <div class="col-sm-4 col-md-3"><input type="text" placeholder="Video Url" ng-value="link.uri" ng-model="link.uri" class="form-control" name=""></div>
+                    <div class="col-sm-4 col-md-3 form-group"><input type="text" placeholder="Video Url" ng-value="link.uri" ng-model="link.uri" class="form-control" name=""></div>
                     <div class="col-sm-2">
                      <!--  <span ng-if="!isActive()">{{video.name}}</span>
                       <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a> -->
                       <a class="btn btn-danger" href="javascript:void(0)" ng-if="link.uri" ng-click="playVideo($index)"><i class="fa fa-play"></i></a>
                     </div>
-                    <div class="col-sm-4 col-md-2 pull-right">
+                    <div class="col-xs-12 col-sm-4 col-md-2 pull-right ">
                       <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
@@ -543,12 +543,12 @@
                       <input type="text" placeholder="Value" value="{{product.technicalInfo.liftingCapacity}}" ng-model="product.technicalInfo.liftingCapacity"  class="form-control" name="">
                     </div>
                   </div>
-                  <div class="form-group row" ng-repeat=" param in product.technicalInfo.params">
-                    <div class="col-sm-4 col-md-5">
+                  <div class="form-group row" ng-repeat=" param in product.technicalInfo.params"> 
+                    <div class="col-sm-4 col-md-5 form-group">
                       <input type="text" placeholder="Parameter" ng-value="param.key" ng-model="param.key" class="form-control" name="">
                     </div>
-                    <div class="col-sm-4 col-md-4"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-sm-4 col-md-4 form-group"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
+                    <div class="col-sm-4 col-md-3 form-group">
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
@@ -580,13 +580,13 @@
                 </div>
                 <div class="panel-body">
                   <div class="form-group row" ng-repeat="serviceinfo in product.serviceInfo">
-                    <div class="col-sm-3 col-md-3">
+                    <div class="col-sm-3 col-md-3 form-group">
                       <input type="date" placeholder="Date" class="form-control" ng-model="serviceinfo.servicedate" uib-datepicker-popup="{{formats1}}" is-open="popups[$index].opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="popups[$index].opened = !popups[$index].opened">
                     </div>
-                    <div class="col-sm-2 col-md-2"><input type="text" placeholder="Operating Hours" ng-value="serviceinfo.operatingHour" class="form-control" ng-model="serviceinfo.operatingHour"></div>
-                    <div class="col-sm-2 col-md-2"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo.serviceat" class="form-control" ng-model="serviceinfo.serviceAt"></div>
-                    <div class="col-sm-2 col-md-3"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo.authServiceStation" class="form-control" ng-model="serviceinfo.authServiceStation"></div>
-                    <div class="col-sm-3 col-md-2">
+                    <div class="col-sm-2 col-md-2 form-group"><input type="text" placeholder="Operating Hours" ng-value="serviceinfo.operatingHour" class="form-control" ng-model="serviceinfo.operatingHour"></div>
+                    <div class="col-sm-2 col-md-2 form-group"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo.serviceat" class="form-control" ng-model="serviceinfo.serviceAt"></div>
+                    <div class="col-sm-2 col-md-3 form-group"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo.authServiceStation" class="form-control" ng-model="serviceinfo.authServiceStation"></div>
+                    <div class="col-sm-3 col-md-2 form-group">
                       <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
@@ -611,7 +611,7 @@
                       </select>
                        <i class="caret"></i>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 form-group">
                   <span class="btn btn-warning fileinput-button">
                    <input type="file" data-index="{{$index}}" name="doc"  data-filetype="mdoc" file-upload>
                     <span><i class="fa fa-upload"></i> Upload Document</span>
@@ -621,7 +621,7 @@
                 <div class="col-sm-2 uploads-doc">
                       {{miscDoc.name}}
                     </div>
-                    <div class="col-sm-3 col-md-2 pull-right">
+                    <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
                       <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
                       <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
                     </div>
@@ -666,22 +666,22 @@
                       </div>
                     </div>
                   <div class="row" ng-show="isActive()">
-                      <div class="col-sm-6">
+                      <div class="col-xs-6 col-sm-6">
                         <div class="row">
-                          <div class="col-sm-1">
+                          <div class="col-xs-1 col-sm-1">
                         <input type="checkbox" id="" name="featured" ng-model="product.featured" ng-value="product.featured"> 
                       </div>
-                      <div class="col-sm-5">
+                      <div class="col-xs-5 col-sm-5">
                         Featured
                       </div>
                         </div>
                       </div>
-                      <div class="col-sm-6">
+                      <div class="col-xs-6 col-sm-6">
                         <div class="row">
-                          <div class="col-sm-1">
+                          <div class="col-xs-1 col-sm-1">
                           <input type="checkbox" id="" name="status"  ng-model="product.status" ng-value="product.status"> 
                           </div>
-                          <div class="col-sm-5">
+                          <div class="col-xs-5 col-sm-5">
                             Active
                           </div>
                         </div>
