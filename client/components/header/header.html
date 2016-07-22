@@ -8,13 +8,17 @@
             
             <li><a href="javascript:void(0)" ng-click="openCart()" ng-class="{cart_item:cartCounter > 0}"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs">Cart </span></a></li>
             <li>
+              <a href="javascript:void(0);" ng-click="redirectToProduct()"  class="hidden-sm hidden-md hidden-lg "><i class="fa fa-upload"></i><span class="hidden-xs">Upload Product</span></a>
+            </li>
+            <li>
+              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')"  class="hidden-sm hidden-md hidden-lg "><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="hidden-xs">Place a Classified Ad</span></a>
             </li>
 
             <li ng-show="isLoggedIn()" class="dropdown" >
               <a href class="dropdown-toggle" data-toggle="dropdown">
                  <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
               <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
-                {{ getCurrentUser().fname }}</a>
+                 <span class="hidden-xs"> {{ getCurrentUser().fname }}</span></a>
               
               <ul class="dropdown-menu">
                   <li ng-show="isAdmin()">
@@ -43,7 +47,7 @@
            
            <nav class="navbar navbar-inverse pull-left" role="navigation">
               <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
+                <!-- <div class="navbar-header">
                   <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -51,20 +55,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>           
-                </div>
+                </div> -->
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
+               <!--  <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true"> -->
+               <div>
                   <ul class="nav navbar-nav">
                     <li ng-class="{active: isActive('/')}"><a href="index.html">Home</a></li>
                     <li ng-class="{active: isActive('/aboutus')}"><a href="/aboutus">About Us</a></li>
-                    <li class="submenu">
-                      <a href="javascript:void(0);" id="single-button"  uib-dropdown-toggle >Services</a>
+                    <li class="submenu dropdown">
+                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Services</a>
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-                        <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png"> Shipping</a></li>
-                        <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png"> Valuation</a></li>
-                        <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png"> Certified by iQuippo</a></li>
-                        <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png"> Manpower</a></li>
+                        <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
+                        <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
+                        <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
+                        <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
                       </ul>
                     </li>
                     
@@ -79,7 +84,7 @@
             <li>
               <a href="javascript:void(0);" ng-click="redirectToProduct()">Upload Product</a>
             </li>
-             <li>
+            <li>
               <a href="javascript:void(0);" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
             </li>
           </ul>

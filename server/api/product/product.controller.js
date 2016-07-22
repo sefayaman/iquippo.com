@@ -1515,6 +1515,7 @@ function importProducts(req,res,data){
          product.seller["country"] = usrs[0]['country'];
          product.seller["email"] = usrs[0]['email'];
          product.seller["mobile"] = usrs[0]['mobile'];
+         product.seller["company"] = usrs[0]['company'];
          product.seller["countryCode"] = usrs[0]['countryCode'];
          product.seller["userType"] = usrs[0]['userType'];
          product.seller["role"] = usrs[0]['role'];

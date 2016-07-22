@@ -2,7 +2,7 @@
   <section class="wrapper">
       <div class="container">
         <div class="row">
-          <div class="col-sm-4 col-md-3">
+          <div class="col-sm-4 col-md-3 form-group">
             <div class="well">
               <h4>Equipment search</h4>
                 <form role="form">
@@ -163,19 +163,23 @@
           <div class="col-sm-8 col-md-9">
 
             <div class="row pull-right">
-                <div class="col-sm-2">
+                <div class="col-xs-2 col-sm-2">
                   <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="viewproductVm.compare()">
                      <span class="count-compare" ng-if="viewproductVm.compareCount != 0">{{viewproductVm.compareCount}}</span>
                      <img src="assets/images/campare-icon.png" width="20">
                    </a>
                 </div>
-                <div class="col-sm-10">
+                <div class="col-xs-10 col-sm-10">
                   <span>Sort by:</span>
                    <select ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
                     <option value="">Relevance</option>
                     <option value="lh">Price : Low to High</option>
                     <option value="hl">Price : High to Low</option>
                     <option value="por">Price on Request</option>
+                    <option value="por">Available</option>
+                    <option value="por">Rented</option>
+                    <option value="por">Sold</option>
+                    <option value="por">Out of Stock</option>
                   </select>
                 <div>
               </div>
@@ -196,6 +200,7 @@
 
              <div ng-if="!noResult">
                  <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+                 <span class="no-list text-right">Showing <b>1-1</b> of <b>1</b></span>
                 <div id="search-result_wrapper" class="search-result">
                   <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
                       <div class="media">
