@@ -215,4 +215,10 @@ angular.module('sreizaoApp')
         layout:'admin',
         restrict:true
       })
+      .state('accept', {
+        url: '/accept',
+        templateUrl: 'app/invitationaccept/invitationaccept.html',
+        controller: 'InvitationAcceptCtrl as invitationAcceptVm',
+        layout:'client'
+      })
   });

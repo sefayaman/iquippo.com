@@ -34,7 +34,7 @@ angular.module('sreizaoApp',[
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';    
   })
-  .run(function ($rootScope, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc) {
+  .run(function ($rootScope, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, InvitationMasterSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -63,7 +63,8 @@ angular.module('sreizaoApp',[
     $rootScope.valuationList = valuationList;
     $rootScope.tradeType = tradeType;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
-
+    $rootScope.invitationData = {};
+    
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 
     if($rootScope.allCountries.length > 0) {
@@ -80,6 +81,13 @@ angular.module('sreizaoApp',[
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
     });
+
+   InvitationMasterSvc.getInvitationData(UPDATE_INVITATION_MASTER)
+    .then(function(res){
+         $rootScope.invitationData = res;
+      })
+      .catch(function(stRes){
+      })
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
     $('#jivo-iframe-container').css("opacity","1");

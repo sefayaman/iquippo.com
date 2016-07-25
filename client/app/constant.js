@@ -3,7 +3,7 @@ var Modals = {
     tplUrl:"app/account/login/login.html",
     Ctrl:'LoginCtrl as loginVm'
   },
-   signup:{
+  signup:{
     tplUrl:"app/account/signup/signup.html",
     Ctrl:'SignupCtrl as signupVm'
   },
@@ -59,7 +59,7 @@ var classifiedAdDir = "classifiedad";
 var templateDir = "templates";
 var tempDir = "temp";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";
-
+var UPDATE_INVITATION_MASTER = "Update_Invitation_Master";
 var assetStatuses = [
 {
   name:"Listed",
@@ -156,9 +156,9 @@ var HOME_BANNER =  [{
     
 var serverPath = location.protocol +"//" + location.host; 
 //var serverPath = "http://14.141.64.180:8100"; 
-var supportMail = "info@iquippo.com";
+//var supportMail = "info@iquippo.com";
 var supportContact = "011 66025672";
-//var supportMail = "bharat.hinduja@bharatconnect.com";
+var supportMail = "bharat.hinduja@bharatconnect.com";
 var informationMessage = {};
 
 informationMessage['unknownError'] = "There is some issue.Please contact our support team.";

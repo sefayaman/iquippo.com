@@ -387,7 +387,7 @@ angular.module('sreizaoApp')
         .catch(function(err){
             throw err;
         });
-    },
+    };
     commonSvc.createTask = function(data){
       return $http.post("api/createtask",data)
         .then(function(res){
@@ -396,8 +396,90 @@ angular.module('sreizaoApp')
         .catch(function(err){
             throw err;
         });
-    }
+    };
     return commonSvc;
+}])
+  .factory("InvitationSvc",['$http','$q',function($http,$q){
+    var invitationSvc = {};
+    var path = '/api/invitation';
+
+  //Services for coupon
+  invitationSvc.getCouponOnId = function(id){
+    var deferred = $q.defer();
+      $http.get(path + "/generatecoupon/" + id)
+      .then(function(res){
+        deferred.resolve(res.data);
+      })
+      .catch(function(res){
+        deferred.reject(res);
+      })
+    return deferred.promise;
+  };
+
+  invitationSvc.checkCodeValidity = function(data){
+    return $http.post(path + "/checkvalidity", data)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+  };
+
+  invitationSvc.createCoupon = function(data){
+    return $http.post(path + "/generatecoupon",data)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err
+    })
+  };
+
+  invitationSvc.updateCoupon = function(data){
+    return $http.put(path + "/generatecoupon/" + data._id, data)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  };
+
+  //Services for coupon
+  invitationSvc.getTransactionOnId = function(id){
+    var deferred = $q.defer();
+      $http.get(path + "/wallettransaction/" + id)
+      .then(function(res){
+        deferred.resolve(res.data);
+      })
+      .catch(function(res){
+        deferred.reject(res);
+      })
+    return deferred.promise;
+  };
+
+  invitationSvc.createWalletTransaction = function(data){
+    return $http.post(path + "/wallettransaction",data)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err
+    })
+  };
+
+  invitationSvc.updateWalletTransaction = function(data){
+    return $http.put(path + "/wallettransaction/" + data._id, data)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  };
+
+    return invitationSvc;
 }])
  .factory("suggestionSvc",['$http',function($http){
     var suggestionService = {};
