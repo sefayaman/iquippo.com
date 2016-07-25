@@ -105,18 +105,21 @@ exports.getUser = function(req, res) {
 
  if(req.body.userId)
     filter["createdBy._id"] = req.body.userId;
-
+  
   if(req.body.userType)
     filter["userType"] = req.body.userType;
 
-  if(req.body.role)
-    filter["role"] = req.body.role;
-  else {
-  var typeFilter = {};
-  typeFilter['$ne'] = "admin";
-  filter["role"] = typeFilter;    
-  }
-
+  /*if(req.body._id)
+    filter["_id"] = req.body._id;
+  else {*/
+    if(req.body.role)
+      filter["role"] = req.body.role;
+    else {
+    var typeFilter = {};
+    typeFilter['$ne'] = "admin";
+    filter["role"] = typeFilter;    
+    }
+  //}
   var query = User.find(filter);
   console.log("filetr ",filter);
   query.exec(

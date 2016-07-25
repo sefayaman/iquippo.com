@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
+function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, InvitationMasterSvc) {
     var vm = this;
     vm.tabValue = 'sc';
    
@@ -28,6 +28,10 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
     vm.updateLocation = updateLocation;
     vm.locationEditClick = locationEditClick;
     vm.deleteLocation = deleteLocation;
+
+    vm.invSetting = {};
+    vm.saveInvitationSetting = saveInvitationSetting;
+    vm.getInvitationMasterData = getInvitationMasterData;
 
     function loadAllState(){
     	LocationSvc.getAllState()
@@ -196,7 +200,74 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal) {
 		})
     }
 
+// Invitation Setting
+	function saveInvitationSetting(form){
+		if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}
+		vm.invSetting.key = UPDATE_INVITATION_MASTER;
+		InvitationMasterSvc.upsert(vm.invSetting)
+		.then(function(result){
+			console.log("Update invitation setting");
+		})
+    }
 
+    function getInvitationMasterData(){
+    InvitationMasterSvc.getInvitationData(UPDATE_INVITATION_MASTER)
+    .then(function(res){
+         vm.invSetting = res;
+      })
+      .catch(function(stRes){
+      })
+  	}
+
+  getInvitationMasterData();
+//date picker
+	$scope.today = function() {
+	vm.sDate = new Date();
+	};
+	$scope.today();
+
+	$scope.clear = function() {
+	vm.sDate = null;
+	};
+
+	$scope.toggleMin = function() {
+	$scope.minDate = $scope.minDate ? null : new Date();
+	};
+
+	$scope.toggleMin();
+	/*$scope.maxDate = new Date(2020, 5, 22);
+	$scope.minDate = new Date();*/
+
+	/*$scope.setDate = function(year, month, day) {
+	vm.sDate = new Date(year, month, day);
+	};*/
+
+	$scope.dateOptions = {
+	formatYear: 'yy',
+	startingDay: 1
+	};
+
+	$scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+	$scope.format = $scope.formats[0];
+
+	$scope.open1 = function() {
+	$scope.popup1.opened = true;
+	};
+
+	$scope.popup1 = {
+	opened: false
+	};
+
+  	$scope.open2 = function() {
+    $scope.popup2.opened = true;
+    };
+
+    $scope.popup2 = {
+    opened: false
+    };
 }
     
 })();
