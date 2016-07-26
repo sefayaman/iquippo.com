@@ -363,7 +363,7 @@ function placeWatermark(req,res,imgPath,cb){
 function updateProduct(req,res){
   if(req.body._id) { delete req.body._id; }
   if(req.body.userInfo) { delete req.body.userInfo; }
-  if(req.body.seller) { delete req.body.seller; }
+  //if(req.body.seller) { delete req.body.seller; }
   req.body.updatedAt = new Date();
   Product.findById(req.params.id, function (err, product) {
     if (err) { return handleError(res, err); }
@@ -816,10 +816,10 @@ function excel_from_data(data, isAdmin) {
     ws[cell_ref] = cell;
 
     if(R == 0)
-      cell = {v: "Sold (Y/N)"};
+      cell = {v: "Asset Status"};
     else {
       if(product)
-        cell = {v: isYorN(product.isSold)};
+        cell = {v: product.assetStatus};
     }
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
     setType(cell);

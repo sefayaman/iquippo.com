@@ -1,6 +1,9 @@
   <div class="view-content">
 <section class="wrapper">
       <div class="container">
+      <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
+        The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
+      </div>
         <ol class="breadcrumb">
           <li><a href="/">Home</a></li>
           <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
@@ -354,7 +357,7 @@
 
 
           </div>
-          <div class="col-md-3 padd-left">
+          <div class="col-md-3 padd-left" ng-if="currentProduct.tradeType != 'SELL' && currentProduct.assetStatus == 'listed'">
             <div class="panel-group vendor-list">   
               <div class="panel panel-primary calctr-info">
                 <div class="panel-heading">

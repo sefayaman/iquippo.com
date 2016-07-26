@@ -8,6 +8,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   $scope.equipmentSearchFilter = {};
   $scope.filterType = $state.current.name;
 
+  var productList = [];
   var minPrice = 0;
   var maxPrice = 0;
   $scope.currentCategroy = 'All Product';
@@ -24,9 +25,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.itemsPerPage = 10;
   vm.currentPage = 1;
   vm.totalItems = 0;
-  vm.maxSize = 10;
+  vm.maxSize = 6;
   vm.sortByFlag = "";
-
   vm.productListToCompare = [{},{},{},{}];
   vm.compareCount = 0;
 
@@ -110,6 +110,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
             $scope.noResult = true;
           }
           $scope.productList = result;
+          productList = result;
         })
         .catch(function(){
           //error handling
@@ -309,6 +310,7 @@ function onModelChange(model){
           $scope.noResult = true;
         }
         $scope.productList = result;
+        productList = result;
       })
       .catch(function(){
         //error handling
@@ -465,25 +467,38 @@ $scope.today = function() {
 
     switch(vm.sortByFlag){
       case "lh":
-         var list = _.orderBy($scope.productList,['grossPrice'],['asc']);
+         var list = _.orderBy(productList,['grossPrice'],['asc']);
          $scope.productList = _.sortBy(list, function(n) {
               return n.tradeType == 'RENT' || n.priceOnRequest;
         });
       break;
       case 'hl':
-         var list  = _.orderBy($scope.productList,['grossPrice'],['desc']);
+         var list  = _.orderBy(productList,['grossPrice'],['desc']);
          $scope.productList = _.sortBy(list, function(n) {
               return n.tradeType == 'RENT' || n.priceOnRequest;
         });
       break;
       case 'por':
-       $scope.productList = _.sortBy($scope.productList, function(n) {
+       $scope.productList = _.sortBy(productList, function(n) {
               return !n.priceOnRequest;
         });
       break;
+      case 'exos':
+        $scope.productList = _.filter(productList, function(obj) {
+              return obj.assetStatus == 'listed';
+        });
+      break;
       default:
-         fireCommand();
+        $scope.productList = productList;
+         //fireCommand();
     }
+    if($scope.productList.length > 0){
+       vm.currentPage = 1;
+      vm.totalItems = $scope.productList.length;
+    }else{
+       $scope.noResult = true;
+    }
+    
   }
 
   function compare(){

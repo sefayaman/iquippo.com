@@ -76,7 +76,7 @@
             <li ng-repeat="category in categoryList">
               <a href="/viewproducts/{{category._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">
-                  <span class="overlayer"></span><span>{{category.name}} <b>(5)</b></span>
+                  <span class="overlayer"></span><span>{{category.name}} <b>({{category.count}})</b></span>
               </a>
 
             </li>

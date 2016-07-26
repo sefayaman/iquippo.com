@@ -137,6 +137,9 @@ function searchUtil(item,toSearch, type)
   } else if(type == 'group'){
     var groupName = item.group.name + "";
     return ( groupName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
+  }else if(type == 'assetStatus'){
+    var assetStatusName = item.assetStatus + "";
+    return (assetStatusName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
   }
 }
 

@@ -63,7 +63,7 @@ function extractEntryAndMapImages(assetIds,product,zipEntryObj,taskData,cb){
        product.images = [];
        product.assetDir = new Date().getTime();
        zipEntryObj[assetIds[0]].forEach(function(item,index){
-          if(item.name.match(/\.(jpg|jpeg|png)$/) && index < 8){
+          if(item.name.match(/\.(jpg|jpeg|png)$/i) && index < 8){
             taskData.zip.extractEntryTo(item.entryName,config.uploadPath + "/" + product.assetDir + "/" ,false);
             var img = {};
             img.isPrimary = false;

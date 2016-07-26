@@ -183,7 +183,8 @@ angular.module('sreizaoApp')
       })
 
       $scope.getUsersOnUserType = [];
-      $scope.getUsersOnUserType[0] = $scope.product.seller;
+      $scope.onRoleChange($scope.product.seller.userType);
+      //$scope.getUsersOnUserType[0] = $scope.product.seller;
 
       if($scope.product.seller.userType == "legalentity") {
         $scope.selectedCompany = $scope.product.seller;
@@ -577,7 +578,7 @@ angular.module('sreizaoApp')
   }
   product.seller = {};
   $scope.onUserChange = function(user){
-    if(angular.isUndefined(user)){
+    if(angular.isUndefined(user) || !user){
       product.seller = {};
       return;
     }

@@ -49,7 +49,7 @@
                 <h3>Seller Information</h3>
                 <div class="row" ng-show="isActive() || isChannelPartner()">
                     <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                      <select ng-disabled="isEdit" class="form-control" name="userType" ng-model="userType" ng-change="onRoleChange(userType)" ng-required="isActive() || isChannelPartner()">
+                      <select  class="form-control" name="userType" ng-model="userType" ng-change="onRoleChange(userType)" ng-required="isActive() || isChannelPartner()">
                         <option value="">* Customer Type</option>
                         <option value="individual">Individual</option>
                         <option value="private">Private Entrepreneur</option>
@@ -58,7 +58,7 @@
                       <i class="caret"></i>
                     </div>
                     <div class="col-sm-4 form-group" ng-show="userRequiredFlag" ng-class="{'has-error': form.userName.$invalid && submitted}">
-                      <select ng-disabled="isEdit" class="form-control" name="userName"  ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user.fname for user in getUsersOnUserType track by user._id" ng-required="userRequiredFlag">
+                      <select  class="form-control" name="userName"  ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user.fname for user in getUsersOnUserType track by user._id" ng-required="userRequiredFlag">
                             <option value="">* Select User</option>
                       </select>
                       <i class="caret"></i>
@@ -67,7 +67,7 @@
                       </p> -->
                     </div>
                     <div class="col-sm-4 form-group" ng-show="compRequiredFlag" ng-class="{'has-error': form.company.$invalid && submitted}">
-                      <select ng-disabled="isEdit" class="form-control" name="company"  ng-model="selectedCompany" ng-change="onUserChange(selectedCompany)" ng-options="user.company for user in getUsersOnUserType track by user._id" ng-required="compRequiredFlag">
+                      <select class="form-control" name="company"  ng-model="selectedCompany" ng-change="onUserChange(selectedCompany)" ng-options="user.company for user in getUsersOnUserType track by user._id" ng-required="compRequiredFlag">
                             <option value="">* Select Company</option>
                       </select>
                       <i class="caret"></i>

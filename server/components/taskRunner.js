@@ -11,15 +11,14 @@ var Uploaded_TEMPLATE_NAME = "BulkProductUploaded"
 function getTask(){
   Task.find({counter:{$lte:3}}).exec(function (err, data) {
       if (err) { 
-        console.error(err);
+          console.error(err);
          setTimeout(function () { getTask(); }, 6*1000); //sleep 
       }
       else {
         if(data.length > 0){
-console.log(data[0]);          
+          //console.log(data[0]);          
           executeTask(data[0]);
         }else
-           // setTimeout(function () { getTask(); }, 6*1000);
          setTimeout(function () { getTask(); }, 6*1000);
       }
   });
