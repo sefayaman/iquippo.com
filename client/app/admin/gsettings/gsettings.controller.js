@@ -209,7 +209,7 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, InvitationMaster
 		vm.invSetting.key = UPDATE_INVITATION_MASTER;
 		InvitationMasterSvc.upsert(vm.invSetting)
 		.then(function(result){
-			console.log("Update invitation setting");
+			Modal.alert("Update Master",true);
 		})
     }
 
