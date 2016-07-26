@@ -31,8 +31,8 @@ function getMatchingProductList(data){
   filter['deleted'] = false;
   var found = false;
 
-  if(qr.text){
-    filter['category.name'] = qr.text;
+  if(qr.filter.category){
+    filter['category.name'] = qr.filter.category;
     found = true;
    }
 
