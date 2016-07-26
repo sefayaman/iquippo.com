@@ -217,6 +217,8 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, InvitationMaster
     InvitationMasterSvc.getInvitationData(UPDATE_INVITATION_MASTER)
     .then(function(res){
          vm.invSetting = res;
+         vm.invSetting.sDate = moment(vm.invSetting.sDate).toDate();
+         vm.invSetting.eDate = moment(vm.invSetting.eDate).toDate();
       })
       .catch(function(stRes){
       })
