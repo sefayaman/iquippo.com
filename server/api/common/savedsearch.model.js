@@ -3,8 +3,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var SaveSearch = new Schema({
-  text: String,
+var SavedSearch = new Schema({
+  filter: {},
   user:{},
   emailNotification:{
     type: Boolean,
@@ -19,4 +19,4 @@ var SaveSearch = new Schema({
   updatedAt: {type:Date,default:Date.now}
 });
 
-module.exports = mongoose.model('SaveSearch', SaveSearch);
+module.exports = mongoose.model('SavedSearch', SavedSearch);

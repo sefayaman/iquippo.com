@@ -34,7 +34,7 @@ angular.module('sreizaoApp',[
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';
   })
-  .run(function ($rootScope, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, InvitationMasterSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, InvitationMasterSvc, InvitationSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -87,7 +87,7 @@ angular.module('sreizaoApp',[
          $rootScope.invitationData = res;
       })
       .catch(function(stRes){
-      })
+      });
 
     $rootScope.$on('$stateChangeStart', function (event, next) {
     $('#jivo-iframe-container').css("opacity","1");
@@ -169,6 +169,21 @@ angular.module('sreizaoApp',[
            $rootScope.isAdminLayout = false;
           $state.go('myaccount');
         }
+
+        if($cookieStore.get('refUserId') && $cookieStore.get('promoCode')) {
+          var couponData = {};
+          couponData.user = {};
+          couponData.refBy = {};
+          couponData.user = Auth.getCurrentUser();
+          couponData.refBy.refId = $location.search().ref_id;
+          couponData.refBy.code = $location.search().code;
+          InvitationSvc.createCoupon(couponData)
+          .then(function(res){
+            console.log("Coupon Created");
+            $cookieStore.remove('refUserId'); 
+            $cookieStore.remove('promoCode');
+          });
+        } 
      }
    });
 

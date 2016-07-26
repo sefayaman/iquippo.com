@@ -399,7 +399,7 @@ angular.module('sreizaoApp')
     };
     return commonSvc;
 }])
-  .factory("InvitationSvc",['$http','$q',function($http,$q){
+  .factory("InvitationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){
     var invitationSvc = {};
     var path = '/api/invitation';
 
@@ -426,7 +426,56 @@ angular.module('sreizaoApp')
           });
   };
 
-  invitationSvc.createCoupon = function(data){
+  invitationSvc.createCoupon = function(couponData){
+    var dataTosend = {};
+    dataTosend.user = {};
+    dataTosend.refBy = {};
+    dataTosend.refBy.refId = couponData.refBy.refId;
+    dataTosend.refBy.code = couponData.refBy.code;
+    dataTosend.user._id = couponData.user._id;
+    dataTosend.user.fname = couponData.user.fname;
+    dataTosend.user.lname = couponData.user.lname;
+    dataTosend.user.email = couponData.user.email;
+    dataTosend.user.mobile = couponData.user.mobile;
+    dataTosend.sDate = $rootScope.invitationData.sDate;//new Date("2016-12-31");
+    dataTosend.eDate = $rootScope.invitationData.eDate;
+    dataTosend.refAmount = $rootScope.invitationData.refAmount; //100;
+    dataTosend.joinAmount = $rootScope.invitationData.joinAmount;
+
+    return $http.post(path + "/generatecoupon", dataTosend)
+    .then(function(res){
+      updateWallet(res.data);
+      return res.data;
+    })
+    .catch(function(err){
+      throw err
+    })
+  }
+
+function updateWallet(res){
+  var walletData = {};
+  walletData.user = res.user;
+  walletData.refBy = res.refBy;
+  walletData.creditAmount = Number($rootScope.invitationData.joinAmount);
+  invitationSvc.createWalletTransaction(walletData)
+  .then(function(res){
+    console.log("Wallet Created");
+  });
+
+  invitationSvc.getTransactionOnId(res.refBy.refId)
+  .then(function(res){
+    var updateData = {};
+    updateData = res;
+    updateData.creditAmount = Number(res.creditAmount) + Number($rootScope.invitationData.refAmount);
+    invitationSvc.updateWalletTransaction(updateData)
+    .then(function(res){
+      console.log("Wallet Created");
+    });
+  });
+
+}
+
+  /*invitationSvc.createCoupon = function(data){
     return $http.post(path + "/generatecoupon",data)
     .then(function(res){
       return res.data;
@@ -434,7 +483,7 @@ angular.module('sreizaoApp')
     .catch(function(err){
       throw err
     })
-  };
+  };*/
 
   invitationSvc.updateCoupon = function(data){
     return $http.put(path + "/generatecoupon/" + data._id, data)

@@ -10,7 +10,7 @@ exports.getCouponOnId = function(req, res) {
   console.log("id###",req.params.id);
   GenerateCoupon.findOne({'user._id':req.params.id}, function (err, data) {
     if(err) { return handleError(res, err); }
-    if(!data) { return res.status(404).send('Not Found'); }
+    if(!data) { return res.status(200).json({errorCode:1,message:"Not Exist!!!"}); }
     return res.json(data);
   });
 };
@@ -83,7 +83,7 @@ exports.createWalletTransaction = function(req, res) {
   WalletTransaction.create(req.body, function(err, data) {
     if(err) { return handleError(res, err); }
      return res.status(200).json(data);
-  });  
+  }); 
 };
 
 // Updates an existing coupon in the DB.
@@ -100,17 +100,6 @@ exports.updateWalletTransaction = function(req, res) {
     });
   });
 };
-
-// Get a joind user list
-/*exports.getAllJoinedUsersOnId = function(req, res) {
-  console.log("id###",req.params.id);
-  GenerateCoupon.findOne({'user._id':req.params.id}, function (err, data) {
-    if(err) { return handleError(res, err); }
-    if(!data) { return res.status(404).send('Not Found'); }
-    return res.json(data);
-  });
-};*/
-//
 
 // Get a joind user list
 exports.getAllJoinedUsersOnId = function(req, res) {

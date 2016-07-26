@@ -3,7 +3,7 @@
 
     angular.module('sreizaoApp').controller('InvitationAcceptCtrl',InvitationAcceptCtrl);
 
-    function InvitationAcceptCtrl($scope, $rootScope, $state, $window, $location, $uibModal,Auth, Modal,InvitationSvc){
+    function InvitationAcceptCtrl($scope, $rootScope, $state, $window, $location, $cookieStore, $uibModal,Auth, Modal,InvitationSvc){
       var vm = this;
       var filter = {};
       vm.refUser = {};
@@ -15,6 +15,8 @@
         $scope.refUserId = $location.search().ref_id;
         $scope.promoCode = $location.search().code;
         if($scope.refUserId) {
+          $cookieStore.put('refUserId', $scope.refUserId);
+          $cookieStore.put('promoCode', $scope.promoCode);
           filter['_id'] = $scope.refUserId;
           filter['code'] = $scope.promoCode;
         }
@@ -22,7 +24,6 @@
             if(data.errorCode == 1)
               vm.codeExpire = true;
             vm.refUser = data;
-            console.log("user Created", data);
           });
       }
 

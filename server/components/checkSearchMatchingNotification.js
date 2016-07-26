@@ -1,7 +1,7 @@
 'use strict';
 
 var Product = require('../api/product/product.model');
-var SaveSearch = require('../api/common/savesearch.model');
+var SavedSearch = require('../api/common/savedsearch.model');
 var config = require('../config/environment');
 var commonController = require('../api/common/common.controller');
 var notification = require('./notification.js');
@@ -10,7 +10,7 @@ var FEEDBACK_TEMPLATE_NAME = "productSearchMatchingItemToCustomer";
 function getAllSaveSearch(){
   var filter = {};
   filter["emailNotification"] = true;
- SaveSearch.find(filter).exec(function (err, data) {
+ SavedSearch.find(filter).exec(function (err, data) {
       if (err) { 
         return console.log(err);
         setTimeout(function () { getAllSaveSearch(); }, 1*24*60*60*1000); //sleep 1*24*60*60*1000
@@ -111,7 +111,7 @@ function updateSearchQuery(data, qr){
     //qr.notifyCounter = 1;
     qr.checkSendMailDate = new Date();
     qr.updatedAt = new Date();
-    SaveSearch.update({ _id:_id }, {$set:qr}, function (err) {
+    SavedSearch.update({ _id:_id }, {$set:qr}, function (err) {
        data.splice(0,1);
         getMatchingProductList(data);
     });

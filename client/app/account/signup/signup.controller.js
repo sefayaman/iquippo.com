@@ -71,22 +71,12 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
                 var couponData = {};
                 couponData.user = {};
                 couponData.refBy = {};
+                couponData.user = Auth.getCurrentUser();
                 couponData.refBy.refId = $location.search().ref_id;
                 couponData.refBy.code = $location.search().code;
-                couponData.user._id = Auth.getCurrentUser()._id;
-                couponData.user.fname = Auth.getCurrentUser().fname;
-                couponData.user.lname = Auth.getCurrentUser().lname;
-                couponData.user.email = Auth.getCurrentUser().email;
-                couponData.user.mobile = Auth.getCurrentUser().mobile;
-                couponData.sDate = $rootScope.invitationData.sDate;//new Date("2016-12-31");
-                couponData.eDate = $rootScope.invitationData.eDate;
-                couponData.refAmount = $rootScope.invitationData.refAmount; //100;
-                couponData.joinAmount = $rootScope.invitationData.joinAmount;
                 InvitationSvc.createCoupon(couponData)
                 .then(function(res){
                   console.log("Coupon Created");
-                  //create empty wallet
-                  updateWallet(res);
                 });
               }
             });
@@ -115,30 +105,6 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     {
       Modal.alert("Incorrect OTP please enter correct OTP",true);
     }
-
-}
-
-function updateWallet(res){
-  var walletData = {};
-  walletData.user = res.user;
-  walletData.refBy = res.refBy;
-  //walletData.disAmount = 100;
-  walletData.creditAmount = Number($rootScope.invitationData.joinAmount);
-  InvitationSvc.createWalletTransaction(walletData)
-  .then(function(res){
-    console.log("Wallet Created");
-  });
-
-  InvitationSvc.getTransactionOnId(res.refBy.refId)
-  .then(function(res){
-    var updateData = {};
-    updateData = res;
-    updateData.creditAmount = Number(res.creditAmount) + Number($rootScope.invitationData.refAmount);
-    InvitationSvc.updateWalletTransaction(updateData)
-    .then(function(res){
-      console.log("Wallet Created");
-    });
-  });
 
 }
 

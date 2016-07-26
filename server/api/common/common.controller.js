@@ -24,7 +24,7 @@ var Product = require('./../product/product.model');
 var config = require('./../../config/environment');
 
 var SearchSuggestion = require('./searchsuggestion.model');
-var SaveSearch = require('./savesearch.model');
+var SavedSearch = require('./savedsearch.model');
 
 var importPath = config.uploadPath + config.importDir + "/";
 
@@ -1045,7 +1045,7 @@ exports.searchLocation = function(req,res){
 // Get a single user save search
 exports.getOnId = function(req, res) {
 	console.log("getOnId search",req.params.id);
-  SaveSearch.find({'user._id':req.params.id}, function (err, searchData) {
+  SavedSearch.find({'user._id':req.params.id}, function (err, searchData) {
     if(err) { return handleError(res, err); }
     if(!searchData) { return res.status(404).send('Not Found'); }
     return res.json(searchData);
@@ -1058,8 +1058,10 @@ exports.createSearch = function(req, res) {
   req.body.updatedAt = new Date();
   var filter = {};
   filter["user._id"] = req.body.user._id;
-  filter["text"] = req.body.text;
-  SaveSearch.find(filter,function (err, searchData) {
+  filter["filter.category"] = req.body.filter.category;
+  console.log("filterSearch", filter);
+  
+  SavedSearch.find(filter,function (err, searchData) {
     if(err) { return handleError(res, err); }
     else
     {	if(searchData.length>0)
@@ -1067,7 +1069,7 @@ exports.createSearch = function(req, res) {
     		return res.status(200).json({errorCode:1,message:"Search already exits!!!"});
     	}
         else{
-        	SaveSearch.create(req.body, function(err, searchData) {
+        	SavedSearch.create(req.body, function(err, searchData) {
               if(err) { return handleError(res, err); }
                return res.status(200).json({errorCode:0,message:"Search save sucessfully"});
              });
@@ -1083,10 +1085,10 @@ exports.updateSaveSearch = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   if(req.body.user) { delete req.body.user; }
   req.body.updatedAt = new Date();
-  SaveSearch.findById(req.params.id, function (err, searchData) {
+  SavedSearch.findById(req.params.id, function (err, searchData) {
     if (err) { return handleError(res, err); }
     if(!searchData) { return res.status(404).send('Not Found'); }
-    SaveSearch.update({_id:req.params.id},{$set:req.body},function(err){
+    SavedSearch.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json(req.body);
     });
@@ -1095,7 +1097,7 @@ exports.updateSaveSearch = function(req, res) {
 
 // Deletes a save search from the DB.
 exports.deleteSaveSearch = function(req, res) {
-  SaveSearch.findById(req.params.id, function (err, searchData) {
+  SavedSearch.findById(req.params.id, function (err, searchData) {
     if(err) { return handleError(res, err); }
     if(!searchData) { return res.status(404).send('Search Not Found'); }
     searchData.remove(function(err) {

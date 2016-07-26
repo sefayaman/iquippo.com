@@ -138,55 +138,56 @@
 			</uib-tabset>
         </div>
 
-        <div class="clearfix form-group"></div>
+        <!-- <div class="clearfix form-group"></div> -->
         <div ng-if="gsettingVm.tabValue == 'inv'">
     		<form name="invMasterForm" novalidate class="invMasterForm">
 				<h4>Update Invitation Setting</h4>
     			<legend></legend>
 				<div class="row">
-					<div class="col-sm-6 form-group">Start Date :</div>
+					<div class="col-sm-4 form-group">Start Date :</div>
 					<!-- <div class="col-sm-6 form-group"> -->
 					<div class="col-sm-6 form-group" ng-class="{'has-error': invMasterForm.sDate && submitted }">
-		                <input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
-		                <span class="input-group-addon">
-		                    <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-2x"></i></a>
-		                </span>
+		                <div class="input-group">
+		                	<input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
+			                <span class="input-group-addon">
+			                    <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-2x"></i></a>
+			                </span>
+		                </div>
 	                </div> 
 					<!-- </div> -->
 				</div>
 				<div class="row">
-					<div class="col-sm-6 form-group">End Date :</div>
+					<div class=" col-sm-4 form-group">End Date :</div>
 					<!-- <div class="col-sm-6 form-group"> -->
 						<div class=" col-sm-6 form-group" ng-class="{'has-error': invMasterForm.eDate && submitted }">
-		                <input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
-		                <span class="input-group-addon">
-		                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-2x"></i></a>
-		                </span>
+		                <div class="input-group">
+		                	<input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+			                <span class="input-group-addon">
+			                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-2x"></i></a>
+			                </span>
+		                </div>
 	                </div> 
 					<!-- </div> -->
 				</div>
 				<div class="row">
-					<div class="form-group col-sm-6">Reference Amount :<p> (To be paid to the referrer)</p>
+					<div class="form-group col-sm-4">Reference Amount :<p> (To be paid to the referrer)</p>
 					</div>
-					<div class="form-group col-sm-6" ng-class="{'has-error': invMasterForm.refAmount && submitted}">
+					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.refAmount && submitted}">
 						<input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="1" class="form-control">
 					</div>
 					
 				</div>
 				<div class="row">
-					<div class="form-group col-sm-6">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
-					<div class="form-group col-sm-6" ng-class="{'has-error': invMasterForm.joinAmount && submitted}">
+					<div class="form-group col-sm-4">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
+					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.joinAmount && submitted}">
 						<input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="1" class="form-control">
 					</div>
 				</div>
-				<!-- <div class="row">
-					<div class="form-group col-sm-6">Code : </div>
-					<div class="form-group col-sm-6">
-						<input type="text"  name=""  class="form-control" disabled="">
+				<div class="row">
+					<div class="form-group col-sm-7 text-right">
+						<button type="button" class="btn btn-warning" ng-click="gsettingVm.saveInvitationSetting(invMasterForm)">Ok</button>
 					</div>
-				</div> -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" ng-click="gsettingVm.saveInvitationSetting(invMasterForm)">Ok</button>
+					
 				</div>
 			</form>
 	    </div>
