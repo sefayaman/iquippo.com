@@ -27,6 +27,8 @@ router.post('/incomingproducts', controller.incomingProduct);
 router.post('/deleteincomingproduct', controller.deleteIncomingProduct);
 router.post('/incomingproduct', controller.getIncomingProduct);
 router.post('/unlockincomingproduct', controller.unIncomingProduct);
+router.post('/statuswisecount', controller.statusWiseCount);
+
 
 
 

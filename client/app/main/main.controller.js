@@ -18,6 +18,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.radioModel = 'SELL';
     vm.isCollapsed = true;
     vm.sortedFeaturedProduct = [];
+    vm.productCountObj = {};
 
     vm.doSearch = doSearch;
     vm.getCategoryHelp = getCategoryHelp;
@@ -75,6 +76,17 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     }
 
+    function getStatusWiseProductCount(){
+       productSvc.statusWiseCount()
+      .then(function(result){
+          vm.productCountObj = result;
+      })
+      .catch(function(res){
+        //error handling
+      });
+
+    }
+
     var flag = true;
     function getActiveClassifiedAd(){
       classifiedSvc.getActiveClassifiedAd()
@@ -108,10 +120,13 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       });
     }
 
+
+
     getFeaturedProduct();
     getCategories();
     getActiveClassifiedAd();
     getAllCategories();
+    getStatusWiseProductCount();
 
      function myFunct(keyEvent) {
       if(keyEvent)

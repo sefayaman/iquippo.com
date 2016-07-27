@@ -38,6 +38,7 @@
       prdService.deleteIncomingProduct = deleteIncomingProduct;
       prdService.getIncomingProduct = getIncomingProduct;
       prdService.unlockIncomingProduct = unlockIncomingProduct;
+      prdService.statusWiseCount = statusWiseCount;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -161,6 +162,20 @@
                 })
       }
 
+      function statusWiseCount(filter){
+        return $http.post(path + "/statuswisecount",filter)
+                .then(function(res){
+                  var resObj = {};
+                  res.data.forEach(function(item){
+                      resObj[item._id] = item.count;
+                  });
+                  return resObj;
+                })
+                .catch(function(res){
+                  throw res;
+                })
+      }
+      
       function updateProduct(product){
 
         return $http.put(path + "/" + product._id,product).
