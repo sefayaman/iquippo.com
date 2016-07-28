@@ -488,21 +488,21 @@ angular.module('sreizaoApp')
     })
   }
 
-function updateWallet(res){
+function updateWallet(couponData){
   var walletData = {};
-  walletData.user = res.user;
-  walletData.refBy = res.refBy;
-  walletData.creditAmount = Number($rootScope.invitationData.joinAmount);
+  walletData.user = couponData.user;
+  walletData.refBy = couponData.refBy;
+  walletData.creditAmount = Number(couponData.joinAmount);
   invitationSvc.createWalletTransaction(walletData)
   .then(function(res){
     console.log("Wallet Created");
   });
 
-  invitationSvc.getTransactionOnId(res.refBy.refId)
+  invitationSvc.getTransactionOnId(couponData.refBy.refId)
   .then(function(res){
     var updateData = {};
     updateData = res;
-    updateData.creditAmount = Number(res.creditAmount) + Number($rootScope.invitationData.refAmount);
+    updateData.creditAmount = Number(res.creditAmount) + Number(couponData.refAmount);
     invitationSvc.updateWalletTransaction(updateData)
     .then(function(res){
       console.log("Wallet Created");

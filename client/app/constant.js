@@ -156,9 +156,9 @@ var HOME_BANNER =  [{
     
 var serverPath = location.protocol +"//" + location.host; 
 //var serverPath = "http://14.141.64.180:8100"; 
-var supportMail = "info@iquippo.com";
+//var supportMail = "info@iquippo.com";
 var supportContact = "011 66025672";
-//var supportMail = "bharat.hinduja@bharatconnect.com";
+var supportMail = "bharat.hinduja@bharatconnect.com";
 var informationMessage = {};
 
 informationMessage['unknownError'] = "There is some issue.Please contact our support team.";
