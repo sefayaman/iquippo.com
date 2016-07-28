@@ -328,7 +328,9 @@ angular.module('sreizaoApp')
           resizeParam.width = imgDim.width;
           resizeParam.height = imgDim.height;
         }
+        $rootScope.loading = true;
         uploadSvc.upload(args.files[0],$scope.assetDir, resizeParam).then(function(result){
+          $rootScope.loading = false;
           $scope.assetDir = result.data.assetDir;
           if(!$scope.product.assetId)
             $scope.product.assetId = $scope.assetDir;
@@ -346,6 +348,7 @@ angular.module('sreizaoApp')
             docObj.name = result.data.filename;
         })
         .catch(function(err){
+           $rootScope.loading = false;
           Modal.alert("Error in file upload.",true);
         });
 
