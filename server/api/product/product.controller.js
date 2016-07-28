@@ -8,7 +8,6 @@ var trim = require('trim');
  var fsExtra = require('fs.extra');
 
 var Product = require('./product.model');
-var Product = require('./product.model');
 var ProductHistory = require('./producthistory.model');
 
 var User = require('./../user/user.model');

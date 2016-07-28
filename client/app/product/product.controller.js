@@ -2,7 +2,7 @@
 
 'use strict';
 angular.module('sreizaoApp')
- .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'userSvc','$timeout','$sce' , function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, userSvc,$timeout,$sce) {
+ .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'AppNotificationSvc', 'userSvc','$timeout','$sce' , function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce) {
     //Start NJ : uploadProductClick object push in GTM dataLayer
      dataLayer.push(gaMasterObject.uploadProductClick);
      //NJ: set upload product Start Time
@@ -704,6 +704,7 @@ angular.module('sreizaoApp')
         $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
         suggestionSvc.buildSuggestion(suggestions);
+        puchAppNotification(product);
         if(result.errorCode){
           alert(result.message);
           console.log("error reason",result.message);
@@ -727,6 +728,25 @@ angular.module('sreizaoApp')
       });
   }
 
+  function puchAppNotification(productData){
+    var dataToSend = {};
+    dataToSend.user = {};
+    dataToSend.product = {};
+    dataToSend.user._id = productData.seller._id;
+    dataToSend.user.fname = productData.seller.fname;
+    dataToSend.product._id = productData._id;
+    dataToSend.product.productId = productData.productId;
+    dataToSend.product.assetId = productData.assetId;
+    dataToSend.product.name = productData.name;
+    dataToSend.product.assetStatus = productData.assetStatus;
+    dataToSend.product.status = productData.status;
+    dataToSend.product.assetDir = productData.assetDir;
+    dataToSend.product.primaryImg = productData.primaryImg;
+    dataToSend.product.createdAt = productData.createdAt;
+    dataToSend.product.updatedAt = productData.updatedAt;
+
+    AppNotificationSvc.createAppNotification(dataToSend);
+  }
   function mailToCustomerForApprovedAndFeatured(result, product) {
     if(result.status)
     {

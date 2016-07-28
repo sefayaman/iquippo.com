@@ -376,6 +376,42 @@ angular.module('sreizaoApp')
       };
       return notificationSvc;
   }])
+.factory("AppNotificationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){
+    var appNotificationSvc = {};
+    var path = '/api/appnotification';
+
+  appNotificationSvc.getAllNotificationOnUserId = function(filter){
+    var deferred = $q.defer();
+    $http.post(path + "/search",filter)
+      .then(function(res){
+        deferred.resolve(res.data);
+      })
+      .catch(function(res){
+        deferred.reject(res);
+      })
+  }
+  appNotificationSvc.createAppNotification = function(data){
+    return $http.post(path + "/create", data)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err
+    })
+  }
+
+  /*appNotificationSvc.updateAppNotification = function(data){
+    return $http.put(path + "/update/" + data._id, data)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  };*/
+
+    return appNotificationSvc;
+}])
   .factory("commonSvc",['$http',function($http){
     var commonSvc = {};
     var path = '/api/common';
@@ -399,7 +435,7 @@ angular.module('sreizaoApp')
     };
     return commonSvc;
 }])
-  .factory("InvitationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){
+.factory("InvitationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){
     var invitationSvc = {};
     var path = '/api/invitation';
 
