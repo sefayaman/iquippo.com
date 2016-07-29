@@ -126,7 +126,13 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
               } else {
                 var dataToSend = {}
                 dataToSend = couponData;
-                dataToSend.user.imgsrc = vm.userInfo.imgsrc;
+                dataToSend.user._id = couponData.user._id;
+                dataToSend.user.fname = vm.userInfo.fname;
+                dataToSend.user.lname = vm.userInfo.lname;
+                dataToSend.user.email = vm.userInfo.email;
+                dataToSend.user.mobile = vm.userInfo.mobile;
+                if(couponData.user.imgsrc)
+                  dataToSend.user.imgsrc = vm.userInfo.imgsrc;
                 InvitationSvc.updateCoupon(dataToSend);
             }
           });
