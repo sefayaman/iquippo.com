@@ -17,6 +17,8 @@ var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
+var appNotificationCtrl = require('./../appnotification/appnotification.controller');
+
 var config = require('./../../config/environment');
 var IncomingProduct = require('./../../components/incomingproduct.model');
 var  xlsx = require('xlsx');
@@ -1191,6 +1193,24 @@ function bulkProductStatusUpdate(req,res,data){
                     bulkProductStatusUpdate(req,res,data);
                     return; 
                   } else {
+                    //create app notificaton
+                    var productData = {};
+                    productData.user = {};
+                    productData.product = {};
+                    productData.user._id = product.seller._id;
+                    productData.user.fname = product.seller.fname;
+                    productData.product._id = product._id;
+                    productData.product.productId = product.productId;
+                    productData.product.assetId = product.assetId;
+                    productData.product.name = product.name;
+                    productData.product.assetStatus = dataToSet.assetStatus;
+                    productData.product.status = product.status;
+                    productData.product.assetDir = product.assetDir;
+                    productData.product.primaryImg = product.primaryImg;
+                    productData.product.createdAt = product.createdAt;
+                    productData.product.updatedAt = dataToSet.updatedAt;
+                    appNotificationCtrl.createAppNotification(productData);
+                    
                     req.successProductArr[req.successProductArr.length] = product;
                   }
                   req.counter ++;

@@ -25,10 +25,8 @@ var config = require('./../../config/environment');
     Cart.find(filter).exec(function (err, cartsData) {
       if (err) { 
         return console.log(err);
-        setTimeout(function () { checkProductInCart(pData); }, 5*1000); //sleep 1*24*60*60*1000
       }
       else {
-        //console.log("cartsData.length***", cartsData.length);
         pushAppNotification(pData, cartsData);
       }
   });
@@ -68,6 +66,17 @@ var config = require('./../../config/environment');
       console.log("No Record Found");
     }
   }
+
+exports.createAppNotification = createAppNotification;
+
+  function createAppNotification(dataToSend) {
+    AppNotification.create(dataToSend, function(err, data) {
+      if(err) { 
+        console.log("Error", err);
+      }
+    });
+  }
+
 
  function create(req, res) {
   req.body.createdAt = new Date();

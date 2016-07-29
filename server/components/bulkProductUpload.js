@@ -10,6 +10,7 @@ var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
 var IncomingProduct = require('./incomingproduct.model');
 var Product = require('./../api/product/product.model');
+var appNotificationCtrl = require('../api/appnotification/appnotification.controller');
 
 bulkProductUpload.commitProduct = function(taskData,cb){
   var filename = taskData.taskInfo.filename;
@@ -139,9 +140,28 @@ function commitProduct(assetIds,product,zipEntryObj,taskData,cb){
     product.createdAt = new Date();
     product.updatedAt = new Date();
     product.relistingDate = new Date();
+    //create app notificaton data
+    var productData = {};
+    productData.user = {};
+    productData.product = {};
+    productData.user._id = product.seller._id;
+    productData.user.fname = product.seller.fname;
+    productData.product._id = product._id;
+    productData.product.productId = product.productId;
+    productData.product.assetId = product.assetId;
+    productData.product.name = product.name;
+    productData.product.assetStatus = product.assetStatus;
+    productData.product.status = product.status;
+    productData.product.assetDir = product.assetDir;
+    productData.product.primaryImg = product.primaryImg;
+    productData.product.createdAt = product.createdAt;
+    productData.product.updatedAt = product.updatedAt;
     Product.create(product, function(err, prd) {
       if(err){console.log('error in creating product')}
       if(!err) taskData.uploadedProducts.push(product.assetId);
+
+       appNotificationCtrl.createAppNotification(productData);
+    
        assetIds.splice(0,1);
        getProduct(assetIds,zipEntryObj,taskData,cb);
     });
