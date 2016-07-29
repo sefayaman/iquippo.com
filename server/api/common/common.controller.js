@@ -55,7 +55,7 @@ exports.sendOtp = function(req,res){
 	}
 	if(data.to){
 		fn(data,req,res,function(req1,res1,isSent){
-			console.log(otp);
+			//console.log(otp);
 			if(isSent){
 				if(sendOtpToClient)
 					return res.status(200).send("" + otp);
