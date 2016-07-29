@@ -473,6 +473,8 @@ angular.module('sreizaoApp')
     dataTosend.user.lname = couponData.user.lname;
     dataTosend.user.email = couponData.user.email;
     dataTosend.user.mobile = couponData.user.mobile;
+    if(couponData.user.imgsrc)
+      dataTosend.user.imgsrc = couponData.user.imgsrc;
     dataTosend.sDate = $rootScope.invitationData.sDate;//new Date("2016-12-31");
     dataTosend.eDate = $rootScope.invitationData.eDate;
     dataTosend.refAmount = $rootScope.invitationData.refAmount; //100;

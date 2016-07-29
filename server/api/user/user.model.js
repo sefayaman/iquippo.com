@@ -92,7 +92,8 @@ UserSchema
       'phone' : this.phone,
       'country' : this.country,
       'company' : this.company,
-      'location':this.location
+      'location':this.location,
+      'imgsrc' : this.imgsrc
     };
   });
 

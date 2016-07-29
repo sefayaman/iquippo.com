@@ -4,7 +4,7 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc) {
+function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, InvitationSvc) {
     var vm = this;
     vm.currentTab = "basic";
     vm.userInfo = {};
@@ -119,6 +119,17 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         vm.editSocialInfo = false;
         if(!noAlert)
           Modal.alert("User Updated.",true);
+          InvitationSvc.getCouponOnId(vm.userInfo._id)
+            .then(function(couponData){
+              if(couponData.errorCode == 1){
+                console.log("Coupon not created.");
+              } else {
+                var dataToSend = {}
+                dataToSend = couponData;
+                dataToSend.user.imgsrc = vm.userInfo.imgsrc;
+                InvitationSvc.updateCoupon(dataToSend);
+            }
+          });
       });
     }
 

@@ -53,7 +53,7 @@ exports.createCoupon = function(req, res) {
 // Updates an existing coupon in the DB.
 exports.updateCoupon = function(req, res) {
   if(req.body._id) { delete req.body._id; }
-  if(req.body.user) { delete req.body.user; }
+  //if(req.body.user) { delete req.body.user; }
   req.body.updatedAt = new Date();
   GenerateCoupon.findById(req.params.id, function (err, data) {
     if (err) { return handleError(res, err); }
