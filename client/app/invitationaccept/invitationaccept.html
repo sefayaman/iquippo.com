@@ -1,7 +1,7 @@
 <div class="container text-center">
    <div class="row">
-   	<div class="col-sm-offset-4 col-sm-4">
-   		<div ng-if="!invitationAcceptVm.codeExpire">
+    <div class="col-sm-offset-4 col-sm-4">
+      <div ng-if="!invitationAcceptVm.codeExpire">
         <h4 class="positive">
           {{invitationAcceptVm.refUser.user.fname}} gave you Rs. {{invitationAcceptVm.refUser.joinAmount}} to access the best equipment
         </h4>
@@ -16,32 +16,33 @@
       <h4 class="positive" ng-if="invitationAcceptVm.codeExpire">
           Code has been expired.
       </h4>
-	    <div class="form-group col-xs-offset-1 col-xs-10">
-	    	<button class="btn btn-default btn-block" ng-click="invitationAcceptVm.downloadApp()"><i class="fa fa-android"></i> Download the App</button>
-	    </div>
-   	</div>
+      <div class="form-group col-xs-offset-1 col-xs-10">
+        <button class="btn btn-default btn-block" ng-click="invitationAcceptVm.downloadApp()"><i class="fa fa-android"></i> Download the App</button>
+      </div>
+    </div>
    </div>
 </div>
 
 <script type="text/ng-template" id="register.html">
-	<div id="claim-modal">
+  <div id="claim-modal">
         <div class="modal-header">
           <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Sign Up</h4>
         </div>
         <div class="modal-body">
-          <button class="btn btn-primary" ng-click="loginOauth('facebook')"><i class="fa fa-facebook"></i> Register with Facebook</button>
-
-            <button class="btn btn-default" ng-click="loginOauth('google')"><i class="fa fa-google"></i> Register with Google</button>
-         
-            <div class="forget-or">OR</div>
-
-            <button class="btn btn-warning" ng-click="openRegister()">Register with Email</button>
-
+          <div class="row">
+            <div class="col-sm-offset-1 col-sm-5 form-group">
+              <button class="btn btn-primary btn-block" ng-click="loginOauth('facebook')"><i class="fa fa-facebook"></i> Register with Facebook</button>
+            </div>
+            <div class="col-sm-5 form-group">
+              <button class="btn btn-default btn-block" ng-click="loginOauth('google')"><i class="fa fa-google"></i> Register with Google</button>
+            </div>
+          </div>
+        <div class="forget-or">OR</div>
+          <button class="btn btn-warning" ng-click="openRegister()">Register with Email</button>
             <hr>
-
             Already an iQuippo member <a href="javascript:void(0);" ng-click="openLogin()">Login</a>
         </div>
             
-	</div>
+  </div>
 </script>
