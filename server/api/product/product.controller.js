@@ -1196,25 +1196,24 @@ function bulkProductStatusUpdate(req,res,data){
                     //create app notificaton
                     var productData = {};
                     productData.user = {};
-                    productData.product = {};
                     productData.user._id = product.seller._id;
                     productData.user.fname = product.seller.fname;
-                    productData.product._id = product._id;
-                    productData.product.productId = product.productId;
-                    productData.product.assetId = product.assetId;
-                    productData.product.name = product.name;
-                    productData.product.assetStatus = dataToSet.assetStatus;
-                    productData.product.status = product.status;
-                    productData.product.assetDir = product.assetDir;
-                    productData.product.primaryImg = product.primaryImg;
-                    productData.product.createdAt = product.createdAt;
-                    productData.product.updatedAt = dataToSet.updatedAt;
-                    appNotificationCtrl.createAppNotification(productData);
+                    productData.productId = product._id;
+                    productData.message = product.name;
+                    if(dataToSet.assetStatus == 'sold')
+                      productData.notificationFor = "Sold";
+                    else if(dataToSet.assetStatus == 'rented')
+                      productData.notificationFor = "Rented";
+                    else if(product.status && dataToSet.assetStatus == 'listed')
+                      productData.notificationFor = "Approved";
+                    productData.imgsrc = product.assetDir + "/"+ product.primaryImg;
+                    appNotificationCtrl.checkProductInCart(productData,function(){
+                      req.successProductArr[req.successProductArr.length] = product;
+                      req.counter ++;
+                      bulkProductStatusUpdate(req,res,data);
+                    });
                     
-                    req.successProductArr[req.successProductArr.length] = product;
                   }
-                  req.counter ++;
-                  bulkProductStatusUpdate(req,res,data);
               });
             }
         }; 

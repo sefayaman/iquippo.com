@@ -140,27 +140,12 @@ function commitProduct(assetIds,product,zipEntryObj,taskData,cb){
     product.createdAt = new Date();
     product.updatedAt = new Date();
     product.relistingDate = new Date();
-    //create app notificaton data
-    var productData = {};
-    productData.user = {};
-    productData.product = {};
-    productData.user._id = product.seller._id;
-    productData.user.fname = product.seller.fname;
-    productData.product._id = product._id;
-    productData.product.productId = product.productId;
-    productData.product.assetId = product.assetId;
-    productData.product.name = product.name;
-    productData.product.assetStatus = product.assetStatus;
-    productData.product.status = product.status;
-    productData.product.assetDir = product.assetDir;
-    productData.product.primaryImg = product.primaryImg;
-    productData.product.createdAt = product.createdAt;
-    productData.product.updatedAt = product.updatedAt;
+
     Product.create(product, function(err, prd) {
       if(err){console.log('error in creating product')}
       if(!err) taskData.uploadedProducts.push(product.assetId);
-
-       appNotificationCtrl.createAppNotification(productData);
+      //create app notificaton data
+       appNotificationCtrl.createAppNotification(product);
     
        assetIds.splice(0,1);
        getProduct(assetIds,zipEntryObj,taskData,cb);

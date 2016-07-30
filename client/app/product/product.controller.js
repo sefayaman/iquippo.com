@@ -660,6 +660,9 @@ angular.module('sreizaoApp')
             });
           }
           if(Auth.isAdmin()) {
+            if(result.status)
+               AppNotificationSvc.createAppNotificationFromProduct(result);
+        
             mailToCustomerForApprovedAndFeatured(result, product);
             } else {
             var data = {};
@@ -707,7 +710,7 @@ angular.module('sreizaoApp')
         $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
         suggestionSvc.buildSuggestion(suggestions);
-        puchAppNotification(product);
+         AppNotificationSvc.createAppNotificationFromProduct(product);
         if(result.errorCode){
           alert(result.message);
           console.log("error reason",result.message);
@@ -731,25 +734,6 @@ angular.module('sreizaoApp')
       });
   }
 
-  function puchAppNotification(productData){
-    var dataToSend = {};
-    dataToSend.user = {};
-    dataToSend.product = {};
-    dataToSend.user._id = productData.seller._id;
-    dataToSend.user.fname = productData.seller.fname;
-    dataToSend.product._id = productData._id;
-    dataToSend.product.productId = productData.productId;
-    dataToSend.product.assetId = productData.assetId;
-    dataToSend.product.name = productData.name;
-    dataToSend.product.assetStatus = productData.assetStatus;
-    dataToSend.product.status = productData.status;
-    dataToSend.product.assetDir = productData.assetDir;
-    dataToSend.product.primaryImg = productData.primaryImg;
-    dataToSend.product.createdAt = productData.createdAt;
-    dataToSend.product.updatedAt = productData.updatedAt;
-
-    AppNotificationSvc.createAppNotification(dataToSend);
-  }
   function mailToCustomerForApprovedAndFeatured(result, product) {
     if(result.status)
     {

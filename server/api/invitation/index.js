@@ -18,7 +18,7 @@ router.put('/wallettransaction/:id', controller.updateWalletTransaction);
 router.post('/joindusers', controller.getAllJoinedUsersOnId);
 router.post('/checkvalidity', controller.checkCodeValidity);
 
-router.post('/upsert', controller.upsertMasterData);
-router.post('/getsetting', controller.getSetting);
+/*router.post('/upsert', controller.upsertMasterData);
+router.post('/getsetting', controller.getSetting);*/
 
 module.exports = router;

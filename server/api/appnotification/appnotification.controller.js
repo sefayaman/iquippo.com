@@ -7,69 +7,81 @@ var Cart = require('./../cart/cart.model');
 var AppNotification = require('./appNotification.model');
 var config = require('./../../config/environment');
 
-  exports.createNotification = function(req, res) {
-    var pData = req.body;
+exports.createAppNotification = createAppNotification;
+exports.checkProductInCart = checkProductInCart;
+  exports.create = function(req, res) {
+    var data = req.body;
     
-    if(pData.product.status && pData.product.assetStatus == "listed")
+    if(data.notificationFor == 'Approved')
     {
       create(req, res);
-    } else if(pData.product.status && (pData.product.assetStatus == "rented" || pData.product.assetStatus == "sold")){
-      checkProductInCart(pData);
+    } else if(data.notificationFor == "Rented" || data.notificationFor == "Sold"){
+      checkProductInCart(pData,sendToClient,res);
+    }else{
+      return res.status(404).send('Invalid request');
     }
   };
 
-  function checkProductInCart(pData){
+  function checkProductInCart(pData,cb,res){
     var filter = {};
-    console.log("pData._id", pData.product._id);
-    filter["products._id"] = pData.product._id;
+    filter["products._id"] = ""+ pData.productId;
     Cart.find(filter).exec(function (err, cartsData) {
-      if (err) { 
-        return console.log(err);
-      }
+      if (err) { return handleError;}
       else {
-        pushAppNotification(pData, cartsData);
+        pushAppNotification(pData, cartsData,cb,res);
       }
   });
   }
 
-  function pushAppNotification(pData, cartsData){
+  function pushAppNotification(pData, cartsData,cb,res){
     if(cartsData && cartsData.length > 0){
     var cData = cartsData[0];
     var dataToSend = {};
     dataToSend.user = {};
-    dataToSend.product = {};
     dataToSend.user._id = cData.user._id;
     dataToSend.user.name = cData.user.name;
-    dataToSend.product._id = pData.product._id;
-    dataToSend.product.productId = pData.product.productId;
-    dataToSend.product.assetId = pData.product.assetId;
-    dataToSend.product.name = pData.product.name;
-    dataToSend.product.assetStatus = pData.product.assetStatus;
-    dataToSend.product.status = pData.product.status;
-    dataToSend.product.assetDir = pData.product.assetDir;
-    dataToSend.product.primaryImg = pData.product.primaryImg;
-    dataToSend.product.createdAt = pData.product.createdAt;
-    dataToSend.product.updatedAt = pData.product.updatedAt;
-    dataToSend.createdAt = new Date();
-    dataToSend.updatedAt = new Date();
+    dataToSend.productId = pData.productId;
+    dataToSend.message = pData.message;
+    dataToSend.notificationFor = pData.notificationFor;
+    dataToSend.imgsrc = pData.imgsrc;
     AppNotification.create(dataToSend, function(err, data) {
       if(err) { 
        cartsData.splice(0,1);
-       pushAppNotification(pData, cartsData);
+       pushAppNotification(pData, cartsData,cb,res);
       }
       else{
         cartsData.splice(0,1);
-        pushAppNotification(pData, cartsData);
+        pushAppNotification(pData, cartsData.cb,res);
      }
     });
     } else {
-      console.log("No Record Found");
+      if(cb && res)
+          return cb(res);
+      else
+        cb();
     }
   }
 
-exports.createAppNotification = createAppNotification;
+  function sendToClient(res){
+    res.status(200).send('Success');
+  }
 
-  function createAppNotification(dataToSend) {
+  function createAppNotification(product) {
+    var dataToSend = {};
+    dataToSend.user = {};
+    dataToSend.user._id = product.seller._id;
+    dataToSend.user.fname = product.seller.fname;
+    dataToSend.productId = product._id;
+    dataToSend.message = product.name;
+    /*if(product.assetStatus == 'sold')
+      productData.notificationFor = "Sold";
+    else if(product.assetStatus == 'rented')
+      productData.notificationFor = "Rented";
+    else*/ 
+    if(product.status && product.assetStatus == 'listed')
+      dataToSend.notificationFor = "Approved";
+    dataToSend.imgsrc = product.assetDir + "/"+ product.primaryImg;
+
     AppNotification.create(dataToSend, function(err, data) {
       if(err) { 
         console.log("Error", err);
@@ -91,10 +103,10 @@ exports.createAppNotification = createAppNotification;
 //search products
 exports.search = function(req, res) {
   var filter = {};
-  if(typeof req.body.notificationStatus !== 'undefined' && !req.body.notificationStatus)
-    filter["notificationStatus"] = req.body.notificationStatus;
+  if(req.body.status)
+    filter["status"] = req.body.status;
   else
-    delete filter.notificationStatus;
+    delete filter.status;
   if(req.body._id)
     filter["user._id"] = req.body._id;
   var query = AppNotification.find(filter).sort( { createdAt: -1 } );
@@ -109,11 +121,11 @@ exports.search = function(req, res) {
 
 exports.updateAppNotification = function(req,res){
   var ids = req.body.ids;
-  var userId = req.body._id;
+  //var userId = req.body._id;
   var obj = {};
   obj['updatedAt'] = new Date();
-  obj['notificationStatus'] = true;
-  AppNotification.update({'product._id':{$in:ids}, 'user._id': userId},{$set:obj},{multi:true},function(err,data){
+  obj['status'] = "read";
+  AppNotification.update({_id:{$in:ids}},{$set:obj},{multi:true},function(err,data){
     if(err) { return handleError(res, err); }
     return res.status(200).send('');
   });

@@ -379,8 +379,10 @@ angular.module('sreizaoApp')
 .factory("AppNotificationSvc",['$http','$q','$rootScope',function($http,$q,$rootScope){
     var appNotificationSvc = {};
     var path = '/api/appnotification';
+    appNotificationSvc.getAllNotificationOnUserId = getAllNotificationOnUserId;
+    appNotificationSvc.createAppNotificationFromProduct = createAppNotificationFromProduct;
 
-  appNotificationSvc.getAllNotificationOnUserId = function(filter){
+  function getAllNotificationOnUserId(filter){
     var deferred = $q.defer();
     $http.post(path + "/search",filter)
       .then(function(res){
@@ -390,7 +392,25 @@ angular.module('sreizaoApp')
         deferred.reject(res);
       })
   }
-  appNotificationSvc.createAppNotification = function(data){
+
+  function createAppNotificationFromProduct(productData){
+    var dataToSend = {};
+    dataToSend.user = {};
+    dataToSend.user._id = productData.seller._id;
+    dataToSend.user.fname = productData.seller.fname;
+    dataToSend.productId = productData._id;
+    dataToSend.message = productData.name;
+    if(productData.assetStatus == 'sold')
+      dataToSend.notificationFor = "Sold";
+    else if(productData.assetStatus == 'rented')
+      dataToSend.notificationFor = "Rented";
+    else if(productData.status && productData.assetStatus == 'listed')
+      dataToSend.notificationFor = "Approved";
+    dataToSend.imgsrc = productData.assetDir + "/"+ productData.primaryImg;
+    pushNotification(dataToSend);
+  }
+
+  function pushNotification(data){
     return $http.post(path + "/create", data)
     .then(function(res){
       return res.data;
@@ -399,17 +419,7 @@ angular.module('sreizaoApp')
       throw err
     })
   }
-
-  /*appNotificationSvc.updateAppNotification = function(data){
-    return $http.put(path + "/update/" + data._id, data)
-    .then(function(res){
-      return res.data;
-    })
-    .catch(function(err){
-      throw err;
-    });
-  };*/
-
+  
     return appNotificationSvc;
 }])
   .factory("commonSvc",['$http',function($http){

@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var GenerateCoupon = require('./generatecoupon.model');
 var WalletTransaction = require('./wallettransaction.model');
-var InvitationMaster = require('./invitationsetting.model');
+//var InvitationMaster = require('./invitationsetting.model');
 
 // Get a single invitation coupon
 exports.getCouponOnId = function(req, res) {
@@ -119,45 +119,6 @@ exports.getAllJoinedUsersOnId = function(req, res) {
   );
 
 };
-
-exports.upsertMasterData = function(req,res){
-  var key = req.body.key;
-  console.log("data@@", req.body);
-  if(!key)
-    return res.status(400).send("Invalid request");
-  InvitationMaster.find({key:key},function(err,data){
-    if(err){return handleError(res,err)}
-    else if(data.length == 0){
-      InvitationMaster.create(req.body,function(err,val){
-        if(err){return handleError(res,err)}
-        else{
-          console.log("created");
-          return res.status(200).json(val);
-        }
-      });
-    }else{
-      InvitationMaster.update({key:key},{$set:req.body},function(err,val){
-        if(err){return handleError(res,err)}
-        else{
-          console.log("updated",val);
-          return res.status(200).json(val);
-        }
-      })
-    }
-  });
-
-}
-exports.getSetting = function(req,res){
-  InvitationMaster.findOne({key:req.body.key},function(err,data){
-    if(err){
-      return handleError(res,err)
-    }
-    else{
-      res.status(200).json(data)
-    }
-    
-  });
-}
 
 function handleError(res, err) {
   console.log("called >>>>>>>>>",err);

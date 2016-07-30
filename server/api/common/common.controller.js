@@ -134,6 +134,7 @@ exports.buildSuggestion = function(req,res){
 
 
 exports.upsertSetting = function(req,res){
+
 	var key = req.body.key;
 	if(!key)
 		return res.status(400).send("Invalid request");
@@ -148,7 +149,16 @@ exports.upsertSetting = function(req,res){
 				}
 			});
 		}else{
-			AppSetting.update({key:key},{$set:{value:req.body.value}},function(err,val){
+			var setObj = {};
+			if(req.body.value){
+				setObj.value = req.body.value
+				setObj.updatedAt = new Date();
+			}
+			else {
+				setObj.valueObj = req.body.valueObj
+				setObj.updatedAt = new Date();
+			}
+			AppSetting.update({key:key},{$set:setObj},function(err,val){
 				if(err){return handleError(res,err)}
 				else{
 					console.log("updated",dt);

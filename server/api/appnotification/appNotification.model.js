@@ -5,10 +5,12 @@ var mongoose = require('mongoose'),
 
 var AppNotificationSchema = new Schema({
   user:{},
-  product:{},
-  notificationStatus: {
-    type: Boolean,
-    default: false
+  message: String,
+  notificationFor:String,
+  imgsrc: String,
+  status: {
+    type: String,
+    default: 'unread'
   },
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

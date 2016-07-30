@@ -235,36 +235,4 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     }
       return subCatServices;
   }
-
- angular.module('admin').factory("InvitationMasterSvc",InvitationMasterSvc);
- function InvitationMasterSvc($http, $q){
-    var invSettingSvc = {};
-    var path = '/api/invitation';
-      
-      invSettingSvc.upsert = upsert;
-      invSettingSvc.getInvitationData = getInvitationData;
-      
-      function upsert(data){
-      return $http.post(path + "/upsert",data)
-      .then(function(res){
-        return res.data;
-      })
-      .catch(function(ex){
-        throw ex;
-      })
-    };
-
-    function getInvitationData(key){
-       return $http.post(path + "/getsetting",{key:key})
-      .then(function(res){
-        return res.data;
-      })
-      .catch(function(ex){
-        throw ex;
-      })
-    }
-
-      return invSettingSvc;
-  }
-
 })();

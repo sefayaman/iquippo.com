@@ -5,7 +5,10 @@ var mongoose = require('mongoose'),
 
 var AppSettingSchema = new Schema({
   key: String,
-  value: String
+  value: String,
+  valueObj:{},
+  createdAt: {type:Date,default:Date.now},
+  updatedAt: {type:Date,default:Date.now}
 });
 
 module.exports = mongoose.model('AppSetting', AppSettingSchema);

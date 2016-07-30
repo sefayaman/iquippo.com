@@ -34,7 +34,7 @@ angular.module('sreizaoApp',[
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, InvitationMasterSvc, InvitationSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -82,7 +82,7 @@ angular.module('sreizaoApp',[
       $rootScope.loading = $rootScope.loadingCount !=0;
     });
 
-   InvitationMasterSvc.getInvitationData(UPDATE_INVITATION_MASTER)
+   settingSvc.get(UPDATE_INVITATION_MASTER)
     .then(function(res){
          $rootScope.invitationData = res;
       })

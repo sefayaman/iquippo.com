@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, InvitationMasterSvc) {
+function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, settingSvc) {
     var vm = this;
     vm.tabValue = 'sc';
    
@@ -206,19 +206,25 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, InvitationMaster
 			$scope.submitted = true;
 			return;
 		}
-		vm.invSetting.key = UPDATE_INVITATION_MASTER;
-		InvitationMasterSvc.upsert(vm.invSetting)
+		var dataToSend = {};
+		dataToSend.valueObj = {};
+		dataToSend.key = UPDATE_INVITATION_MASTER;
+		dataToSend.valueObj = vm.invSetting;
+		settingSvc.upsert(dataToSend)
 		.then(function(result){
 			Modal.alert("Update Master",true);
 		})
     }
 
     function getInvitationMasterData(){
-    InvitationMasterSvc.getInvitationData(UPDATE_INVITATION_MASTER)
+    settingSvc.get(UPDATE_INVITATION_MASTER)
     .then(function(res){
-         vm.invSetting = res;
-         vm.invSetting.sDate = moment(vm.invSetting.sDate).toDate();
-         vm.invSetting.eDate = moment(vm.invSetting.eDate).toDate();
+    	if(res) {
+         vm.invSetting.sDate = moment(res.valueObj.sDate).toDate();
+         vm.invSetting.eDate = moment(res.valueObj.eDate).toDate();
+         vm.invSetting.refAmount = res.valueObj.refAmount;
+         vm.invSetting.joinAmount = res.valueObj.joinAmount;
+     	}
       })
       .catch(function(stRes){
       })
