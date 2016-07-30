@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var GenerateCouponSchema = new Schema({
+var CouponSchema = new Schema({
   user:{},
   refBy:{},
   code:String,
@@ -25,7 +25,7 @@ var GenerateCouponSchema = new Schema({
   updatedAt: {type:Date,default:Date.now}
 });
 
-GenerateCouponSchema.pre('save', function(next){
+CouponSchema.pre('save', function(next){
   var doc = this;
   var uIdNum;
   var uid = Math.round(Math.random() * 10000) + "";
@@ -53,7 +53,7 @@ var generateUniqueCode = function (next, doc, uIdNum){
     var code = fname.substr(0,4) + lname.substr(0,3) + uIdNum;
     filter['code'] = code;
   }
-  GenerateCoupon.find(filter,function(error,uIdNo){
+  Coupon.find(filter,function(error,uIdNo){
     if(!error){
       if(uIdNo.length == 0) {
           //console.log("Not exist", uIdNum);
@@ -70,4 +70,4 @@ var generateUniqueCode = function (next, doc, uIdNum){
       }
     });
 }
-var GenerateCoupon = module.exports = mongoose.model('GenerateCoupon', GenerateCouponSchema);
+var Coupon = module.exports = mongoose.model('Coupon', CouponSchema);

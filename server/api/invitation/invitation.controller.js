@@ -1,14 +1,14 @@
 'use strict';
 
 var _ = require('lodash');
-var GenerateCoupon = require('./generatecoupon.model');
+var Coupon = require('./coupon.model');
 var WalletTransaction = require('./wallettransaction.model');
 //var InvitationMaster = require('./invitationsetting.model');
 
 // Get a single invitation coupon
 exports.getCouponOnId = function(req, res) {
   console.log("id###",req.params.id);
-  GenerateCoupon.findOne({'user._id':req.params.id}, function (err, data) {
+  Coupon.findOne({'user._id':req.params.id}, function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(200).json({errorCode:1,message:"Not Exist!!!"}); }
     return res.json(data);
@@ -33,7 +33,7 @@ exports.checkCodeValidity = function(req,res){
   filter["sDate"] = validsDate;
   filter["eDate"] = valideDate;
   console.log("filter####", filter);
-  GenerateCoupon.findOne(filter, function (err, data) {
+  Coupon.findOne(filter, function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(200).json({errorCode:1,message:"Code Expired"})}
     return res.status(200).json(data);
@@ -44,7 +44,7 @@ exports.checkCodeValidity = function(req,res){
 exports.createCoupon = function(req, res) {
   req.body.createdAt = new Date();
   req.body.updatedAt = new Date();
-  GenerateCoupon.create(req.body, function(err, data) {
+  Coupon.create(req.body, function(err, data) {
     if(err) { return handleError(res, err); }
      return res.status(200).json(data);
   });  
@@ -55,10 +55,10 @@ exports.updateCoupon = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   //if(req.body.user) { delete req.body.user; }
   req.body.updatedAt = new Date();
-  GenerateCoupon.findById(req.params.id, function (err, data) {
+  Coupon.findById(req.params.id, function (err, data) {
     if (err) { return handleError(res, err); }
     if(!data) { return res.status(404).send('Not Found'); }
-    GenerateCoupon.update({_id:req.params.id},{$set:req.body},function(err){
+    Coupon.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json(req.body);
     });
@@ -110,7 +110,7 @@ exports.getAllJoinedUsersOnId = function(req, res) {
   if(req.body.code)
     filter["refBy.code"] = req.body.code;
 
-  var query = GenerateCoupon.find(filter);
+  var query = Coupon.find(filter);
   query.exec(
                function (err, joinedusers) {
                       if(err) { return handleError(res, err); }
