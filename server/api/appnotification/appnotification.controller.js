@@ -16,7 +16,7 @@ exports.checkProductInCart = checkProductInCart;
     {
       create(req, res);
     } else if(data.notificationFor == "Rented" || data.notificationFor == "Sold"){
-      checkProductInCart(pData,sendToClient,res);
+      checkProductInCart(data,sendToClient,res);
     }else{
       return res.status(404).send('Invalid request');
     }
@@ -28,6 +28,7 @@ exports.checkProductInCart = checkProductInCart;
     Cart.find(filter).exec(function (err, cartsData) {
       if (err) { return handleError;}
       else {
+        //console.log("cartsData", cartsData.length);
         pushAppNotification(pData, cartsData,cb,res);
       }
   });
@@ -35,6 +36,7 @@ exports.checkProductInCart = checkProductInCart;
 
   function pushAppNotification(pData, cartsData,cb,res){
     if(cartsData && cartsData.length > 0){
+    //console.log("pushAppNotification");
     var cData = cartsData[0];
     var dataToSend = {};
     dataToSend.user = {};
@@ -50,8 +52,9 @@ exports.checkProductInCart = checkProductInCart;
        pushAppNotification(pData, cartsData,cb,res);
       }
       else{
+        //console.log("created###");
         cartsData.splice(0,1);
-        pushAppNotification(pData, cartsData.cb,res);
+        pushAppNotification(pData, cartsData,cb,res);
      }
     });
     } else {
