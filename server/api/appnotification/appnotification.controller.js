@@ -123,7 +123,7 @@ exports.search = function(req, res) {
 };
 
 exports.updateAppNotification = function(req,res){
-  var ids = req.body.ids;
+  var ids = req.body;
   //var userId = req.body._id;
   var obj = {};
   obj['updatedAt'] = new Date();
