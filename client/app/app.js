@@ -175,8 +175,8 @@ angular.module('sreizaoApp',[
           couponData.user = {};
           couponData.refBy = {};
           couponData.user = Auth.getCurrentUser();
-          couponData.refBy.refId = $location.search().ref_id;
-          couponData.refBy.code = $location.search().code;
+          couponData.refBy.refId = $cookieStore.get('refUserId');
+          couponData.refBy.code = $cookieStore.get('promoCode');
           InvitationSvc.createCoupon(couponData)
           .then(function(res){
             console.log("Coupon Created");
