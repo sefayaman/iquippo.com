@@ -485,10 +485,10 @@ angular.module('sreizaoApp')
     dataTosend.user.mobile = couponData.user.mobile;
     if(couponData.user.imgsrc)
       dataTosend.user.imgsrc = couponData.user.imgsrc;
-    dataTosend.sDate = $rootScope.invitationData.sDate;//new Date("2016-12-31");
-    dataTosend.eDate = $rootScope.invitationData.eDate;
-    dataTosend.refAmount = $rootScope.invitationData.refAmount; //100;
-    dataTosend.joinAmount = $rootScope.invitationData.joinAmount;
+    dataTosend.sDate = $rootScope.invitationData.valueObj.sDate;//new Date("2016-12-31");
+    dataTosend.eDate = $rootScope.invitationData.valueObj.eDate;
+    dataTosend.refAmount = $rootScope.invitationData.valueObj.refAmount; //100;
+    dataTosend.joinAmount = $rootScope.invitationData.valueObj.joinAmount;
 
     return $http.post(path + "/generatecoupon", dataTosend)
     .then(function(res){
