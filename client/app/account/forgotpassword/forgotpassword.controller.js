@@ -4,7 +4,7 @@
 angular.module('account').controller('ForgotPasswordCtrl', ForgotPasswordCtrl);
 
 //Controller function
-function ForgotPasswordCtrl($scope, Auth,$rootScope,$uibModal,$uibModalInstance,commonSvc,Modal) {
+function ForgotPasswordCtrl($scope, Auth,$rootScope,$uibModal,$uibModalInstance,commonSvc,Modal, notificationSvc) {
    
    var vm = this;
    vm.data = {};
@@ -82,6 +82,16 @@ function ForgotPasswordCtrl($scope, Auth,$rootScope,$uibModal,$uibModalInstance,
       Auth.resetPassword($scope.user._id, vm.data.password)
       .success( function(res) {
         $scope.message = 'Password successfully changed.';
+        var data = {};
+        data['to'] = Auth.getCurrentUser().email;
+        data['subject'] = 'Password Changed: Success';
+        var dataToSend = {};
+        dataToSend['fname'] = Auth.getCurrentUser().fname; 
+        dataToSend['lname'] = Auth.getCurrentUser().lname;
+        dataToSend['serverPath'] = serverPath;
+        notificationSvc.sendNotification('userPasswordChangedEmail', data, dataToSend,'email');
+        data['to'] = Auth.getCurrentUser().mobile;
+        notificationSvc.sendNotification('passwordChangesSmsToUser', data, dataToSend,'sms');
         closeDialog();
       })
       .error( function(res) {
