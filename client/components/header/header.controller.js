@@ -59,7 +59,7 @@ angular.module('sreizaoApp')
         data['subject'] = 'Callback request';
         dataToServer['serverPath'] = serverPath;
         notificationSvc.sendNotification('callbackEmail',data,dataToServer,'email');
-        data['to'] = dataToSend['mobile'];
+        data['to'] = dataToServer['mobile'];
         notificationSvc.sendNotification('callbackCustomerSms',data,dataToServer,'sms');
           Modal.alert(informationMessage.callbackSuccess,true);
       } else {
