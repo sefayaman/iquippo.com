@@ -52,15 +52,16 @@ angular.module('sreizaoApp')
         dataToServer['lname'] = Auth.getCurrentUser().lname;
         dataToServer['phone'] = Auth.getCurrentUser().phone;
         dataToServer['mobile'] = Auth.getCurrentUser().mobile;
-
+        dataToServer['email'] = Auth.getCurrentUser().email;
+        
         $http.post('/api/callback', dataToServer);
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Callback request';
         dataToServer['serverPath'] = serverPath;
         notificationSvc.sendNotification('callbackEmail',data,dataToServer,'email');
-        data['to'] = dataToServer['mobile'];
-        notificationSvc.sendNotification('callbackCustomerSms',data,dataToServer,'sms');
+        data['to'] = dataToServer['email'];
+        notificationSvc.sendNotification('callbackEmailToCustomer',data,dataToServer,'email');
           Modal.alert(informationMessage.callbackSuccess,true);
       } else {
         $scope.openDialog('callback');
