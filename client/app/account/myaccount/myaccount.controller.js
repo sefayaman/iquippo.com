@@ -131,7 +131,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
                 dataToSend.user.lname = vm.userInfo.lname;
                 dataToSend.user.email = vm.userInfo.email;
                 dataToSend.user.mobile = vm.userInfo.mobile;
-                if(couponData.user.imgsrc)
+                if(vm.userInfo.imgsrc)
                   dataToSend.user.imgsrc = vm.userInfo.imgsrc;
                 InvitationSvc.updateCoupon(dataToSend);
             }
