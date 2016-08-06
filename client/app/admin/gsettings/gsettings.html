@@ -173,14 +173,14 @@
 					<div class="form-group col-sm-4">Reference Amount :<p> (To be paid to the referrer)</p>
 					</div>
 					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.refAmount && submitted}">
-						<input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="1" class="form-control">
+						<input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="0" class="form-control">
 					</div>
 					
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-4">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
 					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.joinAmount && submitted}">
-						<input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="1" class="form-control">
+						<input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="0" class="form-control">
 					</div>
 				</div>
 				<div class="row">
