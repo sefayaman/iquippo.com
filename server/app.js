@@ -66,7 +66,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage}).any();
 
 app.post('/api/uploads',function(req,res){
-  var assetDir = req.query.assetDir;
+ var assetDir = req.query.assetDir;
   var resize = req.query.resize;
   if(!assetDir)
     assetDir = new Date().getTime();
@@ -86,10 +86,15 @@ app.post('/api/uploads',function(req,res){
       resizeImg(req,res,assetDir,dimension,false)
     }
     else{
-       res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+      try {
+        res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+      } catch(err){
+        return res.end("Error uploading file.");
+      }
     }
 
-  });
+    });
+  
 });
 
 app.post('/api/multiplefile/upload',function(req,res){

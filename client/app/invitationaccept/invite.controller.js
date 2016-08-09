@@ -28,7 +28,7 @@
       }
 
       function downloadApp(){
-        $window.location.href = "https://play.google.com/store/apps/details?id=com.ionicframework.iquippo474922&hl=en";
+        $window.location.href = "https://play.google.com/store/apps/details?id=com.ionicframework.iquippo374922&hl=en";
       }
       function openRegisterModal(){
         var prevScope = $rootScope.$new();
