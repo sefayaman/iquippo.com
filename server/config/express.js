@@ -25,9 +25,9 @@ module.exports = function(app) {
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(compression());
-  app.use(bodyParser.urlencoded({ extended: false,limit:"5mb" }));
-  app.use(bodyParser.json({limit:"5mb"}));
-  app.use(bodyParser({ keepExtensions: true, uploadDir: 'c:/temp',limit:'5mb' }));
+  app.use(bodyParser.urlencoded({ extended: false,limit:"25mb" }));
+  app.use(bodyParser.json({limit:"25mb"}));
+  app.use(bodyParser({ keepExtensions: true, uploadDir: 'c:/temp',limit:'25mb' }));
   app.use(methodOverride());
   app.use(cookieParser());
   app.use(cors());
