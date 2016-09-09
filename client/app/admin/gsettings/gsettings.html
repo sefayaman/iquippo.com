@@ -238,12 +238,40 @@
 				<h4>Payment Master</h4>
     			<legend></legend>		         
 
+    				<form name="stateForm" novalidate class="stateForm">			    		
+			          <div class="row">
+			         	 <div class="form-group col-sm-3">
+			                <select class="form-control">
+			                	<option>Select Services</option>
+			                	<option>Services1</option>
+			                	<option>Services2</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div>
+			            <div class="form-group col-sm-3">
+			                <select class="form-control">
+			                	<option>Partners</option>
+			                	<option>Partners1</option>
+			                	<option>Partners2</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div> 
+			            <div class="form-group col-sm-3" ng-class="{'has-error': stateForm.stateName && submitted}">
+			                <input id="stateName" name="stateName" ng-model="gsettingVm.state.name" type="text" class="form-control" placeholder="Fee" required>
+			            </div>                           	
+			           	<div class="form-group col-sm-2 pull-right">
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveState(stateForm)" ng-if="!gsettingVm.stateEdit">Save</button>
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateState(stateForm)" ng-if="gsettingVm.stateEdit">Update</button>
+			           	</div>
+			           	
+			          </div>
+			     	</form>	
 			          <div class="table-responsive">
 			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
 			              <thead>
-			                <th>Auction Name</th>                                
-			                <th>Value</th>                                
+			                <th>Service Name</th>                                
+			                <th>Fee</th>                                
 			                <th>Action</th>
 			               
 			              </thead>
