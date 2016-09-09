@@ -12,11 +12,14 @@
 	        	<select class="form-control" ng-model="gsettingVm.tabValue">
 	        		<option value="sc">Sub Category</option>
 	        		<option value="loc">Location</option>
+	        		<option value="date">Auction Date</option>
 	        		<option value="inv">Invite Code Setting</option>
+	        		<option value="paymnt">Payment Master</option>
 	        	</select>
 	        	<i class="caret"></i>
 	      	</div> 
 	    </div>
+	    <!--Select category  -->
 	    <div ng-if="gsettingVm.tabValue == 'sc'">
 	    	<form name="subCategoryForm" novalidate class="subCategoryForm">
 	    		<h4>Add New Sub Category</h4>
@@ -138,7 +141,7 @@
 			</uib-tabset>
         </div>
 
-        <!-- <div class="clearfix form-group"></div> -->
+        <!--Select Invitation  -->
         <div ng-if="gsettingVm.tabValue == 'inv'">
     		<form name="invMasterForm" novalidate class="invMasterForm">
 				<h4>Update Invitation Setting</h4>
@@ -189,6 +192,75 @@
 					</div>
 					
 				</div>
+			</form>
+	    </div>
+
+	    <!--Select Auction date  -->
+        <div ng-if="gsettingVm.tabValue == 'date'">
+    		<form name="invMasterForm" novalidate class="invMasterForm">
+				<h4>Auction Date</h4>
+    			<legend></legend>
+				
+			          <div class="row">                         	
+			           	<div class="form-group col-sm-offset-10 col-sm-2">
+			           		<button type="button" class="btn btn-success btn-md btn-block" ng-click="gsettingVm.saveState(stateForm)" ng-if="!gsettingVm.stateEdit"><i class="fa fa-file-excel-o"></i> Import Excel</button>
+			           		
+			           	</div>
+			           	
+			          </div>
+
+			          <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			                <th>Date</th>                                
+			                <th>Action</th>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="state in gsettingVm.stateList">
+			                <td>{{state.name}}</td>
+			                <td>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
+			     	
+
+			</form>
+	    </div>
+
+	    <!--Select payment master -->
+        <div ng-if="gsettingVm.tabValue == 'paymnt'">
+    		<form name="invMasterForm" novalidate class="invMasterForm">
+				<h4>Payment Master</h4>
+    			<legend></legend>		         
+
+			          <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			                <th>Auction Name</th>                                
+			                <th>Value</th>                                
+			                <th>Action</th>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="state in gsettingVm.stateList">
+			                <td>{{state.name}}</td>
+			                <td>{{state.name}}</td>
+			                <td>
+								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
+			     	
+
 			</form>
 	    </div>
     </div>

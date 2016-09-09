@@ -1,175 +1,217 @@
 <div class="container">
-    <div class="col-sm-12 text-justify">
+    <div class="col-sm-6 text-justify">
       <h3>Manpower</h3>
       <legend></legend>
 
-      <h5>Trusted Services, One Portal</h5>
+      <div class="form-group">
+        <h5>Trusted Services, One Portal</h5>
 
-      <ul>
-        <li>
-          Operators are essential to run equipment both effectively and efficiently. This portal would help you find the best and trained operators for your assets. 
-        </li>  
-        <li>
-          Furthermore, the portal offers this as a service in and with its Wet Lease products. This section of the websites - provides the following services:
-        </li> 
-      </ul>
+        <ul>
+          <li>
+            Operators are essential to run equipment both effectively and efficiently. This portal would help you find the best and trained operators for your assets. 
+          </li>  
+          <li>
+            Furthermore, the portal offers this as a service in and with its Wet Lease products. This section of the websites - provides the following services:
+          </li> 
+        </ul>
 
-      <p>
-        <strong>Operators</strong>: Enroll themselves -> Get listed -> Viewed 
-        Serves as a specialised job portal
+        <p>
+          <strong>Operators</strong>: Enroll themselves -> Get listed -> Viewed 
+          Serves as a specialised job portal
 
-      </p>
-      <p>
-        <strong>Operator Training Institutes and Manufacturers</strong>: Collaboration with us on iQuippo.
-      </p>
+        </p>
+        <p>
+          <strong>Operator Training Institutes and Manufacturers</strong>: Collaboration with us on iQuippo.
+        </p>
 
-      <p class="form-group">
-        This hand-on-service from getting operators to get the machines running to search a job and also to get trained in it is unique to the iQuippo platform.
-      </p>
+        <p>
+          This hand-on-service from getting operators to get the machines running to search a job and also to get trained in it is unique to the iQuippo platform.
+        </p>
+      </div>
 
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <input type="text" class="form-control" placeholder="Search...">
+        </div>
+      </div>
+
+      <h4>Manpowers List
+        <small> <a href="javascript:void(0);" class="pull-right">View All</a></small>
+      </h4>
+      <legend></legend>
       <div class="row">
-        <div class="col-sm-4 form-group">         
-          <input type="text" class="form-control" placeholder="Search for...">
+        <div class="col-sm-3 text-center">
+          <a href="javascript:void(0);">
+            <img src="http://placehold.it/200x200" class="img-responsive form-group">
+          </a>
+          <p>Firoz Mansoori</p>
+          <p>New Delhi</p>
         </div>
-        <div class="col-sm-offset-6 col-sm-2">
-          <a class="btn btn-block btn-warning" ng-click="openDialog('manpower')"><i class="fa fa-plus"></i> Create Profile</a>
+        <div class="col-sm-3 text-center">
+          <a href="javascript:void(0);">
+            <img src="http://placehold.it/200x200" class="img-responsive form-group">
+          </a>
+          <p>Firoz Mansoori</p>
+          <p>New Delhi</p>
+        </div>
+        <div class="col-sm-3 text-center">
+          <a href="javascript:void(0);">
+            <img src="http://placehold.it/200x200" class="img-responsive form-group">
+          </a>
+          <p>Firoz Mansoori</p>
+          <p>New Delhi</p>
+        </div>
+        <div class="col-sm-3 text-center">
+          <a href="javascript:void(0);">
+            <img src="http://placehold.it/200x200" class="img-responsive form-group">
+          </a>
+          <p>Firoz Mansoori</p>
+          <p>New Delhi</p>
         </div>
       </div>
 
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Email Id</th>
-            <th>Mobile No.</th>
-            <th>Location</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <img src="http://placehold.it/50x50" width="50" height="50">
-            </td>
-            <td>Firoz Mansoori</td>
-            <td>firoz@bharatconnect.com</td>
-            <td>9999999999</td>
-            <td>New Delhi</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- <div class="serve text-center">
+          <a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('shippingquote')">Request a Quote</a>
+      </div> -->
     </div>
-    <!-- <div class="col-sm-6">
+    <div class="col-sm-6 manpower-register">
       <div class="form-group"></div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Add Profile</h3>
-        </div>
-        <div class="panel-body">
-     
-      <form class="form" novalidate name="form">
-          <div class="row">
-            <div class="col-sm-offset-4 col-xs-4 form-group text-center">
-              <img src="http://placehold.it/120x120" class="form-group">
-              <span class="btn btn-default fileinput-button">
-               <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
-                <span><i class="fa fa-camera"></i> Upload Picture</span>
-              </span>
+      <uib-tabset justified="true">
+        <uib-tab heading="Register">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <form class="form" novalidate name="form">
+                  <div class="row">
+                    <div class="col-sm-offset-4 col-xs-4 form-group text-center">
+                      <img src="http://placehold.it/120x120" class="form-group">
+                      <span class="btn btn-default fileinput-button">
+                       <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                        <span><i class="fa fa-camera"></i> Upload Picture</span>
+                      </span>
+                    </div>
+                    
+                  </div>  
+              
+                  <div class="form-group">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                        <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="manpowerQuote.fname" required>
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">                                      
+                        <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="manpowerQuote.mname">
+                      </div>
+                    </div>
+                  </div>  
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
+                        <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="manpowerQuote.lname" required>
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+                      <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="manpowerQuote.email" required>
+                      <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                      Please enter a valid email.
+                      </p>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
+                       <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="manpowerQuote.mobile" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">                          
+                        <input type="password" name="" class="form-control" placeholder="Password*" ng-model="manpowerQuote.work">
+                      </div>
+                    </div>
+                  </div>      
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">                          
+                        <input type="text" name="" class="form-control" placeholder="Nature of Work" ng-model="manpowerQuote.work">
+                      </div>
+                    </div>
+                    <div class="col-xs-6 form-group">
+                        <select class="form-control" name="location" ng-model="manpowerQuote.city">
+                          <option value="">Assets Operated</option>
+                            <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                    </div>
+                               
+                  </div>  
+
+                  <div class="row">
+                  <div class="col-xs-6 form-group">
+                        <select class="form-control" name="location" ng-model="manpowerQuote.city">
+                          <option value="">Current Location</option>
+                            <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">                          
+                        <input type="text" name="" class="form-control" placeholder="Fees &amp; Charges" ng-model="manpowerQuote.designation">
+                      </div>
+                    </div>                   
+                    
+                  </div>
+                                   
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">                          
+                        <input type="text" name="" class="form-control" placeholder="Available" ng-model="manpowerQuote.phone">
+                      </div>
+                    </div>
+                    <div class="col-xs-6 form-group">
+                      <span class="btn btn-default fileinput-button">
+                         <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                          <span><i class="fa fa-upload"></i> Upload Resume</span>
+                        </span>
+                    </div>
+                  </div>           
+                </div>
+
+                <div class="modal-footer">
+                  <button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
+                  <button type="button" ng-click="addManpowerQuote()" class="btn btn-warning">Submit</button>
+                </div>
+              </form>
             </div>
-            
-          </div>  
-      
-          <div class="form-group">
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
-                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="manpowerQuote.fname" required>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">                                      
-                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="manpowerQuote.mname">
-              </div>
-            </div>
-          </div>  
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
-                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="manpowerQuote.lname" required>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
-              <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="manpowerQuote.email" required>
-              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
-              Please enter a valid email.
-              </p>
-              </div>
-            </div>
-            
           </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
-               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="manpowerQuote.mobile" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
-              </div>
+        </uib-tab>
+        <uib-tab heading="Login">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <form>
+                <div class="row">
+                  <div class="col-sm-offset-2 col-sm-8">
+                    <div class="form-group">
+                      <input class="form-control" type="text" placeholder="Email or Mobile No.">
+                    </div>
+                    <div class="form-group">
+                      <input class="form-control" type="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <input class="btn btn-warning btn-block" type="button" value="Login">
+                    </div>
+                    <div class="form-group text-center">
+                      <a href="javascript:void(0);">Forgot Password?</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Nature of Work" ng-model="manpowerQuote.work">
-              </div>
-            </div>
-          </div>      
-          <div class="row">
-            <div class="col-xs-6 form-group">
-                <select class="form-control" name="location" ng-model="manpowerQuote.city">
-                  <option value="">Assets Operated</option>
-                    <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                </select>
-                <i class="caret"></i>
-            </div>
-            <div class="col-xs-6 form-group">
-                <select class="form-control" name="location" ng-model="manpowerQuote.city">
-                  <option value="">Current Location</option>
-                    <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                </select>
-                <i class="caret"></i>
-            </div>           
-          </div>  
-
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Fees &amp; Charges" ng-model="manpowerQuote.designation">
-              </div>
-            </div>
-
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Available" ng-model="manpowerQuote.phone">
-              </div>
-            </div>
-            
           </div>
-                           
-          <div class="row">
-            <div class="col-sm-offset-6 col-xs-6 form-group">
-              <span class="btn btn-default fileinput-button">
-                 <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
-                  <span><i class="fa fa-upload"></i> Upload Resume</span>
-                </span>
-            </div>
-          </div>           
-        </div>
-
-        <div class="modal-footer">
-          <button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
-          <button type="button" ng-click="addManpowerQuote()" class="btn btn-warning">Submit</button>
-        </div>
-      </form>
-</div>
-      </div>
-    </div> -->
+        </uib-tab>
+      </uib-tabset>
+    </div>
 </div>
