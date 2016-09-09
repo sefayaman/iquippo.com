@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="col-sm-6 text-justify">
+    <div class="col-sm-12 text-justify">
       <h3>Manpower</h3>
       <legend></legend>
 
@@ -23,24 +23,65 @@
         <strong>Operator Training Institutes and Manufacturers</strong>: Collaboration with us on iQuippo.
       </p>
 
-      <p>
+      <p class="form-group">
         This hand-on-service from getting operators to get the machines running to search a job and also to get trained in it is unique to the iQuippo platform.
       </p>
 
-      <!-- <div class="serve text-center">
-          <a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('shippingquote')">Request a Quote</a>
-      </div> -->
+      <div class="row">
+        <div class="col-sm-4 form-group">         
+          <input type="text" class="form-control" placeholder="Search for...">
+        </div>
+        <div class="col-sm-offset-6 col-sm-2">
+          <a class="btn btn-block btn-warning" ng-click="openDialog('manpower')"><i class="fa fa-plus"></i> Create Profile</a>
+        </div>
+      </div>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Email Id</th>
+            <th>Mobile No.</th>
+            <th>Location</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <img src="http://placehold.it/50x50" width="50" height="50">
+            </td>
+            <td>Firoz Mansoori</td>
+            <td>firoz@bharatconnect.com</td>
+            <td>9999999999</td>
+            <td>New Delhi</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="col-sm-6">
+    <!-- <div class="col-sm-6">
       <div class="form-group"></div>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Man Power Quote</h3>
+          <h3 class="panel-title">Add Profile</h3>
         </div>
         <div class="panel-body">
      
       <form class="form" novalidate name="form">
-        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-offset-4 col-xs-4 form-group text-center">
+              <img src="http://placehold.it/120x120" class="form-group">
+              <span class="btn btn-default fileinput-button">
+               <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                <span><i class="fa fa-camera"></i> Upload Picture</span>
+              </span>
+            </div>
+            
+          </div>  
+      
+          <div class="form-group">
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
@@ -60,41 +101,11 @@
               </div>
             </div>
             <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
-                <select class="form-control" ng-model="manpowerQuote.country" name="country" required>
-                  <option value="">*Select Country</option>
-                  <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
-                </select>
-                <i class="caret"></i>
-              </div>
-            </div>
-          </div>  
-          <div class="row">
-            <div class="col-xs-6">
-                    <select class="form-control" name="location" ng-model="manpowerQuote.city">
-                      <option value="">Select Location</option>
-                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                    </select>
-                    <i class="caret"></i>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="manpowerQuote.companyname">
-              </div>
-            </div>
-            
-          </div>  
-
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="manpowerQuote.designation">
-              </div>
-            </div>
-
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="manpowerQuote.phone">
+              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+              <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="manpowerQuote.email" required>
+              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+              Please enter a valid email.
+              </p>
               </div>
             </div>
             
@@ -106,77 +117,51 @@
               </div>
             </div>
             <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
-              <input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="manpowerQuote.email" required>
-              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
-              Please enter a valid email.
-              </p>
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Nature of Work" ng-model="manpowerQuote.work">
               </div>
             </div>
-          </div>                     
+          </div>      
+          <div class="row">
+            <div class="col-xs-6 form-group">
+                <select class="form-control" name="location" ng-model="manpowerQuote.city">
+                  <option value="">Assets Operated</option>
+                    <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                </select>
+                <i class="caret"></i>
+            </div>
+            <div class="col-xs-6 form-group">
+                <select class="form-control" name="location" ng-model="manpowerQuote.city">
+                  <option value="">Current Location</option>
+                    <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                </select>
+                <i class="caret"></i>
+            </div>           
+          </div>  
+
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group">                          
-                <select class="form-control" name="usedBy" ng-model="manpowerQuote.usedBy">
-                  <option value="Operators">Operators</option>
-                  <option value="MaintenanceStaff">Maintenance Staff</option>
-                  <option value="Other">Other</option>
-                </select>
-                <i class="caret"></i>
+                <input type="text" name="" class="form-control" placeholder="Fees &amp; Charges" ng-model="manpowerQuote.designation">
               </div>
             </div>
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.usedByOther.$invalid && form.submitted }">                                      
-                <input type="text" name="usedByOther" ng-model="manpowerQuote.usedByOther" class="form-control" placeholder="Others" ng-required= "manpowerQuote.usedBy == 'Other'" ng-disabled="manpowerQuote.usedBy != 'Other'">
-              </div>
-            </div>
-          </div>  
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="form-group" ng-class="{'has-error': form.equipments.$invalid && form.submitted }">                          
-                <input type="text" name="equipments" ng-model="manpowerQuote.equipments" class="form-control" placeholder="*Equipments" required>
-              </div>
-            </div>
-           
-          </div>  
-         
-          <div class="row text-left">
-              <div class="col-xs-12 col-sm-6 form-group">Schedule a Call :</div>
-                <div class="col-xs-6 col-sm-3 form-group">
-                  <input type="radio"  name="schedule" ng-model="manpowerQuote.schedule" value="yes"> Yes                  
-                </div>
-                <div class="col-xs-6 col-sm-3 form-group">
-                  <input type="radio" name="schedule" ng-model="manpowerQuote.schedule" value="no"> No
-                </div>
 
-                <div class="clerafix"></div>  
-                                                 
-                <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="manpowerQuote.schedule == 'yes'">
-                  <small>Pick Date</small>
-                  <div class="input-group" ng-class="{'has-error': form.scheduleDate.$invalid && form.submitted }">
-                    <input type="text" class="form-control" ng-model="manpowerQuote.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="manpowerQuote.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
-                    <span class="input-group-addon">
-                      <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-2x"></i></a>
-                    </span>
-                  </div>                                       
-                </div>
-                
-                <div class="col-xs-6 col-sm-4 form-group " ng-if="manpowerQuote.schedule == 'yes'">
-                <small>Set Time</small>
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="HH:MM" ng-model="manpowerQuote.scheduledTime" is-open=""  ng-value="{{manpowerQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-                  <span class="input-group-addon">
-                    <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></button>
-                  </span>
-                </div>
-                <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-                <!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->
-                </div>
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Available" ng-model="manpowerQuote.phone">
+              </div>
             </div>
-          
-           <div class="form-group">                      
-            <textarea class="form-control" placeholder="Comments if any" name="comment" ng-model="manpowerQuote.comment"></textarea>
-          </div> 
+            
+          </div>
+                           
+          <div class="row">
+            <div class="col-sm-offset-6 col-xs-6 form-group">
+              <span class="btn btn-default fileinput-button">
+                 <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                  <span><i class="fa fa-upload"></i> Upload Resume</span>
+                </span>
+            </div>
+          </div>           
         </div>
 
         <div class="modal-footer">
@@ -186,5 +171,5 @@
       </form>
 </div>
       </div>
-    </div>
+    </div> -->
 </div>
