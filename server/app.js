@@ -220,7 +220,7 @@ server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   notification.startNotification();
   taskRunner.startTaskRunner();
-  checkExpiryService.start();
+  //checkExpiryService.start();
   checkQuickQueryNotificationService.start();
   checkSearchMatchingNotificationService.start();
 });
