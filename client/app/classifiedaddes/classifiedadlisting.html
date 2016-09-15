@@ -1,9 +1,10 @@
-<!-- <div id="wrapper">
+<div id="wrapper">
   <section class="wrapper">
     <div class="container-fluid">
       <div class="row">        
         <div class="col-sm-12">
           <div id="page-wrapper">
+            <!-- Page Heading -->
               <div class="row">
                 <div class="col-lg-12">
                   <h3>
@@ -12,6 +13,7 @@
                   <hr>
                 </div>
               </div>
+              <!-- /.row -->
 
               <div class="table-responsive">
                 <table datatable="ng"  dt-options= "dtOptions" class="table table-bordred table-striped">
@@ -50,96 +52,6 @@
                   </tbody>
                 </table>
               </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div> -->
-
-<!--for payment -->
-<div id="wrapper">
-  <section class="wrapper">
-    <div class="container-fluid">
-      <div class="row">        
-        <div class="col-sm-12">
-          <div id="page-wrapper">
-            <!-- Page Heading -->
-              <div class="row">
-                <div class="col-lg-12">
-                  <h3>
-                      Order Summary
-                  </h3>
-                  <hr>
-                </div>
-              </div>
-              <!-- /.row -->
-
-              <div class="row form-group">
-                <div class="col-sm-6">
-                  <h4>Product</h4>
-                </div>
-                <div class="col-sm-6">
-                  <h4>Price(Rs.)</h4>
-                </div>
-              </div>
-              <legend></legend>
-              <div class="row form-group">
-                <div class="col-sm-6">
-                  <div class="media">
-                    <a class="pull-left" href="#">
-                      <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{classified.image}}" alt="Image" width="70" height="70">
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading"><a href="javascrip:void(0);">{{product.name}}Name</a></h4>
-                      <p>Location</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  2000
-                </div>
-              </div>
-
-              <div class="well text-center">
-                  <div class="row">
-                    <div class="col-sm-offset-7 col-sm-5 text-right">
-                      <p>Sub total: Rs. 22000</p>
-                      <p>Total: Rs. 22000</p>                      
-                    </div>
-                  </div>
-                  <button class="btn btn-success btn-lg">Proceed to Payment</button>
-                </div>
-
-              <!-- <div class="table-responsive">
-                <table class="table table-bordred">
-
-                  <thead>
-                    <th>Image</th>
-                    <th>Product Name</th>
-                    <th>Price</th>
-                    <th width="50">Delete</th>
-                    
-                   
-                  </thead>
-                  <tbody>
-
-                    <tr ng-repeat="classified in classifiedadLstVm.classifiedAdList" >
-                      <td width="60">
-                        <img class="sheduleImg img-circle media-object" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{classified.image}}" alt="Image">
-                      </td>
-                      <td>                        
-                        <a href="javascrip:void(0);">{{product.name}}Name</a>
-                        <p>{{product.location}}</p>                          
-                      </td>
-                      <td>{{classified.value}}</td>
-                      <td><button class="btn btn-default"><i class="fa fa-trash"></i></button></td>
-                    </tr>
-
-                  </tbody>
-                </table>
-                
-              </div> -->
           </div>
         </div>
       </div>

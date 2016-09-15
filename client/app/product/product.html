@@ -44,10 +44,8 @@
             </div>
             <!-- success error end -->
 
-            <!-- tabs -->
-            <uib-tabset justified="true">
-              <uib-tab heading="Step1">
-                <form name="form" novalidate>
+            <!-- form -->
+            <form name="form" novalidate>
                       <div class="seller_info form-group" ng-show="isActive() || isChannelPartner()">
                         <h3>Seller Information</h3>
                         <div class="row" ng-show="isActive() || isChannelPartner()">
@@ -106,12 +104,7 @@
                             <span ng-if="product.assetId">{{product.assetId}}</span>
                             <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
                           </div>
-                          <div class="row">
-                            <div class="form-group col-sm-5">List for Auction</div>
-                            <div class="form-group col-sm-4">
-                              <input type="checkbox">
-                            </div>
-                          </div>
+                          
                           <div class="row">
                               <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
                               <div class="form-group col-sm-7" ng-class="{'has-error': form.tradeType.$invalid && submitted}">
@@ -616,7 +609,6 @@
                               <select class="form-control">
                                 <option value="policy">Policy</option>
                                 <option value="ertification">Certification</option>
-                                <option value="valuation">Valuation Report</option>
                                 <option value="other">Other</option>
                               </select>
                                <i class="caret"></i>
@@ -699,58 +691,7 @@
                             <button ng-hide="enableButton" class="btn btn-danger" ng-click="addOrUpdateProduct(product)">Submit</button>
                             <button ng-show="enableButton" class="btn btn-danger" confirmed-click="addOrUpdateProduct(product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
                         </div>
-                </form>
-              </uib-tab>
-              <uib-tab heading="Step2">
-                <form>
-                  <div class="panel panel-default">
-                   <div class="panel-heading">
-                     <h3 class="panel-title">Auction Details</h3>
-                   </div>
-                   <div class="panel-body">
-                      <div class="row">
-                        <div class="form-group col-sm-5">Auction Date</div>
-                        <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
-                          <select class="form-control" name="country" ng-model="product.country" required>
-                                <option value="">Select Date</option>
-                                <option  ng-repeat="country in allCountries" value="{{country.name}}">{{}}</option>
-                          </select>
-                          <i class="caret"></i>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="form-group col-sm-5">Valuation Report</div>
-                        <div class="form-group col-sm-7">
-                          <input type="text" class="form-control" placeholder="URL" disabled>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="form-group col-sm-5">Request for Valuation</div>
-                        <div class="form-group col-sm-7">
-                          <input type="checkbox">
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="form-group col-sm-5">Name of Agency </div>
-                        <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
-                          <select class="form-control" name="country" ng-model="product.country" required>
-                                <option value="">Select Agency</option>
-                                <option  ng-repeat="country in allCountries" value="{{country.name}}">{{}}</option>
-                          </select>
-                          <i class="caret"></i>
-                        </div>
-                      </div>
-
-                      <div class="form-group pull-right">
-                        
-                        <button ng-hide="enableButton" class="btn btn-danger" ng-click="addOrUpdateProduct(product)">Submit</button>
-                    </div>
-
-                   </div>
-                 </div>
-                </form>                
-              </uib-tab>
-            </uib-tabset>            
+                </form>   
           </div>
         </div>
         </div>

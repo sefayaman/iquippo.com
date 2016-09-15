@@ -142,18 +142,6 @@ var allCountries = [
 }
 ];
 
-var payableServices = [
-{
-  name:"Auction Listing",
-  code:"Auction",
-  multiple:false
-},
-{
-  name:"Valuation Service",
-  code:"Valuation",
-  multiple:true
-}
-]
 var HOME_BANNER =  [{
       image: 'Banner.jpg'
     }, {

@@ -63,10 +63,15 @@
                   <ul class="nav navbar-nav">
                     <li ng-class="{active: isActive('/')}"><a href="index.html">Home</a></li>
                     <li ng-class="{active: isActive('/aboutus')}"><a href="/aboutus">About Us</a></li>
-                    <li role="menuitem"><a href="/shipping">Shipping</a></li>
-                    <li role="menuitem"><a href="/valuation">Valuation</a></li>
-                    <li role="menuitem"><a href="/certifiedbyiquippo"> Certified by iQuippo</a></li>
-                    <li role="menuitem"><a href="/manpower">Manpower</a></li>
+                    <li class="submenu dropdown">
+                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Services</a>
+                      <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                        <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
+                        <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
+                        <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
+                        <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
+                      </ul>
+                    </li>
                     
                     <li ng-class="{active: isActive('/contactus')}"><a href="/contactus">Contact Us</a></li>
                   </ul>
