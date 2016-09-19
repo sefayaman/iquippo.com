@@ -21,7 +21,7 @@ angular.module('sreizaoApp')
         var deferred = $q.defer();
 
         $http.post('/auth/local', {
-          email: user.email,
+          userId: user.userId,
           password: user.password
         }).
         success(function(data) {

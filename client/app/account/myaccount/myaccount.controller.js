@@ -53,7 +53,14 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         return;
       }
       if(isBasic){
-        Auth.validateSignup({email:vm.userInfo.email,mobile:vm.userInfo.mobile,userid:vm.userInfo._id}).then(function(data){
+        var dataToSend = {};
+        if(vm.userInfo.email) 
+          dataToSend['email'] = vm.userInfo.email;
+        if(vm.userInfo.mobile) 
+          dataToSend['mobile'] = vm.userInfo.mobile;
+        if(vm.userInfo._id) 
+          dataToSend['userid'] = vm.userInfo._id;
+        Auth.validateSignup(dataToSend).then(function(data){
          if(data.errorCode != 0){
             Modal.alert(data.message,true);
              return;

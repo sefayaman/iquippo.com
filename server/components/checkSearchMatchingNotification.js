@@ -42,7 +42,7 @@ function getMatchingProductList(data){
     filter["createdAt"] = dateFilter;
   }
 
-  if(!found){
+  if(!found || !qr.user.email){
     data.splice(0,1);
     getMatchingProductList(data);
     return;

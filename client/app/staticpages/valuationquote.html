@@ -63,12 +63,12 @@
 			<div class="row">
 				<div class="col-xs-6">
 					<div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
-						<input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="valuationQuote.mobile" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+						<input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="valuationQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" required>
 					</div>
 				</div>
 				<div class="col-xs-6">
 					<div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
-						<input type="email" name="email" class="form-control" placeholder="* Email Address" ng-model="valuationQuote.email" required>
+						<input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="valuationQuote.email">
 						<p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
 							Please enter a valid email.
 						</p>

@@ -58,7 +58,8 @@ angular.module('sreizaoApp')
       data['to'] = $scope.shippingService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.shippingService.serverPath},'email');
-
+      $scope.shippingQuote = {};
+      $scope.form.submitted = false;
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -145,7 +146,8 @@ angular.module('sreizaoApp')
       data['to'] = $scope.valuationService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.valuationService.serverPath},'email');
-
+      $scope.valuationQuote = {};
+      $scope.form.submitted = false;
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -287,7 +289,8 @@ angular.module('sreizaoApp')
       data['to'] = $scope.cetifiedByiQuippoService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.cetifiedByiQuippoService.serverPath},'email');
-
+      $scope.cetifiedByiQuippoQuote = {};
+      $scope.form.submitted = false;
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
           Modal.alert(res,true);
@@ -431,6 +434,7 @@ angular.module('sreizaoApp')
 
       Modal.alert(informationMessage.productQuoteSuccess,true);
       $scope.manpowerQuote = {};
+      $scope.form.submitted = false;
       $scope.manpowerQuote.usedBy = "Operators";
       },function(res){
           Modal.alert(res,true);

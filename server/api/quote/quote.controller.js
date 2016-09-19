@@ -54,6 +54,8 @@ function findBestMatch(req,res){
 
 function pushNotification(req,res,product){
    try{
+        if(!req.body.email)
+          return res.status(401).send('email not found');
         var emailData = {};
         emailData.to = req.body.email;
         var tmplName = FEEDBACK_TEMPLATE_NAME;

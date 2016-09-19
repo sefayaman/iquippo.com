@@ -22,7 +22,7 @@
           <div ng-if="isAdmin()" class="featured-pro1">
             
             <label>Channel Partners:</label>
-            <select ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user as (user.fname+' ('+user.email+')') for user in getUsersOnRole track by user._id" >
+            <select ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user as (user.fname+' ('+user.mobile+')') for user in getUsersOnRole track by user._id" >
               <option value="">Select User</option>
             </select>
           </div>

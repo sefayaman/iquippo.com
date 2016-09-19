@@ -111,13 +111,13 @@ UserSchema
  * Validations
  */
 
-// Validate empty email
+// Validate empty mobile
 UserSchema
-  .path('email')
-  .validate(function(email) {
+  .path('mobile')
+  .validate(function(mobile) {
     if (authTypes.indexOf(this.provider) !== -1) return true;
-    return email.length;
-  }, 'Email cannot be blank');
+    return mobile.length;
+  }, 'Mobile cannot be blank');
 
 // Validate empty password
 UserSchema
@@ -127,12 +127,12 @@ UserSchema
     return hashedPassword.length;
   }, 'Password cannot be blank');
 
-// Validate email is not taken
+// Validate mobile is not taken
 UserSchema
-  .path('email')
+  .path('mobile')
   .validate(function(value, respond) {
     var self = this;
-    this.constructor.findOne({email: value, deleted:false}, function(err, user) {
+    this.constructor.findOne({mobile: value, deleted:false}, function(err, user) {
       if(err) throw err;
       if(user) {
         if(self.id === user.id) return respond(true);
@@ -140,7 +140,7 @@ UserSchema
       }
       respond(true);
     });
-}, 'The specified email address is already in use.');
+}, 'The specified mobile is already in use.');
 
 var validatePresenceOf = function(value) {
   return value && value.length;

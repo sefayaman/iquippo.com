@@ -60,7 +60,8 @@ function sendNotification(data,expired){
               }else{
                   emailData.content =  res;
                   //console.log('email data',emailData);
-                  notification.pushNotification(emailData);
+                  if(emailData.to)
+                    notification.pushNotification(emailData);
                   updateProduct(data,expired);
               }
             });

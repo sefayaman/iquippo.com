@@ -693,12 +693,16 @@ function excel_from_data(data, isAdmin) {
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
+    var sellerEmail = "";
+      if(product && product.seller && product.seller.email)
+        sellerEmail = product.seller.email;
+      else
+        sellerEmail = "";
     if(R == 0)
       cell = {v: "Seller email"};
-    else {
-      if(product && product.seller)
-        cell = {v: product.seller.email};
-    }
+    else 
+      cell = {v: sellerEmail};
+    
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
@@ -1540,19 +1544,19 @@ function importProducts(req,res,data){
     })
     .seq(function(){
       var self = this;
-      var sellerEmail = row["Seller_Email_Address*"];
-       if(!sellerEmail){
+      var sellerMobile = row["Seller_Mobile*"];
+       if(!sellerMobile){
         var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
         errorObj['AssetId'] = assetIdVal;
-        errorObj['message'] = "Seller_Email_Address is mandatory to be filled.";
+        errorObj['message'] = "Seller_Mobile is mandatory to be filled.";
         req.errors[req.errors.length] = errorObj;
         req.counter ++;
         importProducts(req,res,data);
         return;
       }
-      sellerEmail = trim(sellerEmail)
-       User.find({email:sellerEmail},function(err,usrs){
+      sellerMobile = trim(sellerMobile)
+       User.find({mobile:sellerMobile},function(err,usrs){
         if(err) return handleError(res, err); 
         if(usrs.length > 0){
          product.seller = {};
@@ -1571,7 +1575,7 @@ function importProducts(req,res,data){
           var errorObj = {};
           errorObj["rowCount"] = req.counter + 2;
           errorObj['AssetId'] = assetIdVal;
-          errorObj["message"] = "Seller_Email_Address does not exist in the syatem.";
+          errorObj["message"] = "Seller_Mobile does not exist in the syatem.";
           req.errors[req.errors.length] = errorObj;
           req.counter ++;
           importProducts(req,res,data);

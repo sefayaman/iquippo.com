@@ -33,6 +33,7 @@ function getMatchingProductList(data){
   var bestSimilarComb = {};
   var similarComb = {};
   var found = false;
+
   if(qr.category && qr.brand && qr.model){
     bestComb['category.name'] = qr.category;
     bestComb['brand.name'] = qr.brand;
@@ -54,7 +55,7 @@ if(qr.category && qr.brand){
       found = true;
    }
 
-  if(!found){
+  if(!found || !qr.email){
     data.splice(0,1);
     getMatchingProductList(data);
     return;

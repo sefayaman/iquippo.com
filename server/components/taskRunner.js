@@ -58,6 +58,9 @@ function updateTask(result,data){
 function pushNotification(taskData){
   if(taskData.uploadedProducts.length == 0)
     return;
+  if(!taskData.user.email)
+    return;
+  
   var emailData = {};
   emailData.to = taskData.user.email;
   var tmplName = Uploaded_TEMPLATE_NAME;

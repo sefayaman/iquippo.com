@@ -37,15 +37,20 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
 
       if(vm.user.agree) 
       {
-        Auth.validateSignup({email:vm.user.email,mobile:vm.user.mobile}).then(function(data){
+        var dataToSend = {};
+        if(vm.user.email) 
+          dataToSend['email'] = vm.user.email;
+        if(vm.user.mobile) 
+          dataToSend['mobile'] = vm.user.mobile;
+        Auth.validateSignup(dataToSend).then(function(data){
           if(data.errorCode == 1){
-             Modal.alert("Email address already in use. Please use another email address",true);
-             return;
-          }else if(data.errorCode == 2){
             Modal.alert("Mobile number already in use. Please use another mobile number",true);
-             return;
-          }else{
-               sendOTP();
+              return;
+          } else if(data.errorCode == 2){
+            Modal.alert("Email address already in use. Please use another email address",true);
+              return;
+          } else {
+              sendOTP();
           }
         });
       }else{

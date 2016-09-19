@@ -18,7 +18,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
       $scope.submitted = true;
       if(form.$valid) {
         Auth.login({
-          email: vm.user.email,
+          userId: vm.user.userId,
           password: vm.user.password
         })
         .then( function() {

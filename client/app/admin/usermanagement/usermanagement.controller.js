@@ -129,12 +129,18 @@ angular.module('sreizaoApp')
     }
 
     if($scope.newUser.agree) {
-      Auth.validateSignup({email:$scope.newUser.email,mobile:$scope.newUser.mobile}).then(function(data){
+      var dataToSend = {};
+      if($scope.newUser.email) 
+        dataToSend['email'] = $scope.newUser.email;
+      if($scope.newUser.mobile) 
+        dataToSend['mobile'] = $scope.newUser.mobile;
+      
+      Auth.validateSignup(dataToSend).then(function(data){
         if(data.errorCode == 1){
-           Modal.alert("Email address already in use. Please use another email address",true);
+           Modal.alert("Mobile number already in use. Please use another email address",true);
            return;
         } else if(data.errorCode == 2){
-          Modal.alert("Mobile number already in use. Please use another mobile number",true);
+          Modal.alert("Email address already in use. Please use another mobile number",true);
            return;
         } else {
           /*if(!$scope.newUser.imgsrc || angular.isUndefined($scope.newUser.imgsrc)){

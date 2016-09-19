@@ -39,34 +39,36 @@ exports.signUp = function (req, res, next) {
 
 exports.validateSignup = function(req, res){
   var filter = {}
-  if(!req.body.email || !req.body.mobile)
+  if(!req.body.mobile)
     return res.status(401).send('Insufficient data');
   if(req.body.userid)
      filter['_id'] = {$ne:req.body.userid}; 
-   if(req.body.email)
-     filter['email'] = req.body.email;
+  if(req.body.mobile)
+    filter['mobile'] = req.body.mobile;
   filter['deleted'] = false;
   User.find(filter,function(err,users){
     if(err){ return handleError(res, err); }
     else if(users.length > 0){
-      return res.status(200).json({errorCode:1,message:"Email is already in used"});
+      return res.status(200).json({errorCode:1,message:"Mobile number is already in used"});
     }
-    else{
-      filter = {}
-       if(req.body.userid)
-          filter['_id'] = {$ne:req.body.userid}; 
-      if(req.body.mobile)
-        filter['mobile'] = req.body.mobile;
-      filter['deleted'] = false;
-      User.find(filter,function(err,usrs){
-         if(err){ return handleError(res, err); }
-         else if(usrs.length > 0){
-            return res.status(200).json({errorCode:2,message:"Mobile number is already in used"});
-         }
-        else
+    else {
+          if(!req.body.email) 
+            return res.status(200).json({errorCode:0,message:""});
+
+          filter = {}
+          if(req.body.userid)
+            filter['_id'] = {$ne:req.body.userid}; 
+          // if(req.body.email)
+          filter['email'] = req.body.email;
+          filter['deleted'] = false;
+          User.find(filter,function(err,usrs){
+             if(err){ return handleError(res, err); }
+             else if(usrs.length > 0){
+                return res.status(200).json({errorCode:2,message:"Email is already in used"});
+             }
+           else
           return res.status(200).json({errorCode:0,message:""});
-      })
-      
+        })
     }
   });
 }
@@ -236,7 +238,7 @@ exports.authCallback = function(req, res, next) {
 exports.validateUser = function(req, res){
   var filter = {}
   filter['deleted'] = false;
-  if(!req.body.email && !req.body.mobile)
+  if(!req.body.mobile)
     return res.status(401).send('Unauthorized');
   if(req.body.email)
       filter['email'] = req.body.email;
