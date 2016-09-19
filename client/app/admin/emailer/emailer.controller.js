@@ -6,7 +6,6 @@ function EmailerCtrl($scope, $location, $window, $rootScope, $http, Modal, uploa
     var vm = this;
   	vm.mailData = {};
     $scope.docObj = {};
-    $scope.regUsers = [];
     $scope.subscribeUsers =[];
     $scope.allToEmails =[];
     vm.getAllRegUser = getAllRegUser;
@@ -19,9 +18,12 @@ function EmailerCtrl($scope, $location, $window, $rootScope, $http, Modal, uploa
 
     function getAllRegUser(){
       var filter = {};
-
+      $scope.regUsers = [];
       userSvc.getUsers(filter).then(function(data){
-        $scope.regUsers = data;
+        data.forEach(function(item){
+          if(item.email)
+            $scope.regUsers[$scope.regUsers.length] = item;
+          });
       })
       .catch(function(err){
         Modal.alert("Error in geting user");
