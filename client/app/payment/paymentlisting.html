@@ -18,6 +18,7 @@
             <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
               <thead>
+                <th width="40"><input type="checkbox"> All</th> 
                 <th>Trasaction ID</th>                                
                 <th>Category</th>
                 <th>Asset Name</th>
@@ -31,6 +32,7 @@
               </thead>
               <tbody>
               <tr ng-repeat="loc in gsettingVm.locationList">
+                <td><input type="checkbox"></td>
                 <td>{{loc.state.name}}</td>
                 <td>{{loc.name}}</td>
                 <td>{{loc.name}}</td>

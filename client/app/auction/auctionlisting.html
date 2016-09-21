@@ -10,24 +10,42 @@
         </div>     
       </div>
       <hr>
+
+      <div class="featured-pro">
+        <select>
+          <option>Auction Status</option>
+          <option>Listed</option>
+          <option>Payment Done</option>
+          <option>Rejected</option>
+          <option>Verified</option>
+          <option>Payment Refund</option>
+        </select>         
+      </div>
+      <div class="featured-pro">
+        <button class="btn btn-primary">Save</button>
+      </div>
      <div class="table-responsive">
           <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
             <thead>
+              <th width="40"><input type="checkbox"> All</th> 
               <th>Asset ID</th>                                
               <th>Auction ID</th>                                
               <th>Start Date</th>
               <th>End Date</th>
               <th>EMD Amount</th>
+              <th>Auction Status</th>
              
             </thead>
             <tbody>
             <tr ng-repeat="auts in auctionListingVm.auctions">
+              <td><input type="checkbox"></td>
               <td>{{auts.product.assetId}}</td>              
               <td>{{auts.auctionId}}</td>              
               <td>{{auts.startDate}}</td>              
               <td>{{auts.endDate}}</td>              
               <td>2000</td>              
+              <td>Payment Done</td>              
              </tr>
             </tbody>
           </table>

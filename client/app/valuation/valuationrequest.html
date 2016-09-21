@@ -29,25 +29,8 @@
               <input type="text" class="form-control" placeholder="Asset Location" disabled="">
             </div>
             <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Agency Name" disabled="">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Request Date">
-            </div>
-            <div class="col-sm-6 form-group">
               <select class="form-control" name="" required>
-                <option value="">*Select Purpose</option>
-                <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
-              </select>
-            </div>
-          </div>
-           <div class="row">
-           
-            <div class="col-sm-6 form-group">
-              <select class="form-control" name="" required>
-                <option value="">Request Status</option>
+                <option value="">Agancy Name</option>
                 <option>Valuation Request Received</option>
                 <option>Valuation – In Progress</option>
                 <option>Valuation Complete</option>
@@ -55,6 +38,16 @@
               <i class="caret"></i>
             </div>
           </div>
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <select class="form-control" name="" required>
+                <option value="">*Select Purpose</option>
+                <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+              </select>
+              <i class="caret"></i>
+            </div>
+          </div>
+           
         
       </div>
       <div class="modal-footer">
