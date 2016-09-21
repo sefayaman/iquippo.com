@@ -1,11 +1,11 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationRequestCtrl',ValuationRequestCtrl);
-function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$uibModalInstance) {
+function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$uibModalInstance,vendorSvc) {
  	var vm = this;
  	vm.close = close;
  	vm.submitRequest = submitRequest;
- 	vm.valuationRequest = {};
+ 	vm.valuationReq = {};
 
  	function init(){
 
@@ -16,22 +16,24 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 			$scope.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
 		});
 
-		valuationReq.product = {};
-		valuationReq.user = {};
-		valuationReq.seller = {};
-		valuationReq.valuationAgency = {};
-		valuationReq.initiatedBy = "buyer";
-		if(Auth.getCurrentUser()._id && Auth.getCurrentUser()._id == $scope.currentProduct.seller._id)
-		valuationReq.initiatedBy = "buyer";
-		valuationReq.product._id = $scope.currentProduct._id;
-		valuationReq.product.assetId = $scope.currentProduct.assetId;
-		valuationReq.product.name = $scope.currentProduct.name;
-		valuationReq.product.category = $scope.currentProduct.category.name;
+		vm.valuationReq.product = {};
+		vm.valuationReq.user = {};
+		vm.valuationReq.seller = {};
+		vm.valuationReq.valuationAgency = {};
+		vm.valuationReq.initiatedBy = "buyer";
+		if(Auth.getCurrentUser()._id && Auth.getCurrentUser()._id == $scope.product.seller._id)
+		vm.valuationReq.initiatedBy = "buyer";
+		vm.valuationReq.product._id = $scope.product._id;
+		vm.valuationReq.product.assetId = $scope.product.assetId;
+		vm.valuationReq.product.name = $scope.product.name;
+		vm.valuationReq.product.category = $scope.product.category.name;
 
  	}
 
  	init();
+ 	function submitRequest(){
 
+ 	}
       function close(){
       	 $uibModalInstance.dismiss('cancel');
       }
