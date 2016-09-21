@@ -218,11 +218,11 @@ function handleError(res, err) {
 // Start server
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
-  notification.startNotification();
-  taskRunner.startTaskRunner();
+  //notification.startNotification();
+  //taskRunner.startTaskRunner();
   //checkExpiryService.start();
-  checkQuickQueryNotificationService.start();
-  checkSearchMatchingNotificationService.start();
+ // checkQuickQueryNotificationService.start();
+  //checkSearchMatchingNotificationService.start();
 });
 
 // Expose app

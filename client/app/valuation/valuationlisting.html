@@ -1,0 +1,71 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Valuation Request</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+          <h3><button class="btn btn-success btn-md" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+      
+      <div class="row">
+        <div class="col-sm-3 form-group">
+          <select class="form-control">
+            <option> Request received by customer</option>
+            <option> Request sent by customer</option>
+          </select>
+          <i class="caret"></i>
+        </div>
+      </div>
+      
+     
+        <div class="clearfix form-group"></div>
+        <div class="featured-pro">
+            <button class="btn btn-primary">Completed</button>
+            <button class="btn btn-primary">Submitted</button>
+              <button class="btn btn-primary">Inprogress</button>
+              
+          </div>
+        <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th width="40"><input type="checkbox"> All</th>                                
+                <th>Request ID</th>                                
+                <th>Category</th>
+                <th>Asset Name</th>
+                <th>Asset Status</th>
+                <th>Serial Number</th>
+                <!-- <th>Location</th> -->
+                <th>Status</th>
+                <th>Purpose</th>
+                <th width="10%">Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="loc in gsettingVm.locationList">
+                <td><input type="checkbox"></td>
+                <td>{{loc.state.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <!-- <td>{{loc.name}}</td> -->
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>
+                  <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-upload"></i> </a>
+                  <a class="btn btn-success btn-md" href="javascript:void(0);"><i class="fa fa-check"></i> </a>
+                  
+                </td>
+               
+               </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>

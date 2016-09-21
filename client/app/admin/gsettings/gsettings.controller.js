@@ -4,10 +4,11 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, settingSvc) {
+function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'sc';
-   
+    vm.onTabChange = onTabChange;
     vm.subCategory = {};
     vm.subCatEdit = false;
     vm.saveSubCategory = saveSubCategory;
@@ -33,6 +34,47 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, settingSvc) {
     vm.saveInvitationSetting = saveInvitationSetting;
     vm.getInvitationMasterData = getInvitationMasterData;
 
+    vm.paymentMaster = {};
+    vm.paymentMasterList = {};
+    vm.paymentMasterEdit = false;
+    vm.partners = [];
+    vm.payableServices = payableServices;
+    vm.savePaymentMaster = savePaymentMaster;
+    vm.updatePaymentMaster = updatePaymentMaster;
+    vm.editPaymentMaster = editPaymentMaster;
+    vm.deletePaymentMaster = deletePaymentMaster;
+    vm.onServiceChange = onServiceChange;
+    vm.getParnerName = getParnerName;
+
+    //Auction date master
+
+    $scope.importAuctionMaster = importAuctionMaster;
+    vm.deleteAuctionMaster = deleteAuctionMaster;
+
+    function onTabChange(tabValue){
+    	switch(tabValue){
+    		case 'sc':
+    			 loadAllSubcategory();
+    		break;
+    		case 'loc':
+    			loadAllState();
+    			loadAllLocation();
+    		break;
+    		case 'date':
+    			getAuctionMaster();
+    		break;
+    		case 'inv':
+    			getInvitationMasterData();
+    		break;
+    		case 'paymnt':
+    			vendorSvc.getAllVendors();
+				getPaymnetMaster();
+    		break;
+
+    	}
+    }
+    onTabChange(vm.tabValue);
+
     function loadAllState(){
     	LocationSvc.getAllState()
     	.then(function(result){
@@ -53,9 +95,6 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, settingSvc) {
     	})
     }
 
-    loadAllState();
-    loadAllLocation();
-    loadAllSubcategory();
 
     //subcategory functions
     function saveSubCategory(form){
@@ -230,7 +269,166 @@ function GSettingCtrl($scope,LocationSvc,SubCategorySvc, Modal, settingSvc) {
       })
   	}
 
-  getInvitationMasterData();
+  //payment master 
+  	function getPaymnetMaster(){
+  		PaymentMasterSvc.getAll()
+  		.then(function(result){
+  			vm.paymentMasterList = result;
+  		});
+  	}
+
+	function savePaymentMaster(form){
+		
+		if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}
+		$scope.submitted = false;
+		PaymentMasterSvc.save(vm.paymentMaster)
+		.then(function(res){
+			if(res.errorCode == 0){
+				vm.paymentMaster = {};
+				getPaymnetMaster();
+			}
+			else
+				Modal.alert(res.message);
+		})
+
+	}
+
+	function updatePaymentMaster(form){
+		if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}
+		$scope.submitted = false;
+		PaymentMasterSvc.update(vm.paymentMaster)
+		.then(function(res){
+			if(res.errorCode == 0){
+				vm.paymentMaster = {};
+				vm.paymentMasterEdit = false;
+				getPaymnetMaster();
+			}
+			else
+				Modal.alert(res.message);
+		})
+	}
+
+	function editPaymentMaster(index){
+		angular.copy(vm.paymentMasterList[index],vm.paymentMaster)
+		vm.paymentMasterEdit = true;
+		onServiceChange(vm.paymentMaster.serviceCode,true);
+	}
+
+	function deletePaymentMaster(index){
+		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeletePaymentMaster(index);
+ 		});
+	}
+
+	function submitDeletePaymentMaster(idx){
+		PaymentMasterSvc.delPaymentMaster(vm.paymentMasterList[idx])
+		.then(function(result){
+			 getPaymnetMaster();
+		})
+    }
+
+    function onServiceChange(code,isEdit){
+    	vm.partners = [];
+    	if(!isEdit)
+    		vm.paymentMaster.partnerId = "";
+    	if(!code){
+    		return;
+    	}
+    	var serv = getServiceByCode(code);
+    	vm.paymentMaster.serviceName = serv.name;
+		vm.paymentMaster.multiple = serv.multiple?'y':'n';
+		if(vm.paymentMaster.multiple == 'n')
+			return;
+		vendorSvc.getAllVendors()
+		.then(function(res){
+			vm.partners = vendorSvc.getVendorsOnCode(code);
+		})
+
+    }
+
+	function getServiceByCode(code){
+		var serv = null;
+		vm.payableServices.forEach(function(item){
+			if(item.code == code)
+				serv = item;
+		});
+		return serv;
+	}
+
+	function getParnerName(id){
+		var name = "";
+		var partners = vendorSvc.getVandorCache(); 
+		for(var i = 0;i < partners.length;i++){
+			if(partners[i]._id == id){
+				name = partners[i].entityName;
+				break;
+			}
+		}
+		return name;
+	}
+
+	//Auction date master
+	function getAuctionMaster(){
+		AuctionMasterSvc.getAll()
+		.then(function(result){
+			vm.auctions = result;
+		})
+	}
+
+	function importAuctionMaster(files){
+	    if(files.length == 0 || !files)
+	      return;
+	     if(files[0].name.indexOf('.xlsx') == -1){
+	        Modal.alert('Please upload a valid file');
+	        return;
+
+	     }
+	     $rootScope.loading = true;
+	    uploadSvc.upload(files[0],importDir)
+	    .then(function(result){
+	      var fileName = result.data.filename;
+	      $rootScope.loading = true;
+	      AuctionMasterSvc.parseExcel(fileName)
+	      .then(function(res){
+	        $rootScope.loading = false; 
+	        if(res.errorCode)
+	        	Modal.alert(res.message,true);
+	        else
+	        	getAuctionMaster();	 
+	      })
+	      .catch(function(res){
+	        $rootScope.loading = false;
+	        Modal.alert("error in parsing data",true);
+	      })
+	    })
+	    .catch(function(res){
+	    	$rootScope.loading = false;
+	       Modal.alert("error in file upload",true);
+	    });
+  }
+
+
+  function deleteAuctionMaster(index){
+		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeleteAuctionMaster(index);
+ 		});
+	}
+
+	function submitDeleteAuctionMaster(idx){
+		AuctionMasterSvc.delAuctionMaster(vm.auctions[idx])
+		.then(function(result){
+			 getAuctionMaster();
+		})
+    }
+
 //date picker
 	$scope.today = function() {
 	vm.sDate = new Date();

@@ -1,0 +1,53 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Transactions</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+          <h3><button class="btn btn-success btn-md" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+      
+      
+     
+        <div class="clearfix form-group"></div>
+        <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th>Trasaction ID</th>                                
+                <th>Category</th>
+                <th>Asset Name</th>
+                <th>Asset Status</th>
+                <th>Location</th>
+                <th>Request Type</th>
+                <th>Request Status</th>
+                <th>Request Date</th>
+                <th width="90">Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="loc in gsettingVm.locationList">
+                <td>{{loc.state.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>{{loc.name}}</td>
+                <td>
+                  <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>
+                  <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a>
+                </td>
+               
+               </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>

@@ -18,7 +18,7 @@ angular.module('sreizaoApp')
       .state('product', {
         url: '/product',
         templateUrl: 'app/product/product.html',
-        controller: 'ProductCtrl',
+        controller: 'ProductCtrl as productVm',
         authenticate:true,
         layout:'admin'
       })
@@ -220,5 +220,33 @@ angular.module('sreizaoApp')
         templateUrl: 'app/invitationaccept/invitationaccept.html',
         controller: 'InvitationAcceptCtrl as invitationAcceptVm',
         layout:'client'
+      })
+      .state('auctionrequests', {
+        url: '/auctionrequets',
+        templateUrl: 'app/auction/auctionlisting.html',
+        controller: 'AuctionListingCtrl as auctionListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('valuationrequests', {
+        url: '/valuationrequests',
+        templateUrl: 'app/valuation/valuationlisting.html',
+        controller: 'ValuationListingCtrl as valuationListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('paymenthistory', {
+        url: '/paymenthistory',
+        templateUrl: 'app/payment/paymentlisting.html',
+        controller: 'PaymentListingCtrl as paymentListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('payment', {
+        url: '/payment/:tid',
+        templateUrl: 'app/payment/payment.html',
+        controller: 'PaymentCtrl as paymentVm',
+        authenticate:true,
+        layout:'admin'
       })
   });

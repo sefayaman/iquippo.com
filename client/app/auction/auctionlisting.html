@@ -1,0 +1,37 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Auction Request</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h3><button class="btn btn-success btn-md" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+     <div class="table-responsive">
+          <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+            <thead>
+              <th>Asset ID</th>                                
+              <th>Auction ID</th>                                
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>EMD Amount</th>
+             
+            </thead>
+            <tbody>
+            <tr ng-repeat="auts in auctionListingVm.auctions">
+              <td>{{auts.product.assetId}}</td>              
+              <td>{{auts.auctionId}}</td>              
+              <td>{{auts.startDate}}</td>              
+              <td>{{auts.endDate}}</td>              
+              <td>2000</td>              
+             </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>

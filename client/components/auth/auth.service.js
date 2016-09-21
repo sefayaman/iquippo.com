@@ -191,6 +191,12 @@ angular.module('sreizaoApp')
        
         return currentUser.role === 'channelpartner';
       },
+      isPartner: function() {
+        return currentUser.role === 'partner';
+      },
+      isCustomer: function() { 
+        return currentUser.role === 'customer';
+      },
       isProfileIncomplete:function(){
         return currentUser.profileStatus === 'incomplete';
       },

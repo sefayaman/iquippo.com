@@ -235,4 +235,154 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     }
       return subCatServices;
   }
+
+  angular.module('admin').factory("PaymentMasterSvc",PaymentMasterSvc);
+  function PaymentMasterSvc($http,$q){
+    var svc = {};
+    var path = "/api/common/paymentmaster";
+    var paymentMasterCache = [];
+    
+    svc.getAll = getAll;
+    svc.save = save;
+    svc.update = update;
+    svc.delPaymentMaster = delPaymentMaster;
+    svc.getPaymentMasterOnSvcCode = getPaymentMasterOnSvcCode;
+
+
+    function getAll(){
+      var deferred = $q.defer();
+      if(paymentMasterCache.length > 0){
+        deferred.resolve(paymentMasterCache);
+      }else{
+        $http.get(path)
+        .then(function(res){
+          paymentMasterCache = res.data;
+          deferred.resolve(res.data);
+        })
+        .catch(function(err){
+          deferred.reject(err);
+        })
+      }
+      return deferred.promise;
+    }
+
+    function save(data){
+      return $http.post(path,data)
+        .then(function(res){
+          paymentMasterCache = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function update(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          paymentMasterCache = [];
+            return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+    function delPaymentMaster(data){
+      return $http.delete(path + "/" + data._id)
+          .then(function(res){
+             paymentMasterCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+    }
+
+    function getPaymentMasterOnSvcCode(svcCode,parnerId){
+      var pyt = null;
+      for(var i = 0;i < paymentMasterCache.length;i++){
+        if(parnerId){
+          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId){
+            pyt = paymentMasterCache[i];
+            break;
+          }
+        }else{
+          if(paymentMasterCache[i].serviceCode == svcCode){
+              pyt = paymentMasterCache[i];
+              break;
+          }
+        }
+      }
+      return pyt;
+    }
+
+    return svc;
+  }
+
+ angular.module('admin').factory("AuctionMasterSvc",AuctionMasterSvc);
+ function AuctionMasterSvc($http,$q){
+    var svc = {};
+    var path = "/api/common/auctionmaster"
+    var auctionMasterCache = [];
+    var latestActions = [];
+    svc.getAll = getAll;
+    svc.delAuctionMaster = delAuctionMaster;
+    svc.parseExcel = parseExcel;
+    svc.getLatestAuction = getLatestAuction;
+
+    function getAll(){
+       var deferred = $q.defer();
+      if(auctionMasterCache.length > 0){
+        deferred.resolve(auctionMasterCache);
+      }else{
+        $http.get(path)
+        .then(function(res){
+          auctionMasterCache = res.data;
+          if(auctionMasterCache.length > 0){
+            var gpId = auctionMasterCache[0].groupId;
+            latestActions = [];
+            for(var i= 0;i< auctionMasterCache.length;i++){
+              if(gpId != auctionMasterCache[i].groupId)
+                  break;
+               latestActions[latestActions.length] = auctionMasterCache[i];
+            }
+          }
+          console.log("#############",latestActions)
+          deferred.resolve(res.data);
+        })
+        .catch(function(err){
+          deferred.reject(err);
+        })
+      }
+      return deferred.promise;
+    }
+
+    function parseExcel(fileName){
+      return $http.post(path,{fileName:fileName})
+      .then(function(res){
+        auctionMasterCache = [];
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
+    }
+
+    function delAuctionMaster(data){
+      return $http.delete(path + "/" + data._id)
+          .then(function(res){
+             auctionMasterCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+    }
+
+    function getLatestAuction(){
+      return latestActions;
+    }
+    return svc;
+ }
 })();

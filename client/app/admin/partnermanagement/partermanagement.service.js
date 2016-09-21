@@ -11,10 +11,12 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       var path = '/api/vendor';
       
       vendorService.getAllVendors = getAllVendors;
+      vendorService.getVandorCache = getVandorCache;
       vendorService.deleteVendor = deleteVendor;
       vendorService.updateVendor = updateVendor;
       vendorService.clearCache = clearCache;
       vendorService.saveVendor = saveVendor;
+      vendorService.getVendorsOnCode = getVendorsOnCode;
 
       function getAllVendors(){
         var deferred = $q.defer();
@@ -33,12 +35,13 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
        
           return deferred.promise; 
       };
+
       function saveVendor(data){
       	return $http.post(path,data)
       	.then(function(res){
-      		 vendorCache = [];
-		 	 shippingVendorList = [];
-			 valuationVendorList = [];
+           vendorCache = [];
+    		 	 shippingVendorList = [];
+    			 valuationVendorList = [];
 			 certifiedByIQuippoVendorList = [];
       		return res.data;
       	})
@@ -52,8 +55,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           .then(function(res){
           	 vendorCache = [];
           	 shippingVendorList = [];
-			 valuationVendorList = [];
-			 certifiedByIQuippoVendorList = [];
+      			 valuationVendorList = [];
+      			 certifiedByIQuippoVendorList = [];
             return res.data.vendor + 1;
           })
           .catch(function(err){
@@ -66,8 +69,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
         .then(function(res){
         	 vendorCache = [];
           	 shippingVendorList = [];
-			 valuationVendorList = [];
-			 certifiedByIQuippoVendorList = [];
+      			 valuationVendorList = [];
+      			 certifiedByIQuippoVendorList = [];
           	return res.data;
         })
         .catch(function(err){
@@ -114,7 +117,22 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
   function getCertifiedByIQuippoVendors(){
   	return certifiedByIQuippoVendorList
   }
+  function getVandorCache(){
+    return vendorCache;
+  }
+  function getVendorsOnCode(code){
+    switch(code){
+      case 'Valuation':
+        return valuationVendorList;
+      break;
+      case 'Shipping':
+        return shippingVendorList;
+      case 'CertifiedByIQuippo':
+        return certifiedByIQuippoVendorList
+      break
 
+    }
+  }
       return vendorService;
   }
 })();

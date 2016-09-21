@@ -17,6 +17,10 @@ var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
+var PaymentTransaction = require('./../payment/payment.model');
+var ValuationReq = require('./../valuation/valuation.model');
+var AuctionReq = require('./../auction/auction.model');
+
 var appNotificationCtrl = require('./../appnotification/appnotification.controller');
 
 var config = require('./../../config/environment');
@@ -2011,6 +2015,83 @@ function fileExists(filePath)
     {
         return false;
     }
+}
+
+exports.createOrUpdateAuction = function(req,res){
+  Seq()
+    .seq(function(){
+      var self = this;
+      if(!req.body.payment)
+        self();
+      else{
+        PaymentTransaction.create(req.body.payment,function(err,paytm){
+          if(err){return handleError(err,res)}
+          else{
+            req.payTransId = paytm._id;
+            self();     
+          }
+        })
+      }
+    })
+    .seq(function(){
+      var self = this;
+      if(!req.body.valuation)
+        self();
+      else{
+        if(req.payTransId)
+        req.body.valuation.transactionId = req.payTransId + "";
+        ValuationReq.create(req.body.valuation,function(err,vals){
+          if(err){return handleError(err,res)}
+          else{
+            req.valuationId = vals._id;
+            self();     
+          }
+        })
+      }
+    })
+    .seq(function(){
+      var self = this;
+      if(req.payTransId)
+        req.body.auction.transactionId = req.payTransId + "";
+      if(req.valuationId)
+        req.body.auction.valuationId = req.valuationId + "";
+
+      if(req.body.auction._id){
+        AuctionReq.update({_id:req.body.auction._id},{$set:req.body.auction},function(err,acts){
+          if(err){return handleError(err,res)}
+          else{
+            self();
+          }
+        })
+      }else{
+        AuctionReq.create(req.body.auction,function(err,acts){
+          if(err){return handleError(err,res)}
+          else{
+            req.auctionId = acts._id;
+            self();     
+          }
+        })
+      }
+    })
+    .seq(function(){
+      var self = this;
+      var auctionUpdate = {};
+      auctionUpdate.auctionId = req.auctionId + "";
+      if(req.valuationId)
+        auctionUpdate.valuationId = req.valuationId + "";
+      Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){
+         if(err){return handleError(err,res)}
+          else{
+            var resObj = {};
+            resObj.auctionId =  req.auctionId;
+            if(req.payTransId)
+              resObj.transactionId = req.payTransId;
+            if(req.valuationId)
+              resObj.valuationId = req.valuationId;
+            res.status(200).json(resObj);
+          }
+      })
+    })
 }
 
 function handleError(res, err) {

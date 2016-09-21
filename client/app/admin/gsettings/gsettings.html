@@ -9,20 +9,23 @@
 	    <hr>
 	    <div class="row form-group">
 	    	<div class="col-sm-4">
-	        	<select class="form-control" ng-model="gsettingVm.tabValue">
+	        	<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
 	        		<option value="sc">Sub Category</option>
 	        		<option value="loc">Location</option>
+	        		<option value="date">Auction Date</option>
 	        		<option value="inv">Invite Code Setting</option>
+	        		<option value="paymnt">Payment Master</option>
 	        	</select>
 	        	<i class="caret"></i>
 	      	</div> 
 	    </div>
+	    <!--Select category  -->
 	    <div ng-if="gsettingVm.tabValue == 'sc'">
 	    	<form name="subCategoryForm" novalidate class="subCategoryForm">
 	    		<h4>Add New Sub Category</h4>
 	    		<legend></legend>
 	          <div class="row">
-	         	 <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname && submitted}">
+	         	 <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
 	                <input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
 	            </div>                           	
 	           	<div class="form-group col-sm-2 pull-right">
@@ -62,7 +65,7 @@
 			    		<h4>Add New State</h4>
 			    		<legend></legend>
 			          <div class="row">
-			         	 <div class="form-group col-sm-4" ng-class="{'has-error': stateForm.stateName && submitted}">
+			         	 <div class="form-group col-sm-4" ng-class="{'has-error': stateForm.stateName.$invalid && submitted}">
 			                <input id="stateName" name="stateName" ng-model="gsettingVm.state.name" type="text" class="form-control" placeholder="Enter State Name" required>
 			            </div>                           	
 			           	<div class="form-group col-sm-2 pull-right">
@@ -97,13 +100,13 @@
 			    		<h4>Add Location</h4>
 			    		<legend></legend>
 			          <div class="row">
-			         	 <div class="form-group col-sm-4" ng-class="{'has-error': locationForm.state && submitted}">
+			         	 <div class="form-group col-sm-4" ng-class="{'has-error': locationForm.state.$invalid && submitted}">
 			                <select class="form-control" name="state" ng-model="gsettingVm.location.state" ng-options="state.name for state in gsettingVm.stateList track by state._id" required>
 			                	<option value="">Select State</option>
 			                </select>
 			                <i class="caret"></i>
 			            </div>  
-			            <div class="form-group col-sm-4" ng-class="{'has-error': locationForm.locationName && submitted}">
+			            <div class="form-group col-sm-4" ng-class="{'has-error': locationForm.locationName.$invalid && submitted}">
 			                <input class="form-control" placeholder="Enter Location" ng-model="gsettingVm.location.name"  name="locationName" required/>
 			            </div>                           	
 			           	<div class="form-group col-sm-2 pull-right">
@@ -138,7 +141,7 @@
 			</uib-tabset>
         </div>
 
-        <!-- <div class="clearfix form-group"></div> -->
+        <!--Select Invitation  -->
         <div ng-if="gsettingVm.tabValue == 'inv'">
     		<form name="invMasterForm" novalidate class="invMasterForm">
 				<h4>Update Invitation Setting</h4>
@@ -146,7 +149,7 @@
 				<div class="row">
 					<div class="col-sm-4 form-group">Start Date :</div>
 					<!-- <div class="col-sm-6 form-group"> -->
-					<div class="col-sm-6 form-group" ng-class="{'has-error': invMasterForm.sDate && submitted }">
+					<div class="col-sm-6 form-group" ng-class="{'has-error': invMasterForm.sDate.$invalid && submitted }">
 		                <div class="input-group">
 		                	<input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
 			                <span class="input-group-addon">
@@ -159,7 +162,7 @@
 				<div class="row">
 					<div class=" col-sm-4 form-group">End Date :</div>
 					<!-- <div class="col-sm-6 form-group"> -->
-						<div class=" col-sm-6 form-group" ng-class="{'has-error': invMasterForm.eDate && submitted }">
+						<div class=" col-sm-6 form-group" ng-class="{'has-error': invMasterForm.eDate.$invalid && submitted }">
 		                <div class="input-group">
 		                	<input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
 			                <span class="input-group-addon">
@@ -172,14 +175,14 @@
 				<div class="row">
 					<div class="form-group col-sm-4">Reference Amount :<p> (To be paid to the referrer)</p>
 					</div>
-					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.refAmount && submitted}">
+					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.refAmount.$invalid && submitted}">
 						<input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="0" class="form-control">
 					</div>
 					
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-4">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
-					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.joinAmount && submitted}">
+					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.joinAmount.$invalid && submitted}">
 						<input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="0" class="form-control">
 					</div>
 				</div>
@@ -190,6 +193,111 @@
 					
 				</div>
 			</form>
+	    </div>
+
+	    <!--Select Auction date  -->
+        <div ng-if="gsettingVm.tabValue == 'date'">
+    		<form name="invMasterForm" novalidate class="invMasterForm">
+				<h4>Auction Date</h4>
+    			<legend></legend>
+				
+			          <div class="row">
+			          	<div class="form-group col-sm-10">
+			          		<!-- <div class="alert alert-danger">
+							  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							   Indicates a successful or positive action.
+							</div> -->
+			          	</div>                         	
+			           	<div class="form-group col-sm-2">
+			           		<div class="btn btn-success pull-right">
+								<span class="fileinput-button">
+							   <i class="fa fa-file-excel-o"></i> Import Excel
+							   <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files,this)">
+							   </span>
+							</div>
+			           	</div>
+			           	
+			          </div>
+
+			          <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			                <th>Auction name</th>
+			                <th>Auction start date</th>
+			                <th>Auction end date</th>                                
+			                <th>Action</th>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="auc in gsettingVm.auctions">
+			                <td>{{auc.name}}</td>
+			                 <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
+			                  <td>{{auc.endDate | date:'MM/dd/yyyy'}}</td>
+			                <td>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
+			     	
+
+			</form>
+	    </div>
+
+	    <!--Select payment master -->
+        <div ng-if="gsettingVm.tabValue == 'paymnt'">
+    			<h4>Payment Master</h4>
+    			<legend></legend>		         
+
+    				<form name="paymentForm" novalidate class="invMasterForm">			    		
+			          <div class="row">
+			         	 <div class="form-group col-sm-3" ng-class="{'has-error': paymentForm.svcType.$invalid && submitted}">
+			                <select class="form-control" name="svcType" ng-change="gsettingVm.onServiceChange(gsettingVm.paymentMaster.serviceCode)" ng-model="gsettingVm.paymentMaster.serviceCode" required>
+			                	<option value="">Select Service*</option>
+			                	<option ng-repeat="svc in gsettingVm.payableServices" value="{{svc.code}}">{{svc.name}}</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div>
+			            <div class="form-group col-sm-3" ng-class="{'has-error': paymentForm.svcPartner.$invalid && submitted}" ng-if="gsettingVm.paymentMaster.multiple == 'y'">
+			                <select class="form-control" name="svcPartner" ng-model="gsettingVm.paymentMaster.partnerId" required>
+			                	<option value="">Select Partner*</option>
+			                	<option value="{{prtr._id}}" ng-repeat="prtr in gsettingVm.partners">{{prtr.name}}</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div> 
+			            <div class="form-group col-sm-3" ng-class="{'has-error': paymentForm.svcFee.$invalid && submitted}">
+			                <input  name="svcFee" ng-model="gsettingVm.paymentMaster.fees" type="text" class="form-control" placeholder="Fee*" required>
+			            </div>                           	
+			           	<div class="form-group col-sm-2 pull-right">
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.savePaymentMaster(paymentForm)" ng-if="!gsettingVm.paymentMasterEdit">Save</button>
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updatePaymentMaster(paymentForm)" ng-if="gsettingVm.paymentMasterEdit">Update</button>
+			           	</div>
+			           	
+			          </div>
+			     	</form>	
+			          <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			                <th>Service Name</th>                                
+			                <th>Fee</th>                                
+			                <th>Action</th>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="payment in gsettingVm.paymentMasterList">
+			                <td>{{payment.serviceName}}<span ng-if="payment.partnerId">({{gsettingVm.getParnerName(payment.partnerId)}})</span></td>
+			                <td>{{payment.fees}}</td>
+			                <td>
+								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editPaymentMaster($index)"><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deletePaymentMaster($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
 	    </div>
     </div>
   </div>

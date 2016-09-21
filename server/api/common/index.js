@@ -39,4 +39,14 @@ router.post('/savesearch', controller.createSearch);
 router.put('/savesearch/:id', controller.updateSaveSearch);
 router.delete('/savesearch/:id', controller.deleteSaveSearch);
 
+router.get('/paymentmaster', controller.getPaymentMaster);
+router.post('/paymentmaster', controller.createPaymentMaster);
+router.put('/paymentmaster/:id', controller.updatePaymentMaster);
+router.delete('/paymentmaster/:id', controller.deletePaymentMaster);
+
+router.get('/auctionmaster', controller.getAuctionMaster);
+router.post('/auctionmaster', controller.importAuctionMaster);
+router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
+
+
 module.exports = router;

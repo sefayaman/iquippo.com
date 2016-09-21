@@ -39,6 +39,7 @@
       prdService.getIncomingProduct = getIncomingProduct;
       prdService.unlockIncomingProduct = unlockIncomingProduct;
       prdService.statusWiseCount = statusWiseCount;
+      prdService.createOrUpdateAuction = createOrUpdateAuction;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -61,10 +62,10 @@
           return deferred.promise;
         };
 
-      function getProductOnId(id){
+      function getProductOnId(id,fromServer){
 
         var deferred = $q.defer();
-        if(productCache[id]){
+        if(productCache[id] && !fromServer){
           deferred.resolve(productCache[id]);
         }else{
 
@@ -122,6 +123,16 @@
           throw res;
         });
       };
+
+      function createOrUpdateAuction(data){
+        return $http.post(path + "/createauction",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(res){
+          throw res;
+        });
+      }
 
       function addProductInHistory(product){
         return $http.post(path + "/createhistory",product)

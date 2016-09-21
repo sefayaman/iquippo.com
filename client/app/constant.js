@@ -34,6 +34,10 @@ var Modals = {
   adduser:{
     tplUrl:"app/admin/usermanagement/adduser.html",
     Ctrl:'AddUserCtrl'
+  },
+  valuationReq:{
+    tplUrl:"app/valuation/valuationrequest.html",
+    Ctrl:'ValuationRequestCtrl as valuationReqVm'
   }
 };
 
@@ -73,7 +77,91 @@ var assetStatuses = [
   name:"Sold",
   code:"sold"
 }
-]
+];
+var auctionStatuses = [
+  {
+    name:"Request Submitted",
+    code:"request submitted"
+  },
+  {
+    name:"Payment Pending",
+    code:"payment pending"
+  },
+  {
+    name:"Payment Received",
+    code:"payment received"
+  },
+  {
+    name:"Payment Failed",
+    code:"payment failed"
+  },
+  {
+    name:"Request Approved",
+    code:"request approved"
+  },
+  {
+    name:"Request Rejected",
+    code:"request rejected"
+  },
+  {
+    name:"Refund Initiated",
+    code:"refund initiated"
+  },
+  {
+    name:"Listed In Auction",
+    code:"Listed In Auction"
+  }
+];
+var valuationStatuses = [
+{
+  name:"Valuation request listed",
+  code:"listed"
+},
+{
+  name:"Valuation request approved",
+  code:"approved"
+},
+{
+  name:"Valuation request received",
+  code:"received"
+},
+{
+  name:"Valuation in process",
+  code:"in process"
+},
+{
+  name:"Valuation Report Submitted",
+  code:"submitted"
+}
+];
+
+var transactionStatuses = [
+{
+  name:"Listed",
+  code:"listed"
+},
+{
+  name:"Failed",
+  code:"failed"
+},
+{
+  name:"Pending",
+  code:"pending"
+},
+{
+  name:"Rejected",
+  code:"rejected"
+},
+{
+  name:"Retried",
+  code:"retried"
+},
+{
+  name:"Completed",
+  code:"completed"
+}
+];
+
 var tradeType = [
 {
   "name" : "Rent",
@@ -142,6 +230,18 @@ var allCountries = [
 }
 ];
 
+var payableServices = [
+{
+  name:"Auction Listing",
+  code:"Auction",
+  multiple:false
+},
+{
+  name:"Valuation Service",
+  code:"Valuation",
+  multiple:true
+}
+];
 var HOME_BANNER =  [{
       image: 'Banner.jpg'
     }, {

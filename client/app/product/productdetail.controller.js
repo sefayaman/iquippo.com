@@ -25,6 +25,8 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
   vm.previewProduct = previewProduct;
   vm.addProductToCart = addProductToCart;
   vm.playVideo = playVideo;
+  vm.openValuationModal = openValuationModal;
+
 
   function loadUserDetail(){
 
@@ -353,6 +355,15 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       dataLayer.push(gaMasterObject.imageview);
     }
   //End
+
+    //valuation request method
+    
+    function openValuationModal(){
+
+      var valuationScope = $rootScope.$new();
+      valuationScope.product = $scope.currentProduct;
+      Modal.openDialog('valuationReq',valuationScope);
+    }
   }
 
 angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {

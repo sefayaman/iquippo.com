@@ -16,6 +16,7 @@ exports.setup = function (User, config) {
         dataToSend['email'] = userId.toLowerCase();
       }
       dataToSend['deleted'] = false;
+      console.log("############",dataToSend);
       User.findOne(dataToSend, function(err, user) {
         if (err) return done(err);
 

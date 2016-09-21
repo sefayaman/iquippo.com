@@ -1,20 +1,67 @@
 (function(){
-
 'use strict';
-angular.module('sreizaoApp')
- .controller('ProductCtrl', ['$scope','$http', '$rootScope', '$stateParams', 'groupSvc','categorySvc','SubCategorySvc','LocationSvc','uploadSvc','productSvc', 'brandSvc','modelSvc','Auth','suggestionSvc','$uibModal','Modal', '$state', 'notificationSvc', 'AppNotificationSvc', 'userSvc','$timeout','$sce' , function($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, suggestionSvc, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce) {
-    //Start NJ : uploadProductClick object push in GTM dataLayer
-     dataLayer.push(gaMasterObject.uploadProductClick);
-     //NJ: set upload product Start Time
-     $scope.productUploadStartTime = new Date();
-     //End
-    $scope.categoryList = [];
+angular.module('sreizaoApp').controller('ProductCtrl',ProductCtrl);
+angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
+
+//Product upload controller
+ function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc) {
+    
+    var vm = this;
+   //Start NJ : uploadProductClick object push in GTM dataLayer
+   dataLayer.push(gaMasterObject.uploadProductClick);
+   //NJ: set upload product Start Time
+   $scope.productUploadStartTime = new Date();
+   //End
+
+    $scope.container = {};
+
+    var imgDim = {width:700,height:459};
+
     var prevAssetStatus = assetStatuses[0].code;
-    var product = $scope.product = {};
+    var prevAuctionStatus = auctionStatuses[0].code;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
-    $scope.product.images = [];
     $scope.assetDir = "";
+
+    var product = null;
+    $scope.isEdit = false;
+
+    $scope.images = [{isPrimary:true}];
+    $scope.primaryIndex = 0;
+    $scope.enableButton = false;
+    var productHistory = $scope.productHistory = {};
+    var ALLOWED_DATA_SIZE = 15*1024*1024;
+
+    $scope.auctSubmitted = false;
+
+    $scope.tabObj = {};
+    $scope.tabObj.step1   = true;
+
+  //All method declaration
+  $scope.updateAssetStatusTemp = updateAssetStatusTemp;
+  $scope.onStateChange = onStateChange;
+  $scope.onRoleChange = onRoleChange;
+  $scope.onCategoryChange = onCategoryChange;
+  $scope.onBrandChange = onBrandChange;
+  $scope.onModelChange = onModelChange;
+  $scope.onTradeTypeChange = onTradeTypeChange;
+  $scope.clickHandler = clickHandler;
+  //$scope.addOrUpdateProduct = addOrUpdateProduct;
+  $scope.onUserChange = onUserChange;
+  $scope.resetClick = resetClick;
+  $scope.makePrimary = makePrimary;
+  $scope.deleteImg = deleteImg;
+  $scope.previewProduct = previewProduct;
+  $scope.openCropModal = openCropModal;
+  $scope.rotate = rotate;
+  $scope.playVideo = playVideo;
+  $scope.firstStep = firstStep;
+  $scope.secondStep = secondStep; 
+
+  function productInit(){
+
+    product = $scope.product = {};
+    $scope.product.images = [];
     $scope.assetStatuses = assetStatuses;
     $scope.product.technicalInfo = {};
     $scope.product.technicalInfo.params = [{}];
@@ -23,6 +70,7 @@ angular.module('sreizaoApp')
     $scope.product.videoLinks = [{}];
     $scope.product.country = "";
     $scope.product.status = false;
+    $scope.product.auctionListing = false;
     $scope.product.assetStatus = assetStatuses[0].code;
     $scope.product.featured = false;
     $scope.product.rent = {};
@@ -34,25 +82,22 @@ angular.module('sreizaoApp')
     product.category = {};
     product.brand = {};
     product.model = {};
-    $scope.isEdit = false;
-    $scope.relistingEnable = false;
-    var videoObj = $scope.video = {};
-    var docObj = $scope.doc = {};
-    var tcDocObj = $scope.tcDoc = {};
-    $scope.productName;
-    $scope.images = [{isPrimary:true}];
-    $scope.primaryIndex = 0;
-    $scope.enableButton = false;
-    var productHistory = $scope.productHistory = {};
-    var ALLOWED_DATA_SIZE = 15*1024*1024;
+    product.seller = {};
+    product.auction = {};
 
-  $scope.userRequiredFlag = true;
-  $scope.compRequiredFlag = false;
-  $scope.updateAssetStatusTemp = updateAssetStatusTemp;
+    $scope.valuationReq = {};
+    $scope.valuationReq.valuationAgency = {};
+    $scope.auctionReq = {};
+  }
 
-  // get all user based on role
+  productInit();
+
   function init(){
 
+    if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+      $state.go('myaccount');
+      return;
+    }
     groupSvc.getAllGroup()
     .then(function(result){
       $scope.allGroup = result;
@@ -72,14 +117,185 @@ angular.module('sreizaoApp')
     .then(function(result){
       $scope.stateList = result;
     });
-    if(Auth.getCurrentUser().profileStatus == 'incomplete'){
-      $state.go('myaccount');
-      return;
-    }
+
     //LocationSvc.getAllLocation()
+
+    // product edit case
+    if($stateParams.id) {
+      $scope.isEdit = true;
+
+      productSvc.getProductOnId($stateParams.id,true).then(function(response){
+        if(response.serviceInfo.length > 0){
+          for(var i =0; i < response.serviceInfo.length; i++){
+            if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
+              response.serviceInfo[i].servicedate = moment(response.serviceInfo[i].servicedate).toDate();
+          }
+        } else {
+          $scope.product.serviceInfo = [{}];
+        }
+        product = $scope.product = response;
+        angular.copy($scope.product.images,$scope.images);
+        $scope.images.forEach(function(item,index){
+          if(item.isPrimary)
+            $scope.primaryIndex = index;
+          item.isEdit = true;
+          item.name = item.src;
+        });
+
+        if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
+          $scope.product.videoLinks = [{}];
+
+        if(!$scope.product.miscDocuments || $scope.product.miscDocuments.length == 0)
+          $scope.product.miscDocuments = [{}];
+
+        if(!$scope.product.technicalInfo){
+             $scope.product.technicalInfo = {};
+              $scope.product.technicalInfo.params = [{}];
+        }
+
+
+        if(product.assetStatus)
+            prevAssetStatus = product.assetStatus;
+        else
+          prevAssetStatus = product.assetStatus = "";
+
+        if(product.auctionListing){
+          prevAuctionStatus = "request submitted";
+
+          if(product.auction && product.auction.auctionId){
+            var serData = {};
+            serData._id = product.auction.auctionId;
+            AuctionSvc.getOnFilter(serData)
+            .then(function(result){
+              if(result.length > 0){
+                $scope.auctionReq = result[0];
+              }
+            })
+          }
+
+        }
+        if(!product.auction)
+           product.auction = {};
+
+        //$scope.userType = product.seller.userType;
+        $scope.product.country = $scope.product.country;
+        // $scope.product.auctionListing = false;
+        $scope.assetDir = product.assetDir;
+        $scope.container.selectedCategoryId = $scope.product.category._id;
+        $scope.container.selectedBrandId = $scope.product.brand._id;
+        $scope.container.selectedModelId = $scope.product.model._id;
+
+        $scope.container.selectedSubCategory = $scope.product.subcategory;
+
+
+        $scope.getUsersOnUserType = [];
+        $scope.onRoleChange($scope.product.seller.userType,true);
+        $scope.container.selectedUserId = $scope.product.seller._id;
+      
+        $scope.onCategoryChange($scope.product.category._id,true);
+        $scope.onBrandChange($scope.product.brand._id,true);
+        $scope.onStateChange(true);
+        $scope.setDate($scope.product.mfgYear,1,1);
+        if($scope.product.rent){
+          $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
+          $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
+        }
+        if($scope.product.currencyType == "INR")
+          $scope.product.currencyType = "";
+        $scope.productName = $scope.product.name;
+        if($scope.product.category.name == 'Other')
+            $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
+
+        if($state.current.name == "productrelisting") {
+          $scope.relistingEnable = true;
+        } else if($state.current.name == "productedit"){
+          $scope.enableButton = !Auth.isAdmin() && product.status;
+          $scope.relistingEnable = false;
+          $scope.isEdit = true;
+        }
+        $scope.onTradeTypeChange($scope.product.tradeType);
+         prepareImgArr();
+      });
+    }else{
+      prepareImgArr();
+    }
+
+    //Live Product name construction tracking
+     $scope.$watch('[product.model,product.category,product.brand, product.variant]',function(){
+        var name = "";
+        if(product.category && product.category.name){
+          if(product.category.name == "Other")
+            name = product.category.otherName || "";
+          else
+             name = product.category.name || "";
+        }
+
+        if(product.brand && product.brand.name){
+          if(product.brand.name == 'Other')
+            name += " " +  (product.brand.otherName || "");
+          else
+            name += " " +  (product.brand.name || "");
+        }
+
+        if(product.model && product.model.name){
+
+        if(product.model.name == 'Other')
+           name += " " + (product.model.otherName || "");
+         else
+          name += " " + (product.model.name || "");
+        }
+
+        if($scope.product.variant)
+          name += " " + ($scope.product.variant || "");
+
+        if(name)
+            product.name =  name;
+    },true);
+
+    //listen for the file selected event
+    $scope.$on("fileSelected", function (event, args) {
+      if(args.files.length == 0)
+          return;
+        $scope.$apply(function () {
+          if(args.type == "image") {
+            var resizeParam = {};
+            resizeParam.resize = true;
+            resizeParam.width = imgDim.width;
+            resizeParam.height = imgDim.height;
+          }
+          $rootScope.loading = true;
+          uploadSvc.upload(args.files[0],$scope.assetDir, resizeParam).then(function(result){
+            $rootScope.loading = false;
+            $scope.assetDir = result.data.assetDir;
+            if(!$scope.product.assetId)
+              $scope.product.assetId = $scope.assetDir;
+
+            if(args.type == "image")
+              $scope.images[parseInt(args.index)].src = result.data.filename;
+            else if(args.type == "video")
+              product.videoName = result.data.filename;
+            else if(args.type == "tcDoc")
+              product.tcDocumentName = result.data.filename;
+            else if(args.type == "mdoc"){
+              $scope.product.miscDocuments[args.index].name = result.data.filename;
+              $scope.product.miscDocuments[args.index].createdAt = new Date();
+              $scope.product.miscDocuments[args.index].userId = Auth.getCurrentUser()._id;
+            }
+            else
+              product.documentName = result.data.filename;
+          })
+          .catch(function(err){
+             $rootScope.loading = false;
+            Modal.alert("Error in file upload.",true);
+          });
+
+        });
+    });
   }
+
   init();
-  $scope.onStateChange = function(noReset){
+
+  function onStateChange(noReset){
 
     $scope.locationList = [];
     if(!noReset)
@@ -95,153 +311,52 @@ angular.module('sreizaoApp')
     });
   }
 
-  $scope.onRoleChange = function(userType){
+  function onRoleChange(userType,noChange){
     if(!userType){
       $scope.getUsersOnUserType = "";
       return;
     }
     var dataToSend = {};
     dataToSend["status"] = true;
-    if(userType) {
-      dataToSend["userType"] = userType;
-      if(userType == "legalentity") {
-        //$scope.requiredFlag = true;
-        $scope.userRequiredFlag = false;
-        $scope.compRequiredFlag = true;
-      } else {
-        //$scope.requiredFlag = false;
-        $scope.userRequiredFlag = true;
-        $scope.compRequiredFlag = false;
-      }
+    dataToSend["userType"] = userType;
+    if(!noChange){
+      product.seller = {};
+      product.seller.userType = userType;
+      $scope.container.selectedUserId = "";
     }
-
     userSvc.getUsers(dataToSend).then(function(result){
       $scope.getUsersOnUserType = result;
     });
   }
 
-  if($stateParams.id) {
-    $scope.isEdit = true;
-    productSvc.getProductOnId($stateParams.id).then(function(response){
-      if(response.serviceInfo.length > 0){
-        for(var i =0; i < response.serviceInfo.length; i++){
-          if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
-            response.serviceInfo[i].servicedate = moment(response.serviceInfo[i].servicedate).toDate();
-        }
-      } else {
-        $scope.product.serviceInfo = [{}];
-      }
-      product = $scope.product = response;
-      angular.copy($scope.product.images,$scope.images);
-      $scope.images.forEach(function(item,index){
-        if(item.isPrimary)
-          $scope.primaryIndex = index;
-        item.isEdit = true;
-        item.name = item.src;
-      });
-      if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
-        $scope.product.videoLinks = [{}];
-
-      if(!$scope.product.miscDocuments || $scope.product.miscDocuments.length == 0)
-        $scope.product.miscDocuments = [{}];
-
-      if(!$scope.product.technicalInfo){
-           $scope.product.technicalInfo = {};
-            $scope.product.technicalInfo.params = [{}];
-      }
-
-
-      if(product.assetStatus)
-          prevAssetStatus = product.assetStatus;
-      else
-        prevAssetStatus = product.assetStatus = "";
-      $scope.userType = product.seller.userType;
-      $scope.product.country = $scope.product.country;
-      videoObj.name = product.videoName;
-      docObj.name = product.documentName;
-      tcDocObj.name = product.tcDocumentName;
-      $scope.assetDir = product.assetDir;
-      $scope.selectedCategory = categorySvc.getCategoryOnId($scope.product.category._id);
-      $scope.selectedGroup = groupSvc.getGroupOnId($scope.product.group._id);
-      $scope.selectedSubCategory = $scope.product.subcategory;
-      brandSvc.getBrandOnFilter({brandId:$scope.product.brand._id})
-      .then(function(result){
-        if(result.length > 0)
-        $scope.selectedBrand = result[0];
-      if($scope.product.brand.name == 'Other')
-          $scope.selectedBrand['otherName'] = $scope.product.brand.otherName;
-        $scope.onBrandChange($scope.selectedBrand,true);
-      });
-
-      modelSvc.getModelOnFilter({modelId:$scope.product.model._id})
-      .then(function(result){
-        if(result.length > 0)
-          $scope.selectedModel = result[0];
-        if($scope.product.model.name == 'Other')
-          $scope.selectedModel['otherName'] = $scope.product.model.otherName;
-
-      })
-
-      $scope.getUsersOnUserType = [];
-      $scope.onRoleChange($scope.product.seller.userType);
-      //$scope.getUsersOnUserType[0] = $scope.product.seller;
-
-      if($scope.product.seller.userType == "legalentity") {
-        $scope.selectedCompany = $scope.product.seller;
-        //$scope.requiredFlag = true;
-        $scope.userRequiredFlag = false;
-        $scope.compRequiredFlag = true;
-      } else {
-        $scope.selectedUser = $scope.product.seller;
-        //$scope.requiredFlag = false;
-        $scope.userRequiredFlag = true;
-        $scope.compRequiredFlag = false;
-      }
-      $scope.onCategoryChange($scope.selectedCategory,true);
-      $scope.onStateChange(true);
-      $scope.setDate($scope.product.mfgYear,1,1);
-      if($scope.product.rent){
-        $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
-        $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
-      }
-      if($scope.product.currencyType == "INR")
-        $scope.product.currencyType = "";
-      $scope.productName = $scope.product.name;
-      if($scope.product.category.name == 'Other')
-          $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
-
-      if($state.current.name == "productrelisting") {
-        $scope.relistingEnable = true;
-      } else if($state.current.name == "productedit"){
-        $scope.enableButton = !Auth.isAdmin() && product.status;
-        $scope.relistingEnable = false;
-        $scope.isEdit = true;
-      }
-      $scope.onTradeTypeChange($scope.product.tradeType);
-       prepareImgArr();
-    });
-  }else{
-    prepareImgArr();
-  }
-  $scope.isCollapsed = true;
-  $scope.onCategoryChange = function(category,noChange){
+   function onCategoryChange(categoryId,noChange){
      if(!noChange)
     {
-      $scope.productName = "";
-      $scope.selectedBrand = {}
-      $scope.selectedModel = {}
-      if(category)
-          $scope.selectedGroup = groupSvc.getGroupOnId(category.group._id);
-        else
-          $scope.selectedGroup = {};
+      product.productName = "";
+      product.brand = {};
+      product.model = {};
+      if(categoryId){
+        var ct = categorySvc.getCategoryOnId(categoryId);
+        product.group = ct.group;
+        product.category._id = ct._id;
+        product.category.name = ct.name;
+      }    
+      else{
+        product.group = {};
+        product.category = {};
+      }
+
+     $scope.container.selectedBrandId = "";
+     $scope.container.selectedModelId = "";
     }
+     
     $scope.brandList = [];
     $scope.modelList = [];
-     if(!category)
+     if(!categoryId)
       return;
     var otherBrand = null;
     var filter = {};
-    filter['categoryId'] = category._id;
+    filter['categoryId'] = categoryId;
     brandSvc.getBrandOnFilter(filter)
     .then(function(result){
       $scope.brandList = result;
@@ -252,18 +367,33 @@ angular.module('sreizaoApp')
     })
   }
 
-  $scope.onBrandChange = function(brand,noChange){
+  function onBrandChange(brandId,noChange){
     if(!noChange)
     {
-      $scope.productName = "";
-      $scope.selectedModel = {}
+      product.name = "";
+      product.model = {};
+      
+      if(brandId){
+         var brd = [];
+         brd = $scope.brandList.filter(function(item){
+          return item._id == brandId;
+        });
+        if(brd.length == 0)
+          return;
+        product.brand._id = brd[0]._id;
+        product.brand.name = brd[0].name;
+      }else{
+        product.brand = {};
+      }
+     $scope.container.selectedModelId = "";
     }
+    
     $scope.modelList = [];
-    if(!brand)
+    if(!brandId)
        return;
     var otherModel = null;
     var filter = {};
-    filter['brandId'] = brand._id;
+    filter['brandId'] = brandId;
     modelSvc.getModelOnFilter(filter)
     .then(function(result){
       $scope.modelList = result;
@@ -274,7 +404,26 @@ angular.module('sreizaoApp')
 
   }
 
-    $scope.onTradeTypeChange = function(tradeType){
+  function onModelChange(modelId){
+    if(!modelId){
+      product.model = {};
+      return;
+    }
+    var md = null;
+    for(var i=0; i< $scope.modelList.length;i++){
+      if($scope.modelList[i]._id == modelId){
+        md = $scope.modelList[i];
+        break;
+      }
+    }
+    if(md){
+      product.model._id = md._id;
+      product.model.name = md.name;
+    }else
+      product.model = {};
+  }
+
+  function onTradeTypeChange(tradeType){
       $scope.assetList = [];
       for(var i=0;i<assetStatuses.length;i++){
         if(tradeType == 'SELL' && assetStatuses[i].code == 'rented')
@@ -285,75 +434,33 @@ angular.module('sreizaoApp')
         $scope.assetList[$scope.assetList.length] = assetStatuses[i];
       }
     }
-    $scope.$watch('[selectedModel,selectedCategory,selectedBrand, product.variant]',function(){
-      var name = "";
-      if($scope.selectedCategory){
-        if($scope.selectedCategory.name == "Other")
-          name = $scope.selectedCategory.otherName || "";
-        else
-           name = $scope.selectedCategory.name || "";
-      }
 
-      if($scope.selectedBrand){
-        if($scope.selectedBrand.name == 'Other')
-          name += " " +  ($scope.selectedBrand.otherName || "");
-        else
-          name += " " +  ($scope.selectedBrand.name || "");
-      }
-
-      if($scope.selectedModel){
-
-      if($scope.selectedModel.name == 'Other')
-         name += " " + ($scope.selectedModel.otherName || "");
-       else
-        name += " " + ($scope.selectedModel.name || "");
-      }
-
-      if($scope.product.variant)
-        name += " " + ($scope.product.variant || "");
-
-      if(name)
-          $scope.productName =  name;
-  },true);
-
-  //listen for the file selected event
-  var imgDim = {width:700,height:459};
-  $scope.$on("fileSelected", function (event, args) {
-    if(args.files.length == 0)
+  function onUserChange(userId){
+      if(angular.isUndefined(userId) || !userId){
+        //product.seller = {};
         return;
-      $scope.$apply(function () {
-        if(args.type == "image") {
-          var resizeParam = {};
-          resizeParam.resize = true;
-          resizeParam.width = imgDim.width;
-          resizeParam.height = imgDim.height;
-        }
-        $rootScope.loading = true;
-        uploadSvc.upload(args.files[0],$scope.assetDir, resizeParam).then(function(result){
-          $rootScope.loading = false;
-          $scope.assetDir = result.data.assetDir;
-          if(!$scope.product.assetId)
-            $scope.product.assetId = $scope.assetDir;
-
-          if(args.type == "image")
-            $scope.images[parseInt(args.index)].src = result.data.filename;
-          else if(args.type == "video")
-            videoObj.name = result.data.filename;
-          else if(args.type == "tcDoc")
-            tcDocObj.name = result.data.filename;
-          else if(args.type == "mdoc"){
-            $scope.product.miscDocuments[args.index].name = result.data.filename;
+      }
+      var seller = null;
+      for(var i=0;i< $scope.getUsersOnUserType.length;i++){
+          if(userId == $scope.getUsersOnUserType[i]._id){
+            seller = $scope.getUsersOnUserType[i];
+            break;
           }
-          else
-            docObj.name = result.data.filename;
-        })
-        .catch(function(err){
-           $rootScope.loading = false;
-          Modal.alert("Error in file upload.",true);
-        });
-
-      });
-  });
+      }
+      if(!seller)
+        return;
+      product.seller._id = seller._id;
+      product.seller.fname = seller.fname;
+      product.seller.mname = seller.mname;
+      product.seller.lname = seller.lname;
+      product.seller.role = seller.role;
+      //product.seller.userType = user.userType;
+      product.seller.phone = seller.phone;
+      $scope.product.seller.mobile = product.seller.mobile = seller.mobile;
+      $scope.product.seller.email = product.seller.email = seller.email;
+      product.seller.country = seller.country;
+      product.seller.company = seller.company;
+  }
 
   function updateAssetStatusTemp(files){
     if(!files[0])
@@ -392,7 +499,8 @@ angular.module('sreizaoApp')
        Modal.alert("error in file upload",true);
     });
   }
-  $scope.clickHandler = function(type, val){
+
+  function clickHandler(type, val){
     if(type == "hours" && !val)
       delete $scope.product.rent.rateHours;
     else if(type == "days" && !val)
@@ -401,56 +509,22 @@ angular.module('sreizaoApp')
       delete $scope.product.rent.rateMonths;
   }
 
-  var suggestions = [];
+  function validateStep1(){
 
-  $scope.addOrUpdateProduct = function(product){
+  }
+
+  function firstStep(form,product){
+
      var ret = false;
-
-     if(!$scope.selectedCategory || !$scope.selectedCategory._id){
-        $scope.form.category.$invalid = true;
-        ret = true;
+     if($scope.container.mfgYear){
+      if($scope.container.mfgYear.getFullYear)
+        $scope.product.mfgYear = $scope.container.mfgYear.getFullYear();
+       }
+      else{
+          form.mfgyear.$invalid = true;
+          ret = true;
       }
-
-     if(!$scope.selectedBrand || !$scope.selectedBrand._id){
-        $scope.form.brand.$invalid = true;
-        ret = true;
-      }
-
-      if(!$scope.selectedModel || !$scope.selectedModel._id){
-        $scope.form.model.$invalid = true;
-        ret = true;
-      }
-
-      if(Auth.isAdmin() || Auth.isChannelPartner()) {
-        if($scope.userRequiredFlag) {
-          if(!$scope.selectedUser || !$scope.selectedUser._id){
-            $scope.form.userName.$invalid = true;
-            ret = true;
-          }
-      } else if($scope.compRequiredFlag) {
-        if(!$scope.selectedCompany || !$scope.selectedCompany._id){
-            $scope.form.company.$invalid = true;
-            ret = true;
-          }
-        }
-      } else {
-        $scope.userRequiredFlag = false;
-        $scope.compRequiredFlag = false;
-        //ret = false;
-      }
-      if(!ret){
-
-           if($scope.mfgYear){
-            if($scope.mfgYear.getFullYear)
-              $scope.product.mfgYear = $scope.mfgYear.getFullYear();
-         }
-        else{
-            $scope.form.mfgyear.$invalid = true;
-            ret = true;
-        }
-      }
-
-      if($scope.product.tradeType != "SELL") {
+      if($scope.product.tradeType != "SELL"){
         if(angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
           ret = true;
           Modal.alert("Please select at-least one check box in 'Check Rental Rate For'.",true);
@@ -458,71 +532,23 @@ angular.module('sreizaoApp')
         }
       }
 
-      if($scope.form.$invalid ||ret){
+      if(form.$invalid ||ret){
         $scope.submitted = true;
         //angular.element("[name='" + $scope.form.$name + "']").find('.ng-invalid:visible:first').focus();
         $timeout(function(){angular.element(".has-error").find('input,select').first().focus();},20);
         return;
       }
 
-      product.group._id = $scope.selectedGroup._id;
-      product.group.name = $scope.selectedGroup.name;
-      suggestions[suggestions.length] = {text:product.group.name};
-
-
-      product.category._id = $scope.selectedCategory._id;
-      product.category.name = $scope.selectedCategory.name;
-      suggestions[suggestions.length] = {text:product.category.name};
-      product.name = $scope.productName;
-      suggestions[suggestions.length] = {text:product.name};
-
-
-      product.brand._id = $scope.selectedBrand._id;
-      product.brand.name = $scope.selectedBrand.name;
-      suggestions[suggestions.length] = {text:product.brand.name};
-
-
-      product.model._id = $scope.selectedModel._id;
-      product.model.name = $scope.selectedModel.name;
-      suggestions[suggestions.length] = {text:product.model.name};
-
-      if($scope.selectedCategory.name == "Other")
-         product.category.otherName = $scope.selectedCategory.otherName;
-
-       if($scope.selectedBrand.name == "Other")
-         product.brand.otherName = $scope.selectedBrand.otherName;
-
-       if($scope.selectedModel.name == "Other")
-          product.model.otherName = $scope.selectedModel.otherName;
-
-      if($scope.selectedCategory.otherName)
-        suggestions[suggestions.length] = {text:$scope.selectedCategory.otherName};
-
-       if($scope.selectedBrand.otherName)
-        suggestions[suggestions.length] = {text:$scope.selectedBrand.otherName};
-       if($scope.selectedModel.otherName)
-        suggestions[suggestions.length] = {text:$scope.selectedModel.otherName};
        if($state.current.name == "productrelisting") {
             product.expired = false;
             product.relistingDate = new Date();
           }
 
-      if($scope.selectedSubCategory){
+      if($scope.container.selectedSubCategory){
          product.subcategory = {};
-         product.subcategory['_id'] = $scope.selectedSubCategory['_id'];
-         product.subcategory['name'] = $scope.selectedSubCategory['name'];
+         product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
+         product.subcategory['name'] = $scope.container.selectedSubCategory['name'];
       }
-
-
-      $rootScope.loading = true;
-      if(videoObj.name)
-       $scope.product.videoName = videoObj.name;
-
-     if(docObj.name)
-       $scope.product.documentName = docObj.name;
-
-     if(tcDocObj.name)
-      $scope.product.tcDocumentName = tcDocObj.name;
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
       var primaryFound = false;
@@ -571,52 +597,223 @@ angular.module('sreizaoApp')
         product.applyWaterMark = false;
       }
 
-     /* if(product.priceOnRequest)
-        product.grossPrice = '';*/
-      if(!$scope.isEdit && !$scope.relistingEnable)
-          addProduct();
-      else
-        updateProduct();
+      if(product.auctionListing){
+         goToSecondStep();
+         return;
+      }else
+        addOrUpdate();
+      
+  }
+  
+  function goToSecondStep(){
+
+    $scope.tabObj.step1 = false;
+    $scope.tabObj.step2 = true;
+    vendorSvc.getAllVendors().
+    then(function(){
+      $scope.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
+    });
+
+    AuctionMasterSvc.getAll()
+    .then(function(res){
+      $scope.auctions = AuctionMasterSvc.getLatestAuction();
+    });
+
+    PaymentMasterSvc.getAll()
+    .then(function(result){
+      $scope.payments = result;
+    })
+
+    $scope.auctionReq.valuationReport = checkValuationReport();
 
   }
-  product.seller = {};
-  $scope.onUserChange = function(user){
-    if(angular.isUndefined(user) || !user){
-      product.seller = {};
+
+  function checkValuationReport(){
+    var fileName = "";
+    var lastTime = new Date().getTime();
+    for(var i= 0;i < $scope.product.miscDocuments.length;i++){
+        if($scope.product.miscDocuments[i].type == 'Valuation'){
+          var creationTime = new Date($scope.product.miscDocuments[i].createdAt).getTime();
+          if(creationTime <= lastTime){
+            fileName = $scope.product.miscDocuments[i].name;
+            lastTime = creationTime;
+          }
+        }
+    }
+    return fileName;
+  }
+
+  function secondStep(form,product){
+    if(form.$invalid){
+      $scope.auctSubmitted = true;
       return;
     }
-    product.seller._id = user._id;
-    product.seller.fname = user.fname;
-    product.seller.mname = user.mname;
-    product.seller.lname = user.lname;
-    product.seller.role = user.role;
-    product.seller.userType = user.userType;
-    product.seller.phone = user.phone;
-    $scope.product.seller.mobile = product.seller.mobile = user.mobile;
-    $scope.product.seller.email = product.seller.email = user.email;
-    product.seller.country = user.country;
-    product.seller.company = user.company;
+
+    if(product.auctionListing && !$scope.auctionReq.valuationReport && !$scope.valuationReq.valuate)
+    {
+      Modal.alert("Valuation report is mandatory for aution listing");
+      return;
+    }
+    addOrUpdate(postSubmit);  
   }
 
-  function addProduct(){
+
+  function postSubmit(productObj){
+
+    var stsObj = {};
+    if(!productObj.auction)
+        productObj.auction = {};
+    if(!productObj.auction._id){
+       $scope.auctionReq.user = {};
+       $scope.auctionReq.user._id = Auth.getCurrentUser()._id;
+       $scope.auctionReq.user.mobile = Auth.getCurrentUser().mobile;
+       $scope.auctionReq.status = auctionStatuses[0].code;
+       $scope.auctionReq.statuses = [];
+       stsObj.createdAt = new Date();
+       stsObj.status = auctionStatuses[0].code;
+       stsObj.userId = Auth.getCurrentUser()._id;
+       $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
+
+    }else{
+       stsObject.createdAt = new Date();
+       stsObject.status = auctionStatuses[0].code;
+       stsObject.userId = Auth.getCurrentUser()._id;
+        $scope.auctionReq.statuses[ $scope.auctionReq.statuses.length] = stsObject;
+    }
+
+    $scope.auctionReq.product = {};
+    $scope.auctionReq.product._id = productObj._id;
+    $scope.auctionReq.product.assetId = productObj.assetId;
+    $scope.auctionReq.product.name = productObj.name;
+    $scope.auctionReq.product.category = productObj.category.name;
+    $scope.auctionReq.product.brand = productObj.brand.name;
+    $scope.auctionReq.product.model = product.model.name;
+    $scope.auctionReq.product.mfgYear = productObj.mfgYear;
+    $scope.auctionReq.product.serialNo = productObj.serialNo;
+    $scope.auctionReq.product.grossPrice = productObj.grossPrice;
+    for(var i=0;i< $scope.auctions.length; i++){
+      if($scope.auctions[i]._id == $scope.auctionReq.auctionId){
+        $scope.auctionReq.startDate = $scope.auctions[i].startDate;
+        $scope.auctionReq.endDate = $scope.auctions[i].endDate;
+        break;
+      }
+    }
+
+    if($scope.valuationReq.valuate){
+      $scope.valuationReq.user = {};
+      $scope.valuationReq.user._id = Auth.getCurrentUser()._id;
+      $scope.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
+      $scope.valuationReq.initiatedBy = "seller";
+      $scope.valuationReq.product = {};
+      $scope.valuationReq.product._id = productObj._id;
+      $scope.valuationReq.assetId = productObj.assetId;
+      $scope.valuationReq.name = productObj.name;
+      for(var i=0; i < $scope.valAgencies.length;i++){
+        if($scope.valuationReq.valuationAgency._id == $scope.valAgencies[i]._id){
+          $scope.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
+          break;
+        }
+      }
+      $scope.valuationReq.status = "request submitted";
+      $scope.valuationReq.statuses = [];
+      var stObject = {};
+      stObject.createdAt = new Date();
+      stObject.status = "request submitted";
+      stObject.userId = Auth.getCurrentUser()._id;
+      $scope.valuationReq.statuses[$scope.valuationReq.statuses.length] = stObject;
+    }
+    
+    var paymentTransaction = {};
+    paymentTransaction.payments = [];
+    paymentTransaction.totalAmount = 0;
+    var payObj = null;
+    var createTraction = false;
+    if(!product.auction._id){
+      payObj = {};
+      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+      payObj.type = "Auction Listing";
+      payObj.charge = pyMaster.fees;
+      paymentTransaction.totalAmount += payObj.charge;
+      paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+      createTraction = true; 
+    }
+
+    if($scope.valuationReq.valuate){
+      payObj = {};
+      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",$scope.valuationReq.valuationAgency._id);
+      payObj.type = "Valuation Request";
+      payObj.charge = pyMaster.fees;
+      paymentTransaction.totalAmount += payObj.charge;
+      paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+     createTraction = true;        
+    }
+
+    if(createTraction){
+
+        paymentTransaction.product = {};
+        paymentTransaction.product._id = productObj._id;
+        paymentTransaction.product.assetId = productObj.assetId;
+        paymentTransaction.product.assetDir = productObj.assetDir;
+        paymentTransaction.product.city = productObj.city;
+        paymentTransaction.product.name = productObj.name;
+        paymentTransaction.user = {};
+        paymentTransaction.user._id = Auth.getCurrentUser()._id;
+        paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
+
+        paymentTransaction.status = "created";
+        paymentTransaction.statuses = [];
+        var sObj = {};
+        sObj.createdAt = new Date();
+        sObj.status = "created";
+        sObj.userId = Auth.getCurrentUser()._id;
+        paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
+    }
+
+    var serverObj = {};
+    serverObj['auction'] = $scope.auctionReq;
+    if($scope.valuationReq.valuate)
+     serverObj['valuation'] = $scope.valuationReq;
+    if(createTraction)
+      serverObj['payment'] = paymentTransaction;
+    productSvc.createOrUpdateAuction(serverObj)
+    .then(function(res){
+        //goto payment if payment are necessary
+        if(createTraction && res.transactionId)
+          $state.go("payment",{tid:res.transactionId});
+        else
+           $state.go('productlisting');
+    })
+    .catch(function(err){
+        //error handling
+    })
+  }
+
+  function addOrUpdate(cb){
+     if(!$scope.isEdit && !$scope.relistingEnable)
+          addProduct(cb);
+      else
+        updateProduct(cb);
+  }
+
+  function addProduct(cb){
+
       product.user = {};
-      //product.user = Auth.getCurrentUser();
-      product.user._id = $rootScope.getCurrentUser()._id;
-      product.user.fname = $rootScope.getCurrentUser().fname;
-      product.user.mname = $rootScope.getCurrentUser().mname;
-      product.user.lname = $rootScope.getCurrentUser().lname;
-      product.user.role = $rootScope.getCurrentUser().role;
-      product.user.userType = $rootScope.getCurrentUser().userType;
-      product.user.phone = $rootScope.getCurrentUser().phone;
-      product.user.mobile = $rootScope.getCurrentUser().mobile;
-      product.user.email = $rootScope.getCurrentUser().email;
-      product.user.country = $rootScope.getCurrentUser().country;
-      product.user.company = $rootScope.getCurrentUser().company;
-      if((!$scope.selectedUser && !$scope.selectedCompany)
-          || ($.isEmptyObject($scope.selectedUser) && $.isEmptyObject($scope.selectedCompany))) {
+      product.user._id = Auth.getCurrentUser()._id;
+      product.user.fname = Auth.getCurrentUser().fname;
+      product.user.mname = Auth.getCurrentUser().mname;
+      product.user.lname = Auth.getCurrentUser().lname;
+      product.user.role = Auth.getCurrentUser().role;
+      product.user.userType = Auth.getCurrentUser().userType;
+      product.user.phone = Auth.getCurrentUser().phone;
+      product.user.mobile = Auth.getCurrentUser().mobile;
+      product.user.email = Auth.getCurrentUser().email;
+      product.user.country = Auth.getCurrentUser().country;
+      product.user.company = Auth.getCurrentUser().company;
+      if($.isEmptyObject(product.seller)){
         product.seller = {};
         product.seller = product.user;
       }
+
       if($scope.product.currencyType == "")
         $scope.product.currencyType = "INR";
 
@@ -627,9 +824,10 @@ angular.module('sreizaoApp')
       stObj.createdAt = new Date();
       $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
       $scope.product.assetId = $scope.assetDir;
-
-      /*adding seller info */
+      
+      $rootScope.loading = true;
       productSvc.addProduct(product).then(function(result){
+
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
          dataLayer.push(gaMasterObject.uploadProductSubmit);
          //NJ : set upload product Start time
@@ -640,45 +838,39 @@ angular.module('sreizaoApp')
          //End
         $rootScope.loading = false;
         setScroll(0);
-        $scope.successMessage = "Product added successfully";
+        $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
-        suggestionSvc.buildSuggestion(suggestions);
         if(result.errorCode){
-          alert(result.message);
-          console.log("error reason",result.message);
+          Modal.alert(result.message,true);
         }
         else {
-          if(result.productId) {
-            productHistory.history = {};
-            productHistory.user = {};
-
-            productHistory.type = "Create";
-            productHistory.history = result;
-            productHistory.user = $rootScope.getCurrentUser();
-            productSvc.addProductInHistory(productHistory).then(function(result){
-            $rootScope.loading = false;
-            });
-          }
+          //addToHistory(result,"Create");
           if(Auth.isAdmin()) {
             if(result.status)
-               AppNotificationSvc.createAppNotificationFromProduct(result);
-        
+                AppNotificationSvc.createAppNotificationFromProduct(result);
             mailToCustomerForApprovedAndFeatured(result, product);
-            } else {
-            var data = {};
-            data['to'] = supportMail;
-            data['subject'] = 'Product Upload: Request for activation';
-            result.serverPath = serverPath;
-            notificationSvc.sendNotification('productUploadEmailToAdmin', data, result,'email');
-            console.log("Product added",result);
+          } else {
+              var data = {};
+              data['to'] = supportMail;
+              data['subject'] = 'Product Upload: Request for activation';
+              result.serverPath = serverPath;
+              notificationSvc.sendNotification('productUploadEmailToAdmin', data, result,'email');
+          }
+          if(cb)
+            cb(result)
+          else{ 
+            product = $scope.product ={};
+            $state.go('productlisting');
+          }
+
         }
-        $state.go('productlisting');
-      }
-      product = $scope.product ={};
+         
       });
   }
 
-  function updateProduct(){
+
+  function updateProduct(cb){
+
       if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role != 'admin') {
         product.status = false;
         product.featured = false;
@@ -702,29 +894,38 @@ angular.module('sreizaoApp')
               $scope.product.featured = false;
             }
         }
+
       if(!$scope.product.assetId)
         $scope.product.assetId = $scope.assetDir;
+      $rootScope.loading = true;
       productSvc.updateProduct(product).then(function(result){
         $rootScope.loading = false;
          setScroll(0);
         $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
-        suggestionSvc.buildSuggestion(suggestions);
-         AppNotificationSvc.createAppNotificationFromProduct(product);
+        AppNotificationSvc.createAppNotificationFromProduct(product);
         if(result.errorCode){
-          alert(result.message);
-          console.log("error reason",result.message);
+          Modal.alert(result.message,true);
+          //console.log("error reason",result.message);
         }
         else {
           mailToCustomerForApprovedAndFeatured(result, product);
           }
-           $state.go('productlisting');
+          if(cb)
+              cb(product);
+          else
+              $state.go('productlisting');
       });
+  }
+
+  function addToHistory(product,type){
       if($scope.relistingEnable) {
           $scope.productHistory.type = "Relist";
       } else {
           $scope.productHistory.type = "Edit";
       }
+      if(type)
+        $scope.productHistory.type = type;
       productHistory.history = {};
       productHistory.user = {};
       productHistory.history = product;
@@ -753,58 +954,27 @@ angular.module('sreizaoApp')
     }
   }
 
-  $scope.resetClick = function(form){
+  function resetClick(form){
+
     //Start NJ : uploadProductReset object push in GTM dataLayer
-      dataLayer.push(gaMasterObject.uploadProductReset);
-     //NJ: set upload product Reset time
-       var productUploadResetTime = new Date();
-       var timeDiff = Math.floor(((productUploadResetTime - $scope.productUploadStartTime) / 1000) * 1000);
-       gaMasterObject.uploadProductResetTime.timingValue = timeDiff;
-       ga('send', gaMasterObject.uploadProductResetTime);
-     //End
-    product = $scope.product = {};
+    dataLayer.push(gaMasterObject.uploadProductReset);
+    //NJ: set upload product Reset time
+     var productUploadResetTime = new Date();
+     var timeDiff = Math.floor(((productUploadResetTime - $scope.productUploadStartTime) / 1000) * 1000);
+     gaMasterObject.uploadProductResetTime.timingValue = timeDiff;
+     ga('send', gaMasterObject.uploadProductResetTime);
+    //End
+
+    productInit();
+    $scope.container = {};
     $scope.brandList = [];
     $scope.modelList = [];
-    $scope.product.technicalInfo = {};
-    $scope.product.technicalInfo.params = [{}];
-    $scope.product.serviceInfo = [{}];
-    $scope.product.miscDocuments = [{}];
-    $scope.product.videoLinks = [{}];
-    $scope.product.group = product.group = {};
-    $scope.product.category = product.category = {};
-    $scope.product.brand = product.brand = {};
-    $scope.product.model = product.model = {};
-    $scope.product.seller = product.seller = {};
-    videoObj = $scope.video = {};
-    docObj = $scope.doc = {};
-    tcDocObj = $scope.tcDoc = {};
-    $scope.selectedUser = {};
-    $scope.selectedCompany = {};
-    $scope.selectedCategory = {_id:""};
-    $scope.selectedGroup = {};
-    $scope.selectedBrand = {};
-    $scope.selectedModel = {};
-    $scope.selectedSubCategory = {};
-    $scope.productName = "";
-    $scope.userType = "";
-    $scope.selectedGroup.name = "";
-    $scope.images = [{isPrimary:true}];
     prepareImgArr();
     productHistory = $scope.productHistory = {};
-    $scope.product.seller = product.seller = {};
-    $scope.mfgYear = null;
-
-    //rent reset fields
-
-    $scope.product.rent = {};
-    $scope.product.rent.rateHours = {};
-    $scope.product.rent.rateDays = {};
-    $scope.product.rent.rateMonths = {};
-    $scope.product.rent.rateHours.rateType = 'hours';
-    //$scope.today();
+    $scope.container.mfgYear = null;
   }
 
-  $scope.makePrimary = function(val){
+  function makePrimary(val){
     $scope.primaryIndex = val;
      $scope.images.forEach(function(item,index,arr){
       if($scope.primaryIndex == index)
@@ -814,7 +984,7 @@ angular.module('sreizaoApp')
       });
   }
 
-   $scope.deleteImg = function(idx){
+   function deleteImg(idx){
      $scope.images[idx] = {};
     $scope.images.forEach(function(item,index,arr){
       if(item.isPrimary)
@@ -826,74 +996,133 @@ angular.module('sreizaoApp')
   }
 
      // preview uploaded images
-  $scope.previewProduct = function(){
-          //Start NJ : uploadProductPreview object push in GTM dataLayer
-          dataLayer.push(gaMasterObject.uploadProductPreview);
-          //NJ: set upload product Preview time
-          var productUploadPreviewTime = new Date();
-          var timeDiff = Math.floor(((productUploadPreviewTime - $scope.productUploadStartTime) / 1000) * 1000);
-          gaMasterObject.uploadProductPreviewTime.timingValue = timeDiff;
-          ga('send', gaMasterObject.uploadProductPreviewTime);
-          //End
-          var prevScope = $rootScope.$new();
-          prevScope.selectedRadio = $scope.primaryIndex;
-          prevScope.images = $scope.images;//getImageArr();
-          prevScope.prefix = $rootScope.uploadImagePrefix;
-          prevScope.assetDir = $scope.assetDir;
-          prevScope.isEdit = $scope.isEdit || $scope.relistingEnable;
-          var prvProduct = {};
-          angular.copy($scope.product,prvProduct);
-          var img = $scope.images[$scope.primaryIndex];
-          if(img.name)
-            prvProduct.primaryImage = img.name;
-          else
-            prvProduct.primaryImage = img.src;
-          prvProduct.src = img.src;
-          prvProduct.videoName = videoObj.name;
-          prvProduct.documentName = docObj.name;
-          prvProduct.group = $scope.selectedGroup;
-          prvProduct.category = $scope.selectedCategory;
-          prvProduct.brand = $scope.selectedBrand;
-          prvProduct.model = $scope.selectedModel;
-          prvProduct.name = $scope.productName;
-          prvProduct.mfgYear = $scope.mfgYear;
-          prevScope.product = prvProduct;
-          var prvProductModal = $uibModal.open({
-              templateUrl: "productPreview.html",
-              scope: prevScope,
-              windowTopClass:'product-preview',
+    function previewProduct(){
+      //Start NJ : uploadProductPreview object push in GTM dataLayer
+      dataLayer.push(gaMasterObject.uploadProductPreview);
+      //NJ: set upload product Preview time
+      var productUploadPreviewTime = new Date();
+      var timeDiff = Math.floor(((productUploadPreviewTime - $scope.productUploadStartTime) / 1000) * 1000);
+      gaMasterObject.uploadProductPreviewTime.timingValue = timeDiff;
+      ga('send', gaMasterObject.uploadProductPreviewTime);
+      //End
+      var prevScope = $rootScope.$new();
+      prevScope.selectedRadio = $scope.primaryIndex;
+      prevScope.images = $scope.images;
+      prevScope.prefix = $rootScope.uploadImagePrefix;
+      prevScope.assetDir = $scope.assetDir;
+      prevScope.isEdit = $scope.isEdit || $scope.relistingEnable;
+      var prvProduct = {};
+      angular.copy($scope.product,prvProduct);
+      var img = $scope.images[$scope.primaryIndex];
+      if(img.name)
+        prvProduct.primaryImage = img.name;
+      else
+        prvProduct.primaryImage = img.src;
+      prvProduct.src = img.src;
+      prvProduct.mfgYear = $scope.container.mfgYear;
+      prevScope.product = prvProduct;
+      var prvProductModal = $uibModal.open({
+          templateUrl: "productPreview.html",
+          scope: prevScope,
+          windowTopClass:'product-preview',
+          size: 'lg'
+      });
+
+      prevScope.deleteImg = $scope.deleteImg
+      prevScope.makePrimary = $scope.makePrimary;
+      prevScope.getDateFormat = function(serviceDate){
+        if(!serviceDate)
+          return;
+        return moment(serviceDate).format('DD/MM/YYYY');
+      }
+
+       prevScope.dismiss = function () {
+        prvProductModal.dismiss('cancel');
+      };
+
+      prevScope.isEngineRepaired = function(value) {
+        if(value == 'true')
+          return "Yes";
+        else
+          return "No";
+      }
+     }
+
+     $scope.timestamp = new Date().getTime();
+      function rotate(idx){
+        var img = $scope.images[idx];
+        var imagePath = $scope.assetDir + "/" + img.src;
+        $http.post("/api/common/rotate",{imgPath:imagePath})
+        .then(function(res){
+          $scope.timestamp = new Date().getTime();
+        })
+      }
+
+      function openCropModal(idx){
+
+          if($scope.images[idx].waterMarked)
+            return;
+          var cropScope = $rootScope.$new();
+          cropScope.imgSrc = $scope.images[idx].src;
+          cropScope.prefix =  $rootScope.uploadImagePrefix + $scope.assetDir+"/";
+          cropScope.assetDir = $scope.assetDir;
+          var cropImageModal = $uibModal.open({
+              templateUrl: "cropImage.html",
+              scope: cropScope,
+              controller:'CropImageCtrl',
               size: 'lg'
           });
 
-          prevScope.deleteImg = $scope.deleteImg
-          prevScope.makePrimary = $scope.makePrimary;
-          prevScope.getDateFormat = function(serviceDate){
-            if(!serviceDate)
-              return;
-            return moment(serviceDate).format('DD/MM/YYYY');
-          }
+          cropImageModal.result.then(function(res){
+            $scope.timestamp = new Date().getTime();
+          })
 
-           prevScope.dismiss = function () {
-            prvProductModal.dismiss('cancel');
-          };
+      };
 
-          prevScope.isEngineRepaired = function(value) {
-            if(value == 'true')
-              return "Yes";
-            else
-              return "No";
-          }
-     }
+      function playVideo(idx){
+          var videoScope = $rootScope.$new();
+          videoScope.productName = $scope.product.name;
+          var videoId = youtube_parser($scope.product.videoLinks[idx].uri);
+          if(!videoId)
+            return;
+          videoScope.videoid = videoId;
+          var playerModal = $uibModal.open({
+              templateUrl: "app/product/youtubeplayer.html",
+              scope: videoScope,
+              size: 'lg'
+          });
+        videoScope.close = function(){
+          playerModal.dismiss('cancel');
+        }
+
+      };
+
+      function getImageArr(){
+        var imgArr = [];
+        $scope.images.forEach(function(item,index,arr){
+          if(item.src)
+            imgArr[imgArr.length] = item;
+        });
+        return imgArr;
+
+      }
+
+      function prepareImgArr(){
+        var numberOfIteration  = 8 - $scope.images.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.images[$scope.images.length] = {};
+        }
+      }
 
      // date picker
       $scope.today = function() {
-          $scope.mfgYear = new Date();
+          $scope.container.mfgYear = new Date();
         };
         if(!$scope.isEdit)
           $scope.today();
 
         $scope.clear = function () {
-          $scope.mfgYear = null;
+          $scope.container.mfgYear = null;
         };
 
         $scope.toggleMin = function() {
@@ -931,7 +1160,7 @@ angular.module('sreizaoApp')
         };
 
         $scope.setDate = function(year, month, day) {
-            $scope.mfgYear = new Date(year, month, day);
+            $scope.container.mfgYear = new Date(year, month, day);
         };
 
         $scope.datepickerOptions = {
@@ -950,80 +1179,17 @@ angular.module('sreizaoApp')
           opened: false
         };
 
-
-        $scope.timestamp = new Date().getTime();
-        $scope.rotate = function(idx){
-          var img = $scope.images[idx];
-          var imagePath = $scope.assetDir + "/" + img.src;
-          $http.post("/api/common/rotate",{imgPath:imagePath})
-          .then(function(res){
-            $scope.timestamp = new Date().getTime();
-          })
-        }
-
-      $scope.openCropModal = function(idx){
-
-          if($scope.images[idx].waterMarked)
-            return;
-          var cropScope = $rootScope.$new();
-          cropScope.imgSrc = $scope.images[idx].src;
-          cropScope.prefix =  $rootScope.uploadImagePrefix + $scope.assetDir+"/";
-          cropScope.assetDir = $scope.assetDir;
-          var cropImageModal = $uibModal.open({
-              templateUrl: "cropImage.html",
-              scope: cropScope,
-              controller:'CropImageCtrl',
-              size: 'lg'
-          });
-
-          cropImageModal.result.then(function(res){
-            $scope.timestamp = new Date().getTime();
-          })
-
-      };
-
-      $scope.playVideo = function(idx){
-          var videoScope = $rootScope.$new();
-          videoScope.productName = $scope.product.name;
-          var videoId = youtube_parser($scope.product.videoLinks[idx].uri);
-          if(!videoId)
-            return;
-          videoScope.videoid = videoId;
-          var playerModal = $uibModal.open({
-              templateUrl: "app/product/youtubeplayer.html",
-              scope: videoScope,
-              size: 'lg'
-          });
-        videoScope.close = function(){
-          playerModal.dismiss('cancel');
-        }
-
-      };
-
       $scope.oneAtATime = true;
       $scope.status = {
         FirstOpen: true,
         FirstDisabled: false
       };
 
-      function getImageArr(){
-          var imgArr = [];
-          $scope.images.forEach(function(item,index,arr){
-            if(item.src)
-              imgArr[imgArr.length] = item;
-          });
-          return imgArr;
+      
+}
 
-        }
-
-        function prepareImgArr(){
-          var numberOfIteration  = 8 - $scope.images.length;
-          for(var i = 0; i < numberOfIteration; i++){
-            $scope.images[$scope.images.length] = {};
-          }
-        }
-}])
-.controller('CropImageCtrl', function ($scope, Auth, $location, $window,$http,$uibModalInstance) {
+//Crop Image Controller
+function CropImageCtrl($scope, Auth, $location, $window,$http,$uibModalInstance) {
      $scope.imageOut='';
       $scope.options={};
       var imgParts =  $scope.imgSrc.split(".");
@@ -1074,7 +1240,7 @@ angular.module('sreizaoApp')
         $uibModalInstance.dismiss();
       }
 
-  });
+  }
 
 
 
