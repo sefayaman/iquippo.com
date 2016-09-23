@@ -1171,7 +1171,7 @@ exports.updatePaymentMaster = function(req, res) {
     if (err) { return handleError(res, err); }
     if(pyms.length == 0) { return res.status(404).send('Not Found'); }
     else if(pyms.length > 1 ) { return res.status(201).send({errorCode:1,message:'Payment Master already exist.'}); }
-    else if(pyms[0]._id != req.params.id) { return res.status(201).send({errorCode:1,errorCode:0,message:'Payment Master already exist.'}); }
+    else if(pyms[0]._id != req.params.id) { return res.status(201).send({errorCode:1,message:'Payment Master already exist.'}); }
     PaymentMaster.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).send({errorCode:0,message:'Payment Master updated successfully.'});

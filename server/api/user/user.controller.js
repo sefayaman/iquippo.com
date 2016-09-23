@@ -76,10 +76,9 @@ exports.validateSignup = function(req, res){
 
 exports.create = function (req, res, next) {
   var newUser = new User(req.body);
-  console.log("username::::" + req.body.name);
- newUser.createdAt = new Date();
- newUser.updatedAt = new Date();
- newUser.save(function(err, user) {
+  newUser.createdAt = new Date();
+  newUser.updatedAt = new Date();
+  newUser.save(function(err, user) {
   if (err) return validationError(res, err);
   res.json(user);
   });
@@ -102,6 +101,7 @@ exports.show = function (req, res, next) {
 exports.getUser = function(req, res) {
   var filter = {};
   filter["deleted"] = false;
+  filter["isManpower"] = false;
   if(req.body.status)
     filter["status"] = true;
 
@@ -119,6 +119,7 @@ exports.getUser = function(req, res) {
     else {
     var typeFilter = {};
     typeFilter['$ne'] = "admin";
+    //typeFilter['$nin'] = ['admin','manpower'];
     filter["role"] = typeFilter;    
     }
   //}

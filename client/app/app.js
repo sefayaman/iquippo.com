@@ -4,6 +4,7 @@ angular.module("account",[]);
 angular.module("classifiedAd",[]);
 angular.module("product",[]);
 angular.module("admin",[]);
+angular.module("manpower",[]);
 //Application module
 angular.module('sreizaoApp',[
   'ngCookies',
@@ -17,7 +18,8 @@ angular.module('sreizaoApp',[
   "account",
   'classifiedAd',
   'product',
-  'admin'
+  'admin',
+  'manpower'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -39,6 +41,7 @@ angular.module('sreizaoApp',[
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
     $rootScope.categoryDir = categoryDir;
+    $rootScope.manpowerDir = manpowerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.classifiedAdDir = classifiedAdDir;
     $rootScope.refresh = true;

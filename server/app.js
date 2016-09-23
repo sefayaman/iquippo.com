@@ -68,6 +68,8 @@ var upload = multer({ storage: storage}).any();
 app.post('/api/uploads',function(req,res){
  var assetDir = req.query.assetDir;
   var resize = req.query.resize;
+  if(assetDir == 'manpower')
+    assetDir = assetDir + "/" + new Date().getTime();
   if(!assetDir)
     assetDir = new Date().getTime();
   var relativePath = config.uploadPath + assetDir +"/";
@@ -218,11 +220,11 @@ function handleError(res, err) {
 // Start server
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
-  //notification.startNotification();
-  //taskRunner.startTaskRunner();
+  notification.startNotification();
+  taskRunner.startTaskRunner();
   //checkExpiryService.start();
- // checkQuickQueryNotificationService.start();
-  //checkSearchMatchingNotificationService.start();
+  checkQuickQueryNotificationService.start();
+  checkSearchMatchingNotificationService.start();
 });
 
 // Expose app

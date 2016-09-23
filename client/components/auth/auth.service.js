@@ -19,12 +19,7 @@ angular.module('sreizaoApp')
       login: function(user, callback) {
         var cb = callback || angular.noop;
         var deferred = $q.defer();
-
-        $http.post('/auth/local', {
-          userId: user.userId,
-          password: user.password
-        }).
-        success(function(data) {
+        $http.post('/auth/local', user).success(function(data) {
           $cookieStore.put('token', data.token);
           currentUser = User.get();
           deferred.resolve(data);

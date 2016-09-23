@@ -226,7 +226,7 @@
                         
                         <!-- form end -->
                 </uib-accordion-group>
-                <uib-accordion-group is-open="status.Secdopen">
+                <uib-accordion-group is-open="status.Secdopen" ng-if="!myAccountVm.userInfo.isManpower">
                   <uib-accordion-heading>
                       Social Media Information
                       <i class="pull-right fa" ng-class="{'fa-minus': status.Secdopen, 'fa-plus': !status.Secdopen}"></i>  
@@ -379,12 +379,108 @@
                         </div>
                         </form>
                       </div>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="status.Fourthopen" ng-if="myAccountVm.userInfo.isManpower">
+                  <uib-accordion-heading>
+                    Manpower Information
+                    <i class="pull-right fa" ng-class="{'fa-minus': status.Fourthopen, 'fa-plus': !status.Fourthopen}"></i>
+                  </uib-accordion-heading>
+                    <div class="text-right"><i class="fa fa-pencil" ng-click="myAccountVm.editOrAddClick('manpower')" ng-if="!myAccountVm.editManpowerInfo"></i></div>
+
+                    <div class="row form-group" ng-if="!myAccountVm.editManpowerInfo">
+                      <div class="col-sm-4 form-group">
+                        <div>
+                          <label>
+                            Nature of work</small>
+                          </label>
+                        </div>
+                        <span ng-if="!myAccountVm.manpowerInfo.work">Add work</span>
+                        <span ng-if="myAccountVm.manpowerInfo.work">{{myAccountVm.manpowerInfo.work}}</span>
+                      </div>
+                      
+                      <div class="col-sm-4 form-group">
+                        <div>
+                          <label> Fees &amp; Charges</label>
+                        </div>
+                        <span ng-if="!myAccountVm.manpowerInfo.fees">Add Fees &amp; Charges</span>
+                         <span ng-if="myAccountVm.manpowerInfo.fees">{{myAccountVm.manpowerInfo.fees}}</span>                      
+                      </div>
+                      <div class="col-sm-4 form-group">
+                        <div>
+                          <label>Available</label>
+                        </div>
+                        <span ng-if="!myAccountVm.manpowerInfo.availableFrom">Add Availability</span>
+                        <span>{{myAccountVm.getDateFormat(myAccountVm.manpowerInfo.availableFrom)}}</span>                  
+                      </div>
+                      
+                     <div class="col-sm-4 form-group">
+                        <div><label>Assets Operated</label></div>
+                        <span ng-if="!myAccountVm.manpowerInfo.assetOperated">Add Operated</span>
+                        <span ng-if="myAccountVm.manpowerInfo.assetOperated">{{myAccountVm.manpowerInfo.assetOperated.join()}}</span>
+                      </div>
+
+                      <div class="col-sm-8 form-group">
+                        <div>
+                          <label>Uplaod Resume</label>
+                        </div>
+                        <span ng-if="!myAccountVm.manpowerInfo.resumeDoc">Add Resume</span>
+                        <a href="{{uploadImagePrefix}}{{myAccountVm.manpowerInfo.docDir}}/{{myAccountVm.manpowerInfo.resumeDoc}}" ng-if="myAccountVm.manpowerInfo.resumeDoc" target="_blank">
+                          <span>{{myAccountVm.manpowerInfo.resumeDoc}}</span>
+                        </a>                    
+                      </div>
+                    </div>
+                    <div class="row form-group" ng-if="myAccountVm.editManpowerInfo">
+                      <form novalidate>
+                        <div class="col-sm-4 form-group">
+                          <div>
+                            <label>
+                               Nature of work
+                            </label>
+                          </div>
+                          <input type="text" placeholder=" Nature of work" ng-model="myAccountVm.manpowerInfo.work" value="{{myAccountVm.manpowerInfo.work}}">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                          <div>
+                            <label> Fees &amp; Charges</label>
+                          </div>
+                          <input type="text" placeholder="Fees &amp; Charges" ng-model="myAccountVm.manpowerInfo.fees" value="{{myAccountVm.manpowerInfo.fees}}">                      
+                        </div>
+                        <div class="col-sm-4 form-group">
+                          <div>
+                            <label>Available</label>
+                          </div>
+                          <div class="input-group">
+                            <input type="text" ng-model="myAccountVm.manpowerInfo.availableFrom" uib-datepicker-popup="{{format}}" name="availableFrom" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                            <!-- <span class="input-group-addon">
+                              <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
+                            </span> -->
+                          </div>                
+                        </div>                        
+                        <div class="col-sm-4 form-group">
+                          <div><label>Assets Operated</label></div>
+                          <select name="selectedAssets" id="selectedAssets" ng-options="assets as assets for assets in assetsList" ng-model="myAccountVm.manpowerInfo.assetOperated" multiple>
+                          </select>
+                        </div>
+                        <div class="col-sm-8 form-group">
+                          <div>
+                            <label>Upload Resume</label>
+                          </div>
+                          <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  class="ng-scope">
+                          <span>{{manpowerVm.manpower.resumeDoc}}</span>                     
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-6 form-group">
+                          <button class="btn btn-sm btn-primary" ng-click="myAccountVm.updateManpowerUser()">Save</button>
+                          <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('manpower')">Cancel</button>
+                        </div>
+                        </form>
+                      </div>
                 </uib-accordion-group>      
               </uib-accordion>
             </div>
           </div>
           <div class="form-group"></div>
-          <div class="my-product">
+          <div class="my-product" ng-if="!myAccountVm.userInfo.isManpower">
             <h4>Transaction History</h4>
             <legend></legend>
             <div class="row">

@@ -361,8 +361,8 @@ angular.module('sreizaoApp')
   $scope.popup2 = {
     opened: false
   };
-  }])
-  .controller('ManpowerCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
+  }]);
+  /*.controller('ManpowerCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
     //NJ Start: set manpowerStartTime
     $scope.manpowerStartTime = new Date();
     //End
@@ -506,4 +506,4 @@ angular.module('sreizaoApp')
   $scope.popup2 = {
     opened: false
   };
-  }]);
+  }]);*/

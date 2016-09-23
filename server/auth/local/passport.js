@@ -4,9 +4,10 @@ var LocalStrategy = require('passport-local').Strategy;
 exports.setup = function (User, config) {
   passport.use(new LocalStrategy({
       usernameField: 'userId',
-      passwordField: 'password' // this is the virtual field on the model
+      passwordField: 'password', // this is the virtual field on the model
+      passReqToCallback: true
     },
-    function(userId, password, done) {
+    function(req, userId, password, done) {
       //email: email.toLowerCase(),
       var dataToSend ={};
       
@@ -15,8 +16,12 @@ exports.setup = function (User, config) {
       } else {
         dataToSend['email'] = userId.toLowerCase();
       }
+      if(req.body.isManpower)
+        dataToSend['isManpower'] = true;
+      else
+        dataToSend['isManpower'] = false;
       dataToSend['deleted'] = false;
-      console.log("############",dataToSend);
+      dataToSend['status'] = true;
       User.findOne(dataToSend, function(err, user) {
         if (err) return done(err);
 

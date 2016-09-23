@@ -157,6 +157,11 @@ header{background:#fff;}
 .nav-tabs > li:last-child a{border-right:0!important;}
 .adon-color .input-group-addon{background: #fff;}
 
+.manpower-register .nav-tabs > li{width: 50% !important; float: left;}
+.manpower-register .nav-tabs > li, .manpower-register .nav-tabs > li.active, .manpower-register .nav-tabs > li a{background: #efefef !important;}
+.manpower-register .nav-tabs > li.active a,.manpower-register .nav-tabs > li:hover a,.manpower-register .nav-tabs > li.active:hover a,.manpower-register .nav-tabs > li a:focus,.manpower-register .nav-tabs > li.active a:focus{background: #ccc !important; color: #111 !important;}
+.manpower-register .tab-content{padding: 0;}
+
 /*testimonials*/
 .testimonial{background-image:url(/assets/images/Banner.jpg);background-size:cover;}
 .testimonial .container-fluid{background:rgba(255,67,66,0.9);min-height:210px;margin-top:30px;padding-top:25px;}
@@ -811,8 +816,9 @@ table.table{width:100% !important;}
 div#jivo_close_button{position: absolute; right: -20px;}
 /*.myProfileDetail input{padding-left: 10px;}
 .myProfileDetail .input-group-addon{padding: 5px; width: 20px;}*/
-.profilePic-button img{width: 150px; height: 150px; margin-right: 30px; }
-.profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 31px;top: 195px; overflow: hidden; width: 150px;}
+.profilePic-button{width: 150px; margin:0 auto 10px; position: relative;}
+.profilePic-button img{width: 150px; height: 150px;}
+.profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 0;top: 120px; overflow: hidden; width: 150px;}
 .profilePic-button .fileinput-button:hover{background: rgba(255,255,255,1);}
 .has-error .basic-detail{border:1px solid #f00;}
 .sold-tag,.rent-tag{display: block;position: absolute;color:#fff;top:0;bottom: 0;border-right:50px solid transparent;border-top:50px solid #E3000F;}

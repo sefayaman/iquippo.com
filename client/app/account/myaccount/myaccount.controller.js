@@ -4,28 +4,39 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, InvitationSvc) {
+function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, ManpowerSvc, InvitationSvc) {
     var vm = this;
     vm.currentTab = "basic";
     vm.userInfo = {};
+    $scope.assetsList = [];
+    vm.manpowerInfo = {};
     vm.editOrAddClick = editOrAddClick;
     vm.cancelEditOrAdd = cancelEditOrAdd;
     vm.save=save;
     $scope.updateAvatar = updateAvatar;
+    $scope.uploadDoc = uploadDoc;
+    vm.updateManpowerUser = updateManpowerUser;
 
     vm.editBasicInfo = false;
     vm.editPersonalInfo = false;
     vm.editProfessionalInfo = false;
     vm.editSocialInfo = false;
-
+    vm.editManpowerInfo = false;
+    vm.getDateFormat = getDateFormat;
     var path = '/api/products';
-
+    $scope.docDir = "";
   
     function inti(){
-        LocationSvc.getAllLocation()
-            .then(function(result){
-            $scope.locationList = result;
-        })
+      LocationSvc.getAllLocation()
+          .then(function(result){
+          $scope.locationList = result;
+      })
+      var filter = {};
+      filter["status"] = true;
+      ManpowerSvc.getProductOnFilter(filter)
+       .then(function(result){
+          $scope.assetsList = result;
+       });
         var dataToSend = {};
 
         Auth.isLoggedInAsync(function(loggedIn){
@@ -36,6 +47,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
               .then(function(count){
                 vm.count = count;
               });
+
             cloneUser();
           if(Auth.getCurrentUser().profileStatus == 'incomplete')
             vm.editBasicInfo = true;
@@ -46,7 +58,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         
     }
     inti();
-
+   
     function save(form,isBasic){
       if(form && form.$invalid){
         $scope.submitted = true;
@@ -80,6 +92,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         vm.editPersonalInfo = false;
         vm.editProfessionalInfo = false;
         vm.editSocialInfo = false;
+        vm.editManpowerInfo = false;
         cloneUser();
         switch(param){
           case 'basic':
@@ -93,6 +106,9 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
           break;
           case 'social':
               vm.editSocialInfo = true;
+          break;
+          case 'manpower':
+              vm.editManpowerInfo = true;
           break;
         }
     }
@@ -111,6 +127,9 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
           case 'social':
               vm.editSocialInfo = false;
           break;
+          case 'manpower':
+              vm.editManpowerInfo = false;
+          break;
         }
         cloneUser();
 
@@ -124,6 +143,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         vm.editPersonalInfo = false;
         vm.editProfessionalInfo = false;
         vm.editSocialInfo = false;
+        vm.editManpowerInfo = false;
         if(!noAlert)
           Modal.alert("User Updated.",true);
           InvitationSvc.getCouponOnId(vm.userInfo._id)
@@ -146,6 +166,23 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       });
     }
 
+    function updateManpowerUser(){
+      ManpowerSvc.updateManpower(vm.manpowerInfo).then(function(result){
+        Modal.alert("User Updated.",true);
+        vm.editBasicInfo = false;
+        vm.editPersonalInfo = false;
+        vm.editProfessionalInfo = false;
+        vm.editSocialInfo = false;
+        vm.editManpowerInfo = false;
+      });
+    }
+
+    function getDateFormat(date) {
+      if(!date)
+        return;
+      return moment(date).format('DD/MM/YYYY');
+    }
+
     function updateAvatar(files){
       if(files.length == 0)
         return;
@@ -154,12 +191,35 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
           vm.userInfo.imgsrc = result.data.filename;
           updateUser(true);
         });
-        
+    }
+
+    function uploadDoc(files){
+      if(files.length == 0)
+        return;
+      if(vm.manpowerInfo.docDir)
+        $scope.docDir = vm.manpowerInfo.docDir;
+      else
+        $scope.docDir = manpowerDir;
+      uploadSvc.upload(files[0], $scope.docDir).then(function(result){
+      if(files[0].name.indexOf('.docx') == -1){
+        Modal.alert('Please upload a valid file');
+        return;
+      }
+      vm.manpowerInfo.docDir = result.data.assetDir;
+      vm.manpowerInfo.resumeDoc = result.data.filename;
+      });
     }
 
     function cloneUser(){
        if(Auth.getCurrentUser()._id){
         angular.copy(Auth.getCurrentUser(), vm.userInfo);
+
+      ManpowerSvc.getManpowerDataOnUserId(Auth.getCurrentUser()._id).then(function(data){
+        angular.copy(data, vm.manpowerInfo);
+        if(vm.manpowerInfo.availableFrom)
+          vm.manpowerInfo.availableFrom = moment(vm.manpowerInfo.availableFrom).toDate();
+      });
+
       if(!vm.userInfo.personalInfo){
           vm.userInfo.personalInfo = {};
           
@@ -176,10 +236,49 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         vm.userInfo.professionalInfo = {};
       if(!vm.userInfo.socialInfo)
         vm.userInfo.socialInfo = {};
+      if(!vm.manpowerInfo)
+        vm.manpowerInfo = {};
       
       }
     }
+  //date picker
+  $scope.today = function() {
+    $scope.availableFrom = new Date();
+  };
+  $scope.today();
 
+  $scope.clear = function() {
+    $scope.availableFrom = null;
+  };
+
+  $scope.toggleMin = function() {
+    $scope.minDate = $scope.minDate ? null : new Date();
+  };
+
+  $scope.toggleMin();
+  //$scope.maxDate = new Date(2020, 5, 22);
+  $scope.minDate = new Date();
+
+  //function open1() {
+  $scope.open1 = function() {
+    $scope.popup1.opened = true;
+  };
+
+   $scope.setDate = function(year, month, day) {
+    $scope.availableFrom = new Date(year, month, day);
+  };
+
+  $scope.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1
+  };
+
+  $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+  $scope.format = $scope.formats[0];
+
+  $scope.popup1 = {
+    opened: false
+  };
   }
 
 })()

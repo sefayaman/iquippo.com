@@ -137,10 +137,10 @@ angular.module('sreizaoApp')
       
       Auth.validateSignup(dataToSend).then(function(data){
         if(data.errorCode == 1){
-           Modal.alert("Mobile number already in use. Please use another email address",true);
+           Modal.alert("Mobile number already in use. Please use another mobile number",true);
            return;
         } else if(data.errorCode == 2){
-          Modal.alert("Email address already in use. Please use another mobile number",true);
+          Modal.alert("Email address already in use. Please use another email address",true);
            return;
         } else {
           /*if(!$scope.newUser.imgsrc || angular.isUndefined($scope.newUser.imgsrc)){

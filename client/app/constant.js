@@ -58,6 +58,7 @@ var priceRange = [
 
 var importDir = "import";
 var categoryDir = "category";
+var manpowerDir = "manpower";
 var avatarDir = "avatar";
 var classifiedAdDir = "classifiedad";
 var templateDir = "templates";

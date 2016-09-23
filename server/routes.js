@@ -30,6 +30,7 @@ module.exports = function(app) {
   app.use('/api/services', require('./api/services'));
   app.use('/api/invitation', require('./api/invitation'));
   app.use('/api/appnotification', require('./api/appnotification'));
+  app.use('/api/manpower', require('./api/manpower'));
   app.use('/api/valuation', require('./api/valuation'));
   app.use('/api/payment', require('./api/payment'));
   app.use('/api/auction', require('./api/auction'));

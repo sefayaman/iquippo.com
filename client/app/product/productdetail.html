@@ -328,7 +328,7 @@
                     <div class="row">
                       <div class="col-xs-6">
                         <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
-                          <input type="email" name="email" ng-model="buycontact.email" ng-value="buycontact.email" class="form-control" placeholder="Email Address">
+                          <input type="email" name="email" ng-model="buycontact.email" ng-value="buycontact.email" class="form-control" placeholder="Email Address" ng-required="buycontact.contact == 'email'">
                           <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
                           Please enter a valid email.
                           </p>

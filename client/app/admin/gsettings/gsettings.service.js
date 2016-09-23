@@ -13,6 +13,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.clearCache = clearCache;
       lServices.saveLocation = saveLocation;
       lServices.getLocationOnFilter = getLocationOnFilter;
+      lServices.getStateByCity = getStateByCity;
 
       lServices.getAllState = getAllState;
       lServices.deleteState = deleteState;
@@ -36,6 +37,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
        
           return deferred.promise; 
       };
+
+      function getStateByCity(city){
+      var state = "";
+      for(var i=0;i < locationCache.length; i++){
+        if(locationCache[i].name == city){
+          state = locationCache[i].state.name;
+          break;
+        }
+      }
+      return state;
+      }
 
       function getAllState(){
         var deferred = $q.defer();

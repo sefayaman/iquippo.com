@@ -9,13 +9,13 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
 
     vm.user = {};
     vm.otpCode;
-    vm.user.activationOTP = "email";
+    vm.user.activationOTP = "mobile";
     vm.register = register;
     vm.verify = verify;
     vm.openLogin = openLogin;
     vm.closeDialog = closeDialog;
     vm.loginOauth = loginOauth;
-
+    vm.sendOTP = sendOTP;
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};
     $scope.isRegister = true;

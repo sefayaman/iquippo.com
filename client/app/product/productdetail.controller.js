@@ -7,7 +7,7 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
   $scope.oneAtATime = true;
-  $scope.buycontact.contact = "email";
+  $scope.buycontact.contact = "mobile";
   $scope.zoomLvl = 3;
   $scope.calRent = {};
   $scope.calRent.rateType = "Hours";

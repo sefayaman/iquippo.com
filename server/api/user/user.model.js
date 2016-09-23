@@ -27,7 +27,7 @@ var UserSchema = new Schema({
   company: String,
   imgsrc: String,
   city:String,
-  location: String,
+  state: String,
   status:{
     type: Boolean,
     default: true
@@ -47,6 +47,10 @@ var UserSchema = new Schema({
   deleted:{
     type: Boolean,
     default: false
+  },
+  isManpower:{
+    type:Boolean,
+    default:false
   },
   createdAt: Date,
   updatedAt: Date, 
@@ -93,7 +97,8 @@ UserSchema
       'country' : this.country,
       'company' : this.company,
       'location':this.location,
-      'imgsrc' : this.imgsrc
+      'imgsrc' : this.imgsrc,
+      'isManpower' : this.isManpower
     };
   });
 
