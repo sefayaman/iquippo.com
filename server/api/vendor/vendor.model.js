@@ -4,19 +4,20 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var VendorSchema = new Schema({
-  fname: String,
-  mname: String,
-  lname: String,
-  email: String,
-  phone: String,
-  mobile: String,
+  user:{},
   entityName: String,
-  country: String,
   services: [String],
-  imgsrc: String,
   url: String,
-  createdAt: Date,
-  updatedAt: Date
+  status:{
+    type: Boolean,
+    default: true
+  },
+  deleted:{
+    type: Boolean,
+    default: false
+  },
+  createdAt: {type:Date,default:Date.now},
+  updatedAt: {type:Date,default:Date.now}
 });
 
 module.exports = mongoose.model('Vendor', VendorSchema);

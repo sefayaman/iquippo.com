@@ -52,6 +52,10 @@ var UserSchema = new Schema({
     type:Boolean,
     default:false
   },
+  isPartner:{
+    type:Boolean,
+    default:false
+  },
   createdAt: Date,
   updatedAt: Date, 
   salt: String,
@@ -98,7 +102,8 @@ UserSchema
       'company' : this.company,
       'location':this.location,
       'imgsrc' : this.imgsrc,
-      'isManpower' : this.isManpower
+      'isManpower' : this.isManpower,
+      'isPartner' : this.isPartner
     };
   });
 

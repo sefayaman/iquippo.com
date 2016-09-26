@@ -7,6 +7,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
  	  var shippingVendorList = [];
 	  var valuationVendorList = [];
 	  var certifiedByIQuippoVendorList = [];
+    var financeVendorList =[];
       var vendorService = {};
       var path = '/api/vendor';
       
@@ -15,8 +16,10 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       vendorService.deleteVendor = deleteVendor;
       vendorService.updateVendor = updateVendor;
       vendorService.clearCache = clearCache;
-      vendorService.saveVendor = saveVendor;
+      vendorService.createUser = createUser;
+      vendorService.createPartner = createPartner;
       vendorService.getVendorsOnCode = getVendorsOnCode;
+      vendorService.validate = validate;
 
       function getAllVendors(){
         var deferred = $q.defer();
@@ -36,13 +39,35 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           return deferred.promise; 
       };
 
-      function saveVendor(data){
+      function validate(data){
+          return $http.post(path + '/validate', data)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err
+          });
+      }
+
+      function createUser(data){
+        return $http.post('/api/users/register', data)
+        .then(function(res){
+          vendorCache = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+      };
+
+      function createPartner(data){
       	return $http.post(path,data)
       	.then(function(res){
-           vendorCache = [];
-    		 	 shippingVendorList = [];
-    			 valuationVendorList = [];
-			 certifiedByIQuippoVendorList = [];
+          vendorCache = [];
+    		 	shippingVendorList = [];
+    			valuationVendorList = [];
+			    certifiedByIQuippoVendorList = [];
+          financeVendorList = [];
       		return res.data;
       	})
       	.catch(function(err){
@@ -57,6 +82,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           	 shippingVendorList = [];
       			 valuationVendorList = [];
       			 certifiedByIQuippoVendorList = [];
+             financeVendorList = [];
             return res.data.vendor + 1;
           })
           .catch(function(err){
@@ -71,6 +97,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           	 shippingVendorList = [];
       			 valuationVendorList = [];
       			 certifiedByIQuippoVendorList = [];
+             financeVendorList = [];
           	return res.data;
         })
         .catch(function(err){
@@ -87,7 +114,9 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             var vd = {};
             vd._id =  data[i]._id;
             vd.name =  data[i].entityName;
-            vd.imgsrc = data[i].imgsrc;
+            vd.mobile =  data[i].user.mobile;
+            if(data[i].user.email)
+              vd.email =  data[i].user.email;
           if(data[i].services[j] == 'Shipping'){
             	shippingVendorList.push(vd);
           }
@@ -96,6 +125,9 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           }
           else if(data[i].services[j] == 'CertifiedByIQuippo'){
             certifiedByIQuippoVendorList.push(vd);
+          }
+          else if(data[i].services[j] == 'Finance'){
+            financeVendorList.push(vd);
           }
         }
       }
@@ -106,6 +138,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
  	 shippingVendorList = [];
 	 valuationVendorList = [];
 	 certifiedByIQuippoVendorList = [];
+   financeVendorList = [];
   }
 
   function getShippingVendors(){
@@ -115,7 +148,10 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
   	return valuationVendorList;
   }
   function getCertifiedByIQuippoVendors(){
-  	return certifiedByIQuippoVendorList
+  	return certifiedByIQuippoVendorList;
+  }
+  function getFinanceVendor(){
+    return financeVendorList;
   }
   function getVandorCache(){
     return vendorCache;
@@ -127,8 +163,12 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       break;
       case 'Shipping':
         return shippingVendorList;
+      break;
       case 'CertifiedByIQuippo':
-        return certifiedByIQuippoVendorList
+        return certifiedByIQuippoVendorList;
+      break;
+      case 'Finance':
+        return financeVendorList;
       break
 
     }

@@ -134,13 +134,9 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       var ret = false;
     
       if(!$scope.selectedAssetsArr){
-        //Modal.alert("Please select assets operated.",true);
         form.selectedAssets.$invalid = true;
-        //ret = true;
-        //return;
       } else {
         form.selectedAssets.$invalid = false;
-        //ret = false;
       }
       if(!vm.manpower.resumeDoc){
         Modal.alert("Please upload resume.",true);
@@ -203,6 +199,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         //End
         getAllUsers();
         vm.manpower = {};
+        $scope.submitted = false;
         $scope.selectedAssetsArr = [];
         });
       });
@@ -336,4 +333,4 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
   }
 
 
-})()
+})();

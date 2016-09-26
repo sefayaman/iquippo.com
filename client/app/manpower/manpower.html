@@ -117,9 +117,13 @@
                       </div>
                     </div>
                     <div class="col-xs-6">
-                      <div class="form-group" ng-class="{'has-error': form.password && submitted }">                          
-                        <input type="password" name="password" class="form-control" placeholder="Password*" ng-model="manpowerVm.manpower.password">
+                      <div class="form-group" ng-class="{'has-error': form.password && submitted }">
+                        <input type="password" name="password" class="form-control" placeholder="Password*" ng-model="manpowerVm.manpower.password" ng-minlength="4">
                       </div>
+                      <p class="help-block"
+                       ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
+                      Password must be at least 4 characters.
+                    </p>
                     </div>
                   </div>      
                   <div class="row">
@@ -143,9 +147,9 @@
 
                   <div class="row">
                   <div class="col-xs-6 form-group" ng-class="{'has-error': form.location && submitted }">
-                        <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)">
-                          <option value="">Current Location</option>
-                            <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                        <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)" required>
+                          <option value="" disabled>Current Location</option>
+                          <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                         </select>
                         <i class="caret"></i>
                     </div>

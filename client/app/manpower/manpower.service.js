@@ -10,11 +10,11 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
     manpowerService.getAllUser = getAllUser;
     manpowerService.getManpowerDataOnUserId = getManpowerDataOnUserId;
     manpowerService.clearCache = clearCache;
-    manpowerService.validateSignup = validateSignup;
+    //manpowerService.validateSignup = validateSignup;
     manpowerService.getProductOnFilter = getProductOnFilter;
     manpowerService.getManpowerUserOnFilter = getManpowerUserOnFilter;
     manpowerService.createUser = createUser;
-    manpowerService.updateUser = updateUser;
+    //manpowerService.updateUser = updateUser;
     manpowerService.createManpower = createManpower;
     manpowerService.updateManpower = updateManpower;
     
@@ -91,7 +91,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
       })
     };
 
-    function updateUser(user){
+    /*function updateUser(user){
       return $http.put("/api/users/update/" + user._id, user)
       .then(function(res){
         return res.data;
@@ -99,7 +99,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
       .catch(function(err){
         throw err;
       });
-    };
+    };*/
 
     function updateManpower(user){
       return $http.put(path + "/update/" + user._id, user)
@@ -111,7 +111,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
       });
     };
 
-    function validateSignup(data){
+    /*function validateSignup(data){
           return $http.post(path + '/validatesignup', data)
           .then(function(res){
             return res.data;
@@ -119,7 +119,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
           .catch(function(err){
             throw err
           });
-      }
+      }*/
 
       /*function sortVendors(data){
 

@@ -11,7 +11,7 @@ angular.module('sreizaoApp')
     };
 
     $scope.redirectToProduct = function(){
-      if($rootScope.getCurrentUser()._id && !$rootScope.getCurrentUser().isManpower) 
+      if($rootScope.getCurrentUser()._id) 
           $state.go('product');
         else
           Modal.alert("Please Login/Register for uploading the products!", true);

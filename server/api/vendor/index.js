@@ -9,6 +9,7 @@ router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
+router.post('/validate', controller.validate);
 //router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 

@@ -1,13 +1,14 @@
 (function(){
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
-function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, cartSvc) {
+function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, cartSvc) {
   var vm = this;
   $scope.currentProduct = {};
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "mobile";
+  $scope.buycontact.interestedIn = "buyORrent";
   $scope.zoomLvl = 3;
   $scope.calRent = {};
   $scope.calRent.rateType = "Hours";
@@ -126,6 +127,12 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
 
       });
     }
+
+    vendorSvc.getAllVendors()
+    .then(function(){
+      $scope.valAgencies = vendorSvc.getVendorsOnCode('Finance');
+      console.log($scope.valAgencies);
+    });
   }
 
   //init();
@@ -196,6 +203,9 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     dataToSend['email'] = buycontact.email;
     dataToSend['contact'] = buycontact.contact;
     dataToSend['message'] = buycontact.message;
+    dataToSend['interestedIn'] = buycontact.interestedIn;
+    if(buycontact.interestedIn == "finance")
+      dataToSend['financeInfo'] = buycontact.financeInfo;
 
     $http.post('/api/buyer', dataToSend)
     .success(function(result) {
@@ -205,6 +215,7 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       //End
       $scope.buycontact = {};
       $scope.buycontact.contact = "email";
+      $scope.buycontact.interestedIn = "buyORrent";
       $scope.form.submitted = false;
       var data = {};
       data['to'] = supportMail;

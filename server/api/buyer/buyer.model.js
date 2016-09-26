@@ -17,6 +17,8 @@ var BuyerSchema = new Schema({
     type: String,
     default: 'email'
   },
+  interestedIn: String,
+  financeInfo: {},
   message: String,
   createdAt: Date,
   updatedAt: Date

@@ -178,7 +178,7 @@ angular.module('sreizaoApp')
       .state('partnermanagement', {
         url: '/partnermanagement',
         templateUrl: 'app/admin/partnermanagement/partnermanagement.html',
-        controller: 'PartnerManagementCtrl',
+        controller: 'PartnerManagementCtrl as partnerVM',
         authenticate:true,
         layout:'admin',
         restrict:true

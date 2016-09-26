@@ -187,7 +187,7 @@ angular.module('sreizaoApp')
         return currentUser.role === 'channelpartner';
       },
       isPartner: function() {
-        return currentUser.role === 'partner';
+        return currentUser.isPartner;
       },
       isCustomer: function() { 
         return currentUser.role === 'customer';

@@ -1,121 +1,210 @@
+(function(){
 'use strict';
+angular.module('sreizaoApp').controller('PartnerManagementCtrl', PartnerManagementCtrl);
 
-angular.module('sreizaoApp')
-  .controller('PartnerManagementCtrl', ['$scope', 'DTOptionsBuilder', '$rootScope', '$http', 'Auth','User', 'Modal', 'uploadSvc', 'notificationSvc', 'vendorSvc',
-   function ($scope, DTOptionsBuilder, $rootScope, $http, Auth, User, Modal, uploadSvc, notificationSvc, vendorSvc) {
-   	$scope.vendorReg ={};
-   	$scope.errors = {};
-    $scope.services = [];
-    $scope.isEdit = false;
-    $scope.editImage = false;
-    $rootScope.isSuccess = false;
-    $rootScope.isError = false;
-    $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
-	  
-    function loadVendors(){
-      vendorSvc.getAllVendors()
-      .then(function(result){
-        $scope.vendorList = result;
-      })  
-    }
+//controller function
+function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, notificationSvc, vendorSvc, LocationSvc) {
+  var vm = this;
+	vm.vendorReg ={};
+  vm.existingUser ={};
+ 	$scope.errors = {};
+  $scope.services = [];
+  vm.vendorReg.user = {};
+  $scope.isEdit = false;
+  $rootScope.isSuccess = false;
+  $rootScope.isError = false;
+  vm.existFlag = false;
+  vm.register = register;
+  vm.verify = verify;
+  vm.onLocationChange = onLocationChange;
+  vm.getServiceString = getServiceString;
+  vm.deleteVendor = deleteVendor;
+  vm.editVendorClick = editVendorClick;
+  $scope.updateAvatar = updateAvatar;
+
+  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
+  
+  function init(){
+    LocationSvc.getAllLocation()
+    .then(function(result){
+      $scope.locationList = result;
+    });
+
     loadVendors();
-    $scope.register = function(form){
-    var ret = false;
-    if($scope.form.$invalid || ret){
-        $scope.form.submitted = true;
+  }
+
+  function loadVendors(){
+    vendorSvc.getAllVendors()
+    .then(function(result){
+      $scope.vendorList = result;
+    })  
+  }
+
+  init();
+
+  function onLocationChange(city){
+    vm.vendorReg.state = LocationSvc.getStateByCity(city);
+  }
+
+  function verify(){
+    var dataToSend = {};
+    if(vm.vendorReg.user.email) 
+      dataToSend['email'] = vm.vendorReg.user.email;
+    if(vm.vendorReg.user.mobile) 
+      dataToSend['mobile'] = vm.vendorReg.user.mobile;
+
+    vendorSvc.validate(dataToSend).then(function(data){
+      if(data.errorCode == 1){
+         setPartnerDate(data.user);
+         return;
+      }else if(data.errorCode == 2){
+        setPartnerDate(data.user);
         return;
       }
-     if(!$scope.vendorReg.imgsrc){
-        Modal.alert("Please upload the partner logo image.",true);
-        return;
-      }
+    });
+  }
 
-      saveVendor();
-};
+  function setPartnerDate(user){
+    vm.existingUser = user;
+    if(user) {
+      //vm.vendorReg.user = {};
+      vm.vendorReg.user.userId = user._id;
+      vm.vendorReg.user.fname = user.fname;
+      if(user.mname)
+        vm.vendorReg.user.mname = user.mname;
+      vm.vendorReg.user.lname = user.lname;
+      if(user.email)
+        vm.vendorReg.user.email = user.email;
+      vm.vendorReg.user.mobile = user.mobile;
+      if(user.phone)
+        vm.vendorReg.user.phone = user.phone;
+      if(user.city)
+        vm.vendorReg.user.city = user.city;
+      if(user.imgsrc)
+        vm.vendorReg.user.imgsrc = user.imgsrc; 
+      vm.existFlag = true;
+    }
+    else
+      vm.existFlag = false;
+  }
 
-  function saveVendor(){
+  function register(form){
+    if(!vm.vendorReg.user.imgsrc){
+      Modal.alert("Please upload the partner logo image.",true);
+      return;
+    }
+    if(vm.existFlag && !vm.vendorReg.user.password)
+      form.password.$invalid = false;
+    if(form.$invalid){
+      $scope.submitted = true;
+      return;
+    }
+
     $scope.services =[];
-      if($scope.Shipping)
-        $scope.services.push($scope.Shipping);
-      if($scope.Valuation)
-        $scope.services.push($scope.Valuation);
-      if($scope.CertifiedByIQuippo)
-        $scope.services.push($scope.CertifiedByIQuippo);
-      if($scope.ManPower)
-        $scope.services.push($scope.ManPower);
-      
-      $scope.vendorReg.services = $scope.services;
+    if($scope.Shipping)
+      $scope.services.push($scope.Shipping);
+    if($scope.Valuation)
+      $scope.services.push($scope.Valuation);
+    if($scope.CertifiedByIQuippo)
+      $scope.services.push($scope.CertifiedByIQuippo);
+    if($scope.ManPower)
+      $scope.services.push($scope.ManPower);
+    if($scope.Finance)
+      $scope.services.push($scope.Finance);
+    
+    vm.vendorReg.services = $scope.services;
+    setUserData(vm.vendorReg);
+    if(!$scope.isEdit) {
+      savePartner();
+    } else {
+      updateVendor(vm.vendorReg);
+    }
+  }
 
-      if(!$scope.isEdit) {
-      if(!$scope[$scope.imgsrc])
-        return;
-      uploadSvc.upload($scope[$scope.imgsrc],avatarDir).then(function(result){
-        $scope.vendorReg.imgsrc = result.data.filename;
-        vendorSvc.saveVendor($scope.vendorReg)
-        .then(function(result){
-          if(result && result.errorCode == 1){
-          Modal.alert(result.message, true);
-        } else {
-          $scope.successMessage = "Partner added successfully";
-          $scope.autoSuccessMessage(20);
-          $scope.editImage = false;
-          var data = {};
-          data['to'] = $scope.vendorReg.email;
-          data['subject'] = 'Partner Registration';
-          $scope.vendorReg.serverPath = serverPath;
-          notificationSvc.sendNotification('vendorRegEmail', data, $scope.vendorReg,'email');
-          loadVendors();
-          $scope.vendorReg = {};
-          $scope.Shipping = "";
-          $scope.Valuation = "";
-          $scope[$scope.imgsrc] = null;
-          $scope.CertifiedByIQuippo = "";
-          $scope.ManPower = "";
-          } 
-        })
-        .catch(function(res){
-          Modal.alert(res,true);
-        })
-       /* $http.post('/api/vendor',$scope.vendorReg).success(function(result) {
-        if(result && result.errorCode == 1){
-          Modal.alert(result.message, true);
-        } else {
-          $scope.successMessage = "Partner added successfully";
-          $scope.autoSuccessMessage(20);
-          $scope.editImage = false;
-          var data = {};
-          data['to'] = $scope.vendorReg.email;
-          data['subject'] = 'Partner Registration';
-          $scope.vendorReg.serverPath = serverPath;
-          notificationSvc.sendNotification('vendorRegEmail', data, $scope.vendorReg,'email');
-          loadVendors();
-          $scope.vendorReg = {};
-          $scope.Shipping = "";
-          $scope.Valuation = "";
-          $scope[$scope.imgsrc] = null;
-          $scope.CertifiedByIQuippo = "";
-          } 
-        }).error(function(res){
-            Modal.alert(res,true);
-        });*/
+  function updateAvatar(files){
+    if(files.length == 0)
+      return;
+    uploadSvc.upload(files[0], avatarDir).then(function(result){
+      vm.vendorReg.user.imgsrc = result.data.filename;
+    });
+  }
+
+  function savePartner(){
+    vm.existingUser.isPartner = true;
+    //setUserData(vm.vendorReg);
+    if(vm.existFlag) {
+      userSvc.updateUser(vm.existingUser).then(function(result){
+        createPartner(vm.vendorReg);
       });
     } else {
-      if($scope.editImage) {
-      if(!$scope[$scope.imgsrc])
-        return;
-        uploadSvc.upload($scope[$scope.imgsrc],avatarDir).then(function(result){
-          $scope[$scope.imgsrc] = null;
-          $scope.vendorReg.imgsrc = result.data.filename;
-          updateVendor($scope.vendorReg);
-        });
-      } else {
-        updateVendor($scope.vendorReg);
-      }
-      
+      vendorSvc.createUser(vm.existingUser).then(function(result) {
+        if(result && result._id) {
+          vm.vendorReg.user.userId = result._id;
+        }
+        createPartner(vm.vendorReg);
+      });
     }
-}
+    
+  }
 
-  $scope.getServiceString = function(services){
+  function setUserData(userData){
+    vm.existingUser.fname = userData.user.fname;
+    if(userData.user.mname)
+      vm.existingUser.mname = userData.user.mname;
+    vm.existingUser.lname = userData.user.lname;
+    if(userData.user.email)
+      vm.existingUser.email = userData.user.email;
+    vm.existingUser.mobile = userData.user.mobile;
+    if(userData.user.phone)
+      vm.existingUser.phone = userData.user.phone;
+    vm.existingUser.city = userData.user.city;
+    vm.existingUser.state = userData.state;
+    vm.existingUser.imgsrc = userData.user.imgsrc;
+    if(userData.user.password)
+      vm.existingUser.password = userData.user.password;
+  }
+
+  function createPartner(data){
+    vendorSvc.createPartner(vm.vendorReg)
+      .then(function(result){
+        if(result && result.errorCode == 1){
+        Modal.alert(result.message, true);
+      } else {
+          $scope.successMessage = "Partner added successfully";
+          $scope.autoSuccessMessage(20);
+          var data = {};
+          if(vm.vendorReg.mobile)
+            data['to'] = vm.vendorReg.mobile;
+          data['subject'] = 'Partner Registration: Success';
+          var dataToSend = {};
+          dataToSend['fname'] = vm.vendorReg.fname; 
+          dataToSend['lname'] = vm.vendorReg.lname;
+          if(vm.vendorReg.mobile)
+            dataToSend['userId'] = vm.vendorReg.mobile;  
+          dataToSend['password'] = vm.vendorReg.password;
+          dataToSend['serverPath'] = serverPath;
+          notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend,'sms');
+          if(vm.vendorReg.email) {
+            data['to'] = vm.vendorReg.email;
+            notificationSvc.sendNotification('vendorRegEmail', data, dataToSend,'email');
+          }
+          loadVendors();
+          vm.vendorReg = {};
+          vm.existingUser = {};
+          $scope.Shipping = "";
+          $scope.Valuation = "";
+          $scope.Finance = "";
+          $scope.CertifiedByIQuippo = "";
+          $scope.ManPower = "";
+          vm.existFlag = false;
+          $scope.submitted = false;
+        }  
+    })
+    .catch(function(res){
+      Modal.alert(res,true);
+    })
+  }
+  function getServiceString(services){
     var tempArr = [];
     var serviceArr = [];
 
@@ -132,6 +221,8 @@ angular.module('sreizaoApp')
          serviceArr.push('Certified by iQuippo');
        else if(tempArr[i] == 'ManPower')
          serviceArr.push('ManPower');
+       else if(tempArr[i] == 'Finance')
+         serviceArr.push('Finance');
     }
     return serviceArr.join();
   }
@@ -145,6 +236,7 @@ function updateVendor(vendor) {
     $scope.Valuation = "";
     $scope.CertifiedByIQuippo = "";
     $scope.ManPower = "";
+    $scope.Finance = "";
     $scope.isCollapsed = true;
     loadVendors();
   })
@@ -152,22 +244,10 @@ function updateVendor(vendor) {
     console.log("error in vendor update",err);
   });
 }
-$scope.imgsrc = "file";
-//listen for the file selected event
-    $scope.$on("fileSelected", function (event, args) {
-        if(args.files.length == 0)
-          return;
-        $scope.$apply(function () {            
-            //add the file object to the scope's files collection
-            $scope.editImage = true;
-            $scope[$scope.imgsrc] = args.files[0];
-            $scope.vendorReg.imgsrc = args.files[0].name;
-        });
-    });
 
  $scope.isCollapsed = true;
 
- $scope.deleteVendor = function(vendor){
+ function deleteVendor(vendor){
     Modal.confirm(informationMessage.deletePartnerConfirm,function(isGo){
         if(isGo == 'no')
           return;
@@ -180,14 +260,15 @@ $scope.imgsrc = "file";
     });
   }
 
-  $scope.editVendorClick = function(vendor){
+  function editVendorClick(vendor){
     $scope.isCollapsed = false;
-    $scope.editImage = false;
 
-    $scope.vendorReg = vendor;
+    vm.vendorReg = vendor;
+    
     $scope.Shipping = "";
     $scope.Valuation = "";
     $scope.CertifiedByIQuippo = "";
+    $scope.Finance = "";
     $scope.ManPower = "";
     for (var i=0; i< vendor.services.length; i++) {
       if(vendor.services[i] == 'Shipping')
@@ -198,10 +279,12 @@ $scope.imgsrc = "file";
         $scope.CertifiedByIQuippo = vendor.services[i];
       else if(vendor.services[i] == 'ManPower')
         $scope.ManPower = vendor.services[i];
+      else if(vendor.services[i] == 'Finance')
+        $scope.Finance = vendor.services[i];
     }
     $scope.isEdit = true;
+    vm.existFlag = true;
   }
-
-  
-}]);
+}
+})();
 
