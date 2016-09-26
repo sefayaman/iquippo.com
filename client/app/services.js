@@ -355,7 +355,7 @@ angular.module('sreizaoApp')
       notificationSvc.sendNotification = function(templateName,data,dynamicData,notificationType){
         var dataTosend = {};
         dataTosend['notificationType'] = notificationType;
-        if(!data.to || notificationType == "sms")
+        if(!data.to)
           return;
         dataTosend['to'] = data.to;
         if(data.subject)
