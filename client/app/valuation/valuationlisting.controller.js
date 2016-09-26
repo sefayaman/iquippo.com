@@ -108,9 +108,9 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc) {
     	
     	ValuationSvc.updateStatus(valuationReq,toStatus,intermediateStatus)
     	.then(function(){
-    		ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus),'customer');
+    		ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'customer');
     		if(intermediateStatus)
-    			ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus),'valagency');
+    			ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'valagency');
     	})
     }
 }

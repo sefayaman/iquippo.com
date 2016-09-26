@@ -1229,7 +1229,7 @@ exports.importAuctionMaster = function(req,res){
   if(data.length == 0){
   	return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Title*','Start_Date*','End_Date*'];
+  var headers = ['Auction_Title*','Start_Date*','End_Date*',"Auction_Id*"];
   var hd = getHeaders(worksheet);
   if(!validateHeader(hd,headers)){
   	return res.status(500).send("Wrong template");
@@ -1240,9 +1240,15 @@ exports.importAuctionMaster = function(req,res){
   	var title = data[i]['Auction_Title*'];
   	var startDate = new Date(data[i]['Start_Date*']);
   	var endDate = new Date(data[i]['End_Date*']);
+  	var auctionId = data[i]['Auction_Id*'];
   	if(!title){
   		ret = true;
   		errorMessage += "Title is empty in row " + (i+2);
+  		break;
+  	}
+  	if(!auctionId){
+  		ret = true;
+  		errorMessage += "Auction Id is empty in row " + (i+2);
   		break;
   	}
   	if(!startDate ||!isValid(startDate)){
@@ -1275,6 +1281,7 @@ function importAuctionMaster(req,res,data){
 		auctionData.name = data[req.counter]['Auction_Title*'];
 	  	auctionData.startDate = new Date(data[req.counter]['Start_Date*']);
 	  	auctionData.endDate = new Date(data[req.counter]['End_Date*']);
+	  	auctionData.auctionId = data[req.counter]['Auction_Id*'];
 	  	auctionData.groupId = req.groupId;
 	  	AuctionMaster.create(auctionData,function(err,act){
 	  		if(err){return handleError(res,err)}

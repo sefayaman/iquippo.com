@@ -7,6 +7,7 @@ var AuctionRequestSchema = new Schema({
   user: {},
   product:{},
   auctionId:String,
+  dbAuctionId:String,
   startDate:Date,
   endDate:Date,
   status:{type:String,default:"Request Submitted"},

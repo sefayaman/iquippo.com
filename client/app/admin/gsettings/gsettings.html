@@ -224,6 +224,7 @@
 
 			              <thead>
 			                <th>Auction name</th>
+			                <th>Auction Id</th>
 			                <th>Auction start date</th>
 			                <th>Auction end date</th>                                
 			                <th>Action</th>
@@ -232,6 +233,7 @@
 			              <tbody>
 			              <tr ng-repeat="auc in gsettingVm.auctions">
 			                <td>{{auc.name}}</td>
+			                <td>{{auc.auctionId}}</td>
 			                 <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
 			                  <td>{{auc.endDate | date:'MM/dd/yyyy'}}</td>
 			                <td>

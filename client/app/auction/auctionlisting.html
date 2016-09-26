@@ -39,10 +39,10 @@
               <td><input type="checkbox"  ng-click="auctionListingVm.updateSelection($event,auts._id)" ng-checked="auctionListingVm.master"></td>
               <td>{{auts.product.assetId}}</td>              
               <td>{{auts.auctionId}}</td>              
-              <td>{{auts.startDate}}</td>              
-              <td>{{auts.endDate}}</td>              
+              <td>{{auts.startDate | date:'MM/dd/yyyy'}}</td>              
+              <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>              
               <td>2000</td>              
-              <td>{{getStatusOnCode(auctionStatuses,auts.status)}}</td>
+              <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
               <td ng-if="isAdmin()">
                   <select ng-model="status">
                   <option value="">Select Status</option>

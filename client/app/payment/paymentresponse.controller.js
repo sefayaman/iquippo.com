@@ -63,13 +63,13 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationS
  				valuationReq = result[0];
  				if(valuationReq.initiatedBy == "seller"){
 	 				ValuationSvc.updateStatus(valuationReq,valuationStatuses[3].code);
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].name,'customer');
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].name,'valagency');
+	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'customer');
+	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'valagency');
  				}
 
  				if(valuationReq.initiatedBy == "buyer"){
  					ValuationSvc.updateStatus(valuationReq,valuationStatuses[1].code);
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].name,'customer');
+	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'customer');
 	 				//need to send seller also
  				}
 		

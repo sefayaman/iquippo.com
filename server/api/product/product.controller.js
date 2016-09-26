@@ -2060,6 +2060,7 @@ exports.createOrUpdateAuction = function(req,res){
         AuctionReq.update({_id:req.body.auction._id},{$set:req.body.auction},function(err,acts){
           if(err){return handleError(err,res)}
           else{
+            req.auctionId = req.body.auction._id;
             self();
           }
         })
@@ -2076,7 +2077,7 @@ exports.createOrUpdateAuction = function(req,res){
     .seq(function(){
       var self = this;
       var auctionUpdate = {};
-      auctionUpdate.auctionId = req.auctionId + "";
+      auctionUpdate._id = req.auctionId + "";
       if(req.valuationId)
         auctionUpdate.valuationId = req.valuationId + "";
       Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){

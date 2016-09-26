@@ -129,14 +129,14 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   var utilSvc = {};
 
   utilSvc.getStatusOnCode = function(list,code){
-      var retVal = "";
+      var statusObj = "";
       for(var i = 0; i < list.length;i++){
         if(list[i].code == code){
-          retVal = list[i].name;
+          statusObj = list[i];
           break 
         }
       }
-      return retVal;
+      return statusObj;
   }
   return utilSvc;
 });

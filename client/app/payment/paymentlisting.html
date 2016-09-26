@@ -38,9 +38,9 @@
                 <td>{{tns.product.name}}</td>
                 <td>{{tns.product.status}}</td>
                 <td>{{tns.product.city}}</td>
-                <td>Auction Listing</td>
-                 <td>{{getStatusOnCode(transactionStatuses,tns.status)}}</td>
-                <td>{{tns.createdAt}}</td>
+                <td>{{tns.requestType}}</td>
+                 <td>{{getStatusOnCode(transactionStatuses,tns.status).name}}</td>
+                <td>{{tns.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
                  <a class="btn btn-primary"  ng-if="tns.status != 'completed'" href="/payment/{{tns._id}}">Pay Now</a>
                   <!-- <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>

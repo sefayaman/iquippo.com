@@ -83,54 +83,66 @@ var assetStatuses = [
 var auctionStatuses = [
   {
     name:"Payment Pending",
-    code:"payment_pending"
+    code:"payment_pending",
+    notificationText : "pending"
   },
   {
     name:"Request Submitted",
-    code:"request_submitted"
+    code:"request_submitted",
+    notificationText : "submitted"
   },
   {
     name:"Request Approved",
-    code:"request_approved"
+    code:"request_approved",
+    notificationText : "approved"
   },
   {
     name:"Request Rejected",
-    code:"request_rejected"
+    code:"request_rejected",
+    notificationText : "rejected"
   },
   {
     name:"Refund Initiated",
-    code:"refund_initiated"
+    code:"refund_initiated",
+    notificationText : "refund initiated"
   },
   {
     name:"Listed In Auction",
-    code:"Listed_in_auction"
+    code:"Listed_in_auction",
+    notificationText : "listed"
   }
 ];
 
 var valuationStatuses = [
 {
     name:"Payment Pending",
-    code:"payment_pending"
+    code:"payment_pending",
+    notificationText : "pending"
 },
 {
   name:"Valuation Request Listed",
-  code:"request_listed"
+  code:"request_listed",
+  notificationText : "listed"
 },
 {
   name:"Valuation Request Approved",
-  code:"request_approved"
+  code:"request_approved",
+   notificationText : "approved"
 },
 {
   name:"Valuation Request Submitted",
-  code:"request_submitted"
+  code:"request_submitted",
+  notificationText : "submitted"
 },
 {
   name:"Valuation in process",
-  code:"request_in_process"
+  code:"request_in_process",
+   notificationText : "in progress"
 },
 {
   name:"Valuation Report Uploaded",
-  code:"request_completed"
+  code:"request_completed",
+  notificationText:"completed"
 }
 ];
 

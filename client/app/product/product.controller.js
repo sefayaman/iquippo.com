@@ -162,9 +162,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         if(product.auctionListing){
           prevAuctionStatus = "request submitted";
 
-          if(product.auction && product.auction.auctionId){
+          if(product.auction && product.auction._id){
             var serData = {};
-            serData._id = product.auction.auctionId;
+            serData._id = product.auction._id;
             AuctionSvc.getOnFilter(serData)
             .then(function(result){
               if(result.length > 0){
@@ -687,9 +687,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq.product.serialNo = productObj.serialNo;
     $scope.auctionReq.product.grossPrice = productObj.grossPrice;
     for(var i=0;i< $scope.auctions.length; i++){
-      if($scope.auctions[i]._id == $scope.auctionReq.auctionId){
+      if($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId){
         $scope.auctionReq.startDate = $scope.auctions[i].startDate;
         $scope.auctionReq.endDate = $scope.auctions[i].endDate;
+        $scope.auctionReq.auctionId = $scope.auctions[i].auctionId;
         break;
       }
     }
@@ -711,7 +712,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.product.assetId = productObj.assetId;
       $scope.valuationReq.product.category = productObj.category.name;
       $scope.valuationReq.product.city = productObj.city;
-      $scope.valuationReq.product.status = productObj.status;
+      $scope.valuationReq.product.status = productObj.assetStatus;
       $scope.valuationReq.product.serialNumber = productObj.serialNo;
       $scope.valuationReq.product.name = productObj.name;
       for(var i=0; i < $scope.valAgencies.length;i++){
@@ -745,6 +746,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
       createTraction = true; 
     }
+    
     if($scope.valuationReq.valuate){
       payObj = {};
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",$scope.valuationReq.valuationAgency._id);
@@ -764,6 +766,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         paymentTransaction.product.primaryImage = productObj.primaryImg;
         paymentTransaction.product.city = productObj.city;
         paymentTransaction.product.name = productObj.name;
+        paymentTransaction.product.status = productObj.assetStatus;
         paymentTransaction.product.category = productObj.category.name;
         paymentTransaction.user = {};
         paymentTransaction.user._id = Auth.getCurrentUser()._id;

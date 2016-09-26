@@ -12,7 +12,7 @@ var ValuationRequestSchema = new Schema({
   valuationAgency:{},
   product: {},
   transactionId:String,
-  status:{type:String,default:'request submitted'},
+  status:{type:String},
   statuses:[{}],
   comment:String,
   report:String,

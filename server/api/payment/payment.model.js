@@ -9,6 +9,7 @@ var PaymentTransactionSchema = new Schema({
   transactionId:String,
   payments:[{}],
   totalAmount:Number,
+  requestType:String,
   status:{type:String,default:'created'},
   statuses:[{}],
   createdAt: {type:Date,default:Date.now},

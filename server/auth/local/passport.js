@@ -16,10 +16,10 @@ exports.setup = function (User, config) {
       } else {
         dataToSend['email'] = userId.toLowerCase();
       }
-      if(req.body.isManpower)
+      /*if(req.body.isManpower)
         dataToSend['isManpower'] = true;
       else
-        dataToSend['isManpower'] = false;
+        dataToSend['isManpower'] = false;*/
       dataToSend['deleted'] = false;
       dataToSend['status'] = true;
       User.findOne(dataToSend, function(err, user) {
@@ -27,6 +27,10 @@ exports.setup = function (User, config) {
 
         if (!user) {
           return done(null, false, { message: 'This user is not registered.' });
+        }
+
+        if (req.body.isManpower && !user.isManpower) {
+          return done(null, false, { message: 'Not valid crediential.' });
         }
 
         if (!user.status) {

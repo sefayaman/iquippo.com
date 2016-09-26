@@ -65,7 +65,7 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
     function updateStatus(auctionReq,status){
       AuctionSvc.updateStatus(auctionReq,status)
       .then(function(result){
-        AuctionSvc.sendNotification(auctionReq,UtilSvc.getStatusOnCode(auctionStatuses,status),true);
+        AuctionSvc.sendNotification(auctionReq,UtilSvc.getStatusOnCode(auctionStatuses,status).notificationText,true);
       });
     }
 }
