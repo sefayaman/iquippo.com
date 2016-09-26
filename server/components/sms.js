@@ -37,7 +37,8 @@ var smsConfig = { host:"http://mobiprom.com", URL: "/smsclient/pushsms.jsp",from
 
 sms.autoSMS = function(data,cb) { 
 	
-    var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);   
+    //var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
+    var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=9990771509"+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);   
 	request(smsConfig.host  + path, {timeout: 5*60*60*1000},function (error, response, body) {
 		if(!error){
 			if(response.statusCode == 200){

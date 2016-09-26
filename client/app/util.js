@@ -24,17 +24,6 @@ $(document).ready(function () {
 
     });
 });
-
-/*window.onbeforeunload = function (event) {
-  var message = 'Would you like to review our website? Please go to the following link: ....';
-  if (typeof event == 'undefined') {
-    event = window.event;
-  }
-  if (event) {
-    event.returnValue = message;
-  }
-  return message;
-}*/
  
 function setScroll(val){
 
@@ -64,14 +53,6 @@ function youtube_parser(url){
       return "";
   }
 }
-// pop overs
-
-// Force hiding of "original text" popup for menus, etc. (very annoying)
-    // jQuery(selector).bind("hover", function (event) {
-    //         if (event.type === 'mouseenter'){ google_trans_tt.css('z-index', -1000); };
-    //         else                                { google_trans_tt.css('z-index',  1000); };
-    //     }
-    // );
 
 angular.module('sreizaoApp').
 factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
@@ -144,3 +125,18 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
     };
     return UploadFile;
 }])
+.factory("UtilSvc",function($http,$rootScope){
+  var utilSvc = {};
+
+  utilSvc.getStatusOnCode = function(list,code){
+      var retVal = "";
+      for(var i = 0; i < list.length;i++){
+        if(list[i].code == code){
+          retVal = list[i].name;
+          break 
+        }
+      }
+      return retVal;
+  }
+  return utilSvc;
+});

@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var sequence = require('./../../components/seqgenerator').sequence();
 var ValuationRequestSchema = new Schema({
   user: {},
+  seller:{},
   initiatedBy:String,
   requestId:String,
   valuationAgency:{},
@@ -15,6 +16,7 @@ var ValuationRequestSchema = new Schema({
   statuses:[{}],
   comment:String,
   report:String,
+  purpose:String,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

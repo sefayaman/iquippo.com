@@ -249,4 +249,11 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+       .state('paymentresponse', {
+        url: '/paymentresponse/:tid',
+        templateUrl: 'app/payment/paymentresponse.html',
+        controller: 'PaymentResponseCtrl as paymentResponseVm',
+        authenticate:true,
+        layout:'admin'
+      })
   });

@@ -79,75 +79,74 @@ var assetStatuses = [
   code:"sold"
 }
 ];
+
 var auctionStatuses = [
   {
-    name:"Request Submitted",
-    code:"request submitted"
-  },
-  {
     name:"Payment Pending",
-    code:"payment pending"
+    code:"payment_pending"
   },
   {
-    name:"Payment Received",
-    code:"payment received"
-  },
-  {
-    name:"Payment Failed",
-    code:"payment failed"
+    name:"Request Submitted",
+    code:"request_submitted"
   },
   {
     name:"Request Approved",
-    code:"request approved"
+    code:"request_approved"
   },
   {
     name:"Request Rejected",
-    code:"request rejected"
+    code:"request_rejected"
   },
   {
     name:"Refund Initiated",
-    code:"refund initiated"
+    code:"refund_initiated"
   },
   {
     name:"Listed In Auction",
-    code:"Listed In Auction"
+    code:"Listed_in_auction"
   }
 ];
+
 var valuationStatuses = [
 {
-  name:"Valuation request listed",
-  code:"listed"
+    name:"Payment Pending",
+    code:"payment_pending"
 },
 {
-  name:"Valuation request approved",
-  code:"approved"
+  name:"Valuation Request Listed",
+  code:"request_listed"
 },
 {
-  name:"Valuation request received",
-  code:"received"
+  name:"Valuation Request Approved",
+  code:"request_approved"
+},
+{
+  name:"Valuation Request Submitted",
+  code:"request_submitted"
 },
 {
   name:"Valuation in process",
-  code:"in process"
+  code:"request_in_process"
 },
 {
-  name:"Valuation Report Submitted",
-  code:"submitted"
+  name:"Valuation Report Uploaded",
+  code:"request_completed"
 }
 ];
 
 var transactionStatuses = [
+
 {
   name:"Listed",
   code:"listed"
 },
 {
-  name:"Failed",
-  code:"failed"
-},
-{
   name:"Pending",
   code:"pending"
+},
+{
+  name:"Failed",
+  code:"failed"
 },
 {
   name:"Rejected",

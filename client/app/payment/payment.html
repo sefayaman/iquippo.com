@@ -26,15 +26,15 @@
                 </div>
               </div>
               <legend></legend>
-              <div class="row form-group" ng-repeat="py in paymentVm.payTrasaction.payments">
+              <div class="row form-group" ng-repeat="py in paymentVm.payTransaction.payments">
                 <div class="col-sm-6">
                   <div class="media">
                     <a class="pull-left" href="javascrip:void(0)">
-                      <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTrasaction.product.assetDir}}/{{paymentVm.payTrasaction.product.image}}" alt="Image" width="70" height="70">
+                      <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImage}}" alt="Image" width="70" height="70">
                     </a>
                     <div class="media-body">
-                      <h4 class="media-heading"><a href="javascrip:void(0);">{{paymentVm.payTrasaction.product.name}}</a></h4>
-                      <p>{{paymentVm.payTrasaction.product.city}}</p>
+                      <h4 class="media-heading"><a href="javascrip:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>
+                      <p>{{paymentVm.payTransaction.product.city}}</p>
                     </div>
                   </div>
                 </div>
@@ -46,8 +46,8 @@
               <div class="well text-center">
                   <div class="row">
                     <div class="col-sm-offset-7 col-sm-5 text-right">
-                      <p>Sub total: Rs. {{paymentVm.payTrasaction.totalAmount}}</p>
-                      <p>Total: Rs. {{paymentVm.payTrasaction.totalAmount}}</p>                      
+                      <p>Sub total: Rs. {{paymentVm.payTransaction.totalAmount}}</p>
+                      <p>Total: Rs. {{paymentVm.payTransaction.totalAmount}}</p>                      
                     </div>
                   </div>
                   <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment" ng-click="paymentVm.payNow()">Proceed to Payment</button>

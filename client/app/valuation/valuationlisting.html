@@ -6,16 +6,17 @@
           <h3>Valuation Request</h3>
         </div>
         <div class="col-sm-6 text-right">
-          <h3><button class="btn btn-success btn-md" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+          <h3><button class="btn btn-success btn-md" ng-click="valuationListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
         </div>     
       </div>
       <hr>
       
-      <div class="row">
+      <div class="row" ng-if="isCustomer()">
         <div class="col-sm-3 form-group">
-          <select class="form-control">
-            <option> Request received by customer</option>
-            <option> Request sent by customer</option>
+          <select class="form-control" ng-change="valuationListingVm.onValuationReqTypeChange(valType)" ng-model="valType">
+            <option value="sent"> Request sent by customer</option>
+            <option value="received"> Request received by customer</option>
+            
           </select>
           <i class="caret"></i>
         </div>
@@ -23,43 +24,40 @@
       
      
         <div class="clearfix form-group"></div>
-        <div class="featured-pro">
+       <!--  <div class="featured-pro" ng-if="isPartner()">
             <button class="btn btn-primary">Completed</button>
-            <button class="btn btn-primary">Submitted</button>
-              <button class="btn btn-primary">Inprogress</button>
-              
-          </div>
+            <button class="btn btn-primary">Inprogress</button> 
+          </div> -->
         <div class="table-responsive">
             <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
               <thead>
-                <th width="40"><input type="checkbox"> All</th>                                
+                <th width="40"><input type="checkbox" ng-model="valuationListingVm.master"> All</th>                                
                 <th>Request ID</th>                                
                 <th>Category</th>
                 <th>Asset Name</th>
                 <th>Asset Status</th>
                 <th>Serial Number</th>
-                <!-- <th>Location</th> -->
                 <th>Status</th>
                 <th>Purpose</th>
                 <th width="10%">Action</th>
                
               </thead>
               <tbody>
-              <tr ng-repeat="loc in gsettingVm.locationList">
-                <td><input type="checkbox"></td>
-                <td>{{loc.state.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <!-- <td>{{loc.name}}</td> -->
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
+              <tr ng-repeat="valuation in valuationListingVm.valuations">
+                <td><input type="checkbox" ng-checked="valuationListingVm.master" ng-click="valuationListingVm.updateSelection($event,valuation._id)"></td>
+                <td>{{valuation.requestId}}</td>
+                <td>{{valuation.product.category}}</td>
+                <td>{{valuation.product.name}}</td>
+                <td>{{valuation.product.status}}</td>
+                <td>{{valuation.product.serialNumber}}</td>
+                <td>{{getStatusOnCode(valuationStatuses,valuation.status)}}</td>
+                <td>{{valuation.purpose}}</td>
                 <td>
-                  <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-upload"></i> </a>
-                  <a class="btn btn-success btn-md" href="javascript:void(0);"><i class="fa fa-check"></i> </a>
-                  
+                  <a class="btn btn-default btn-md" href="javascript:void(0);" ng-if="isPartner()&& valuation.status == 'request_in_process'"><i class="fa fa-upload"></i> </a>
+                  <button class="btn btn-primary"  ng-if="isPartner()&& valuation.status == 'request_in_process'" ng-click="valuationListingVm.updateStatus(valuation,'request_completed')">Completed</button>
+                   <button class="btn btn-primary" ng-if="isPartner()&& valuation.status == 'request_submitted'"  ng-click="valuationListingVm.updateStatus(valuation,'request_in_process')">Inprogress</button>
+                  <a class="btn btn-success btn-md" href="javascript:void(0);" ng-if="valType =='received' && valuation.status == 'request_listed'" ng-click="valuationListingVm.updateStatus(valuation,'request_submitted','request_approved')"><i class="fa fa-check"></i> </a>
                 </td>
                
                </tr>

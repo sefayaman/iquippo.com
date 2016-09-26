@@ -5,42 +5,40 @@
           </h3>
           
       </div>
-      <form>
+      <form name="form" novalidate>
       <div class="modal-body">
         
           <div class="row">
             <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Category" disabled="">
+              <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.category" placeholder="Category" disabled>
             </div>
             <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Asset Name" disabled="">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Asset Status" disabled="">
-            </div>
-            <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Serial Number" disabled="">
+              <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.name" placeholder="Asset Name" disabled>
             </div>
           </div>
           <div class="row">
             <div class="col-sm-6 form-group">
-              <input type="text" class="form-control" placeholder="Asset Location" disabled="">
+              <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.status" placeholder="Asset Status" disabled>
             </div>
             <div class="col-sm-6 form-group">
-              <select class="form-control" name="" required>
+              <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.serialNumber" placeholder="Serial Number" disabled>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.city" placeholder="Asset Location" disabled>
+            </div>
+            <div class="col-sm-6 form-group" ng-class="{'has-error':form.valagency.$invalid && submitted}">
+              <select class="form-control" name="valagency" required ng-model="valuationReqVm.valuationReq.valuationAgency._id">
                 <option value="">Agancy Name</option>
-                <option>Valuation Request Received</option>
-                <option>Valuation – In Progress</option>
-                <option>Valuation Complete</option>
+                <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
               </select>
               <i class="caret"></i>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-6 form-group">
-              <select class="form-control" name="" required>
+            <div class="col-sm-6 form-group" ng-class="{'has-error': form.purpose.$invalid && submitted}">
+              <select class="form-control" name="purpose" ng-model="valuationReqVm.valuationReq.purpose" required>
                 <option value="">*Select Purpose</option>
                 <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
               </select>
@@ -51,8 +49,8 @@
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="resetQuote()">Reset</button>
-        <button type="button" class="btn btn-warning" ng-click="addProductQuote($event)">Submit</button>
+        <button type="button" class="btn btn-default" ng-click="valuationReqVm.resetValuationReq()">Reset</button>
+        <button type="button" class="btn btn-warning" ng-click="valuationReqVm.submitValuationReq(form)">Submit</button>
       </div>
     </form>
   </div>

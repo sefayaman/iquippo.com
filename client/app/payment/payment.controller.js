@@ -5,7 +5,7 @@ angular.module('sreizaoApp').controller('PaymentCtrl',PaymentCtrl);
 
 function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth) {
  	var vm = this;
- 	vm.payTrasaction = null;
+ 	vm.payTransaction = null;
  	vm.enablePayment = false;
 
  	vm.payNow = payNow;
@@ -24,23 +24,19 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth) {
  				$state.go("main");
  				Modal.alert("Invalid payment access");
  			}
- 			vm.payTrasaction = result[0];
- 			vm.prevStatus = vm.payTrasaction.status;
- 			if(vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[2].code){
- 				var stObj = {};
-	 			stObj.createdAt = new Date();
-	 			stObj.status = transactionStatuses[2].code;
-	 			vm.payTrasaction.status = transactionStatuses[2].code;
-	 			stObj.userId = Auth.getCurrentUser()._id;
-	 			vm.payTrasaction.statuses[vm.payTrasaction.statuses.length] = stObj;
-	 			PaymentSvc.update(vm.payTrasaction)
+
+ 			vm.payTransaction = result[0];
+ 			vm.prevStatus = vm.payTransaction.status;
+
+ 			if(vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code){
+	 			PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code)
 	 			.then(function(){
 	 				vm.enablePayment = true;
 	 			});
  			}else{
  				vm.enablePayment = false;
  			}
- 			
+
  		})
  		.catch(function(err){
  			$state.go("main");
@@ -49,18 +45,9 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth) {
  	}
 
  	function payNow(){
- 		var stObj = {};
-		stObj.createdAt = new Date();
-		stObj.status = transactionStatuses[5].code;
-		vm.payTrasaction.status = transactionStatuses[5].code;
-		stObj.userId = Auth.getCurrentUser()._id;
-		vm.payTrasaction.statuses[vm.payTrasaction.statuses.length] = stObj;
-		PaymentSvc.update(vm.payTrasaction)
-		.then(function(){
-			vm.enablePayment = true;
-			$state.go("productlisting");
-		});
+ 		$state.go("paymentresponse",{tid:vm.payTransaction._id});
  	}
+
  	init();
 }
 

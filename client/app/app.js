@@ -36,7 +36,7 @@ angular.module('sreizaoApp',[
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -137,6 +137,9 @@ angular.module('sreizaoApp',[
     $rootScope.openDialog = Modal.openDialog;
     $rootScope.logout = Auth.logout;
     $rootScope.isProfileIncomplete = Auth.isProfileIncomplete;
+    $rootScope.isCustomer = Auth.isCustomer;
+    $rootScope.isPartner = Auth.isPartner;
+    $rootScope.getStatusOnCode = UtilSvc.getStatusOnCode;
 
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

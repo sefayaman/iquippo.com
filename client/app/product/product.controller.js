@@ -667,18 +667,13 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
        $scope.auctionReq.user = {};
        $scope.auctionReq.user._id = Auth.getCurrentUser()._id;
        $scope.auctionReq.user.mobile = Auth.getCurrentUser().mobile;
+       $scope.auctionReq.user.email = Auth.getCurrentUser().email;
        $scope.auctionReq.status = auctionStatuses[0].code;
        $scope.auctionReq.statuses = [];
        stsObj.createdAt = new Date();
        stsObj.status = auctionStatuses[0].code;
        stsObj.userId = Auth.getCurrentUser()._id;
        $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
-
-    }else{
-       stsObject.createdAt = new Date();
-       stsObject.status = auctionStatuses[0].code;
-       stsObject.userId = Auth.getCurrentUser()._id;
-        $scope.auctionReq.statuses[ $scope.auctionReq.statuses.length] = stsObject;
     }
 
     $scope.auctionReq.product = {};
@@ -703,22 +698,33 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.user = {};
       $scope.valuationReq.user._id = Auth.getCurrentUser()._id;
       $scope.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
+      $scope.valuationReq.user.email = Auth.getCurrentUser().email;
+      $scope.valuationReq.seller = {};
+      $scope.valuationReq.seller._id = productObj.seller._id;
+      $scope.valuationReq.seller.mobile = productObj.seller.mobile;
+      $scope.valuationReq.seller.email = productObj.seller.email;
+      
       $scope.valuationReq.initiatedBy = "seller";
+      $scope.valuationReq.purpose = "Listing in auction";
       $scope.valuationReq.product = {};
       $scope.valuationReq.product._id = productObj._id;
-      $scope.valuationReq.assetId = productObj.assetId;
-      $scope.valuationReq.name = productObj.name;
+      $scope.valuationReq.product.assetId = productObj.assetId;
+      $scope.valuationReq.product.category = productObj.category.name;
+      $scope.valuationReq.product.city = productObj.city;
+      $scope.valuationReq.product.status = productObj.status;
+      $scope.valuationReq.product.serialNumber = productObj.serialNo;
+      $scope.valuationReq.product.name = productObj.name;
       for(var i=0; i < $scope.valAgencies.length;i++){
         if($scope.valuationReq.valuationAgency._id == $scope.valAgencies[i]._id){
           $scope.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
           break;
         }
       }
-      $scope.valuationReq.status = "request submitted";
+      $scope.valuationReq.status = valuationStatuses[0].code;
       $scope.valuationReq.statuses = [];
       var stObject = {};
       stObject.createdAt = new Date();
-      stObject.status = "request submitted";
+      stObject.status = valuationStatuses[0].code;
       stObject.userId = Auth.getCurrentUser()._id;
       $scope.valuationReq.statuses[$scope.valuationReq.statuses.length] = stObject;
     }
@@ -726,22 +732,23 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     var paymentTransaction = {};
     paymentTransaction.payments = [];
     paymentTransaction.totalAmount = 0;
+    paymentTransaction.requestType = "Auction Listing";
     var payObj = null;
     var createTraction = false;
     if(!product.auction._id){
       payObj = {};
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
-      payObj.type = "Auction Listing";
+      payObj.type = "auctionreq";
+      //payObj.auctionId = $scope.auctionReq.auctionId;
       payObj.charge = pyMaster.fees;
       paymentTransaction.totalAmount += payObj.charge;
       paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
       createTraction = true; 
     }
-
     if($scope.valuationReq.valuate){
       payObj = {};
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",$scope.valuationReq.valuationAgency._id);
-      payObj.type = "Valuation Request";
+      payObj.type = "valuationreq";
       payObj.charge = pyMaster.fees;
       paymentTransaction.totalAmount += payObj.charge;
       paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
@@ -754,17 +761,19 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         paymentTransaction.product._id = productObj._id;
         paymentTransaction.product.assetId = productObj.assetId;
         paymentTransaction.product.assetDir = productObj.assetDir;
+        paymentTransaction.product.primaryImage = productObj.primaryImg;
         paymentTransaction.product.city = productObj.city;
         paymentTransaction.product.name = productObj.name;
+        paymentTransaction.product.category = productObj.category.name;
         paymentTransaction.user = {};
         paymentTransaction.user._id = Auth.getCurrentUser()._id;
         paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
 
-        paymentTransaction.status = "created";
+        paymentTransaction.status = transactionStatuses[0].code;
         paymentTransaction.statuses = [];
         var sObj = {};
         sObj.createdAt = new Date();
-        sObj.status = "created";
+        sObj.status = transactionStatuses[0].code;
         sObj.userId = Auth.getCurrentUser()._id;
         paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
     }

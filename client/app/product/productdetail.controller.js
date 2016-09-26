@@ -359,7 +359,10 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     //valuation request method
     
     function openValuationModal(){
-
+      if(!Auth.isLoggedIn()){
+        Modal.alert("Please login/register before send valuation request");
+        return;
+      }
       var valuationScope = $rootScope.$new();
       valuationScope.product = $scope.currentProduct;
       Modal.openDialog('valuationReq',valuationScope);

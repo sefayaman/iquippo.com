@@ -67,7 +67,12 @@
                     <a href="/emailer"><i class="fa fa-envelope-o"></i>
                         Emailer</a>
                      
-                </li> 
+                </li>
+                <li ng-if="isAdmin()">
+                    <a href="/gsettings"><i class="fa fa-envelope-o"></i>
+                        General Settings</a>
+                     
+                </li>  
                 <li>
                     <a href="/auctionrequets"><i class="fa fa-cogs"></i>Auction Request</a>
                 </li>

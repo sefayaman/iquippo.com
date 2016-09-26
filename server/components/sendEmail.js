@@ -48,7 +48,7 @@ email.sendMail = function(data,req,res,cb) {
 
 email.autoMail = function(data,cb) {
 	var mailOptions={
-		to : data.to,
+		to : "subhash.patel@bharatconnect.com",//data.to,
 		subject : data.subject,
 		html : data.content
 	}

@@ -6,7 +6,7 @@
           <h3>Transactions</h3>
         </div>
         <div class="col-sm-6 text-right">
-          <h3><button class="btn btn-success btn-md" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+          <h3><button class="btn btn-success btn-md" ng-click="paymentListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
         </div>     
       </div>
       <hr>
@@ -18,7 +18,7 @@
             <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
               <thead>
-                <th width="40"><input type="checkbox"> All</th> 
+                <th width="40"><input type="checkbox" ng-model="paymentListingVm.master"> All</th> 
                 <th>Trasaction ID</th>                                
                 <th>Category</th>
                 <th>Asset Name</th>
@@ -31,19 +31,20 @@
                
               </thead>
               <tbody>
-              <tr ng-repeat="loc in gsettingVm.locationList">
-                <td><input type="checkbox"></td>
-                <td>{{loc.state.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
-                <td>{{loc.name}}</td>
+              <tr ng-repeat="tns in paymentListingVm.transactions">
+                <td><input type="checkbox" ng-checked="paymentListingVm.master" ng-click="paymentListingVm.updateSelection($event,tns._id)"></td>
+                <td>{{tns.transactionId}}</td>
+                <td>{{tns.product.category}}</td>
+                <td>{{tns.product.name}}</td>
+                <td>{{tns.product.status}}</td>
+                <td>{{tns.product.city}}</td>
+                <td>Auction Listing</td>
+                 <td>{{getStatusOnCode(transactionStatuses,tns.status)}}</td>
+                <td>{{tns.createdAt}}</td>
                 <td>
-                  <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>
-                  <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a>
+                 <a class="btn btn-primary"  ng-if="tns.status != 'completed'" href="/payment/{{tns._id}}">Pay Now</a>
+                  <!-- <a class="btn btn-info btn-md" href="javascript:void(0);" ng-click="gsettingVm.editState($index)"><i class="fa fa-pencil"></i> </a>
+                  <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a> -->
                 </td>
                
                </tr>

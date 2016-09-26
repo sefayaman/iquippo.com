@@ -6,46 +6,50 @@
           <h3>Auction Request</h3>
         </div>
         <div class="col-sm-6 text-right">
-            <h3><button class="btn btn-success btn-md" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            <h3><button class="btn btn-success btn-md" ng-click="auctionListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
         </div>     
       </div>
       <hr>
 
-      <div class="featured-pro">
+     <!--  <div class="featured-pro">
         <select>
           <option>Auction Status</option>
-          <option>Listed</option>
-          <option>Payment Done</option>
-          <option>Rejected</option>
-          <option>Verified</option>
-          <option>Payment Refund</option>
+          <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
         </select>         
       </div>
       <div class="featured-pro">
         <button class="btn btn-primary">Save</button>
-      </div>
+      </div> -->
      <div class="table-responsive">
           <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
             <thead>
-              <th width="40"><input type="checkbox"> All</th> 
+              <th width="40"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
               <th>Asset ID</th>                                
               <th>Auction ID</th>                                
               <th>Start Date</th>
               <th>End Date</th>
               <th>EMD Amount</th>
               <th>Auction Status</th>
+              <th ng-if="isAdmin()">Action</th>
              
             </thead>
             <tbody>
             <tr ng-repeat="auts in auctionListingVm.auctions">
-              <td><input type="checkbox"></td>
+              <td><input type="checkbox"  ng-click="auctionListingVm.updateSelection($event,auts._id)" ng-checked="auctionListingVm.master"></td>
               <td>{{auts.product.assetId}}</td>              
               <td>{{auts.auctionId}}</td>              
               <td>{{auts.startDate}}</td>              
               <td>{{auts.endDate}}</td>              
               <td>2000</td>              
-              <td>Payment Done</td>              
+              <td>{{getStatusOnCode(auctionStatuses,auts.status)}}</td>
+              <td ng-if="isAdmin()">
+                  <select ng-model="status">
+                  <option value="">Select Status</option>
+                  <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
+                </select>
+                 <button class="btn btn-primary" ng-click="auctionListingVm.updateStatus(auts,status)">Save</button>    
+              </td>                
              </tr>
             </tbody>
           </table>
