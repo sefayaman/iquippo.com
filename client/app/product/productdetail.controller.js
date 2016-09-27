@@ -230,6 +230,12 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       emailDynamicData['message'] = dataToSend.message;
       emailDynamicData['contact'] = dataToSend.contact;
       emailDynamicData['product'] = dataToSend.product;
+      if(dataToSend.interestedIn == "finance") {
+        emailDynamicData['interestedIn'] = "Finance Asset";
+        emailDynamicData['financeInfo'] = dataToSend.financeInfo;
+      }
+      else
+        emailDynamicData['interestedIn'] = "Buy/Rent Asset";
       //emailDynamicData['productName'] = dataToSend.product.name;
       notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
 

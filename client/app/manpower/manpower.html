@@ -74,7 +74,7 @@
                     <img class="media-object img-rounded" ng-if="manpowerVm.manpower.imgsrc" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{manpowerVm.manpower.imgsrc}}" alt="Image">
                       <img class="media-object img-rounded" ng-if="!manpowerVm.manpower.imgsrc" src="assets/images/profile.png" class="form-group">
                       <span class="btn btn-default fileinput-button">
-                       <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope">
+                       <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope" accept="image/*">
                         <span><i class="fa fa-camera"></i> Upload Picture</span>
                       </span>
                     </div>
@@ -176,7 +176,7 @@
                     </div>
                     <div class="col-xs-6 form-group">
                       <span class="btn btn-default fileinput-button">
-                         <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  class="ng-scope">
+                         <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  class="ng-scope" accept=".doc, .docx, .pdf">
                          <!-- <input type="file" name="doc"  data-filetype="doc" file-upload> -->
                           <span><i class="fa fa-upload"></i> Upload Resume</span>
                           <span>{{manpowerVm.manpower.resumeDoc}}</span>
