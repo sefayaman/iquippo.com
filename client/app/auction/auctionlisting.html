@@ -41,7 +41,7 @@
               <td>{{auts.auctionId}}</td>              
               <td>{{auts.startDate | date:'MM/dd/yyyy'}}</td>              
               <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>              
-              <td>2000</td>              
+              <td>{{auts.emdAmount}}</td>              
               <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
               <td ng-if="isAdmin()">
                   <select ng-model="status">

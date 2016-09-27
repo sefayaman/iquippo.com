@@ -245,11 +245,8 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     function uploadDoc(files){
       if(files.length == 0)
         return;
+
       uploadSvc.upload(files[0], manpowerDir).then(function(result){
-        if(files[0].name.indexOf('.docx') == -1){
-          Modal.alert('Please upload a valid file');
-          return;
-        }
         vm.manpower.docDir = result.data.assetDir;
         vm.manpower.resumeDoc = result.data.filename;
         });

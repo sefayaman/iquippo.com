@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
-function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc) {
+function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc,$rootScope,uploadSvc) {
  	var vm = this;
 	 vm.valuations = [];
 	 var reqSent = [];
@@ -15,6 +15,7 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc) {
 	 vm.updateSelection = updateSelection;
 	 vm.exportExcel = exportExcel;
 	 vm.updateStatus = updateStatus;
+	 $scope.uploadReport = uploadReport;
 	 var selectedIds = [];
 
 	 function init(){
@@ -100,7 +101,7 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc) {
     }
 
     function updateStatus(valuationReq,toStatus,intermediateStatus){
-    	valuationReq.report = "abc.pdf";
+
     	if(toStatus == 'request_completed' && !valuationReq.report){
     		Modal.alert("Please upload report.");
     		return;
@@ -113,6 +114,25 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc) {
     			ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'valagency');
     	})
     }
+
+       function uploadReport(files,_this){
+    	if(!files[0])
+	 		return;
+	 	var index = parseInt($(_this).data('index'));
+	 	var valReq = vm.valuations[index];
+	 	if(!valReq)
+	 		return;
+	 	$rootScope.loading = true;
+	 	uploadSvc.upload(files[0],valReq.product.assetDir)
+	 	.then(function(result){
+	 		valReq.report = result.data.filename;
+	 		$rootScope.loading = false;
+	    })
+	    .catch(function(err){
+	    	$rootScope.loading = false;
+	    })
+	 }
+
 }
 
 })();

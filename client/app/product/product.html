@@ -699,6 +699,12 @@
                         </div>
                       </div>
                       <div class="row">
+                        <div class="form-group col-sm-5">EMD Ammount </div>
+                        <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.emdAmount.$invalid && auctSubmitted}">
+                          <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" placeholder="EMD Ammount" required>
+                        </div>
+                      </div>
+                      <div class="row">
                         <div class="form-group col-sm-5">Valuation Report</div>
                         <div class="form-group col-sm-7">
                           <input type="text" class="form-control" placeholder="URL" disabled value="{{auctionReq.valuationReport}}">
@@ -718,13 +724,6 @@
                                 <option  ng-repeat="ag in valAgencies" value="{{ag._id}}">{{ag.name}}</option>
                           </select>
                           <i class="caret"></i>
-                        </div>
-                      </div>
-
-                      <div class="row" ng-if="valuationReq.valuate">
-                        <div class="form-group col-sm-5">EMD Ammount </div>
-                        <div class="form-group col-sm-7">
-                          <input type="text" class="form-control" placeholder="EMD Ammount">
                         </div>
                       </div>
 

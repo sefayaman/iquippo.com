@@ -12,7 +12,6 @@
     <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
          This is to notify you that a prospective buyer has shown interest for buying with the following details:
-	
         </td>
     </tr>
     {{#each product}}
@@ -25,42 +24,59 @@
 <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
       First name: {{fname}}
-			
         </td>
-
     </tr>
         <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
      Last name: {{lname}}
-			
         </td>
-    </tr>  
-
+    </tr> 
         <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
       Country: {{country}}
-			
         </td>
     </tr> 
     <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
       Method of contact: {{contact}}
-      
         </td>
     </tr>  
         <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
      Mobile no: {{mobile}}
-			
         </td>
     </tr>  
-
         <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
       Email address: {{email}}
-			
         </td>
-    </tr>   
+    </tr> 
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+      Interested in: {{interestedIn}}
+        </td>
+    </tr>
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+      Asset cost: {{financeInfo.assetCost}}
+        </td>
+    </tr> 
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+      Agency : {{financeInfo.finAgency}}
+        </td>
+    </tr>
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+      Period in months: {{financeInfo.periodInMonths}}
+        </td>
+    </tr>
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+      Amount: {{financeInfo.financeAmount}}
+        </td>
+    </tr>
+     
         <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
      Message: {{message}}
