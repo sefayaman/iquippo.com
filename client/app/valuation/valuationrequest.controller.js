@@ -26,6 +26,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		vm.valuationReq.initiatedBy = "seller";
 		vm.valuationReq.product._id = $scope.product._id;
 		vm.valuationReq.product.assetId = $scope.product.assetId;
+		vm.valuationReq.product.assetDir = $scope.product.assetDir;
 		vm.valuationReq.product.name = $scope.product.name;
 		vm.valuationReq.product.category = $scope.product.category.name;
 		vm.valuationReq.product.status = $scope.product.assetStatus;
@@ -59,6 +60,8 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
  		for(var i=0; $scope.valAgencies.length;i++){
  			if($scope.valAgencies[i]._id == vm.valuationReq.valuationAgency._id){
  				vm.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
+ 				vm.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
+ 				vm.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
  				break;
  			}
  		}
@@ -80,6 +83,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		paymentTransaction.product._id = $scope.product._id;
 		paymentTransaction.product.assetId = $scope.product.assetId;
 		paymentTransaction.product.assetDir = $scope.product.assetDir;
+		paymentTransaction.product.primaryImage = $scope.product.primaryImg;
 		paymentTransaction.product.city = $scope.product.city;
 		paymentTransaction.product.name = $scope.product.name;
 		paymentTransaction.user = {};

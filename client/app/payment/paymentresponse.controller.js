@@ -70,6 +70,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationS
  				if(valuationReq.initiatedBy == "buyer"){
  					ValuationSvc.updateStatus(valuationReq,valuationStatuses[1].code);
 	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'customer');
+	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'seller');
 	 				//need to send seller also
  				}
 		

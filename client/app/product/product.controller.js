@@ -710,6 +710,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.product = {};
       $scope.valuationReq.product._id = productObj._id;
       $scope.valuationReq.product.assetId = productObj.assetId;
+      $scope.valuationReq.product.assetDir = productObj.assetDir;
       $scope.valuationReq.product.category = productObj.category.name;
       $scope.valuationReq.product.city = productObj.city;
       $scope.valuationReq.product.status = productObj.assetStatus;
@@ -718,6 +719,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       for(var i=0; i < $scope.valAgencies.length;i++){
         if($scope.valuationReq.valuationAgency._id == $scope.valAgencies[i]._id){
           $scope.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
+          $scope.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
+          $scope.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
           break;
         }
       }
