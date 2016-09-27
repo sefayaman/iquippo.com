@@ -30,7 +30,7 @@
             </div>
             <div class="col-sm-6 form-group" ng-class="{'has-error':form.valagency.$invalid && submitted}">
               <select class="form-control" name="valagency" required ng-model="valuationReqVm.valuationReq.valuationAgency._id">
-                <option value="">Agancy Name</option>
+                <option value="">Agency Name</option>
                 <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
               </select>
               <i class="caret"></i>
