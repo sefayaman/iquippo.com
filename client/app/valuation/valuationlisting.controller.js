@@ -62,7 +62,7 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc,$rootScope,
 
 	 	var filter = {};
 	 	if(Auth.isPartner()){
-			filter['partnerId'] = Auth.getCurrentUser().partnerId;
+			filter['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
 			filter['statuses'] = ['request_submitted','request_in_process','request_completed']; 
 		}else if(Auth.isCustomer() && val && val == "sent"){
 			filter['userId'] = Auth.getCurrentUser()._id;

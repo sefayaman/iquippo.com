@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var  xlsx = require('xlsx');
 var Product = require('../product/product.model');
 var Vendor = require('../vendor/vendor.model');
+var ManpowerUser = require('../manpower/manpower.model');
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
@@ -246,11 +247,54 @@ exports.me = function(req, res, next) {
   }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.status(401).send('Unauthorized');
-    addNoCacheHeader(res)
-    res.json(user);
+    user = user.toObject();
+    if(user.isPartner){
+        getPartenerDetail(req,res,user);
+    } else {
+      if(user.isManpower) {
+        getManpowerDetail(req,res,user);
+      } else {
+        addNoCacheHeader(res)
+        res.json(user);
+      }
+    }
   });
 };
 
+function getPartenerDetail(req,res,user){
+   var filter = {};
+      filter["deleted"] = false;
+      filter["status"] = true;
+      if(user._id)
+        filter['user.userId'] = "" + user._id;
+      //console.log("filter###",filter);
+      Vendor.findOne(filter, function (err, partnerData) {
+        if(err) { return handleError(res, err); }
+        if(!partnerData) { console.log("Not Exist!!!"); }
+        user.partnerInfo = partnerData;
+        if(user.isManpower) {
+          getManpowerDetail(req,res,user);
+        } else {
+          addNoCacheHeader(res)
+          res.json(user);
+        }
+      });
+}
+
+function getManpowerDetail(req,res,user){
+   var filter = {};
+      filter["deleted"] = false;
+      filter["status"] = true;
+      if(user._id)
+        filter['user.userId'] = "" + user._id;
+      ManpowerUser.findOne(filter, function (err, manpowerData) {
+        if(err) { return handleError(res, err); }
+        if(!manpowerData) { console.log("Not Exist!!!"); }
+        user.manpowerInfo = manpowerData;
+        addNoCacheHeader(res)
+        res.json(user);
+      });
+}
 /**
  * Authentication callback
  */
