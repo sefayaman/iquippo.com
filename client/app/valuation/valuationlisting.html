@@ -54,10 +54,17 @@
                 <td>{{getStatusOnCode(valuationStatuses,valuation.status).name}}</td>
                 <td>{{valuation.purpose}}</td>
                 <td>
-                  <a class="btn btn-default btn-md" href="javascript:void(0);" ng-if="isPartner()&& valuation.status == 'request_in_process'"><i class="fa fa-upload"></i> </a>
-                  <button class="btn btn-primary"  ng-if="isPartner()&& valuation.status == 'request_in_process'" ng-click="valuationListingVm.updateStatus(valuation,'request_completed')">Completed</button>
-                   <button class="btn btn-primary" ng-if="isPartner()&& valuation.status == 'request_submitted'"  ng-click="valuationListingVm.updateStatus(valuation,'request_in_process')">Inprogress</button>
-                  <a class="btn btn-success btn-md" href="javascript:void(0);" ng-if="valType =='received' && valuation.status == 'request_listed'" ng-click="valuationListingVm.updateStatus(valuation,'request_submitted','request_approved')"><i class="fa fa-check"></i> </a>
+                  <button class="btn btn-default fileinput-button" ng-if="isPartner()&& valuation.status == 'request_in_process'" uib-popover="Upload" popover-trigger="mouseenter">
+                      <span><i class="fa fa-upload"></i></span>
+                        <input type="file">
+                  </button>
+                  
+                  <button class="btn btn-success" ng-if="isPartner()&& valuation.status == 'request_in_process'" ng-click="valuationListingVm.updateStatus(valuation,'request_completed')" uib-popover="Complete" popover-trigger="mouseenter" ><i class="fa fa-hourglass-end"></i></button>
+
+                   <button class="btn btn-info" ng-if="isPartner()&& valuation.status == 'request_submitted'"  ng-click="valuationListingVm.updateStatus(valuation,'request_in_process')" uib-popover="Inprogress" popover-trigger="mouseenter"><i class="fa fa-hourglass-2"></i></button>
+
+                  <a class="btn btn-success btn-md" ng-if="valType =='received' && valuation.status == 'request_listed'" ng-click="valuationListingVm.updateStatus(valuation,'request_submitted','request_approved')" uib-popover="Approved" popover-trigger="mouseenter"><i class="fa fa-check"></i> </a>
+                  <a class="btn btn-default btn-md" uib-popover="Download" popover-trigger="mouseenter"><i class="fa fa-download"></i> </a>
                 </td>
                
                </tr>

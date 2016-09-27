@@ -45,10 +45,10 @@
               <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
               <td ng-if="isAdmin()">
                   <select ng-model="status">
-                  <option value="">Select Status</option>
-                  <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
-                </select>
-                 <button class="btn btn-primary" ng-click="auctionListingVm.updateStatus(auts,status)">Save</button>    
+                    <option value="">Select Status</option>
+                    <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
+                  </select>
+                 <button class="btn btn-primary" ng-click="auctionListingVm.updateStatus(auts,status)"><i class="fa fa-check"></i></button>    
               </td>                
              </tr>
             </tbody>
