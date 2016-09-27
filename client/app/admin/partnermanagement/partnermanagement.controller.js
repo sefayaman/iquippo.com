@@ -188,7 +188,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
             dataToSend['userId'] = vm.vendorReg.mobile;  
           dataToSend['password'] = vm.vendorReg.password;
           dataToSend['serverPath'] = serverPath;
-          notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend,'sms');
+          notificationSvc.sendNotification('partnerRegSmsToUser', data, dataToSend,'sms');
           if(vm.vendorReg.email) {
             data['to'] = vm.vendorReg.email;
             notificationSvc.sendNotification('vendorRegEmail', data, dataToSend,'email');
