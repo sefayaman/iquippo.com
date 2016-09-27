@@ -48,7 +48,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationS
  			if(result.length > 0){
  				auctionReq = result[0];
  				AuctionSvc.updateStatus(auctionReq,auctionStatuses[1].code);
- 				AuctionSvc.sendNotification(auctionReq,auctionStatuses[1].name);
+ 				AuctionSvc.sendNotification(auctionReq,auctionStatuses[1].notificationText);
  			}
 
  		})
