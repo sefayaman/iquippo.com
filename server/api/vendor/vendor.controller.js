@@ -102,6 +102,8 @@ exports.update = function(req, res) {
     if(req.body.user.phone)
       dataObj['phone'] = req.body.user.phone;
     dataObj['city'] = req.body.user.city;
+    if(req.body.user.state)
+      dataObj['state'] = req.body.user.state;
     dataObj['imgsrc'] = req.body.user.imgsrc;
     dataObj.updatedAt = new Date();
     User.update({_id:req.body.user.userId},{$set:dataObj},function(err,userObj){

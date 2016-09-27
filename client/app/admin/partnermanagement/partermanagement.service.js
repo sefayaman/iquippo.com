@@ -8,6 +8,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
 	  var valuationVendorList = [];
 	  var certifiedByIQuippoVendorList = [];
     var financeVendorList =[];
+    var manpowerVendorList =[];
       var vendorService = {};
       var path = '/api/vendor';
       
@@ -67,6 +68,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
     		 	shippingVendorList = [];
     			valuationVendorList = [];
 			    certifiedByIQuippoVendorList = [];
+          manpowerVendorList = [];
           financeVendorList = [];
       		return res.data;
       	})
@@ -82,6 +84,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           	 shippingVendorList = [];
       			 valuationVendorList = [];
       			 certifiedByIQuippoVendorList = [];
+             manpowerVendorList = [];
              financeVendorList = [];
             return res.data.vendor + 1;
           })
@@ -97,6 +100,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           	 shippingVendorList = [];
       			 valuationVendorList = [];
       			 certifiedByIQuippoVendorList = [];
+             manpowerVendorList = [];
              financeVendorList = [];
           	return res.data;
         })
@@ -126,6 +130,9 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           else if(data[i].services[j] == 'CertifiedByIQuippo'){
             certifiedByIQuippoVendorList.push(vd);
           }
+          else if(data[i].services[j] == 'ManPower'){
+            manpowerVendorList.push(vd);
+          }
           else if(data[i].services[j] == 'Finance'){
             financeVendorList.push(vd);
           }
@@ -138,6 +145,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
  	 shippingVendorList = [];
 	 valuationVendorList = [];
 	 certifiedByIQuippoVendorList = [];
+   manpowerVendorList = [];
    financeVendorList = [];
   }
 
@@ -153,9 +161,13 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
   function getFinanceVendor(){
     return financeVendorList;
   }
+  function getManpowerVendor(){
+    return manpowerVendorList;
+  }
   function getVandorCache(){
     return vendorCache;
   }
+  
   function getVendorsOnCode(code){
     switch(code){
       case 'Valuation':
@@ -166,6 +178,9 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       break;
       case 'CertifiedByIQuippo':
         return certifiedByIQuippoVendorList;
+      break;
+      case 'ManPower':
+        return manpowerVendorList;
       break;
       case 'Finance':
         return financeVendorList;

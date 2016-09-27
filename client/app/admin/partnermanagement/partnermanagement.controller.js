@@ -57,9 +57,11 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       if(data.errorCode == 1){
          setPartnerDate(data.user);
          return;
-      }else if(data.errorCode == 2){
+      } else if(data.errorCode == 2){
         setPartnerDate(data.user);
         return;
+      } else {
+        vm.existFlag = false;
       }
     });
   }
@@ -130,8 +132,11 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function savePartner(){
+    if(vm.existingUser.isPartner) {
+      Modal.alert("User has has already registered as Partner.", true);
+      return;
+    }      
     vm.existingUser.isPartner = true;
-    //setUserData(vm.vendorReg);
     if(vm.existFlag) {
       userSvc.updateUser(vm.existingUser).then(function(result){
         createPartner(vm.vendorReg);
@@ -160,7 +165,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     vm.existingUser.city = userData.user.city;
     vm.existingUser.state = userData.state;
     vm.existingUser.imgsrc = userData.user.imgsrc;
-    if(userData.user.password)
+    if(userData.user.password && !vm.existFlag)
       vm.existingUser.password = userData.user.password;
   }
 

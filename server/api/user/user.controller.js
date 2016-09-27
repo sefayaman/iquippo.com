@@ -6,6 +6,7 @@ var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var  xlsx = require('xlsx');
 var Product = require('../product/product.model');
+var Vendor = require('../vendor/vendor.model');
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
@@ -170,10 +171,33 @@ exports.update = function(req, res) {
     if(!user) { return res.status(404).send('Not Found'); }
     User.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
+        if(req.body.isPartner) {
+          updateVendor(req.body, req.params.id);
+        }
         return res.status(200).json(req.body);
     });
   });
 };
+
+//update partner
+  function updateVendor(userData, userId){
+    var dataObj = {};
+    dataObj['user.fname'] = userData.fname;
+      if(userData.mname)
+    dataObj['user.mname'] = userData.mname;
+    dataObj['user.lname'] = userData.lname;
+    dataObj['user.email'] = userData.email;
+    dataObj['user.mobile'] = userData.mobile;
+    if(userData.phone)
+      dataObj['user.phone'] = userData.phone;
+    dataObj['user.city'] = userData.city;
+    dataObj['user.imgsrc'] = userData.imgsrc;
+    dataObj.updatedAt = new Date();
+    
+    Vendor.update({'user.userId':userId},{$set:dataObj},function(err,userObj){
+      if(err){return handleError(res, err);}
+    });
+  };
 
 /**
  * Change a users password
