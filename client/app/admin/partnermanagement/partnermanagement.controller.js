@@ -178,19 +178,20 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
           $scope.successMessage = "Partner added successfully";
           $scope.autoSuccessMessage(20);
           var data = {};
-          if(vm.vendorReg.mobile)
-            data['to'] = vm.vendorReg.mobile;
+          if(vm.vendorReg.user.mobile)
+            data['to'] = vm.vendorReg.user.mobile;
           data['subject'] = 'Partner Registration: Success';
           var dataToSend = {};
-          dataToSend['fname'] = vm.vendorReg.fname; 
-          dataToSend['lname'] = vm.vendorReg.lname;
-          if(vm.vendorReg.mobile)
-            dataToSend['userId'] = vm.vendorReg.mobile;  
-          dataToSend['password'] = vm.vendorReg.password;
+          dataToSend['fname'] = vm.vendorReg.user.fname; 
+          dataToSend['lname'] = vm.vendorReg.user.lname;
+          if(vm.vendorReg.user.mobile)
+            dataToSend['userId'] = vm.vendorReg.user.mobile;  
+          dataToSend['password'] = vm.vendorReg.user.password;
+          dataToSend['existFlag'] = vm.existFlag;
           dataToSend['serverPath'] = serverPath;
           notificationSvc.sendNotification('partnerRegSmsToUser', data, dataToSend,'sms');
-          if(vm.vendorReg.email) {
-            data['to'] = vm.vendorReg.email;
+          if(vm.vendorReg.user.email) {
+            data['to'] = vm.vendorReg.user.email;
             notificationSvc.sendNotification('vendorRegEmail', data, dataToSend,'email');
           }
           loadVendors();

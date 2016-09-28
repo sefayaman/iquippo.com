@@ -15,14 +15,19 @@
 	
         </td>
     </tr>
-<tr>
+    {{#if existFlag}}
+      <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Please use this details to Login:
-      User Name : {{userId}} and Password : {{password}}.
-			
+        Please use existing user name and password.
         </td>
-    </tr>
-  
+    {{else}}
+      <tr>
+          <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+        Please use this details to Login:
+        User Name : {{userId}} and Password : {{password}}.
+          </td>
+      </tr>
+    {{/if}}
         <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
        Regards, 
