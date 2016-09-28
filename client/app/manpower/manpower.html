@@ -66,6 +66,9 @@
           <p>{{manpowerUser.user.fname}} {{manpowerUser.user.lname}}</p>
           <p>{{manpowerUser.user.city}}</p>
         </div>
+        <div class="row manpower-lists" ng-if="noUserExist">
+          <h6>No data found.</h6>
+        </div>
       </div>
 
       <!-- <div class="serve text-center">

@@ -10,6 +10,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     vm.manpowerFilter = {};
     $scope.assetsList = [];
     $scope.allManpowerUserList = [];
+    $scope.noUserExist = false;
     vm.resetClick = resetClick;
     vm.register = register;
     vm.onChangedValue = onChangedValue;
@@ -91,6 +92,10 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         delete vm.manpowerFilter.equipmentSearchText;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         $scope.allManpowerUserList = result;
+        if(result.length == 0)
+          $scope.noUserExist = true;
+        else
+          $scope.noUserExist = false;
       })
       .catch(function(){
         //error handling
@@ -112,6 +117,10 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       var filter = {};
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         $scope.allManpowerUserList = result;
+        if(result.length == 0)
+          $scope.noUserExist = true;
+        else
+          $scope.noUserExist = false;
       });
     }
 
