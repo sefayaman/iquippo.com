@@ -162,7 +162,7 @@
                   <div class="row">
                   <div class="col-xs-6 form-group" ng-class="{'has-error': form.location && submitted }">
                         <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)" required>
-                          <option value="" disabled>Current Location</option>
+                          <option value="" >*Current Location</option>
                           <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                         </select>
                         <i class="caret"></i>

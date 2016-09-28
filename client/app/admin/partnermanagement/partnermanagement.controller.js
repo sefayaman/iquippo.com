@@ -47,12 +47,16 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function verify(){
+
     var dataToSend = {};
     if(vm.vendorReg.user.email) 
       dataToSend['email'] = vm.vendorReg.user.email;
     if(vm.vendorReg.user.mobile) 
       dataToSend['mobile'] = vm.vendorReg.user.mobile;
-
+    else {
+      vm.existFlag = false;
+      return;
+    }
     vendorSvc.validate(dataToSend).then(function(data){
       if(data.errorCode == 1){
          setPartnerDate(data.user);
