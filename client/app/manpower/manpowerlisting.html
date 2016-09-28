@@ -29,22 +29,23 @@
                   </thead>
                   <tbody>
 
-                    <tr ng-repeat="classified in classifiedadLstVm.classifiedAdList" >
-                      <td>{{classified.fname}}</td>
-                      <td>{{classified.mobile}}</td>
-                      <td>{{classified.email}}</td>
+                    <tr ng-repeat="manpower in allManpowerList" >
+                      <td>{{manpower.user.fname}} {{manpower.user.lname}}</td>
+                      <td>{{manpower.user.mobile}}</td>
+                      <td>{{manpower.user.email}}</td>
                       <td> 
-                          {{classified.position}}
+                          {{manpower.assetOperated.join()}}
                        
                       </td>
                       <td> 
-                          <span ng-if="classified.status">Active</span><span ng-if="!classified.status">Inactive</span>
+                          <span ng-if="manpower.status">Active</span><span ng-if="!manpower.status">Inactive</span>
                            
                       </td>
                       <td>
-                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="classified.status" uib-btn-checkbox ng-click="classifiedadLstVm.updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
-                        <button class="btn btn-danger" ng-click="classifiedadLstVm.editClassifiedAdd(classified)"><i class="fa fa-trash" ></i></button>
-                        <button class="btn btn-default"><i class="fa fa-download"></i></button>
+                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="manpower.status" uib-btn-checkbox ng-click="manpowerListingVm.updateManpowerUser(manpower)"><span ng-if="!manpower.status">Activate</span> <span ng-if="manpower.status">Deactivate</span></label>
+                        <!-- <button class="btn btn-danger" ng-click="manpowerListingVm.editClassifiedAdd(manpower)"><i class="fa fa-trash" ></i></button> -->
+                        <!-- <button class="btn btn-default"><i class="fa fa-download"></i></button> -->
+                        <a class="btn btn-default" href="{{uploadImagePrefix}}{{manpower.docDir}}/{{manpower.resumeDoc}}" ng-if="manpower.resumeDoc" target="_blank"><i class="fa fa-download"></i></a>
                       </td> 
                     </tr>
 

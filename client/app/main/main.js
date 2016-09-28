@@ -124,6 +124,14 @@ angular.module('sreizaoApp')
         controller:"ManpowerCtrl as manpowerVm",
         layout:'client'
       })
+      .state('manpowerlisting', {
+        url: '/manpowerlisting',
+        templateUrl: 'app/manpower/manpowerlisting.html',
+        controller: 'ManpowerListingCtrl as manpowerListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      
       .state('certifiedbyiquippo', {
         url:"/certifiedbyiquippo",
         templateUrl: 'app/staticpages/certifiedByiQuippo.html',
@@ -224,13 +232,6 @@ angular.module('sreizaoApp')
       .state('auctionrequests', {
         url: '/auctionrequets',
         templateUrl: 'app/auction/auctionlisting.html',
-        controller: 'AuctionListingCtrl as auctionListingVm',
-        authenticate:true,
-        layout:'admin'
-      })
-      .state('manPowerList', {
-        url: '/manPowerList',
-        templateUrl: 'app/manpower/manpowerlisting.html',
         controller: 'AuctionListingCtrl as auctionListingVm',
         authenticate:true,
         layout:'admin'

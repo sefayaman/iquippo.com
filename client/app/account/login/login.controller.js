@@ -16,11 +16,12 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
 
     function login(form) {
       $scope.submitted = true;
+      var dataToSend = {};
+      dataToSend['userId'] = vm.user.userId;
+      dataToSend['password'] = vm.user.password;
+      //dataToSend['isManpower'] = false;
       if(form.$valid) {
-        Auth.login({
-          userId: vm.user.userId,
-          password: vm.user.password
-        })
+        Auth.login(dataToSend)
         .then( function() {
           closeDialog();
           vm.user = {};

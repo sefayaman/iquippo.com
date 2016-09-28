@@ -21,7 +21,7 @@ exports.setup = function (User, config) {
       else
         dataToSend['isManpower'] = false;*/
       dataToSend['deleted'] = false;
-      dataToSend['status'] = true;
+      //dataToSend['status'] = true;
       User.findOne(dataToSend, function(err, user) {
         if (err) return done(err);
 
@@ -29,8 +29,18 @@ exports.setup = function (User, config) {
           return done(null, false, { message: 'This user is not registered.' });
         }
 
-        if (req.body.isManpower && !user.isManpower) {
+        /*if (req.body.isManpower && !user.isManpower) {
           return done(null, false, { message: 'Not valid crediential.' });
+        }*/
+        var isManpower = false;
+        if(req.body.isManpower)
+          var isManpower = true;
+        else
+          var isManpower = false;
+        if(!(user.isPartner && user.isManpower)) {
+          if ((!isManpower && user.isManpower) || (isManpower && !user.isManpower)) {
+            return done(null, false, { message: 'Not valid crediential.' });
+          }
         }
 
         if (!user.status) {

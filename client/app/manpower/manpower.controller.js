@@ -80,7 +80,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
     function doSearch(){
       var filter = {};
-      filter['role'] = "manpower";
+      filter['isManpower'] = true;
       if(vm.manpowerFilter && vm.manpowerFilter.locationText)
         filter['location'] = vm.manpowerFilter.locationText;
       else
@@ -168,12 +168,33 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         });
     }
 
+    function setManpowerDate(user){
+      vm.manpower.user.userId = user._id;
+      vm.manpower.user.fname = user.fname;
+      if(user.mname)
+        vm.manpower.user.mname = user.mname;
+      vm.manpower.user.lname = user.lname;
+      if(user.email)
+        vm.manpower.user.email = user.email;
+      vm.manpower.user.mobile = user.mobile;
+      if(user.phone)
+        vm.manpower.user.phone = user.phone;
+      if(user.city)
+        vm.manpower.user.city = user.city;
+      vm.manpower.user.state = user.state;
+      if(user.imgsrc)
+        vm.manpower.user.imgsrc = user.imgsrc; 
+      //if(user.password)
+      vm.manpower.user.password = vm.manpower.password;
+    }
+
     function saveNewManpowerUser(){
       vm.manpower.isManpower =  true;    
       ManpowerSvc.createUser(vm.manpower).then(function(result) {
         vm.manpower.user = {};
-        if(result && result._id)
-          vm.manpower.user.userId = result._id;
+        setManpowerDate(result);
+        // if(result && result._id)
+        //   vm.manpower.user.userId = result._id;
         ManpowerSvc.createManpower(vm.manpower).then(function(result){
         Modal.alert("You have registered successfully");
         var data = {};
@@ -329,5 +350,53 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
   }
 
+/* listing controller*/
+angular.module('manpower').controller('ManpowerListingCtrl', ManpowerListingCtrl);
+function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $uibModal, LocationSvc, ManpowerSvc) {
+    var vm = this;
+    vm.manpower = {};
+    vm.manpowerFilter = {};
+    $scope.assetsList = [];
+    $scope.allManpowerList = [];
+    vm.updateManpowerUser = updateManpowerUser;
+    function init(){
+      LocationSvc.getAllLocation()
+      .then(function(result){
+        $scope.locationList = result;
+      });
+      var dataToSend = {};
+      dataToSend["status"] = true;
+      ManpowerSvc.getProductOnFilter(dataToSend)
+       .then(function(result){
+          $scope.assetsList = result;
+       });
+
+      getAllUsers();
+    }
+    init();
+
+    function updateManpowerUser(user){
+      $rootScope.loading = true;
+      ManpowerSvc.updateManpower(user).then(function(result){
+        $rootScope.loading = false;
+        getAllUsers();
+        if(result.status)
+          Modal.alert("User Activated",true);
+        else
+          Modal.alert("User Deactivated",true);
+      })
+      .catch(function(err){
+        console.log("error in manpower user update", err);
+      });
+    }
+
+    function getAllUsers(){
+      var filter = {};
+      ManpowerSvc.getAllUser(filter).then(function(result){
+        $scope.allManpowerList = result;
+      });
+    }
+
+  }
 
 })();

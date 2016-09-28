@@ -9,7 +9,11 @@ var User = require('./../user/user.model');
 
 // Get list of services
 exports.getAll = function(req, res) {
-  ManpowerUser.find(function (err, users) {
+  var filter = {};
+  filter['deleted'] = false;
+  if(req.body.status)
+    filter['status'] = req.body.status;
+  ManpowerUser.find(filter, function (err, users) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(users);
   });
@@ -74,8 +78,6 @@ exports.getOnId = function(req, res) {
 //var ADMIN_EMAIL = "bharat.hinduja@bharatconnect.com";
 
 exports.create = function(req, res) {
-  // var prQuote = validateProductQuote(req.body);
-  req.body.createdAt = new Date();
   ManpowerUser.create(req.body, function(err, user) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(user);
@@ -91,6 +93,13 @@ exports.update = function(req, res) {
     if(!user) { return res.status(404).send('Not Found'); }
     ManpowerUser.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
+        var dataObj = {};
+        dataObj['status'] = req.body.status;
+        dataObj.updatedAt = new Date();
+        User.update({_id:req.body.user.userId},{$set:dataObj},function(err,userObj){
+          if(err){return handleError(res, err);}
+        });
+        
         return res.status(200).json(req.body);
     });
   });
@@ -121,15 +130,13 @@ exports.getSearchedUser = function(req, res) {
   var filter = {};
   filter["status"] = true;
   filter["deleted"] = false;
-  filter["isManpower"] = true;
-  // if(req.body.role)
-  //     filter["role"] = req.body.role;
+  //filter["isManpower"] = true;
   var arr = [];
   if(req.body.location){
     var locRegEx = req.body.location; // new RegExp(req.body.location, 'i');
     console.log("filter", locRegEx);
-    arr[arr.length] = {"city":locRegEx};
-    arr[arr.length] = {"state":locRegEx};
+    arr[arr.length] = {"user.city":locRegEx};
+    arr[arr.length] = {"user.state":locRegEx};
   }
   if(arr.length > 0)
     filter['$or'] = arr;
@@ -142,7 +149,7 @@ exports.getSearchedUser = function(req, res) {
   }
   console.log("filter", filter);
   //var query = ManpowerUser.find(filter); 
-  var query = User.find(filter); 
+  var query = ManpowerUser.find(filter); 
   query.exec(
                function (err, users) {
                       if(err) { return handleError(res, err); }
