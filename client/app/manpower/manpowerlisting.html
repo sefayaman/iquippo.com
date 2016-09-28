@@ -1,0 +1,67 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">        
+        <div class="col-sm-12">
+          <div id="page-wrapper">
+            <!-- Page Heading -->
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>
+                      Manpower List
+                  </h3>
+                  <hr>
+                </div>
+              </div>
+              <!-- /.row -->
+
+              <div class="table-responsive">
+                <table datatable="ng"  dt-options= "dtOptions" class="table table-bordred table-striped">
+
+                  <thead>
+                    <th>Name</th>
+                    <th>Mobile No.</th>
+                    <th>Email Id</th>
+                    <th>Product</th>
+                    <th>Status</th>
+                    <th width="25%">Action</th>
+                   
+                  </thead>
+                  <tbody>
+
+                    <tr ng-repeat="classified in classifiedadLstVm.classifiedAdList" >
+                      <td>{{classified.fname}}</td>
+                      <td>{{classified.mobile}}</td>
+                      <td>{{classified.email}}</td>
+                      <td> 
+                          {{classified.position}}
+                       
+                      </td>
+                      <td> 
+                          <span ng-if="classified.status">Active</span><span ng-if="!classified.status">Inactive</span>
+                           
+                      </td>
+                      <td>
+                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="classified.status" uib-btn-checkbox ng-click="classifiedadLstVm.updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
+                        <button class="btn btn-danger" ng-click="classifiedadLstVm.editClassifiedAdd(classified)"><i class="fa fa-trash" ></i></button>
+                        <button class="btn btn-default"><i class="fa fa-download"></i></button>
+                      </td> 
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function(){
+    $('.dashboard-nav a').on('click', function(){
+      $('.dashboard-nav a').removeClass('active')
+      $(this).addClass('active')
+    });
+  });
+</script>

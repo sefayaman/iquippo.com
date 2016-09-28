@@ -228,6 +228,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('manPowerList', {
+        url: '/manPowerList',
+        templateUrl: 'app/manpower/manpowerlisting.html',
+        controller: 'AuctionListingCtrl as auctionListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('valuationrequests', {
         url: '/valuationrequests',
         templateUrl: 'app/valuation/valuationlisting.html',
