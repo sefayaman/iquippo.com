@@ -172,8 +172,26 @@ exports.update = function(req, res) {
     if(!user) { return res.status(404).send('Not Found'); }
     User.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
+        var dataObj = {};
+        dataObj['user.fname'] = req.body.fname;
+          if(req.body.mname)
+        dataObj['user.mname'] = req.body.mname;
+        dataObj['user.lname'] = req.body.lname;
+        if(req.body.email)
+          dataObj['user.email'] = req.body.email;
+        dataObj['user.mobile'] = req.body.mobile;
+        if(req.body.phone)
+          dataObj['user.phone'] = req.body.phone;
+        dataObj['user.city'] = req.body.city;
+        if(req.body.state)
+          dataObj['user.state'] = req.body.state;
+        if(req.body.imgsrc)
+          dataObj['user.imgsrc'] = req.body.imgsrc;
         if(req.body.isPartner) {
-          updateVendor(req.body, req.params.id);
+          updateVendor(dataObj, req.params.id);
+        }
+        if(req.body.isManpower) {
+          updateManpower(dataObj, req.params.id);
         }
         return res.status(200).json(req.body);
     });
@@ -182,20 +200,18 @@ exports.update = function(req, res) {
 
 //update partner
   function updateVendor(userData, userId){
-    var dataObj = {};
-    dataObj['user.fname'] = userData.fname;
-      if(userData.mname)
-    dataObj['user.mname'] = userData.mname;
-    dataObj['user.lname'] = userData.lname;
-    dataObj['user.email'] = userData.email;
-    dataObj['user.mobile'] = userData.mobile;
-    if(userData.phone)
-      dataObj['user.phone'] = userData.phone;
-    dataObj['user.city'] = userData.city;
-    dataObj['user.imgsrc'] = userData.imgsrc;
-    dataObj.updatedAt = new Date();
+    userData.updatedAt = new Date();
     
-    Vendor.update({'user.userId':userId},{$set:dataObj},function(err,userObj){
+    Vendor.update({'user.userId':userId},{$set:userData},function(err,userObj){
+      if(err){return handleError(res, err);}
+    });
+  };
+
+  //update manpower
+  function updateManpower(userData, userId){
+    userData.updatedAt = new Date();
+    
+    ManpowerUser.update({'user.userId':userId},{$set:userData},function(err,userObj){
       if(err){return handleError(res, err);}
     });
   };
