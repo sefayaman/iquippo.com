@@ -8,7 +8,7 @@ var User = require('./../user/user.model');
 exports.getAll = function(req, res) {
   console.log("find Vendor");
   var filter = {}
-  filter['status'] = true;
+  filter['deleted'] = false;
   Vendor.find(filter, function (err, vendor) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(vendor);
@@ -106,6 +106,10 @@ exports.update = function(req, res) {
       dataObj['state'] = req.body.user.state;
     dataObj['imgsrc'] = req.body.user.imgsrc;
     dataObj.updatedAt = new Date();
+    if(req.body.status)
+      dataObj['isPartner'] = true;
+    else
+      dataObj['isPartner'] = false;
     User.update({_id:req.body.user.userId},{$set:dataObj},function(err,userObj){
       if(err){return handleError(res, err);}
     });

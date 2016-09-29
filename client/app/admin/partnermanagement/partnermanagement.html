@@ -152,7 +152,8 @@
                 <th width="10%">Legal Entity</th>
                 <th width="20%">Services</th>
                 <th width="20%">Email Id</th>
-                <th width="10%">Mobile No.</th>                
+                <th width="10%">Mobile No.</th>  
+                <th>Status</th>              
                 <th width="10%">Action</th>
                
               </thead>
@@ -164,9 +165,13 @@
                 <td>{{partnerVM.getServiceString(vendor.services.join())}}</td>
                 <td>{{vendor.user.email}}</td>
                 <td>{{vendor.user.mobile}}</td>
+                <td> 
+                  <span ng-if="vendor.status">Active</span><span ng-if="!vendor.status">Inactive</span>
+                </td>
                 <td>
+                <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="vendor.status" uib-btn-checkbox ng-click="partnerVM.updateVendorUser(vendor)"><span ng-if="!vendor.status">Activate</span> <span ng-if="vendor.status">Deactivate</span></label>
                 <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="partnerVM.editVendorClick(vendor)" ><i class="fa fa-pencil"></i> </a>
-                <button class="btn btn-sm btn-danger" ng-click="partnerVM.deleteVendor(vendor)"><i class="fa fa-trash"></i></button></td>
+                <!-- <button class="btn btn-sm btn-danger" ng-click="partnerVM.deleteVendor(vendor)"><i class="fa fa-trash"></i></button> --></td>
                 </tr>
               </tbody>
             </table>

@@ -11,8 +11,6 @@ var User = require('./../user/user.model');
 exports.getAll = function(req, res) {
   var filter = {};
   filter['deleted'] = false;
-  if(req.body.status)
-    filter['status'] = req.body.status;
   ManpowerUser.find(filter, function (err, users) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(users);
@@ -93,18 +91,45 @@ exports.update = function(req, res) {
     if(!user) { return res.status(404).send('Not Found'); }
     ManpowerUser.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        var dataObj = {};
-        dataObj['status'] = req.body.status;
-        dataObj.updatedAt = new Date();
-        User.update({_id:req.body.user.userId},{$set:dataObj},function(err,userObj){
-          if(err){return handleError(res, err);}
-        });
+        updateUser(req.body, req.body.user.userId) ;
         
         return res.status(200).json(req.body);
     });
   });
 };
 
+//update user collection 
+
+function updateUser(userData, userId) {
+  var dataObj = {};
+  dataObj.updatedAt = new Date();
+  User.findById(userId, function (err, user) {
+    if (err) { return handleError(res, err); }
+    if(!userData.status) {
+      if(user.isManpower && user.isPartner){
+        if(userData.status) 
+          dataObj['isManpower'] = true;
+        else
+          dataObj['isManpower'] = false;
+      } else if(user.isManpower) {
+        if(userData.status) {
+          dataObj['isManpower'] = true;
+          dataObj['status'] = userData.status;
+        } else {
+          dataObj['status'] = userData.status;
+          dataObj['isManpower'] = false;
+        }
+      }
+    } else {
+      dataObj['isManpower'] = true;
+      dataObj['status'] = userData.status;
+    }
+
+    User.update({_id:userId},{$set:dataObj},function(err,userObj){
+      if(err){return handleError(res, err);}
+    });
+  });
+}
 // Get products list
 exports.getProducts = function(req, res) {
   var filter = {};

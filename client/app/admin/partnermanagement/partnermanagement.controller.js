@@ -18,7 +18,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   vm.verify = verify;
   vm.onLocationChange = onLocationChange;
   vm.getServiceString = getServiceString;
-  vm.deleteVendor = deleteVendor;
+  //vm.deleteVendor = deleteVendor;
+  vm.updateVendorUser = updateVendorUser;
   vm.editVendorClick = editVendorClick;
   $scope.updateAvatar = updateAvatar;
 
@@ -257,7 +258,7 @@ function updateVendor(vendor) {
 
  $scope.isCollapsed = true;
 
- function deleteVendor(vendor){
+ /*function deleteVendor(vendor){
     Modal.confirm(informationMessage.deletePartnerConfirm,function(isGo){
         if(isGo == 'no')
           return;
@@ -268,7 +269,22 @@ function updateVendor(vendor) {
         console.log("error in vendor delete",err.data);
       });
     });
-  }
+  }*/
+
+  function updateVendorUser(vendor){
+      $rootScope.loading = true;
+      vendorSvc.updateVendor(vendor).then(function(result){
+        $rootScope.loading = false;
+        loadVendors();
+        if(result.status)
+          Modal.alert("User Activated",true);
+        else
+          Modal.alert("User Deactivated",true);
+      })
+      .catch(function(err){
+         console.log("error in vendor delete", err);
+      });
+    }
 
   function editVendorClick(vendor){
     $scope.isCollapsed = false;
