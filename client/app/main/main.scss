@@ -42,7 +42,7 @@ select::-ms-expand {display: none;}
 a.text-muted{position:absolute; top:7px; right:30px; font-size:18px;}
 .panel-title span i{position:relative; right:5px; font-size:14px;}
 .quote-btn{width: 250px;margin: -33px 0 7px 400px;float: left;}
-.search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:4px; height:45px;}
+.search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:2px; height:40px;}
 
 .navbar-toggle{float: left;margin-left: 10px;}
 .navbar-inverse .navbar-toggle{background: #E3000F;border: #E3000F;border-radius: 0;}
@@ -99,6 +99,7 @@ header{background:#fff;}
 .select select{background:#FFF;border:0;color:#A8A8A9;padding:0 20px 3px 5px;outline:none; width:100%; -webkit-appearance:none;-moz-appearance:none;appearance:none;}
 .search-field .caret{padding:0; right: 10px; color:#ADACAD;}
 .select-text{width:70%;margin-left:0;}
+.or-devided{padding: 15px; color: #fff;}
 .caret{position:absolute;right:30px;top:18px;color:#000;padding:0;z-index:5;}
 .wrapper .caret{position:absolute;right:25px;top:18px;color:#000;padding:0;z-index:5;}
 .top-menu{padding:0;}
@@ -143,6 +144,8 @@ header{background:#fff;}
 .feature{padding:0;}
 .feature li{display:block;text-align:center;width:85%;margin:30px auto;}
 #view-container{min-height:400px;margin-bottom:15px;}
+#view-container .carousel-indicators{display: none;}
+
 .discription{font-size:12px;}
 .padd-left{padding-left:0;}
 .padd-right{padding-right:0;}
@@ -727,11 +730,11 @@ table.table{width:100% !important;}
 
 /* updated css */
 .full-header{box-shadow:0 2px 3px #ccc;}
-.search-banner{position: absolute;top:200px;z-index: 99;border-radius: 15px;}
+.search-banner{position: absolute;top:240px;z-index: 99;border-radius: 15px;}
 .search-banner .select-text{width:100%;}
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {margin-bottom: 20px; height: 380px;}
 .carousel-inner.cont-slider > .item > img, .carousel-inner.cont-slider > .item > a > img {margin-bottom: 20px; height: auto;}
-.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:20px; border: 2px solid #bbb;}
+.search-tabs .tab-content{background:rgba(0,0,0,0.75); border-radius:0 6px 6px 6px; padding:15px; border: 2px solid #bbb;}
 .search-tabs .btn-group{position:relative;display:inline-block;font-size:0;vertical-align:middle;white-space:nowrap;top: 2px;
     border: 2px solid #bbb;
     border-radius: 8px 8px 0 0;
@@ -849,6 +852,16 @@ border-radius: 50%;}
    
 .manpower-lists p{margin-bottom: 0px;}
 .manpower-lists img{height: 130px;width: 100%;}
-.search-manpower .btn-warning{padding: 10px;}
-/*.manpower-register .input-group{width: 242px;}*/
+.search-manpower .btn-warning{padding: 10px; border:0;}
 .payment-icon{margin: 190px auto;}
+.manpower-img {
+    border: 1px solid #666;
+    border-radius: 50%;
+    width: 110px;
+    margin: 0 auto;
+    height: 110px;
+}
+.manpower-img img {
+    margin: 0 auto;
+    padding: 5px 0;
+}

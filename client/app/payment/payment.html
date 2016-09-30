@@ -18,16 +18,19 @@
               <!-- /.row -->
 
               <div class="row form-group">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                   <h4>Product</h4>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
+                  <h4>Request Type</h4>
+                </div>
+                <div class="col-sm-4">
                   <h4>Price(Rs.)</h4>
                 </div>
               </div>
               <legend></legend>
               <div class="row form-group" ng-repeat="py in paymentVm.payTransaction.payments">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                   <div class="media">
                     <a class="pull-left" href="javascrip:void(0)">
                       <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImage}}" alt="Image" width="70" height="70">
@@ -38,7 +41,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
+                  Auction
+                </div>
+                <div class="col-sm-4">
                   {{py.charge}}
                 </div>
               </div>

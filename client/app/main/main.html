@@ -21,20 +21,28 @@
       <div class="tab-content">
         <form>
             <div class="row">
-              <div class="col-sm-5">
+              <div class="col-sm-3">
                 <div class="select-text">
                   <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                 </div>
               </div>
-              <div class="col-sm-5">
+              <div class="col-sm-3">
                 <div class="select-text">
                   <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                     <div ng-show="mainVm.noResults">
                       <i class="glyphicon glyphicon-remove"></i> No Results Found
                     </div>
                 </div>
-              </div>
-              <div class="col-sm-2 text-center">
+              </div> 
+              <div class="col-sm-3">
+                <div class="select-text">
+                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Product Name" uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    <div ng-show="mainVm.noResults">
+                      <i class="glyphicon glyphicon-remove"></i> No Results Found
+                    </div>
+                </div>
+              </div>             
+              <div class="col-sm-3 text-center">
                 <a href="javascript:;"  class="btn btn-lg btn-warning btn-block" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search</a>
               </div>
             </div>
