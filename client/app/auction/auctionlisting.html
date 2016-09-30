@@ -25,12 +25,14 @@
 
             <thead>
               <th width="40"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
-              <th>Asset ID</th>                                
+              <th>Asset Name</th>                                
               <th>Auction ID</th>                                
+              <th>Seller Name</th>                                
               <th>Start Date</th>
               <th>End Date</th>
               <th>EMD Amount</th>
               <th>Auction Status</th>
+              <th>Valuation Status</th>
               <th ng-if="isAdmin()">Action</th>
              
             </thead>
@@ -41,6 +43,8 @@
               <td>{{auts.auctionId}}</td>              
               <td>{{auts.startDate | date:'MM/dd/yyyy'}}</td>              
               <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>              
+              <td>{{auts.emdAmount}}</td>              
+              <td>{{auts.emdAmount}}</td>              
               <td>{{auts.emdAmount}}</td>              
               <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
               <td ng-if="isAdmin()">

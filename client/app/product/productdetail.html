@@ -12,9 +12,9 @@
           <li><a class="active">{{currentProduct.name}}</a></li>
         </ol>
 
-        <div class="valueation-request">
+        <!-- <div class="valueation-request">
           <button class="btn btn-info btn-lg" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>
-        </div>
+        </div> -->
 
         <div class="row">
           <div class="col-sm-7 col-md-5">
@@ -63,17 +63,24 @@
             <div class="form-group clearfix">
               <legend></legend>
             </div>
-            <div class="video-link">
-              <ul>
-                <li ng-repeat="link in currentProduct.videoLinks">
-                  <a href="javascript:void(0)" ng-click="productDetailVm.playVideo($index)">
-                    <!-- {{link.uri}} -->
-                    <i class="fa fa-youtube-play fa-2x"></i>
-                  </a>
-                </li>
-              </ul>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="video-link">
+                  <ul>
+                    <li ng-repeat="link in currentProduct.videoLinks">
+                      <a href="javascript:void(0)" ng-click="productDetailVm.playVideo($index)">
+                        <!-- {{link.uri}} -->
+                        <i class="fa fa-youtube-play fa-2x"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <button class="btn btn-info btn-md" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>
+              </div>
             </div>
-
+             
             <div class="form-group clearfix"></div>
 
               <uib-accordion close-others="oneAtATime" class="information">
@@ -255,11 +262,8 @@
                     </table>
                 </uib-accordion-group>
               </uib-accordion>
-              <div class="row">
-                <div class="col-sm-4">
-                  <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>
-                </div>
-                <div class="col-sm-8">
+              <div class="row">                
+                <div class="col-sm-12">
                   <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>
                 </div>
               </div>
@@ -351,16 +355,16 @@
                       </div>
                     </div>
 
-                    <span>Do you want to </span>
-                    <div class="row">
+                    <span>Request for finance </span>
+                    <div class="row">                      
                       <div class="col-xs-6">
                         <div class="form-group">
-                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="buyORrent"> Buy/Rent Asset
+                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="finance"> Yes
                         </div>
                       </div>
                       <div class="col-xs-6">
                         <div class="form-group">
-                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="finance"> Finance Asset
+                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="buyORrent"> No
                         </div>
                       </div>
                     </div>
@@ -368,12 +372,12 @@
                       <div class="row">
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Asset Cost">
+                            <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Amount to be Financed">
                           </div>
                         </div>
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Finance Amount">
+                            <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
                           </div>
                         </div>
                       </div>
@@ -407,40 +411,43 @@
 
 
           </div>
-          <div class="col-md-3 padd-left" ng-if="currentProduct.tradeType != 'SELL' && currentProduct.assetStatus == 'listed'">
-            <div class="panel-group vendor-list">   
-              <div class="panel panel-primary calctr-info">
-                <div class="panel-heading">
-                  <h5 class="panel-title"><i class="fa fa-calculator"></i> Rent Calculation</h5>
-                </div>
-                <div class="panel-body">
-                  <h5><strong>Specify your Rental duration:</strong></h5>
-                  I require machine for
-                  <div class="row">
-                    <div class="col-sm-12 form-group">
-                      <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Enter value" name="duration" ng-model="calRent.duration">
-                        <span class="input-group-addon">
-                          <select class="form-control" name="rateType" ng-model="calRent.rateType">
-                            <option value="Hours">Hours</option>
-                            <option value="Days">Days</option>
-                            <option value="Months">Months</option>
-                          </select>
-                          <i class="caret"></i>
-                        </span>
+          <div class="col-md-3 padd-left">
+            <div ng-if="currentProduct.tradeType != 'SELL' && currentProduct.assetStatus == 'listed'">
+              <div class="panel-group vendor-list">   
+                <div class="panel panel-primary calctr-info">
+                  <div class="panel-heading">
+                    <h5 class="panel-title"><i class="fa fa-calculator"></i> Rent Calculation</h5>
+                  </div>
+                  <div class="panel-body">
+                    <h5><strong>Specify your Rental duration:</strong></h5>
+                    I require machine for
+                    <div class="row">
+                      <div class="col-sm-12 form-group">
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="Enter value" name="duration" ng-model="calRent.duration">
+                          <span class="input-group-addon">
+                            <select class="form-control" name="rateType" ng-model="calRent.rateType">
+                              <option value="Hours">Hours</option>
+                              <option value="Days">Days</option>
+                              <option value="Months">Months</option>
+                            </select>
+                            <i class="caret"></i>
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="calctr-value text-center">
-                    <h4><i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i> {{totalRent}}</h4>
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" ng-click="productDetailVm.calculateRent(currentProduct.rent, calRent)" class="btn btn-warning">Calculate Now</button>
-                  </div>
+                    <div class="calctr-value text-center">
+                      <h4><i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i> {{totalRent}}</h4>
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" ng-click="productDetailVm.calculateRent(currentProduct.rent, calRent)" class="btn btn-warning">Calculate Now</button>
+                    </div>
 
+                  </div>
                 </div>
               </div>
             </div>
+            <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>
           </div>
         </div>
       </div>

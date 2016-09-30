@@ -10,6 +10,16 @@
 	    <div class="row form-group">
 	    	<div class="col-sm-4">
 	        	<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
+	        		<option value="sc">Category</option>
+	        		<option value="loc">Location</option>
+	        		<option value="date">Auction Date</option>
+	        		<option value="inv">Invite Code Setting</option>
+	        		<option value="paymnt">Payment Master</option>
+	        	</select>
+	        	<i class="caret"></i>
+	      	</div> 
+	      	<div class="col-sm-4">
+	        	<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
 	        		<option value="sc">Sub Category</option>
 	        		<option value="loc">Location</option>
 	        		<option value="date">Auction Date</option>

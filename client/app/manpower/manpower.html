@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="col-sm-6 text-justify">
+    <div class="col-sm-7 text-justify">
       <h3>Manpower</h3>
       <legend></legend>
 
@@ -31,22 +31,29 @@
       <h4>Search Manpower</h4>
       <legend></legend>
       <div class="form-group row search-manpower">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
         <!-- <select class="form-control" name="location" ng-model="manpowerVm.manpowerFilter.locationText" ng-change="manpowerVm.doSearch()">
             <option value="">Select Location</option>
             <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
           </select>
           <i class="caret"></i> -->
-          <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Enter Location/State..." uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+          <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Enter Location/State" uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-3 padd-left">
           <!-- <div class="search-equip">
           <i class="fa fa-search"></i>
            </div> -->
-          <input type="text" class="form-control" placeholder="Equipment/Assets Search..." ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+          <input type="text" class="form-control" placeholder="Enter Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
          
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3 padd-left">
+          <!-- <div class="search-equip">
+          <i class="fa fa-search"></i>
+           </div> -->
+          <input type="text" class="form-control" placeholder="Enter Experience" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+         
+        </div>
+        <div class="col-sm-3 padd-left">
         <button type="button" class="btn btn-warning btn-block" ng-click="manpowerVm.doSearch()">
          <i class="fa fa-search"></i> Search</button>
         </div>
@@ -75,7 +82,7 @@
           <a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('shippingquote')">Request a Quote</a>
       </div> -->
     </div>
-    <div class="col-sm-6 manpower-register" ng-if="!isLoggedIn()">
+    <div class="col-sm-5 padd-right manpower-register" ng-if="!isLoggedIn()">
       <div class="form-group"></div>
       <uib-tabset justified="true">
         <uib-tab heading="Register">
@@ -163,7 +170,7 @@
                   
 
                   <div class="row">
-                  <div class="col-xs-6 form-group" ng-class="{'has-error': form.location && submitted }">
+                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.location && submitted }">
                         <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)" required>
                           <option value="" >*Current Location</option>
                           <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
@@ -174,8 +181,21 @@
                       <div class="form-group">                          
                         <input type="text" name="" class="form-control" placeholder="Fees &amp; Charges" ng-model="manpowerVm.manpower.fees">
                       </div>
-                    </div>                   
-                    
+                    </div>  
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.location && submitted }">
+                        <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)" required>
+                          <option value="" >Experience</option>
+                          <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group">                          
+                        <input type="text" name="" class="form-control" placeholder="Certificates">
+                      </div>
+                    </div>  
                   </div>
                                    
                   <div class="row">
