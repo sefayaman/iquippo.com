@@ -413,13 +413,20 @@
                         <span>{{myAccountVm.getDateFormat(myAccountVm.manpowerInfo.availableFrom)}}</span>                  
                       </div>
                       
-                     <div class="col-sm-4 form-group">
-                        <div><label>Assets Operated</label></div>
-                        <span ng-if="!myAccountVm.manpowerInfo.assetOperated">Add Operated</span>
-                        <span ng-if="myAccountVm.manpowerInfo.assetOperated">{{myAccountVm.manpowerInfo.assetOperated.join()}}</span>
+                      <div class="col-sm-4 form-group">
+                        <div><label>Experience</label></div>
+                        <!-- <span ng-if="!myAccountVm.manpowerInfo.experience">Add Experience</span> -->
+                        <span>{{myAccountVm.manpowerInfo.experience}}</span>
                       </div>
 
-                      <div class="col-sm-8 form-group">
+                      <div class="col-sm-4">
+                        <div><label>Certificates</label></div>
+                        <span ng-if="!myAccountVm.manpowerInfo.certificates">Add Certificates</span>
+                        <span ng-if="myAccountVm.manpowerInfo.certificates">{{myAccountVm.manpowerInfo.certificates}}</span>
+                      </div>
+                      
+
+                      <div class="col-sm-4 form-group">
                         <div>
                           <label>Uplaod Resume</label>
                         </div>
@@ -428,9 +435,22 @@
                           <span>{{myAccountVm.manpowerInfo.resumeDoc}}</span>
                         </a>                    
                       </div>
+                      <div class="clearfix"></div>
+                      <div class="col-sm-4 form-group">
+                        <div><label>Assets Operated</label></div>
+                        <span ng-if="!myAccountVm.manpowerInfo.assetOperated">Add Operated</span>
+                        <span ng-if="myAccountVm.manpowerInfo.assetOperated">{{myAccountVm.manpowerInfo.assetOperated.join()}}</span>
+                      </div>
+
+                      <div class="col-sm-8">
+                        <div><label>Notes</label></div>
+                        <span ng-if="!myAccountVm.manpowerInfo.notes">Add Notes</span>
+                        <span ng-if="myAccountVm.manpowerInfo.notes">{{myAccountVm.manpowerInfo.notes}}</span>
+
+                      </div>
                     </div>
                     <div class="row form-group" ng-if="myAccountVm.editManpowerInfo">
-                      <form novalidate>
+                      <form novalidate name="manpowerInfoForm">
                         <div class="col-sm-4 form-group">
                           <div>
                             <label>
@@ -451,17 +471,21 @@
                           </div>
                           <div class="input-group">
                             <input type="text" ng-model="myAccountVm.manpowerInfo.availableFrom" uib-datepicker-popup="{{format}}" name="availableFrom" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
-                            <!-- <span class="input-group-addon">
-                              <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
-                            </span> -->
                           </div>                
                         </div>                        
-                        <div class="col-sm-4 form-group">
-                          <div><label>Assets Operated</label></div>
-                          <select name="selectedAssets" id="selectedAssets" ng-options="assets as assets for assets in assetsList" ng-model="myAccountVm.manpowerInfo.assetOperated" multiple>
-                          </select>
+                        <div class="col-sm-4 form-group" ng-class="{'has-error': manpowerInfoForm.experience.$invalid && submitted}">
+                          <div><label>Experience</label></div>
+                          <input type="number" name="experience" class="form-control" min="0" placeholder="Experience" value="{{myAccountVm.manpowerInfo.experience}}" ng-model="myAccountVm.manpowerInfo.experience" required>
                         </div>
-                        <div class="col-sm-8 form-group">
+                        <div class="col-sm-4 form-group">
+                          <div>
+                            <label>Certificates</label>
+                          </div>
+                          <div class="input-group">
+                            <input type="text" name="certificates" class="form-control" placeholder="Certificates" value="{{myAccountVm.manpowerInfo.certificates}}" ng-model="myAccountVm.manpowerInfo.certificates">
+                          </div>                
+                        </div>                       
+                        <div class="col-sm-4 form-group">
                           <div>
                             <label>Upload Resume</label>
                           </div>
@@ -469,8 +493,22 @@
                           <span>{{manpowerVm.manpower.resumeDoc}}</span>                     
                         </div>
                         <div class="clearfix"></div>
+                         <div class="col-sm-4 form-group">
+                          <div><label>Assets Operated</label></div>
+                          <select name="selectedAssets" id="selectedAssets" ng-options="assets as assets for assets in assetsList" ng-model="myAccountVm.manpowerInfo.assetOperated" multiple>
+                          </select>
+                        </div>
+                        <div class="col-sm-8 form-group">
+                          <div>
+                            <label>Notes</label>
+                          </div>
+                          <div class="">
+                            <textarea class="form-control" placeholder="Enter Notes" rows="3" name="notes" value="{{myAccountVm.manpowerInfo.notes}}" ng-model="myAccountVm.manpowerInfo.notes"></textarea>
+                          </div>                
+                        </div>
+                        <div class="clearfix"></div>
                         <div class="col-sm-6 form-group">
-                          <button class="btn btn-sm btn-primary" ng-click="myAccountVm.updateManpowerUser()">Save</button>
+                          <button class="btn btn-sm btn-primary" ng-click="myAccountVm.updateManpowerUser(manpowerInfoForm)">Save</button>
                           <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('manpower')">Cancel</button>
                         </div>
                         </form>

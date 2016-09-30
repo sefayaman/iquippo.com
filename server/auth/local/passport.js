@@ -8,7 +8,6 @@ exports.setup = function (User, config) {
       passReqToCallback: true
     },
     function(req, userId, password, done) {
-      //email: email.toLowerCase(),
       var dataToSend ={};
       
       if (/^\d{10}$/.test(userId)) {
@@ -16,10 +15,6 @@ exports.setup = function (User, config) {
       } else {
         dataToSend['email'] = userId.toLowerCase();
       }
-      /*if(req.body.isManpower)
-        dataToSend['isManpower'] = true;
-      else
-        dataToSend['isManpower'] = false;*/
       dataToSend['deleted'] = false;
       //dataToSend['status'] = true;
       User.findOne(dataToSend, function(err, user) {
@@ -32,7 +27,7 @@ exports.setup = function (User, config) {
         /*if (req.body.isManpower && !user.isManpower) {
           return done(null, false, { message: 'Not valid crediential.' });
         }*/
-        var isManpower = false;
+        /*var isManpower = false;
         if(req.body.isManpower)
           var isManpower = true;
         else
@@ -41,7 +36,7 @@ exports.setup = function (User, config) {
           if ((!isManpower && user.isManpower) || (isManpower && !user.isManpower)) {
             return done(null, false, { message: 'Not valid crediential.' });
           }
-        }
+        }*/
 
         if (!user.status) {
           return done(null, false, { message: 'This user is Deactived.' });

@@ -67,6 +67,7 @@ angular.module('sreizaoApp',[
     $rootScope.tradeType = tradeType;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
     $rootScope.invitationData = {};
+    $rootScope.expValue = expValue;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 

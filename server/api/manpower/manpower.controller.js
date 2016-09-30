@@ -139,7 +139,7 @@ exports.getProducts = function(req, res) {
     filter["status"] = req.body.status;
   if(req.body.searchStr){
     var term = new RegExp("^" + req.body.searchStr, 'i');
-  filter['name'] = { $regex: term };
+    filter['name'] = { $regex: term };
   }
   var query = Product.distinct("name", filter); 
   query.exec(
@@ -166,12 +166,27 @@ exports.getSearchedUser = function(req, res) {
   if(arr.length > 0)
     filter['$or'] = arr;
 
-  if(req.body.searchStr){
+  /*if(req.body.searchStr){
     //var term = new RegExp("^" + req.body.searchStr, 'i');
     var term = req.body.searchStr;
    //filter['assetOperated'] = { $elemMatch : {$eq: { $regex: term }}};
    filter['assetOperated'] = { $elemMatch : {$eq: term }};
+  }*/
+  if(req.body.searchStr){
+    var term = new RegExp(req.body.searchStr, 'i');
+    filter['assetOperated'] = { $regex: term };
   }
+  if(req.body.experience){
+    var expFilter = {};
+    if(req.body.experience.min)
+      expFilter['$gt'] = Number(req.body.experience.min);
+    if(req.body.experience.max == 'plus')
+      delete req.body.experience.max;  
+    else  
+      expFilter['$lte'] = Number(req.body.experience.max);
+    filter["experience"] = expFilter;
+  }
+
   console.log("filter", filter);
   //var query = ManpowerUser.find(filter); 
   var query = ManpowerUser.find(filter); 

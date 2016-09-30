@@ -56,6 +56,25 @@ var priceRange = [
 }
 ];
 
+var expValue = [
+{
+  name:" 0 - 1 yr",
+  value:1
+},
+{
+  name:" 1 - 3 yr",
+  value:3
+},
+{
+  name:" 3 - 5 yr",
+  value:5
+},
+{
+  name:" 5 + yr",
+  value:"plus"
+}
+];
+
 var importDir = "import";
 var categoryDir = "category";
 var manpowerDir = "manpower";

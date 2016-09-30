@@ -16,17 +16,19 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     vm.onChangedValue = onChangedValue;
     vm.onLocationChange = onLocationChange;
     vm.viewAllUser = viewAllUser;
+    vm.viewUserProfile = viewUserProfile;
     vm.getEquipmentHelp = getEquipmentHelp;
     vm.getLocationHelp = getLocationHelp;
     vm.myFunct = myFunct;
     vm.doSearch = doSearch;
-    vm.login = login;
-    vm.forgotPassword = forgotPassword;
+    vm.onExpRangeChange = onExpRangeChange;
+    //vm.login = login;
+    //vm.forgotPassword = forgotPassword;
     
     $scope.uploadDoc = uploadDoc;
     $scope.updateAvatar = updateAvatar;
     $scope.open1 = open1;
-    $scope.loginObj = {};
+    //$scope.loginObj = {};
 
     function init(){
       LocationSvc.getAllLocation()
@@ -75,9 +77,34 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       }
     }
 
-    function forgotPassword(){
+    /*function forgotPassword(){
       $scope.openDialog('forgotpassword');
-    };
+    };*/
+
+    function onExpRangeChange(exp){ 
+      vm.manpowerFilter.experience = {};
+      
+      switch(exp){
+        case "1": 
+          vm.manpowerFilter.experience.min = 0;
+          vm.manpowerFilter.experience.max = 1;
+          break;
+        case '3':
+          vm.manpowerFilter.experience.min = 1;
+          vm.manpowerFilter.experience.max = 3;
+          break;
+        case '5':
+          vm.manpowerFilter.experience.min = 3;
+          vm.manpowerFilter.experience.max = 5;
+          break;
+        case 'plus':
+          vm.manpowerFilter.experience.min = 5;
+          vm.manpowerFilter.experience.max = 'plus';
+          break;
+        default:
+          delete vm.manpowerFilter.experience;
+      }
+    }
 
     function doSearch(){
       var filter = {};
@@ -90,6 +117,11 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         filter['searchStr'] = vm.manpowerFilter.equipmentSearchText;
       else
         delete vm.manpowerFilter.equipmentSearchText;
+      if(vm.experienceValue)
+        filter['experience'] = vm.manpowerFilter.experience;
+      else
+        delete vm.manpowerFilter.experience;
+
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         $scope.allManpowerUserList = result;
         if(result.length == 0)
@@ -236,19 +268,38 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     }
 
     function viewAllUser(){ 
-          var viewAllScope = $rootScope.$new();
-          var viewAllUser = [];
-          angular.copy($scope.allManpowerUserList, viewAllUser);
-          
-          viewAllScope.allUsers = viewAllUser;
-          var viewAllUserModal = $uibModal.open({
-              templateUrl: "viewAllUserProfile.html",
-              scope: viewAllScope,
-              size: 'lg'
-          });
-          viewAllScope.close = function(){
-            viewAllUserModal.close();
-          }
+      var viewAllScope = $rootScope.$new();
+      var viewAllUser = [];
+      angular.copy($scope.allManpowerUserList, viewAllUser);
+      
+      viewAllScope.allUsers = viewAllUser;
+      var viewAllUserModal = $uibModal.open({
+          templateUrl: "viewAllUserProfile.html",
+          scope: viewAllScope,
+          size: 'lg'
+      });
+
+      viewAllScope.openUserProfile = function(userData){
+        viewUserProfile(userData);
+      }
+
+      viewAllScope.close = function(){
+        viewAllUserModal.close();
+      }
+    }
+
+     function viewUserProfile(userData){ 
+      var viewUserProfileScope = $rootScope.$new();
+      viewUserProfileScope.userData = userData;
+      var viewUserProfileModal = $uibModal.open({
+          templateUrl: "viewManpoerUserProfile.html",
+          scope: viewUserProfileScope,
+          size: 'lg'
+      });
+
+      viewUserProfileScope.close = function(){
+        viewUserProfileModal.close();
+      }
      }
 
     function resetClick() {
@@ -283,19 +334,19 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         
     }
     
-    $scope.errors = {};
+    /*$scope.errors = {};
     function login(form) {
       $scope.submitted = true;
       var dataToSend = {};
       dataToSend['userId'] = $scope.loginObj.userId;
       dataToSend['password'] = $scope.loginObj.password;
-      dataToSend['isManpower'] = true;
+      //dataToSend['isManpower'] = true;
       if(form.$valid) {
         Auth.login(dataToSend)
         .then( function() {
           $scope.loginObj = {};
 
-          /*Loading cart and other data if user is logged in*/
+          //Loading cart and other data if user is logged in*
           $rootScope.loading = true;
          Auth.isLoggedInAsync(function(loggedIn){
            $rootScope.loading = false;
@@ -317,7 +368,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
           $scope.errors.other = err.message;
         });
       }
-    };
+    };*/
 
     //date picker
   $scope.today = function() {

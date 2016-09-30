@@ -166,7 +166,11 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       });
     }
 
-    function updateManpowerUser(){
+    function updateManpowerUser(form){
+      if(form && form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
       ManpowerSvc.updateManpower(vm.manpowerInfo).then(function(result){
         Modal.alert("User Updated.",true);
         vm.editBasicInfo = false;

@@ -2,8 +2,6 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var crypto = require('crypto');
-var authTypes = ['twitter', 'facebook', 'google','linkedin'];
 
 var ManpowerUserSchema = new Schema({
   user:{},
@@ -21,6 +19,9 @@ var ManpowerUserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  experience: Number,
+  certificates: String,
+  notes: String,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });
