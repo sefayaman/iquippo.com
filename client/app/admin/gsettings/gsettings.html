@@ -8,16 +8,6 @@
 	    </div>
 	    <hr>
 	    <div class="row form-group">
-	    	<div class="col-sm-4">
-	        	<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
-	        		<option value="sc">Category</option>
-	        		<option value="loc">Location</option>
-	        		<option value="date">Auction Date</option>
-	        		<option value="inv">Invite Code Setting</option>
-	        		<option value="paymnt">Payment Master</option>
-	        	</select>
-	        	<i class="caret"></i>
-	      	</div> 
 	      	<div class="col-sm-4">
 	        	<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
 	        		<option value="sc">Sub Category</option>
@@ -36,6 +26,9 @@
 	    		<legend></legend>
 	          <div class="row">
 	         	 <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
+	                <input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Category Name" required>
+	            </div>
+	            <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
 	                <input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
 	            </div>                           	
 	           	<div class="form-group col-sm-2 pull-right">
@@ -49,12 +42,14 @@
 	            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
 	              <thead>
+	                <th>Category</th>                                
 	                <th>Sub Category</th>                                
 	                <th>Action</th>
 	               
 	              </thead>
 	              <tbody>
 	              <tr ng-repeat="sc in gsettingVm.subCategoryList">
+	                <td>{{sc.name}}</td>
 	                <td>{{sc.name}}</td>
 	                <td>
 	                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
