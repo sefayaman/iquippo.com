@@ -138,7 +138,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
 
   function savePartner(){
     if(vm.existingUser.isPartner) {
-      Modal.alert("User has has already registered as Partner.", true);
+      Modal.alert("User has already registered as Partner.", true);
       return;
     }      
     vm.existingUser.isPartner = true;
