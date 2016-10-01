@@ -4,12 +4,13 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc) {
+function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'sc';
     vm.onTabChange = onTabChange;
     vm.subCategory = {};
+    vm.subCategory.category = {};
     vm.subCatEdit = false;
     vm.saveSubCategory = saveSubCategory;
     vm.updateSubCategory = updateSubCategory;
@@ -88,11 +89,17 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     		vm.locationList = result;
     	})
     }
+
     function loadAllSubcategory(){
     	SubCategorySvc.getAllSubCategory()
     	.then(function(result){
     		vm.subCategoryList = result;
     	})
+
+    	categorySvc.getAllCategory()
+		.then(function(result){
+			vm.allCategory = result;
+		})
     }
 
 
@@ -102,6 +109,9 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 			$scope.submitted = true;
 			return;
 		}
+
+		var cat = categorySvc.getCategoryOnId(vm.subCategory.category._id);
+		vm.subCategory.category.name = cat.name;
 		SubCategorySvc.saveSubCategory(vm.subCategory)
 		.then(function(result){
 			 vm.subCategory = {};
@@ -114,6 +124,8 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 			$scope.submitted = true;
 			return;
 		}
+		var cat = categorySvc.getCategoryOnId(vm.subCategory.category._id);
+		vm.subCategory.category.name = cat.name;
 		SubCategorySvc.updateSubCategory(vm.subCategory)
 		.then(function(result){
 			 vm.subCategory = {};

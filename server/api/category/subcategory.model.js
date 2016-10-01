@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var SubCategorySchema = new Schema({
   name: String,
   user:{},
+  category:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

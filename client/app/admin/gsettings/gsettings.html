@@ -25,8 +25,12 @@
 	    		<h4>Add New Sub Category</h4>
 	    		<legend></legend>
 	          <div class="row">
-	         	 <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
-	                <input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Category Name" required>
+	         	 <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
+	                <select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
+		        		<option value="">Select Category</option>
+		        		<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
+		        	</select>
+		        	<i class="caret"></i>
 	            </div>
 	            <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
 	                <input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
@@ -49,7 +53,7 @@
 	              </thead>
 	              <tbody>
 	              <tr ng-repeat="sc in gsettingVm.subCategoryList">
-	                <td>{{sc.name}}</td>
+	                <td>{{sc.category.name}}</td>
 	                <td>{{sc.name}}</td>
 	                <td>
 	                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
