@@ -95,18 +95,19 @@ exports.createSubCategory = function(req, res) {
   req.body.updatedAt = req.body.createdAt;
   var filter = {};
   filter["name"] =req.body.name;
+  filter["category.name"] =req.body.category.name;
   SubCategory.find(filter,function (err, categories) {
     if(err) { return handleError(res, err); }
     else
     {
       if(categories.length > 0)
       {
-        return res.status(201).json({message:"SubCategory already exits!!!"});
+        return res.status(201).json({errorCode:1, message:"SubCategory already exits!!!"});
       }
         else{
           SubCategory.create(req.body, function(err, category) {
               if(err) { return handleError(res, err); }
-               return res.status(200).json({message:"Sub Category saved sucessfully"});
+               return res.status(200).json({errorCode:0, message:"Sub Category saved sucessfully"});
              });
         }  
     

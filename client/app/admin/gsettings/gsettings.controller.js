@@ -114,8 +114,14 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 		vm.subCategory.category.name = cat.name;
 		SubCategorySvc.saveSubCategory(vm.subCategory)
 		.then(function(result){
-			 vm.subCategory = {};
-			 loadAllSubcategory();
+			if(result.errorCode == 1) {
+				Modal.alert(result.message, true);
+				return;
+			} else {
+				Modal.alert(result.message, true);
+				vm.subCategory = {};
+				loadAllSubcategory();
+			}	
 		})
     }
  	

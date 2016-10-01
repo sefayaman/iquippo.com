@@ -65,7 +65,7 @@
       </h4>
       <legend></legend>
       <div class="row manpower-lists">
-        <div class="col-sm-3 text-center" ng-repeat="manpowerUser in allManpowerUserList | limitTo:4">
+        <div class="col-sm-3 text-center" ng-repeat="manpowerUser in manpowerVm.allManpowerUserList | limitTo:4">
           <a href="javascript:void(0);" ng-click="manpowerVm.viewUserProfile(manpowerUser)">
             <img ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{manpowerUser.user.imgsrc}}" ng-if="manpowerUser.user.imgsrc" class="img-responsive form-group">
             <img ng-src="assets/images/profile.png" ng-if="!manpowerUser.user.imgsrc" class="img-responsive form-group">
@@ -196,7 +196,7 @@
                     <div class="col-xs-6 form-group" ng-class="{'has-error': form.selectedAssets && submitted }">
                         <label>Select the equipment:</label>
                         <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
-                          <option ng-repeat="assets in assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>
+                          <option ng-repeat="assets in manpowerVm.assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>
                         </select>
                     </div>
                   </div> 

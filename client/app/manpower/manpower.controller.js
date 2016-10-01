@@ -8,8 +8,8 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     var vm = this;
     vm.manpower = {};
     vm.manpowerFilter = {};
-    $scope.assetsList = [];
-    $scope.allManpowerUserList = [];
+    vm.assetsList = [];
+    vm.allManpowerUserList = [];
     $scope.noUserExist = false;
     vm.resetClick = resetClick;
     vm.register = register;
@@ -36,24 +36,27 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         $scope.locationList = result;
       });
       var dataToSend = {};
-      dataToSend["status"] = true;
-      ManpowerSvc.getProductOnFilter(dataToSend)
+      ManpowerSvc.getCatSubCatOnFilter(dataToSend)
        .then(function(result){
-          $scope.assetsList = result;
-       });
+        result.forEach(function(item){
+          vm.assetsList[vm.assetsList.length] =  item.category.name + "-" + item.name;
+        });
+       }).catch(function(err){
+        Modal.alert("Error in getting list");
+      });
 
       getAllUsers();
     }
+
     init();
 
     function getEquipmentHelp(val) {
       var serData = {};
       serData['searchStr'] = vm.manpowerFilter.equipmentSearchText;
-      serData["status"] = true;
-      return ManpowerSvc.getProductOnFilter(serData)
+      return ManpowerSvc.getCatSubCatOnFilter(serData)
       .then(function(result){
-         return result.map(function(item){
-              return item;
+        return result.map(function(item){
+          return item.category.name + "-" + item.name;;
         });
       })
     };
@@ -123,7 +126,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         delete vm.manpowerFilter.experience;
 
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
-        $scope.allManpowerUserList = result;
+        vm.allManpowerUserList = result;
         if(result.length == 0)
           $scope.noUserExist = true;
         else
@@ -148,7 +151,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     function getAllUsers(){
       var filter = {};
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
-        $scope.allManpowerUserList = result;
+        vm.allManpowerUserList = result;
         if(result.length == 0)
           $scope.noUserExist = true;
         else
@@ -270,7 +273,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     function viewAllUser(){ 
       var viewAllScope = $rootScope.$new();
       var viewAllUser = [];
-      angular.copy($scope.allManpowerUserList, viewAllUser);
+      angular.copy(vm.allManpowerUserList, viewAllUser);
       
       viewAllScope.allUsers = viewAllUser;
       var viewAllUserModal = $uibModal.open({
@@ -415,22 +418,9 @@ angular.module('manpower').controller('ManpowerListingCtrl', ManpowerListingCtrl
 function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $uibModal, LocationSvc, ManpowerSvc) {
     var vm = this;
     vm.manpower = {};
-    vm.manpowerFilter = {};
-    $scope.assetsList = [];
-    $scope.allManpowerList = [];
+    vm.allManpowerList = [];
     vm.updateManpowerUser = updateManpowerUser;
     function init(){
-      LocationSvc.getAllLocation()
-      .then(function(result){
-        $scope.locationList = result;
-      });
-      var dataToSend = {};
-      dataToSend["status"] = true;
-      ManpowerSvc.getProductOnFilter(dataToSend)
-       .then(function(result){
-          $scope.assetsList = result;
-       });
-
       getAllUsers();
     }
     init();
@@ -453,7 +443,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     function getAllUsers(){
       var filter = {};
       ManpowerSvc.getAllUser(filter).then(function(result){
-        $scope.allManpowerList = result;
+        vm.allManpowerList = result;
       });
     }
 

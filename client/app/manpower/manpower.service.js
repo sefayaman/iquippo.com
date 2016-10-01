@@ -11,7 +11,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
     manpowerService.getManpowerDataOnUserId = getManpowerDataOnUserId;
     manpowerService.clearCache = clearCache;
     //manpowerService.validateSignup = validateSignup;
-    manpowerService.getProductOnFilter = getProductOnFilter;
+    manpowerService.getCatSubCatOnFilter = getCatSubCatOnFilter;
     manpowerService.getManpowerUserOnFilter = getManpowerUserOnFilter;
     manpowerService.createUser = createUser;
     //manpowerService.updateUser = updateUser;
@@ -19,7 +19,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
     manpowerService.updateManpower = updateManpower;
     
 
-    function getProductOnFilter(filter){
+    function getCatSubCatOnFilter(filter){
       return $http.post(path + "/getequipment",filter)
         .then(function(res){
           return res.data;

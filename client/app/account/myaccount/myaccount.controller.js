@@ -4,11 +4,11 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, ManpowerSvc, InvitationSvc) {
+function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, ManpowerSvc, InvitationSvc, SubCategorySvc) {
     var vm = this;
     vm.currentTab = "basic";
     vm.userInfo = {};
-    $scope.assetsList = [];
+    vm.assetsList = [];
     vm.manpowerInfo = {};
     vm.editOrAddClick = editOrAddClick;
     vm.cancelEditOrAdd = cancelEditOrAdd;
@@ -31,30 +31,30 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
           .then(function(result){
           $scope.locationList = result;
       })
-      var filter = {};
-      filter["status"] = true;
-      ManpowerSvc.getProductOnFilter(filter)
-       .then(function(result){
-          $scope.assetsList = result;
-       });
-        var dataToSend = {};
+      SubCategorySvc.getAllSubCategory()
+      .then(function(result){
+        result.forEach(function(item){
+          vm.assetsList[vm.assetsList.length] =  item.category.name + "-" + item.name;
+        });
+      })  
+      var dataToSend = {};
 
-        Auth.isLoggedInAsync(function(loggedIn){
-         if(loggedIn){
-            if(Auth.getCurrentUser().role != 'admin')
-                dataToSend["userId"] = Auth.getCurrentUser()._id;
-              productSvc.userWiseProductCount(dataToSend)
-              .then(function(count){
-                vm.count = count;
-              });
+      Auth.isLoggedInAsync(function(loggedIn){
+       if(loggedIn){
+          if(Auth.getCurrentUser().role != 'admin')
+              dataToSend["userId"] = Auth.getCurrentUser()._id;
+            productSvc.userWiseProductCount(dataToSend)
+            .then(function(count){
+              vm.count = count;
+            });
 
-            cloneUser();
-          if(Auth.getCurrentUser().profileStatus == 'incomplete')
-            vm.editBasicInfo = true;
-           }else{
-            $state.go("main");
-          }
-       });
+          cloneUser();
+        if(Auth.getCurrentUser().profileStatus == 'incomplete')
+          vm.editBasicInfo = true;
+         }else{
+          $state.go("main");
+        }
+     });
         
     }
     inti();

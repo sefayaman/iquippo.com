@@ -2,10 +2,8 @@
 
 var _ = require('lodash');
 var ManpowerUser = require('./manpower.model');
-var Product = require('./../product/product.model');
+var SubCategory = require('./../category/subcategory.model');
 var User = require('./../user/user.model');
-//var email = require('./../../components/sendEmail.js');
-//var  xlsx = require('xlsx');
 
 // Get list of services
 exports.getAll = function(req, res) {
@@ -34,43 +32,6 @@ exports.getOnId = function(req, res) {
     return res.json(data);
   });
 };
-
-/*exports.validateSignup = function(req, res){
-  var filter = {}
-  if(!req.body.mobile)
-    return res.status(401).send('Insufficient data');
-  if(req.body.userid)
-     filter['_id'] = {$ne:req.body.userid}; 
-   if(req.body.mobile)
-     filter['mobile'] = req.body.email;
-  filter['deleted'] = false;
-  ManpowerUser.find(filter,function(err,users){
-    if(err){ return handleError(res, err); }
-    else if(users.length > 0){
-      return res.status(200).json({errorCode:1,message:"Mobile number is already in used"});
-    }
-    else {
-          if(!req.body.email) 
-            return res.status(200).json({errorCode:0,message:""});
-
-          filter = {}
-          if(req.body.userid)
-            filter['_id'] = {$ne:req.body.userid}; 
-          // if(req.body.email)
-          filter['email'] = req.body.email;
-          filter['deleted'] = false;
-          User.find(filter,function(err,usrs){
-             if(err){ return handleError(res, err); }
-             else if(usrs.length > 0){
-                return res.status(200).json({errorCode:2,message:"Email is already in used"});
-             }
-           else
-          return res.status(200).json({errorCode:0,message:""});
-        })
-      
-    }
-  });
-}*/
 
 // Creates a new service in the DB.
 //var ADMIN_EMAIL = "bharat.hinduja@bharatconnect.com";
@@ -130,22 +91,25 @@ function updateUser(userData, userId) {
     });
   });
 }
-// Get products list
-exports.getProducts = function(req, res) {
+// Get concat list
+exports.getConcatCatSubCat = function(req, res) {
   var filter = {};
-  //filter["status"] = true;
-  filter["deleted"] = false;
-  if(req.body.status)
-    filter["status"] = req.body.status;
+  var arr = [];
+    
   if(req.body.searchStr){
-    var term = new RegExp("^" + req.body.searchStr, 'i');
-    filter['name'] = { $regex: term };
+    var term = new RegExp(req.body.searchStr, 'i');
+    arr[arr.length] = { name: { $regex: term }};
+    arr[arr.length] = { "category.name": { $regex: term }};
   }
-  var query = Product.distinct("name", filter); 
+  if(arr.length > 0)
+    filter['$or'] = arr;
+  
+  //console.log("Filter###", filter);
+  var query = SubCategory.find(filter); 
   query.exec(
-               function (err, products) {
+               function (err, categories) {
                       if(err) { return handleError(res, err); }
-                      return res.status(200).json(products);
+                      return res.status(200).json(categories);
                }
   );
 };
@@ -155,13 +119,11 @@ exports.getSearchedUser = function(req, res) {
   var filter = {};
   filter["status"] = true;
   filter["deleted"] = false;
-  //filter["isManpower"] = true;
   var arr = [];
   if(req.body.location){
-    var locRegEx = req.body.location; // new RegExp(req.body.location, 'i');
-    console.log("filter", locRegEx);
-    arr[arr.length] = {"user.city":locRegEx};
-    arr[arr.length] = {"user.state":locRegEx};
+    var locRegEx =  new RegExp(req.body.location, 'i');
+    arr[arr.length] = {"user.city": { $regex: locRegEx }};
+    arr[arr.length] = {"user.state": { $regex: locRegEx }};
   }
   if(arr.length > 0)
     filter['$or'] = arr;
