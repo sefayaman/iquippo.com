@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('ProductCtrl',ProductCtrl);
 angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 //Product upload controller
- function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc) {
+ function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc) {
     
     var vm = this;
    //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -117,6 +117,16 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     .then(function(result){
       $scope.stateList = result;
     });
+
+    vendorSvc.getAllVendors().
+    then(function(){
+      $scope.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
+    });
+
+    PaymentMasterSvc.getAll()
+    .then(function(result){
+      $scope.payments = result;
+    })
 
     //LocationSvc.getAllLocation()
 
@@ -509,10 +519,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       delete $scope.product.rent.rateMonths;
   }
 
-  function validateStep1(){
-
-  }
-
   function firstStep(form,product){
 
      var ret = false;
@@ -600,8 +606,13 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       if(product.auctionListing){
          goToSecondStep();
          return;
-      }else
-        addOrUpdate();
+      }else{
+        var cb = null;
+        if($scope.valuationReq.valuate)
+          cb = postValuationRequest;
+        
+        addOrUpdate(cb);
+      }
       
   }
   
@@ -609,20 +620,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
     $scope.tabObj.step1 = false;
     $scope.tabObj.step2 = true;
-    vendorSvc.getAllVendors().
-    then(function(){
-      $scope.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-    });
 
     AuctionMasterSvc.getAll()
     .then(function(res){
       $scope.auctions = AuctionMasterSvc.getLatestAuction();
     });
-
-    PaymentMasterSvc.getAll()
-    .then(function(result){
-      $scope.payments = result;
-    })
 
     $scope.auctionReq.valuationReport = checkValuationReport();
 
@@ -654,11 +656,12 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       Modal.alert("Valuation report is mandatory for aution listing");
       return;
     }
-    addOrUpdate(postSubmit);  
+    addOrUpdate(postAuction);  
   }
 
 
-  function postSubmit(productObj){
+
+  function postAuction(productObj){
 
     var stsObj = {};
     if(!productObj.auction)
@@ -668,6 +671,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
        $scope.auctionReq.user._id = Auth.getCurrentUser()._id;
        $scope.auctionReq.user.mobile = Auth.getCurrentUser().mobile;
        $scope.auctionReq.user.email = Auth.getCurrentUser().email;
+       $scope.auctionReq.seller = {};
+       $scope.auctionReq.seller._id = productObj.seller._id;
+       $scope.auctionReq.seller.name = productObj.seller.fname;
+       $scope.auctionReq.seller.email = productObj.seller.email;
+       $scope.auctionReq.seller.mobile = productObj.seller.mobile;
        $scope.auctionReq.status = auctionStatuses[0].code;
        $scope.auctionReq.statuses = [];
        stsObj.createdAt = new Date();
@@ -686,6 +694,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq.product.mfgYear = productObj.mfgYear;
     $scope.auctionReq.product.serialNo = productObj.serialNo;
     $scope.auctionReq.product.grossPrice = productObj.grossPrice;
+
     for(var i=0;i< $scope.auctions.length; i++){
       if($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId){
         $scope.auctionReq.startDate = $scope.auctions[i].startDate;
@@ -696,6 +705,48 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     }
 
     if($scope.valuationReq.valuate){
+      createValuationRequest(productObj,"Listing in auction");
+    }
+    $scope.valuationReq.isAuction = true;
+    var paymentTransaction = createPaymentObj(productObj,"Auction Listing");
+
+    var serverObj = {};
+    serverObj['auction'] = $scope.auctionReq;
+    if($scope.valuationReq.valuate)
+     serverObj['valuation'] = $scope.valuationReq;
+    if(paymentTransaction)
+      serverObj['payment'] = paymentTransaction;
+    productSvc.createOrUpdateAuction(serverObj)
+    .then(function(res){
+        //goto payment if payment are necessary
+        if(paymentTransaction && res.transactionId)
+          $state.go("payment",{tid:res.transactionId});
+        else
+           $state.go('productlisting');
+    })
+    .catch(function(err){
+        //error handling
+    })
+  }
+
+  function postValuationRequest(productObj){
+
+    createValuationRequest(productObj,"Buying or Selling of Asset");
+    var paymentTransaction = createPaymentObj(productObj,"Auction Listing");
+    ValuationSvc.save({valuation:$scope.valuationReq,payment:paymentTransaction})
+    .then(function(result){      
+      if(result.transactionId)
+        $state.go('payment',{tid:result.transactionId});
+    })
+    .catch(function(){
+      //error handling
+    });
+
+
+  }
+
+  function createValuationRequest(productObj,purpose){
+
       $scope.valuationReq.user = {};
       $scope.valuationReq.user._id = Auth.getCurrentUser()._id;
       $scope.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
@@ -706,7 +757,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.seller.email = productObj.seller.email;
       
       $scope.valuationReq.initiatedBy = "seller";
-      $scope.valuationReq.purpose = "Listing in auction";
+      $scope.valuationReq.purpose = purpose;;
       $scope.valuationReq.product = {};
       $scope.valuationReq.product._id = productObj._id;
       $scope.valuationReq.product.assetId = productObj.assetId;
@@ -731,19 +782,20 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       stObject.status = valuationStatuses[0].code;
       stObject.userId = Auth.getCurrentUser()._id;
       $scope.valuationReq.statuses[$scope.valuationReq.statuses.length] = stObject;
-    }
-    
+  }
+
+  function createPaymentObj(productObj,requestType){
+
     var paymentTransaction = {};
     paymentTransaction.payments = [];
     paymentTransaction.totalAmount = 0;
-    paymentTransaction.requestType = "Auction Listing";
+    paymentTransaction.requestType = requestType;;
     var payObj = null;
     var createTraction = false;
-    if(!product.auction._id){
+    if(!product.auction._id && product.auctionListing){
       payObj = {};
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
       payObj.type = "auctionreq";
-      //payObj.auctionId = $scope.auctionReq.auctionId;
       payObj.charge = pyMaster.fees;
       paymentTransaction.totalAmount += payObj.charge;
       paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
@@ -757,7 +809,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       payObj.charge = pyMaster.fees;
       paymentTransaction.totalAmount += payObj.charge;
       paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
-     createTraction = true;        
+      createTraction = true;        
     }
 
     if(createTraction){
@@ -773,7 +825,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         paymentTransaction.product.category = productObj.category.name;
         paymentTransaction.user = {};
         paymentTransaction.user._id = Auth.getCurrentUser()._id;
+        paymentTransaction.user.fname = Auth.getCurrentUser().fname;
         paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
+        paymentTransaction.user.email = Auth.getCurrentUser().email;
+        paymentTransaction.user.city = Auth.getCurrentUser().city;
 
         paymentTransaction.status = transactionStatuses[0].code;
         paymentTransaction.statuses = [];
@@ -784,23 +839,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
     }
 
-    var serverObj = {};
-    serverObj['auction'] = $scope.auctionReq;
-    if($scope.valuationReq.valuate)
-     serverObj['valuation'] = $scope.valuationReq;
     if(createTraction)
-      serverObj['payment'] = paymentTransaction;
-    productSvc.createOrUpdateAuction(serverObj)
-    .then(function(res){
-        //goto payment if payment are necessary
-        if(createTraction && res.transactionId)
-          $state.go("payment",{tid:res.transactionId});
-        else
-           $state.go('productlisting');
-    })
-    .catch(function(err){
-        //error handling
-    })
+      return paymentTransaction;
+    else
+      return null;
   }
 
   function addOrUpdate(cb){
@@ -984,6 +1026,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.container = {};
     $scope.brandList = [];
     $scope.modelList = [];
+    $scope.images = [{isPrimary:true}];
     prepareImgArr();
     productHistory = $scope.productHistory = {};
     $scope.container.mfgYear = null;

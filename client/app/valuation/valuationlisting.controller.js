@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
-function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc,$rootScope,uploadSvc) {
+function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
  	var vm = this;
 	 vm.valuations = [];
 	 var reqSent = [];
@@ -101,21 +101,35 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc,$rootScope,
     }
 
     function updateStatus(valuationReq,toStatus,intermediateStatus){
-
+    	if(!toStatus)
+    		return;
     	if(toStatus == 'request_completed' && !valuationReq.report){
     		Modal.alert("Please upload report.");
     		return;
     	}
-    	
     	ValuationSvc.updateStatus(valuationReq,toStatus,intermediateStatus)
     	.then(function(){
+    		if(valuationReq.isAuction)
+    			updateAuction(valuationReq,toStatus);
+
     		ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'customer');
     		if(intermediateStatus)
     			ValuationSvc.sendNotification(valuationReq,$scope.getStatusOnCode($scope.valuationStatuses,toStatus).notificationText,'valagency');
     	})
     }
 
-       function uploadReport(files,_this){
+    function updateAuction(valuationReq,toStatus){
+    	AuctionSvc.getOnFilter({valuationId:valuationReq._id})
+		.then(function(result){
+			if(result.length > 0){
+				var auctReq = result[0];
+				auctReq.valuation.status = toStatus;
+				AuctionSvc.update(auctReq);
+			}
+		});
+    }
+
+    function uploadReport(files,_this){
     	if(!files[0])
 	 		return;
 	 	var index = parseInt($(_this).data('index'));
@@ -131,7 +145,7 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,UtilSvc,$rootScope,
 	    .catch(function(err){
 	    	$rootScope.loading = false;
 	    })
-	 }
+	}
 
 }
 

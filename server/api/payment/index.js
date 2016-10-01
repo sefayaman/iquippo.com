@@ -13,5 +13,7 @@ router.put('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 router.post('/onfilter', controller.getOnFilter);
 router.post('/export', controller.exportPayment);
+router.post('/encrypt', controller.encrypt);
+router.post('/paymentresponse', controller.paymentResponse);
 
 module.exports = router;

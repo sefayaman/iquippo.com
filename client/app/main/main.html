@@ -29,17 +29,11 @@
               <div class="col-sm-3">
                 <div class="select-text">
                   <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-                    <div ng-show="mainVm.noResults">
-                      <i class="glyphicon glyphicon-remove"></i> No Results Found
-                    </div>
                 </div>
               </div> 
               <div class="col-sm-3">
                 <div class="select-text">
-                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Product Name" uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-                    <div ng-show="mainVm.noResults">
-                      <i class="glyphicon glyphicon-remove"></i> No Results Found
-                    </div>
+                  <input type="text" class="form-control" ng-model="mainVm.searchstr" placeholder="Enter Product Name" class="form-control" ng-keypress="mainVm.myFunct($event)"/>
                 </div>
               </div>             
               <div class="col-sm-3 text-center">

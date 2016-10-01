@@ -13,6 +13,7 @@ function PaymentSvc($http,$q,Auth){
   svc.delPayment = delPayment;
   svc.getOnFilter = getOnFilter;
   svc.export = exportValuation;
+  svc.encrypt = encrypt;
 
   function getAll(){
         return $http.get(path)
@@ -33,8 +34,19 @@ function PaymentSvc($http,$q,Auth){
           throw err
         })
     }
+
     function exportValuation(data){
      return $http.post(path + "/export",data)
+        .then(function(res){
+          return res.data
+        })
+        .catch(function(err){
+          throw err
+        }) 
+    }
+
+    function encrypt(dataStr){
+     return $http.post(path + "/encrypt",dataStr)
         .then(function(res){
           return res.data
         })

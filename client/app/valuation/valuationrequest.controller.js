@@ -36,7 +36,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		vm.valuationReq.user._id = Auth.getCurrentUser()._id;
 		vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
 		vm.valuationReq.user.email = Auth.getCurrentUser().email;
-
+		
 		vm.valuationReq.seller._id = $scope.product.seller._id;
 		vm.valuationReq.seller.mobile = $scope.product.seller.mobile;
 		vm.valuationReq.seller.email = $scope.product.seller.email;
@@ -69,7 +69,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		var paymentTransaction = {};
 		paymentTransaction.payments = [];
 		paymentTransaction.totalAmount = 0;
-		paymentTransaction.requestType = "Auction Listing";
+		paymentTransaction.requestType = "Valuation Request";
 
 		var payObj = {};
 
@@ -87,8 +87,12 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		paymentTransaction.product.city = $scope.product.city;
 		paymentTransaction.product.name = $scope.product.name;
 		paymentTransaction.user = {};
+
 		paymentTransaction.user._id = Auth.getCurrentUser()._id;
 		paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
+		paymentTransaction.user.fname = Auth.getCurrentUser().fname;
+		paymentTransaction.user.city = Auth.getCurrentUser().city;
+		paymentTransaction.user.email = Auth.getCurrentUser().email;
 
 		paymentTransaction.status = transactionStatuses[0].code;
 		paymentTransaction.statuses = [];

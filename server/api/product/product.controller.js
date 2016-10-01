@@ -113,9 +113,6 @@ exports.search = function(req, res) {
     var stateRegex = new RegExp(req.body.stateName, 'i');
     filter['state'] = {$regex:stateRegex};
   }
-
-  if(arr.length > 0)
-    filter['$or'] = arr;
   
   if(req.body.tradeType){
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
@@ -178,13 +175,17 @@ exports.search = function(req, res) {
     filter["category._id"] = req.body.categoryId;
 
   if(req.body.role && req.body.userid) {
-    var arr = [];
+    //var arr = [];
     arr[arr.length] = { "user._id": req.body.userid};
     arr[arr.length] = { "seller._id": req.body.userid};
-    filter['$or'] = arr; 
+    //filter['$or'] = arr; 
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
   }
+
+  if(arr.length > 0)
+    filter['$or'] = arr;
+  
   var query = Product.find(filter).sort( { createdAt: -1 } );
   query.exec(
                function (err, products) {
@@ -2053,8 +2054,11 @@ exports.createOrUpdateAuction = function(req,res){
       var self = this;
       if(req.payTransId)
         req.body.auction.transactionId = req.payTransId + "";
-      if(req.valuationId)
-        req.body.auction.valuationId = req.valuationId + "";
+      if(req.valuationId){
+        req.body.auction.valuation = {};
+        req.body.auction.valuation._id = req.valuationId + "";
+        req.body.auction.valuation.status = req.body.valuation.status;
+      }
 
       if(req.body.auction._id){
         AuctionReq.update({_id:req.body.auction._id},{$set:req.body.auction},function(err,acts){

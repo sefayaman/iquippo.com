@@ -74,6 +74,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
           $scope.equipmentSearchFilter['location'] = filter.location;
         if(filter.tradeType)
           $scope.equipmentSearchFilter['tradeType'] = filter.tradeType;
+        if(filter.searchstr)
+          $scope.equipmentSearchFilter['searchstr'] = filter.searchstr;
         if(filter.category){
           $scope.equipmentSearchFilter['category'] = filter.category;
            $scope.selectedCategory = categorySvc.getCategoryByName(filter.category);

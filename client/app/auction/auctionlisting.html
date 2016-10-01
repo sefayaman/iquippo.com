@@ -39,13 +39,13 @@
             <tbody>
             <tr ng-repeat="auts in auctionListingVm.auctions">
               <td><input type="checkbox"  ng-click="auctionListingVm.updateSelection($event,auts._id)" ng-checked="auctionListingVm.master"></td>
-              <td>{{auts.product.assetId}}</td>              
-              <td>{{auts.auctionId}}</td>              
+              <td>{{auts.product.name}}</td>              
+              <td>{{auts.auctionId}}</td>
+              <td>{{auts.seller.name}}</td>              
               <td>{{auts.startDate | date:'MM/dd/yyyy'}}</td>              
-              <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>              
+              <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>                            
               <td>{{auts.emdAmount}}</td>              
-              <td>{{auts.emdAmount}}</td>              
-              <td>{{auts.emdAmount}}</td>              
+              <td>{{getStatusOnCode(valuationStatuses,auts.valuation.status).name}}</td>              
               <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
               <td ng-if="isAdmin()">
                   <select ng-model="status">

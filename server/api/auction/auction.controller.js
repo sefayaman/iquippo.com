@@ -39,7 +39,8 @@ exports.getOnFilter = function(req, res) {
     filter["_id"] = req.body._id;
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
-
+  if(req.body.valuationId)
+      filter["valuation._id"] = req.body.valuationId;
    if(req.body.tid)
     filter["transactionId"] = req.body.tid;
   var query = AuctionRequest.find(filter);

@@ -138,8 +138,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     function doSearch(){
 
-      if(!vm.categorySearchText && !vm.locationSearchText){
-        Modal.alert("Please enter category name or location");
+      if(!vm.searchstr && !vm.categorySearchText && !vm.locationSearchText){
+        Modal.alert("Please enter category name or location or product name");
         return;
       }
 
@@ -147,12 +147,17 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         Modal.alert("Please enter valid category");
         return;
       }
-      if(vm.categorySearchText)
-        vm.categorySearchText = vm.categorySearchText.trim();
+      
       var filter = {};
-      filter['category'] = vm.categorySearchText;
-      filter['tradeType'] = vm.radioModel;
-      filter['location'] = vm.locationSearchText;
+      if(vm.categorySearchText)
+        filter['category'] = vm.categorySearchText.trim();
+      if(vm.radioModel)
+        filter['tradeType'] = vm.radioModel;
+      if(vm.locationSearchText)
+        filter['location'] = vm.locationSearchText.trim();
+      if(vm.searchstr)
+        filter['searchstr'] = vm.searchstr.trim();
+
       productSvc.setFilter(filter);
       $state.go('viewproduct');
     }

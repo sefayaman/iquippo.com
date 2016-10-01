@@ -1017,7 +1017,7 @@ exports.deleteCity = function(req, res) {
 exports.searchCity = function(req,res){
 	var filter = {};
   if(req.body.searchStr){
-    var term = new RegExp("^" + req.body.searchStr, 'i');
+    var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = { $regex: term };
   }
   if(req.body.stateName)
@@ -1036,7 +1036,7 @@ exports.searchLocation = function(req,res){
   if(!req.body.searchStr)
   	res.status(200).json([]);
   if(req.body.searchStr){
-    var term = new RegExp("^" + req.body.searchStr, 'i');
+    var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = {$regex:term};
   }
   var cityQry = City.find(filter);

@@ -1,8 +1,11 @@
 'use strict';
 
 var _ = require('lodash');
+var crypto = require('crypto');
 var Payment = require('./payment.model');
 var  xlsx = require('xlsx');
+
+var trasactionStatuses = ['failed','pending','completed'];
 
 // Get list of payment transaction
 exports.getAll = function(req, res) {
@@ -190,7 +193,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Request Status"};
     else{
       if(payment)
-        cell =  {v: payment.purpose};
+        cell =  {v: payment.status};
     }
     setCell(ws,cell,R,C++);
     
@@ -222,6 +225,78 @@ exports.exportPayment = function(req,res){
      });
 }
 
+//ccavenue payment keys
+ var ccAvenueWorkingKey = "D6013738094F627ED02C3E99140512D5"; // test
+//var ccAvenueWorkingKey = "DF2CF283425D194738C2F85DE9ED2657"; // production
+
+exports.encrypt = function(req,res){
+    var m = crypto.createHash('md5');
+    m.update(ccAvenueWorkingKey);
+    var key = m.digest('binary');
+    var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';
+    var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
+    var encoded = cipher.update(req.body.rawstr, 'utf8', 'hex');
+    encoded += cipher.final('hex');
+    return res.status(200).json(encoded);
+}
+
+exports.paymentResponse = function(req,res){
+    var json = {};
+    if (req.body != undefined && Object.keys(req.body).length > 0) {
+        json = req.body;
+    }
+    else if (req.params != undefined && Object.keys(req.params).length > 0) {
+        json = req.params;
+    }
+    else if (req.query != undefined && Object.keys(req.query).length > 0) {
+        json = request.query;
+    }
+
+    //console.log("#########",json);
+
+    var m = crypto.createHash('md5');
+    m.update(ccAvenueWorkingKey)
+    var key = m.digest('binary');
+    var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';
+    var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
+    var decoded = decipher.update(json.encResp, 'hex', 'utf8');
+    decoded += decipher.final('utf8');
+
+    var arrayVAl = decoded.split("&");
+    var resPayment = {};
+
+    arrayVAl.forEach(function (d) {
+        var val = d.split("=");
+        resPayment[val[0]] = val[1];
+    });
+    Payment.findById(resPayment.order_id, function (err, payment) {
+      if(err) { return handleError(res, err); }
+      if(!payment) { return res.status(404).send('Not Found'); }
+      
+      payment.ccAvenueRes = resPayment;
+      payment.save(function(err,pys){
+        if(err) { return handleError(res, err); }
+        else{
+          sendPaymentRes(req,res,resPayment);
+        }
+
+      });
+      //return res.json(payment);
+  });
+
+}
+
+function sendPaymentRes(req,res,resPayment){
+  var status = resPayment.order_status.toString().toLowerCase().trim();
+  console.log("########param1", resPayment.merchant_param1);
+  if(resPayment.merchant_param3 == "mobapp"){
+    if (status != 'success')
+      res.redirect('http://mobile?payment=failed');
+    else
+      res.redirect('http://mobile?payment=success');
+  }else
+    res.redirect("http://localhost:9000/paymentresponse/" + resPayment.order_id);
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

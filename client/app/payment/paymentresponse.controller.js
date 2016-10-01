@@ -1,9 +1,9 @@
 (function(){
 
 'use strict';
-angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentCtrl);
+angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc) {
+function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc) {
  	var vm = this;
  	vm.payTransaction = null;
  	vm.enablePayment = false;
@@ -11,12 +11,6 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationS
  	var auctionReq = null;
 
  	function init(){
- 		if(!Auth.getCurrentUser()._id){
- 			Modal.alert("It seems you have refreshed the page.",true);
- 			$state.go("main");
- 		}
- 		if(!$stateParams.tid)
- 			$state.go("main");
  		var tid = $stateParams.tid;
  		PaymentSvc.getOnFilter({_id:tid})
  		.then(function(result){

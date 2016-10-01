@@ -8,6 +8,7 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
  vm.master = false;
 
  $scope.auctionStatuses = auctionStatuses;
+ $scope.valuationStatuses = valuationStatuses;
  vm.updateSelection = updateSelection;
  vm.exportExcel = exportExcel;
  vm.updateStatus = updateStatus;
@@ -63,6 +64,8 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
     }
 
     function updateStatus(auctionReq,status){
+      if(!status)
+        return;
       AuctionSvc.updateStatus(auctionReq,status)
       .then(function(result){
         AuctionSvc.sendNotification(auctionReq,UtilSvc.getStatusOnCode(auctionStatuses,status).notificationText,true);

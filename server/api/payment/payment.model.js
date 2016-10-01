@@ -10,7 +10,9 @@ var PaymentTransactionSchema = new Schema({
   payments:[{}],
   totalAmount:Number,
   requestType:String,
-  status:{type:String,default:'created'},
+  ccAvenueRes:{},
+  statusCode : {type:Number,default:-1},
+  status:{type:String,default:'listed'},
   statuses:[{}],
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
