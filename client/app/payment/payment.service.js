@@ -107,10 +107,10 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
 
   function sendNotification(tData,oData,flag){
     var data = {};
-    data['to'] = mailData.user.email;
-    mailData.serverPath = serverPath;
+    data['to'] = tData.user.email;
     data['subject'] = 'Payment detail';
     var mailData = {};
+    mailData.serverPath = serverPath;
     mailData.product = tData.product;
     mailData.user = tData.user;
     mailData.tId = tData.transactionId;

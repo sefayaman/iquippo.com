@@ -113,8 +113,6 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         case 1:
            data['subject'] = 'Request for Listing in auction';
            notificationSvc.sendNotification('auctioListingEmailToCustomer', data, mailData,'email');
-           data['subject'] = 'Payment detail';
-           notificationSvc.sendNotification('auctionPaymentDetailToCustomer', data, mailData,'email');
         break;
         case 2:
             data['subject'] = 'Request for Listing in auction';
