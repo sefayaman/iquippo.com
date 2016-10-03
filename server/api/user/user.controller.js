@@ -103,7 +103,7 @@ exports.show = function (req, res, next) {
 exports.getUser = function(req, res) {
   var filter = {};
   filter["deleted"] = false;
-  filter["isManpower"] = false;
+  //filter["isManpower"] = false;
   if(req.body.status)
     filter["status"] = true;
 
