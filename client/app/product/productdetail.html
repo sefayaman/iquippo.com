@@ -453,6 +453,20 @@
       </div>
     </section>
     </div>
+     <script type="text/javascript">
+      $(document).ready(function() {
+        $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hidden.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+        });
+      });
+
+      function goTo(dir){
+           $('#article-photo').carousel(dir);
+      }
+
+    </script>
  <script type="text/ng-template" id="magnifier.html">
 <div id="magnifier-modal">
     <div class="modal-header">
