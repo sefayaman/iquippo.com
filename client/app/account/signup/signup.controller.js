@@ -87,10 +87,26 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
             });
           }
           var data = {};
+          if(vm.user.mobile)
+            data['to'] = vm.user.mobile;
+          data['subject'] = 'New User Registration: Success';
+          var dataToSend = {};
+          dataToSend['fname'] = vm.user.fname; 
+          dataToSend['lname'] = vm.user.lname;
+          dataToSend['mobile'] = vm.user.mobile;
+          dataToSend['email'] = vm.user.email;
+          dataToSend['password'] = vm.user.password;
+          dataToSend['serverPath'] = serverPath;
+          notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend,'sms');
+          if(vm.user.email) {
+            data['to'] = vm.user.email;
+            notificationSvc.sendNotification('userRegEmail', data, dataToSend,'email');
+          }
+          /*var data = {};
           data['to'] = vm.user.email;
           data['subject'] = 'New User Registration: Success';
           vm.user.serverPath = serverPath;
-          notificationSvc.sendNotification('userRegEmail', data, vm.user,'email');
+          notificationSvc.sendNotification('userRegEmail', data, vm.user,'email');*/
           closeDialog();
           vm.user = {};
         })
@@ -116,7 +132,7 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
 function sendOTP(){
 
   var dataToSend = {};
-  dataToSend['content'] = 'Your verification OTP is ';
+  dataToSend['content'] = 'Dear User, One TimePassword (OTP) to verify your iQuippo account is ';
   dataToSend['otpOn'] = vm.user.activationOTP;
   dataToSend['sendToClient'] = 'y';
   if(vm.user.activationOTP == 'email') {

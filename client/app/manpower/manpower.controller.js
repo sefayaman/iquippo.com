@@ -248,6 +248,9 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         var dataToSend = {};
         dataToSend['fname'] = vm.manpower.fname; 
         dataToSend['lname'] = vm.manpower.lname;
+        dataToSend['mobile'] = vm.user.mobile;
+        dataToSend['email'] = vm.user.email;
+        dataToSend['password'] = vm.manpower.password;
         dataToSend['serverPath'] = serverPath;
         notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend,'sms');
         if(vm.manpower.email) {
