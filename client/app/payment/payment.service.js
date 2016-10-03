@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("PaymentSvc",PaymentSvc);
-function PaymentSvc($http,$q,Auth){
+function PaymentSvc($http,$q,Auth,notificationSvc){
   var svc = {};
   var path = "/api/payment";
 
@@ -14,6 +14,7 @@ function PaymentSvc($http,$q,Auth){
   svc.getOnFilter = getOnFilter;
   svc.export = exportValuation;
   svc.encrypt = encrypt;
+  svc.sendNotification = sendNotification;
 
   function getAll(){
         return $http.get(path)
@@ -103,6 +104,31 @@ function PaymentSvc($http,$q,Auth){
               throw err;
           });
     }
+
+  function sendNotification(tData,oData,flag){
+    var data = {};
+    data['to'] = mailData.user.email;
+    mailData.serverPath = serverPath;
+    data['subject'] = 'Payment detail';
+    var mailData = {};
+    mailData.product = tData.product;
+    mailData.user = tData.user;
+    mailData.tId = tData.transactionId;
+    mailData.totalAmount = tData.totalAmount;
+    mailData.status = tData.status == 'completed'?'Paid' : 'Payment Pending';
+    mailData.createdAt = tData.createdAt;
+    switch(flag){
+      case 1:
+         mailData.auctionId = oData.auctionId;
+         mailData.auctionDate = oData.startDate;
+         notificationSvc.sendNotification('auctionPaymentDetailToCustomer', data, mailData,'email');
+      break;
+      case 2:
+         notificationSvc.sendNotification('valuationListingEmailToCustomer', data, mailData,'email');
+        break;
+
+    }
+  }
   return svc;
 }
 })();

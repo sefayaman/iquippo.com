@@ -79,8 +79,11 @@
                 <li>
                     <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
                 </li>
+                <li ng-if="isPartner()">
+                    <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
+                </li>
                 <li>
-                    <a href="/valuationrequests"><i class="fa fa-tags"></i>Valuation Request</a>
+                    <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i>My Valuation Request</a>
                 </li>
                 <li>
                     <a href="/paymenthistory"><i class="fa fa-cc"></i>Payment History</a>

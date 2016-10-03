@@ -237,7 +237,7 @@ angular.module('sreizaoApp')
         layout:'admin'
       })
       .state('valuationrequests', {
-        url: '/valuationrequests',
+        url: '/valuationrequests/:mode',
         templateUrl: 'app/valuation/valuationlisting.html',
         controller: 'ValuationListingCtrl as valuationListingVm',
         authenticate:true,

@@ -41,8 +41,10 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  		.then(function(result){
  			if(result.length > 0){
  				auctionReq = result[0];
+
  				AuctionSvc.updateStatus(auctionReq,auctionStatuses[1].code);
- 				AuctionSvc.sendNotification(auctionReq,auctionStatuses[1].notificationText);
+ 				AuctionSvc.sendNotification(auctionReq,auctionStatuses[1].notificationText,1);
+ 				PaymentSvc.sendNotification(vm.payTransaction,auctionReq,1);
  			}
 
  		})
@@ -57,16 +59,18 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  				valuationReq = result[0];
  				if(valuationReq.initiatedBy == "seller"){
 	 				ValuationSvc.updateStatus(valuationReq,valuationStatuses[3].code);
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'customer');
+	 				//ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'customer');
 	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[3].notificationText,'valagency');
  				}
 
  				if(valuationReq.initiatedBy == "buyer"){
  					ValuationSvc.updateStatus(valuationReq,valuationStatuses[1].code);
-	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'customer');
+	 				//ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'customer');
 	 				ValuationSvc.sendNotification(valuationReq,valuationStatuses[1].notificationText,'seller');
 	 				//need to send seller also
  				}
+
+ 				PaymentSvc.sendNotification(vm.payTransaction,valuationReq,2);
 		
  			}
  		});

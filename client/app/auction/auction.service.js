@@ -105,15 +105,26 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
           });
     }
 
-    function sendNotification(auctData,statusName){
+    function sendNotification(mailData,statusName,flag){
       var data = {};
-      data['to'] = auctData.user.email;
-      data['subject'] = 'Request for Listing in auction';
-      auctData.serverPath = serverPath;
-      auctData.statusName = statusName;
-      notificationSvc.sendNotification('auctionCustomerEmail', data, auctData,'email');
-      data['to'] = auctData.user.mobile;
-      notificationSvc.sendNotification('auctionCustomerSms',data, auctData,'sms');
+      data['to'] = mailData.user.email;
+      mailData.serverPath = serverPath;
+      switch(flag){
+        case 1:
+           data['subject'] = 'Request for Listing in auction';
+           notificationSvc.sendNotification('auctioListingEmailToCustomer', data, mailData,'email');
+           data['subject'] = 'Payment detail';
+           notificationSvc.sendNotification('auctionPaymentDetailToCustomer', data, mailData,'email');
+        break;
+        case 2:
+            data['subject'] = 'Request for Listing in auction';
+            mailData.statusName = statusName;
+            notificationSvc.sendNotification('auctionCustomerEmail', data, mailData,'email');
+            data['to'] = mailData.user.mobile;
+            notificationSvc.sendNotification('auctionCustomerSms',data, mailData,'sms');
+          break;
+
+      }
     }
 
   return svc;

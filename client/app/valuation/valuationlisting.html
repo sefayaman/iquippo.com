@@ -11,7 +11,7 @@
       </div>
       <hr>
       
-      <div class="row" ng-if="isCustomer() && !isPartner()">
+      <div class="row" ng-if="valuationListingVm.isUserMode()">
         <div class="col-sm-3 form-group">
           <select class="form-control" ng-change="valuationListingVm.onValuationReqTypeChange(valType)" ng-model="valType">
             <option value="sent"> Request sent by customer</option>

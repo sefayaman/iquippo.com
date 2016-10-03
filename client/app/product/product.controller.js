@@ -907,11 +907,21 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
                 AppNotificationSvc.createAppNotificationFromProduct(result);
             mailToCustomerForApprovedAndFeatured(result, product);
           } else {
+
               var data = {};
+              data['to'] = result.seller.email;
+              data['subject'] = 'Product Upload: Request for Listing';
+              result.serverPath = serverPath;
+              result.listedFor = result.tradeType;
+              if(result.listedFor == 'BOTH')
+                  result.listedFor = "SELL & RENT"
+              notificationSvc.sendNotification('productUploadEmailToCustomer', data, result,'email');
+
               data['to'] = supportMail;
               data['subject'] = 'Product Upload: Request for activation';
               result.serverPath = serverPath;
               notificationSvc.sendNotification('productUploadEmailToAdmin', data, result,'email');
+              
           }
           if(cb)
             cb(result)
@@ -999,6 +1009,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       data['to'] = product.seller.email;
       data['subject'] = 'Request for Product Upload : Approved';
       product.serverPath = serverPath;
+       result.listedFor = result.tradeType;
+        if(result.listedFor == 'BOTH')
+            result.listedFor = "SELL & RENT"
       notificationSvc.sendNotification('productUploadEmailToCustomerActive', data, product,'email');
     }
     if(result.featured)

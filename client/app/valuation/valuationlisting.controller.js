@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
-function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
+function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
  	var vm = this;
 	 vm.valuations = [];
 	 var reqSent = [];
@@ -16,12 +16,24 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,
 	 vm.exportExcel = exportExcel;
 	 vm.updateStatus = updateStatus;
 	 $scope.uploadReport = uploadReport;
+	 vm.isUserMode = isUserMode;
 	 var selectedIds = [];
+
+	 var mode = "user";
 
 	 function init(){
 	 	Auth.isLoggedInAsync(function(loggedIn){
 	 		if(loggedIn){
-	 			if(Auth.isCustomer()){
+
+	 			if($stateParams.mode=="myrequest"){
+	 				mode = "user";
+	 			}else if($stateParams.mode == "valuationpartner" && Auth.isPartner()){
+	 				mode = "agency";
+	 			}else{
+	 				goToUserMode();
+	 			}
+
+	 			if(isUserMode()){
 	 				filter = formFilter("sent");
 	 				getValuations(filter,"sent");
 	 			}else{
@@ -33,6 +45,14 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,
 	 	});
 	 }
 	 
+	 function goToUserMode(){
+	 	$state.go("valuationrequests",{mode:"myrequest"});
+	 }
+
+	 function isUserMode(){
+	 	return mode == "user";
+	 }
+
 	 init();
 	 function getValuations(filter,valType){
 
@@ -61,12 +81,12 @@ function ValuationListingCtrl($scope,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,
 	 function formFilter(val){
 
 	 	var filter = {};
-	 	if(Auth.isPartner()){
+	 	if(!isUserMode()){
 			filter['partnerId'] = Auth.getCurrentUser().partnerInfo._id;
 			filter['statuses'] = ['request_submitted','request_in_process','request_completed']; 
-		}else if(Auth.isCustomer() && val && val == "sent"){
+		}else if(isUserMode() && val && val == "sent"){
 			filter['userId'] = Auth.getCurrentUser()._id;
-		}else if(Auth.isCustomer() && val && val == "received"){
+		}else if(isUserMode() && val && val == "received"){
 			filter['sellerId'] = Auth.getCurrentUser()._id;
 		}
 
