@@ -262,7 +262,7 @@
         </div>
         <div class="modal-body">
           <div class="">
-            <div class="row">
+            <div class="row manpower-lists">
               <div class="col-sm-3 form-group" ng-repeat="manpower in allUsers">
                 <a href="javascript:void(0);" ng-click="openUserProfile(manpower)">
                     <img ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{manpower.user.imgsrc}}" ng-if="manpower.user.imgsrc" class="img-responsive form-group">
@@ -289,8 +289,8 @@
       <div class="row text-left">
         <div class="col-sm-4 col-sm-offset-1 man-margin">
           <div class="manpower-img">
-            <img ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{userData.user.imgsrc}}" ng-if="userData.user.imgsrc" class="img-responsive form-group" width="80">
-            <img ng-src="assets/images/profile.png" ng-if="!userData.user.imgsrc" class="img-responsive form-group" width="80">
+            <img ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{userData.user.imgsrc}}" ng-if="userData.user.imgsrc" class="img-responsive form-group" width="100">
+            <img ng-src="assets/images/profile.png" ng-if="!userData.user.imgsrc" class="img-responsive form-group" width="100">
           </div>
         </div>
         <div class="col-sm-6 man-margin">
