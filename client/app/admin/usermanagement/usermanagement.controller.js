@@ -16,6 +16,7 @@ angular.module('sreizaoApp')
         filter["userId"] = Auth.getCurrentUser()._id;
       }
       userSvc.getUsers(filter).then(function(data){
+        $scope.userList = [];
         data.forEach(function(item){
           if(!item.isManpower || item.isPartner)
             $scope.userList[$scope.userList.length] = item;

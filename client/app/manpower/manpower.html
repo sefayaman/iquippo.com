@@ -98,7 +98,7 @@
                     </div>
                   </div>
                     <div class="col-xs-6">
-                      <div class="form-group" ng-class="{'has-error': form.fname && submitted }">                          
+                      <div class="form-group" ng-class="{'has-error': form.fname.$invalid && submitted }">                          
                         <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="manpowerVm.manpower.fname" required>
                       </div>
                     </div>
@@ -108,7 +108,7 @@
                       </div>
                     </div>
                    <div class="col-xs-6">
-                      <div class="form-group" ng-class="{'has-error': form.lname && submitted }">                          
+                      <div class="form-group" ng-class="{'has-error': form.lname.$invalid && submitted }">                          
                         <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="manpowerVm.manpower.lname" required>
                       </div>
                     </div>
@@ -125,15 +125,15 @@
                       </div>
                     </div>
                      <div class="col-xs-6">
-                      <div class="form-group" ng-class="{'has-error': form.mobile && submitted }"> 
-                       <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="manpowerVm.manpower.mobile" uib-tooltip="+91-98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && submitted }"> 
+                       <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="manpowerVm.manpower.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" required>
                       </div>
                     </div>
                   </div>
                   <div class="row">
                    
                     <div class="col-xs-6">
-                      <div class="form-group" ng-class="{'has-error': form.password && submitted }">
+                      <div class="form-group" ng-class="{'has-error': form.password.$invalid && submitted }">
                         <input type="password" name="password" class="form-control" placeholder="Password*" ng-model="manpowerVm.manpower.password" ng-minlength="4">
                       </div>
                       <p class="help-block"
@@ -150,7 +150,7 @@
                   
 
                   <div class="row">
-                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.location && submitted }">
+                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.location.$invalid && submitted }">
                         <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)" required>
                           <option value="" >*Current Location</option>
                           <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
@@ -164,8 +164,8 @@
                     </div>  
                   </div>
                   <div class="row">
-                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.experience && submitted }">
-                        <input type="number" name="experience" class="form-control" min="0" placeholder="Experience" ng-model="manpowerVm.manpower.experience" required>
+                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.experience.$invalid && submitted }">
+                        <input type="number" name="experience" class="form-control" min="0" placeholder="*Experience" ng-model="manpowerVm.manpower.experience" required>
                     </div>
                     <div class="col-xs-6">
                       <div class="form-group">                          
@@ -193,7 +193,7 @@
                         <span>{{manpowerVm.manpower.resumeDoc}}</span>
                       </div>
                     </div>
-                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.selectedAssets && submitted }">
+                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.selectedAssets.$invalid && submitted }">
                         <label>Select the equipment:</label>
                         <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
                           <option ng-repeat="assets in manpowerVm.assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>

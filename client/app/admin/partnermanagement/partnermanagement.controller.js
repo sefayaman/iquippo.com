@@ -188,6 +188,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
     vm.existFlag = false;
+    $scope.submitted = false;
   }
 
   function updateAvatar(files){

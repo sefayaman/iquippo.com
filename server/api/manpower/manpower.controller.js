@@ -74,14 +74,17 @@ function updateUser(userData, userId) {
           dataObj['isManpower'] = false;
       } else if(user.isManpower) {
         if(userData.status) {
+          dataObj['deleted'] = false;
           dataObj['isManpower'] = true;
           dataObj['status'] = userData.status;
         } else {
+          dataObj['deleted'] = true;
           dataObj['status'] = userData.status;
           dataObj['isManpower'] = false;
         }
       }
     } else {
+      dataObj['deleted'] = false;
       dataObj['isManpower'] = true;
       dataObj['status'] = userData.status;
     }

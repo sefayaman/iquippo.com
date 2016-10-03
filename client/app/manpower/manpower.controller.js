@@ -42,7 +42,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
           vm.assetsList[vm.assetsList.length] =  item.category.name + "-" + item.name;
         });
        }).catch(function(err){
-        Modal.alert("Error in getting list");
+        //Modal.alert("Error in getting list");
       });
 
       getAllUsers();
