@@ -154,40 +154,6 @@ exports.update = function(req, res) {
   });
 }
 
-/*// Updates an existing vendor in the DB.
-exports.update = function(req, res) {
-  var _id = req.body._id;
-  if(req.body._id) { delete req.body._id;}
-  //if(req.body.user) { delete req.body.user; }
-  req.body.updatedAt = new Date();
-  Vendor.update({_id:_id},{$set:req.body},function (err) {
-    if (err) {return handleError(res, err); }
-
-    var dataObj = {};
-    dataObj['fname'] = req.body.user.fname;
-      if(req.body.user.mname)
-    dataObj['mname'] = req.body.user.mname;
-    dataObj['lname'] = req.body.user.lname;
-    dataObj['email'] = req.body.user.email;
-    dataObj['mobile'] = req.body.user.mobile;
-    if(req.body.user.phone)
-      dataObj['phone'] = req.body.user.phone;
-    dataObj['city'] = req.body.user.city;
-    if(req.body.user.state)
-      dataObj['state'] = req.body.user.state;
-    dataObj['imgsrc'] = req.body.user.imgsrc;
-    dataObj.updatedAt = new Date();
-    if(req.body.status)
-      dataObj['isPartner'] = true;
-    else
-      dataObj['isPartner'] = false;
-    User.update({_id:req.body.user.userId},{$set:dataObj},function(err,userObj){
-      if(err){return handleError(res, err);}
-    });
-    return res.status(200).send("success");
-  });
-};*/
-
 // Deletes a vendor from the DB.
 exports.destroy = function(req, res) {
   var userId = req.params.id;

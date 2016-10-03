@@ -150,19 +150,6 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
           if(!$scope.isEdit) {
             savePartner();
           } else {
-            /*var dataToSend = {};
-            dataToSend['entityName'] = vm.vendorReg.entityName;
-            if(vm.vendorReg._id) 
-              dataToSend['_id'] = vm.vendorReg._id;
-
-            vendorSvc.validateVendor(dataToSend).then(function(data){
-              if(data.errorCode != 0){
-                Modal.alert(data.message,true);
-                 return;
-                } else {
-                  updateVendor(vm.vendorReg);
-                }
-            });*/
             updateVendor(vm.vendorReg);
         }
       }
