@@ -86,6 +86,8 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		paymentTransaction.product.primaryImage = $scope.product.primaryImg;
 		paymentTransaction.product.city = $scope.product.city;
 		paymentTransaction.product.name = $scope.product.name;
+		paymentTransaction.product.category = $scope.product.category.name;
+		paymentTransaction.product.status = $scope.product.assetStatus;
 		paymentTransaction.user = {};
 
 		paymentTransaction.user._id = Auth.getCurrentUser()._id;
