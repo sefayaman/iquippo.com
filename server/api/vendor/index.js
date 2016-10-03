@@ -10,6 +10,7 @@ router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.post('/validate', controller.validate);
+//router.post('/validatevendor', controller.validateVendor);
 //router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 

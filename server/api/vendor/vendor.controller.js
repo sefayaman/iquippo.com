@@ -33,11 +33,13 @@ exports.validate = function(req, res){
   if(req.body.mobile)
     filter['mobile'] = req.body.mobile;
   filter['deleted'] = false;
-
+  if(req.body.isPartner)
+    filter['isPartner'] = req.body.isPartner;
+  
   User.find(filter,function(err,users){
     if(err){ return handleError(res, err); }
     else if(users.length > 0){
-      return res.status(200).json({errorCode:1,message:"Mobile number is already in used", user: users[0]});
+      return res.status(200).json({errorCode:1,message:"Mobile number is already registered as partner", user: users[0]});
     }
     else {
           if(!req.body.email) 
@@ -51,7 +53,7 @@ exports.validate = function(req, res){
           User.find(filter,function(err,users){
              if(err){ return handleError(res, err); }
              else if(users.length > 0){
-                return res.status(200).json({errorCode:2,message:"Email is already in used", user: users[0]});
+                return res.status(200).json({errorCode:2,message:"Email is already registered as partner", user: users[0]});
              }
            else
           return res.status(200).json({errorCode:0,message:""});
@@ -59,6 +61,27 @@ exports.validate = function(req, res){
     }
   });
 }
+
+/*exports.validateVendor = function(req, res){
+  var filter = {}
+  if(!req.body.entityName)
+    return res.status(401).send('Insufficient data');
+  if(req.body._id)
+     filter['_id'] = {$ne:req.body._id}; 
+  if(req.body.entityName)
+    filter['entityName'] = req.body.entityName;
+  filter['deleted'] = false;
+  console.log("req.body._id", req.body);
+  console.log("filter", filter);
+  Vendor.find(filter,function(err,vendors){
+    if(err){ return handleError(res, err); }
+    else if(vendors.length > 0){
+
+      return res.status(200).json({errorCode:1,message:"Entity name is already in exist."});
+    } else
+     return res.status(200).json({errorCode:0,message:""});
+  });
+}*/
 
 // Creates a new vendor in the DB.
 exports.create = function(req, res) {
@@ -84,6 +107,54 @@ exports.create = function(req, res) {
 };
 
 // Updates an existing vendor in the DB.
+exports.update = function(req, res) {
+  var _id = req.body._id;
+  if(req.body._id) { delete req.body._id;}
+  //if(req.body.user) { delete req.body.user; }
+  req.body.updatedAt = new Date();
+  var filter = {}
+  if(!req.body.entityName)
+    return res.status(401).send('Insufficient data');
+  if(_id)
+     filter['_id'] = {$ne:_id}; 
+  if(req.body.entityName)
+    filter['entityName'] = req.body.entityName;
+  Vendor.find(filter,function(err,vendors){
+    if(err) return handleError(res, err); 
+    if(vendors.length > 0){
+      return res.status(200).json({errorCode:1, message:"Entity Name already exist."});
+    } else {
+      Vendor.update({_id:_id},{$set:req.body},function (err) {
+        if (err) {return handleError(res, err); }
+
+        var dataObj = {};
+        dataObj['fname'] = req.body.user.fname;
+          if(req.body.user.mname)
+        dataObj['mname'] = req.body.user.mname;
+        dataObj['lname'] = req.body.user.lname;
+        dataObj['email'] = req.body.user.email;
+        dataObj['mobile'] = req.body.user.mobile;
+        if(req.body.user.phone)
+          dataObj['phone'] = req.body.user.phone;
+        dataObj['city'] = req.body.user.city;
+        if(req.body.user.state)
+          dataObj['state'] = req.body.user.state;
+        dataObj['imgsrc'] = req.body.user.imgsrc;
+        dataObj.updatedAt = new Date();
+        if(req.body.status)
+          dataObj['isPartner'] = true;
+        else
+          dataObj['isPartner'] = false;
+        User.update({_id:req.body.user.userId},{$set:dataObj},function(err,userObj){
+          if(err){return handleError(res, err);}
+        });
+        return res.status(200).json({errorCode:0, message:"Success"});
+      });
+    }
+  });
+}
+
+/*// Updates an existing vendor in the DB.
 exports.update = function(req, res) {
   var _id = req.body._id;
   if(req.body._id) { delete req.body._id;}
@@ -115,7 +186,7 @@ exports.update = function(req, res) {
     });
     return res.status(200).send("success");
   });
-};
+};*/
 
 // Deletes a vendor from the DB.
 exports.destroy = function(req, res) {

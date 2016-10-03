@@ -21,6 +21,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       vendorService.createPartner = createPartner;
       vendorService.getVendorsOnCode = getVendorsOnCode;
       vendorService.validate = validate;
+      //vendorService.validateVendor = validateVendor;
 
       function getAllVendors(){
         var deferred = $q.defer();
@@ -49,6 +50,16 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             throw err
           });
       }
+
+      /*function validateVendor(data){
+          return $http.post(path + '/validatevendor', data)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err
+          });
+      }*/
 
       function createUser(data){
         return $http.post('/api/users/register', data)

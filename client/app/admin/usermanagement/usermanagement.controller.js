@@ -6,6 +6,7 @@ angular.module('sreizaoApp')
 
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
     $rootScope.users = [];
+    $scope.userList = [];
     $rootScope.globleUsers = [];
     $scope.getUsersOnRole = [];
     self.getAllUser = function(){
@@ -15,6 +16,11 @@ angular.module('sreizaoApp')
         filter["userId"] = Auth.getCurrentUser()._id;
       }
       userSvc.getUsers(filter).then(function(data){
+        data.forEach(function(item){
+          if(!item.isManpower || item.isPartner)
+            $scope.userList[$scope.userList.length] = item;
+        });
+
         $rootScope.globleUsers = $rootScope.users = data;
         getChannelUser("channelpartner");
       })

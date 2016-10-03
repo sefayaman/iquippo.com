@@ -22,6 +22,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   vm.updateVendorUser = updateVendorUser;
   vm.editVendorClick = editVendorClick;
   $scope.updateAvatar = updateAvatar;
+  vm.resetClick = resetClick;
 
   $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
   
@@ -75,20 +76,31 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     vm.existingUser = user;
     if(user) {
       //vm.vendorReg.user = {};
-      vm.vendorReg.user.userId = user._id;
+      if(!$scope.isEdit)
+        vm.vendorReg.user.userId = user._id;
       vm.vendorReg.user.fname = user.fname;
       if(user.mname)
         vm.vendorReg.user.mname = user.mname;
+      else
+        delete vm.vendorReg.user.mname;
       vm.vendorReg.user.lname = user.lname;
       if(user.email)
         vm.vendorReg.user.email = user.email;
+      else
+        delete vm.vendorReg.user.email;
       vm.vendorReg.user.mobile = user.mobile;
       if(user.phone)
         vm.vendorReg.user.phone = user.phone;
+      else
+        delete vm.vendorReg.user.phone;
       if(user.city)
         vm.vendorReg.user.city = user.city;
+      else
+        delete vm.vendorReg.user.city;
       if(user.imgsrc)
         vm.vendorReg.user.imgsrc = user.imgsrc; 
+      else
+        delete vm.vendorReg.user.imgsrc; 
       vm.existFlag = true;
     }
     else
@@ -118,14 +130,55 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.ManPower);
     if($scope.Finance)
       $scope.services.push($scope.Finance);
-    
     vm.vendorReg.services = $scope.services;
     setUserData(vm.vendorReg);
-    if(!$scope.isEdit) {
-      savePartner();
-    } else {
-      updateVendor(vm.vendorReg);
-    }
+    
+    var dataToSend = {};
+    if(vm.vendorReg.user.email) 
+      dataToSend['email'] = vm.vendorReg.user.email;
+    if(vm.vendorReg.user.mobile) 
+      dataToSend['mobile'] = vm.vendorReg.user.mobile;
+    if(vm.vendorReg.user.userId && $scope.isEdit) 
+      dataToSend['userid'] = vm.vendorReg.user.userId;
+    dataToSend['isPartner'] = true;
+
+    vendorSvc.validate(dataToSend).then(function(data){
+    if(data.errorCode != 0){
+        Modal.alert(data.message,true);
+         return;
+      } else {
+          if(!$scope.isEdit) {
+            savePartner();
+          } else {
+            /*var dataToSend = {};
+            dataToSend['entityName'] = vm.vendorReg.entityName;
+            if(vm.vendorReg._id) 
+              dataToSend['_id'] = vm.vendorReg._id;
+
+            vendorSvc.validateVendor(dataToSend).then(function(data){
+              if(data.errorCode != 0){
+                Modal.alert(data.message,true);
+                 return;
+                } else {
+                  updateVendor(vm.vendorReg);
+                }
+            });*/
+            updateVendor(vm.vendorReg);
+        }
+      }
+    });
+  }
+
+  function resetClick(form){
+    vm.vendorReg ={};
+    vm.existingUser ={};
+    $scope.errors = {};
+    $scope.services = [];
+    vm.vendorReg.user = {};
+    $scope.isEdit = false;
+    $rootScope.isSuccess = false;
+    $rootScope.isError = false;
+    vm.existFlag = false;
   }
 
   function updateAvatar(files){
@@ -137,10 +190,10 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function savePartner(){
-    if(vm.existingUser.isPartner) {
+    /*if(vm.existingUser.isPartner) {
       Modal.alert("User has already registered as Partner.", true);
       return;
-    }      
+    }  */    
     vm.existingUser.isPartner = true;
     if(vm.existFlag) {
       userSvc.updateUser(vm.existingUser).then(function(result){
@@ -240,16 +293,21 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
 
 function updateVendor(vendor) {
   vendorSvc.updateVendor(vendor).then(function(result){
-    $scope.successMessage = "Partner updated successfully";
-    $scope.autoSuccessMessage(5);
-    $scope.vendorReg = {};
-    $scope.Shipping = "";
-    $scope.Valuation = "";
-    $scope.CertifiedByIQuippo = "";
-    $scope.ManPower = "";
-    $scope.Finance = "";
-    $scope.isCollapsed = true;
-    loadVendors();
+    if(result && result.errorCode != 0){
+      Modal.alert(result.message,true);
+       return;
+      } else {
+        $scope.successMessage = "Partner updated successfully";
+        $scope.autoSuccessMessage(5);
+        $scope.vendorReg = {};
+        $scope.Shipping = "";
+        $scope.Valuation = "";
+        $scope.CertifiedByIQuippo = "";
+        $scope.ManPower = "";
+        $scope.Finance = "";
+        $scope.isCollapsed = true;
+        loadVendors();
+      }
   })
   .catch(function(err){
     console.log("error in vendor update",err);
