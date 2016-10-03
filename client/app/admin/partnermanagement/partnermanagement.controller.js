@@ -170,11 +170,20 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function resetClick(form){
+    clearData();
+  }
+
+  function clearData(){
     vm.vendorReg ={};
     vm.existingUser ={};
+    vm.vendorReg.user = {};
     $scope.errors = {};
     $scope.services = [];
-    vm.vendorReg.user = {};
+    $scope.Shipping = "";
+    $scope.Valuation = "";
+    $scope.CertifiedByIQuippo = "";
+    $scope.ManPower = "";
+    $scope.Finance = "";
     $scope.isEdit = false;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -252,15 +261,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
             data['to'] = vm.vendorReg.user.email;
             notificationSvc.sendNotification('vendorRegEmail', data, dataToSend,'email');
           }
+          clearData();
           loadVendors();
-          vm.vendorReg = {};
-          vm.existingUser = {};
-          $scope.Shipping = "";
-          $scope.Valuation = "";
-          $scope.Finance = "";
-          $scope.CertifiedByIQuippo = "";
-          $scope.ManPower = "";
-          vm.existFlag = false;
           $scope.submitted = false;
         }  
     })
@@ -299,12 +301,7 @@ function updateVendor(vendor) {
       } else {
         $scope.successMessage = "Partner updated successfully";
         $scope.autoSuccessMessage(5);
-        $scope.vendorReg = {};
-        $scope.Shipping = "";
-        $scope.Valuation = "";
-        $scope.CertifiedByIQuippo = "";
-        $scope.ManPower = "";
-        $scope.Finance = "";
+        clearData();
         $scope.isCollapsed = true;
         loadVendors();
       }
