@@ -264,4 +264,36 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('spareupload', {
+        url: '/spareupload',
+        templateUrl: 'app/spare/spareupload.html',
+        controller: 'SpareUploadCtrl as spareVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('sparelisting', {
+        url: '/sparelisting',
+        templateUrl: 'app/spare/sparelisting.html',
+        controller: 'SpareListingCtrl as spareListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('viewspares', {
+        url: '/viewspares',
+        templateUrl: 'app/spare/viewspares.html',
+        controller: 'ViewSpareCtrl as viewSpareVm',
+        layout:'client'
+      })
+      .state('sparedetail', {
+        url: '/sparedetail',
+        templateUrl: 'app/spare/sparedetail.html',
+        controller: 'SpareDetailCtrl as spareDetailVm',
+        layout:'client'
+      })
+      .state('sparehome', {
+        url:"/sparehome",
+        templateUrl: 'app/spare/sparehome.html',
+        controller:"SpareHomeCtrl as spareHomeVm",
+        layout:'client'
+      });
   });

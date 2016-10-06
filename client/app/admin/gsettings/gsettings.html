@@ -15,6 +15,7 @@
 	        		<option value="date">Auction Date</option>
 	        		<option value="inv">Invite Code Setting</option>
 	        		<option value="paymnt">Payment Master</option>
+	        		<option value="manu">Manufacturer</option>
 	        	</select>
 	        	<i class="caret"></i>
 	      	</div> 
@@ -309,6 +310,55 @@
 			              </tbody>
 			            </table>
 			        </div>
+	    </div>
+
+	    <!--Select Manufacturer -->
+        <div ng-if="gsettingVm.tabValue == 'manu'">
+			<h4>Manufacturer</h4>
+			<legend></legend>
+			<form name="paymentForm" novalidate class="invMasterForm">			    		
+	          <div class="row">
+                         	
+                <div class="form-group col-sm-4" ng-class="{'has-error': form.errorCategory && submitted}">
+                    <input id="categoryName" ng-model="c.name" type="text"  name ="categoryName" class="form-control" placeholder="Enter Manufacturers Name" required>
+                </div> 
+                <div class="form-group col-sm-2">
+                	<span class="btn btn-warning fileinput-button">
+                        <span>Browse image...</span>
+                        <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                    </span>
+                </div>
+                <div class="col-sm-4">
+                  {{c.imgSrc}}
+                </div>                           	
+               	<div class="form-group col-sm-2">
+               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Category')" ng-if="!categoryEdit">Save</button>
+               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Category')" ng-if="categoryEdit">Update</button>
+               	</div>
+               	
+              </div>
+	     	</form>	
+          	<div class="table-responsive">
+	            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+	              <thead>
+	                <th>Image</th>                                
+	                <th>Manufacturers</th>                                
+	                <th>Action</th>
+	               
+	              </thead>
+	              <tbody>
+	              <tr ng-repeat="payment in gsettingVm.paymentMasterList">
+	                <td>{{payment.serviceName}}<span ng-if="payment.partnerId">({{gsettingVm.getParnerName(payment.partnerId)}})</span></td>
+	                <td>{{payment.fees}}</td>
+	                <td>
+						<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editPaymentMaster($index)"><i class="fa fa-pencil"></i> </a>
+						<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deletePaymentMaster($index)"><i class="fa fa-trash"></i> </a>
+	                </td>
+	               </tr>
+	              </tbody>
+	            </table>
+        	</div>
 	    </div>
     </div>
   </div>

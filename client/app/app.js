@@ -5,6 +5,7 @@ angular.module("classifiedAd",[]);
 angular.module("product",[]);
 angular.module("admin",[]);
 angular.module("manpower",[]);
+angular.module("spare",[]);
 //Application module
 angular.module('sreizaoApp',[
   'ngCookies',
@@ -19,7 +20,8 @@ angular.module('sreizaoApp',[
   'classifiedAd',
   'product',
   'admin',
-  'manpower'
+  'manpower',
+  'spare'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

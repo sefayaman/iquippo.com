@@ -1,0 +1,398 @@
+<div id="wrapper">
+    <section class="wrapper">
+      <div class="container-fluid">
+        <div id="page-wrapper">
+          <div class="row">
+          <div class="col-sm-12">
+            <h3>
+              Spare Upload
+            </h3>
+            <hr>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+          <!-- success error start-->
+            <div class="row animate-show" ng-show="isSuccess" >
+              <div class="col-sm-12">
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                   {{successMessage}}
+                </div>
+              </div>
+            </div>
+            <div class="row animate-show" ng-show="isError">
+              <div class="col-sm-12">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{errorMessage}}
+                </div>
+              </div>
+            </div>
+            <!-- success error end -->
+
+            <!-- tabs -->
+            <uib-tabset justified="true">
+              <uib-tab heading="Step1" index="0" active="tabObj.step1">
+                <form name="form" novalidate>
+                      <div class="seller_info form-group" ng-if="isActive() || isChannelPartner()">
+                        <h3>Seller Information</h3>
+                        <div class="row">
+                            <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                              <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
+                                <option value="">* Customer Type</option>
+                                <option value="individual">Individual</option>
+                                <option value="private">Private Entrepreneur</option>
+                                <option value="legalentity">Legal Entity</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-4 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                              <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="spareVm.onUserChange(container.selectedUserId)" required>
+                                    <option value="">* Select User</option>
+                                    <option value="{{user._id}}" ng-repeat="user in spareVm.getUsersOnUserType">{{user.fname}}</option>
+                              </select>
+                              <i class="caret"></i>
+                    
+                            </div>
+                            <div class="col-sm-4 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                              <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="spareVm.onUserChange(container.selectedUserId)" required>
+                                    <option value="">* Select Company</option>
+                                    <option value="{{user._id}}" ng-repeat="user in spareVm.getUsersOnUserType">{{user.company}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-2 ln">
+                            <a href="/usermanagement">Create User</a>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-4 form-group">
+                              <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="spareVm.spare.seller.email" ng-model="spareVm.spare.seller.email" name="sellerEmail">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                              <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="spareVm.spare.seller.mobile" ng-model="spareVm.spare.seller.mobile" name="sellerMobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top">
+                            </div>
+                          </div>
+                          <div class="row col-sm-12 form-group">
+                            <p class="help-block cart_item" ng-show="(form.userName.$error.required || form.company.$error.required || form.userType.$invalid) && submitted">
+                              Selection of Customer type and User/Company is must to upload your spare.
+                            </p>
+                          </div>
+                      </div>
+                      <div class="clearfix"></div>
+
+                     <div class="panel panel-default">
+                       <div class="panel-heading">
+                         <h3 class="panel-title">Basic Information</h3>
+                       </div>
+                       <div class="panel-body">
+                          <div class="row">
+                            <div class="form-group col-sm-5">Part ID.</div>
+                            <input type="text" class="form-control" placeholder="Enter Part no." name="partId" ng-value="spareVm.spare.partId" ng-model="spareVm.spare.partId">
+                            <!-- <div class="form-group col-sm-7">{{spareVm.partId}}</div> -->
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Part No.</div>
+                            <div class="form-group col-sm-7">
+                              <input type="text" class="form-control" name="partNo" ng-value="spareVm.spare.partNo" ng-model="spareVm.spare.partNo" placeholder="Enter Part no.">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Serial Number</div>
+                            <div class="form-group col-sm-7">
+                            <input type="text" class="form-control" name="serialNo" ng-value="spareVm.spare.serialNo" ng-model="spareVm.spare.serialNo" placeholder="Enter Serial no.">
+                            </div>                           
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Part Name <span class="text-warning">*</span> </div>
+                            <div class="form-group col-sm-7">
+                            <input type="text" class="form-control" name="name" ng-value="spareVm.spare.name" ng-model="spareVm.spare.name" placeholder="Enter Part Name">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Part Description</div>
+                            <div class="form-group col-sm-7">
+                            <input type="text" class="form-control" name="description" ng-value="spareVm.spare.description" ng-model="spareVm.spare.description" placeholder="Enter Part Description">
+                            </div>
+                          </div>
+                          <div class="row"> 
+                            <div class="form-group col-sm-5">Manufacturer <span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.manufacturer.$invalid && submitted}">
+                              <select class="form-control" name="manufacturer" ng-model="spareVm.spare.manufacturer" required>
+                                <option>Select Manufacturer</option>
+                                <option ng-repeat="manufacturer in spareVm.manufacturers" value="{{manufacturer.name}}">{{manufacturer.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>                             
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Price <span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-4">
+                               <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
+                                <span class="input-group-addon currency-width">
+                                  <select class="form-control"  name="currencyType" ng-model="spareVm.spare.currencyType">
+                                   <option value="" selected>&#x20B9; Rupee</option>
+                                  </select>
+                                  <!-- <i class="caret"></i> -->
+                                </span>
+                                  <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="spareVm.spare.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!spareVm.spare.priceOnRequest">
+                              </div>     
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="form-group checkbox check">
+                                <input type="checkbox" name="" ng-value="true" ng-model="spareVm.spare.priceOnRequest">
+                                Price on Request
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" ng-repeat=" link in product.videoLinks">
+                            <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-5" ng-class="{'has-error': form.location.$invalid && submitted}">
+                              <select class="form-control" name="location" ng-model="spareVm.spare.city" required>
+                                <option value="">Select Location</option>
+                                <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <!-- <div class="col-sm-2 ">
+                              <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div> -->
+                          </div>
+                          <div class="row">                            
+                            <div class="col-sm-5 form-group">Product Condition <span class="text-warning">*</span></div>
+                              <div class="col-xs-6 col-sm-4 form-group">
+                                  <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="spareVm.spare.productCondition" value="used"> Used</span>
+                                </div>
+                                <div class="col-xs-6 col-sm-3 form-group">
+                                  <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="spareVm.spare.productCondition" value="new"> New</span>
+                                </div>
+                            </div>
+                          <div class="row form-group">
+                            <div class="col-sm-5">Payment Mode  </div>
+                            <div class="col-sm-7">
+                              <div class="row">
+                                <div class="col-sm-4">
+                                  <input type="radio" name="payment"> Online
+                                </div>
+                                <div class="col-sm-4">
+                                  <input type="radio" name="payment"> Offline
+                                </div>
+                                <div class="col-sm-4">
+                                  <input type="radio" name="payment"> COD
+                                </div>
+                              </div>
+                            </div>                            
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Commission Percent</div>
+                            <div class="col-sm-7 form-group">
+                              <input type="number" min="0"  class="form-control" name="commission" ng-value="spareVm.spare.commission" ng-model="spareVm.spare.commission" placeholder="Commission Percent (Numbers Only in Percent)">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5">Spare Status</div>
+                            <div class="col-sm-7">
+                              <select class="form-control" name="spareStatus" ng-model="spareVm.spare.spareStatus">
+                                    <option value="">Spare Status</option>
+                                    <option value="active"> Active </option>
+                                    <option value="inactive"> Inactive </option>
+                                    <option value="sold"> Sold </option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                          </div>
+                       </div>
+                     </div>
+
+                        <!-- <div class="clearfix form-group"></div> -->
+                         <div class="form-group pull-right">
+                            <button class="btn" type="button" ng-click="resetClick(form)" ng-show="!isEdit">Reset</button>
+                           <!--  <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button> -->
+                            <button ng-hide="enableButton" class="btn btn-danger" ng-click="firstStep(form,product)">Submit</button>
+                            <button ng-show="enableButton" class="btn btn-danger" confirmed-click="firstStep(form,product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
+                        </div>
+                </form>
+              </uib-tab>
+              <uib-tab heading="Step2" index="1" active="tabObj.step2" disable="false">
+                <form name="auctForm" novalidate>
+                  <div class="panel panel-default">
+                   <div class="panel-heading">
+                     <h3 class="panel-title">Asset Details</h3>
+                   </div>
+                   <div class="panel-body">
+                      <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Category</th>
+                                  <th>Modal</th>
+                                  <th>Brand</th>
+                                  <th>Variant</th>
+                                  <th>Add More</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr ng-repeat=" param in product.technicalInfo.params">
+                                  <td>
+                                    <div class="form-group" ng-class="{'has-error': form.category.$invalid && submitted}">
+                                      <select ng-disabled="relistingEnable" class="form-control" name="category"  ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required>
+                                            <option value="">Select Category*</option>
+                                            <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+                                      </select>
+                                      <i class="caret"></i>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': form.otherCategory.$invalid && submitted}">
+                                      <input type="text" class="form-control" name="otherCategory" ng-model="product.category.otherName" ng-value="{{product.category.otherName}}" ng-disabled ="product.category.name != 'Other'" placeholder="Other" ng-required= "product.category.name == 'Other'">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group" ng-class="{'has-error': form.brand.$invalid && submitted}">
+                                       <select ng-disabled="relistingEnable" class="form-control" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required>
+                                            <option value="">Select Brand *</option>
+                                            <option value="{{brand._id}}" ng-repeat="brand in brandList">{{brand.name}}</option>
+                                      </select>
+                                      <i class="caret"></i>
+                                    </div>
+                                    <div class="form-group" ng-class="{'has-error': form.otherBrand.$invalid && submitted}">
+                                      <input type="text" class="form-control" name="otherBrand" ng-model="product.brand.otherName" ng-value="{{product.brand.otherName}}" ng-disabled ="product.brand.name != 'Other'" placeholder="Other" ng-required= "product.brand.name == 'Other'">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group" ng-class="{'has-error': form.model.$invalid && submitted}">
+                                       <select ng-disabled="relistingEnable" class="form-control" name="model" ng-model="container.selectedModelId" required  ng-change="onModelChange(container.selectedModelId)">
+                                              <option value="">Select Model</option>
+                                              <option value="{{model._id}}" ng-repeat="model in modelList">{{model.name}}</option>
+                                        </select>
+                                        <i class="caret"></i>
+                                      </div>
+                                      <div class="form-group" ng-class="{'has-error': form.otherModel.$invalid && submitted}">
+                                        <input type="text" class="form-control" name="otherModel" ng-model="product.model.otherName" ng-value="{{product.model.otherName}}" ng-disabled ="product.model.name != 'Other'" placeholder="Other" ng-required= "product.model.name == 'Other'">
+                                      </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group">
+                                      <input type="text" placeholder="Variant" ng-value="product.variant" ng-model="product.variant" name="variant" class="form-control">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group">
+                                      <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
+                                      <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                                    </div>
+                                  </td>
+                              </tbody>
+                            </table>
+                   </div>
+                  </div>
+
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Artifacts Details</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
+                             <div class="col-sm-3 form-group">Document Category</div>
+
+
+                            <div class="col-sm-3 form-group">
+                              <select class="form-control">
+                               <option>Documents Type</option>
+                                <option>User Manuals</option>
+                                <option>Technical Specifications</option>
+                                <option>Certifications</option>
+                              </select>
+                               <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                              <span class="btn btn-warning fileinput-button">
+                               <input type="file" data-index="{{$index}}" name="doc"  data-filetype="mdoc" file-upload ng-disabled="!miscDoc.type">
+                                <span><i class="fa fa-upload"></i> Upload Document</span>
+
+                              </span>
+                            </div>
+                            <div class="col-sm-2 uploads-doc">
+                              {{miscDoc.name}}
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
+                              <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div>
+                          </div>
+                      <div class="row upload-picHover form-group">
+                            <div class="form-group col-sm-5 pic-popover">Upload Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover" popover-placement="left" uib-popover="To ensure picture quality we suggest minimum image resolutions as 450*300 pixels." popover-trigger="mouseenter">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in images">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row" ng-show="isActive()">
+                             
+                              <div class="col-xs-6 col-sm-6">
+                                <div class="row">
+                                  <div class="col-xs-1 col-sm-1">
+                                  <input type="checkbox" id="" name="status"  ng-model="product.status" ng-value="product.status">
+                                  </div>
+                                  <div class="col-xs-5 col-sm-5">
+                                    Active
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group pull-right">                        
+                    <button ng-hide="enableButton" class="btn btn-danger" ng-click="secondStep(auctForm,product)">Submit</button>
+                  </div>
+                </form>                
+              </uib-tab>
+            </uib-tabset>            
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+<div class="form-group"></div>
+
+<script type="text/ng-template" id="cropImage.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  ng-click="dismissModal()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+       <image-crop image-out="imageOut"  crop-options="options" ng-transclude crop-image-save="saveCrop">
+         <edit-crop></edit-crop>
+       </image-crop>
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-success" ng-click="cropImage()">Crop <i class="fa fa-crop"></i></button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="saveImage()">Save</button>
+      </div>
+  </div>
+</script>

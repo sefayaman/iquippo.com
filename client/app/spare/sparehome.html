@@ -1,0 +1,238 @@
+<section class="banner">
+  <div class="overlay"></div>
+  <div id="static-banner">
+    <img  ng-src="assets/images/Banner2.jpg" class="img-responsive">
+  </div>
+  <div class="static-search-banner">
+    <div class="container">
+      <div class="spare-content">
+          <form>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="">
+                    <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name" uib-typeahead="address for address in mainVm.getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="">
+                    <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location of Spare Parts" uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                      <div ng-show="mainVm.noResults">
+                        <i class="glyphicon glyphicon-remove"></i> No Results Found
+                      </div>
+                  </div>
+                </div> 
+                <div class="col-sm-3">
+                  <div class="">
+                    <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Spare Part Name" uib-typeahead="address for address in mainVm.getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                      <div ng-show="mainVm.noResults">
+                        <i class="glyphicon glyphicon-remove"></i> No Results Found
+                      </div>
+                  </div>
+                </div>             
+                <div class="col-sm-3 text-center">
+                  <a href="javascript:;"  class="btn btn-warning btn-block" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search</a>
+                </div>
+              </div>
+          </form>
+        </div>
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="wrapper">
+  <div class="container">
+
+    <div class="row main-container">
+    <div class="col-sm-2 col-md-2 hidden-xs">
+       <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank">
+          <img ng-if="mainVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop.src}}" class="img-responsive add1">
+       </a>
+        <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
+        <div class="form-group"></div>
+        <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
+        <a ng-href="{{mainVm.imgLeftBottom.websiteUrl}}" target="_blank">
+          <img ng-if="mainVm.imgLeftBottom.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftBottom.src}}" class="img-responsive add1">
+        </a>
+      </div>
+      <div class="col-sm-10 col-md-7 padd-left">
+        <!-- <div class="head">
+
+          <legend class="dull"></legend>
+          <legend class="dark"></legend>
+        </div> -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-th"></i> Spare Parts</h4>
+          </div>
+        </div>
+        <div class="cat cat-product text-center">
+          <ul class="cat-list">
+            <!-- <li ng-repeat="category in categoryList">
+              <a href="/viewproducts/{{category._id}}">
+                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">
+                  <span class="overlayer"></span><span>{{category.name}} <b>({{category.count}})</b></span>
+              </a>
+
+            </li> -->
+            <li>
+              <a href="/spareproducts">
+                 <img src="assets/images/best-offer.jpg" class="img-responsive">
+                  <span class="overlayer"></span><span>{{category.name}} <b>({{category.count}})</b></span>
+              </a>
+
+            </li>
+          </ul>
+          <!-- <div class="show-more">
+            <button type="button" class="btn btn-default" ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
+          </div> -->
+        </div>
+
+      </div>
+
+      <div class="col-sm-2 col-md-3 hidden-xs padd-left">
+        <div class="panel-group">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-hourglass-2"></i> Spare Snapshots</h3>
+            </div>
+            <div class="panel-body">
+             <!--  <img src="assets/images/update-product.jpg" class="img-responsive"> -->
+             <div class="row">
+             <div class="col-sm-6 col-sm-offset-1 assets-uploaded text-center">
+              <div class="uploded-asset">
+              <a href="javascript:void(0);">
+                <strong>{{mainVm.productCountObj.total || 0}}</strong>
+                <p>Number of Spares Listed</p>
+              </a>
+             </div>
+             </div>
+             <div class="col-sm-6 assets-listed text-center">
+             <div class="listed-assets">
+              <a href="javascript:void(0);">
+                <strong>{{mainVm.productCountObj.listed || 0}}</strong>
+                <p>Number of Manufacturers Listed</p>
+              </a>
+             </div>
+             </div>
+
+             </div>
+             <div class="row sold-top">
+             <div class="col-sm-6 col-sm-offset-3 assets-sold text-center">
+             <div class="sold-assets">
+              <a href="javascript:void(0);">
+                <strong>{{mainVm.productCountObj.sold || 0}}</strong>
+                <p>Number of Spares Sold</p>
+              </a>
+             </div>
+             </div>
+             </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-link"></i> Partners</h3>
+              </div>
+              <div class="panel-body text-center">
+                <div class="form-group">
+                  <a href="http://srei.com/" target="_blank">
+                    <img src="assets/images/srei-logo.png" width="100">
+                  </a>
+
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+        <div class="form-group"></div>
+        <div class="form-group clearfix"></div>
+
+        <div class="horizontal-crsl">
+          <!-- <div class="head clear-fix">
+            <h4>Featured Products</h4>
+            <legend class="dull"></legend>
+            <legend class="dark"></legend>
+          </div> -->
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa fa-star"></i> Spare Manufacturer</h4>
+            </div>
+          </div>
+          <div id="slides_control_feature">
+            <uib-carousel no-wrap="noWrapSlides">
+              <!-- <uib-slide ng-repeat="gpSlide in mainVm.sortedFeaturedProduct"> -->
+              <uib-slide>
+                <div class="row">
+                  <!-- <div class="col-sm-3" ng-repeat="slide in gpSlide">
+                    <div class="panel panel-default">
+                      <a ng-href="/productdetail/{{slide._id}}?FeatureProduct">
+                        <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
+                      </a>
+                      <div class="panel-heading">
+                        <h3 class="panel-title">{{slide.name}}</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row">
+                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> {{slide.brand.name}}</div>
+                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-bookmark"></i> {{slide.model.name}}</div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-6 form-group text-ellips"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
+                          <div class="col-xs-6 form-group text-ellips">
+                            <i class="fa fa-ticket"></i>
+                            <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
+                            <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="col-sm-3">
+                    <div class="panel panel-default">
+                      <a ng-href="/productdetail/{{slide._id}}?FeatureProduct">
+                        <img src="assets/images/best-offer.jpg" class="img-responsive">
+                      </a>
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Spare Name</h3>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row">
+                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i> Spare Name </div>
+                          <div class="col-xs-6 form-group text-ellips"><i class="fa fa-bookmark"></i> Manufacturer brand</div>
+                        </div>
+                        <div class="row">
+                          <div class="col-xs-6 form-group text-ellips"> <i class="fa fa-map-marker"></i> Location</div>
+                          <div class="col-xs-6 form-group text-ellips">
+                            <i class="fa fa-inr"></i>
+                            2000
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </uib-slide>
+            </uib-carousel>
+          </div>
+        </div>
+
+  </div>
+</section>
+<div class="container text-center form-group">
+  <div class="row">
+    <div class="col-sm-6">
+      <a ng-href="{{mainVm.imgBottomLeft.websiteUrl}}" target="_blank">
+        <img ng-if="mainVm.imgBottomLeft.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomLeft.src}}" class="add2 img-responsive">
+      </a>
+    </div>
+    <div class="col-sm-6">
+      <a ng-href="{{mainVm.imgBottomRight.websiteUrl}}" target="_blank">
+        <img ng-if="mainVm.imgBottomRight.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgBottomRight.src}}" class="add2 img-responsive">
+      </a>
+    </div>
+  </div>
+</div>
+</div>

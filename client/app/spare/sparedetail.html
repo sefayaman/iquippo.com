@@ -1,0 +1,317 @@
+  <div class="view-content">
+<section class="wrapper">
+      <div class="container">
+      <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
+        The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
+      </div>
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
+          <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
+          <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
+          <li><a class="active">{{currentProduct.name}}</a></li>
+        </ol>
+
+        <!-- <div class="valueation-request">
+          <button class="btn btn-info btn-lg" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>
+        </div> -->
+
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <div class="panel-group">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-cube"></i> {{currentProduct.name}}</h3>
+                </div>
+              </div>
+            </div>
+           
+            <div class="carousel slide article-slide" id="article-photo-carousel">
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner cont-slider">
+                <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':thumbnailImage.isPrimary}">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
+
+                </div>
+              </div>
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
+                </li>
+              </ol>
+              <!-- <ul>
+                <li ng-if="currentProduct.videoName">
+                    <a href="/download/{{currentProduct.assetDir}}/{{currentProduct.videoName}}" class="text-muted" target="_blank"><span><i class="fa fa-video-camera fa-4x"></i></span></a>
+                  </li>
+              </ul> -->
+            </div>
+            <div class="form-group clearfix">
+              <legend></legend>
+            </div>
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="video-link">
+                  <ul>
+                    <li ng-repeat="link in currentProduct.videoLinks">
+                      <a href="javascript:void(0)" ng-click="productDetailVm.playVideo($index)">
+                        <!-- {{link.uri}} -->
+                        <i class="fa fa-youtube-play fa-2x"></i>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+             
+            </div>
+             
+            <div class="form-group clearfix"></div>
+
+          </div>
+          <div class="col-sm-5 col-md-4 padd-left panel-group">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-info-circle"></i> 
+
+                Spares Basic Information</h3>
+              </div>
+              <div class="panel-body">
+                 <table class="table table-striped">
+                    
+                    <tr>
+                      <td>Part No.</td>
+                      <td>{{currentProduct.Part.No}} </td>                    
+                    </tr>
+                    <tr>
+                      <td>Serial Number</td>
+                      <td >{{currentProduct.serial.no}}</td>
+                      
+                    </tr>
+                    <tr>
+                      <td>Part Name *</td>
+                      <td>{{currentProduct.PartName}}</td>
+                    </tr>
+                    <tr>
+                      <td>Part Description</td>
+                      <td>{{currentProduct.PartDescription}}</td>
+                    </tr>
+                    <tr>
+                      <td>Manufacturer *</td>
+                      <td>{{currentProduct.Manufacturer}}</td>
+                    </tr>
+                    <tr>
+                    <td>Price *</td>
+                    <td>{{currentProduct.Price}}</td>
+                  </tr>
+                    <tr>
+                      <td>Product Condition *</td>
+                      <td>{{currentProduct.Condition}}</td>
+                    </tr>
+                   <tr>
+                      <td>Location</td>
+                      <td>{{currentProduct.payment}}</td>
+                    </tr>
+                    
+                  </table>
+
+              </div>
+            </div>
+
+
+          </div>
+          <div class="col-md-4 padd-left panel-group">
+             <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-envelope"></i> To Buy Contact</h3>
+              </div>
+              <div class="panel-body">
+                <form  novalidate role="form" name="form">
+                  <table class="table table-striped">
+                    <tr>
+                      <td><i class="fa fa-phone"></i> Phone Number</td>
+                      <td>011 66025672</td>
+                    </tr>
+                    <tr>
+                      <td><i class="fa fa-envelope"></i> Email</td>
+                      <td>info@iQuippo.com</td>
+                    </tr>
+                  </table>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
+                          <input type="text" name="fname" ng-model="buycontact.fname" ng-value="buycontact.fname" class="form-control"  placeholder="* First Name" required>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <input type="text" name="mname" ng-model="buycontact.mname" ng-value="buycontact.mname" class="form-control" placeholder="Middle Name">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
+                        <input type="text" name="lname" ng-model="buycontact.lname" ng-value="buycontact.lname" class="form-control" placeholder="* Last Name" required>
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }">
+                          <select class="form-control" name="country" ng-model="buycontact.country" required>
+                            <option value="" disabled>* Select Country</option>
+                            <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                          </select>
+                          <i class="caret"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <input type="text" name="phone" ng-model="buycontact.phone" ng-value="buycontact.phone" class="form-control" placeholder=" Phone No.">
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+                        <div class="input-group">
+                          <input type="text" name="mobile" ng-model="buycontact.mobile" ng-value="buycontact.mobile" class="form-control" placeholder="* Mobile No." uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" required>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                          <input type="email" name="email" ng-model="buycontact.email" ng-value="buycontact.email" class="form-control" placeholder="Email Address" ng-required="buycontact.contact == 'email'">
+                          <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                          Please enter a valid email.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <span>Method of contact </span>
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group">
+
+                          <input type="radio" name="contact" ng-model="buycontact.contact" value="email"> E-mail
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <input type="radio" name="contact" ng-model="buycontact.contact" value="mobile"> Phone
+                        </div>
+                      </div>
+                    </div>
+
+                    <span>Request for finance </span>
+                    <div class="row">                      
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="finance"> Yes
+                        </div>
+                      </div>
+                      <div class="col-xs-6">
+                        <div class="form-group">
+                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="buyORrent"> No
+                        </div>
+                      </div>
+                    </div>
+                    <div ng-if="buycontact.interestedIn == 'finance'">
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <div class="form-group">
+                            <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Amount to be Financed">
+                          </div>
+                        </div>
+                        <div class="col-xs-6">
+                          <div class="form-group">
+                            <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <div class="form-group">
+                            <input type="text" class="form-control" name="periodInMonths" ng-model="buycontact.financeInfo.periodInMonths" ng-value="buycontact.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+                          </div>
+                        </div> 
+                        <div class="col-xs-6">
+                          <div class="form-group" ng-class="{'has-error': form.finAgency.$invalid && form.submitted }">
+                            <select class="form-control" name="finAgency" ng-model="buycontact.financeInfo.finAgency" required>
+                              <option value="" disabled>* Financing Company</option>
+                              <option  ng-repeat="finAgency in valAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                            </select>
+                            <i class="caret"></i>
+                          </div>
+                        </div>                      
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <textarea class="form-control" name="message" ng-model="buycontact.message" placeholder="Comments"></textarea>
+                    </div>
+                    <a class="btn btn-md btn-primary" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Add To Cart</a>
+                    <button type="submit" ng-click="productDetailVm.sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Send Message</button>
+                  </form>
+
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+     <script type="text/javascript">
+      $(document).ready(function() {
+        $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hidden.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+        });
+      });
+
+      function goTo(dir){
+           $('#article-photo').carousel(dir);
+      }
+
+    </script>
+ <script type="text/ng-template" id="magnifier.html">
+<div id="magnifier-modal">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="carousel slide article-slide" id="article-photo">
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner cont-slider">
+                <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+                </div>
+              </div>
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+                </li>
+              </ol>
+
+              <!-- Controls -->
+              <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+      </div>
+    </div>
+</div>
+</script>
+

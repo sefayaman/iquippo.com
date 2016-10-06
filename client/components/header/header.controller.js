@@ -16,6 +16,12 @@ angular.module('sreizaoApp')
         else
           Modal.alert("Please Login/Register for uploading the products!", true);
     };
+    $scope.redirectToSpare = function(){
+      if($rootScope.getCurrentUser()._id) 
+          $state.go('spareupload');
+        else
+          Modal.alert("Please Login/Register for uploading the products!", true);
+    };
 
     $scope.openLogin = function(){
       Auth.doNotRedirect = false;
