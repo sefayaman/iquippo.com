@@ -61,7 +61,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  		})
  		.catch(function(err){
  			$state.go("main");
- 			Modal,$stateParams,$state.alert("Unknown error occured in payment system");
+ 			Modal.alert("Unknown error occured in payment system");
  		})
 
  		LocationSvc.getAllState();

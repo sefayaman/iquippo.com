@@ -269,11 +269,26 @@ exports.paymentResponse = function(req,res){
         var val = d.split("=");
         resPayment[val[0]] = val[1];
     });
+
+    var status = resPayment.order_status.toString().toLowerCase().trim();
     Payment.findById(resPayment.order_id, function (err, payment) {
       if(err) { return handleError(res, err); }
       if(!payment) { return res.status(404).send('Not Found'); }
       
-      payment.ccAvenueRes = resPayment;
+    var paymentVal = {};
+    paymentVal.paymentType = "CCAvenue";
+    paymentVal.bank_ref_no = resPayment.bank_ref_no;
+    paymentVal.order_status = resPayment.order_status;
+    paymentVal.failure_message = resPayment.failure_message;
+    paymentVal.payment_mode = resPayment.payment_mode;
+    paymentVal.card_name = resPayment.card_name;
+    paymentVal.status_message = resPayment.status_message;
+    paymentVal.tracking_id = resPayment.tracking_id;
+    payment.ccAvenueRes = paymentVal;
+
+      if(status == "success")
+        payment.statusCode = 0;
+          
       payment.save(function(err,pys){
         if(err) { return handleError(res, err); }
         else{
