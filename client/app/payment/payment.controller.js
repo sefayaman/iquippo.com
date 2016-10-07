@@ -19,7 +19,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
 
    //new ccavennue crediential
    var ccavenueURL = "https://test.ccavenue.com";
-   var currentURL = "http://www.localhost";
+   var currentURL = "http://localhost";
    var accessCode = 'AVSW00DJ54AN50WSNA';
 
  	//Default parameter value
