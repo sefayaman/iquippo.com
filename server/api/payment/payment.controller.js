@@ -226,7 +226,8 @@ exports.exportPayment = function(req,res){
 }
 
 //ccavenue payment keys
- var ccAvenueWorkingKey = "D6013738094F627ED02C3E99140512D5"; // test
+ //var ccAvenueWorkingKey = "D6013738094F627ED02C3E99140512D5"; // test
+ var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // new account
 //var ccAvenueWorkingKey = "DF2CF283425D194738C2F85DE9ED2657"; // production
 
 exports.encrypt = function(req,res){
