@@ -19,8 +19,8 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
 
    //new ccavennue crediential
    var ccavenueURL = "https://test.ccavenue.com";
-   var currentURL = "http://www.iquippo.com";
-   var accessCode = 'AVSY67DJ29AL34YSLA';
+   var currentURL = "http://www.localhost";
+   var accessCode = 'AVSW00DJ54AN50WSNA';
 
  	//Default parameter value
 
@@ -110,7 +110,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&billing_zip=" + pinCode;
       //optional field
       bodyRequest += "&customer_identifier="+encodeURIComponent(vm.payTransaction.user._id);
-      bodyRequest += "&merchant_param1="+ encodeURIComponent(currentURL);
+      bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
       //console.log("b###########",bodyRequest);
