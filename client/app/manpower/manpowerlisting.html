@@ -43,8 +43,6 @@
                       </td>
                       <td>
                         <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="manpower.status" uib-btn-checkbox ng-click="manpowerListingVm.updateManpowerUser(manpower)"><span ng-if="!manpower.status">Activate</span> <span ng-if="manpower.status">Deactivate</span></label>
-                        <!-- <button class="btn btn-danger" ng-click="manpowerListingVm.editClassifiedAdd(manpower)"><i class="fa fa-trash" ></i></button> -->
-                        <!-- <button class="btn btn-default"><i class="fa fa-download"></i></button> -->
                         <a class="btn btn-default" href="{{uploadImagePrefix}}{{manpower.docDir}}/{{manpower.resumeDoc}}" ng-if="manpower.resumeDoc" target="_blank"><i class="fa fa-download"></i></a>
                       </td> 
                     </tr>

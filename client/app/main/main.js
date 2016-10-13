@@ -278,6 +278,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('spareedit', {
+        url: '/spareedit/:id',
+        templateUrl: 'app/spare/spareupload.html',
+        controller: 'SpareUploadCtrl as spareVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('viewspares', {
         url: '/viewspares',
         templateUrl: 'app/spare/viewspares.html',

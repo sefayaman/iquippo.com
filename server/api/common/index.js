@@ -48,5 +48,9 @@ router.get('/auctionmaster', controller.getAuctionMaster);
 router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
 
+router.get('/manufacturer', controller.getAllManufacturer);
+router.post('/manufacturer/save', controller.createManufacturer);
+router.put('/manufacturer/:id', controller.updateManufacturer);
+router.delete('/manufacturer/:id', controller.destroyManufacturer);
 
 module.exports = router;

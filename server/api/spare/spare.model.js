@@ -11,7 +11,7 @@ var SpareSchema = new Schema({
   serialNo:String,
   name:String,
   description:String,
-  manufacturers:String,
+  manufacturers:{},
   currencyType: {
     type: String,
     default: "INR"
@@ -21,13 +21,12 @@ var SpareSchema = new Schema({
   paymentOption:[String],
   commission:Number,
   country:String,
-  state:String,
-  city:String,
+  locations : [{}],
   productCondition:String,
   images:[{}],
   primaryImg: String,
   miscDocuments:[{}],
-  spareStatus:{type:String,default:'inactive'},
+  status:{type:String,default:'inactive'},
   spareStatuses:[{}],
   spareDetails:[{}],
   deleted: {

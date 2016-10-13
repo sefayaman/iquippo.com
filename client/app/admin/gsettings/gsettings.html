@@ -316,24 +316,24 @@
         <div ng-if="gsettingVm.tabValue == 'manu'">
 			<h4>Manufacturer</h4>
 			<legend></legend>
-			<form name="paymentForm" novalidate class="invMasterForm">			    		
+			<form name="manufactureForm" novalidate class="invMasterForm">			    		
 	          <div class="row">
                          	
-                <div class="form-group col-sm-4" ng-class="{'has-error': form.errorCategory && submitted}">
-                    <input id="categoryName" ng-model="c.name" type="text"  name ="categoryName" class="form-control" placeholder="Enter Manufacturers Name" required>
+                <div class="form-group col-sm-4" ng-class="{'has-error': manufactureForm.name.$invalid && submitted}">
+                    <input name="name" ng-model="gsettingVm.manufacturer.name" type="text" class="form-control" placeholder="Manufacturers Name*" required>
                 </div> 
                 <div class="form-group col-sm-2">
                 	<span class="btn btn-warning fileinput-button">
                         <span>Browse image...</span>
-                        <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                        <input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)"  class="ng-scope">
                     </span>
                 </div>
                 <div class="col-sm-4">
-                  {{c.imgSrc}}
+                  {{gsettingVm.manufacturer.imgsrc}}
                 </div>                           	
                	<div class="form-group col-sm-2">
-               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.Save('Category')" ng-if="!categoryEdit">Save</button>
-               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="masterDataVm.update('Category')" ng-if="categoryEdit">Update</button>
+               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveManufacturer(manufactureForm)" ng-if="!gsettingVm.manufacturerEdit">Save</button>
+               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateManufacturer(manufactureForm)" ng-if="gsettingVm.manufacturerEdit">Update</button>
                	</div>
                	
               </div>
@@ -348,12 +348,12 @@
 	               
 	              </thead>
 	              <tbody>
-	              <tr ng-repeat="payment in gsettingVm.paymentMasterList">
-	                <td>{{payment.serviceName}}<span ng-if="payment.partnerId">({{gsettingVm.getParnerName(payment.partnerId)}})</span></td>
-	                <td>{{payment.fees}}</td>
+	              <tr ng-repeat="mfg in gsettingVm.manufacturerList">
+	                <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
+	                <td>{{mfg.name}}</td>
 	                <td>
-						<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editPaymentMaster($index)"><i class="fa fa-pencil"></i> </a>
-						<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deletePaymentMaster($index)"><i class="fa fa-trash"></i> </a>
+						<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer($index)"><i class="fa fa-pencil"></i> </a>
+						<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer($index)"><i class="fa fa-trash"></i> </a>
 	                </td>
 	               </tr>
 	              </tbody>

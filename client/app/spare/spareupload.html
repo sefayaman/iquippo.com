@@ -34,13 +34,13 @@
 
             <!-- tabs -->
             <uib-tabset justified="true">
-              <uib-tab heading="Step1" index="0" active="tabObj.step1">
+              <uib-tab heading="Step1" index="0" active="spareVm.tabObj.step1">
                 <form name="form" novalidate>
                       <div class="seller_info form-group" ng-if="isActive() || isChannelPartner()">
                         <h3>Seller Information</h3>
                         <div class="row">
                             <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                              <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
+                              <select  class="form-control" name="userType" ng-model="spareVm.spare.seller.userType" ng-change="spareVm.onRoleChange(spareVm.spare.seller.userType)" ng-required="isActive() || isChannelPartner()">
                                 <option value="">* Customer Type</option>
                                 <option value="individual">Individual</option>
                                 <option value="private">Private Entrepreneur</option>
@@ -48,16 +48,16 @@
                               </select>
                               <i class="caret"></i>
                             </div>
-                            <div class="col-sm-4 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
-                              <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="spareVm.onUserChange(container.selectedUserId)" required>
+                            <div class="col-sm-4 form-group" ng-if="spareVm.container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                              <select  class="form-control" name="userName"  ng-model="spareVm.container.selectedUserId" ng-change="spareVm.onUserChange(spareVm.container.selectedUserId)" required>
                                     <option value="">* Select User</option>
                                     <option value="{{user._id}}" ng-repeat="user in spareVm.getUsersOnUserType">{{user.fname}}</option>
                               </select>
                               <i class="caret"></i>
                     
                             </div>
-                            <div class="col-sm-4 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
-                              <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="spareVm.onUserChange(container.selectedUserId)" required>
+                            <div class="col-sm-4 form-group" ng-if="spareVm.container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                              <select class="form-control" name="company"  ng-model="spareVm.container.selectedUserId" ng-change="spareVm.onUserChange(spareVm.container.selectedUserId)" required>
                                     <option value="">* Select Company</option>
                                     <option value="{{user._id}}" ng-repeat="user in spareVm.getUsersOnUserType">{{user.company}}</option>
                               </select>
@@ -89,13 +89,13 @@
                        </div>
                        <div class="panel-body">
                           <div class="row">
-                            <div class="form-group col-sm-5">Part ID.</div>
-                            <input type="text" class="form-control" placeholder="Enter Part no." name="partId" ng-value="spareVm.spare.partId" ng-model="spareVm.spare.partId">
-                            <!-- <div class="form-group col-sm-7">{{spareVm.partId}}</div> -->
+                            <div class="form-group col-sm-5" ng-if="spareVm.isEdit">Part ID.</div>
+                            <!-- <input type="text" class="form-control" placeholder="Enter Part no." name="partId" ng-value="spareVm.spare.partId" ng-model="spareVm.spare.partId"> -->
+                            <div class="form-group col-sm-7" ng-if="spareVm.isEdit">{{spareVm.spare.partId}}</div>
                           </div>
                           <div class="row">
-                            <div class="form-group col-sm-5">Part No.</div>
-                            <div class="form-group col-sm-7">
+                            <div class="form-group col-sm-5">Part No. <span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.partNo.$invalid && submitted}">
                               <input type="text" class="form-control" name="partNo" ng-value="spareVm.spare.partNo" ng-model="spareVm.spare.partNo" placeholder="Enter Part no.">
                             </div>
                           </div>
@@ -107,7 +107,7 @@
                           </div>
                           <div class="row">
                             <div class="form-group col-sm-5">Part Name <span class="text-warning">*</span> </div>
-                            <div class="form-group col-sm-7">
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.name.$invalid && submitted}">
                             <input type="text" class="form-control" name="name" ng-value="spareVm.spare.name" ng-model="spareVm.spare.name" placeholder="Enter Part Name">
                             </div>
                           </div>
@@ -120,9 +120,9 @@
                           <div class="row"> 
                             <div class="form-group col-sm-5">Manufacturer <span class="text-warning">*</span></div>
                             <div class="form-group col-sm-7" ng-class="{'has-error': form.manufacturer.$invalid && submitted}">
-                              <select class="form-control" name="manufacturer" ng-model="spareVm.spare.manufacturer" required>
-                                <option>Select Manufacturer</option>
-                                <option ng-repeat="manufacturer in spareVm.manufacturers" value="{{manufacturer.name}}">{{manufacturer.name}}</option>
+                              <select class="form-control" name="manufacturer" ng-model="spareVm.container.manufacturerId" ng-change="spareVm.onManufacturerChange(spareVm.container.manufacturerId)" required>
+                                <option value="">Select Manufacturer</option>
+                                <option ng-repeat="manufacturer in spareVm.manufacturerList" value="{{manufacturer._id}}">{{manufacturer.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>                             
@@ -133,11 +133,11 @@
                                <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
                                 <span class="input-group-addon currency-width">
                                   <select class="form-control"  name="currencyType" ng-model="spareVm.spare.currencyType">
-                                   <option value="" selected>&#x20B9; Rupee</option>
+                                   <option value="" >&#x20B9; Rupee</option>
                                   </select>
                                   <!-- <i class="caret"></i> -->
                                 </span>
-                                  <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="spareVm.spare.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!spareVm.spare.priceOnRequest">
+                                  <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="spareVm.spare.grossPrice" class="form-control" ng-model="spareVm.spare.grossPrice" ng-required="!spareVm.spare.priceOnRequest">
                               </div>     
                             </div>
                             <div class="col-sm-3">
@@ -147,22 +147,22 @@
                               </div>
                             </div>
                           </div>
-                          <div class="row" ng-repeat=" link in product.videoLinks">
+                          <div class="row" ng-repeat="loc in spareVm.spare.locations">
                             <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
                             <div class="form-group col-sm-5" ng-class="{'has-error': form.location.$invalid && submitted}">
-                              <select class="form-control" name="location" ng-model="spareVm.spare.city" required>
+                              <select class="form-control" name="location" ng-model="loc.city" ng-change="spareVm.onLocationChange(loc.city, $index)" data-index="{{$index}}" required>
                                 <option value="">Select Location</option>
-                                <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                                <option ng-repeat="location in spareVm.locationList" value="{{location.name}}">{{location.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
-                            <!-- <div class="col-sm-2 ">
-                              <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
-                            </div> -->
+                            <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
+                              <button class="btn btn-block" ng-click="spareVm.spare.locations.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="spareVm.spare.locations.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div>
                           </div>
                           <div class="row">                            
-                            <div class="col-sm-5 form-group">Product Condition <span class="text-warning">*</span></div>
+                            <div class="col-sm-5 form-group">Product Condition </div>
                               <div class="col-xs-6 col-sm-4 form-group">
                                   <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="spareVm.spare.productCondition" value="used"> Used</span>
                                 </div>
@@ -174,32 +174,27 @@
                             <div class="col-sm-5">Payment Mode  </div>
                             <div class="col-sm-7">
                               <div class="row">
-                                <div class="col-sm-4">
-                                  <input type="radio" name="payment"> Online
-                                </div>
-                                <div class="col-sm-4">
-                                  <input type="radio" name="payment"> Offline
-                                </div>
-                                <div class="col-sm-4">
-                                  <input type="radio" name="payment"> COD
+                                <div class="col-sm-2" ng-repeat="paymentOpt in paymentOptions">
+                                  <input type="checkbox"
+                                  value="{{paymentOpt}}"
+                                  ng-checked="spareVm.spare.paymentOption.indexOf(paymentOpt) > -1"
+                                  ng-click="spareVm.paymentSelection(paymentOpt)"> {{paymentOpt}}
                                 </div>
                               </div>
                             </div>                            
                           </div>
-                          <div class="row">
+                          <div class="row" ng-if="isActive()">
                             <div class="col-sm-5 form-group">Commission Percent</div>
                             <div class="col-sm-7 form-group">
                               <input type="number" min="0"  class="form-control" name="commission" ng-value="spareVm.spare.commission" ng-model="spareVm.spare.commission" placeholder="Commission Percent (Numbers Only in Percent)">
                             </div>
                           </div>
-                          <div class="row">
+                          <div class="row" ng-if="isActive()">
                             <div class="col-sm-5">Spare Status</div>
                             <div class="col-sm-7">
-                              <select class="form-control" name="spareStatus" ng-model="spareVm.spare.spareStatus">
+                              <select class="form-control" name="status" ng-model="spareVm.spare.status">
                                     <option value="">Spare Status</option>
-                                    <option value="active"> Active </option>
-                                    <option value="inactive"> Inactive </option>
-                                    <option value="sold"> Sold </option>
+                                    <option value="{{status.code}}" ng-repeat="status in spareStatus">{{status.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
@@ -209,15 +204,13 @@
 
                         <!-- <div class="clearfix form-group"></div> -->
                          <div class="form-group pull-right">
-                            <button class="btn" type="button" ng-click="resetClick(form)" ng-show="!isEdit">Reset</button>
-                           <!--  <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button> -->
-                            <button ng-hide="enableButton" class="btn btn-danger" ng-click="firstStep(form,product)">Submit</button>
-                            <button ng-show="enableButton" class="btn btn-danger" confirmed-click="firstStep(form,product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
+                            <button class="btn" type="button" ng-click="spareVm.resetClick(form)" ng-show="!isEdit">Reset</button>
+                            <button ng-hide="spareVm.enableButton" class="btn btn-danger" ng-click="spareVm.firstStep(form, spareVm.spare)">Next</button>
                         </div>
                 </form>
               </uib-tab>
-              <uib-tab heading="Step2" index="1" active="tabObj.step2" disable="false">
-                <form name="auctForm" novalidate>
+              <uib-tab heading="Step2" index="1" active="spareVm.tabObj.step2" disable="false">
+                <form name="detailForm" novalidate>
                   <div class="panel panel-default">
                    <div class="panel-heading">
                      <h3 class="panel-title">Asset Details</h3>
@@ -234,52 +227,52 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr ng-repeat=" param in product.technicalInfo.params">
+                                <tr ng-repeat="spareDet in spareVm.spare.spareDetails">
                                   <td>
-                                    <div class="form-group" ng-class="{'has-error': form.category.$invalid && submitted}">
-                                      <select ng-disabled="relistingEnable" class="form-control" name="category"  ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required>
+                                    <div class="form-group" ng-class="{'has-error': detailForm.category.$invalid && step2Submitted}">
+                                      <select class="form-control" name="category"  ng-model="spareVm.container.selectedCategoryId" data-index="{{$index}}" ng-change="spareVm.onCategoryChange(spareVm.container.selectedCategoryId, $index)" required>
                                             <option value="">Select Category*</option>
-                                            <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+                                            <option value="{{category._id}}" ng-repeat="category in spareVm.allCategory">{{category.name}}</option>
                                       </select>
                                       <i class="caret"></i>
                                     </div>
-                                    <div class="form-group" ng-class="{'has-error': form.otherCategory.$invalid && submitted}">
-                                      <input type="text" class="form-control" name="otherCategory" ng-model="product.category.otherName" ng-value="{{product.category.otherName}}" ng-disabled ="product.category.name != 'Other'" placeholder="Other" ng-required= "product.category.name == 'Other'">
+                                    <div class="form-group" ng-class="{'has-error': detailForm.otherCategory.$invalid && step2Submitted}">
+                                      <input type="text" class="form-control" name="otherCategory" ng-model="spareDet.category.otherName" ng-value="{{spareDet.category.otherName}}" ng-disabled ="spareDet.category.name != 'Other'" placeholder="Other" ng-required= "spareDet.category.name == 'Other'">
                                     </div>
                                   </td>
                                   <td>
-                                    <div class="form-group" ng-class="{'has-error': form.brand.$invalid && submitted}">
-                                       <select ng-disabled="relistingEnable" class="form-control" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required>
+                                    <div class="form-group" ng-class="{'has-error': detailForm.brand.$invalid && step2Submitted}">
+                                       <select class="form-control" name="brand" ng-model="spareVm.container.selectedBrandId" data-index="{{$index}}" ng-change="spareVm.onBrandChange(spareVm.container.selectedBrandId, $index)" required>
                                             <option value="">Select Brand *</option>
-                                            <option value="{{brand._id}}" ng-repeat="brand in brandList">{{brand.name}}</option>
+                                            <option value="{{brand._id}}" ng-repeat="brand in spareVm.brandList">{{brand.name}}</option>
                                       </select>
                                       <i class="caret"></i>
                                     </div>
-                                    <div class="form-group" ng-class="{'has-error': form.otherBrand.$invalid && submitted}">
-                                      <input type="text" class="form-control" name="otherBrand" ng-model="product.brand.otherName" ng-value="{{product.brand.otherName}}" ng-disabled ="product.brand.name != 'Other'" placeholder="Other" ng-required= "product.brand.name == 'Other'">
+                                    <div class="form-group" ng-class="{'has-error': detailForm.otherBrand.$invalid && step2Submitted}">
+                                      <input type="text" class="form-control" name="otherBrand" ng-model="spareDet.brand.otherName" ng-value="{{spareDet.brand.otherName}}" ng-disabled ="spareDet.brand.name != 'Other'" placeholder="Other" ng-required= "spareDet.brand.name == 'Other'">
                                     </div>
                                   </td>
                                   <td>
-                                    <div class="form-group" ng-class="{'has-error': form.model.$invalid && submitted}">
-                                       <select ng-disabled="relistingEnable" class="form-control" name="model" ng-model="container.selectedModelId" required  ng-change="onModelChange(container.selectedModelId)">
+                                    <div class="form-group" ng-class="{'has-error': detailForm.model.$invalid && step2Submitted}">
+                                       <select class="form-control" name="model" ng-model="spareVm.container.selectedModelId" required data-index="{{$index}}" ng-change="spareVm.onModelChange(spareVm.container.selectedModelId, $index)">
                                               <option value="">Select Model</option>
-                                              <option value="{{model._id}}" ng-repeat="model in modelList">{{model.name}}</option>
+                                              <option value="{{model._id}}" ng-repeat="model in spareVm.modelList">{{model.name}}</option>
                                         </select>
                                         <i class="caret"></i>
                                       </div>
-                                      <div class="form-group" ng-class="{'has-error': form.otherModel.$invalid && submitted}">
-                                        <input type="text" class="form-control" name="otherModel" ng-model="product.model.otherName" ng-value="{{product.model.otherName}}" ng-disabled ="product.model.name != 'Other'" placeholder="Other" ng-required= "product.model.name == 'Other'">
+                                      <div class="form-group" ng-class="{'has-error': detailForm.otherModel.$invalid && step2Submitted}">
+                                        <input type="text" class="form-control" name="otherModel" ng-model="spareDet.model.otherName" ng-value="{{spareDet.model.otherName}}" ng-disabled ="spareDet.model.name != 'Other'" placeholder="Other" ng-required= "spareDet.model.name == 'Other'">
                                       </div>
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <input type="text" placeholder="Variant" ng-value="product.variant" ng-model="product.variant" name="variant" class="form-control">
+                                      <input type="text" placeholder="Variant" ng-value="spareDet.variant" ng-model="spareDet.variant" name="variant" class="form-control">
                                     </div>
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
-                                      <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                                      <button class="btn btn-block" ng-click="spareVm.spare.spareDetails.push({})" ng-if="$last">Add More</button>
+                                      <button class="btn btn-block" ng-click="spareVm.spare.spareDetails.splice($index,1)" ng-if="!$last">Delete</button>
                                     </div>
                                   </td>
                               </tbody>
@@ -292,16 +285,16 @@
                       <h3 class="panel-title">Artifacts Details</h3>
                     </div>
                     <div class="panel-body">
-                      <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
+                      <div class="form-group row" ng-repeat="miscDoc in spareVm.spare.miscDocuments">
                              <div class="col-sm-3 form-group">Document Category</div>
 
 
                             <div class="col-sm-3 form-group">
-                              <select class="form-control">
-                               <option>Documents Type</option>
-                                <option>User Manuals</option>
-                                <option>Technical Specifications</option>
-                                <option>Certifications</option>
+                              <select class="form-control" ng-model="miscDoc.type">
+                                <option value="">Documents Type</option>
+                                <option value="Manuals">User Manuals</option>
+                                <option value="Specifications">Technical Specifications</option>
+                                <option value="Certifications">Certifications</option>
                               </select>
                                <i class="caret"></i>
                             </div>
@@ -316,41 +309,41 @@
                               {{miscDoc.name}}
                             </div>
                             <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
-                              <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="btn btn-block" ng-click="spareVm.spare.miscDocuments.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="spareVm.spare.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                       <div class="row upload-picHover form-group">
                             <div class="form-group col-sm-5 pic-popover">Upload Pictures</div>
                              <div class="col-sm-7 col-xs-12">
                              <div class="row pic-popover" popover-placement="left" uib-popover="To ensure picture quality we suggest minimum image resolutions as 450*300 pixels." popover-trigger="mouseenter">
-                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in images">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in spareVm.images">
                                   <div class="br5">
                                     <span class="fileinput-button browse-icon" ng-show="!img.src">
                                         <span><i class="fa fa-plus-circle"></i></span>
-                                          <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                          <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" accept="image/*" image-upload>
                                      </span>
 
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="spareVm.deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
-                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                          <a href="javascript:void(0);" ng-click="spareVm.rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
                                        </div>
                                         <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
-                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                            <img ng-src="{{uploadImagePrefix}}{{spareVm.assetDir}}/{{img.src}}?spareVm.timestamp={{spareVm.timestamp}}" class="img-responsive">
                                           </a>
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="spareVm.makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                             </div>
                             </div>
 
                           </div>
-                          <div class="row" ng-show="isActive()">
+                          <!-- <div class="row" ng-show="isActive()">
                              
                               <div class="col-xs-6 col-sm-6">
                                 <div class="row">
@@ -362,12 +355,12 @@
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div> -->
                     </div>
                   </div>
 
                   <div class="form-group pull-right">                        
-                    <button ng-hide="enableButton" class="btn btn-danger" ng-click="secondStep(auctForm,product)">Submit</button>
+                    <button ng-hide="spareVm.enableButton" class="btn btn-danger" ng-click="spareVm.secondStep(detailForm, spareVm.spare)">Submit</button>
                   </div>
                 </form>                
               </uib-tab>
@@ -379,20 +372,3 @@
     </section>
   </div>
 <div class="form-group"></div>
-
-<script type="text/ng-template" id="cropImage.html">
-  <div>
-    <div class="modal-header">
-    <button type="button" class="close"  ng-click="dismissModal()" aria-hidden="true"><i class="fa fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-       <image-crop image-out="imageOut"  crop-options="options" ng-transclude crop-image-save="saveCrop">
-         <edit-crop></edit-crop>
-       </image-crop>
-    </div>
-     <div class="modal-footer">
-            <button type="button" class="btn btn-success" ng-click="cropImage()">Crop <i class="fa fa-crop"></i></button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="saveImage()">Save</button>
-      </div>
-  </div>
-</script>

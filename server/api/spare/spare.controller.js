@@ -43,15 +43,14 @@ exports.getOnId = function(req, res) {
   });
 };
 
-//search products
-exports.search = function(req, res) {
+//search spare
+exports.searchSpare = function(req, res) {
   var term = new RegExp(req.body.searchstr, 'i');
   var filter = {};
-  //filter["status"] = true;
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
-  
+  var arr = [];
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
     arr[arr.length] = {city:{$regex:locRegEx}};
@@ -66,8 +65,11 @@ exports.search = function(req, res) {
     var stateRegex = new RegExp(req.body.stateName, 'i');
     filter['state'] = {$regex:stateRegex};
   }
+  if(req.body.partNo)
+    filter["partNo"] = req.body.partNo;
   
- if(req.body.mfgYear){
+  
+ /*if(req.body.mfgYear){
     var mfgYear = false;
     var mfgFilter = {};
     if(req.body.mfgYear.min){
@@ -80,11 +82,20 @@ exports.search = function(req, res) {
     }
     if(mfgYear)
       filter["mfgYear"] = mfgFilter;
- }
+ }*/
+  if(req.body.role && req.body.userid) {
+    //var arr = [];
+    arr[arr.length] = { "user._id": req.body.userid};
+    arr[arr.length] = { "seller._id": req.body.userid};
+    //filter['$or'] = arr; 
+  } else if(req.body.userid) {
+    filter["seller._id"] = req.body.userid;
+  }
 
   if(arr.length > 0)
     filter['$or'] = arr;
   
+  console.log("filter##", filter);
   var query = Spare.find(filter).sort( { createdAt: -1 } );
   query.exec(
                function (err, spares) {
@@ -113,9 +124,10 @@ exports.update = function(req, res) {
 // Creates a new product in the DB.
 exports.create = function(req, res) {
   req.isEdit = false;
-  Spare.find({partNo:req.body.partNo},function(err,pds){
+  Spare.find({partNo:req.body.partNo},function(err, spare){
     if (err) { return handleError(res, err); }
-    else if(pds.length > 0){return res.status(404).json({errorCode:1});}
+    else if(spare.length > 0){
+      return res.status(201).json({errorCode:1, message:"This part no already exist."});}
     else{
       if(req.body.applyWaterMark){
         req.imgCounter = 0;
@@ -141,17 +153,6 @@ function checkAndCopyImage(req,res,cb){
         checkAndCopyImage(req,res,cb);
       }else{
         placeWatermark(req,res,imgPath,cb);
-       /* var fileNameParts = imgObj.src.split('.');
-        var extPart = fileNameParts[fileNameParts.length -1];
-        var namePart = fileNameParts[0];
-        var originalFilePath = config.uploadPath + req.assetDir + "/" + namePart +"_original." + extPart;
-        if(fileExists(originalFilePath)){
-            placeWatermark(req,res,imgPath,cb);
-        }else{
-            fsExtra.copy(imgPath,originalFilePath,function(err,result){
-              placeWatermark(req,res,imgPath,cb);
-            })
-        }*/
       }
    }else{
       if(cb)
@@ -159,8 +160,9 @@ function checkAndCopyImage(req,res,cb){
       else{
         if(req.isEdit)
           updateSpare(req,res);
-        else
+        else {
           addSpare(req,res);  
+        }
       }
    }
 }
@@ -194,18 +196,35 @@ function placeWatermark(req,res,imgPath,cb){
 }
 
 function updateSpare(req,res){
+  var _id = req.body._id;
   if(req.body._id) { delete req.body._id; }
   if(req.body.userInfo) { delete req.body.userInfo; }
   //if(req.body.seller) { delete req.body.seller; }
   req.body.updatedAt = new Date();
-  Spare.findById(req.params.id, function (err, spare) {
+  var filter = {}
+  if(_id)
+     filter['_id'] = {$ne:_id}; 
+  if(req.body.partNo)
+    filter['partNo'] = req.body.partNo;
+  Spare.find(filter,function(err,spare){
+    if(err) return handleError(res, err); 
+    if(spare.length > 0){
+      return res.status(200).json({errorCode:1, message:"Part no already exist."});
+    } else {
+        Spare.update({_id:req.params.id},{$set:req.body},function(err){
+          if (err) { return handleError(res, err); }
+          return res.status(200).json({errorCode:0, message:"Success"});
+        });
+    }
+  });
+  /*Spare.findById(req.params.id, function (err, spare) {
     if (err) { return handleError(res, err); }
     if(!spare) { return res.status(404).send('Not Found'); }
     Spare.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json(req.body);
     });
-  });
+  });*/
 }
 
 function addSpare(req,res){

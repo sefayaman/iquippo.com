@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc) {
+function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc, ManufacturerSvc) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'sc';
@@ -47,6 +47,15 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     vm.onServiceChange = onServiceChange;
     vm.getParnerName = getParnerName;
 
+    vm.manufacturer = {};
+    vm.manufacturerEdit = false;
+    vm.saveManufacturer = saveManufacturer;
+    vm.updateManufacturer = updateManufacturer;
+    vm.editManufacturer = editManufacturer;
+    vm.deleteManufacturer = deleteManufacturer;
+    $scope.updateLogo = updateLogo;
+
+
     //Auction date master
 
     $scope.importAuctionMaster = importAuctionMaster;
@@ -71,6 +80,9 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     			vendorSvc.getAllVendors();
 				getPaymnetMaster();
     		break;
+    		case 'manu':
+    			getAllManufacturer();
+			break;
 
     	}
     }
@@ -101,6 +113,18 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 			vm.allCategory = result;
 		})
     }
+
+/*    function loadAllManufacturer(){
+    	SubCategorySvc.getAllManufacturer()
+    	.then(function(result){
+    		vm.subCategoryList = result;
+    	})
+
+    	categorySvc.getAllCategory()
+		.then(function(result){
+			vm.allCategory = result;
+		})
+    }*/
 
 
     //subcategory functions
@@ -446,6 +470,81 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 			 getAuctionMaster();
 		})
     }
+
+    //Manufacturer functions
+
+    function getAllManufacturer(){
+  		ManufacturerSvc.getAllManufacturer()
+  		.then(function(result){
+  			vm.manufacturerList = result;
+  		});
+  	}
+
+  	function updateLogo(files){
+	    if(files.length == 0)
+	      return;
+	    uploadSvc.upload(files[0], manufacturerDir).then(function(result){
+	      vm.manufacturer.imgsrc = result.data.filename;
+	    });
+	}
+
+	function saveManufacturer(form){
+		
+		if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}
+		$scope.submitted = false;
+		ManufacturerSvc.saveManufacturer(vm.manufacturer)
+		.then(function(res){
+			if(res.errorCode == 0){
+				vm.manufacturer = {};
+				getAllManufacturer();
+			}
+			else
+				Modal.alert(res.message);
+		})
+
+	}
+
+	function updateManufacturer(form){
+		if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}
+		$scope.submitted = false;
+		ManufacturerSvc.updateManufacturer(vm.manufacturer)
+		.then(function(res){
+			if(res.errorCode == 0){
+				vm.manufacturer = {};
+				vm.manufacturerEdit = false;
+				getAllManufacturer();
+			}
+			else
+				Modal.alert(res.message);
+		})
+	}
+
+	function editManufacturer(index){
+		angular.copy(vm.manufacturerList[index], vm.manufacturer)
+		vm.manufacturerEdit = true;
+		//onServiceChange(vm.paymentMaster.serviceCode,true);
+	}
+
+	function deleteManufacturer(index){
+		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeleteManufacturer(index);
+ 		});
+	}
+
+	function submitDeleteManufacturer(idx){
+		ManufacturerSvc.deleteManufacturer(vm.manufacturerList[idx])
+		.then(function(result){
+			 getAllManufacturer();
+		})
+    }
+
 
 //date picker
 	$scope.today = function() {

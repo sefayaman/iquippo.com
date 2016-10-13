@@ -9,6 +9,7 @@ var City = require('./location.model').City;
 var Subscribe = require('./subscribe.model');
 var AppSetting = require('./setting.model');
 var PaymentMaster = require('./paymentmaster.model');
+var ManufacturerMaster = require('./manufacturer.model');
 var AuctionMaster = require('./auctionmaster.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
@@ -1295,6 +1296,72 @@ function importAuctionMaster(req,res,data){
 	}
 }
 
+// Get list of manufacturer
+exports.getAllManufacturer = function(req, res) {
+  ManufacturerMaster.find(function (err, manufacturer) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(manufacturer);
+  });
+};
+
+
+// Creates a new manufacturer in the DB.
+exports.createManufacturer = function(req, res) {
+  var filter = {};
+  filter["name"] =req.body.name;
+  ManufacturerMaster.find(filter,function (err, manufacturer) {
+    if(err) { return handleError(res, err); }
+    else
+    {
+      if(manufacturer.length > 0)
+      {
+        return res.status(201).json({errorCode:1, message:"Manufacturer already exits!!!"});
+      }
+        else{
+          ManufacturerMaster.create(req.body, function(err, manufacturer) {
+              if(err) { return handleError(res, err); }
+               return res.status(200).json({errorCode:0, message:"Manufacturer saved sucessfully"});
+            });
+        }
+    }
+  });
+};
+
+// Updates an existing manufacturer in the DB.
+exports.updateManufacturer = function(req, res) {
+  var _id = req.body._id;
+  if(req.body._id) { delete req.body._id;}
+  req.body.updatedAt = new Date();
+  var filter = {}
+  if(!req.body.name)
+    return res.status(401).send('Insufficient data');
+  if(_id)
+     filter['_id'] = {$ne:_id}; 
+  filter['name'] = req.body.name;
+  ManufacturerMaster.find(filter,function(err,manufacturer){
+    if(err) return handleError(res, err); 
+    if(manufacturer.length > 0){
+      return res.status(200).json({errorCode:1, message:"Manufacturer already exist."});
+    } else {
+      ManufacturerMaster.update({_id:_id},{$set:req.body},function (err) {
+        if (err) {return handleError(res, err); }
+        return res.status(200).json({errorCode:0, message:"Success"});
+      });
+    }
+  });
+};
+
+// Deletes a manufacturer from the DB.
+exports.destroyManufacturer = function(req, res) {
+  ManufacturerMaster.findById(req.params.id, function (err, manufacturer) {
+    if(err) { return handleError(res, err); }
+    if(!manufacturer) { return res.status(404).send('Not Found'); }
+    manufacturer.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send('No Content');
+    });
+  });
+};
 
 function isValid(d) {
   return d.getTime() === d.getTime();

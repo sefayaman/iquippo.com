@@ -3,22 +3,216 @@
 angular.module('spare').controller('SpareUploadCtrl',SpareUploadCtrl);
 
 //Spare upload controller
-function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce) {
+function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spareSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, ManufacturerSvc) {
     var vm = this;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
-    $scope.assetDir = "";
+    vm.assetDir = "";
     vm.spare = {};
-    $scope.container = {};
+    vm.container = {};
+
+    vm.isEdit = false;
+
+    vm.images = [{isPrimary:true}];
+    vm.primaryIndex = 0;
+    vm.enableButton = false;
+    var imgDim = {width:700,height:459};
+
+    vm.tabObj = {};
+    vm.tabObj.step1 = true;
+    vm.tabObj.step2 = false;
+
     vm.onRoleChange = onRoleChange;
     vm.onUserChange = onUserChange;
     vm.resetClick = resetClick;
     vm.firstStep = firstStep;
   	vm.secondStep = secondStep;
+    vm.onLocationChange = onLocationChange;
+    vm.paymentSelection = paymentSelection;
+
+    vm.onCategoryChange = onCategoryChange;
+    vm.onBrandChange = onBrandChange;
+    vm.onModelChange = onModelChange;
+    vm.onManufacturerChange = onManufacturerChange;
+    vm.makePrimary = makePrimary;
+    vm.deleteImg = deleteImg;
+    vm.rotate = rotate;
+    
+    function clearData(){
+
+      vm.spare = {};
+      vm.spare.images = [];
+      //vm.spare.spareStatuses = [];
+      vm.prevAssetStatus = "inactive";
+      vm.spareStatuses = [];
+      vm.spare.paymentOption = [];
+      vm.spare.spareDetails = [{}];
+      vm.spare.miscDocuments = [{}];
+      vm.spare.locations = [{}];
+      //vm.spare.city = "";
+      vm.spare.status = $rootScope.spareStatus[1].code;
+      // vm.spare.spareDetails.category = {};
+      // vm.spare.spareDetails.brand = {};
+      // vm.spare.spareDetails.model = {};
+      vm.spare.seller = {};
+    }
+
+    clearData();
+
+    function init(){
+      categorySvc.getAllCategory()
+      .then(function(result){
+        vm.allCategory = result;
+      });
+
+       SubCategorySvc.getAllSubCategory()
+      .then(function(result){
+        vm.allSubCategory = result;
+      });
+
+      LocationSvc.getAllLocation()
+      .then(function(result){
+        vm.locationList = result;
+      });
+
+      ManufacturerSvc.getAllManufacturer()
+      .then(function(result){
+        vm.manufacturerList = result;
+      });
+
+
+      // product edit case
+      if($stateParams.id) {
+        vm.isEdit = true;
+
+      spareSvc.getSpareOnId($stateParams.id, true).then(function(response){
+          
+          vm.spare = response;
+          angular.copy(vm.spare.images, vm.images);
+          vm.images.forEach(function(item,index){
+            if(item.isPrimary)
+              vm.primaryIndex = index;
+            item.isEdit = true;
+            item.name = item.src;
+          });
+
+          if(!vm.spare.locations || vm.spare.locations.length == 0)
+            vm.spare.locations = [{}];
+
+          if(!vm.spare.miscDocuments || vm.spare.miscDocuments.length == 0)
+            vm.spare.miscDocuments = [{}];
+
+          if(!vm.spare.spareDetails || vm.spare.spareDetails.length == 0)
+            vm.spare.spareDetails = [{}];
+
+          if(vm.spare.manufacturers && vm.spare.manufacturers._id)
+            vm.container.manufacturerId = vm.spare.manufacturers._id;
+          
+
+          if(vm.spare.status)
+            vm.prevAssetStatus = vm.spare.status;
+          else
+            vm.prevAssetStatus = vm.spare.status = "";
+
+          //$scope.userType = product.seller.userType;
+          //vm.spare.country = vm.spare.country;
+          // $scope.product.auctionListing = false;
+          vm.assetDir = vm.spare.assetDir;
+          if(vm.spare.spareDetails.category && vm.spare.spareDetails.category._id) {
+            vm.container.selectedCategoryId = vm.spare.spareDetails.category._id;
+            vm.onCategoryChange(vm.spare.spareDetails.category._id, true);
+          }
+          if(vm.spare.spareDetails.brand && vm.spare.spareDetails.brand._id) {
+            vm.container.selectedBrandId = vm.spare.spareDetails.brand._id;
+            vm.onBrandChange(vm.spare.spareDetails.brand._id, true);
+          }
+          if(vm.spare.spareDetails.model && vm.spare.spareDetails.model._id)
+            vm.container.selectedModelId = vm.spare.spareDetails.model._id;
+
+          //vm.container.selectedSubCategory = vm.spare.subcategory;
+
+
+          vm.getUsersOnUserType = [];
+          vm.onRoleChange(vm.spare.seller.userType, true);
+          if(vm.spare.seller && vm.spare.seller._id)
+            vm.container.selectedUserId = vm.spare.seller._id;
+        
+          if(vm.spare.currencyType == "INR")
+            vm.spare.currencyType = "";
+          if(vm.spare.spareDetails.category && vm.spare.spareDetails.category.name == 'Other')
+              vm.selectedCategory['otherName'] = vm.spare.spareDetails.category.otherName;
+
+          if($state.current.name == "spareedit"){
+            vm.enableButton = !Auth.isAdmin() && vm.spare.status;
+            vm.isEdit = true;
+          }
+          prepareImgArr();
+        });
+      }else{
+        prepareImgArr();
+      }
+      //listen for the file selected event
+      $scope.$on("fileSelected", function (event, args) {
+        if(args.files.length == 0)
+            return;
+          $scope.$apply(function () {
+            if(args.type == "image") {
+              var resizeParam = {};
+              resizeParam.resize = true;
+              resizeParam.width = imgDim.width;
+              resizeParam.height = imgDim.height;
+            }
+            $rootScope.loading = true;
+            uploadSvc.upload(args.files[0], vm.assetDir, resizeParam).then(function(result){
+              $rootScope.loading = false;
+              vm.assetDir = result.data.assetDir;
+              
+              if(args.type == "image")
+                vm.images[parseInt(args.index)].src = result.data.filename;
+              else if(args.type == "mdoc"){
+                vm.spare.miscDocuments[args.index].name = result.data.filename;
+                vm.spare.miscDocuments[args.index].createdAt = new Date();
+                vm.spare.miscDocuments[args.index].userId = Auth.getCurrentUser()._id;
+              }
+            })
+            .catch(function(err){
+               $rootScope.loading = false;
+              Modal.alert("Error in file upload.",true);
+            });
+
+          });
+      });
+    }
+
+    init();
+
+    function paymentSelection(paymentOpt) {
+      var idx = vm.spare.paymentOption.indexOf(paymentOpt);
+      // is currently selected
+      if (idx > -1)
+        vm.spare.paymentOption.splice(idx, 1);
+      else
+        vm.spare.paymentOption.push(paymentOpt);
+    }
+
+    vm.timestamp = new Date().getTime();
+    function rotate(idx){
+      var img = vm.images[idx];
+      var imagePath = vm.assetDir + "/" + img.src;
+      $http.post("/api/common/rotate",{imgPath:imagePath})
+      .then(function(res){
+        vm.timestamp = new Date().getTime();
+      })
+    }
+
+    function onLocationChange(city, index){
+      var state = LocationSvc.getStateByCity(city);
+      vm.spare.locations[index].state = state;
+    }
 
     function onRoleChange(userType,noChange){
 	    if(!userType){
-	      $scope.getUsersOnUserType = "";
+	      vm.getUsersOnUserType = "";
 	      return;
 	    }
 	    var dataToSend = {};
@@ -27,7 +221,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, cate
 	    if(!noChange){
 	      vm.spare.seller = {};
 	      vm.spare.seller.userType = userType;
-	      $scope.container.selectedUserId = "";
+	      vm.container.selectedUserId = "";
 	    }
 	    userSvc.getUsers(dataToSend).then(function(result){
 	      vm.getUsersOnUserType = result;
@@ -53,7 +247,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, cate
       vm.spare.seller.mname = seller.mname;
       vm.spare.seller.lname = seller.lname;
       vm.spare.seller.role = seller.role;
-      vm.spare.seller.userType = user.userType;
+      vm.spare.seller.userType = seller.userType;
       vm.spare.seller.phone = seller.phone;
       vm.spare.seller.mobile = seller.mobile;
       vm.spare.seller.email = seller.email;
@@ -61,23 +255,335 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, cate
       vm.spare.seller.company = seller.company;
     }
 
-    function resetClick(form){
-	    productInit();
-	    $scope.container = {};
-	    $scope.brandList = [];
-	    $scope.modelList = [];
-	    $scope.images = [{isPrimary:true}];
-	    prepareImgArr();
-	    productHistory = $scope.productHistory = {};
-	    $scope.container.mfgYear = null;
-	}
+    function onCategoryChange(categoryId, idx){
+      // if(!noChange)
+      // {
+        vm.spare.spareDetails[idx].brand = {};
+        vm.spare.spareDetails[idx].model = {};
+        vm.spare.spareDetails[idx].category = {};
+        if(categoryId){
+          var ct = categorySvc.getCategoryOnId(categoryId);
+          //vm.spare.group = ct.group;
+          vm.spare.spareDetails[idx].category._id = ct._id;
+          vm.spare.spareDetails[idx].category.name = ct.name;
+        }    
+        else{
+          //vm.spare.group = {};
+          vm.spare.spareDetails[idx].category = {};
+        }
 
-	function firstStep(form,spare){
+       vm.container.selectedBrandId = "";
+       vm.container.selectedModelId = "";
+      //}
+       
+      vm.brandList = [];
+      vm.modelList = [];
+       if(!categoryId)
+        return;
+      var otherBrand = null;
+      var filter = {};
+      filter['categoryId'] = categoryId;
+      brandSvc.getBrandOnFilter(filter)
+      .then(function(result){
+        vm.brandList = result;
 
-	}
+      })
+      .catch(function(res){
+        console.log("error in fetching brand",res);
+      })
+  }
 
-	function secondStep(form,product){
-    
+  function onManufacturerChange(manufacturerId){
+    if(manufacturerId){
+      vm.spare.manufacturers = {};
+      var mfgName = ManufacturerSvc.getManufacturerOnId(manufacturerId);
+      //vm.spare.group = ct.group;
+      vm.spare.manufacturers._id = manufacturerId;
+      vm.spare.manufacturers.name = mfgName;
+    }    
+    else{
+      //vm.spare.group = {};
+      vm.spare.manufacturers = {};
     }
+  }
+
+  function onBrandChange(brandId, idx){
+    // if(!noChange)
+    // {
+      vm.spare.spareDetails[idx].model = {};
+      vm.spare.spareDetails[idx].brand = {};
+      if(brandId){
+         var brd = [];
+         brd = vm.brandList.filter(function(item){
+          return item._id == brandId;
+        });
+        if(brd.length == 0)
+          return;
+        vm.spare.spareDetails[idx].brand._id = brd[0]._id;
+        vm.spare.spareDetails[idx].brand.name = brd[0].name;
+      }else{
+        vm.spare.spareDetails[idx].brand = {};
+      }
+     vm.container.selectedModelId = "";
+    //}
+    
+    vm.modelList = [];
+    if(!brandId)
+       return;
+    var otherModel = null;
+    var filter = {};
+    filter['brandId'] = brandId;
+    modelSvc.getModelOnFilter(filter)
+    .then(function(result){
+      vm.modelList = result;
+    })
+    .catch(function(res){
+      console.log("error in fetching model",res);
+    })
+
+  }
+
+  function onModelChange(modelId, idx){
+    if(!modelId){
+      vm.spare.spareDetails[idx].model = {};
+      return;
+    }
+    var md = null;
+    for(var i=0; i< vm.modelList.length;i++){
+      if(vm.modelList[i]._id == modelId){
+        md = vm.modelList[i];
+        break;
+      }
+    }
+    if(md){
+      vm.spare.spareDetails[idx].model._id = md._id;
+      vm.spare.spareDetails[idx].model.name = md.name;
+    }else
+      vm.spare.spareDetails[idx].model = {};
+  }
+
+  function makePrimary(val){
+    vm.primaryIndex = val;
+     vm.images.forEach(function(item,index,arr){
+      if(vm.primaryIndex == index)
+          item.isPrimary = true;
+        else
+          item.isPrimary = false;
+      });
+  }
+
+   function deleteImg(idx){
+     vm.images[idx] = {};
+    vm.images.forEach(function(item,index,arr){
+      if(item.isPrimary)
+          vm.primaryIndex = index;
+      });
+    if(typeof vm.primaryIndex === 'undefined')
+        vm.primaryIndex  =  0;
+
+  }
+
+  function resetClick(form){
+    clearData();
+    vm.container = {};
+    vm.brandList = [];
+    vm.modelList = [];
+    vm.images = [{isPrimary:true}];
+    prepareImgArr();
+  }
+
+  function prepareImgArr(){
+    var numberOfIteration  = 8 - vm.images.length;
+    for(var i = 0; i < numberOfIteration; i++){
+      vm.images[vm.images.length] = {};
+    }
+  }
+  
+	function firstStep(form,spare){
+      if(form.$invalid){
+        $scope.submitted = true;
+        $timeout(function(){angular.element(".has-error").find('input,select').first().focus();},20);
+        return;
+      }
+
+      vm.tabObj.step1 = false;
+      vm.tabObj.step2 = true;
+	}
+
+  function secondStep(form,spare){
+    if(form.$invalid){
+      $scope.step2Submitted = true;
+      return;
+    }
+
+    vm.spare.assetDir = vm.assetDir;
+    vm.spare.images = [];
+    var primaryFound = false;
+    vm.images.forEach(function(item,index){
+        if(item.src){
+          var imgObj = {};
+          imgObj.src = item.src;
+          if(item.isPrimary){
+            imgObj.isPrimary = true;
+            vm.spare.primaryImg = item.src;
+            primaryFound = true;
+          }else{
+             imgObj.isPrimary = false;
+          }
+          if(item.waterMarked)
+              imgObj.waterMarked = true;
+           else
+            imgObj.waterMarked = false;
+           vm.spare.images[ vm.spare.images.length] = imgObj;
+        }
+
+    });
+
+    if(vm.spare.images.length == 0){
+      Modal.alert("Please upload atleast one image.",true);
+      $rootScope.loading = false;
+      return;
+    }
+
+    if(!primaryFound){
+       vm.spare.primaryImg =  vm.spare.images[0].src;
+       vm.spare.images[0].isPrimary = true;
+    }
+
+    if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role == 'admin' && vm.spare.status == 'active') {
+      vm.spare.applyWaterMark = true;
+    }else{
+      vm.spare.applyWaterMark = false;
+    }
+
+    addOrUpdate();  
+  }
+
+  function addOrUpdate(){
+    if(!vm.isEdit)
+      addSpare();
+    else
+      updateSpare();
+  }
+
+  function addSpare(){
+
+      vm.spare.user = {};
+      vm.spare.user._id = Auth.getCurrentUser()._id;
+      vm.spare.user.fname = Auth.getCurrentUser().fname;
+      vm.spare.user.mname = Auth.getCurrentUser().mname;
+      vm.spare.user.lname = Auth.getCurrentUser().lname;
+      vm.spare.user.role = Auth.getCurrentUser().role;
+      vm.spare.user.userType = Auth.getCurrentUser().userType;
+      vm.spare.user.mobile = Auth.getCurrentUser().mobile;
+      vm.spare.user.email = Auth.getCurrentUser().email;
+      vm.spare.user.company = Auth.getCurrentUser().company;
+      if($.isEmptyObject(vm.spare.seller)){
+        vm.spare.seller = {};
+        vm.spare.seller = vm.spare.user;
+      }
+
+      if(vm.spare.currencyType == "")
+        vm.spare.currencyType = "INR";
+
+      vm.spare.spareStatuses = [];
+      var stObj = {};
+      stObj.userId = vm.spare.user._id;
+      stObj.status = vm.spare.status;
+      stObj.createdAt = new Date();
+      vm.spare.spareStatuses[vm.spare.spareStatuses.length] = stObj;
+      
+      $rootScope.loading = true;
+      spareSvc.addSpare(vm.spare).then(function(result){
+        $rootScope.loading = false;
+          
+        if(result.errorCode == 1){
+          Modal.alert(result.message, true);
+          vm.tabObj.step1 = true;
+          vm.tabObj.step2 = false;
+          return;
+        }
+        else {
+          if(Auth.isAdmin()) {
+            if(result.status)
+                //AppNotificationSvc.createAppNotificationFromProduct(result);
+              mailToCustomerForApprovedAndFeatured(result, vm.spare);
+          } else {
+              var data = {};
+              data['to'] = result.seller.email;
+              data['subject'] = 'Spare Upload: Request for Listing';
+              result.serverPath = serverPath;
+              notificationSvc.sendNotification('productUploadEmailToCustomer', data, result,'email');
+
+              data['to'] = supportMail;
+              data['subject'] = 'Spare Upload: Request for activation';
+              result.serverPath = serverPath;
+              notificationSvc.sendNotification('productUploadEmailToAdmin', data, result,'email');   
+          }
+            setScroll(0);
+          
+            vm.spare = {};
+            clearData();
+            vm.container = {};
+            vm.brandList = [];
+            vm.modelList = [];
+            vm.images = [{isPrimary:true}];
+            $state.go('sparelisting');
+        }
+      });
+  }
+
+
+  function updateSpare(){
+
+      if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role != 'admin') {
+        vm.spare.status = "inactive";
+      }
+      if(vm.spare.currencyType == "")
+        vm.spare.currencyType = "INR";
+        if(!vm.spare.assetStatuses)
+            vm.spare.assetStatuses = [];
+        if(vm.prevAssetStatus != vm.spare.status){
+            var stObj = {};
+            stObj.userId = vm.spare.user._id;
+            stObj.status = vm.spare.status;
+            stObj.createdAt = new Date();
+            vm.spare.spareStatuses[vm.spare.spareStatuses.length] = stObj;
+            if(vm.spare.status == $rootScope.spareStatus[2].code)
+              vm.spare.isSold = true;
+            else 
+              vm.spare.isSold = false;
+        }
+
+      $rootScope.loading = true;
+      spareSvc.updateSpare(vm.spare).then(function(result){
+        $rootScope.loading = false;
+        //AppNotificationSvc.createAppNotificationFromProduct(product);
+        if(result && result.errorCode != 0){
+          Modal.alert(result.message, true);
+          vm.tabObj.step1 = true;
+          vm.tabObj.step2 = false;
+          return;
+        }
+        else {
+          setScroll(0);
+          mailToCustomerForApprovedAndFeatured(result, vm.spare);
+          }
+          $state.go('sparelisting');
+      });
+  }
+
+  function mailToCustomerForApprovedAndFeatured(result, spare) {
+    if(result.status)
+    {
+      var data = {};
+      data['to'] = spare.seller.email;
+      data['subject'] = 'Request for Product Upload : Approved';
+      spare.serverPath = serverPath;
+      result.listedFor = "SELL"
+      notificationSvc.sendNotification('productUploadEmailToCustomerActive', data, spare,'email');
+    }
+  }
+
 }
 })();

@@ -44,6 +44,7 @@ angular.module('sreizaoApp',[
     $rootScope.uploadImagePrefix = "assets/uploads/";
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
+    $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.classifiedAdDir = classifiedAdDir;
     $rootScope.refresh = true;
@@ -70,6 +71,8 @@ angular.module('sreizaoApp',[
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
     $rootScope.invitationData = {};
     $rootScope.expValue = expValue;
+    $rootScope.spareStatus = spareStatus;
+    $rootScope.paymentOptions = paymentOptions;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 

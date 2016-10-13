@@ -397,4 +397,80 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     }
     return svc;
  }
+
+ angular.module('admin').factory("ManufacturerSvc",ManufacturerSvc);
+  function ManufacturerSvc($http,$q){
+    var mfgService = {};
+    var path = "/api/common/manufacturer";
+    var manufacturerCache = [];
+    
+    mfgService.getAllManufacturer = getAllManufacturer;
+    mfgService.saveManufacturer = saveManufacturer;
+    mfgService.updateManufacturer = updateManufacturer;
+    mfgService.deleteManufacturer = deleteManufacturer;
+    mfgService.getManufacturerOnId = getManufacturerOnId;
+
+    function getAllManufacturer(){
+      var deferred = $q.defer();
+      if(manufacturerCache.length > 0){
+        deferred.resolve(manufacturerCache);
+      }else{
+        $http.get(path)
+        .then(function(res){
+          manufacturerCache = res.data;
+          deferred.resolve(res.data);
+        })
+        .catch(function(err){
+          deferred.reject(err);
+        })
+      }
+      return deferred.promise;
+    }
+
+    function getManufacturerOnId(id){
+      var name = "";
+      for(var i=0;i < manufacturerCache.length; i++){
+        if(manufacturerCache[i]._id == id){
+          name = manufacturerCache[i].name;
+          break;
+        }
+      }
+      return name;
+    }
+
+    function saveManufacturer(data){
+      return $http.post(path + "/save",data)
+        .then(function(res){
+          manufacturerCache = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function updateManufacturer(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          manufacturerCache = [];
+            return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+    function deleteManufacturer(data){
+      return $http.delete(path + "/" + data._id)
+          .then(function(res){
+             manufacturerCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+    }
+
+    return mfgService;
+  }
 })();

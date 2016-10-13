@@ -80,6 +80,7 @@ var categoryDir = "category";
 var manpowerDir = "manpower";
 var avatarDir = "avatar";
 var classifiedAdDir = "classifiedad";
+var manufacturerDir = "manufacturer";
 var templateDir = "templates";
 var tempDir = "temp";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";
@@ -92,6 +93,27 @@ var assetStatuses = [
 {
   name:"Rented",
   code:"rented"
+},
+{
+  name:"Sold",
+  code:"sold"
+}
+];
+
+var paymentOptions = [
+  "Online",
+  "Offline",
+  "COD"
+];
+
+var spareStatus = [
+{
+  name:"Active",
+  code:"active"
+},
+{
+  name:"Inactive",
+  code:"inactive"
 },
 {
   name:"Sold",
