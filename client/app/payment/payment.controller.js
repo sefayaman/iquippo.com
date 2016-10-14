@@ -6,16 +6,21 @@ angular.module('sreizaoApp').controller('PaymentCtrl',PaymentCtrl);
 function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,LocationSvc,$sce,$window) {
  	var vm = this;
 
-   var skipPayment = true;
- 	//production ccavennue crediential
+   var skipPayment = false;
+ 	//production ccavennue crediential merchant id 81564
  	/*var ccavenueURL = "https://secure.ccavenue.com";
  	var currentURL = $location.protocol() +"://" + $location.host();
  	var accessCode = 'AVPB07CK26AS14BPSA'; // SREI*/
 
  	//dev ccavennue crediential
- 	var ccavenueURL = "https://test.ccavenue.com";
- 	var currentURL = "http://localhost:9000";
- 	var accessCode = 'AVFA00CK27AK87AFKA'; // SREI
+ 	/*var ccavenueURL = "https://test.ccavenue.com";
+ 	var currentURL = "http://iquippo.com";
+ 	var accessCode = 'AVFA00CK27AK87AFKA';*/ 
+
+   //new ccavennue crediential
+   var ccavenueURL = "https://test.ccavenue.com";
+   var currentURL = "http://localhost";
+   var accessCode = 'AVSW00DJ54AN50WSNA';
 
  	//Default parameter value
 
@@ -61,7 +66,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  		})
  		.catch(function(err){
  			$state.go("main");
- 			Modal,$stateParams,$state.alert("Unknown error occured in payment system");
+ 			Modal.alert("Unknown error occured in payment system");
  		})
 
  		LocationSvc.getAllState();
@@ -71,7 +76,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  	function payNow(){
 
  	  var bodyRequest = "";
- 	  bodyRequest = "merchant_id=81564&order_id=" + vm.payTransaction._id;
+ 	  bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
       bodyRequest += "&currency=INR&amount=" + vm.payTransaction.totalAmount;
       bodyRequest += "&redirect_url=" + encodeURIComponent(currentURL + '/api/payment/paymentresponse') 
       bodyRequest += "&cancel_url=" + encodeURIComponent(currentURL + '/api/payment/paymentresponse');
@@ -105,7 +110,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&billing_zip=" + pinCode;
       //optional field
       bodyRequest += "&customer_identifier="+encodeURIComponent(vm.payTransaction.user._id);
-      bodyRequest += "&merchant_param1="+ encodeURIComponent(currentURL);
+      bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
       //console.log("b###########",bodyRequest);

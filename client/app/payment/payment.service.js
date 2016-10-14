@@ -115,7 +115,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
     mailData.user = tData.user;
     mailData.tId = tData.transactionId;
     mailData.totalAmount = tData.totalAmount;
-    mailData.status = tData.status == 'completed'?'Paid' : 'Payment Pending';
+    mailData.status = tData.statusCode == 0?'Paid' : 'Payment Pending';
     mailData.createdAt = tData.createdAt;
     switch(flag){
       case 1:

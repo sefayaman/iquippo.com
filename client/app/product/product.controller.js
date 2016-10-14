@@ -730,7 +730,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   }
 
   function postValuationRequest(productObj){
-
+	if(!productObj.auction)
+        productObj.auction = {};
+	
     createValuationRequest(productObj,"Buying or Selling of Asset");
     var paymentTransaction = createPaymentObj(productObj,"Auction Listing");
     ValuationSvc.save({valuation:$scope.valuationReq,payment:paymentTransaction})
@@ -792,7 +794,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     paymentTransaction.requestType = requestType;;
     var payObj = null;
     var createTraction = false;
-    if(!product.auction._id && product.auctionListing){
+    if(!productObj.auction._id && productObj.auctionListing){
       payObj = {};
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
       payObj.type = "auctionreq";
@@ -897,10 +899,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
-        if(result.errorCode){
-          Modal.alert(result.message,true);
-        }
-        else {
           //addToHistory(result,"Create");
           if(Auth.isAdmin()) {
             if(result.status)
@@ -929,8 +927,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             product = $scope.product ={};
             $state.go('productlisting');
           }
-
-        }
          
       });
   }
@@ -971,17 +967,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
         AppNotificationSvc.createAppNotificationFromProduct(product);
-        if(result.errorCode){
-          Modal.alert(result.message,true);
-          //console.log("error reason",result.message);
-        }
-        else {
-          mailToCustomerForApprovedAndFeatured(result, product);
-          }
-          if(cb)
-              cb(product);
-          else
-              $state.go('productlisting');
+        mailToCustomerForApprovedAndFeatured(result, product);
+		 if(cb)
+			cb(product);
+		  else
+			$state.go('productlisting');
       });
   }
 

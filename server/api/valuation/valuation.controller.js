@@ -75,6 +75,9 @@ exports.getOnFilter = function(req, res) {
   if(req.body.statuses)
        filter['status'] = {$in:req.body.statuses};
 
+    if(req.body.partnerId)
+       filter['valuationAgency._id'] = req.body.partnerId;
+
   if(req.body.tid)
        filter['transactionId'] = req.body.tid;
   

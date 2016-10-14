@@ -19,7 +19,11 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
- 			PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
+ 			if(vm.payTransaction.statusCode == 0)
+ 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
+ 			else
+ 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[2].code);
+
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
  				if(vm.payTransaction.payments[i].type == "auctionreq")
  					getAuctionReqDetail(vm.payTransaction._id);

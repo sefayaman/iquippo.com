@@ -226,8 +226,10 @@ exports.exportPayment = function(req,res){
 }
 
 //ccavenue payment keys
- var ccAvenueWorkingKey = "D6013738094F627ED02C3E99140512D5"; // test
+var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // new account test
+//var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // new account production
 //var ccAvenueWorkingKey = "DF2CF283425D194738C2F85DE9ED2657"; // production
+//var ccAvenueWorkingKey = "D6013738094F627ED02C3E99140512D5"; // test
 
 exports.encrypt = function(req,res){
     var m = crypto.createHash('md5');
@@ -269,11 +271,26 @@ exports.paymentResponse = function(req,res){
         var val = d.split("=");
         resPayment[val[0]] = val[1];
     });
+
+    var status = resPayment.order_status.toString().toLowerCase().trim();
     Payment.findById(resPayment.order_id, function (err, payment) {
       if(err) { return handleError(res, err); }
       if(!payment) { return res.status(404).send('Not Found'); }
       
-      payment.ccAvenueRes = resPayment;
+    var paymentVal = {};
+    paymentVal.paymentType = "CCAvenue";
+    paymentVal.bank_ref_no = resPayment.bank_ref_no;
+    paymentVal.order_status = resPayment.order_status;
+    paymentVal.failure_message = resPayment.failure_message;
+    paymentVal.payment_mode = resPayment.payment_mode;
+    paymentVal.card_name = resPayment.card_name;
+    paymentVal.status_message = resPayment.status_message;
+    paymentVal.tracking_id = resPayment.tracking_id;
+    payment.ccAvenueRes = paymentVal;
+
+      if(status == "success")
+        payment.statusCode = 0;
+          
       payment.save(function(err,pys){
         if(err) { return handleError(res, err); }
         else{
@@ -281,7 +298,6 @@ exports.paymentResponse = function(req,res){
         }
 
       });
-      //return res.json(payment);
   });
 
 }
@@ -295,7 +311,7 @@ function sendPaymentRes(req,res,resPayment){
     else
       res.redirect('http://mobile?payment=success');
   }else
-    res.redirect("http://localhost:9000/paymentresponse/" + resPayment.order_id);
+    res.redirect("http://"+ resPayment.merchant_param1 +"/paymentresponse/" + resPayment.order_id);
 }
 
 function handleError(res, err) {
