@@ -315,7 +315,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       var pyt = null;
       for(var i = 0;i < paymentMasterCache.length;i++){
         if(parnerId){
-          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId){
+          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId == parnerId){
             pyt = paymentMasterCache[i];
             break;
           }
