@@ -115,8 +115,7 @@
                             </button>
                           </div>
                           <div class="options">                       
-                               <i class="fa fa-inr"></i> {{spare.grossPrice}}
-                            </button>
+                               <i class="fa fa-inr"></i> {{spare.grossPrice}}                            
                           </div>
                           <a href="/sparedetail/{{spare._id}}"> <img src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive" alt="Product Image" /> </a>
                         </div>
@@ -150,37 +149,6 @@
                  <h3 class="panel-title"><strong>Recently Added Spares</strong></h3>
                 </div>
                 <div class="panel-body search-result spares-arrow">
-                  <!-- <ul class="spareViews">
-                      <li ng-repeat="spare in viewSpareVm.allSpareList  | startFrom:(viewSpareVm.currentPage -1 )*4 | limitTo:4">
-                        <article class="col-item">
-                          <div class="photo">
-                          <div class="options-cart-round">
-                            <button class="btn btn-default" title="Add to cart">
-                              <span class="fa fa-shopping-cart"></span>
-                            </button>
-                          </div>
-                          <div class="options">                       
-                               <i class="fa fa-inr"></i> {{spare.grossPrice}}
-                            </button>
-                          </div>
-                          <a href="/sparedetail/{{spare._id}}"> <img src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive" alt="Product Image" /> </a>
-                        </div>
-                        <div class="info">
-                          <div class="price-details">
-                            <h4>{{spare.name}}</h4>
-                            <p>{{getLocations(spare.locations)}}</p>
-                            {{spare.manufacturers.name}}
-                            
-                          </div>
-                        </div>
-                        <div class="btn-group">
-                          <a href="javascript:void(0);" class="btn btn-default" >View Details</a>
-                          <a href="javascript:void(0);" class="btn btn-default" >Buy Now</a>
-                        </div>
-                        </article> 
-                      </li> 
-                    </ul> -->
-
                     <uib-carousel no-wrap="noWrapSlides">
                       <uib-slide ng-repeat="gpSlide in viewSpareVm.sortedSpares">
                         <!-- <div class="row">
@@ -213,35 +181,36 @@
                           </div>
                         </div> -->
                         <ul class="spareViews">
-                      <li ng-repeat="spare in viewSpareVm.allSpareList  | startFrom:(viewSpareVm.currentPage -1 )*4 | limitTo:4">
-                        <article class="col-item">
-                          <div class="photo">
-                          <div class="options-cart-round">
-                            <button class="btn btn-default" title="Add to cart">
-                              <span class="fa fa-shopping-cart"></span>
-                            </button>
-                          </div>
-                          <div class="options">                       
-                               <i class="fa fa-inr"></i> {{spare.grossPrice}}
-                            </button>
-                          </div>
-                          <a href="/sparedetail/{{spare._id}}"> <img src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive" alt="Product Image" /> </a>
-                        </div>
-                        <div class="info">
-                          <div class="price-details">
-                            <h4 class="text-left">{{spare.name}}</h4>
-                            <p class="text-left">{{getLocations(spare.locations)}}</p>
-                            <p class="text-left">{{spare.manufacturers.name}}</p>
-                            
-                          </div>
-                        </div>
-                        <div class="btn-group">
-                          <a href="javascript:void(0);" class="btn btn-default" >View Details</a>
-                          <a href="javascript:void(0);" class="btn btn-default" >Buy Now</a>
-                        </div>
-                        </article> 
-                      </li> 
-                    </ul>
+                          <li ng-repeat="slide in gpSlide">
+                            <article class="col-item">
+                              <div class="photo">
+                                <div class="options-cart-round">
+                                  <button class="btn btn-default" title="Add to cart">
+                                    <span class="fa fa-shopping-cart"></span>
+                                  </button>
+                                </div>
+                                <div class="options">                       
+                                     <i class="fa fa-inr"></i> {{slide.grossPrice}}                                
+                                </div>
+                                <a href="/sparedetail/{{slide._id}}" >
+                                  <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
+                                </a>
+                              </div>
+                            <div class="info">
+                              <div class="price-details">
+                                <h4 class="text-left">{{slide.name}}</h4>
+                                <p class="text-left">{{getLocations(slide.locations)}}</p>
+                                <p class="text-left">{{slide.manufacturers.name}}</p>
+                                
+                              </div>
+                            </div>
+                            <div class="btn-group">
+                              <a href="/sparedetail/{{slide._id}}" class="btn btn-default" >View Details</a>
+                              <a href="javascript:void(0);" class="btn btn-default" >Buy Now</a>
+                            </div>
+                            </article> 
+                          </li> 
+                        </ul>
                       </uib-slide>
                     </uib-carousel>
                 </div>
