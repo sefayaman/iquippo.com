@@ -71,7 +71,7 @@ function SpareHomeCtrl($scope,$stateParams, $rootScope, $uibModal, $state, $http
 
     function getAllSpares(){
 		var dataToSend = {};
-		//dataToSend.status = "active";
+		dataToSend.status = "active";
 		spareSvc.getSpareOnFilter(dataToSend)
 		.then(function(result){
 		  vm.allSpareList = result;
