@@ -13,6 +13,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
   vm.searchType = "";
   vm.showFilter = showFilter;
   vm.searchFilter = searchFilter;
+  vm.getCategories = getCategories;
   var selectedIds = [];
 
   vm.globalSpareList = [];
@@ -30,6 +31,18 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
       },10)  
   });
   
+  function getCategories(dataObj){
+    if(!dataObj)
+      return "";
+   var categoryArr = [];
+    if(dataObj.length > 0){
+          angular.forEach(dataObj, function(categories, key){
+          categoryArr.push(categories.category.name);
+       });
+        }
+    return categoryArr.join();
+  }
+
   function loadSpares(){
 
     if(Auth.getCurrentUser()._id){

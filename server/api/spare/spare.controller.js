@@ -43,46 +43,85 @@ exports.getOnId = function(req, res) {
   });
 };
 
+exports.statusWiseCount = function(req,res){
+    var filter = {};
+    filter['deleted'] = false;
+    //filter['status'] = true;
+    Spare.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: '$status', count: { $sum: 1 } } 
+    },
+    {$sort:{count:-1}},
+    function (err, result) {
+      if (err) return handleError(err);
+      Spare.count({deleted:false},function(err,count){
+        if(!err){
+          var obj = {};
+          obj._id = "total";
+          obj.count = count;
+          result.push(obj);
+        }
+        return res.status(200).json(result);
+      });
+    }
+  );
+}
+
 //search spare
 exports.searchSpare = function(req, res) {
-  var term = new RegExp(req.body.searchstr, 'i');
+  var term = new RegExp(req.body.sparename, 'i');
   var filter = {};
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
   var arr = [];
+  if(req.body.sparename){
+    var term = new RegExp(req.body.sparename, 'i');
+    filter['name'] = { $regex: term };
+  }
+
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
-    arr[arr.length] = {city:{$regex:locRegEx}};
-    arr[arr.length] = {state:{$regex:locRegEx}};
+    arr[arr.length] = {'locations.city':{$regex:locRegEx}};
+    arr[arr.length] = {'locations.state':{$regex:locRegEx}};
   }
+
+  if(req.body.category){
+    var catRegEx = new RegExp(req.body.category, 'i');
+    filter['spareDetails.category.name'] = {$regex:catRegEx};
+  }
+
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
-    filter['city'] = {$regex:cityRegex};
+    filter['locations.city'] = {$regex:cityRegex};
   }
 
   if(req.body.stateName){
     var stateRegex = new RegExp(req.body.stateName, 'i');
-    filter['state'] = {$regex:stateRegex};
+    filter['locations.state'] = {$regex:stateRegex};
   }
   if(req.body.partNo)
     filter["partNo"] = req.body.partNo;
   
+  if(req.body.currency){
+    var currencyFilter = {};
+    if(req.body.currency.min){
+      currencyFilter['$gte'] = req.body.currency.min;
+    }
+    if(req.body.currency.max){
+      currencyFilter['$lte'] = req.body.currency.max;
+    }
+    
+    filter["grossPrice"] = currencyFilter;
+  }
   
- /*if(req.body.mfgYear){
-    var mfgYear = false;
-    var mfgFilter = {};
-    if(req.body.mfgYear.min){
-      mfgFilter['$gte'] = req.body.mfgYear.min;
-      mfgYear = true;
-    }
-    if(req.body.mfgYear.max){
-      mfgFilter['$lte'] = req.body.mfgYear.max;
-      mfgYear = true;
-    }
-    if(mfgYear)
-      filter["mfgYear"] = mfgFilter;
- }*/
+  if(req.body.manufacturerId)
+    filter["manufacturers._id"] = req.body.manufacturerId;
+
+  if(req.body.manufacturer)
+    filter["manufacturers.name"] = req.body.manufacturer;
+
   if(req.body.role && req.body.userid) {
     //var arr = [];
     arr[arr.length] = { "user._id": req.body.userid};

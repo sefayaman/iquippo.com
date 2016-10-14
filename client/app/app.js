@@ -59,6 +59,7 @@ angular.module('sreizaoApp',[
 
 
     $rootScope.currentProduct = null;
+    $rootScope.currentSpare = null;
     $rootScope.currentProductListingPage = 0;
 
     // Get all global data
@@ -146,6 +147,10 @@ angular.module('sreizaoApp',[
     $rootScope.isCustomer = Auth.isCustomer;
     $rootScope.isPartner = Auth.isPartner;
     $rootScope.getStatusOnCode = UtilSvc.getStatusOnCode;
+    $rootScope.validateCategory = UtilSvc.validateCategory;
+    $rootScope.getCategoryHelp = UtilSvc.getCategoryHelp;
+    $rootScope.getLocationHelp = UtilSvc.getLocationHelp;
+    $rootScope.getLocations = UtilSvc.getLocations;
 
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

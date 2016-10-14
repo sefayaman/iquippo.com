@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -21,8 +21,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.productCountObj = {};
 
     vm.doSearch = doSearch;
-    vm.getCategoryHelp = getCategoryHelp;
-    vm.getLocationHelp = getLocationHelp;
     vm.myFunct = myFunct;
     // vm.toggleCategory = toggleCategory;
 
@@ -143,7 +141,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         return;
       }
 
-      if(vm.categorySearchText && !validateCategory()){
+      if(vm.categorySearchText && !UtilSvc.validateCategory(vm.allCategoryList, vm.categorySearchText)){
         Modal.alert("Please enter valid category");
         return;
       }
@@ -160,17 +158,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
       productSvc.setFilter(filter);
       $state.go('viewproduct');
-    }
-
-    function validateCategory(){
-      var ret = false;
-      for(var i =0; i < vm.allCategoryList.length ; i++){
-        if(vm.allCategoryList[i].name == vm.categorySearchText){
-          ret  = true;
-          break;
-        }
-      }
-      return ret;
     }
 
     function beginVertScroll() {
@@ -199,29 +186,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         },
         1000*5
       );
-    };
-
-
-    function getCategoryHelp(val) {
-      var serData = {};
-      serData['searchStr'] = vm.categorySearchText;
-      return categorySvc.getCategoryOnFilter(serData)
-      .then(function(result){
-         return result.map(function(item){
-              return item.name;
-        });
-      })
-    };
-
-    function getLocationHelp(val) {
-      var serData = {};
-      serData['searchStr'] = vm.locationSearchText;
-     return LocationSvc.getLocationHelp(serData)
-      .then(function(result){
-         return result.map(function(item){
-             return item.name;
-        });
-      });
     };
 
      $scope.setPopover = function(evt){

@@ -14,10 +14,13 @@
       spareService.addSpare = addSpare;
       spareService.updateSpare = updateSpare;
       spareService.deleteSpare = deleteSpare;
-      //spareService.getProductOnCategoryId = getProductOnCategoryId;
+      //spareService.getSparesOnManufacturerId = getSparesOnManufacturerId;
       spareService.getSpareOnFilter = getSpareOnFilter;
-      //spareService.getSearchResult = getSearchResult;
-      //spareService.setSearchResult = setSearchResult;
+      spareService.getStatusWiseSpareCount = getStatusWiseSpareCount;
+      spareService.getSearchResult = getSearchResult;
+      spareService.setSearchResult = setSearchResult;
+      spareService.getFilter = getFilter;
+      spareService.setFilter = setFilter;
       
       function getSpareOnId(id,fromServer){
 
@@ -48,6 +51,20 @@
             throw res;
           })
       };
+
+      function getStatusWiseSpareCount(filter){
+        return $http.post(path + "/statuswisecount",filter)
+                .then(function(res){
+                  var resObj = {};
+                  res.data.forEach(function(item){
+                      resObj[item._id] = item.count;
+                  });
+                  return resObj;
+                })
+                .catch(function(res){
+                  throw res;
+                })
+      }
 
       function addSpare(spareData){
         return $http.post(path, spareData)
@@ -98,7 +115,7 @@
             delete spareCache[prd._id];
      }
 
-      /*function getSearchResult(){
+      function getSearchResult(){
         return searchResult;
       }
 
@@ -112,7 +129,7 @@
 
       function setFilter(filter){
          searchFilter = filter;
-      }*/
+      }
 
      return spareService;
   }

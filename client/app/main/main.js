@@ -291,8 +291,14 @@ angular.module('sreizaoApp')
         controller: 'ViewSpareCtrl as viewSpareVm',
         layout:'client'
       })
+      .state('manufacturerspare', {
+        url: '/viewspares/:id',
+        templateUrl: 'app/spare/viewspares.html',
+        controller: 'ViewSpareCtrl as viewSpareVm',
+        layout:'client'
+      })
       .state('sparedetail', {
-        url: '/sparedetail',
+        url: '/sparedetail/:id',
         templateUrl: 'app/spare/sparedetail.html',
         controller: 'SpareDetailCtrl as spareDetailVm',
         layout:'client'

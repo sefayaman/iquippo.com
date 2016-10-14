@@ -409,6 +409,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     mfgService.updateManufacturer = updateManufacturer;
     mfgService.deleteManufacturer = deleteManufacturer;
     mfgService.getManufacturerOnId = getManufacturerOnId;
+    mfgService.getManufacturerOnId = getManufacturerOnId;
 
     function getAllManufacturer(){
       var deferred = $q.defer();
@@ -426,6 +427,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       }
       return deferred.promise;
     }
+
+    function getManufacturerOnId(id){
+      var mfg;
+      for(var i = 0; i < manufacturerCache.length ; i++){
+        if(manufacturerCache[i]._id == id){
+          mfg = manufacturerCache[i];
+          break;
+        }
+      }
+      return mfg;
+    };
 
     function getManufacturerOnId(id){
       var name = "";

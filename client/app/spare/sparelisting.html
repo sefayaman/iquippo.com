@@ -76,7 +76,7 @@
                       {{spare.manufacturers.name}}
                     </td>
                     <td>
-                      category
+                      {{spareListingVm.getCategories(spare.spareDetails)}}
                     </td>
                     <td>
                     <a href="javascript:void(0);" ng-click="spareListingVm.previewSellerDetail(spare)" uib-popover="Seller Information" popover-trigger="mouseenter">

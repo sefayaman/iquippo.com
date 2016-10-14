@@ -125,10 +125,16 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
     };
     return UploadFile;
 }])
-.factory("UtilSvc",function($http,$rootScope){
+.factory("UtilSvc",function($http, $rootScope, categorySvc, LocationSvc){
   var utilSvc = {};
 
-  utilSvc.getStatusOnCode = function(list,code){
+  utilSvc.getStatusOnCode = getStatusOnCode;
+  utilSvc.validateCategory = validateCategory;
+  utilSvc.getCategoryHelp = getCategoryHelp;
+  utilSvc.getLocationHelp = getLocationHelp;
+  utilSvc.getLocations = getLocations;
+  
+  function getStatusOnCode(list,code){
       var statusObj = {};
       for(var i = 0; i < list.length;i++){
         if(list[i].code == code){
@@ -138,5 +144,51 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       }
       return statusObj;
   }
+
+  function validateCategory(allCategoryList, categorySearchText){
+      var ret = false;
+      for(var i =0; i < allCategoryList.length ; i++){
+        if(allCategoryList[i].name == categorySearchText){
+          ret  = true;
+          break;
+        }
+      }
+      return ret;
+    }
+
+    function getCategoryHelp(categorySearchText) {
+      var serData = {};
+      serData['searchStr'] = categorySearchText;
+      return categorySvc.getCategoryOnFilter(serData)
+      .then(function(result){
+         return result.map(function(item){
+              return item.name;
+        });
+      })
+    };
+
+    function getLocationHelp(locationSearchText) {
+      var serData = {};
+      serData['searchStr'] = locationSearchText;
+     return LocationSvc.getLocationHelp(serData)
+      .then(function(result){
+         return result.map(function(item){
+             return item.name;
+        });
+      });
+    };
+
+    function getLocations(locations){
+      if(!locations)
+        return;
+     var locationArr = [];
+      if(locations.length > 0){
+            angular.forEach(locations, function(location, key){
+            locationArr.push(location.city);
+         });
+          }
+      return locationArr.join();
+    }
+
   return utilSvc;
 });

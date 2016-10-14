@@ -131,7 +131,6 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     vendorSvc.getAllVendors()
     .then(function(){
       $scope.valAgencies = vendorSvc.getVendorsOnCode('Finance');
-      console.log($scope.valAgencies);
     });
   }
 
