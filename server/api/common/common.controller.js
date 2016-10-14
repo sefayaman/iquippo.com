@@ -43,28 +43,47 @@ exports.getAllCountry = function(req, res) {
 
 exports.sendOtp = function(req,res){
 	var isOnMobile = req.body.otpOn == 'mobile'?true:false;
-	var sendOtpToClient = req.body.sendToClient == 'y'?true:false;
 	 var otp = Math.round(Math.random() * 1000000) + "";
 	 var data = {};
 	 data.subject = 'OTP Message';
 	 data.content = req.body.content + otp;
-  	var fn = null; 
+	 req.otp = otp;
+  	//var fn = null; 
 	if(isOnMobile){
 		 data.to = req.body.mobile;
-		 fn = sms.sendSMS;
+		 postOtpRequest(sms.sendSMS,data,req,res);
+		 //fn = sms.sendSMS;
 	}else{
 		data.to = req.body.email;
-		fn = email.sendMail;
+		//req.body.templateName = "userRgeOTP";
+		//req.body.data = {};
+		//req.body.data.otp = otp;
+		//req.body.data.serverPath = config.serverPath;
+		exports.compileTemplate({otp:otp},config.serverPath,"userRgeOTP1",function(isSuccess,text){
+			if(isSuccess){
+				data.content = text;
+				postOtpRequest(email.sendMail,data,req,res);
+			}else
+				handleError(res,{});
+			
+		})
+		//fn = email.sendMail;
 	}
+	
+
+}
+
+function postOtpRequest(fn,data,req,res){
+	var sendOtpToClient = req.body.sendToClient == 'y'?true:false;
 	if(data.to){
 		fn(data,req,res,function(req1,res1,isSent){
 			//console.log(otp);
 			if(isSent){
 				if(sendOtpToClient)
-					return res.status(200).send("" + otp);
+					return res.status(200).send("" + req.otp);
 				else{
 					var otpObj = {};
-					otpObj['otp'] = otp;
+					otpObj['otp'] = req.otp;
 					otpObj.createdAt = new Date();
 					User.update({_id:req.body.userId},{$set:{otp:otpObj}},function(err,userObj){
 						if(err){
@@ -83,10 +102,9 @@ exports.sendOtp = function(req,res){
 	else{
 		return res.status(400).send("Insufficient data");
 	}
-
 }
 
-exports.compileHtml = function(req,res){
+exports.compileHtml = function (req,res){
 	var dataObj = req.body.data;
 	var tplName = req.body.templateName;
 	if(!tplName || !dataObj)
@@ -95,7 +113,8 @@ exports.compileHtml = function(req,res){
 	  if (err){ return handleError(res, err); }
 	  var tempFun = handlebars.compile(data);
 	  var text = tempFun(dataObj);
-	  return res.status(200).send(text);
+	  var cb = null;
+	   return res.status(200).send(text);
 	});
 }
 

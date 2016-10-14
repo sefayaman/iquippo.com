@@ -323,7 +323,7 @@ exports.authCallback = function(req, res, next) {
 exports.validateUser = function(req, res){
   var filter = {}
   filter['deleted'] = false;
-  if(!req.body.mobile)
+  if(!req.body.mobile && !req.body.email)
     return res.status(401).send('Unauthorized');
   if(req.body.email)
       filter['email'] = req.body.email;
