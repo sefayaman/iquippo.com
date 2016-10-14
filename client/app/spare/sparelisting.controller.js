@@ -110,15 +110,26 @@ function searchUtil(item, toSearch, type)
     return ( fName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
             || lName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
   } else if(type == 'location'){
-    var cityName = item.locations.city + "";
-    var stateName = item.locations.state + "";
-    return ( cityName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
-      || stateName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
+    var locFlag = false;
+    item.locations.forEach(function(val,idx){
+      var cityName = val.city + "";
+      var stateName = val.state + "";
+      if(cityName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
+          || stateName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1)
+        locFlag = true;
+      })
+    return locFlag ? true : false;
+
   } else if(type == 'category'){
-    var categoryName = item.spareDetails.category.name + "";
-    var otherCategoryName = item.spareDetails.category.otherName + "";
-    return ( categoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
-            || otherCategoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
+      var catFlag = false;
+      item.spareDetails.forEach(function(val,idx){
+        var categoryName = val.category.name + "";
+        var otherCategoryName = val.category.otherName + "";
+        if(categoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
+            || otherCategoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) 
+          catFlag = true;
+      })
+    return catFlag ? true : false;
   }
 }
 
