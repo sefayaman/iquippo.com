@@ -31,12 +31,32 @@
                       <option value="category">Asset Category</option>
                       <option value="listedBy">Listed By</option>
                       <option value="status">Status </option>
-                      <!-- <option value="group">Listing Date</option> -->
+                      <option value="ldate">Listing Date</option>
                       <option value="location">Location</option>
                     </select>
                   </div>
-                  <div class="featured-pro">
+                  <div class="featured-pro" ng-if="spareListingVm.searchType != 'ldate'">
                     <input type="text" ng-if="spareListingVm.searchType != ''" name="searchTxt" ng-model="spareListingVm.spareSearchFilter.searchTxt" ng-change="spareListingVm.searchFilter(spareListingVm.searchType)" ng-model-options="{debounce:500}" placeholder="Search text..." class="form-input-width" />
+                  </div>
+                  <div class="featured-pro" ng-if="spareListingVm.searchType == 'ldate'">
+                    <div class="row">
+                     <div class="col-sm-8">
+                                <div class="row">
+                                  <div class="col-sm-7">
+                                    <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
+                                      <span class="input-group-addon">From</span>
+                                      <input type="date" placeholder="Date" class="form-input-width " name="fromDate"  ng-model="spareListingVm.spareSearchFilter.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup1.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open1()" ng-change="spareListingVm.searchFilter(spareListingVm.searchType)">
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-5 ">
+                                    <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
+                                      <span class="input-group-addon">To</span>
+                                      <input type="date" placeholder="Date" class="form-input-width " name="toDate" ng-value="toDate" ng-model="spareListingVm.spareSearchFilter.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-change="spareListingVm.searchFilter(spareListingVm.searchType)">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                    </div>
                   </div>
 
             <!-- <div class="featured-pro">

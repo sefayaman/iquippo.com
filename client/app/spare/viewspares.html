@@ -151,35 +151,6 @@
                 <div class="panel-body search-result spares-arrow">
                     <uib-carousel no-wrap="noWrapSlides">
                       <uib-slide ng-repeat="gpSlide in viewSpareVm.sortedSpares">
-                        <!-- <div class="row">
-                          <div class="col-sm-3" ng-repeat="slide in gpSlide">
-                            <div class="panel panel-default">
-                              <a href="/sparedetail/{{slide._id}}" >
-                                <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
-                              </a>
-                              <div class="panel-heading">
-                                <h3 class="panel-title">{{slide.name}}</h3>
-                              </div>
-                              <div class="panel-body">
-                                <div class="row">
-                                  <div class="col-xs-6 form-group text-ellips"><i class="fa fa-tags"></i>{{slide.name}}</div>
-                                  <div class="col-xs-6 form-group text-ellips"><i class="fa fa-bookmark"></i>{{slide.manufacturers.name}}</div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-xs-6 form-group text-ellips"> <i class="fa fa-map-marker"></i>{{getLocations(slide.locations)}}</div>
-                                  <div class="col-xs-6 form-group text-ellips">
-                                    <i class="fa fa-inr"></i>
-                                    {{slide.grossPrice}}
-                                  </div>
-                                </div>
-                                <div class="btn-group">
-                                  <a href="/sparedetail/{{slide._id}}" class="btn btn-default" ><i class="fa fa-eye"></i></a>
-                                  <a href="javascript:void(0);" class="btn btn-default" ><i class="fa fa-shopping-cart"></i></a>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div> -->
                         <ul class="spareViews">
                           <li ng-repeat="slide in gpSlide">
                             <article class="col-item">

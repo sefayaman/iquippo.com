@@ -134,7 +134,7 @@
                    
                     <div class="col-xs-6">
                       <div class="form-group" ng-class="{'has-error': form.password.$invalid && submitted }">
-                        <input type="password" name="password" class="form-control" placeholder="Password*" ng-model="manpowerVm.manpower.password" ng-minlength="4">
+                        <input type="password" name="password" class="form-control" placeholder="Password*" ng-model="manpowerVm.manpower.password" ng-minlength="4" required>
                       </div>
                       <p class="help-block"
                        ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">

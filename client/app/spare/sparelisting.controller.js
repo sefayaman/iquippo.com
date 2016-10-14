@@ -14,8 +14,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
   vm.showFilter = showFilter;
   vm.searchFilter = searchFilter;
   vm.getCategories = getCategories;
-  var selectedIds = [];
-
+ 
   vm.globalSpareList = [];
   vm.orgGlobalSpareList = [];
   vm.spareSearchFilter = {};
@@ -79,6 +78,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
   {
     vm.spareSearchFilter  = {};
   }
+
 function searchFilter(type)
 { 
     vm.globalSpareList = {};
@@ -130,6 +130,21 @@ function searchUtil(item, toSearch, type)
           catFlag = true;
       })
     return catFlag ? true : false;
+  } else if(type == 'ldate'){
+      if(!vm.spareSearchFilter.fromDate && !vm.spareSearchFilter.toDate){
+        delete vm.spareSearchFilter.fromDate;
+        delete vm.spareSearchFilter.toDate;
+        return;
+      }
+      var listingDate = item.createdAt;  
+      var fromDate = vm.spareSearchFilter.fromDate;
+      var toDate = vm.spareSearchFilter.toDate;      
+      if(fromDate && toDate)
+        return (moment(listingDate).isAfter(fromDate) && moment(listingDate).isBefore(toDate)) ? true : false; 
+      else if(fromDate)
+        return (moment(listingDate).isAfter(fromDate)) ? true : false; 
+      else if(toDate)
+        return (moment(listingDate).isAfter(toDate)) ? true : false; 
   }
 }
 
@@ -186,7 +201,39 @@ function searchUtil(item, toSearch, type)
    $rootScope.currentProductListingPage = $scope.tableRef.DataTable.page();
    $state.go('spareedit', {id:spare._id});
   }
-}
-  
 
+  // date picker
+  $scope.today = function() {
+    vm.spareSearchFilter.fromDate = new Date();
+    vm.spareSearchFilter.toDate = new Date();
+  };
+  
+  $scope.clear = function () {
+    vm.spareSearchFilter.fromDate = null;
+    vm.spareSearchFilter.toDate = null;
+  };
+
+  $scope.popups = [{opened:false}]
+
+  $scope.open1 = function() {
+    $scope.popup1.opened = true;
+  };
+  $scope.open2 = function() {
+    $scope.popup2.opened = true;
+  };
+
+  $scope.popup1 = {
+    opened: false
+  };
+  $scope.popup2 = {
+    opened: false
+  };
+
+  $scope.formats1 = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+  $scope.format1 = $scope.formats1[0];
+
+  $scope.status = {
+    opened: false
+  };
+}
 })();
