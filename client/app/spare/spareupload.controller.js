@@ -37,6 +37,15 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     vm.makePrimary = makePrimary;
     vm.deleteImg = deleteImg;
     vm.rotate = rotate;
+    vm.addMoreMaster = addMoreMaster;
+
+    function addMoreMaster(){
+      var tmpObj = {};
+      tmpObj.category = {};
+      tmpObj.brand = {};
+      tmpObj.model = {};
+      vm.spare.spareDetails.push(tmpObj)
+    }
     
     function clearData(){
 
@@ -46,7 +55,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       vm.prevAssetStatus = "inactive";
       vm.spareStatuses = [];
       vm.spare.paymentOption = [];
-      vm.spare.spareDetails = [{}];
+      vm.spare.spareDetails = [{category:{},brand:{},model:{}}];
       vm.spare.miscDocuments = [{}];
       vm.spare.locations = [{}];
       //vm.spare.city = "";
@@ -114,23 +123,12 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
           else
             vm.prevAssetStatus = vm.spare.status = "";
 
-          //$scope.userType = product.seller.userType;
-          //vm.spare.country = vm.spare.country;
-          // $scope.product.auctionListing = false;
           vm.assetDir = vm.spare.assetDir;
-          if(vm.spare.spareDetails.category && vm.spare.spareDetails.category._id) {
-            vm.container.selectedCategoryId = vm.spare.spareDetails.category._id;
-            vm.onCategoryChange(vm.spare.spareDetails.category._id, true);
-          }
-          if(vm.spare.spareDetails.brand && vm.spare.spareDetails.brand._id) {
-            vm.container.selectedBrandId = vm.spare.spareDetails.brand._id;
-            vm.onBrandChange(vm.spare.spareDetails.brand._id, true);
-          }
-          if(vm.spare.spareDetails.model && vm.spare.spareDetails.model._id)
-            vm.container.selectedModelId = vm.spare.spareDetails.model._id;
-
-          //vm.container.selectedSubCategory = vm.spare.subcategory;
-
+          vm.spare.spareDetails.forEach(function(item,idx){
+            onCategoryChange(idx,true);
+            onBrandChange(idx,true);
+            //onModelChange(idx,true);
+          })
 
           vm.getUsersOnUserType = [];
           vm.onRoleChange(vm.spare.seller.userType, true);
@@ -139,9 +137,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
         
           if(vm.spare.currencyType == "INR")
             vm.spare.currencyType = "";
-          if(vm.spare.spareDetails.category && vm.spare.spareDetails.category.name == 'Other')
-              vm.selectedCategory['otherName'] = vm.spare.spareDetails.category.otherName;
-
+         
           if($state.current.name == "spareedit"){
             vm.enableButton = !Auth.isAdmin() && vm.spare.status;
             vm.isEdit = true;
@@ -151,6 +147,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       }else{
         prepareImgArr();
       }
+
       //listen for the file selected event
       $scope.$on("fileSelected", function (event, args) {
         if(args.files.length == 0)
@@ -255,45 +252,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       vm.spare.seller.company = seller.company;
     }
 
-    function onCategoryChange(categoryId, idx){
-      // if(!noChange)
-      // {
-        vm.spare.spareDetails[idx].brand = {};
-        vm.spare.spareDetails[idx].model = {};
-        vm.spare.spareDetails[idx].category = {};
-        if(categoryId){
-          var ct = categorySvc.getCategoryOnId(categoryId);
-          //vm.spare.group = ct.group;
-          vm.spare.spareDetails[idx].category._id = ct._id;
-          vm.spare.spareDetails[idx].category.name = ct.name;
-        }    
-        else{
-          //vm.spare.group = {};
-          vm.spare.spareDetails[idx].category = {};
-        }
-
-       vm.container.selectedBrandId = "";
-       vm.container.selectedModelId = "";
-      //}
-       
-      vm.brandList = [];
-      vm.modelList = [];
-       if(!categoryId)
-        return;
-      var otherBrand = null;
-      var filter = {};
-      filter['categoryId'] = categoryId;
-      brandSvc.getBrandOnFilter(filter)
-      .then(function(result){
-        vm.brandList = result;
-
-      })
-      .catch(function(res){
-        console.log("error in fetching brand",res);
-      })
-  }
-
-  function onManufacturerChange(manufacturerId){
+function onManufacturerChange(manufacturerId){
     if(manufacturerId){
       vm.spare.manufacturers = {};
       var mfgName = ManufacturerSvc.getManufacturerOnId(manufacturerId);
@@ -307,35 +266,66 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     }
   }
 
-  function onBrandChange(brandId, idx){
-    // if(!noChange)
-    // {
-      vm.spare.spareDetails[idx].model = {};
+function onCategoryChange(idx,noChange){
+     if(!noChange)
+    { 
+      if(vm.spare.spareDetails[idx].category._id){
+        var ct = categorySvc.getCategoryOnId(vm.spare.spareDetails[idx].category._id);
+        vm.spare.spareDetails[idx].category.name = ct.name;
+      }    
+      else{
+        var tmpObj = {};
+        tmpObj.category = {};
+        tmpObj.brand = {};
+        tmpObj.model = {};
+        vm.spare.spareDetails[idx] = tmpObj;
+      }
       vm.spare.spareDetails[idx].brand = {};
-      if(brandId){
+      vm.spare.spareDetails[idx].model = {};
+    }
+     
+    vm.spare.spareDetails[idx].brandList = [];
+    vm.spare.spareDetails[idx].modelList = [];
+
+     if(!vm.spare.spareDetails[idx].category._id)
+      return;
+    var filter = {};
+    filter['categoryId'] = vm.spare.spareDetails[idx].category._id;
+    brandSvc.getBrandOnFilter(filter)
+    .then(function(result){
+      vm.spare.spareDetails[idx].brandList = result;
+
+    })
+    .catch(function(res){
+      console.log("error in fetching brand",res);
+    })
+  }
+
+  function onBrandChange(idx,noChange){
+    if(!noChange)
+    {
+      if(vm.spare.spareDetails[idx].brand._id){
          var brd = [];
-         brd = vm.brandList.filter(function(item){
-          return item._id == brandId;
+         brd = vm.spare.spareDetails[idx].brandList.filter(function(item){
+          return item._id == vm.spare.spareDetails[idx].brand._id;
         });
         if(brd.length == 0)
           return;
-        vm.spare.spareDetails[idx].brand._id = brd[0]._id;
         vm.spare.spareDetails[idx].brand.name = brd[0].name;
       }else{
         vm.spare.spareDetails[idx].brand = {};
       }
-     vm.container.selectedModelId = "";
-    //}
+     vm.spare.spareDetails[idx].model = {};
+    }
     
-    vm.modelList = [];
-    if(!brandId)
+    vm.spare.spareDetails[idx].modelList = [];
+    if(!vm.spare.spareDetails[idx].brand._id)
        return;
-    var otherModel = null;
     var filter = {};
-    filter['brandId'] = brandId;
+    filter['brandId'] = vm.spare.spareDetails[idx].brand._id;
     modelSvc.getModelOnFilter(filter)
     .then(function(result){
-      vm.modelList = result;
+      vm.spare.spareDetails[idx].modelList = result;
     })
     .catch(function(res){
       console.log("error in fetching model",res);
@@ -343,20 +333,19 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
 
   }
 
-  function onModelChange(modelId, idx){
-    if(!modelId){
+  function onModelChange(idx){
+    if(!vm.spare.spareDetails[idx].model._id){
       vm.spare.spareDetails[idx].model = {};
       return;
     }
     var md = null;
-    for(var i=0; i< vm.modelList.length;i++){
-      if(vm.modelList[i]._id == modelId){
-        md = vm.modelList[i];
+    for(var i=0; i< vm.spare.spareDetails[idx].modelList.length;i++){
+      if(vm.spare.spareDetails[idx].modelList[i]._id == vm.spare.spareDetails[idx].model._id){
+        md = vm.spare.spareDetails[idx].modelList[i];
         break;
       }
     }
     if(md){
-      vm.spare.spareDetails[idx].model._id = md._id;
       vm.spare.spareDetails[idx].model.name = md.name;
     }else
       vm.spare.spareDetails[idx].model = {};
@@ -455,6 +444,11 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     }else{
       vm.spare.applyWaterMark = false;
     }
+
+     vm.spare.spareDetails.forEach(function(item,index){
+       delete item.brandList;
+       delete item.modelList;
+      });
 
     addOrUpdate();  
   }

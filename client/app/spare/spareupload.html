@@ -230,7 +230,7 @@
                                 <tr ng-repeat="spareDet in spareVm.spare.spareDetails">
                                   <td>
                                     <div class="form-group" ng-class="{'has-error': detailForm.category.$invalid && step2Submitted}">
-                                      <select class="form-control" name="category"  ng-model="spareVm.container.selectedCategoryId" data-index="{{$index}}" ng-change="spareVm.onCategoryChange(spareVm.container.selectedCategoryId, $index)" required>
+                                      <select class="form-control" name="category"  ng-model="spareDet.category._id" ng-change="spareVm.onCategoryChange($index)" required>
                                             <option value="">Select Category*</option>
                                             <option value="{{category._id}}" ng-repeat="category in spareVm.allCategory">{{category.name}}</option>
                                       </select>
@@ -242,9 +242,9 @@
                                   </td>
                                   <td>
                                     <div class="form-group" ng-class="{'has-error': detailForm.brand.$invalid && step2Submitted}">
-                                       <select class="form-control" name="brand" ng-model="spareVm.container.selectedBrandId" data-index="{{$index}}" ng-change="spareVm.onBrandChange(spareVm.container.selectedBrandId, $index)" required>
+                                       <select class="form-control" name="brand" ng-model="spareDet.brand._id"  ng-change="spareVm.onBrandChange($index)" required>
                                             <option value="">Select Brand *</option>
-                                            <option value="{{brand._id}}" ng-repeat="brand in spareVm.brandList">{{brand.name}}</option>
+                                            <option value="{{brand._id}}" ng-repeat="brand in spareDet.brandList">{{brand.name}}</option>
                                       </select>
                                       <i class="caret"></i>
                                     </div>
@@ -254,9 +254,9 @@
                                   </td>
                                   <td>
                                     <div class="form-group" ng-class="{'has-error': detailForm.model.$invalid && step2Submitted}">
-                                       <select class="form-control" name="model" ng-model="spareVm.container.selectedModelId" required data-index="{{$index}}" ng-change="spareVm.onModelChange(spareVm.container.selectedModelId, $index)">
-                                              <option value="">Select Model</option>
-                                              <option value="{{model._id}}" ng-repeat="model in spareVm.modelList">{{model.name}}</option>
+                                       <select class="form-control" name="model" ng-model="spareDet.model._id" required ng-change="spareVm.onModelChange($index)">
+                                              <option value="">Select Model *</option>
+                                              <option value="{{model._id}}" ng-repeat="model in spareDet.modelList">{{model.name}}</option>
                                         </select>
                                         <i class="caret"></i>
                                       </div>
@@ -271,7 +271,7 @@
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <button class="btn btn-block" ng-click="spareVm.spare.spareDetails.push({})" ng-if="$last">Add More</button>
+                                      <button class="btn btn-block" ng-click="spareVm.addMoreMaster()" ng-if="$last">Add More</button>
                                       <button class="btn btn-block" ng-click="spareVm.spare.spareDetails.splice($index,1)" ng-if="!$last">Delete</button>
                                     </div>
                                   </td>
