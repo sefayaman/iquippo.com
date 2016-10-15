@@ -35,15 +35,19 @@
                     <a class="pull-left" href="javascrip:void(0)">
                       <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImage}}" alt="Image" width="70" height="70">
                     </a>
-                    <div class="media-body">
-                      <h4 class="media-heading"><a href="javascrip:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>
+                    <div class="media-body payment-details">
+                      <h4 class="media-heading"><a href="javascrip:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>                      
+                      <p>Spare id/no.</p>
+                      <p>Manufacturer</p>
+                      <p>asset for rent - Brand , Model, Variant</p>
+                      <p>Rental Period</p>
                       <p>{{paymentVm.payTransaction.product.city}}</p>
                     </div>
                   </div>
                 </div>
                 <div class="col-sm-4">
-                  <span ng-if="py.type=='auctionreq'">Auction</span>
-                  <span ng-if="py.type=='valuationreq'">Valuation</span>
+                  <span ng-if="py.type=='auctionreq'">Auction (quippoauctions.com)</span>
+                  <span ng-if="py.type=='valuationreq'">Valuation (Agency Name)</span>
                 </div>
                 <div class="col-sm-4">
                   {{py.charge}}

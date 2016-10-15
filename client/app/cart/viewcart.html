@@ -9,15 +9,9 @@
                <tr>
                   <th></th>
                    <th>Image</th>
-                   <th>Product ID</th>
-                    <th>Group</th>
-                   <th>Product Categories</th>
-                   <th>Brand</th>
-                   <th>Model</th>
-                   <th>Manufacturing Year</th>
-                   <th>Location</th>
+                   <th>Type</th>
+                   <th>Product Name</th>                   
                    <th>Product Condition</th>
-                    <!-- <th>Age </th> -->
                     <th>Action</th>
                </tr>
             </thead>
@@ -30,22 +24,8 @@
                     <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" width="50" height="50">
                   </a>  
                 </td>
-                <td>{{product.productId}}</td>
-                <td>{{product.group.name}}</td>
-                <td>
-                  <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
-                  <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
-                </td>
-                <td>
-                  <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
-                  <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
-                </td>
-                <td>
-                  <span ng-if="product.brand.name != 'Other'">{{product.model.name}}</span>
-                  <span ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</span>
-                </td>
-                <td>{{product.mfgYear}}</td>
-                 <td>{{product.country}}</td>
+                <td><!-- {{product.productId}} --></td>
+                <td>{{product.name}}</td>                
                  <td ng-if="product.productCondition == 'new'">New</td>
                   <td ng-if="product.productCondition != 'new'">Old</td>
                  <!-- <td>4 days</td> -->
