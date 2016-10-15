@@ -586,6 +586,14 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       });
 
+       $scope.product.miscDocuments = $scope.product.miscDocuments.filter(function(item,idx){
+          if(item && item.name)
+              return true;
+          else
+            return false;
+
+      });
+
       if($scope.product.images.length == 0){
         Modal.alert("Please upload atleast one image.",true);
         $rootScope.loading = false;
@@ -1195,7 +1203,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 
         $scope.open = function($event) {
-          $scope.opened = true;
+          $scope.container.opened = true;
         };
 
         $scope.popups = [{opened:false}]
