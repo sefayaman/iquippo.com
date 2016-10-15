@@ -118,6 +118,7 @@ function init(){
           onManufacturerChange(mfg, true);
         }
         var filter = {};
+        filter['status'] = "active";
         filter['manufacturerId'] = $stateParams.id;
         spareSvc.getSpareOnFilter(filter)
         .then(function(result){

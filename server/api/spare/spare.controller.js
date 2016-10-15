@@ -73,8 +73,12 @@ exports.searchSpare = function(req, res) {
   var term = new RegExp(req.body.sparename, 'i');
   var filter = {};
   filter["deleted"] = false;
-  if(req.body.status)
-    filter["status"] = req.body.status;
+  if(req.body.status) {
+    //filter["status"] = req.body.status;
+    var typeFilter = {};
+    typeFilter['$in'] = ['active','sold'];
+    filter["status"] = typeFilter;
+  }
   var arr = [];
   if(req.body.sparename){
     var term = new RegExp(req.body.sparename, 'i');

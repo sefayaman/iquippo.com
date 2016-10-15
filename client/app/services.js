@@ -395,19 +395,27 @@ angular.module('sreizaoApp')
 
   function createAppNotificationFromProduct(productData){
     var dataToSend = {};
+    var notificationFlag = false;
     dataToSend.user = {};
     dataToSend.user._id = productData.seller._id;
     dataToSend.user.fname = productData.seller.fname;
     dataToSend.productId = productData._id;
     dataToSend.message = productData.name;
-    if(productData.assetStatus == 'sold')
+    if(productData.assetStatus == 'sold') {
       dataToSend.notificationFor = "Sold";
-    else if(productData.assetStatus == 'rented')
+      notificationFlag = true;
+    }
+    else if(productData.assetStatus == 'rented') {
       dataToSend.notificationFor = "Rented";
-    else if(productData.status && productData.assetStatus == 'listed')
+      notificationFlag = true;
+    }
+    else if(productData.status && productData.assetStatus == 'listed'){
       dataToSend.notificationFor = "Approved";
+      notificationFlag = true;
+    }
     dataToSend.imgsrc = productData.assetDir + "/"+ productData.primaryImg;
-    pushNotification(dataToSend);
+    if(notificationFlag)
+      pushNotification(dataToSend);
   }
 
   function pushNotification(data){
