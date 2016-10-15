@@ -20,7 +20,7 @@ function SpareHomeCtrl($scope,$stateParams, $rootScope, $uibModal, $state, $http
     function toggleCategory(){
       vm.isCollapsed = !vm.isCollapsed;
       if(vm.isCollapsed)
-         vm.spareList = vm.allSpareList.slice(0,9);
+         vm.spareList = vm.allSpareList.slice(0,12);
        else
         vm.spareList = vm.allSpareList;
     }
@@ -75,7 +75,7 @@ function SpareHomeCtrl($scope,$stateParams, $rootScope, $uibModal, $state, $http
 		spareSvc.getSpareOnFilter(dataToSend)
 		.then(function(result){
 		  vm.allSpareList = result;
-		  vm.spareList = vm.allSpareList.slice(0,9);
+		  vm.spareList = vm.allSpareList.slice(0,12);
 		})
 		.catch(function(res){
 		//error handling

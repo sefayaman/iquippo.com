@@ -63,7 +63,7 @@
                   <ul class="nav navbar-nav">
                     <li ng-class="{active: isActive('/')}"><a href="index.html">Home</a></li>
                     <li ng-class="{active: isActive('/aboutus')}"><a href="/aboutus">About Us</a></li>
-                    <li ng-class="{active: isActive('/shipping')}"><a href="/shipping">Shipping</a></li>
+                    <li ng-class="{active: isActive('/shipping')}"><a href="/shipping">Financing</a></li>
                      <li ng-class="{active: isActive('/valuation')}"><a href="/valuation">Valuation</a></li>
                      <!-- <li><a href="/certifiedbyiquippo">Certified by iQuippo</a></li> -->
                      <li ng-class="{active: isActive('/manpower')}" ><a href="/manpower">Manpower</a></li>
@@ -87,13 +87,10 @@
             </nav>
           <ul class="nav navbar-nav navbar-right hidden-xs">
             <li>
-              <a href="javascript:void(0);" ng-click="redirectToSpare()">Upload Spares</a>
+              <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
             </li>
             <li>
-              <a href="javascript:void(0);" ng-click="redirectToProduct()">Upload Product</a>
-            </li>
-            <li>
-              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
+              <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
             </li>
           </ul>
         </div>

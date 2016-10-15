@@ -31,7 +31,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.toggleCategory = function(){
       vm.isCollapsed = !vm.isCollapsed;
       if(vm.isCollapsed)
-         $scope.categoryList = vm.activeCategoryList.slice(0,9);
+         $scope.categoryList = vm.activeCategoryList.slice(0,12);
        else
         $scope.categoryList = vm.activeCategoryList;
 
@@ -54,7 +54,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       categorySvc.getCategoryForMain()
       .then(function(result){
           vm.activeCategoryList = result;
-          $scope.categoryList = vm.activeCategoryList.slice(0,9);
+          $scope.categoryList = vm.activeCategoryList.slice(0,12);
       })
       .catch(function(res){
         //error handling

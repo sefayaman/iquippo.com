@@ -37,7 +37,7 @@
                 </div>
               </div>             
               <div class="col-sm-3 text-center">
-                <a href="javascript:;"  class="btn btn-lg btn-warning btn-block" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search</a>
+                <a href="javascript:;"  class="btn btn-lg btn-warning btn-block" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search Assets</a>
               </div>
             </div>
         </form>
@@ -52,6 +52,9 @@
 
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
+        <div class="form-group">
+          <a href="javascript:void(0);" class="btn btn-default btn-block" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
+        </div>
        <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank">
           <img ng-if="mainVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop.src}}" class="img-responsive add1">
        </a>
@@ -134,15 +137,15 @@
                 <h3 class="panel-title"><i class="fa fa-link"></i> Partners</h3>
               </div>
               <div class="panel-body text-center">
-                <div class="form-group">
+               <!--  <div class="form-group">
                   <a href="http://quippoauctions.com/" target="_blank">
                     <img src="assets/images/partner-logo-img.jpg">
                   </a>
                 </div>
-                <hr>
+                <hr> -->
                 <div class="form-group">
                   <a href="http://srei.com/" target="_blank">
-                    <img src="assets/images/srei-logo.png">
+                    <img src="assets/images/srei-logo.png" width="120">
                   </a>
 
                 </div>

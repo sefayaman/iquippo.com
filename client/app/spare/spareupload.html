@@ -177,6 +177,16 @@
                                   <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="spareVm.spare.productCondition" value="new"> New</span>
                                 </div>
                             </div>
+                          <div class="row">                            
+                            <div class="col-sm-5 form-group">Made in </div>
+                              <div class="col-xs-6 col-sm-4 form-group">
+                                 <select class="form-control" name="location" ng-model="loc.city" ng-change="spareVm.onLocationChange(loc.city, $index)" data-index="{{$index}}" required>
+                                  <option value="">Select Country</option>
+                                  <option ng-repeat="location in spareVm.locationList" value="{{location.name}}">{{location.name}}</option>
+                                </select>
+                                <i class="caret"></i>
+                              </div>
+                          </div>
                           <div class="row form-group">
                             <div class="col-sm-5">Payment Mode  </div>
                             <div class="col-sm-7">
