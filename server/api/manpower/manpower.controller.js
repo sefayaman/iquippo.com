@@ -137,6 +137,17 @@ exports.getSearchedUser = function(req, res) {
    //filter['assetOperated'] = { $elemMatch : {$eq: { $regex: term }}};
    filter['assetOperated'] = { $elemMatch : {$eq: term }};
   }*/
+
+  if(req.body.cityName){
+    var cityRegex = new RegExp(req.body.cityName, 'i');
+    filter['user.city'] = {$regex:cityRegex};
+  }
+
+  if(req.body.stateName){
+    var stateRegex = new RegExp(req.body.stateName, 'i');
+    filter['user.state'] = {$regex:stateRegex};
+  }
+
   if(req.body.searchStr){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['assetOperated'] = { $regex: term };
