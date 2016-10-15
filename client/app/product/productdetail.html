@@ -64,7 +64,7 @@
               <legend></legend>
             </div>
             <div class="row">
-              <div class="col-sm-8">
+              <div class="col-sm-12">
                 <div class="video-link">
                   <ul>
                     <li ng-repeat="link in currentProduct.videoLinks">
@@ -76,9 +76,7 @@
                   </ul>
                 </div>
               </div>
-              <div class="col-sm-4">
-                <button class="btn btn-info btn-md" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>
-              </div>
+              
             </div>
              
             <div class="form-group clearfix"></div>
@@ -264,7 +262,7 @@
               </uib-accordion>
               <div class="row">                
                 <div class="col-sm-12">
-                  <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>
+                  
                 </div>
               </div>
 
@@ -440,14 +438,23 @@
                       <h4><i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i> {{totalRent}}</h4>
                     </div>
                     <div class="text-center">
-                      <button type="submit" ng-click="productDetailVm.calculateRent(currentProduct.rent, calRent)" class="btn btn-warning">Calculate Now</button>
+                      <button type="submit" ng-click="productDetailVm.calculateRent(currentProduct.rent, calRent)" class="btn btn-info">Calculate Now</button>
                     </div>
 
                   </div>
                 </div>
               </div>
             </div>
-            <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>
+            
+            <div class="form-group">
+              <button class="btn btn-primary btn-block" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>            
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>              
+            </div>
+            <div class="form-group">
+              <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>           
+            </div>
           </div>
         </div>
       </div>
