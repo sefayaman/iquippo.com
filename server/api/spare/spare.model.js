@@ -22,6 +22,7 @@ var SpareSchema = new Schema({
   commission:Number,
   country:String,
   locations : [{}],
+  madeIn : String,
   productCondition:String,
   images:[{}],
   primaryImg: String,

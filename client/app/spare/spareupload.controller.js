@@ -28,6 +28,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     vm.firstStep = firstStep;
   	vm.secondStep = secondStep;
     vm.onLocationChange = onLocationChange;
+    vm.deleteLocation = deleteLocation;
     vm.paymentSelection = paymentSelection;
 
     vm.onCategoryChange = onCategoryChange;
@@ -38,7 +39,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     vm.deleteImg = deleteImg;
     vm.rotate = rotate;
     vm.addMoreMaster = addMoreMaster;
-
+    
     function addMoreMaster(){
       var tmpObj = {};
       tmpObj.category = {};
@@ -46,23 +47,37 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       tmpObj.model = {};
       vm.spare.spareDetails.push(tmpObj)
     }
+
+    function onLocationChange(city){
+      for(var i = 0;i < vm.spare.locations.length;i++){
+        if(vm.spare.locations[i].city == city){
+          return;
+        }
+      }
+      var locObj = {};
+      var state = LocationSvc.getStateByCity(city);
+      
+      locObj.city = city;
+      locObj.state = state;
+      vm.spare.locations[vm.spare.locations.length] = locObj;
+    }
     
+    function deleteLocation(idx){
+      vm.spare.locations[idx] = {};
+    }
     function clearData(){
 
       vm.spare = {};
       vm.spare.images = [];
       //vm.spare.spareStatuses = [];
       vm.prevAssetStatus = "inactive";
+      vm.spare.madeIn = "India";
       vm.spareStatuses = [];
       vm.spare.paymentOption = [];
       vm.spare.spareDetails = [{category:{},brand:{},model:{}}];
       vm.spare.miscDocuments = [{}];
-      vm.spare.locations = [{}];
-      //vm.spare.city = "";
+      vm.spare.locations = [];
       vm.spare.status = $rootScope.spareStatus[1].code;
-      // vm.spare.spareDetails.category = {};
-      // vm.spare.spareDetails.brand = {};
-      // vm.spare.spareDetails.model = {};
       vm.spare.seller = {};
     }
 
@@ -200,11 +215,6 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       .then(function(res){
         vm.timestamp = new Date().getTime();
       })
-    }
-
-    function onLocationChange(city, index){
-      var state = LocationSvc.getStateByCity(city);
-      vm.spare.locations[index].state = state;
     }
 
     function onRoleChange(userType,noChange){
@@ -471,6 +481,7 @@ function onCategoryChange(idx,noChange){
       vm.spare.user.userType = Auth.getCurrentUser().userType;
       vm.spare.user.mobile = Auth.getCurrentUser().mobile;
       vm.spare.user.email = Auth.getCurrentUser().email;
+      vm.spare.user.country = Auth.getCurrentUser().country;
       vm.spare.user.company = Auth.getCurrentUser().company;
       if($.isEmptyObject(vm.spare.seller)){
         vm.spare.seller = {};

@@ -165,7 +165,7 @@ exports.getSearchedUser = function(req, res) {
 
   console.log("filter", filter);
   //var query = ManpowerUser.find(filter); 
-  var query = ManpowerUser.find(filter); 
+  var query = ManpowerUser.find(filter).sort( { createdAt: -1 } ); 
   query.exec(
                function (err, users) {
                       if(err) { return handleError(res, err); }

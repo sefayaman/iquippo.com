@@ -150,22 +150,16 @@
                           <div class="row">
                             <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
                             <div class="form-group col-sm-3" ng-class="{'has-error': form.location.$invalid && submitted}">
-                              <select class="form-control" name="location" ng-model="loc.city" ng-change="spareVm.onLocationChange(loc.city, $index)" data-index="{{$index}}" required>
+                              <select class="form-control" name="location" ng-model="spareVm.location" ng-change="spareVm.onLocationChange(spareVm.location)" required>
                                 <option value="">Select Location</option>
                                 <option ng-repeat="location in spareVm.locationList" value="{{location.name}}">{{location.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
                             <div class="form-group col-sm-4">
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
-                              <span class="badge">Delhi <i class="fa fa-times"></i></span>
+                              <span class="badge" ng-repeat="loc in spareVm.spare.locations" ng-if="loc.city">{{loc.city}} 
+                              <a href="javascript:void(0);" ng-click="spareVm.deleteLocation($index)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+                              <i class="fa fa-times" ></i></a></span>
                             </div>                            
                           </div>
                           <div class="row">                            
@@ -178,11 +172,11 @@
                                 </div>
                             </div>
                           <div class="row">                            
-                            <div class="col-sm-5 form-group">Made in </div>
-                              <div class="col-xs-6 col-sm-4 form-group">
-                                 <select class="form-control" name="location" ng-model="loc.city" ng-change="spareVm.onLocationChange(loc.city, $index)" data-index="{{$index}}" required>
+                            <div class="col-sm-5 form-group">Made In<span class="text-warning">*</span></div>
+                              <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.madeIn.$invalid && submitted}">
+                                 <select class="form-control" name="madeIn" ng-model="spareVm.spare.madeIn" required>
                                   <option value="">Select Country</option>
-                                  <option ng-repeat="location in spareVm.locationList" value="{{location.name}}">{{location.name}}</option>
+                                  <option ng-repeat="madeIn in allMadeInCountries" value="{{madeIn.name}}">{{madeIn.name}}</option>
                                 </select>
                                 <i class="caret"></i>
                               </div>

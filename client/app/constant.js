@@ -283,6 +283,33 @@ var allCountries = [
 }
 ];
 
+var allMadeInCountries = [
+{
+    "name" : "India",
+    "code" : "IN"
+},
+{
+    "name" : "Canada",
+    "code" : "CA"
+},
+{
+    "name" : "China",
+    "code" : "CN"
+},
+{
+    "name" : "Japan",
+    "code" : "JP"
+},
+{
+    "name" : "United States",
+    "code" : "US"
+},
+{
+    "name" : "Bangladesh",
+    "code" : "BD"
+}
+];
+
 var payableServices = [
 {
   name:"Auction Listing",

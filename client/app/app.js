@@ -74,6 +74,7 @@ angular.module('sreizaoApp',[
     $rootScope.expValue = expValue;
     $rootScope.spareStatus = spareStatus;
     $rootScope.paymentOptions = paymentOptions;
+    $rootScope.allMadeInCountries = allMadeInCountries;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 
