@@ -238,7 +238,7 @@ header{background:#fff;}
 .vendor-list ul{padding:0;}
 .vendor-list ul li{list-style:none;margin-top:10px;}
 .vendor-list ul li a{color:#666;text-decoration:none;}
-.add1{border:1px solid #eee; margin-bottom: 0px;}
+.add1{border:1px solid #eee; margin-bottom: 0px; width: 100%; height: 205px;}
 .add2{width: 100%; height: 100px;}
 
 /*dashboard*/
@@ -860,6 +860,11 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .spareViews {padding: 0; min-height: 240px; margin: 0 -10px;}
 .spareViews li{list-style: none; width: 25%; float: left; position: relative; padding: 15px 10px 2px;}
 .horizontal-crsl.spare-manufacturer img{width: 120px; height: 100px; margin: 0 auto;}
+.ad-btn{position: absolute; top: 25px; right: 100px; z-index: 99;}
+.price-details p{margin-bottom:0;}
+.price-details h4{margin: 1px 0;}
+.spares-arrow .carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev, .spares-arrow .carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {position: absolute;top: -28px;font-size: 18px;box-shadow: none; text-shadow: none;}
+.spares-arrow .carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {left: 798px;}
 .col-item {background: #f0f0f0;}
 .col-item .options-cart-round {
   position:absolute;
@@ -873,7 +878,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
   top:15px;
   z-index: 9;
   padding: 5px; 
-  background: rgba(227,0,15,0.6);
+  background: rgba(0, 67, 148, 0.9);
   color: #fff;
 }
 .col-item .options-cart-round button {
@@ -901,14 +906,14 @@ div#jivo_close_button{position: absolute; right: -20px;}
 }
 .col-item .price-details {
   width: 100%;
-  height: 70px;
-  margin-top: 5px;
+  height: 55px;
+  margin-top: 0;
 }
 .col-item .photo img{
   width: 100%;
   height: 120px;
 }
-.spares-arrow .carousel-control{width: 0%;color:#848282;}
+.spares-arrow .carousel-control{width: 0%;color:#3a3939;}
 .payment-details p{margin-bottom: 0;}
 
 /*stylish radio and checkbox*/

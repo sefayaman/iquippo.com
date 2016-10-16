@@ -44,28 +44,44 @@
                 <h4>Please choose your ad option:</h4>
                 <div class="row">
                   <div class="col-sm-3">
-                      <div class="form-group checkbox">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="leftTop" ng-change="classifiedadVm.resetImages()" id="left-top" ng-model="checked">
+                        <label for="left-top"> Left Bottom </label>
+                    </div>
+                     <!--  <div class="form-group checkbox">
                         <input type="radio" name="rad1" value="leftTop" ng-change="classifiedadVm.resetImages()" id="left-top" ng-model="checked"><label for="left-top">Left Top</label>
                         
-                      </div>
+                      </div> -->
                       
                   </div>
                   <div class="col-sm-3">
-                    <div class="form-group checkbox">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="leftBottom" ng-change="classifiedadVm.resetImages()" id="left-bottom" ng-model="checked">
+                        <label for="left-bottom"> Left Bottom </label>
+                    </div>
+                    <!-- <div class="form-group checkbox">
                         <input type="radio" name="rad1" value="leftBottom" ng-change="classifiedadVm.resetImages()" id="left-bottom" ng-model="checked"><label for="left-bottom">Left Bottom</label>
-                      </div>
+                      </div> -->
                       
                   </div>
                   <div class="col-sm-3">
-                    <div class="form-group checkbox">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked">
+                        <label for="bottom-left"> Bottom Left </label>
+                    </div>
+                   <!--  <div class="form-group checkbox">
                         <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked"><label for="bottom-left">Bottom Left</label>
-                      </div>
+                      </div> -->
                       
                   </div>
                   <div class="col-sm-3">
-                    <div class="form-group checkbox">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked">
+                        <label for="bottom-right"> Left Bottom </label>
+                    </div>
+                    <!-- <div class="form-group checkbox">
                         <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked"><label for="bottom-right">Bottom right</label>
-                      </div>
+                      </div> -->
                       
                   </div>
                 </div>
@@ -131,8 +147,8 @@
               </form>
             </div>
             <div class="modal-footer">
-              <input type="reset" ng-click = "classifiedadVm.reset()" class="btn btn-lg btn-default" ng-if="!edit"></input>
-              <button type="button"  ng-click="classifiedadVm.addOrUpdate()" class="btn btn-lg btn-warning">Submit</button>
+              <input type="reset" ng-click = "classifiedadVm.reset()" class="btn btn-default" ng-if="!edit"></input>
+              <button type="button"  ng-click="classifiedadVm.addOrUpdate()" class="btn btn-warning">Submit</button>
               </div>
 </div>
 <script type="text/ng-template" id="classifiedAdPreview.html">

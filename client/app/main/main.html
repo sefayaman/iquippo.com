@@ -7,8 +7,10 @@
       </uib-slide>
     </uib-carousel>
   </div>
-  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">
-
+  <a href="javascript:void(0);" ng-click="openDialog('classifiedad')" class="ad-btn">
+    <img src="assets/images/ad-button.png">
+  </a>
+  <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">    
     <div class="search-tabs">
 
       <!-- Nav tabs -->
@@ -52,14 +54,7 @@
 
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4 class="panel-title text-center">
-          <a href="javascript:void(0);" ng-click="openDialog('classifiedad')">Place a Classified Ad</a>
-          </h4>
-        </div>
-      </div>
-       
+            
        <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank">
           <img ng-if="mainVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop.src}}" class="img-responsive add1">
        </a>
