@@ -103,10 +103,13 @@
                     </tr>
                     
                   </table>
-
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary btn-block">Buy Now</button>
+                  <div class="">
+                    <button type="button" class="btn btn-danger">Buy Offline</button>
+                    <button type="button" class="btn btn-info">Buy with COD</button>
+                    <button type="button" class="btn btn-primary">Buy Now</button>
+                  </div>
+              </div>              
+            </div>           
 
           </div>
           <div class="col-md-4 padd-left panel-group">
@@ -119,11 +122,12 @@
                   <table class="table table-striped">
                     <tr>
                       <td><i class="fa fa-phone"></i> Phone Number</td>
-                      <td>011 66025672</td>
+                      <td>{{spareDetailVm.currentSpare.seller.mobile}}</td>
+                      
                     </tr>
-                    <tr>
+                    <tr ng-if="spareDetailVm.currentSpare.seller.email">
                       <td><i class="fa fa-envelope"></i> Email</td>
-                      <td>info@iQuippo.com</td>
+                      <td>{{spareDetailVm.currentSpare.seller.email}}</td>
                     </tr>
                   </table>
                     <div class="row">
@@ -183,20 +187,27 @@
                     <span>Method of contact </span>
                     <div class="row">
                       <div class="col-xs-6">
-                        <div class="form-group">
-
-                          <input type="radio" name="contact" ng-model="spareDetailVm.buycontact.contact" value="email"> E-mail
+                        <div class="radio radio-info">
+                            <input type="radio" id="inlineRadio1" name="contact" ng-model="spareDetailVm.buycontact.contact" value="email" checked="">
+                            <label for="inlineRadio1"> E-mail </label>
                         </div>
                       </div>
                       <div class="col-xs-6">
-                        <div class="form-group">
-                          <input type="radio" name="contact" ng-model="spareDetailVm.buycontact.contact" value="mobile"> Phone
+                         <div class="radio radio-info">
+                            <input type="radio" id="inlineRadio2" name="contact" ng-model="spareDetailVm.buycontact.contact" value="mobile">
+                            <label for="inlineRadio2"> Phone </label>
                         </div>
                       </div>
                     </div>
 
-                    <span>Request for finance </span>
-                    <div class="row">                      
+                    <div class="checkbox checkbox-info checkbox-circle">
+                        <input id="checkbox8" type="checkbox" name="interestedIn" ng-model="spareDetailVm.buycontact.interestedIn" ng-true-value="'finance'">
+                        <label for="checkbox8">
+                            Request for finance
+                        </label>
+                    </div>
+                    <!-- <span>Request for finance </span> -->
+                   <!--  <div class="row">                      
                       <div class="col-xs-6">
                         <div class="form-group">
                           <input type="radio" name="interestedIn" ng-model="spareDetailVm.buycontact.interestedIn" value="finance"> Yes
@@ -207,7 +218,7 @@
                           <input type="radio" name="interestedIn" ng-model="spareDetailVm.buycontact.interestedIn" value="buyORrent"> No
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <div ng-if="spareDetailVm.buycontact.interestedIn == 'finance'">
                       <div class="row">
                         <div class="col-xs-6">
