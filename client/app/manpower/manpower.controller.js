@@ -452,7 +452,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
 
     function getAllUsers(){
       var filter = {};
-      filter['status'] = true;
+      //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         vm.allManpowerList = result;
       });
