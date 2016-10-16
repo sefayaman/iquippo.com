@@ -2,7 +2,7 @@
 'use strict';
 angular.module('spare').controller('ViewSpareCtrl', ViewSpareCtrl);
 
-function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth, UtilSvc, cartSvc, spareSvc, categorySvc, LocationSvc, DTOptionsBuilder,Modal,$timeout, ManufacturerSvc) {
+function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth, UtilSvc, CartSvc, spareSvc, categorySvc, LocationSvc, DTOptionsBuilder,Modal,$timeout, ManufacturerSvc) {
   var vm = this;
   vm.spareList = [];
   vm.equipmentSearchFilter = {};
@@ -31,6 +31,7 @@ function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth,
   vm.spareSearchOnPrice = spareSearchOnPrice;
   vm.myFunct = myFunct;
   vm.sortBy = sortBy;
+  vm.addSpareToCart = addSpareToCart;
   vm.sortedSpares = [];
 
   function myFunct(keyEvent) {
@@ -91,7 +92,7 @@ function init(){
   			vm.manufacturerList = result;
   		})
 
-  	getAllSpares();
+  	   getAllSpares();
   		
   	  if($state.current.name == "viewspares"){
        vm.equipmentSearchFilter = {};
@@ -147,6 +148,17 @@ function init(){
     }else{
       $state.go('main');
     }
+  }
+
+ function addSpareToCart(spare){
+    var prdObj = {};
+    prdObj.type = "spare";
+    prdObj.name = spare.name;
+    prdObj.assetDir = spare.assetDir;
+    prdObj._id = spare._id;
+    prdObj.primaryImg = spare.primaryImg
+    prdObj.condition = spare.productCondition;
+    CartSvc.addProductToCart(prdObj);
   }
 
 function getAllSpares(){

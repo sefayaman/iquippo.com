@@ -38,6 +38,7 @@ var SpareSchema = new Schema({
   seller:{},
   isSold:{type:Boolean,default:false},
   assetDir:String,
+  inquiryCounter : {type:Number,default:0},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

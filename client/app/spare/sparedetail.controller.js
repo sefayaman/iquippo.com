@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 angular.module('spare').controller('SpareDetailCtrl', SpareDetailCtrl)
-function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, cartSvc) {
+function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc) {
   var vm = this;
   vm.currentSpare = {};
   vm.buycontact = {};
@@ -10,7 +10,7 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
 
   vm.sendBuyRequest = sendBuyRequest;
   vm.previewProduct = previewProduct;
-  //vm.addSpareToCart = addSpareToCart;
+  vm.addSpareToCart = addSpareToCart;
 
   function loadUserDetail(){
 
@@ -74,75 +74,45 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
     }
   }
 
+  function addSpareToCart(spare){
+    var prdObj = {};
+    prdObj.type = "spare";
+    prdObj.name = spare.name;
+    prdObj._id = spare._id;
+    prdObj.assetDir = spare.assetDir;
+    prdObj.primaryImg = spare.primaryImg
+    prdObj.condition = spare.productCondition;
+    CartSvc.addProductToCart(prdObj);
+  }
+
   function sendBuyRequest(form) {
     if(form.$invalid){
       $scope.submitted = true;
       return;
     }
     var spareObj = {};
-
     spareObj._id = vm.currentSpare._id;
     spareObj.name = vm.currentSpare.name;
     spareObj.partNo = vm.currentSpare.partNo;
+    spareObj.manufacturer = vm.manufacturers.name;
+    spareObj.seller = vm.currentSpare.seller;
+    spareObj.assetDir = vm.currentSpare.assetDir;
+    spareObj.primaryImg = vm.currentSpare.primaryImg;
+    spareObj.city = vm.currentSpare.locations[0].city;
+    spareObj.grossPrice = vm.currentSpare.grossPrice;
+    spareObj.comment = vm.currentSpare.description;
 
-    var dataToSend = {};
-    dataToSend['seller'] = vm.currentSpare.seller;
-    dataToSend.product =  [];
-    dataToSend.product[dataToSend.product.length] = spareObj
-    dataToSend['fname'] =  vm.buycontact.fname;
-    dataToSend['mname'] = vm.buycontact.mname;
-    dataToSend['lname'] = vm.buycontact.lname;
-    dataToSend['country'] = vm.buycontact.country;
-    dataToSend['phone'] = vm.buycontact.phone;
-    dataToSend['mobile'] = vm.buycontact.mobile;
-    dataToSend['email'] = vm.buycontact.email;
-    dataToSend['contact'] = vm.buycontact.contact;
-    dataToSend['message'] = vm.buycontact.message;
-    dataToSend['interestedIn'] = vm.buycontact.interestedIn;
-    if(vm.buycontact.interestedIn == "finance")
-      dataToSend['financeInfo'] = vm.buycontact.financeInfo;
+    vm.buycontact.spares = [];
+    vm.buycontact.spares[vm.buycontact.spares.length] = spareObj;
 
-    $http.post('/api/buyer', dataToSend)
-    .success(function(result) {
-      /*//Start NJ : push toBuyContact object in GTM dataLayer
-      gaMasterObject.toBuyContact.eventLabel = result.product[0].name;
-      dataLayer.push(gaMasterObject.toBuyContact);
-      //End*/
+    if(buycontact.interestedIn != "finance")
+      delete buycontact.financeInfo;
+    BuyContactSvc.submitRequest(vm.buycontact)
+    .then(function(result){
       vm.buycontact = {};
       vm.buycontact.contact = "email";
       vm.buycontact.interestedIn = "buyORrent";
       $scope.submitted = false;
-      var data = {};
-      data['to'] = supportMail;
-      data['subject'] = 'Request for buy a product';
-      var emailDynamicData = {};
-      emailDynamicData['serverPath'] = serverPath;
-      emailDynamicData['fname'] = dataToSend.fname;
-      emailDynamicData['lname'] = dataToSend.lname;
-      emailDynamicData['country'] = dataToSend.country;
-      emailDynamicData['email'] = dataToSend.email;
-      emailDynamicData['mobile'] = dataToSend.mobile;
-      emailDynamicData['message'] = dataToSend.message;
-      emailDynamicData['contact'] = dataToSend.contact;
-      emailDynamicData['product'] = dataToSend.product;
-      if(dataToSend.interestedIn == "finance") {
-        emailDynamicData['interestedIn'] = "Finance Asset";
-        emailDynamicData['financeInfo'] = dataToSend.financeInfo;
-      }
-      else
-        emailDynamicData['interestedIn'] = "Buy/Rent Asset";
-      //emailDynamicData['productName'] = dataToSend.product.name;
-      notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
-
-      if(result.contact == "email") {
-        data['to'] = emailDynamicData.email;
-        data['subject'] = 'No reply: Product Enquiry request received';
-        notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
-      }
-      //productSvc.updateInquiryCounter([spareObj._id]);
-      Modal.alert(informationMessage.buyRequestSuccess,true);
-    }).error(function(res){
-        Modal.alert(res);
     });
   };
 }

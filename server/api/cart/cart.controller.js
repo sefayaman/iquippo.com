@@ -3,6 +3,8 @@
 var _ = require('lodash');
 var Cart = require('./cart.model');
 var Product = require('./../product/product.model');
+var Spare = require('./../spare/spare.model');
+var Seq = require('seq');
 
 // Get list of buyer
 exports.getAll = function(req, res) {
@@ -25,19 +27,71 @@ exports.getOnId = function(req, res) {
 };
 
 function updateCartProduct(cart,res){
-  var ids = [];
+  var prdIds = [];
+  var sparesIds = [];
   cart.products.forEach(function(item){
-    ids[ids.length] = item._id;    
+    if(item.type == "spare")
+        sparesIds[sparesIds.length] = item._id;
+    else
+      prdIds[prdIds.length] = item._id;
   });
-  var filter = {};
-  filter['deleted'] = false;
-  filter['status'] = true;
-  filter['_id'] = {$in:ids};
-  Product.find(filter,function(err,products){
-    if(!err)
-      cart.products = products;
-    return res.json(cart);
+  cart.products = [];
+  Seq()
+  .seq(function(){
+       var self = this;
+      if(prdIds.length == 0){
+        self();
+        return;
+      }
+      var filter = {};
+      filter['deleted'] = false;
+      filter['status'] = true;
+      filter['_id'] = {$in:prdIds};
+      Product.find(filter,function(err,products){
+        if(!err){
+          products.forEach(function(itm){
+              var prdObj = {};
+              prdObj.type = "equipment";
+              prdObj._id = itm._id;
+              prdObj.assetDir = itm.assetDir;
+              prdObj.name = itm.name;
+              prdObj.primaryImg = itm.primaryImg
+              prdObj.condition = itm.productCondition;
+              cart.products[cart.products.length] = prdObj;  
+          })
+          
+        }
+        self();
+      });
+  })
+  .seq(function(){
+    var self = this;
+    if(sparesIds.length == 0){
+       return res.json(cart);
+      }
+      var filter = {};
+      filter['deleted'] = false;
+      filter['status'] = "active";
+      filter['_id'] = {$in:sparesIds};
+      Spare.find(filter,function(err,spares){
+        if(!err){
+          spares.forEach(function(itm){
+              var prdObj = {};
+              prdObj.type = "spare";
+              prdObj._id = itm._id;
+              prdObj.assetDir = itm.assetDir;
+              prdObj.name = itm.name;
+              prdObj.primaryImg = itm.primaryImg
+              prdObj.condition = itm.productCondition;
+              cart.products[cart.products.length] = prdObj;  
+          })
+          
+        }
+        return res.json(cart);
+      });
+
   });
+  
 }
 
 // Creates a new cart in the DB.

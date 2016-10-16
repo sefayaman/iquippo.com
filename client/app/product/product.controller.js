@@ -823,8 +823,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     }
 
     if(createTraction){
-
+      
         paymentTransaction.product = {};
+        paymentTransaction.product.type = "equipment";
         paymentTransaction.product._id = productObj._id;
         paymentTransaction.product.assetId = productObj.assetId;
         paymentTransaction.product.assetDir = productObj.assetDir;

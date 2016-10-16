@@ -1,7 +1,7 @@
-'use strict';
-//  'ngFileUpload'
+(function(){
+  'use strict';
 
-angular.module('sreizaoApp')
+  angular.module('sreizaoApp')
   .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
     return {
       // Add authorization token to headers
@@ -250,7 +250,7 @@ angular.module('sreizaoApp')
       };
       return brandService;
   }])
-.factory("modelSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
+  .factory("modelSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
       var modelService = {};
       var path = '/api/model';
       modelService.getAllModel = getAllModel;
@@ -622,4 +622,61 @@ function updateWallet(couponData){
       })
     }
     return settingSvc;
-}]);
+}])
+.factory("BuyContactSvc",BuyContactSvc);
+  function BuyContactSvc($http,$q,notificationSvc,productSvc,Modal,spareSvc){
+    var path = '/api/buyer';
+
+    var buycontactSvc = {};
+    buycontactSvc.submitRequest = submitRequest;
+
+    function submitRequest(dataToSend){
+      return $http.post(path,dataToSend)
+        .then(function(res) {
+          var data = {};
+          data['to'] = supportMail;
+          data['subject'] = 'Request for buy a product';
+          var emailDynamicData = {};
+          emailDynamicData['serverPath'] = serverPath;
+          emailDynamicData['fname'] = dataToSend.fname;
+          emailDynamicData['lname'] = dataToSend.lname; 
+          emailDynamicData['country'] = dataToSend.country; 
+          emailDynamicData['email'] = dataToSend.email;
+          emailDynamicData['mobile'] = dataToSend.mobile;
+          emailDynamicData['message'] = dataToSend.message;
+          if(dataToSend.contact)
+              emailDynamicData['contact'] = dataToSend.contact;
+
+          emailDynamicData['product'] = dataToSend.product;
+          if(dataToSend.interestedIn == "finance") {
+            emailDynamicData['interestedIn'] = "Finance Asset";
+            emailDynamicData['financeInfo'] = dataToSend.financeInfo;
+          }
+          else
+            emailDynamicData['interestedIn'] = "Buy/Rent Asset";
+
+          notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
+
+          if(res.data.contact == "email") {
+            data['to'] = emailDynamicData.email;
+            data['subject'] = 'No reply: Product Enquiry request received';
+            notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
+          }
+          var ids = [];
+          dataToSend.product.forEach(function(prd){
+            ids[ids.length] = prd._id;
+          });
+          if(ids.length > 0)
+            productSvc.updateInquiryCounter(ids);
+          Modal.alert(informationMessage.buyRequestSuccess,true);
+          return res.data;
+        }).catch(function(res){
+            Modal.alert(res);
+            throw res;
+        });
+    }
+   
+      return buycontactSvc;
+    };
+
+})();

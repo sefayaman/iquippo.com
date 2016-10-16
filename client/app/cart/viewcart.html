@@ -17,20 +17,25 @@
             </thead>
             <tbody>
   
-              <tr ng-repeat="product in cart.products">
+              <tr ng-repeat="product in cartVm.cart.products">
               <td><input type="checkbox" ng-click="cartVm.updateSelection($event,product)" id="product_{{product._id}}"></td>
                 <td class="products-img">
-                  <a ng-href="/productdetail/{{product._id}}">
+                  <a ng-if="product.type == 'spare'" ng-href="/sparedetail/{{product._id}}">
+                    <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" width="50" height="50">
+                  </a>
+                  <a ng-if="product.type == 'equipment'" ng-href="/productdetail/{{product._id}}">
                     <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" width="50" height="50">
                   </a>  
                 </td>
-                <td><!-- {{product.productId}} --></td>
+                <td ng-if="product.type == 'equipment'">Equipment</td>
+                <td ng-if="product.type != 'equipment'">Spare Part</td>
                 <td>{{product.name}}</td>                
                  <td ng-if="product.productCondition == 'new'">New</td>
-                  <td ng-if="product.productCondition != 'new'">Old</td>
+                 <td ng-if="product.productCondition != 'new'">Old</td>
                  <!-- <td>4 days</td> -->
                  <td><a href="javascript:void(0)"  ng-click="cartVm.deleteProductFromCart($index)" class="btn btn-default btn-md"><i class="fa fa-trash"></i></a>
-                 <a ng-href="/productdetail/{{product._id}}" class="btn btn-default btn-md"><i class="fa fa-eye"></i></a>
+                 <a ng-if="product.type == 'spare'"  ng-href="/sparedetail/{{product._id}}" class="btn btn-default btn-md"><i class="fa fa-eye"></i></a>
+                 <a ng-if="product.type == 'equipment'" ng-href="/productdetail/{{product._id}}" class="btn btn-default btn-md"><i class="fa fa-eye"></i></a>
                  </td>
 
              

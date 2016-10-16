@@ -80,6 +80,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
 
 		paymentTransaction.product = {};
+		paymentTransaction.product.type = "equipment";
 		paymentTransaction.product._id = $scope.product._id;
 		paymentTransaction.product.assetId = $scope.product.assetId;
 		paymentTransaction.product.assetDir = $scope.product.assetDir;

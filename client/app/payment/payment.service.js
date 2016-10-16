@@ -83,7 +83,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
       stsObj.createdAt = new Date();
       stsObj.createdAt = Auth.getCurrentUser()._id;
       stsObj.status = toStatus;
-      payTrans.statuses[payTrans.statuses.length] = toStatus;
+      payTrans.statuses[payTrans.statuses.length] = stsObj;
       payTrans.status = toStatus;
       update(payTrans)
       .then(function(result){

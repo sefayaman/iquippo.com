@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var BuyerSchema = new Schema({
   seller: {},
   product: [],
+  spares: [],
   fname: String,
   mname: String,
   lname: String,
@@ -13,6 +14,8 @@ var BuyerSchema = new Schema({
   phone: String,
   mobile: String,
   email: { type: String, lowercase: true },
+  requestType:{type:String,default:'contactinfo'},
+  transactionId:String,
   contact: {
     type: String,
     default: 'email'

@@ -38,7 +38,7 @@ angular.module('sreizaoApp',[
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,cartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -144,6 +144,7 @@ angular.module('sreizaoApp',[
     $rootScope.getCurrentUser = Auth.getCurrentUser;
     $rootScope.openDialog = Modal.openDialog;
     $rootScope.logout = Auth.logout;
+    $rootScope.clearCache = CartSvc.clearCache;
     $rootScope.isProfileIncomplete = Auth.isProfileIncomplete;
     $rootScope.isCustomer = Auth.isCustomer;
     $rootScope.isPartner = Auth.isPartner;
@@ -176,7 +177,7 @@ angular.module('sreizaoApp',[
    Auth.isLoggedInAsync(function(loggedIn){
      if(loggedIn){
          if(Auth.getCurrentUser()._id){
-           cartSvc.getCartData(Auth.getCurrentUser()._id);
+           CartSvc.loadCart();
         }
         if(!Auth.getCurrentUser().status){
           Modal.alert("This account is deactivated by admin.Please contact our support team.");

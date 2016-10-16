@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
-function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, cartSvc) {
+function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc) {
   var vm = this;
   $scope.currentProduct = {};
   $rootScope.currntUserInfo = {};
@@ -176,6 +176,17 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       $scope.totalRent = (Number(rentObj.rateMonths.rentAmountM) * Number(calRent.duration));
   }
 
+  function addProductToCart(product){
+    var prdObj = {};
+    prdObj.type = "equipment";
+    prdObj._id = product._id;
+    prdObj.assetDir = product.assetDir;
+    prdObj.name = product.name;
+    prdObj.primaryImg = product.primaryImg
+    prdObj.condition = product.productCondition;
+    CartSvc.addProductToCart(prdObj);
+  }
+
   function sendBuyRequest(buycontact) {
     var ret = false;
 
@@ -188,65 +199,30 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     productObj._id = $scope.currentProduct._id;
     productObj.name = $scope.currentProduct.name;
     productObj.productId = $scope.currentProduct.productId;
-
-    var dataToSend = {};
-    dataToSend['seller'] = $scope.currentProduct.seller;
-    dataToSend.product =  [];
-    dataToSend.product[dataToSend.product.length] = productObj
-    dataToSend['fname'] =  buycontact.fname;
-    dataToSend['mname'] = buycontact.mname;
-    dataToSend['lname'] = buycontact.lname;
-    dataToSend['country'] = buycontact.country;
-    dataToSend['phone'] = buycontact.phone;
-    dataToSend['mobile'] = buycontact.mobile;
-    dataToSend['email'] = buycontact.email;
-    dataToSend['contact'] = buycontact.contact;
-    dataToSend['message'] = buycontact.message;
-    dataToSend['interestedIn'] = buycontact.interestedIn;
-    if(buycontact.interestedIn == "finance")
-      dataToSend['financeInfo'] = buycontact.financeInfo;
-
-    $http.post('/api/buyer', dataToSend)
-    .success(function(result) {
+    productObj.seller = $scope.currentProduct.seller;
+    productObj.assetDir = item.assetDir;
+    productObj.image = item.primaryImg;
+    productObj.category = item.category.name;
+    productObj.brand = item.brand.name;
+    productObj.model = item.model.name;
+    productObj.subCategory = item.subcategory.name;
+    productObj.city = item.city;
+    productObj.grossPrice = item.grossPrice;
+    productObj.comment = item.comment;
+    buycontact.product = [];
+    buycontact.product[0] = productObj;
+    if(buycontact.interestedIn != "finance")
+      delete buycontact.financeInfo;
+    BuyContactSvc.submitRequest(buycontact)
+    .then(function(result){
       //Start NJ : push toBuyContact object in GTM dataLayer
-      gaMasterObject.toBuyContact.eventLabel = result.product[0].name;
+      gaMasterObject.toBuyContact.eventLabel = $scope.currentProduct.name;
       dataLayer.push(gaMasterObject.toBuyContact);
       //End
       $scope.buycontact = {};
       $scope.buycontact.contact = "email";
       $scope.buycontact.interestedIn = "buyORrent";
       $scope.form.submitted = false;
-      var data = {};
-      data['to'] = supportMail;
-      data['subject'] = 'Request for buy a product';
-      var emailDynamicData = {};
-      emailDynamicData['serverPath'] = serverPath;
-      emailDynamicData['fname'] = dataToSend.fname;
-      emailDynamicData['lname'] = dataToSend.lname;
-      emailDynamicData['country'] = dataToSend.country;
-      emailDynamicData['email'] = dataToSend.email;
-      emailDynamicData['mobile'] = dataToSend.mobile;
-      emailDynamicData['message'] = dataToSend.message;
-      emailDynamicData['contact'] = dataToSend.contact;
-      emailDynamicData['product'] = dataToSend.product;
-      if(dataToSend.interestedIn == "finance") {
-        emailDynamicData['interestedIn'] = "Finance Asset";
-        emailDynamicData['financeInfo'] = dataToSend.financeInfo;
-      }
-      else
-        emailDynamicData['interestedIn'] = "Buy/Rent Asset";
-      //emailDynamicData['productName'] = dataToSend.product.name;
-      notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
-
-      if(result.contact == "email") {
-        data['to'] = emailDynamicData.email;
-        data['subject'] = 'No reply: Product Enquiry request received';
-        notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
-      }
-      productSvc.updateInquiryCounter([productObj._id]);
-      Modal.alert(informationMessage.buyRequestSuccess,true);
-    }).error(function(res){
-        Modal.alert(res);
     });
   };
 
@@ -266,77 +242,6 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     }
 
   }
-
-  function addProductToCart(){
-      if(!Auth.getCurrentUser()._id){
-        Modal.alert(informationMessage.cartLoginError,true);
-        return;
-      }
-      if(!$rootScope.cart){
-        var cart = {};
-        cart.user = {};
-        cart.user['_id'] = Auth.getCurrentUser()._id;
-        cart.user['name'] = Auth.getCurrentUser().fname;
-        cart.products = [];
-        cart.products[cart.products.length] = $scope.currentProduct;
-        cartSvc.createCart(cart)
-        .success(function(res){
-          $rootScope.cart = res;
-            Modal.alert(informationMessage.cartAddedSuccess,true);
-            $rootScope.cartCounter = $rootScope.cart.products.length;
-        })
-        .error(function(res){
-             Modal.alert(informationMessage.cartAddedError,true);
-        })
-
-      }else{
-        var prd = []
-        prd = $rootScope.cart.products.filter(function(d){
-            return d._id === $rootScope.currentProduct._id;
-        });
-        if(prd.length > 0){
-          Modal.alert(informationMessage.productAlreadyInCart,true);
-          return;
-        }
-
-        $rootScope.cart.products[$rootScope.cart.products.length] = $scope.currentProduct;
-
-         cartSvc.updateCart($rootScope.cart)
-        .success(function(res){
-            //Start NJ : Insert Add to cart details in GTM
-            var data = res.products[res.products.length-1];
-            var cardListArray = [];
-            var cardListObject={};
-            gaMasterObject.addToCart.name = data.name;
-            gaMasterObject.addToCart.id = data.productId;
-            gaMasterObject.addToCart.price = data.grossPrice;
-            gaMasterObject.addToCart.brand = data.brand.name;
-            gaMasterObject.addToCart.category = data.category.name;
-            // gaMasterObject.addToCart.metric1 = '1';
-            $.extend(true,cardListObject,gaMasterObject.addToCart );
-            cardListArray.push(cardListObject);
-            dataLayer.push({
-              'event': 'addToCart',
-              'ecommerce': {
-               'currencyCode': 'INR',
-                'add': {
-                // 'actionField': {'list': data.category.name},                               // 'add' actionFieldObject measures.
-                'products': cardListArray
-              }
-            }
-          });
-
-          //End
-
-        //$scope.closeDialog();
-            Modal.alert(informationMessage.cartAddedSuccess,true);
-            $rootScope.cartCounter = $rootScope.cart.products.length;
-        })
-        .error(function(res){
-             Modal.alert(informationMessage.cartAddedError,true);
-        })
-      }
-    }
     /*
     Date: 17/06/2016
     Developer Name: Nishant

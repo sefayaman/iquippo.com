@@ -42,8 +42,7 @@ angular.module('sreizaoApp')
       logout: function() {
         $cookieStore.remove('token');
         currentUser = {};
-         $rootScope.cartCounter = 0;
-        $rootScope.cart = null;
+        $rootScope.clearCache();
       },
 
       /**

@@ -242,7 +242,7 @@
                     <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="spareDetailVm.buycontact.message" placeholder="Comments"></textarea>
                     </div>
-                    <!-- <a class="btn btn-md btn-primary" ng-click="spareDetailVm.addSpareToCart()">Add To Cart</a> -->
+                    <a class="btn btn-md btn-primary" ng-click="spareDetailVm.addSpareToCart(spareDetailVm.currentSpare)">Add To Cart</a>
                     <button type="submit" ng-click="spareDetailVm.sendBuyRequest(form)" class="btn btn-warning pull-right">Send Message</button>
                   </form>
 

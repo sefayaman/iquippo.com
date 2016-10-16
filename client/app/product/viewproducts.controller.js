@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, cartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout) {
   var vm = this;
   $scope.productList = [];
   $scope.equipmentSearchFilter = {};
@@ -144,81 +144,6 @@ function onGroupChange(group){
     dataLayer.push(gaMasterObject.EquipmentSearchProductGroup);
     fireCommand();
   }
-
-
-  function addProductToCart(product){
-
-      if(!Auth.getCurrentUser()._id){
-        Modal.alert(informationMessage.cartLoginError,true);
-        return;
-      }
-      if(!$rootScope.cart){
-        var cart = {};
-        cart.user = {};
-        cart.user['_id'] = Auth.getCurrentUser()._id;
-        cart.user['name'] = Auth.getCurrentUser().fname;
-        cart.products = [];
-        cart.products[cart.products.length] = product;
-        cartSvc.createCart(cart)
-        .success(function(res){
-          $rootScope.cart = res;
-            Modal.alert(informationMessage.cartAddedSuccess,true);
-            $rootScope.cartCounter = $rootScope.cart.products.length;
-        })
-        .error(function(res){
-             Modal.alert(informationMessage.cartAddedError,true);
-        })
-
-      }else{
-        var prd = []
-        prd = $rootScope.cart.products.filter(function(d){
-            return d._id === product._id;
-        });
-        if(prd.length > 0){
-          Modal.alert(informationMessage.productAlreadyInCart,true);
-          return;
-        }
-
-        $rootScope.cart.products[$rootScope.cart.products.length] = product;
-
-         cartSvc.updateCart($rootScope.cart)
-        .success(function(res){
-            //$scope.closeDialog();
-            /*
-            Date: 10/06/2016
-            Developer Name : Nishnat
-            Purpose:insert add to cart event in GTM
-            */
-            var data = res.products[res.products.length-1];
-            var cardListArray = [];
-            var cardListObject={};
-            gaMasterObject.addToCart.name = data.name;
-            gaMasterObject.addToCart.id = data.productId;
-            gaMasterObject.addToCart.price = data.grossPrice;
-            gaMasterObject.addToCart.brand = data.brand.name;
-            gaMasterObject.addToCart.category = data.category.name;
-            // gaMasterObject.addToCart.metric1 = '1';
-            $.extend( true,cardListObject,gaMasterObject.addToCart );
-            cardListArray.push(cardListObject);
-            dataLayer.push({
-              'event': 'addToCart',
-              'ecommerce': {
-               'currencyCode': 'INR',
-                'add': {
-                // 'actionField': {'list': data.category.name},
-                'products': cardListArray
-              }
-            }
-          });
-
-            Modal.alert(informationMessage.cartAddedSuccess,true);
-            $rootScope.cartCounter = $rootScope.cart.products.length;
-        })
-        .error(function(res){
-             Modal.alert(informationMessage.cartAddedError,true);
-        })
-      }
-    }
 
   function onCategoryChange(category,noAction){
       $scope.brandList = [];
@@ -501,6 +426,17 @@ $scope.today = function() {
        $scope.noResult = true;
     }
     
+  }
+
+  function addProductToCart(product){
+    var prdObj = {};
+    prdObj.type = "equipment";
+    prdObj._id = product._id;
+    prdObj.assetDir = product.assetDir;
+    prdObj.name = product.name;
+    prdObj.primaryImg = product.primaryImg
+    prdObj.condition = product.productCondition;
+    CartSvc.addProductToCart(prdObj);
   }
 
   function compare(){

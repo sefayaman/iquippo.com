@@ -3,7 +3,7 @@
 
 angular.module('account').controller('LoginCtrl', LoginCtrl);
 
-  function LoginCtrl($scope, Auth, $location, cartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state) {
+  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state) {
     var vm = this;
     vm.user = {};
     vm.login = login;
@@ -35,7 +35,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
                  //NJ: set currentUser id in sessionStorage and pass into GTM
                   $window.sessionStorage.currentUser = Auth.getCurrentUser()._id;
                   dataLayer.push({'userID': $window.sessionStorage.currentUser});
-                 cartSvc.getCartData(Auth.getCurrentUser()._id);
+                 CartSvc.loadCart();
               }
               if(Auth.isAdmin()){
                 if(!Auth.doNotRedirect)
