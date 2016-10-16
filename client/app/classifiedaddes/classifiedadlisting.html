@@ -25,7 +25,7 @@
                     <th width="20%">Email Id</th>
                     <th>Position</th>
                     <th width="10%">Status</th>
-                    <th width="25%">Action</th>
+                    <th>Action</th>
                    
                   </thead>
                   <tbody>
@@ -44,8 +44,8 @@
                            
                       </td>
                       <td>
-                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="classified.status" uib-btn-checkbox ng-click="classifiedadLstVm.updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
-                        <button class="btn btn-primary" ng-click="classifiedadLstVm.editClassifiedAdd(classified)"><i class="fa fa-edit" ></i></button>
+                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning active-btn" ng-model="classified.status" uib-btn-checkbox ng-click="classifiedadLstVm.updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
+                        <button class="btn btn-primary btn-sm" ng-click="classifiedadLstVm.editClassifiedAdd(classified)"><i class="fa fa-edit" ></i></button>
                       </td> 
                     </tr>
 

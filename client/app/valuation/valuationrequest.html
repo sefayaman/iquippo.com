@@ -17,17 +17,18 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-6 form-group">
+           <!--  <div class="col-sm-6 form-group">
               <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.status" placeholder="Asset Status" disabled>
-            </div>
+            </div> -->
             <div class="col-sm-6 form-group">
               <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.serialNumber" placeholder="Serial Number" disabled>
             </div>
-          </div>
-          <div class="row">
             <div class="col-sm-6 form-group">
               <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.city" placeholder="Asset Location" disabled>
             </div>
+          </div>
+          <div class="row">
+            
             <div class="col-sm-6 form-group" ng-class="{'has-error':form.valagency.$invalid && submitted}">
               <select class="form-control" name="valagency" required ng-model="valuationReqVm.valuationReq.valuationAgency._id">
                 <option value="">Agency Name</option>
@@ -35,9 +36,7 @@
               </select>
               <i class="caret"></i>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6 form-group" ng-class="{'has-error': form.purpose.$invalid && submitted}">
+             <div class="col-sm-6 form-group" ng-class="{'has-error': form.purpose.$invalid && submitted}">
               <select class="form-control" name="purpose" ng-model="valuationReqVm.valuationReq.purpose" required>
                 <option value="">*Select Purpose</option>
                 <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
@@ -45,8 +44,7 @@
               <i class="caret"></i>
             </div>
           </div>
-           
-        
+       
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="valuationReqVm.resetValuationReq()">Reset</button>

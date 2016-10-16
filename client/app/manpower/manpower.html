@@ -28,7 +28,7 @@
           This hand-on-service from getting operators to get the machines running to search a job and also to get trained in it is unique to the iQuippo platform.
         </p>
       </div>
-      <h4>Search Manpower</h4>
+      <h4>Search Manpowers</h4>
       <legend></legend>
       <div class="form-group row search-manpower">
         <div class="col-sm-3">
@@ -37,13 +37,13 @@
             <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
           </select>
           <i class="caret"></i> -->
-          <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Enter Location/State" uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+          <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Location/State" uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
         </div>
         <div class="col-sm-3 padd-left">
           <!-- <div class="search-equip">
           <i class="fa fa-search"></i>
            </div> -->
-          <input type="text" class="form-control" placeholder="Enter Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+          <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
          
         </div>
         <div class="col-sm-3 padd-left">

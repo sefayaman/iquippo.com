@@ -341,23 +341,36 @@
                     <span>Method of contact </span>
                     <div class="row">
                       <div class="col-xs-6">
-                        <div class="form-group">
-
-                          <input type="radio" name="contact" ng-model="buycontact.contact" value="email"> E-mail
+                        <div class="radio radio-info">
+                            <input type="radio" id="inlineRadio1" name="contact" ng-model="buycontact.contact" value="email" checked="">
+                            <label for="inlineRadio1"> E-mail </label>
                         </div>
+                        <!-- <div class="form-group">
+                          <input type="radio" name="contact" ng-model="buycontact.contact" value="email"> 
+                        </div> -->
                       </div>
                       <div class="col-xs-6">
-                        <div class="form-group">
-                          <input type="radio" name="contact" ng-model="buycontact.contact" value="mobile"> Phone
+                       <div class="radio radio-info">
+                            <input type="radio" id="inlineRadio2" name="contact" ng-model="buycontact.contact" value="mobile">
+                            <label for="inlineRadio2"> Phone </label>
                         </div>
+                        <!-- <div class="form-group">
+                          <input type="radio" name="contact" ng-model="buycontact.contact" value="mobile"> Phone
+                        </div> -->
                       </div>
                     </div>
 
-                    <span>Request for finance </span>
-                    <div class="row">                      
+                    <div class="checkbox checkbox-info checkbox-circle">
+                        <input id="checkbox8" type="checkbox" name="interestedIn" ng-model="buycontact.interestedIn" ng-true-value="'finance'">
+                        <label for="checkbox8">
+                            Request for finance
+                        </label>
+                    </div>
+                    
+                   <!--  <div class="row">                      
                       <div class="col-xs-6">
                         <div class="form-group">
-                          <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="finance"> Yes
+                          <input type="radio"  > Yes
                         </div>
                       </div>
                       <div class="col-xs-6">
@@ -365,7 +378,7 @@
                           <input type="radio" name="interestedIn" ng-model="buycontact.interestedIn" value="buyORrent"> No
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                     <div ng-if="buycontact.interestedIn == 'finance'">
                       <div class="row">
                         <div class="col-xs-6">

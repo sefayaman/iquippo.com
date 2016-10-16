@@ -62,7 +62,7 @@
                     <span ng-if="!user.status">Inactive</span>
                   </td>
                   <td ng-show="getCurrentUser().role == 'admin'">
-                    <label  class="btn btn-warning" ng-model="user.status" uib-btn-checkbox ng-click="updateUser(user)" style="width:60%;"><span ng-if="!user.status">Activate</span> <span ng-if="user.status">Deactivate</span></label>
+                    <label  class="btn btn-warning active-btn" ng-model="user.status" uib-btn-checkbox ng-click="updateUser(user)"><span ng-if="!user.status">Activate</span> <span ng-if="user.status">Deactivate</span></label>
                   <button class="btn btn-sm btn-danger" ng-click="deleteUser(user)"><i class="fa fa-trash"></i></button></td>                
                 </tr>
               </tbody>

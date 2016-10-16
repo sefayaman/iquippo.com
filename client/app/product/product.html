@@ -51,7 +51,7 @@
                       <div class="seller_info form-group" ng-if="isActive() || isChannelPartner()">
                         <h3>Seller Information</h3>
                         <div class="row">
-                            <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                            <div class="form-group col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
                               <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
                                 <option value="">* Customer Type</option>
                                 <option value="individual">Individual</option>
@@ -60,7 +60,7 @@
                               </select>
                               <i class="caret"></i>
                             </div>
-                            <div class="col-sm-4 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                            <div class="col-sm-3 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
                               <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
                                     <option value="">* Select User</option>
                                     <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType">{{user.fname}}</option>
@@ -68,25 +68,24 @@
                               <i class="caret"></i>
                     
                             </div>
-                            <div class="col-sm-4 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                            <div class="col-sm-3 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
                               <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
                                     <option value="">* Select Company</option>
                                     <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType">{{user.company}}</option>
                               </select>
                               <i class="caret"></i>
-                            </div>
-                            <div class="col-sm-2 ln">
-                            <a href="/usermanagement">Create User</a>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-sm-4 form-group">
+                            </div>                            
+                         
+                            <div class="col-sm-3 form-group">
                               <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-3 form-group">
                               <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top">
                             </div>
                           </div>
+                          <div class="text-right">
+                            <a href="/usermanagement" class="btn btn-default">Create User</a>
+                            </div>
                           <div class="row col-sm-12 form-group">
                             <p class="help-block cart_item" ng-show="(form.userName.$error.required || form.company.$error.required || form.userType.$invalid) && submitted">
                               Selection of Customer type and User/Company is must to upload your product.
@@ -536,8 +535,8 @@
                             <div class="col-sm-4 col-md-5 form-group">
                               <input type="text" placeholder="Parameter" ng-value="param.key" ng-model="param.key" class="form-control" name="">
                             </div>
-                            <div class="col-sm-4 col-md-4 form-group"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
-                            <div class="col-sm-4 col-md-3 form-group">
+                            <div class="col-sm-5 col-md-5 form-group"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
+                            <div class="col-sm-3 col-md-2 form-group">
                               <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
                               <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
@@ -615,7 +614,7 @@
                              <div class="col-sm-3 form-group">Document Category</div>
 
 
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group">
                               <select class="form-control" ng-model="miscDoc.type">
                                <option value="">Document Type</option>
                                 <option value="Policy">Policy</option>

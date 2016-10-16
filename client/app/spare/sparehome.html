@@ -24,7 +24,7 @@
                   </div>
                 </div>             
                 <div class="col-sm-3 text-center">
-                  <a href="javascript:;"  class="btn btn-warning btn-block" ng-click="spareHomeVm.doSearch()"><i class="fa fa-search"></i> Search</a>
+                  <a href="javascript:;"  class="btn btn-warning btn-block" ng-click="spareHomeVm.doSearch()"><i class="fa fa-search"></i> Search Spares</a>
                 </div>
               </div>
           </form>
@@ -84,31 +84,31 @@
               <h3 class="panel-title"><i class="fa fa-hourglass-2"></i> Spare Snapshots</h3>
             </div>
             <div class="panel-body">
-             <div class="row">
-             <div class="col-sm-6 col-sm-offset-1 assets-uploaded text-center">
+             <div class="row form-group">
+             <div class="col-sm-6 text-center">
               <div class="uploded-asset">
-              <a href="javascript:void(0);">
+              <a href="javascript:void(0);" class="text-danger">
                 <strong>{{spareHomeVm.spareCountObj.active || 0}}</strong>
-                <p>Number of Spares Listed</p>
+                <p>Spares Listed</p>
               </a>
              </div>
              </div>
-             <div class="col-sm-6 assets-listed text-center">
-             <div class="listed-assets">
-              <a href="javascript:void(0);">
+             <div class="col-sm-6 text-center">
+             <div class="uploded-asset">
+              <a href="javascript:void(0);" class="text-info">
                 <strong>{{spareHomeVm.manufacturerList.length || 0}}</strong>
-                <p>Number of Manufacturers Listed</p>
+                <p>Manufacturers</p>
               </a>
              </div>
              </div>
 
              </div>
-             <div class="row sold-top">
-             <div class="col-sm-6 col-sm-offset-3 assets-sold text-center">
-             <div class="sold-assets">
-              <a href="javascript:void(0);">
+             <div class="row">
+             <div class="col-sm-6 col-sm-offset-3 text-center">
+             <div class="uploded-asset">
+              <a href="javascript:void(0);" class="text-success">
                 <strong>{{spareHomeVm.spareCountObj.sold || 0}}</strong>
-                <p>Number of Spares Sold</p>
+                <p>Spares Sold</p>
               </a>
              </div>
              </div>
@@ -120,12 +120,7 @@
                 <h3 class="panel-title"><i class="fa fa-link"></i> Partners</h3>
               </div>
               <div class="panel-body text-center">
-                <div class="form-group">
-                  <a href="http://quippoauctions.com/" target="_blank">
-                    <img src="assets/images/partner-logo-img.jpg">
-                  </a>
-                </div>
-                <hr>
+                
                 <div class="form-group">
                   <a href="http://srei.com/" target="_blank">
                     <img src="assets/images/srei-logo.png" width="100">
