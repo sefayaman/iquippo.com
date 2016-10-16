@@ -111,7 +111,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
     function doSearch(){
       var filter = {};
-      filter['isManpower'] = true;
+      //filter['isManpower'] = true;
       if(vm.manpowerFilter && vm.manpowerFilter.locationText)
         filter['location'] = vm.manpowerFilter.locationText;
       else
@@ -124,6 +124,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         filter['experience'] = vm.manpowerFilter.experience;
       else
         delete vm.manpowerFilter.experience;
+      filter['status'] = true;
 
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         vm.allManpowerUserList = result;
@@ -150,6 +151,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
     function getAllUsers(){
       var filter = {};
+      filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         vm.allManpowerUserList = result;
         if(result.length == 0)
@@ -226,6 +228,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       if(user.city)
         vm.manpower.user.city = user.city;
       vm.manpower.user.state = user.state;
+      vm.manpower.user.country = user.country;
       if(user.imgsrc)
         vm.manpower.user.imgsrc = user.imgsrc; 
       //if(user.password)
@@ -233,13 +236,17 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     }
 
     function saveNewManpowerUser(){
-      vm.manpower.isManpower =  true;    
+      vm.manpower.isManpower =  true; 
+      vm.manpower.country = $rootScope.allCountries[0].name;
+      vm.manpower.status =  false;   
+      $rootScope.loading = true; 
       ManpowerSvc.createUser(vm.manpower).then(function(result) {
         vm.manpower.user = {};
         setManpowerDate(result);
         // if(result && result._id)
         //   vm.manpower.user.userId = result._id;
         ManpowerSvc.createManpower(vm.manpower).then(function(result){
+        $rootScope.loading = false;
         Modal.alert("You have registered successfully");
         var data = {};
         if(vm.manpower.mobile)
@@ -445,7 +452,8 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
 
     function getAllUsers(){
       var filter = {};
-      ManpowerSvc.getAllUser(filter).then(function(result){
+      filter['status'] = true;
+      ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         vm.allManpowerList = result;
       });
     }

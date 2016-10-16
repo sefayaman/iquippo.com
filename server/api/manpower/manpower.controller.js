@@ -74,17 +74,17 @@ function updateUser(userData, userId) {
           dataObj['isManpower'] = false;
       } else if(user.isManpower) {
         if(userData.status) {
-          dataObj['deleted'] = false;
+          //dataObj['deleted'] = false;
           dataObj['isManpower'] = true;
           dataObj['status'] = userData.status;
         } else {
-          dataObj['deleted'] = true;
+          //dataObj['deleted'] = true;
           dataObj['status'] = userData.status;
           dataObj['isManpower'] = false;
         }
       }
     } else {
-      dataObj['deleted'] = false;
+      //dataObj['deleted'] = false;
       dataObj['isManpower'] = true;
       dataObj['status'] = userData.status;
     }
@@ -120,7 +120,8 @@ exports.getConcatCatSubCat = function(req, res) {
 //search based on service type
 exports.getSearchedUser = function(req, res) {
   var filter = {};
-  filter["status"] = true;
+  if(req.body.status)
+    filter["status"] = true;
   filter["deleted"] = false;
   var arr = [];
   if(req.body.location){

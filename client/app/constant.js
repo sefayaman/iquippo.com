@@ -289,16 +289,40 @@ var allMadeInCountries = [
     "code" : "IN"
 },
 {
-    "name" : "Canada",
-    "code" : "CA"
-},
-{
     "name" : "China",
     "code" : "CN"
 },
 {
+    "name" : "Germany",
+    "code" : "DE"
+},
+{
+    "name" : "Singapore",
+    "code" : "SG"
+},
+{
+    "name" : "Taiwan",
+    "code" : "TW"
+},
+{
+    "name" : "Malaysia",
+    "code" : "MY"
+},
+{
     "name" : "Japan",
     "code" : "JP"
+},
+{
+    "name" : "Korea",
+    "code" : "KR"
+},
+{
+    "name" : "Hong Kong",
+    "code" : "HK"
+},
+{
+    "name" : "United Kingdom",
+    "code" : "UK"
 },
 {
     "name" : "United States",
@@ -309,7 +333,6 @@ var allMadeInCountries = [
     "code" : "BD"
 }
 ];
-
 var payableServices = [
 {
   name:"Auction Listing",

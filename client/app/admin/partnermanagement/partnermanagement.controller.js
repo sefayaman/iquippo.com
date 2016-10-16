@@ -97,6 +97,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
         vm.vendorReg.user.city = user.city;
       else
         delete vm.vendorReg.user.city;
+      vm.vendorReg.user.country = user.country;
       if(user.imgsrc)
         vm.vendorReg.user.imgsrc = user.imgsrc; 
       else
@@ -219,6 +220,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       vm.existingUser.phone = userData.user.phone;
     vm.existingUser.city = userData.user.city;
     vm.existingUser.state = userData.state;
+    vm.existingUser.country = userData.country;
     vm.existingUser.imgsrc = userData.user.imgsrc;
     if(userData.user.password && !vm.existFlag)
       vm.existingUser.password = userData.user.password;

@@ -129,8 +129,10 @@ function searchUtil(item,toSearch, type)
     return ( modelName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
       || otherModelName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
   } else if(type == 'location'){
-    var country = item.country + "";
-    return ( item.country.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false ;
+    var cityLoc = item.city + "";
+    var stateLoc = item.state + "";
+    return ( cityLoc.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
+      || stateLoc.toLowerCase().indexOf(toSearch.toLowerCase()) > -1) ? true : false ;
   } else if(type == 'seller'){
     var sellerName = item.seller.fname + "";
     return ( sellerName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false ;

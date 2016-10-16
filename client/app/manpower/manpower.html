@@ -283,7 +283,7 @@
   <div>
     <div class="modal-header">
       <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-      <h4 class="modal-title">Manpower Detail</h4>
+      <h4 class="modal-title"><p><i class="fa fa-user"></i>  {{userData.user.fname}} {{userData.user.lname}}, {{userData.user.city}}</p></h4>
     </div>
     <div class="modal-body manpower-icon">
       <div class="row text-left">
@@ -294,7 +294,6 @@
           </div>
         </div>
         <div class="col-sm-6 man-margin">
-          <p><i class="fa fa-user"></i>  {{userData.user.fname}} {{userData.user.lname}}</p>
           <p ng-if="userData.user.email"> <i class="fa fa-envelope"></i>  {{userData.user.email}}</p>
           <p><i class="fa fa-phone"></i>  {{userData.user.mobile}}</p>
         </div>
@@ -308,14 +307,6 @@
               </div>
               <div class="col-sm-7 form-group">
                 {{userData.work}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-5 form-group">
-                <i class="fa fa-map-marker"></i>  <b>Location :</b>
-              </div>
-              <div class="col-sm-7 form-group">
-                {{userData.user.city}}
               </div>
             </div>
             <div class="row">  

@@ -28,7 +28,6 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     vm.firstStep = firstStep;
   	vm.secondStep = secondStep;
     vm.onLocationChange = onLocationChange;
-    vm.deleteLocation = deleteLocation;
     vm.paymentSelection = paymentSelection;
 
     vm.onCategoryChange = onCategoryChange;
@@ -49,6 +48,9 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     }
 
     function onLocationChange(city){
+      if(!city)
+        return;
+
       for(var i = 0;i < vm.spare.locations.length;i++){
         if(vm.spare.locations[i].city == city){
           return;
@@ -62,9 +64,6 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       vm.spare.locations[vm.spare.locations.length] = locObj;
     }
     
-    function deleteLocation(idx){
-      vm.spare.locations[idx] = {};
-    }
     function clearData(){
 
       vm.spare = {};
@@ -414,6 +413,9 @@ function onCategoryChange(idx,noChange){
       $scope.step2Submitted = true;
       return;
     }
+
+    if(vm.spare.paymentOption.length == 0)
+      vm.spare.paymentOption = $rootScope.paymentOptions[0];
 
     vm.spare.assetDir = vm.assetDir;
     vm.spare.images = [];
