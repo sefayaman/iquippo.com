@@ -104,9 +104,9 @@
                     
                   </table>
                   <div class="text-right">
-                    <button type="button" class="btn btn-danger">Buy Offline</button>
-                    <button type="button" class="btn btn-info">Buy with COD</button>
-                    <button type="button" class="btn btn-primary">Buy Now</button>
+                    <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Offline') != -1" class="btn btn-danger" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'offline')">Buy Offline</button>
+                    <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('COD') != -1" class="btn btn-info" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'cod')">Buy with COD</button>
+                    <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Online') != -1" class="btn btn-primary" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'online')">Buy Now</button>
                   </div>
               </div>              
             </div>           

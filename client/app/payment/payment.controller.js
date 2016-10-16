@@ -31,9 +31,10 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  	vm.enablePayment = false;
 
  	vm.payNow = payNow;
+   vm.confirmPurchase = confirmPurchase;
 
 
- 	//$scope.ccAvenue = false;
+ 	$scope.ccAvenue = false;
 
  	function init(){
 
@@ -54,7 +55,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			vm.payTransaction = result[0];
  			vm.prevStatus = vm.payTransaction.status;
 
- 			if(vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code){
+ 			if(vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code && vm.payTransaction.paymentMode == 'online'){
 	 			PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code)
 	 			.then(function(){
 	 				vm.enablePayment = true;
@@ -72,6 +73,13 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  		LocationSvc.getAllState();
 
  	}
+
+   function confirmPurchase(){
+      PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code)
+      .then(function(){
+         $state.go('paymentresponse',{tid:vm.payTransaction._id});
+      })
+   }
 
  	function payNow(){
 
@@ -121,12 +129,12 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       
       PaymentSvc.encrypt({ 'rawstr' : bodyRequest})
       .then(function(encrytedData){
-      	 //$scope.ccAvenue = true;
+      	 $scope.ccAvenue = true;
       	 var encryptedstr = encrytedData;
          var ccavenueReq = ccavenueURL+"/transaction/transaction.do?command=initiateTransaction&encRequest="+encryptedstr+"&access_code="+ accessCode;
-         $window.location.href = ccavenueReq; 
+         //$window.location.href = ccavenueReq; 
 
-         //$scope.ccavenueURLSCE = $sce.trustAsResourceUrl(ccavenueReq);
+         $scope.ccavenueURLSCE = $sce.trustAsResourceUrl(ccavenueReq);
       })
       .catch(function(err){
       		console.log("##########",err);

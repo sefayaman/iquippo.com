@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var Buyer = require('./buyer.model');
+var Seq = require('seq');
+var PaymentTransaction = require('./../payment/payment.model');
 
 // Get list of buyer
 exports.getAll = function(req, res) {
@@ -73,6 +75,41 @@ exports.destroy = function(req, res) {
     });
   });
 };
+
+exports.buyNow = function(req,res){
+  
+  Seq()
+  .seq(function(){
+    var self = this;
+     PaymentTransaction.create(req.body.payment,function(err,paytm){
+          if(err){return handleError(err,res)}
+          else{
+            req.payTransId = paytm._id;
+            self();     
+          }
+        })
+    })
+   .seq(function(){
+    var self = this;
+    req.body.buyReq.transactionId = req.payTransId + "";
+     Buyer.create(req.body.buyReq,function(err,buyReq){
+          if(err){return handleError(err,res)}
+          else{
+              res.status(200).json({transactionId:req.payTransId});
+          }
+        })
+      });
+}
+
+exports.getOnFilter = function(req,res){
+  var filter = {};
+  if(req.body.transactionId)
+    filter['transactionId'] = req.body.transactionId;
+  Buyer.find(filter,function(err,buyReqs){
+    if(err){return handleError(res,err)}
+     res.status(200).json(buyReqs);
+  });
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

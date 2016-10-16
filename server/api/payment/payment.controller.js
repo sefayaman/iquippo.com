@@ -9,7 +9,8 @@ var trasactionStatuses = ['failed','pending','completed'];
 
 // Get list of payment transaction
 exports.getAll = function(req, res) {
-  Payment.find(function (err, payments) {
+
+  Payment.find({status:{$eq:'listed'}},function (err, payments) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(payments);
   });

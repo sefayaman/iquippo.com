@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc) {
+function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc) {
  	var vm = this;
  	vm.payTransaction = null;
  	vm.enablePayment = false;
@@ -19,16 +19,20 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
- 			if(vm.payTransaction.statusCode == 0)
- 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
- 			else
+ 			if(vm.payTransaction.paymentMode == 'online'){
+	 			if(vm.payTransaction.statusCode == 0)
+	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
+	 			else
  				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[2].code);
-
+ 			}
+ 			
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
  				if(vm.payTransaction.payments[i].type == "auctionreq")
  					getAuctionReqDetail(vm.payTransaction._id);
  				else if(vm.payTransaction.payments[i].type == "valuationreq")
  					getValuatonReqDetail(vm.payTransaction._id);
+ 				else if(vm.payTransaction.payments[i].type == "sparebuy")
+ 					getBuyReqDetail(vm.payTransaction._id);
  			}
 
  		})
@@ -78,6 +82,19 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
 		
  			}
  		});
+ 	}
+
+ 	function getBuyReqDetail(transactionId){
+ 		if(!transactionId)
+ 			return;
+ 		BuyContactSvc.getOnFilter({transactionId : transactionId})
+ 		.then(function(result){
+ 			if(result.length > 0){
+	 			var buyreq = result[0];
+	 			PaymentSvc.sendNotification(vm.payTransaction,buyreq,3);
+ 			}
+ 			
+ 		})
  	}
 
  	init();

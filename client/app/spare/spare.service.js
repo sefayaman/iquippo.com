@@ -2,7 +2,7 @@
  'use strict';
  angular.module("spare").factory("spareSvc",spareSvc);
 
- function spareSvc($http,$rootScope,$q,Auth){
+ function spareSvc($http,$rootScope,$q,Auth,BuyContactSvc,$state){
       var spareService = {};
       var path = '/api/spare';
       
@@ -21,6 +21,7 @@
       spareService.setSearchResult = setSearchResult;
       spareService.getFilter = getFilter;
       spareService.setFilter = setFilter;
+      spareService.buyNow = buyNow;
       
       function getSpareOnId(id,fromServer){
 
@@ -99,7 +100,96 @@
               });
       };
 
-      
+      function buyNow(spare,paymentMode){
+
+        var reqObj = {};
+        reqObj.requestType = "spareBuy";
+        reqObj['fname'] =  Auth.getCurrentUser().fname;
+        reqObj['mname'] = Auth.getCurrentUser().mname;
+        reqObj['lname'] = Auth.getCurrentUser().lname;
+        reqObj['country'] = Auth.getCurrentUser().country;
+        reqObj['phone'] = Auth.getCurrentUser().phone;
+        reqObj['mobile'] = Auth.getCurrentUser().mobile;
+        reqObj['email'] = Auth.getCurrentUser().email;
+        reqObj['contact'] = Auth.getCurrentUser().contact;
+        reqObj.spares = [];
+        var spObj = {};
+        var spareObj = {};
+        spareObj._id = spare._id;
+        spareObj.name = spare.name;
+        spareObj.partNo = spare.partNo;
+        spareObj.manufacturer = spare.manufacturers.name;
+        spareObj.seller = spare.seller;
+        spareObj.assetDir = spare.assetDir;
+        spareObj.primaryImg = spare.primaryImg;
+        if(spare.locations.length > 0)
+          spareObj.city = spare.locations[0].city;
+        if(spare.locations.length > 1)
+          spareObj.city += " ..."
+        spareObj.grossPrice = spare.grossPrice;
+        spareObj.comment = spare.description;
+        reqObj.spares[reqObj.spares.length] = spareObj;
+
+        var paymentTransaction = {};
+        paymentTransaction.paymentMode = paymentMode;
+        paymentTransaction.payments = [];
+        paymentTransaction.totalAmount = 0;
+        paymentTransaction.requestType = "Spare Buy";
+
+        var payObj = {};
+
+        payObj.type = "sparebuy";
+        payObj.charge = spare.grossPrice;
+        paymentTransaction.totalAmount += payObj.charge;
+        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+
+        paymentTransaction.product = {};
+        paymentTransaction.product.type = "spare";
+        paymentTransaction.product._id = spare._id;
+        paymentTransaction.product.partNo = spare.partNo;
+        paymentTransaction.product.assetDir = spare.assetDir;
+        paymentTransaction.product.primaryImage = spare.primaryImg;
+        if(spare.locations.length > 0)
+          paymentTransaction.product.city = spare.locations[0].city;
+        if(spare.locations.length > 1)
+          paymentTransaction.product.city += " ...";
+        paymentTransaction.product.name = spare.name;
+        paymentTransaction.product.manufacturer = spare.manufacturers.name;
+        if(spare.spareDetails.length > 0)
+          paymentTransaction.product.category = spare.spareDetails[0].category.name;
+        if(spare.spareDetails.length > 1)
+          paymentTransaction.product.category += " ...";
+
+        paymentTransaction.product.status = spare.status;
+        paymentTransaction.user = {};
+
+        paymentTransaction.user._id = Auth.getCurrentUser()._id;
+        paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
+        paymentTransaction.user.fname = Auth.getCurrentUser().fname;
+        paymentTransaction.user.city = Auth.getCurrentUser().city;
+        paymentTransaction.user.email = Auth.getCurrentUser().email;
+
+        paymentTransaction.status = transactionStatuses[0].code;
+        paymentTransaction.statuses = [];
+        var sObj = {};
+        sObj.createdAt = new Date();
+        sObj.status = transactionStatuses[0].code;
+        sObj.userId = Auth.getCurrentUser()._id;
+        paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
+        var serObj = {};
+        serObj.buyReq = reqObj;
+        serObj.payment = paymentTransaction; 
+        return BuyContactSvc.buyNow(serObj)
+        .then(function(result){
+          if(result.transactionId)
+            $state.go("payment",{tid:result.transactionId});
+        })
+        .catch(function(err){
+            //error handling
+        })
+
+      }
+
       function addToCache(spare){
         spareCache[spare._id] = spare;
       }

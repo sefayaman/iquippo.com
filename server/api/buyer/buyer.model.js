@@ -14,7 +14,7 @@ var BuyerSchema = new Schema({
   phone: String,
   mobile: String,
   email: { type: String, lowercase: true },
-  requestType:{type:String,default:'contactinfo'},
+  requestType:{type:String,default:'contactInfo'},
   transactionId:String,
   contact: {
     type: String,

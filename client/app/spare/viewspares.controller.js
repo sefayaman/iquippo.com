@@ -32,6 +32,7 @@ function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth,
   vm.myFunct = myFunct;
   vm.sortBy = sortBy;
   vm.addSpareToCart = addSpareToCart;
+  vm.buyNow = buyNow;
   vm.sortedSpares = [];
 
   function myFunct(keyEvent) {
@@ -159,6 +160,10 @@ function init(){
     prdObj.primaryImg = spare.primaryImg
     prdObj.condition = spare.productCondition;
     CartSvc.addProductToCart(prdObj);
+  }
+
+  function buyNow(spare,paymnetMode){
+    spareSvc.buyNow(spare,paymnetMode);
   }
 
 function getAllSpares(){

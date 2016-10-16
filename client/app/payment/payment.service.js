@@ -126,6 +126,10 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
       case 2:
          notificationSvc.sendNotification('valuationListingEmailToCustomer', data, mailData,'email');
         break;
+       case 3:
+        mailData.product.grossPrice = oData.spares[0].grossPrice;
+         notificationSvc.sendNotification('sparePurchaseEmailToCustomer', data, mailData,'email');
+        break;
 
     }
   }

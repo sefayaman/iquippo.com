@@ -113,7 +113,8 @@ function ViewCartCtrl($scope,$rootScope,CartSvc,Auth,Modal,$uibModal,notificatio
             obj.category = item.category.name;
             obj.brand = item.brand.name;
             obj.model = item.model.name;
-            obj.subCategory = item.subcategory.name;
+            if(item.subCategory)
+              obj.subCategory = item.subCategory.name;
             obj.city = item.city;
             obj.comment = item.comment;
             dataToSend.product[dataToSend.product.length] = obj;

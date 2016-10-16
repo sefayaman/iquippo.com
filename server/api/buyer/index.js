@@ -12,5 +12,8 @@ router.put('/:id', controller.update);
 //router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 router.post('/search', controller.search);
+router.post('/buynow', controller.buyNow);
+router.post('/onfilter', controller.getOnFilter);
+
 
 module.exports = router;

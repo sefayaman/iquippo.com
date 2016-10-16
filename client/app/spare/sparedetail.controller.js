@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 angular.module('spare').controller('SpareDetailCtrl', SpareDetailCtrl)
-function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc) {
+function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc) {
   var vm = this;
   vm.currentSpare = {};
   vm.buycontact = {};
@@ -11,6 +11,7 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
   vm.sendBuyRequest = sendBuyRequest;
   vm.previewProduct = previewProduct;
   vm.addSpareToCart = addSpareToCart;
+  vm.buyNow = buyNow;
 
   function loadUserDetail(){
 
@@ -94,7 +95,7 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
     spareObj._id = vm.currentSpare._id;
     spareObj.name = vm.currentSpare.name;
     spareObj.partNo = vm.currentSpare.partNo;
-    spareObj.manufacturer = vm.manufacturers.name;
+    spareObj.manufacturer = vm.currentSpare.manufacturers.name;
     spareObj.seller = vm.currentSpare.seller;
     spareObj.assetDir = vm.currentSpare.assetDir;
     spareObj.primaryImg = vm.currentSpare.primaryImg;
@@ -105,8 +106,8 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
     vm.buycontact.spares = [];
     vm.buycontact.spares[vm.buycontact.spares.length] = spareObj;
 
-    if(buycontact.interestedIn != "finance")
-      delete buycontact.financeInfo;
+    if(vm.buycontact.interestedIn != "finance")
+      delete vm.buycontact.financeInfo;
     BuyContactSvc.submitRequest(vm.buycontact)
     .then(function(result){
       vm.buycontact = {};
@@ -115,5 +116,9 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
       $scope.submitted = false;
     });
   };
+
+  function buyNow(spare,paymentMode){
+    spareSvc.buyNow(spare,paymentMode);
+  }
 }
 })();

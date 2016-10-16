@@ -2,88 +2,145 @@
   <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
 </head>
 <body>
-<table style="width:80%; margin:0 auto;padding:15px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
-	<tr>
-		<td style="height:70px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
-	</tr>
+  <table style="width:80%; margin:0 auto; padding:15px; /* [disabled]font-family:Verdana, Geneva, sans-serif; */ border: 5px solid rgba(128, 128, 128, 0.28);">
     <tr>
-		<td style="font-size:20px; color:#FF4342; padding-bottom:20px;">Hello Support team,</td>	
-	</tr>
-    <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-         This is to notify you that a prospective buyer has shown interest for buying with the following details:
-        </td>
-    </tr>
-    {{#each product}}
-      <tr>
-          <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-           <b>{{productId}}  {{name}}</b>
-          </td>
-      </tr>
-     {{/each}}
-<tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      First name: {{fname}}
-        </td>
-    </tr>
-        <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-     Last name: {{lname}}
-        </td>
-    </tr> 
-        <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Country: {{country}}
-        </td>
-    </tr> 
-    <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Method of contact: {{contact}}
-        </td>
-    </tr>  
-        <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-     Mobile no: {{mobile}}
-        </td>
-    </tr>  
-        <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Email address: {{email}}
-        </td>
-    </tr> 
-    <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Interested in: {{interestedIn}}
-        </td>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
     </tr>
     <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Asset cost: {{financeInfo.assetCost}}
-        </td>
-    </tr> 
-    <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Agency : {{financeInfo.finAgency}}
-        </td>
+      <td style="font-size:20px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear User, </td>
     </tr>
     <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Period in months: {{financeInfo.periodInMonths}}
-        </td>
+      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;" colspan="3">
+        This is to notify you that a perspective {{fname}} has shown interest for buying with the following details :
+        
+      </td>
+    </tr>
+    
+    
+    <tr>
+      <td colspan="3">
+        <table style="width:60%; margin:0 auto;padding:15px; font-family:Verdana, Geneva, sans-serif;">
+          <tr>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Full Name :</strong></td>
+            <td  style="color:#01395c; font-size:13px; padding-bottom:10px;">{{fname}} {{lname}}</td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Country::</strong></td>
+            <td  style="color:#01395c; font-size:13px; padding-bottom:10px;">{{country}}</td>
+          </tr>
+          
+          <tr>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Method of Contact:</strong></td>
+            <td  style="color:#01395c; font-size:13px; padding-bottom:10px;">{{contact}}</td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Mobile No:</strong></td>
+            <td  style="color:#01395c; font-size:13px; padding-bottom:10px;">+91-{{mobile}}</td>
+          </tr>
+          
+          <tr>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Email Address:</strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">{{email}}</td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Interested in:</strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">{{interestedIn}}</td>
+          </tr>
+          {{#if finance}}
+          <tr>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Asset Cost:</strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">{{financeInfo.assetCost}}</td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong><b>Agency:</b> </strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">{{financeInfo.finAgency}}</td>
+          </tr>
+          
+          <tr>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Period in Months:</strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">{{financeInfo.periodInMonths}}</td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Amount:</strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">Rs.{{financeInfo.financeAmount}}</td>
+          </tr>
+          {{/if}}
+          <tr>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Message:</strong></td>
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">{{message}}</td>
+          </tr>
+          
+        </table>
+      </td>
+    </tr>
+    {{#if spares}}
+    <tr>
+      <td style="background-color: #104195;color: #fff;padding: 5px;font-family:Verdana, Geneva, sans-serif;"colspan="3"><strong>Spares</strong></td>
     </tr>
     <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-      Amount: {{financeInfo.financeAmount}}
-        </td>
+      <td colspan="3">
+        {{#each spares}}
+        <div style="background: rgba(204, 204, 204, 0.3); float:left;width:49%; margin-bottom:10px;margin-left:10px">
+          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../serverPath}}/assets/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
+          <div style=" float:left;">
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Spare Part Name:</b> {{name}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Spare Part ID / No:</b> {{partNo}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Manufacturer:</b> {{manufacturer}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Location:</b> {{city}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Price:</b> Rs.{{grossPrice}}
+            </p>
+            <p style="font-size:12px;margin:7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Comments(If any):</b> {{comment}}
+            </p>
+            <a href="{{../serverPath}}/sparedetail/{{_id}}" style="font-size:14px;color:#104295;padding: 1px 30px 0;margin-left:10px;background:#ccc; text-align: center; font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >
+            Click to View </a>
+          </div>
+        </div>
+        {{/each}}
+      </td>
     </tr>
-     
-        <tr>
-        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
-     Message: {{message}}
-			
-        </td>
-    </tr>  
-
-       
- </table>
- </body>
+    
+    <tr>
+      <td height="20">
+      </td>
+    </tr>
+    {{/if}}
+    {{#if product}}
+    <tr>
+      <td style="background-color: #104195;color: #fff;padding: 5px;font-family:Verdana, Geneva, sans-serif;" colspan="3"><strong>Assets</strong></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        {{#each product}}
+        <div style="background: rgba(204, 204, 204, 0.3); float:left;width:49%;margin-bottom:10px;margin-left:10px">
+          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../serverPath}}/assets/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
+          <div style=" float:left;">
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Category :</b>{{category}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Sub-Category:</b>{{subCategory}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Model:</b> {{model}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Price:</b> Rs.{{grossPrice}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Location:</b> {{city}}
+            </p>
+            <p style="font-size:12px;margin:7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Comments(If any):</b> {{comment}}
+            </p>
+            <a href="{{../serverPath}}/productdetail/{{_id}}" style="font-size:14px;color:#104295;padding: 1px 30px 0;margin-left:10px;background:#ccc; text-align: center; font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >
+            Click to View </a>
+          </div>
+        </div>
+        {{/each}}
+      </td>
+    </tr>
+    {{/if}}
+    
+    
+  </table>
+</body>

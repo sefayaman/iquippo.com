@@ -624,11 +624,13 @@ function updateWallet(couponData){
     return settingSvc;
 }])
 .factory("BuyContactSvc",BuyContactSvc);
-  function BuyContactSvc($http,$q,notificationSvc,productSvc,Modal,spareSvc){
+  function BuyContactSvc($http,$q,notificationSvc,productSvc,Modal){
     var path = '/api/buyer';
 
     var buycontactSvc = {};
     buycontactSvc.submitRequest = submitRequest;
+    buycontactSvc.buyNow = buyNow;
+    buycontactSvc.getOnFilter = getOnFilter;
 
     function submitRequest(dataToSend){
       return $http.post(path,dataToSend)
@@ -647,8 +649,13 @@ function updateWallet(couponData){
           if(dataToSend.contact)
               emailDynamicData['contact'] = dataToSend.contact;
 
-          emailDynamicData['product'] = dataToSend.product;
+          if(dataToSend.product && dataToSend.product.length > 0)
+            emailDynamicData['product'] = dataToSend.product;
+           if( dataToSend.spares && dataToSend.spares.length > 0)
+              emailDynamicData['spares'] = dataToSend.spares;
+
           if(dataToSend.interestedIn == "finance") {
+            dataToSend.finance = true;
             emailDynamicData['interestedIn'] = "Finance Asset";
             emailDynamicData['financeInfo'] = dataToSend.financeInfo;
           }
@@ -663,9 +670,12 @@ function updateWallet(couponData){
             notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');
           }
           var ids = [];
-          dataToSend.product.forEach(function(prd){
-            ids[ids.length] = prd._id;
-          });
+          if(dataToSend.product && dataToSend.product.length > 0){
+            dataToSend.product.forEach(function(prd){
+              ids[ids.length] = prd._id;
+            });
+          }
+          
           if(ids.length > 0)
             productSvc.updateInquiryCounter(ids);
           Modal.alert(informationMessage.buyRequestSuccess,true);
@@ -675,8 +685,29 @@ function updateWallet(couponData){
             throw res;
         });
     }
-   
-      return buycontactSvc;
-    };
+
+    function buyNow(serData){
+      return $http.post(path + "/buynow",serData)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
+    }
+
+    function getOnFilter(filter){
+      return $http.post(path + "/onfilter",filter)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
+    }
+  
+    return buycontactSvc;
+
+  };
 
 })();
