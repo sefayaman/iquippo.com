@@ -744,7 +744,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.seller.email = productObj.seller.email;
       
       $scope.valuationReq.initiatedBy = "seller";
-      $scope.valuationReq.purpose = purpose;;
+      $scope.valuationReq.purpose = purpose;
       $scope.valuationReq.product = {};
       $scope.valuationReq.product._id = productObj._id;
       $scope.valuationReq.product.assetId = productObj.assetId;

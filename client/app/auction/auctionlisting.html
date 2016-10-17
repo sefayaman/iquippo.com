@@ -33,7 +33,7 @@
               <!-- <th>EMD Amount</th> -->
               <th>Auction Status</th>
               <th>Valuation Status</th>
-              <th ng-if="isAdmin()">Action</th>
+              <th>Action</th>
              
             </thead>
             <tbody>
@@ -47,13 +47,15 @@
               <!-- <td>{{auts.emdAmount}}</td>               -->
               <td>{{getStatusOnCode(valuationStatuses,auts.valuation.status).name}}</td>              
               <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
-              <td ng-if="isAdmin()">
+              <td>
+                <div ng-if="isAdmin()">
                   <select ng-model="status">
-                    <option value="">Select Status</option>
-                    <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
-                  </select>
-                 <button class="btn btn-success btn-sm" ng-click="auctionListingVm.updateStatus(auts,status)"><i class="fa fa-check"></i></button>
-                 <button class="btn btn-primary" ng-click="auctionListingVm.updateStatus(auts,status)">Pay Now</button>    
+                  <option value="">Select Status</option>
+                  <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
+                </select>
+                  <button class="btn btn-success btn-sm" ng-click="auctionListingVm.updateStatus(auts,status)"><i class="fa fa-check"></i></button>
+                </div>
+                 <a class="btn btn-primary" href="/payment/{{auts.transactionId}}" ng-if="auts.status == 'payment_pending' && auts.user._id == getCurrentUser()._id">Pay Now</a>    
               </td>                
              </tr>
             </tbody>

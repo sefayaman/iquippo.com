@@ -36,20 +36,15 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  			if(result.length == 0){
  				$state.go("main");
  				Modal.alert("Invalid payment access");
+            return;
  			}
 
  			vm.payTransaction = result[0];
  			vm.prevStatus = vm.payTransaction.status;
+         vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
 
- 			if(vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code && vm.payTransaction.paymentMode == 'online'){
-	 			PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code)
-	 			.then(function(){
-	 				vm.enablePayment = true;
-	 			});
- 			}else{
- 				vm.enablePayment = false;
- 			}
-
+ 			if(vm.payTransaction.paymentMode == 'online')
+	 		  PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
  		})
  		.catch(function(err){
  			$state.go("main");
@@ -73,7 +68,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code)
       .then(function(){
          $state.go('paymentresponse',{tid:vm.payTransaction._id});
-      })
+      });
    }
 
  	function payNow(){
