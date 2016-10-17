@@ -227,10 +227,8 @@ exports.exportPayment = function(req,res){
 }
 
 //ccavenue payment keys
-var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // new account test
-//var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // new account production
-//var ccAvenueWorkingKey = "DF2CF283425D194738C2F85DE9ED2657"; // production
-//var ccAvenueWorkingKey = "D6013738094F627ED02C3E99140512D5"; // test
+var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // localhost account test
+//var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com account test
 
 exports.encrypt = function(req,res){
     var m = crypto.createHash('md5');
