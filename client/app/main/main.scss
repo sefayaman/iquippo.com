@@ -52,7 +52,7 @@ a.text-muted{position:absolute; top:7px; right:30px; font-size:18px;}
 .panel-title span i{position:relative; right:5px; font-size:14px;}
 .quote-btn{width: 250px;margin: -33px 0 7px 400px;float: left;}
 .search-tabs .tab-content .form-control,.search-tabs .tab-content .btn{border-radius:2px; height:40px;}
-
+.panel-default .panel-heading{background: #ddd; border-radius: 0;}
 .navbar-toggle{float: left;margin-left: 10px;}
 .navbar-inverse .navbar-toggle{background: #E3000F;border: #E3000F;border-radius: 0;}
 .navbar-inverse .navbar-toggle:hover{background: #E3000F;border: #E3000F;border-radius: 0;}
@@ -70,7 +70,7 @@ a.text-muted{position:absolute; top:7px; right:30px; font-size:18px;}
 .horizontal-crsl .carousel-control{color:#444;}
 .horizontal-crsl .left.carousel-control{left: -60px;}
 .horizontal-crsl .right.carousel-control{right: -60px;}
-.horizontal-crsl img{height: 200px; width: 100%;}
+.horizontal-crsl img{height: 100px; width: 100%;}
 /*ul.verContainer{width:50000px; height:200px;list-style-type:none outside none;padding-left:0px;font-smoothing:antialiased;}
 ul.verContainer li{float: left; width: 272px; display: inline-block !important; margin: 15px 15px 0 0;}
 ul.verContainer li a{}
@@ -759,7 +759,8 @@ table.table{width:100% !important;}
 .label.label-primary{background:#104095;}
 .form-input-width{width: 100%; height:21px;}
 .panel-title,.text-ellips{white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
-
+.text-ellips{font-size: 13px;}
+.description-ellips{max-width: 200px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align:left;}
 /* my account css */
 .back-color .btn{background-color:#3A5795;border:1px solid #3A5795;}
 .back-color1 .btn{background-color: #2CA2EA;border:1px solid #2CA2EA;}
@@ -842,7 +843,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
 /*updated*/
 
 .uploded-asset{background: #f1f1f1; padding: 15px 5px; box-shadow: 1px 2px 3px #ccc; border-radius: 4px;}
-.uploded-asset a{text-decoration: none; display: block;}
+.uploded-asset a{text-decoration: none; display: block;cursor: context-menu;}
 .uploded-asset strong{font-size: 28px;}
 .uploded-asset p{font-size: 13px;}
    
@@ -863,7 +864,8 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .spareViews {padding: 0; min-height: 240px; margin: 0 -10px;}
 .spareViews li{list-style: none; width: 25%; float: left; position: relative; padding: 15px 10px 2px;}
 .horizontal-crsl.spare-manufacturer img{width: 120px; height: 100px; margin: 0 auto;}
-.ad-btn{position: absolute; top: 25px; right: 100px; z-index: 99;}
+.ad-btn{position: absolute; top: 25px; right: 105px; z-index: 99; background: rgba(0,67,148,0.9); border:0; padding: 10px 15px; border-radius: 2px;}
+.ad-btn:focus{background: rgba(0,67,148,0.9) !important;}
 .price-details p{margin-bottom:0;}
 .price-details h4{margin: 1px 0;}
 .spares-arrow .carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev, .spares-arrow .carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {position: absolute;top: -28px;font-size: 18px;box-shadow: none; text-shadow: none;}
