@@ -86,10 +86,9 @@
                     </tr>
                     <tr>
                       <td>Documents</td>
-                      <td>
-                        
-                        <span ng-repeat="miscDoc in spareDetailVm.currentSpare.miscDocuments"> 
-                          <a href="{{uploadImagePrefix}}{{spareDetailVm.currentSpare.assetDir}}/{{miscDoc.name}}" class="" target="_blank" uib-popover="pdf" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
+                      <td>                        
+                        <span ng-repeat="miscDoc in spareDetailVm.currentSpare.miscDocuments" class="document-space"> 
+                          <a href="{{uploadImagePrefix}}{{spareDetailVm.currentSpare.assetDir}}/{{miscDoc.name}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
                         </span>
                       </td>
                     </tr>

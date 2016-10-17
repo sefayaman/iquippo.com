@@ -67,7 +67,12 @@
               <a href="/sparedetail/{{spare._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive">
                   <span class="overlayer"></span><span>{{spare.name}}</span>
+                  <div class="options">                       
+                    <small ng-if="spare.grossPrice && !spare.priceOnRequest"> <i class="fa fa-inr"></i> {{spare.grossPrice}}</small>
+                    <small ng-if="spare.priceOnRequest"> Price On Request</small>                            
+                </div>
               </a>
+
             </li>
           </ul>
           <!-- <div class="show-more">

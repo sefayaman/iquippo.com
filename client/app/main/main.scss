@@ -870,6 +870,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .price-details h4{margin: 1px 0;}
 .spares-arrow .carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev, .spares-arrow .carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {position: absolute;top: -28px;font-size: 18px;box-shadow: none; text-shadow: none;}
 .spares-arrow .carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {left: 798px;}
+.document-space{margin-right: 15px;}
 .col-item {background: #f0f0f0;}
 .col-item .options-cart-round {
   position:absolute;
@@ -877,7 +878,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
   top:20%;
   display:none;
 }
-.col-item .options{
+.cat-list .options, .col-item .options{
   position:absolute;
   right:10px;
   top:15px;
@@ -886,6 +887,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
   background: rgba(0, 67, 148, 0.9);
   color: #fff;
 }
+.cat-list .options{right:0; top: 0px;}
 .col-item .options-cart-round button {
   border-radius: 50%;
   padding:14px 16px;

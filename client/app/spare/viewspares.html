@@ -116,7 +116,7 @@
                           </div>
                           <div class="options">                       
                               <span ng-if="spare.grossPrice && !spare.priceOnRequest"> <i class="fa fa-inr"></i> {{spare.grossPrice}}</span>
-                              <span ng-if="spare.priceOnRequest"> Price Request</span>                            
+                              <span ng-if="spare.priceOnRequest"> Price On Request</span>                            
                           </div>
                           <a href="/sparedetail/{{spare._id}}"> <img src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive" alt="Product Image" /> </a>
                         </div>
@@ -163,7 +163,7 @@
                                 </div>
                                 <div class="options">                       
                                   <span ng-if="slide.grossPrice && !slide.priceOnRequest"> <i class="fa fa-inr"></i> {{slide.grossPrice}}</span>
-                                  <span ng-if="slide.priceOnRequest"> Price Request</span>                                
+                                  <span ng-if="slide.priceOnRequest"> Price On Request</span>                                
                                 </div>
                                 <a href="/sparedetail/{{slide._id}}" >
                                   <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
