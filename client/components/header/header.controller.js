@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http, $location, Auth,$uibModal,Modal,notificationSvc) {
+  .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc) {
 
     $scope.isCollapsed = true;
     var dataToSend = {};
 
-    $scope.isActive = function(route) {
-      return route === $location.path();
+    $scope.isActive = function(states) {
+      return states.indexOf($state.current.name) != -1;//routes === $location.path();
     };
 
     $scope.redirectToProduct = function(){
@@ -33,11 +33,6 @@ angular.module('sreizaoApp')
       Auth.logout();
       $state.go("main");
     };
-
-    $scope.isActive = function(route) {
-      return route === $location.path();
-    };
-
     $scope.openCart = function(){
       if(!Auth.getCurrentUser()._id){
         Modal.alert('please login first to view your cart',true);

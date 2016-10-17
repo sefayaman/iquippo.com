@@ -9,6 +9,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  	vm.enablePayment = false;
  	var valuationReq = null;
  	var auctionReq = null;
+ 	vm.success = true;
 
  	function init(){
  		
@@ -30,8 +31,11 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  			if(vm.payTransaction.paymentMode == 'online'){
 	 			if(vm.payTransaction.statusCode == 0)
 	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
-	 			else
- 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[2].code);
+	 			else{
+	 				vm.success = false;
+	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[2].code);
+	 			}
+ 				
  			}
  			
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
