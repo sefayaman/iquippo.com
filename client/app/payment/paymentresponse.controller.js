@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc) {
+function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
  	var vm = this;
  	vm.payTransaction = null;
  	vm.enablePayment = false;
@@ -11,7 +11,15 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  	var auctionReq = null;
 
  	function init(){
+ 		
  		var tid = $stateParams.tid;
+ 		var tidFromCookie = $cookieStore.get("tid");
+ 		if(!tidFromCookie || tid != tidFromCookie){
+ 			$state.go("main");
+ 			return;
+ 		}
+ 		$cookieStore.remove("tid");
+
  		PaymentSvc.getOnFilter({_id:tid})
  		.then(function(result){
  			if(result.length == 0){

@@ -351,13 +351,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         $http.get(path)
         .then(function(res){
           auctionMasterCache = res.data;
+          var currentTime = new Date().getTime();
           if(auctionMasterCache.length > 0){
             var gpId = auctionMasterCache[0].groupId;
             latestActions = [];
             for(var i= 0;i< auctionMasterCache.length;i++){
               if(gpId != auctionMasterCache[i].groupId)
                   break;
-               latestActions[latestActions.length] = auctionMasterCache[i];
+               var auctionStartTime = new Date(auctionMasterCache[i].startDate).getTime();
+               if(auctionStartTime > currentTime)
+                  latestActions[latestActions.length] = auctionMasterCache[i];
             }
           }
           console.log("#############",latestActions)

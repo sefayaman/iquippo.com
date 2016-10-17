@@ -60,7 +60,8 @@
                     </div>
                   </div>
                   <p ng-if = "paymentVm.payTransaction.paymentMode != 'online'">Your request has been submitted successfully.We will get back to you very soon.</p>
-                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.payTransaction.paymentMode != 'online'" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.payTransaction.paymentMode != 'online' && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button>
                   <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online'" ng-click="paymentVm.payNow()">Proceed to Payment</button>
                 </div>
           </div>

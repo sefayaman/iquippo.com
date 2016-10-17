@@ -216,11 +216,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         if($scope.product.category.name == 'Other')
             $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
 
-        if($state.current.name == "productrelisting") {
-          $scope.relistingEnable = true;
-        } else if($state.current.name == "productedit"){
+        if($state.current.name == "productedit"){
           $scope.enableButton = !Auth.isAdmin() && product.status;
-          $scope.relistingEnable = false;
           $scope.isEdit = true;
         }
         $scope.onTradeTypeChange($scope.product.tradeType);
@@ -545,11 +542,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         return;
       }
 
-       if($state.current.name == "productrelisting") {
-            product.expired = false;
-            product.relistingDate = new Date();
-          }
-
       if($scope.container.selectedSubCategory){
          product.subcategory = {};
          product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
@@ -575,22 +567,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
               imgObj.waterMarked = false;
             $scope.product.images[$scope.product.images.length] = imgObj;
           }
-
-      });
-
-      $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item,idx){
-          if(item && item.uri)
-              return true;
-          else
-            return false;
-
-      });
-
-       $scope.product.miscDocuments = $scope.product.miscDocuments.filter(function(item,idx){
-          if(item && item.name)
-              return true;
-          else
-            return false;
 
       });
 
@@ -659,7 +635,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       return;
     }
 
-    if(product.auctionListing && !$scope.auctionReq.valuationReport && !$scope.valuationReq.valuate)
+    var auctionAvailed = product.auction && product.auction._id?true:false;
+    if(product.auctionListing && !$scope.auctionReq.valuationReport && !$scope.valuationReq.valuate && !auctionAvailed)
     {
       Modal.alert("Valuation report is mandatory for aution listing");
       return;
@@ -848,6 +825,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         sObj.status = transactionStatuses[0].code;
         sObj.userId = Auth.getCurrentUser()._id;
         paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
+        if(Auth.isAdmin())
+          paymentTransaction.paymentMode = "offline";
+        else
+          paymentTransaction.paymentMode = "online";
     }
 
     if(createTraction)
@@ -857,7 +838,24 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   }
 
   function addOrUpdate(cb){
-     if(!$scope.isEdit && !$scope.relistingEnable)
+
+      $scope.product.videoLinks = $scope.product.videoLinks.filter(function(item,idx){
+          if(item && item.uri)
+              return true;
+          else
+            return false;
+
+      });
+
+       $scope.product.miscDocuments = $scope.product.miscDocuments.filter(function(item,idx){
+          if(item && item.name)
+              return true;
+          else
+            return false;
+
+      });
+
+     if(!$scope.isEdit)
           addProduct(cb);
       else
         updateProduct(cb);
@@ -1080,7 +1078,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       prevScope.images = $scope.images;
       prevScope.prefix = $rootScope.uploadImagePrefix;
       prevScope.assetDir = $scope.assetDir;
-      prevScope.isEdit = $scope.isEdit || $scope.relistingEnable;
+      prevScope.isEdit = $scope.isEdit;
       var prvProduct = {};
       angular.copy($scope.product,prvProduct);
       var img = $scope.images[$scope.primaryIndex];

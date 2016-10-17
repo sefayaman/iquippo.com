@@ -40,6 +40,7 @@
                 <th>Serial Number</th>
                 <th>Status</th>
                 <th>Purpose</th>
+                <th>Request Date</th>
                 <th width="10%">Action</th>
                
               </thead>
@@ -53,6 +54,7 @@
                 <td>{{valuation.product.serialNumber}}</td>
                 <td>{{getStatusOnCode(valuationStatuses,valuation.status).name}}</td>
                 <td>{{valuation.purpose}}</td>
+                <td>{{valuation.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>
                   <button class="btn btn-default fileinput-button" ng-if="isPartner()&& (valuation.status == 'request_in_process' || valuation.status == 'request_completed')" uib-popover="Upload" popover-trigger="mouseenter">
                       <span><i class="fa fa-upload"></i></span>

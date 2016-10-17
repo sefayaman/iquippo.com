@@ -104,6 +104,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		sObj.status = transactionStatuses[0].code;
 		sObj.userId = Auth.getCurrentUser()._id;
 		paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
+		paymentTransaction.paymentMode = "online";
 
  		ValuationSvc.save({valuation:vm.valuationReq,payment:paymentTransaction})
  		.then(function(result){

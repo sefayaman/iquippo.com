@@ -3,21 +3,10 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentCtrl',PaymentCtrl);
 
-function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,LocationSvc,$sce,$window) {
+function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,LocationSvc,$sce,$window,$cookieStore) {
  	var vm = this;
-
-   var skipPayment = false;
- 	//production ccavennue crediential merchant id 81564
- 	/*var ccavenueURL = "https://secure.ccavenue.com";
- 	var currentURL = $location.protocol() +"://" + $location.host();
- 	var accessCode = 'AVPB07CK26AS14BPSA'; // SREI*/
-
- 	//dev ccavennue crediential
- 	/*var ccavenueURL = "https://test.ccavenue.com";
- 	var currentURL = "http://iquippo.com";
- 	var accessCode = 'AVFA00CK27AK87AFKA';*/ 
-
-   //new ccavennue crediential
+   
+   //new test ccavennue crediential
    var ccavenueURL = "https://test.ccavenue.com";
    var currentURL = "http://localhost";
    var accessCode = 'AVSW00DJ54AN50WSNA';
@@ -32,16 +21,13 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
 
  	vm.payNow = payNow;
    vm.confirmPurchase = confirmPurchase;
+   vm.confirmPayment = confirmPayment;
 
 
  	$scope.ccAvenue = false;
 
  	function init(){
 
- 		if(!Auth.getCurrentUser()._id){
- 			Modal.alert("It seems you have refreshed the page.");
- 			$state.go("main");
- 		}
  		if(!$stateParams.tid)
  			$state.go("main");
  		var tid = $stateParams.tid;
@@ -75,7 +61,16 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  	}
 
    function confirmPurchase(){
+      $cookieStore.put("tid",vm.payTransaction._id);
       PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code)
+      .then(function(){
+         $state.go('paymentresponse',{tid:vm.payTransaction._id});
+      })
+   }
+
+   function confirmPayment(){
+      $cookieStore.put("tid",vm.payTransaction._id);
+      PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code)
       .then(function(){
          $state.go('paymentresponse',{tid:vm.payTransaction._id});
       })
@@ -121,15 +116,11 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
       bodyRequest += "&merchant_param1="+ encodeURIComponent($location.host());
       bodyRequest += "&merchant_param2="+ vm.payTransaction.user._id;
       bodyRequest += "&merchant_param3=main";
-      //console.log("b###########",bodyRequest);
-      if(skipPayment){
-         $state.go("paymentresponse",{tid:vm.payTransaction._id});
-         return
-      }
       
       PaymentSvc.encrypt({ 'rawstr' : bodyRequest})
       .then(function(encrytedData){
       	 $scope.ccAvenue = true;
+          $cookieStore.put("tid",vm.payTransaction._id);
       	 var encryptedstr = encrytedData;
          var ccavenueReq = ccavenueURL+"/transaction/transaction.do?command=initiateTransaction&encRequest="+encryptedstr+"&access_code="+ accessCode;
          //$window.location.href = ccavenueReq; 
