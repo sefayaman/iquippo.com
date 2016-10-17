@@ -24,6 +24,22 @@ exports.getAll = function(req, res) {
   });
 };*/
 
+exports.statusWiseCount = function(req,res){
+    var filter = {};
+    filter['deleted'] = false;
+    ManpowerUser.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: '$status', count: { $sum: 1 } } 
+    },
+    {$sort:{count:-1}},
+    function (err, result) {
+      if (err) return handleError(err);
+      return res.status(200).json(result);
+    }
+  );
+}
+
 exports.getOnId = function(req, res) {
   console.log("id###",req.params.id);
   ManpowerUser.findOne({'user.userId':req.params.id}, function (err, data) {

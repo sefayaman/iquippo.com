@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -19,6 +19,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.isCollapsed = true;
     vm.sortedFeaturedProduct = [];
     vm.productCountObj = {};
+    vm.spareCountObj = {};
+    vm.manPowerCountObj = {}
 
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
@@ -49,6 +51,29 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       })
 
     }
+
+     function getStatusWiseSpareCount(){
+       spareSvc.getStatusWiseSpareCount()
+      .then(function(result){
+          vm.spareCountObj = result;
+      })
+      .catch(function(res){
+        //error handling
+      });
+
+    }
+
+    function getStatusWiseManPowerCount(){
+       ManpowerSvc.getStatusWiseCount()
+      .then(function(result){
+          vm.manPowerCountObj = result;
+      })
+      .catch(function(res){
+        //error handling
+      });
+
+    }
+
 
     function getCategories(){
       categorySvc.getCategoryForMain()
@@ -125,6 +150,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getActiveClassifiedAd();
     getAllCategories();
     getStatusWiseProductCount();
+    getStatusWiseSpareCount();
+    getStatusWiseManPowerCount();
 
      function myFunct(keyEvent) {
       if(keyEvent)

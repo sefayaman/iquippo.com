@@ -17,6 +17,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
     //manpowerService.updateUser = updateUser;
     manpowerService.createManpower = createManpower;
     manpowerService.updateManpower = updateManpower;
+    manpowerService.getStatusWiseCount = getStatusWiseCount;
     
 
     function getCatSubCatOnFilter(filter){
@@ -85,6 +86,20 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
       .then(function(res){
         manpowerCache = [];
         return res.data;
+      })
+      .catch(function(err){
+        throw err
+      })
+    };
+
+    function getStatusWiseCount(){
+      return $http.post(path + "/statuswisecount", {})
+      .then(function(res){
+        var resObj = {};
+        res.data.forEach(function(item){
+            resObj[item._id] = item.count;
+        });
+        return resObj;
       })
       .catch(function(err){
         throw err
