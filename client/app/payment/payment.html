@@ -60,8 +60,8 @@
                     </div>
                   </div>
                   <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
-                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button>
-                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online'" ng-click="paymentVm.payNow()">Proceed to Payment</button>
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button>
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online'&& !isAdmin()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
                 </div>
           </div>
          <div class="page-wrapper" ng-if="ccAvenue">

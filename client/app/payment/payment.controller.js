@@ -49,7 +49,7 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
          vm.enablePayment = vm.prevStatus != transactionStatuses[5].code && vm.prevStatus != transactionStatuses[3].code?true:false;
 
  			if(vm.payTransaction.paymentMode == 'online')
-	 		  PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
+	 		     PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[1].code);
  		})
  		.catch(function(err){
  			$state.go("main");

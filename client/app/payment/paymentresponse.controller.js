@@ -28,7 +28,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
- 			if(vm.payTransaction.paymentMode == 'online'){
+ 			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin()){
 	 			if(vm.payTransaction.statusCode == 0)
 	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);
 	 			else{

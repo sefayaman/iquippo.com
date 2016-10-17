@@ -2,7 +2,7 @@
  'use strict';
  angular.module("spare").factory("spareSvc",spareSvc);
 
- function spareSvc($http,$rootScope,$q,Auth,BuyContactSvc,$state){
+ function spareSvc($http,$rootScope,$q,Auth,BuyContactSvc,$state,Modal){
       var spareService = {};
       var path = '/api/spare';
       
@@ -101,6 +101,10 @@
       };
 
       function buyNow(spare,paymentMode){
+        if(!Auth.isLoggedIn()){
+          Modal.alert('You need to login to transact on the site.')
+          return;
+        }
 
         var reqObj = {};
         reqObj.requestType = "spareBuy";
