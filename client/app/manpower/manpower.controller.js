@@ -247,7 +247,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         //   vm.manpower.user.userId = result._id;
         ManpowerSvc.createManpower(vm.manpower).then(function(result){
         $rootScope.loading = false;
-        Modal.alert("You have registered successfully");
+        Modal.alert("Thank you for Registering with iQuippo.");
         var data = {};
         if(vm.manpower.mobile)
           data['to'] = vm.manpower.mobile;

@@ -87,7 +87,9 @@
                     
                   </table>
                   <div class="text-right">
-                    <a class="btn btn-md btn-primary" ng-click="spareDetailVm.addSpareToCart(spareDetailVm.currentSpare)">Add To Cart</a>                    
+                    <span ng-repeat="miscDoc in spareDetailVm.currentSpare.miscDocuments"> 
+                      <a href="{{uploadImagePrefix}}{{spareDetailVm.currentSpare.assetDir}}/{{miscDoc.name}}" class="btn" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>  </span>
+                    <a class="btn btn-md btn-primary" ng-click="spareDetailVm.addSpareToCart(spareDetailVm.currentSpare)">Add To Cart</a>               
                   </div>
               </div>              
             </div> 
