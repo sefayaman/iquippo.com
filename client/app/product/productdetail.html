@@ -423,9 +423,9 @@
 
           </div>
           <div class="col-md-3 padd-left">
-            <div ng-if="currentProduct.tradeType != 'SELL' && currentProduct.assetStatus == 'listed'">
-              <div class="panel-group vendor-list">   
-                <div class="panel panel-primary calctr-info">
+            <div>
+              <div class="panel-group vendor-list calctr-info">   
+                <div class="panel panel-primary" ng-if="currentProduct.tradeType != 'SELL' && currentProduct.assetStatus == 'listed'">
                   <div class="panel-heading">
                     <h5 class="panel-title"><i class="fa fa-calculator"></i> Rent Calculation</h5>
                   </div>
@@ -456,18 +456,19 @@
 
                   </div>
                 </div>
+                <div class="from-group clearfix"></div>
+                <div class="form-group">
+                  <button class="btn btn-primary btn-block" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>            
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>              
+                </div>
+                <div class="form-group">
+                  <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>           
+                </div>
               </div>
-            </div>
+            </div>            
             
-            <div class="form-group">
-              <button class="btn btn-primary btn-block" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>            
-            </div>
-            <div class="form-group">
-              <button type="button" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart()">Add to Cart</button>              
-            </div>
-            <div class="form-group">
-              <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>           
-            </div>
           </div>
         </div>
       </div>

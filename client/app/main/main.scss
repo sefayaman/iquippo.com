@@ -38,6 +38,9 @@ a:focus,.btn{outline: none;}
 .btn-warning{background:#e3000f;border:1px solid #fff;border-radius:0;width:180px;}
 .btn-warning.btn-block{width: 100%;}
 .btn-primary{background: #004394; border:1px solid #004394; }
+.btn-danger{background: #e3000f; border:1px solid #e3000f; }
+.btn-info{background: #d8a91a; border-color: #f4bc10;}
+.btn-info:hover{background: #f4bc10; border-color: #d8a91a;}
 .serve .quote-btn{width: 300px;margin: 135px 0 7px 0;float: left;}
 .btn-warning:hover,.btn-warning:focus,.btn-warning.active.focus,.btn-warning.active:focus,.btn-warning.active:hover,.btn-warning.focus:active,.btn-warning:active:focus,.btn-warning:active:hover{background:#E03C3C;border:1px solid #e3000f;}
 .btn{border-radius:0;}
@@ -398,7 +401,7 @@ div[data-role="editor-toolbar"]{-webkit-user-select:none;-moz-user-select:none;-
 .panel-heading.calendar .panel-title{margin-top:5px;}
 .calendar .input-group span i{position:absolute;z-index:5;left:6px;top:8px;}
 .calendar .input-group input{height:30px;padding-left:25px;padding-right:0;}
-#article-photo-carousel .carousel-inner{height:300px;}
+#article-photo-carousel .carousel-inner{height:275px;}
 #article-photo-carousel .carousel-inner  > .item > img{cursor:pointer;}
 .popover.right {margin-left: 9px;width: 250px;}
 table.table thead .sorting_desc::before,table.table thead .sorting_asc::before{content:none;}

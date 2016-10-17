@@ -38,25 +38,8 @@
             </div>
             <div class="form-group clearfix">
               <legend></legend>
-            </div>
-            <!-- <div class="row">
-              <div class="col-sm-8">
-                <div class="video-link">
-                  <ul>
-                    <li ng-repeat="link in spareDetailVm.currentSpare.videoLinks">
-                      <a href="javascript:void(0)" ng-click="productDetailVm.playVideo($index)">
-                        <!-- {{link.uri}} 
-                        <i class="fa fa-youtube-play fa-2x"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-             
-            </div> -->
-             
+            </div>                       
             <div class="form-group clearfix"></div>
-
           </div>
           <div class="col-sm-5 col-md-4 padd-left panel-group">
             <div class="panel panel-primary">
@@ -104,13 +87,16 @@
                     
                   </table>
                   <div class="text-right">
-                    <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Offline') != -1" class="btn btn-danger" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'offline')">Buy Offline</button>
-                    <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('COD') != -1" class="btn btn-info" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'cod')">Buy with COD</button>
-                    <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Online') != -1" class="btn btn-primary" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'online')">Buy Now</button>
+                    <a class="btn btn-md btn-primary" ng-click="spareDetailVm.addSpareToCart(spareDetailVm.currentSpare)">Add To Cart</a>                    
                   </div>
               </div>              
-            </div>           
-
+            </div> 
+            <div class="form-group"></div>          
+            <div class="text-right">              
+              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Offline') != -1" class="btn btn-danger" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'offline')">Buy Offline</button>
+              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('COD') != -1" class="btn btn-info" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'cod')">Buy with COD</button>
+              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Online') != -1" class="btn btn-primary" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'online')">Buy Now</button>
+            </div>
           </div>
           <div class="col-md-4 padd-left panel-group">
              <div class="panel panel-primary">
@@ -205,20 +191,7 @@
                         <label for="checkbox8">
                             Request for finance
                         </label>
-                    </div>
-                    <!-- <span>Request for finance </span> -->
-                   <!--  <div class="row">                      
-                      <div class="col-xs-6">
-                        <div class="form-group">
-                          <input type="radio" name="interestedIn" ng-model="spareDetailVm.buycontact.interestedIn" value="finance"> Yes
-                        </div>
-                      </div>
-                      <div class="col-xs-6">
-                        <div class="form-group">
-                          <input type="radio" name="interestedIn" ng-model="spareDetailVm.buycontact.interestedIn" value="buyORrent"> No
-                        </div>
-                      </div>
-                    </div> -->
+                    </div>                    
                     <div ng-if="spareDetailVm.buycontact.interestedIn == 'finance'">
                       <div class="row">
                         <div class="col-xs-6">
@@ -252,8 +225,7 @@
 
                     <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="spareDetailVm.buycontact.message" placeholder="Comments"></textarea>
-                    </div>
-                    <a class="btn btn-md btn-primary" ng-click="spareDetailVm.addSpareToCart(spareDetailVm.currentSpare)">Add To Cart</a>
+                    </div>                    
                     <button type="submit" ng-click="spareDetailVm.sendBuyRequest(form)" class="btn btn-warning pull-right">Send Message</button>
                   </form>
 

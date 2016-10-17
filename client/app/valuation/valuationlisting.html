@@ -41,7 +41,7 @@
                 <th>Status</th>
                 <th>Purpose</th>
                 <th>Request Date</th>
-                <th width="10%">Action</th>
+                <th width="15%">Action</th>
                
               </thead>
               <tbody>
@@ -67,6 +67,7 @@
 
                   <a class="btn btn-success btn-md" ng-if="valType =='received' && valuation.status == 'request_listed'" ng-click="valuationListingVm.updateStatus(valuation,'request_submitted','request_approved')" uib-popover="Approved" popover-trigger="mouseenter"><i class="fa fa-check"></i> </a>
                   <a class="btn btn-default btn-md" href="/download/{{valuation.product.assetId}}/{{valuation.report}}" ng-if="valuation.report && valuation.status == 'request_completed'" uib-popover="Download" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
+                  <button class="btn btn-primary" ng-click="auctionListingVm.updateStatus(auts,status)">Pay Now</button>
                 </td>
                
                </tr>
