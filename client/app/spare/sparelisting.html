@@ -112,10 +112,10 @@
                     <!-- <td>{{product.images.length}}</td> -->
                     <td>{{spare.status | uppercase}}</td>
                     <td>
-                      <a href="javascript:void(0);" ng-disabled="product.isSold" ng-click="spareListingVm.spareEditHandler(spare)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+                      <a href="javascript:void(0);" ng-disabled="spare.isSold" ng-click="spareListingVm.spareEditHandler(spare)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
                         <i class="fa fa-pencil"></i>
                       </a>
-                      <button class="btn btn-danger btn-sm" ng-disabled="product.isSold" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="spareListingVm.deleteSpare(spare)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
+                      <button class="btn btn-danger btn-sm" ng-disabled="spare.isSold" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="spareListingVm.deleteSpare(spare)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
 
                       </button>
                     </td>
