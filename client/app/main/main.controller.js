@@ -230,8 +230,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         products.forEach(function(item){
             vm.sortedFeaturedProduct[rowCounter][colCounter] = item;
             colCounter ++;
-            var totalCounter = (rowCounter +1)*4;
-            if(colCounter == 4 && totalCounter < products.length){
+            var totalCounter = (rowCounter +1)*6;
+            if(colCounter == 6 && totalCounter < products.length){
                 colCounter = 0;
                 vm.sortedFeaturedProduct[vm.sortedFeaturedProduct.length] = [];
                 rowCounter++;
