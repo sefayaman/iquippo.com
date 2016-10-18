@@ -227,8 +227,8 @@ exports.exportPayment = function(req,res){
 }
 
 //ccavenue payment keys
-var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // localhost account test
-//var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com account test
+//var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // localhost account test
+var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com account test
 
 exports.encrypt = function(req,res){
     var m = crypto.createHash('md5');
