@@ -28,34 +28,36 @@
           This hand-on-service from getting operators to get the machines running to search a job and also to get trained in it is unique to the iQuippo platform.
         </p>
       </div>
-      <h4>Search Manpowers</h4>
-      <legend></legend>
-      <div class="form-group row search-manpower">
-        <div class="col-sm-3">
-        <!-- <select class="form-control" name="location" ng-model="manpowerVm.manpowerFilter.locationText" ng-change="manpowerVm.doSearch()">
-            <option value="">Select Location</option>
-            <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-          </select>
-          <i class="caret"></i> -->
-          <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Location/State" uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
-        </div>
-        <div class="col-sm-3 padd-left">
-          <!-- <div class="search-equip">
-          <i class="fa fa-search"></i>
-           </div> -->
-          <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
-         
-        </div>
-        <div class="col-sm-3 padd-left">
-          <select class="form-control" name="experienceValue" ng-model="manpowerVm.experienceValue" ng-change="manpowerVm.onExpRangeChange(manpowerVm.experienceValue)">
-            <option value="" >Experience</option>
-            <option ng-repeat="experienceValue in expValue" value="{{experienceValue.value}}">{{experienceValue.name}}</option>
-          </select>
-              <i class="caret"></i>
-        </div>
-        <div class="col-sm-3 padd-left">
-        <button type="button" class="btn btn-warning btn-block" ng-click="manpowerVm.doSearch()">
-         <i class="fa fa-search"></i> Search</button>
+      <div ng-if="!isLoggedIn()">
+        <h4>Search Manpower</h4>
+        <legend></legend>
+        <div class="form-group row search-manpower">
+          <div class="col-sm-3">
+            <select class="form-control" name="experienceValue" ng-model="manpowerVm.experienceValue" ng-change="manpowerVm.onExpRangeChange(manpowerVm.experienceValue)">
+              <option value="" >Experience</option>
+              <option ng-repeat="experienceValue in expValue" value="{{experienceValue.value}}">{{experienceValue.name}}</option>
+            </select>
+                <i class="caret"></i>
+          </div>
+          <div class="col-sm-3  padd-left">
+          <!-- <select class="form-control" name="location" ng-model="manpowerVm.manpowerFilter.locationText" ng-change="manpowerVm.doSearch()">
+              <option value="">Select Location</option>
+              <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+            </select>
+            <i class="caret"></i> -->
+            <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Location/State" uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+          </div>
+          <div class="col-sm-3 padd-left">
+            <!-- <div class="search-equip">
+            <i class="fa fa-search"></i>
+             </div> -->
+            <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+           
+          </div>          
+          <div class="col-sm-3 padd-left">
+          <button type="button" class="btn btn-warning btn-block" ng-click="manpowerVm.doSearch()">
+           <i class="fa fa-search"></i> Search</button>
+          </div>
         </div>
       </div>
 
@@ -77,6 +79,38 @@
           <h4 class="text-center">No data found.</h4>
         </div>
       </div>
+    </div>
+    <div class="col-sm-offset-1 col-sm-4 padd-right" ng-if="isLoggedIn()">
+      <h3>Search Manpower</h3>
+      <legend></legend>
+      <div class="form-group row search-manpower" >
+        <div class="col-sm-12 form-group">
+          <select class="form-control" name="experienceValue" ng-model="manpowerVm.experienceValue" ng-change="manpowerVm.onExpRangeChange(manpowerVm.experienceValue)">
+            <option value="" >Experience</option>
+            <option ng-repeat="experienceValue in expValue" value="{{experienceValue.value}}">{{experienceValue.name}}</option>
+          </select>
+              <i class="caret"></i>
+        </div>
+        <div class="col-sm-12 form-group">
+        <!-- <select class="form-control" name="location" ng-model="manpowerVm.manpowerFilter.locationText" ng-change="manpowerVm.doSearch()">
+            <option value="">Select Location</option>
+            <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+          </select>
+          <i class="caret"></i> -->
+          <input type="text" class="form-control" ng-model="manpowerVm.manpowerFilter.locationText" placeholder="Location/State" uib-typeahead="address for address in manpowerVm.getLocationHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+        </div>
+        <div class="col-sm-12 form-group">
+          <!-- <div class="search-equip">
+          <i class="fa fa-search"></i>
+           </div> -->
+          <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+         
+        </div>  
+      </div>
+      <div class="form-group text-right">
+        <button type="button" class="btn btn-warning" ng-click="manpowerVm.doSearch()">
+         <i class="fa fa-search"></i> Search</button>
+        </div>
     </div>
     <div class="col-sm-5 padd-right manpower-register" ng-if="!isLoggedIn()">
       <div class="form-group"></div>
@@ -200,12 +234,17 @@
                         </select>
                     </div>
                   </div> 
-                  <div class="row">
+                  <div class="row form-group">
                     <div class="col-sm-12">
                       <textarea class="form-control" placeholder="Enter Notes" rows="5" name="notes" ng-model="manpowerVm.manpower.notes"></textarea>
                     </div>
                   </div>
-                              
+                  <div class="row">
+                    <div class="col-sm-12 form-group text-left">
+                      <input type="checkbox" name="agree" ng-model="quote.agree" value=""> I Agree to the 
+                      <a href="/privacy" ng-click="closeDialog()" aria-hidden="true" target="_blank">Terms &amp; Conditions.</a>
+                    </div>
+                  </div>         
                 </div>
 
                 <div class="modal-footer">
