@@ -130,7 +130,7 @@
                         </div>
                         <div class="btn-group">
                           <a href="/sparedetail/{{spare._id}}" class="btn btn-default" >View Details</a>
-                          <a href="javascript:void(0);" class="btn btn-default" ng-disabled="spare.priceOnRequest || spare.paymentOption.indexOf('Online') == -1" ng-click="viewSpareVm.buyNow(spare,'online')">Buy Now</a>
+                          <a href="javascript:void(0);" class="btn btn-default" ng-disabled="spare.priceOnRequest || spare.paymentOption.indexOf('Online') == -1 || isAdmin()" ng-click="viewSpareVm.buyNow(spare,'online')">Buy Now</a>
                         </div>
                         </article> 
                       </li>
@@ -179,7 +179,7 @@
                             </div>
                             <div class="btn-group">
                               <a href="/sparedetail/{{slide._id}}" class="btn btn-default" >View Details</a>
-                              <a href="javascript:void(0);" class="btn btn-default" ng-disabled="slide.priceOnRequest || slide.paymentOption.indexOf('Online') == -1" ng-click="viewSpareVm.buyNow(slide,'online')">Buy Now</a>
+                              <a href="javascript:void(0);" class="btn btn-default" ng-disabled="slide.priceOnRequest || slide.paymentOption.indexOf('Online') == -1 || isAdmin()" ng-click="viewSpareVm.buyNow(slide,'online')">Buy Now</a>
                             </div>
                             </article> 
                           </li> 

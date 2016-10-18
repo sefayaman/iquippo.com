@@ -8,7 +8,7 @@
           <div id="page-wrapper">
             <!-- Page Heading -->
               <div class="row">
-                <div class="col-lg-12" ng-if="paymentResponseVm.success">
+                <div class="col-lg-12" ng-if="paymentResponseVm.success && paymentResponseVm.payTransaction.paymentMode == 'online'">
                     <div class="payment-icon text-center">
                        <i class="fa fa-check-circle-o fa-5x text-success" aria-hidden="true"></i>
                        <h2 class="text-success">
@@ -21,6 +21,37 @@
                       <h4>
                           You will be hear from us within 1-2 days..
                           
+                      </h4>
+                    </div>
+                </div>
+                 <div class="col-lg-12" ng-if="paymentResponseVm.success && paymentResponseVm.payTransaction.paymentMode == 'cod'">
+                    <div class="payment-icon text-center">
+                       <i class="fa fa-check-circle-o fa-5x text-success" aria-hidden="true"></i>
+                       <h2 class="text-success">
+                         Thank you for placing your order with iQuippo.com.
+                      </h2>
+                      <h4>
+                         You have chosen to pay by Cash on Delivery. You will hear from our executives on your request soon.
+
+                      </h4>
+                      <h4>
+                         Happy Shopping!
+                          
+                      </h4>
+                    </div>
+                </div>
+                 <div class="col-lg-12" ng-if="paymentResponseVm.success && paymentResponseVm.payTransaction.paymentMode == 'offline'">
+                    <div class="payment-icon text-center">
+                       <i class="fa fa-check-circle-o fa-5x text-success" aria-hidden="true"></i>
+                       <h2 class="text-success">
+                        Thank you for placing your order with iQuippo.com.
+                      </h2>
+                      <h4>
+                         You have chosen to pay Offline. You will hear from our executives on your request soon and your order will be processed on payment confirmation..
+
+                      </h4>
+                      <h4>     
+                          Happy Shopping!
                       </h4>
                     </div>
                 </div>

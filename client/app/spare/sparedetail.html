@@ -101,10 +101,10 @@
               </div>              
             </div> 
             <div class="form-group"></div>          
-            <div class="text-right">              
-              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Offline') != -1" class="btn btn-danger" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'offline')">Buy Offline</button>
-              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('COD') != -1" class="btn btn-info" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'cod')">Buy with COD</button>
-              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Online') != -1" class="btn btn-primary" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'online')">Buy Now</button>
+            <div class="text-right" ng-if="!isAdmin()">              
+              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Offline') != -1" class="btn btn-danger" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'offline')">Offline</button>
+              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('COD') != -1" class="btn btn-info" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'cod')">Cash on delivery</button>
+              <button type="button" ng-if="spareDetailVm.currentSpare.paymentOption.indexOf('Online') != -1" class="btn btn-primary" ng-click="spareDetailVm.buyNow(spareDetailVm.currentSpare,'online')">Online</button>
             </div>
           </div>
           <div class="col-md-4 padd-left panel-group">
