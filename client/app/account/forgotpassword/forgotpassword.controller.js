@@ -43,7 +43,7 @@ function ForgotPasswordCtrl($scope, Auth,$rootScope,$uibModal,$uibModalInstance,
               Modal.alert('OTP has been sent successfully!',true);
             })
             .catch(function(res){
-                Modal.alert(res,true);
+                 Modal.alert("Error occured in sending OTP.Please try again.",true);
             })
 
           }else{

@@ -1,0 +1,14 @@
+<form>
+    <div class="form-group">
+        <input id="tokenfield" type="text" class="form-control" ng-model="replyVM.parentmess.from" placeholder="To" />
+    </div>
+    <div class="form-group">
+        <textarea class="form-control" ng-model="replyVM.mess" placeholder="message"></textarea>
+    </div>
+    
+    <div class="btn-send">
+    	<button ng-click="doSend()" class="btn btn-success btn-md pull-right"><span class="fa fa-send"></span> Send</button>
+        <button ui-sref="mailhome.inbox" class="btn btn-danger btn-md pull-right"><span class="fa fa-send"></span> Cancel</button>
+    </div>
+</form>
+

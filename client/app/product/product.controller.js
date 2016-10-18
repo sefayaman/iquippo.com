@@ -56,7 +56,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   $scope.rotate = rotate;
   $scope.playVideo = playVideo;
   $scope.firstStep = firstStep;
-  $scope.secondStep = secondStep; 
+  $scope.secondStep = secondStep;
+  $scope.goToUsermanagement = goToUsermanagement; 
 
   function productInit(){
 
@@ -88,6 +89,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.valuationReq = {};
     $scope.valuationReq.valuationAgency = {};
     $scope.auctionReq = {};
+  }
+
+  function goToUsermanagement(){
+    $state.go('usermanagment');
+    $timeout(function() { Modal.openDialog('adduser');}, 20);
   }
 
   productInit();
