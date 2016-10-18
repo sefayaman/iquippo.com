@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
-function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc) {
+function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, CartSvc, BuyContactSvc, userSvc) {
   var vm = this;
   $scope.currentProduct = {};
   $rootScope.currntUserInfo = {};
@@ -95,6 +95,24 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
             Auth.postLoginCallback = loadUserDetail;
         }
      });
+
+     if($rootScope.getCurrentUser().role != 'admin'){
+      var filter = {};
+      filter.status = true;
+      filter.role = 'admin';
+      userSvc.getUsers(filter).then(function(data){
+        data.forEach(function(item){
+          $scope.adminEmail = item.email;
+          $scope.adminMobile = item.mobile;
+        });
+      })
+      .catch(function(err){
+        Modal.alert("Error in getting user data");
+      });
+     } else {
+        $scope.adminEmail = $rootScope.getCurrentUser().email;
+        $scope.adminMobile = $rootScope.getCurrentUser().mobile;
+     }
 
     if($stateParams.id) {
       productSvc.getProductOnId($stateParams.id).then(function(result){

@@ -49,6 +49,8 @@ exports.validate = function(req, res){
           if(req.body.userid)
             filter['_id'] = {$ne:req.body.userid}; 
           filter['email'] = req.body.email;
+          if(req.body.isPartner)
+            filter['isPartner'] = req.body.isPartner;
           filter['deleted'] = false;
           User.find(filter,function(err,users){
              if(err){ return handleError(res, err); }
