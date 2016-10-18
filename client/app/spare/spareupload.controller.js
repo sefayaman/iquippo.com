@@ -38,6 +38,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     vm.deleteImg = deleteImg;
     vm.rotate = rotate;
     vm.addMoreMaster = addMoreMaster;
+    vm.goToUsermanagement = goToUsermanagement;
     
     function addMoreMaster(){
       var tmpObj = {};
@@ -45,6 +46,11 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       tmpObj.brand = {};
       tmpObj.model = {};
       vm.spare.spareDetails.push(tmpObj)
+    }
+
+    function goToUsermanagement(){
+      $state.go('usermanagment');
+      $timeout(function() { Modal.openDialog('adduser');}, 20);
     }
 
     function onLocationChange(city){
