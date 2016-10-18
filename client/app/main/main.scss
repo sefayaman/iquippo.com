@@ -15,7 +15,7 @@ body{top:0 !important;}
 #static-banner img{height: 380px;}
 .static-search-banner{position: absolute; bottom: 0; padding: 20px 0; width: 100%; background: rgba(0,0,0,0.6); z-index: 10;}
 .static-search-banner .spare-content{position: relative; z-index: 10; }
-.static-search-banner .spare-content .btn{height: 40px; padding: 10px;}
+.static-search-banner .spare-content .btn{height: 40px; padding: 7px 10px; font-size: 18px;}
 .overlay{position:absolute; background:rgba(0,0,0,0.2); height:380px; z-index:10; width:100%;}
 .goog-te-gadget-simple{border:transparent !important;}
 .goog-tooltip.skiptranslate{display:none !important;}
@@ -39,8 +39,8 @@ a:focus,.btn{outline: none;}
 .btn-warning.btn-block{width: 100%;}
 .btn-primary{background: #004394; border:1px solid #004394; }
 .btn-danger{background: #e3000f; border:1px solid #e3000f; }
-.btn-info{background: #d8a91a; border-color: #f4bc10;}
-.btn-info:hover{background: #f4bc10; border-color: #d8a91a;}
+.btn-info:hover,.btn-info:focus{background: #d8a91a; border-color: #f4bc10;}
+.btn-info{background: #f4bc10; border-color: #d8a91a;}
 .serve .quote-btn{width: 300px;margin: 135px 0 7px 0;float: left;}
 .btn-warning:hover,.btn-warning:focus,.btn-warning.active.focus,.btn-warning.active:focus,.btn-warning.active:hover,.btn-warning.focus:active,.btn-warning:active:focus,.btn-warning:active:hover{background:#E03C3C;border:1px solid #e3000f;}
 .btn{border-radius:0;}
@@ -887,7 +887,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
   background: rgba(0, 67, 148, 0.9);
   color: #fff;
 }
-.cat-list .options{right:0; top: 0px;}
+.cat-list .options{right:0; top: 0px; padding: 2px 8px; font-size: 13px;}
 .col-item .options-cart-round button {
   border-radius: 50%;
   padding:14px 16px;
