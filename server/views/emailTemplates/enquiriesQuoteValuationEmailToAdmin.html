@@ -174,6 +174,10 @@
                         <td >Asset Location</td><td >{{product.city}}</td>
                         <td >Description:</td><td >{{product.descripton}}</td>
                    </tr>
+                   <tr>
+                        <td >Contact Person</td><td >{{#if product.contactPersonAsAbove}}<span>Same As Above</span>{{else}}<span>{{product.contactPerson}}</span>{{/if}}</td>
+                        <td >Contact Number</td><td >{{#if product.contactNumberAsAbove}}<span>Same As Above</span>{{else}}<span>{{product.contactNumber}}</span>{{/if}}</td>
+                   </tr>
                    </table>
                    </td>
                    </tr>     

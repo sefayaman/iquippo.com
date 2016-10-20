@@ -1184,10 +1184,11 @@ exports.updatePaymentMaster = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
   var filter = {};
-  filter['code'] = req.body.code;
+  filter['serviceCode'] = req.body.serviceCode;
   if(req.body.multiple == 'y')
   	filter["partnerId"] = req.body.partnerId;
-  PaymentMaster.find(req.params.id, function (err, pyms) {
+  console.log("dgdhd",filter);
+  PaymentMaster.find({_id:req.params.id}, function (err, pyms) {
     if (err) { return handleError(res, err); }
     if(pyms.length == 0) { return res.status(404).send('Not Found'); }
     else if(pyms.length > 1 ) { return res.status(201).send({errorCode:1,message:'Payment Master already exist.'}); }

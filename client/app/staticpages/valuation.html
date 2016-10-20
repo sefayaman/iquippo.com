@@ -158,7 +158,7 @@
 					<div class="row">
 						<div class="col-xs-6">
 							<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
-								<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year*" ng-model="valuationQuote.product.mfgYear" required>
+								<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year*" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
 							</div>
 						</div>
 						<div class="col-xs-6">
@@ -171,13 +171,13 @@
 
 					<div class="row">
 						<div class="col-xs-6">
-							<div class="form-group" >
-								<input type="text" name="" class="form-control" placeholder="Contact Person" >
+							<div class="form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted }">
+								<input type="text" name="contactPerson" class="form-control" placeholder="Contact Person"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
 							</div>							
 						</div>
 						<div class="col-xs-6">
 							<div class="checkbox checkbox-info checkbox-circle">
-		                        <input id="checkbox1" type="checkbox" name="">
+		                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="">
 		                        <label for="checkbox1">
 		                            same as above
 		                        </label>
@@ -186,13 +186,13 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-6">
-							<div class="form-group">
-								<input type="text" name="" class="form-control" placeholder="Contact Number">
+							<div class="form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted }">
+								<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
 							</div>							
 						</div>
 						<div class="col-xs-6">
 							<div class="checkbox checkbox-info checkbox-circle">
-		                        <input id="checkbox2" type="checkbox" name="">
+		                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="">
 		                        <label for="checkbox2">
 		                            same as above
 		                        </label>

@@ -136,22 +136,22 @@
               <i class="caret"></i>
             </div>
             <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Asset Description " ng-model="financeQuote.product.description">
+              <div class="form-group" ng-class="{'has-error': form.prdDesc.$invalid && form.submitted }">                          
+                <input type="text" name="prdDesc" class="form-control" placeholder="* Asset Description " ng-model="financeQuote.product.description" required>
               </div>
             </div>            
           </div>  
           <div class="row form-group">
-            <div class="col-xs-6">
-              <select class="form-control" name="location" ng-model="financeQuote.product.city">
-                <option value="">Select Asset Location </option>
+            <div class="col-xs-6" ng-class="{'has-error': form.prdLocation.$invalid && form.submitted }">
+              <select class="form-control" name="prdLocation" ng-model="financeQuote.product.city" required>
+                <option value="">* Select Asset Location </option>
                   <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
               </select>
               <i class="caret"></i>
             </div>
             <div class="col-xs-6">
-              <div class="">                          
-                <input type="number" name="" class="form-control" placeholder="Manufacturing Year" ng-model="financeQuote.product.mfgYear">
+              <div class="" ng-class="{'has-error': form.prdMfgYear.$invalid && form.submitted }">                          
+                <input type="number" name="prdMfgYear" class="form-control" placeholder="* Manufacturing Year" ng-model="financeQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
               </div>
             </div>            
           </div>  

@@ -110,20 +110,12 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
 
     $scope.valuationQuote = {};
+    $scope.valuationQuote.product = {};
     $scope.valuationService = {};
+    $scope.currentYear = new Date().getFullYear();
 
     function init(){
-       if(Auth.getCurrentUser()._id){
-          var currUser = Auth.getCurrentUser();
-          $scope.valuationQuote.fname = currUser.fname;
-          $scope.valuationQuote.mname = currUser.mname;
-          $scope.valuationQuote.lname = currUser.lname;
-
-          $scope.valuationQuote.mobile = currUser.mobile;
-          $scope.valuationQuote.email = currUser.email;
-          $scope.valuationQuote.phone = currUser.phone;
-          $scope.valuationQuote.country = currUser.country;
-        }
+         setUser();
         $scope.mytime = new Date();
         $scope.hstep = 1;
         $scope.mstep = 1;
@@ -140,9 +132,25 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         });
     }
 
+    function setUser(){
+       if(Auth.getCurrentUser()._id){
+          var currUser = Auth.getCurrentUser();
+          $scope.valuationQuote.fname = currUser.fname;
+          $scope.valuationQuote.mname = currUser.mname;
+          $scope.valuationQuote.lname = currUser.lname;
+
+          $scope.valuationQuote.mobile = currUser.mobile;
+          $scope.valuationQuote.email = currUser.email;
+          $scope.valuationQuote.phone = currUser.phone;
+          $scope.valuationQuote.country = currUser.country;
+        }
+    }
+
     function onCategoryChange(categoryName){
       $scope.brandList = [];
       $scope.modelList = [];
+      $scope.valuationQuote.product.brand = "";
+      $scope.valuationQuote.product.model = "";
        if(!categoryName)
         return;
       var filter = {};
@@ -160,6 +168,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   function onBrandChange(brandName){
     
     $scope.modelList = [];
+    $scope.valuationQuote.product.model = "";
     if(!brandName)
       return;
     var filter = {};
@@ -215,6 +224,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.valuationService.serverPath},'email');
       $scope.valuationQuote = {};
+       $scope.valuationQuote.product = {};
+        setUser();
       $scope.form.submitted = false;
       Modal.alert(informationMessage.productQuoteSuccess,true);
       },function(res){
@@ -232,6 +243,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       ga('send', gaMasterObject.valuationResetTime);
       //End
        $scope.valuationQuote = {};
+        $scope.valuationQuote.product = {};
+         setUser();
     };
 
     $scope.changed = function (mytime) {
@@ -296,9 +309,11 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.resetClick = resetClick;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
+    $scope.currentYear = new Date().getFullYear();
 
 
     $scope.financeQuote = {};
+    $scope.financeQuote.product = {};
     $scope.financeService = {};
 
     function init(){
@@ -332,6 +347,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     function onCategoryChange(categoryName){
       $scope.brandList = [];
       $scope.modelList = [];
+      $scope.financeQuote.product.brand = "";
+      $scope.financeQuote.product.model = "";
        if(!categoryName)
         return;
       var filter = {};
@@ -349,6 +366,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   function onBrandChange(brandName){
     
     $scope.modelList = [];
+    $scope.financeQuote.product.model = "";
     if(!brandName)
       return;
     var filter = {};
@@ -385,6 +403,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         data['subject'] = 'No reply: Request a Quote';
         notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:serverPath},'email');
         $scope.financeQuote = {};
+        $scope.financeQuote.product = {};
         setUserData();
         $scope.form.submitted = false;
         Modal.alert(informationMessage.productQuoteSuccess,true);
@@ -396,6 +415,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
     function resetClick() {
        $scope.financeQuote = {};
+       $scope.financeQuote.product = {};
        setUserData();
     };
 
@@ -411,7 +431,9 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
 
     $scope.insuranceQuote = {};
+    $scope.insuranceQuote.product = {};
     var insuranceService = {};
+    $scope.currentYear = new Date().getFullYear();
 
     function init(){
         setUserData();
@@ -444,6 +466,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     function onCategoryChange(categoryName){
       $scope.brandList = [];
       $scope.modelList = [];
+      $scope.insuranceQuote.brand = "";
+      $scope.insuranceQuote.model = "";
        if(!categoryName)
         return;
       var filter = {};
@@ -461,6 +485,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   function onBrandChange(brandName){
     
     $scope.modelList = [];
+    $scope.insuranceQuote.model = "";
     if(!brandName)
       return;
     var filter = {};
@@ -496,6 +521,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         data['subject'] = 'No reply: Request a Quote';
         notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:serverPath},'email');
         $scope.insuranceQuote = {};
+        $scope.insuranceQuote.product = {};
         setUserData();
         $scope.form.submitted = false;
         Modal.alert(informationMessage.productQuoteSuccess,true);
@@ -507,6 +533,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
     function resetClick() {
        $scope.valuationQuote = {};
+       $scope.insuranceQuote.product = {};
        setUserData();
     };
 
