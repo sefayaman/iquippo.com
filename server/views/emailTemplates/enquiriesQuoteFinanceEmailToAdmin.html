@@ -3,16 +3,16 @@
 </head>
 <body>
 <table style="width:70%; margin:0 auto;padding:20px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
-	<tr>
-		<td style="height:70px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
-	</tr>
     <tr>
-		<td style="font-size:20px; color:#FF4342; padding-bottom:20px;">Hello Support team,</td>	
-	</tr>
+        <td style="height:70px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
+    </tr>
+    <tr>
+        <td style="font-size:20px; color:#FF4342; padding-bottom:20px;">Hello Support team,</td>    
+    </tr>
     <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
          This is to notify you that a prospective customer has shown interest in a quote with the following details:
-	
+    
         </td>
     </tr>
 <tr>
@@ -100,24 +100,11 @@
                         
                     </td>
                 </tr>
- 
-              
                 <tr>
-                    <td>
-                         Purpose of Valuation:
-                    </td>
-                    <td>
-                         {{valuation}}
-                    </td>
-            
-                    <td>
-                         Schedule a call: 
-                        
-                    </td>
-                    <td>
-                     {{schedule}}
-                    </td>
-                </tr>  
+                        <td ></td><td ></td>
+                        <td >Method Of Contact</td><td >{{contactMethod}}</td>
+                        <td ></td><td ></td>
+                   </tr>
                 <tr>
                         <td>
                             
@@ -127,37 +114,10 @@
                 
                         <td>
                          {{comment}}
-                            
-                        </td>
-                 <td style="padding-left:10px;">
-                       Date
-                        
-                    </td>
-                    <td>
-                     {{date}}
-                    </td>
-                        
+                         </td>
+                        </td><td>
+                         </td><td>
                    </tr>  
-             <tr>
-                        <td>
-                            
-                      
-                            
-                        </td>
-                
-                        <td>
-                         
-                            
-                        </td>
-                 <td style="padding-left:10px;">
-                       Time
-                        
-                    </td>
-                    <td>
-                    {{scheduledTime}}
-                    </td>
-                        
-                   </tr>
                    <tr>
                         <td colspan="4"><b>Product deatil</b></td>
                    </tr>
@@ -173,7 +133,7 @@
                    <tr>
                         <td >Asset Location</td><td >{{product.city}}</td>
                         <td >Description:</td><td >{{product.descripton}}</td>
-                   </tr>
+                   </tr>   
                    </table>
                    </td>
                    </tr>     

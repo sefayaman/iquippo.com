@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 var ServiceEnquirySchema = new Schema({
   type : String,
   quote : {},
-  createdAt: Date
+  createdAt: {type:Date,default:Date.now}
 });
 
 module.exports = mongoose.model('ServiceEnquiry', ServiceEnquirySchema);

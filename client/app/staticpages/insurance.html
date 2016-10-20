@@ -23,29 +23,29 @@
         </div>
         <div class="panel-body">
           
-      <form class="form" ng-submit="addShippingQuote($event)" novalidate name="form">
+      <form class="form" ng-submit="addInsuranceQuote($event)" novalidate name="form">
         <div class="form-group">                    
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
-                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="shippingQuote.fname" required>
+                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="insuranceQuote.fname" required>
               </div>
             </div>
             <div class="col-xs-6">
               <div class="form-group">                                      
-                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="shippingQuote.mname">
+                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="insuranceQuote.mname">
               </div>
             </div>
           </div>  
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
-                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="shippingQuote.lname" required>
+                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="insuranceQuote.lname" required>
               </div>
             </div>
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
-                <select class="form-control" ng-model="shippingQuote.country" name="country" required>
+                <select class="form-control" ng-model="insuranceQuote.country" name="country" required>
                   <option value="">*Select Country</option>
                   <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
                 </select>
@@ -55,7 +55,7 @@
 
           <div class="row">
             <div class="col-xs-6">
-                    <select class="form-control" name="location" ng-model="shippingQuote.city">
+                    <select class="form-control" name="location" ng-model="insuranceQuote.city">
                       <option value="">Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                     </select>
@@ -63,7 +63,7 @@
             </div>
             <div class="col-xs-6">
               <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="shippingQuote.companyname">
+                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="insuranceQuote.companyname">
               </div>
             </div>
             
@@ -72,13 +72,13 @@
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="shippingQuote.designation">
+                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="insuranceQuote.designation">
               </div>
             </div>
 
             <div class="col-xs-6">
               <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="shippingQuote.phone">
+                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="insuranceQuote.phone">
               </div>
             </div>
             
@@ -87,12 +87,12 @@
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
-               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="insuranceQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
               </div>
             </div>
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
-              <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="shippingQuote.email">
+              <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="insuranceQuote.email">
               <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
               Please enter a valid email.
               </p>
@@ -101,37 +101,37 @@
           </div>    
           <div class="row form-group">
             <div class="col-xs-6">
-              <select class="form-control" name="location" ng-model="shippingQuote.city">
+              <select class="form-control" name="category" ng-model="insuranceQuote.product.category" ng-change="onCategoryChange(insuranceQuote.product.category)">
                 <option value="">Select Category </option>
-                  <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                  <option ng-repeat="ct in allCategory" value="{{ct.name}}">{{ct.name}}</option>
               </select>
               <i class="caret"></i>
             </div>
             <div class="col-xs-6">
-              <select class="form-control" name="location" ng-model="shippingQuote.city">
+              <select class="form-control" name="brand" ng-model="insuranceQuote.product.brand" ng-change="onBrandChange(insuranceQuote.product.brand)">
                 <option value="">Select Brand </option>
-                  <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                  <option ng-repeat="br in brandList" value="{{br.name}}">{{br.name}}</option>
               </select>
               <i class="caret"></i>
             </div>            
           </div>  
           <div class="row">
             <div class="col-xs-6">
-              <select class="form-control" name="location" ng-model="shippingQuote.city">
+              <select class="form-control" name="model" ng-model="insuranceQuote.product.model">
                 <option value="">Select Model </option>
-                  <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                  <option ng-repeat="md in modelList" value="{{md.name}}">{{md.name}}</option>
               </select>
               <i class="caret"></i>
             </div>
             <div class="col-xs-6">
               <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Asset Description " ng-model="shippingQuote.companyname">
+                <input type="text" name="" class="form-control" placeholder="Asset Description " ng-model="insuranceQuote.product.description">
               </div>
             </div>            
           </div>  
           <div class="row form-group">
             <div class="col-xs-6">
-              <select class="form-control" name="location" ng-model="shippingQuote.city">
+              <select class="form-control" name="location" ng-model="insuranceQuote.product.city">
                 <option value="">Select Asset Location </option>
                   <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
               </select>
@@ -139,14 +139,14 @@
             </div>
             <div class="col-xs-6">
               <div class="">                          
-                <input type="number" name="" class="form-control" placeholder="Manufacturing Year" ng-model="shippingQuote.companyname">
+                <input type="number" name="" class="form-control" placeholder="Manufacturing Year" ng-model="insuranceQuote.product.mfgYear">
               </div>
             </div>            
           </div>  
           <div class="row form-group">            
             <div class="col-xs-6">
               <div class="">                          
-                <input type="number" name="" class="form-control" placeholder="Invoice Value" ng-model="shippingQuote.companyname">
+                <input type="number" name="" class="form-control" placeholder="Invoice Value" ng-model="insuranceQuote.invoiceVal">
               </div>
             </div>            
           </div>  
@@ -155,24 +155,24 @@
             <div class="row">
               <div class="col-xs-6">
                 <div class="radio radio-info">
-                    <input type="radio" id="inlineRadio1" name="contact" ng-model="buycontact.contact" value="email" checked="">
+                    <input type="radio" id="inlineRadio1" name="contact" ng-model="insuranceQuote.contactMeathod" value="email" checked="">
                     <label for="inlineRadio1"> E-mail </label>
                 </div>               
               </div>
               <div class="col-xs-6">
                <div class="radio radio-info">
-                    <input type="radio" id="inlineRadio2" name="contact" ng-model="buycontact.contact" value="mobile">
+                    <input type="radio" id="inlineRadio2" name="contact" ng-model="insuranceQuote.contact" value="mobile">
                     <label for="inlineRadio2"> Phone </label>
                 </div>               
               </div>
             </div>
            <div class="form-group">                      
-            <textarea class="form-control" placeholder="Comments if any" ng-model="shippingQuote.comment"></textarea>
+            <textarea class="form-control" placeholder="Comments if any" ng-model="insuranceQuote.comment"></textarea>
           </div> 
         </div>
 
         <div class="modal-footer">
-          <button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
+          <button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
           <button type="submit" class="btn btn-warning">Submit</button>
         </div>
       </form>

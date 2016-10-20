@@ -1,72 +1,89 @@
+(function(){
 'use strict';
-angular.module('sreizaoApp')
-  .controller('StaticCtrl', ['$scope', '$rootScope',function($scope, $rootScope) {
-    $rootScope.searchFilter = {};
-    $rootScope.equipmentSearchFilter = {};
-  }])
+angular.module('sreizaoApp').controller('StaticCtrl',StaticCtrl);
+angular.module('sreizaoApp').controller('ShippingCtrl',ShippingCtrl);
+angular.module('sreizaoApp').controller('ValuationCtrl',ValuationCtrl);
+angular.module('sreizaoApp').controller('FinanceCtrl',FinanceCtrl);
+angular.module('sreizaoApp').controller('InsuranceCtrl',InsuranceCtrl);
+angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuippoCtrl);
+  
+  //Controller for static pages
+  function StaticCtrl($scope, $rootScope) {
 
-  .controller('ShippingCtrl', ['$scope', '$rootScope', 'Auth', '$http' , 'Modal', 'notificationSvc', 'LocationSvc',function($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc) {
+  }
+
+  //Shipping controller function
+  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc) {
     //NJ start:set current time
     $scope.shippingStartTime = new Date();
     //End
-    $rootScope.searchFilter = {};
-    $rootScope.equipmentSearchFilter = {};
+
+    $scope.addShippingQuote = addShippingQuote;
+    $scope.resetClick = resetClick;
+
     $scope.shippingService = {};
     $scope.shippingQuote = {};
 
-    if(Auth.getCurrentUser()._id){
-      var currUser = Auth.getCurrentUser();
-      $scope.shippingQuote.fname = currUser.fname;
-      $scope.shippingQuote.mname = currUser.mname;
-      $scope.shippingQuote.lname = currUser.lname;
+    function init(){
+      if(Auth.getCurrentUser()._id){
+        var currUser = Auth.getCurrentUser();
+        $scope.shippingQuote.fname = currUser.fname;
+        $scope.shippingQuote.mname = currUser.mname;
+        $scope.shippingQuote.lname = currUser.lname;
 
-      $scope.shippingQuote.mobile = currUser.mobile;
-      $scope.shippingQuote.email = currUser.email;
-      $scope.shippingQuote.phone = currUser.phone;
-      $scope.shippingQuote.country = currUser.country;
+        $scope.shippingQuote.mobile = currUser.mobile;
+        $scope.shippingQuote.email = currUser.email;
+        $scope.shippingQuote.phone = currUser.phone;
+        $scope.shippingQuote.country = currUser.country;
+      }
+
+      LocationSvc.getAllLocation()
+       .then(function(result){
+        $scope.locationList = result;
+      });
     }
+    
+    init();
 
-    LocationSvc.getAllLocation()
-     .then(function(result){
-      $scope.locationList = result;
-    });
+    function addShippingQuote(evt) {
 
-    $scope.addShippingQuote = function(evt) {
       if($scope.form.$invalid){
         $scope.form.submitted = true;
         return;
       }
+
       $scope.shippingService.type = "shipping";
       $scope.shippingService.quote = $scope.shippingQuote;
       $http.post('/api/services', $scope.shippingService).then(function(res){
 
-      //Start NJ : push shippingSubmit object in GTM dataLayer
-      dataLayer.push(gaMasterObject.shippingSubmit);
-      //NJ : set shipping form submit time
-      var shippingSubmitTime = new Date();
-      var timeDiff = Math.floor(((shippingSubmitTime - $scope.shippingStartTime)/1000)*1000);
-      gaMasterObject.shippingSubmitTime.timingValue = timeDiff;
-      ga('send', gaMasterObject.shippingSubmitTime);
-      //End
+          //Start NJ : push shippingSubmit object in GTM dataLayer
+          dataLayer.push(gaMasterObject.shippingSubmit);
+          //NJ : set shipping form submit time
+          var shippingSubmitTime = new Date();
+          var timeDiff = Math.floor(((shippingSubmitTime - $scope.shippingStartTime)/1000)*1000);
+          gaMasterObject.shippingSubmitTime.timingValue = timeDiff;
+          ga('send', gaMasterObject.shippingSubmitTime);
+          //End
 
-      var data = {};
-      data['to'] = supportMail;
-      data['subject'] = 'Request for a Quote: Shipping';
-      $scope.shippingService.serverPath = serverPath;
-      notificationSvc.sendNotification('enquiriesQuoteShippingEmailToAdmin', data, $scope.shippingService.quote,'email');
+          var data = {};
+          data['to'] = supportMail;
+          data['subject'] = 'Request for a Quote: Shipping';
+          $scope.shippingService.serverPath = serverPath;
+          notificationSvc.sendNotification('enquiriesQuoteShippingEmailToAdmin', data, $scope.shippingService.quote,'email');
 
-      data['to'] = $scope.shippingService.quote.email;
-      data['subject'] = 'No reply: Request a Quote';
-      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.shippingService.serverPath},'email');
-      $scope.shippingQuote = {};
-      $scope.form.submitted = false;
-      Modal.alert(informationMessage.productQuoteSuccess,true);
-      },function(res){
-          Modal.alert(res,true);
+          data['to'] = $scope.shippingService.quote.email;
+          data['subject'] = 'No reply: Request a Quote';
+          notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.shippingService.serverPath},'email');
+          $scope.shippingQuote = {};
+          $scope.form.submitted = false;
+          Modal.alert(informationMessage.productQuoteSuccess,true);
+      })
+      .catch(function(res){
+          //Modal.alert("",true);
       });
     }
 
-    $scope.resetClick = function () {
+    function resetClick() {
         //Start NJ : push shippingReset object in GTM dataLayer
         dataLayer.push(gaMasterObject.shippingReset);
         //NJ : set shipping Reset time
@@ -78,38 +95,88 @@ angular.module('sreizaoApp')
 
        $scope.shippingQuote = {};
     };
-  }])
-  .controller('ValuationCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc', function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
+  }
+
+  //Valuation controller function
+  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc) {
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
     //End
-    $rootScope.searchFilter = {};
-    $rootScope.equipmentSearchFilter = {};
+
+    $scope.addValuationQuote = addValuationQuote;
+    $scope.resetClick = resetClick;
+    $scope.onCategoryChange = onCategoryChange;
+    $scope.onBrandChange = onBrandChange;
+
+
     $scope.valuationQuote = {};
     $scope.valuationService = {};
 
-    if(Auth.getCurrentUser()._id){
-      var currUser = Auth.getCurrentUser();
-      $scope.valuationQuote.fname = currUser.fname;
-      $scope.valuationQuote.mname = currUser.mname;
-      $scope.valuationQuote.lname = currUser.lname;
+    function init(){
+       if(Auth.getCurrentUser()._id){
+          var currUser = Auth.getCurrentUser();
+          $scope.valuationQuote.fname = currUser.fname;
+          $scope.valuationQuote.mname = currUser.mname;
+          $scope.valuationQuote.lname = currUser.lname;
 
-      $scope.valuationQuote.mobile = currUser.mobile;
-      $scope.valuationQuote.email = currUser.email;
-      $scope.valuationQuote.phone = currUser.phone;
-      $scope.valuationQuote.country = currUser.country;
+          $scope.valuationQuote.mobile = currUser.mobile;
+          $scope.valuationQuote.email = currUser.email;
+          $scope.valuationQuote.phone = currUser.phone;
+          $scope.valuationQuote.country = currUser.country;
+        }
+        $scope.mytime = new Date();
+        $scope.hstep = 1;
+        $scope.mstep = 1;
+        $scope.ismeridian = true;
+
+        LocationSvc.getAllLocation()
+         .then(function(result){
+          $scope.locationList = result;
+        });
+
+        categorySvc.getAllCategory()
+        .then(function(result){
+          $scope.allCategory = result;
+        });
     }
-    $scope.mytime = new Date();
-    $scope.hstep = 1;
-    $scope.mstep = 1;
-    $scope.ismeridian = true;
 
-    LocationSvc.getAllLocation()
-     .then(function(result){
-      $scope.locationList = result;
-    });
+    function onCategoryChange(categoryName){
+      $scope.brandList = [];
+      $scope.modelList = [];
+       if(!categoryName)
+        return;
+      var filter = {};
+      filter['categoryName'] = categoryName;
+      brandSvc.getBrandOnFilter(filter)
+      .then(function(result){
+        $scope.brandList = result;
 
-    $scope.addValuationQuote = function(evt) {
+      })
+      .catch(function(res){
+        console.log("error in fetching brand",res);
+      })
+  }
+
+  function onBrandChange(brandName){
+    
+    $scope.modelList = [];
+    if(!brandName)
+      return;
+    var filter = {};
+    filter['brandName'] = brandName;
+    modelSvc.getModelOnFilter(filter)
+    .then(function(result){
+      $scope.modelList = result;
+    })
+    .catch(function(res){
+      console.log("error in fetching model",res);
+    })
+
+  }
+
+    init();
+
+    function addValuationQuote(evt) {
 
       if($scope.valuationQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.valuationQuote.scheduleDate))
@@ -122,6 +189,7 @@ angular.module('sreizaoApp')
         $scope.form.submitted = true;
         return;
       }
+
       if(!$scope.valuationQuote.scheduledTime
         && $scope.valuationQuote.schedule == "yes")
         $scope.changed($scope.mytime);
@@ -154,7 +222,7 @@ angular.module('sreizaoApp')
       });
     }
 
-    $scope.resetClick = function () {
+    function resetClick() {
       //Start NJ : push valuationReset object in GTM dataLayer
       dataLayer.push(gaMasterObject.valuationReset);
       //NJ : set valuationResetTime
@@ -182,51 +250,274 @@ angular.module('sreizaoApp')
       $scope.isShow = ! $scope.isShow;
     };
 
-  //date picker
-  $scope.today = function() {
-    $scope.scheduleDate = new Date();
-  };
-  $scope.today();
+    //date picker
+    $scope.today = function() {
+      $scope.scheduleDate = new Date();
+    };
+    $scope.today();
 
-  $scope.clear = function() {
-    $scope.scheduleDate = null;
-  };
+    $scope.clear = function() {
+      $scope.scheduleDate = null;
+    };
 
-  $scope.toggleMin = function() {
-    $scope.minDate = $scope.minDate ? null : new Date();
-  };
+    $scope.toggleMin = function() {
+      $scope.minDate = $scope.minDate ? null : new Date();
+    };
 
-  $scope.toggleMin();
-  $scope.maxDate = new Date(2020, 5, 22);
-  $scope.minDate = new Date();
+    $scope.toggleMin();
+    $scope.maxDate = new Date(2020, 5, 22);
+    $scope.minDate = new Date();
 
-  $scope.open1 = function() {
-    $scope.popup1.opened = true;
-  };
+    $scope.open1 = function() {
+      $scope.popup1.opened = true;
+    };
 
-   $scope.setDate = function(year, month, day) {
-    $scope.scheduleDate = new Date(year, month, day);
-  };
+     $scope.setDate = function(year, month, day) {
+      $scope.scheduleDate = new Date(year, month, day);
+    };
 
-  $scope.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
+    $scope.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1
+    };
 
-  $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
-  $scope.format = $scope.formats[0];
+    $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
 
-  $scope.popup1 = {
-    opened: false
-  };
-  }])
+    $scope.popup1 = {
+      opened: false
+    };
+  }
 
-  .controller('CetifiedByiQuippoCtrl', ['$scope', '$rootScope', 'Auth', '$http', '$log', 'Modal', 'notificationSvc', 'LocationSvc',function($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
+  //Finance Controller function
+  function FinanceCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc) {
+
+    $scope.addFinanceQuote = addFinanceQuote;
+    $scope.resetClick = resetClick;
+    $scope.onCategoryChange = onCategoryChange;
+    $scope.onBrandChange = onBrandChange;
+
+
+    $scope.financeQuote = {};
+    $scope.financeService = {};
+
+    function init(){
+        setUserData();
+        LocationSvc.getAllLocation()
+         .then(function(result){
+          $scope.locationList = result;
+        });
+
+        categorySvc.getAllCategory()
+        .then(function(result){
+          $scope.allCategory = result;
+        });
+    }
+
+    function setUserData(){
+
+       if(Auth.getCurrentUser()._id){
+          var currUser = Auth.getCurrentUser();
+          $scope.financeQuote.fname = currUser.fname;
+          $scope.financeQuote.mname = currUser.mname;
+          $scope.financeQuote.lname = currUser.lname;
+
+          $scope.financeQuote.mobile = currUser.mobile;
+          $scope.financeQuote.email = currUser.email;
+          $scope.financeQuote.phone = currUser.phone;
+          $scope.financeQuote.country = currUser.country;
+        }
+    }
+
+    function onCategoryChange(categoryName){
+      $scope.brandList = [];
+      $scope.modelList = [];
+       if(!categoryName)
+        return;
+      var filter = {};
+      filter['categoryName'] = categoryName;
+      brandSvc.getBrandOnFilter(filter)
+      .then(function(result){
+        $scope.brandList = result;
+
+      })
+      .catch(function(res){
+        console.log("error in fetching brand",res);
+      })
+  }
+
+  function onBrandChange(brandName){
+    
+    $scope.modelList = [];
+    if(!brandName)
+      return;
+    var filter = {};
+    filter['brandName'] = brandName;
+    modelSvc.getModelOnFilter(filter)
+    .then(function(result){
+      $scope.modelList = result;
+    })
+    .catch(function(res){
+      console.log("error in fetching model",res);
+    })
+
+  }
+
+    init();
+
+    function addFinanceQuote(evt) {
+
+      if($scope.form.$invalid){
+        $scope.form.submitted = true;
+        return;
+      }
+
+      $scope.financeService.type = "finance";
+      $scope.financeService.quote = $scope.financeQuote;
+      $http.post('/api/services',  $scope.financeService).then(function(res){
+        var data = {};
+        data['to'] = supportMail;
+        data['subject'] = 'Request for a Quote: Finance';
+        $scope.financeService.serverPath = serverPath;
+        notificationSvc.sendNotification('enquiriesQuoteFinanceEmailToAdmin', data, $scope.financeService.quote,'email');
+
+        data['to'] = $scope.financeService.quote.email || "";
+        data['subject'] = 'No reply: Request a Quote';
+        notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:serverPath},'email');
+        $scope.financeQuote = {};
+        setUserData();
+        $scope.form.submitted = false;
+        Modal.alert(informationMessage.productQuoteSuccess,true);
+      })
+      .catch(function(res){
+          //error handling
+      });
+    }
+
+    function resetClick() {
+       $scope.financeQuote = {};
+       setUserData();
+    };
+
+
+  }
+  //Valuation controller function
+  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc) {
+   
+    $scope.addInsuranceQuote = addInsuranceQuote;
+    $scope.resetClick = resetClick;
+    $scope.onCategoryChange = onCategoryChange;
+    $scope.onBrandChange = onBrandChange;
+
+
+    $scope.insuranceQuote = {};
+    var insuranceService = {};
+
+    function init(){
+        setUserData();
+        LocationSvc.getAllLocation()
+         .then(function(result){
+          $scope.locationList = result;
+        });
+
+        categorySvc.getAllCategory()
+        .then(function(result){
+          $scope.allCategory = result;
+        });
+    }
+
+    function setUserData(){
+
+       if(Auth.getCurrentUser()._id){
+          var currUser = Auth.getCurrentUser();
+          $scope.insuranceQuote.fname = currUser.fname;
+          $scope.insuranceQuote.mname = currUser.mname;
+          $scope.insuranceQuote.lname = currUser.lname;
+
+          $scope.insuranceQuote.mobile = currUser.mobile;
+          $scope.insuranceQuote.email = currUser.email;
+          $scope.insuranceQuote.phone = currUser.phone;
+          $scope.insuranceQuote.country = currUser.country;
+        }
+    }
+
+    function onCategoryChange(categoryName){
+      $scope.brandList = [];
+      $scope.modelList = [];
+       if(!categoryName)
+        return;
+      var filter = {};
+      filter['categoryName'] = categoryName;
+      brandSvc.getBrandOnFilter(filter)
+      .then(function(result){
+        $scope.brandList = result;
+
+      })
+      .catch(function(res){
+        console.log("error in fetching brand",res);
+      })
+  }
+
+  function onBrandChange(brandName){
+    
+    $scope.modelList = [];
+    if(!brandName)
+      return;
+    var filter = {};
+    filter['brandName'] = brandName;
+    modelSvc.getModelOnFilter(filter)
+    .then(function(result){
+      $scope.modelList = result;
+    })
+    .catch(function(res){
+      console.log("error in fetching model",res);
+    })
+
+  }
+
+    init();
+
+    function addInsuranceQuote(evt) {
+
+      if($scope.form.$invalid){
+        $scope.form.submitted = true;
+        return;
+      }
+
+      insuranceService.type = "insurance";
+      insuranceService.quote = $scope.insuranceQuote;
+      $http.post('/api/services',  insuranceService).then(function(res){
+        var data = {};
+        data['to'] = supportMail;
+        data['subject'] = 'Request for a Quote: Insurance';
+        notificationSvc.sendNotification('enquiriesQuoteInsuranceEmailToAdmin', data, insuranceService.quote,'email');
+
+        data['to'] = insuranceService.quote.email || "";
+        data['subject'] = 'No reply: Request a Quote';
+        notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:serverPath},'email');
+        $scope.insuranceQuote = {};
+        setUserData();
+        $scope.form.submitted = false;
+        Modal.alert(informationMessage.productQuoteSuccess,true);
+      })
+      .catch(function(res){
+          //error handling
+      });
+    }
+
+    function resetClick() {
+       $scope.valuationQuote = {};
+       setUserData();
+    };
+
+  }
+
+  function CetifiedByiQuippoCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
     //NJ Start: set certifiedbyiquippoStartTime
     $scope.certifiedbyiquippoStartTime = new Date();
     //End
-    $rootScope.searchFilter = {};
-    $rootScope.equipmentSearchFilter = {};
+
+    $scope.addCetifiedByiQuippoQuote = addCetifiedByiQuippoQuote;
     $scope.cetifiedByiQuippoQuote = {};
     $scope.cetifiedByiQuippoService = {};
     $scope.mytime = new Date();
@@ -234,24 +525,28 @@ angular.module('sreizaoApp')
     $scope.mstep = 1;
     $scope.ismeridian = true;
 
-    if(Auth.getCurrentUser()._id){
-      var currUser = Auth.getCurrentUser();
-      $scope.cetifiedByiQuippoQuote.fname = currUser.fname;
-      $scope.cetifiedByiQuippoQuote.mname = currUser.mname;
-      $scope.cetifiedByiQuippoQuote.lname = currUser.lname;
+    function init(){
+      if(Auth.getCurrentUser()._id){
+        var currUser = Auth.getCurrentUser();
+        $scope.cetifiedByiQuippoQuote.fname = currUser.fname;
+        $scope.cetifiedByiQuippoQuote.mname = currUser.mname;
+        $scope.cetifiedByiQuippoQuote.lname = currUser.lname;
 
-      $scope.cetifiedByiQuippoQuote.mobile = currUser.mobile;
-      $scope.cetifiedByiQuippoQuote.email = currUser.email;
-      $scope.cetifiedByiQuippoQuote.phone = currUser.phone;
-      $scope.cetifiedByiQuippoQuote.country = currUser.country;
+        $scope.cetifiedByiQuippoQuote.mobile = currUser.mobile;
+        $scope.cetifiedByiQuippoQuote.email = currUser.email;
+        $scope.cetifiedByiQuippoQuote.phone = currUser.phone;
+        $scope.cetifiedByiQuippoQuote.country = currUser.country;
+      }
+
+      LocationSvc.getAllLocation()
+       .then(function(result){
+        $scope.locationList = result;
+      });
     }
 
-    LocationSvc.getAllLocation()
-     .then(function(result){
-      $scope.locationList = result;
-    });
+    init();
 
-    $scope.addCetifiedByiQuippoQuote = function(evt) {
+   function addCetifiedByiQuippoQuote(evt) {
 
       if($scope.cetifiedByiQuippoQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.cetifiedByiQuippoQuote.scheduleDate))
@@ -297,7 +592,7 @@ angular.module('sreizaoApp')
       });
     }
 
-    $scope.resetClick = function () {
+    function resetClick() {
       //Start NJ : push certifiedbyiquippoReset object in GTM dataLayer
       dataLayer.push(gaMasterObject.certifiedbyiquippoReset);
       //NJ : set certifiedbyiquippoResetTime
@@ -309,56 +604,57 @@ angular.module('sreizaoApp')
        $scope.cetifiedByiQuippoQuote = {};
     };
 
-  $scope.changed = function (mytime) {
-      if(mytime) {
-        var hours = mytime.getHours();
-        var minutes = mytime.getMinutes();
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        $scope.cetifiedByiQuippoQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
-      }
-    };
+    $scope.changed = function (mytime) {
+        if(mytime) {
+          var hours = mytime.getHours();
+          var minutes = mytime.getMinutes();
+          var ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+          minutes = minutes < 10 ? '0' + minutes : minutes;
+          $scope.cetifiedByiQuippoQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
+        }
+      };
 
-    $scope.toggleMode = function() {
-      $scope.isShow = ! $scope.isShow;
-    };
-    // date picker
-  $scope.today = function() {
-    $scope.scheduleDate = new Date();
-  };
-  $scope.today();
+      $scope.toggleMode = function() {
+        $scope.isShow = ! $scope.isShow;
+      };
+      // date picker
+      $scope.today = function() {
+        $scope.scheduleDate = new Date();
+      };
+      $scope.today();
 
-  $scope.clear = function() {
-    $scope.scheduleDate = null;
-  };
+      $scope.clear = function() {
+        $scope.scheduleDate = null;
+      };
 
-  $scope.toggleMin = function() {
-    $scope.minDate = $scope.minDate ? null : new Date();
-  };
+      $scope.toggleMin = function() {
+        $scope.minDate = $scope.minDate ? null : new Date();
+      };
 
-  $scope.toggleMin();
-  $scope.maxDate = new Date(2020, 5, 22);
-  $scope.minDate = new Date();
+      $scope.toggleMin();
+      $scope.maxDate = new Date(2020, 5, 22);
+      $scope.minDate = new Date();
 
-  $scope.open2 = function() {
-    $scope.popup2.opened = true;
-  };
+      $scope.open2 = function() {
+        $scope.popup2.opened = true;
+      };
 
-   $scope.setDate = function(year, month, day) {
-    $scope.scheduleDate = new Date(year, month, day);
-  };
+       $scope.setDate = function(year, month, day) {
+        $scope.scheduleDate = new Date(year, month, day);
+      };
 
-  $scope.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
+      $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+      };
 
-  $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
-  $scope.format = $scope.formats[0];
+      $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+      $scope.format = $scope.formats[0];
 
-  $scope.popup2 = {
-    opened: false
-  };
-  }]);
+      $scope.popup2 = {
+        opened: false
+      };
+  }
+})();

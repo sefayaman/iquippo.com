@@ -153,13 +153,13 @@ angular.module('sreizaoApp')
       .state('financing', {
         url:"/financing",
         templateUrl: 'app/staticpages/financing.html',
-        controller:"ValuationCtrl",
+        controller:"FinanceCtrl",
         layout:'client'
       })
       .state('insurance', {
         url:"/insurance",
         templateUrl: 'app/staticpages/insurance.html',
-        controller:"ValuationCtrl",
+        controller:"InsuranceCtrl",
     	  layout:'client'
       })
       .state('privacy', {
