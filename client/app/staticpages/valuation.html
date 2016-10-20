@@ -31,7 +31,7 @@
 			</div>
 			<div class="panel-body">
 				     
-			<form class="form" name="form" novalidate>
+			<form class="" name="form" novalidate>
 				<div class="form-group">
 					<div class="row">
 						<div class="col-xs-6">
@@ -168,6 +168,37 @@
 						</div>
 						
 					</div>
+
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group" >
+								<input type="text" name="" class="form-control" placeholder="Contact Person" >
+							</div>							
+						</div>
+						<div class="col-xs-6">
+							<div class="checkbox checkbox-info checkbox-circle">
+		                        <input id="checkbox1" type="checkbox" name="">
+		                        <label for="checkbox1">
+		                            same as above
+		                        </label>
+		                    </div>							
+						</div>						
+					</div>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<input type="text" name="" class="form-control" placeholder="Contact Number">
+							</div>							
+						</div>
+						<div class="col-xs-6">
+							<div class="checkbox checkbox-info checkbox-circle">
+		                        <input id="checkbox2" type="checkbox" name="">
+		                        <label for="checkbox2">
+		                            same as above
+		                        </label>
+		                    </div>							
+						</div>						
+					</div>
 					<hr>
 					<div class="row text-left">
 						<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
@@ -184,10 +215,16 @@
 					<div class="row text-left">
 		              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
 		              <div class="col-xs-6 col-sm-4 form-group">
-		                <input type="radio" placeholder=""  name="schedule" ng-model="valuationQuote.schedule" value="yes"> Yes 
+		              	<div class="radio radio-info">
+                            <input type="radio" id="inlineRadio1" name="schedule" ng-model="valuationQuote.schedule" value="yes">
+                            <label for="inlineRadio1"> Yes </label>
+                        </div>		               
 		              </div>
 		              <div class="col-xs-6 col-sm-4 form-group">
-		                <input type="radio" placeholder=""  name="schedule" ng-model="valuationQuote.schedule" value="no"> No      
+		              	<div class="radio radio-info">
+                            <input type="radio" id="inlineRadio2" name="schedule" ng-model="valuationQuote.schedule" value="no">
+                            <label for="inlineRadio2"> No </label>
+                        </div>     
 		              </div>
 		              
 		              <div class="clerafix"></div>                                   
