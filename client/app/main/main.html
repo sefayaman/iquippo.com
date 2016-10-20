@@ -115,7 +115,7 @@
                <div class="col-sm-6 text-center">
                  <div class="uploded-asset">
                   <a href="javascript:void(0);" class="text-priamry">
-                    <strong>{{mainVm.productCountObj.listed || 0}}</strong>
+                    <strong>{{(mainVm.productCountObj.listed + mainVm.productCountObj.sold) || 0}}</strong>
                     <p> Assets Listed</p>
                   </a>
                  </div>
