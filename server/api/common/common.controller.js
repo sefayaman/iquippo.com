@@ -59,7 +59,7 @@ exports.sendOtp = function(req,res){
 		//req.body.data = {};
 		//req.body.data.otp = otp;
 		//req.body.data.serverPath = config.serverPath;
-		exports.compileTemplate({otp:otp},config.serverPath,"userRgeOTP1",function(isSuccess,text){
+		exports.compileTemplate({otp:otp},config.serverPath,"userRgeOTP",function(isSuccess,text){
 			if(isSuccess){
 				data.content = text;
 				postOtpRequest(email.sendMail,data,req,res);
