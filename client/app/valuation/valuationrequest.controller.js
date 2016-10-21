@@ -10,12 +10,24 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 
  	function init(){
 
-		PaymentMasterSvc.getAll();
 
-		vendorSvc.getAllVendors()
-		.then(function(){
-			$scope.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-		});
+		 PaymentMasterSvc.getAll()
+	    .then(function(result){
+	      $scope.payments = result;
+	      vendorSvc.getAllVendors()
+	      .then(function(){
+	        var agency = vendorSvc.getVendorsOnCode('Valuation');
+	        $scope.valAgencies = [];
+	        agency.forEach(function(item){
+	          var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",item._id);
+	          if(pyMst && pyMst.fees)
+	            $scope.valAgencies[$scope.valAgencies.length] = item;
+	          else if(pyMst && pyMst.fees === 0)
+	            $scope.valAgencies[$scope.valAgencies.length] = item;
+	        })
+	      });
+
+	    })
 
 		vm.valuationReq.product = {};
 		vm.valuationReq.user = {};
