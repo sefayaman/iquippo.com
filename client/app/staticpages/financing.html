@@ -159,19 +159,19 @@
            <div class="row">
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.amountToBeFinanced.$invalid && form.submitted }">
-                  <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" ng-value="financeQuote.amountToBeFinanced" placeholder="Amount to be Financed" required>
+                  <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" ng-value="financeQuote.amountToBeFinanced" placeholder="Amount to be Financed*" required>
                 </div>
               </div>
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.indicativeRate.$invalid && form.submitted }">
-                  <input type="number" class="form-control" name="indicativeRate" ng-model="financeQuote.indicativeRate" ng-value="financeQuote.indicativeRate" min= '0' placeholder="Indicative Rate" required>
+                  <input type="number" class="form-control" name="indicativeRate" ng-model="financeQuote.indicativeRate" ng-value="financeQuote.indicativeRate" min= '0' placeholder="Indicative Rate*" required>
                 </div>
               </div>
             </div>
           <div class="row">
             <div class="col-xs-6">
               <div class="form-group" ng-class="{'has-error': form.periodInMonths.$invalid && form.submitted }">
-                <input type="number" class="form-control" name="periodInMonths" ng-model="financeQuote.periodInMonths" ng-value="financeQuote.periodInMonths" ng-minlength="1"  min="1"  placeholder="Tenure (in Months)" required>
+                <input type="number" class="form-control" name="periodInMonths" ng-model="financeQuote.periodInMonths" ng-value="financeQuote.periodInMonths" ng-minlength="1"  min="1"  placeholder="Tenure (in Months)*" required>
               </div>
             </div> 
                              
