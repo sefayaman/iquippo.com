@@ -156,6 +156,27 @@
             </div>            
           </div>  
 
+           <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Amount to be Financed">
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
+                </div>
+              </div>
+            </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <input type="text" class="form-control" name="periodInMonths" ng-model="buycontact.financeInfo.periodInMonths" ng-value="buycontact.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+              </div>
+            </div> 
+                             
+          </div>
+
           <span>Method of contact </span>
             <div class="row">
               <div class="col-xs-6">
