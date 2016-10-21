@@ -45,20 +45,19 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   init();
 
   function onLocationChange(city){
-    vm.vendorReg.state = LocationSvc.getStateByCity(city);
+    vm.vendorReg.user.state = LocationSvc.getStateByCity(city);
   }
 
   function verify(){
 
     var dataToSend = {};
+    vm.existFlag = false;
+
     if(vm.vendorReg.user.email) 
       dataToSend['email'] = vm.vendorReg.user.email;
     if(vm.vendorReg.user.mobile) 
       dataToSend['mobile'] = vm.vendorReg.user.mobile;
-    else {
-      vm.existFlag = false;
-      return;
-    }
+
     vendorSvc.validate(dataToSend).then(function(data){
       if(data.errorCode == 1){
          setPartnerDate(data.user);
@@ -68,6 +67,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
         return;
       } else {
         vm.existFlag = false;
+        return;
       }
     });
   }
@@ -75,7 +75,6 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   function setPartnerDate(user){
     vm.existingUser = user;
     if(user) {
-      //vm.vendorReg.user = {};
       if(!$scope.isEdit)
         vm.vendorReg.user.userId = user._id;
       vm.vendorReg.user.fname = user.fname;
@@ -97,7 +96,9 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
         vm.vendorReg.user.city = user.city;
       else
         delete vm.vendorReg.user.city;
-      vm.vendorReg.user.country = user.country;
+      if(user.state)
+        vm.vendorReg.user.state = user.state;
+      vm.vendorReg.user.country = $rootScope.allCountries[0].name;
       if(user.imgsrc)
         vm.vendorReg.user.imgsrc = user.imgsrc; 
       else
@@ -132,6 +133,9 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     if($scope.Finance)
       $scope.services.push($scope.Finance);
     vm.vendorReg.services = $scope.services;
+    if(!vm.vendorReg.user.state)
+      vm.vendorReg.user.state = LocationSvc.getStateByCity(vm.vendorReg.user.city);      
+    vm.vendorReg.user.country = $rootScope.allCountries[0].name;  
     setUserData(vm.vendorReg);
     
     var dataToSend = {};
@@ -188,27 +192,26 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function savePartner(){
-    /*if(vm.existingUser.isPartner) {
-      Modal.alert("User has already registered as Partner.", true);
-      return;
-    }  */    
     vm.existingUser.isPartner = true;
     if(vm.existFlag) {
       userSvc.updateUser(vm.existingUser).then(function(result){
         createPartner(vm.vendorReg);
       });
     } else {
+      if(vm.existingUser._id)
+        delete vm.existingUser._id;
       vendorSvc.createUser(vm.existingUser).then(function(result) {
         if(result && result._id) {
           vm.vendorReg.user.userId = result._id;
         }
         createPartner(vm.vendorReg);
       });
-    }
-    
+    }   
   }
 
   function setUserData(userData){
+    if(!vm.existFlag)
+      vm.existingUser = {};
     vm.existingUser.fname = userData.user.fname;
     if(userData.user.mname)
       vm.existingUser.mname = userData.user.mname;
@@ -219,8 +222,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     if(userData.user.phone)
       vm.existingUser.phone = userData.user.phone;
     vm.existingUser.city = userData.user.city;
-    vm.existingUser.state = userData.state;
-    vm.existingUser.country = userData.country;
+    vm.existingUser.state = userData.user.state;
+    vm.existingUser.country = $rootScope.allCountries[0].name;
     vm.existingUser.imgsrc = userData.user.imgsrc;
     if(userData.user.password && !vm.existFlag)
       vm.existingUser.password = userData.user.password;

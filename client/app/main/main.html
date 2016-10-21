@@ -55,13 +55,15 @@
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
             
-       <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank">
+       <!-- <a ng-href="{{mainVm.imgLeftTop.websiteUrl}}" target="_blank"> -->
+       <a href="/financing" target="_blank">
           <img ng-if="mainVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftTop.src}}" class="img-responsive add1">
        </a>
         <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
         <div class="form-group"></div>
         <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
-        <a ng-href="{{mainVm.imgLeftBottom.websiteUrl}}" target="_blank">
+        <!-- <a ng-href="{{mainVm.imgLeftBottom.websiteUrl}}" target="_blank"> -->
+        <a href="/insurance" target="_blank">
           <img ng-if="mainVm.imgLeftBottom.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.imgLeftBottom.src}}" class="img-responsive add1">
         </a>
       </div>
@@ -113,7 +115,7 @@
                <div class="col-sm-6 text-center">
                  <div class="uploded-asset">
                   <a href="javascript:void(0);" class="text-priamry">
-                    <strong>{{mainVm.productCountObj.listed || 0}}</strong>
+                    <strong>{{(mainVm.productCountObj.listed + mainVm.productCountObj.sold) || 0}}</strong>
                     <p> Assets Listed</p>
                   </a>
                  </div>
@@ -250,20 +252,22 @@
         <div class="panel-body">
         <div class="row">
         <div class="col-sm-8">
-         <div class="media">
+          <div class="media">
+            <h4 class="media-heading">How iQuippo Works?</h4>
             <a class="pull-left" href="#">
-              <img class="media-object" src="assets/images/news-1.jpg" alt="Image">
+              <iframe width="250" height="180" src="https://www.youtube.com/embed/6fWE5bmpu9g" frameborder="0" allowfullscreen></iframe>
             </a>
-            <div class="media-body news-text">
-              <h4 class="media-heading text-primary">iQuippo News</h4>
+            <div class="media-body news-text">              
               <p><strong>iQuippo</strong> offers the best of services and expertise to take our customers to the next level ,improving their efficiency and productivity by offering cost effective solution on a Single platform.</p>
               <p class="text-primary">25 Aug, 2016</p>
             </div>
           </div>
         </div>
-       
+        
         <div class="col-sm-4">
-        <iframe width="330" height="140" src="https://www.youtube.com/embed/cT3hcuOkdQc" frameborder="0" allowfullscreen></iframe>
+          <h4 class="media-heading">iQuippo Launch:</h4>
+          <iframe width="100%" height="180" src="https://www.youtube.com/embed/0cabxI1gy4s" frameborder="0" allowfullscreen></iframe>
+        <!-- <iframe width="330" height="140" src="https://www.youtube.com/embed/cT3hcuOkdQc" frameborder="0" allowfullscreen></iframe> -->
         </div>
       </div>
       </div>

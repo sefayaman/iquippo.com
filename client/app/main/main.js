@@ -148,6 +148,18 @@ angular.module('sreizaoApp')
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
         controller:"ValuationCtrl",
+        layout:'client'
+      })
+      .state('financing', {
+        url:"/financing",
+        templateUrl: 'app/staticpages/financing.html',
+        controller:"FinanceCtrl",
+        layout:'client'
+      })
+      .state('insurance', {
+        url:"/insurance",
+        templateUrl: 'app/staticpages/insurance.html',
+        controller:"InsuranceCtrl",
     	  layout:'client'
       })
       .state('privacy', {

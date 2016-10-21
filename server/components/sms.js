@@ -1,6 +1,6 @@
 var request = require('request');
 // configuration ===============================================================
-var smsConfig = { host:"http://mobiprom.com", URL: "/smsclient/pushsms.jsp",from:"SreiBP",user:"CL20640",password:"XGFz5Hw"}
+var smsConfig = { host:"http://mobiprom.com", URL: "/smsclient/pushsms.jsp",from:"iQUIPO",user:"CL20640",password:"XGFz5Hw"}
  var sms = {}
  sms.sendSMS = function(data,req,res,cb) {   
     var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);   

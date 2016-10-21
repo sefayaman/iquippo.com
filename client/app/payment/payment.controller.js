@@ -77,7 +77,11 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
    }
 
  	function payNow(){
-
+   if(vm.payTransaction.totalAmount < 1){
+      vm.payTransaction.paymentMode = "offline";
+      confirmPayment();
+      return;
+   }
  	  var bodyRequest = "";
  	  bodyRequest = "merchant_id=111628&order_id=" + vm.payTransaction._id;
       bodyRequest += "&currency=INR&amount=" + vm.payTransaction.totalAmount;

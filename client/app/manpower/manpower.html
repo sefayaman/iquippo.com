@@ -72,7 +72,7 @@
             <img ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{manpowerUser.user.imgsrc}}" ng-if="manpowerUser.user.imgsrc" class="img-responsive form-group">
             <img ng-src="assets/images/profile.png" ng-if="!manpowerUser.user.imgsrc" class="img-responsive form-group">
           </a>
-          <p>{{manpowerUser.user.fname}} {{manpowerUser.user.lname}}</p>
+          <p class="text-ellips">{{manpowerUser.user.fname}} {{manpowerUser.user.lname}}</p>
           <p>{{manpowerUser.user.city}}</p>
         </div>
         <div class="row manpower-lists" ng-if="noUserExist">
@@ -123,7 +123,7 @@
           <div class="panel panel-default">
             <div class="panel-heading"> Register</div>
             <div class="panel-body">
-              <form class="form" novalidate name="form">
+              <form class="" novalidate name="form">
                   <div class="row">
                    <div class="col-xs-6">
                     <div class="profilePic-button">
@@ -197,7 +197,7 @@
                     </div>
                     <div class="col-xs-6">
                       <div class="form-group">                          
-                        <input type="text" name="fees" class="form-control" placeholder="Fees &amp; Charges" ng-model="manpowerVm.manpower.fees">
+                        <input type="text" name="fees" class="form-control" placeholder="Salary &amp; Charges" ng-model="manpowerVm.manpower.fees">
                       </div>
                     </div>  
                   </div>
@@ -245,8 +245,15 @@
                   </div>
                   <div class="row">
                     <div class="col-sm-12 form-group text-left">
-                      <input type="checkbox" name="agree" ng-model="quote.agree" value=""> I Agree to the 
-                      <a href="/privacy" ng-click="closeDialog()" aria-hidden="true" target="_blank">Terms &amp; Conditions.</a>
+                      <div class="checkbox checkbox-info checkbox-circle">
+                        <input id="checkbox1" type="checkbox" name="agree" ng-model="quote.agree" value="">
+                        <label for="checkbox1">
+                            I Agree to the 
+                          <a href="/privacy" ng-click="closeDialog()" aria-hidden="true" target="_blank">Terms &amp; Conditions.</a>
+                        </label>
+                      </div>
+                      <!-- <input type="checkbox" name="agree" ng-model="quote.agree" value=""> I Agree to the 
+                      <a href="/privacy" ng-click="closeDialog()" aria-hidden="true" target="_blank">Terms &amp; Conditions.</a> -->
                     </div>
                   </div>         
                 </div>
@@ -311,7 +318,7 @@
                     <img ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{manpower.user.imgsrc}}" ng-if="manpower.user.imgsrc" class="img-responsive form-group">
                     <img ng-src="assets/images/profile.png" ng-if="!manpower.user.imgsrc" class="img-responsive form-group">
                   </a>
-                  <p>{{manpower.user.fname}} {{manpower.user.lname}}</p>
+                  <p class="text-ellips">{{manpower.user.fname}} {{manpower.user.lname}}</p>
                   <p>{{manpower.user.city}}</p>
 
               </div>

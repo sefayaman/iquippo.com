@@ -31,7 +31,7 @@
 			</div>
 			<div class="panel-body">
 				     
-			<form class="form" name="form" novalidate>
+			<form class="" name="form" novalidate>
 				<div class="form-group">
 					<div class="row">
 						<div class="col-xs-6">
@@ -105,6 +105,101 @@
 						</div>
 					</div>
 					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<label>Product Detail:</label>
+							</div>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<select class="form-control" ng-model="valuationQuote.product.category" ng-change="onCategoryChange(valuationQuote.product.category)">
+									<option value="">Select category</option>
+									<option value="{{cat.name}}" ng-repeat="cat in allCategory">{{cat.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group">
+								<select class="form-control" ng-model="valuationQuote.product.brand" ng-change="onBrandChange(valuationQuote.product.brand)">
+									<option value="">Select Brand</option>
+									<option value="{{br.name}}" ng-repeat="br in brandList">{{br.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<select class="form-control" ng-model="valuationQuote.product.model">
+									<option value="">Select Modal</option>
+									<option value="{{md.name}}" ng-repeat="md in modelList">{{md.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group" ng-class="{'has-error': form.prdLocation.$invalid && form.submitted }">
+								<select class="form-control" name="prdLocation"  ng-model="valuationQuote.product.city" required>
+									<option value="">Select Location Of Asset*</option>
+									<option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+						</div>
+						
+					</div>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
+								<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year*" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<div class="form-group" ng-class="{'has-error': form.prddescription.$invalid && form.submitted }">
+								<input type="text" name="prddescription" class="form-control" placeholder="Asset Description*" ng-model="valuationQuote.product.description" required>
+							</div>
+						</div>
+						
+					</div>
+
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted }">
+								<input type="text" name="contactPerson" class="form-control" placeholder="Contact Person*"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
+							</div>							
+						</div>
+						<div class="col-xs-6">
+							<div class="checkbox checkbox-info checkbox-circle">
+		                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="">
+		                        <label for="checkbox1">
+		                            same as above
+		                        </label>
+		                    </div>							
+						</div>						
+					</div>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted }">
+								<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="Contact Number*" ng-required="!valuationQuote.product.contactNumberAsAbove">
+							</div>							
+						</div>
+						<div class="col-xs-6">
+							<div class="checkbox checkbox-info checkbox-circle">
+		                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="">
+		                        <label for="checkbox2">
+		                            same as above
+		                        </label>
+		                    </div>							
+						</div>						
+					</div>
+					<hr>
 					<div class="row text-left">
 						<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
 						<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
@@ -120,10 +215,16 @@
 					<div class="row text-left">
 		              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
 		              <div class="col-xs-6 col-sm-4 form-group">
-		                <input type="radio" placeholder=""  name="schedule" ng-model="valuationQuote.schedule" value="yes"> Yes 
+		              	<div class="radio radio-info">
+                            <input type="radio" id="inlineRadio1" name="schedule" ng-model="valuationQuote.schedule" value="yes">
+                            <label for="inlineRadio1"> Yes </label>
+                        </div>		               
 		              </div>
 		              <div class="col-xs-6 col-sm-4 form-group">
-		                <input type="radio" placeholder=""  name="schedule" ng-model="valuationQuote.schedule" value="no"> No      
+		              	<div class="radio radio-info">
+                            <input type="radio" id="inlineRadio2" name="schedule" ng-model="valuationQuote.schedule" value="no">
+                            <label for="inlineRadio2"> No </label>
+                        </div>     
 		              </div>
 		              
 		              <div class="clerafix"></div>                                   

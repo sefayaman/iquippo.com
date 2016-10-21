@@ -100,24 +100,10 @@
                         
                     </td>
                 </tr>
- 
-              
-                <tr>
-                    <td>
-                         Purpose of Valuation:
-                    </td>
-                    <td>
-                         {{valuation}}
-                    </td>
-            
-                    <td>
-                         Schedule a call: 
-                        
-                    </td>
-                    <td>
-                     {{schedule}}
-                    </td>
-                </tr>  
+                 <tr>
+                        <td >Invoice Value:</td><td >{{invoiceVal}}</td>
+                        <td >Method Of Contact</td><td >{{contactMethod}}</td>
+                   </tr>
                 <tr>
                         <td>
                             
@@ -127,37 +113,10 @@
                 
                         <td>
                          {{comment}}
-                            
-                        </td>
-                 <td style="padding-left:10px;">
-                       Date
-                        
-                    </td>
-                    <td>
-                     {{date}}
-                    </td>
-                        
+                         </td>
+                        <td></td>
+                         <td></td>
                    </tr>  
-             <tr>
-                        <td>
-                            
-                      
-                            
-                        </td>
-                
-                        <td>
-                         
-                            
-                        </td>
-                 <td style="padding-left:10px;">
-                       Time
-                        
-                    </td>
-                    <td>
-                    {{scheduledTime}}
-                    </td>
-                        
-                   </tr>
                    <tr>
                         <td colspan="4"><b>Product detail</b></td>
                    </tr>
@@ -173,11 +132,7 @@
                    <tr>
                         <td >Asset Location</td><td >{{product.city}}</td>
                         <td >Description:</td><td >{{product.descripton}}</td>
-                   </tr>
-                   <tr>
-                        <td >Contact Person</td><td >{{#if product.contactPersonAsAbove}}<span>Same As Above</span>{{else}}<span>{{product.contactPerson}}</span>{{/if}}</td>
-                        <td >Contact Number</td><td >{{#if product.contactNumberAsAbove}}<span>Same As Above</span>{{else}}<span>{{product.contactNumber}}</span>{{/if}}</td>
-                   </tr>
+                   </tr>   
                    </table>
                    </td>
                    </tr>     
