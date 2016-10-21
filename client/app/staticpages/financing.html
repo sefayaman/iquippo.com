@@ -158,20 +158,20 @@
 
            <div class="row">
               <div class="col-xs-6">
-                <div class="form-group">
-                  <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Amount to be Financed">
+                <div class="form-group" ng-class="{'has-error': form.amountToBeFinanced.$invalid && form.submitted }">
+                  <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" ng-value="financeQuote.amountToBeFinanced" placeholder="Amount to be Financed" required>
                 </div>
               </div>
               <div class="col-xs-6">
-                <div class="form-group">
-                  <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
+                <div class="form-group" ng-class="{'has-error': form.indicativeRate.$invalid && form.submitted }">
+                  <input type="number" class="form-control" name="indicativeRate" ng-model="financeQuote.indicativeRate" ng-value="financeQuote.indicativeRate" min= '0' placeholder="Indicative Rate" required>
                 </div>
               </div>
             </div>
           <div class="row">
             <div class="col-xs-6">
-              <div class="form-group">
-                <input type="text" class="form-control" name="periodInMonths" ng-model="buycontact.financeInfo.periodInMonths" ng-value="buycontact.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+              <div class="form-group" ng-class="{'has-error': form.periodInMonths.$invalid && form.submitted }">
+                <input type="number" class="form-control" name="periodInMonths" ng-model="financeQuote.periodInMonths" ng-value="financeQuote.periodInMonths" ng-minlength="1"  min="1"  placeholder="Tenure (in Months)" required>
               </div>
             </div> 
                              

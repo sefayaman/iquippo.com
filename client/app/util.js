@@ -187,7 +187,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
             locationArr.push(location.city);
          });
           }
-      return locationArr.join();
+      return locationArr.join(", ");
     }
 
   return utilSvc;
