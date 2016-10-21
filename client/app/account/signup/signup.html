@@ -105,31 +105,23 @@
                             <span>By clicking submit, you agree to the <a href="/privacy" target="_blank" aria-hidden="true">Terms &amp; Conditions</a>.</span>
                         </label>
                       </div>
-                      <!-- <input type="checkbox" name="agree" ng-model="signupVm.user.agree" value="">  -->
-                    </div>
-                    <!-- <div class="col-sm-9 text-left">
-                      <p><small>By clicking submit, you agree to the <a href="/privacy" target="_blank" aria-hidden="true">Terms &amp; Conditions</a>.</small></p>
-                    </div> -->
+                    </div>                    
                   </div>
                 </div>
                   
                 <div class="form-group">
                   <div class="row">
                    <div class="col-sm-6 text-left">
-                      <div class="checkbox checkbox-info checkbox-circle">
-                        <input id="checkbox1" type="checkbox" name="activationOTP" ng-model="signupVm.user.activationOTP" value="mobile">
-                        <label for="checkbox1">
-                            Verification OTP on SMS
-                        </label>
-                      </div>
+                    <div class="radio radio-info">
+                        <input type="radio" id="inlineRadio1" name="activationOTP" ng-model="signupVm.user.activationOTP" value="mobile">
+                        <label for="inlineRadio1"> Verification OTP on SMS </label>
+                    </div>
                       <!-- <input type="radio" name="activationOTP" ng-model="signupVm.user.activationOTP" value="mobile"> <small>Verification OTP on SMS</small> -->
                     </div>
                     <div class="col-sm-6 text-left">
-                      <div class="checkbox checkbox-info checkbox-circle">
-                        <input id="checkbox2" type="checkbox" name="activationOTP" ng-model="signupVm.user.activationOTP" value="email">
-                        <label for="checkbox2">
-                            Verification OTP on Email
-                        </label>
+                      <div class="radio radio-info">
+                        <input type="radio" id="inlineRadio2" name="activationOTP" ng-model="signupVm.user.activationOTP" value="email">
+                        <label for="inlineRadio2"> Verification OTP on Email </label>
                       </div>
                       <!-- <input type="radio" name="activationOTP" ng-model="signupVm.user.activationOTP"  value="email"> <small>Verification OTP on Email</small> -->
                     </div>
