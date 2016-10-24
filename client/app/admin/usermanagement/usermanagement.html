@@ -22,7 +22,7 @@
           <div ng-if="isAdmin()" class="featured-pro1">
             
             <label>Channel Partners:</label>
-            <select ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user as (user.fname+' ('+user.mobile+')') for user in getUsersOnRole track by user._id" >
+            <select ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in getUsersOnRole track by user._id" >
               <option value="">Select User</option>
             </select>
           </div>
@@ -35,7 +35,7 @@
                 <th>User Type</th>
                 <th>Company Name</th>
                 <th>Mobile No.</th>
-                <th>Country</th>
+                <th>Location</th>
                 <th width="6%">Status</th>
                 <th width="15%" ng-show="getCurrentUser().role == 'admin'">Action</th>
                 
@@ -56,7 +56,7 @@
                   </td>
                   <td>{{user.company}}</td>
                   <td>{{user.mobile}}</td>
-                  <td>{{user.country}}</td>
+                  <td>{{user.city}}</td>
                   <td>
                     <span ng-if="user.status">Active</span>
                     <span ng-if="!user.status">Inactive</span>
