@@ -6,13 +6,23 @@ angular.module('sreizaoApp').controller('PaymentCtrl',PaymentCtrl);
 function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,LocationSvc,$sce,$window,$cookieStore) {
  	var vm = this;
    
-   //localhost ccavennue test crediential
-   /*var ccavenueURL = "https://test.ccavenue.com";
-   var currentURL = "http://localhost";
+    //ccavenue test  url
+   //var ccavenueURL = "https://test.ccavenue.com";
+
+   //ccavenue live  url
+   var ccavenueURL = " https://secure.ccavenue.com";
+
+   //localhost ccavennue test account crediential
+   /*var currentURL = "http://localhost";
    var accessCode = 'AVSW00DJ54AN50WSNA';*/
 
-   //iquippo.com ccavenue test 
-   var ccavenueURL = "https://test.ccavenue.com";
+   //localhost ccavennue live account crediential
+   /*var currentURL = "http://localhost";
+   var accessCode = 'AVMO67DJ54BY29OMYB';*/
+
+  
+
+   //iquippo.com ccavenue detail 
    var currentURL = " http://iquippo.com";
    var accessCode = 'AVSY67DJ29AL34YSLA';
 
