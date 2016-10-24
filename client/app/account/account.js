@@ -26,11 +26,13 @@ angular.module('sreizaoApp')
     })
     .state('mailhome.sentmails', {
         url: '/sentmails',
-        templateUrl: 'app/account/mymail/sentmails.html'
+        templateUrl: 'app/account/mymail/inbox.html',
+        controller: 'inboxCtrl as inboxVM'
     })
     .state('mailhome.compose', {
         url: '/compose',
-        templateUrl: 'app/account/mymail/compose.html'
+        templateUrl: 'app/account/mymail/compose.html',
+        controller: 'composeCtrl'
     })        
     .state('mailhome.show', {
         url: '/show',

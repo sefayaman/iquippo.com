@@ -13,14 +13,14 @@ var Schema = mongoose.Schema;
 // },{ _id : false });
 
 var replySchema = new Schema({
-	from: String,
-	reply: String,
-	to: [ {type: String} ]
+	from: {type: String, required: true},
+	reply: {type: String, required: true},
+	to: [ {type: String, required: true} ]
 }, {timestamps: true});
 
 
 var messageSchema = new Schema({
-	from: String,
+	from: {type: String, required: true},	
 	to: [ {type: String, required: true} ],	
 	subject: String,
 	message: {type: String, required: true},

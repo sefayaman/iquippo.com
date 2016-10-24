@@ -1,7 +1,7 @@
 <div class="table-responsive">
-    <blockquote>Please click on a row</blockquote>
+<!--     <blockquote>Please click on a row</blockquote>
     <p class="text-danger">You clicked on: <strong>{{ inboxVM.message }}</strong></p>
-    <br>
+    <br> -->
   <!-- <table datatable="ng" id="inbox_table" dt-options= "dtOptions" dt-instance="dogs" class="table table-bordred table-striped nosort"> -->
 
  <!-- <table datatable="" dt-options="inboxVM.dtOptions" dt-columns="inboxVM.dtColumns" dt-column-defs="inboxVM.dtColumnDefs" class="row-border hover"> -->
@@ -10,7 +10,8 @@
       <tr>
         <!-- <th><input type="checkbox" ng-model="inboxVM.selectAll" ng-click="inboxVM.toggleAll(inboxVM.selectAll, inboxVM.selected)"></th> -->
         <th>#</th>
-        <th>From</th>
+        <th ng-show="!inboxVM.isSentBox">From</th>
+        <th ng-show="inboxVM.isSentBox">To</th>
         <th>Subject</th>
         <!-- <th visibility="hidden">_id</th> -->
        </tr>
@@ -20,7 +21,8 @@
     	<tr ng-repeat="mess in inboxVM.messages" ng-click="inboxVM.showRow($index)">
     		<td><input type="checkbox" ng-model="inboxVM.selected[ mess._id ]" ng-click="inboxVM.toggleOne(inboxVM.selected)"></td>
 
-    		<td>{{mess.from}}</td>
+    		<td ng-show="inboxVM.isSentBox">{{mess.to}}</td>
+            <td ng-show="!inboxVM.isSentBox">{{mess.from}}</td>
     		<td>{{mess.subject}}</td>
             <!-- <td visibility="hidden">{{ mess._id }}</td> -->
     	</tr>

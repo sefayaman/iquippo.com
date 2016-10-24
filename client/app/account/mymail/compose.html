@@ -1,15 +1,15 @@
-<form>
+<form name="form" novalidate ng-submit="doSend()">
     <div class="form-group">
-        <input id="tokenfield" type="text" class="form-control" placeholder="To" />
+        <input id="tokenfield" type="text" class="form-control" name="to" ng-model="recievers" placeholder="To" ng-class="{'has-error': form.to.$invalid && submitted }" required/>
     </div>
     <div class="form-group">
-        <input type="text" class="form-control" placeholder="Subject" />
+        <input type="text" class="form-control" placeholder="Subject" name="subject" ng-model="mail.subject" />
     </div>
     <div class="form-group">
-        <textarea class="form-control" placeholder="message"></textarea>
+        <textarea class="form-control" placeholder="message" name="message" ng-model="mail.message"></textarea>
     </div>
     
     <div class="btn-send">
-    <button class="btn btn-success btn-md pull-right"><span class="fa fa-send"></span> Send</button>
+    <button class="btn btn-success btn-md pull-right" type="submit"><span class="fa fa-send"></span> Send</button>
     </div>
 </form>

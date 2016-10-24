@@ -1,13 +1,13 @@
-<form>
+<form name="form" novalidate ng-submit="replyVM.doSend()">
     <div class="form-group">
-        <input id="tokenfield" type="text" class="form-control" ng-model="replyVM.parentmess.from" placeholder="To" />
+        <input name="receivers" ng-class="{'has-error': form.receivers.$invalid && submitted }" id="tokenfield" type="text" class="form-control" ng-model="replyVM.receivers" placeholder="To" required/>
     </div>
     <div class="form-group">
-        <textarea class="form-control" ng-model="replyVM.mess" placeholder="message"></textarea>
+        <textarea class="form-control" name="message" required ng-model="replyVM.replymess" ng-class="{'has-error': form.message.$invalid && submitted }" placeholder="Message"></textarea>
     </div>
     
     <div class="btn-send">
-    	<button ng-click="doSend()" class="btn btn-success btn-md pull-right"><span class="fa fa-send"></span> Send</button>
+    	<button type="submit" class="btn btn-success btn-md pull-right"><span class="fa fa-send"></span> Send</button>
         <button ui-sref="mailhome.inbox" class="btn btn-danger btn-md pull-right"><span class="fa fa-send"></span> Cancel</button>
     </div>
 </form>

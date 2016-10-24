@@ -6,14 +6,84 @@ angular.module('account').controller('mailCtrl', mailCtrl);
 angular.module('account').controller('inboxCtrl', inboxCtrl);
 angular.module('account').controller('showmailCtrl', showmailCtrl);
 angular.module('account').controller('replyCtrl', replyCtrl);
+angular.module('account').controller('composeCtrl', composeCtrl);
+// angular.module('account').controller('sentmailsCtrl', sentmailsCtrl);
 
-function replyCtrl($scope, $stateParams){
-    var vm = this;
-    console.log( $stateParams.message);
-    vm.parentmess = $stateParams.message;
-    vm.mess = '';
-    vm.doSend = function(){
+// function sentmailsCtrl($scope){
+
+// }
+function composeCtrl($scope, $state, mailService, Auth){
+    $scope.mail = {};
+
+    $scope.doSend = function(){
         
+        if(!$scope.recievers || ($scope.recievers === '')){
+            alert('Please enter a reciever');
+            return;
+        }
+        $scope.mail.to = getrecievers($scope.recievers);
+        $scope.mail.from = Auth.getCurrentUser().email;
+        // var mess = new mailService();
+        mailService.save($scope.mail, 
+            function(res){
+                alert('Mail Sent '+res.mess);
+            },
+            function(res){            
+                alert('Error Sending Mail '+res.data.message);
+            }        
+        );
+    };
+}
+function getrecievers(recievers){
+    var recarr = [];
+    recievers = recievers.trim();
+    if(recievers.indexOf(' ') > 0){
+        recarr = recievers.split(' ');
+    }else if(recievers.indexOf(',') > 0){
+        recarr = recievers.split(',');
+    }else if(recievers.indexOf(';') > 0){
+        recarr = recievers.split(';');
+    }else{
+        recarr.push(recievers);
+    }
+    return recarr;
+}
+function replyCtrl($scope, $stateParams, mailService, Auth, $state){
+    var vm = this;
+
+    vm.parentmess = $stateParams.message;
+
+console.log(vm.parentmess);
+
+    vm.receivers = vm.parentmess.from;
+    vm.replymess = '';
+    vm.replyserv = mailService.get({ id: $stateParams.message._id }, function() {});
+
+    vm.doSend = function(){
+          
+          if(!vm.receivers || vm.receivers === ''){
+            alert('Please enter a reciever');
+            return;
+          }
+          var receivs = getrecievers(vm.receivers);
+
+          var repobj = {};
+          repobj.from = Auth.getCurrentUser().email;
+          repobj.reply = vm.replymess;
+          repobj.to = receivs;
+          vm.replyserv.mail.replies.push(repobj);
+
+console.log('Replay : ', vm.replyserv);          
+          vm.replyserv.mail.reply = repobj;
+          vm.replyserv.$update({ id: $stateParams.message._id }, 
+          function(res) {
+                alert('Reply Sent' + res.message);
+          },
+          function(res) {
+                alert('Error Replying' + res.data.message);
+          }
+          );
+          $state.go('mailhome.inbox');
     };
 }
 function mailCtrl($scope, $state){
@@ -23,13 +93,13 @@ function showmailCtrl($state, $stateParams){
     var vm = this;
 
     vm.mess = $stateParams.message;
-
+    vm.mess.created = moment(vm.mess.createdAt).format('DD/MM/YYYY, h:mm:ss a');
     vm.goReply = function(message){
         $state.go( 'mailhome.show.reply', { message: message} );
     };
 }
 
-function inboxCtrl($scope, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $http, Auth, $compile, $resource, $q, $state){
+function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $http, Auth, $compile, $resource, $q, $state){
     var vm = this;
     // vm.dogs = ['Bernese', 'Husky', 'Goldendoodle'];
 
@@ -75,13 +145,56 @@ function inboxCtrl($scope, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder
     vm.dtOptions = DTOptionsBuilder.newOptions()
     .withPaginationType('full_numbers')
     // .withOption('rowCallback', rowCallback);
+
+    // -------------------------------------
     // $resource('/api/messages/'+ Auth.getCurrentUser().email ).query().$promise
     //     .then(function(messs) {
     //         vm.messages = messs;
     //     });
-    fnThatReturnsAPromise().then(function(res){   
-          vm.messages = res.data;
-    });
+    // fnThatReturnsAPromise().then(function(res){   
+    //       vm.messages = res.data;
+    // });2016/10/18 12:46:05 
+    // vm.messages = mailService.query({from: Auth.getCurrentUser().email});
+    // var temp = mailService.getusersmails().$promise
+    //     .then(function(messs) {
+    //         vm.messages = messs.messages;
+    //     });
+    // mailService.getusersmails(
+    //     function (messobj){
+    //         vm.messages = messobj.messages;
+    //     },
+    //     function (res){
+    //         alert('Error Fetching Mails'+ res.data.message);
+    //     }
+    // );
+    // var isInbox = true;
+    var boj = {};
+    vm.isSentBox = false;
+    boj.id = 'usersmails';
+    if($state.current.name === 'mailhome.inbox'){
+        boj.fromto = 'to';
+
+    }else if($state.current.name === 'mailhome.sentmails'){
+        boj.fromto = 'from';
+        vm.isSentBox = true;
+    }
+    mailService.get(boj, 
+        function (messobj){
+            vm.messages = messobj.messages;
+        },
+        function (res){
+            alert('Error Fetching Mails'+ res.data.message);
+        }
+    );    
+    // User.get({userId:123}, function(user, getResponseHeaders){
+    //   user.abc = true;
+    //   user.$save(function(user, putResponseHeaders) {
+    //     //user => saved user object
+    //     //putResponseHeaders => $http header getter
+    //   });
+    // });
+    // -------------------------------------
+
     // vm.dtColumnDefs = [
     //     DTColumnDefBuilder.newColumnDef(0),
     //     DTColumnDefBuilder.newColumnDef(1),
@@ -157,7 +270,7 @@ function inboxCtrl($scope, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder
 
     function showRow(indx){
         // console.log(vm.messages[indx]);
-        $state.go('mailhome.show', {message: vm.messages[indx] });
+        $state.go('mailhome.show', {'message': vm.messages[indx] });
     }
     function fnThatReturnsAPromise(){
         var defer = $q.defer();
