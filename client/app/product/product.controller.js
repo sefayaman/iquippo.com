@@ -767,6 +767,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.product._id = productObj._id;
       $scope.valuationReq.product.assetId = productObj.assetId;
       $scope.valuationReq.product.assetDir = productObj.assetDir;
+      $scope.valuationReq.product.primaryImg = productObj.primaryImg;
       $scope.valuationReq.product.category = productObj.category.name;
       $scope.valuationReq.product.city = productObj.city;
       $scope.valuationReq.product.status = productObj.assetStatus;

@@ -39,6 +39,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		vm.valuationReq.product._id = $scope.product._id;
 		vm.valuationReq.product.assetId = $scope.product.assetId;
 		vm.valuationReq.product.assetDir = $scope.product.assetDir;
+		vm.valuationReq.product.primaryImg = $scope.product.primaryImg;
 		vm.valuationReq.product.name = $scope.product.name;
 		vm.valuationReq.product.category = $scope.product.category.name;
 		vm.valuationReq.product.status = $scope.product.assetStatus;
