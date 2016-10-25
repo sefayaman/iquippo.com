@@ -104,7 +104,7 @@ function ViewCartCtrl($scope,$rootScope,CartSvc,Auth,Modal,$uibModal,notificatio
         obj._id = item._id;
         obj.name = item.name;
         obj.assetDir = item.assetDir;
-        obj.image = item.primaryImg;
+        obj.primaryImg = item.primaryImg;
         obj.grossPrice = item.grossPrice;
         obj.seller = item.seller;
 

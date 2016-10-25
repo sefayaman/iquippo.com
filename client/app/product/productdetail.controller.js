@@ -219,7 +219,7 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     productObj.productId = $scope.currentProduct.productId;
     productObj.seller = $scope.currentProduct.seller;
     productObj.assetDir = $scope.currentProduct.assetDir;
-    productObj.image = $scope.currentProduct.primaryImg;
+    productObj.primaryImg = $scope.currentProduct.primaryImg;
     productObj.category = $scope.currentProduct.category.name;
     productObj.brand = $scope.currentProduct.brand.name;
     productObj.model = $scope.currentProduct.model.name;
