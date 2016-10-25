@@ -59,10 +59,18 @@
          Product Name: {{name}}
 	    </td>
     </tr> 
+    {{#if assetId}}
     <tr>
         <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
          Asset Id: {{assetId}}
         </td>
     </tr> 
+    {{else}}
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         Part No: {{partNo}}
+        </td>
+    </tr> 
+    {{/if}}
  </table>
  </body>
