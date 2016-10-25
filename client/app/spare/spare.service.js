@@ -152,7 +152,7 @@
         paymentTransaction.product._id = spare._id;
         paymentTransaction.product.partNo = spare.partNo;
         paymentTransaction.product.assetDir = spare.assetDir;
-        paymentTransaction.product.primaryImage = spare.primaryImg;
+        paymentTransaction.product.primaryImg = spare.primaryImg;
         if(spare.locations.length > 0)
           paymentTransaction.product.city = spare.locations[0].city;
         if(spare.locations.length > 1)

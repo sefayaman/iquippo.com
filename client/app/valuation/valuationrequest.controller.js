@@ -96,7 +96,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		paymentTransaction.product._id = $scope.product._id;
 		paymentTransaction.product.assetId = $scope.product.assetId;
 		paymentTransaction.product.assetDir = $scope.product.assetDir;
-		paymentTransaction.product.primaryImage = $scope.product.primaryImg;
+		paymentTransaction.product.primaryImg = $scope.product.primaryImg;
 		paymentTransaction.product.city = $scope.product.city;
 		paymentTransaction.product.name = $scope.product.name;
 		paymentTransaction.product.category = $scope.product.category.name;

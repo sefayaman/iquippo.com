@@ -417,7 +417,7 @@ function excel_from_data(data) {
       cell = {v: "Email"};
     else {
       if(user)
-        cell = {v: user.email};
+        cell = {v: user.email || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -447,7 +447,7 @@ function excel_from_data(data) {
       cell = {v: "Company Name"};
     else {
       if(user)
-        cell = {v: user.company};
+        cell = {v: user.company || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -467,7 +467,7 @@ function excel_from_data(data) {
       cell = {v: "Phone No."};
     else {
       if(user)
-        cell = {v: user.phone};
+        cell = {v: user.phone || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -477,7 +477,7 @@ function excel_from_data(data) {
       cell = {v: "Country"};
     else {
       if(user)
-        cell = {v: user.country};
+        cell = {v: user.country || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 

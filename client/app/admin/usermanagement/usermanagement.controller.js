@@ -5,8 +5,8 @@ angular.module('sreizaoApp')
    	var self = this;
 
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
-    $rootScope.users = [];
-    $scope.userList = [];
+    //$rootScope.users = [];
+    $rootScope.userList = [];
     $rootScope.globleUsers = [];
     $scope.getUsersOnRole = [];
     self.getAllUser = function(){
@@ -16,13 +16,13 @@ angular.module('sreizaoApp')
         filter["userId"] = Auth.getCurrentUser()._id;
       }
       userSvc.getUsers(filter).then(function(data){
-        $scope.userList = [];
+        $rootScope.userList = [];
         data.forEach(function(item){
           if(!item.isManpower || item.isPartner)
-            $scope.userList[$scope.userList.length] = item;
+            $rootScope.userList[$rootScope.userList.length] = item;
         });
 
-        $rootScope.globleUsers = $rootScope.users = data;
+        $rootScope.globleUsers = $rootScope.userList;
         getChannelUser("channelpartner");
       })
       .catch(function(err){
@@ -40,10 +40,10 @@ angular.module('sreizaoApp')
 
     $scope.onUserChange = function(user){
       if(!user) {
-        $rootScope.users = $rootScope.globleUsers;
+        $rootScope.userList = $rootScope.globleUsers;
         return;
       }
-      $rootScope.users = $rootScope.globleUsers.filter(function(d){
+      $rootScope.userList = $rootScope.globleUsers.filter(function(d){
         if(!angular.isUndefined(d.createdBy))
             return user._id == d.createdBy._id;
       });
@@ -107,7 +107,8 @@ angular.module('sreizaoApp')
     $scope.newUser ={};
     $scope.errors = {};
     //$scope.editImage = false;
-    $scope.users = [];
+    //$scope.users = [];
+    $rootScope.userList = [];
     $scope.locationList = [];
     LocationSvc.getAllLocation()
     .then(function(result){
@@ -121,7 +122,12 @@ angular.module('sreizaoApp')
         filter["userId"] = Auth.getCurrentUser()._id;
       }
       userSvc.getUsers(filter).then(function(data){
-        $rootScope.users = data;
+        //$rootScope.users = data;
+        $rootScope.userList = [];
+        data.forEach(function(item){
+          if(!item.isManpower || item.isPartner)
+            $rootScope.userList[$rootScope.userList.length] = item;
+        });
       })
       .catch(function(err){
         Modal.alert("Error in geting user");

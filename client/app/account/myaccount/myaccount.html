@@ -49,6 +49,9 @@
                   <h5><i class="fa fa-envelope"></i> <span ng-if="myAccountVm.userInfo.email">{{myAccountVm.userInfo.email}}<span ng-if="myAccountVm.userInfo.emailVerified">(verified)</span></span><span ng-if="!myAccountVm.userInfo.email">Add Email</span></h5>
                   
                   <!-- email end -->
+                  <!-- phone start -->
+                  <h5><i class="fa fa-phone"></i> <span ng-if="myAccountVm.userInfo.phone">{{myAccountVm.userInfo.phone}}</span><span ng-if="!myAccountVm.userInfo.phone">Add Phone</span></h5>
+                  <!-- phone end -->
                   <h5>
                   <i class="fa fa-phone"></i> <span ng-if="myAccountVm.userInfo.mobile">{{myAccountVm.userInfo.mobile}}<span ng-if="myAccountVm.userInfo.mobileVerified">(verified)</span></span><span ng-if="!myAccountVm.userInfo.mobile">Add Mobile Number</span></h5>
                 </div>
@@ -103,6 +106,13 @@
                       </div>
                     </div>
                     <!-- email end -->
+                    <!-- phone start -->
+                    <div class="row form-group">
+                      <div class="col-sm-12">
+                          <input type="text" name="phone" class="basic-detail" ng-model="myAccountVm.userInfo.phone" value="{{myAccountVm.userInfo.phone}}" placeholder="Phone No." >
+                      </div>
+                    </div>
+                    <!-- phone end -->
                     <div class="row form-group">
                       <div class="col-sm-12">
                         <div class="form-group" ng-class="{'has-error': basicInfoForm.mobile.$invalid && submitted}">

@@ -401,7 +401,7 @@ informationMessage['vendorSuccess'] = "Your have been successfully register!";
 informationMessage['classifiedSuccess'] = "Your request for Classified Ad has been successfully received.";
 
 /*channel partner messsage */
-informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this channel partner?";
+informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
 
 /*
 Date: 06/06/2016

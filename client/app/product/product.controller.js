@@ -695,6 +695,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq.product.mfgYear = productObj.mfgYear;
     $scope.auctionReq.product.serialNo = productObj.serialNo;
     $scope.auctionReq.product.grossPrice = productObj.grossPrice;
+    $scope.auctionReq.product.assetDir = productObj.assetDir;
+    $scope.auctionReq.product.primaryImg = productObj.primaryImg;
 
     for(var i=0;i< $scope.auctions.length; i++){
       if($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId){
@@ -822,7 +824,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         paymentTransaction.product._id = productObj._id;
         paymentTransaction.product.assetId = productObj.assetId;
         paymentTransaction.product.assetDir = productObj.assetDir;
-        paymentTransaction.product.primaryImage = productObj.primaryImg;
+        paymentTransaction.product.primaryImg = productObj.primaryImg;
         paymentTransaction.product.city = productObj.city;
         paymentTransaction.product.name = productObj.name;
         paymentTransaction.product.status = productObj.assetStatus;
