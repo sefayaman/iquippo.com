@@ -1,25 +1,27 @@
 
 <div>
 	<div>
-		created At : {{showmailVM.mess.created }}
+		When : {{showmailVM.mess.created }}
 	</div>
 	<div>
 		From : {{	showmailVM.mess.from }}
 	</div>
+	<div ng-repeat="gg in showmailVM.mess.to">
+		To : {{	gg }}
+	</div>	
 	<div>
 		Subject : {{	showmailVM.mess.subject }}
 	</div>
 	<div>
 		Message : {{	showmailVM.mess.message }}
 	</div>	
-	<div ng-repeat="gg in showmailVM.mess.to">
-		To : {{	gg }}
-	</div>
+	<hr />
 	<div ng-repeat="reply in showmailVM.mess.replies">
 		 To : <span ng-repeat="to in reply.to"> {{to}}&nbsp; </span>
+		 <span> From : {{reply.from}}&nbsp; </span>
 		<div> Message : {{ reply.reply }} </div>
 	</div>
-			<a ng-click="showmailVM.goReply(showmailVM.mess)" class="btn btn-success pull-right">Reply</a>	 	
+			<a ng-hide="showmailVM.isSentBox" ng-click="showmailVM.goReply(showmailVM.mess)" class="btn btn-success pull-right">Reply</a>	 	
 	    	<div class="col-sm-9">
 	    		<div ui-view></div>
 	    	</div>	

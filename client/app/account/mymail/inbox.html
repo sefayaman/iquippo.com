@@ -21,8 +21,8 @@
     	<tr ng-repeat="mess in inboxVM.messages" ng-click="inboxVM.showRow($index)">
     		<td><input type="checkbox" ng-model="inboxVM.selected[ mess._id ]" ng-click="inboxVM.toggleOne(inboxVM.selected)"></td>
 
-    		<td ng-show="inboxVM.isSentBox">{{mess.to}}</td>
-            <td ng-show="!inboxVM.isSentBox">{{mess.from}}</td>
+    		<td ng-show="inboxVM.isSentBox">{{mess.showfromorto}}</td>
+            <td ng-show="!inboxVM.isSentBox">{{mess.showfromorto}}</td>
     		<td>{{mess.subject}}</td>
             <!-- <td visibility="hidden">{{ mess._id }}</td> -->
     	</tr>

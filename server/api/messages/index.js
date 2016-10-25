@@ -9,9 +9,9 @@ var router = express.Router();
 router.get('/usersmails', auth.isAuthenticated(), controller.getusersmails);
 router.get('/:emailid', auth.isAuthenticated(), controller.getmail);
 
-router.post('/', controller.create);
+router.post('/', auth.isAuthenticated(), controller.create);
 // router.post('/insertreply/:messid', controller.insertreply);
 
-router.put('/:emailid', controller.updatemail);
+router.put('/:emailid', auth.isAuthenticated(), controller.updatemail);
 
 module.exports = router;
