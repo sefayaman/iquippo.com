@@ -103,7 +103,9 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       userSvc.getUsers(filter).then(function(data){
         data.forEach(function(item){
           $scope.adminEmail = item.email;
-          $scope.adminMobile = item.mobile;
+          //$scope.adminMobile = item.mobile;
+          $scope.adminPhone = item.phone;
+
         });
       })
       .catch(function(err){
@@ -111,7 +113,8 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       });
      } else {
         $scope.adminEmail = $rootScope.getCurrentUser().email;
-        $scope.adminMobile = $rootScope.getCurrentUser().mobile;
+        //$scope.adminMobile = $rootScope.getCurrentUser().mobile;
+        $scope.adminPhone = $rootScope.getCurrentUser().phone;
      }
 
     if($stateParams.id) {
