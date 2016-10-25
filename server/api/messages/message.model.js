@@ -15,8 +15,10 @@ var Schema = mongoose.Schema;
 var replySchema = new Schema({
 	from: {type: String, required: true},
 	reply: {type: String, required: true},
-	to: [ {type: String, required: true} ]
-}, {timestamps: true});
+	to: [ {type: String, required: true} ],
+	createdAt: { type : Date, default: Date.now }
+});
+// }, {timestamps: true});
 
 
 var messageSchema = new Schema({

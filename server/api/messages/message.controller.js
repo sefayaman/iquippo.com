@@ -1,6 +1,7 @@
 'use strict';
 
 var Message = require('./message.model');
+var _ = require('lodash');
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
@@ -49,20 +50,38 @@ exports.getusersmails = function(req, res, next){
 
   // console.log( 'getusersmails >>>>>> ',req.user);
   var boj = {};
-  boj.replies = {};
+  // boj.replies = {};
   var arr = [];
   if(req.param('fromto') === 'to'){
 
-    arr.push( { 'to': req.user.email} );
-    arr.push( { 'replies.to': req.user.email} );
+    // arr.push( { 'to': req.user.email} );
+    // arr.push( { 'replies.to': req.user.email} );
+    boj = { 'to': req.user.email};
 
   }else if(req.param('fromto') === 'from'){
-    arr.push ( { 'from': req.user.email} );
-    arr.push ( { 'replies.from': req.user.email} );
+    // arr.push ( { 'from': req.user.email} );
+    // arr.push ( { 'replies.from': req.user.email} );
+    boj = { 'from': req.user.email};
   }
-  var koj = { $or : arr };
-console.log( JSON.stringify(koj) );
-	Message.find(koj).sort({updatedAt: 'descending'}).exec( function(err, mess){
+  // var koj = { $or : arr };
+console.log( JSON.stringify(boj) );
+
+
+	Message.find(boj).sort({createdAt: 'descending'}).exec( function(err, mess){
+        var tt = [];
+        // for (var i = 0; i < mess.replies.length; i++) {
+        //   mess.replies[i]
+        // };
+        for (var i = 0; i < mess.length; i++) {
+          // tt = _.find(mess[i].replies, {'to': req.user.email});
+          // mess.filtreplies = tt;
+          mess[i].find({'replies.to': req.user.email}).sort({createdAt: 'descending'}).exec( function(err, filteredreplies){
+              tt = filteredreplies;
+console.log('tt >>>. ', tt);       
+          });
+
+        }
+ 
 		    if(err) { return handleError(res, err); }
 		    return res.status(200).json({'messages': mess});
 	});

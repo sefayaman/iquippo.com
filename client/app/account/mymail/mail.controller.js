@@ -27,11 +27,14 @@ function composeCtrl($scope, $state, mailService, Auth){
         mailService.save($scope.mail, 
             function(res){
                 alert('Mail Sent '+res.mess);
+                $state.go('mailhome.inbox');                        
             },
             function(res){            
                 alert('Error Sending Mail '+res.data.message);
+                $state.go('mailhome.inbox');        
             }        
         );
+
     };
 }
 function getrecievers(recievers){
@@ -48,6 +51,15 @@ function getrecievers(recievers){
     }
     return recarr;
 }
+
+function inArr(toArr, currruser ){
+
+    for (var i = toArr.length - 1; i >= 0; i--) {
+        if( currruser === toArr[i]) return true;
+    };
+    return false;
+} 
+
 function replyCtrl($scope, $stateParams, mailService, Auth, $state){
     var vm = this;
 
@@ -55,9 +67,17 @@ function replyCtrl($scope, $stateParams, mailService, Auth, $state){
 
 console.log(vm.parentmess);
 
-    vm.receivers = vm.parentmess.from;
+    if(vm.parentmess.replies && vm.parentmess.replies.length > 0){
+        vm.receivers = vm.parentmess.replies[vm.parentmess.replies.length -1].from;
+        var tempreceivs = getrecievers(vm.receivers);
+        if( inArr(tempreceivs, Auth.getCurrentUser().email) )
+            vm.receivers = vm.parentmess.replies[vm.parentmess.replies.length -1].to;
+    }else
+        vm.receivers = vm.parentmess.from;
+
     vm.replymess = '';
     vm.replyserv = mailService.get({ id: $stateParams.message._id }, function() {});
+
 
     vm.doSend = function(){
           
@@ -78,19 +98,24 @@ console.log('Replay : ', vm.replyserv);
           vm.replyserv.$update({ id: $stateParams.message._id }, 
           function(res) {
                 alert('Reply Sent' + res.message);
+                $state.go('mailhome.inbox');
           },
           function(res) {
                 alert('Error Replying' + res.data.message);
+                $state.go('mailhome.inbox');
           }
           );
-          $state.go('mailhome.inbox');
+          
     };
 }
 function mailCtrl($scope, $state){
     $state.go('mailhome.inbox');
 }
-function showmailCtrl($state, $stateParams){
+function showmailCtrl($state, $stateParams, $rootScope){
     var vm = this;
+
+    if($rootScope.previousState === 'mailhome.sentmails')
+        vm.isSentBox = true;
 
     vm.mess = $stateParams.message;
     vm.mess.created = moment(vm.mess.createdAt).format('DD/MM/YYYY, h:mm:ss a');
@@ -173,6 +198,7 @@ function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTCol
     boj.id = 'usersmails';
     if($state.current.name === 'mailhome.inbox'){
         boj.fromto = 'to';
+        vm.isSentBox = false;
 
     }else if($state.current.name === 'mailhome.sentmails'){
         boj.fromto = 'from';
@@ -181,11 +207,27 @@ function inboxCtrl(mailService, $scope, DTOptionsBuilder, DTColumnBuilder, DTCol
     mailService.get(boj, 
         function (messobj){
             vm.messages = messobj.messages;
+
+            angular.forEach(vm.messages, function(value, key){
+                if(!vm.isSentBox){
+                    if((value.replies && value.replies.length > 0) && (Auth.getCurrentUser().email !== value.replies[ value.replies.length - 1 ].from) )    
+                        vm.messages[key].showfromorto = value.replies[ value.replies.length - 1 ].from;
+                    else
+                        vm.messages[key].showfromorto = value.from;                        
+                }else{
+                    if((value.replies && value.replies.length > 0) && (!inArr(value.replies[ value.replies.length - 1 ].to, Auth.getCurrentUser().email) ) )
+                        vm.messages[key].showfromorto = value.replies[ value.replies.length - 1 ].to;
+                    else
+                        vm.messages[key].showfromorto = value.to;
+                }
+
+            });
         },
         function (res){
-            alert('Error Fetching Mails'+ res.data.message);
+            alert('Error Fetching Mails '+ res.data.message);
         }
-    );    
+    );  
+ 
     // User.get({userId:123}, function(user, getResponseHeaders){
     //   user.abc = true;
     //   user.$save(function(user, putResponseHeaders) {
