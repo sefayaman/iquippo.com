@@ -822,7 +822,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         paymentTransaction.product._id = productObj._id;
         paymentTransaction.product.assetId = productObj.assetId;
         paymentTransaction.product.assetDir = productObj.assetDir;
-        paymentTransaction.product.primaryImage = productObj.primaryImg;
+        paymentTransaction.product.primaryImg = productObj.primaryImg;
         paymentTransaction.product.city = productObj.city;
         paymentTransaction.product.name = productObj.name;
         paymentTransaction.product.status = productObj.assetStatus;
