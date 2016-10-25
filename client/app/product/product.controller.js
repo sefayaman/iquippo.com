@@ -695,6 +695,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq.product.mfgYear = productObj.mfgYear;
     $scope.auctionReq.product.serialNo = productObj.serialNo;
     $scope.auctionReq.product.grossPrice = productObj.grossPrice;
+    $scope.auctionReq.product.assetDir = productObj.assetDir;
+    $scope.auctionReq.product.primaryImg = productObj.primaryImg;
 
     for(var i=0;i< $scope.auctions.length; i++){
       if($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId){
