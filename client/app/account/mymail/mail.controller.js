@@ -32,7 +32,7 @@ function composeCtrl($scope, $state, mailService, Auth){
             function(res){            
                 alert('Error Sending Mail '+res.data.message);
                 $state.go('mailhome.inbox');        
-            }        
+            }
         );
 
     };
