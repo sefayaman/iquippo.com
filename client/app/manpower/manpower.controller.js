@@ -184,10 +184,10 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       } else {
         form.selectedAssets.$invalid = false;
       }
-      if(!vm.manpower.resumeDoc){
+      /*if(!vm.manpower.resumeDoc){
         Modal.alert("Please upload resume.",true);
         return;
-      }
+      }*/
       if(form.$invalid || ret){
         $scope.submitted = true;
         return;
@@ -195,23 +195,27 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       vm.manpower.assetOperated = $scope.selectedAssetsArr;
       //vm.manpower.role = "manpower";
       /*adding manpower info */
-      var dataToSend = {};
-      if(vm.manpower.email) 
-        dataToSend['email'] = vm.manpower.email;
-      if(vm.manpower.mobile) 
-        dataToSend['mobile'] = vm.manpower.mobile;
+      if(vm.manpower.agree) {
+        var dataToSend = {};
+        if(vm.manpower.email) 
+          dataToSend['email'] = vm.manpower.email;
+        if(vm.manpower.mobile) 
+          dataToSend['mobile'] = vm.manpower.mobile;
 
-      Auth.validateSignup(dataToSend).then(function(data){
-          if(data.errorCode == 1){
-             Modal.alert("Mobile number already in use. Please use another mobile number",true);
-             return;
-          }else if(data.errorCode == 2){
-            Modal.alert("Email address already in use. Please use another email address",true);
-             return;
-          }else{
-            saveNewManpowerUser();
-          }
-        });
+        Auth.validateSignup(dataToSend).then(function(data){
+            if(data.errorCode == 1){
+               Modal.alert("Mobile number already in use. Please use another mobile number",true);
+               return;
+            }else if(data.errorCode == 2){
+              Modal.alert("Email address already in use. Please use another email address",true);
+               return;
+            }else{
+              saveNewManpowerUser();
+            }
+          });
+      } else {
+          Modal.alert("Please Agree to the Terms & Conditions", true);
+      }
     }
 
     function setManpowerDate(user){

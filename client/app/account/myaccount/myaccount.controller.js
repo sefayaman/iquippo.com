@@ -205,10 +205,10 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       else
         $scope.docDir = manpowerDir;
       uploadSvc.upload(files[0], $scope.docDir).then(function(result){
-      if(files[0].name.indexOf('.docx') == -1){
+      /*if(files[0].name.indexOf('.docx') == -1){
         Modal.alert('Please upload a valid file');
         return;
-      }
+      }*/
       vm.manpowerInfo.docDir = result.data.assetDir;
       vm.manpowerInfo.resumeDoc = result.data.filename;
       });

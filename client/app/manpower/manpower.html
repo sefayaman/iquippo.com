@@ -246,10 +246,10 @@
                   <div class="row">
                     <div class="col-sm-12 form-group text-left">
                       <div class="checkbox checkbox-info checkbox-circle">
-                        <input id="checkbox1" type="checkbox" name="agree" ng-model="quote.agree" value="">
+                        <input id="checkbox1" type="checkbox" name="agree" ng-model="manpowerVm.manpower.agree" value="">
                         <label for="checkbox1">
                             I Agree to the 
-                          <a href="/privacy" ng-click="closeDialog()" aria-hidden="true" target="_blank">Terms &amp; Conditions.</a>
+                          <a href="/privacy" aria-hidden="true" target="_blank">Terms &amp; Conditions.</a>
                         </label>
                       </div>
                       <!-- <input type="checkbox" name="agree" ng-model="quote.agree" value=""> I Agree to the 
@@ -344,8 +344,8 @@
           </div>
         </div>
         <div class="col-sm-6 man-margin">
-          <p ng-if="userData.user.email"> <i class="fa fa-envelope"></i>  {{userData.user.email}}</p>
-          <p><i class="fa fa-phone"></i>  {{userData.user.mobile}}</p>
+          <p ng-if="userData.user.email"> <i class="fa fa-envelope"></i>    *****</p>
+          <p><i class="fa fa-phone"></i>    *****</p>
         </div>
       </div>
       <hr />
