@@ -231,7 +231,7 @@
                         <span>{{manpowerVm.manpower.resumeDoc}}</span>
                       </div>
                     </div>
-                    <div class="col-xs-6 form-group" ng-class="{'has-error': form.selectedAssets.$invalid && submitted }">
+                    <div class="col-xs-6 form-group">
                         <label>Select the equipment:</label>
                         <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
                           <option ng-repeat="assets in manpowerVm.assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>

@@ -180,13 +180,13 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
       var ret = false;
     
-      if($scope.selectedAssetsArr.length < 1){
+      /*if($scope.selectedAssetsArr.length < 1){
         form.selectedAssets.$invalid = true;
         ret = true;
       } else {
         form.selectedAssets.$invalid = false;
         ret = false;
-      }
+      }*/
       /*if(!vm.manpower.resumeDoc){
         Modal.alert("Please upload resume.",true);
         return;
