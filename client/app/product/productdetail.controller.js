@@ -226,7 +226,8 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     productObj.category = $scope.currentProduct.category.name;
     productObj.brand = $scope.currentProduct.brand.name;
     productObj.model = $scope.currentProduct.model.name;
-    productObj.subCategory = $scope.currentProduct.subcategory.name;
+    if($scope.currentProduct.subCategory)
+      productObj.subCategory = $scope.currentProduct.subCategory.name;
     productObj.city = $scope.currentProduct.city;
     productObj.grossPrice = $scope.currentProduct.grossPrice;
     productObj.comment = $scope.currentProduct.comment;
