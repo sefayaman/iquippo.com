@@ -69,6 +69,7 @@ var ProductSchema = new Schema({
   tradeType:String,
   rateMyEquipment:String,
   tcDocumentName:String,
+  specialOffers:String,
   rent:{},
   auctionListing:{type:Boolean,default:false},
   auction:{},
