@@ -79,6 +79,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.product.rent.rateDays = {};
     $scope.product.rent.rateMonths = {};
     $scope.product.rent.rateHours.rateType = 'hours';
+    $scope.product.rent.negotiable = false;
     product.group = {};
     product.category = {};
     product.brand = {};
