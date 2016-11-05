@@ -49,42 +49,59 @@ exports.updatemail = function(req, res, next){
 exports.getusersmails = function(req, res, next){
 
   // console.log( 'getusersmails >>>>>> ',req.user);
-  var boj = {};
+  // var boj = {};
   // boj.replies = {};
   var arr = [];
   if(req.param('fromto') === 'to'){
 
-    // arr.push( { 'to': req.user.email} );
-    // arr.push( { 'replies.to': req.user.email} );
-    boj = { 'to': req.user.email};
+    arr.push( { 'to': req.user.email} );
+    arr.push( { 'replies.to': req.user.email} );
+    // boj = { 'to': req.user.email};
 
   }else if(req.param('fromto') === 'from'){
-    // arr.push ( { 'from': req.user.email} );
-    // arr.push ( { 'replies.from': req.user.email} );
-    boj = { 'from': req.user.email};
+    arr.push ( { 'from': req.user.email} );
+    arr.push ( { 'replies.from': req.user.email} );
+    // boj = { 'from': req.user.email};
   }
-  // var koj = { $or : arr };
-console.log( JSON.stringify(boj) );
+  var koj = { $or : arr };
+console.log( JSON.stringify(koj) );
 
 
-	Message.find(boj).sort({createdAt: 'descending'}).exec( function(err, mess){
-        var tt = [];
-        // for (var i = 0; i < mess.replies.length; i++) {
-        //   mess.replies[i]
-        // };
+    Message.find(koj).sort({createdAt: 'descending'}).exec()
+    .then( function(mess){
+        // var gg = [];
         for (var i = 0; i < mess.length; i++) {
-          // tt = _.find(mess[i].replies, {'to': req.user.email});
-          // mess.filtreplies = tt;
-          mess[i].find({'replies.to': req.user.email}).sort({createdAt: 'descending'}).exec( function(err, filteredreplies){
-              tt = filteredreplies;
-console.log('tt >>>. ', tt);       
+// console.log('>>>>> ', mess[i].replies); 
+          var gg = [];
+//           for (var j = 0; j < mess[i].replies.length; j++) {
+//               var contains = false;
+//               for (var k = 0; k < mess[i].replies[j].to.length; k++) {
+//                 if(mess[i].replies[j].to[k] === 'ritinpali@gmail.com'){
+//                   contains = true;
+//                   break;
+//                 }
+//               }
+//               if(contains)
+//                 gg.push(mess[i].replies[j]);
+//           }
+          gg = _.filter(mess[i].replies, function(obj){
+              if(req.param('fromto') === 'from')
+                return obj.from ===  req.user.email;
+              else if(req.param('fromto') === 'to')
+                return _.includes(obj.to, req.user.email);
           });
-
+          // mess[i].filtreplies = {};
+          // mess[i].filtreplies = 'asdasdfdf';
+          mess[i].replies = gg;
+console.log('tt >>>. ', gg);       
+            
         }
- 
-		    if(err) { return handleError(res, err); }
-		    return res.status(200).json({'messages': mess});
-	});
+        return res.status(200).json({'messages': mess});
+
+    })
+    .then(undefined, function(err){
+        if(err) { return handleError(res, err); }
+    })    
 };
 
 exports.insertreply = function(req, res, next){
