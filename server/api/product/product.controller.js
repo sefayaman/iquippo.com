@@ -1802,7 +1802,9 @@ function importProducts(req,res,data){
           }
           product["rent"].toDate = toDate;
           //rent hours
+          var negotiableFlag = true;
           if(rateTypeH == "yes" || rateTypeH == 'y') {
+            negotiableFlag = false;
             var minPeriodH = row["Min_Rental_Period_Hours"];
             if(!minPeriodH){
               var errorObj = {};
@@ -1857,6 +1859,7 @@ function importProducts(req,res,data){
           }
           // rent days
           if(rateTypeD == "yes" || rateTypeD == 'y') {
+            negotiableFlag = false;
             var minPeriodD = row["Min_Rental_Period_Days"];
             if(!minPeriodD){
               var errorObj = {};
@@ -1911,6 +1914,7 @@ function importProducts(req,res,data){
           }
           //rent months
           if(rateTypeM == "yes" || rateTypeM == 'y') {
+            negotiableFlag = false;
             var minPeriodM = row["Min_Rental_Period_Months"];
             if(!minPeriodM){
               var errorObj = {};
@@ -1963,6 +1967,7 @@ function importProducts(req,res,data){
             }
             product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
           }
+          product["rent"].negotiable = negotiableFlag;
         }
         
         product["rateMyEquipment"] = trim(row["Rate_My_Equipment"] || "");
