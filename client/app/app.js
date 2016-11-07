@@ -46,6 +46,7 @@ angular.module('sreizaoApp',[
     $rootScope.manpowerDir = manpowerDir;
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
+    $rootScope.bannerDir = bannerDir;
     $rootScope.classifiedAdDir = classifiedAdDir;
     $rootScope.refresh = true;
 

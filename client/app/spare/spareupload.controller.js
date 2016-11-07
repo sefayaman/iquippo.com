@@ -270,7 +270,7 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
 function onManufacturerChange(manufacturerId){
     if(manufacturerId){
       vm.spare.manufacturers = {};
-      var mfgName = ManufacturerSvc.getManufacturerOnId(manufacturerId);
+      var mfgName = ManufacturerSvc.getManufacturerNameOnId(manufacturerId);
       //vm.spare.group = ct.group;
       vm.spare.manufacturers._id = manufacturerId;
       vm.spare.manufacturers.name = mfgName;

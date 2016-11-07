@@ -16,7 +16,7 @@
 						<option value="inv">Invite Code Setting</option>
 						<option value="paymnt">Payment Master</option>
 						<option value="manu">Manufacturer</option>
-						<option value="bannr">Banner Setting</option>
+						<option value="banner">Banner Setting</option>
 					</select>
 					<i class="caret"></i>
 				</div>
@@ -325,7 +325,7 @@
 					<div class="form-group col-sm-2">
 						<span class="btn btn-warning fileinput-button">
 							<span>Browse image...</span>
-							<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)"  class="ng-scope">
+							<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="image/*" class="ng-scope">
 						</span>
 					</div>
 					<div class="col-sm-4">
@@ -360,42 +360,42 @@
 			</div>
 		</div>
 		<!--Banner setting -->
-		<div ng-if="gsettingVm.tabValue == 'bannr'">
-			<form name="invMasterForm" novalidate class="invMasterForm">
+		<div ng-if="gsettingVm.tabValue == 'banner'">
+			<form name="bannerForm" novalidate class="invMasterForm">
 				<h4>Banner Setting</h4>
 				<legend></legend>
 				
 				<div class="row">
-					<div class="form-group col-sm-4">
+					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.name.$invalid && submitted}">
 						Promo Name
-						<input id="" name="promocode" type="text" class="form-control" placeholder="Enter Promo Name" required>
+						<input id="" name="name" ng-model="gsettingVm.banner.name" type="text" class="form-control" placeholder="Enter Promo Name*" required>
 					</div>
-					<div class="form-group col-sm-4">
+					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.code.$invalid && submitted}">
 						Promo Code
-						<input id="" name="promocode" type="text" class="form-control" placeholder="Enter Promo Code" required>
+						<input id="" name="code" type="text" class="form-control" placeholder="Enter Promo Code*" ng-model="gsettingVm.banner.code" required>
 					</div>
-					<div class="form-group col-sm-4">
+					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.regCharge.$invalid && submitted}">
 						Registration Charge
-						<input id="" name="promocode" type="text" class="form-control" placeholder="Enter Registration Charge" required>
+						<input id="" name="regCharge" type="number" class="form-control" placeholder="Enter Registration Charge*" ng-model="gsettingVm.banner.regCharge" required>
 					</div>		
 					
 				</div>
 				
 				<div class="row">
-					<div class="col-sm-3 form-group" >
+					<div class="col-sm-3 form-group" ng-class="{'has-error': bannerForm.sDate.$invalid && submitted}">
 						Start Date :
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
 							<span class="input-group-addon">
 								<a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
 							</span>
 						</div>
 					</div>
 					
-					<div class=" col-sm-3 form-group" >
+					<div class=" col-sm-3 form-group" ng-class="{'has-error': bannerForm.eDate.$invalid && submitted}">
 						End Date :
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
 							<span class="input-group-addon">
 								<a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
 							</span>
@@ -405,10 +405,10 @@
 						Hyperlink :
 						<div class="row">
 							<div class="col-xs-6 col-sm-6">
-								<input type="radio" placeholder=""  name="" value=""> Yes
+								<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
 							</div>
 							<div class="col-xs-6 col-sm-6">
-								<input type="radio" placeholder=""  name=""  value=""> No
+								<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="No"> No
 							</div>
 						</div>
 					</div>
@@ -416,18 +416,21 @@
 						Ticker :
 						<div class="row">
 							<div class="col-xs-6 col-sm-6">
-								<input type="radio" placeholder=""  name="" value=""> Yes
+								<input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="Yes"> Yes
 							</div>
 							<div class="col-xs-6 col-sm-6">
-								<input type="radio" placeholder=""  name=""  value=""> No
+								<input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="No"> No
 							</div>
 						</div>
 					</div>
 					<div class="form-group col-sm-2">
 						<span class="btn btn-warning fileinput-button">
 							<span>Browse image...</span>
-							<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)"  class="ng-scope">
+							<input type="file" name="file" onchange="angular.element(this).scope().updateBannerImage(this.files,this)" accept="image/*" class="ng-scope">
 						</span>
+						<div class="col-sm-2">
+                          {{gsettingVm.banner.webImg}}
+                    	</div>
 					</div>
 				</div>
 				
@@ -436,24 +439,27 @@
 							Show in mobile :
 							<div class="row form-group">
 								<div class="col-xs-6 col-sm-6">
-									<input type="radio" placeholder=""  name="" value=""> Yes
+									<input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="Yes"> Yes
 								</div>
 								<div class="col-xs-6 col-sm-6">
-									<input type="radio" placeholder=""  name=""  value=""> No
+									<input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="No"> No
 								</div>																
 							</div>							
 						</div>	
-						<div class="form-group col-sm-offset-1 col-sm-2">
+						<div class="form-group col-sm-offset-1 col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
 							<span class="btn btn-warning fileinput-button">
 								<span>Browse image...</span>
-								<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)"  class="ng-scope">
+								<input type="file" name="file" onchange="angular.element(this).scope().updateMobBannerImage(this.files,this)" accept="image/*" class="ng-scope">
 							</span>
+							<div class="col-sm-2">
+	                          {{gsettingVm.banner.mobileImg}}
+	                    	</div>
 						</div>				
 					</div>
 					<div class="row form-group">						
 						<div class="col-sm-offset-10 col-sm-2">
-							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
-							
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveBanner(bannerForm)" ng-if="!gsettingVm.bannerEdit">Save</button>
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateBanner(bannerForm)" ng-if="gsettingVm.bannerEdit">Update</button>
 						</div>
 					</div>
 
@@ -471,17 +477,17 @@
 								
 							</thead>
 							<tbody>
-								<tr ng-repeat="auc in gsettingVm.auctions">
-									<td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
-									<td>343546</td>
-									<td>Yes</td>
-									<td>Yes</td>
-									<td>26/01/2017</td>
-									<td>05/02/2017</td>
-									<td>Yes</td>
+								<tr ng-repeat="banner in gsettingVm.bannerList">
+									<td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{bannerDir}}/{{banner.webImg}}" alt="Image"></td>
+									<td>{{banner.code}}</td>
+									<td>{{banner.hyperlink}}</td>
+									<td>{{banner.ticker}}</td>
+									<td>{{gsettingVm.getDateFormat(banner.sDate)}}</td>
+									<td>{{gsettingVm.getDateFormat(banner.eDate)}}</td>
+									<td>{{banner.showInMobile}}</td>
 									<td>
-										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editAuctionMaster($index)"><i class="fa fa-edit"></i> </a>
-										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editBanner($index)"><i class="fa fa-edit"></i> </a>
+										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteBanner($index)"><i class="fa fa-trash"></i> </a>
 									</td>
 								</tr>
 							</tbody>

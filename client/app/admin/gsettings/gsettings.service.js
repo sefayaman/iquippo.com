@@ -412,7 +412,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     mfgService.updateManufacturer = updateManufacturer;
     mfgService.deleteManufacturer = deleteManufacturer;
     mfgService.getManufacturerOnId = getManufacturerOnId;
-    mfgService.getManufacturerOnId = getManufacturerOnId;
+    mfgService.getManufacturerNameOnId = getManufacturerNameOnId;
 
     function getAllManufacturer(){
       var deferred = $q.defer();
@@ -442,7 +442,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       return mfg;
     };
 
-    function getManufacturerOnId(id){
+    function getManufacturerNameOnId(id){
       var name = "";
       for(var i=0;i < manufacturerCache.length; i++){
         if(manufacturerCache[i]._id == id){
@@ -488,4 +488,80 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     return mfgService;
   }
+
+   angular.module('admin').factory("BannerSvc",BannerSvc);
+  function BannerSvc($http,$q){
+    var bannerService = {};
+    var path = "/api/common/banner";
+    var bannerCache = [];
+    
+    bannerService.getAll = getAll;
+    bannerService.save = save;
+    bannerService.update = update;
+    bannerService.deleteBanner = deleteBanner;
+    bannerService.getBannerOnId = getBannerOnId;
+    
+    function getAll(){
+      var deferred = $q.defer();
+      if(bannerCache.length > 0){
+        deferred.resolve(bannerCache);
+      }else{
+        $http.get(path)
+        .then(function(res){
+          bannerCache = res.data;
+          deferred.resolve(res.data);
+        })
+        .catch(function(err){
+          deferred.reject(err);
+        })
+      }
+      return deferred.promise;
+    }
+
+    function getBannerOnId(id){
+      var mfg;
+      for(var i = 0; i < bannerCache.length ; i++){
+        if(bannerCache[i]._id == id){
+          mfg = bannerCache[i];
+          break;
+        }
+      }
+      return mfg;
+    };
+
+    function save(data){
+      return $http.post(path,data)
+        .then(function(res){
+          bannerCache = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function update(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          bannerCache = [];
+            return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+    function deleteBanner(data){
+      return $http.delete(path + "/" + data._id)
+          .then(function(res){
+             bannerCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+    }
+
+    return bannerService;
+  }  
 })();

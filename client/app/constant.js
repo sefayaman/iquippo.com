@@ -81,6 +81,7 @@ var manpowerDir = "manpower";
 var avatarDir = "avatar";
 var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
+var bannerDir = "banner";
 var templateDir = "templates";
 var tempDir = "temp";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";

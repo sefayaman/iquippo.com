@@ -11,6 +11,7 @@ var AppSetting = require('./setting.model');
 var PaymentMaster = require('./paymentmaster.model');
 var ManufacturerMaster = require('./manufacturer.model');
 var AuctionMaster = require('./auctionmaster.model');
+var Banner = require('./banner.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
@@ -1377,6 +1378,49 @@ exports.destroyManufacturer = function(req, res) {
     if(err) { return handleError(res, err); }
     if(!manufacturer) { return res.status(404).send('Not Found'); }
     manufacturer.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send('No Content');
+    });
+  });
+};
+
+// Get list of banner master
+exports.getAllBanner = function(req, res) {
+  Banner.find(function (err, banner) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(banner);
+  });
+};
+
+
+// Creates a new banner master in the DB.
+exports.createBanner = function(req, res) {
+    Banner.create(req.body, function(err, banner) {
+	  if(err) { return handleError(res, err); }
+	   return res.status(200).json({errorCode:0, message:"Banner saved sucessfully"});
+	});
+};
+
+// Updates an existing banner master in the DB.
+exports.updateBanner = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  req.body.updatedAt = new Date();
+  Banner.findById(req.params.id, function (err, banner) {
+    if (err) { return handleError(res, err); }
+    if(!banner) { return res.status(404).send('Not Found'); }
+    Banner.update({_id:req.params.id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json({errorCode:0, message:"Banner updated sucessfully"});
+    });
+  });
+};
+
+// Deletes a banner master from the DB.
+exports.deleteBanner = function(req, res) {
+  Banner.findById(req.params.id, function (err, banner) {
+    if(err) { return handleError(res, err); }
+    if(!banner) { return res.status(404).send('Not Found'); }
+    banner.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.status(204).send('No Content');
     });
