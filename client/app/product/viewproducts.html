@@ -237,6 +237,9 @@
                           <p>{{product.city}}
 
                             <div class="pull-right">
+                              <label class="btn btn-success text-ellips">
+                               <i class="fa fa-tags"></i> {{product.specialOffers}}
+                              </label>
                               <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">
                                Add to Compare
                               </a>
@@ -253,7 +256,11 @@
            </div>
            <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
           </div>
-          <div class="no-result" ng-if="noResult">No results found</div>
+          <div class="no-result" ng-if="noResult">
+            <img src="assets/images/assets-loading.gif" class="form-group">
+            <p>No results found</p>
+          </div>
+          <!-- <div class="no-result" ng-if="noResult">No results found</div> -->
         </div>
       </div>
     </section>

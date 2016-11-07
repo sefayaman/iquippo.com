@@ -82,9 +82,16 @@
             <div class="form-group clearfix"></div>
 
               <uib-accordion close-others="oneAtATime" class="information">
-                <uib-accordion-group is-open="status.Firstopen" ng-click="informationTag('basicInformation')">
+                <uib-accordion-group is-open="status.Firstopen" ng-click="informationTag('specialoffer')">
                   <uib-accordion-heading>
-                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                    Special Offers<i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                  </uib-accordion-heading>
+                    <p>{{currentProduct.specialOffers}}</p>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="status.Basicstatus" ng-click="informationTag('basicInformation')">
+                  <uib-accordion-heading>
+                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Basicstatus, 'fa-plus': !status.Basicstatus}"></i>
                   </uib-accordion-heading>
                   <table class="table table-striped">
                     <tr>

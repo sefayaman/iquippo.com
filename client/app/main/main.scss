@@ -16,7 +16,7 @@ body{top:0 !important;}
 .static-search-banner{position: absolute; bottom: 0; padding: 20px 0; width: 100%; background: rgba(0,0,0,0.6); z-index: 10;}
 .static-search-banner .spare-content{position: relative; z-index: 10; }
 .static-search-banner .spare-content .btn{height: 40px; padding: 7px 10px; font-size: 18px;}
-.overlay{position:absolute; background:rgba(0,0,0,0.2); height:380px; z-index:10; width:100%;}
+.overlay{position:absolute; background:rgba(0,0,0,0.1); height:380px; z-index:10; width:100%;}
 .goog-te-gadget-simple{border:transparent !important;}
 .goog-tooltip.skiptranslate{display:none !important;}
 .goog-text-highlight{background:none !important; box-shadow:none !important;}
@@ -24,8 +24,13 @@ body{top:0 !important;}
 .search-result h4{font-size:16px;}
 .sorts{padding:10px;border-bottom: 1px solid #ccc;}
 .sorts:hover{background-color: #eee;}
-.search-result .btn-warning {padding: 5px 20px;text-align: left;width: 125px;}
-
+.search-result .btn-warning {padding: 6px 20px;text-align: left;width: 125px;}
+.search-result .btn-success {width: 125px;}
+.carousel-caption{top: 15%; background: rgba(0,0,0,0.4); height: 170px; left: 35%; right: 35%;}
+.carousel-caption h1{font-size: 42px; margin:5px 0;}
+.carousel-caption h2{font-size: 32px; margin:5px 0 10px;}
+.carousel-caption .btn-primary{padding: 8px 25px; font-size: 16px;}
+.tricker{position: absolute;top: 0; width: 100%; background: rgba(0,0,0,0.6); padding: 10px 100px 5px; z-index: 11; color: #fff;}
 /*Created by firoz*/
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 body{font-family:'Roboto Condensed',sans-serif;}
@@ -327,6 +332,7 @@ footer .subscribe{height: 40px;}
   #wrapper{padding-left:225px;}
   #page-wrapper{padding:10px;}
 }
+.input-group-addon .btn-default{padding: 8px 15px; font-size: 16px;}
 
 /* Top Navigation */
 .top-nav{padding:0 20px;}
@@ -380,7 +386,7 @@ ul.alert-dropdown{width:200px;}
 .modal-body{position:relative;padding:15px;text-align:center;font-size:16px;}
 .modal-footer{padding:15px;border-top:1px solid #e5e5e5;}
 .btn-warning:hover{background-color:#C7100E}
-.btn-default{color:#333;background-color:#fff;border-color:#ccc;margin-right:3px; padding: 5px 12px;}
+.btn-default{color:#333;background-color:#fff;border-color:#ccc;margin-right:3px; padding: 6px 12px;}
 #res{width:33%;height:20px;margin-left:-29px;margin-bottom:-18px;}
 .nav i{border-radius:63%;width:20px;height:18px;text-align:center;padding:1px;  /*color: black;*/}
 #editor{max-height:250px;height:250px;background-color:white;border-collapse:separate;border:1px solid rgb(204,204,204);padding:4px;box-sizing:content-box;-webkit-box-shadow:rgba(0,0,0,0.0745098) 0px 1px 1px 0px inset;box-shadow:rgba(0,0,0,0.0745098) 0px 1px 1px 0px inset;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border-top-left-radius:3px;overflow:scroll;outline:none;}

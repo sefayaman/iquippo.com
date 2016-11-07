@@ -4,7 +4,15 @@
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide ng-repeat="slide in mainVm.slides">
         <img  ng-src="assets/images/{{slide.image}}">
+        <div class="carousel-caption">
+          <h1>Promo Name</h1>          
+          <h2>Promocode: CYRNKLM</h2>
+          <button type="button" class="btn btn-md btn-primary">Bid Now</button>          
+        </div>
       </uib-slide>
+      <div class="tricker">
+        <marquee>Promo Name - 25000(2 bids), Promo Name - 30000(1bid), Promo Name - 25000(2 bids), Promo Name - 30000(1bid), Promo Name - 25000(2 bids), Promo Name - 30000(1bid),</marquee>
+      </div>
     </uib-carousel>
   </div>
   <!-- <a href="javascript:void(0);" ng-click="openDialog('classifiedad')" class="btn btn-primary ad-btn">
