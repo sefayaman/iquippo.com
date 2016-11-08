@@ -48,11 +48,11 @@
 
                 </div>
               </div>
-              <div class="featured-image">
+              <div class="featured-image" ng-if="currentProduct.featured">
                 <img src="assets/images/featured.png" class="img-responsive">
               </div>
-              <div class="stamp-image">
-                <img src="assets/images/featured.png" class="img-responsive">
+              <div class="stamp-image" ng-if="currentProduct.valuationStamp">
+                <img ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.valuationStamp}}" class="img-responsive">
               </div>
               <!-- Indicators -->
               <ol class="carousel-indicators">

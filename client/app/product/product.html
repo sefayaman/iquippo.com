@@ -662,16 +662,16 @@
                       </div>
 
                         <div class="clearfix form-group"></div>
-                        <div class="row">
+                        <div class="row" ng-if="isAdmin()">
                           <div class="col-sm-3">Upload Stamp</div>
                           <div class="form-group col-sm-2">
                             <span class="btn btn-success fileinput-button">
-                             <input type="file" name="doc"  data-filetype="doc" file-upload>
+                             <input type="file" name="valStamp"  data-filetype="valStamp" file-upload>
                               <span><i class="fa fa-img"></i> Browse Stamp</span>
                             </span>
                           </div>
                           <div class="col-sm-2 uploads-doc">
-                            {{product.tcDocumentName}}
+                            {{product.valuationStamp}}
                           </div>
                         </div>
                         <div class="clearfix form-group"></div>
