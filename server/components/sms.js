@@ -1,9 +1,11 @@
 var request = require('request');
 // configuration ===============================================================
-var smsConfig = { host:"http://mobiprom.com", URL: "/smsclient/pushsms.jsp",from:"iQUIPO",user:"CL20640",password:"XGFz5Hw"}
+var smsConfig = { host:"https://control.msg91.com", URL: "/api/sendhttp.php",sender:"SreiAP",authKey:"129263AJDKJkzoHwY4580e186b",countryCode:"91",route:4}
  var sms = {}
  sms.sendSMS = function(data,req,res,cb) {   
-    var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);   
+    //var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
+    var path = smsConfig.URL + "?authkey=" + smsConfig.authKey +  "&mobiles=" + ( smsConfig.countryCode + data.to)+ "&sender=" + smsConfig.sender + "&message="+encodeURI(data.content) + "&route=" + smsConfig.route + "&country=" +smsConfig.countryCode;   
+   
 	request(smsConfig.host  + path, {timeout: 5*60*60*1000},function (error, response, body) {
 		if(!error){
 			if(response.statusCode == 200){
@@ -37,7 +39,8 @@ var smsConfig = { host:"http://mobiprom.com", URL: "/smsclient/pushsms.jsp",from
 
 sms.autoSMS = function(data,cb) { 
 	
-    var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
+    //var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
+     var path = smsConfig.URL + "?authkey=" + smsConfig.authKey +  "&mobiles=" + ( smsConfig.countryCode + data.to)+ "&sender=" + smsConfig.sender + "&message="+encodeURI(data.content) + "&route=" + smsConfig.route + "&country=" +smsConfig.countryCode;   
     request(smsConfig.host  + path, {timeout: 5*60*60*1000},function (error, response, body) {
 		if(!error){
 			if(response.statusCode == 200){
