@@ -493,46 +493,56 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
   function BannerSvc($http,$q){
     var bannerService = {};
     var path = "/api/common/banner";
-    var bannerCache = [];
+    var HomeBannerCache = [];
     
     bannerService.getAll = getAll;
     bannerService.save = save;
     bannerService.update = update;
     bannerService.deleteBanner = deleteBanner;
-    bannerService.getBannerOnId = getBannerOnId;
+    bannerService.getHomeBanner = getHomeBanner;
     
     function getAll(){
-      var deferred = $q.defer();
-      if(bannerCache.length > 0){
-        deferred.resolve(bannerCache);
-      }else{
-        $http.get(path)
+
+        return $http.get(path)
         .then(function(res){
-          bannerCache = res.data;
-          deferred.resolve(res.data);
+          return res.data;
         })
         .catch(function(err){
-          deferred.reject(err);
+         throw err;
         })
-      }
-      return deferred.promise;
     }
 
-    function getBannerOnId(id){
-      var mfg;
-      for(var i = 0; i < bannerCache.length ; i++){
-        if(bannerCache[i]._id == id){
-          mfg = bannerCache[i];
-          break;
+    function getHomeBanner(){
+
+        var deferred = $q.defer();
+        if(HomeBannerCache.length > 0){
+          deferred.resolve(HomeBannerCache);
+        }else{
+          var filter = {};
+          filter.valid = 'y';
+          $http.post(path + "/onfilter",filter)
+          .then(function(res){
+            for(var i =0 ; i < 5 ; i++){
+              if(res.data[i]){
+                HomeBannerCache[HomeBannerCache.length] = res.data[i];  
+              }else
+                HomeBannerCache[HomeBannerCache.length] = HOME_BANNER[i];
+            }
+             deferred.resolve(HomeBannerCache);
+          })
+          .catch(function(err){
+            deferred.reject(err);
+          })
         }
-      }
-      return mfg;
+
+        return deferred.promise;
+        
     };
 
     function save(data){
       return $http.post(path,data)
         .then(function(res){
-          bannerCache = [];
+          HomeBannerCache = [];
           return res.data;
         })
         .catch(function(err){
@@ -543,7 +553,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     function update(data){
        return $http.put(path + "/" + data._id, data)
         .then(function(res){
-          bannerCache = [];
+          HomeBannerCache = [];
             return res.data;
         })
         .catch(function(err){
@@ -554,7 +564,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     function deleteBanner(data){
       return $http.delete(path + "/" + data._id)
           .then(function(res){
-             bannerCache = [];
+             HomeBannerCache = [];
             return res.data;
           })
           .catch(function(err){

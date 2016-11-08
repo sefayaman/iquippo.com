@@ -3,15 +3,16 @@
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
       <uib-slide ng-repeat="slide in mainVm.slides">
-        <img  ng-src="assets/images/{{slide.image}}">
-        <div class="carousel-caption">
-          <h1>Promo Name</h1>          
-          <h2>Promocode: CYRNKLM</h2>
-          <button type="button" class="btn btn-md btn-primary">Bid Now</button>          
+        <img  ng-src="assets/images/{{slide.webImg}}" ng-if="slide.default">
+         <img  ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" ng-if="!slide.default">
+        <div class="carousel-caption" ng-if="!slide.default">
+          <h1>{{slide.name}}</h1>          
+          <h2>Promocode: {{slide.code}}</h2>
+          <!-- <button type="button" class="btn btn-md btn-primary">Bid Now</button> -->          
         </div>
       </uib-slide>
       <div class="tricker">
-        <marquee>Promo Name - 25000(2 bids), Promo Name - 30000(1bid), Promo Name - 25000(2 bids), Promo Name - 30000(1bid), Promo Name - 25000(2 bids), Promo Name - 30000(1bid),</marquee>
+        <marquee><span ng-if="!slide.default && slide.ticker == 'Yes'" ng-repeat="slide in mainVm.slides">{{slide.name}} : {{slide.regCharge}}, &nbsp</span></marquee>
       </div>
     </uib-carousel>
   </div>

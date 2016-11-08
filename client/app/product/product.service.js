@@ -7,7 +7,6 @@
       var path = '/api/products';
       
       var productCache = {};
-      var categoryWiseProductCache = {};
       var featuredProductCache = [];
       var searchResult = [];
       var searchFilter = null;
@@ -84,22 +83,18 @@
       function getProductOnCategoryId(catId){
 
         var deferred = $q.defer();
-        if(categoryWiseProductCache[catId]){
-          deferred.resolve(categoryWiseProductCache[catId]);
-        }else{
-          var filter = {};
-          filter['status'] = true;
-          filter['categoryId'] = catId;
-          $http.post(path + "/search",filter)
-          .then(function(res){
-            categoryWiseProductCache[catId] = res.data;
-            updateCache(res.data);
-            deferred.resolve(res.data);
-          })
-          .catch(function(res){
-            deferred.reject(res);
-          })
-        }
+        var filter = {};
+        filter['status'] = true;
+        filter['categoryId'] = catId;
+        filter['sort'] = {featured:-1};
+        $http.post(path + "/search",filter)
+        .then(function(res){
+          updateCache(res.data);
+          deferred.resolve(res.data);
+        })
+        .catch(function(res){
+          deferred.reject(res);
+        })
         return deferred.promise;
       };
 
@@ -355,9 +350,6 @@
       function deleteFromCache(prd){
           if(productCache[prd._id])
             delete productCache[prd._id];
-          if(categoryWiseProductCache[prd.category._id]){
-            delete categoryWiseProductCache[prd.category._id];
-          }
       }
 
       function getSearchResult(){

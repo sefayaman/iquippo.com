@@ -82,7 +82,7 @@
             <div class="form-group clearfix"></div>
 
               <uib-accordion close-others="oneAtATime" class="information">
-                <uib-accordion-group is-open="status.Firstopen" ng-click="informationTag('specialoffer')">
+                <uib-accordion-group is-open="status.Firstopen" ng-if="currentProduct.specialOffers">
                   <uib-accordion-heading>
                     Special Offers<i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
                   </uib-accordion-heading>

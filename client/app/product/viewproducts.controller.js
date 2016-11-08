@@ -223,7 +223,8 @@ function onModelChange(model){
          //productSvc.setFilter(filter);
          $state.go("viewproduct",{},{notify:false});
       }
-     filter['status'] = true;
+      filter['status'] = true;
+      filter['sort'] = {featured:-1};
       productSvc.getProductOnFilter(filter)
       .then(function(result){
         $scope.noResult = false;

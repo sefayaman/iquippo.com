@@ -211,7 +211,7 @@
                         </div>
                         <div class="media-body">
                           <h4 class="media-heading">
-                            {{product.name}}
+                            {{product.name}}{{product.featured}}
                             <span ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'"><img src="assets/images/rent.png" width="30"></span>
                             <span ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'"><img src="assets/images/sale.png" width="30"></span>
                             <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
@@ -237,7 +237,7 @@
                           <p>{{product.city}}
 
                             <div class="pull-right">
-                              <label class="btn btn-success text-ellips">
+                              <label class="btn btn-success text-ellips" ng-if="currentProduct.specialOffers">
                                <i class="fa fa-tags"></i> {{product.specialOffers}}
                               </label>
                               <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">

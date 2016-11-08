@@ -3,13 +3,13 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
     vm.myInterval = 7000;
     vm.noWrapSlides = false;
-    vm.slides = HOME_BANNER;
+    vm.slides = [];//HOME_BANNER;
     vm.featuredslides = [];
     vm.imgLeftTop = "";
     vm.imgLeftBottom = "";
@@ -29,6 +29,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = beginVertScroll;
     $scope.categoryList = [{},{},{}];
+
+    function getHomeBanner(){
+      BannerSvc.getHomeBanner()
+      .then(function(slides){
+          vm.slides = slides;
+      })
+      .catch(function(){
+        vm.slides = HOME_BANNER;
+      })
+    }
 
     vm.toggleCategory = function(){
       vm.isCollapsed = !vm.isCollapsed;
@@ -145,6 +155,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
 
 
+    getHomeBanner();
     getFeaturedProduct();
     getCategories();
     getActiveClassifiedAd();
@@ -152,6 +163,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getStatusWiseProductCount();
     getStatusWiseSpareCount();
     getStatusWiseManPowerCount();
+
 
      function myFunct(keyEvent) {
       if(keyEvent)

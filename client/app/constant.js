@@ -347,15 +347,20 @@ var payableServices = [
 }
 ];
 var HOME_BANNER =  [{
-      image: 'Banner.jpg'
+      webImg: 'Banner.jpg',
+      default:true
     }, {
-      image: 'Banner1.jpg'
+      webImg: 'Banner1.jpg',
+      default:true
     }, {
-      image: 'Banner2.jpg'
+      webImg: 'Banner2.jpg',
+      default:true
     }, {
-      image: 'Banner3.jpg'
+      webImg: 'Banner3.jpg',
+      default:true
     }, {
-      image: 'Banner4.jpg'
+      webImg: 'Banner4.jpg',
+      default:true
     }];
     
 var serverPath = location.protocol +"//" + location.host; 

@@ -1427,6 +1427,24 @@ exports.deleteBanner = function(req, res) {
   });
 };
 
+exports.getBannerOnFilter = function(req,res){
+	var bodyData = req.body;
+	var filter = {};
+	filter['deleted'] = false;
+	filter['status'] = "active";
+	if(bodyData.valid && bodyData.valid == 'y'){
+		filter['eDate'] = {$gte:new Date()};
+		filter['sDate'] = {$lte:new Date()};
+	}
+	console.log("filter@@@@@@@@",filter);
+	var query = Banner.find(filter);
+	query.exec(
+	   function (err, banners) {
+	    if(err) { return handleError(res, err); }
+	     return res.status(200).json(banners);   
+	});
+}
+
 function isValid(d) {
   return d.getTime() === d.getTime();
 }
