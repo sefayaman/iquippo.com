@@ -10,7 +10,7 @@ body{top:0 !important;}
 .hero-unit {position: relative;padding: 30px 15px;color: #F5F5F5;text-align: center;text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);background: #4393B9;}
 .footer {text-align: center;padding: 30px 0;margin-top: 70px;border-top: 1px solid #E5E5E5;}
 .navbar-text {margin-left: 15px;}
-.banner{min-height:230px; position: relative;}
+.banner{min-height:400px; position: relative;}
 #static-banner{margin-bottom: 25px;}
 #static-banner img{height: 380px;}
 .static-search-banner{position: absolute; bottom: 0; padding: 20px 0; width: 100%; background: rgba(0,0,0,0.6); z-index: 10;}
@@ -1054,3 +1054,6 @@ div#jivo_close_button{position: absolute; right: -20px;}
   border-color: #5bc0de; }
 .radio-info input[type="radio"]:checked + label::after {
   background-color: #5bc0de; }
+
+.featured-image{position: absolute; top: 0; right: 0; width: 80px;}
+.stamp-image{position: absolute; top: 30%; right: 40%; left: 40%; bottom: 5%; width: 100px;}
