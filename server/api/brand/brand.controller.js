@@ -26,9 +26,9 @@ exports.create = function(req, res) {
   req.body.updatedAt = req.body.createdAt;
   //var Result=Group.findOne({name:req.body.name});
   var filter = {};
-  filter["group.name"] =req.body.group.name;
-  filter["category.name"] =req.body.category.name;
-  filter["name"] =req.body.name;
+  filter["group.name"] = {$regex:new RegExp("^"+ req.body.group.name + "$", 'i')};
+  filter["category.name"] = {$regex:new RegExp("^"+ req.body.category.name + "$", 'i')}; 
+  filter["name"] = {$regex:new RegExp("^"+ req.body.name + "$", 'i')};
   Brand.find(filter,function (err, brands) {
     if(err) { return handleError(res, err); }
     else

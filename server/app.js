@@ -26,6 +26,7 @@ var fsExtra = require('fs.extra');
  var gm = require('gm');
  var task = require('./components/task.js');
   var taskRunner = require('./components/taskRunner.js');
+  var BulkProductUpload = require('./components/bulkProductUpload.js');
 
 
 // Connect to database
@@ -189,6 +190,10 @@ app.post('/api/emailer',function(req,res){
 
 app.post('/api/createtask',function(req,res){
    task.create(req,res);
+});
+
+app.post('/api/updateproductmaster',function(req,res){
+   BulkProductUpload.updateProductMaster(req,res);
 });
 
 app.post('/api/currency',function(req,response){

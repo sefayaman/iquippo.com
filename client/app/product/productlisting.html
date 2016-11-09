@@ -98,8 +98,8 @@
                       <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
                     </td>
                     <td>
-                      <span ng-if="product.brand.name != 'Other'">{{product.model.name}}</span>
-                      <span ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</span>
+                      <span ng-if="product.model.name != 'Other'">{{product.model.name}}</span>
+                      <span ng-if="product.model.name == 'Other'">{{product.model.otherName}}</span>
                     </td>
                     <td>
                       <span ng-if="product.tradeType != 'RENT'"><i class="fa fa-inr" ng-if="product.currencyType == 'INR' && product.grossPrice"></i>{{product.grossPrice |number:0}}</span>

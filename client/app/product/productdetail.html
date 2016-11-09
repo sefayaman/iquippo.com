@@ -34,9 +34,9 @@
                        <span><i class="fa fa-map-marker"></i> {{currentProduct.country}}</span>
                     </li>
                     <li ng-if="currentProduct.documentName">|</li>
-                    <!-- <li ng-if="currentProduct.documentName">
+                    <li ng-if="currentProduct.documentName">
                       <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>
-                    </li> -->
+                    </li>
 
             </ul>
             <div class="carousel slide article-slide" id="article-photo-carousel">
@@ -158,8 +158,8 @@
                     </tr>
                     <tr>
                       <td>Documents</td>
-                      <td ng-if="currentProduct.documentName">                        
-                        <span ng-repeat="miscDoc in spareDetailVm.currentSpare.miscDocuments" class="document-space"> 
+                      <td>                        
+                        <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space"> 
                           <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{currentProduct.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
                         </span>
                       </td>

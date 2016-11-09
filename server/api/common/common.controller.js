@@ -217,6 +217,17 @@ exports.updateMasterData = function(req,res){
 			Seq()
 			.seq(function(){
 				var self = this;
+				var filter = {};
+				filter["name"] ={$regex:new RegExp("^"+ reqData.name + "$", 'i')};
+				var query = Group.find(filter);
+				query.exec(function(err,gps){
+				  if(err){ return handleError(res, err); }
+				  if(gps.length > 0 && gps[0]._id != _id){return res.status(400).send("Group already exist."); }
+				  self();
+				})
+			})
+			.seq(function(){
+				var self = this;
 				Group.update({_id:_id},{$set:reqData},function(err,gp){
 					 if(err) { return handleError(res, err); }
 					 self();
@@ -224,21 +235,21 @@ exports.updateMasterData = function(req,res){
 			})
 			.seq(function(){
 				var self = this;
-				Category.update({"group._id":_id},{$set:{"group.name":reqData.name}},function(err,ct){
+				Category.update({"group._id":_id},{$set:{"group.name":reqData.name}},{multi:true},function(err,ct){
 					 if(err) { return handleError(res, err); }
 					 self();
 				});
 			})
 			.seq(function(){
 				var self = this;
-				Brand.update({"group._id":_id},{$set:{"group.name":reqData.name}},function(err,br){
+				Brand.update({"group._id":_id},{$set:{"group.name":reqData.name}},{multi:true},function(err,br){
 					 if(err) { return handleError(res, err); }
 					 self();
 				});
 			})
 			.seq(function(){
 				var self = this;
-				Model.update({"group._id":_id},{$set:{"group.name":reqData.name}},function(err,md){
+				Model.update({"group._id":_id},{$set:{"group.name":reqData.name}},{multi:true},function(err,md){
 					 if(err) { return handleError(res, err); }
 					 res.status(200).send(type + " updated successfully");
 				});
@@ -248,6 +259,18 @@ exports.updateMasterData = function(req,res){
 			Seq()
 			.seq(function(){
 				var self = this;
+				var filter = {};
+				filter["name"] ={$regex:new RegExp("^"+ reqData.name + "$", 'i')};
+				filter["group.name"] ={$regex:new RegExp("^"+ reqData.group.name + "$", 'i')};
+				var query = Category.find(filter);
+				query.exec(function(err,gps){
+				  if(err){ return handleError(res, err); }
+				  if(gps.length > 0 && gps[0]._id != _id){return res.status(400).send("Category already exist."); }
+				  self();
+				})
+			})
+			.seq(function(){
+				var self = this;
 				Category.update({_id:_id},{$set:reqData},function(err,ct){
 					 if(err) { return handleError(res, err); }
 					 self();
@@ -255,14 +278,14 @@ exports.updateMasterData = function(req,res){
 			})
 			.seq(function(){
 				var self = this;
-				Brand.update({"category._id":_id},{$set:{group:reqData.group,"category.name":reqData.name}},function(err,br){
+				Brand.update({"category._id":_id},{$set:{group:reqData.group,"category.name":reqData.name}},{multi:true},function(err,br){
 					 if(err) { return handleError(res, err); }
 					 self();
 				});
 			})
 			.seq(function(){
 				var self = this;
-				Model.update({"category._id":_id},{$set:{group:reqData.group,"category.name":reqData.name}},function(err,br){
+				Model.update({"category._id":_id},{$set:{group:reqData.group,"category.name":reqData.name}},{multi:true},function(err,br){
 					 if(err) { return handleError(res, err); }
 					  res.status(200).send(type + " updated successfully");
 				});
@@ -272,6 +295,19 @@ exports.updateMasterData = function(req,res){
 			Seq()
 			.seq(function(){
 				var self = this;
+				var filter = {};
+				filter["name"] ={$regex:new RegExp("^"+ reqData.name + "$", 'i')};
+				filter["group.name"] ={$regex:new RegExp("^"+ reqData.group.name + "$", 'i')};
+				filter["category.name"] ={$regex:new RegExp("^"+ reqData.category.name + "$", 'i')};
+				var query = Brand.find(filter);
+				query.exec(function(err,gps){
+				  if(err){ return handleError(res, err); }
+				  if(gps.length > 0 && gps[0]._id != _id){return res.status(400).send("Brand already exist."); }
+				  self();
+				})
+			})
+			.seq(function(){
+				var self = this;
 				Brand.update({_id:_id},{$set:reqData},function(err,br){
 					 if(err) { return handleError(res, err); }
 					 self();
@@ -279,17 +315,35 @@ exports.updateMasterData = function(req,res){
 			})
 			.seq(function(){
 				var self = this;
-				Model.update({"brand._id":_id},{$set:{group:reqData.group,category:reqData.category,"brand.name":reqData.name}},function(err,md){
+				Model.update({"brand._id":_id},{$set:{group:reqData.group,category:reqData.category,"brand.name":reqData.name}},{multi:true},function(err,md){
 					 if(err) { return handleError(res, err); }
 					 res.status(200).send(type + " updated successfully");
 				});
 			})
 		break;
 		case "Model":
-			Model.update({_id:_id},{$set:reqData},function(err,md){
+			Seq()
+			.seq(function(){
+				var self = this;
+				var filter = {};
+				filter["name"] ={$regex:new RegExp("^"+ reqData.name + "$", 'i')};
+				filter["brand.name"] ={$regex:new RegExp("^"+ reqData.brand.name + "$", 'i')};
+				filter["group.name"] ={$regex:new RegExp("^"+ reqData.group.name + "$", 'i')};
+				filter["category.name"] ={$regex:new RegExp("^"+ reqData.category.name + "$", 'i')};
+				var query = Model.find(filter);
+				query.exec(function(err,gps){
+				  if(err){ return handleError(res, err); }
+				 if(gps.length > 0 && gps[0]._id != _id){return res.status(400).send("Model already exist."); }
+				  self();
+				})
+			})
+			.seq(function(){
+				Model.update({_id:_id},{$set:reqData},function(err,md){
 				 if(err) { return handleError(res, err); }
 				  res.status(200).send(type + " updated successfully");
+				});
 			});
+			
 		break;
 		default:
 		 return res.status(400).send("Invalid request");
@@ -571,25 +625,24 @@ function getHeaders(worksheet){
 
 function importData(req,res,data){
 	if(req.counter < req.numberOfCount){
-		req.data = {};
-		upsertGroup(req,res,data);
-		/*var row = data[req.counter];
-		var groupName = trim(row["Product_Group"] || "");
-		var categoryName = trim(row["Product_Category"] || "");
-		var modelName = trim(row["Model_No"] || "");
-		var brandName = trim(row["Brand_Name"] || "");
-		if(!groupName){
+		var row = data[req.counter];
+		var groupName = trim(row["Product_Group"] || "").toLowerCase();
+		var categoryName = trim(row["Product_Category"] || "").toLowerCase();
+		var modelName = trim(row["Model_No"] || "").toLowerCase();
+		var brandName = trim(row["Brand_Name"] || "").toLowerCase();
+		var isValid = true;
+		if(groupName == "other" || categoryName == "other" || modelName != "other" || brandName != "other")
+			isValid = false;
+		if(!isValid){
 			req.counter ++;
 			importData(req,res,data)
 			return;
-		}else{
-			req.data = {};
-			upsertGroup(req,res,data);
-		}*/
-
+		}
+		req.data = {};
+		upsertGroup(req,res,data);
 		
 	}else{
-		res.status(200).send(req.successCount + " out of " +  req.numberOfCount+ " records processed");
+		res.status(200).send(req.successCount + " out of " +  req.numberOfCount + " records processed");
 	}
 }
 
