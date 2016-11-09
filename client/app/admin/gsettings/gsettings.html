@@ -1,75 +1,75 @@
 <div id="wrapper">
-  <div id="page-wrapper">
-    <div class="container-fluid">
-      	<div class="row">
-	      <div class="col-sm-6">
-	      	<h3>General Settings</h3>
-	      </div>     
-	    </div>
-	    <hr>
-	    <div class="row form-group">
-	      	<div class="col-sm-4">
-	        	<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
-	        		<option value="sc">Sub Category</option>
-	        		<option value="loc">Location</option>
-	        		<option value="date">Auction Date</option>
-	        		<option value="inv">Invite Code Setting</option>
-	        		<option value="paymnt">Payment Master</option>
-	        		<option value="manu">Manufacturer</option>
-	        	</select>
-	        	<i class="caret"></i>
-	      	</div> 
-	    </div>
-	    <!--Select category  -->
-	    <div ng-if="gsettingVm.tabValue == 'sc'">
-	    	<form name="subCategoryForm" novalidate class="subCategoryForm">
-	    		<h4>Add New Sub Category</h4>
-	    		<legend></legend>
-	          <div class="row">
-	         	 <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
-	                <select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
-		        		<option value="">Select Category</option>
-		        		<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
-		        	</select>
-		        	<i class="caret"></i>
-	            </div>
-	            <div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
-	                <input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
-	            </div>                           	
-	           	<div class="form-group col-sm-2 pull-right">
-	           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
-	           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
-	           	</div>
-	           	
-	          </div>
-	     	</form>	
-		    <div class="table-responsive">
-	            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-
-	              <thead>
-	                <th>Category</th>                                
-	                <th>Sub Category</th>                                
-	                <th>Action</th>
-	               
-	              </thead>
-	              <tbody>
-	              <tr ng-repeat="sc in gsettingVm.subCategoryList">
-	                <td>{{sc.category.name}}</td>
-	                <td>{{sc.name}}</td>
-	                <td>
-	                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-						<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
-	                </td>
-	               </tr>
-	              </tbody>
-	            </table>
-	        </div>
-	    </div> 
-	   
-        <div class="clearfix form-group"></div>
-        <!--Select Location  -->
-        <div ng-if="gsettingVm.tabValue == 'loc'">
-        	<uib-tabset justified="true">
+	<div id="page-wrapper">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>General Settings</h3>
+				</div>
+			</div>
+			<hr>
+			<div class="row form-group">
+				<div class="col-sm-4">
+					<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
+						<option value="sc">Sub Category</option>
+						<option value="loc">Location</option>
+						<option value="date">Auction Date</option>
+						<option value="inv">Invite Code Setting</option>
+						<option value="paymnt">Payment Master</option>
+						<option value="manu">Manufacturer</option>
+						<option value="banner">Banner Setting</option>
+					</select>
+					<i class="caret"></i>
+				</div>
+			</div>
+			<!--Select category  -->
+			<div ng-if="gsettingVm.tabValue == 'sc'">
+				<form name="subCategoryForm" novalidate class="subCategoryForm">
+					<h4>Add New Sub Category</h4>
+					<legend></legend>
+					<div class="row">
+						<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
+							<select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
+								<option value="">Select Category</option>
+								<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
+							</select>
+							<i class="caret"></i>
+						</div>
+						<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
+							<input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
+						</div>
+						<div class="form-group col-sm-2 pull-right">
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
+						</div>
+						
+					</div>
+				</form>
+				<div class="table-responsive">
+					<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+						<thead>
+							<th>Category</th>
+							<th>Sub Category</th>
+							<th>Action</th>
+							
+						</thead>
+						<tbody>
+							<tr ng-repeat="sc in gsettingVm.subCategoryList">
+								<td>{{sc.category.name}}</td>
+								<td>{{sc.name}}</td>
+								<td>
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="clearfix form-group"></div>
+			<!--Select Location  -->
+			<div ng-if="gsettingVm.tabValue == 'loc'">
+				<uib-tabset justified="true">
 				<uib-tab heading="State">
 			        <form name="stateForm" novalidate class="stateForm">
 			    		<h4>Add New State</h4>
@@ -316,50 +316,186 @@
         <div ng-if="gsettingVm.tabValue == 'manu'">
 			<h4>Manufacturer</h4>
 			<legend></legend>
-			<form name="manufactureForm" novalidate class="invMasterForm">			    		
-	          <div class="row">
-                         	
-                <div class="form-group col-sm-4" ng-class="{'has-error': manufactureForm.name.$invalid && submitted}">
-                    <input name="name" ng-model="gsettingVm.manufacturer.name" type="text" class="form-control" placeholder="Manufacturers Name*" required>
-                </div> 
-                <div class="form-group col-sm-2">
-                	<span class="btn btn-warning fileinput-button">
-                        <span>Browse image...</span>
-                        <input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)"  class="ng-scope">
-                    </span>
-                </div>
-                <div class="col-sm-4">
-                  {{gsettingVm.manufacturer.imgsrc}}
-                </div>                           	
-               	<div class="form-group col-sm-2">
-               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveManufacturer(manufactureForm)" ng-if="!gsettingVm.manufacturerEdit">Save</button>
-               		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateManufacturer(manufactureForm)" ng-if="gsettingVm.manufacturerEdit">Update</button>
-               	</div>
-               	
-              </div>
-	     	</form>	
-          	<div class="table-responsive">
-	            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+			<form name="manufactureForm" novalidate class="invMasterForm">
+				<div class="row">
+					
+					<div class="form-group col-sm-4" ng-class="{'has-error': manufactureForm.name.$invalid && submitted}">
+						<input name="name" ng-model="gsettingVm.manufacturer.name" type="text" class="form-control" placeholder="Manufacturers Name*" required>
+					</div>
+					<div class="form-group col-sm-2">
+						<span class="btn btn-warning fileinput-button">
+							<span>Browse image...</span>
+							<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="image/*" class="ng-scope">
+						</span>
+					</div>
+					<div class="col-sm-4">
+						{{gsettingVm.manufacturer.imgsrc}}
+					</div>
+					<div class="form-group col-sm-2">
+						<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveManufacturer(manufactureForm)" ng-if="!gsettingVm.manufacturerEdit">Save</button>
+						<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateManufacturer(manufactureForm)" ng-if="gsettingVm.manufacturerEdit">Update</button>
+					</div>
+					
+				</div>
+			</form>
+			<div class="table-responsive">
+				<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+					<thead>
+						<th>Image</th>
+						<th>Manufacturers</th>
+						<th>Action</th>
+						
+					</thead>
+					<tbody>
+						<tr ng-repeat="mfg in gsettingVm.manufacturerList">
+							<td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
+							<td>{{mfg.name}}</td>
+							<td>
+								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer($index)"><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer($index)"><i class="fa fa-trash"></i> </a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--Banner setting -->
+		<div ng-if="gsettingVm.tabValue == 'banner'">
+			<form name="bannerForm" novalidate class="invMasterForm">
+				<h4>Banner Setting</h4>
+				<legend></legend>
+				
+				<div class="row">
+					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.name.$invalid && submitted}">
+						Promo Name
+						<input id="" name="name" ng-model="gsettingVm.banner.name" type="text" class="form-control" placeholder="Enter Promo Name">
+					</div>
+					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.code.$invalid && submitted}">
+						Promo Code
+						<input id="" name="code" type="text" class="form-control" placeholder="Enter Promo Code" ng-model="gsettingVm.banner.code">
+					</div>
+					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.regCharge.$invalid && submitted}">
+						Registration Charge
+						<input id="" name="regCharge" type="number" class="form-control" placeholder="Enter Registration Charge" ng-model="gsettingVm.banner.regCharge">
+					</div>		
+					
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-3 form-group" ng-class="{'has-error': bannerForm.sDate.$invalid && submitted}">
+						Start Date :
+						<div class="input-group">
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
+							<span class="input-group-addon">
+								<a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
+							</span>
+						</div>
+					</div>
+					
+					<div class=" col-sm-3 form-group" ng-class="{'has-error': bannerForm.eDate.$invalid && submitted}">
+						End Date :
+						<div class="input-group">
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+							<span class="input-group-addon">
+								<a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
+							</span>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						Hyperlink :
+						<div class="row">
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
+							</div>
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="No"> No
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						Ticker :
+						<div class="row">
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="Yes"> Yes
+							</div>
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="No"> No
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						<span class="btn btn-warning fileinput-button">
+							<span>Browse image...</span>
+							<input type="file" name="file" onchange="angular.element(this).scope().updateBannerImage(this.files,this)" accept="image/*" class="ng-scope">
+						</span>
+						<div class="col-sm-2">
+                          {{gsettingVm.banner.webImg}}
+                    	</div>
+					</div>
+				</div>
+				
+				<div class="row">	
+						<div class="form-group col-sm-2">
+							Show in mobile :
+							<div class="row form-group">
+								<div class="col-xs-6 col-sm-6">
+									<input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="Yes"> Yes
+								</div>
+								<div class="col-xs-6 col-sm-6">
+									<input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="No"> No
+								</div>																
+							</div>							
+						</div>	
+						<div class="form-group col-sm-offset-1 col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
+							<span class="btn btn-warning fileinput-button">
+								<span>Browse image...</span>
+								<input type="file" name="file" onchange="angular.element(this).scope().updateMobBannerImage(this.files,this)" accept="image/*" class="ng-scope">
+							</span>
+							<div class="col-sm-2">
+	                          {{gsettingVm.banner.mobileImg}}
+	                    	</div>
+						</div>				
+					</div>
+					<div class="row form-group">						
+						<div class="col-sm-offset-10 col-sm-2">
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveBanner(bannerForm)" ng-if="!gsettingVm.bannerEdit">Save</button>
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateBanner(bannerForm)" ng-if="gsettingVm.bannerEdit">Update</button>
+						</div>
+					</div>
 
-	              <thead>
-	                <th>Image</th>                                
-	                <th>Manufacturers</th>                                
-	                <th>Action</th>
-	               
-	              </thead>
-	              <tbody>
-	              <tr ng-repeat="mfg in gsettingVm.manufacturerList">
-	                <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
-	                <td>{{mfg.name}}</td>
-	                <td>
-						<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer($index)"><i class="fa fa-pencil"></i> </a>
-						<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer($index)"><i class="fa fa-trash"></i> </a>
-	                </td>
-	               </tr>
-	              </tbody>
-	            </table>
-        	</div>
-	    </div>
-    </div>
-  </div>
+					<div class="table-responsive">
+						<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+							<thead>
+								<th>Image</th>
+								<th>Promo Code</th>
+								<th>Hyperlink</th>
+								<th>Ticker</th>
+								<th>Banner start date</th>
+								<th>Banner end date</th>
+								<th>Show in mobile</th>
+								<th>Action</th>
+								
+							</thead>
+							<tbody>
+								<tr ng-repeat="banner in gsettingVm.bannerList">
+									<td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{bannerDir}}/{{banner.webImg}}" alt="Image"></td>
+									<td>{{banner.code}}</td>
+									<td>{{banner.hyperlink}}</td>
+									<td>{{banner.ticker}}</td>
+									<td>{{gsettingVm.getDateFormat(banner.sDate)}}</td>
+									<td>{{gsettingVm.getDateFormat(banner.eDate)}}</td>
+									<td>{{banner.showInMobile}}</td>
+									<td>
+										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editBanner($index)"><i class="fa fa-edit"></i> </a>
+										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteBanner($index)"><i class="fa fa-trash"></i> </a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+				</form>
+			</div>
+		</div>
+	</div>
 </div>

@@ -304,7 +304,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
               $scope.product.miscDocuments[args.index].name = result.data.filename;
               $scope.product.miscDocuments[args.index].createdAt = new Date();
               $scope.product.miscDocuments[args.index].userId = Auth.getCurrentUser()._id;
-            }
+            }else if(args.type == "valStamp")
+              product.valuationStamp = result.data.filename;
             else
               product.documentName = result.data.filename;
           })

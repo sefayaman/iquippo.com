@@ -211,9 +211,10 @@
                         </div>
                         <div class="media-body">
                           <h4 class="media-heading">
-                            {{product.name}}
+                            <span class="text-ellips productname">{{product.name}}</span>
                             <span ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'"><img src="assets/images/rent.png" width="30"></span>
                             <span ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'"><img src="assets/images/sale.png" width="30"></span>
+                            <span ng-if="product.featured"><img src="assets/images/featured.gif" width="60"></span>
                             <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
                             <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
                             <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
@@ -237,6 +238,9 @@
                           <p>{{product.city}}
 
                             <div class="pull-right">
+                              <label class="btn btn-success text-ellips" ng-if="product.specialOffers">
+                               <i class="fa fa-tags"></i> Special Offers
+                              </label>
                               <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">
                                Add to Compare
                               </a>
@@ -252,6 +256,10 @@
               </div>
            </div>
            <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+          </div>
+          <div class="no-result" ng-if="searching && !noResult">
+            <img src="assets/images/assets-loading.gif" class="form-group">
+            <p>Loading...</p>
           </div>
           <div class="no-result" ng-if="noResult">No results found</div>
         </div>

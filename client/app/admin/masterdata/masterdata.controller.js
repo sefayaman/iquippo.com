@@ -200,6 +200,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 					$scope.form.errorGroup = true;
 					isValid = false;
 				}
+				if($scope.c.name.toLowerCase() != "other" && $scope.c.group.name.toLowerCase() == "other"){
+					isValid = false;
+					Modal.alert("Invaid combination",true);
+				}
+				if($scope.c.name.toLowerCase() == "other" && $scope.c.group.name.toLowerCase() != "other"){
+					isValid = false;
+					Modal.alert("Invaid combination",true);
+				}
 				break;
 			case "Brand":
 				if(!$scope.b.category){
@@ -213,6 +221,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 				if(!$scope.b.name){
 					$scope.form.errorBrand = true;
 					isValid = false;
+				}
+				if($scope.b.name.toLowerCase() != "other" && ($scope.b.group.name.toLowerCase() == "other" || $scope.b.category.name.toLowerCase() == "other")){
+					isValid = false;
+					Modal.alert("Invaid combination",true);
+				}
+				if($scope.b.name.toLowerCase() == "other" && ($scope.b.group.name.toLowerCase() != "other" || $scope.b.category.name.toLowerCase() != "other")){
+					isValid = false;
+					Modal.alert("Invaid combination",true);
 				}
 			break;
 			case "Model":
@@ -231,6 +247,14 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 				if(!$scope.m.name){
 					$scope.form.errorModel = true;
 					isValid = false;
+				}
+				if($scope.m.name.toLowerCase() != "other" && ($scope.m.group.name.toLowerCase() == "other" || $scope.m.category.name.toLowerCase() == "other" || $scope.m.brand.name.toLowerCase() == "other")){
+					isValid = false;
+					Modal.alert("Invaid combination",true);
+				}
+				if($scope.m.name.toLowerCase() == "other" && ($scope.m.group.name.toLowerCase() != "other" || $scope.m.category.name.toLowerCase() != "other" || $scope.m.brand.name.toLowerCase() != "other")){
+					isValid = false;
+					Modal.alert("Invaid combination",true);
 				}
 				break;                
 		}
@@ -343,6 +367,11 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 	 }
 
 	 function deleteClick(type,val){
+
+		 	if(val.name == "Other"){
+		 		Modal.alert("Delete not allowed.");
+		 		return;
+		 	}
 	 		var dataToSend = {};
 	 		dataToSend["type"] = type;
 	 		dataToSend["_id"] = val._id;
@@ -378,8 +407,11 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 	 }
 
 	 function editClick(type,val){
+	 	if(val.name == "Other"){
+	 		Modal.alert("Edit not allowed.");
+	 		return;
+	 	}
  		switch(type){
-
 			case "Group":
 				$scope.g =  jQuery.extend(true, {}, val);
 				$scope.groupEdit = true;
@@ -429,6 +461,11 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 				dataToSend.brand = filterObject($scope.m.brand);
 			break;
 		}
+		if(dataToSend.name.toLowerCase() == "other"){
+	 		Modal.alert("Update not allowed.");
+	 		return;
+	 	}
+
 		dataToSend['type'] = type;
 		if(type == "Category" && $scope.fileObj.file){
 			uploadSvc.upload($scope.fileObj.file,categoryDir).then(function(result){

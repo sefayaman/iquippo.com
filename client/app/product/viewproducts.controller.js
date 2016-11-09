@@ -19,7 +19,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   $scope.selectedSubCategory = "";
   $scope.selectedBrand = "";
   $scope.selectedModel = "";
-  $scope.noResult = true;
+  $scope.searching = true;
+  $scope.noResult = false;
 
   /* pagination flag */
   vm.itemsPerPage = 10;
@@ -102,7 +103,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
            $scope.categorylistPageLoad($scope.TotalRecordPerPage,'category');
            //End
 
-          $scope.noResult = false;
+          $scope.searching = false;
           //vm.productListToCompare = [];
 
           if(result.length > 0){
@@ -223,10 +224,11 @@ function onModelChange(model){
          //productSvc.setFilter(filter);
          $state.go("viewproduct",{},{notify:false});
       }
-     filter['status'] = true;
+      filter['status'] = true;
+      filter['sort'] = {featured:-1};
       productSvc.getProductOnFilter(filter)
       .then(function(result){
-        $scope.noResult = false;
+        $scope.searching = false;
         //Start NJ : call categorylistPageLoad function.
         $scope.categorylistPageLoad(result,'Search Result');
         //End

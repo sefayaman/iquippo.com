@@ -53,4 +53,10 @@ router.post('/manufacturer/save', controller.createManufacturer);
 router.put('/manufacturer/:id', controller.updateManufacturer);
 router.delete('/manufacturer/:id', controller.destroyManufacturer);
 
+router.get('/banner', controller.getAllBanner);
+router.post('/banner', controller.createBanner);
+router.put('/banner/:id', controller.updateBanner);
+router.delete('/banner/:id', controller.deleteBanner);
+router.post('/banner/onfilter', controller.getBannerOnFilter);
+
 module.exports = router;

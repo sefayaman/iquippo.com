@@ -185,8 +185,13 @@ exports.search = function(req, res) {
 
   if(arr.length > 0)
     filter['$or'] = arr;
-  
-  var query = Product.find(filter).sort( { createdAt: -1 } );
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+
+  sortObj['createdAt'] = -1;
+
+  var query = Product.find(filter).sort(sortObj);
   query.exec(
                function (err, products) {
                       if(err) { return handleError(res, err); }

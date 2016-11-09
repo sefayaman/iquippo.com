@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc, ManufacturerSvc) {
+function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc, ManufacturerSvc, BannerSvc) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'sc';
@@ -55,7 +55,21 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     vm.deleteManufacturer = deleteManufacturer;
     $scope.updateLogo = updateLogo;
 
-
+    vm.banner = {};
+    vm.bannerEdit = false;
+    vm.saveBanner = saveBanner;
+    vm.updateBanner = updateBanner;
+    vm.editBanner = editBanner;
+    vm.deleteBanner = deleteBanner;
+    vm.getDateFormat = getDateFormat;
+    $scope.updateBannerImage = updateBannerImage;
+    $scope.updateMobBannerImage = updateMobBannerImage;
+    
+    function resetData(){
+    	vm.banner.hyperlink = "No";
+    	vm.banner.ticker = "No";
+    	vm.banner.showInMobile = "No";
+    }
     //Auction date master
 
     $scope.importAuctionMaster = importAuctionMaster;
@@ -82,6 +96,11 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     		break;
     		case 'manu':
     			getAllManufacturer();
+			break;
+			case 'banner':
+				vm.banner = {};
+				resetData();
+    			getAllBanner();
 			break;
 
     	}
@@ -545,6 +564,103 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 		})
     }
 
+/*Banner Master code start*/
+	function getAllBanner(){
+  		BannerSvc.getAll()
+  		.then(function(result){
+  			vm.bannerList = result;
+  		});
+  	}
+
+	function updateBannerImage(files){
+	    if(files.length == 0)
+	      return;
+	    uploadSvc.upload(files[0], bannerDir).then(function(result){
+	      vm.banner.webImg = result.data.filename;
+	    });
+	}
+
+	function updateMobBannerImage(files){
+	    if(files.length == 0)
+	      return;
+	    uploadSvc.upload(files[0], bannerDir).then(function(result){
+	      vm.banner.mobileImg = result.data.filename;
+	    });
+	}
+	function getDateFormat(date){
+		if(!date)
+			return;
+		return moment(date).format('DD/MM/YYYY');
+	}
+
+	function saveBanner(form){
+		/*if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}*/
+		if(!vm.banner.webImg){
+	        Modal.alert("Please upload image for web.",true);
+	        return;
+	      }
+	    if(!vm.banner.mobileImg && vm.banner.showInMobile == 'Yes'){
+	        Modal.alert("Please upload image for mobile.",true);
+	        return;
+	      }
+		//$scope.submitted = false;
+		BannerSvc.save(vm.banner)
+		.then(function(res){
+			if(res.errorCode == 0){
+				vm.banner = {};
+				resetData();
+				getAllBanner();
+			}
+			else
+				Modal.alert(res.message);
+		})
+
+	}
+
+	function updateBanner(form){
+		/*if(form.$invalid){
+			$scope.submitted = true;
+			return;
+		}*/
+		$scope.submitted = false;
+		BannerSvc.update(vm.banner)
+		.then(function(res){
+			if(res.errorCode == 0){
+				vm.banner = {};
+				resetData();
+				vm.bannerEdit = false;
+				getAllBanner();
+			}
+			else
+				Modal.alert(res.message);
+		})
+	}
+
+	function editBanner(index){
+		angular.copy(vm.bannerList[index], vm.banner)
+		vm.bannerEdit = true;
+		//onServiceChange(vm.paymentMaster.serviceCode,true);
+	}
+
+	function deleteBanner(index){
+		Modal.confirm("Are you sure want to delete?",function(ret){
+ 			if(ret == "yes")
+ 				submitDeleteBanner(index);
+ 		});
+	}
+
+	function submitDeleteBanner(idx){
+		BannerSvc.deleteBanner(vm.bannerList[idx])
+		.then(function(result){
+			vm.banner = {};
+			resetData();
+			getAllBanner();
+		})
+    }
+/*Banner Master code end*/
 
 //date picker
 	$scope.today = function() {

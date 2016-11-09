@@ -412,7 +412,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     mfgService.updateManufacturer = updateManufacturer;
     mfgService.deleteManufacturer = deleteManufacturer;
     mfgService.getManufacturerOnId = getManufacturerOnId;
-    mfgService.getManufacturerOnId = getManufacturerOnId;
+    mfgService.getManufacturerNameOnId = getManufacturerNameOnId;
 
     function getAllManufacturer(){
       var deferred = $q.defer();
@@ -442,7 +442,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       return mfg;
     };
 
-    function getManufacturerOnId(id){
+    function getManufacturerNameOnId(id){
       var name = "";
       for(var i=0;i < manufacturerCache.length; i++){
         if(manufacturerCache[i]._id == id){
@@ -488,4 +488,90 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     return mfgService;
   }
+
+   angular.module('admin').factory("BannerSvc",BannerSvc);
+  function BannerSvc($http,$q){
+    var bannerService = {};
+    var path = "/api/common/banner";
+    var HomeBannerCache = [];
+    
+    bannerService.getAll = getAll;
+    bannerService.save = save;
+    bannerService.update = update;
+    bannerService.deleteBanner = deleteBanner;
+    bannerService.getHomeBanner = getHomeBanner;
+    
+    function getAll(){
+
+        return $http.get(path)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+         throw err;
+        })
+    }
+
+    function getHomeBanner(){
+
+        var deferred = $q.defer();
+        if(HomeBannerCache.length > 0){
+          deferred.resolve(HomeBannerCache);
+        }else{
+          var filter = {};
+          filter.valid = 'y';
+          $http.post(path + "/onfilter",filter)
+          .then(function(res){
+            for(var i =0 ; i < 5 ; i++){
+              if(res.data[i]){
+                HomeBannerCache[HomeBannerCache.length] = res.data[i];  
+              }else
+                HomeBannerCache[HomeBannerCache.length] = HOME_BANNER[i];
+            }
+             deferred.resolve(HomeBannerCache);
+          })
+          .catch(function(err){
+            deferred.reject(err);
+          })
+        }
+
+        return deferred.promise;
+        
+    };
+
+    function save(data){
+      return $http.post(path,data)
+        .then(function(res){
+          HomeBannerCache = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function update(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          HomeBannerCache = [];
+            return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+    function deleteBanner(data){
+      return $http.delete(path + "/" + data._id)
+          .then(function(res){
+             HomeBannerCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+    }
+
+    return bannerService;
+  }  
 })();

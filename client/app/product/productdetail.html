@@ -48,6 +48,12 @@
 
                 </div>
               </div>
+              <div class="featured-image" ng-if="currentProduct.featured">
+                <img src="assets/images/featured.gif" class="img-responsive">
+              </div>
+              <div class="stamp-image" ng-if="currentProduct.valuationStamp">
+                <img ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.valuationStamp}}" class="img-responsive">
+              </div>
               <!-- Indicators -->
               <ol class="carousel-indicators">
                 <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images">
@@ -82,9 +88,16 @@
             <div class="form-group clearfix"></div>
 
               <uib-accordion close-others="oneAtATime" class="information">
-                <uib-accordion-group is-open="status.Firstopen" ng-click="informationTag('basicInformation')">
+                <uib-accordion-group is-open="status.Firstopen" ng-if="currentProduct.specialOffers">
                   <uib-accordion-heading>
-                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                    Special Offers<i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                  </uib-accordion-heading>
+                    <p>{{currentProduct.specialOffers}}</p>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="status.Basicstatus" ng-click="informationTag('basicInformation')">
+                  <uib-accordion-heading>
+                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Basicstatus, 'fa-plus': !status.Basicstatus}"></i>
                   </uib-accordion-heading>
                   <table class="table table-striped">
                     <tr>
@@ -143,6 +156,14 @@
                       <td>Product Condition</td>
                       <td>{{currentProduct.productCondition}}</td>
                     </tr>
+                    <tr>
+                      <td>Documents</td>
+                      <td>                        
+                        <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space"> 
+                          <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
+                        </span>
+                      </td>
+                    </tr>                    
                     <!-- <tr ng-repeat="link in currentProduct.videoLinks">
                       <td>Video Link</td>
                       <td><a ng-href="{{link.uri}}" target="_blank">{{link.uri}}</a></td>

@@ -26,7 +26,7 @@ exports.create = function(req, res) {
   req.body.updatedAt = req.body.createdAt;
   //var Result=Group.findOne({name:req.body.name});
   var filter = {};
-  filter["name"] =req.body.name;
+  filter["name"] ={$regex:new RegExp("^"+ req.body.name + "$", 'i')};
   Group.find(filter,function (err, groups) {
     if(err) { return handleError(res, err); }
     else

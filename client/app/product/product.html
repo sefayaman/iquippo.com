@@ -492,12 +492,13 @@
                               <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
-                          <!-- <div class="row">
+                          <div class="row">
                             <div class="form-group col-sm-5">Special Offers</div>
                             <div class="form-group col-sm-7">
-                              <input type="text" placeholder="Special Offers" name="specialOffers" ng-value="product.specialOffers" ng-model="product.specialOffers"  class="form-control">
+                              <textarea type="text" placeholder="Special Offers" name="specialOffers" ng-value="product.specialOffers" ng-model="product.specialOffers"  class="form-control">
+                              </textarea>
                             </div>
-                          </div> -->
+                          </div>
                           <div class="row" ng-if="isAdmin() && isEdit">
                             <div class="form-group col-sm-5">Asset Status</div>
                             <div class="form-group col-sm-4">
@@ -619,7 +620,7 @@
                                     <option  ng-repeat="ag in valAgencies" value="{{ag._id}}">{{ag.name}}</option>
                               </select>
                               <i class="caret"></i>
-                            </div>
+                            </div>                            
                           </div>
                         </div>
                       </div>
@@ -650,7 +651,7 @@
                               </span>
                             </div>
                             <div class="col-sm-2 uploads-doc">
-                              {{miscDoc.name}}
+                              <a href="{{uploadImagePrefix}}{{assetDir}}/{{miscDoc.name}}" target="_blank">{{miscDoc.name}}</a>
                             </div>
                             <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
                               <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
@@ -660,6 +661,19 @@
                         </div>
                       </div>
 
+                        <div class="clearfix form-group"></div>
+                        <div class="row" ng-if="isAdmin()">
+                          <div class="col-sm-3">Upload Stamp</div>
+                          <div class="form-group col-sm-2">
+                            <span class="btn btn-success fileinput-button">
+                             <input type="file" name="valStamp"  data-filetype="valStamp" file-upload>
+                              <span><i class="fa fa-img"></i> Browse Stamp</span>
+                            </span>
+                          </div>
+                          <div class="col-sm-2 uploads-doc">
+                            {{product.valuationStamp}}
+                          </div>
+                        </div>
                         <div class="clearfix form-group"></div>
                         <div class="row form-group">
                             <div class="col-sm-3">Upload Terms &amp; Conditions</div>
