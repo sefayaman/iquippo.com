@@ -20,6 +20,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   $scope.selectedBrand = "";
   $scope.selectedModel = "";
   $scope.noResult = true;
+  $scope.searching = false;
 
   /* pagination flag */
   vm.itemsPerPage = 10;
@@ -109,7 +110,8 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
             vm.currentPage = 1;
             vm.totalItems = result.length;
           }else{
-            $scope.noResult = true;
+            //$scope.noResult = true;
+            $scope.searching = true;
           }
           $scope.productList = result;
           productList = result;
@@ -235,7 +237,8 @@ function onModelChange(model){
           vm.currentPage = 1;
           vm.totalItems = result.length;
         }else{
-          $scope.noResult = true;
+          //$scope.noResult = true;
+          $scope.searching = true;
         }
         $scope.productList = result;
         productList = result;
@@ -424,7 +427,8 @@ $scope.today = function() {
        vm.currentPage = 1;
       vm.totalItems = $scope.productList.length;
     }else{
-       $scope.noResult = true;
+       //$scope.noResult = true;
+       $scope.searching = true;
     }
     
   }

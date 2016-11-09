@@ -368,15 +368,15 @@
 				<div class="row">
 					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.name.$invalid && submitted}">
 						Promo Name
-						<input id="" name="name" ng-model="gsettingVm.banner.name" type="text" class="form-control" placeholder="Enter Promo Name*" required>
+						<input id="" name="name" ng-model="gsettingVm.banner.name" type="text" class="form-control" placeholder="Enter Promo Name*">
 					</div>
 					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.code.$invalid && submitted}">
 						Promo Code
-						<input id="" name="code" type="text" class="form-control" placeholder="Enter Promo Code*" ng-model="gsettingVm.banner.code" required>
+						<input id="" name="code" type="text" class="form-control" placeholder="Enter Promo Code*" ng-model="gsettingVm.banner.code">
 					</div>
 					<div class="form-group col-sm-4" ng-class="{'has-error': bannerForm.regCharge.$invalid && submitted}">
 						Registration Charge
-						<input id="" name="regCharge" type="number" class="form-control" placeholder="Enter Registration Charge*" ng-model="gsettingVm.banner.regCharge" required>
+						<input id="" name="regCharge" type="number" class="form-control" placeholder="Enter Registration Charge*" ng-model="gsettingVm.banner.regCharge">
 					</div>		
 					
 				</div>
@@ -385,7 +385,7 @@
 					<div class="col-sm-3 form-group" ng-class="{'has-error': bannerForm.sDate.$invalid && submitted}">
 						Start Date :
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="gsettingVm.banner.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
 							<span class="input-group-addon">
 								<a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
 							</span>
@@ -395,7 +395,7 @@
 					<div class=" col-sm-3 form-group" ng-class="{'has-error': bannerForm.eDate.$invalid && submitted}">
 						End Date :
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="gsettingVm.banner.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
 							<span class="input-group-addon">
 								<a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
 							</span>

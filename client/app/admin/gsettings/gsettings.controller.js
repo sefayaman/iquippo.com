@@ -594,10 +594,10 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 	}
 
 	function saveBanner(form){
-		if(form.$invalid){
+		/*if(form.$invalid){
 			$scope.submitted = true;
 			return;
-		}
+		}*/
 		if(!vm.banner.webImg){
 	        Modal.alert("Please upload image for web.",true);
 	        return;
@@ -606,7 +606,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 	        Modal.alert("Please upload image for mobile.",true);
 	        return;
 	      }
-		$scope.submitted = false;
+		//$scope.submitted = false;
 		BannerSvc.save(vm.banner)
 		.then(function(res){
 			if(res.errorCode == 0){
