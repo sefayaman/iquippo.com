@@ -631,7 +631,7 @@ function importData(req,res,data){
 		var modelName = trim(row["Model_No"] || "").toLowerCase();
 		var brandName = trim(row["Brand_Name"] || "").toLowerCase();
 		var isValid = true;
-		if(groupName == "other" || categoryName == "other" || modelName != "other" || brandName != "other")
+		if(groupName == "other" || categoryName == "other" || modelName == "other" || brandName == "other")
 			isValid = false;
 		if(!isValid){
 			req.counter ++;
