@@ -34,9 +34,9 @@
                        <span><i class="fa fa-map-marker"></i> {{currentProduct.country}}</span>
                     </li>
                     <li ng-if="currentProduct.documentName">|</li>
-                    <li ng-if="currentProduct.documentName">
+                    <!-- <li ng-if="currentProduct.documentName">
                       <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>
-                    </li>
+                    </li> -->
 
             </ul>
             <div class="carousel slide article-slide" id="article-photo-carousel">
@@ -49,7 +49,7 @@
                 </div>
               </div>
               <div class="featured-image" ng-if="currentProduct.featured">
-                <img src="assets/images/featured.png" class="img-responsive">
+                <img src="assets/images/featured.gif" class="img-responsive">
               </div>
               <div class="stamp-image" ng-if="currentProduct.valuationStamp">
                 <img ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.valuationStamp}}" class="img-responsive">
@@ -156,6 +156,14 @@
                       <td>Product Condition</td>
                       <td>{{currentProduct.productCondition}}</td>
                     </tr>
+                    <tr>
+                      <td>Documents</td>
+                      <td ng-if="currentProduct.documentName">                        
+                        <span ng-repeat="miscDoc in spareDetailVm.currentSpare.miscDocuments" class="document-space"> 
+                          <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{currentProduct.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
+                        </span>
+                      </td>
+                    </tr>                    
                     <!-- <tr ng-repeat="link in currentProduct.videoLinks">
                       <td>Video Link</td>
                       <td><a ng-href="{{link.uri}}" target="_blank">{{link.uri}}</a></td>
