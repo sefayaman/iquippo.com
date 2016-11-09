@@ -200,11 +200,11 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 					$scope.form.errorGroup = true;
 					isValid = false;
 				}
-				if($scope.c.name.toLowerCase != "other" && $scope.c.group.name.toLowerCase == "other"){
+				if($scope.c.name.toLowerCase() != "other" && $scope.c.group.name.toLowerCase() == "other"){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
 				}
-				if($scope.c.name.toLowerCase == "other" && $scope.c.group.name.toLowerCase != "other"){
+				if($scope.c.name.toLowerCase() == "other" && $scope.c.group.name.toLowerCase() != "other"){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
 				}
@@ -248,11 +248,11 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 					$scope.form.errorModel = true;
 					isValid = false;
 				}
-				if($scope.m.name.toLowerCase != "other" && ($scope.m.group.name.toLowerCase == "other" || $scope.m.category.name.toLowerCase == "other" || $scope.m.brand.name.toLowerCase == "other")){
+				if($scope.m.name.toLowerCase() != "other" && ($scope.m.group.name.toLowerCase() == "other" || $scope.m.category.name.toLowerCase() == "other" || $scope.m.brand.name.toLowerCase() == "other")){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
 				}
-				if($scope.m.name.toLowerCase == "other" && ($scope.m.group.name.toLowerCase != "other" || $scope.m.category.name.toLowerCase != "other" || $scope.m.brand.name.toLowerCase != "other")){
+				if($scope.m.name.toLowerCase() == "other" && ($scope.m.group.name.toLowerCase() != "other" || $scope.m.category.name.toLowerCase() != "other" || $scope.m.brand.name.toLowerCase() != "other")){
 					isValid = false;
 					Modal.alert("Invaid combination",true);
 				}
@@ -461,7 +461,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 				dataToSend.brand = filterObject($scope.m.brand);
 			break;
 		}
-		if(dataToSend.name.toLowerCase == "other"){
+		if(dataToSend.name.toLowerCase() == "other"){
 	 		Modal.alert("Update not allowed.");
 	 		return;
 	 	}
