@@ -160,7 +160,7 @@
                       <td>Documents</td>
                       <td>                        
                         <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space"> 
-                          <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{currentProduct.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
+                          <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
                         </span>
                       </td>
                     </tr>                    
