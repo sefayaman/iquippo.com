@@ -95,6 +95,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
           $scope.equipmentSearchFilter.group = $scope.selectedCategory.group.name;
           onCategoryChange(cat,true);
         }
+        $scope.searching = true;
         productSvc.getProductOnCategoryId($stateParams.id)
         .then(function(result){
            $scope.TotalRecordPerPage = result.slice(0,vm.itemsPerPage);
@@ -109,6 +110,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
           if(result.length > 0){
             vm.currentPage = 1;
             vm.totalItems = result.length;
+            $scope.noResult = false;
           }else{
             $scope.noResult = true;
           }
@@ -226,6 +228,7 @@ function onModelChange(model){
       }
       filter['status'] = true;
       filter['sort'] = {featured:-1};
+      $scope.searching = true;
       productSvc.getProductOnFilter(filter)
       .then(function(result){
         $scope.searching = false;
@@ -235,6 +238,7 @@ function onModelChange(model){
         if(result.length > 0){
           vm.currentPage = 1;
           vm.totalItems = result.length;
+          $scope.noResult = false;
         }else{
           $scope.noResult = true;
         }
@@ -424,6 +428,7 @@ $scope.today = function() {
     if($scope.productList.length > 0){
        vm.currentPage = 1;
       vm.totalItems = $scope.productList.length;
+      $scope.noResult = false;
     }else{
        $scope.noResult = true;
     }

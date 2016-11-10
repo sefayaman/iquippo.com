@@ -195,7 +195,7 @@
               </li>
             </ul> -->
 
-             <div ng-if="!noResult">
+             <div ng-if="!searching && !noResult">
                  <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
                  <span class="no-list text-right">Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
                 <div id="search-result_wrapper" class="search-result">
@@ -261,7 +261,7 @@
             <img src="assets/images/assets-loading.gif" class="form-group">
             <p>Loading...</p>
           </div>
-          <div class="no-result" ng-if="noResult">No results found</div>
+          <div class="no-result" ng-if="noResult && !searching">No results found</div>
         </div>
       </div>
     </section>

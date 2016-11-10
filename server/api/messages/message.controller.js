@@ -89,6 +89,8 @@ console.log( JSON.stringify(koj) );
                 return obj.from ===  req.user.email;
               else if(req.param('fromto') === 'to')
                 return _.includes(obj.to, req.user.email);
+              else
+                return null;
           });
           // mess[i].filtreplies = {};
           // mess[i].filtreplies = 'asdasdfdf';
