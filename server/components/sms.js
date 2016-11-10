@@ -1,6 +1,6 @@
 var request = require('request');
 // configuration ===============================================================
-var smsConfig = { host:"https://control.msg91.com", URL: "/api/sendhttp.php",sender:"SreiAP",authKey:"129263AJDKJkzoHwY4580e186b",countryCode:"91",route:4}
+var smsConfig = { host:"https://control.msg91.com", URL: "/api/sendhttp.php",sender:"iQuipo",authKey:"129263AJDKJkzoHwY4580e186b",countryCode:"91",route:4}
  var sms = {}
  sms.sendSMS = function(data,req,res,cb) {   
     //var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
