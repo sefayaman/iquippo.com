@@ -227,6 +227,13 @@ angular.module('sreizaoApp')
         layout:'admin',
         restrict:true
       })
+      .state('bidValue', {
+        url: '/bidValue',
+        templateUrl: 'app/bidValue/bid-value.html',
+        authenticate:true,
+        layout:'admin',
+        restrict:true
+      })
       .state('services', {
         url: '/services',
         templateUrl: 'app/admin/services/services.html',

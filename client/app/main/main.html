@@ -5,15 +5,16 @@
       <uib-slide ng-repeat="slide in mainVm.slides">
         <img  ng-src="assets/images/{{slide.webImg}}" ng-if="slide.default">
          <img  ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" ng-if="!slide.default">
-        <!-- <div class="carousel-caption" ng-if="!slide.default">
+        <div class="carousel-caption" ng-if="!slide.default">
           <h1>{{slide.name}}</h1>          
           <h2>Promocode: {{slide.code}}</h2>
           <button type="button" class="btn btn-md btn-primary">Bid Now</button>          
-        </div> -->
+        </div>
+        <a href="" class="bid-gif"><img src="assets/images/bid-now.gif"></a>
       </uib-slide>
-      <!-- <div class="tricker">
+      <div class="tricker">
         <marquee><span ng-if="!slide.default && slide.ticker == 'Yes'" ng-repeat="slide in mainVm.slides">{{slide.name}} : {{slide.regCharge}}, &nbsp</span></marquee>
-      </div> -->
+      </div>
     </uib-carousel>
   </div>
   <!-- <a href="javascript:void(0);" ng-click="openDialog('classifiedad')" class="btn btn-primary ad-btn">
