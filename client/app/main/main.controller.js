@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout,productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -24,11 +24,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
+    vm.openBidModal = openBidModal;
     // vm.toggleCategory = toggleCategory;
 
     $scope.ConfigureList = function() {};
     $scope.beginVertScroll = beginVertScroll;
     $scope.categoryList = [{},{},{}];
+
+    $scope.$on('resetBannerTimer',function(){
+      vm.myInterval = 7000;
+    })
 
     function getHomeBanner(){
       BannerSvc.getHomeBanner()
@@ -38,6 +43,16 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       .catch(function(){
         vm.slides = HOME_BANNER;
       })
+    }
+
+    function openBidModal(currentSlide){
+      if(Auth.isAdmin())
+        return;
+      var biddingScope = $rootScope.$new();
+      biddingScope.slideInfo = currentSlide;
+      biddingScope.isPayNow = false;
+      vm.myInterval = 1*2*60*60*1000;
+      Modal.openDialog('biddingReq', biddingScope);
     }
 
     vm.toggleCategory = function(){

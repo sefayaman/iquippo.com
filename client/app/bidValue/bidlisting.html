@@ -1,0 +1,49 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>
+            Bid Values
+          </h3>
+          <hr>
+        </div>
+        <div class="col-sm-12">
+          <div class="table-responsive">
+            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+              <thead>
+                <th>Promo Code</th>
+                <th>User Name</th>
+                <th>User Mobile No</th>
+                <th>User Email ID</th>
+                <th>Date of Bid</th>
+                <th>Quantity</th>
+                <th>Payment Mode </th>   
+                <th>Status</th>         
+                <th ng-if="isAdmin()">Action</th>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="bid in bidListing">
+                <td>{{bid.bannerInfo.code}}</td>
+                <td>{{bid.bannerInfo.name}}</td>
+                <td>{{bid.user.mobile}}</td>
+                <td>{{bid.user.email}}</td>
+                <td>{{bidListingVm.getDateFormat(bid.createdAt)}}</td>
+                <td>{{bid.quantity}}</td>
+                <td>{{bid.paymentmode}}</td>
+                <td>{{bid.status}}</td>
+                <td ng-if="isAdmin()">
+                <button class="btn btn-primary" ng-click="bidListingVm.payNow($index)" ng-disabled="bid.paymentmode == 'Online'">Pay Now</button>
+                </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+         
+        </div>
+      </div>   
+    </div>
+  </div>

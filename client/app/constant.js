@@ -38,6 +38,10 @@ var Modals = {
   valuationReq:{
     tplUrl:"app/valuation/valuationrequest.html",
     Ctrl:'ValuationRequestCtrl as valuationReqVm'
+  },
+  biddingReq:{
+    tplUrl:"app/bidvalue/bidnow.html",
+    Ctrl:'BidCtrl as bidVm'
   }
 };
 
