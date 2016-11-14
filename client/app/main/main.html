@@ -12,8 +12,8 @@
         </div> -->
         <a href="javascript:void(0);" ng-if="slide.hyperlink == 'Yes'" ng-click="mainVm.openBidModal(slide)" class="bid-gif"><img src="assets/images/bid-now.gif"></a>
       </uib-slide>
-      <div class="tricker">
-        <marquee><span ng-if="!slide.default && slide.ticker == 'Yes'" ng-repeat="slide in mainVm.slides">{{slide.name}} : {{slide.regCharge}}, &nbsp</span></marquee>
+      <div class="tricker" ng-if="mainVm.getBids != 0">
+        <marquee><span ng-repeat="bids in mainVm.getBids">{{bids.name}}: {{bids.bidValuesStr}}  </span></marquee>
       </div>
     </uib-carousel>
   </div>

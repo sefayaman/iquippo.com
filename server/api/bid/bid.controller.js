@@ -60,6 +60,37 @@ exports.updateBid = function(req, res) {
   });
 };
 
+// get 10 highest bids
+exports.getHighestBids = function(req,res){
+    var filter = {};
+    //filter['status'] = true;
+    if(req.body.bannerIds)
+      filter['bannerInfo._id'] = {$in:req.body.bannerIds};
+    Bid.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: {
+            'name': '$bannerInfo.name',
+            'valueperunit': '$valueperunit'
+        }, count: { $sum: 1 } } 
+    },
+    { $group: {
+        _id: '$_id.name',
+        valueperunits: { 
+            $push: { 
+                valueperunit: '$_id.valueperunit',
+                total_count: '$count'
+            },
+        },
+        total_count: { $sum: '$count' }
+    }},
+    {$sort:{count: -1}},
+    function (err, result) {
+      if (err) return handleError(err);
+      return res.status(200).json(result);
+    }
+  );
+}
 // Deletes a bid from the DB.
 exports.deleteBid = function(req, res) {
   Bid.findById(req.params.id, function (err, bid) {

@@ -10,5 +10,6 @@ router.post('/', controller.createBid);
 router.put('/:id', controller.updateBid);
 router.delete('/:id', controller.deleteBid);
 router.post('/onfilter', controller.getOnFilter);
+router.post('/gethighestbids', controller.getHighestBids);
 
 module.exports = router;

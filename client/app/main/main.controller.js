@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -33,15 +33,33 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     $scope.$on('resetBannerTimer',function(){
       vm.myInterval = 7000;
+      getHighestBids();
     })
 
     function getHomeBanner(){
       BannerSvc.getHomeBanner()
       .then(function(slides){
           vm.slides = slides;
+          getHighestBids();
       })
       .catch(function(){
         vm.slides = HOME_BANNER;
+      })
+    }
+
+    function getHighestBids(){
+      var filter = {};
+      var bIds = [];
+      vm.slides.forEach(function(item){
+        if(item.ticker == 'Yes')
+          bIds[bIds.length] = item._id;
+      });
+      filter.bannerIds = bIds;
+      BiddingSvc.getHighestBids(filter)
+      .then(function(bids){
+          vm.getBids = bids;
+      })
+      .catch(function(){
       })
     }
 
@@ -61,7 +79,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
          $scope.categoryList = vm.activeCategoryList.slice(0,12);
        else
         $scope.categoryList = vm.activeCategoryList;
-
     }
 
     function getFeaturedProduct(){
@@ -168,8 +185,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       });
     }
 
-
-
     getHomeBanner();
     getFeaturedProduct();
     getCategories();
@@ -178,7 +193,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getStatusWiseProductCount();
     getStatusWiseSpareCount();
     getStatusWiseManPowerCount();
-
 
      function myFunct(keyEvent) {
       if(keyEvent)

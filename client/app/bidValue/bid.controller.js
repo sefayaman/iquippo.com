@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('BidCtrl',BidCtrl);
 angular.module('sreizaoApp').controller('BidListingCtrl', BidListingCtrl);
-function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance) {
+function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance, notificationSvc) {
  var vm = this;
  vm.biddingInfo = {};
  vm.biddingInfo.user = {};
@@ -26,8 +26,10 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance)
 	 		}
 	 	})
 	 	
+	 	vm.biddingInfo.bannerInfo._id = $scope.slideInfo._id;
 	 	vm.biddingInfo.bannerInfo.name = $scope.slideInfo.name;
 	 	vm.biddingInfo.bannerInfo.code = $scope.slideInfo.code;
+	 	//vm.biddingInfo.bannerInfo.ticker = $scope.slideInfo.ticker;
  	} else {
  		vm.biddingInfo = $scope.biddingInfo;
  	} 
@@ -44,7 +46,18 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance)
 			BiddingSvc.save(vm.biddingInfo)
 			.then(function(res){
 				if(res.errorCode == 0){
-					vm.biddingInfo = {};
+					var data = {};
+					var dataToSend = {};
+      					dataToSend['promoname'] = vm.biddingInfo.bannerInfo.name;
+					if(vm.biddingInfo.user.email)
+			        	data['to'] = vm.biddingInfo.user.email;
+			        data['subject'] = 'No Reply: Bid Request';
+			        dataToSend['serverPath'] = serverPath;
+			        notificationSvc.sendNotification('biddingEmailToCustomer', data, dataToSend,'email');
+			        if(vm.biddingInfo.user.mobile)
+			        	data['to'] = vm.biddingInfo.user.mobile;
+			        notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend,'sms');
+			        vm.biddingInfo = {};
 					closeDialog();
 				}
 				else
@@ -55,10 +68,8 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance)
 			BiddingSvc.update(vm.biddingInfo)
 			.then(function(res){
 				if(res.errorCode == 0){
-					var filter = {};
 					vm.biddingInfo = {};
 					closeDialog();
-					getBids(filter);
 				}
 				else
 					Modal.alert(res.message);
@@ -66,16 +77,10 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance)
 		}
  	}
 
- 	function getBids(filter){
-      BiddingSvc.getOnFilter(filter)
-      .then(function(result){
-        $rootScope.bidListing = result;
-      });
-    }
-
    function closeDialog() {
      $uibModalInstance.dismiss('cancel');
      $rootScope.$broadcast('resetBannerTimer');
+     $rootScope.$broadcast('updateBidList');
    };
 }
 
@@ -85,6 +90,11 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc) {
  vm.getDateFormat = getDateFormat;
  vm.biddingInfo = {};
  vm.payNow = payNow;
+
+    $scope.$on('updateBidList',function(){
+      init();
+    })
+
  function init(){
   Auth.isLoggedInAsync(function(loggedIn){
   	var filter = {}
@@ -106,7 +116,7 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc) {
 	}
 	
 	function payNow(index){
-		angular.copy($rootScope.bidListing[index], vm.biddingInfo)
+		angular.copy(vm.bidListing[index], vm.biddingInfo)
 		var biddingScope = $rootScope.$new();
         biddingScope.biddingInfo = vm.biddingInfo;
         biddingScope.isPayNow = true;
@@ -117,7 +127,7 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc) {
  function getBids(filter){
       BiddingSvc.getOnFilter(filter)
       .then(function(result){
-        $rootScope.bidListing = result;
+        vm.bidListing = result;
       });
     }
 }
