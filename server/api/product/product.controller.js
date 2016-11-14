@@ -88,22 +88,70 @@ exports.search = function(req, res) {
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
+
+  if(req.body.statusText == "active")
+    filter["status"] = true;
+  if(req.body.statusText == "inactive")
+    filter["status"] = false;
+
   if(req.body.featured)
     filter["featured"] = req.body.featured;
   var arr = [];
   if(req.body.searchstr){
+
     arr[arr.length] = { name: { $regex: term }};
     arr[arr.length] = { "group.name": { $regex: term }};
+    arr[arr.length] = { "group.otherName": { $regex: term }};
     arr[arr.length] = { "category.name": { $regex: term }};
+    arr[arr.length] = { "category.otherName": { $regex: term }};
     arr[arr.length] = { "model.name": { $regex: term }};
+    arr[arr.length] = { "model.otherName": { $regex: term }};
     arr[arr.length] = { "brand.name": { $regex: term }};
-    
+    arr[arr.length] = { "brand.otherName": { $regex: term }};
+    arr[arr.length] = { city: { $regex: term }};
+    arr[arr.length] = { state: { $regex: term }};
+    arr[arr.length] = { assetStatus: { $regex: term }};
+    arr[arr.length] = { tradeType: { $regex: term }};
+    arr[arr.length] = { assetId: { $regex: term }};
+    //arr[arr.length] = { grossPrice: { $regex: term }};
+    arr[arr.length] = { "seller.fname": { $regex: term }};
+    arr[arr.length] = { mfgYear: { $regex: term }};
   }
+
+  if(req.body.groupStr){
+    var gpRegex = new RegExp(req.body.groupStr, 'i');
+    arr[arr.length] = { "group.name": { $regex: gpRegex}};
+    arr[arr.length] = { "group.otherName": { $regex: gpRegex}};
+  }
+
+  if(req.body.categoryStr){
+    var ctRegex = new RegExp(req.body.categoryStr, 'i');
+    arr[arr.length] = { "category.name": { $regex: ctRegex }};
+    arr[arr.length] = { "category.otherName": { $regex: ctRegex }};
+  }
+
+  if(req.body.brandStr){
+    var brRegex = new RegExp(req.body.brandStr, 'i');
+    arr[arr.length] = { "brand.name": { $regex: brRegex}};
+    arr[arr.length] = { "brand.otherName": { $regex: brRegex}};
+   
+  }
+
+  if(req.body.modelStr){
+    var mdRegex = new RegExp(req.body.modelStr, 'i');
+    arr[arr.length] = { "model.name": { $regex: mdRegex }};
+    arr[arr.length] = { "model.otherName": { $regex: mdRegex }};
+  }
+
+  if(req.body.sellerName)
+   filter["seller.fname"] = {$regex:new RegExp(req.body.sellerName,'i')};
+
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
     arr[arr.length] = {city:{$regex:locRegEx}};
     arr[arr.length] = {state:{$regex:locRegEx}};
   }
+
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
     filter['city'] = {$regex:cityRegex};
@@ -118,11 +166,13 @@ exports.search = function(req, res) {
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
   }
   if(req.body.tradeValue)
-   filter["tradeType"] = req.body.tradeValue; 
+   filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')}; 
   if(req.body.assetStatus)
-    filter["assetStatus"] = req.body.assetStatus;
+    filter["assetStatus"] = {$regex:new RegExp(req.body.assetStatus,'i')};
   if(req.body.assetId)
-    filter["assetId"] = req.body.assetId;
+    filter["assetId"] = {$regex:new RegExp(req.body.assetId,'i')};
+   if(req.body.assetIds && req.body.assetIds.length > 0)
+    filter["assetId"] = {$in:req.body.assetIds};
   if(req.body.group)
     filter["group.name"] = req.body.group;
   if(req.body.category)
@@ -175,31 +225,112 @@ exports.search = function(req, res) {
     filter["category._id"] = req.body.categoryId;
 
   if(req.body.role && req.body.userid) {
-    //var arr = [];
     arr[arr.length] = { "user._id": req.body.userid};
-    arr[arr.length] = { "seller._id": req.body.userid};
-    //filter['$or'] = arr; 
+    arr[arr.length] = { "seller._id": req.body.userid}; 
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
   }
 
   if(arr.length > 0)
     filter['$or'] = arr;
+ 
+  var result = {};
+  if(req.body.pagination){
+    paginatedProducts(req,res,filter,result);
+    return;    
+  }
+  var maxItem = 600;
+  if(req.body.maxItem)
+    maxItem = req.body.maxItem;
+
   var sortObj = {}; 
   if(req.body.sort)
     sortObj = req.body.sort;
-
   sortObj['createdAt'] = -1;
 
-  var query = Product.find(filter).sort(sortObj);
-  query.exec(
-               function (err, products) {
-                      if(err) { return handleError(res, err); }
-                      return res.status(200).json(products);
-               }
-  );
+  var query = Product.find(filter).sort(sortObj).limit(maxItem);
+  Seq()
+  .par(function(){
+    var self = this;
+    Product.count(filter,function(err,counts){
+      result.totalItems = counts;
+      self(err);
+    })
+  })
+  .par(function(){
+    var self = this;
+    query.exec(function (err, products) {
+        if(err) { return handleError(res, err); }
+        result.products = products;
+        self();
+       }
+    );
+
+  })
+  .seq(function(){
+    return res.status(200).json(result.products);
+  })
+  
 
 };
+
+function paginatedProducts(req,res,filter,result){
+
+  var pageSize = req.body.itemsPerPage;
+  var first_id = req.body.first_id;
+  var last_id = req.body.last_id;
+  var currentPage = req.body.currentPage;
+  var prevPage = req.body.prevPage;
+  var isNext = currentPage - prevPage >= 0?true:false;
+  Seq()
+  .par(function(){
+    var self = this;
+    Product.count(filter,function(err,counts){
+      result.totalItems = counts;
+      self(err);
+    })
+  })
+  .par(function(){
+
+      var self = this;
+      var sortFilter = {_id : -1};
+      if(last_id && isNext){
+        filter['_id'] = {'$lt' : last_id};
+        console.log("going forward");
+      }
+      if(first_id && !isNext){
+        filter['_id'] = {'$gt' : first_id};
+        sortFilter['_id'] = 1;
+        console.log("going backward");
+      }
+
+      var query = null;
+      var skipNumber = currentPage - prevPage;
+      if(skipNumber < 0)
+        skipNumber = -1*skipNumber;
+
+      query = Product.find(filter).sort(sortFilter).limit(pageSize*skipNumber);
+      query.exec(function(err,products){
+          if(!err && products.length > pageSize*(skipNumber - 1)){
+                result.products = products.slice(pageSize*(skipNumber - 1),products.length);
+          }else
+            result.products = [];
+          if(!isNext && result.products.length > 0)
+           result.products.reverse();
+           self(err);
+    });
+
+  })
+  .seq(function(){
+      return res.status(200).json(result);
+  })
+  .catch(function(err){
+    console.log("######",err);
+    handleError(res,err);
+  })
+ 
+}
+
 
 //bulk product update
 exports.bulkUpdate = function(req,res){
@@ -214,7 +345,6 @@ exports.bulkUpdate = function(req,res){
         //dataToSet.featured = false;
          Product.update({_id : {"$in":bodyData.selectedIds}}, {$set:dataToSet}, {multi: true} , function(err, product) {
             if(err) { 
-              console.log("------- ",err);
               return handleError(res, err); 
             }
             return res.status(200).json({});

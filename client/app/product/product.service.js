@@ -101,7 +101,10 @@
       function getProductOnFilter(filter){
         return $http.post(path + "/search",filter)
           .then(function(res){
-            updateCache(res.data);
+            if(filter.pagination)
+                updateCache(res.data.products);
+              else
+              updateCache(res.data);
             return res.data;
           })
           .catch(function(res){
