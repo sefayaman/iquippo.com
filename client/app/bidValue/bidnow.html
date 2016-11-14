@@ -63,8 +63,8 @@
          <div class="form-group col-sm-6">          
           <input type="text" class="form-control" placeholder="Cheque No" name="checkno" ng-model="bidVm.biddingInfo.paymentInfo.checkno">          
         </div>
-        <div class="form-group col-sm-6">          
-          <input type="number" min="0" class="form-control" placeholder="Payment Amount" name="amount" ng-model="bidVm.biddingInfo.paymentInfo.amount">        
+        <div class="form-group col-sm-6" ng-class="{'has-error': form.amount.$invalid && submitted }">          
+          <input type="number" min="0" class="form-control" placeholder="Payment Amount" name="amount" ng-model="bidVm.biddingInfo.paymentInfo.amount" required>        
         </div>
       </div>
       <div class="row" style="display:none;">
