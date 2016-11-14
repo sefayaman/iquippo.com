@@ -70,6 +70,7 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,
 				if(res.errorCode == 0){
 					vm.biddingInfo = {};
 					closeDialog();
+					$rootScope.$broadcast('updateBidList');
 				}
 				else
 					Modal.alert(res.message);
@@ -80,16 +81,25 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,
    function closeDialog() {
      $uibModalInstance.dismiss('cancel');
      $rootScope.$broadcast('resetBannerTimer');
-     $rootScope.$broadcast('updateBidList');
    };
 }
 
-function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc) {
+function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBuilder) {
  var vm = this;
  
  vm.getDateFormat = getDateFormat;
  vm.biddingInfo = {};
  vm.payNow = payNow;
+ 
+  $scope.tableRef = {};
+  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withOption('stateSave',true)
+  .withOption('stateLoaded',function(){
+    if($scope.tableRef.DataTable && $rootScope.currentProductListingPage > 0)
+      $timeout(function(){
+          $scope.tableRef.DataTable.page($rootScope.currentProductListingPage).draw(false);
+          $rootScope.currentProductListingPage = 0;
+      },10)  
+  });
 
     $scope.$on('updateBidList',function(){
       init();

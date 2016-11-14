@@ -36,7 +36,7 @@ exports.getOnFilter = function(req, res) {
     filter["_id"] = req.body._id;
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
-  var query = Bid.find(filter);
+  var query = Bid.find(filter).sort( { createdAt: -1 } );
   console.log("filetr ",filter);
   query.exec(
                function (err, bids) {
