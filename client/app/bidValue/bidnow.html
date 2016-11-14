@@ -67,9 +67,9 @@
           <input type="number" min="0" class="form-control" placeholder="Payment Amount" name="amount" ng-model="bidVm.biddingInfo.paymentInfo.amount" required>        
         </div>
       </div>
-      <div class="row" style="display:none;">
-        <div class=" col-sm-6">
-          <p><strong>Note :</strong> Registration Charges of Rs. 25000 The same will be adjusted against downpayment.</p>
+      <div class="row">
+        <div class=" col-sm-12 text-left">
+          <p><strong>Note :</strong> Registration Charges of Rs. <b>{{slideInfo.regCharge}}</b> The same will be adjusted against downpayment.</p>
         </div>
         
       </div>
