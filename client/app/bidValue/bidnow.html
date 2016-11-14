@@ -26,7 +26,7 @@
           <input type="email" class="form-control" placeholder="Email Address" name="email" ng-model="bidVm.biddingInfo.user.email">
         </div>
         <div class="form-group col-sm-6" ng-class="{'has-error': form.quantity.$invalid && submitted }">
-          <input type="number" class="form-control" name="quantity" ng-model="bidVm.biddingInfo.quantity" placeholder=" Quantity" required>
+          <input type="number" class="form-control" name="quantity*" ng-model="bidVm.biddingInfo.quantity" placeholder=" Quantity" required>
         </div>
       </div>
       
@@ -69,7 +69,7 @@
       </div>
       <div class="row">
         <div class=" col-sm-12 text-left">
-          <p><strong>Note :</strong> Registration Charges of Rs. <b>{{slideInfo.regCharge}}</b> The same will be adjusted against downpayment.</p>
+          <p><strong>Note :</strong> Registration Charges of Rs. <b>{{slideInfo.regCharge}}</b> The same will be adjusted against security deposit.</p>
         </div>
         
       </div>
