@@ -30,7 +30,7 @@
                 <td>{{bid.bannerInfo.name}}</td>
                 <td>{{bid.user.mobile}}</td>
                 <td>{{bid.user.email}}</td>
-                <td>{{bidListingVm.getDateFormat(bid.createdAt)}}</td>
+                <td>{{bid.createdAt | date: 'dd/mm/yyyy'}}</td>
                 <td>{{bid.quantity}}</td>
                 <td>{{bid.paymentmode}}</td>
                 <td>{{bid.status}}</td>

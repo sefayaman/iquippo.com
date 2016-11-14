@@ -61,7 +61,6 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     vm.updateBanner = updateBanner;
     vm.editBanner = editBanner;
     vm.deleteBanner = deleteBanner;
-    vm.getDateFormat = getDateFormat;
     $scope.updateBannerImage = updateBannerImage;
     $scope.updateMobBannerImage = updateMobBannerImage;
     
@@ -587,12 +586,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 	      vm.banner.mobileImg = result.data.filename;
 	    });
 	}
-	function getDateFormat(date){
-		if(!date)
-			return;
-		return moment(date).format('DD/MM/YYYY');
-	}
-
+	
 	function saveBanner(form){
 		/*if(form.$invalid){
 			$scope.submitted = true;

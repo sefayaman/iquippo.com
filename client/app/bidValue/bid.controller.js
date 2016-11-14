@@ -87,7 +87,6 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,
 function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBuilder) {
  var vm = this;
  
- vm.getDateFormat = getDateFormat;
  vm.biddingInfo = {};
  vm.payNow = payNow;
  
@@ -118,12 +117,6 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBu
  }
 
  init();
-
- function getDateFormat(date){
-		if(!date)
-			return;
-		return moment(date).format('DD/MM/YYYY');
-	}
 	
 	function payNow(index){
 		angular.copy(vm.bidListing[index], vm.biddingInfo)
