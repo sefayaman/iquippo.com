@@ -35,7 +35,7 @@
                 <td>{{bid.paymentmode}}</td>
                 <td>{{bid.status}}</td>
                 <td ng-if="isAdmin()">
-                <button class="btn btn-primary" ng-click="bidListingVm.payNow($index)" ng-disabled="bid.paymentmode == 'Online'">Pay Now</button>
+                <button class="btn btn-primary" ng-click="bidListingVm.payNow($index)" ng-if="bid.status == 'Pending'">Pay Now</button>
                 </td>
                 </tr>
               </tbody>
