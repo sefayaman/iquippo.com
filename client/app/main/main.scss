@@ -22,7 +22,7 @@ body{top:0 !important;}
 .goog-text-highlight{background:none !important; box-shadow:none !important;}
 #search-result_wrapper{margin-top:10px;margin-bottom:10px;background-color:#f9f9f9;border-top: 1px solid #000;border-bottom: 1px solid #000;}
 .search-result h4{font-size:16px;}
-.sorts{padding:10px;border-bottom: 1px solid #ccc;}
+.sorts{padding:0 10px 10px 10px;border-bottom: 1px solid #ccc;}
 .sorts:hover{background-color: #eee;}
 .search-result .btn-warning {padding: 6px 20px;text-align: left;width: 125px;}
 .search-result .btn-success {width: 125px;}
@@ -31,8 +31,8 @@ body{top:0 !important;}
 .carousel-caption h2{font-size: 32px; margin:5px 0 10px;}
 .carousel-caption .btn-primary{padding: 8px 25px; font-size: 16px;}
 .tricker{position: absolute;top: 0; width: 100%; background: rgba(0,0,0,0.6); padding: 10px 100px 5px; z-index: 11; color: #fff;}
-.bid-gif{position: absolute; right: 30px; top: 30px; z-index: 99;}
-.bid-gif img{width: 150px !important; height: 44px !important;}
+.bid-gif{position: absolute; left: 50px; top: 50px; z-index: 99;}
+.bid-gif img{width: 150px !important; height: 40px !important;}
 /*Created by firoz*/
 @import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 body{font-family:'Roboto Condensed',sans-serif;}
@@ -208,12 +208,13 @@ header{background:#fff;}
 .table.dataTable .fa{font-size:smaller;}
 #search-result .btn-warning{width:125px;padding:8px 20px;text-align:left;}
 #search-result_wrapper h4{font-size:16px;}
-#search-result_wrapper h4 .productname{width: 50%;display: block;float: left;font-size: 16px;}
+#search-result_wrapper h4 .productname{width: 50%;display: block;float: left;font-size: 16px; padding-top: 12px;}
 .wrapper .well .list-group{margin:0;overflow-y:scroll;height:300px;}
 #search-result_wrapper p{font-size:13px;margin:5px 0;}
 .pagination > li:first-child > a,.pagination > li:first-child > span,.pagination > li:last-child > a,.pagination > li:last-child > span{border-radius:0;}
 .pagination > .active > a,.pagination > .active > a:focus,.pagination > .active > a:hover,.pagination > .active > span,.pagination > .active > span:focus,.pagination > .active > span:hover{background-color:#004394;border-color:#004394;}
-.result-products{position: relative;}
+.result-products{position: relative;padding-top: 10px;}
+.sell-featured{position: relative; top: -4px;}
 .result-products img{width:150px;height:130px;}
 .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:40px;}
 .input-group .input-group-addon.currency-width{width:100px;}
@@ -1058,5 +1059,5 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .radio-info input[type="radio"]:checked + label::after {
   background-color: #5bc0de; }
 
-.featured-image{position: absolute; top: 0; right: 0; width: 80px;}
+.featured-image{position: absolute; top: 0; left: 0; width: 100px;}
 .stamp-image{position: absolute; top: 30%; right: 40%; left: 40%; bottom: 5%; width: 100px;}
