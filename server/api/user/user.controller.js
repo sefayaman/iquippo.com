@@ -393,7 +393,7 @@ function setType(cell){
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:10, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:9, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     
@@ -407,7 +407,7 @@ function excel_from_data(data) {
       cell = {v: "Name"};
     else{
       if(user)
-        cell =  {v: user.fname + " " + (user.mname || "") + " " + user.lname};
+        cell =  {v: (user.fname || "") + " " + (user.mname || "") + " " + (user.lname || "")};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -427,7 +427,7 @@ function excel_from_data(data) {
       cell = {v: "Role"};
     else {
       if(user)
-        cell = {v: user.role};
+        cell = {v: user.role || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -437,7 +437,7 @@ function excel_from_data(data) {
       cell = {v: "UserType"};
     else {
       if(user)
-        cell = {v: user.userType};
+        cell = {v: user.userType || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -457,7 +457,7 @@ function excel_from_data(data) {
       cell = {v: "Mobile No."};
     else {
       if(user)
-        cell = {v: user.mobile};
+        cell = {v: user.mobile || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -504,6 +504,8 @@ function excel_from_data(data) {
     return "Deactive";
   else if(!status && deleted)
     return "Deleted";
+   else
+    return "";
   } 
 
 exports.exportUsers = function(req,res){
