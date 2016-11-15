@@ -40,7 +40,7 @@ var Modals = {
     Ctrl:'ValuationRequestCtrl as valuationReqVm'
   },
   biddingReq:{
-    tplUrl:"app/bidvalue/bidnow.html",
+    tplUrl:"app/bidValue/bidnow.html",
     Ctrl:'BidCtrl as bidVm'
   }
 };
