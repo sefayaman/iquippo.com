@@ -14,12 +14,16 @@
 
               <thead>
                 <th>Promo Code</th>
+                <th>Promo Name</th>
                 <th>User Name</th>
                 <th>User Mobile No</th>
                 <th>User Email ID</th>
                 <th>Date of Bid</th>
                 <th>Quantity</th>
-                <th>Payment Mode </th>   
+                <th>Value per Unit</th>
+                <th>Bank Name</th>
+                <th>Cheque No.</th>
+                <th>Payment Amount </th>   
                 <th>Status</th>         
                 <th ng-if="isAdmin()">Action</th>
                
@@ -31,6 +35,10 @@
                 <td>{{bid.user.mobile}}</td>
                 <td>{{bid.user.email}}</td>
                 <td>{{bid.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{bid.quantity}}</td>
+                <td>{{bid.quantity}}</td>
+                <td>{{bid.quantity}}</td>
+                <td>{{bid.quantity}}</td>
                 <td>{{bid.quantity}}</td>
                 <td>{{bid.paymentmode}}</td>
                 <td>{{bid.status}}</td>
