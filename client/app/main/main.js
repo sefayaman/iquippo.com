@@ -229,7 +229,7 @@ angular.module('sreizaoApp')
       })
       .state('bidValue', {
         url: '/bidValue',
-        templateUrl: 'app/bidvalue/bidlisting.html',
+        templateUrl: 'app/bidValue/bidlisting.html',
         controller: 'BidListingCtrl as bidListingVm',
         authenticate:true,
         layout:'admin'
