@@ -109,7 +109,7 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBu
   	var filter = {}
     if(loggedIn){
     	if(!Auth.isAdmin())
-    		filter["userId"] = Auth.getCurrentUser()._id;
+    		filter["mobile"] = Auth.getCurrentUser().mobile;
     }
     getBids(filter);
   })
