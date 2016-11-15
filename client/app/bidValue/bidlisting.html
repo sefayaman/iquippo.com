@@ -32,15 +32,15 @@
               <tr ng-repeat="bid in bidListingVm.bidListing">
                 <td>{{bid.bannerInfo.code}}</td>
                 <td>{{bid.bannerInfo.name}}</td>
+                <td>{{bid.user.fname}} {{bid.user.lname}}</td>
                 <td>{{bid.user.mobile}}</td>
                 <td>{{bid.user.email}}</td>
                 <td>{{bid.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>{{bid.quantity}}</td>
-                <td>{{bid.quantity}}</td>
-                <td>{{bid.quantity}}</td>
-                <td>{{bid.quantity}}</td>
-                <td>{{bid.quantity}}</td>
-                <td>{{bid.paymentmode}}</td>
+                <td>{{bid.valueperunit}}</td>
+                <td>{{bid.paymentInfo.bankname}}</td>
+                <td>{{bid.paymentInfo.checkno}}</td>
+                <td>{{bid.paymentInfo.amount}}</td>
                 <td>{{bid.status}}</td>
                 <td ng-if="isAdmin()">
                 <button class="btn btn-primary" ng-click="bidListingVm.payNow($index)" ng-if="bid.status == 'Pending'">Pay Now</button>
