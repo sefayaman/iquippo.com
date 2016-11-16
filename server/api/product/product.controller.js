@@ -1735,7 +1735,7 @@ function importProducts(req,res,data){
         return;
       }
       sellerMobile = trim(sellerMobile)
-       User.find({mobile:sellerMobile},function(err,usrs){
+       User.find({mobile:sellerMobile, deleted:false},function(err,usrs){
         if(err) return handleError(res, err); 
         if(usrs.length > 0){
          product.seller = {};

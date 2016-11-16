@@ -877,6 +877,14 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       });
 
+      $scope.product.serviceInfo = $scope.product.serviceInfo.filter(function(item,idx){
+          if(item && (item.servicedate || item.operatingHour || item.serviceAt || item.authServiceStation))
+              return true;
+          else
+            return false;
+
+      });
+
      if(!$scope.isEdit)
           addProduct(cb);
       else
