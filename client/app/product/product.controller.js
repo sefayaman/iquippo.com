@@ -152,6 +152,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.isEdit = true;
 
       productSvc.getProductOnId($stateParams.id,true).then(function(response){
+        product = $scope.product = response;
         if(response.serviceInfo.length > 0){
           for(var i =0; i < response.serviceInfo.length; i++){
             if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
@@ -160,7 +161,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         } else {
           $scope.product.serviceInfo = [{}];
         }
-        product = $scope.product = response;
+        
         angular.copy($scope.product.images,$scope.images);
         $scope.images.forEach(function(item,index){
           if(item.isPrimary)
@@ -870,6 +871,14 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
        $scope.product.miscDocuments = $scope.product.miscDocuments.filter(function(item,idx){
           if(item && item.name)
+              return true;
+          else
+            return false;
+
+      });
+
+      $scope.product.serviceInfo = $scope.product.serviceInfo.filter(function(item,idx){
+          if(item && (item.servicedate || item.operatingHour || item.serviceAt || item.authServiceStation))
               return true;
           else
             return false;

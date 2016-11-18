@@ -1735,7 +1735,7 @@ function importProducts(req,res,data){
         return;
       }
       sellerMobile = trim(sellerMobile)
-       User.find({mobile:sellerMobile},function(err,usrs){
+       User.find({mobile:sellerMobile, deleted:false},function(err,usrs){
         if(err) return handleError(res, err); 
         if(usrs.length > 0){
          product.seller = {};
@@ -2124,7 +2124,15 @@ function importProducts(req,res,data){
         product["serviceInfo"][0].authServiceStation = trim(row["Authorized_Station"] || "");
         product["serviceInfo"][0].serviceAt = trim(row["Service_at_KMs"] || "");
         product["serviceInfo"][0].operatingHour = trim(row["Operating_Hours"] || "");
-        product["serviceInfo"][0].servicedate =  new Date(trim(row["Service_Date"] || "")) || "";
+        
+        var servicedate = new Date(row["Service_Date"]);
+        var validDate = isValid(servicedate);
+          
+        if(servicedate && validDate) {
+          product["serviceInfo"][0].servicedate =  servicedate; 
+        }
+
+        //product["serviceInfo"][0].servicedate =  new Date(trim(row["Service_Date"] || "")) || "";
         product.user = req.body.user;
         product.images = [{}];
         IncomingProduct.create(product,function(err,pd){
