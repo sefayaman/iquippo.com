@@ -118,7 +118,7 @@ function showmailCtrl($state, $stateParams, $rootScope){
         vm.isSentBox = true;
 
     vm.mess = $stateParams.message;
-    vm.mess.created = moment(vm.mess.createdAt).format('DD/MM/YYYY, h:mm:ss a');
+    // vm.mess.created = moment(vm.mess.createdAt).format('DD/MM/YYYY, h:mm:ss a');
     vm.goReply = function(message){
         $state.go( 'mailhome.show.reply', { message: message} );
     };
@@ -350,16 +350,22 @@ console.log('toggleAll', selectAll, selectedItems);
             }
         }
     }
-    function toggleOne (selectedItems) {
-console.log('toggleOne', selectedItems);        
+    function toggleOne (selectedItems, $event) {
+
+        // vm.selected.push(selectedItems[0]);
+console.log('toggleOne', vm.selected);        
         for (var id in selectedItems) {
             if (selectedItems.hasOwnProperty(id)) {
                 if(!selectedItems[id]) {
                     vm.selectAll = false;
+                    // $event.preventDefault();
+                    $event.stopPropagation();
                     return;
                 }
             }
         }
+        // $event.preventDefault();
+        $event.stopPropagation();
         // vm.selectAll = true;
     }    
 }
