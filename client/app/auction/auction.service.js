@@ -79,9 +79,9 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
       var deferred = $q.defer();
       var stsObj = {};
       stsObj.createdAt = new Date();
-      stsObj.createdAt = Auth.getCurrentUser()._id;
+      stsObj.userId = Auth.getCurrentUser()._id;
       stsObj.status = toStatus;
-      auctionReq.statuses[auctionReq.statuses.length] = toStatus;
+      auctionReq.statuses[auctionReq.statuses.length] = stsObj;
       auctionReq.status = toStatus;
       update(auctionReq)
       .then(function(result){

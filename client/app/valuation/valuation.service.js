@@ -71,12 +71,12 @@ function ValuationSvc($http,$q,notificationSvc,Auth){
       var stsObj = {};
       if(intermediateStatus){
         stsObj.createdAt = new Date();
-        stsObj.createdAt = Auth.getCurrentUser()._id;
+        stsObj.userId = Auth.getCurrentUser()._id;
         stsObj.status = intermediateStatus;
         valReq.statuses[valReq.statuses.length] = stsObj;
       }
       stsObj.createdAt = new Date();
-      stsObj.createdAt = Auth.getCurrentUser()._id;
+      stsObj.userId = Auth.getCurrentUser()._id;
       stsObj.status = toStatus;
       valReq.statuses[valReq.statuses.length] = stsObj;
       valReq.status = toStatus;

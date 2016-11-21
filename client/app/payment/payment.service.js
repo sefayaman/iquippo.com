@@ -81,7 +81,7 @@ function PaymentSvc($http,$q,Auth,notificationSvc){
       var deferred = $q.defer();
       var stsObj = {};
       stsObj.createdAt = new Date();
-      stsObj.createdAt = Auth.getCurrentUser()._id;
+      stsObj.userId = Auth.getCurrentUser()._id;
       stsObj.status = toStatus;
       payTrans.statuses[payTrans.statuses.length] = stsObj;
       payTrans.status = toStatus;
