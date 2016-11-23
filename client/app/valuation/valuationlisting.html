@@ -29,10 +29,16 @@
             <button class="btn btn-primary">Inprogress</button> 
           </div> -->
         <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-
+          <div class="row">                    
+              <div class="col-sm-3 pull-right">
+                <div class="tablesearch text-right form-group">
+                   Search: <input type="text" placeholder="Search..." ng-model="valuationListingVm.searchStr" ng-change="valuationListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                </div>
+              </div>
+          </div>
+            <table class="table table-bordred table-striped">
               <thead>
-                <th width="40"><input type="checkbox" ng-model="valuationListingVm.master"> All</th>                                
+                <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th>
                 <th>Request ID</th>                                
                 <th>Category</th>
                 <th>Asset Name</th>
@@ -73,6 +79,7 @@
                </tr>
               </tbody>
             </table>
+            <uib-pagination total-items="valuationListingVm.totalItems" ng-model="valuationListingVm.currentPage" items-per-page="valuationListingVm.itemsPerPage" max-size="valuationListingVm.maxSize" ng-change="valuationListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
         </div>
     </div>
   </div>

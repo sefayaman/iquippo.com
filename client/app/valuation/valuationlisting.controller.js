@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('ValuationListingCtrl',ValuationListingCtrl);
 function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc,AuctionSvc,UtilSvc,$rootScope,uploadSvc) {
- 	var vm = this;
+ 	 var vm = this;
 	 vm.valuations = [];
 	 var reqSent = [];
 	 var reqReceived = [];
@@ -10,6 +10,18 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 	 $scope.valuationStatuses = valuationStatuses;
 	 $scope.valType = "sent";
 	 vm.master = false;
+	 vm.searchStr = "";
+
+	 //pagination variables
+	  var prevPage = 0;
+	  vm.itemsPerPage = 50;
+	  vm.currentPage = 1;
+	  vm.totalItems = 0;
+	  vm.maxSize = 6;
+	  var first_id = null;
+	  var last_id = null;
+
+	  vm.fireCommand = fireCommand;
 
 	 vm.onValuationReqTypeChange = onValuationReqTypeChange;
 	 vm.updateSelection = updateSelection;
@@ -54,27 +66,53 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 	 }
 
 	 init();
+
+	 function fireCommand(rstPagination){
+	 	
+	 	if(rstPagination)
+	 		resetPagination();
+	 	var fltr = formFilter($scope.valType);
+	 	if(vm.searchStr)
+	 		fltr.searchStr = vm.searchStr;
+	 	if(isUserMode())
+	 		getValuations(fltr,$scope.valType);
+	 	else
+	 		getValuations(fltr);
+	 }
+
 	 function getValuations(filter,valType){
+	 	
+	 	filter.pagination = true;
+	 	filter.prevPage = prevPage;
+	    filter.currentPage = vm.currentPage;
+	    filter.first_id = first_id;
+	    filter.last_id = last_id;
+	    filter.itemsPerPage = vm.itemsPerPage;
 
 	 	ValuationSvc.getOnFilter(filter)
 	 	.then(function(result){
 	 		if(valType && valType == 'sent'){
 	 			$scope.valType = 'sent';
-	 			vm.valuations = result;
-	 			reqSent = result;
+	 			vm.valuations = result.items;
 	 		}else if(valType && valType == 'received'){
 	 			$scope.valType = 'received';
-	 			vm.valuations = result;
-	 			reqReceived = result;
+	 			vm.valuations = result.items;
 	 		}else{
-	 			vm.valuations = result;
+	 			vm.valuations = result.items;
 	 		}
-	 		
+	 		vm.totalItems = result.totalItems;
+        	prevPage = vm.currentPage;
+        	if(result.items.length > 0){
+        		 first_id = result.items[0]._id;
+          		 last_id = result.items[result.items.length - 1]._id;
+        	}
+
 	 	})
 
 	 }
 
 	 function onValuationReqTypeChange(val){
+	 		resetPagination();
 	 		getValuations(formFilter(val),val);
 	 }
 
@@ -166,6 +204,14 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 	    	$rootScope.loading = false;
 	    })
 	}
+
+ function resetPagination(){
+     prevPage = 0;
+     vm.currentPage = 1;
+     vm.totalItems = 0;
+     first_id = null;
+     last_id = null;
+  }
 
 }
 
