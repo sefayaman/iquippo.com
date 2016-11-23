@@ -8,10 +8,17 @@
           </h3>
           <hr>
         </div>
+        <p class="text-right">Showing : {{bidListingVm.totalItems}} Records</p>
         <div class="col-sm-12">
+          <div class="row">                    
+              <div class="col-sm-3 pull-right">
+                <div class="tablesearch text-right form-group">
+                   Search: <input type="text" placeholder="Search..." ng-model="bidListingVm.searchStr" ng-change="bidListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                </div>
+              </div>
+          </div>
           <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" id="bid_listing_table" dt-instance="tableRef" class="table table-bordred table-striped">
-
+            <table id="bid_listing_table" dt-instance="tableRef" class="table table-bordred table-striped">
               <thead>
                 <th>Promo Code</th>
                 <th>Promo Name</th>
@@ -25,8 +32,7 @@
                 <th>Cheque No.</th>
                 <th>Payment Amount </th>   
                 <th>Status</th>         
-                <th ng-if="isAdmin()">Action</th>
-               
+                <th ng-if="isAdmin()">Action</th>               
               </thead>
               <tbody>
               <tr ng-repeat="bid in bidListingVm.bidListing">
@@ -48,6 +54,7 @@
                 </tr>
               </tbody>
             </table>
+            <uib-pagination total-items="bidListingVm.totalItems" ng-model="bidListingVm.currentPage" items-per-page="bidListingVm.itemsPerPage" max-size="bidListingVm.maxSize" ng-change="bidListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
         </div>
          

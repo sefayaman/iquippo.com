@@ -1,7 +1,9 @@
 'use strict';
 
 var _ = require('lodash');
+var Seq = require('seq');
 var Bid = require('./bid.model');
+var Utility = require('./../../components/utility.js');
 
 // Get list of bids
 exports.getAllBid = function(req, res) {
@@ -30,7 +32,8 @@ exports.createBid = function(req, res) {
 
 //search based on filter
 exports.getOnFilter = function(req, res) {
-  
+  var searchStrReg = new RegExp(req.body.searchstr, 'i');
+
   var filter = {};
   if(req.body._id)
     filter["_id"] = req.body._id;
@@ -38,14 +41,56 @@ exports.getOnFilter = function(req, res) {
     filter["user._id"] = req.body.userId;
   if(req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
-  var query = Bid.find(filter).sort( { createdAt: -1 } );
-  console.log("filetr ",filter);
-  query.exec(
-               function (err, bids) {
-                      if(err) { return handleError(res, err); }
-                      return res.status(200).json(bids);
-               }
-  );
+  var arr = [];
+  if(req.body.searchstr){
+    arr[arr.length] = { "bannerInfo.code": { $regex: searchStrReg }};
+    arr[arr.length] = { "bannerInfo.name": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.fname": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.lname": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.mobile": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.email": { $regex: searchStrReg }};
+    arr[arr.length] = { "paymentInfo.bankname": { $regex: searchStrReg }};
+    arr[arr.length] = { "paymentInfo.checkno": { $regex: searchStrReg }};
+    arr[arr.length] = { "paymentInfo.amount": { $regex: searchStrReg }};
+    arr[arr.length] = { status: { $regex: searchStrReg }};
+  }
+
+  if(arr.length > 0)
+    filter['$or'] = arr;
+
+  var result = {};
+  if(req.body.pagination){
+    Utility.paginatedResult(req,res,Bid,filter,{});
+    return;    
+  }
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
+
+  var query = Bid.find(filter).sort(sortObj).limit(maxItem);
+  Seq()
+  .par(function(){
+    var self = this;
+    Bid.count(filter,function(err, counts){
+      result.totalItems = counts;
+      self(err);
+    })
+  })
+  .par(function(){
+    var self = this;
+    query.exec(function (err, bids) {
+        if(err) { return handleError(res, err); }
+        result.bids = bids;
+        self();
+       }
+    );
+
+  })
+  .seq(function(){
+    return res.status(200).json(result.bids);
+  })
 };
 
 // Updates an existing bid in the DB.

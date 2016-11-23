@@ -133,6 +133,12 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       //End
         $scope.currentProduct = result;
         $rootScope.currentProduct = $scope.currentProduct;
+        if($scope.currentProduct.tradeType == "SELL")
+          vm.showText = "Buy"
+        else if($scope.currentProduct.tradeType == "RENT")
+          vm.showText = "Rent"
+        else
+          vm.showText = "Buy / Rent"
         if($rootScope.currentProduct.serviceInfo.length > 0){
           for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
             if($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)

@@ -45,7 +45,10 @@
       function getSpareOnFilter(filter){
         return $http.post(path + "/searchspare", filter)
           .then(function(res){
-            updateCache(res.data);
+            if(filter.pagination)
+                updateCache(res.data.spares);
+            else
+              updateCache(res.data);
             return res.data;
           })
           .catch(function(res){

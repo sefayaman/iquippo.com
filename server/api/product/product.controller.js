@@ -731,9 +731,9 @@ function excel_from_data(data, isAdmin) {
   var ws = {};
   var range;
   if(isAdmin)
-    range = {s: {c:0, r:0}, e: {c:38, r:data.length }};
+    range = {s: {c:0, r:0}, e: {c:40, r:data.length }};
   else
-    range = {s: {c:0, r:0}, e: {c:24, r:data.length }};
+    range = {s: {c:0, r:0}, e: {c:26, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     var C = 0;
@@ -759,6 +759,19 @@ function excel_from_data(data, isAdmin) {
     else{
       if(product)
         cell =  {v: product.assetId};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R != 0)
+      product = data[R-1];
+    var cell = null;
+    if(R == 0)
+      cell = {v: "Trading Type"};
+    else{
+      if(product)
+        cell =  {v: product.tradeType};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -797,7 +810,7 @@ function excel_from_data(data, isAdmin) {
 
     var sellerName = "";
     if(product && product.seller && product.seller.fname) 
-      sellerName = product.seller.fname;
+      sellerName = product.seller.fname + " " + product.seller.lname;
     else
       sellerName = "";
     if(R == 0)
@@ -864,6 +877,19 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Product Name"};
     else
       cell = {v: productName};
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    var state = "";
+    if(product && product.state) 
+      state = product.state;
+    else
+      state = "";
+    if(R == 0)
+      cell = {v: "State"};
+    else
+      cell = {v: state};
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;

@@ -12,7 +12,6 @@ var Spare = require('./spare.model');
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
 var Category = require('./../category/category.model');
-var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
@@ -71,6 +70,7 @@ exports.statusWiseCount = function(req,res){
 //search spare
 exports.searchSpare = function(req, res) {
   var term = new RegExp(req.body.sparename, 'i');
+  var searchStrReg = new RegExp(req.body.searchstr, 'i');
   var filter = {};
   filter["deleted"] = false;
   if(req.body.status) {
@@ -84,6 +84,20 @@ exports.searchSpare = function(req, res) {
     var term = new RegExp(req.body.sparename, 'i');
     filter['name'] = { $regex: term };
   }
+  var arr = [];
+  if(req.body.searchstr){
+
+    arr[arr.length] = { name: { $regex: searchStrReg }};
+    arr[arr.length] = { "spareDetails.category.name": { $regex: searchStrReg }};
+    arr[arr.length] = { "spareDetails.category.otherName": { $regex: searchStrReg }};
+    arr[arr.length] = { city: { $regex: searchStrReg }};
+    arr[arr.length] = { state: { $regex: searchStrReg }};
+    arr[arr.length] = { partNo: { $regex: searchStrReg }};
+    arr[arr.length] = { "manufacturers.name": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.fname": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.lname": { $regex: searchStrReg }};
+    arr[arr.length] = { status: { $regex: searchStrReg }};
+  }
 
   if(req.body.location){
     var locRegEx = new RegExp(req.body.location, 'i');
@@ -93,7 +107,9 @@ exports.searchSpare = function(req, res) {
 
   if(req.body.category){
     var catRegEx = new RegExp(req.body.category, 'i');
-    filter['spareDetails.category.name'] = {$regex:catRegEx};
+    arr[arr.length] = {'spareDetails.category.name':{$regex:catRegEx}};
+    arr[arr.length] = {'spareDetails.category.otherName':{$regex:catRegEx}};
+    //filter['spareDetails.category.name'] = {$regex:catRegEx};
   }
 
   if(req.body.cityName){
@@ -106,7 +122,9 @@ exports.searchSpare = function(req, res) {
     filter['locations.state'] = {$regex:stateRegex};
   }
   if(req.body.partNo)
-    filter["partNo"] = req.body.partNo;
+    filter["partNo"] = {$regex:new RegExp(req.body.partNo,'i')};
+  if(req.body.partNos && req.body.partNos.length > 0)
+    filter["partNo"] = {$in:req.body.partNos};
   
   if(req.body.currency){
     var currencyFilter = {};
@@ -119,12 +137,39 @@ exports.searchSpare = function(req, res) {
     
     filter["grossPrice"] = currencyFilter;
   }
+
+  if(req.body.listingDate){
+    var listingDate = false;
+    var dateFilter = {};
+    if(req.body.listingDate.fromDate){
+      dateFilter['$gte'] = req.body.listingDate.fromDate;
+      listingDate = true;
+    }
+    if(req.body.listingDate.toDate){
+      dateFilter['$lte'] = req.body.listingDate.toDate + 1;
+      listingDate = true;
+    }
+    if(listingDate)
+      filter["createdAt"] = dateFilter;
+ }
   
   if(req.body.manufacturerId)
     filter["manufacturers._id"] = req.body.manufacturerId;
 
-  if(req.body.manufacturer)
-    filter["manufacturers.name"] = req.body.manufacturer;
+  if(req.body.manufacturer) {
+    var manufacturerRegex = new RegExp(req.body.manufacturer, 'i');
+    filter["manufacturers.name"] = {$regex:manufacturerRegex};
+  }
+
+  if(req.body.status)
+    filter["status"] = req.body.status;
+
+  if(req.body.listedBy){
+    var nameRegex = new RegExp(req.body.listedBy, 'i');
+    //filter['user.fname'] = {$regex:listedByRegex};
+    arr[arr.length] = {'user.fname':{$regex:nameRegex}};
+    arr[arr.length] = {'user.lname':{$regex:nameRegex}};
+  }
 
   if(req.body.role && req.body.userid) {
     //var arr = [];
@@ -138,16 +183,95 @@ exports.searchSpare = function(req, res) {
   if(arr.length > 0)
     filter['$or'] = arr;
   
-  console.log("filter##", filter);
-  var query = Spare.find(filter).sort( { createdAt: -1 } );
-  query.exec(
-               function (err, spares) {
-                      if(err) { return handleError(res, err); }
-                      return res.status(200).json(spares);
-               }
-  );
+  var result = {};
+  if(req.body.pagination){
+    paginatedSpares(req,res,filter,result);
+    return;    
+  }
+  // var maxItem = 600;
+  // if(req.body.maxItem)
+  //   maxItem = req.body.maxItem;
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
+
+  var query = Spare.find(filter).sort(sortObj).limit(maxItem);
+  Seq()
+  .par(function(){
+    var self = this;
+    Spare.count(filter,function(err, counts){
+      result.totalItems = counts;
+      self(err);
+    })
+  })
+  .par(function(){
+    var self = this;
+    query.exec(function (err, spares) {
+        if(err) { return handleError(res, err); }
+        result.spares = spares;
+        self();
+       }
+    );
+
+  })
+  .seq(function(){
+    return res.status(200).json(result.spares);
+  })
 
 };
+
+function paginatedSpares(req,res,filter,result){
+  var pageSize = req.body.itemsPerPage;
+  var first_id = req.body.first_id;
+  var last_id = req.body.last_id;
+  var currentPage = req.body.currentPage;
+  var prevPage = req.body.prevPage;
+  var isNext = currentPage - prevPage >= 0?true:false;
+  Seq()
+  .par(function(){
+    var self = this;
+    Spare.count(filter,function(err,counts){
+      result.totalItems = counts;
+      self(err);
+    })
+  })
+  .par(function(){
+
+      var self = this;
+      var sortFilter = {_id : -1};
+      if(last_id && isNext){
+        filter['_id'] = {'$lt' : last_id};
+      }
+      if(first_id && !isNext){
+        filter['_id'] = {'$gt' : first_id};
+        sortFilter['_id'] = 1;
+      }
+
+      var query = null;
+      var skipNumber = currentPage - prevPage;
+      if(skipNumber < 0)
+        skipNumber = -1*skipNumber;
+
+      query = Spare.find(filter).sort(sortFilter).limit(pageSize*skipNumber);
+      query.exec(function(err,spares){
+          if(!err && spares.length > pageSize*(skipNumber - 1)){
+                result.spares = spares.slice(pageSize*(skipNumber - 1),spares.length);
+          }else
+            result.spares = [];
+          if(!isNext && result.spares.length > 0)
+           result.spares.reverse();
+           self(err);
+    });
+  })
+  .seq(function(){
+      return res.status(200).json(result);
+  })
+  .catch(function(err){
+    handleError(res,err);
+  }) 
+}
 
 // Updates an existing product in the DB.
 exports.update = function(req, res) {

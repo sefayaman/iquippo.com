@@ -45,10 +45,10 @@ angular.module('sreizaoApp')
 
   }
 
-  SubCategorySvc.getAllSubCategory()
+  /*SubCategorySvc.getAllSubCategory()
    .then(function(result){
     $scope.allSubcategory = result;
-  });
+  });*/
 
   LocationSvc.getAllLocation()
    .then(function(result){
@@ -79,7 +79,7 @@ angular.module('sreizaoApp')
         dataToSend['category']= quote.catName;
       else
         dataToSend['category']= quote.otherCategory;
-      dataToSend['subcategory']= quote.subcategory;
+      //dataToSend['subcategory']= quote.subcategory;
       dataToSend['brand']= quote.brand;
       dataToSend['model']= quote.model;
       dataToSend['expPrice']= quote.expPrice;

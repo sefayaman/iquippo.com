@@ -4,7 +4,7 @@
 angular.module('manpower').controller('ManpowerCtrl',ManpowerCtrl);
 
 //controller function
-function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $uibModal, notificationSvc, uploadSvc, LocationSvc, productSvc, ManpowerSvc) {
+function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, LocationSvc, productSvc, ManpowerSvc) {
     var vm = this;
     vm.manpower = {};
     vm.manpowerFilter = {};
@@ -18,7 +18,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     vm.onLocationChange = onLocationChange;
     vm.viewAllUser = viewAllUser;
     vm.viewUserProfile = viewUserProfile;
-    vm.getEquipmentHelp = getEquipmentHelp;
+    //vm.getEquipmentHelp = getEquipmentHelp;
     vm.getLocationHelp = getLocationHelp;
     vm.myFunct = myFunct;
     vm.doSearch = doSearch;
@@ -36,11 +36,19 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       .then(function(result){
         $scope.locationList = result;
       });
-      var dataToSend = {};
+      /*var dataToSend = {};
       ManpowerSvc.getCatSubCatOnFilter(dataToSend)
        .then(function(result){
         result.forEach(function(item){
           vm.assetsList[vm.assetsList.length] =  item.category.name + "-" + item.name;
+        });
+       }).catch(function(err){
+        //Modal.alert("Error in getting list");
+      });*/
+      categorySvc.getAllCategory()
+       .then(function(result){
+        result.forEach(function(item){
+          vm.assetsList[vm.assetsList.length] =  item.name + "";
         });
        }).catch(function(err){
         //Modal.alert("Error in getting list");
@@ -51,7 +59,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
     init();
 
-    function getEquipmentHelp(val) {
+    /*function getEquipmentHelp(val) {
       var serData = {};
       serData['searchStr'] = vm.manpowerFilter.equipmentSearchText;
       return ManpowerSvc.getCatSubCatOnFilter(serData)
@@ -60,7 +68,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
           return item.category.name + "-" + item.name;;
         });
       })
-    };
+    };*/
 
     function getLocationHelp(val) {
       var serData = {};
@@ -195,7 +203,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         $scope.submitted = true;
         return;
       }
-      vm.manpower.assetOperated = $scope.selectedAssetsArr;
+      //vm.manpower.assetOperated = $scope.selectedAssetsArr;
       //vm.manpower.role = "manpower";
       /*adding manpower info */
       if(vm.manpower.agree) {
@@ -436,9 +444,22 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     var vm = this;
     vm.manpower = {};
     vm.allManpowerList = [];
+    //pagination variables
+    var prevPage = 0;
+    vm.itemsPerPage = 50;
+    vm.currentPage = 1;
+    vm.totalItems = 0;
+    vm.maxSize = 6;
+    var first_id = null;
+    var last_id = null;
+  
+    vm.fireCommand = fireCommand;
     vm.updateManpowerUser = updateManpowerUser;
+    var dataToSend = {};
     function init(){
-      getAllUsers();
+      dataToSend.pagination = true;
+      dataToSend.itemsPerPage = vm.itemsPerPage;
+      getAllUsers(dataToSend);
     }
     init();
 
@@ -446,7 +467,8 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       $rootScope.loading = true;
       ManpowerSvc.updateManpower(user).then(function(result){
         $rootScope.loading = false;
-        getAllUsers();
+        //getAllUsers();
+        fireCommand(true);
         if(result.status)
           Modal.alert("User Activated",true);
         else
@@ -457,12 +479,45 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       });
     }
 
-    function getAllUsers(){
+    function fireCommand(reset,filterObj){
+      if(reset)
+        resetPagination();
       var filter = {};
+      if(!filterObj)
+          angular.copy(dataToSend, filter);
+      else
+        filter = filterObj;
+      if(vm.searchStr)
+        filter['searchstr'] = vm.searchStr;
+      
+      getAllUsers(filter);
+    }
+
+    function getAllUsers(filter){
+      filter.prevPage = prevPage;
+      filter.currentPage = vm.currentPage;
+      filter.first_id = first_id;
+      filter.last_id = last_id;
+      //var filter = {};
       //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
-        vm.allManpowerList = result;
+        //vm.allManpowerList = result;
+        vm.allManpowerList = result.items;
+        vm.totalItems = result.totalItems;
+        prevPage = vm.currentPage;
+        if(vm.allManpowerList.length > 0){
+          first_id = vm.allManpowerList[0]._id;
+          last_id = vm.allManpowerList[vm.allManpowerList.length - 1]._id;
+        }
       });
+    }
+
+    function resetPagination(){
+      prevPage = 0;
+      vm.currentPage = 1;
+      vm.totalItems = 0;
+      first_id = null;
+      last_id = null;
     }
 
   }

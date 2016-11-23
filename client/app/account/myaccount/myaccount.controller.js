@@ -4,7 +4,7 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, ManpowerSvc, InvitationSvc, SubCategorySvc) {
+function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
     var vm = this;
     vm.currentTab = "basic";
     vm.userInfo = {};
@@ -30,13 +30,20 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       LocationSvc.getAllLocation()
           .then(function(result){
           $scope.locationList = result;
-      })
-      SubCategorySvc.getAllSubCategory()
+      });
+      /*SubCategorySvc.getAllSubCategory()
       .then(function(result){
         result.forEach(function(item){
           vm.assetsList[vm.assetsList.length] =  item.category.name + "-" + item.name;
         });
-      })  
+      })*/ 
+      categorySvc.getAllCategory()
+       .then(function(result){
+        result.forEach(function(item){
+          vm.assetsList[vm.assetsList.length] = item.name;
+        });
+       });
+        
       var dataToSend = {};
 
       Auth.isLoggedInAsync(function(loggedIn){

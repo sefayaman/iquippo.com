@@ -10,7 +10,7 @@
 			<div class="row form-group">
 				<div class="col-sm-4">
 					<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
-						<option value="sc">Sub Category</option>
+						<!-- <option value="sc">Sub Category</option> -->
 						<option value="loc">Location</option>
 						<option value="date">Auction Date</option>
 						<option value="inv">Invite Code Setting</option>
@@ -22,7 +22,7 @@
 				</div>
 			</div>
 			<!--Select category  -->
-			<div ng-if="gsettingVm.tabValue == 'sc'">
+			<!-- <div ng-if="gsettingVm.tabValue == 'sc'">
 				<form name="subCategoryForm" novalidate class="subCategoryForm">
 					<h4>Add New Sub Category</h4>
 					<legend></legend>
@@ -66,7 +66,7 @@
 				</div>
 			</div>
 			
-			<div class="clearfix form-group"></div>
+			<div class="clearfix form-group"></div> -->
 			<!--Select Location  -->
 			<div ng-if="gsettingVm.tabValue == 'loc'">
 				<uib-tabset justified="true">

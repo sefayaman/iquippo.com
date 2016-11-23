@@ -87,37 +87,55 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,
 function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBuilder) {
  var vm = this;
  
- vm.biddingInfo = {};
- vm.payNow = payNow;
- 
-  $scope.tableRef = {};
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withOption('stateSave',true)
-  .withOption('stateLoaded',function(){
-    if($scope.tableRef.DataTable && $rootScope.currentProductListingPage > 0)
-      $timeout(function(){
-          $scope.tableRef.DataTable.page($rootScope.currentProductListingPage).draw(false);
-          $rootScope.currentProductListingPage = 0;
-      },10)  
-  });
+ //pagination variables
+  var prevPage = 0;
+  vm.itemsPerPage = 50;
+  vm.currentPage = 1;
+  vm.totalItems = 0;
+  vm.maxSize = 6;
+  var first_id = null;
+  var last_id = null;
+  
+  vm.fireCommand = fireCommand;
+  vm.bidListing = [];
+  vm.biddingInfo = {};
+  vm.payNow = payNow;
+ var dataToSend = {};
 
     $scope.$on('updateBidList',function(){
-      init();
+      fireCommand(true);
     })
 
  function init(){
   Auth.isLoggedInAsync(function(loggedIn){
-  	var filter = {}
-    if(loggedIn){
+  	if(loggedIn){
     	if(!Auth.isAdmin())
-    		filter["mobile"] = Auth.getCurrentUser().mobile;
+    		dataToSend["mobile"] = Auth.getCurrentUser().mobile;
+
+    	dataToSend.pagination = true;
+        dataToSend.itemsPerPage = vm.itemsPerPage;
+    	getBids(dataToSend);
     }
-    getBids(filter);
   })
   
  }
 
  init();
 	
+	function fireCommand(reset,filterObj){
+	    if(reset)
+	      resetPagination();
+	    var filter = {};
+	    if(!filterObj)
+	        angular.copy(dataToSend, filter);
+	    else
+	      filter = filterObj;
+	    if(vm.searchStr)
+	      filter['searchstr'] = vm.searchStr;
+	    
+	    getBids(filter);
+	  }
+
 	function payNow(index){
 		angular.copy(vm.bidListing[index], vm.biddingInfo)
 		var biddingScope = $rootScope.$new();
@@ -128,11 +146,29 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBu
 
 
  function getBids(filter){
+ 	filter.prevPage = prevPage;
+    filter.currentPage = vm.currentPage;
+    filter.first_id = first_id;
+    filter.last_id = last_id;
       BiddingSvc.getOnFilter(filter)
       .then(function(result){
-        vm.bidListing = result;
+        vm.bidListing = result.items;
+        vm.totalItems = result.totalItems;
+        prevPage = vm.currentPage;
+        if(vm.bidListing.length > 0){
+          first_id = vm.bidListing[0]._id;
+          last_id = vm.bidListing[vm.bidListing.length - 1]._id;
+        }
       });
     }
+
+    function resetPagination(){
+      prevPage = 0;
+      vm.currentPage = 1;
+      vm.totalItems = 0;
+      first_id = null;
+      last_id = null;
+  	}
 }
 
 })();

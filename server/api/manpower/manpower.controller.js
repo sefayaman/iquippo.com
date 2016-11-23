@@ -1,9 +1,11 @@
 'use strict';
 
 var _ = require('lodash');
+var Seq = require('seq');
 var ManpowerUser = require('./manpower.model');
 var SubCategory = require('./../category/subcategory.model');
 var User = require('./../user/user.model');
+var Utility = require('./../../components/utility.js');
 
 // Get list of services
 exports.getAll = function(req, res) {
@@ -41,7 +43,6 @@ exports.statusWiseCount = function(req,res){
 }
 
 exports.getOnId = function(req, res) {
-  console.log("id###",req.params.id);
   ManpowerUser.findOne({'user.userId':req.params.id}, function (err, data) {
     if(err) { return handleError(res, err); }
     if(!data) { return res.status(200).json({errorCode:1,message:"Not Exist!!!"}); }
@@ -135,6 +136,7 @@ exports.getConcatCatSubCat = function(req, res) {
 
 //search based on service type
 exports.getSearchedUser = function(req, res) {
+  var searchStrReg = new RegExp(req.body.searchstr, 'i');
   var filter = {};
   if(req.body.status)
     filter["status"] = true;
@@ -145,6 +147,16 @@ exports.getSearchedUser = function(req, res) {
     arr[arr.length] = {"user.city": { $regex: locRegEx }};
     arr[arr.length] = {"user.state": { $regex: locRegEx }};
   }
+
+  if(req.body.searchstr){
+    arr[arr.length] = { "user.fname": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.lname": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.mobile": { $regex: searchStrReg }};
+    arr[arr.length] = { "user.email": { $regex: searchStrReg }};
+    arr[arr.length] = { "assetOperated": { $regex: searchStrReg }};
+  //  arr[arr.length] = { status: { $regex: searchStrReg }};
+  }
+
   if(arr.length > 0)
     filter['$or'] = arr;
 
@@ -180,16 +192,39 @@ exports.getSearchedUser = function(req, res) {
     filter["experience"] = expFilter;
   }
 
-  console.log("filter", filter);
-  //var query = ManpowerUser.find(filter); 
-  var query = ManpowerUser.find(filter).sort( { createdAt: -1 } ); 
-  query.exec(
-               function (err, users) {
-                      if(err) { return handleError(res, err); }
-                      //console.log(users);
-                      return res.status(200).json(users);
-               }
-  );
+  var result = {};
+  if(req.body.pagination){
+    Utility.paginatedResult(req,res,ManpowerUser,filter,{});
+    return;    
+  }
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
+
+  var query = ManpowerUser.find(filter).sort(sortObj).limit(maxItem);
+    Seq()
+    .par(function(){
+      var self = this;
+      ManpowerUser.count(filter,function(err, counts){
+        result.totalItems = counts;
+        self(err);
+      })
+    })
+    .par(function(){
+      var self = this;
+      query.exec(function (err, manpowers) {
+          if(err) { return handleError(res, err); }
+          result.manpowers = manpowers;
+          self();
+         }
+      );
+
+    })
+    .seq(function(){
+      return res.status(200).json(result.manpowers);
+    })
 };
 
 function handleError(res, err) {

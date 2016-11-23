@@ -14,18 +14,23 @@
                 </div>
               </div>
               <!-- /.row -->
-
+              <p class="text-right">Showing : {{manpowerListingVm.totalItems}} Records</p>
               <div class="table-responsive">
-                <table datatable="ng"  dt-options= "dtOptions" class="table table-bordred table-striped">
-
+              <div class="row">                    
+                  <div class="col-sm-3 pull-right">
+                    <div class="tablesearch text-right form-group">
+                       Search: <input type="text" placeholder="Search..." ng-model="manpowerListingVm.searchStr" ng-change="manpowerListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                    </div>
+                  </div>
+              </div>
+                <table class="table table-bordred table-striped">
                   <thead>
                     <th>Name</th>
                     <th>Mobile No.</th>
                     <th>Email Id</th>
                     <th>Product</th>
                     <th>Status</th>
-                    <th width="25%">Action</th>
-                   
+                    <th width="25%">Action</th>                   
                   </thead>
                   <tbody>
 
@@ -49,6 +54,7 @@
 
                   </tbody>
                 </table>
+                <uib-pagination total-items="manpowerListingVm.totalItems" ng-model="manpowerListingVm.currentPage" items-per-page="manpowerListingVm.itemsPerPage" max-size="manpowerListingVm.maxSize" ng-change="manpowerListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
               </div>
           </div>
         </div>

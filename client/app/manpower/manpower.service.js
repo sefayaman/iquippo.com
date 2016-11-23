@@ -33,6 +33,10 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
     function getManpowerUserOnFilter(filter){
       return $http.post(path + "/getmanpoweruserfilter",filter)
         .then(function(res){
+          if(filter.pagination)
+                manpowerCache = res.data.manpowers;
+            else
+              manpowerCache = res.data;
           return res.data;
         })
         .catch(function(res){

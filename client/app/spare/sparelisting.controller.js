@@ -5,6 +5,17 @@ angular.module('spare').controller('SpareListingCtrl', SpareListingCtrl);
 function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
   var vm  = this;
 
+  //pagination variables
+  var prevPage = 0;
+  vm.itemsPerPage = 50;
+  vm.currentPage = 1;
+  vm.totalItems = 0;
+  vm.maxSize = 6;
+  var first_id = null;
+  var last_id = null;
+  
+  vm.fireCommand = fireCommand;
+
   vm.deleteSpare = deleteSpare;
   vm.spareEditHandler = spareEditHandler;
   vm.getDateFormat = getDateFormat;
@@ -12,23 +23,13 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
   vm.previewSellerDetail = previewSellerDetail;
   vm.searchType = "";
   vm.showFilter = showFilter;
-  vm.searchFilter = searchFilter;
+  //vm.searchFilter = searchFilter;
   vm.getCategories = getCategories;
  
-  vm.globalSpareList = [];
-  vm.orgGlobalSpareList = [];
+  vm.spareLists = [];
+  //vm.orgspareLists = [];
   vm.spareSearchFilter = {};
   var dataToSend = {};
-  
-  $scope.tableRef = {};
-  $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withOption('stateSave',true)
-  .withOption('stateLoaded',function(){
-    if($scope.tableRef.DataTable && $rootScope.currentProductListingPage > 0)
-      $timeout(function(){
-          $scope.tableRef.DataTable.page($rootScope.currentProductListingPage).draw(false);
-          $rootScope.currentProductListingPage = 0;
-      },10)  
-  });
   
   function getCategories(dataObj){
     if(!dataObj)
@@ -42,20 +43,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
     return categoryArr.join();
   }
 
-  function loadSpares(){
-
-    if(Auth.getCurrentUser()._id){
-      if(Auth.getCurrentUser().role != 'admin') {
-        if(Auth.getCurrentUser().role == 'channelpartner')
-          dataToSend["role"] = Auth.getCurrentUser().role;
-        dataToSend["userid"] = Auth.getCurrentUser()._id;
-       }
-       spareSvc.getSpareOnFilter(dataToSend)
-       .then(function(result){
-          vm.globalSpareList = vm.orgGlobalSpareList = result;
-       })
-    }else{
-        //refresh case
+  function init(){
         Auth.isLoggedInAsync(function(loggedIn){
            if(loggedIn){
               if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') {
@@ -63,90 +51,118 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
                   dataToSend["role"] = Auth.getCurrentUser().role;
                 dataToSend["userid"] = Auth.getCurrentUser()._id;
                }
-                spareSvc.getSpareOnFilter(dataToSend)
-               .then(function(result){
-                  vm.globalSpareList = vm.orgGlobalSpareList = result;
-               })
+                dataToSend.pagination = true;
+                dataToSend.itemsPerPage = vm.itemsPerPage;
+                loadSpares(dataToSend);
            }
         });
-    }
+
   }
 
-  loadSpares();
+  init();
   
+  function loadSpares(filter){
+
+    filter.prevPage = prevPage;
+    filter.currentPage = vm.currentPage;
+    filter.first_id = first_id;
+    filter.last_id = last_id;
+    spareSvc.getSpareOnFilter(filter)
+    .then(function(result){
+        vm.spareLists  = result.spares;
+        vm.totalItems = result.totalItems;
+        prevPage = vm.currentPage;
+        if(vm.spareLists.length > 0){
+          first_id = vm.spareLists[0]._id;
+          last_id = vm.spareLists[vm.spareLists.length - 1]._id;
+        }
+     })
+  }
+
+  
+  function fireCommand(reset,filterObj){
+    if(reset)
+      resetPagination();
+    var filter = {};
+    if(!filterObj)
+        angular.copy(dataToSend, filter);
+    else
+      filter = filterObj;
+    if(vm.spareSearchFilter.searchStr)
+      filter['searchstr'] = vm.spareSearchFilter.searchStr;
+    if(vm.searchType){
+      var colFilter = getCoulmnSearchFilter();
+      for(var key in  colFilter){
+        filter[key] = colFilter[key];
+      }
+    }
+    loadSpares(filter);
+  }
+
   function showFilter(type)
   {
     vm.spareSearchFilter  = {};
+    //fireCommand(true);
   }
 
-function searchFilter(type)
-{ 
-    vm.globalSpareList = {};
-    vm.globalSpareList = vm.orgGlobalSpareList;
-    vm.globalSpareList  = _.filter(vm.globalSpareList,
-    function(item){  
-      return searchUtil(item, vm.spareSearchFilter.searchTxt, type); 
-    });
-    if(vm.spareSearchFilter.searchTxt == '')
-      vm.globalSpareList = vm.orgGlobalSpareList;
-}  
- 
-function searchUtil(item, toSearch, type)
-{
-  if(type == 'partNo'){
-    var partNoArr = toSearch.split(",");
-    if(!partNoArr || partNoArr.length == 0)
-      return;
-    return ( partNoArr.indexOf(item.partNo) != -1) ? true : false ;
-  } else if(type == 'manufacturer'){
-    var manufacturerName = item.manufacturers.name + "";
-    return (manufacturerName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
-  } else if(type == 'status'){
-    var assetStatus = item.status + "";
-    return (assetStatus.toLowerCase() == toSearch.toLowerCase()) ? true : false;
-  } else if(type == 'listedBy'){
-    var fName = item.user.fname + "";
-    var lName = item.user.lname + "";
-    return ( fName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
-            || lName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) ? true : false;
-  } else if(type == 'location'){
-    var locFlag = false;
-    item.locations.forEach(function(val,idx){
-      var cityName = val.city + "";
-      var stateName = val.state + "";
-      if(cityName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
-          || stateName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1)
-        locFlag = true;
-      })
-    return locFlag ? true : false;
+  function getCoulmnSearchFilter(){
+    var filter = {};
+    switch(vm.searchType){
+      case "partNo":
+         var partNoArr = vm.spareSearchFilter.coulmnSearchStr.split(",");
+        if(partNoArr && partNoArr.length > 0){
+          if(partNoArr.length == 1)
+            filter['partNo'] = partNoArr[0];
+          else
+            filter['partNos'] = partNoArr;
+        }
+        break;
+      case "manufacturer":
+       filter['manufacturer'] = vm.spareSearchFilter.coulmnSearchStr;
+        break;
+      case "status":
+        filter['status'] = vm.spareSearchFilter.coulmnSearchStr;
+        break;
+      case "listedBy":
+          filter['listedBy'] = vm.spareSearchFilter.coulmnSearchStr;
+        break;
+       case "category":
+          filter['category'] = vm.spareSearchFilter.coulmnSearchStr;
+          break;
+      case "ldate":
+                  vm.spareSearchFilter.listingDate = {};
+                  if(!vm.spareSearchFilter.fromDate && !vm.spareSearchFilter.toDate){
+                  delete vm.spareSearchFilter.listingDate;
+                  return;
+                }
 
-  } else if(type == 'category'){
-      var catFlag = false;
-      item.spareDetails.forEach(function(val,idx){
-        var categoryName = val.category.name + "";
-        var otherCategoryName = val.category.otherName + "";
-        if(categoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 
-            || otherCategoryName.toLowerCase().indexOf(toSearch.toLowerCase()) > -1 ) 
-          catFlag = true;
-      })
-    return catFlag ? true : false;
-  } else if(type == 'ldate'){
-      if(!vm.spareSearchFilter.fromDate && !vm.spareSearchFilter.toDate){
-        delete vm.spareSearchFilter.fromDate;
-        delete vm.spareSearchFilter.toDate;
-        return;
-      }
-      var listingDate = item.createdAt;  
-      var fromDate = vm.spareSearchFilter.fromDate;
-      var toDate = vm.spareSearchFilter.toDate;      
-      if(fromDate && toDate)
-        return (moment(listingDate).isAfter(fromDate) && moment(listingDate).isBefore(toDate)) ? true : false; 
-      else if(fromDate)
-        return (moment(listingDate).isAfter(fromDate)) ? true : false; 
-      else if(toDate)
-        return (moment(listingDate).isAfter(toDate)) ? true : false; 
+                vm.spareSearchFilter.listingDate = {};
+                if(vm.spareSearchFilter.fromDate)
+                  vm.spareSearchFilter.listingDate.fromDate = vm.spareSearchFilter.fromDate;
+                else
+                  delete vm.spareSearchFilter.listingDate.fromDate;
+
+                if(vm.spareSearchFilter.toDate)
+                  vm.spareSearchFilter.listingDate.toDate = vm.spareSearchFilter.toDate;
+                else
+                  delete vm.spareSearchFilter.listingDate.toDate;
+                filter['listingDate'] = vm.spareSearchFilter.listingDate;
+                break;
+      case "location":
+        filter['location'] = vm.spareSearchFilter.coulmnSearchStr;
+        break;
+    }
+    return filter;
+    //fireCommand(true,filter);
   }
-}
+
+  function resetPagination(){
+     prevPage = 0;
+     vm.currentPage = 1;
+     vm.totalItems = 0;
+     first_id = null;
+     last_id = null;
+  }
 
 	function getDateFormat(date) {
       if(!date)
@@ -188,7 +204,7 @@ function searchUtil(item, toSearch, type)
   function deleteSpare(spare){
     spare.deleted = true;
     spareSvc.updateSpare(spare).then(function(result){
-        loadSpares();
+        fireCommand(true);
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Spare Deleted';

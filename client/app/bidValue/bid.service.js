@@ -6,6 +6,7 @@ function BiddingSvc($http,$q,notificationSvc,Auth){
   var bidSvc = {};
     var path = "/api/bid";
     var HomeBiddingCache = [];
+    var biddingCache = [];
     
     bidSvc.getAll = getAll;
     bidSvc.save = save;
@@ -80,6 +81,10 @@ function BiddingSvc($http,$q,notificationSvc,Auth){
     function getOnFilter(data){
      return $http.post(path + "/onfilter",data)
         .then(function(res){
+          // if(data.pagination)
+          //       updateCache(res.data.items);
+          //   else
+          //     updateCache(res.data);
           return res.data
         })
         .catch(function(err){
@@ -87,6 +92,12 @@ function BiddingSvc($http,$q,notificationSvc,Auth){
         }) 
     }
     
+    function updateCache(dataArr){
+        dataArr.forEach(function(item,index){
+          biddingCache[item._id] = item;
+        });
+      }
+
     function update(bidData){
       var stsObj = {};
       stsObj.createdAt = new Date();

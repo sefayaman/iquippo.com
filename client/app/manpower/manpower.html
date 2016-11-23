@@ -51,7 +51,7 @@
             <!-- <div class="search-equip">
             <i class="fa fa-search"></i>
              </div> -->
-            <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+            <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in getCategoryHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
            
           </div>          
           <div class="col-sm-3 padd-left">
@@ -103,7 +103,7 @@
           <!-- <div class="search-equip">
           <i class="fa fa-search"></i>
            </div> -->
-          <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in manpowerVm.getEquipmentHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
+          <input type="text" class="form-control" placeholder="Equipment/Assets" ng-model="manpowerVm.manpowerFilter.equipmentSearchText" uib-typeahead="address for address in getCategoryHelp($viewValue)" ng-keypress="manpowerVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200">
          
         </div>  
       </div>
@@ -233,10 +233,11 @@
                     </div>
                     <div class="col-xs-6 form-group">
                         <label>Select the equipment:</label>
-                        <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
+                        <!-- <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
                           <option ng-repeat="assets in manpowerVm.assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>
-                        </select>
-                    </div>
+                        </select> -->
+                        <select class="form-control" name="selectedAssets" id="selectedAssets" ng-options="assets as assets for assets in manpowerVm.assetsList" ng-model="manpowerVm.manpower.assetOperated" multiple>
+                    </select>
                   </div> 
                   <div class="row form-group">
                     <div class="col-sm-12">

@@ -7,15 +7,15 @@ angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc, ManufacturerSvc, BannerSvc) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
-    vm.tabValue = 'sc';
+    vm.tabValue = 'loc';
     vm.onTabChange = onTabChange;
-    vm.subCategory = {};
-    vm.subCategory.category = {};
-    vm.subCatEdit = false;
-    vm.saveSubCategory = saveSubCategory;
-    vm.updateSubCategory = updateSubCategory;
-    vm.subCategoryEditClick = subCategoryEditClick;
-    vm.deleteSubCategory = deleteSubCategory;
+    // vm.subCategory = {};
+    // vm.subCategory.category = {};
+    // vm.subCatEdit = false;
+    // vm.saveSubCategory = saveSubCategory;
+    // vm.updateSubCategory = updateSubCategory;
+    // vm.subCategoryEditClick = subCategoryEditClick;
+    // vm.deleteSubCategory = deleteSubCategory;
 
     vm.state = {};
     vm.stateEdit = false;
@@ -76,9 +76,9 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 
     function onTabChange(tabValue){
     	switch(tabValue){
-    		case 'sc':
-    			 loadAllSubcategory();
-    		break;
+    		// case 'sc':
+    		// 	 loadAllSubcategory();
+    		// break;
     		case 'loc':
     			loadAllState();
     			loadAllLocation();
@@ -120,7 +120,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     	})
     }
 
-    function loadAllSubcategory(){
+    /*function loadAllSubcategory(){
     	SubCategorySvc.getAllSubCategory()
     	.then(function(result){
     		vm.subCategoryList = result;
@@ -130,7 +130,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 		.then(function(result){
 			vm.allCategory = result;
 		})
-    }
+    }*/
 
 /*    function loadAllManufacturer(){
     	SubCategorySvc.getAllManufacturer()
@@ -146,7 +146,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 
 
     //subcategory functions
-    function saveSubCategory(form){
+    /*function saveSubCategory(form){
 		if(form.$invalid){
 			$scope.submitted = true;
 			return;
@@ -200,7 +200,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 		.then(function(result){
 			 loadAllSubcategory();
 		})
-    }
+    }*/
 
     //state functions
 	function saveState(form){

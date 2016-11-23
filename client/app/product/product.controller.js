@@ -115,10 +115,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.allCategory = result;
     });
 
-     SubCategorySvc.getAllSubCategory()
+    /* SubCategorySvc.getAllSubCategory()
     .then(function(result){
       $scope.allSubCategory = result;
-    });
+    });*/
 
      LocationSvc.getAllState()
     .then(function(result){
@@ -213,7 +213,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         $scope.container.selectedBrandId = $scope.product.brand._id;
         $scope.container.selectedModelId = $scope.product.model._id;
 
-        $scope.container.selectedSubCategory = $scope.product.subcategory;
+        //$scope.container.selectedSubCategory = $scope.product.subcategory;
 
 
         $scope.getUsersOnUserType = [];
@@ -561,11 +561,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         return;
       }
 
-      if($scope.container.selectedSubCategory){
+      /*if($scope.container.selectedSubCategory){
          product.subcategory = {};
          product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
          product.subcategory['name'] = $scope.container.selectedSubCategory['name'];
-      }
+      }*/
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
       var primaryFound = false;
