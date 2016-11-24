@@ -39,26 +39,22 @@
                       </select>
                     </div>                   
                   </div>
-                  <div class="col-sm-2">
+                  <div class="col-sm-3">
                      <div ng-if="spareListingVm.searchType != 'ldate'">
                       <input type="text" ng-if="spareListingVm.searchType != ''" name="coulmnSearchStr" ng-model="spareListingVm.spareSearchFilter.coulmnSearchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..." class="form-input-width" />
                     </div>
                     <div ng-if="spareListingVm.searchType == 'ldate'">
                       <div class="row">
-                        <div class="col-sm-8">
-                          <div class="row">
-                            <div class="col-sm-7">
-                              <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
-                                <span class="input-group-addon">From</span>
-                                <input type="date" placeholder="Date" class="form-input-width " name="fromDate"  ng-model="spareListingVm.spareSearchFilter.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup1.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open1()" ng-change="spareListingVm.fireCommand(true)">
-                              </div>
-                            </div>
-                            <div class="col-sm-5 ">
-                              <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
-                                <span class="input-group-addon">To</span>
-                                <input type="date" placeholder="Date" class="form-input-width " name="toDate" ng-value="toDate" ng-model="spareListingVm.spareSearchFilter.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-change="spareListingVm.fireCommand(true)">
-                              </div>
-                            </div>
+                        <div class="col-sm-6">
+                          <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
+                            <span class="input-group-addon">From</span>
+                            <input type="date" placeholder="Date" name="fromDate" class="form-input-width"  ng-model="spareListingVm.spareSearchFilter.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup1.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open1()" ng-change="spareListingVm.fireCommand(true)">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
+                            <span class="input-group-addon">To</span>
+                            <input type="date" placeholder="Date" name="toDate" class="form-input-width" ng-value="toDate" ng-model="spareListingVm.spareSearchFilter.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-change="spareListingVm.fireCommand(true)">
                           </div>
                         </div>
                       </div>
@@ -89,7 +85,7 @@
                     <th>Categories</th>
                     <th>Listed By</th>
                     <th>Listed Date</th>
-                    <th>Price</th>
+                    <th>Price (<i class="fa fa-inr"></i>)</th>
                     <!-- <th>Location</th> -->
                     <th>Status</th>
                     <th width="10%">Actions</th>
@@ -117,7 +113,9 @@
                       {{spareListingVm.getDateFormat(spare.createdAt)}}
                     </td>
                     <td>
-                      <span ng-if="spare.tradeType != 'RENT'"><i class="fa fa-inr" ng-if="spare.currencyType == 'INR' && spare.grossPrice"></i>{{spare.grossPrice |number:0}}</span>
+                      <span ng-if="spare.tradeType != 'RENT'">
+                        <!-- <i class="fa fa-inr" ng-if="spare.currencyType == 'INR' && spare.grossPrice"></i> -->
+                        {{spare.grossPrice |number:0}}</span>
                       <span ng-if="spare.priceOnRequest && spare.tradeType != 'RENT'">(Price On Request)</span>
                     </td>
                     <!-- <td>{{product.images.length}}</td> -->
