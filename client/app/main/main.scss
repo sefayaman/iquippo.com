@@ -1066,3 +1066,9 @@ div#jivo_close_button{position: absolute; right: -20px;}
     padding-right: 15px;
 }
 .featured .tablesearch input{width: 160px;} 
+.media-coverage{border: 1px solid #ccc;padding: 7px;height: 180px;overflow-y: scroll;}
+.media-coverage h6{font-size: 11px;}
+.media-coverage hr{margin:7px 0 7px 0;}
+.medianame ul{margin:0;padding:0;}
+.medianame ul li{display: inline-block;list-style: none;padding: 0 5px 0 3px;line-height: 13px;border-right: 1px solid #ccc;}
+.medianame ul li:last-child{border-right: 0;}
