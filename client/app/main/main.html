@@ -35,12 +35,12 @@
             <div class="row">
               <div class="col-sm-3">
                 <div class="select-text">
-                  <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name..." uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                  <input type="text" ng-model="mainVm.categorySearchText" placeholder="Enter Category Name" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                 </div>
               </div>
               <div class="col-sm-3">
                 <div class="select-text">
-                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State..." uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                  <input type="text" class="form-control" ng-model="mainVm.locationSearchText" placeholder="Enter Location/State" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="mainVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                 </div>
               </div> 
               <div class="col-sm-3">
