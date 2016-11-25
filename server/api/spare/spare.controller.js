@@ -197,7 +197,7 @@ exports.searchSpare = function(req, res) {
     sortObj = req.body.sort;
   sortObj['createdAt'] = -1;
 
-  var query = Spare.find(filter).sort(sortObj).limit(maxItem);
+  var query = Spare.find(filter).sort(sortObj);
   Seq()
   .par(function(){
     var self = this;

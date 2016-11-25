@@ -500,6 +500,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     bannerService.update = update;
     bannerService.deleteBanner = deleteBanner;
     bannerService.getHomeBanner = getHomeBanner;
+    bannerService.getBannerOnId =getBannerOnId;
     
     function getAll(){
 
@@ -537,6 +538,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
         return deferred.promise;
         
+    };
+
+    function getBannerOnId(id){
+      var bannerData = {};
+      for(var i = 0; i < HomeBannerCache.length ; i++){
+        if(HomeBannerCache[i]._id == id){
+          bannerData = HomeBannerCache[i];
+          break;
+        }
+      }
+      return bannerData;
     };
 
     function save(data){

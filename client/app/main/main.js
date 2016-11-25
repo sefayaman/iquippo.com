@@ -191,7 +191,7 @@ angular.module('sreizaoApp')
       .state('usermanagment', {
         url: '/usermanagement',
         templateUrl: 'app/admin/usermanagement/usermanagement.html',
-        controller: 'UserManagementCtrl',
+        controller: 'UserManagementCtrl as userManagementVm',
         authenticate:true,
         layout:'admin'
       })

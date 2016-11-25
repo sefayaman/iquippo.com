@@ -13,21 +13,30 @@
               <h3><button class="btn btn-success btn-md pull-right" ng-click="openDialog('adduser')"><i class="fa fa-plus"></i> Add User</button></h3>
             </div>
             <div class="col-sm-1">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
           </div>
 
           <hr>
-
-          <div ng-if="isAdmin()" class="featured-pro1">
-            
-            <label>Channel Partners:</label>
-            <select ng-model="selectedUser" ng-change="onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in getUsersOnRole track by user._id" >
-              <option value="">Select User</option>
-            </select>
-          </div>
+          <p class="text-right">Showing : {{userManagementVm.totalItems}} Records</p>
+          <div class="row">
+            <div class="col-sm-9">
+              <div ng-if="isAdmin()" class="">            
+                <label>Channel Partners:</label>
+                <select ng-model="selectedUser" ng-change="userManagementVm.onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in userManagementVm.getUsersOnRole track by user._id" >
+                  <option value="">Select User</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-3 pull-right">
+              <div class="tablesearch text-right form-group">
+                 Search: <input type="text" placeholder="Search..." ng-model="userManagementVm.userSearchFilter.searchStr" ng-change="userManagementVm.fireCommand(true)" ng-model-options="{debounce:500}">
+              </div>
+            </div>
+          </div>          
+          
           <div class="table-responsive">
-            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+            <table class="table table-bordred table-striped">
               <thead>
                 <th>Name</th>
                 <th>Email</th>
@@ -36,12 +45,14 @@
                 <th>Company Name</th>
                 <th>Mobile No.</th>
                 <th>Location</th>
+                <th>Product Uploaded</th>
+                <th>Count</th>
                 <th width="6%">Status</th>
                 <th width="15%" ng-show="getCurrentUser().role == 'admin'">Action</th>
                 
               </thead>
               <tbody>
-                <tr ng-repeat="user in userList">
+                <tr ng-repeat="user in userManagementVm.userList">
                   <td>{{user.fname}} {{user.mname}} {{user.lname}}</td>
                   <td>{{user.email}}</td>
                   <td>
@@ -57,16 +68,19 @@
                   <td>{{user.company}}</td>
                   <td>{{user.mobile}}</td>
                   <td>{{user.city}}</td>
+                  <td>{{userManagementVm.getProductData(user._id, "have_products")}}</td>
+                  <td>{{userManagementVm.getProductData(user._id, "total_products")}}</td>
                   <td>
                     <span ng-if="user.status">Active</span>
                     <span ng-if="!user.status">Inactive</span>
                   </td>
                   <td ng-show="getCurrentUser().role == 'admin'">
-                    <label  class="btn btn-warning active-btn" ng-model="user.status" uib-btn-checkbox ng-click="updateUser(user)"><span ng-if="!user.status">Activate</span> <span ng-if="user.status">Deactivate</span></label>
-                  <button class="btn btn-sm btn-danger" ng-click="deleteUser(user)"><i class="fa fa-trash"></i></button></td>                
+                    <label  class="btn btn-warning active-btn" ng-model="user.status" uib-btn-checkbox ng-click="userManagementVm.updateUser(user)"><span ng-if="!user.status">Activate</span> <span ng-if="user.status">Deactivate</span></label>
+                  <button class="btn btn-sm btn-danger" ng-click="userManagementVm.deleteUser(user)"><i class="fa fa-trash"></i></button></td>                
                 </tr>
               </tbody>
             </table>
+            <uib-pagination total-items="userManagementVm.totalItems" ng-model="userManagementVm.currentPage" items-per-page="userManagementVm.itemsPerPage" max-size="userManagementVm.maxSize" ng-change="userManagementVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
         </div>
       </div>

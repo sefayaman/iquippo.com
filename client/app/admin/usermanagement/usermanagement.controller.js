@@ -2,54 +2,156 @@
 
 angular.module('sreizaoApp')
   .controller('UserManagementCtrl', ['$scope', '$rootScope', 'DTOptionsBuilder','Auth','userSvc', 'Modal','$http', function ($scope, $rootScope, DTOptionsBuilder, Auth, userSvc, Modal,$http) {
-   	var self = this;
+   	var vm = this;
+    //pagination variables
+    var prevPage = 0;
+    vm.itemsPerPage = 50;
+    vm.currentPage = 1;
+    vm.totalItems = 0;
+    vm.maxSize = 6;
+    var first_id = null;
+    var last_id = null;
 
-    $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true);
-    //$rootScope.users = [];
-    $rootScope.userList = [];
-    $rootScope.globleUsers = [];
-    $scope.getUsersOnRole = [];
-    self.getAllUser = function(){
-      var filter = {};
+    vm.userList = [];
+    //vm.globleUsers = [];
+    vm.getUsersOnRole = [];
+    vm.exportExcel = exportExcel;
+    vm.onUserChange = onUserChange;
+    vm.deleteUser = deleteUser;
+    vm.fireCommand = fireCommand;
+    vm.userSearchFilter = {};
+    var dataToSend = {};
+    vm.getProductData = getProductData;
+    $scope.getConcatData = [];
+    $scope.$on('updateUserList',function(){
+      fireCommand(true);
+    })
 
-      if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
-        filter["userId"] = Auth.getCurrentUser()._id;
-      }
-      userSvc.getUsers(filter).then(function(data){
-        $rootScope.userList = [];
-        data.forEach(function(item){
-          if(!item.isManpower || item.isPartner)
-            $rootScope.userList[$rootScope.userList.length] = item;
-        });
+    function init(){
+      Auth.isLoggedInAsync(function(loggedIn){
+        if(loggedIn){
+          if(Auth.getCurrentUser().role == 'admin') {
+            var filter = {};
+            filter.role = "channelpartner";
+            userSvc.getUsers(filter).then(function(data){
+            vm.getUsersOnRole = data;
+            })
+            .catch(function(err){
+              Modal.alert("Error in geting user");
+            })
+          }
 
-        $rootScope.globleUsers = $rootScope.userList;
-        getChannelUser("channelpartner");
+          if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
+            dataToSend["userId"] = Auth.getCurrentUser()._id;
+           }
+
+          dataToSend.pagination = true;
+          dataToSend.itemsPerPage = vm.itemsPerPage;
+          getUser(dataToSend);
+        }
+      });
+
+    }
+    init();
+    
+     function getUser(filter){
+      filter.prevPage = prevPage;
+      filter.currentPage = vm.currentPage;
+      filter.first_id = first_id;
+      filter.last_id = last_id;
+      filter.notManpower = true;
+      userSvc.getUsers(filter).then(function(result){
+        getProductsCountWithUser(result);
+        vm.userList  = result.users;
+        vm.totalItems = result.totalItems;
+        prevPage = vm.currentPage;
+        if(vm.userList.length > 0){
+          first_id = vm.userList[0]._id;
+          last_id = vm.userList[vm.userList.length - 1]._id;
+        }
       })
       .catch(function(err){
         Modal.alert("Error in geting user");
       })
     }
-
-    function getChannelUser(role) {
-      if($rootScope.globleUsers) {
-        $scope.getUsersOnRole = $rootScope.globleUsers.filter(function(d){
-          return role == d.role;
-        });
+    function getProductData(id, type){
+      if(angular.isUndefined($scope.getConcatData)) {
+        if(type == "total_products")
+          return 0;
+        if(type == "have_products") 
+            return "No";
+      } else {
+        var count = 0;
+        $scope.getConcatData.forEach(function(data){
+            if(id == data._id) 
+              count = data.total_products;
+          });
+        if(type == "total_products") {
+          if(count > 0)
+            return count;
+          else
+            return 0;
+        }
+        if(type == "have_products"){
+          if(count > 0)
+            return "Yes";
+          else
+            return "No";
+        }
       }
     }
+    function getProductsCountWithUser(result){
+      var filter = {};
+      var userIds = [];
+      result.users.forEach(function(item){
+        userIds[userIds.length] = item._id;
+      });
+      filter.userIds = userIds;
+      userSvc.getProductsCountOnUserIds(filter)
+      .then(function(data){
+        $scope.getConcatData = data;
+        //return data;
+      })
+      .catch(function(){
+      })
+    }
 
-    $scope.onUserChange = function(user){
+    function fireCommand(reset,filterObj){
+    if(reset)
+      resetPagination();
+    var filter = {};
+    if(!filterObj)
+        angular.copy(dataToSend, filter);
+    else
+      filter = filterObj;
+    if(vm.userSearchFilter.createdBy)
+      filter['userId'] = vm.userSearchFilter.createdBy;
+
+    if(vm.userSearchFilter.searchStr)
+      filter['searchstr'] = vm.userSearchFilter.searchStr;
+    getUser(filter);
+  }
+
+  function resetPagination(){
+     prevPage = 0;
+     vm.currentPage = 1;
+     vm.totalItems = 0;
+     first_id = null;
+     last_id = null;
+  }
+
+    function onUserChange(user){
       if(!user) {
-        $rootScope.userList = $rootScope.globleUsers;
+        delete vm.userSearchFilter.createdBy;
+        fireCommand(true);
         return;
       }
-      $rootScope.userList = $rootScope.globleUsers.filter(function(d){
-        if(!angular.isUndefined(d.createdBy))
-            return user._id == d.createdBy._id;
-      });
+      
+      vm.userSearchFilter.createdBy = user._id;
+      fireCommand(true);
     }
 
-     $scope.exportExcel = function(){
+     function exportExcel(){
       var dataToSend ={};
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
         dataToSend["userId"] = Auth.getCurrentUser()._id;
@@ -64,14 +166,14 @@ angular.module('sreizaoApp')
       })
      }
     
-    $scope.deleteUser = function(user){
+    function deleteUser(user){
       Modal.confirm(informationMessage.deleteChannelPartnerConfirm,function(isGo){
         if(isGo == 'no')
           return;
         $rootScope.loading = true;
         userSvc.deleteUser(user._id).then(function(result){
           $rootScope.loading = false;
-          self.getAllUser();
+          fireCommand(true);
           if(result.errorCode == 0)
            Modal.alert("User deleted succesfully",true);
          else
@@ -83,11 +185,11 @@ angular.module('sreizaoApp')
       });
     }
 
-    $scope.updateUser = function(user){
+    function updateUser(user){
       $rootScope.loading = true;
       userSvc.updateUser(user).then(function(result){
         $rootScope.loading = false;
-        self.getAllUser();
+        fireCommand(true);
         if(result.status)
           Modal.alert("User Activated",true);
         else
@@ -98,12 +200,10 @@ angular.module('sreizaoApp')
       });
     }
 
-    self.getAllUser();
 }])
 
   .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance',
    function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance) {
-    var self = this;
     $scope.newUser ={};
     $scope.errors = {};
     //$scope.editImage = false;
@@ -114,25 +214,6 @@ angular.module('sreizaoApp')
     .then(function(result){
       $scope.locationList = result;
     });
-
-    self.getAllUser = function(){
-      var filter = {};
-
-      if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
-        filter["userId"] = Auth.getCurrentUser()._id;
-      }
-      userSvc.getUsers(filter).then(function(data){
-        //$rootScope.users = data;
-        $rootScope.userList = [];
-        data.forEach(function(item){
-          if(!item.isManpower || item.isPartner)
-            $rootScope.userList[$rootScope.userList.length] = item;
-        });
-      })
-      .catch(function(err){
-        Modal.alert("Error in geting user");
-      })
-    }
 
     $scope.register = function(evt){
     var ret = false;
@@ -206,7 +287,7 @@ angular.module('sreizaoApp')
         $scope.newUser.serverPath = serverPath;
         notificationSvc.sendNotification('userRegEmailFromAdminChannelPartner', data, $scope.newUser,'email');
         $scope.closeDialog();
-        self.getAllUser();
+        $rootScope.$broadcast('updateUserList');
         $scope.newUser = {};
         } 
       }).error(function(res){

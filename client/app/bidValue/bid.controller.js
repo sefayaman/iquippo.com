@@ -84,7 +84,7 @@ function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,
    };
 }
 
-function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBuilder) {
+function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBuilder, BannerSvc) {
  var vm = this;
  
  //pagination variables
@@ -139,8 +139,12 @@ function BidListingCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, DTOptionsBu
 	function payNow(index){
 		angular.copy(vm.bidListing[index], vm.biddingInfo)
 		var biddingScope = $rootScope.$new();
-        biddingScope.biddingInfo = vm.biddingInfo;
+		biddingScope.biddingInfo = vm.biddingInfo;
         biddingScope.isPayNow = true;
+        if(vm.biddingInfo.bannerInfo._id)
+			var currentSlide = BannerSvc.getBannerOnId(vm.biddingInfo.bannerInfo._id);
+		if(currentSlide)
+			biddingScope.slideInfo = currentSlide;
         Modal.openDialog('biddingReq',biddingScope);
 	}
 

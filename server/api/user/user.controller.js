@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+var Seq = require('seq');
 var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
@@ -101,13 +103,33 @@ exports.show = function (req, res, next) {
 
 //search based on user userType
 exports.getUser = function(req, res) {
+  var searchStrReg = new RegExp(req.body.searchstr, 'i');
   var filter = {};
   filter["deleted"] = false;
   //filter["isManpower"] = false;
   if(req.body.status)
     filter["status"] = true;
+  var arr = [];
+  
+  /*if(req.body.notManpower) {
+    arr[arr.length] = { isManpower: false};
+    arr[arr.length] = { isPartner: true};
+  }*/
 
- if(req.body.userId)
+  if(req.body.searchstr){
+    console.log("req.body.searchstr", req.body.searchstr);
+    arr[arr.length] = { fname: { $regex: searchStrReg }};
+    arr[arr.length] = { lname: { $regex: searchStrReg }};
+    arr[arr.length] = { mobile: { $regex: searchStrReg }};
+    arr[arr.length] = { email: { $regex: searchStrReg }};
+    arr[arr.length] = { role: { $regex: searchStrReg }};
+    arr[arr.length] = { company: { $regex: searchStrReg }};
+    arr[arr.length] = { city: { $regex: searchStrReg }};
+    arr[arr.length] = { state: { $regex: searchStrReg }};
+    arr[arr.length] = { userType: { $regex: searchStrReg }};
+  }
+  
+  if(req.body.userId)
     filter["createdBy._id"] = req.body.userId;
   
   if(req.body.userType)
@@ -125,15 +147,115 @@ exports.getUser = function(req, res) {
     filter["role"] = typeFilter;    
     }
   //}
-  var query = User.find(filter);
-  console.log("filetr ",filter);
-  query.exec(
-               function (err, users) {
-                      if(err) { return handleError(res, err); }
-                      return res.status(200).json(users);
-               }
-  );
+  if(arr.length > 0)
+    filter['$or'] = arr;
+
+console.log("Filter User", filter);
+  var result = {};
+  if(req.body.pagination){
+    paginatedUser(req,res,filter,result);
+    return;    
+  }
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
+
+var query = User.find(filter).sort(sortObj);
+    Seq()
+    .par(function(){
+      var self = this;
+      User.count(filter,function(err, counts){
+        result.totalItems = counts;
+        self(err);
+      })
+    })
+    .par(function(){
+      var self = this;
+      query.exec(function (err, users) {
+          if(err) { return handleError(res, err); }
+          result.users = users;
+          self();
+         }
+      );
+
+    })
+    .seq(function(){
+      return res.status(200).json(result.users);
+    })
 };
+
+function paginatedUser(req,res,filter,result){
+    var pageSize = req.body.itemsPerPage;
+    var first_id = req.body.first_id;
+    var last_id = req.body.last_id;
+    var currentPage = req.body.currentPage;
+    var prevPage = req.body.prevPage;
+    var isNext = currentPage - prevPage >= 0?true:false;
+    Seq()
+    .par(function(){
+      var self = this;
+      User.count(filter,function(err,counts){
+        result.totalItems = counts;
+        self(err);
+      })
+    })
+    .par(function(){
+
+        var self = this;
+        var sortFilter = {_id : -1};
+        if(last_id && isNext){
+          filter['_id'] = {'$lt' : last_id};
+        }
+        if(first_id && !isNext){
+          filter['_id'] = {'$gt' : first_id};
+          sortFilter['_id'] = 1;
+        }
+
+        var query = null;
+        var skipNumber = currentPage - prevPage;
+        if(skipNumber < 0)
+          skipNumber = -1*skipNumber;
+
+        query = User.find(filter).sort(sortFilter).limit(pageSize*skipNumber);
+        query.exec(function(err,users){
+            if(!err && users.length > pageSize*(skipNumber - 1)){
+                  result.users = users.slice(pageSize*(skipNumber - 1),users.length);
+            }else
+              result.users = [];
+            if(!isNext && result.users.length > 0)
+             result.users.reverse();
+             self(err);
+      });
+    })
+    .seq(function(){
+        return res.status(200).json(result);
+    })
+    .catch(function(err){
+      handleError(res,err);
+    }) 
+  }
+
+//get products count on User Ids
+exports.getProductsCountOnUserIds = function(req, res) {
+  var filter = {};
+    filter['deleted'] = false;
+    filter['status'] = true;
+    if(req.body.userIds)
+      filter['seller._id'] = {$in:req.body.userIds};
+    Product.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: '$seller._id', total_products: { $sum: 1 } } 
+    },
+    {$sort:{count:-1}},
+    function (err, result) {
+      if (err) return handleError(err);
+      return res.status(200).json(result);
+    }
+  );
+}
 
 /**
  * Deletes a user
@@ -283,7 +405,6 @@ function getPartenerDetail(req,res,user){
       filter["status"] = true;
       if(user._id)
         filter['user.userId'] = "" + user._id;
-      //console.log("filter###",filter);
       Vendor.findOne(filter, function (err, partnerData) {
         if(err) { return handleError(res, err); }
         if(!partnerData) { console.log("Not Exist!!!"); }
@@ -329,10 +450,8 @@ exports.validateUser = function(req, res){
       filter['email'] = req.body.email;
   if(req.body.mobile)
     filter['mobile'] = req.body.mobile;
-  //console.log("filter >...",filter);
   User.find(filter,function(err,users){
     if(err){ return handleError(res, err); }
-    //console.log("users",users)
     if(users.length == 0) return res.status(200).json({errorCode:1,message:"User not found"});
     else if(users.length == 1)
       return res.status(200).json({errorCode:0,user:users[0]});
@@ -345,7 +464,7 @@ exports.validateOtp = function(req,res){
   var otp = req.body.otp;
   if(!otp)
      return res.status(401).send('Unauthorized');
-   console.log("otp filetr",{'otp.otp':otp})
+   //console.log("otp filetr",{'otp.otp':otp})
    User.findOne({'otp.otp':otp},function(err,user){
       if(err){ return handleError(res, err); }
       if(!user){return res.status(404).send('Invalid OTP');}
@@ -393,7 +512,7 @@ function setType(cell){
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:9, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:11, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     
@@ -484,6 +603,26 @@ function excel_from_data(data) {
     ws[cell_ref] = cell;
 
     if(R == 0)
+      cell = {v: "Product Uploaded"};
+    else {
+      if(user)
+        cell = {v: user.have_products};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Counts"};
+    else {
+      if(user)
+        cell = {v: user.total_products};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell; 
+
+    if(R == 0)
       cell = {v: "Status"};
     else {
       if(user)
@@ -491,7 +630,7 @@ function excel_from_data(data) {
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
+    ws[cell_ref] = cell; 
   }
   ws['!ref'] = xlsx.utils.encode_range(range);
   return ws;
@@ -520,17 +659,61 @@ exports.exportUsers = function(req,res){
   query.exec(
      function (err, users) {
         if(err) { return handleError(res, err); }
-        var ws_name = "users"
-        var wb = new Workbook();
-        var ws = excel_from_data(users);
-        wb.SheetNames.push(ws_name);
-        wb.Sheets[ws_name] = ws;
-        var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-        res.end(wbout);
+        var userIds = [];
+        users.forEach(function(item){
+          userIds[userIds.length] = item._id + "";
+        });
+        getProductData(req, res, users, userIds);
+        // var ws_name = "users"
+        // var wb = new Workbook();
+        // var ws = excel_from_data(users);
+        // wb.SheetNames.push(ws_name);
+        // wb.Sheets[ws_name] = ws;
+        // var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+        // res.end(wbout);
      });
 }
 
-
+function getProductData(req, res, users, userIds){
+  var filter = {};
+    filter['deleted'] = false;
+    filter['status'] = true;
+    if(userIds)
+      filter['seller._id'] = {$in:userIds};
+    Product.aggregate(
+    { $match:filter},
+    { $group: 
+      { _id: '$seller._id', total_products: { $sum: 1 } } 
+    },
+    {$sort:{count:-1}},
+    function (err, products) {
+      if (err) return handleError(err);;
+      for(var i=0; i < users.length; i++) {
+        var countFlag = false;
+        for(var j=0; j < products.length; j++){
+          if(users[i]._id == products[j]._id) {
+            countFlag = true;
+            users[i].total_products = products[j].total_products;
+            users[i].have_products = "Yes";
+            break;
+          }
+        }
+        if(!countFlag) {
+          users[i].total_products = 0;
+          users[i].have_products = "No";
+        }
+        //console.log("users[" + i +"]" + users[i]._id + " # " + users[i].total_products+ "#" + users[i].have_products);
+      }
+      var ws_name = "users"
+      var wb = new Workbook();
+      var ws = excel_from_data(users);
+      wb.SheetNames.push(ws_name);
+      wb.Sheets[ws_name] = ws;
+      var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+      res.end(wbout);
+    }
+  );
+} 
 function handleError(res, err) {
   return res.status(500).send(err);
 }

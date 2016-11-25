@@ -314,6 +314,16 @@
         });
       };
 
+      userService.getProductsCountOnUserIds = function(filter) {
+        return $http.post(path + "/getproductscountonuserids", filter)
+              .then(function(res){
+                return res.data;
+              })
+              .catch(function(err){
+                throw err;
+              });
+            };
+
       return userService;
   }])
   .factory("subscribeSvc",['$http',function($http){

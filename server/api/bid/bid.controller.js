@@ -69,7 +69,7 @@ exports.getOnFilter = function(req, res) {
     sortObj = req.body.sort;
   sortObj['createdAt'] = -1;
 
-  var query = Bid.find(filter).sort(sortObj).limit(maxItem);
+  var query = Bid.find(filter).sort(sortObj);
   Seq()
   .par(function(){
     var self = this;
