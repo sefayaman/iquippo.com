@@ -334,5 +334,19 @@ angular.module('sreizaoApp')
         templateUrl: 'app/spare/sparehome.html',
         controller:"SpareHomeCtrl as spareHomeVm",
         layout:'client'
+      })
+      .state('pricetrend', {
+        url: '/pricetrend',
+        templateUrl: 'app/admin/pricetrend/pricetrend.html',
+        controller: 'PriceTrendCtrl as priceTrendVm',
+        authenticate:true,
+        layout:'admin'
+      })
+       .state('pricetrendcomment', {
+        url: '/pricetrendcomment',
+        templateUrl: 'app/admin/pricetrend/pricetrendsurveylisting.html',
+        controller: 'PriceTrendSurveyListingCtrl as priceTrendSurveyListingVm',
+        authenticate:true,
+        layout:'admin'
       });
   });

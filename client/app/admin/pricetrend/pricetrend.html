@@ -1,0 +1,199 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          
+          <div class="row">
+            <div class="col-sm-10">
+              <h3>Price Trend</h3>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.openAddTrendPrice()"><i class="fa fa-plus"></i> Add New</button></h3>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            </div>
+          </div>
+          <hr>
+          
+          
+        </div>
+      </div>
+      <div uib-collapse="!isCollapsed">
+        <div class="row form-group">
+          <div class="col-sm-12">            
+            <form class="form" name="form" novalidate>
+              <div class="form-group row">
+                <div class="col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
+                  <select class="form-control" name="category" ng-model="priceTrendVm.priceTrend.category._id" ng-change="priceTrendVm.onCategoryChange(priceTrendVm.priceTrend.category._id)" required>
+                    <option value="">Category</option>
+                    <option ng-repeat="category in priceTrendVm.categoryList" value="{{category._id}}" ng-hide="category.name == 'Other'">{{category.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+                <div class="col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
+                  <select class="form-control" name="brand" ng-model="priceTrendVm.priceTrend.brand._id" ng-change="priceTrendVm.onBrandChange(priceTrendVm.priceTrend.brand._id)" required>
+                    <option value="" >Brand</option>
+                    <option ng-repeat="brand in priceTrendVm.brandList" value="{{brand._id}}" ng-hide="brand.name == 'Other'">{{brand.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+                <div class="col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
+                  <select class="form-control" name="model" ng-model="priceTrendVm.priceTrend.model._id" required>
+                    <option value="" >Model</option>
+                    <option ng-repeat="model in priceTrendVm.modelList" value="{{model._id}}" ng-hide="model.name == 'Other'">{{model.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+              </div>
+              
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="form-group row">
+                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
+                      <p>Manufacturing Year :</p>
+                      <input type="number" name="mfgYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.mfgYear"  ng-minlength="4" ng-min="1900" ng-max="currentYear" ng-maxlength="4" required>
+                    </div>
+                    <!-- <div class="form-group"></div> -->
+                    
+                    <div class="form-group col-sm-6" ng-class="{'has-error': form.saleYear.$invalid && submitted}">
+                      <p>Sale Year :</p>
+                      <input type="number" ng-min="currentYear" name="saleYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.saleYear" required>
+                    </div>                    
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Working Condition</th>
+                        <th>Average Condition</th>
+                        <th>Requires Major Repair</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><b>OEM Price</b></td>
+                        <td>
+                          <div ng-class="{'has-error': form.oemPrice_working.$invalid && submitted}">
+                            <input type="number" name="oemPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.workingCondition" placeholder="Working Condition" min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div ng-class="{'has-error': form.oemPrice_average.$invalid && submitted}">
+                            <input type="number" name="oemPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.averageCondition" placeholder="Average Condition." min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        <td>
+                          <div ng-class="{'has-error': form.oemPrice_repair.$invalid && submitted}">
+                            <input type="number" name="oemPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.requireMajorRepair" placeholder="Requires Major Repair" min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        
+                      </tr>
+                      <tr>
+                        <td><b>Market Price</b></td>
+                         <td>
+                          <div ng-class="{'has-error': form.mPrice_working.$invalid && submitted}">
+                            <input type="number" name="mPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.workingCondition" placeholder="Working Condition" min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div ng-class="{'has-error': form.mPrice_average.$invalid && submitted}">
+                            <input type="number" name="mPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.averageCondition" placeholder="Average Condition." min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        <td>
+                          <div ng-class="{'has-error': form.mPrice_repair.$invalid && submitted}">
+                            <input type="number" name="mPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.requireMajorRepair" placeholder="Requires Major Repair" min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        
+                      </tr>
+                      <tr>
+                        <td><b>Highest Realised Price</b></td>
+                         <td>
+                          <div ng-class="{'has-error': form.hrealised_working.$invalid && submitted}">
+                            <input type="number" name="hrealised_working" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.workingCondition" placeholder="Working Condition" min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div ng-class="{'has-error': form.hrealised_average.$invalid && submitted}">
+                            <input type="number" name="hrealised_average" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.averageCondition" placeholder="Average Condition." min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        <td>
+                          <div ng-class="{'has-error': form.hrealised_repair.$invalid && submitted}">
+                            <input type="number" name="hrealised_repair" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.requireMajorRepair" placeholder="Requires Major Repair" min="1" class="form-control" required/>
+                          </div>
+                        </td>
+                        
+                        
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                  <!-- <div class="row form-group">
+                    <div class="col-xs-12 col-sm-4 col-md-2 pull-right">
+                      <button class="btn btn-block" ng-if="$last" ng-click="priceTrendVm.priceTrend.trendValues.push({})">Add More</button>
+                       <button class="btn btn-block" ng-if="!$last" ng-click="priceTrendVm.priceTrend.trendValues.splice($index,1)">Delete</button>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="col-sm-2 pull-right form-group">
+                <button class="btn" type="button" ng-click="priceTrendVm.resetPriceTrend()">Reset</button>
+                <input class="btn btn-danger btn-md" name="" type="button" value="Submit" ng-click="priceTrendVm.addPriceTrendOrUpdate(form)">
+              </div>
+              
+            </form>
+          </div>
+        </div>        
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-12 tablesearch text-right">
+          Search: <input type="text" placeholder="Search..." ng-model="priceTrendVm.searchStr" ng-change="priceTrendVm.searchFn()" ng-model-options="{debounce:500}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class=" table-responsive ">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Manufacturing Year</th>
+                  <th>Sale Year</th>
+                  
+                  <th width="10%">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="trend in priceTrendVm.filteredData  |startFrom:(priceTrendVm.currentPage -1 )*priceTrendVm.itemsPerPage | limitTo:priceTrendVm.itemsPerPage">
+                  <td>{{trend.category.name}}</td>
+                  <td>{{trend.brand.name}}</td>
+                  <td>{{trend.model.name}}</td>
+                  <td>{{trend.mfgYear}}</td>
+                  <td>{{trend.saleYear}}</td>
+                  <td>
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="priceTrendVm.editClick($index)">
+                      <i class="fa fa-pencil"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm"  uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ng-click="priceTrendVm.destroy(trend._id)"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <uib-pagination total-items="priceTrendVm.totalItems" ng-model="priceTrendVm.currentPage" items-per-page="priceTrendVm.itemsPerPage" max-size="priceTrendVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

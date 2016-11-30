@@ -80,6 +80,16 @@
                         General Settings</a>
                      
                 </li>
+                <li ng-if="isAdmin()">
+                    <a href="/pricetrend"><i class="fa fa-cogs"></i>
+                        Price Trend</a>
+                     
+                </li>
+                 <li ng-if="isAdmin()">
+                    <a href="/pricetrendcomment"><i class="fa fa-cogs"></i>
+                        Price Trend Comments</a>
+                </li>
+                
                 <li >
                     <a href="/bidValue"><i class="fa fa-tag"></i>
                         Promo Transaction Summary </a>

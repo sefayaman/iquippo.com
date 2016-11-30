@@ -523,13 +523,14 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
           filter.valid = 'y';
           $http.post(path + "/onfilter",filter)
           .then(function(res){
-            for(var i =0 ; i < 5 ; i++){
-              if(res.data[i]){
-                HomeBannerCache[HomeBannerCache.length] = res.data[i];  
-              }else
-                HomeBannerCache[HomeBannerCache.length] = HOME_BANNER[i];
+            HomeBannerCache = res.data;
+            if(HomeBannerCache.length < 5){
+                for(var i = 0;i < 5 - HomeBannerCache.length; i++){
+                  HomeBannerCache[HomeBannerCache.length] = HOME_BANNER[i];   
+                }
             }
              deferred.resolve(HomeBannerCache);
+            }
           })
           .catch(function(err){
             deferred.reject(err);

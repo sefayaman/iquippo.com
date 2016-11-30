@@ -35,22 +35,32 @@
                            	
                           </div>
                      	</form>	
-                     	<div ng-if="refresh">		    		
-						<table  datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped" >
-							<thead>
-								<th>Product Group</th>
-								<th>Actions</th>
-							</thead>
-							<tbody>												
-								<tr ng-repeat="group in allGroup">
-									<td>{{group.name}}</td>
-									<td>
-									    <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Group',group)" ><i class="fa fa-pencil"></i> </a>
-  										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Group',group)"><i class="fa fa-trash"></i> </a>
-  									</td>
-								</tr>
-							</tbody>
-						</table>					
+                     	<div ng-if="refresh">
+                     		<div class="row">					           
+					            <div class="col-sm-3 pull-right">
+					              <div class="tablesearch text-right form-group">
+					                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.gSearch" ng-change="masterDataVm.searchFn('group')" ng-model-options="{debounce:500}">
+					              </div>
+					            </div>
+					         </div>   
+                     		<div class=" table-responsive">		    		
+								<table class="table table-bordred table-striped" >
+									<thead>
+										<th>Product Group</th>
+										<th>Actions</th>
+									</thead>
+									<tbody>												
+										<tr ng-repeat="group in filteredGroup |startFrom:(masterDataVm.gCurrentPage -1 )*masterDataVm.itemsPerPage | limitTo:masterDataVm.itemsPerPage">
+											<td>{{group.name}}</td>
+											<td>
+											    <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="masterDataVm.editClick('Group',group)" ><i class="fa fa-pencil"></i> </a>
+		  										<a class="btn btn-danger btn-sm" href="javascript:void(0);" ng-click="masterDataVm.deleteClick('Group',group)"><i class="fa fa-trash"></i> </a>
+		  									</td>
+										</tr>
+									</tbody>
+								</table>
+								<uib-pagination total-items="masterDataVm.gTotalItems" ng-model="masterDataVm.gCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+							</div>					
 						</div>
 				    </uib-tab>
 
@@ -89,8 +99,16 @@
                            	</div>
                            	
                           </div>
-                     	</form>					     	
-						<table dt-options="dtOptions" datatable="ng" class="table table-bordred table-striped" ng-if="refresh">
+                     	</form>	
+
+                     	<div class="row">					           
+				            <div class="col-sm-3 pull-right">
+				              <div class="tablesearch text-right form-group">
+				                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.cSearch" ng-change="masterDataVm.searchFn('category')" ng-model-options="{debounce:500}">
+				              </div>
+				            </div>
+				         </div>				     	
+						<table class="table table-bordred table-striped">
 							
 							<thead>	
 								<tr>
@@ -98,11 +116,11 @@
 									<th>Product Category</th>
 									<th>Product Group</th>
 									<th>Status</th>
-									<th>Actions</th>
+									<th width="300">Actions</th>
 								</tr>							
 							</thead>
 							<tbody>							
-								<tr ng-repeat="category in allCategory">
+								<tr ng-repeat="category in filteredCategory |startFrom:(masterDataVm.cCurrentPage -1 )*masterDataVm.itemsPerPage | limitTo:masterDataVm.itemsPerPage">
 									<td>
 										<span class="master-browse" tooltip-trigger="mouseenter" tooltip-placement="top" uib-tooltip="Change Image">
 											<img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" alt="Image">
@@ -120,7 +138,7 @@
 								</tr>
 								</tbody>						
 							</table>
-							
+							<uib-pagination total-items="masterDataVm.cTotalItems" ng-model="masterDataVm.cCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 					    </uib-tab>
 					    <uib-tab heading="Brand" select="masterDataVm.reset()">	
 					    	<form  name="brandForm" novalidate class="form">
@@ -150,8 +168,14 @@
 	                          </div>
 	                     	</form>					      
 					    	
-			               	<table dt-options="dtOptions" datatable="ng" class="table table-bordred table-striped" ng-if="refresh">
-				
+					    	<div class="row">					           
+					            <div class="col-sm-3 pull-right">
+					              <div class="tablesearch text-right form-group">
+					                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.bSearch" ng-change="masterDataVm.searchFn('brand')" ng-model-options="{debounce:500}">
+					              </div>
+					            </div>
+					        </div>
+			               	<table class="table table-bordred table-striped">				
 	                            <thead>
                                     <th>Brand</th>
                                     <th>Product Category</th>
@@ -159,7 +183,7 @@
                                      <th>Actions</th>		
                                 </thead>
                          		<tbody>
-                         		  <tr ng-repeat="brand in allBrand">
+                         		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
 									<td>{{brand.name}}</td>
 									<td>{{brand.category.name}}</td>
 									<td>{{brand.group.name}}</td>
@@ -170,7 +194,7 @@
 								  </tr>
                                 </tbody>
                             </table>
-                			
+                			<uib-pagination total-items="masterDataVm.bTotalItems" ng-model="masterDataVm.bCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 					    </uib-tab>
 					    <uib-tab heading="Model" select="masterDataVm.reset()">
 					    	<form role="form" name="modelForm" novalidate class="form">
@@ -212,7 +236,14 @@
                               </div>
                          	</form>
 
-                            <table dt-options="dtOptions" datatable="ng" class="table table-bordred table-striped" ng-if="refresh">
+                         	<div class="row">					           
+					            <div class="col-sm-3 pull-right">
+					              <div class="tablesearch text-right form-group">
+					                 Search: <input type="text" placeholder="Search..." ng-model="masterDataVm.mSearch" ng-change="masterDataVm.searchFn('model')" ng-model-options="{debounce:500}">
+					              </div>
+					            </div>
+					        </div>
+                            <table class="table table-bordred table-striped">
                                 <thead>
                                 	<th>Model</th>
                                     <th>Brand</th>
@@ -221,7 +252,7 @@
                                     <th>Actions</th>
                                 </thead>
                          		<tbody>
-                                  <tr ng-repeat="model in allModel">
+                                  <tr ng-repeat="model in filteredModel|startFrom:(masterDataVm.mCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
                                   	<td>{{model.name}}</td>
 									<td>{{model.brand.name}}</td>
 									<td>{{model.category.name}}</td>
@@ -233,8 +264,7 @@
 								  </tr>
                                 </tbody>
                             </table>
-        							
-					    </uib-tab>
+        					<uib-pagination total-items="masterDataVm.mTotalItems" ng-model="masterDataVm.mCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 				</uib-tabset>
 
             </div>

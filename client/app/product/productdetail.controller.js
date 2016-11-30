@@ -1,9 +1,11 @@
 (function(){
   'use strict';
-angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl)
-function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, CartSvc, BuyContactSvc, userSvc) {
+angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
+angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
+function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, CartSvc, BuyContactSvc, userSvc,PriceTrendSvc) {
   var vm = this;
   $scope.currentProduct = {};
+  $scope.priceTrendData = null; 
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
   $scope.oneAtATime = true;
@@ -27,18 +29,20 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
   vm.addProductToCart = addProductToCart;
   vm.playVideo = playVideo;
   vm.openValuationModal = openValuationModal;
+  vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
+  vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
 
 
   function loadUserDetail(){
 
     if($rootScope.getCurrentUser()._id) {
-      $scope.buycontact.fname = $rootScope.getCurrentUser().fname;
-      $scope.buycontact.mname = $rootScope.getCurrentUser().mname;
-      $scope.buycontact.lname = $rootScope.getCurrentUser().lname;
-      $scope.buycontact.phone = $rootScope.getCurrentUser().phone;
-      $scope.buycontact.mobile = $rootScope.getCurrentUser().mobile;
-      $scope.buycontact.email = $rootScope.getCurrentUser().email;
-      $scope.buycontact.country = $rootScope.getCurrentUser().country;
+      $scope.buycontact.fname = Auth.getCurrentUser().fname;
+      $scope.buycontact.mname = Auth.getCurrentUser().mname;
+      $scope.buycontact.lname = Auth.getCurrentUser().lname;
+      $scope.buycontact.phone = Auth.getCurrentUser().phone;
+      $scope.buycontact.mobile = Auth.getCurrentUser().mobile;
+      $scope.buycontact.email = Auth.getCurrentUser().email;
+      $scope.buycontact.country = Auth.getCurrentUser().country;
     } else {
       $scope.quote = {}
     }
@@ -133,6 +137,7 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       //End
         $scope.currentProduct = result;
         $rootScope.currentProduct = $scope.currentProduct;
+        getPriceTrendData();
         if($scope.currentProduct.tradeType == "SELL")
           vm.showText = "Buy"
         else if($scope.currentProduct.tradeType == "RENT")
@@ -159,6 +164,36 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     .then(function(){
       $scope.valAgencies = vendorSvc.getVendorsOnCode('Finance');
     });
+  }
+
+  function getPriceTrendData(){
+    var filter = {};
+    filter['categoryId'] = $scope.currentProduct.category._id;
+    filter['brandId'] = $scope.currentProduct.brand._id;
+    filter['modelId'] = $scope.currentProduct.model._id;
+    filter['mfgYear'] = $scope.currentProduct.mfgYear;
+    filter['saleYear'] = new Date().getFullYear();
+    PriceTrendSvc.getOnFilter(filter)
+    .then(function(result){
+      if(result.length > 0){
+        $scope.priceTrendData = result[0];
+        getPriceTrendSurveyCount();
+      }
+    })
+  }
+
+  function getPriceTrendSurveyCount(){
+
+    var filter = {};
+    filter['productId'] = $scope.currentProduct._id;
+    filter['priceTrendId'] = $scope.priceTrendData._id;
+    filter['saleYear'] = new Date().getFullYear();
+    PriceTrendSvc.getSurveyAnalytics(filter)
+    .then(function(result){
+       $scope.priceTrendCountObj = result;
+       console.log("rrrrrrrrrr",result);
+       
+    })
   }
 
   //init();
@@ -316,6 +351,118 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       valuationScope.product = $scope.currentProduct;
       Modal.openDialog('valuationReq',valuationScope);
     }
+
+    function openPriceTrendSurveyModal(agree){
+      
+      var priceTrendScope = $rootScope.$new();
+      priceTrendScope.currentProduct = $scope.currentProduct;
+      priceTrendScope.priceTrend = $scope.priceTrendData;
+      priceTrendScope.agree = agree;
+      var surveyModal = $uibModal.open({
+          templateUrl: "price_trend_survey.html",
+          scope: priceTrendScope,
+          controller:"PriceTrendSurveyCtrl as priceTrendSurveyVm",
+          size: 'lg'
+      });
+
+      surveyModal.result.then(function(param){
+        if(param == "success")
+            getPriceTrendSurveyCount();
+      })
+    }
+
+    function openPriceTrendSurveyDetailModal(agree){
+      
+      var filter = {};
+      filter['productId'] = $scope.currentProduct._id;
+      filter['priceTrendId'] = $scope.priceTrendData._id;
+      filter['agree'] = agree;
+
+      PriceTrendSvc.getSurveyOnFilter(filter)
+      .then(function(result){
+        if(result.length > 0){
+          var priceTrendSurveyScope = $rootScope.$new();
+          priceTrendSurveyScope.surveys = result;
+          var surveyDetailModal = $uibModal.open({
+              templateUrl: "price_trend_survey_detail.html",
+              scope: priceTrendSurveyScope,
+              size: 'lg'
+          });
+
+          priceTrendSurveyScope.close = function(){surveyDetailModal.close()};
+        }
+      })
+    }
+  }
+
+  function  PriceTrendSurveyCtrl($scope,Auth,$uibModalInstance,PriceTrendSvc){
+    var vm  = this;
+    vm.priceTrendSurvey = {};
+    vm.priceTrendSurvey.user = {};
+    vm.priceTrendSurvey.product = {};
+    vm.priceTrendSurvey.priceTrend = {};
+
+    vm.save = save;
+    vm.close = close;
+
+    function init(){
+
+      vm.priceTrendSurvey.agree = $scope.agree;
+      if(Auth.getCurrentUser()._id){
+        vm.priceTrendSurvey.user._id = Auth.getCurrentUser()._id;
+        vm.priceTrendSurvey.user.fname = Auth.getCurrentUser().fname;
+        vm.priceTrendSurvey.user.lname = Auth.getCurrentUser().lname;
+        vm.priceTrendSurvey.user.email = Auth.getCurrentUser().email;
+        vm.priceTrendSurvey.user.mobile = Auth.getCurrentUser().mobile;
+      }
+      
+      vm.priceTrendSurvey.product._id = $scope.currentProduct._id;
+      vm.priceTrendSurvey.product.name = $scope.currentProduct.name;
+      vm.priceTrendSurvey.product.mfgYear = $scope.currentProduct.mfgYear;
+
+      if($scope.currentProduct.category.name == "Other")
+        vm.priceTrendSurvey.product.category = $scope.currentProduct.category.otherName;
+      else
+        vm.priceTrendSurvey.product.category = $scope.currentProduct.category.name;
+
+      if($scope.currentProduct.brand.name == "Other")
+        vm.priceTrendSurvey.product.brand = $scope.currentProduct.brand.otherName;
+      else
+        vm.priceTrendSurvey.product.brand = $scope.currentProduct.brand.name;
+
+      if($scope.currentProduct.model.name == "Other")
+        vm.priceTrendSurvey.product.model = $scope.currentProduct.model.otherName;
+      else
+        vm.priceTrendSurvey.product.model = $scope.currentProduct.model.name;
+
+      vm.priceTrendSurvey.priceTrend._id = $scope.priceTrend._id;
+      vm.priceTrendSurvey.priceTrend.saleYear = $scope.priceTrend.saleYear;
+
+    }
+
+    function save(form){
+
+      if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
+      PriceTrendSvc.saveSurvey(vm.priceTrendSurvey)
+      .then(function(result){
+        close("success");
+      })
+      .catch(function(err){
+        //close("success");
+      })
+      //console.log("hiiiiiii",vm.priceTrendSurvey);
+    }
+
+    function close(param){
+      $uibModalInstance.close(param);
+    }
+
+    init();
+
   }
 
 angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $stateParams, $rootScope,LocationSvc, $http, Auth, $uibModalInstance, Modal, notificationSvc, $log) {

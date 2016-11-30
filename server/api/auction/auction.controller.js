@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var AuctionRequest = require('./auction.model');
 var  xlsx = require('xlsx');
-
+var Utility = require('./../../components/utility.js');
 // Get list of auctions
 exports.getAll = function(req, res) {
   AuctionRequest.find(function (err, auctions) {
@@ -35,6 +35,24 @@ exports.create = function(req, res) {
 exports.getOnFilter = function(req, res) {
   
   var filter = {};
+   var orFilter = [];
+  
+  if(req.body.searchStr){
+
+     var term = new RegExp(req.body.searchStr, 'i');
+     orFilter[orFilter.length] = {"product.name":{$regex:term}};
+     orFilter[orFilter.length] = {"product.assetId":{$regex:term}};
+     orFilter[orFilter.length] = {"product.productId":{$regex:term}};
+     orFilter[orFilter.length] = {auctionId:{$regex:term}};
+     orFilter[orFilter.length] = {status:{$regex:term}};
+     orFilter[orFilter.length] = {"valuation.status":{$regex:term}};
+      orFilter[orFilter.length] = {"seller.name":{$regex:term}};
+  }
+
+  if(orFilter.length > 0){
+    filter['$or'] = orFilter;
+  }
+
   if(req.body._id)
     filter["_id"] = req.body._id;
   if(req.body.userId)
@@ -43,6 +61,11 @@ exports.getOnFilter = function(req, res) {
       filter["valuation._id"] = req.body.valuationId;
    if(req.body.tid)
     filter["transactionId"] = req.body.tid;
+
+  if(req.body.pagination){
+    Utility.paginatedResult(req,res,AuctionRequest,filter,{});
+    return;
+  }
   var query = AuctionRequest.find(filter);
   console.log("filetr ",filter);
   query.exec(
@@ -115,7 +138,7 @@ function setCell(ws,cell,R,C){
 function excel_from_data(data, isAdmin) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:11, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:14, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     var C = 0;
@@ -136,7 +159,26 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Asset Id"};
     else{
       if(auction)
-        cell =  {v: auction.product.assetId};
+        cell =  {v: auction.product.assetId || ""};
+    }
+    setCell(ws,cell,R,C++);
+
+
+    if(R == 0)
+      cell = {v: "Product Id"};
+    else{
+      if(auction)
+        cell =  {v: auction.product.productId || ""};
+    }
+    setCell(ws,cell,R,C++);
+
+     if(R == 0)
+      cell = {v: "Seller Name"};
+    else{
+      if(auction && auction.seller)
+        cell =  {v: auction.seller.name || ""};
+      else
+        cell =  {v: ""};
     }
     setCell(ws,cell,R,C++);
 

@@ -21,32 +21,42 @@
         <button class="btn btn-primary">Save</button>
       </div> -->
      <div class="table-responsive">
-          <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-
+        <div class="row">                    
+          <div class="col-sm-3 pull-right">
+            <div class="tablesearch text-right form-group">
+               Search: <input type="text" placeholder="Search..." ng-model="auctionListingVm.searchStr" ng-change="auctionListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+            </div>
+          </div>
+      </div>
+          <table class="table table-bordred table-striped">
             <thead>
-              <th width="40"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
+              <th width="50"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
               <th>Asset Name</th>                                
               <th>Auction ID</th>                                
+              <th>Asset ID</th>                                
+              <th>Product ID</th>                                
               <th>Seller Name</th>                                
               <th>Start Date</th>
               <th>End Date</th>
               <!-- <th>EMD Amount</th> -->
               <th>Auction Status</th>
               <th>Valuation Status</th>
-              <th>Action</th>
-             
+              <th>Action</th>             
             </thead>
             <tbody>
             <tr ng-repeat="auts in auctionListingVm.auctions">
               <td><input type="checkbox"  ng-click="auctionListingVm.updateSelection($event,auts._id)" ng-checked="auctionListingVm.master"></td>
               <td>{{auts.product.name}}</td>              
               <td>{{auts.auctionId}}</td>
+              <td>{{auts.product.assetId}}</td>
+              <td>{{auts.product.productId}}</td>
               <td>{{auts.seller.name}}</td>              
               <td>{{auts.startDate | date:'MM/dd/yyyy'}}</td>              
               <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>                            
-              <!-- <td>{{auts.emdAmount}}</td>               -->
-              <td>{{getStatusOnCode(valuationStatuses,auts.valuation.status).name}}</td>              
+              <!-- <td>{{auts.emdAmount}}</td>-->
               <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
+              <td>{{getStatusOnCode(valuationStatuses,auts.valuation.status).name}}</td>              
+              
               <td>
                 <div ng-if="isAdmin()">
                   <select ng-model="status">
@@ -60,6 +70,7 @@
              </tr>
             </tbody>
           </table>
+          <uib-pagination total-items="auctionListingVm.totalItems" ng-model="auctionListingVm.currentPage" items-per-page="auctionListingVm.itemsPerPage" max-size="auctionListingVm.maxSize" ng-change="auctionListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
       </div>
     </div>
   </div>

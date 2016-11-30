@@ -7,6 +7,18 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
  vm.auctions = [];
  vm.master = false;
 
+ //pagination variables
+  var prevPage = 0;
+  vm.itemsPerPage = 50;
+  vm.currentPage = 1;
+  vm.totalItems = 0;
+  vm.maxSize = 6;
+  var first_id = null;
+  var last_id = null;
+   vm.searchStr = "";
+
+  vm.fireCommand = fireCommand;
+
  $scope.auctionStatuses = auctionStatuses;
  $scope.valuationStatuses = valuationStatuses;
  vm.updateSelection = updateSelection;
@@ -14,14 +26,15 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
  vm.updateStatus = updateStatus;
  var selectedIds = [];
 
+ var initFilter = {};
 
  function init(){
  	Auth.isLoggedInAsync(function(loggedIn){
  		if(loggedIn){
  			var filter = {};
  			if(!Auth.isAdmin())
- 				filter['userId'] = Auth.getCurrentUser()._id;
-
+ 				initFilter['userId'] = Auth.getCurrentUser()._id;
+        angular.copy(initFilter,filter);
  				getAuctions(filter);
  		}
  	})
@@ -29,12 +42,44 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
  
  init();
  function getAuctions(filter){
- 	AuctionSvc.getOnFilter(filter)
+
+  filter.pagination = true;
+  filter.prevPage = prevPage;
+  filter.currentPage = vm.currentPage;
+  filter.first_id = first_id;
+  filter.last_id = last_id;
+  filter.itemsPerPage = vm.itemsPerPage;
+
+  AuctionSvc.getOnFilter(filter)
  	.then(function(result){
- 		vm.auctions = result;
+ 		vm.auctions = result.items;
+    vm.totalItems = result.totalItems;
+    prevPage = vm.currentPage;
+    if(result.items.length > 0){
+       first_id = result.items[0]._id;
+        last_id = result.items[result.items.length - 1]._id;
+    }
  	})
 
  }
+
+ function fireCommand(reset){
+    if(reset)
+      resetPagination();
+    var filter = {};
+    angular.copy(initFilter,filter);
+    if(vm.searchStr)
+      filter['searchStr'] = vm.searchStr; 
+    getAuctions(filter);
+ }
+
+ function resetPagination(){
+     prevPage = 0;
+     vm.currentPage = 1;
+     vm.totalItems = 0;
+     first_id = null;
+     last_id = null;
+  }
 
   function exportExcel(){
         var dataToSend ={};

@@ -95,6 +95,110 @@
                     <p>{{currentProduct.specialOffers}}</p>
                 </uib-accordion-group>
 
+                <uib-accordion-group is-open="status.Pricestatus" ng-click="informationTag('pricetrend')" ng-if="priceTrendData">
+                  <uib-accordion-heading>
+                    Price Trend<i class="pull-right fa" ng-class="{'fa-minus': status.Pricestatus, 'fa-plus': !status.Pricestatus}"></i>
+                  </uib-accordion-heading>
+                  <!-- <table class="table table-striped">
+                    <tr>
+                      <td>Category</td>
+                      <td>Excavator</td>
+                    </tr>
+                    <tr>
+                      <td>Brand</td>
+                      <td>Tata</td>
+                    </tr>
+                    <tr>
+                      <td>Model</td>
+                      <td>Tipper</td>
+                    </tr>
+                    <tr>
+                      <td>Manufacturing Year</td>
+                      <td>2016</td>
+                    </tr>
+                    <tr>
+                      <td>Sale Year</td>
+                      <td>2016</td>
+                    </tr>
+                   </table> -->
+
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Working Condition</th>
+                          <th>Average Condition</th>
+                          <th>Requires Major Repair</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><b>OEM Price</b></td>
+                          <td>
+                         Rs.{{priceTrendData.trendValue.oemPrice.workingCondition}}
+                          </td>
+                          
+                          <td>
+                          Rs.{{priceTrendData.trendValue.oemPrice.averageCondition}}
+                          </td>
+                          <td>
+                           Rs.{{priceTrendData.trendValue.oemPrice.requireMajorRepair}}
+                          </td>
+                         
+                        </tr>
+                        <tr>
+                          <td><b>Market Price</b></td>
+                          <td>
+                         Rs.{{priceTrendData.trendValue.marketPrice.workingCondition}}
+                          </td>
+                          
+                          <td>
+                          Rs.{{priceTrendData.trendValue.marketPrice.averageCondition}}
+                          </td>
+                          <td>
+                           Rs.{{priceTrendData.trendValue.marketPrice.requireMajorRepair}}
+                          </td>
+                         
+                        </tr>
+                        <tr>
+                          <td><b>Highest Realised Price</b></td>
+                          <td>
+                         Rs.{{priceTrendData.trendValue.highestRealisedPrice.workingCondition}}
+                          </td>
+                          
+                          <td>
+                          Rs.{{priceTrendData.trendValue.highestRealisedPrice.averageCondition}}
+                          </td>
+                          <td>
+                           Rs.{{priceTrendData.trendValue.highestRealisedPrice.requireMajorRepair}}
+                          </td>
+                         
+                        </tr>
+                       
+
+                      </tbody>
+
+                    </table>
+                    <div class="form-group row">
+                      <div class="col-sm-6 text-center">
+                         <a href="javascript:void(0);" ng-click="productDetailVm.openPriceTrendSurveyDetailModal('Yes')"><span class="badge">{{priceTrendCountObj.Yes || 0}}</span></a>
+                      </div>
+                      <div class="col-sm-6 text-center">
+                        <a href="javascript:void(0);" ng-click="productDetailVm.openPriceTrendSurveyDetailModal('No')"><span class="badge">{{priceTrendCountObj.No || 0}}</span></a>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-sm-6 text-center">
+                        <a href="javascript:void(0);" class="btn btn-danger send-message" ng-click="productDetailVm.openPriceTrendSurveyModal('Yes')">Agree</a>
+                      </div>
+                      <div class="col-sm-6 text-center">
+                        <a href="javascript:void(0);" class="btn btn-danger disagree-btn" ng-click="productDetailVm.openPriceTrendSurveyModal('No')">Disagree</a>
+                      </div>
+                    </div>
+
+                </uib-accordion-group>
+
                 <uib-accordion-group is-open="status.Basicstatus" ng-click="informationTag('basicInformation')">
                   <uib-accordion-heading>
                     Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Basicstatus, 'fa-plus': !status.Basicstatus}"></i>
@@ -544,3 +648,73 @@
 </div>
 </script>
 
+
+<!-- popup after click agree button -->
+<script type="text/ng-template" id="price_trend_survey.html">
+      <div>
+          <div class="modal-header">
+              <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Leave your Comment</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" name="surveyForm" novalidate>
+                <div class="row">
+                  <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
+                    <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
+                  </div>
+                
+                  <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
+                    <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
+                  </div>
+                </div>
+                
+                <div class="row">
+                   <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
+                   <div class="input-group">
+                  <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+                  </div>
+                </div>
+                 <div class="col-sm-6 form-group">
+                    <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
+                  
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
+                    <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
+                  </div>
+                </div>
+                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
+              <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
+            </div>
+      </div>
+      </script>
+      <!-- end poup -->
+
+      <!-- user detail popup -->
+<script type="text/ng-template" id="price_trend_survey_detail.html">
+    <div>
+       <div class="modal-header">
+          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">User Details</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row text-center">
+              <div class="col-sm-12" ng-repeat="survey in surveys">
+                <p class="text-ellips"><strong>{{survey.user.fname}} {{survey.user.lname}}</strong></p>
+                <p class="text-ellips">{{survey.comment}}</p>
+                <hr>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+<!-- end -->

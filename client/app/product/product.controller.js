@@ -678,6 +678,12 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
        $scope.auctionReq.seller = {};
        $scope.auctionReq.seller._id = productObj.seller._id;
        $scope.auctionReq.seller.name = productObj.seller.fname;
+       
+       if(productObj.seller.mname)
+          $scope.auctionReq.seller.name += " " + productObj.seller.mname;
+       if(productObj.seller.lname)
+          $scope.auctionReq.seller.name += " " + productObj.seller.lname;
+       
        $scope.auctionReq.seller.email = productObj.seller.email;
        $scope.auctionReq.seller.mobile = productObj.seller.mobile;
        $scope.auctionReq.status = auctionStatuses[0].code;
@@ -692,6 +698,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq.product._id = productObj._id;
     $scope.auctionReq.product.assetId = productObj.assetId;
     $scope.auctionReq.product.name = productObj.name;
+    $scope.auctionReq.product.productId = productObj.productId;
     $scope.auctionReq.product.category = productObj.category.name;
     $scope.auctionReq.product.brand = productObj.brand.name;
     $scope.auctionReq.product.model = product.model.name;

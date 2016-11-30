@@ -1489,8 +1489,8 @@ exports.getBannerOnFilter = function(req,res){
 		filter['eDate'] = {$gte:new Date()};
 		filter['sDate'] = {$lte:new Date()};
 	}
-	console.log("filter@@@@@@@@",filter);
-	var query = Banner.find(filter);
+
+	var query = Banner.find(filter).sort({sequence:1});
 	query.exec(
 	   function (err, banners) {
 	    if(err) { return handleError(res, err); }

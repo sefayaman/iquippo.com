@@ -3,7 +3,7 @@
 'use strict';
 angular.module('admin').controller('MasterDataCtrl',MasterDataCtrl);
 
-function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, groupSvc, modelSvc, categorySvc, brandSvc, Modal, uploadSvc) {
+function MasterDataCtrl($scope, $rootScope,MasterDataService, groupSvc, modelSvc, categorySvc, brandSvc, Modal, uploadSvc,$filter) {
 	$scope.groupList = [];
 	$scope.categoryList = [];
 	$scope.brandList = [];
@@ -15,9 +15,6 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
     $scope.form = {};
     var dataToSend = {};
     $scope.fileObj = {};
-    $scope.refresh1 = false;
- 	$scope.dtOptions = DTOptionsBuilder.newOptions().withOption('bFilter', true).withOption('lengthChange', true).withPaginationType('full_numbers')
-        .withDisplayLength(100);
 
     //edit flag
     $scope.groupEdit = false;
@@ -27,6 +24,23 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 
 	var vm = this;
 
+	//pagination flag
+
+	vm.itemsPerPage = 40;
+	vm.maxSize = 6;
+
+	vm.gCurrentPage = 1;
+	vm.gTotalItems = 0;
+
+	vm.cCurrentPage = 1;
+	vm.cTotalItems = 0;
+
+	vm.bCurrentPage = 1;
+	vm.bTotalItems = 0;
+
+	vm.mCurrentPage = 1;
+	vm.mTotalItems = 0;
+	
 	//public methods
 	vm.onGroupChange = onGroupChange;
 	vm.onCategoryChange = onCategoryChange;
@@ -37,6 +51,7 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 	vm.deleteClick = deleteClick;
 	vm.editClick = editClick;
 	vm.exportMasterData = exportMasterData;
+	vm.searchFn = searchFn;
 
 	//methods in scope
 	$scope.updateCategoryImg = updateCategoryImg;
@@ -49,6 +64,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 		groupSvc.getAllGroup()
 		.then(function(result){
 			$scope.allGroup = result;
+			$scope.filteredGroup = result;
+			vm.gCurrentPage = 1;
+			vm.gSearch = "";
+			vm.gTotalItems = result.length;
 		})
 	}
 
@@ -58,6 +77,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 		categorySvc.getAllCategory()
 		.then(function(result){
 			$scope.allCategory = result;
+			$scope.filteredCategory = result;
+			vm.cSearch = "";
+			vm.cCurrentPage = 1;
+			vm.cTotalItems = result.length;
 		})
 	}
 
@@ -65,6 +88,10 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 		brandSvc.getAllBrand()
 		.then(function(result){
 			$scope.allBrand = result;
+			$scope.filteredBrand = result;
+			vm.bCurrentPage = 1;
+			vm.bSearch = "";
+			vm.bTotalItems = result.length;
 		})
 	}
 
@@ -72,12 +99,47 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 		modelSvc.getAllModel()
 		.then(function(result){
 			$scope.allModel = result;
+			$scope.filteredModel = result;
+			vm.mCurrentPage = 1;
+			vm.mSearch = "";
+			vm.mTotalItems = result.length;
 		})
 	}
+
 	loadAllGroup(true);
 	loadAllCategory(true);
 	loadAllBrand();
 	loadAllModel();
+
+	function searchFn(type){
+
+		switch(type){
+			case "group":
+				$scope.filteredGroup = $filter('filter')($scope.allGroup,vm.gSearch);
+				vm.gCurrentPage = 1;
+				vm.gTotalItems = $scope.filteredGroup.length;
+			break;
+
+			case "category":
+				$scope.filteredCategory = $filter('filter')($scope.allCategory,vm.cSearch);
+				vm.cCurrentPage = 1;
+				vm.cTotalItems = $scope.filteredCategory.length;
+			break;
+			
+			case "brand":
+				$scope.filteredBrand = $filter('filter')($scope.allBrand,vm.bSearch);
+				vm.bCurrentPage = 1;
+				vm.bTotalItems = $scope.filteredBrand.length;
+			break;
+			
+			case "model":
+				$scope.filteredModel = $filter('filter')($scope.allModel,vm.mSearch);
+				vm.mCurrentPage = 1;
+				vm.mTotalItems = $scope.filteredModel.length;
+			break;
+		}
+		
+	}
 
    function onGroupChange(group){
     $scope.categoryList = [];
@@ -361,8 +423,8 @@ function MasterDataCtrl($scope, $rootScope,MasterDataService, DTOptionsBuilder, 
 	 		return;
 	 	var index = parseInt($(_this).data('index'));
 	 	uploadSvc.upload(files[0],categoryDir).then(function(result){
-	 		$scope.allCategory[index].imgSrc = result.data.filename;
-	 		updateCategory($scope.allCategory[index]);
+	 		$scope.filteredCategory[index].imgSrc = result.data.filename;
+	 		updateCategory($scope.filteredCategory[index]);
 	    })
 	 }
 
