@@ -530,7 +530,6 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
                 }
             }
              deferred.resolve(HomeBannerCache);
-            }
           })
           .catch(function(err){
             deferred.reject(err);
