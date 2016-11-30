@@ -1,0 +1,158 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Reports</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h3><button class="btn btn-success btn-md" ng-click="reportsVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+      <p class="text-right">Showing : {{reportsVm.totalItems}} Records</p>
+     <div class="table-responsive">
+        <div class="row"> 
+          <div class="col-sm-9">
+            <div class="">
+              <select ng-model="reportsVm.tabValue" ng-change="reportsVm.selectReportData(reportsVm.tabValue)">
+                <option value="callback">Call Back</option>
+                <option value="quickQuery">Quick Query</option>
+                <option value="additionalServices">Get a Quote for Additional Services</option>
+              </select>
+            </div>
+          </div>                  
+          <div class="col-sm-3 pull-right">
+            <div class="tablesearch text-right form-group">
+               Search: <input type="text" placeholder="Search..." ng-model="reportsVm.searchStr" ng-change="reportsVm.fireCommand(true)" ng-model-options="{debounce:500}">
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" ng-if="reportsVm.tabValue == 'callback'">
+          <table class="table table-bordred table-striped">
+            <thead>
+              <th>Sr. No</th> 
+              <th>Customer Full Name</th>                                
+              <th>Mobile No.</th>                                
+              <th>Phone No.</th>                                
+              <th>Email</th>                                
+              <th>Date of Request</th>  
+            </thead>
+            <tbody>
+            <tr ng-repeat="callback in reportsVm.callbackListing">
+              <td>{{$index + 1}}</td>
+              <td>{{callback.fname}} {{callback.lname}}</td>              
+              <td>{{callback.mobile}}</td>
+              <td>{{callback.phone}}</td>
+              <td>{{callback.email}}</td>
+              <td>{{callback.createdAt | date:'MM/dd/yyyy'}}</td>                    
+             </tr>
+            </tbody>
+          </table>
+          <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
+
+        <div class="table-responsive" ng-if="reportsVm.tabValue == 'quickQuery'">
+          <table class="table table-bordred table-striped">
+            <thead>
+              <th>Sr. No</th> 
+              <th>Customer Full Name</th>                                
+              <th>Mobile No.</th>                                
+              <th>Phone No.</th>                                
+              <th>Email</th>                                
+              <th>Date of Request</th>  
+              <th>Category</th>  
+              <th>Brand</th>  
+              <th>Model No.</th>  
+              <th>Expected Price</th>  
+              <th>Location</th>  
+              <th>Comments</th>  
+            </thead>
+            <tbody>
+            <tr  ng-repeat="query in reportsVm.quickQueryListing">
+              <td>{{$index + 1}}</td>
+              <td>{{query.fname}} {{query.lname}}</td>              
+              <td>{{query.mobile}}</td>
+              <td>{{query.phone}}</td>
+              <td>{{query.email}}</td>
+              <td>{{query.createdAt | date:'MM/dd/yyyy'}}</td>                     
+              <td>{{query.category}}</td>                    
+              <td>{{query.brand}}</td>                    
+              <td>{{query.model}}</td>                    
+              <td>{{query.expPrice}}</td>                    
+              <td>{{query.city}}</td>                    
+              <td>{{query.comment}}</td>                    
+             </tr>
+            </tbody>
+          </table>
+          <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
+
+        <div class="table-responsive" ng-if="reportsVm.tabValue == 'additionalServices'">
+          <table class="table table-bordred table-striped">
+            <thead>
+              <th>Sr. No</th> 
+              <th>Customer Full Name</th>                                
+              <th>Mobile No.</th>                                
+              <th>Phone No.</th>                                
+              <th>Email</th>                                
+              <th>Date of Request</th>  
+              <th>Country</th>  
+              <th>Location</th>  
+              <th>Company Name</th>  
+              <th>Designation</th>  
+              <th>Part Shipment Allowed (Yes / No)</th>  
+              <th>Packaging as per International Standards (Yes / No)</th>  
+              <th>Valuation Quote - Purpose of Valutaion</th>
+              <th>Valuation Quote - Schedule a Call (Yes / No)</th>  
+              <th>Valuation Quote - Comments</th>  
+              <th>Certified - Purpose of Valutaion</th>  
+              <th>Certified - Schedule a Call (Yes / No)</th>  
+              <th>Certified - Comments</th>  
+              <th>Manpower - Operators</th>  
+              <th>Manpower - Equipments</th>  
+              <th>Manpower - Schedule a Call (Yes / No)</th>  
+              <th>Manpower - Comments</th>  
+            </thead>
+            <tbody>
+            <tr  ng-repeat="addSvc in reportsVm.additionalSvcListing">
+              <td>{{$index + 1}}</td>
+              <td>{{addSvc.fname}} {{addSvc.lname}}</td>              
+              <td>{{addSvc.mobile}}</td>
+              <td>{{addSvc.phone}}</td>
+              <td>{{addSvc.email}}</td>
+              <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+              <td>{{addSvc.country}}</td>                    
+              <td>{{addSvc.city}}</td>                    
+              <td>{{addSvc.companyname}}</td>                    
+              <td>{{addSvc.designation}}</td>                    
+              <td>{{addSvc.shippingQuote.allowed}}</td>                    
+              <td>{{addSvc.shippingQuote.packaging}}</td>                    
+              <td>
+                <span ng-if="addSvc.valuationQuote.valuation != 'Other'">{{addSvc.valuationQuote.valuation}}</span>
+                <span ng-if="addSvc.valuationQuote.valuation == 'Other'">{{addSvc.valuationQuote.otherName}}</span>
+              </td>                    
+              <td>{{addSvc.valuationQuote.schedule}}</td>                    
+              <td>{{addSvc.valuationQuote.comment}}</td>                    
+              <td>
+                <span ng-if="addSvc.certifiedByIQuippoQuote.valuation != 'Other'">{{addSvc.certifiedByIQuippoQuote.valuation}}</span>
+                <span ng-if="addSvc.certifiedByIQuippoQuote.valuation == 'Other'">{{addSvc.certifiedByIQuippoQuote.otherName}}</span>
+              </td>                    
+              <td>{{addSvc.certifiedByIQuippoQuote.scheduleC}}</td>                    
+              <td>{{addSvc.certifiedByIQuippoQuote.comment}}</td>                    
+              <td>
+                <span ng-if="addSvc.manpowerQuote.usedBy != 'Other'">{{addSvc.manpowerQuote.usedBy}}</span>
+                <span ng-if="addSvc.manpowerQuote.usedBy == 'Other'">{{addSvc.manpowerQuote.otherName}}</span>
+              </td>        
+              <td>{{addSvc.manpowerQuote.equipments}}</td>                    
+              <td>{{addSvc.manpowerQuote.scheduleM}}</td>                    
+              <td>{{addSvc.manpowerQuote.comment}}</td>                    
+             </tr>
+            </tbody>
+          </table>
+          <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

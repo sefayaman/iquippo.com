@@ -203,28 +203,14 @@ exports.getSearchedUser = function(req, res) {
     sortObj = req.body.sort;
   sortObj['createdAt'] = -1;
 
-  var query = ManpowerUser.find(filter).sort(sortObj);
-    Seq()
-    .par(function(){
-      var self = this;
-      ManpowerUser.count(filter,function(err, counts){
-        result.totalItems = counts;
-        self(err);
-      })
-    })
-    .par(function(){
-      var self = this;
-      query.exec(function (err, manpowers) {
-          if(err) { return handleError(res, err); }
-          result.manpowers = manpowers;
-          self();
-         }
-      );
-
-    })
-    .seq(function(){
-      return res.status(200).json(result.manpowers);
-    })
+  var query = ManpowerUser.find(filter).sort(sortObj); 
+  query.exec(
+               function (err, users) {
+                      if(err) { return handleError(res, err); }
+                      //console.log(users);
+                      return res.status(200).json(users);
+               }
+  );
 };
 
 function handleError(res, err) {

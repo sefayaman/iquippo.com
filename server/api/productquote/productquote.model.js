@@ -12,7 +12,7 @@ var ProductQuoteSchema = new Schema({
   country:String,
   city:String,
   companyname:String,
-  desination:String,
+  designation:String,
   email: { type: String, lowercase: true },
   product:{},
   seller:{},

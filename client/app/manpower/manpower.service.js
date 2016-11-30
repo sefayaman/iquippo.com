@@ -34,7 +34,7 @@ angular.module('manpower').factory("ManpowerSvc",ManpowerSvc)
       return $http.post(path + "/getmanpoweruserfilter",filter)
         .then(function(res){
           if(filter.pagination)
-                manpowerCache = res.data.manpowers;
+                manpowerCache = res.data.items;
             else
               manpowerCache = res.data;
           return res.data;

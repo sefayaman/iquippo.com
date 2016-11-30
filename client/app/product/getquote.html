@@ -38,7 +38,7 @@
           <div class="form-group">
             <!-- <input type="text" name="" class="form-control" placeholder="City" ng-model="productQuote.city"> -->
             <div class="form-group" ng-class="{'has-error': form.location.$invalid && form.submitted}">
-              <select class="form-control" name="location" ng-model="product.city" required>
+              <select class="form-control" name="location" ng-model="productQuote.city" required>
                 <option value="">*Select Location</option>
                 <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
               </select>

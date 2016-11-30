@@ -114,6 +114,11 @@ exports.getUser = function(req, res) {
   /*if(req.body.notManpower) {
     arr[arr.length] = { isManpower: false};
     arr[arr.length] = { isPartner: true};
+  }
+  if(req.body.notManpower) {
+    arr[arr.length] = { isPartner: true, isManpower:false};
+    arr[arr.length] = { isPartner: true, isManpower:true};
+    arr[arr.length] = { isPartner: false, isManpower:false};
   }*/
 
   if(req.body.searchstr){

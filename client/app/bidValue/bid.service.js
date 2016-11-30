@@ -6,14 +6,12 @@ function BiddingSvc($http,$q,notificationSvc,Auth){
   var bidSvc = {};
     var path = "/api/bid";
     var HomeBiddingCache = [];
-    var biddingCache = [];
     
     bidSvc.getAll = getAll;
     bidSvc.save = save;
     bidSvc.update = update;
     bidSvc.getOnFilter = getOnFilter;
     bidSvc.getHighestBids = getHighestBids;
-    //bidSvc.getHomeTickerList = getHomeTickerList;
     
     function getAll(){
 
@@ -81,22 +79,12 @@ function BiddingSvc($http,$q,notificationSvc,Auth){
     function getOnFilter(data){
      return $http.post(path + "/onfilter",data)
         .then(function(res){
-          // if(data.pagination)
-          //       updateCache(res.data.items);
-          //   else
-          //     updateCache(res.data);
           return res.data
         })
         .catch(function(err){
           throw err
         }) 
     }
-    
-    function updateCache(dataArr){
-        dataArr.forEach(function(item,index){
-          biddingCache[item._id] = item;
-        });
-      }
 
     function update(bidData){
       var stsObj = {};

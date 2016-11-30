@@ -234,6 +234,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('reports', {
+        url: '/reports',
+        templateUrl: 'app/admin/reports/reports.html',
+        controller: 'ReportsCtrl as reportsVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('services', {
         url: '/services',
         templateUrl: 'app/admin/services/services.html',
