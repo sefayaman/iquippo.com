@@ -29,6 +29,7 @@
               <option value="">*Select Country</option>
               <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
             </select>
+            <i class="caret"></i>
           </div>
         </div>
       </div> 
@@ -99,23 +100,31 @@
                       <div class="row text-left">
                         <div class="col-xs-12 col-sm-6 form-group">Part shipment allowed</div>
                         <div class="col-xs-6 col-sm-3 form-group">
-                          <!-- <input type="radio" name="allowed" id="allowed" > <label for="allowed">Yes </label>  -->  
-                          <input type="radio"  placeholder=""  name="allowed" ng-model="productQuote.shippingQuote.allowed" value="yes"> Yes                  
+                          <div class="radio radio-info">                             
+                            <input type="radio"  placeholder="" id="shippingRadio1" name="allowed" ng-model="productQuote.shippingQuote.allowed" value="yes">
+                            <label for="shippingRadio1"> Yes </label>                 
+                          </div>      
                         </div>
                         <div class="col-xs-6 col-sm-3 form-group">
-                          <!-- <input type="radio" name="allowed" id="notallowed" > <label for="ntallowed">No</label> -->
-                          <input type="radio" placeholder=""  name="allowed" ng-model="productQuote.shippingQuote.allowed" value="no"> No
+                          <div class="radio radio-info">
+                            <input type="radio" placeholder="" id="shippingRadio2" name="allowed" ng-model="productQuote.shippingQuote.allowed" value="no">
+                            <label for="shippingRadio2"> No</label>
+                          </div>                          
                         </div>
                       </div>
                       <div class="row text-left">
                         <div class="col-xs-12 col-sm-6 form-group">Packaging as per international standard</div>
                         <div class="col-xs-6 col-sm-3 form-group">
-                          <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label>  -->   
-                          <input type="radio"  placeholder=""  name="packaging" ng-model="productQuote.shippingQuote.packaging" value="yes"> Yes                    
+                          <div class="radio radio-info">
+                            <input type="radio"  placeholder="" id="packageRadio1" name="packaging" ng-model="productQuote.shippingQuote.packaging" value="yes">
+                            <label for="packageRadio1"> Yes</label>                   
+                          </div>                                             
                         </div>
                         <div class="col-xs-6 col-sm-3 form-group">
-                          <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label>  -->  
-                          <input type="radio" placeholder=""  name="packaging" ng-model="productQuote.shippingQuote.packaging" value="no"> No                     
+                          <div class="radio radio-info">                           
+                            <input type="radio" placeholder="" id="packageRadio2" name="packaging" ng-model="productQuote.shippingQuote.packaging" value="no"> 
+                            <label for="packageRadio2"> No </label>                    
+                          </div>                                              
                         </div>
                       </div>
                       <div class="form-group">
@@ -147,12 +156,17 @@
                     <div class="row text-left">
                       <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
                       <div class="col-xs-6 col-sm-4 form-group">
-                        <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
-                        <input type="radio"  placeholder=""  name="schedule" ng-model="productQuote.valuationQuote.schedule" value="yes"> Yes 
+                        <div class="radio radio-info">
+                          <input type="radio"  placeholder="" id="valuationRadio1" name="schedule" ng-model="productQuote.valuationQuote.schedule" value="yes">
+                          <label for="valuationRadio1"> Yes </label>
+                        </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 form-group">
-                        <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
-                        <input type="radio" placeholder=""  name="schedule" ng-model="productQuote.valuationQuote.schedule" value="no"> No      
+                        <div class="radio radio-info">
+                          <input type="radio" placeholder="" id="valuationRadio2" name="schedule" ng-model="productQuote.valuationQuote.schedule" value="no"> 
+                           <label for="valuationRadio2"> No </label>
+                        </div> 
+                           
                       </div>
                       
                       <div class="clerafix"></div>                                      
@@ -206,12 +220,17 @@
                     <div class="row text-left">
                       <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
                       <div class="col-xs-6 col-sm-4 form-group">
-                        <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
-                        <input type="radio"  placeholder=""  name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes"> Yes 
+                        <div class="radio radio-info">
+                          <input type="radio"  placeholder="" id="certifiedRadio1" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes">
+                          <label for="certifiedRadio1"> Yes </label>
+                        </div>                        
                       </div>
                       <div class="col-xs-6 col-sm-4 form-group">
-                        <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
-                        <input type="radio" placeholder=""  name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="no"> No      
+                        <div class="radio radio-info">
+                          <input type="radio" placeholder="" id="certifiedRadio2" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="no">
+                          <label for="certifiedRadio2"> No </label> 
+                        </div> 
+                              
                       </div>
                       
                       <div class="clerafix"></div>                                      
@@ -279,12 +298,16 @@
                       <div class="row text-left">
                       <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
                       <div class="col-xs-6 col-sm-4 form-group">
-                        <!-- <input type="radio" name="standard" id="standard" > <label for="standard">Yes</label> -->
-                        <input type="radio" placeholder=""  name="scheduleM" ng-model="productQuote.manpowerQuote.scheduleM" value="yes"> Yes 
+                        <div class="radio radio-info">
+                          <input type="radio" placeholder="" id="sceduleRadio1" name="scheduleM" ng-model="productQuote.manpowerQuote.scheduleM" value="yes">
+                          <label for="sceduleRadio1"> Yes </label> 
+                        </div>                        
                       </div>
                       <div class="col-xs-6 col-sm-4 form-group">
-                        <!-- <input type="radio" name="standard" id="simple" > <label for="simple">No</label> -->
-                        <input type="radio" placeholder=""  name="scheduleM" ng-model="productQuote.manpowerQuote.scheduleM" value="no"> No      
+                        <div class="radio radio-info">
+                          <input type="radio" placeholder="" id="sceduleRadio2" name="scheduleM" ng-model="productQuote.manpowerQuote.scheduleM" value="no">
+                          <label for="sceduleRadio2"> No  </label>
+                        </div>                              
                       </div>
                       
                       <div class="clerafix"></div>                                      
