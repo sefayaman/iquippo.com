@@ -9,7 +9,7 @@
               <h3>Price Trend</h3>
             </div>
             <div class="col-sm-1">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.openAddTrendPrice()"><i class="fa fa-plus"></i> Add New</button></h3>
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.openAddTrendPrice()"><i class="fa" ng-class="{'fa-minus': isCollapsed, 'fa-plus': !isCollapsed}"></i> Add New</button></h3>
             </div>
             <div class="col-sm-1">
               <h3><button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
@@ -145,7 +145,8 @@
                   </div> -->
                 </div>
               </div>
-              <div class="col-sm-2 pull-right form-group">
+              <div class="col-sm-12 text-right form-group">
+                <button class="btn" type="button" ng-click="priceTrendVm.openAddTrendPrice()">Close</button>
                 <button class="btn" type="button" ng-click="priceTrendVm.resetPriceTrend()">Reset</button>
                 <input class="btn btn-danger btn-md" name="" type="button" value="Submit" ng-click="priceTrendVm.addPriceTrendOrUpdate(form)">
               </div>

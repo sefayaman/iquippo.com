@@ -24,96 +24,97 @@
         </ul>
         <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">              
-
-            <ul class="nav navbar-nav side-nav">                
-                <!-- <li ng-if="isAdmin()">
-                    <a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
-                </li> -->
-                <li >
-                    <a href="/productlisting"><i class="fa fa-list"></i>    
-                        Product Listing</a>
-                </li>
-                <li >
-                    <a href="/sparelisting"><i class="fa fa-list"></i>    
-                        Spare Listing</a>
-                </li>
-                <li>
-                    <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
-                </li>
-                <li>
-                    <a href="/spareupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Spare Upload</a>
-                </li>
-                 <li ng-if="isAdmin()">
-                    <a href="/masterdata"><i class="fa fa-database"></i> Master Data</a>
+            <div class="side-nav scrollbar" id="style-2">
+                <ul class="nav navbar-nav force-overflow">                
+                    <!-- <li ng-if="isAdmin()">
+                        <a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li> -->
+                    <li >
+                        <a href="/productlisting"><i class="fa fa-list"></i>    
+                            Product Listing</a>
                     </li>
-                <li ng-if="isAdmin() || isChannelPartner()">
-                    <a href="/usermanagement"><i class="fa fa-user"></i>
-                    User Management</a>
-                     
-                </li>
-                <li ng-if="isAdmin()">
-                    <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
-                </li>
-                <!--<li ng-if="isAdmin()">
-                    <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>
-                </li>
-                <li ng-if="isAdmin()">
-                    <a href="javascript:void(0);"><i class="fa fa-user"></i>About Us</a>
-                </li>-->
-                 <li ng-if="isAdmin()">
-                    <a href="/classifiedadlisting"><i class="fa fa-newspaper-o"></i>  Classified Ad</a>
-                </li>
-          <!--       <li ng-if="isAdmin()">
-                    <a href="/classifiedadlisting"><i class="fa fa-history"></i>History</a>
-                </li> -->
-                <!-- <li ng-if="isAdmin()">
-                    <a href="/services"><i class="fa fa-users"></i> Services</a>
-                     
-                </li>  -->
-                <li ng-if="isAdmin()">
-                    <a href="/emailer"><i class="fa fa-envelope-o"></i>
-                        Emailer</a>
-                     
-                </li>
-                <li ng-if="isAdmin()">
-                    <a href="/gsettings"><i class="fa fa-cogs"></i>
-                        General Settings</a>
-                     
-                </li>
-                <li ng-if="isAdmin()">
-                    <a href="/pricetrend"><i class="fa fa-cogs"></i>
-                        Price Trend</a>
-                     
-                </li>
-                 <li ng-if="isAdmin()">
-                    <a href="/pricetrendcomment"><i class="fa fa-cogs"></i>
-                        Price Trend Comments</a>
-                </li>
-                
-                <li >
-                    <a href="/bidValue"><i class="fa fa-tag"></i>
-                        Promo Transaction Summary </a>
-                     
-                </li>  
-                <li ng-if="isAdmin()">
-                    <a href="/manpowerlisting"><i class="fa fa-list"></i>Manpower Listing</a>
-                </li>
-                <li>
-                    <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
-                </li>
-                <li ng-if="isPartner()">
-                    <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
-                </li>
-                <li>
-                    <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i>My Valuation Request</a>
-                </li>
-                <li>
-                    <a href="/paymenthistory"><i class="fa fa-cc"></i>Payment History</a>
-                </li>  
-                <li>
-                    <a href="/reports"><i class="fa fa-cc"></i>Reports</a>
-                </li>                
-            </ul>
+                    <li >
+                        <a href="/sparelisting"><i class="fa fa-list"></i>    
+                            Spare Listing</a>
+                    </li>
+                    <li>
+                        <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
+                    </li>
+                    <li>
+                        <a href="/spareupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Spare Upload</a>
+                    </li>
+                     <li ng-if="isAdmin()">
+                        <a href="/masterdata"><i class="fa fa-database"></i> Master Data</a>
+                        </li>
+                    <li ng-if="isAdmin() || isChannelPartner()">
+                        <a href="/usermanagement"><i class="fa fa-user"></i>
+                        User Management</a>
+                         
+                    </li>
+                    <li ng-if="isAdmin()">
+                        <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
+                    </li>
+                    <!--<li ng-if="isAdmin()">
+                        <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>
+                    </li>
+                    <li ng-if="isAdmin()">
+                        <a href="javascript:void(0);"><i class="fa fa-user"></i>About Us</a>
+                    </li>-->
+                     <li ng-if="isAdmin()">
+                        <a href="/classifiedadlisting"><i class="fa fa-newspaper-o"></i>  Classified Ad</a>
+                    </li>
+                    <!-- <li ng-if="isAdmin()">
+                        <a href="/classifiedadlisting"><i class="fa fa-history"></i>History</a>
+                    </li> -->
+                    <!-- <li ng-if="isAdmin()">
+                        <a href="/services"><i class="fa fa-users"></i> Services</a>
+                         
+                    </li>  -->
+                    <li ng-if="isAdmin()">
+                        <a href="/emailer"><i class="fa fa-envelope-o"></i>
+                            Emailer</a>
+                         
+                    </li>
+                    <li ng-if="isAdmin()">
+                        <a href="/gsettings"><i class="fa fa-cogs"></i>
+                            General Settings</a>
+                         
+                    </li>
+                    <li ng-if="isAdmin()">
+                        <a href="/pricetrend"><i class="fa fa-inr"></i>
+                            Price Trend</a>
+                         
+                    </li>
+                     <li ng-if="isAdmin()">
+                        <a href="/pricetrendcomment"><i class="fa fa-comment"></i>
+                            Price Trend Comments</a>
+                    </li>
+                    
+                    <li >
+                        <a href="/bidValue"><i class="fa fa-tag"></i>
+                            Promo Transaction Summary </a>
+                         
+                    </li>  
+                    <li ng-if="isAdmin()">
+                        <a href="/manpowerlisting"><i class="fa fa-list"></i>Manpower Listing</a>
+                    </li>
+                    <li>
+                        <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
+                    </li>
+                    <li ng-if="isPartner()">
+                        <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
+                    </li>
+                    <li>
+                        <a href="/valuationrequests/myrequest"><i class="fa fa-tags"></i>My Valuation Request</a>
+                    </li>
+                    <li>
+                        <a href="/paymenthistory"><i class="fa fa-cc"></i>Payment History</a>
+                    </li>  
+                    <li>
+                        <a href="/reports"><i class="fa fa-cc"></i>Reports</a>
+                    </li>                
+                </ul>
+            </div>
         </div>
         <!-- /.navbar-collapse -->
     </nav>
