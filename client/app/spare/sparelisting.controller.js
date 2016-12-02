@@ -214,7 +214,6 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
   }
 
    function spareEditHandler(spare){
-   $rootScope.currentProductListingPage = $scope.tableRef.DataTable.page();
    $state.go('spareedit', {id:spare._id});
   }
 
