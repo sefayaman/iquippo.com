@@ -176,13 +176,19 @@ function PriceTrendCtrl($scope,$rootScope,categorySvc,brandSvc,modelSvc ,Modal,P
     }
 
     function destroy(id){
-    	if(!id)
-    		return;
-    	PriceTrendSvc.destroy(id)
-		.then(function(result){
-			getPriceTrends({});
-			Modal.alert(result.message);
-		})
+        
+        if(!id)
+         return;
+      Modal.confirm("Are you sure want to delete?",function(ret){
+                if(ret == "yes"){
+                    PriceTrendSvc.destroy(id)
+                    .then(function(result){
+                        getPriceTrends({});
+                        Modal.alert(result.message);
+                    })
+                }
+        });
+    	
     }
 
     function resetPriceTrend(){
