@@ -647,7 +647,12 @@ function updateWallet(couponData){
         .then(function(res) {
           var data = {};
           data['to'] = supportMail;
-          data['subject'] = 'Request for buy a product';
+          if(dataToSend.tradeType == "SELL")
+            data['subject'] = "Request for BUY a product"
+          else if(dataToSend.tradeType == "RENT")
+            data['subject'] = "Request for RENT a product"
+          else
+            data['subject'] = "Request for BUY/RENT a product"
           var emailDynamicData = {};
           emailDynamicData['serverPath'] = serverPath;
           emailDynamicData['fname'] = dataToSend.fname;
@@ -669,12 +674,18 @@ function updateWallet(couponData){
             emailDynamicData['interestedIn'] = "Finance Asset";
             emailDynamicData['financeInfo'] = dataToSend.financeInfo;
           }
-          else
-            emailDynamicData['interestedIn'] = "Buy/Rent Asset";
+          else {
+            if(dataToSend.tradeType == "SELL")
+              emailDynamicData['interestedIn'] = "Buy Asset"
+            else if(dataToSend.tradeType == "RENT")
+              emailDynamicData['interestedIn'] = "Rent Asset"
+            else
+              emailDynamicData['interestedIn'] = "Buy/Rent Asset"
+          }
 
           notificationSvc.sendNotification('productEnquiriesEmailToAdmin', data, emailDynamicData,'email');
 
-          if(res.data.contact == "email") {
+          if(dataToSend.contact == "email") {
             data['to'] = emailDynamicData.email;
             data['subject'] = 'No reply: Product Enquiry request received';
             notificationSvc.sendNotification('productEnquiriesEmailToCustomer', data, emailDynamicData,'email');

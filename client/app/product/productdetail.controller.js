@@ -139,11 +139,11 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
         $rootScope.currentProduct = $scope.currentProduct;
         getPriceTrendData();
         if($scope.currentProduct.tradeType == "SELL")
-          vm.showText = "Buy"
+          vm.showText = "To Buy"
         else if($scope.currentProduct.tradeType == "RENT")
-          vm.showText = "Rent"
+          vm.showText = "For Rent"
         else
-          vm.showText = "Buy / Rent"
+          vm.showText = "To Buy / For Rent"
         if($rootScope.currentProduct.serviceInfo.length > 0){
           for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
             if($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)
@@ -191,8 +191,6 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     PriceTrendSvc.getSurveyAnalytics(filter)
     .then(function(result){
        $scope.priceTrendCountObj = result;
-       console.log("rrrrrrrrrr",result);
-       
     })
   }
 
@@ -274,6 +272,8 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     productObj.comment = $scope.currentProduct.comment;
     buycontact.product = [];
     buycontact.product[0] = productObj;
+    buycontact.tradeType = $scope.currentProduct.tradeType;
+    
     if(buycontact.interestedIn != "finance")
       delete buycontact.financeInfo;
     BuyContactSvc.submitRequest(buycontact)
