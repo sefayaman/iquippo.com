@@ -63,7 +63,31 @@
         </div>
         <div class="cat cat-product text-center">
           <ul class="cat-list">
-            <li ng-repeat="spare in spareHomeVm.spareList">
+            <li>
+              <a href="javascript:void(0);">
+                <img src="/assets/images/tyre.png" class="img-responsive" />
+                <span class="overlayer"></span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0);">
+                <img src="/assets/images/rinch-1.png" class="img-responsive" />
+                <span class="overlayer"></span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0);">
+                <img src="/assets/images/rinch-2.png" class="img-responsive" />
+                <span class="overlayer"></span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0);">
+                <img src="/assets/images/rinch-3.png" class="img-responsive" />
+                <span class="overlayer"></span>
+              </a>
+            </li>
+            <!-- <li ng-repeat="spare in spareHomeVm.spareList">
               <a href="/sparedetail/{{spare._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive">
                   <span class="overlayer"></span><span>{{spare.name}}</span>
@@ -73,12 +97,13 @@
                 </div>
               </a>
 
-            </li>
-          </ul>
+            </li> -->
+          </ul>          
           <!-- <div class="show-more">
             <button type="button" class="btn btn-default" ng-click="spareHomeVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : spareHomeVm.isCollapsed,'fa-chevron-up' : !spareHomeVm.isCollapsed}"></i> </button>
           </div> -->
         </div>
+        <h4 class="text-center">Coming soon...</h4>
 
       </div>
 
