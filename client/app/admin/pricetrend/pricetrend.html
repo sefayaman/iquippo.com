@@ -59,7 +59,7 @@
                     
                     <div class="form-group col-sm-6" ng-class="{'has-error': form.saleYear.$invalid && submitted}">
                       <p>Sale Year :</p>
-                      <input type="number" ng-min="currentYear" name="saleYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.saleYear" required>
+                      <input type="number" ng-minlength="4" ng-min="1900" name="saleYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.saleYear" ng-max="currentYear" required>
                     </div>                    
                   </div>
                   <table class="table">

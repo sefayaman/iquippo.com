@@ -40,14 +40,18 @@ exports.getPriceTrendOnFilter = function(req,res){
     filter['brand._id'] = req.body.brandId;
   
   if(req.body.modelId)
-    filter['modelId._id'] = req.body.modelIdId;
+    filter['model._id'] = req.body.modelId;
 
   if(req.body.mfgYear)
     filter['mfgYear'] = req.body.mfgYear;
   if(req.body.saleYear)
     filter['saleYear'] = req.body.saleYear;
+  if(req.body.maxSaleYear)
+    filter['saleYear'] = {$lte:req.body.maxSaleYear};
+  console.log("filter",filter);
 
-  PriceTrend.find(filter,function(err,result){
+  var query = PriceTrend.find(filter).sort({saleYear:-1});
+  query.exec(function(err,result){
    if(err) { return handleError(res, err); }
     return res.status(200).json(result);
 

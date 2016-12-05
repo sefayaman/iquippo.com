@@ -172,7 +172,7 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     filter['brandId'] = $scope.currentProduct.brand._id;
     filter['modelId'] = $scope.currentProduct.model._id;
     filter['mfgYear'] = $scope.currentProduct.mfgYear;
-    filter['saleYear'] = new Date().getFullYear();
+    filter['maxSaleYear'] = new Date().getFullYear();
     PriceTrendSvc.getOnFilter(filter)
     .then(function(result){
       if(result.length > 0){
