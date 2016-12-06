@@ -401,7 +401,7 @@ informationMessage['contactUsSuccess'] = "Your request has been successfully rec
 
 /*messages on product details*/
 informationMessage['productQuoteSuccess'] = "Your request for quote submitted successfully!";
-informationMessage['buyRequestSuccess'] = "Your request to buy has been submitted successfully!";
+informationMessage['buyRequestSuccess'] = "Your request has been submitted successfully!";
 informationMessage['productUpdateMessage'] = "This operation will make product inactive and needs administrator approval for activation. Do you want to continue?";
 
 /*vendor registration messages */
