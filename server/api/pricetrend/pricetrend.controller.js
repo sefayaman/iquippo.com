@@ -68,12 +68,12 @@ exports.update = function(req, res) {
   filter["brand._id"] = req.body.brand._id;
   filter["model._id"] = req.body.model._id;
 
-  filter["mfgYear"] = req.body.trendValue.mfgYear;
-  filter["saleYear"] = req.body.trendValue.saleYear;
+  filter["mfgYear"] = req.body.mfgYear;
+  filter["saleYear"] = req.body.saleYear;
 
   PriceTrend.find(filter, function (err, prTrends) {
     if (err) { return handleError(res, err); }
-    if(prTrends.length > 1){return res.status(201).json({errorCode:1,message:"Duplicate price trend found"}};
+    if(prTrends.length > 1){return res.status(201).json({errorCode:1,message:"Duplicate price trend found"})};
     if(prTrends.length  == 1 && prTrends[0]._id != req.params.id) { return res.status(201).json({errorCode:1,message:"Duplicate price trend found"}); }
      PriceTrend.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
