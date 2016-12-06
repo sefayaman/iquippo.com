@@ -3,10 +3,11 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, $uibModal, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
+    vm.newsEvents = newsEvents;
     vm.myInterval = 7000;
     vm.noWrapSlides = false;
     vm.slides = [];//HOME_BANNER;
@@ -25,6 +26,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
     vm.openBidModal = openBidModal;
+    vm.openPrintMedia = openPrintMedia;
     // vm.toggleCategory = toggleCategory;
 
     $scope.ConfigureList = function() {};
@@ -35,6 +37,19 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       vm.myInterval = 7000;
       getHighestBids();
     })
+
+    function openPrintMedia(imageName) {
+      var prMediaScope = $rootScope.$new();
+      prMediaScope.url = $rootScope.uploadImagePrefix + $rootScope.newsEventsDir  + "/" + imageName;
+      var printMediaModal = $uibModal.open({
+          templateUrl: "primtmedia.html",
+          scope: prMediaScope
+      });
+
+      prMediaScope.close = function(){
+        printMediaModal.close();
+      }
+    }
 
     function getHomeBanner(){
       BannerSvc.getHomeBanner()

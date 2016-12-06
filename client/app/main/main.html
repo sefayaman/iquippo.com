@@ -283,7 +283,7 @@
         </div>
         <div class="col-sm-3 form-group">
          <div class="media">
-           <h4 class="media-heading">Media Coverage :</h4>
+           <h4 class="media-heading">Digital Media :</h4>
            <div class="media-body media-coverage">
              <div class="row">
 
@@ -411,43 +411,11 @@
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <h4 class="media-heading">Media Name:</h4>
+          <h4 class="media-heading">Print Media:</h4>
            <div class="media-body medianame well">
-           <marquee>
-            <ul>
-              <li>The Economic Times</li>
-              <li>The Hindu Business Line</li>
-              <li>The Financial Express</li>
-              <li>Financial Chronicle</li>
-              <li>The Times of India</li>
-              <li>The Telegraph</li>
-              <li>DNA</li>
-              <li>The Echo of India</li>
-              <li>The Statesman</li>
-              <li>Orissa Today</li>
-              <li>Duniya Khabar</li>
-              <li>Financial Explorer</li>
-              <li>J&amp;K Newspoint</li>
-              <li>The Northlines</li>
-              <li>Mercury Times</li>
-              <li>Shankhdhun</li>
-              <li>Dogra Herald</li>
-              <li>Sanmarg</li>
-              <li>Rajasthan Patrika</li>
-              <li>Dainik Vishwamitra</li>
-              <li>Chaapte Chaapte</li>
-              <li>Dakshin Mumbai</li>
-              <li>Dabang Duniya</li>
-              <li>Navshakti</li>
-              <li>Kalinga Bharti</li>
-              <li>Arthhik Lipi</li>
-              <li>Aajkal</li>
-              <li>Kalantar</li>
-              <li>Mumbai Chaufer</li>
-              <li>Vaartha</li>
-              <li>Munsif Daily</li>
+           <ul>
+              <li ng-repeat="nwEvt in mainVm.newsEvents"><a href="javascript:void(0);" class="" ng-click="mainVm.openPrintMedia(nwEvt.image)"> {{nwEvt.name}}</a></li>
             </ul>
-            </marquee>
            </div>
         </div>
       </div>
@@ -471,3 +439,16 @@
   </div>
 </div>
 </div>
+<script type="text/ng-template" id="primtmedia.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body text-center">
+       <img ng-src="{{url}}" width="100%">
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-danger" ng-click="close()">Close</button>
+      </div>
+  </div>
+</script>

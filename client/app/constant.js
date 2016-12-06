@@ -88,6 +88,7 @@ var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
 var templateDir = "templates";
 var tempDir = "temp";
+var newsEventsDir = "newsevents";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";
 var UPDATE_INVITATION_MASTER = "Update_Invitation_Master";
 var assetStatuses = [
@@ -412,6 +413,134 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 
 /*channel partner messsage */
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
+
+var newsEvents = [
+  {
+    name:"The Economic Times",
+    image:"The_Economic_Times.jpg"
+  },
+  {
+    name:"The Hindu Business Line",
+    image:"The_Hindu_Business_Line.jpg"
+  },
+  {
+    name:"The Financial Express",
+    image:"The_Financial_Express.jpg"
+  },
+  {
+    name:"Financial Chronicle",
+    image:"Financial_Chronicle.jpg"
+  },
+  {
+    name:"The Times of India",
+    image:"The_Times_of_India.jpg"
+  },
+  {
+    name:"The Telegraph",
+    image:"The_Telegraph.jpg"
+  },
+  {
+    name:"DNA",
+    image:"DNA.jpg"
+  },
+  {
+    name:"The Echo of India",
+    image:"The_Echo_of_India.jpg"
+  },
+  {
+    name:"The Statesman",
+    image:"The_Statesman.jpg"
+  },
+  {
+    name:"Orissa Today",
+    image:"Orissa_Today.jpg"
+  },
+  {
+    name:"Duniya Khabar",
+    image:"Duniya_Khabar.jpg"
+  },
+  {
+    name:"Financial Explorer",
+    image:"Financial_Explorer.jpg"
+  },
+  {
+    name:"J&amp;K Newspoint",
+    image:"J&K_Newspoint.jpg"
+  },
+  {
+    name:"The Northlines",
+    image:"The_Northlines.jpg"
+  },
+  {
+    name:"Mercury Times",
+    image:"Mercury_Times.jpg"
+  },
+  {
+    name:"Shankhdhun",
+    image:"Shankhdhun.jpg"
+  },
+  {
+    name:"Dogra Herald",
+    image:"Dogra_Herald.jpg"
+  },
+  {
+    name:"Sanmarg",
+    image:"Sanmarg.jpg"
+  },
+  {
+    name:"Rajasthan Patrika",
+    image:"Rajasthan_Patrika.jpg"
+  },
+  {
+    name:"Dainik Vishwamitra",
+    image:"Dainik_Vishwamitra.jpg"
+  },
+  {
+    name:"Chaapte Chaapte",
+    image:"Chaapte_Chaapte.jpg"
+  },
+  {
+    name:"Dakshin Mumbai",
+    image:"Dakshin_Mumbai.jpg"
+  },
+  {
+    name:"Dabang Duniya",
+    image:"Dabang_Duniya.jpg"
+  },
+  {
+    name:"Navshakti",
+    image:"Navshakti.jpg"
+  },
+  {
+    name:"Kalinga Bharti",
+    image:"Kalinga_Bharti.jpg"
+  },
+  {
+    name:"Arthhik Lipi",
+    image:"Arthhik_Lipi.jpg"
+  },
+  {
+    name:"Aajkal",
+    image:"Aajkal.jpg"
+  },
+  {
+    name:"Kalantar",
+    image:"Kalantar.jpg"
+  },
+  {
+    name:"Mumbai Chaufer",
+    image:"Mumbai_Chaufer.jpg"
+  },
+  {
+    name:"Vaartha",
+    image:"Vaartha.jpg"
+  },
+  {
+    name:"Munsif Daily",
+    image:"Munsif_Daily.jpg"
+  }
+  
+]
 
 /*
 Date: 06/06/2016

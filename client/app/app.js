@@ -50,6 +50,7 @@ angular.module('sreizaoApp',[
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;
     $rootScope.classifiedAdDir = classifiedAdDir;
+    $rootScope.newsEventsDir = newsEventsDir;
     $rootScope.refresh = true;
 
     $rootScope.isSuccess = false;
