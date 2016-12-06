@@ -1448,19 +1448,25 @@ exports.getAllBanner = function(req, res) {
 
 // Creates a new banner master in the DB.
 exports.createBanner = function(req, res) {
-    Banner.create(req.body, function(err, banner) {
-	  if(err) { return handleError(res, err); }
-	   return res.status(200).json({errorCode:0, message:"Banner saved sucessfully"});
-	});
+	var seq = req.body.sequence;
+	Banner.find({sequence:seq},function(errObj,bns){
+		if(errObj){return handleError(res, err);}
+		if(bns.length > 0){return res.status(200).json({errorCode:1, message:"Duplicate sequence find"}); }
+		Banner.create(req.body, function(err, banner) {
+	  	if(err) { return handleError(res, err); }
+		   return res.status(200).json({errorCode:0, message:"Banner saved sucessfully"});
+		});
+	})
+    
 };
 
 // Updates an existing banner master in the DB.
 exports.updateBanner = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
-  Banner.findById(req.params.id, function (err, banner) {
+  Banner.find({sequence:req.body.sequence}, function (err, banners) {
     if (err) { return handleError(res, err); }
-    if(!banner) { return res.status(404).send('Not Found'); }
+    if(banners.length > 0) {return res.status(200).json({errorCode:1, message:"Duplicate sequence find"}); }
     Banner.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Banner updated sucessfully"});
