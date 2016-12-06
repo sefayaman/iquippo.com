@@ -1466,7 +1466,7 @@ exports.updateBanner = function(req, res) {
   req.body.updatedAt = new Date();
   Banner.find({sequence:req.body.sequence}, function (err, banners) {
     if (err) { return handleError(res, err); }
-    if(banners.length > 0) {return res.status(200).json({errorCode:1, message:"Duplicate sequence find"}); }
+    if(banners.length > 1 || (banners.length == 1 && banners[0]._id != req.params.id)){return res.status(200).json({errorCode:1, message:"Duplicate sequence find"}); }
     Banner.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Banner updated sucessfully"});
