@@ -73,6 +73,7 @@ exports.update = function(req, res) {
 
   PriceTrend.find(filter, function (err, prTrends) {
     if (err) { return handleError(res, err); }
+    if(prTrends.length > 1){return res.status(201).json({errorCode:1,message:"Duplicate price trend found"}};
     if(prTrends.length  == 1 && prTrends[0]._id != req.params.id) { return res.status(201).json({errorCode:1,message:"Duplicate price trend found"}); }
      PriceTrend.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
