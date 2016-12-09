@@ -608,6 +608,16 @@ function excel_from_data(data) {
     ws[cell_ref] = cell;
 
     if(R == 0)
+      cell = {v: "Registered By"};
+    else {
+      //if(user)
+        cell = {v: getRegisteredBy(user) || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
       cell = {v: "Product Uploaded"};
     else {
       if(user)
@@ -651,6 +661,18 @@ function excel_from_data(data) {
    else
     return "";
   } 
+
+  function getRegisteredBy(user){
+    if(!user.createdBy)
+      return user.fname + " " + user.lname + ' (Self)';
+
+    if(user.createdBy.role == 'admin')
+      return user.createdBy.fname + " " + user.createdBy.lname + ' (Admin)';
+    else if(user.createdBy.role == 'channelpartner') 
+      return user.createdBy.fname + " " + user.createdBy.lname + ' (Channel Partner)';
+    else 
+      return user.createdBy.fname + " " + user.createdBy.lname + ' (Self)';
+  }
 
 exports.exportUsers = function(req,res){
   var filter = {};

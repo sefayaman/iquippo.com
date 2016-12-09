@@ -523,9 +523,10 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
           filter.valid = 'y';
           $http.post(path + "/onfilter",filter)
           .then(function(res){
+            var resLen = res.data.length;
             HomeBannerCache = res.data;
             if(HomeBannerCache.length < 5){
-                for(var i = 0;i < 5 - HomeBannerCache.length; i++){
+                for(var i = 0;i < 5 - resLen; i++){
                   HomeBannerCache[HomeBannerCache.length] = HOME_BANNER[i];   
                 }
             }

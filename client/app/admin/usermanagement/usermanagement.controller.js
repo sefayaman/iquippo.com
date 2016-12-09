@@ -19,6 +19,8 @@ angular.module('sreizaoApp')
     vm.onUserChange = onUserChange;
     vm.deleteUser = deleteUser;
     vm.fireCommand = fireCommand;
+    vm.getRegisteredBy = getRegisteredBy;
+
     vm.userSearchFilter = {};
     var dataToSend = {};
     vm.getProductData = getProductData;
@@ -99,6 +101,18 @@ angular.module('sreizaoApp')
             return "No";
         }
       }
+    }
+
+    function getRegisteredBy(user){
+      if(!user.createdBy)
+        return user.fname + " " + user.lname + ' (Self)';
+
+      if(user.createdBy.role == 'admin')
+        return user.createdBy.fname + " " + user.createdBy.lname + ' (Admin)';
+      else if(user.createdBy.role == 'channelpartner') 
+        return user.createdBy.fname + " " + user.createdBy.lname + ' (Channel Partner)';
+      else 
+        return user.createdBy.fname + " " + user.createdBy.lname + ' (Self)';
     }
     function getProductsCountWithUser(result){
       var filter = {};

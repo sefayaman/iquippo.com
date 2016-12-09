@@ -45,6 +45,7 @@
                 <th>Company Name</th>
                 <th>Mobile No.</th>
                 <th>Location</th>
+                <th>Registered By</th>
                 <th>Product Uploaded</th>
                 <th>Count</th>
                 <th width="6%">Status</th>
@@ -68,6 +69,7 @@
                   <td>{{user.company}}</td>
                   <td>{{user.mobile}}</td>
                   <td>{{user.city}}</td>
+                  <td>{{userManagementVm.getRegisteredBy(user)}}</td>
                   <td>{{userManagementVm.getProductData(user._id, "have_products")}}</td>
                   <td>{{userManagementVm.getProductData(user._id, "total_products")}}</td>
                   <td>
