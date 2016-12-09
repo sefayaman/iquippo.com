@@ -619,6 +619,10 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 			$scope.submitted = true;
 			return;
 		}*/
+		if(!vm.banner.mobileImg && vm.banner.showInMobile == 'Yes'){
+	        Modal.alert("Please upload image for mobile.",true);
+	        return;
+	      }
 		$scope.submitted = false;
 		BannerSvc.update(vm.banner)
 		.then(function(res){
