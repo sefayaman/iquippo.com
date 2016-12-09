@@ -209,7 +209,7 @@
                       <div class="input-group form-group">
                       <input type="text" class="form-control" ng-model="manpowerVm.manpower.availableFrom" uib-datepicker-popup="{{format}}" name="availableFrom" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                       <span class="input-group-addon">
-                        <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-2x"></i></a>
+                        <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
                       </span>
                     </div>  
 
@@ -222,14 +222,15 @@
                         <span>{{manpowerVm.manpower.resumeDoc}}</span>
                       </div>
                     </div>
-                    <div class="col-xs-6 form-group">
-                        <label>Select the equipment:</label>
-                        <!-- <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
-                          <option ng-repeat="assets in manpowerVm.assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>
-                        </select> -->
-                        <select class="form-control" name="selectedAssets" id="selectedAssets" ng-options="assets as assets for assets in manpowerVm.assetsList" ng-model="manpowerVm.manpower.assetOperated" multiple>
-                    </select>
-                  </div> 
+                      <div class="col-xs-6 form-group">
+                          <label>Select the equipment:</label>
+                          <!-- <select class=" form-control" name="selectedAssets" ng-model="manpowerVm.selectedAssets" ng-change="manpowerVm.onChangedValue(manpowerVm.selectedAssets)" ng-multiple="true" multiple>
+                            <option ng-repeat="assets in manpowerVm.assetsList"  value="{{assets}}" ng-selected="{{manpowerVm.selectedAssets.indexOf(assets.toString())!=-1}}">{{assets}}</option>
+                          </select> -->
+                          <select class="form-control" name="selectedAssets" id="selectedAssets" ng-options="assets as assets for assets in manpowerVm.assetsList" ng-model="manpowerVm.manpower.assetOperated" multiple>
+                      </select>
+                    </div>
+                  </div>
                   <div class="row form-group">
                     <div class="col-sm-12">
                       <textarea class="form-control" placeholder="Enter Notes" rows="5" name="notes" ng-model="manpowerVm.manpower.notes"></textarea>

@@ -8,14 +8,17 @@
           </h3>
           <hr>
         </div>
-        <p class="text-right">Showing : {{bidListingVm.totalItems}} Records</p>
+        <p class="text-right"></p>
         <div class="col-sm-12">
-          <div class="row">                    
-              <div class="col-sm-3 pull-right">
-                <div class="tablesearch text-right form-group">
-                   Search: <input type="text" placeholder="Search..." ng-model="bidListingVm.searchStr" ng-change="bidListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
-                </div>
+          <div class="row"> 
+            <div class="col-sm-9">
+              Showing : {{bidListingVm.totalItems}} Records
+            </div>                    
+            <div class="col-sm-3 pull-right">
+              <div class="tablesearch text-right form-group">
+                 Search: <input type="text" placeholder="Search..." ng-model="bidListingVm.searchStr" ng-change="bidListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
               </div>
+            </div>
           </div>
           <div class="table-responsive">
             <table id="bid_listing_table" class="table table-bordred table-striped">
@@ -53,9 +56,9 @@
                 </td>
                 </tr>
               </tbody>
-            </table>
-            <uib-pagination total-items="bidListingVm.totalItems" ng-model="bidListingVm.currentPage" items-per-page="bidListingVm.itemsPerPage" max-size="bidListingVm.maxSize" ng-change="bidListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+            </table>            
           </div>
+          <uib-pagination total-items="bidListingVm.totalItems" ng-model="bidListingVm.currentPage" items-per-page="bidListingVm.itemsPerPage" max-size="bidListingVm.maxSize" ng-change="bidListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
         </div>
          
         </div>
