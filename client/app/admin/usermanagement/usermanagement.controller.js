@@ -18,6 +18,7 @@ angular.module('sreizaoApp')
     vm.exportExcel = exportExcel;
     vm.onUserChange = onUserChange;
     vm.deleteUser = deleteUser;
+    vm.updateUser = updateUser;
     vm.fireCommand = fireCommand;
     vm.getRegisteredBy = getRegisteredBy;
 
