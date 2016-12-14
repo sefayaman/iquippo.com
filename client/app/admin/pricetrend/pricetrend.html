@@ -66,29 +66,28 @@
                     <thead>
                       <tr>
                         <th></th>
-                        <th>Working Condition</th>
+                        <th>Excellent Condition </th>
+                        <th>Good Condition</th>
                         <th>Average Condition</th>
-                        <th>Requires Major Repair</th>
-                        
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td><b>OEM Price</b></td>
                         <td>
-                          <div ng-class="{'has-error': form.oemPrice_working.$invalid && submitted}">
-                            <input type="number" name="oemPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.workingCondition" placeholder="Working Condition" min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="oemPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.workingCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
                         <td>
-                          <div ng-class="{'has-error': form.oemPrice_average.$invalid && submitted}">
-                            <input type="number" name="oemPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.averageCondition" placeholder="Average Condition." min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="oemPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.averageCondition" placeholder="Good Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         <td>
-                          <div ng-class="{'has-error': form.oemPrice_repair.$invalid && submitted}">
-                            <input type="number" name="oemPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.requireMajorRepair" placeholder="Requires Major Repair" min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="oemPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.requireMajorRepair" placeholder="Average Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
@@ -96,19 +95,19 @@
                       <tr>
                         <td><b>Market Price</b></td>
                          <td>
-                          <div ng-class="{'has-error': form.mPrice_working.$invalid && submitted}">
-                            <input type="number" name="mPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.workingCondition" placeholder="Working Condition" min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="mPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.workingCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
                         <td>
-                          <div ng-class="{'has-error': form.mPrice_average.$invalid && submitted}">
-                            <input type="number" name="mPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.averageCondition" placeholder="Average Condition." min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="mPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.averageCondition" placeholder="Good Condition" min="1" class="form-control" />
                           </div>
                         </td>
                         <td>
-                          <div ng-class="{'has-error': form.mPrice_repair.$invalid && submitted}">
-                            <input type="number" name="mPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.requireMajorRepair" placeholder="Requires Major Repair" min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="mPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.requireMajorRepair" placeholder="Average Condition" min="1" class="form-control" />
                           </div>
                         </td>
                         
@@ -116,19 +115,19 @@
                       <tr>
                         <td><b>Highest Realised Price</b></td>
                          <td>
-                          <div ng-class="{'has-error': form.hrealised_working.$invalid && submitted}">
-                            <input type="number" name="hrealised_working" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.workingCondition" placeholder="Working Condition" min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="hrealised_working" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.workingCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
                         <td>
-                          <div ng-class="{'has-error': form.hrealised_average.$invalid && submitted}">
-                            <input type="number" name="hrealised_average" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.averageCondition" placeholder="Average Condition." min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="hrealised_average" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.averageCondition" placeholder="Good Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         <td>
-                          <div ng-class="{'has-error': form.hrealised_repair.$invalid && submitted}">
-                            <input type="number" name="hrealised_repair" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.requireMajorRepair" placeholder="Requires Major Repair" min="1" class="form-control" required/>
+                          <div>
+                            <input type="number" name="hrealised_repair" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.requireMajorRepair" placeholder="Average Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
