@@ -19,6 +19,10 @@
                 <option value="callback">Call Back</option>
                 <option value="quickQuery">Quick Query</option>
                 <option value="additionalServices">Get a Quote for Additional Services</option>
+                <option value="shipping">Shipping</option>
+                <option value="valuation">Valuation</option>
+                <option value="finance">Financing</option>
+                <option value="insurance">Insurance</option>
               </select>
             </div>
           </div>                  
@@ -91,12 +95,12 @@
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
 
-        <div ng-if="reportsVm.tabValue == 'additionalServices'">
+          <div ng-if="reportsVm.tabValue == 'additionalServices'">
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
                 <th>Sr. No</th> 
-                <th>Customer Full Name</th>                                
+                <th>Full Name</th>                                
                 <th>Mobile No.</th>                                
                 <th>Phone No.</th>                                
                 <th>Email</th>                                
@@ -105,18 +109,18 @@
                 <th>Location</th>  
                 <th>Company Name</th>  
                 <th>Designation</th>  
-                <th>Part Shipment Allowed (Yes / No)</th>  
-                <th>Packaging as per International Standards (Yes / No)</th>  
-                <th>Valuation Quote - Purpose of Valutaion</th>
-                <th>Valuation Quote - Schedule a Call (Yes / No)</th>  
-                <th>Valuation Quote - Comments</th>  
-                <th>Certified - Purpose of Valutaion</th>  
-                <th>Certified - Schedule a Call (Yes / No)</th>  
-                <th>Certified - Comments</th>  
-                <th>Manpower - Operators</th>  
-                <th>Manpower - Equipments</th>  
-                <th>Manpower - Schedule a Call (Yes / No)</th>  
-                <th>Manpower - Comments</th>  
+                <th>Part Shipment Allowed</th>  
+                <th>Packaging</th>  
+                <th>Valuation <small>Purpose of Valutaion</small></th>
+                <th>Valuation <small>Schedule a Call</small></th>  
+                <th>Valuation <small>Comments</small></th>  
+                <th>Certified <small>Purpose of Valutaion</small></th>  
+                <th>Certified <small>Schedule a Call</small></th>  
+                <th>Certified <small>Comments</small></th>  
+                <th>Manpower <small>Operators</small></th>  
+                <th>Manpower <small>Equipments</small></th>  
+                <th>Manpower <small>Schedule a Call</small></th>  
+                <th>Manpower <small>Comments</small></th>  
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.additionalSvcListing">
@@ -157,7 +161,193 @@
           </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
+
+        <div ng-if="reportsVm.tabValue == 'shipping'">
+          <div class="table-responsive" >
+            <table class="table table-bordred table-striped">
+              <thead>
+                <th>Sr. No</th> 
+                <th>Customer</th>                                
+                <th>Mobile No.</th>                                
+                <th>Phone No.</th>                                
+                <th>Email</th>                                
+                <th>Date of Request</th>  
+                <th>Country</th>  
+                <th>Location</th>  
+                <th>Company Name</th>  
+                <th>Designation</th>  
+                <th>Shipment Allowed</th>  
+                <th>Packaging</th>    
+              </thead>
+              <tbody>
+              <tr  ng-repeat="addSvc in reportsVm.shippingListing">
+                <td>{{$index + 1}}</td>
+                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{addSvc.quote.country}}</td>                    
+                <td>{{addSvc.quote.city}}</td>                    
+                <td>{{addSvc.quote.companyname}}</td>                    
+                <td>{{addSvc.quote.designation}}</td>                    
+                <td>{{addSvc.quote.allowed}}</td>                    
+                <td>{{addSvc.quote.packaging}}</td>                                        
+               </tr>
+              </tbody>
+            </table>
+          </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
      
+       <div ng-if="reportsVm.tabValue == 'valuation'">
+          <div class="table-responsive" >
+            <table class="table table-bordred table-striped">
+              <thead>
+                <th>Sr. No</th> 
+                <th>Customer</th>                                
+                <th>Mobile No.</th>                                
+                <th>Phone No.</th>                                
+                <th>Email</th>                                
+                <th>Date of Request</th>  
+                <th>Country</th>  
+                <th>Location</th>  
+                <th>Company Name</th>  
+                <th>Designation</th>    
+                <th>Purpose of Valutaion</th>
+                <th>Schedule a Call</th>  
+                <th>Comments</th>    
+              </thead>
+              <tbody>
+              <tr  ng-repeat="addSvc in reportsVm.valuationListing">
+                <td>{{$index + 1}}</td>
+                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{addSvc.quote.country}}</td>                    
+                <td>{{addSvc.quote.city}}</td>                    
+                <td>{{addSvc.quote.companyname}}</td>                    
+                <td>{{addSvc.quote.designation}}</td>                                        
+                <td>
+                  <span ng-if="addSvc.quote.valuation != 'Other'">{{addSvc.quote.valuation}}</span>
+                  <span ng-if="addSvc.quote.valuation == 'Other'">{{addSvc.quote.otherName}}</span>
+                </td>                    
+                <td>{{addSvc.quote.schedule}}</td>                    
+                <td>{{addSvc.quote.comment}}</td>                                       
+               </tr>
+              </tbody>
+            </table>
+          </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+          
+          <div ng-if="reportsVm.tabValue == 'finance'">
+          <div class="table-responsive" >
+            <table class="table table-bordred table-striped">
+              <thead>
+                <th>Sr. No</th> 
+                <th>Full Name</th> 
+                <th>Country</th>                                
+                <th>Location</th>                                
+                <th>Company Name</th>                                
+                <th>Designation</th>                                
+                <th>Phone No.</th>  
+                <th>Mobile No.</th>  
+                <th>Email</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Modal</th>
+                <th>Asset Description</th>
+                <th>Asset Location</th>
+                <th>Manufacturing Year</th>
+                <th>Amount to be Financed</th>
+                <th>Indicative Rate</th>
+                <th>Tenure(in Months)</th>
+                <th>Method Of Contact</th>
+                <th>Comments</th>    
+              </thead>
+              <tbody>
+              <tr  ng-repeat="addSvc in reportsVm.financingListing">
+                <td></td>              
+                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                <td>{{addSvc.quote.country}}</td>
+                <td>{{addSvc.quote.city}}</td>
+                <td>{{addSvc.quote.companyname}}</td>                    
+                <td>{{addSvc.quote.designation}}</td>                                        
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.quote.product.category}}</td>
+                <td>{{addSvc.quote.product.brand}}</td>
+                <td>{{addSvc.quote.product.model}}</td>
+                <td>{{addSvc.quote.product.description}}</td>
+                <td>{{addSvc.quote.product.city}}</td>
+                <td>{{addSvc.quote.product.mfgYear}}</td>
+                <td>{{addSvc.quote.amountToBeFinanced}}</td>
+                <td>{{addSvc.quote.indicativeRate}}</td>
+                <td>{{addSvc.quote.periodInMonths}}</td>
+                <td>{{addSvc.quote.contactMethod}}</td>               
+                <td>{{addSvc.quote.comment}}</td>                    
+               </tr>
+              </tbody>
+            </table>
+          </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'insurance'">
+          <div class="table-responsive" >
+            <table class="table table-bordred table-striped">
+              <thead>
+               <th>Sr. No</th> 
+               <th>Full Name</th> 
+                <th>Country</th>                                
+                <th>Location</th>                                
+                <th>Company Name</th>                                
+                <th>Designation</th>                                
+                <th>Phone No.</th>  
+                <th>Mobile No.</th>  
+                <th>Email</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Modal</th>
+                <th>Asset Description</th>
+                <th>Asset Location</th>
+                <th>Manufacturing Year</th>
+                <th>Invoice value</th>
+                <th>Method Of Contact</th>
+                <th>Comments</th>       
+              </thead>
+              <tbody>
+              <tr  ng-repeat="addSvc in reportsVm.insuranceListing">
+               <td></td>              
+               <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                <td>{{addSvc.quote.country}}</td>
+                <td>{{addSvc.quote.city}}</td>
+                <td>{{addSvc.quote.companyname}}</td>                    
+                <td>{{addSvc.quote.designation}}</td>                                        
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.quote.product.category}}</td>
+                <td>{{addSvc.quote.product.brand}}</td>
+                <td>{{addSvc.quote.product.model}}</td>
+                <td>{{addSvc.quote.product.description}}</td>
+                <td>{{addSvc.quote.product.city}}</td>
+                <td>{{addSvc.quote.product.mfgYear}}</td>
+                <td>{{addSvc.quote.invoiceVal}}</td>
+                <td>{{addSvc.quote.contactMethod}}</td>               
+                <td>{{addSvc.quote.comment}}</td>                                             
+               </tr>
+              </tbody>
+            </table>
+          </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+
     </div>
   </div>
 </div>

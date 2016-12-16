@@ -1,68 +1,65 @@
 <div id="wrapper">
-  <section class="wrapper">
+  <div id="page-wrapper">
+  <!-- Page Heading -->
     <div class="container-fluid">
-      <div class="row">        
-        <div class="col-sm-12">
-          <div id="page-wrapper">
-            <!-- Page Heading -->
-              <div class="row">
-                <div class="col-lg-12">
-                  <h3>
-                      Manpower List
-                  </h3>
-                  <hr>
-                </div>
-              </div>
-              <!-- /.row -->
-              <div class="row"> 
-                <div class="col-sm-9">
-                  Showing : {{manpowerListingVm.totalItems}} Records
-                </div>                   
-                  <div class="col-sm-3 pull-right">
-                    <div class="tablesearch text-right form-group">
-                       Search: <input type="text" placeholder="Search..." ng-model="manpowerListingVm.searchStr" ng-change="manpowerListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
-                    </div>
-                  </div>
-              </div>
-              <div class="table-responsive">                
-                <table class="table table-bordred table-striped">
-                  <thead>
-                    <th>Name</th>
-                    <th>Mobile No.</th>
-                    <th>Email Id</th>
-                    <th>Product</th>
-                    <th>Status</th>
-                    <th width="25%">Action</th>                   
-                  </thead>
-                  <tbody>
-
-                    <tr ng-repeat="manpower in manpowerListingVm.allManpowerList" >
-                      <td>{{manpower.user.fname}} {{manpower.user.lname}}</td>
-                      <td>{{manpower.user.mobile}}</td>
-                      <td>{{manpower.user.email}}</td>
-                      <td> 
-                          {{manpower.assetOperated.join()}}
-                       
-                      </td>
-                      <td> 
-                          <span ng-if="manpower.status">Active</span><span ng-if="!manpower.status">Inactive</span>
-                           
-                      </td>
-                      <td>
-                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="manpower.status" uib-btn-checkbox ng-click="manpowerListingVm.updateManpowerUser(manpower)"><span ng-if="!manpower.status">Activate</span> <span ng-if="manpower.status">Deactivate</span></label>
-                        <a class="btn btn-default" href="{{uploadImagePrefix}}{{manpower.docDir}}/{{manpower.resumeDoc}}" ng-if="manpower.resumeDoc" target="_blank"><i class="fa fa-download"></i></a>
-                      </td> 
-                    </tr>
-
-                  </tbody>
-                </table>                
-              </div>
-              <uib-pagination total-items="manpowerListingVm.totalItems" ng-model="manpowerListingVm.currentPage" items-per-page="manpowerListingVm.itemsPerPage" max-size="manpowerListingVm.maxSize" ng-change="manpowerListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+      <div class="row">
+          <div class="col-sm-6">
+            <h3>
+                Manpower List
+            </h3>            
           </div>
+          <div class="col-sm-6 text-right">
+            <h3><button class="btn btn-success btn-md" ng-click="reportsVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+          </div>  
         </div>
+        <hr>
+      <!-- /.row -->
+      <div class="row"> 
+        <div class="col-sm-9">
+          Showing : {{manpowerListingVm.totalItems}} Records
+        </div>                   
+          <div class="col-sm-3 pull-right">
+            <div class="tablesearch text-right form-group">
+               Search: <input type="text" placeholder="Search..." ng-model="manpowerListingVm.searchStr" ng-change="manpowerListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+            </div>
+          </div>
       </div>
+      <div class="table-responsive">                
+        <table class="table table-bordred table-striped">
+          <thead>
+            <th>Name</th>
+            <th>Mobile No.</th>
+            <th>Email Id</th>
+            <th>Product</th>
+            <th>Status</th>
+            <th width="25%">Action</th>                   
+          </thead>
+          <tbody>
+
+            <tr ng-repeat="manpower in manpowerListingVm.allManpowerList" >
+              <td>{{manpower.user.fname}} {{manpower.user.lname}}</td>
+              <td>{{manpower.user.mobile}}</td>
+              <td>{{manpower.user.email}}</td>
+              <td> 
+                  {{manpower.assetOperated.join()}}
+               
+              </td>
+              <td> 
+                  <span ng-if="manpower.status">Active</span><span ng-if="!manpower.status">Inactive</span>
+                   
+              </td>
+              <td>
+                <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="manpower.status" uib-btn-checkbox ng-click="manpowerListingVm.updateManpowerUser(manpower)"><span ng-if="!manpower.status">Activate</span> <span ng-if="manpower.status">Deactivate</span></label>
+                <a class="btn btn-default" href="{{uploadImagePrefix}}{{manpower.docDir}}/{{manpower.resumeDoc}}" ng-if="manpower.resumeDoc" target="_blank"><i class="fa fa-download"></i></a>
+              </td> 
+            </tr>
+
+          </tbody>
+        </table>                
+      </div>
+      <uib-pagination total-items="manpowerListingVm.totalItems" ng-model="manpowerListingVm.currentPage" items-per-page="manpowerListingVm.itemsPerPage" max-size="manpowerListingVm.maxSize" ng-change="manpowerListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
     </div>
-  </section>
+  </div>
 </div>
 <script>
   $(document).ready(function(){
