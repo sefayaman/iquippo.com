@@ -207,55 +207,460 @@
 
 	    <!--Select Auction date  -->
         <div ng-if="gsettingVm.tabValue == 'date'">
-    		<form name="invMasterForm" novalidate class="invMasterForm">
-				<h4>Auction Date</h4>
-    			<legend></legend>
-				
-			          <div class="row">
-			          	<div class="form-group col-sm-10">
-			          		<!-- <div class="alert alert-danger">
-							  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-							   Indicates a successful or positive action.
-							</div> -->
-			          	</div>                         	
-			           	<div class="form-group col-sm-2">
-			           		<div class="btn btn-success pull-right">
-								<span class="fileinput-button">
-							   <i class="fa fa-file-excel-o"></i> Import Excel
-							   <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files,this)">
-							   </span>
+        	<uib-tabset justified="true">
+				<uib-tab heading="Auction Date">
+					<form name="invMasterForm" novalidate class="invMasterForm">
+						<div class="row">
+							<div class="col-sm-8">
+								<h4>Auction Date</h4>
 							</div>
-			           	</div>
-			           	
-			          </div>
+							<div class="col-sm-2">
+								<button class="btn btn-success btn-block" ng-click="isCollapsed = !isCollapsed">
+									<i class="fa " class="fa" ng-class="{'fa-minus': !isCollapsed, 'fa-plus': isCollapsed}"></i> Add New						   
+								</button>
+							</div>
+							<div class="col-sm-2">
+								<div class="btn btn-success btn-block">
+									<span class="fileinput-button">
+								   <i class="fa fa-file-excel-o"></i> Import Excel
+								   <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files,this)">
+								   </span>
+								</div>
+							</div>
+						</div>
+		    			<legend></legend>
 
-			          <div class="table-responsive">
-			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+				        <div uib-collapse="isCollapsed">
+				        <form class="auctionDateForm" name="auctionDateForm" >
+				          	<div class=" row">
+				          		<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.name.$invalid && submitted }">
+				          			Auction Name*
+				          			<input type="text" class="form-control" name="name" ng-model="gsettingVm.auctionData.name" placeholder="Auction Name" required>
+				          		</div>
+				          		<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.auctionid.$invalid && submitted }">
+				          			Auction ID*
+				          			<input type="text" class="form-control" placeholder="Auction ID" name="auctionid" ng-model="gsettingVm.auctionData.auctionid" required>
+				          		</div>
+								<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
+									Auction Start Date*
+					                <div class="input-group">
+					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.startDate" uib-datepicker-popup="{{formats}}" name="startDate" ng-value="" is-open="popup3.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
+						                <span class="input-group-addon">
+						                    <a href class="btn btn-default" ng-click="open3()"><i class="fa fa-calendar-o fa-1x"></i></a>
+						                </span>
+					                </div>
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	Auction Start Time
+				                	<div class="input-group">
+					              		<input type="text" class="form-control" name="startTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.startTime" is-open=""  ng-value="{{gsettingVm.auctionData.startTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+					              		<span class="input-group-addon">
+					              			<button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
+					              		</span>
+					              	</div>
+					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'auction_start_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+				                </div>
+				          	</div>
+				          	<div class=" row">
+				          		<div class=" col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
+									Auction End Date*
+					                <div class="input-group">
+					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.endDate" uib-datepicker-popup="{{formats}}" name="endDate" is-open="popup4.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+						                <span class="input-group-addon">
+						                    <a href class="btn btn-default" ng-click="open4()"><i class="fa fa-calendar-o fa-1x"></i></a>
+						                </span>
+					                </div>
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	Auction End Time
+				                	<div class="input-group">
+					              		<input type="text" class="form-control" name="endTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.endTime" is-open=""  ng-value="{{gsettingVm.auctionData.endTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+					              		<span class="input-group-addon">
+					              			<button class="btn btn-default" ng-click="gsettingVm.toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
+					              		</span>
+					              	</div>
+					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'auction_end_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+				                </div>
+				          		<div class="col-sm-2">
+				          			Auction Owner
+					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwner" required>
+				                	<option value="">Select Service*</option>
+				                	<option ng-repeat="svc in gsettingVm.payableServices" value="{{svc.code}}">{{svc.name}}</option>
+				                </select>
+				                <!-- <i class="caret"></i> -->
+				          		</div>
+				          		<!-- <div class="col-sm-2">
+				          			Select Category
+				          			<select class="form-control">
+				          				<option>Select Category</option>
+				          			</select>
+				          			<i class="caret"></i>
+				          		</div>
+				          		<div class="col-sm-2">
+				          			Other Category
+				          			<input type="text" class="form-control" placeholder="Other Category" disabled>
+				          		</div>	 -->		          	
+				          	</div>
 
-			              <thead>
-			                <th>Auction name</th>
-			                <th>Auction Id</th>
-			                <th>Auction start date</th>
-			                <th>Auction end date</th>                                
-			                <th>Action</th>
-			               
-			              </thead>
-			              <tbody>
-			              <tr ng-repeat="auc in gsettingVm.auctions">
-			                <td>{{auc.name}}</td>
-			                <td>{{auc.auctionId}}</td>
-			                 <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
-			                  <td>{{auc.endDate | date:'MM/dd/yyyy'}}</td>
-			                <td>
-								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
-			                </td>
-			               </tr>
-			              </tbody>
-			            </table>
-			        </div>
-			     	
+				          	<div class=" row">
+				          		<div class=" col-sm-3 form-group">
+									Inspection Start Date
+					                <div class="input-group">
+					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.insStartDate" uib-datepicker-popup="{{format}}" name="insStartDate" ng-value="" is-open="popup5.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+						                <span class="input-group-addon">
+						                    <a href class="btn btn-default" ng-click="open5()"><i class="fa fa-calendar-o fa-1x"></i></a>
+						                </span>
+					                </div>
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	Inspection Start Time
+				                	<div class="input-group">
+					              		<input type="text" class="form-control" name="insStartTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.insStartTime" is-open=""  ng-value="{{gsettingVm.auctionData.insStartTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+					              		<span class="input-group-addon">
+					              			<button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
+					              		</span>
+					              	</div>
+					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'inspection_start_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+				                </div>
+				                <div class=" col-sm-3 form-group">
+									Inspection End Date
+					                <div class="input-group">
+					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.insEndDate" uib-datepicker-popup="{{format}}" name="insEndDate" ng-value="" is-open="popup6.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
+						                <span class="input-group-addon">
+						                    <a href class="btn btn-default" ng-click="open6()"><i class="fa fa-calendar-o fa-1x"></i></a>
+						                </span>
+					                </div>
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	Inspection End Time
+				                	<div class="input-group">
+					              		<input type="text" class="form-control" name="otherName" placeholder="HH:MM" ng-model="gsettingVm.auctionData.insEndTime" is-open=""  ng-value="{{gsettingVm.auctionData.insEndTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+					              		<span class="input-group-addon">
+					              			<button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
+					              		</span>
+					              	</div>
+					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'inspection_end_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+				                </div>			          					          	
+				          	</div>
 
-			</form>
+				          	<div class=" row">
+				          		<div class=" col-sm-3 form-group" >
+									Registration End Date
+					                <div class="input-group">
+					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.regEndDate" uib-datepicker-popup="{{format}}" name="regEndDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
+						                <span class="input-group-addon">
+						                    <a href class="btn btn-default" ng-click=""><i class="fa fa-calendar-o fa-1x"></i></a>
+						                </span>
+					                </div>
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	Select Location
+						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city" >
+			                          <option value="" >Current Location</option>
+			                          <option ng-repeat="location in gsettingVm.locationList" value="{{location.name}}">{{location.name}}</option>
+			                        </select>
+			                    </div>
+				                <div class=" col-sm-3 form-group">
+									Address of Auction
+									<input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	<p>Auction Type</p>
+				                	<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="live"> Live Auction
+				                	<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
+				                </div>			          					          	
+				          	</div>
+
+				          	<div class="row">
+				          		<div class="col-sm-3 form-group">
+				          			Registration Charges for Auction
+				          			<input type="text" class="form-control" placeholder="Registration Charges for Auction" disabled>
+				          		</div>
+				          		<div class="col-sm-3 form-group">
+				          			Document Attachment 
+				          			<select class="form-control" name="docType" ng-model="gsettingVm.auctionData.docType" >
+				          				<option value="">Select Type</option>
+				          				<option value="tc">Terms and Conditions</option>
+				          				<option value="bidProxy">Bid Proxy Form</option>
+				          			</select>
+				          		</div>
+				          		<div class="col-sm-2">
+				          			Upload Document
+				          			<span class="btn btn-warning fileinput-button">
+										<span>Browse Document</span>
+										<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
+									</span>
+				          		</div>
+				          		<div class="col-sm-3 form-group">
+				          		<!-- file name -->
+				          		</div>
+				          	</div>
+
+				          	<div class="row form-group">
+				          		<div class="col-sm-2 pull-right">
+				          			<button class="btn btn-primary btn-block"> Save </button>
+				          		</div>
+				          	</div>
+				          	</form>
+				          </div>
+
+				          <div class="row">
+				          	<div class="col-sm-3 pull-right">
+			                    <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="spareListingVm.spareSearchFilter.searchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+			                    </div>
+			                 </div>
+				          </div>
+				          <div class="table-responsive">
+				            <table class="table table-bordred table-striped">
+
+				              <thead>
+				                <th>Auction name</th>
+				                <th>Auction id</th>
+				                <th>Auction start date &amp; time</th>
+				                <th>Auction end date &amp; time</th>
+				                <th>Auction Owner</th>                                
+				                <th>Category</th>                                
+				                <th>Inspection start date &amp; time</th>
+				                <th>Inspection end date &amp; time</th>
+				                <th>Registration end date</th>
+				                <th>Location</th>
+				                <th>Address of auction</th>
+				                <th>Auction type</th>
+				                <th>Registration charges for auction</th>
+				                <th>Document attachment type</th>
+				                <th width="10%">Action</th>
+				               
+				              </thead>
+				              <tbody>
+				              <tr ng-repeat="auc in gsettingVm.auctions">
+				                <td>{{auc.name}}</td>
+				                <td>{{auc.auctionId}}</td>
+				                 <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
+				                  <td>{{auc.endDate | date:'MM/dd/yyyy'}}</td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                  <td></td>
+				                <td>										
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+				                </td>
+				               </tr>
+				              </tbody>
+				            </table>
+				        </div>
+				        <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+					</form>
+				</uib-tab>
+				<uib-tab heading="Assets in Auction">
+					<div class="row">
+						<div class="col-sm-10">
+							<h4>Assets in Auction</h4>
+						</div>
+						<div class="col-sm-2">
+							<button class="btn btn-success btn-block" ng-click="isAssetCollapsed = !isAssetCollapsed">
+								<i class="fa " class="fa" ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New						   
+							</button>
+						</div>						
+					</div>
+					<legend></legend>
+
+					<div uib-collapse="isAssetCollapsed">
+				        <form class="assetAuctionForm" name="assetAuctionForm" >
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<select class="form-control">
+									<option> Select Auction Id</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Lot No*">
+							</div>
+							<div class="col-sm-3 form-group">								
+								<span class="btn btn-warning fileinput-button">
+									<span>Browes Asset Image 1</span>
+									<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="files/*" class="ng-scope">
+								</span>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<span class="btn btn-warning fileinput-button">
+									<span>Browes Asset Image 2</span>
+									<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="files/*" class="ng-scope">
+								</span>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Asset No*">
+							</div>
+							<div class="col-sm-3 form-group">
+								<select class="form-control">
+									<option> Select Asset Category*</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<select class="form-control">
+									<option> Select Brand*</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<select class="form-control">
+									<option> Select Model*</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Asset Desc" />
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Invoice Date" />
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Asset Registration No" />
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Engine No" />
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-3 form-group">								
+								<select class="form-control">
+									<option> Select Asset Location</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<div>Original Invoice</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<input type="radio" name="invoice" /> Yes
+									</div>
+									<div class="col-sm-6">
+										<input type="radio" name="invoice" /> No
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="number" class="form-control" placeholder="VAT %" />
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Contact Person" />
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<input type="number" class="form-control" placeholder="Contact No" />
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Asset ID*" />
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Product ID" />
+							</div>							
+						</div>
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<div>Sold</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<input type="radio" name="sold" /> Yes
+									</div>
+									<div class="col-sm-6">
+										<input type="radio" name="sold" /> No
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Sale Value" />
+							</div>
+							<div class="col-sm-2 pull-right">
+								<button class="btn btn-primary btn-block"> Save </button>
+							</div>
+						</div>
+						</form>
+				    </div>	
+						<div class="row">
+				          	<div class="col-sm-3 pull-right">
+			                    <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="spareListingVm.spareSearchFilter.searchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+			                    </div>
+			                 </div>
+				          </div>
+				          <div class="table-responsive">
+				            <table class="table table-bordred table-striped">
+
+				              <thead>
+				                <th>Image</th>
+				                <th>Auction id</th>
+				                <th>Lot no</th>
+				                <th>Asset no</th>
+				                <th>Asset category</th>
+				                <th>Brand</th>                                
+				                <th>Model</th>                                
+				                <th>Asset desc</th>
+				                <th>Invoice date</th>
+				                <th>Asset registration no</th>
+				                <th>Engine no</th>
+				                <th>Asset location</th>
+				                <th>Original invoice</th>
+				                <th>VAT %</th>
+				                <th>Contact person</th>
+				                <th>Contact no</th>
+				                <th>Asset id</th>
+				                <th>Product id</th>
+				                <th>Sold</th>
+				                <th>Sale Value</th>
+				                <th width="50">Action</th>
+				               
+				              </thead>
+				              <tbody>
+				              <tr ng-repeat="auc in gsettingVm.auctions">
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td></td>
+				                <td>										
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+				                </td>
+				               </tr>
+				              </tbody>
+				            </table>
+				        </div>
+				        <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+
+				</uib-tab>
+    		
 	    </div>
 
 	    <!--Select payment master -->

@@ -358,8 +358,7 @@ ul.alert-dropdown{width:200px;}
 .side-nav li.active a,.side-nav li a:hover,.side-nav li a:focus{outline:none;background-color:#ce1414!important;color:#fff!important;}
 .navbar-default .navbar-nav > li > a{color:#fff}
 .navbar .side-nav .navbar-nav i{background:none;}
-
-.table-responsive{overflow:auto; overflow-y: hidden; }
+.table-responsive.auctions-table{overflow-x:scroll; overflow-y: hidden; }
 /* Custom tabs Panels */
 .btn,.form-control{border-radius:0;}
 .navbar-default{background-color:#eee;border-color:#ccc;}
@@ -1105,4 +1104,4 @@ div#jivo_close_button{position: absolute; right: -20px;}
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.6);
     background-color: #D62929;
 }
-.like-button .btn-danger {color: #fff;width: 55px;background-color: #3e403e;border-color: #3e403e;}
+.like-button a{color: #aaabad;padding: 15px;}

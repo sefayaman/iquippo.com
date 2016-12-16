@@ -132,6 +132,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.ManPower);
     if($scope.Finance)
       $scope.services.push($scope.Finance);
+    if($scope.Auction)
+      $scope.services.push($scope.Auction);
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
       vm.vendorReg.user.state = LocationSvc.getStateByCity(vm.vendorReg.user.city);      
@@ -176,6 +178,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     $scope.CertifiedByIQuippo = "";
     $scope.ManPower = "";
     $scope.Finance = "";
+    $scope.Auction = "";
     $scope.isEdit = false;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -344,6 +347,7 @@ function updateVendor(vendor) {
     $scope.CertifiedByIQuippo = "";
     $scope.Finance = "";
     $scope.ManPower = "";
+    $scope.Auction = "";
     for (var i=0; i< vendor.services.length; i++) {
       if(vendor.services[i] == 'Shipping')
         $scope.Shipping = vendor.services[i];
@@ -355,6 +359,8 @@ function updateVendor(vendor) {
         $scope.ManPower = vendor.services[i];
       else if(vendor.services[i] == 'Finance')
         $scope.Finance = vendor.services[i];
+      else if(vendor.services[i] == 'Auction')
+        $scope.Auction = vendor.services[i];
     }
     $scope.isEdit = true;
     vm.existFlag = true;

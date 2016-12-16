@@ -1,0 +1,93 @@
+  <div class="container">
+    <div class="col-sm-12 text-justify">
+		<h3>Auctions</h3>
+		<legend></legend>
+
+		<div class="btn-group form-group">
+      <button type="button" class="btn btn-default active">Closed Auctions</button>
+      <button type="button" class="btn btn-default">Upcoming Auctions</button>          
+    </div>
+
+		<div class="row">
+			<div class="col-sm-12 form-group">                
+        <div class="table-responsive auctions-table">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Auction Id</th>
+                <th>Type of Auction</th>
+                <th>Auction Name</th>
+                <th>Auction Conducted by</th>
+                <th>Auction Start Date &amp; Time</th>
+                <th>Auction End Date &amp; Time</th>
+                <th>Inspection Start Date &amp; Time</th>
+                <th>Inspection End Date &amp; Time</th>
+                <th>Registration Charges</th>
+                <th>Registration End Date</th>
+                <th>Location</th>
+                <th>Address</th>
+                <th>Google map of Location</th>
+                <th>Terms &amp; Condition</th>
+                <th>Proxy Form</th>
+                <th>No. of Assets in Auction</th>
+                <th>No. of Assets in Sold</th>
+                <th>Total Sale Value</th>
+                <th>View Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Auction_Id_005</td>
+                <td>frgjuh</td>
+                <td>Tipper Ashok Leyland 2518</td>
+                <td>iQuippo</td>
+                <td>01/12/2017 &amp; 11.30 am</td>
+                <td>01/12/2017 &amp; 11.30 am</td>
+                <td>01/12/2017 &amp; 11.30 am</td>
+                <td>01/12/2017 &amp; 11.30 am</td>
+                <td>Rs.1300</td>
+                <td>01/12/2017</td>
+                <!-- <td>
+                    <a href="javascript:void(0);" uib-popover="Seller Information" popover-trigger="mouseenter"></a>
+                </td> -->
+
+                <td>Delhi</td>
+                <td>Southern Park,Saket</td>
+                <td><a href="javascript:void(0);">Saket</a></td>
+                <td><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i></a></td>
+                <td><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i></a></td>
+                <td>26</td>
+                <td>15</td>
+                <td>10</td>
+               	<td>
+                  <a href="/auctiondetail" class="btn btn-primary btn-sm">
+               	    <i class="fa fa-eye"></i>
+                  </a>
+               	</td> 
+            
+              </tr>
+              
+            </tbody>
+            
+          </table>
+        </div>
+        <uib-pagination total-items="productListingVm.totalItems" ng-model="productListingVm.currentPage" items-per-page="productListingVm.itemsPerPage" max-size="productListingVm.maxSize" ng-change="productListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>        
+      </div>
+		</div>
+		
+	</div>
+  </div>
+
+<!-- Onclick google map location popup -->
+<script type="text/ng-template" id="">
+  <div>
+    <div class="modal-header">
+      <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+       <h4 class="modal-title">Google Map Location</h4>
+    </div>
+    <div class="modal-body">
+      
+     
+    </div>
+  </div>
+</script>

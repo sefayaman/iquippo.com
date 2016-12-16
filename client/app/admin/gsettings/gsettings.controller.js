@@ -16,6 +16,8 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     // vm.updateSubCategory = updateSubCategory;
     // vm.subCategoryEditClick = subCategoryEditClick;
     // vm.deleteSubCategory = deleteSubCategory;
+    $scope.isCollapsed = true;
+    $scope.isAssetCollapsed = true;
 
     vm.state = {};
     vm.stateEdit = false;
@@ -63,7 +65,66 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     vm.deleteBanner = deleteBanner;
     $scope.updateBannerImage = updateBannerImage;
     $scope.updateMobBannerImage = updateMobBannerImage;
+
+    vm.auctionData = {};
+    vm.auctionEdit = false;
+    vm.saveAuction = saveAuction;
+    vm.toggleMode = toggleMode;
+    $scope.uploadDoc = uploadDoc;
+    //vm.updateAuction = updateAuction;
+    //vm.auctionEditClick = auctionEditClick;
+    //vm.deleteAuction = deleteAuction;
+    $scope.mytime = new Date();
+    $scope.hstep = 1;
+    $scope.mstep = 1;
+    $scope.ismeridian = true;
+
+    function saveAuction(){
+    	
+    }
     
+    function toggleMode() {
+       $scope.isShow = ! $scope.isShow;
+    };
+
+    $scope.changed = function (mytime, type) {
+      if(mytime) {
+        var hours = mytime.getHours();
+        var minutes = mytime.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        switch(type){
+    		case 'auction_start_time':
+    			 vm.auctionData.startTime = hours + ':' + minutes + ' ' + ampm;
+    		break;
+    		case 'auction_end_time':
+    			vm.auctionData.endTime = hours + ':' + minutes + ' ' + ampm;
+    		break;
+    		case 'inspection_start_time':
+    			getAuctionMaster();
+    		break;
+    		case 'inspection_end_time':
+    			getInvitationMasterData();
+    		break;
+    	}
+        
+      }
+    };
+
+    function uploadDoc(files){
+      if(files.length == 0)
+        return;
+
+      uploadSvc.upload(files[0], manpowerDir).then(function(result){
+        vm.auctionData.docDir = result.data.assetDir;
+        vm.auctionData.docName = result.data.filename;
+        });
+        
+    }
+
     function resetData(){
     	vm.banner.hyperlink = "No";
     	vm.banner.ticker = "No";
@@ -691,19 +752,45 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 	$scope.format = $scope.formats[0];
 
 	$scope.open1 = function() {
-	$scope.popup1.opened = true;
+	  $scope.popup1.opened = true;
 	};
-
 	$scope.popup1 = {
-	opened: false
+	  opened: false
 	};
-
-  	$scope.open2 = function() {
-    $scope.popup2.opened = true;
+	
+    $scope.open2 = function() {
+      $scope.popup2.opened = true;
+    };
+    $scope.popup2 = {
+      opened: false
     };
 
-    $scope.popup2 = {
-    opened: false
+    $scope.open3 = function() {
+      $scope.popup3.opened = true;
+    };
+    $scope.popup3 = {
+      opened: false
+    };
+
+    $scope.open4 = function() {
+      $scope.popup4.opened = true;
+    };
+    $scope.popup4 = {
+      opened: false
+    };
+
+    $scope.open5 = function() {
+      $scope.popup5.opened = true;
+    };
+    $scope.popup5 = {
+      opened: false
+    };
+
+    $scope.open6 = function() {
+      $scope.popup6.opened = true;
+    };
+    $scope.popup6 = {
+      opened: false
     };
 }
     

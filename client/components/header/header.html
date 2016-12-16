@@ -1,4 +1,4 @@
-<div class="container" ng-controller="HeaderCtrl">
+<div class="container-fluid" ng-controller="HeaderCtrl">
         <div class="text-right">
           <ul class="top-menu">
             
@@ -11,7 +11,7 @@
               <a href="javascript:void(0);" ng-click="redirectToProduct()"  class="hidden-sm hidden-md hidden-lg "><i class="fa fa-upload"></i><span class="hidden-xs">Upload Product</span></a>
             </li>
             <li>
-              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')"  class="hidden-sm hidden-md hidden-lg "><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="hidden-xs">Place a Classified Ad</span></a>
+              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')"  class="hidden"><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="hidden-xs">Place a Classified Ad</span></a>
             </li>
 
             <li ng-if="isLoggedIn()" class="dropdown" >
@@ -47,19 +47,20 @@
            
            <nav class="navbar navbar-inverse pull-left" role="navigation">
               <!-- Brand and toggle get grouped for better mobile display -->
-                <!-- <div class="navbar-header">
+                <div class="navbar-header">
                   <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+                    <span class="mob-menu">Menu</span>
                   </button>           
-                </div> -->
+                </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-               <!--  <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true"> -->
-               <div>
+                <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
+               <div class="text-center">
                   <ul class="nav navbar-nav">
                     <li ng-class="{active: isActive(['main'])}"><a href="index.html">Home</a></li>
                     <li ng-class="{active: isActive(['aboutus'])}"><a href="/aboutus">About Us</a></li>
@@ -79,6 +80,7 @@
                       </ul>
                     </li> -->
                     
+                    <li ng-class="{active: isActive(['auctions'])}"><a href="/auctions">Auctions</a></li>
                     <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
                   </ul>
                 </div><!-- /.navbar-collapse -->
