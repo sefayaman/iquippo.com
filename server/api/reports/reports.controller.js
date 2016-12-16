@@ -109,16 +109,16 @@ var reports = {
 
 		var csvData = {
 			'shipping': {
-				headers: ['Customer', 'Mobile No', 'Phone No', 'Email', 'Date of Request', 'Country', 'Location', 'Company Name', 'Designation', 'Shipment Allowed', 'Packaging']
+				headers: ['Customer', 'Mobile No', 'Phone No', 'Email', 'Date of Request', 'Country', 'Location', 'Company Name', 'Designation', 'Shipment Allowed', 'Packaging','Comments']
 			},
 			'valuation': {
 				headers: ['Customer', 'Mobile No', 'Phone No', 'Email', 'Date of Request', 'Country', 'Location', 'Company Name', 'Designation', 'Purpose of Valutaion', 'Schedule a Call', 'Comments']
 			},
 			'finance': {
-				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email', 'Category', 'Brand', 'Modal', 'Asset Description', 'Asset Location', 'Manufacturing Year', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email','Date of Request' ,'Category', 'Brand', 'Modal', 'Asset Description', 'Asset Location', 'Manufacturing Year', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments']
 			},
 			'insurance': {
-				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email', 'Category', 'Brand', 'Modal', 'Asset Description', 'Asset Location', 'Manufacturing Year', 'Invoice value', 'Method Of Contact', 'Comments']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email', 'Date of Request','Category', 'Brand', 'Modal', 'Asset Description', 'Asset Location', 'Manufacturing Year', 'Invoice value', 'Method Of Contact', 'Comments']
 			}
 		};
 
@@ -141,7 +141,8 @@ var reports = {
 						x.quote.companyname || '',
 						x.quote.designation || '',
 						x.quote.allowed || '',
-						x.quote.packaging || '');
+						x.quote.packaging || '',
+						x.quote.comment || '');
 
 					for (var i = 0; i < csvData[type].headers.length; i++) {
 						json[csvData[type].headers[i]] = arr[i];
@@ -182,6 +183,7 @@ var reports = {
 						x.quote.phone || '',
 						x.quote.mobile || '',
 						x.quote.email || '',
+						moment(x.createdAt).format('MM/DD/YYYY') || '',
 						x.quote.product.category || '',
 						x.quote.product.brand || '',
 						x.quote.product.model || '',
@@ -211,6 +213,7 @@ var reports = {
 						x.quote.phone || '',
 						x.quote.mobile || '',
 						x.quote.email || '',
+						moment(x.createdAt).format('MM/DD/YYYY') || '',
 						x.quote.product.category || '',
 						x.quote.product.brand || '',
 						x.quote.product.model || '',

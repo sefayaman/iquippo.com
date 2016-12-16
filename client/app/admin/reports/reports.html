@@ -111,6 +111,7 @@
                 <th>Designation</th>  
                 <th>Part Shipment Allowed</th>  
                 <th>Packaging</th>  
+                <th>Shipping <small>Comments</small></th>  
                 <th>Valuation <small>Purpose of Valutaion</small></th>
                 <th>Valuation <small>Schedule a Call</small></th>  
                 <th>Valuation <small>Comments</small></th>  
@@ -135,7 +136,8 @@
                 <td>{{addSvc.companyname}}</td>                    
                 <td>{{addSvc.designation}}</td>                    
                 <td>{{addSvc.shippingQuote.allowed}}</td>                    
-                <td>{{addSvc.shippingQuote.packaging}}</td>                    
+                <td>{{addSvc.shippingQuote.packaging}}</td> 
+                <td>{{addSvc.shippingQuote.comments}}</td>                   
                 <td>
                   <span ng-if="addSvc.valuationQuote.valuation != 'Other'">{{addSvc.valuationQuote.valuation}}</span>
                   <span ng-if="addSvc.valuationQuote.valuation == 'Other'">{{addSvc.valuationQuote.otherName}}</span>
@@ -178,6 +180,7 @@
                 <th>Designation</th>  
                 <th>Shipment Allowed</th>  
                 <th>Packaging</th>    
+                <th>Comments</th>    
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.shippingListing">
@@ -193,6 +196,7 @@
                 <td>{{addSvc.quote.designation}}</td>                    
                 <td>{{addSvc.quote.allowed}}</td>                    
                 <td>{{addSvc.quote.packaging}}</td>                                        
+                <td>{{addSvc.quote.comment}}</td>                                        
                </tr>
               </tbody>
             </table>
@@ -256,6 +260,7 @@
                 <th>Phone No.</th>  
                 <th>Mobile No.</th>  
                 <th>Email</th>
+                <th>Date of Request</th> 
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Modal</th>
@@ -279,6 +284,7 @@
                 <td>{{addSvc.quote.phone}}</td>
                 <td>{{addSvc.quote.mobile}}</td>
                 <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>{{addSvc.quote.product.category}}</td>
                 <td>{{addSvc.quote.product.brand}}</td>
                 <td>{{addSvc.quote.product.model}}</td>
@@ -310,6 +316,7 @@
                 <th>Phone No.</th>  
                 <th>Mobile No.</th>  
                 <th>Email</th>
+                <th>Date of Request</th> 
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Modal</th>
@@ -331,6 +338,7 @@
                 <td>{{addSvc.quote.phone}}</td>
                 <td>{{addSvc.quote.mobile}}</td>
                 <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>{{addSvc.quote.product.category}}</td>
                 <td>{{addSvc.quote.product.brand}}</td>
                 <td>{{addSvc.quote.product.model}}</td>
