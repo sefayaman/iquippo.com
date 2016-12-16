@@ -45,7 +45,7 @@
               </thead>
               <tbody>
               <tr ng-repeat="callback in reportsVm.callbackListing">
-                <td>{{$index + 1}}</td>
+                <td>{{$index + 1 + count}}</td>
                 <td>{{callback.fname}} {{callback.lname}}</td>              
                 <td>{{callback.mobile}}</td>
                 <td>{{callback.phone}}</td>
@@ -76,7 +76,7 @@
               </thead>
               <tbody>
               <tr  ng-repeat="query in reportsVm.quickQueryListing">
-                <td>{{$index + 1}}</td>
+                <td>{{$index + 1 + count}}</td>
                 <td>{{query.fname}} {{query.lname}}</td>              
                 <td>{{query.mobile}}</td>
                 <td>{{query.phone}}</td>
@@ -124,7 +124,7 @@
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.additionalSvcListing">
-                <td>{{$index + 1}}</td>
+                <td>{{$index + 1+count}}</td>
                 <td>{{addSvc.fname}} {{addSvc.lname}}</td>              
                 <td>{{addSvc.mobile}}</td>
                 <td>{{addSvc.phone}}</td>
@@ -181,7 +181,7 @@
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.shippingListing">
-                <td>{{$index + 1}}</td>
+                <td>{{$index + 1+count}}</td>
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.mobile}}</td>
                 <td>{{addSvc.quote.phone}}</td>
@@ -220,7 +220,7 @@
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.valuationListing">
-                <td>{{$index + 1}}</td>
+                <td>{{$index + 1+count}}</td>
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.mobile}}</td>
                 <td>{{addSvc.quote.phone}}</td>
@@ -270,7 +270,7 @@
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.financingListing">
-                <td></td>              
+                <td>{{$index + 1+count}}</td>             
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.country}}</td>
                 <td>{{addSvc.quote.city}}</td>
@@ -322,7 +322,7 @@
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.insuranceListing">
-               <td></td>              
+                <td>{{$index + 1+count}}</td>            
                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.country}}</td>
                 <td>{{addSvc.quote.city}}</td>

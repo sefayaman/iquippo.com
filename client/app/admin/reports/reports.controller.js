@@ -16,6 +16,7 @@
     var first_id = null;
     var last_id = null;
 
+
     vm.fireCommand = fireCommand;
     vm.selectReportData = selectReportData;
     vm.exportExcel = exportExcel;
@@ -33,6 +34,7 @@
     $scope.valuationTotalItems = 0;
     $scope.financingTotalItems = 0;
     $scope.insuranceTotalItems = 0;
+    $scope.count = 0;
 
 
 
@@ -112,6 +114,7 @@
               vm.callbackListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
+              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.callbackListing.length > 0) {
                 first_id = vm.callbackListing[0]._id;
                 last_id = vm.callbackListing[vm.callbackListing.length - 1]._id;
@@ -124,6 +127,7 @@
               vm.quickQueryListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
+              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.quickQueryListing.length > 0) {
                 first_id = vm.quickQueryListing[0]._id;
                 last_id = vm.quickQueryListing[vm.quickQueryListing.length - 1]._id;
@@ -136,6 +140,7 @@
               vm.additionalSvcListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
+              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.additionalSvcListing.length > 0) {
                 first_id = vm.additionalSvcListing[0]._id;
                 last_id = vm.additionalSvcListing[vm.additionalSvcListing.length - 1]._id;
@@ -169,6 +174,7 @@
                 vm.shippingListing = result;
                 vm.totalItems = $scope.shippingTotalItems;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               });
           } else {
             ReportsSvc.getTotatItemsCount("shipping", filter.searchstr)
@@ -184,6 +190,7 @@
               .then(function(result) {
                 vm.shippingListing = result;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
                 if (vm.shippingListing.length > 0) {
                   first_id = vm.shippingListing[0]._id;
                   last_id = vm.shippingListing[vm.shippingListing.length - 1]._id;
@@ -219,6 +226,7 @@
                 vm.valuationListing = result;
                 vm.totalItems = $scope.valuationTotalItems;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               });
           } else {
             ReportsSvc.getTotatItemsCount("valuation", filter.searchstr)
@@ -234,6 +242,7 @@
               .then(function(result) {
                 vm.valuationListing = result;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
                 if (vm.valuationListing.length > 0) {
                   first_id = vm.valuationListing[0]._id;
                   last_id = vm.valuationListing[vm.valuationListing.length - 1]._id;
@@ -268,6 +277,7 @@
                 vm.financingListing = result;
                 vm.totalItems = $scope.financingTotalItems;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               });
           } else {
             ReportsSvc.getTotatItemsCount("finance", filter.searchstr)
@@ -283,6 +293,7 @@
               .then(function(result) {
                 vm.financingListing = result;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
                 if (vm.financingListing.length > 0) {
                   first_id = vm.financingListing[0]._id;
                   last_id = vm.financingListing[vm.financingListing.length - 1]._id;
@@ -317,6 +328,7 @@
                 vm.insuranceListing = result;
                 vm.totalItems = $scope.insuranceTotalItems;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               });
           } else {
             ReportsSvc.getTotatItemsCount("insurance", filter.searchstr)
@@ -332,6 +344,7 @@
               .then(function(result) {
                 vm.insuranceListing = result;
                 prevPage = vm.currentPage;
+                $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
                 if (vm.insuranceListing.length > 0) {
                   first_id = vm.insuranceListing[0]._id;
                   last_id = vm.insuranceListing[vm.insuranceListing.length - 1]._id;
@@ -350,7 +363,7 @@
       last_id = null;
     }
 
-    function openWindow(url){
+    function openWindow(url) {
       console.log(url);
       $window.open(url);
     }
