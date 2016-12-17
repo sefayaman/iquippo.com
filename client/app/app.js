@@ -23,7 +23,8 @@ angular.module('sreizaoApp',[
   'admin',
   'manpower',
   'spare',
-  'report'
+  'report',
+  'angularjs-datetime-picker'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

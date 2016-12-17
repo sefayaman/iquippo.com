@@ -44,10 +44,6 @@ router.post('/paymentmaster', controller.createPaymentMaster);
 router.put('/paymentmaster/:id', controller.updatePaymentMaster);
 router.delete('/paymentmaster/:id', controller.deletePaymentMaster);
 
-router.get('/auctionmaster', controller.getAuctionMaster);
-router.post('/auctionmaster', controller.importAuctionMaster);
-router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
-
 router.get('/manufacturer', controller.getAllManufacturer);
 router.post('/manufacturer/save', controller.createManufacturer);
 router.put('/manufacturer/:id', controller.updateManufacturer);

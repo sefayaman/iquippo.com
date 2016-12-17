@@ -13,5 +13,7 @@ router.post('/validate', controller.validate);
 //router.post('/validatevendor', controller.validateVendor);
 //router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
+router.post('/getfilteruser', controller.getFilteredUser);
+
 
 module.exports = router;

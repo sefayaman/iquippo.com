@@ -2,8 +2,12 @@
 
 var _ = require('lodash');
 var AuctionRequest = require('./auction.model');
+var AuctionMaster = require('./auctionmaster.model');
+
 var  xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
+var config = require('./../../config/environment');
+var importPath = config.uploadPath + config.importDir + "/";
 // Get list of auctions
 exports.getAll = function(req, res) {
   AuctionRequest.find(function (err, auctions) {
@@ -282,6 +286,172 @@ exports.exportAuction = function(req,res){
      });
 }
 
+//Auction master services
+
+// Creates a new vendor in the DB.
+exports.createAuctionMaster = function(req, res) {
+  var filter = {}
+  if(!req.body.auctionId)
+    return res.status(401).send('Insufficient data');
+  
+  //if(req.body.entityName)
+  filter['auctionId'] = req.body.auctionId;
+  //var term = new RegExp("^" + req.body.entityName + "$", 'i');
+  AuctionMaster.find(filter,function(err, auctionData){
+    if(err) return handleError(res, err); 
+    if(auctionData.length > 0){
+      return res.status(200).json({errorCode:1, message:"Auction Id already exist."});
+    }else{
+      AuctionMaster.create(req.body, function(err, auctionData) {
+        if(err) { return handleError(res, err); }
+        return res.status(201).json({errorCode:0, message:""});
+      });
+    }
+  })
+  
+};
+
+exports.getAuctionMaster = function(req,res){
+  console.log("inside");
+  var query = AuctionMaster.find({}).sort({createdAt:-1})
+   query.exec(function (err, auctions) {
+      if(err) { console.log("err", err);
+       return handleError(res, err); }
+      return res.status(200).json(auctions);
+    });
+}
+
+exports.deleteAuctionMaster = function(req, res) {
+  AuctionMaster.findById(req.params.id, function (err, auctionData) {
+    if(err) { return handleError(res, err); }
+    if(!auctionData) { return res.status(404).send('Payment master Found'); }
+    auctionData.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).send({errorCode:0,message:"Payment master deleted sucessfully!!!"});
+    });
+  });
+};
+
+exports.importAuctionMaster = function(req,res){
+  var fileName = req.body.fileName;
+    var workbook = null;
+  try{
+    workbook = xlsx.readFile(importPath + fileName);
+  }catch(e){
+    console.log(e);
+    return  handleError(res,"Error in file upload")
+  }
+  if(!workbook)
+    return res.status(404).send("Error in file upload");
+  var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  //console.log("data",worksheet);
+  var data = xlsx.utils.sheet_to_json(worksheet);
+  if(data.length == 0){
+    return res.status(500).send("There is no data in the file.");
+  }
+  var headers = ['Auction_Title*','Start_Date*','End_Date*',"Auction_Id*"];
+  var hd = getHeaders(worksheet);
+  if(!validateHeader(hd,headers)){
+    return res.status(500).send("Wrong template");
+  }
+  var ret = false;
+  var errorMessage = "";
+  for(var i=0;i < data.length; i++){
+    var title = data[i]['Auction_Title*'];
+    var startDate = new Date(data[i]['Start_Date*']);
+    var endDate = new Date(data[i]['End_Date*']);
+    var auctionId = data[i]['Auction_Id*'];
+    if(!title){
+      ret = true;
+      errorMessage += "Title is empty in row " + (i+2);
+      break;
+    }
+    if(!auctionId){
+      ret = true;
+      errorMessage += "Auction Id is empty in row " + (i+2);
+      break;
+    }
+    if(!startDate ||!isValid(startDate)){
+      ret = true;
+      errorMessage += "Start_Date is empty  or invalid format in row " + (i+2);
+      break;
+    }
+    if(!endDate || !isValid(endDate)){
+      ret = true;
+      errorMessage += "End_Date is empty or invalid format in row " + (i+2);
+      break;
+    }
+  } 
+
+  if(ret){
+    return res.status(201).json({errorCode:1,message:errorMessage});
+  }
+
+  //console.log("data",data);
+  req.counter = 0;
+  req.numberOfCount = data.length;
+  req.successCount = 0;
+  req.groupId = new Date().getTime();
+  importAuctionMaster(req,res,data);
+}
+
+function getHeaders(worksheet){
+  var headers = [];
+  for(var z in worksheet) {
+        if(z[0] === '!') continue;
+        //parse out the column, row, and value
+        var col = z.substring(0,1);
+        var row = parseInt(z.substring(1));
+        var value = worksheet[z].v;
+        //store header names
+        if(row == 1) {
+            headers[headers.length] = value;
+        }
+    }
+    console.log("gggg",headers);
+  return headers;
+}
+
+function validateHeader(headersInFile,headers){
+  var ret = true;
+  ret = headersInFile.length == headers.length;
+  if(!ret)
+    return ret;
+  for(var i=0; i < headersInFile.length;i++){
+    var hd = headers[i];
+    if(headers.indexOf(hd) == -1){
+      ret = false;
+      break;
+    }
+  }
+
+  return ret;
+}
+
+function isValid(d) {
+  return d.getTime() === d.getTime();
+}
+
+function importAuctionMaster(req,res,data){
+  if(req.counter < req.numberOfCount){
+    var auctionData = {};
+    auctionData.name = data[req.counter]['Auction_Title*'];
+      auctionData.startDate = new Date(data[req.counter]['Start_Date*']);
+      auctionData.endDate = new Date(data[req.counter]['End_Date*']);
+      auctionData.auctionId = data[req.counter]['Auction_Id*'];
+      auctionData.groupId = req.groupId;
+      AuctionMaster.create(auctionData,function(err,act){
+        if(err){return handleError(res,err)}
+        else{
+          req.counter ++;
+          importAuctionMaster(req,res,data);
+        }
+      })
+  }else{
+    res.status(200).json({errorCode:0,message:"Auction master imported successfully"});
+  }
+}
+/* end of auctionmaster */
 function handleError(res, err) {
   return res.status(500).send(err);
 }

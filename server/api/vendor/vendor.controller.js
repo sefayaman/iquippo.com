@@ -175,6 +175,32 @@ exports.destroy = function(req, res) {
   });
 };
 
+//search based on service type
+exports.getFilteredUser = function(req, res) {
+  var filter = {};
+  filter["status"] = true;
+  filter["deleted"] = false;
+  
+  if(req.body.service){
+    var term = new RegExp(req.body.service, 'i');
+    filter['services'] = { $regex: term };
+  }
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
+
+  var query = Vendor.find(filter).sort(sortObj); 
+  query.exec(
+               function (err, users) {
+                      if(err) { return handleError(res, err); }
+                      //console.log(users);
+                      return res.status(200).json(users);
+               }
+  );
+};
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

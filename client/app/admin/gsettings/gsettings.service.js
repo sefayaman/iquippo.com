@@ -335,14 +335,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
  angular.module('admin').factory("AuctionMasterSvc",AuctionMasterSvc);
  function AuctionMasterSvc($http,$q){
     var svc = {};
-    var path = "/api/common/auctionmaster"
+    var path = "/api/auction/auctionmaster"
     var auctionMasterCache = [];
     var latestActions = [];
     svc.getAll = getAll;
     svc.delAuctionMaster = delAuctionMaster;
     svc.parseExcel = parseExcel;
     svc.getLatestAuction = getLatestAuction;
-
+    svc.getAuctionOwnerFilter = getAuctionOwnerFilter;
+    svc.saveAuctionMaster = saveAuctionMaster;
+    
     function getAll(){
        var deferred = $q.defer();
       if(auctionMasterCache.length > 0){
@@ -372,6 +374,36 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       }
       return deferred.promise;
     }
+
+    function saveAuctionMaster(data){
+      return $http.post(path + "/save", data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function getAuctionOwnerFilter(filter){
+      return $http.post("/api/vendor/getfilteruser", filter)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(res){
+          throw res;
+        })
+    };
+
+    function getAuctionRegCharges(filter){
+      return $http.post("/api/vendor/getfilteruser", filter)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(res){
+          throw res;
+        })
+    };
 
     function parseExcel(fileName){
       return $http.post(path,{fileName:fileName})
