@@ -69,16 +69,11 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     vm.auctionData = {};
     vm.auctionEdit = false;
     vm.saveAuctionMaster = saveAuctionMaster;
-    vm.toggleMode = toggleMode;
+    vm.onLocationChange = onLocationChange;
+    vm.editAuctionMaster = editAuctionMaster;
+    vm.updateAuctionMaster = updateAuctionMaster;
     $scope.uploadDoc = uploadDoc;
-    //vm.updateAuction = updateAuction;
-    //vm.auctionEditClick = auctionEditClick;
-    //vm.deleteAuction = deleteAuction;
-    // $scope.mytime = new Date();
-    // $scope.hstep = 1;
-    // $scope.mstep = 1;
-    // $scope.ismeridian = true;
-
+    
     function uploadDoc(files){
       if(files.length == 0)
         return;
@@ -111,6 +106,7 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     		break;
     		case 'date':
     			getAuctionMaster();
+    			loadAuctionData();
     		break;
     		case 'inv':
     			getInvitationMasterData();
@@ -511,30 +507,43 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 
 	}
 
-	/*function updateManufacturer(form){
+	function onLocationChange(city){
+      vm.auctionData.state = LocationSvc.getStateByCity(city);
+    }
+
+	function updateAuctionMaster(form){
 		if(form.$invalid){
 			$scope.submitted = true;
 			return;
 		}
 		$scope.submitted = false;
-		ManufacturerSvc.updateManufacturer(vm.manufacturer)
+		AuctionMasterSvc.updateAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
-				vm.manufacturer = {};
-				vm.manufacturerEdit = false;
-				getAllManufacturer();
+				vm.auctionData = {};
+				vm.auctionEdit = false;
+				//getAllManufacturer();
 			}
 			else
 				Modal.alert(res.message);
 		})
-	}*/
+	}
+
+	function editAuctionMaster(index){
+		angular.copy(vm.auctions[index], vm.auctionData)
+		vm.auctionEdit = true;
+		$scope.isCollapsed = false;
+		//onServiceChange(vm.paymentMaster.serviceCode,true);
+	}
 
 	function getAuctionMaster(){
 		AuctionMasterSvc.getAll()
 		.then(function(result){
 			vm.auctions = result;
 		});
+	}
 
+	function loadAuctionData(){
 		PaymentMasterSvc.getAll()
   		.then(function(result){
   		  result.forEach(function(item){

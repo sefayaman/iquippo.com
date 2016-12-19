@@ -361,7 +361,7 @@
 				          		 
 				                <div class="col-sm-3 form-group">
 				                	Select Location
-						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city" >
+						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city" ng-change="gsettingVm.onLocationChange(gsettingVm.auctionData.city)">
 			                          <option value="" >Current Location</option>
 			                          <option ng-repeat="location in gsettingVm.locationList" value="{{location.name}}">{{location.name}}</option>
 			                        </select>
@@ -405,7 +405,8 @@
 
 				          	<div class="row form-group">
 				          		<div class="col-sm-2 pull-right">
-				          			<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)"> Save </button>
+				          			<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
+				          		    <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(paymentForm)" ng-if="gsettingVm.auctionEdit">Update</button>
 				          		</div>
 				          	</div>
 				          	</form>
@@ -427,7 +428,7 @@
 				                <th>Auction start date &amp; time</th>
 				                <th>Auction end date &amp; time</th>
 				                <th>Auction Owner</th>                                
-				                <th>Category</th>                                
+				                <!-- <th>Category</th> -->                                
 				                <th>Inspection start date &amp; time</th>
 				                <th>Inspection end date &amp; time</th>
 				                <th>Registration end date</th>
@@ -443,20 +444,23 @@
 				              <tr ng-repeat="auc in gsettingVm.auctions">
 				                <td>{{auc.name}}</td>
 				                <td>{{auc.auctionId}}</td>
-				                 <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
-				                  <td>{{auc.endDate | date:'MM/dd/yyyy'}}</td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
-				                  <td></td>
+				                 <td>{{auc.startDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.endDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.auctionOwner}}</td>
+				                  <td>{{auc.insStartDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.insEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
+				                  <td>{{auc.city}}</td>
+				                  <td>{{auc.auctionAddr}}</td>
+				                  <td>{{auc.auctionType}}</td>
+				                  <td>{{auc.regCharges}}</td>
+				                  <td>
+				                  		<span ng-if="auc.docType == 'tc'">Terms and Conditions</span> 
+				                  		<span ng-if="auc.docType == 'bidProxy'">Bid Proxy Form</span> 
+				                  </td>
+				                  <!-- <td></td> -->
 				                <td>										
-									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editAuctionMaster($index)"><i class="fa fa-pencil"></i> </a>
 									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
 				                </td>
 				               </tr>

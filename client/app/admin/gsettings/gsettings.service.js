@@ -344,13 +344,14 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     svc.getLatestAuction = getLatestAuction;
     svc.getAuctionOwnerFilter = getAuctionOwnerFilter;
     svc.saveAuctionMaster = saveAuctionMaster;
+    svc.updateAuctionMaster = updateAuctionMaster;
     
     function getAll(){
        var deferred = $q.defer();
       if(auctionMasterCache.length > 0){
         deferred.resolve(auctionMasterCache);
       }else{
-        $http.get(path)
+        $http.get(path + "/getall")
         .then(function(res){
           auctionMasterCache = res.data;
           var currentTime = new Date().getTime();
@@ -383,6 +384,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         .catch(function(err){
           throw err
         })
+    }
+
+    function updateAuctionMaster(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
     }
 
     function getAuctionOwnerFilter(filter){

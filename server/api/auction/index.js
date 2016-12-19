@@ -14,7 +14,7 @@ router.delete('/:id', controller.destroy);
 router.post('/onfilter', controller.getOnFilter);
 router.post('/export', controller.exportAuction);
 
-router.get('/auctionmaster', controller.getAuctionMaster);
+router.get('/auctionmaster/getall', controller.getAuctionMaster);
 router.post('/auctionmaster/save', controller.createAuctionMaster);
 //router.put('/auctionmaster/:id', controller.updateAuctionMaster);
 router.post('/auctionmaster', controller.importAuctionMaster);
