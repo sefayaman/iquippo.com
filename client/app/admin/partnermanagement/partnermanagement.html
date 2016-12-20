@@ -5,7 +5,7 @@
         <div class="col-sm-12">
           <h3>
             Partner Registration
-            <button class="btn btn-success btn-md pull-right" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus"></i> Add New Partner</button>
+            <button class="btn btn-success btn-md pull-right" ng-click="isCollapsed = !isCollapsed"><i class="fa" ng-class="{'fa-minus': !isCollapsed, 'fa-plus': isCollapsed}"></i> Add New Partner</button>
           </h3>
           <hr>
         </div>
@@ -103,21 +103,22 @@
                   <div class="form-group col-sm-3">
                     <input type="url" name="url" class="form-control" ng-model="partnerVM.vendorReg.url" placeholder="Your URL" />
                       
-                </div>
-                
-                </div>
-                <div class="row">
+                  </div>
                   <div class="col-sm-3 form-group">
                     <span class="btn btn-warning fileinput-button">
                       <span>Browse Partner Logo...</span>
                       <!-- <input type="file" image-upload="" data-filetype="image" data-index="0" name="files_0" class="ng-scope"> -->
                       <input type="file" name="file" onchange="angular.element(this).scope().updateAvatar(this.files,this)"  class="ng-scope">
-                    </span>
-                    <div class="col-sm-2">
-                          {{partnerVM.vendorReg.user.imgsrc}}
-                    </div>
+                    </span>                    
                   </div>
-                  <div class="col-sm-7 form-group">
+                  <div class="col-sm-3">
+                    {{partnerVM.vendorReg.user.imgsrc}}
+                  </div>
+                
+                </div>
+                <div class="row">
+                  
+                  <div class="col-sm-10 form-group">
                     <div class="row">
                       <div class="col-sm-2">
                         <input type="checkbox" name="Shipping" ng-model="Shipping" ng-true-value="'Shipping'"> Shipping
@@ -125,7 +126,7 @@
                       <div class="col-sm-2">
                         <input type="checkbox" name="Valuation" ng-model="Valuation" ng-true-value="'Valuation'"> Valuation
                       </div>
-                      <div class="col-sm-3">
+                      <div class="col-sm-2">
                         <input type="checkbox"  name="CertifiedByIQuippo" ng-model="CertifiedByIQuippo" ng-true-value="'CertifiedByIQuippo'" ng-cha> Certified by iQuippo
                       </div>
                       <div class="col-sm-2">
