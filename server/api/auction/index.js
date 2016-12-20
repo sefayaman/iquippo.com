@@ -16,8 +16,9 @@ router.post('/export', controller.exportAuction);
 
 router.get('/auctionmaster/get', controller.getAuctionMaster);
 router.post('/auctionmaster/save', controller.createAuctionMaster);
-//router.put('/auctionmaster/:id', controller.updateAuctionMaster);
+router.put('/auctionmaster/:id', controller.updateAuctionMaster);
 router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
+router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
 
 module.exports = router;

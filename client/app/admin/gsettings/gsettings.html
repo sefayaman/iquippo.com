@@ -243,58 +243,19 @@
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
 				          			Auction Start Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" />
+				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Auction Start Date &amp; Time*" required/>
 				          		</div>
-				          		<div class="col-sm-3">
+				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
 				          			Auction End Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" />
+				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" date-format="MM/dd/yyyy hh:mm a"placeholder="Auction End Date &amp; Time*" required/>
 				          		</div>
-								<!-- <div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
-									Auction Start Date*
-					                <div class="input-group">
-					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.startDate" uib-datepicker-popup="{{format}}" name="startDate" ng-value="" is-open="popup3.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
-						                <span class="input-group-addon">
-						                    <a href class="btn btn-default" ng-click="open3()"><i class="fa fa-calendar-o fa-1x"></i></a>
-						                </span>
-					                </div>
-				                </div>  -->
-				                <!-- <div class="col-sm-3 form-group">
-				                	Auction Start Time
-				                	<div class="input-group">
-					              		<input type="text" class="form-control" name="startTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.startTime" is-open=""  ng-value="{{gsettingVm.auctionData.startTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-					              		<span class="input-group-addon">
-					              			<button class="btn btn-default" ng-click="gsettingVm.toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
-					              		</span>
-					              	</div>
-					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'auction_start_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-				                </div> -->
-				          	</div>
+							</div>
 				          	<div class=" row">
-				          		<!-- <div class=" col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
-									Auction End Date*
-					                <div class="input-group">
-					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.endDate" uib-datepicker-popup="{{format}}" name="endDate" is-open="popup4.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
-						                <span class="input-group-addon">
-						                    <a href class="btn btn-default" ng-click="open4()"><i class="fa fa-calendar-o fa-1x"></i></a>
-						                </span>
-					                </div>
-				                </div>  -->
-				                <!-- <div class="col-sm-3 form-group">
-				                	Auction End Time
-				                	<div class="input-group">
-					              		<input type="text" class="form-control" name="endTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.endTime" is-open=""  ng-value="{{gsettingVm.auctionData.endTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-					              		<span class="input-group-addon">
-					              			<button class="btn btn-default" ng-click="gsettingVm.toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
-					              		</span>
-					              	</div>
-					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'auction_end_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-				                </div> -->
-
 				          		<div class="col-sm-3">
 				          			Auction Owner
-					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwner" required>
-				                	<option value="">Select Service*</option>
-				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.fname}}">{{svc.user.fname}}</option>
+					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwner" >
+				                	<option value="">Select Owner</option>
+				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.fname}}">{{svc.user.fname}} ( {{svc.user.mobile}} )</option>
 				                </select>
 				                <!-- <i class="caret"></i> -->
 				          		</div>
@@ -307,61 +268,17 @@
 				          			Inspection End Date &amp; Time
 				          			<input class="form-control" datetime-picker name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" placeholder="Inspection End Date" />
 				          		</div>
-				          		<!-- <div class=" col-sm-3 form-group">
-									Inspection Start Date
-					                <div class="input-group">
-					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.insStartDate" uib-datepicker-popup="{{format}}" name="insStartDate" ng-value="" is-open="popup5.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
-						                <span class="input-group-addon">
-						                    <a href class="btn btn-default" ng-click="open5()"><i class="fa fa-calendar-o fa-1x"></i></a>
-						                </span>
-					                </div>
-				                </div> 
-				                <div class="col-sm-3 form-group">
-				                	Inspection Start Time
-				                	<div class="input-group">
-					              		<input type="text" class="form-control" name="insStartTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.insStartTime" is-open=""  ng-value="{{gsettingVm.auctionData.insStartTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-					              		<span class="input-group-addon">
-					              			<button class="btn btn-default" ng-click="gsettingVm.toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
-					              		</span>
-					              	</div>
-					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'inspection_start_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-				                </div>
-				                <div class=" col-sm-3 form-group">
-									Inspection End Date
-					                <div class="input-group">
-					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.insEndDate" uib-datepicker-popup="{{format}}" name="insEndDate" ng-value="" is-open="popup6.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
-						                <span class="input-group-addon">
-						                    <a href class="btn btn-default" ng-click="open6()"><i class="fa fa-calendar-o fa-1x"></i></a>
-						                </span>
-					                </div>
-				                </div> 
-				                <div class="col-sm-3 form-group">
-				                	Inspection End Time
-				                	<div class="input-group">
-					              		<input type="text" class="form-control" name="insEndTime" placeholder="HH:MM" ng-model="gsettingVm.auctionData.insEndTime" is-open=""  ng-value="{{gsettingVm.auctionData.insEndTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
-					              		<span class="input-group-addon">
-					              			<button class="btn btn-default" ng-click="gsettingVm.toggleMode()"><i class="fa fa-clock-o fa-1x"></i></button>
-					              		</span>
-					              	</div>
-					              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime, 'inspection_end_time')" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
-				                </div> -->
-				                <div class=" col-sm-3 form-group" >
+				          		<div class=" col-sm-3 form-group" >
 									Registration End Date
 				          			<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />
-					                <!-- <div class="input-group">
-					                	<input type="text" class="form-control" ng-model="gsettingVm.auctionData.regEndDate" uib-datepicker-popup="{{format}}" name="regEndDate" ng-value="" is-open="popup7.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
-						                <span class="input-group-addon">
-						                    <a href class="btn btn-default" ng-click="open7()"><i class="fa fa-calendar-o fa-1x"></i></a>
-						                </span>
-					                </div> -->
-				                </div>			          					          	
+					            </div>			          					          	
 				          	</div>
 
 				          	<div class=" row">
 				          		 
 				                <div class="col-sm-3 form-group">
 				                	Select Location
-						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city" ng-change="gsettingVm.onLocationChange(gsettingVm.auctionData.city)">
+						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city">
 			                          <option value="" >Current Location</option>
 			                          <option ng-repeat="location in gsettingVm.locationList" value="{{location.name}}">{{location.name}}</option>
 			                        </select>
@@ -406,16 +323,17 @@
 				          	<div class="row form-group">
 				          		<div class="col-sm-2 pull-right">
 				          			<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
-				          		    <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(paymentForm)" ng-if="gsettingVm.auctionEdit">Update</button>
+				          		    <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
 				          		</div>
 				          	</div>
 				          	</form>
 				          </div>
 				        </form>
+				        <p class="text-right">Showing : {{gsettingVm.totalItems}} Records</p>
 				          <div class="row">
 				          	<div class="col-sm-3 pull-right">
 			                    <div class="tablesearch text-right form-group">
-			                       Search: <input type="text" placeholder="Search..." ng-model="spareListingVm.spareSearchFilter.searchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.auctionSearchFilter.searchStr" ng-change="gsettingVm.fireCommandForAuctionMaster(true)" ng-model-options="{debounce:500}">
 			                    </div>
 			                 </div>
 				          </div>
@@ -449,7 +367,7 @@
 				                  <td>{{auc.auctionOwner}}</td>
 				                  <td>{{auc.insStartDate | date:'MM/dd/yyyy hh:mm a'}}</td>
 				                  <td>{{auc.insEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
-				                  <td>{{auc.startDate | date:'MM/dd/yyyy'}}</td>
+				                  <td>{{auc.regEndDate | date:'MM/dd/yyyy'}}</td>
 				                  <td>{{auc.city}}</td>
 				                  <td>{{auc.auctionAddr}}</td>
 				                  <td>{{auc.auctionType}}</td>
@@ -467,7 +385,7 @@
 				              </tbody>
 				            </table>
 				        </div>
-				        <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommandForAuctionMaster()" class="pagination-sm" rotate="false">  </uib-pagination>
 				</uib-tab>
 				<uib-tab heading="Assets in Auction">
 					<div class="row">

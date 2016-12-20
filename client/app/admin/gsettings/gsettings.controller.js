@@ -69,10 +69,22 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     vm.auctionData = {};
     vm.auctionEdit = false;
     vm.saveAuctionMaster = saveAuctionMaster;
-    vm.onLocationChange = onLocationChange;
+    
     vm.editAuctionMaster = editAuctionMaster;
     vm.updateAuctionMaster = updateAuctionMaster;
+    vm.fireCommandForAuctionMaster = fireCommandForAuctionMaster;
     $scope.uploadDoc = uploadDoc;
+    
+    vm.auctionSearchFilter = {};
+    var dataToSend = {};
+    //pagination variables
+    var prevPage = 0;
+    vm.itemsPerPage = 50;
+    vm.currentPage = 1;
+    vm.totalItems = 0;
+    vm.maxSize = 6;
+    var first_id = null;
+    var last_id = null;
     
     vm.auctionProduct = {};
     vm.addAssetInAuction = addAssetInAuction;
@@ -87,8 +99,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
       if(files.length == 0)
         return;
 
-      uploadSvc.upload(files[0], manpowerDir).then(function(result){
-        vm.auctionData.docDir = result.data.assetDir;
+      uploadSvc.upload(files[0], auctionDir).then(function(result){
+        //vm.auctionData.docDir = result.data.assetDir;
         vm.auctionData.docName = result.data.filename;
         });
         
@@ -114,7 +126,9 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     			loadAllLocation();
     		break;
     		case 'date':
-    			getAuctionMaster();
+			dataToSend.pagination = true;
+			dataToSend.itemsPerPage = vm.itemsPerPage;
+			getAuctionMaster(dataToSend);
     			loadAuctionData();
 				loadAllCategory();
 				getApprovedAuctionAsset()
@@ -504,38 +518,6 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		return name;
 	}
 
-	//Auction date master
-	/*function toggleMode() {
-       $scope.isShow = ! $scope.isShow;
-    };
-
-    $scope.changed = function (mytime, type) {
-      if(mytime) {
-        var hours = mytime.getHours();
-        var minutes = mytime.getMinutes();
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-
-        switch(type){
-    		case 'auction_start_time':
-    			 vm.auctionData.startTime = hours + ':' + minutes + ' ' + ampm;
-    		break;
-    		case 'auction_end_time':
-    			vm.auctionData.endTime = hours + ':' + minutes + ' ' + ampm;
-    		break;
-    		case 'inspection_start_time':
-    			vm.auctionData.insStartTime = hours + ':' + minutes + ' ' + ampm;
-    		break;
-    		case 'inspection_end_time':
-    			vm.auctionData.insEndTime = hours + ':' + minutes + ' ' + ampm;
-    		break;
-    	}
-        
-      }
-    };*/
-
 	function saveAuctionMaster(form){
 		
 		if(form.$invalid){
@@ -543,22 +525,20 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			return;
 		}
 		$scope.submitted = false;
+		if(vm.auctionData.city)
+			vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
 		AuctionMasterSvc.saveAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
 				vm.auctionData = {};
-				//getAllManufacturer();
+				loadAuctionData();
+				fireCommandForAuctionMaster(true);
 			}
 			else
 				Modal.alert(res.message);
 		})
 
 	}
-
-	function onLocationChange(city){
-      vm.auctionData.state = LocationSvc.getStateByCity(city);
-    }
-
 	function updateAuctionMaster(form){
 		if(form.$invalid){
 			$scope.submitted = true;
@@ -570,7 +550,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			if(res.errorCode == 0){
 				vm.auctionData = {};
 				vm.auctionEdit = false;
-				//getAllManufacturer();
+				loadAuctionData();
+				fireCommandForAuctionMaster(true);
 			}
 			else
 				Modal.alert(res.message);
@@ -581,16 +562,46 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		angular.copy(vm.auctions[index], vm.auctionData)
 		vm.auctionEdit = true;
 		$scope.isCollapsed = false;
-		//onServiceChange(vm.paymentMaster.serviceCode,true);
 	}
-
-	function getAuctionMaster(){
-		AuctionMasterSvc.get()
+	
+	function getAuctionMaster(filter){
+		filter.prevPage = prevPage;
+	    filter.currentPage = vm.currentPage;
+	    filter.first_id = first_id;
+	    filter.last_id = last_id;
+		AuctionMasterSvc.getFilterOnAuctionMaster(filter)
 		.then(function(result){
-			vm.auctions = result;
+			vm.auctions = result.items;
+	        vm.totalItems = result.totalItems;
+	        prevPage = vm.currentPage;
+	        if(vm.auctions.length > 0){
+	          first_id = vm.auctions[0]._id;
+	          last_id = vm.auctions[vm.auctions.length - 1]._id;
+	        }
 		});
 	}
 
+	function fireCommandForAuctionMaster(reset,filterObj){
+	    if(reset)
+	      resetPagination();
+	    var filter = {};
+	    if(!filterObj)
+	        angular.copy(dataToSend, filter);
+	    else
+	      filter = filterObj;
+	    if(vm.auctionSearchFilter.searchStr)
+	      filter['searchstr'] = vm.auctionSearchFilter.searchStr;
+	    
+	    getAuctionMaster(filter);
+	  }
+
+	function resetPagination(){
+      prevPage = 0;
+      vm.currentPage = 1;
+      vm.totalItems = 0;
+      first_id = null;
+      last_id = null;
+  	}
 
 	function loadAuctionData(){
 		PaymentMasterSvc.getAll()
@@ -630,7 +641,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	        if(res.errorCode)
 	        	Modal.alert(res.message,true);
 	        else
-	        	getAuctionMaster();	 
+	        	//getAuctionMaster();	 
+	        fireCommandForAuctionMaster(true);
 	      })
 	      .catch(function(res){
 	        $rootScope.loading = false;
@@ -654,7 +666,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	function submitDeleteAuctionMaster(idx){
 		AuctionMasterSvc.delAuctionMaster(vm.auctions[idx])
 		.then(function(result){
-			 getAuctionMaster();
+			//getAuctionMaster();
+			fireCommandForAuctionMaster(true);
 		})
     }
 

@@ -288,7 +288,7 @@ exports.exportAuction = function(req,res){
 
 //Auction master services
 
-// Creates a new vendor in the DB.
+// Creates a new AuctionMaster in the DB.
 exports.createAuctionMaster = function(req, res) {
   var filter = {}
   if(!req.body.auctionId)
@@ -309,6 +309,80 @@ exports.createAuctionMaster = function(req, res) {
     }
   })
   
+};
+
+// Creates a AuctionMaster in the DB.
+exports.updateAuctionMaster = function(req, res) {
+  var _id = req.body._id;
+  if(req.body._id) { delete req.body._id;}
+  //if(req.body.user) { delete req.body.user; }
+  req.body.updatedAt = new Date();
+  var filter = {}
+  if(!req.body.auctionId)
+    return res.status(401).send('Insufficient data');
+  if(_id)
+     filter['_id'] = {$ne:_id}; 
+  if(req.body.auctionId)
+    filter['auctionId'] = req.body.auctionId;
+  AuctionMaster.find(filter,function(err,auctionData){
+    if(err) return handleError(res, err); 
+    if(auctionData.length > 0){
+      return res.status(200).json({errorCode:1, message:"Auction Id already exist."});
+    } else {
+      AuctionMaster.update({_id:_id},{$set:req.body},function (err) {
+        if (err) {return handleError(res, err); }
+        return res.status(200).json({errorCode:0, message:"Success"});
+      });
+    }
+  });
+}
+
+//search AucyionMaster based on filter 
+exports.getFilterOnAuctionMaster = function(req, res) {
+  console.log("req.body.searchstr", req.body.searchstr);
+  var searchStrReg = new RegExp(req.body.searchstr, 'i');
+
+  var filter = {};
+  if(req.body._id)
+    filter["_id"] = req.body._id;
+  if(req.body.userId)
+    filter["user._id"] = req.body.userId;
+  if(req.body.mobile)
+    filter["user.mobile"] = req.body.mobile;
+  var arr = [];
+  if(req.body.searchstr){
+    arr[arr.length] = { name: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionId: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionOwner: { $regex: searchStrReg }};
+    arr[arr.length] = { city: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionAddr: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionType: { $regex: searchStrReg }};
+    arr[arr.length] = { docType: { $regex: searchStrReg }};
+    //arr[arr.length] = { regCharges: { $regex: searchStrReg }};
+    
+  }
+
+  if(arr.length > 0)
+    filter['$or'] = arr;
+
+  var result = {};
+  if(req.body.pagination){
+    Utility.paginatedResult(req,res,AuctionMaster,filter,{});
+    return;    
+  }
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
+
+  var query = AuctionMaster.find(filter).sort(sortObj); 
+  query.exec(
+               function (err, users) {
+                      if(err) { return handleError(res, err); }
+                      return res.status(200).json(users);
+               }
+  );
 };
 
 exports.getAuctionMaster = function(req,res){

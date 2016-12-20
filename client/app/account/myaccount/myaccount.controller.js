@@ -211,7 +211,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         $scope.docDir = vm.manpowerInfo.docDir;
       else
         $scope.docDir = manpowerDir;
-      uploadSvc.upload(files[0], $scope.docDir).then(function(result){
+      uploadSvc.upload(files[0], $scope.docDir, null, true).then(function(result){
       /*if(files[0].name.indexOf('.docx') == -1){
         Modal.alert('Please upload a valid file');
         return;
