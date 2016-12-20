@@ -1,7 +1,7 @@
 'use strict';
 
 var Model = require('../services/services.model');
-var APIError = require('../common/_error');
+var APIError = require('../../components/_error');
 var moment = require('moment');
 var json2xls = require('json2xls');
 
