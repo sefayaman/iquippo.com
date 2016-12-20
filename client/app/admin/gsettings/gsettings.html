@@ -475,7 +475,7 @@
 							<h4>Assets in Auction</h4>
 						</div>
 						<div class="col-sm-2">
-							<button class="btn btn-success btn-block" ng-click="isAssetCollapsed = !isAssetCollapsed">
+							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuction()">
 								<i class="fa " class="fa" ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New						   
 							</button>
 						</div>						
@@ -483,72 +483,78 @@
 					<legend></legend>
 
 					<div uib-collapse="isAssetCollapsed">
-				        <form class="assetAuctionForm" name="assetAuctionForm" >
+				        <form class="assetAuctionForm" name="assetAuctionForm" novalidate>
 						<div class="row">
-							<div class="col-sm-3 form-group">
-								<select class="form-control">
-									<option> Select Auction Id</option>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.auctionId.$invalid && submitted}">
+								<select class="form-control" name="auctionId" ng-model="gsettingVm.auctionProduct.dbAuctionId" required>
+									<option value=""> Select Auction Id</option>
+									<option ng-repeat="auct in gsettingVm.upcomingAuctions" value="{{auct._id}}">{{auct.auctionId}}({{auct.name}})</option>
 								</select>
 								<i class="caret"></i>
 							</div>
-							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Lot No*">
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.lotNo.$invalid && submitted}">
+								<input type="text" class="form-control" name="lotNo" placeholder="Lot No*" ng-model="gsettingVm.auctionProduct.lotNo" required>
 							</div>
 							<div class="col-sm-3 form-group">								
 								<span class="btn btn-warning fileinput-button">
 									<span>Browes Asset Image 1</span>
-									<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="files/*" class="ng-scope">
+									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,1)" accept="files/*" class="ng-scope">
 								</span>
 							</div>
 							<div class="col-sm-3 form-group">								
 								<span class="btn btn-warning fileinput-button">
 									<span>Browes Asset Image 2</span>
-									<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="files/*" class="ng-scope">
+									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,2)" accept="files/*" class="ng-scope">
 								</span>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Asset No*">
+								<!-- <input type="text" class="form-control" placeholder="Asset No*"> -->
 							</div>
-							<div class="col-sm-3 form-group">
-								<select class="form-control">
-									<option> Select Asset Category*</option>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.category.$invalid && submitted}">
+								<select class="form-control" name="category" ng-model="gsettingVm.auctionProduct.product.category" ng-change="gsettingVm.onCategoryChange(gsettingVm.auctionProduct.product.category,true)" required>
+									<option value=""> Select Category*</option>
+									<option ng-repeat="cat in gsettingVm.allCategory" value="{{cat.name}}">{{cat.name}}</option>
 								</select>
 								<i class="caret"></i>
 							</div>
-							<div class="col-sm-3 form-group">								
-								<select class="form-control">
-									<option> Select Brand*</option>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.brand.$invalid && submitted}">								
+								<select class="form-control" name="brand" ng-model="gsettingVm.auctionProduct.product.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.auctionProduct.product.brand,true)"required>
+									<option value=""> Select Brand*</option>
+									<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}">{{br.name}}</option>
 								</select>
 								<i class="caret"></i>
 							</div>
-							<div class="col-sm-3 form-group">								
-								<select class="form-control">
-									<option> Select Model*</option>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.model.$invalid && submitted}">								
+								<select class="form-control" name="model" ng-model="gsettingVm.auctionProduct.product.model" required>
+									<option value=""> Select Model*</option>
+									<option ng-repeat="md in gsettingVm.modelList" value="{{md.name}}">{{md.name}}</option>
 								</select>
 								<i class="caret"></i>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Asset Desc" />
+								<input type="text" class="form-control" placeholder="Asset Desc" ng-model="gsettingVm.auctionProduct.product.description"/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Invoice Date" />
+								<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invioceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Asset Registration No" />
+								<input type="text" class="form-control" placeholder="Asset Registration No" ng-model="gsettingVm.auctionProduct.product.registrationNo"/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Engine No" />
+								<input type="text" class="form-control" placeholder="Engine No" ng-model="gsettingVm.auctionProduct.product.engineNo"/>
 							</div>
 						</div>
 
 						<div class="row">
 							<div class="col-sm-3 form-group">								
-								<select class="form-control">
-									<option> Select Asset Location</option>
+								<select class="form-control" ng-model="gsettingVm.auctionProduct.product.city">
+									<option value=""> Select Asset Location</option>
+									<option value="{{loc.name}}" ng-repeat="loc in gsettingVm.locationList">{{loc.name}}</option>
+									
 								</select>
 								<i class="caret"></i>
 							</div>
@@ -556,30 +562,30 @@
 								<div>Original Invoice</div>
 								<div class="row">
 									<div class="col-sm-6">
-										<input type="radio" name="invoice" /> Yes
+										<input type="radio" name="invoice" value="Yes" ng-model="gsettingVm.auctionProduct.product.originalInvoice"/> Yes
 									</div>
 									<div class="col-sm-6">
-										<input type="radio" name="invoice" /> No
+										<input type="radio" name="invoice" value="No" ng-model="gsettingVm.auctionProduct.product.originalInvoice"/> No
 									</div>
 								</div>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="number" class="form-control" placeholder="VAT %" />
+								<input type="number" class="form-control" placeholder="VAT %" ng-model="gsettingVm.auctionProduct.product.vatPercentage"/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Contact Person" />
+								<input type="text" class="form-control" placeholder="Contact Person" ng-model="gsettingVm.auctionProduct.product.contactName"/>
 							</div>
 						</div>
 
 						<div class="row">
 							<div class="col-sm-3 form-group">
-								<input type="number" class="form-control" placeholder="Contact No" />
+								<input type="number" class="form-control" placeholder="Contact No" ng-model="gsettingVm.auctionProduct.product.contactNumber"/>
+							</div>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.assetId.$invalid && submitted}">
+								<input type="text" class="form-control" name="assetId" placeholder="Asset ID*" ng-model="gsettingVm.auctionProduct.product.assetId" required/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Asset ID*" />
-							</div>
-							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Product ID" />
+								<input type="text" class="form-control" placeholder="Product ID" ng-model="gsettingVm.auctionProduct.product.productId"/>
 							</div>							
 						</div>
 						<div class="row">
@@ -587,18 +593,18 @@
 								<div>Sold</div>
 								<div class="row">
 									<div class="col-sm-6">
-										<input type="radio" name="sold" /> Yes
+										<input type="radio" name="sold" ng-value="true" ng-model="gsettingVm.auctionProduct.product.isSold"/> Yes
 									</div>
 									<div class="col-sm-6">
-										<input type="radio" name="sold" /> No
+										<input type="radio" name="sold" ng-value="false" ng-model="gsettingVm.auctionProduct.product.isSold"/> No
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Sale Value" />
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.saleVal.$invalid && submitted}">
+								<input type="text" class="form-control" name="saleVal" placeholder="Sale Value" ng-model="gsettingVm.auctionProduct.product.saleVal" ng-required="gsettingVm.auctionProduct.product.isSold"/>
 							</div>
 							<div class="col-sm-2 pull-right">
-								<button class="btn btn-primary btn-block"> Save </button>
+								<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAssetInAuction(assetAuctionForm)">Save </button>
 							</div>
 						</div>
 						</form>
@@ -617,7 +623,8 @@
 				                <th>Image</th>
 				                <th>Auction id</th>
 				                <th>Lot no</th>
-				                <th>Asset no</th>
+				              	<th>Asset id</th>
+				                <th>Product id</th>
 				                <th>Asset category</th>
 				                <th>Brand</th>                                
 				                <th>Model</th>                                
@@ -630,35 +637,32 @@
 				                <th>VAT %</th>
 				                <th>Contact person</th>
 				                <th>Contact no</th>
-				                <th>Asset id</th>
-				                <th>Product id</th>
 				                <th>Sold</th>
 				                <th>Sale Value</th>
 				                <th width="50">Action</th>
 				               
 				              </thead>
 				              <tbody>
-				              <tr ng-repeat="auc in gsettingVm.auctions">
+				              <tr ng-repeat="auct in gsettingVm.assetsInAuction">
 				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
-				                <td></td>
+				                <td>{{auct.auctionId}}</td>
+				                <td>{{auct.lotNo}}</td>
+				                <td>{{auct.product.assetId}}</td>
+				                <td>{{auct.product.productId}}</td>
+				                <td>{{auct.product.category}}</td>
+				                <td>{{auct.product.brand}}</td>
+				                <td>{{auct.product.model}}</td>
+				                <td>{{auct.product.description}}</td>
+				                <td>{{auct.product.invoiceDate}}</td>
+				                <td>{{auct.product.registrationNo}}</td>
+				                <td>{{auct.product.engineNo}}</td>
+				                <td>{{auct.product.city}}</td>
+				                <td>{{auct.product.originalInvoice}}</td>
+				                <td>{{auct.product.vatPercentage}}</td>
+				                <td>{{auct.product.contactName}}</td>
+				                <td>{{auct.product.contactNumber}}</td>
+				                <td>{{auct.product.isSold?'Yes':'No'}}</td>
+				                <td>{{auct.product.saleVal}}</td>
 				                <td>										
 									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil"></i> </a>
 									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>

@@ -52,14 +52,12 @@ var storage = multer.diskStorage({
      var decodedFname = decodeURI(file.originalname);
     if(decodedFname.indexOf('%20') != -1)
       decodedFname = decodedFname.replace(/%20/g,'');
-   // var arr = decodeURI(file.originalname).split(".");
    var arr = decodedFname.split(".");
     var extPart = arr[arr.length - 1];
     arr.splice(arr.length - 1,1);
     var namePart = arr.join('_');
     var nameArr = namePart.split(" ");
     var fName = nameArr.join('_');
-    console.log(Math.floor(Math.random() * 100));
     cb(null, fName+"_"+Math.floor(Math.random() * 100) + "." + extPart);
   }
 });
@@ -68,10 +66,12 @@ var upload = multer({ storage: storage}).any();
 
 app.post('/api/uploads',function(req,res){
  var assetDir = req.query.assetDir;
+ var childDir = req.query.childDir;
   var resize = req.query.resize;
-  if(assetDir == 'manpower') {
+  if(childDir == 'y' && assetDir){
     assetDir = assetDir + "/" + new Date().getTime();
   }
+
   if(!assetDir)
     assetDir = new Date().getTime();
   var relativePath = config.uploadPath + assetDir +"/";

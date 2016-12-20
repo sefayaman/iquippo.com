@@ -87,6 +87,7 @@ var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
 var templateDir = "templates";
+var auctionDir = "auction"
 var tempDir = "temp";
 var newsEventsDir = "newsevents";
 var UPLOAD_TEMPLATE_KEY = "BULK_PRODUCT_UPLOAD_TEMPLATE";

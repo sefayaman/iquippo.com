@@ -333,47 +333,29 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
   }
 
  angular.module('admin').factory("AuctionMasterSvc",AuctionMasterSvc);
- function AuctionMasterSvc($http,$q){
+ function AuctionMasterSvc($http,$q,UtilSvc){
     var svc = {};
     var path = "/api/auction/auctionmaster"
-    var auctionMasterCache = [];
-    var latestActions = [];
-    svc.getAll = getAll;
+    svc.get = get;
     svc.delAuctionMaster = delAuctionMaster;
     svc.parseExcel = parseExcel;
-    svc.getLatestAuction = getLatestAuction;
     svc.getAuctionOwnerFilter = getAuctionOwnerFilter;
     svc.saveAuctionMaster = saveAuctionMaster;
     svc.updateAuctionMaster = updateAuctionMaster;
     
-    function getAll(){
-       var deferred = $q.defer();
-      if(auctionMasterCache.length > 0){
-        deferred.resolve(auctionMasterCache);
-      }else{
-        $http.get(path + "/getall")
-        .then(function(res){
-          auctionMasterCache = res.data;
-          var currentTime = new Date().getTime();
-          if(auctionMasterCache.length > 0){
-            var gpId = auctionMasterCache[0].groupId;
-            latestActions = [];
-            for(var i= 0;i< auctionMasterCache.length;i++){
-              if(gpId != auctionMasterCache[i].groupId)
-                  break;
-               var auctionStartTime = new Date(auctionMasterCache[i].startDate).getTime();
-               if(auctionStartTime > currentTime)
-                  latestActions[latestActions.length] = auctionMasterCache[i];
-            }
-          }
-          console.log("#############",latestActions)
-          deferred.resolve(res.data);
-        })
-        .catch(function(err){
-          deferred.reject(err);
-        })
-      }
-      return deferred.promise;
+    function get(filter){
+
+      var queryParam = UtilSvc.buildQueryParam(filter);
+      var locPath = path + "/get";
+      if(queryParam)
+        locPath += "?" + queryParam;
+     return $http.get(locPath)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
     }
 
     function saveAuctionMaster(data){
@@ -438,9 +420,6 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
           });
     }
 
-    function getLatestAuction(){
-      return latestActions;
-    }
     return svc;
  }
 

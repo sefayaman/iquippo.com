@@ -312,8 +312,11 @@ exports.createAuctionMaster = function(req, res) {
 };
 
 exports.getAuctionMaster = function(req,res){
-  console.log("inside");
-  var query = AuctionMaster.find({}).sort({createdAt:-1})
+  var filter = {};
+  var queryObj = req.query;
+  if(queryObj.yetToStartDate)
+    filter['startDate'] = {'$gt' : new Date(queryObj.yetToStartDate)}
+  var query = AuctionMaster.find(filter).sort({createdAt:-1})
    query.exec(function (err, auctions) {
       if(err) { console.log("err", err);
        return handleError(res, err); }

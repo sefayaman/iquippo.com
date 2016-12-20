@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc, ManufacturerSvc, BannerSvc) {
+function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc,brandSvc,modelSvc, ManufacturerSvc, BannerSvc,AuctionSvc) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'loc';
@@ -74,6 +74,15 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     vm.updateAuctionMaster = updateAuctionMaster;
     $scope.uploadDoc = uploadDoc;
     
+    vm.auctionProduct = {};
+    vm.addAssetInAuction = addAssetInAuction;
+    vm.saveAssetInAuction = saveAssetInAuction;
+    vm.editProductInAuction = editProductInAuction;
+    vm.deleteProductFromAuction = deleteProductFromAuction;
+    vm.onCategoryChange = onCategoryChange;
+    vm.onBrandChange = onBrandChange;
+    $scope.uploadImage = uploadImage;
+    
     function uploadDoc(files){
       if(files.length == 0)
         return;
@@ -107,6 +116,8 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     		case 'date':
     			getAuctionMaster();
     			loadAuctionData();
+				loadAllCategory();
+				getApprovedAuctionAsset()
     		break;
     		case 'inv':
     			getInvitationMasterData();
@@ -140,6 +151,43 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     	.then(function(result){
     		vm.locationList = result;
     	})
+    }
+
+    function loadAllCategory(){
+		categorySvc.getAllCategory()
+		.then(function(result){
+			vm.allCategory = result;
+		})
+    }
+
+    function onCategoryChange(catName,reset){
+    	vm.brandList = [];
+    	vm.modelList = [];
+    	if(reset){
+    		vm.auctionProduct.product.brand = "";
+    		vm.auctionProduct.product.model = "";
+    	}
+    	
+    	if(!catName)
+    		return;
+    	brandSvc.getBrandOnFilter({categoryName:catName})
+    	.then(function(result){
+    		vm.brandList = result;
+    	})
+
+    }
+
+    function onBrandChange(brandName,reset){
+    	vm.modelList = [];
+    	if(reset){
+    		vm.auctionProduct.product.model = "";
+    	}
+    	if(!brandName)
+    	return;
+    	modelSvc.getModelOnFilter({brandName:brandName})
+    	.then(function(result){
+    		vm.modelList = result;
+    	})	
     }
 
     /*function loadAllSubcategory(){
@@ -537,11 +585,12 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
 	}
 
 	function getAuctionMaster(){
-		AuctionMasterSvc.getAll()
+		AuctionMasterSvc.get()
 		.then(function(result){
 			vm.auctions = result;
 		});
 	}
+
 
 	function loadAuctionData(){
 		PaymentMasterSvc.getAll()
@@ -780,6 +829,104 @@ function GSettingCtrl($scope,$rootScope,DTOptionsBuilder,LocationSvc,SubCategory
     }
 /*Banner Master code end*/
 
+/*Auction Request for external product  start*/
+
+function getApprovedAuctionAsset(){
+	var filter = {};
+	filter['status'] = auctionStatuses[2].code;
+	AuctionSvc.getOnFilter()
+	.then(function(aucts){
+		vm.assetsInAuction = aucts;
+	})
+}
+
+function addAssetInAuction(){
+
+	$scope.isAssetCollapsed = !$scope.isAssetCollapsed;
+	vm.auctionProduct = {};
+	vm.brandList = [];
+	vm.modeList = [];
+	if(!$scope.isAssetCollapsed){
+		vm.auctionProduct.external = true;
+		vm.auctionProduct.user = {};
+		vm.auctionProduct.user._id = Auth.getCurrentUser()._id;
+		vm.auctionProduct.user.email = Auth.getCurrentUser().email;
+		vm.auctionProduct.user.mobile = Auth.getCurrentUser().mobile;
+		vm.auctionProduct.status = auctionStatuses[2].code;
+		vm.auctionProduct.statuses = [];
+		var stObj = {};
+		stObj.userId = Auth.getCurrentUser()._id;
+		stObj.status = auctionStatuses[2].code;
+		stObj.createdAt = new Date();
+		vm.auctionProduct.statuses[vm.auctionProduct.statuses.length] = stObj;
+		vm.auctionProduct.product = {};
+		vm.auctionProduct.product.originalInvoice = 'Yes';
+		vm.auctionProduct.product.isSold = true;
+		getUpcomingAuctions();
+	}
+	
+}
+
+function uploadImage(files,_this,param){
+	if(files.length == 0)
+		return;
+	 uploadSvc.upload(files[0], auctionDir,null,true).then(function(result){
+	 	vm.auctionProduct.product.assetDir = result.data.assetDir;
+	 	if(param == 1)
+	 		vm.auctionProduct.product.primaryImage = result.data.filename;
+	 	else if(param == 2){
+	 		if(!vm.auctionProduct.product.otherImages)
+	 			vm.auctionProduct.product.otherImages = [];
+			vm.auctionProduct.product.otherImages[vm.auctionProduct.product.otherImages.length] = result.data.filename;
+	 	}
+
+      });
+}
+
+function getUpcomingAuctions(){
+		var filter = {};
+		filter['yetToStartDate'] = new Date();
+		AuctionMasterSvc.get(filter)
+		.then(function(result){
+			vm.upcomingAuctions = result;
+		});	
+}
+
+function saveAssetInAuction(form){
+	
+	if(form.$invalid){
+		$scope.submitted = true;
+		return;
+	}
+
+	for(var i=0; i< vm.upcomingAuctions.length;i++){
+		if(vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId){
+			vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
+			vm.auctionProduct.startDate = vm.upcomingAuctions[i].startDate;
+			vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
+		}
+	}
+
+	AuctionSvc.save(vm.auctionProduct)
+	.then(function(){
+		$scope.submitted = false;
+		$scope.isAssetCollapsed = !$scope.isAssetCollapsed;
+	})
+	.catch(function(){
+		//error handling
+	});
+
+}
+
+function editProductInAuction(){
+
+}
+
+function deleteProductFromAuction(){
+
+}
+
+/*Auction Request for external product  end*/
 //date picker
 	$scope.today = function() {
 	vm.sDate = new Date();

@@ -12,6 +12,7 @@ var AuctionRequestSchema = new Schema({
   startDate:Date,
   endDate:Date,
   emdAmount : Number,
+  external:{type:Boolean,default:false},
   status:{type:String,default:"Request Submitted"},
   transactionId:String,
   valuation:{},

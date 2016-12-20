@@ -57,10 +57,12 @@ function youtube_parser(url){
 angular.module('sreizaoApp').
 factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
     var UploadFile = {};
-    UploadFile.upload = function(file,assetDir,resizeParam){
+    UploadFile.upload = function(file,assetDir,resizeParam,childDir){
       var uploadPath = '/api/uploads';
       if(assetDir)
         uploadPath += "?assetDir=" + assetDir;
+      if(assetDir && childDir)
+        uploadPath += "&childDir=y";
       if(resizeParam && resizeParam.resize){
         if(assetDir)
           uploadPath += "&";
@@ -133,6 +135,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.getCategoryHelp = getCategoryHelp;
   utilSvc.getLocationHelp = getLocationHelp;
   utilSvc.getLocations = getLocations;
+  utilSvc.buildQueryParam = buildQueryParam;
   
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -188,6 +191,18 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
          });
           }
       return locationArr.join(", ");
+    }
+
+    function buildQueryParam(filterObj){
+      var queryStr = "";
+      if(!filterObj)
+        return queryStr;
+      for( var prop in filterObj){
+        queryStr += prop + "=" + filterObj[prop];
+        queryStr += "&";
+      }
+      queryStr = queryStr.substr(0,queryStr.length - 1);
+      return queryStr;
     }
 
   return utilSvc;

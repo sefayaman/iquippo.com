@@ -35,16 +35,6 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         }) 
     }
 
-    function getOnFilter(data){
-     return $http.post(path + "/onfilter",data)
-        .then(function(res){
-          return res.data
-        })
-        .catch(function(err){
-          throw err
-        }) 
-    }
-
     function exportAuction(data){
      return $http.post(path + "/export",data)
         .then(function(res){

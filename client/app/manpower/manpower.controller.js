@@ -355,7 +355,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       if(files.length == 0)
         return;
 
-      uploadSvc.upload(files[0], manpowerDir).then(function(result){
+      uploadSvc.upload(files[0], manpowerDir,null,true).then(function(result){
         vm.manpower.docDir = result.data.assetDir;
         vm.manpower.resumeDoc = result.data.filename;
         });
