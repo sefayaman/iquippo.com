@@ -243,11 +243,11 @@
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
 				          			Auction Start Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Auction Start Date &amp; Time*" required/>
+				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" required/>
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
 				          			Auction End Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" date-format="MM/dd/yyyy hh:mm a"placeholder="Auction End Date &amp; Time*" required/>
+				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" required/>
 				          		</div>
 							</div>
 				          	<div class=" row">
@@ -316,7 +316,7 @@
 									</span>
 				          		</div>
 				          		<div class="col-sm-3 form-group">
-				          		<!-- file name -->
+				          		<span>{{gsettingVm.auctionData.docName}}</span>
 				          		</div>
 				          	</div>
 

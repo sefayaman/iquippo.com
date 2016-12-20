@@ -560,6 +560,12 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 
 	function editAuctionMaster(index){
 		angular.copy(vm.auctions[index], vm.auctionData)
+
+		vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
+		vm.auctionData.endDate = moment(vm.auctionData.endDate).format('MM/DD/YYYY hh:mm A');
+		vm.auctionData.insStartDate = moment(vm.auctionData.insStartDate).format('MM/DD/YYYY hh:mm A');
+		vm.auctionData.insEndDate = moment(vm.auctionData.insEndDate).format('MM/DD/YYYY hh:mm A');
+		vm.auctionData.regEndDate = moment(vm.auctionData.regEndDate).format('MM/DD/YYYY');
 		vm.auctionEdit = true;
 		$scope.isCollapsed = false;
 	}

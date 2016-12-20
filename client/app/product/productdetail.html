@@ -546,7 +546,7 @@
                     <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="buycontact.message" placeholder="Comments"></textarea>
                     </div>
-                    <button type="submit" ng-click="productDetailVm.sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Send Message</button>
+                    <button type="submit" ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Send Message</button>
                   </form>
 
 
@@ -597,7 +597,7 @@
                   <button type="button" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>              
                 </div>
                 <div class="form-group">
-                  <a class="btn btn-md btn-warning btn-block" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>           
+                  <a class="btn btn-md btn-warning btn-block" ng-if="currentProduct.assetStatus == 'listed'" ng-click="openDialog('getquote')" onClick="dataLayer.push(gaMasterObject.getaQuoteforAdditionalServices)">Get a Quote for Additional Services</a>           
                 </div>
               </div>
             </div>            
