@@ -243,11 +243,11 @@
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
 				          			Auction Start Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" required/>
+				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
 				          			Auction End Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" required/>
+				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
 				          		</div>
 							</div>
 				          	<div class=" row">
@@ -262,11 +262,11 @@
 				          		
 				          		<div class="col-sm-3 form-group">
 				          			Inspection Start Date &amp; Time
-				          			<input class="form-control" datetime-picker  name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" placeholder="Inspection Start Date" />
+				          			<input class="form-control" datetime-picker  name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date" />
 				          		</div>
 				          		<div class="col-sm-3 form-group">
 				          			Inspection End Date &amp; Time
-				          			<input class="form-control" datetime-picker name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" placeholder="Inspection End Date" />
+				          			<input class="form-control" datetime-picker name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date" />
 				          		</div>
 				          		<div class=" col-sm-3 form-group" >
 									Registration End Date
