@@ -77,23 +77,23 @@
                         <table class="table table-bordered">
                           <thead>
                             <tr class="success">
+                              <th>Auction ID</th>
                               <th>Asset ID</th>
-                              <th width="30%">Group</th>
+                              <th width="30%">city</th>
                               <th>Category</th>
                               <th>Brand</th>
                               <th>Model</th>
-                              <th>Variant</th>
                               <th width="10%">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr ng-repeat="prd in BulkUploadCtrl.products">
-                              <td>{{prd.product.asset_id}}</td>
-                              <td>{{prd.product.group}}</td>
+                              <td>{{prd.auction.auctionId}}</td>
+                              <td>{{prd.product.assetId}}</td>
+                              <td>{{prd.product.city}}</td>
                               <td>{{prd.product.category}}</td>
                               <td>{{prd.product.brand}}</td>
                               <td>{{prd.product.model}}</td>
-                              <td>{{prd.product.variant || ''}}</td>
                               <td> <!-- <a href="javascript:void(0);"  ng-click="bulkProduct.goToImageUpload(prd._id)" class="btn btn-primary btn-xs" uib-popover="Add images" popover-trigger="mouseenter">
                                   </i>Add Images
                                 </a> -->
