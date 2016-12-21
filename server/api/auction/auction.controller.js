@@ -116,14 +116,14 @@ exports.getOnFilter = function(req, res) {
 
 // Updates an existing auction in the DB.
 exports.update = function(req, res) {
-  
+
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
   AuctionRequest.find({"product.assetId":req.body.product.assetId}, function (err, auctions) {
     if (err) { return handleError(res, err); }
     if(auctions.length == 0){return res.status(404).send("Not Found.");}
     if(auctions.length > 1 || auctions[0]._id != req.params.id){
-      return res.status(201).json({errorCode:1,"Duplicate asset id found."});
+      return res.status(201).json({errorCode:1,message:"Duplicate asset id found."});
     }
       
      AuctionRequest.update({_id:req.params.id},{$set:req.body},function(err){
