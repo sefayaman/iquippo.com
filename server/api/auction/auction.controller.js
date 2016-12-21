@@ -385,12 +385,25 @@ exports.updateAuctionMaster = function(req, res) {
     } else {
       AuctionMaster.update({_id:_id},{$set:req.body},function (err) {
         if (err) {return handleError(res, err); }
+        updateAuctionRequest(req.body, _id);
         return res.status(200).json({errorCode:0, message:"Success"});
       });
     }
   });
 }
 
+function updateAuctionRequest(data, id) {
+  var dataToSet = {};
+  dataToSet.auctionId = data.auctionId;
+  dataToSet.startDate = data.startDate;
+  dataToSet.endDate = data.endDate;
+  AuctionRequest.update({dbAuctionId:id}, {$set:dataToSet}, {multi: true} , function(err, product) {
+    if(err) { 
+      console.log("Error with updating auction request"); 
+    }
+    console.log("Auction Request Updated");
+  });
+}
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
 
