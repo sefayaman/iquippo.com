@@ -82,10 +82,21 @@ exports.getOnFilter = function(req, res) {
      orFilter[orFilter.length] = {"product.name":{$regex:term}};
      orFilter[orFilter.length] = {"product.assetId":{$regex:term}};
      orFilter[orFilter.length] = {"product.productId":{$regex:term}};
+     orFilter[orFilter.length] = {"product.description":{$regex:term}};
+     orFilter[orFilter.length] = {"product.category":{$regex:term}};
+     orFilter[orFilter.length] = {"product.brand":{$regex:term}};
+     orFilter[orFilter.length] = {"product.model":{$regex:term}};
+     orFilter[orFilter.length] = {"product.engineNo":{$regex:term}};
+     orFilter[orFilter.length] = {"product.registrationNo":{$regex:term}};
+     orFilter[orFilter.length] = {"product.invoiceDate":{$regex:term}};
+     orFilter[orFilter.length] = {"product.originalInvoice":{$regex:term}};
+     orFilter[orFilter.length] = {"product.contactNumber":{$regex:term}};
+     orFilter[orFilter.length] = {"product.contactName":{$regex:term}};
      orFilter[orFilter.length] = {auctionId:{$regex:term}};
+     orFilter[orFilter.length] = {lotNo:{$regex:term}};
      orFilter[orFilter.length] = {status:{$regex:term}};
      orFilter[orFilter.length] = {"valuation.status":{$regex:term}};
-      orFilter[orFilter.length] = {"seller.name":{$regex:term}};
+     orFilter[orFilter.length] = {"seller.name":{$regex:term}};
   }
 
   if(orFilter.length > 0){
@@ -100,11 +111,16 @@ exports.getOnFilter = function(req, res) {
       filter["valuation._id"] = req.body.valuationId;
    if(req.body.tid)
     filter["transactionId"] = req.body.tid;
+   if(req.body.status)
+    filter["status"] = req.body.status;
+   if(req.body.external)
+    filter["external"] = req.body.external == 'y'?true:false;
 
   if(req.body.pagination){
     Utility.paginatedResult(req,res,AuctionRequest,filter,{});
     return;
   }
+
   var query = AuctionRequest.find(filter);
   query.exec(
                function (err, auctions) {
@@ -125,7 +141,6 @@ exports.update = function(req, res) {
     if(auctions.length > 1 || auctions[0]._id != req.params.id){
       return res.status(201).json({errorCode:1,message:"Duplicate asset id found."});
     }
-      
      AuctionRequest.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json(req.body);
@@ -378,8 +393,8 @@ exports.updateAuctionMaster = function(req, res) {
 
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
-  console.log("req.body.searchstr", req.body.searchstr);
-  var searchStrReg = new RegExp(req.body.searchstr, 'i');
+
+  var searchStrReg = new RegExp(req.body.searchStr, 'i');
 
   var filter = {};
   if(req.body._id)
@@ -389,7 +404,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if(req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
   var arr = [];
-  if(req.body.searchstr){
+  if(req.body.searchStr){
     arr[arr.length] = { name: { $regex: searchStrReg }};
     arr[arr.length] = { auctionId: { $regex: searchStrReg }};
     arr[arr.length] = { auctionOwner: { $regex: searchStrReg }};

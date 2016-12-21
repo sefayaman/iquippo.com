@@ -333,7 +333,7 @@
 				          <div class="row">
 				          	<div class="col-sm-3 pull-right">
 			                    <div class="tablesearch text-right form-group">
-			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.auctionSearchFilter.searchStr" ng-change="gsettingVm.fireCommandForAuctionMaster(true)" ng-model-options="{debounce:500}">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'auctionmaster')" ng-model-options="{debounce:500}">
 			                    </div>
 			                 </div>
 				          </div>
@@ -385,7 +385,7 @@
 				              </tbody>
 				            </table>
 				        </div>
-				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommandForAuctionMaster()" class="pagination-sm" rotate="false">  </uib-pagination>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
 				</uib-tab>
 				<uib-tab heading="Assets in Auction">
 					<div class="row">
@@ -457,7 +457,7 @@
 								<input type="text" class="form-control" placeholder="Asset Desc" ng-model="gsettingVm.auctionProduct.product.description"/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invioceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+								<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invoiceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
 							</div>
 							<div class="col-sm-3 form-group">
 								<input type="text" class="form-control" placeholder="Asset Registration No" ng-model="gsettingVm.auctionProduct.product.registrationNo"/>
@@ -531,7 +531,7 @@
 						<div class="row">
 				          	<div class="col-sm-3 pull-right">
 			                    <div class="tablesearch text-right form-group">
-			                       Search: <input type="text" placeholder="Search..." ng-model="spareListingVm.spareSearchFilter.searchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'auctionrequest')" ng-model-options="{debounce:500}">
 			                    </div>
 			                 </div>
 				          </div>
@@ -590,7 +590,7 @@
 				              </tbody>
 				            </table>
 				        </div>
-				        <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionrequest')" class="pagination-sm" rotate="false">  </uib-pagination>
 
 				</uib-tab>
     		
