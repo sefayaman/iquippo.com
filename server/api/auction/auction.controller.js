@@ -1,13 +1,16 @@
 'use strict';
 
 var _ = require('lodash');
+var Seq = require("seq");
 var AuctionRequest = require('./auction.model');
 var AuctionMaster = require('./auctionmaster.model');
 
 var  xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
+var ApiError = require('./../../components/_error.js');
 var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
+var Product = require('./../product/product.model');
 // Get list of auctions
 exports.getAll = function(req, res) {
   AuctionRequest.find(function (err, auctions) {
@@ -26,13 +29,45 @@ exports.getOnId = function(req, res) {
 };
 
 // Creates a new valuation in the DB.
-exports.create = function(req, res) {
-  console.log("buyer created");
-  req.body.createdAt = new Date();
-  req.body.updatedAt = new Date();
-  AuctionRequest.create(req.body, function(err, auction) {
-        return res.status(201).json(auction);
-  });
+exports.create = function(req, res,next) {
+  
+  var assetIdExist = false;
+  if(!req.body.product.assetId)
+    return next(new ApiError(400,"Asset Id is mandatory"));
+
+  Seq()
+  .par(function(){
+    var self = this;
+    Product.find({assetId:req.body.product.assetId},function(err,prds){
+      if(err){return self(err)}
+      if(prds.length > 0){assetIdExist = true;}
+      self();
+
+    });
+  })
+  .par(function(){
+    var self = this;
+    AuctionRequest.find({"product.assetId":req.body.product.assetId},function(err,acts){
+      if(err){self(err)}
+      if(acts.length > 0){assetIdExist = true;}
+      self();
+    });
+  })
+  .seq(function(){
+
+    if(assetIdExist)
+      return res.status(201).json({errorCode:1,message:"Duplicate asset id found."});
+    req.body.createdAt = new Date();
+    req.body.updatedAt = new Date();
+    AuctionRequest.create(req.body, function(err, auction) {
+          return res.status(201).json({errorCode:0,message:"Success."});;
+    });
+
+  })
+  .catch(function(err){
+    return handleError(res, err);
+  })
+  
 };
 
 //search based on filter
@@ -71,7 +106,6 @@ exports.getOnFilter = function(req, res) {
     return;
   }
   var query = AuctionRequest.find(filter);
-  console.log("filetr ",filter);
   query.exec(
                function (err, auctions) {
                       if(err) { return handleError(res, err); }
@@ -82,11 +116,16 @@ exports.getOnFilter = function(req, res) {
 
 // Updates an existing auction in the DB.
 exports.update = function(req, res) {
+  
   if(req.body._id) { delete req.body._id; }
   req.body.updatedAt = new Date();
-  AuctionRequest.findById(req.params.id, function (err, auction) {
+  AuctionRequest.find({"product.assetId":req.body.product.assetId}, function (err, auctions) {
     if (err) { return handleError(res, err); }
-    if(!auction) { return res.status(404).send('Not Found'); }
+    if(auctions.length == 0){return res.status(404).send("Not Found.");}
+    if(auctions.length > 1 || auctions[0]._id != req.params.id){
+      return res.status(201).json({errorCode:1,"Duplicate asset id found."});
+    }
+      
      AuctionRequest.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json(req.body);

@@ -87,10 +87,11 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     var last_id = null;
     
     vm.auctionProduct = {};
-    vm.addAssetInAuction = addAssetInAuction;
+    vm.addAssetInAuctionClicked = addAssetInAuctionClicked;
+    vm.editAssetInAuctionClicked = editAssetInAuctionClicked;
     vm.saveAssetInAuction = saveAssetInAuction;
-    vm.editProductInAuction = editProductInAuction;
-    vm.deleteProductFromAuction = deleteProductFromAuction;
+    vm.updateAssetInAuction = updateAssetInAuction;
+    vm.deleteAssetFromAuction = deleteAssetFromAuction;
     vm.onCategoryChange = onCategoryChange;
     vm.onBrandChange = onBrandChange;
     $scope.uploadImage = uploadImage;
@@ -859,8 +860,8 @@ function getApprovedAuctionAsset(){
 	})
 }
 
-function addAssetInAuction(){
-
+function addAssetInAuctionClicked(){
+	$scope.isEdit = false;
 	$scope.isAssetCollapsed = !$scope.isAssetCollapsed;
 	vm.auctionProduct = {};
 	vm.brandList = [];
@@ -927,21 +928,56 @@ function saveAssetInAuction(form){
 	}
 
 	AuctionSvc.save(vm.auctionProduct)
-	.then(function(){
-		$scope.submitted = false;
-		$scope.isAssetCollapsed = !$scope.isAssetCollapsed;
+	.then(function(result){
+		if(!result.errorCode){
+			$scope.submitted = false;
+			$scope.isAssetCollapsed = !$scope.isAssetCollapsed;
+			getApprovedAuctionAsset();
+		}else
+			Modal.alert(result.message);
+		
 	})
-	.catch(function(){
+	.catch(function(err){
+		console.log(err);
 		//error handling
 	});
 
 }
 
-function editProductInAuction(){
+function editAssetInAuctionClicked(assetInAuct){
+	$scope.isEdit = true;
+	$scope.isAssetCollapsed = false;
+	vm.auctionProduct = {};
+	getUpcomingAuctions(); 
+	angular.copy(assetInAuct,vm.auctionProduct);
+	onCategoryChange(vm.auctionProduct.product.category,false);
+	onBrandChange(vm.auctionProduct.product.brand,false);
+}
+
+function updateAssetInAuction(form){
+	if(form.$invalid){
+		$scope.submitted = true;
+		return;
+	}
+
+	AuctionSvc.update(vm.auctionProduct)
+	.then(function(result){
+		if(!result.errorCode){
+			$scope.submitted = false;
+			$scope.isAssetCollapsed = true;
+			getApprovedAuctionAsset();
+		}else
+			Modal.alert(result.message);
+		
+	})
+	.catch(function(err){
+		console.log(err);
+		//error handling
+	});
 
 }
 
-function deleteProductFromAuction(){
+function deleteAssetFromAuction(){
 
 }
 

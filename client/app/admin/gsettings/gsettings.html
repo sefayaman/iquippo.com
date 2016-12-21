@@ -393,7 +393,7 @@
 							<h4>Assets in Auction</h4>
 						</div>
 						<div class="col-sm-2">
-							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuction()">
+							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuctionClicked()">
 								<i class="fa " class="fa" ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New						   
 							</button>
 						</div>						
@@ -521,8 +521,11 @@
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.saleVal.$invalid && submitted}">
 								<input type="text" class="form-control" name="saleVal" placeholder="Sale Value" ng-model="gsettingVm.auctionProduct.product.saleVal" ng-required="gsettingVm.auctionProduct.product.isSold"/>
 							</div>
-							<div class="col-sm-2 pull-right">
+							<div class="col-sm-2 pull-right" ng-if="!isEdit">
 								<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAssetInAuction(assetAuctionForm)">Save </button>
+							</div>
+							<div class="col-sm-2 pull-right" ng-if="isEdit">
+								<button class="btn btn-primary btn-block" ng-click="gsettingVm.updateAssetInAuction(assetAuctionForm)">Update </button>
 							</div>
 						</div>
 						</form>
@@ -582,8 +585,8 @@
 				                <td>{{auct.product.isSold?'Yes':'No'}}</td>
 				                <td>{{auct.product.saleVal}}</td>
 				                <td>										
-									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil"></i> </a>
-									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil" ng-click="gsettingVm.editAssetInAuctionClicked(auct)"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct._id)"><i class="fa fa-trash"></i> </a>
 				                </td>
 				               </tr>
 				              </tbody>
