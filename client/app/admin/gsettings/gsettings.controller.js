@@ -80,7 +80,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 
     //pagination variables
     var prevPage = 0;
-    vm.itemsPerPage = 1;
+    vm.itemsPerPage = 50;
     vm.currentPage = 1;
     vm.totalItems = 0;
     vm.maxSize = 6;
@@ -895,7 +895,7 @@ function uploadImage(files,_this,param){
 	 uploadSvc.upload(files[0], auctionDir,null,true).then(function(result){
 	 	vm.auctionProduct.product.assetDir = result.data.assetDir;
 	 	if(param == 1)
-	 		vm.auctionProduct.product.primaryImage = result.data.filename;
+	 		vm.auctionProduct.product.primaryImg = result.data.filename;
 	 	else if(param == 2){
 	 		if(!vm.auctionProduct.product.otherImages)
 	 			vm.auctionProduct.product.otherImages = [];
@@ -920,7 +920,11 @@ function saveAssetInAuction(form){
 		$scope.submitted = true;
 		return;
 	}
-
+	var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0?true:false;
+	if(!imgFound){
+		Modal.alert("Please upload both images.");
+		return;
+	}
 	for(var i=0; i< vm.upcomingAuctions.length;i++){
 		if(vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId){
 			vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
@@ -961,6 +965,11 @@ function updateAssetInAuction(form){
 		$scope.submitted = true;
 		return;
 	}
+	var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0?true:false;
+	if(!imgFound){
+		Modal.alert("Please upload both images.");
+		return;
+	}
 
 	for(var i=0; i< vm.upcomingAuctions.length;i++){
 		if(vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId){
@@ -987,10 +996,21 @@ function updateAssetInAuction(form){
 
 }
 
-function deleteAssetFromAuction(){
-
+function deleteAssetFromAuction(auct){
+	if(!auct)
+		return;
+	Modal.confirm('Would you want to delete?.',function(ret){
+		if(ret == 'yes')
+			deleteFn(auct);
+	});
 }
 
+function deleteFn(auct){
+	AuctionSvc.delAuction(auct)
+	.then(function(res){
+		fireCommand(true,null,'auctionrequest');
+	});
+}
 /*Auction Request for external product  end*/
 
 	function fireCommand(reset,filterObj,requestFor){

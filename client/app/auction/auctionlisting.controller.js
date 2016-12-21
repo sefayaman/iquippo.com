@@ -27,7 +27,7 @@ function AuctionListingCtrl($scope,Modal,Auth,AuctionSvc,UtilSvc) {
  var selectedIds = [];
 
  var initFilter = {};
- initFilter['external'] = 'y';
+ initFilter['external'] = 'n';
 
  function init(){
  	Auth.isLoggedInAsync(function(loggedIn){
