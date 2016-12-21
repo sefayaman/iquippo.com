@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./common.controller');
+var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 
 var router = express.Router();
 
@@ -54,5 +55,10 @@ router.post('/banner', controller.createBanner);
 router.put('/banner/:id', controller.updateBanner);
 router.delete('/banner/:id', controller.deleteBanner);
 router.post('/banner/onfilter', controller.getBannerOnFilter);
+
+
+//Bulk Upload Routes
+router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.renderJson);
+router.post('/bulkupload/request/delete',bulkUploadCtrl.delete)
 
 module.exports = router;

@@ -21,4 +21,6 @@ router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
 
+router.post('/upload/excel',controller.bulkUpload);
+
 module.exports = router;

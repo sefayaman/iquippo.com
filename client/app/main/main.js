@@ -29,6 +29,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+       .state('bulkupload', {
+        url: '/bulkupload',
+        templateUrl: 'app/bulkupload/bulkupload.html',
+        controller: 'BulkUploadCtrl as BulkUploadCtrl',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('callback', {
         url: '/callback',
         templateUrl: 'app/callback/callback.html',

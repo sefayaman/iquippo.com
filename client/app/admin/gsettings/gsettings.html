@@ -389,14 +389,18 @@
 				</uib-tab>
 				<uib-tab heading="Assets in Auction">
 					<div class="row">
-						<div class="col-sm-10">
+						<div class="col-sm-8">
 							<h4>Assets in Auction</h4>
 						</div>
 						<div class="col-sm-2">
 							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuctionClicked()">
 								<i class="fa "  ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New					   
 							</button>
-						</div>						
+						</div>
+
+						<span class="col-sm-2" >
+              <a href="/bulkupload?type=auction" class="btn btn-success"><i class="fa fa-database"></i> Bulk Auction Upload</a>
+                   </span>						
 					</div>
 					<legend></legend>
 
