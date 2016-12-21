@@ -9,6 +9,7 @@ var AuctionMasterSchema = new Schema({
 	auctionId:String,
 	endDate:Date,
 	auctionOwner: String,
+	auctionOwnerMobile:String,
 	insStartDate: Date,
 	insEndDate: Date,
 	regEndDate: Date,

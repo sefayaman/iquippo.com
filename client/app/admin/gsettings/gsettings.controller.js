@@ -526,8 +526,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			return;
 		}
 		$scope.submitted = false;
-		if(vm.auctionData.city)
-			vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
+		getChangeAuctionMasterData();
 		AuctionMasterSvc.saveAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
@@ -546,6 +545,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			return;
 		}
 		$scope.submitted = false;
+		getChangeAuctionMasterData();
 		AuctionMasterSvc.updateAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
@@ -557,6 +557,15 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			else
 				Modal.alert(res.message);
 		})
+	}
+
+	function getChangeAuctionMasterData(){
+		vm.auctionOwnerLists.forEach(function(item){
+            if(item.user.mobile == vm.auctionData.auctionOwnerMobile)
+              vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
+        });
+		if(vm.auctionData.city)
+			vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
 	}
 
 	function editAuctionMaster(index){

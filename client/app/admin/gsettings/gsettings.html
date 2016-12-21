@@ -253,9 +253,9 @@
 				          	<div class=" row">
 				          		<div class="col-sm-3">
 				          			Auction Owner
-					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwner" >
+					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" >
 				                	<option value="">Select Owner</option>
-				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.fname}}">{{svc.user.fname}} ( {{svc.user.mobile}} )</option>
+				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.mobile}}">{{svc.user.fname}} ( {{svc.user.mobile}} )</option>
 				                </select>
 				                <!-- <i class="caret"></i> -->
 				          		</div>
