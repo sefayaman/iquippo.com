@@ -355,7 +355,7 @@
 				                <th>Auction type</th>
 				                <th>Registration charges for auction</th>
 				                <th>Document attachment type</th>
-				                <th width="10%">Action</th>
+				                <th class="col-xs-2 col-sm-1">Action</th>
 				               
 				              </thead>
 				              <tbody>
@@ -393,8 +393,8 @@
 							<h4>Assets in Auction</h4>
 						</div>
 						<div class="col-sm-2">
-							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuctionClicked()">
-								<i class="fa " class="fa" ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New						   
+							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuction()">
+								<i class="fa " ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New						   
 							</button>
 						</div>						
 					</div>
@@ -427,8 +427,8 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-3 form-group">
-								<!-- <input type="text" class="form-control" placeholder="Asset No*"> -->
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.assetId.$invalid && submitted}">
+								<input type="text" class="form-control" name="assetId" placeholder="Asset ID*" ng-model="gsettingVm.auctionProduct.product.assetId" required/>
 							</div>
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.category.$invalid && submitted}">
 								<select class="form-control" name="category" ng-model="gsettingVm.auctionProduct.product.category" ng-change="gsettingVm.onCategoryChange(gsettingVm.auctionProduct.product.category,true)" required>
@@ -499,14 +499,10 @@
 							<div class="col-sm-3 form-group">
 								<input type="number" class="form-control" placeholder="Contact No" ng-model="gsettingVm.auctionProduct.product.contactNumber"/>
 							</div>
-							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.assetId.$invalid && submitted}">
-								<input type="text" class="form-control" name="assetId" placeholder="Asset ID*" ng-model="gsettingVm.auctionProduct.product.assetId" required/>
-							</div>
+							
 							<div class="col-sm-3 form-group">
 								<input type="text" class="form-control" placeholder="Product ID" ng-model="gsettingVm.auctionProduct.product.productId"/>
-							</div>							
-						</div>
-						<div class="row">
+							</div>
 							<div class="col-sm-3 form-group">
 								<div>Sold</div>
 								<div class="row">
@@ -520,12 +516,11 @@
 							</div>
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.saleVal.$invalid && submitted}">
 								<input type="text" class="form-control" name="saleVal" placeholder="Sale Value" ng-model="gsettingVm.auctionProduct.product.saleVal" ng-required="gsettingVm.auctionProduct.product.isSold"/>
-							</div>
-							<div class="col-sm-2 pull-right" ng-if="!isEdit">
+							</div>							
+						</div>
+						<div class="row form-group">							
+							<div class="col-sm-2 pull-right">
 								<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAssetInAuction(assetAuctionForm)">Save </button>
-							</div>
-							<div class="col-sm-2 pull-right" ng-if="isEdit">
-								<button class="btn btn-primary btn-block" ng-click="gsettingVm.updateAssetInAuction(assetAuctionForm)">Update </button>
 							</div>
 						</div>
 						</form>
@@ -560,7 +555,7 @@
 				                <th>Contact no</th>
 				                <th>Sold</th>
 				                <th>Sale Value</th>
-				                <th width="50">Action</th>
+				                <th class="col-xs-2 col-sm-1">Action</th>
 				               
 				              </thead>
 				              <tbody>
@@ -585,8 +580,8 @@
 				                <td>{{auct.product.isSold?'Yes':'No'}}</td>
 				                <td>{{auct.product.saleVal}}</td>
 				                <td>										
-									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil" ng-click="gsettingVm.editAssetInAuctionClicked(auct)"></i> </a>
-									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct._id)"><i class="fa fa-trash"></i> </a>
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
 				                </td>
 				               </tr>
 				              </tbody>
