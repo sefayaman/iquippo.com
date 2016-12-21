@@ -828,7 +828,7 @@ exports.deleteAuctionMaster = function(req, res) {
     if (!auctionData) {
       return res.status(404).send('Payment master Found');
     }
-    auctionData.remove(function(err) {
+    AuctionMaster.remove(function(err) {
       if (err) {
         return handleError(res, err);
       }

@@ -581,6 +581,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	}
 	
 	function getAuctionMaster(filter){
+		filter = filter || {};
 		filter.prevPage = prevPage;
 	    filter.currentPage = vm.currentPage;
 	    filter.first_id = first_id;
@@ -590,7 +591,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			vm.auctions = result.items;
 	        vm.totalItems = result.totalItems;
 	        prevPage = vm.currentPage;
-	        if(vm.auctions.length > 0){
+	        if(vm.auctions && vm.auctions.length > 0){
 	          first_id = vm.auctions[0]._id;
 	          last_id = vm.auctions[vm.auctions.length - 1]._id;
 	        }
@@ -682,7 +683,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	function submitDeleteAuctionMaster(idx){
 		AuctionMasterSvc.delAuctionMaster(vm.auctions[idx])
 		.then(function(result){
-			//getAuctionMaster();
+			getAuctionMaster();
 			fireCommandForAuctionMaster(true);
 		})
     }

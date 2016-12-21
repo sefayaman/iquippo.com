@@ -137,12 +137,13 @@ function _insertAuctionData(uploadData, cb) {
 		})
 	}
 
-	function finalize(err) {
+function finalize(err) {
 		if (err) {
 			util.log(err);
 			return cb(err);
 		}
 
+		var response = {};
 		if (insertData.length) {
 			Model.create(insertData, function(err, response) {
 				if (err) {
@@ -150,7 +151,7 @@ function _insertAuctionData(uploadData, cb) {
 					return cb(errObj);
 				}
 
-				var response = {
+				response = {
 					errObj: errObj,
 					successObj: insertData.length,
 					duplicateRecords: duplicateRecords
@@ -158,6 +159,14 @@ function _insertAuctionData(uploadData, cb) {
 
 				return cb(null, response);
 			});
+		} else {
+			response = {
+				errObj: errObj,
+				successObj: 0,
+				duplicateRecords: duplicateRecords
+			};
+
+			return cb(null, response);
 		}
 	}
 }
