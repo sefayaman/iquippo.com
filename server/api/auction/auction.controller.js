@@ -106,7 +106,7 @@ function validateData(data) {
   var missingParams = [];
   var nonNumericParams = [];
   manadatoryParams.forEach(function(x) {
-    if (!data[x] || !data.product[x])
+    if (!data[x] || (data.product && !data.product[x]))
       missingParams.push(x);
   });
 
