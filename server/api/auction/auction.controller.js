@@ -17,6 +17,7 @@ var APIError = require('../../components/_error');
 var async = require('async');
 var debug = require('debug')('api.auction');
 var uploadReqCtrl = require('../common/uploadrequest/uploadrequest.controller');
+var moment = require('moment');
 
 exports.getAll = function(req, res) {
   AuctionRequest.find(function(err, auctions) {
@@ -1040,8 +1041,17 @@ function importAuctionMaster(req, res, data) {
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
     auctionData.name = data[req.counter]['Auction_Name'];
-    auctionData.startDate = new Date(data[req.counter]['Auction_Start_Date']);
-    auctionData.endDate = new Date(data[req.counter]['Auction_End_Date']);
+
+    auctionData.startDate = moment(data[req.counter]['Auction_Start_Date']);
+    var startTime = data[req.counter]['Auction_Start_Time'];
+    if(startTime &&  moment(data[req.counter]['Auction_Start_Date'] + ' ' + startTime) != 'Invalid Date')
+      auctionData.startDate = moment(data[req.counter]['Auction_Start_Date'] + ' ' + startTime).format();
+    debugger;
+    auctionData.endDate = moment(data[req.counter]['Auction_End_Date']);
+    var endTime = data[req.counter]['Auction_End_Time'];
+    if(endTime && moment(data[req.counter]['Auction_End_Date'] + ' ' + endTime) != 'Invalid Date')
+      auctionData.endDate = moment(data[req.counter]['Auction_End_Date'] + ' ' + endTime).format();
+    debugger;
     auctionData.auctionId = data[req.counter]['Auction_ID'];
     auctionData.groupId = req.groupId;
     AuctionMaster.find({
