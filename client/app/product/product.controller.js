@@ -623,10 +623,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
     $scope.tabObj.step1 = false;
     $scope.tabObj.step2 = true;
-
-    AuctionMasterSvc.getAll()
-    .then(function(res){
-      $scope.auctions = AuctionMasterSvc.getLatestAuction();
+    var filter = {};
+    filter['yetToStartDate'] = new Date();
+    AuctionMasterSvc.get(filter)
+    .then(function(aucts){
+      $scope.auctions = aucts;
     });
 
     $scope.auctionReq.valuationReport = checkValuationReport();

@@ -270,46 +270,31 @@ exports.bulkUpload = function(req, res, next) {
 exports.getOnFilter = function(req, res) {
 
   var filter = {};
-  var orFilter = [];
 
-  if (req.body.searchStr) {
+   var orFilter = [];
+  
+  if(req.body.searchStr){
 
-    var term = new RegExp(req.body.searchStr, 'i');
-    orFilter[orFilter.length] = {
-      "product.name": {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      "product.assetId": {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      "product.productId": {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      auctionId: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      status: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      "valuation.status": {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      "seller.name": {
-        $regex: term
-      }
-    };
+     var term = new RegExp(req.body.searchStr, 'i');
+     orFilter[orFilter.length] = {"product.name":{$regex:term}};
+     orFilter[orFilter.length] = {"product.assetId":{$regex:term}};
+     orFilter[orFilter.length] = {"product.productId":{$regex:term}};
+     orFilter[orFilter.length] = {"product.description":{$regex:term}};
+     orFilter[orFilter.length] = {"product.category":{$regex:term}};
+     orFilter[orFilter.length] = {"product.brand":{$regex:term}};
+     orFilter[orFilter.length] = {"product.model":{$regex:term}};
+     orFilter[orFilter.length] = {"product.engineNo":{$regex:term}};
+     orFilter[orFilter.length] = {"product.registrationNo":{$regex:term}};
+     orFilter[orFilter.length] = {"product.invoiceDate":{$regex:term}};
+     orFilter[orFilter.length] = {"product.originalInvoice":{$regex:term}};
+     orFilter[orFilter.length] = {"product.contactNumber":{$regex:term}};
+     orFilter[orFilter.length] = {"product.contactName":{$regex:term}};
+     orFilter[orFilter.length] = {auctionId:{$regex:term}};
+     orFilter[orFilter.length] = {lotNo:{$regex:term}};
+     orFilter[orFilter.length] = {status:{$regex:term}};
+     orFilter[orFilter.length] = {"valuation.status":{$regex:term}};
+     orFilter[orFilter.length] = {"seller.name":{$regex:term}};
+
   }
 
   if (orFilter.length > 0) {
@@ -324,11 +309,16 @@ exports.getOnFilter = function(req, res) {
     filter["valuation._id"] = req.body.valuationId;
   if (req.body.tid)
     filter["transactionId"] = req.body.tid;
+   if(req.body.status)
+    filter["status"] = req.body.status;
+   if(req.body.external)
+    filter["external"] = req.body.external == 'y'?true:false;
 
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;
   }
+
   var query = AuctionRequest.find(filter);
   query.exec(
     function(err, auctions) {
@@ -346,31 +336,16 @@ exports.update = function(req, res) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
-  AuctionRequest.find({
-    "product.assetId": req.body.product.assetId
-  }, function(err, auctions) {
-    if (err) {
-      return handleError(res, err);
-    }
-    if (auctions.length == 0) {
-      return res.status(404).send("Not Found.");
-    }
-    if (auctions.length > 1 || auctions[0]._id != req.params.id) {
-      return res.status(201).json({
-        errorCode: 1,
-        message: "Duplicate asset id found."
-      });
-    }
 
-    AuctionRequest.update({
-      _id: req.params.id
-    }, {
-      $set: req.body
-    }, function(err) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(200).json(req.body);
+  AuctionRequest.find({"product.assetId":req.body.product.assetId}, function (err, auctions) {
+    if (err) { return handleError(res, err); }
+    if(auctions.length == 0){return res.status(404).send("Not Found.");}
+    if(auctions.length > 1 || auctions[0]._id != req.params.id){
+      return res.status(201).json({errorCode:1,message:"Duplicate asset id found."});
+    }
+     AuctionRequest.update({_id:req.params.id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(req.body)
     });
   });
 };
@@ -706,27 +681,31 @@ exports.updateAuctionMaster = function(req, res) {
         message: "Auction Id already exist."
       });
     } else {
-      AuctionMaster.update({
-        _id: _id
-      }, {
-        $set: req.body
-      }, function(err) {
-        if (err) {
-          return handleError(res, err);
-        }
-        return res.status(200).json({
-          errorCode: 0,
-          message: "Success"
-        });
+      AuctionMaster.update({_id:_id},{$set:req.body},function (err) {
+        if (err) {return handleError(res, err); }
+        updateAuctionRequest(req.body, _id);
+        return res.status(200).json({errorCode:0, message:"Success"});
       });
     }
   });
 }
 
+function updateAuctionRequest(data, id) {
+  var dataToSet = {};
+  dataToSet.auctionId = data.auctionId;
+  dataToSet.startDate = data.startDate;
+  dataToSet.endDate = data.endDate;
+  AuctionRequest.update({dbAuctionId:id}, {$set:dataToSet}, {multi: true} , function(err, product) {
+    if(err) { 
+      console.log("Error with updating auction request"); 
+    }
+    console.log("Auction Request Updated");
+  });
+}
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
-  console.log("req.body.searchstr", req.body.searchstr);
-  var searchStrReg = new RegExp(req.body.searchstr, 'i');
+
+  var searchStrReg = new RegExp(req.body.searchStr, 'i');
 
   var filter = {};
   if (req.body._id)
@@ -736,42 +715,15 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
   var arr = [];
-  if (req.body.searchstr) {
-    arr[arr.length] = {
-      name: {
-        $regex: searchStrReg
-      }
-    };
-    arr[arr.length] = {
-      auctionId: {
-        $regex: searchStrReg
-      }
-    };
-    arr[arr.length] = {
-      auctionOwner: {
-        $regex: searchStrReg
-      }
-    };
-    arr[arr.length] = {
-      city: {
-        $regex: searchStrReg
-      }
-    };
-    arr[arr.length] = {
-      auctionAddr: {
-        $regex: searchStrReg
-      }
-    };
-    arr[arr.length] = {
-      auctionType: {
-        $regex: searchStrReg
-      }
-    };
-    arr[arr.length] = {
-      docType: {
-        $regex: searchStrReg
-      }
-    };
+
+  if(req.body.searchStr){
+    arr[arr.length] = { name: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionId: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionOwner: { $regex: searchStrReg }};
+    arr[arr.length] = { city: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionAddr: { $regex: searchStrReg }};
+    arr[arr.length] = { auctionType: { $regex: searchStrReg }};
+    arr[arr.length] = { docType: { $regex: searchStrReg }};
     //arr[arr.length] = { regCharges: { $regex: searchStrReg }};
 
   }
