@@ -149,44 +149,44 @@ exports.bulkCreate = function(data, cb) {
   }
 
   function iteration(auctionData, next) {
-      AuctionRequest.create(auctionData, function(err, auction) {
-        if (err) {
-          errObj.push({
-            data: auctionData,
-            error: 'Mongo Insert Error'
-          })
-        } else {
-          sucessObj.push(auctionData);
-        }
+    AuctionRequest.create(auctionData, function(err, auction) {
+      if (err) {
+        errObj.push({
+          data: auctionData,
+          error: 'Mongo Insert Error'
+        })
+      } else {
+        sucessObj.push(auctionData);
+      }
 
-        return next();
+      return next();
+    });
+  }
+
+  function finalize(err) {
+    if (err)
+      debug(err);
+
+    if (errObj.length && !sucessObj.length)
+      return cb({
+        Error: 'Error while inserting these data:' + errObj.toString(),
+        errObj: errObj
       });
-    }
 
-    function finalize(err) {
-      if (err)
-        debug(err);
+    if (sucessObj.length && !errObj.length)
+      return cb(null, {
+        Error: '',
+        sucessObj: sucessObj
+      });
 
-      if (errObj.length && !sucessObj.length)
-        return cb({
-          Error: 'Error while inserting these data:' + errObj.toString(),
-          errObj: errObj
-        });
-
-      if (sucessObj.length && !errObj.length)
-        return cb(null, {
-          Error: '',
-          sucessObj: sucessObj
-        });
-
-      if (errObj.length && sucessObj.length)
-        return cb({
-          Error: 'Error while inserting these data:' + errObj.toString() +
-            'Inserted Successfully:' + sucessObj.toString(),
-          sucessObj: sucessObj,
-          errObj: errObj
-        });
-    }
+    if (errObj.length && sucessObj.length)
+      return cb({
+        Error: 'Error while inserting these data:' + errObj.toString() +
+          'Inserted Successfully:' + sucessObj.toString(),
+        sucessObj: sucessObj,
+        errObj: errObj
+      });
+  }
 
 }
 
@@ -270,29 +270,101 @@ exports.getOnFilter = function(req, res) {
 
   var filter = {};
 
-   var orFilter = [];
-  
-  if(req.body.searchStr){
+  var orFilter = [];
 
-     var term = new RegExp(req.body.searchStr, 'i');
-     orFilter[orFilter.length] = {"product.name":{$regex:term}};
-     orFilter[orFilter.length] = {"product.assetId":{$regex:term}};
-     orFilter[orFilter.length] = {"product.productId":{$regex:term}};
-     orFilter[orFilter.length] = {"product.description":{$regex:term}};
-     orFilter[orFilter.length] = {"product.category":{$regex:term}};
-     orFilter[orFilter.length] = {"product.brand":{$regex:term}};
-     orFilter[orFilter.length] = {"product.model":{$regex:term}};
-     orFilter[orFilter.length] = {"product.engineNo":{$regex:term}};
-     orFilter[orFilter.length] = {"product.registrationNo":{$regex:term}};
-     orFilter[orFilter.length] = {"product.invoiceDate":{$regex:term}};
-     orFilter[orFilter.length] = {"product.originalInvoice":{$regex:term}};
-     orFilter[orFilter.length] = {"product.contactNumber":{$regex:term}};
-     orFilter[orFilter.length] = {"product.contactName":{$regex:term}};
-     orFilter[orFilter.length] = {auctionId:{$regex:term}};
-     orFilter[orFilter.length] = {lotNo:{$regex:term}};
-     orFilter[orFilter.length] = {status:{$regex:term}};
-     orFilter[orFilter.length] = {"valuation.status":{$regex:term}};
-     orFilter[orFilter.length] = {"seller.name":{$regex:term}};
+  if (req.body.searchStr) {
+
+    var term = new RegExp(req.body.searchStr, 'i');
+    orFilter[orFilter.length] = {
+      "product.name": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.assetId": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.productId": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.description": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.category": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.brand": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.model": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.engineNo": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.registrationNo": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.invoiceDate": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.originalInvoice": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.contactNumber": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "product.contactName": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      auctionId: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      lotNo: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      status: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "valuation.status": {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      "seller.name": {
+        $regex: term
+      }
+    };
 
   }
 
@@ -308,10 +380,10 @@ exports.getOnFilter = function(req, res) {
     filter["valuation._id"] = req.body.valuationId;
   if (req.body.tid)
     filter["transactionId"] = req.body.tid;
-   if(req.body.status)
+  if (req.body.status)
     filter["status"] = req.body.status;
-   if(req.body.external)
-    filter["external"] = req.body.external == 'y'?true:false;
+  if (req.body.external)
+    filter["external"] = req.body.external == 'y' ? true : false;
 
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
@@ -336,15 +408,30 @@ exports.update = function(req, res) {
   }
   req.body.updatedAt = new Date();
 
-  AuctionRequest.find({"product.assetId":req.body.product.assetId}, function (err, auctions) {
-    if (err) { return handleError(res, err); }
-    if(auctions.length == 0){return res.status(404).send("Not Found.");}
-    if(auctions.length > 1 || auctions[0]._id != req.params.id){
-      return res.status(201).json({errorCode:1,message:"Duplicate asset id found."});
+  AuctionRequest.find({
+    "product.assetId": req.body.product.assetId
+  }, function(err, auctions) {
+    if (err) {
+      return handleError(res, err);
     }
-     AuctionRequest.update({_id:req.params.id},{$set:req.body},function(err){
-        if (err) { return handleError(res, err); }
-        return res.status(200).json(req.body)
+    if (auctions.length == 0) {
+      return res.status(404).send("Not Found.");
+    }
+    if (auctions.length > 1 || auctions[0]._id != req.params.id) {
+      return res.status(201).json({
+        errorCode: 1,
+        message: "Duplicate asset id found."
+      });
+    }
+    AuctionRequest.update({
+      _id: req.params.id
+    }, {
+      $set: req.body
+    }, function(err) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(req.body)
     });
   });
 };
@@ -680,10 +767,19 @@ exports.updateAuctionMaster = function(req, res) {
         message: "Auction Id already exist."
       });
     } else {
-      AuctionMaster.update({_id:_id},{$set:req.body},function (err) {
-        if (err) {return handleError(res, err); }
+      AuctionMaster.update({
+        _id: _id
+      }, {
+        $set: req.body
+      }, function(err) {
+        if (err) {
+          return handleError(res, err);
+        }
         updateAuctionRequest(req.body, _id);
-        return res.status(200).json({errorCode:0, message:"Success"});
+        return res.status(200).json({
+          errorCode: 0,
+          message: "Success"
+        });
       });
     }
   });
@@ -694,9 +790,15 @@ function updateAuctionRequest(data, id) {
   dataToSet.auctionId = data.auctionId;
   dataToSet.startDate = data.startDate;
   dataToSet.endDate = data.endDate;
-  AuctionRequest.update({dbAuctionId:id}, {$set:dataToSet}, {multi: true} , function(err, product) {
-    if(err) { 
-      console.log("Error with updating auction request"); 
+  AuctionRequest.update({
+    dbAuctionId: id
+  }, {
+    $set: dataToSet
+  }, {
+    multi: true
+  }, function(err, product) {
+    if (err) {
+      console.log("Error with updating auction request");
     }
     console.log("Auction Request Updated");
   });
@@ -715,14 +817,42 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user.mobile"] = req.body.mobile;
   var arr = [];
 
-  if(req.body.searchStr){
-    arr[arr.length] = { name: { $regex: searchStrReg }};
-    arr[arr.length] = { auctionId: { $regex: searchStrReg }};
-    arr[arr.length] = { auctionOwner: { $regex: searchStrReg }};
-    arr[arr.length] = { city: { $regex: searchStrReg }};
-    arr[arr.length] = { auctionAddr: { $regex: searchStrReg }};
-    arr[arr.length] = { auctionType: { $regex: searchStrReg }};
-    arr[arr.length] = { docType: { $regex: searchStrReg }};
+  if (req.body.searchStr) {
+    arr[arr.length] = {
+      name: {
+        $regex: searchStrReg
+      }
+    };
+    arr[arr.length] = {
+      auctionId: {
+        $regex: searchStrReg
+      }
+    };
+    arr[arr.length] = {
+      auctionOwner: {
+        $regex: searchStrReg
+      }
+    };
+    arr[arr.length] = {
+      city: {
+        $regex: searchStrReg
+      }
+    };
+    arr[arr.length] = {
+      auctionAddr: {
+        $regex: searchStrReg
+      }
+    };
+    arr[arr.length] = {
+      auctionType: {
+        $regex: searchStrReg
+      }
+    };
+    arr[arr.length] = {
+      docType: {
+        $regex: searchStrReg
+      }
+    };
     //arr[arr.length] = { regCharges: { $regex: searchStrReg }};
 
   }
@@ -772,22 +902,33 @@ exports.getAuctionMaster = function(req, res) {
 }
 
 exports.deleteAuctionMaster = function(req, res) {
-  AuctionMaster.findById(req.params.id, function(err, auctionData) {
-    if (err) {
-      return handleError(res, err);
-    }
-    if (!auctionData) {
-      return res.status(404).send('Payment master Found');
-    }
-    AuctionMaster.remove(function(err) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(204).send({
-        errorCode: 0,
-        message: "Payment master deleted sucessfully!!!"
-      });
-    });
+  // AuctionMaster.findById(req.params.id, function(err, auctionData) {
+  //   if (err) {
+  //     return handleError(res, err);
+  //   }
+  //   if (!auctionData) {
+  //     return res.status(404).send('Payment master Found');
+  //   }
+  //   AuctionMaster.remove(function(err) {
+  //     if (err) {
+  //       return handleError(res, err);
+  //     }
+  //     return res.status(204).send({
+  //       errorCode: 0,
+  //       message: "Payment master deleted sucessfully!!!"
+  //     });
+  //   });
+  // });
+  AuctionMaster.find({_id: req.params.id})
+    .remove()
+      .exec(function(err, doc) {
+        if (err) {
+          return handleError(res, err);
+        }
+       return res.status(200).send({
+           errorCode: 0,
+           message: "Payment master deleted sucessfully!!!"
+        });
   });
 };
 
@@ -809,18 +950,19 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length == 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Title*', 'Start_Date*', 'End_Date*', "Auction_Id*"];
+  var headers = ['Auction_Name', 'Auction_Start_Date', 'Auction_End_Date', "Auction_ID"];
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
     return res.status(500).send("Wrong template");
   }
   var ret = false;
   var errorMessage = "";
+  req.errors = [];
   for (var i = 0; i < data.length; i++) {
-    var title = data[i]['Auction_Title*'];
-    var startDate = new Date(data[i]['Start_Date*']);
-    var endDate = new Date(data[i]['End_Date*']);
-    var auctionId = data[i]['Auction_Id*'];
+    var title = data[i]['Auction_Name'];
+    var startDate = new Date(data[i]['Auction_Start_Date']);
+    var endDate = new Date(data[i]['Auction_End_Date']);
+    var auctionId = data[i]['Auction_ID'];
     if (!title) {
       ret = true;
       errorMessage += "Title is empty in row " + (i + 2);
@@ -877,17 +1019,16 @@ function getHeaders(worksheet) {
 
 function validateHeader(headersInFile, headers) {
   var ret = true;
-  ret = headersInFile.length == headers.length;
-  if (!ret)
-    return ret;
-  for (var i = 0; i < headersInFile.length; i++) {
-    var hd = headers[i];
-    if (headers.indexOf(hd) == -1) {
-      ret = false;
-      break;
-    }
-  }
+  //ret = headersInFile.length == headers.length;
+  // if (!ret)
+  //   return ret;
 
+  headers.some(function(x) {
+    if (headersInFile.indexOf(x) < 0) {
+      ret = false;
+      return true;
+    }
+  })
   return ret;
 }
 
@@ -898,18 +1039,35 @@ function isValid(d) {
 function importAuctionMaster(req, res, data) {
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
-    auctionData.name = data[req.counter]['Auction_Title*'];
-    auctionData.startDate = new Date(data[req.counter]['Start_Date*']);
-    auctionData.endDate = new Date(data[req.counter]['End_Date*']);
-    auctionData.auctionId = data[req.counter]['Auction_Id*'];
+    auctionData.name = data[req.counter]['Auction_Name'];
+    auctionData.startDate = new Date(data[req.counter]['Auction_Start_Date']);
+    auctionData.endDate = new Date(data[req.counter]['Auction_End_Date']);
+    auctionData.auctionId = data[req.counter]['Auction_ID'];
     auctionData.groupId = req.groupId;
-    AuctionMaster.create(auctionData, function(err, act) {
-      if (err) {
-        return handleError(res, err)
-      } else {
+    AuctionMaster.find({
+      auctionId: auctionData.auctionId
+    }, function(err, auction) {
+      if (err)
+        handleError(err);
+      if (auction && auction.length){
+        var errorObj = {};
+        errorObj['rowCount'] = req.counter + 2;
+        errorObj['AuctionID'] = auctionData.auctionId;
+        errorObj['message'] = "Auction with this AuctionID is already exist in Auction Master";
+        req.errors[req.errors.length] = errorObj;
         req.counter++;
         importAuctionMaster(req, res, data);
+        return;
       }
+      
+      AuctionMaster.create(auctionData, function(err, act) {
+        if (err) {
+          return handleError(res, err)
+        } else {
+          req.counter++;
+          importAuctionMaster(req, res, data);
+        }
+      })
     })
   } else {
     res.status(200).json({
