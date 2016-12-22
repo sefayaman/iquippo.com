@@ -18,6 +18,7 @@
     //$scope.assetStatuses = assetStatuses;
     vm.deleteProduct = deleteProduct;
     $scope.successMessage = "";
+    $scope.type = "";
     vm.images = [];
 
     $scope.updateTemplate = updateTemplate;
@@ -25,6 +26,7 @@
 
     var query = $location.search();
     var type = query.type || 'auction';
+    $scope.type = type;
 
     //listen for the file selected event
     $scope.$on("fileSelected", function(event, args) {

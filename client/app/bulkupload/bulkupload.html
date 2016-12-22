@@ -5,13 +5,13 @@
       <div class="row">
         <div class="col-lg-12">
           <h3>
-          Bulk Upload
-            <div class="btn btn-success pull-right" ng-if="isAdmin()">
+          {{type}} Bulk Upload
+            <!-- <div class="btn btn-success pull-right" ng-if="isAdmin()">
                 <span class="fileinput-button" >
                    <i class="fa fa-file-excel-o"></i> Update Template
                    <input type="file" name="template_update" onchange="angular.element(this).scope().updateTemplate(this.files,this)">
                    </span>
-               </div>
+               </div> -->
           </h3>
           <hr>
         </div>
@@ -26,11 +26,7 @@
                        <div class="form-group col-sm-offset-1 col-sm-10" >
                           <ul class="list-instrct">
                             <li>Download the <a href="/download/templates/{{bulkProduct.template}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory.</li>
-                            <li>User need to ensure that combination of Category, Brand and Model exists in the Master data. In case of mismatch, system will reject that record respect to product data and will not upload in the system. </li>
-                            <li>Admin/Channel Partner needs to register seller in the system prior uploading products on their behalf.</li>
                             <li>System will accept only 100 records in a single file.</li>
-                            <li>It is mandatory to fill Other_Category, Other_Brand and Other_Model fields if user has put Other in Category, Product Brand and Product Model fields.</li>
-                           
                           </ul>
                           
                             <div class="input-group col-md-12">

@@ -57,87 +57,108 @@ function _insertAuctionData(uploadData, cb) {
 	var insertData = [];
 	async.eachLimit(uploadData, 5, iterator, finalize);
 
-	function iterator(collec, cb) {
+	function iterator(collec, next) {
 		var obj = {
 			product: {},
 			auction: {},
 			user: {}
 		};
 
-		fetchAuction(collec.auctionId, function(err, auction) {
+		Model.find({
+			'auction.auctionId': collec.auctionId
+		}, function(err, aucReq) {
 			if (err) {
-				errObj.push(collec)
-				return cb();
+				errObj.push(collec);
+				return next();
 			}
 
-			if (auction && auction.length) {
+			if (aucReq && aucReq.length) {
 				duplicateRecords.push({
-					Error: 'Duplicate Auction Id:' + collec.auctionId,
+					Error: 'Altready present in quene:' + collec.auctionId,
 					rowCount: collec.rowCount
 				});
-				return cb();
+
+				return next();
 			}
 
-			fetchProduct(collec.assetId, function(err, product) {
+
+			fetchAuction(collec.auctionId, function(err, auction) {
 				if (err) {
 					errObj.push(collec)
-					return cb();
+					return next();
 				}
 
-				if (product && product.length) {
+				if (auction && auction.length) {
 					duplicateRecords.push({
-						Error: 'Duplicate Asset Id:' + collec.assetId,
+						Error: 'Duplicate Auction Id:' + collec.auctionId,
 						rowCount: collec.rowCount
 					});
-
-					return cb();
+					return next();
 				}
 
-				fetchAuctionMaster(collec.auctionId, function(err, auctionMaster) {
+				fetchProduct(collec.assetId, function(err, product) {
 					if (err) {
-						errObj.push({
-							Error: 'Unable to fetch auction master' + collec.auctionId,
-							rowCount: collec.rowCount
-						})
-						return cb();
+						errObj.push(collec)
+						return next();
 					}
 
-					if (!auctionMaster.length) {
-						errObj.push({
-							Error: 'Auction not exist in auction master' + collec.auctionId,
+					if (product && product.length) {
+						duplicateRecords.push({
+							Error: 'Duplicate Asset Id:' + collec.assetId,
 							rowCount: collec.rowCount
-						})
-						return cb();
+						});
+
+						return next();
 					}
 
-					collec.dbAuctionId = auctionMaster[0]._id;
+					fetchAuctionMaster(collec.auctionId, function(err, auctionMaster) {
+						if (err) {
+							errObj.push({
+								Error: 'Unable to fetch auction master' + collec.auctionId,
+								rowCount: collec.rowCount
+							})
+							return next();
+						}
 
-					productCols.forEach(function(x) {
-						if (collec[x])
-							obj.product[x] = collec[x];
-					});
+						if (!auctionMaster.length) {
+							errObj.push({
+								Error: 'Auction not exist in auction master ' + collec.auctionId,
+								rowCount: collec.rowCount
+							})
+							return next();
+						}
 
-					auctionCols.forEach(function(x) {
-						if (collec[x])
-							obj.auction[x] = collec[x]
+						collec.dbAuctionId = auctionMaster[0]._id;
+
+						productCols.forEach(function(x) {
+							if (collec[x])
+								obj.product[x] = collec[x];
+						});
+
+						auctionCols.forEach(function(x) {
+							if (collec[x])
+								obj.auction[x] = collec[x]
+						})
+
+						userCols.forEach(function(x) {
+							if (collec.user && collec.user[x])
+								obj.user[x] = collec.user[x];
+						})
+
+						obj.type = 'auction';
+						obj.lotNo = collec.lotNo;
+						insertData.push(obj);
+
+						return next();
 					})
-
-					userCols.forEach(function(x) {
-						if (collec.user && collec.user[x])
-							obj.user[x] = collec.user[x];
-					})
-
-					obj.type = 'auction';
-					obj.lotNo = collec.lotNo;
-					insertData.push(obj);
-
-					return cb();
 				})
 			})
 		})
+
+
 	}
 
-function finalize(err) {
+	function finalize(err) {
 		if (err) {
 			util.log(err);
 			return cb(err);
