@@ -17,7 +17,6 @@ var APIError = require('../../components/_error');
 var async = require('async');
 var debug = require('debug')('api.auction');
 var uploadReqCtrl = require('../common/uploadrequest/uploadrequest.controller');
-var moment = require('moment');
 
 exports.getAll = function(req, res) {
   AuctionRequest.find(function(err, auctions) {
@@ -1042,40 +1041,50 @@ function importAuctionMaster(req, res, data) {
     var auctionData = {};
     auctionData.name = data[req.counter]['Auction_Name'];
 
-    auctionData.startDate = moment(data[req.counter]['Auction_Start_Date']);
+    auctionData.startDate = new Date(data[req.counter]['Auction_Start_Date']);
     var startTime = data[req.counter]['Auction_Start_Time'];
-    if(startTime &&  moment(data[req.counter]['Auction_Start_Date'] + ' ' + startTime) != 'Invalid Date')
-      auctionData.startDate = moment(data[req.counter]['Auction_Start_Date'] + ' ' + startTime).format();
+    if(startTime &&  new Date(data[req.counter]['Auction_Start_Date'] + ' ' + startTime) != 'Invalid Date')
+      auctionData.startDate = new Date(data[req.counter]['Auction_Start_Date'] + ' ' + startTime);
     
-    auctionData.endDate = moment(data[req.counter]['Auction_End_Date']);
+    auctionData.endDate = new Date(data[req.counter]['Auction_End_Date']);
     var endTime = data[req.counter]['Auction_End_Time'];
-    if(endTime && moment(data[req.counter]['Auction_End_Date'] + ' ' + endTime) != 'Invalid Date')
-      auctionData.endDate = moment(data[req.counter]['Auction_End_Date'] + ' ' + endTime).format();
+    if(endTime && new Date(data[req.counter]['Auction_End_Date'] + ' ' + endTime) != 'Invalid Date')
+      auctionData.endDate = new Date(data[req.counter]['Auction_End_Date'] + ' ' + endTime);
+    
     
     auctionData.auctionId = data[req.counter]['Auction_ID'];
     auctionData.groupId = req.groupId;
     var field_map = {
-      'Auction_Owner': 'auction_owner',
+      'Auction_Owner': 'auctionOwner',
       'Inspection_Start_Date': 'insStartDate',
-      'Inspection_End_Date.': 'insEndDate',
-      'Inspection_End_Time.': 'lotNo',
+      'Inspection_Start_Time':'insStartTime',
+      'Inspection_End_Date': 'insEndDate',
+      'Inspection_End_Time': 'insEndTime',
       'Registration_End_Date': 'regEndDate',
       'Address_of_Auction': 'auctionAddr',
       'Auction_Type': 'auctionType',
-      'City' : 'city',
-      'State':'state'
+      'Location' : 'city',
+      'Address_of_Auction':'auctionAddr'
     };
 
     Object.keys(field_map).forEach(function(x){
       if(data[req.counter][x]){
-        auctionData[x] = data[req.counter][x];
+        auctionData[field_map[x]] = data[req.counter][x];
+
+        if(x === 'Inspection_Start_Date' && data[req.counter]['Inspection_Start_Time']){
+          startTime = (data[req.counter]['Inspection_Start_Time']);
+          auctionData[field_map['Inspection_Start_Date']] = new Date(data[req.counter]['Inspection_Start_Date'] + ' ' + endTime);
+          delete x.Inspection_Start_Time;    
+        }
+
         if(x === 'Inspection_End_Date' && data[req.counter]['Inspection_End_Time']){
-          endTime = moment(data[req.counter]['Auction_End_Time']);
-          auctionData.Inspection_End_Date = moment(data[req.counter]['Inspection_End_Date'] + ' ' + endTime).format();
+          endTime = (data[req.counter]['Inspection_End_Time']);
+          auctionData[field_map['Inspection_End_Date']] = new Date(data[req.counter]['Inspection_End_Date'] + ' ' + endTime);
           delete x.Inspection_End_Time;    
         }
       }
     })
+
 
     AuctionMaster.find({
       auctionId: auctionData.auctionId
