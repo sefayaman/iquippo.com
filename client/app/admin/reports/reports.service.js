@@ -13,7 +13,8 @@
     reportService.getValuationQuotesOnFilter = getValuationQuotesOnFilter;
     reportService.getFinancingQuotesOnFilter = getFinancingQuotesOnFilter;
     reportService.getInsuranceQuotesOnFilter = getInsuranceQuotesOnFilter;
-
+    reportService.getBuyOrRentOnFilter = getBuyOrRentOnFilter;
+    
     reportService.exportData = exportData;
 
     function getCallbackOnFilter(data) {
@@ -46,7 +47,15 @@
         })
     }
 
-
+    function getBuyOrRentOnFilter(data) {
+      return $http.post(path + "/buyer/search", data)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+    }
 
     function getTotatItemsCount(data, searchstr) {
       return $http.get(path + "/reports/fetch.count.json?type=" + data + "&searchStr=" + searchstr)
@@ -105,6 +114,8 @@
         url = path + "/callback/export";
       else if (refName == "quickQuery")
         url = path + "/quote/export";
+      else if (refName == "buyOrRentOrBoth")
+        url = path + "/buyer/export";
       else if (refName == "shipping" || refName == "valuation" || refName == "finance" || refName == "insurance") {
         return path + "/reports/fetch.csv?type=" + refName + "&limit=100";
       } else

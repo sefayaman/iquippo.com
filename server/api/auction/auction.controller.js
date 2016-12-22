@@ -145,10 +145,10 @@ exports.bulkCreate = function(data, cb) {
   if (data.length) {
     //AA:If the length of data is non zero
     //insert data asynchronously in mongodb
-
     async.eachLimit(data, 5, iteration, finalize);
+  }
 
-    function iteration(auctionData, next) {
+  function iteration(auctionData, next) {
       AuctionRequest.create(auctionData, function(err, auction) {
         if (err) {
           errObj.push({
@@ -187,7 +187,6 @@ exports.bulkCreate = function(data, cb) {
           errObj: errObj
         });
     }
-  }
 
 }
 
