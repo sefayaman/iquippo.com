@@ -1063,8 +1063,7 @@ function importAuctionMaster(req, res, data) {
       'Registration_End_Date': 'regEndDate',
       'Address_of_Auction': 'auctionAddr',
       'Auction_Type': 'auctionType',
-      'Location' : 'city',
-      'Address_of_Auction':'auctionAddr'
+      'Location' : 'city'
     };
 
     Object.keys(field_map).forEach(function(x){

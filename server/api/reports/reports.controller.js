@@ -109,16 +109,16 @@ var reports = {
 
 		var csvData = {
 			'shipping': {
-				headers: ['Customer', 'Mobile No', 'Phone No', 'Email', 'Date of Request', 'Country', 'Location', 'Company Name', 'Designation', 'Shipment Allowed', 'Packaging','Comments']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Shipment Allowed', 'Packaging', 'Comments', 'Date of Request']
 			},
 			'valuation': {
-				headers: ['Customer', 'Mobile No', 'Phone No', 'Email', 'Date of Request', 'Country', 'Location', 'Company Name', 'Designation', 'Purpose of Valutaion', 'Schedule a Call', 'Comments']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Contact Person', 'Contact Number', 'Purpose of Valutaion', 'Schedule a Call', 'Comments', 'Date of Request']
 			},
 			'finance': {
-				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email','Date of Request' ,'Category', 'Brand', 'Modal', 'Asset Description', 'Asset Location', 'Manufacturing Year', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address' ,'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments', 'Date of Request']
 			},
 			'insurance': {
-				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email', 'Date of Request','Category', 'Brand', 'Modal', 'Asset Description', 'Asset Location', 'Manufacturing Year', 'Invoice value', 'Method Of Contact', 'Comments']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Invoice value', 'Method Of Contact', 'Comments', 'Date of Request',]
 			}
 		};
 
@@ -131,18 +131,19 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						(x.quote.fname || '') + ' ' + (x.quote.mname || '') + ' ' + (x.quote.lname || ''),
-						String(x.quote.mobile) || '',
-						String(x.quote.phone) || '',
-						x.quote.email || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || '',
+						(x.quote.fname || '') + ' ' + (x.quote.lname || ''),
 						x.quote.country || '',
 						x.quote.city || '',
 						x.quote.companyname || '',
 						x.quote.designation || '',
+						String(x.quote.phone) || '',
+						String(x.quote.mobile) || '',
+						x.quote.email || '',
 						x.quote.allowed || '',
 						x.quote.packaging || '',
-						x.quote.comment || '');
+						x.quote.comment || '',
+						moment(x.createdAt).format('MM/DD/YYYY') || ''
+						);
 
 					for (var i = 0; i < csvData[type].headers.length; i++) {
 						json[csvData[type].headers[i]] = arr[i];
@@ -153,18 +154,26 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						((x.quote.fname || '') + ' ' + (x.quote.mname || '') + ' ' + (x.quote.lname || '')),
-						x.quote.mobile || '',
-						x.quote.phone || '',
-						x.quote.email || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || '',
+						((x.quote.fname || '') + ' ' + (x.quote.lname || '')),
 						x.quote.country || '',
 						x.quote.city || '',
 						x.quote.companyname || '',
 						x.quote.designation || '',
+						x.quote.phone || '',
+						x.quote.mobile || '',
+						x.quote.email || '',
+						x.quote.product.category || '',
+						x.quote.product.brand || '',
+						x.quote.product.model || '',
+						x.quote.product.city || '',
+						x.quote.product.mfgYear || '',
+						x.quote.product.description || '',
+						x.quote.product.contactPerson || '',
+						x.quote.product.contactNumber || '',
 						x.quote.valuation || x.quote.otherName || '',
 						x.quote.schedule || '',
-						x.quote.comment || ''
+						x.quote.comment || '',
+						moment(x.createdAt).format('MM/DD/YYYY') || ''			
 					);
 					for (var i = 0; i < csvData[type].headers.length; i++) {
 						json[csvData[type].headers[i]] = arr[i];
@@ -175,7 +184,7 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						((x.quote.fname || '') + ' ' + (x.quote.mname || '') + ' ' + (x.quote.lname || '')),
+						((x.quote.fname || '') + ' ' + (x.quote.lname || '')),
 						x.quote.country || '',
 						x.quote.city || '',
 						x.quote.companyname || '',
@@ -183,18 +192,18 @@ var reports = {
 						x.quote.phone || '',
 						x.quote.mobile || '',
 						x.quote.email || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || '',
 						x.quote.product.category || '',
 						x.quote.product.brand || '',
 						x.quote.product.model || '',
-						x.quote.product.description || '',
 						x.quote.product.city || '',
 						x.quote.product.mfgYear || '',
+						x.quote.product.description || '',
 						x.quote.amountToBeFinanced || '',
 						x.quote.indicativeRate || '',
 						x.quote.periodInMonths || '',
 						x.quote.contactMethod || '',
-						x.quote.comment || ''
+						x.quote.comment || '',
+						moment(x.createdAt).format('MM/DD/YYYY') || ''
 					);
 					for (var i = 0; i < csvData[type].headers.length; i++) {
 						json[csvData[type].headers[i]] = arr[i];
@@ -205,7 +214,7 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						((x.quote.fname || '') + ' ' + (x.quote.mname || '') + ' ' + (x.quote.lname || '')),
+						((x.quote.fname || '') + ' ' + (x.quote.lname || '')),
 						x.quote.country || '',
 						x.quote.city || '',
 						x.quote.companyname || '',
@@ -213,16 +222,16 @@ var reports = {
 						x.quote.phone || '',
 						x.quote.mobile || '',
 						x.quote.email || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || '',
 						x.quote.product.category || '',
 						x.quote.product.brand || '',
 						x.quote.product.model || '',
-						x.quote.product.description || '',
 						x.quote.product.city || '',
 						x.quote.product.mfgYear || '',
+						x.quote.product.description || '',
 						x.quote.invoiceVal || '',
 						x.quote.contactMethod || '',
-						x.quote.comment || ''
+						x.quote.comment || '',
+						moment(x.createdAt).format('MM/DD/YYYY') || ''
 					);
 					for (var i = 0; i < csvData[type].headers.length; i++) {
 						json[csvData[type].headers[i]] = arr[i];
