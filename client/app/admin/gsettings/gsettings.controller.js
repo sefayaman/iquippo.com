@@ -666,8 +666,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	function submitDeleteAuctionMaster(idx){
 		AuctionMasterSvc.delAuctionMaster(vm.auctions[idx])
 		.then(function(result){
-			getAuctionMaster();
-			fireCommandForAuctionMaster(true);
+			//loadAuctionData();
+			fireCommand(true,null,'auctionmaster');
 		})
     }
 
