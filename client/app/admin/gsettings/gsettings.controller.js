@@ -894,7 +894,8 @@ function addAssetInAuctionClicked(){
 function uploadImage(files,_this,param){
 	if(files.length == 0)
 		return;
-	 uploadSvc.upload(files[0], auctionDir,null,true).then(function(result){
+	var assetDir = !vm.auctionProduct.product.assetDir?auctionDir:vm.auctionProduct.product.assetDir;
+	 uploadSvc.upload(files[0], assetDir,null,true).then(function(result){
 	 	vm.auctionProduct.product.assetDir = result.data.assetDir;
 	 	if(param == 1)
 	 		vm.auctionProduct.product.primaryImg = result.data.filename;
