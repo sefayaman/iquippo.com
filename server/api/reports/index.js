@@ -12,4 +12,5 @@ router.get('/fetch.csv', controller.fetch, controller.renderCsv);
 router.get('/fetch.count.json', controller.count);
 
 
+
 module.exports = router;

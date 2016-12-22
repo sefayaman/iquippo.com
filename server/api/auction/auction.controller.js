@@ -101,12 +101,12 @@ exports.getOnFilter = function(req, res) {
    if(req.body.tid)
     filter["transactionId"] = req.body.tid;
 
-  if(req.body.pagination){
+  /*if(req.body.pagination){
     Utility.paginatedResult(req,res,AuctionRequest,filter,{});
     return;
-  }
-  var query = AuctionRequest.find(filter);
-  query.exec(
+  }*/
+  var query = AuctionMaster.find({});
+  query.count().exec(
                function (err, auctions) {
                       if(err) { return handleError(res, err); }
                       return res.status(200).json(auctions);
@@ -510,6 +510,8 @@ exports.importAuctionMaster = function(req,res){
   req.groupId = new Date().getTime();
   importAuctionMaster(req,res,data);
 }
+
+
 
 function getHeaders(worksheet){
   var headers = [];

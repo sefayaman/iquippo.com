@@ -3,6 +3,7 @@
 
 angular.module('sreizaoApp').factory("AuctionSvc",AuctionSvc);
 function AuctionSvc($http,$q,notificationSvc,Auth){
+  var auctionId="";
   var svc = {};
   var path = "/api/auction";
 
@@ -14,6 +15,12 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
   svc.export = exportAuction;
   svc.sendNotification = sendNotification;
   svc.updateStatus = updateStatus;
+  svc.getTotalItemsCount=getTotalItemsCount;
+  svc.getAuctionData=getAuctionData;
+  svc.getLatLong=getLatLong;
+  svc.getTotalAuctionItemsCount=getTotalAuctionItemsCount;
+  svc.getAuctionItemData=getAuctionItemData;
+
 
   function getAll(){
         return $http.get(path)
@@ -115,7 +122,84 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
       }
     }
 
+    function getTotalItemsCount(auctionType) {
+      alert("hello2");
+      return $http.get(path + "/auctionmaster/getAuctionCount?auctionType=" + auctionType)
+        .then(function(result) {
+          return result
+        })
+        .catch(function(err) {
+          throw err;
+        })
+
+    }
+
+    function getAuctionData(data){
+      return $http.get(path + "/auctionmaster/fetchAuctionData?type="+data.auctionType+"&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+
+    }
+
+    function getLatLong(city,location){
+      var address="";
+      address+=city+','+location;
+      var params = {address: address, sensor: false};
+
+      return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+city+','+location+'&key=AIzaSyB2Vlq4VoNvIEkhE1Ou9HR48qdKRkSxmxs',{params:params,headers:{'X-Requested-With':undefined}})
+        .then(function(res) {
+          return res.geometry.location;
+        })
+        .catch(function(err) {
+          throw err
+        })
+    }
+
+    function setAuctionId(data){
+     auctionId=data;
+    }
+
+    function getAuctionId(){
+     return auctionId;
+    }
+
+    function getTotalAuctionItemsCount(data){
+       return $http.get(path + "/auctionmaster/getAuctionItemsCount?auctionId=" + data)
+        .then(function(result) {
+          return result
+        })
+        .catch(function(err) {
+          throw err;
+        })
+
+    }
+
+    function getAuctionItemData(data){
+     return $http.get(path + "/auctionmaster/fetchAuctionItemsData?auctionId="+data.auctionId)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+ 
+    }
+
+
+
   return svc;
 }
 })();
 
+/*var searchAddress = function(address) {
+    var params = {address: address, sensor: false};
+    //Note: google map rejects XHR header
+    $http.get(google_map_web_api_url, {params: params, headers: {'X-Requested-With': undefined}})
+        .success(function(data, status, headers, config) {
+        })
+        .error(function(data, status, headers, config) {
+        })*/

@@ -79,6 +79,7 @@ exports.validateSignup = function(req, res){
 
 
 exports.create = function (req, res, next) {
+  console.log("----create[---",req.body);
   var newUser = new User(req.body);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();

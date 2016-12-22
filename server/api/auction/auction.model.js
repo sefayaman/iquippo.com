@@ -24,3 +24,4 @@ var AuctionRequestSchema = new Schema({
 });
 
 module.exports = mongoose.model('AuctionRequest', AuctionRequestSchema);
+

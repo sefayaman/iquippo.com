@@ -23,6 +23,8 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     vm.myFunct = myFunct;
     vm.doSearch = doSearch;
     vm.onExpRangeChange = onExpRangeChange;
+
+    //vm.exportExcel=exportExcel;
     //vm.login = login;
     //vm.forgotPassword = forgotPassword;
     
@@ -123,6 +125,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       //filter['isManpower'] = true;
       if(vm.manpowerFilter && vm.manpowerFilter.locationText)
         filter['location'] = vm.manpowerFilter.locationText;
+
       else
         delete vm.manpowerFilter.locationText;
       if(vm.manpowerFilter && vm.manpowerFilter.equipmentSearchText)
@@ -185,7 +188,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       };
 
     function register(form) {
-
+       alert("I am hit"+form);
       var ret = false;
     
       /*if($scope.selectedAssetsArr.length < 1){
@@ -455,6 +458,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
   
     vm.fireCommand = fireCommand;
     vm.updateManpowerUser = updateManpowerUser;
+    vm.exportExcel=exportExcel;
     var dataToSend = {};
     function init(){
       dataToSend.pagination = true;
@@ -512,6 +516,11 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       });
     }
 
+    function openWindow(url){
+      return $window.open(url);
+
+    }
+
     function resetPagination(){
       prevPage = 0;
       vm.currentPage = 1;
@@ -520,6 +529,10 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       last_id = null;
     }
 
+    function exportExcel(){
+      return openWindow('/api/manpower/data/fetch.xlsx');
+
   }
+}
 
 })();

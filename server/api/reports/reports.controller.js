@@ -235,7 +235,7 @@ var reports = {
 					});
 			}
 		})
-		res.xls('data.xlsx', xlsxData)
+		res.xls('data.xlsx', xlsxData);
 			//res.end();
 	}
 };

@@ -78,6 +78,41 @@ angular.module('sreizaoApp')
           scope:scope,
           size: 'lg'
       });
+    },
+
+    openMap:function(loc,scope){
+      
+      return $uibModal.open({
+          animation: true,
+          templateUrl: 'components/modal/map.html',
+          controller: function(){
+            scope.lat = loc.lat;
+            scope.lng = loc.lng;
+          },
+          scope:scope,
+          size: 'lg'
+      });
+
+      // if(!scope)
+      //       scope = $rootScope.$new();
+      // var scope = {};
+      // scope.template = 'components/modal/map.html';
+      // scope.backdrop = true;
+      // var alertModal;
+      // scope.close = function(){
+      //   alertModal.close()
+      // }
+      //return openModal(scope,null);
+
+      //     var modalInstance = $uibModal.open({
+      //     animation: true,
+      //     templateUrl: ,
+      //     //controller: Modals[modalType].Ctrl,
+      //     scope:scope,
+      //     size: 'lg'
+      // });
     }
+
+
     };
   });

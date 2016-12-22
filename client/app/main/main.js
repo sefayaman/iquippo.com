@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .config(function ($stateProvider) {
+  .config(function ($stateProvider,$httpProvider) {
     $stateProvider
       .state('main', {
         url: '/',
@@ -265,13 +265,13 @@ angular.module('sreizaoApp')
       .state('auctions', {
         url: '/auctions',
         templateUrl: 'app/auction/auction.html',
-        controller: 'AuctionListingCtrl as auctionListingVm',
+        controller: 'AuctionDateCtrl as auctionDateVm',
         layout:'client'
       })
       .state('auctiondetails', {
         url: '/auctiondetail',
         templateUrl: 'app/auction/auctionsdetail.html',
-        controller: 'AuctionListingCtrl as auctionListingVm',
+        controller: 'AuctionDetailCtrl as auctionDetailsVm',
         layout:'client'
       })
       .state('valuationrequests', {
@@ -360,5 +360,7 @@ angular.module('sreizaoApp')
         controller: 'PriceTrendSurveyListingCtrl as priceTrendSurveyListingVm',
         authenticate:true,
         layout:'admin'
-      });
+      })
+
+       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

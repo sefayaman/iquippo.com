@@ -31,16 +31,16 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      <tr ng-repeat="product in auctionDetailsVm.auctionDetailListing">
                     <td>1</td>
                     <td><img width="50" height="50" src="assets/uploads/1478683591803/banner_46.jpg"></td>
                     <td><img width="50" height="50" src="assets/uploads/1478683591803/banner_46.jpg"></td>
-                    <td>Tipper_1244</td>
-                    <td>Excavator</td>
-                    <td>Tata</td>
-                    <td>2526</td>
-                    <td>ghgvyg</td>
-                    <td>01/12/2017</td>
+                    <td>product.AssetNo</td>
+                    <td>product.AssetCategory</td>
+                    <td>product.Brand</td>
+                    <td>product.Model</td>
+                    <td>{{product.auctionId}}</td>
+                    <td>{{product.lotNo}}</td>
                     <td>12452300</td>
                     <td>3436478</td>
                     <td>Southern Park,Saket</td>
@@ -54,7 +54,7 @@
                     
                   </table>
                   <a href="/auctions" class="btn btn-danger btn-md pull-right">Back</a>
-                  <uib-pagination total-items="productListingVm.totalItems" ng-model="productListingVm.currentPage" items-per-page="productListingVm.itemsPerPage" max-size="productListingVm.maxSize" ng-change="productListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+                  <uib-pagination total-items="auctionDetailsVm.totalItems" ng-model="auctionDetailsVm.currentPage" items-per-page="auctionDetailsVm.itemsPerPage" max-size="auctionDetailsVm.maxSize" ng-change="auctionDetailsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                 </div>
                 
               </div>

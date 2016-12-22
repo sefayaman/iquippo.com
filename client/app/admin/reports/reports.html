@@ -19,6 +19,7 @@
                 <option value="callback">Call Back</option>
                 <option value="quickQuery">Quick Query</option>
                 <option value="additionalServices">Get a Quote for Additional Services</option>
+                <option value="toBuyOrRent">To Buy Or Rent</option>
                 <option value="shipping">Shipping</option>
                 <option value="valuation">Valuation</option>
                 <option value="finance">Financing</option>
@@ -158,6 +159,40 @@
                 <td>{{addSvc.manpowerQuote.scheduleM}}</td>                    
                 <td>{{addSvc.manpowerQuote.comment}}</td>                    
                </tr>
+              </tbody>
+            </table>
+          </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'toBuyOrRent'">
+          <div class="table-responsive" >
+            <table class="table table-bordred table-striped">
+              <thead>
+                <th>Sr. No</th> 
+                <th>Customer</th>                                
+                <th>Mobile No.</th>                                
+                <th>Phone No.</th>                                
+                <th>Email</th>                                
+                <th>Date of Request</th>  
+                <th>Country</th>  
+                <th>Location</th>  
+                <th>Request Type</th>
+                <th>interested In</th>    
+              </thead>
+              <tbody>
+              <tr  ng-repeat="addSvc in reportsVm.toBuyOrRentListing">
+                <td>{{$index + 1+count}}</td>
+                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{addSvc.quote.country}}</td>                    
+                <td>{{addSvc.quote.city}}</td>                    
+                <td>{{addSvc.quote.requesType}}</td>                    
+                <td>{{addSvc.quote.interestedIn}}</td>                    
+                </tr>
               </tbody>
             </table>
           </div>
