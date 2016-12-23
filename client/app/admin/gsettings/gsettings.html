@@ -238,25 +238,25 @@
 				        <form class="invMasterForm" name="auctionDateForm" >
 				          	<div class=" row">
 				          		<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.name.$invalid && submitted }">
-				          			Auction Name*
-				          			<input type="text" class="form-control" name="name" ng-model="gsettingVm.auctionData.name" placeholder="Auction Name" required>
+				          			
+				          			<input type="text" class="form-control" name="name" ng-model="gsettingVm.auctionData.name" placeholder="Auction Name*" required>
 				          		</div>
 				          		<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.auctionId.$invalid && submitted }">
-				          			Auction ID*
-				          			<input type="text" class="form-control" placeholder="Auction ID" name="auctionId" ng-model="gsettingVm.auctionData.auctionId" required>
+				          			
+				          			<input type="text" class="form-control" placeholder="Auction ID*" name="auctionId" ng-model="gsettingVm.auctionData.auctionId" required>
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
-				          			Auction Start Date &amp; Time*
+				          			
 				          			<input class="form-control" datetime-picker readonly name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
-				          			Auction End Date &amp; Time*
+				          			
 				          			<input class="form-control" datetime-picker readonly name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
 				          		</div>
 							</div>
 				          	<div class=" row">
 				          		<div class="col-sm-3">
-				          			Auction Owner
+				          			
 					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" >
 				                	<option value="">Select Owner</option>
 				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.mobile}}">{{svc.user.fname}} ( {{svc.user.mobile}} )</option>
@@ -265,30 +265,30 @@
 				          		</div>
 				          		
 				          		<div class="col-sm-3 form-group">
-				          			Inspection Start Date &amp; Time
-				          			<input class="form-control" datetime-picker readonly name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date" />
+				          			
+				          			<input class="form-control" datetime-picker readonly name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date &amp; Time*" />
 				          		</div>
 				          		<div class="col-sm-3 form-group">
-				          			Inspection End Date &amp; Time
-				          			<input class="form-control" datetime-picker readonly name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date" />
+				          			
+				          			<input class="form-control" datetime-picker readonly name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date &amp; Time*" />
 				          		</div>
 				          		<div class=" col-sm-3 form-group" >
-									Registration End Date
-				          			<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />
+									
+				          			<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Registration End Date &amp; Time" />
 					            </div>			          					          	
 				          	</div>
 
 				          	<div class=" row">
 				          		 
 				                <div class="col-sm-3 form-group">
-				                	Select Location
+				                	
 						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city">
 			                          <option value="" >Current Location</option>
 			                          <option ng-repeat="location in gsettingVm.locationList" value="{{location.name}}">{{location.name}}</option>
 			                        </select>
 			                    </div>
 				                <div class=" col-sm-3 form-group">
-									Address of Auction
+									
 									<input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
 				                </div> 
 				                <div class="col-sm-3 form-group">
@@ -297,7 +297,7 @@
 				                	<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
 				                </div>	
 				                <div class="col-sm-3 form-group">
-				          			Registration Charges for Auction
+				          			
 				          			<input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled>
 				          		</div>		          					          	
 				          	</div>
@@ -305,7 +305,7 @@
 				          	<div class="row">
 				          		
 				          		<div class="col-sm-3 form-group">
-				          			Document Attachment 
+				          			
 				          			<select class="form-control" name="docType" ng-model="gsettingVm.auctionData.docType" >
 				          				<option value="">Select Type</option>
 				          				<option value="tc">Terms and Conditions</option>
@@ -313,7 +313,7 @@
 				          			</select>
 				          		</div>
 				          		<div class="col-sm-2">
-				          			Upload Document
+				          			
 				          			<span class="btn btn-warning fileinput-button">
 										<span>Browse Document</span>
 										<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
