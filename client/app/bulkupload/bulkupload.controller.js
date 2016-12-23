@@ -8,7 +8,7 @@
   function BulkUploadCtrl($scope, $rootScope, bulkuploadSvc, uploadSvc, $location, settingSvc, Modal, Auth, notificationSvc, $uibModal, suggestionSvc, commonSvc) {
     var vm = this;
     var imageCounter = 0;
-
+    vm.template = '';
     vm.showDataSection = true;
     vm.products = [];
     vm.currentProduct = null;
@@ -107,6 +107,7 @@
             case 'auction':
               url = '/api/auction/upload/excel';
               vm.uploadType = 'bulkauction';
+              vm.template = 'Bulk_upload_auction.xlsx';
               break;
             default:
               Modal.alert('Invalod Choice');
@@ -120,7 +121,7 @@
               $rootScope.loading = false;
               var totalRecord = res.successObj + res.errObj.length + res.duplicateRecords.length;
               var message = res.successObj + " out of " + totalRecord + " records are  processed successfully.";
-              if (res.errObj.length > 0) {
+              if (res.errObj.length > 0 || res.duplicateRecords.length) {
                 var data = {};
                 data['to'] = Auth.getCurrentUser().email;
                 data['subject'] = 'Bulk produt upload error details.';
