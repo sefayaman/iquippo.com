@@ -150,7 +150,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
       address+=city+','+location;
       var params = {address: address, sensor: false};
 
-      return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+city+','+location+'&key=AIzaSyB2Vlq4VoNvIEkhE1Ou9HR48qdKRkSxmxs',{params:params,headers:{'X-Requested-With':undefined}})
+      return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address='+city+','+location+'&key=AIzaSyB2Vlq4VoNvIEkhE1Ou9HR48qdKRkSxmxs')
         .then(function(res) {
           return res.geometry.location;
         })

@@ -2,7 +2,7 @@ var Auction = require('./auction.model');
 
 var auctionData = {
 
-		count: function(req, res) {
+		count: function(req, res,next) {
 			var filters={};
              console.log(req.query.auctionId);
 			      filters.auctionId=req.query.auctionId;
@@ -15,9 +15,17 @@ var auctionData = {
 				query.exec(
 					function(err, auctions) {
 						if (err) {
-							return handleError(res, err);
+							return next(err);
 						}
 						console.log(auctions);
+                        var query2=Auction.aggregate([{"$group":{_id:"$isSold",count:{$sum:1,auctionId:1}}}])
+                        	query2.exec(function(err,isSoldCount){
+                        		if (err) {
+							return next(err);
+						}
+						    console.log(isSoldCount);
+                        	});
+
 						return res.status(200).send(auctions);
 					}
 				);

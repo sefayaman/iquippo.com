@@ -24,11 +24,14 @@ angular.module('sreizaoApp',[
   'manpower',
   'spare',
   'report',
-  'angularjs-datetime-picker'
+  'angularjs-datetime-picker',
+  'ngMap'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
       .otherwise('/');
+
+    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
     $locationProvider.html5Mode(true);
     if (!$httpProvider.defaults.headers.get) {
