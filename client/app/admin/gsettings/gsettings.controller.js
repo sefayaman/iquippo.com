@@ -133,6 +133,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     			loadAllLocation();
     		break;
     		case 'date':
+    			resetPagination();
 				getAuctionMaster(dataToSend);
     			loadAuctionData();
 				loadAllCategory();
