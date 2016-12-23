@@ -38,16 +38,18 @@
           </div>
             <table class="table table-bordred table-striped">
               <thead>
-                <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th>
-                <th>Request ID</th>                                
-                <th>Category</th>
-                <th>Asset Name</th>
-                <th>Asset Status</th>
-                <th>Serial Number</th>
-                <th>Status</th>
-                <th>Purpose</th>
-                <th>Request Date</th>
-                <th width="15%">Action</th>
+                <tr>
+                  <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th>
+                  <th>Request ID</th>                                
+                  <th>Category</th>
+                  <th>Asset Name</th>
+                  <th>Asset Status</th>
+                  <th>Serial Number</th>
+                  <th>Status</th>
+                  <th>Purpose</th>
+                  <th>Request Date</th>
+                  <th width="15%">Action</th>
+                </tr>
                
               </thead>
               <tbody>
@@ -79,8 +81,9 @@
                </tr>
               </tbody>
             </table>
+            </div>
             <uib-pagination total-items="valuationListingVm.totalItems" ng-model="valuationListingVm.currentPage" items-per-page="valuationListingVm.itemsPerPage" max-size="valuationListingVm.maxSize" ng-change="valuationListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-        </div>
+        
     </div>
   </div>
 </div>

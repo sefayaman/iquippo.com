@@ -177,10 +177,12 @@
 					        </div>
 			               	<table class="table table-bordred table-striped">				
 	                            <thead>
-                                    <th>Brand</th>
-                                    <th>Product Category</th>
-                                    <th>Product Group</th>                                    
-                                     <th>Actions</th>		
+                                    <tr>
+                                    	<th>Brand</th>
+	                                    <th>Product Category</th>
+	                                    <th>Product Group</th>                                    
+	                                    <th>Actions</th>
+                                    </tr>		
                                 </thead>
                          		<tbody>
                          		  <tr ng-repeat="brand in filteredBrand| startFrom:(masterDataVm.bCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">
@@ -245,11 +247,13 @@
 					        </div>
                             <table class="table table-bordred table-striped">
                                 <thead>
-                                	<th>Model</th>
-                                    <th>Brand</th>
-                                    <th>Product Category</th>
-                                    <th>Product Group</th>
-                                    <th>Actions</th>
+                                	<tr>
+                                		<th>Model</th>
+	                                    <th>Brand</th>
+	                                    <th>Product Category</th>
+	                                    <th>Product Group</th>
+	                                    <th>Actions</th>
+                                	</tr>
                                 </thead>
                          		<tbody>
                                   <tr ng-repeat="model in filteredModel|startFrom:(masterDataVm.mCurrentPage -1 )*masterDataVm.itemsPerPage|limitTo:masterDataVm.itemsPerPage">

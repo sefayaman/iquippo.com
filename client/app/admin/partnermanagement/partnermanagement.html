@@ -153,18 +153,20 @@
             <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
               <thead>
-                <th >Image</th>
-                <th>Name</th>
-                <th>Legal Entity</th>
-                <th>Services</th>
-                <th>Email Id</th>
-                <th>Mobile No.</th>  
-                <th>Status</th>              
-                <th>Action</th>
+                <tr>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Legal Entity</th>
+                  <th>Services</th>
+                  <th>Email Id</th>
+                  <th>Mobile No.</th>  
+                  <th>Status</th>              
+                  <th>Action</th>
+                </tr>
                
               </thead>
               <tbody>
-              <tr ng-repeat="vendor in vendorList">
+               <tr ng-repeat="vendor in vendorList">
                 <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{vendor.user.imgsrc}}" alt="Image"></td>
                 <td>{{vendor.user.fname}}</td>
                 <td>{{vendor.entityName}}</td>

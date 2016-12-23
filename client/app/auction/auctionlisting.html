@@ -30,18 +30,20 @@
       </div>
           <table class="table table-bordred table-striped">
             <thead>
-              <th width="50"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
-              <th>Asset Name</th>                                
-              <th>Auction ID</th>                                
-              <th>Asset ID</th>                                
-              <th>Product ID</th>                                
-              <th>Seller Name</th>                                
-              <th>Start Date</th>
-              <th>End Date</th>
-              <!-- <th>EMD Amount</th> -->
-              <th>Auction Status</th>
-              <th>Valuation Status</th>
-              <th>Action</th>             
+              <tr>
+                <th width="50"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
+                <th>Asset Name</th>                                
+                <th>Auction ID</th>                                
+                <th>Asset ID</th>                                
+                <th>Product ID</th>                                
+                <th>Seller Name</th>                                
+                <th>Start Date</th>
+                <th>End Date</th>
+                <!-- <th>EMD Amount</th> -->
+                <th>Auction Status</th>
+                <th>Valuation Status</th>
+                <th>Action</th>  
+              </tr>           
             </thead>
             <tbody>
             <tr ng-repeat="auts in auctionListingVm.auctions">
@@ -70,8 +72,9 @@
              </tr>
             </tbody>
           </table>
+        </div>
           <uib-pagination total-items="auctionListingVm.totalItems" ng-model="auctionListingVm.currentPage" items-per-page="auctionListingVm.itemsPerPage" max-size="auctionListingVm.maxSize" ng-change="auctionListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-      </div>
+      
     </div>
   </div>
 </div>
