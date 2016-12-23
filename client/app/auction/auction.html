@@ -4,8 +4,8 @@
 		<legend></legend>
 
 		<div class="btn-group form-group">
-      <button type="button" class="btn btn-default active" ng-click="auctionDateVm.firecommand('closedAuctions')">Closed Auctions</button>
-      <button type="button" class="btn btn-default" ng-click="auctionDateVm.firecommand('upcomingAuctions')">Upcoming Auctions</button>          
+      <button type="button" class="btn btn-default active" ng-click="auctionDateVm.fireCommand('closedAuctions')">Closed Auctions</button>
+      <button type="button" class="btn btn-default" ng-click="auctionDateVm.fireCommand('openAuctions')">Upcoming Auctions</button>          
     </div>
 
 		<div class="row">
@@ -41,12 +41,12 @@
                 <td>{{product.auctionType}}</td>
                 <td>{{product.name}}</td>
                 <td>{{product.auctionOwner}}</td>
-                <td>{{product.startDate}}</td>
-                <td>{{product.endDate}}</td>
-                <td>{{product.insStartDate}}</td>
-                <td>{{product.insEndDate}}</td>
+                <td>{{product.startDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.endDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.insStartDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.insEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
                 <td>{{product.regCharges}}</td>
-                <td>{{product.regEndDate}}</td>
+                <td>{{product.regEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
                 <!-- <td>
                     <a href="javascript:void(0);" uib-popover="Seller Information" popover-trigger="mouseenter"></a>
                 </td> -->
@@ -56,9 +56,9 @@
                 <td ng-click="auctionDateVm.openMap(product.auctionAddr,product.state)"><a href="javascript:void(0);">{{product.auctionAddr}}</a></td>
                 <td><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i></a></td>
                 <td><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i></a></td>
-                <td>26</td>
-                <td>15</td>
-                <td>10</td>
+                <td>{{product.itemCount}}</td>
+                <td>{{product.totalItemsSold}}</td>
+                <td>{{product.inSaleValue}}</td>
                	<td>
                   <a href="/auctiondetail?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
                	    <i class="fa fa-eye"></i>
@@ -71,7 +71,7 @@
             
           </table>
         </div>
-        <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>        
+       <!--  <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->        
       </div>
 		</div>
 		

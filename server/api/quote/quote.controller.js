@@ -195,7 +195,7 @@ function excel_from_data(data) {
     ws[cell_ref] = cell;
 
     if(R == 0)
-      cell = {v: "Customer Full Name"};
+      cell = {v: "Full Name"};
     else{
       if(user)
         cell =  {v: (user.fname || "") + " " + (user.mname || "") + " " + (user.lname || "")};
@@ -225,7 +225,7 @@ function excel_from_data(data) {
     ws[cell_ref] = cell;
 
     if(R == 0)
-      cell = {v: "Email"};
+      cell = {v: "Email Address"};
     else {
       if(user)
         cell = {v: user.email || ""};

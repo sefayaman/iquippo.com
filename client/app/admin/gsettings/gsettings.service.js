@@ -343,6 +343,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     svc.saveAuctionMaster = saveAuctionMaster;
     svc.updateAuctionMaster = updateAuctionMaster;
     svc.getFilterOnAuctionMaster = getFilterOnAuctionMaster;
+    var auctionMasterCache = [];
     
     function get(filter){
 

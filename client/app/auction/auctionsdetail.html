@@ -31,23 +31,23 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="product in auctionDetailsVm.auctionDetailListing">
-                    <td>1</td>
+                      <tr ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+                    <td>{{auctionProduct.lotNo}}</td>
                     <td><img width="50" height="50" src="assets/uploads/1478683591803/banner_46.jpg"></td>
                     <td><img width="50" height="50" src="assets/uploads/1478683591803/banner_46.jpg"></td>
-                    <td>product.AssetNo</td>
-                    <td>product.AssetCategory</td>
-                    <td>product.Brand</td>
-                    <td>product.Model</td>
-                    <td>{{product.auctionId}}</td>
-                    <td>{{product.lotNo}}</td>
-                    <td>12452300</td>
-                    <td>3436478</td>
-                    <td>Southern Park,Saket</td>
-                    <td>Yes</td>
-                    <td>50%</td>
-                    <td>Rafia</td>
-                    <td>9267727823</td>
+                    <td>{{auctionProduct.product.assetId}}</td>
+                    <td>{{auctionProduct.product.category}}</td>
+                    <td>{{auctionProduct.product.brand}}</td>
+                    <td>{{auctionProduct.product.model}}</td>
+                    <td>{{auctionProduct.product.description}}</td>
+                    <td>{{auctionProduct.product.invoiceDate}}</td>
+                    <td>{{auctionProduct.product.registrationNo}}</td>
+                    <td>{{auctionProduct.product.engineNo}}</td>
+                    <td>{{auctionProduct.product.city}}</td>
+                    <td>{{auctionProduct.product.originalInvoice}}</td>
+                    <td>{{auctionProduct.product.vatPercentage}}</td>
+                    <td>{{auctionProduct.product.contactName}}</td>
+                    <td>{{auctionProduct.product.contactNumber}}</td>
                   </tr>
                       
                     </tbody>

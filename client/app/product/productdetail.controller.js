@@ -259,6 +259,10 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
     productObj._id = $scope.currentProduct._id;
     productObj.name = $scope.currentProduct.name;
     productObj.productId = $scope.currentProduct.productId;
+    productObj.tradeType = $scope.currentProduct.tradeType;
+    productObj.assetId = $scope.currentProduct.assetId;
+    productObj.mfgYear = $scope.currentProduct.mfgYear;
+    productObj.city = $scope.currentProduct.city;
     productObj.seller = $scope.currentProduct.seller;
     productObj.assetDir = $scope.currentProduct.assetDir;
     productObj.primaryImg = $scope.currentProduct.primaryImg;

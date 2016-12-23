@@ -14,6 +14,6 @@ router.delete('/:id', controller.destroy);
 router.post('/search', controller.search);
 router.post('/buynow', controller.buyNow);
 router.post('/onfilter', controller.getOnFilter);
-
+router.post('/export', controller.exportBuyer);
 
 module.exports = router;

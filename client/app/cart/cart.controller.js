@@ -117,6 +117,10 @@ function ViewCartCtrl($scope,$rootScope,CartSvc,Auth,Modal,$uibModal,notificatio
               obj.subCategory = item.subCategory.name;
             obj.city = item.city;
             obj.comment = item.comment;
+            obj.tradeType = item.tradeType;
+            obj.mfgYear = item.mfgYear;
+            obj.city = item.city;
+            obj.assetId = item.assetId;
             dataToSend.product[dataToSend.product.length] = obj;
         }
         else{

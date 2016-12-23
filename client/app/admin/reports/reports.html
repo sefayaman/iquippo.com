@@ -19,7 +19,10 @@
                 <option value="callback">Call Back</option>
                 <option value="quickQuery">Quick Query</option>
                 <option value="additionalServices">Get a Quote for Additional Services</option>
-                <option value="toBuyOrRent">To Buy Or Rent</option>
+<<<<<<< HEAD
+=======
+                <option value="buyOrRentOrBoth">Send Message - To Buy / For Rent / For Both</option>
+>>>>>>> 6cc1e077c8132ef9588e541d7a30e82be54164ff
                 <option value="shipping">Shipping</option>
                 <option value="valuation">Valuation</option>
                 <option value="finance">Financing</option>
@@ -38,10 +41,10 @@
             <table class="table table-bordred table-striped">
               <thead>
                 <th>Sr. No</th> 
-                <th>Customer Full Name</th>                                
+                <th>Full Name</th>                                
                 <th>Mobile No.</th>                                
                 <th>Phone No.</th>                                
-                <th>Email</th>                                
+                <th>Email Address</th>                                
                 <th>Date of Request</th>  
               </thead>
               <tbody>
@@ -63,10 +66,10 @@
             <table class="table table-bordred table-striped">
               <thead>
                 <th>Sr. No</th> 
-                <th>Customer Full Name</th>                                
+                <th>Full Name</th>                                
                 <th>Mobile No.</th>                                
                 <th>Phone No.</th>                                
-                <th>Email</th>                                
+                <th>Email Address</th>                                
                 <th>Date of Request</th>  
                 <th>Category</th>  
                 <th>Brand</th>  
@@ -104,7 +107,7 @@
                 <th>Full Name</th>                                
                 <th>Mobile No.</th>                                
                 <th>Phone No.</th>                                
-                <th>Email</th>                                
+                <th>Email Address</th>                                
                 <th>Date of Request</th>  
                 <th>Country</th>  
                 <th>Location</th>  
@@ -164,6 +167,7 @@
           </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
+<<<<<<< HEAD
 
           <div ng-if="reportsVm.tabValue == 'toBuyOrRent'">
           <div class="table-responsive" >
@@ -200,38 +204,92 @@
           </div>
 
         <div ng-if="reportsVm.tabValue == 'shipping'">
+=======
+          <!-- start of to sell-->
+          <div ng-if="reportsVm.tabValue == 'buyOrRentOrBoth'">
+>>>>>>> 6cc1e077c8132ef9588e541d7a30e82be54164ff
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
                 <th>Sr. No</th> 
-                <th>Customer</th>                                
-                <th>Mobile No.</th>                                
+                <th>Full Name</th>
+                <th>Country</th> 
                 <th>Phone No.</th>                                
-                <th>Email</th>                                
+                <th>Mobile No.</th>                                
+                <th>Email Address</th>                                
+                <th>Method of contact</th>  
+                <!-- <th>Request for finance</th> -->  
+                <th>Amount to be Financed</th>  
+                <th>Indicative Rate</th>  
+                <th>Tenure</th>  
+                <th>Financing Company</th> 
+                <th>Comments</th>  
                 <th>Date of Request</th>  
-                <th>Country</th>  
+                <th>Requested Products</th> 
+                <th>View Products</th> 
+              </thead>
+              <tbody>
+              <tr  ng-repeat="proQuery in reportsVm.buyOrRentListing">
+                <td>{{$index + 1 + count}}</td>
+                <td>{{proQuery.fname}} {{proQuery.lname}}</td>     
+                <td>{{proQuery.country}}</td> 
+                <td>{{proQuery.phone}}</td>        
+                <td>{{proQuery.mobile}}</td>
+                <td>{{proQuery.email}}</td>
+                <td>{{proQuery.contact}}</td>                    
+                <!-- <td>{{proQuery.interestedIn}}</td> -->                  
+                <td>{{proQuery.financeInfo.financeAmount}}</td>                    
+                <td>{{proQuery.financeInfo.assetCost}}</td>                    
+                <td>{{proQuery.financeInfo.periodInMonths}}</td>                    
+                <td>{{proQuery.financeInfo.finAgency}}</td>
+                <td>{{proQuery.comment}}</td>     
+                <td>{{proQuery.createdAt | date:'MM/dd/yyyy'}}</td>                     
+                <td>{{reportsVm.getRequestedProducts(proQuery.product)}}</td>
+                <td>
+                  <a href="javascript:void(0);" ng-click="reportsVm.viewProductsDetail(proQuery.product)" class="btn btn-primary btn-sm">
+                    <i class="fa fa-eye"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+          <!-- end of to sell-->
+        <div ng-if="reportsVm.tabValue == 'shipping'">
+          <div class="table-responsive" >
+            <table class="table table-bordred table-striped">
+              <thead>
+                <th>Sr. No</th> 
+                <th>Full Name</th>                                
+                <th>Country</th>
                 <th>Location</th>  
-                <th>Company Name</th>  
+                <th>Company Name</th>
                 <th>Designation</th>  
+                <th>Phone No.</th>
+                <th>Mobile No.</th>                                
+                <th>Email Address</th>                                
                 <th>Shipment Allowed</th>  
                 <th>Packaging</th>    
-                <th>Comments</th>    
+                <th>Comments</th>
+                <th>Date of Request</th>  
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.shippingListing">
                 <td>{{$index + 1+count}}</td>
-                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
-                <td>{{addSvc.quote.mobile}}</td>
-                <td>{{addSvc.quote.phone}}</td>
-                <td>{{addSvc.quote.email}}</td>
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
-                <td>{{addSvc.quote.country}}</td>                    
-                <td>{{addSvc.quote.city}}</td>                    
+                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td> 
+                <td>{{addSvc.quote.country}}</td>
+                <td>{{addSvc.quote.city}}</td> 
                 <td>{{addSvc.quote.companyname}}</td>                    
-                <td>{{addSvc.quote.designation}}</td>                    
+                <td>{{addSvc.quote.designation}}</td>   
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.email}}</td>
                 <td>{{addSvc.quote.allowed}}</td>                    
                 <td>{{addSvc.quote.packaging}}</td>                                        
-                <td>{{addSvc.quote.comment}}</td>                                        
+                <td>{{addSvc.quote.comment}}</td>   
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                </tr>
               </tbody>
             </table>
@@ -244,10 +302,10 @@
             <table class="table table-bordred table-striped">
               <thead>
                 <th>Sr. No</th> 
-                <th>Customer</th>                                
+                <th>Full Name</th>                                
                 <th>Mobile No.</th>                                
                 <th>Phone No.</th>                                
-                <th>Email</th>                                
+                <th>Email Address</th>                                
                 <th>Date of Request</th>  
                 <th>Country</th>  
                 <th>Location</th>  
@@ -294,7 +352,7 @@
                 <th>Designation</th>                                
                 <th>Phone No.</th>  
                 <th>Mobile No.</th>  
-                <th>Email</th>
+                <th>Email Address</th>
                 <th>Date of Request</th> 
                 <th>Category</th>
                 <th>Brand</th>
@@ -350,7 +408,7 @@
                 <th>Designation</th>                                
                 <th>Phone No.</th>  
                 <th>Mobile No.</th>  
-                <th>Email</th>
+                <th>Email Address</th>
                 <th>Date of Request</th> 
                 <th>Category</th>
                 <th>Brand</th>
@@ -394,3 +452,44 @@
     </div>
   </div>
 </div>
+<script type="text/ng-template" id="viewProductList.html">
+  <div>
+    <div class="modal-header">
+      <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">View Detail</h4>
+    </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-bordred table-striped">
+              <thead>
+                <tr>
+                  <th>Product ID</th>
+                  <th>Asset ID</th>  
+                  <th>Category</th>  
+                  <th>Brand</th>  
+                  <th>Model</th>  
+                  <th>Manufacturing Year</th>
+                  <th>Asset Location</th>
+                  <th>Trading Type</th>
+                  <th>Price</th>
+                </tr>      
+              </thead>
+              <tbody>
+                <tr ng-repeat="product in productList">
+                  <td>{{product.productId}}</td>
+                  <td>{{product.assetId}}</td>
+                  <td>{{product.category}}</td>
+                  <td>{{product.brand}}</td>
+                  <td>{{product.model}}</td>
+                  <td>{{product.mfgYear}}</td>
+                  <td>{{product.city}}</td>
+                  <td>{{product.tradeType}}</td>
+                  <td>{{product.grossPrice}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+     
+      </div>
+  </div>
+</script>

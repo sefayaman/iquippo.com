@@ -329,11 +329,11 @@
 				          	</form>
 				          </div>
 				        </form>
-				        <p class="text-right">Showing : {{gsettingVm.totalItems}} Records</p>
+				        <!-- <p class="text-right">Showing : {{gsettingVm.totalMItems}} Records</p> -->
 				          <div class="row">
 				          	<div class="col-sm-3 pull-right">
 			                    <div class="tablesearch text-right form-group">
-			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.auctionSearchFilter.searchStr" ng-change="gsettingVm.fireCommandForAuctionMaster(true)" ng-model-options="{debounce:500}">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'auctionmaster')" ng-model-options="{debounce:500}">
 			                    </div>
 			                 </div>
 				          </div>
@@ -385,18 +385,22 @@
 				              </tbody>
 				            </table>
 				        </div>
-				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommandForAuctionMaster()" class="pagination-sm" rotate="false">  </uib-pagination>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
 				</uib-tab>
 				<uib-tab heading="Assets in Auction">
 					<div class="row">
-						<div class="col-sm-10">
+						<div class="col-sm-8">
 							<h4>Assets in Auction</h4>
 						</div>
 						<div class="col-sm-2">
 							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuctionClicked()">
 								<i class="fa "  ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New					   
 							</button>
-						</div>						
+						</div>
+
+						<span class="col-sm-2" >
+              <a href="/bulkupload?type=auction" class="btn btn-success"><i class="fa fa-database"></i> Bulk Auction Upload</a>
+                   </span>						
 					</div>
 					<legend></legend>
 
@@ -457,7 +461,7 @@
 								<input type="text" class="form-control" placeholder="Asset Desc" ng-model="gsettingVm.auctionProduct.product.description"/>
 							</div>
 							<div class="col-sm-3 form-group">
-								<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invioceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+								<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invoiceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
 							</div>
 							<div class="col-sm-3 form-group">
 								<input type="text" class="form-control" placeholder="Asset Registration No" ng-model="gsettingVm.auctionProduct.product.registrationNo"/>
@@ -531,7 +535,7 @@
 						<div class="row">
 				          	<div class="col-sm-3 pull-right">
 			                    <div class="tablesearch text-right form-group">
-			                       Search: <input type="text" placeholder="Search..." ng-model="spareListingVm.spareSearchFilter.searchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'auctionrequest')" ng-model-options="{debounce:500}">
 			                    </div>
 			                 </div>
 				          </div>
@@ -584,13 +588,13 @@
 				                <td>{{auct.product.saleVal}}</td>
 				                <td>										
 									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil" ng-click="gsettingVm.editAssetInAuctionClicked(auct)"></i> </a>
-									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct._id)"><i class="fa fa-trash"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct)"><i class="fa fa-trash"></i> </a>
 				                </td>
 				               </tr>
 				              </tbody>
 				            </table>
 				        </div>
-				        <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionrequest')" class="pagination-sm" rotate="false">  </uib-pagination>
 
 				</uib-tab>
     		

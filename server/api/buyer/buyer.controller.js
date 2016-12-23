@@ -4,7 +4,8 @@ var _ = require('lodash');
 var Buyer = require('./buyer.model');
 var Seq = require('seq');
 var PaymentTransaction = require('./../payment/payment.model');
-
+var Utility = require('./../../components/utility.js');
+var  xlsx = require('xlsx');
 // Get list of buyer
 exports.getAll = function(req, res) {
   Buyer.find(function (err, buyer) {
@@ -34,11 +35,44 @@ exports.create = function(req, res) {
 
 //search based on product _id
 exports.search = function(req, res) {
-  //var term = new RegExp(req.body.searchstr, 'i');
+  var searchStrReg = new RegExp(req.body.searchstr, 'i');
+
   var filter = {};
-  console.log("buyer created", req.body._id);
+  var arr = [];
+  if(req.body.searchstr){
+    arr[arr.length] = { fname: { $regex: searchStrReg }};
+    arr[arr.length] = { lname: { $regex: searchStrReg }};
+    arr[arr.length] = { mobile: { $regex: searchStrReg }};
+    arr[arr.length] = { phone: { $regex: searchStrReg }};
+    arr[arr.length] = { email: { $regex: searchStrReg }};
+    arr[arr.length] = { country: { $regex: searchStrReg }};
+    arr[arr.length] = { contact: { $regex: searchStrReg }};
+    arr[arr.length] = { "financeInfo.finAgency": { $regex: searchStrReg }};
+    arr[arr.length] = { "financeInfo.periodInMonths": { $regex: searchStrReg }};
+    arr[arr.length] = { "financeInfo.assetCost": { $regex: searchStrReg }};
+    arr[arr.length] = { "financeInfo.financeAmount": { $regex: searchStrReg }};
+    arr[arr.length] = { "product.assetId": { $regex: searchStrReg }};
+    arr[arr.length] = { "product.productId": { $regex: searchStrReg }};
+    arr[arr.length] = { "product.name": { $regex: searchStrReg }};
+    arr[arr.length] = { "product.tradeType": { $regex: searchStrReg }};
+  }
+
+  if(arr.length > 0)
+    filter['$or'] = arr;
+
   if(req.body._id)
     filter["product._id"] = req.body._id;
+
+  var result = {};
+  if(req.body.pagination){
+    Utility.paginatedResult(req,res,Buyer,filter,{});
+    return;    
+  }
+
+  var sortObj = {}; 
+  if(req.body.sort)
+    sortObj = req.body.sort;
+  sortObj['createdAt'] = -1;
 
   var query = Buyer.find(filter);
   console.log("filetr ",filter);
@@ -110,6 +144,230 @@ exports.getOnFilter = function(req,res){
      res.status(200).json(buyReqs);
   });
 }
+
+exports.exportBuyer = function(req,res){
+  var filter = {};
+
+  var query = Buyer.find(filter).sort({createdAt: -1});
+  query.exec(
+     function (err, users) {
+        if(err) { return handleError(res, err); }
+        var ws_name = "users"
+        var wb = new Workbook();
+        var ws = excel_from_data(users);
+        wb.SheetNames.push(ws_name);
+        wb.Sheets[ws_name] = ws;
+        var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+        res.end(wbout);
+     });
+}
+
+//export data into excel
+function Workbook() {
+  if(!(this instanceof Workbook)) return new Workbook();
+  this.SheetNames = [];
+  this.Sheets = {};
+}
+
+function datenum(v, date1904) {
+  if(date1904) v+=1462;
+  var epoch = Date.parse(v);
+  return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
+}
+ 
+function setType(cell){
+  if(typeof cell.v === 'number')
+    cell.t = 'n';
+  else if(typeof cell.v === 'boolean')
+      cell.t = 'b';
+  else if(cell.v instanceof Date)
+   {
+        cell.t = 'n'; cell.z = xlsx.SSF._table[14];
+        cell.v = datenum(cell.v);
+    }
+    else cell.t = 's';
+}
+
+function excel_from_data(data) {
+  var ws = {};
+  var range;
+  range = {s: {c:0, r:0}, e: {c:14, r:data.length }};
+
+  for(var R = 0; R != data.length + 1 ; ++R){
+    
+    var C = 0;
+    var user = null;
+    var cell = null;
+    if(R != 0)
+      user = data[R-1];
+
+    if(R == 0)
+      cell = {v: "Sr. No"};
+    else{
+      if(user)
+        cell =  {v: R};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Full Name"};
+    else{
+      if(user)
+        cell =  {v: (user.fname || "") + " " + (user.lname || "")};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Country"};
+    else {
+      if(user)
+        cell = {v: user.country || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Phone No."};
+    else {
+      if(user)
+        cell = {v: user.phone || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Mobile No."};
+    else {
+      if(user)
+        cell = {v: user.mobile || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Email Address"};
+    else {
+      if(user)
+        cell = {v: user.email || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Method of contact"};
+    else {
+      if(user)
+        cell = {v: user.contact || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Amount to be Financed"};
+    else {
+      if(user && user.financeInfo)
+        cell = {v: user.financeInfo.financeAmount || ""};
+      else
+        cell = {v: ""};
+
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Indicative Rate"};
+    else {
+      if(user && user.financeInfo)
+        cell = {v: user.financeInfo.assetCost || ""};
+      else
+        cell = {v: ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+        if(R == 0)
+      cell = {v: "Tenure"};
+    else {
+      if(user && user.financeInfo)
+        cell = {v: user.financeInfo.periodInMonths || ""};
+      else
+        cell = {v: ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Financing Company"};
+    else {
+      if(user && user.financeInfo)
+        cell = {v: user.financeInfo.finAgency || ""};
+      else
+        cell = {v: ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Comments"};
+    else {
+      if(user)
+        cell = {v: user.comment || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Date of Request"};
+    else {
+      if(user)
+        cell = {v: user.createdAt};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Requested Products"};
+    else {
+      if(user)
+        cell = {v: getRequestedProducts(user.product) || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+  }
+  ws['!ref'] = xlsx.utils.encode_range(range);
+  return ws;
+}
+
+  function getRequestedProducts(productsData){
+      if(!productsData)
+        return "";
+      var productArr = [];
+      if(productsData.length > 0){
+        productsData.forEach(function(product){
+          var tradeType = "";
+            if(product.tradeType)
+              var tradeType = product.tradeType;
+          productArr[productArr.length] = product.productId + " | " + product.name + " | " + tradeType;
+        });
+      }
+      return productArr.join(", ");
+    }
 
 function handleError(res, err) {
   return res.status(500).send(err);

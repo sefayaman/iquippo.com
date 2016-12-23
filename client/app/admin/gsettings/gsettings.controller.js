@@ -72,19 +72,22 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     
     vm.editAuctionMaster = editAuctionMaster;
     vm.updateAuctionMaster = updateAuctionMaster;
-    vm.fireCommandForAuctionMaster = fireCommandForAuctionMaster;
+    vm.fireCommand = fireCommand;
     $scope.uploadDoc = uploadDoc;
     
-    vm.auctionSearchFilter = {};
+    //vm.auctionSearchFilter = {};
     var dataToSend = {};
+
     //pagination variables
     var prevPage = 0;
     vm.itemsPerPage = 50;
     vm.currentPage = 1;
     vm.totalItems = 0;
+    vm.totalMItems = 0;
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;
+    $scope.resetPagination = resetPagination;
     
     vm.auctionProduct = {};
     vm.addAssetInAuctionClicked = addAssetInAuctionClicked;
@@ -118,6 +121,9 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     vm.deleteAuctionMaster = deleteAuctionMaster;
 
     function onTabChange(tabValue){
+    	dataToSend.pagination = true;
+		dataToSend.itemsPerPage = vm.itemsPerPage;
+
     	switch(tabValue){
     		// case 'sc':
     		// 	 loadAllSubcategory();
@@ -127,12 +133,10 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     			loadAllLocation();
     		break;
     		case 'date':
-			dataToSend.pagination = true;
-			dataToSend.itemsPerPage = vm.itemsPerPage;
-			getAuctionMaster(dataToSend);
+				getAuctionMaster(dataToSend);
     			loadAuctionData();
 				loadAllCategory();
-				getApprovedAuctionAsset()
+				getApprovedAuctionAsset(dataToSend);
     		break;
     		case 'inv':
     			getInvitationMasterData();
@@ -532,7 +536,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 			if(res.errorCode == 0){
 				vm.auctionData = {};
 				loadAuctionData();
-				fireCommandForAuctionMaster(true);
+				fireCommand(true,null,"auctionmaster");
 			}
 			else
 				Modal.alert(res.message);
@@ -552,7 +556,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 				vm.auctionData = {};
 				vm.auctionEdit = false;
 				loadAuctionData();
-				fireCommandForAuctionMaster(true);
+				fireCommand(true,null,'auctionmaster');
 			}
 			else
 				Modal.alert(res.message);
@@ -581,6 +585,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	}
 	
 	function getAuctionMaster(filter){
+		filter = filter || {};
 		filter.prevPage = prevPage;
 	    filter.currentPage = vm.currentPage;
 	    filter.first_id = first_id;
@@ -588,36 +593,15 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		AuctionMasterSvc.getFilterOnAuctionMaster(filter)
 		.then(function(result){
 			vm.auctions = result.items;
-	        vm.totalItems = result.totalItems;
+	        vm.totalMItems = result.totalItems;
 	        prevPage = vm.currentPage;
-	        if(vm.auctions.length > 0){
+	        if(vm.auctions && vm.auctions.length > 0){
 	          first_id = vm.auctions[0]._id;
 	          last_id = vm.auctions[vm.auctions.length - 1]._id;
 	        }
 		});
 	}
 
-	function fireCommandForAuctionMaster(reset,filterObj){
-	    if(reset)
-	      resetPagination();
-	    var filter = {};
-	    if(!filterObj)
-	        angular.copy(dataToSend, filter);
-	    else
-	      filter = filterObj;
-	    if(vm.auctionSearchFilter.searchStr)
-	      filter['searchstr'] = vm.auctionSearchFilter.searchStr;
-	    
-	    getAuctionMaster(filter);
-	  }
-
-	function resetPagination(){
-      prevPage = 0;
-      vm.currentPage = 1;
-      vm.totalItems = 0;
-      first_id = null;
-      last_id = null;
-  	}
 
 	function loadAuctionData(){
 		PaymentMasterSvc.getAll()
@@ -658,7 +642,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	        	Modal.alert(res.message,true);
 	        else
 	        	//getAuctionMaster();	 
-	        fireCommandForAuctionMaster(true);
+	        fireCommand(true,null,"auctionmaster");
 	      })
 	      .catch(function(res){
 	        $rootScope.loading = false;
@@ -682,8 +666,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	function submitDeleteAuctionMaster(idx){
 		AuctionMasterSvc.delAuctionMaster(vm.auctions[idx])
 		.then(function(result){
-			//getAuctionMaster();
-			fireCommandForAuctionMaster(true);
+			//loadAuctionData();
+			fireCommand(true,null,'auctionmaster');
 		})
     }
 
@@ -860,12 +844,23 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 
 /*Auction Request for external product  start*/
 
-function getApprovedAuctionAsset(){
-	var filter = {};
+function getApprovedAuctionAsset(filter){
+
+	filter.prevPage = prevPage;
+	filter.currentPage = vm.currentPage;
+	filter.first_id = first_id;
+	filter.last_id = last_id;
+
 	filter['status'] = auctionStatuses[2].code;
-	AuctionSvc.getOnFilter()
-	.then(function(aucts){
-		vm.assetsInAuction = aucts;
+	AuctionSvc.getOnFilter(filter)
+	.then(function(result){
+		vm.assetsInAuction = result.items;
+		vm.totalItems = result.totalItems;
+        prevPage = vm.currentPage;
+        if(vm.assetsInAuction.length > 0){
+          first_id = vm.assetsInAuction[0]._id;
+          last_id = vm.assetsInAuction[vm.assetsInAuction.length - 1]._id;
+        }
 	})
 }
 
@@ -902,7 +897,7 @@ function uploadImage(files,_this,param){
 	 uploadSvc.upload(files[0], auctionDir,null,true).then(function(result){
 	 	vm.auctionProduct.product.assetDir = result.data.assetDir;
 	 	if(param == 1)
-	 		vm.auctionProduct.product.primaryImage = result.data.filename;
+	 		vm.auctionProduct.product.primaryImg = result.data.filename;
 	 	else if(param == 2){
 	 		if(!vm.auctionProduct.product.otherImages)
 	 			vm.auctionProduct.product.otherImages = [];
@@ -927,7 +922,11 @@ function saveAssetInAuction(form){
 		$scope.submitted = true;
 		return;
 	}
-
+	var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0?true:false;
+	if(!imgFound){
+		Modal.alert("Please upload both images.");
+		return;
+	}
 	for(var i=0; i< vm.upcomingAuctions.length;i++){
 		if(vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId){
 			vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
@@ -941,7 +940,7 @@ function saveAssetInAuction(form){
 		if(!result.errorCode){
 			$scope.submitted = false;
 			$scope.isAssetCollapsed = !$scope.isAssetCollapsed;
-			getApprovedAuctionAsset();
+			fireCommand('true',null,"auctionrequest");
 		}else
 			Modal.alert(result.message);
 		
@@ -968,13 +967,26 @@ function updateAssetInAuction(form){
 		$scope.submitted = true;
 		return;
 	}
+	var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0?true:false;
+	if(!imgFound){
+		Modal.alert("Please upload both images.");
+		return;
+	}
+
+	for(var i=0; i< vm.upcomingAuctions.length;i++){
+		if(vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId){
+			vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
+			vm.auctionProduct.startDate = vm.upcomingAuctions[i].startDate;
+			vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
+		}
+	}
 
 	AuctionSvc.update(vm.auctionProduct)
 	.then(function(result){
 		if(!result.errorCode){
 			$scope.submitted = false;
 			$scope.isAssetCollapsed = true;
-			getApprovedAuctionAsset();
+			fireCommand('true',null,"auctionrequest");
 		}else
 			Modal.alert(result.message);
 		
@@ -986,11 +998,52 @@ function updateAssetInAuction(form){
 
 }
 
-function deleteAssetFromAuction(){
-
+function deleteAssetFromAuction(auct){
+	if(!auct)
+		return;
+	Modal.confirm('Would you want to delete?.',function(ret){
+		if(ret == 'yes')
+			deleteFn(auct);
+	});
 }
 
+function deleteFn(auct){
+	AuctionSvc.delAuction(auct)
+	.then(function(res){
+		fireCommand(true,null,'auctionrequest');
+	});
+}
 /*Auction Request for external product  end*/
+
+	function fireCommand(reset,filterObj,requestFor){
+	    if(reset)
+	      resetPagination();
+	    var filter = {};
+	    if(!filterObj)
+	        angular.copy(dataToSend, filter);
+	    else
+	      filter = filterObj;
+	    if(vm.searchStr)
+	      filter['searchStr'] = vm.searchStr;
+	  switch(requestFor){
+	   case "auctionmaster":
+	  		getAuctionMaster(filter);
+	  	break;
+	  	 case "auctionrequest":
+	  		getApprovedAuctionAsset(filter);
+	  	break;	
+	  }
+	    
+  	}
+
+	function resetPagination(){
+	  prevPage = 0;
+	  vm.currentPage = 1;
+	  vm.totalItems = 0;
+	  vm.totalMItems = 0;
+	  first_id = null;
+	  last_id = null;
+	}
 //date picker
 	$scope.today = function() {
 	vm.sDate = new Date();

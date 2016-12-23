@@ -11,7 +11,6 @@ router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
-//router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 router.post('/onfilter', controller.getOnFilter);
 router.post('/export', controller.exportAuction);
@@ -25,5 +24,7 @@ router.get('/auctionmaster/getAuctionCount', auctionDateController.count);
 router.get('/auctionmaster/fetchAuctionData',auctionDateController.fetch,auctionDateController.renderJson);
 router.get('/auctionmaster/getAuctionItemsCount',auctionDetailController.count);
 router.get('/auctionmaster/fetchAuctionItemsData',auctionDetailController.fetch);
+
+router.post('/upload/excel',controller.bulkUpload);
 
 module.exports = router;

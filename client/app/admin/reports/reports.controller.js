@@ -3,7 +3,7 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal) {
     var vm = this;
     vm.tabValue = "callback";
 
@@ -19,12 +19,15 @@
     vm.fireCommand = fireCommand;
     vm.selectReportData = selectReportData;
     vm.exportExcel = exportExcel;
+    vm.getRequestedProducts = getRequestedProducts;
+    vm.viewProductsDetail = viewProductsDetail;
     vm.callbackListing = [];
     vm.shippingListing = [];
     vm.valuationListing = [];
     vm.financingListing = [];
     vm.insuranceListing = [];
     vm.quickQueryListing = [];
+    vm.buyOrRentListing =[];
     vm.additionalSvcListing = [];
     var dataToSend = {};
 
@@ -34,7 +37,35 @@
     $scope.financingTotalItems = 0;
     $scope.insuranceTotalItems = 0;
 
+    function getRequestedProducts(productsData){
+      if(!productsData)
+        return "";
+      var productArr = [];
+      if(productsData.length > 0){
+            angular.forEach(productsData, function(product, key){
+              var tradeType = "";
+              if(product.tradeType)
+                var tradeType = product.tradeType;
+            productArr.push(product.productId + " | " + product.name + " | " + tradeType);
+         });
+          }
+      return productArr.join("; ");
+    }
 
+    // preview uploaded images
+  function viewProductsDetail(products){ 
+          var prevScope = $rootScope.$new();
+          prevScope.productList = products;
+          var prvSellerModal = $uibModal.open({
+              templateUrl: "viewProductList.html",
+              scope: prevScope,
+              size: 'lg'
+          });
+
+          prevScope.close = function(){
+            prvSellerModal.close();
+          }
+     }
 
     function init() {
       Auth.isLoggedInAsync(function(loggedIn) {
@@ -84,6 +115,9 @@
           break;
         case 'additionalServices':
           getReportData(filter, 'additionalServices');
+          break;
+        case 'buyOrRentOrBoth':
+          getReportData(filter, 'buyOrRentOrBoth');
           break;
         case 'shipping':
           getReportData(filter, 'shipping');
@@ -139,6 +173,20 @@
               if (vm.additionalSvcListing.length > 0) {
                 first_id = vm.additionalSvcListing[0]._id;
                 last_id = vm.additionalSvcListing[vm.additionalSvcListing.length - 1]._id;
+              }
+            });
+          break;
+        case 'buyOrRentOrBoth':
+          //filter.tradeType = "SELL";
+          ReportsSvc.getBuyOrRentOnFilter(filter)
+            .then(function(result) {
+              vm.buyOrRentListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
+              if (vm.buyOrRentListing.length > 0) {
+                first_id = vm.buyOrRentListing[0]._id;
+                last_id = vm.buyOrRentListing[vm.buyOrRentListing.length - 1]._id;
               }
             });
           break;
@@ -352,6 +400,8 @@
         fileName = "Callback_";
       else if (vm.tabValue == "quickQuery")
         fileName = "QuickQuery_";
+      else if (vm.tabValue == "buyOrRentOrBoth")
+        fileName = "buyOrRentOrBoth_";
       else if (vm.tabValue == "shipping" || vm.tabValue == "valuation" || vm.tabValue == "finance" || vm.tabValue == "insurance")
         return openWindow(ReportsSvc.exportData(filter, vm.tabValue));
       else

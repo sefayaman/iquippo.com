@@ -17,7 +17,9 @@ exports.create = function(req,res){
   bodyData['createdAt'] = new Date();
   bodyData.counter = 0;
   Task.create(bodyData, function(err, data){
-    if(err) { return handleError(res, err); }
+    if(err) { 
+      console.log(err);
+      return handleError(res, err); }
     else
       return res.status(200).json(data);
   });

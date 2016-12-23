@@ -29,11 +29,11 @@ var auctionData = {
 				var datei = new Date();
                  var filter={};
 
-                 filter.endDate={
+                 filter.startDate={
 						'$gt': datei
 					};
 				var query = AuctionMaster.find(filter);
-				query.exec(
+				query.count().exec(
 					function(err, auctions) {
 						if (err) {
 							return handleError(res, err);
@@ -87,12 +87,12 @@ fetch: function(req, res, next) {
          }
          else{
          	console.log('openAuctionsDataActive');
-         	filters.endDate={
-         		'$gte':datei
+         	filters.startDate={
+         		'$gt':datei
          	};
          }
 
-
+          console.log(filters);
 		query = AuctionMaster.find(filters);
 		query = query.sort(sort);
 

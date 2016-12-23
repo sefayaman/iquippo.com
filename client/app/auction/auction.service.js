@@ -123,7 +123,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
     }
 
     function getTotalItemsCount(auctionType) {
-      alert("hello2");
+     
       return $http.get(path + "/auctionmaster/getAuctionCount?auctionType=" + auctionType)
         .then(function(result) {
           return result
@@ -159,16 +159,10 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         })
     }
 
-    function setAuctionId(data){
-     auctionId=data;
-    }
+    
 
-    function getAuctionId(){
-     return auctionId;
-    }
-
-    function getTotalAuctionItemsCount(data){
-       return $http.get(path + "/auctionmaster/getAuctionItemsCount?auctionId=" + data)
+    function getTotalAuctionItemsCount(){
+       return $http.get(path + "/auctionmaster/getAuctionItemsCount")
         .then(function(result) {
           return result
         })
@@ -195,11 +189,3 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
 }
 })();
 
-/*var searchAddress = function(address) {
-    var params = {address: address, sensor: false};
-    //Note: google map rejects XHR header
-    $http.get(google_map_web_api_url, {params: params, headers: {'X-Requested-With': undefined}})
-        .success(function(data, status, headers, config) {
-        })
-        .error(function(data, status, headers, config) {
-        })*/
