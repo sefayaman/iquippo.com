@@ -76,7 +76,7 @@ function updateTask(result, data) {
 }
 
 function pushNotification(taskData) {
-  if (taskData.uploadedProducts.length == 0)
+  if (taskData.uploadedProducts && taskData.uploadedProducts.length == 0)
     return;
   if (!taskData.user.email)
     return;

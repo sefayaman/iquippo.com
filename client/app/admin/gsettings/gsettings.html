@@ -89,8 +89,10 @@
 			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
 			              <thead>
-			                <th>State</th>                                
-			                <th>Action</th>
+			               <tr>
+			               	 	<th>State</th>                                
+			                	<th>Action</th>
+			               </tr>
 			               
 			              </thead>
 			              <tbody>
@@ -130,9 +132,11 @@
 			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 
 			              <thead>
-			                <th>State</th>                                
-			                <th>Location</th>
-			                <th>Action</th>
+			                <tr>
+			                	<th>State</th>                                
+				                <th>Location</th>
+				                <th>Action</th>
+			                </tr>
 			               
 			              </thead>
 			              <tbody>
@@ -243,11 +247,11 @@
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
 				          			Auction Start Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
+				          			<input class="form-control" datetime-picker readonly name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
 				          		</div>
 				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
 				          			Auction End Date &amp; Time*
-				          			<input class="form-control" datetime-picker name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
+				          			<input class="form-control" datetime-picker readonly name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
 				          		</div>
 							</div>
 				          	<div class=" row">
@@ -262,15 +266,15 @@
 				          		
 				          		<div class="col-sm-3 form-group">
 				          			Inspection Start Date &amp; Time
-				          			<input class="form-control" datetime-picker  name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date" />
+				          			<input class="form-control" datetime-picker readonly name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date" />
 				          		</div>
 				          		<div class="col-sm-3 form-group">
 				          			Inspection End Date &amp; Time
-				          			<input class="form-control" datetime-picker name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date" />
+				          			<input class="form-control" datetime-picker readonly name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date" />
 				          		</div>
 				          		<div class=" col-sm-3 form-group" >
 									Registration End Date
-				          			<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />
+				          			<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />
 					            </div>			          					          	
 				          	</div>
 
@@ -341,21 +345,23 @@
 				            <table class="table table-bordred table-striped">
 
 				              <thead>
-				                <th>Auction name</th>
-				                <th>Auction id</th>
-				                <th>Auction start date &amp; time</th>
-				                <th>Auction end date &amp; time</th>
-				                <th>Auction Owner</th>                                
-				                <!-- <th>Category</th> -->                                
-				                <th>Inspection start date &amp; time</th>
-				                <th>Inspection end date &amp; time</th>
-				                <th>Registration end date</th>
-				                <th>Location</th>
-				                <th>Address of auction</th>
-				                <th>Auction type</th>
-				                <th>Registration charges for auction</th>
-				                <th>Document attachment type</th>
-				                <th class="col-xs-2 col-sm-1">Action</th>
+				                <tr>
+				                	<th>Auction name</th>
+					                <th>Auction id</th>
+					                <th>Auction start date &amp; time</th>
+					                <th>Auction end date &amp; time</th>
+					                <th>Auction Owner</th>                                
+					                <!-- <th>Category</th> -->                                
+					                <th>Inspection start date &amp; time</th>
+					                <th>Inspection end date &amp; time</th>
+					                <th>Registration end date</th>
+					                <th>Location</th>
+					                <th>Address of auction</th>
+					                <th>Auction type</th>
+					                <th>Registration charges for auction</th>
+					                <th>Document attachment type</th>
+					                <th class="col-xs-2 col-sm-1">Action</th>
+				                </tr>
 				               
 				              </thead>
 				              <tbody>
@@ -422,12 +428,18 @@
 									<span>Browes Asset Image 1</span>
 									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,1)" accept="files/*" class="ng-scope">
 								</span>
+								<div>
+									{{gsettingVm.auctionProduct.product.primaryImg}}
+								</div>
 							</div>
 							<div class="col-sm-3 form-group">								
 								<span class="btn btn-warning fileinput-button">
 									<span>Browes Asset Image 2</span>
 									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,2)" accept="files/*" class="ng-scope">
 								</span>
+								<div>
+									{{gsettingVm.auctionProduct.product.otherImages[0]}}
+								</div>
 							</div>
 						</div>
 						<div class="row">
@@ -543,31 +555,33 @@
 				            <table class="table table-bordred table-striped">
 
 				              <thead>
-				                <th>Image</th>
-				                <th>Auction id</th>
-				                <th>Lot no</th>
-				              	<th>Asset id</th>
-				                <th>Product id</th>
-				                <th>Asset category</th>
-				                <th>Brand</th>                                
-				                <th>Model</th>                                
-				                <th>Asset desc</th>
-				                <th>Invoice date</th>
-				                <th>Asset registration no</th>
-				                <th>Engine no</th>
-				                <th>Asset location</th>
-				                <th>Original invoice</th>
-				                <th>VAT %</th>
-				                <th>Contact person</th>
-				                <th>Contact no</th>
-				                <th>Sold</th>
-				                <th>Sale Value</th>
-				                <th class="col-xs-2 col-sm-1">Action</th>
+				                <tr>
+				                	<th>Image</th>
+					                <th>Auction id</th>
+					                <th>Lot no</th>
+					              	<th>Asset id</th>
+					                <th>Product id</th>
+					                <th>Asset category</th>
+					                <th>Brand</th>                                
+					                <th>Model</th>                                
+					                <th>Asset desc</th>
+					                <th>Invoice date</th>
+					                <th>Asset registration no</th>
+					                <th>Engine no</th>
+					                <th>Asset location</th>
+					                <th>Original invoice</th>
+					                <th>VAT %</th>
+					                <th>Contact person</th>
+					                <th>Contact no</th>
+					                <th>Sold</th>
+					                <th>Sale Value</th>
+					                <th class="col-xs-2 col-sm-1">Action</th>
+				                </tr>
 				               
 				              </thead>
 				              <tbody>
 				              <tr ng-repeat="auct in gsettingVm.assetsInAuction">
-				                <td></td>
+				                <td><img ng-src="{{uploadImagePrefix}}{{auct.product.assetDir}}/{{auct.product.primaryImg}}" width="40" height="40"></td>
 				                <td>{{auct.auctionId}}</td>
 				                <td>{{auct.lotNo}}</td>
 				                <td>{{auct.product.assetId}}</td>
@@ -683,9 +697,11 @@
 			<div class="table-responsive">
 				<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 					<thead>
-						<th>Image</th>
-						<th>Manufacturers</th>
-						<th>Action</th>
+						<tr>
+							<th>Image</th>
+							<th>Manufacturers</th>
+							<th>Action</th>
+						</tr>
 						
 					</thead>
 					<tbody>
@@ -812,15 +828,17 @@
 					<div class="table-responsive">
 						<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 							<thead>
-								<th>Image</th>
-								<th>Promo Code</th>
-								<th>Hyperlink</th>
-								<th>Ticker</th>
-								<th>Banner start date</th>
-								<th>Banner end date</th>
-								<th>Show in mobile</th>
-								<th>Sequence</th>
-								<th>Action</th>
+								<tr>
+									<th>Image</th>
+									<th>Promo Code</th>
+									<th>Hyperlink</th>
+									<th>Ticker</th>
+									<th>Banner start date</th>
+									<th>Banner end date</th>
+									<th>Show in mobile</th>
+									<th>Sequence</th>
+									<th>Action</th>
+								</tr>
 								
 							</thead>
 							<tbody>

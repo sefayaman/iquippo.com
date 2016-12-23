@@ -38,18 +38,20 @@
           <div class="table-responsive">
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>User Type</th>
-                <th>Company Name</th>
-                <th>Mobile No.</th>
-                <th>Location</th>
-                <th>Registered By</th>
-                <th>Product Uploaded</th>
-                <th>Count</th>
-                <th width="6%">Status</th>
-                <th width="15%" ng-show="getCurrentUser().role == 'admin'">Action</th>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>User Type</th>
+                  <th>Company Name</th>
+                  <th>Mobile No.</th>
+                  <th>Location</th>
+                  <th>Registered By</th>
+                  <th>Product Uploaded</th>
+                  <th>Count</th>
+                  <th width="6%">Status</th>
+                  <th width="15%" ng-show="getCurrentUser().role == 'admin'">Action</th>
+                </tr>
                 
               </thead>
               <tbody>

@@ -4,7 +4,10 @@ var APIError = require('../../../components/_error');
 var Model = require('./uploadrequest.model');
 var AuctionModel = require('../../auction/auction.model');
 var ProductModel = require('../../product/product.model');
-var AuctionMasterModel = require('../../auction/auctionmaster.model')
+var AuctionMasterModel = require('../../auction/auctionmaster.model');
+var CategoryModel = require('../../category/category.model');
+var BrandModel = require('../../brand/brand.model');
+var ModelModel = require('../../model/model.model');
 var util = require('util');
 var async = require('async');
 
@@ -36,7 +39,10 @@ function fetchProduct(assetId, cb) {
 
 function fetchAuctionMaster(auctionId, cb) {
 	AuctionMasterModel.find({
-		auctionId: auctionId
+		auctionId: auctionId,
+		endDate:{
+			'$gte' : new Date()
+		} 
 	}).exec(function(err, auction) {
 
 		if (err) {
@@ -44,6 +50,41 @@ function fetchAuctionMaster(auctionId, cb) {
 		}
 
 		return cb(null, auction);
+	});
+}
+
+function fetchCategory(category, cb) {
+	CategoryModel.find({
+		name: category
+	}).exec(function(err, categoryData) {
+		if (err) {
+			return cb(err);
+		}
+
+		return cb(null, categoryData);
+	});
+}
+
+function fetchBrand(brand, cb) {
+	BrandModel.find({
+		name: brand
+	}).exec(function(err, brandData) {
+		if (err) {
+			return cb(err);
+		}
+
+		return cb(null, brandData);
+	});
+}
+
+function fetchModel(model, cb) {
+	ModelModel.find({
+		name: model
+	}).exec(function(err, modelData) {
+		if (err) {
+			return cb(err);
+		}
+		return cb(null, modelData);
 	});
 }
 
@@ -120,7 +161,7 @@ function _insertAuctionData(uploadData, cb) {
 							return next();
 						}
 
-						if (!auctionMaster.length) {
+						if (auctionMaster && !auctionMaster.length) {
 							errObj.push({
 								Error: 'Auction not exist in auction master ' + collec.auctionId,
 								rowCount: collec.rowCount
@@ -128,34 +169,88 @@ function _insertAuctionData(uploadData, cb) {
 							return next();
 						}
 
-						collec.dbAuctionId = auctionMaster[0]._id;
+						fetchCategory(collec.category,function(err,categoryData){
+							if(err){
+								errObj.push({
+									Error: 'Unable to fetch Category: ' + collec.category,
+									rowCount: collec.rowCount
+								})
+								return next();
+							}
 
-						productCols.forEach(function(x) {
-							if (collec[x])
-								obj.product[x] = collec[x];
-						});
+							if(categoryData && !categoryData.length){
+								errObj.push({
+									Error: 'Category not exists :' + collec.category,
+									rowCount: collec.rowCount
+								})
+								return next();
+							}
 
-						auctionCols.forEach(function(x) {
-							if (collec[x])
-								obj.auction[x] = collec[x]
+							fetchModel(collec.model,function(err,modelData){
+								if(err){
+									errObj.push({
+										Error: 'Unable to fetch Model: ' + collec.model,
+										rowCount: collec.rowCount
+									})
+									return next();
+								}
+
+								if(modelData && !modelData.length){
+									errObj.push({
+										Error: 'Model not exists :' + collec.model,
+										rowCount: collec.rowCount
+									})
+									return next();
+								}
+
+								fetchBrand(collec.brand,function(err,brandData){
+									if(err){
+										errObj.push({
+											Error: 'Unable to fetch Brand: ' + collec.brand,
+											rowCount: collec.rowCount
+										})
+										return next();
+									}
+
+									if(brandData && !brandData.length){
+										errObj.push({
+											Error: 'Brand not exists' + collec.brand,
+											rowCount: collec.rowCount
+										})
+										return next();
+									}
+
+									collec.dbAuctionId = auctionMaster[0]._id;
+									productCols.forEach(function(x) {
+										if (collec[x]){
+											if(x === 'invioceDate')
+												collec[x] = new Date(collec[x]);
+												obj.product[x] = collec[x];
+										}
+									});
+
+									auctionCols.forEach(function(x) {
+										if (collec[x])
+											obj.auction[x] = collec[x]
+									})
+
+									userCols.forEach(function(x) {
+										if (collec.user && collec.user[x])
+											obj.user[x] = collec.user[x];
+									})
+
+									obj.type = 'auction';
+									obj.lotNo = collec.lotNo;
+									insertData.push(obj);
+
+									return next();			
+								})
+							})
 						})
-
-						userCols.forEach(function(x) {
-							if (collec.user && collec.user[x])
-								obj.user[x] = collec.user[x];
-						})
-
-						obj.type = 'auction';
-						obj.lotNo = collec.lotNo;
-						insertData.push(obj);
-
-						return next();
 					})
 				})
 			})
 		})
-
-
 	}
 
 	function finalize(err) {

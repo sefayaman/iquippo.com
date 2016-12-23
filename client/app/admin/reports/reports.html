@@ -40,12 +40,14 @@
           <div class="table-responsive">
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th>                                
-                <th>Mobile No.</th>                                
-                <th>Phone No.</th>                                
-                <th>Email Address</th>                                
-                <th>Date of Request</th>  
+               <tr>
+                  <th>Sr. No</th> 
+                  <th>Full Name</th>                                
+                  <th>Mobile No.</th>                                
+                  <th>Phone No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Date of Request</th>  
+               </tr>
               </thead>
               <tbody>
               <tr ng-repeat="callback in reportsVm.callbackListing">
@@ -65,18 +67,20 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th>                                
-                <th>Mobile No.</th>                                
-                <th>Phone No.</th>                                
-                <th>Email Address</th>                                
-                <th>Date of Request</th>  
-                <th>Category</th>  
-                <th>Brand</th>  
-                <th>Model No.</th>  
-                <th>Expected Price</th>  
-                <th>Location</th>  
-                <th>Comments</th>  
+                <tr>
+                  <th>Sr. No</th> 
+                  <th>Full Name</th>                                
+                  <th>Mobile No.</th>                                
+                  <th>Phone No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Date of Request</th>  
+                  <th>Category</th>  
+                  <th>Brand</th>  
+                  <th>Model No.</th>  
+                  <th>Expected Price</th>  
+                  <th>Location</th>  
+                  <th>Comments</th> 
+                </tr> 
               </thead>
               <tbody>
               <tr  ng-repeat="query in reportsVm.quickQueryListing">
@@ -103,29 +107,31 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th>                                
-                <th>Mobile No.</th>                                
-                <th>Phone No.</th>                                
-                <th>Email Address</th>                                
-                <th>Date of Request</th>  
-                <th>Country</th>  
-                <th>Location</th>  
-                <th>Company Name</th>  
-                <th>Designation</th>  
-                <th>Part Shipment Allowed</th>  
-                <th>Packaging</th>  
-                <th>Shipping <small>Comments</small></th>  
-                <th>Valuation <small>Purpose of Valutaion</small></th>
-                <th>Valuation <small>Schedule a Call</small></th>  
-                <th>Valuation <small>Comments</small></th>  
-                <th>Certified <small>Purpose of Valutaion</small></th>  
-                <th>Certified <small>Schedule a Call</small></th>  
-                <th>Certified <small>Comments</small></th>  
-                <th>Manpower <small>Operators</small></th>  
-                <th>Manpower <small>Equipments</small></th>  
-                <th>Manpower <small>Schedule a Call</small></th>  
-                <th>Manpower <small>Comments</small></th>  
+                <tr>
+                  <th>Sr. No</th> 
+                  <th>Full Name</th>                                
+                  <th>Mobile No.</th>                                
+                  <th>Phone No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Date of Request</th>  
+                  <th>Country</th>  
+                  <th>Location</th>  
+                  <th>Company Name</th>  
+                  <th>Designation</th>  
+                  <th>Part Shipment Allowed</th>  
+                  <th>Packaging</th>  
+                  <th>Shipping <small>Comments</small></th>  
+                  <th>Valuation <small>Purpose of Valutaion</small></th>
+                  <th>Valuation <small>Schedule a Call</small></th>  
+                  <th>Valuation <small>Comments</small></th>  
+                  <th>Certified <small>Purpose of Valutaion</small></th>  
+                  <th>Certified <small>Schedule a Call</small></th>  
+                  <th>Certified <small>Comments</small></th>  
+                  <th>Manpower <small>Operators</small></th>  
+                  <th>Manpower <small>Equipments</small></th>  
+                  <th>Manpower <small>Schedule a Call</small></th>  
+                  <th>Manpower <small>Comments</small></th>
+                </tr>  
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.additionalSvcListing">
@@ -211,22 +217,24 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th>
-                <th>Country</th> 
-                <th>Phone No.</th>                                
-                <th>Mobile No.</th>                                
-                <th>Email Address</th>                                
-                <th>Method of contact</th>  
-                <!-- <th>Request for finance</th> -->  
-                <th>Amount to be Financed</th>  
-                <th>Indicative Rate</th>  
-                <th>Tenure</th>  
-                <th>Financing Company</th> 
-                <th>Comments</th>  
-                <th>Date of Request</th>  
-                <th>Requested Products</th> 
-                <th>View Products</th> 
+                <tr>
+                  <th>Sr. No</th> 
+                  <th>Full Name</th>
+                  <th>Country</th> 
+                  <th>Phone No.</th>                                
+                  <th>Mobile No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Method of contact</th>  
+                  <!-- <th>Request for finance</th> -->  
+                  <th>Amount to be Financed</th>  
+                  <th>Indicative Rate</th>  
+                  <th>Tenure</th>  
+                  <th>Financing Company</th> 
+                  <th>Comments</th>  
+                  <th>Date of Request</th>  
+                  <th>Requested Products</th> 
+                  <th>View Products</th> 
+                </tr>
               </thead>
               <tbody>
               <tr  ng-repeat="proQuery in reportsVm.buyOrRentListing">
@@ -242,7 +250,7 @@
                 <td>{{proQuery.financeInfo.assetCost}}</td>                    
                 <td>{{proQuery.financeInfo.periodInMonths}}</td>                    
                 <td>{{proQuery.financeInfo.finAgency}}</td>
-                <td>{{proQuery.comment}}</td>     
+                <td>{{proQuery.message}}</td>     
                 <td>{{proQuery.createdAt | date:'MM/dd/yyyy'}}</td>                     
                 <td>{{reportsVm.getRequestedProducts(proQuery.product)}}</td>
                 <td>
@@ -261,19 +269,21 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th>                                
-                <th>Country</th>
-                <th>Location</th>  
-                <th>Company Name</th>
-                <th>Designation</th>  
-                <th>Phone No.</th>
-                <th>Mobile No.</th>                                
-                <th>Email Address</th>                                
-                <th>Shipment Allowed</th>  
-                <th>Packaging</th>    
-                <th>Comments</th>
-                <th>Date of Request</th>  
+                <tr>
+                  <th>Sr. No</th> 
+                  <th>Full Name</th>                                
+                  <th>Country</th>
+                  <th>Location</th>  
+                  <th>Company Name</th>
+                  <th>Designation</th>  
+                  <th>Phone No.</th>
+                  <th>Mobile No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Shipment Allowed</th>  
+                  <th>Packaging</th>    
+                  <th>Comments</th>
+                  <th>Date of Request</th> 
+                </tr> 
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.shippingListing">
@@ -301,38 +311,56 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th>                                
-                <th>Mobile No.</th>                                
-                <th>Phone No.</th>                                
-                <th>Email Address</th>                                
-                <th>Date of Request</th>  
-                <th>Country</th>  
-                <th>Location</th>  
-                <th>Company Name</th>  
-                <th>Designation</th>    
-                <th>Purpose of Valutaion</th>
-                <th>Schedule a Call</th>  
-                <th>Comments</th>    
+                <tr>
+                  <th>Sr. No</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>  
+                  <th>Location</th>  
+                  <th>Company Name</th>  
+                  <th>Designation</th>                               
+                  <th>Mobile No.</th>                                
+                  <th>Phone No.</th>                                
+                  <th>Email Address</th>  
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Modal</th>
+                  <th>Location of Asset</th>
+                  <th>Manufacturing Year</th>
+                  <th>Asset Description</th>
+                  <th>Contact Person</th>
+                  <th>Contact Number</th>                              
+                  <th>Purpose of Valutaion</th>
+                  <th>Schedule a Call</th>  
+                  <th>Comments</th>    
+                  <th>Date of Request</th> 
+                </tr> 
               </thead>
               <tbody>
               <tr  ng-repeat="addSvc in reportsVm.valuationListing">
                 <td>{{$index + 1+count}}</td>
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
-                <td>{{addSvc.quote.mobile}}</td>
-                <td>{{addSvc.quote.phone}}</td>
-                <td>{{addSvc.quote.email}}</td>
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>{{addSvc.quote.country}}</td>                    
                 <td>{{addSvc.quote.city}}</td>                    
                 <td>{{addSvc.quote.companyname}}</td>                    
                 <td>{{addSvc.quote.designation}}</td>                                        
+                <td>{{addSvc.quote.mobile}}</td>
+                <td>{{addSvc.quote.phone}}</td>
+                <td>{{addSvc.quote.email}}</td>
+                <td>{{addSvc.quote.product.category}}</td>
+                <td>{{addSvc.quote.product.brand}}</td>
+                <td>{{addSvc.quote.product.model}}</td>
+                <td>{{addSvc.quote.product.city}}</td>
+                <td>{{addSvc.quote.product.mfgYear}}</td>
+                <td>{{addSvc.quote.product.description}}</td>
+                <td>{{addSvc.quote.product.contactPerson}}</td>
+                <td>{{addSvc.quote.product.contactNumber}}</td>
                 <td>
                   <span ng-if="addSvc.quote.valuation != 'Other'">{{addSvc.quote.valuation}}</span>
                   <span ng-if="addSvc.quote.valuation == 'Other'">{{addSvc.quote.otherName}}</span>
                 </td>                    
                 <td>{{addSvc.quote.schedule}}</td>                    
                 <td>{{addSvc.quote.comment}}</td>                                       
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                </tr>
               </tbody>
             </table>
@@ -344,30 +372,32 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-                <th>Sr. No</th> 
-                <th>Full Name</th> 
-                <th>Country</th>                                
-                <th>Location</th>                                
-                <th>Company Name</th>                                
-                <th>Designation</th>                                
-                <th>Phone No.</th>  
-                <th>Mobile No.</th>  
-                <th>Email Address</th>
-                <th>Date of Request</th> 
-                <th>Category</th>
-                <th>Brand</th>
-                <th>Modal</th>
-                <th>Asset Description</th>
-                <th>Asset Location</th>
-                <th>Manufacturing Year</th>
-                <th>Amount to be Financed</th>
-                <th>Indicative Rate</th>
-                <th>Tenure(in Months)</th>
-                <th>Method Of Contact</th>
-                <th>Comments</th>    
+                  <tr>
+                    <th>Sr. No</th> 
+                    <th>Full Name</th> 
+                    <th>Country</th>                                
+                    <th>Location</th>                                
+                    <th>Company Name</th>                                
+                    <th>Designation</th>                                
+                    <th>Phone No.</th>  
+                    <th>Mobile No.</th>  
+                    <th>Email Address</th>
+                    <th>Category</th>
+                    <th>Brand</th>
+                    <th>Modal</th>
+                    <th>Location of Asset</th>
+                    <th>Manufacturing Year</th>
+                    <th>Asset Description</th>
+                    <th>Amount to be Financed</th>
+                    <th>Indicative Rate</th>
+                    <th>Tenure(in Months)</th>
+                    <th>Method Of Contact</th>
+                    <th>Comments</th>    
+                    <th>Date of Request</th> 
+                  </tr>
               </thead>
               <tbody>
-              <tr  ng-repeat="addSvc in reportsVm.financingListing">
+              <tr ng-repeat="addSvc in reportsVm.financingListing">
                 <td>{{$index + 1+count}}</td>             
                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.country}}</td>
@@ -377,18 +407,18 @@
                 <td>{{addSvc.quote.phone}}</td>
                 <td>{{addSvc.quote.mobile}}</td>
                 <td>{{addSvc.quote.email}}</td>
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>{{addSvc.quote.product.category}}</td>
                 <td>{{addSvc.quote.product.brand}}</td>
                 <td>{{addSvc.quote.product.model}}</td>
-                <td>{{addSvc.quote.product.description}}</td>
                 <td>{{addSvc.quote.product.city}}</td>
                 <td>{{addSvc.quote.product.mfgYear}}</td>
+                <td>{{addSvc.quote.product.description}}</td>
                 <td>{{addSvc.quote.amountToBeFinanced}}</td>
                 <td>{{addSvc.quote.indicativeRate}}</td>
                 <td>{{addSvc.quote.periodInMonths}}</td>
                 <td>{{addSvc.quote.contactMethod}}</td>               
-                <td>{{addSvc.quote.comment}}</td>                    
+                <td>{{addSvc.quote.comment}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                </tr>
               </tbody>
             </table>
@@ -400,8 +430,9 @@
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
-               <th>Sr. No</th> 
-               <th>Full Name</th> 
+               <tr>
+                <th>Sr. No</th> 
+                <th>Full Name</th> 
                 <th>Country</th>                                
                 <th>Location</th>                                
                 <th>Company Name</th>                                
@@ -409,19 +440,20 @@
                 <th>Phone No.</th>  
                 <th>Mobile No.</th>  
                 <th>Email Address</th>
-                <th>Date of Request</th> 
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Modal</th>
-                <th>Asset Description</th>
-                <th>Asset Location</th>
+                <th>Location of Asset</th>
                 <th>Manufacturing Year</th>
+                <th>Asset Description</th>
                 <th>Invoice value</th>
                 <th>Method Of Contact</th>
-                <th>Comments</th>       
+                <th>Comments</th>
+                <th>Date of Request</th>
+               </tr> 
               </thead>
               <tbody>
-              <tr  ng-repeat="addSvc in reportsVm.insuranceListing">
+              <tr ng-repeat="addSvc in reportsVm.insuranceListing">
                 <td>{{$index + 1+count}}</td>            
                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                 <td>{{addSvc.quote.country}}</td>
@@ -431,16 +463,16 @@
                 <td>{{addSvc.quote.phone}}</td>
                 <td>{{addSvc.quote.mobile}}</td>
                 <td>{{addSvc.quote.email}}</td>
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                 <td>{{addSvc.quote.product.category}}</td>
                 <td>{{addSvc.quote.product.brand}}</td>
                 <td>{{addSvc.quote.product.model}}</td>
-                <td>{{addSvc.quote.product.description}}</td>
                 <td>{{addSvc.quote.product.city}}</td>
                 <td>{{addSvc.quote.product.mfgYear}}</td>
+                <td>{{addSvc.quote.product.description}}</td>
                 <td>{{addSvc.quote.invoiceVal}}</td>
                 <td>{{addSvc.quote.contactMethod}}</td>               
-                <td>{{addSvc.quote.comment}}</td>                                             
+                <td>{{addSvc.quote.comment}}</td>    
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
                </tr>
               </tbody>
             </table>

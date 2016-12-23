@@ -287,7 +287,7 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
     width: 100%;
     margin-bottom: 15px;
     overflow-y: hidden;
-    overflow-x: scroll;
+    overflow-x: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch;
 }
@@ -395,8 +395,10 @@ ul.alert-dropdown{width:200px;}
 #wrapper .nav-tabs > li a,#wrapper .nav-tabs > li.active a{outline:none;}
 #wrapper .nav-tabs > li:last-child{border:0;}
 .table{width:100%;max-width:100%;margin-bottom:20px;border:1px solid rgba(128,128,128,0.26);}
-.table>thead>tr>th{border-right:1px solid rgba(128,128,128,0.26);font-size:13px; padding: 6px;}
-.table>tbody>tr>td{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;vertical-align:middle;text-align:left; padding: 3px;}
+.table>thead>tr>th{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;}
+.table>tbody>tr>td{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;vertical-align:middle;text-align:left;}
+.tab-pane .table>thead>tr>th{padding: 6px;}
+.tab-pane .table>tbody>tr>td{padding: 3px;}
 #add{margin-top:20px;float:right;font-size:12px;}
 .dropdown-toggle img{width:25px;height:25px;border-radius:50%;margin-right:6px;}
 .modal-body .input-group-addon .btn.btn-default{padding:8px 15px; margin-right:0; font-size:10px; background-color:transparent; border-color:transparent;}

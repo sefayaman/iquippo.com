@@ -324,7 +324,7 @@ function excel_from_data(data) {
       cell = {v: "Comments"};
     else {
       if(user)
-        cell = {v: user.comment || ""};
+        cell = {v: user.message || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
@@ -366,7 +366,7 @@ function excel_from_data(data) {
           productArr[productArr.length] = product.productId + " | " + product.name + " | " + tradeType;
         });
       }
-      return productArr.join(", ");
+      return productArr.join("; ");
     }
 
 function handleError(res, err) {

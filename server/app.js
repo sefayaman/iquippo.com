@@ -69,7 +69,9 @@ app.post('/api/uploads',function(req,res){
  var childDir = req.query.childDir;
   var resize = req.query.resize;
   if(childDir == 'y' && assetDir){
-    assetDir = assetDir + "/" + new Date().getTime();
+    var dirs = assetDir.split("/");
+    if(dirs.length == 1)
+      assetDir = assetDir + "/" + new Date().getTime();
   }
 
   if(!assetDir)

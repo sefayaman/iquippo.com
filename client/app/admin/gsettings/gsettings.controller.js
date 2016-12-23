@@ -133,6 +133,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     			loadAllLocation();
     		break;
     		case 'date':
+    			resetPagination();
 				getAuctionMaster(dataToSend);
     			loadAuctionData();
 				loadAllCategory();
@@ -894,17 +895,24 @@ function addAssetInAuctionClicked(){
 function uploadImage(files,_this,param){
 	if(files.length == 0)
 		return;
-	 uploadSvc.upload(files[0], auctionDir,null,true).then(function(result){
+	var assetDir = !vm.auctionProduct.product.assetDir?auctionDir:vm.auctionProduct.product.assetDir;
+	$rootScope.loading = true;
+	 uploadSvc.upload(files[0], assetDir,null,true)
+	 .then(function(result){
+	 	$rootScope.loading = false;
 	 	vm.auctionProduct.product.assetDir = result.data.assetDir;
 	 	if(param == 1)
 	 		vm.auctionProduct.product.primaryImg = result.data.filename;
 	 	else if(param == 2){
 	 		if(!vm.auctionProduct.product.otherImages)
 	 			vm.auctionProduct.product.otherImages = [];
-			vm.auctionProduct.product.otherImages[vm.auctionProduct.product.otherImages.length] = result.data.filename;
+			vm.auctionProduct.product.otherImages[0] = result.data.filename;
 	 	}
 
-      });
+      })
+	 .catch(function(){
+	 	$rootScope.loading = false;
+	 });
 }
 
 function getUpcomingAuctions(){
