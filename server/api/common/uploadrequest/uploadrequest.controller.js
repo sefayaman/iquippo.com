@@ -40,9 +40,9 @@ function fetchProduct(assetId, cb) {
 function fetchAuctionMaster(auctionId, cb) {
 	AuctionMasterModel.find({
 		auctionId: auctionId,
-		endDate:{
-			'$gte' : new Date()
-		} 
+		endDate: {
+			'$gte': new Date()
+		}
 	}).exec(function(err, auction) {
 
 		if (err) {
@@ -66,9 +66,13 @@ function fetchCategory(category, cb) {
 }
 
 function fetchBrand(brand, cb) {
-	BrandModel.find({
-		name: brand
-	}).exec(function(err, brandData) {
+	var filter = {
+		name: brand.name,
+		'group.name': brand.group,
+		'category.name': brand.category
+	};
+
+	BrandModel.find(filter).exec(function(err, brandData) {
 		if (err) {
 			return cb(err);
 		}
@@ -78,9 +82,14 @@ function fetchBrand(brand, cb) {
 }
 
 function fetchModel(model, cb) {
-	ModelModel.find({
-		name: model
-	}).exec(function(err, modelData) {
+	var filter = {
+		name: model.name,
+		'group.name': model.group,
+		'category.name': model.category,
+		'brand.name': model.brand
+	};
+	
+	ModelModel.find(filter).exec(function(err, modelData) {
 		if (err) {
 			return cb(err);
 		}
@@ -169,8 +178,8 @@ function _insertAuctionData(uploadData, cb) {
 							return next();
 						}
 
-						fetchCategory(collec.category,function(err,categoryData){
-							if(err){
+						fetchCategory(collec.category, function(err, categoryData) {
+							if (err) {
 								errObj.push({
 									Error: 'Unable to fetch Category: ' + collec.category,
 									rowCount: collec.rowCount
@@ -178,7 +187,7 @@ function _insertAuctionData(uploadData, cb) {
 								return next();
 							}
 
-							if(categoryData && !categoryData.length){
+							if (categoryData && !categoryData.length) {
 								errObj.push({
 									Error: 'Category not exists :' + collec.category,
 									rowCount: collec.rowCount
@@ -186,35 +195,48 @@ function _insertAuctionData(uploadData, cb) {
 								return next();
 							}
 
-							fetchModel(collec.model,function(err,modelData){
-								if(err){
+							var brandFilter = {
+								name: collec.brand,
+								category: categoryData[0]._doc.name,
+								group: categoryData[0]._doc.group.name
+							};
+
+							fetchBrand(brandFilter, function(err, brandData) {
+								if (err) {
 									errObj.push({
-										Error: 'Unable to fetch Model: ' + collec.model,
+										Error: 'Unable to fetch Brand: ' + collec.brand,
 										rowCount: collec.rowCount
 									})
 									return next();
 								}
 
-								if(modelData && !modelData.length){
+								if (brandData && !brandData.length) {
 									errObj.push({
-										Error: 'Model not exists :' + collec.model,
+										Error: 'Brand not exists' + collec.brand,
 										rowCount: collec.rowCount
 									})
 									return next();
 								}
 
-								fetchBrand(collec.brand,function(err,brandData){
-									if(err){
+								var modelFilter = {
+									name: collec.model,
+									category: categoryData[0]._doc.name,
+									group: categoryData[0]._doc.group.name,
+									brand: brandData[0]._doc.name
+								}
+
+								fetchModel(modelFilter, function(err, modelData) {
+									if (err) {
 										errObj.push({
-											Error: 'Unable to fetch Brand: ' + collec.brand,
+											Error: 'Unable to fetch Model: ' + collec.model,
 											rowCount: collec.rowCount
 										})
 										return next();
 									}
 
-									if(brandData && !brandData.length){
+									if (modelData && !modelData.length) {
 										errObj.push({
-											Error: 'Brand not exists' + collec.brand,
+											Error: 'Model not exists :' + collec.model,
 											rowCount: collec.rowCount
 										})
 										return next();
@@ -222,10 +244,10 @@ function _insertAuctionData(uploadData, cb) {
 
 									collec.dbAuctionId = auctionMaster[0]._id;
 									productCols.forEach(function(x) {
-										if (collec[x]){
-											if(x === 'invioceDate')
+										if (collec[x]) {
+											if (x === 'invioceDate')
 												collec[x] = new Date(collec[x]);
-												obj.product[x] = collec[x];
+											obj.product[x] = collec[x];
 										}
 									});
 
@@ -243,7 +265,7 @@ function _insertAuctionData(uploadData, cb) {
 									obj.lotNo = collec.lotNo;
 									insertData.push(obj);
 
-									return next();			
+									return next();
 								})
 							})
 						})
