@@ -13,9 +13,10 @@ var async = require('async');
 
 //AA:this function create uplaod data in bulk
 
-function fetchAuction(auctionId, cb) {
+function fetchAuction(productFilter, cb) {
 	AuctionModel.find({
-		auctionId: auctionId
+		'product.assetId': productFilter.assetId,
+		'auctionId': productFilter.auctionId
 	}).exec(function(err, auction) {
 
 		if (err) {
@@ -40,8 +41,8 @@ function fetchProduct(assetId, cb) {
 function fetchAuctionMaster(auctionId, cb) {
 	AuctionMasterModel.find({
 		auctionId: auctionId,
-		endDate: {
-			'$gte': new Date()
+		startDate: {
+			'$gt': new Date()
 		}
 	}).exec(function(err, auction) {
 
@@ -88,7 +89,7 @@ function fetchModel(model, cb) {
 		'category.name': model.category,
 		'brand.name': model.brand
 	};
-	
+
 	ModelModel.find(filter).exec(function(err, modelData) {
 		if (err) {
 			return cb(err);
@@ -104,6 +105,7 @@ function _insertAuctionData(uploadData, cb) {
 	var duplicateRecords = [],
 		successObj = [],
 		errObj = [];
+	var auctionMap = {};
 	var insertData = [];
 	async.eachLimit(uploadData, 5, iterator, finalize);
 
@@ -115,7 +117,8 @@ function _insertAuctionData(uploadData, cb) {
 		};
 
 		Model.find({
-			'auction.auctionId': collec.auctionId
+			'auction.auctionId': collec.auctionId,
+			'product.assetId' : collec.assetId
 		}, function(err, aucReq) {
 			if (err) {
 				errObj.push(collec);
@@ -131,8 +134,12 @@ function _insertAuctionData(uploadData, cb) {
 				return next();
 			}
 
+			var productFilter = {
+				assetId: collec.assetId,
+				auctionId: collec.auctionId
+			}
 
-			fetchAuction(collec.auctionId, function(err, auction) {
+			fetchAuction(productFilter, function(err, auction) {
 				if (err) {
 					errObj.push(collec)
 					return next();
@@ -140,7 +147,7 @@ function _insertAuctionData(uploadData, cb) {
 
 				if (auction && auction.length) {
 					duplicateRecords.push({
-						Error: 'Duplicate Auction Id:' + collec.auctionId,
+						Error: 'Duplicate Asset Id in same auction:' + collec.assetId,
 						rowCount: collec.rowCount
 					});
 					return next();
@@ -241,6 +248,21 @@ function _insertAuctionData(uploadData, cb) {
 										})
 										return next();
 									}
+
+									if (!auctionMap[collec.auctionId]) {
+										auctionMap[collec.auctionId] = [];
+									}
+
+									if (auctionMap[collec.auctionId].indexOf(collec.assetId) > -1) {
+										errObj.push({
+											Error: 'Same asset id in excel for same auction id: ' + collec.assetId,
+											rowCount: collec.rowCount
+										});
+
+										return next();
+									}
+
+									auctionMap[collec.auctionId].push(collec.assetId);
 
 									collec.dbAuctionId = auctionMaster[0]._id;
 									productCols.forEach(function(x) {
