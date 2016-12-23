@@ -417,7 +417,7 @@ exports.update = function(req, res) {
     /*if (auctions.length == 0) {
       return res.status(404).send("Not Found.");
     }*/
-    if (auctions.length > 1 || (auctions.length > 1 && auctions[0]._id != req.params.id)) {
+    if (auctions.length > 1 || (auctions.length == 1 && auctions[0]._id != req.params.id)) {
       return res.status(201).json({
         errorCode: 1,
         message: "Duplicate asset id found."
