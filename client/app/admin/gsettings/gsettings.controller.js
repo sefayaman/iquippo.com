@@ -133,6 +133,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     			loadAllLocation();
     		break;
     		case 'date':
+    			resetAuctionValuse();
     			resetPagination();
 				getAuctionMaster(dataToSend);
     			loadAuctionData();
@@ -158,7 +159,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     	}
     }
     onTabChange(vm.tabValue);
-
+    
     function loadAllState(){
     	LocationSvc.getAllState()
     	.then(function(result){
@@ -524,6 +525,13 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		return name;
 	}
 
+	function resetAuctionValuse(){
+    	$scope.isCollapsed = true;
+    	$scope.submitted = false;
+    	$scope.isAssetCollapsed = true;
+    	vm.auctionData = {};
+    }
+
 	function saveAuctionMaster(form){
 		
 		if(form.$invalid){
@@ -535,7 +543,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		AuctionMasterSvc.saveAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
-				vm.auctionData = {};
+				resetAuctionValuse();
 				loadAuctionData();
 				fireCommand(true,null,"auctionmaster");
 			}
@@ -554,8 +562,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		AuctionMasterSvc.updateAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
-				vm.auctionData = {};
-				vm.auctionEdit = false;
+				resetAuctionValuse();
 				loadAuctionData();
 				fireCommand(true,null,'auctionmaster');
 			}
