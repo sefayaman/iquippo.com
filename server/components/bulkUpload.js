@@ -17,8 +17,7 @@ var bulkUpload = {};
 function _fetchRequestData(options, cb) {
 	var type = options.type;
 	UploadRequestModel.find({
-		type: type,
-		isInserted: false
+		type: type
 	}, processData);
 
 	function processData(err, requests) {

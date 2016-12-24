@@ -394,7 +394,6 @@
 
     function exportExcel() {
       var filter = {};
-         alert("hello");
       var fileName = "";
       if (vm.tabValue == "callback")
         fileName = "Callback_";
