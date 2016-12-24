@@ -261,16 +261,16 @@
 				                	<option value="">Select Owner</option>
 				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.mobile}}">{{svc.user.fname}} ( {{svc.user.mobile}} )</option>
 				                </select>
-				                <!-- <i class="caret"></i> -->
+				                <i class="caret"></i>
 				          		</div>
 				          		
 				          		<div class="col-sm-3 form-group">
 				          			
-				          			<input class="form-control" datetime-picker readonly name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date &amp; Time*" />
+				          			<input class="form-control" datetime-picker readonly name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date &amp; Time" />
 				          		</div>
 				          		<div class="col-sm-3 form-group">
 				          			
-				          			<input class="form-control" datetime-picker readonly name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date &amp; Time*" />
+				          			<input class="form-control" datetime-picker readonly name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date &amp; Time" />
 				          		</div>
 				          		<div class=" col-sm-3 form-group" >
 									
@@ -286,16 +286,23 @@
 			                          <option value="" >Current Location</option>
 			                          <option ng-repeat="location in gsettingVm.locationList" value="{{location.name}}">{{location.name}}</option>
 			                        </select>
+			                        <i class="caret"></i>
 			                    </div>
 				                <div class=" col-sm-3 form-group">
 									
 									<input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
 				                </div> 
 				                <div class="col-sm-3 form-group">
-				                	<p>Auction Type</p>
-				                	<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="live"> Live Auction
-				                	<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
-				                </div>	
+				                	Auction Type
+				                	<div class="row">
+				                		<div class="col-xs-6">
+				                			<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="live"> Live Auction
+				                		</div>
+				                		<div class="col-xs-6">
+				                			<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
+				                		</div>
+				                	</div>
+				                </div>
 				                <div class="col-sm-3 form-group">
 				          			
 				          			<input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled>
@@ -311,6 +318,7 @@
 				          				<option value="tc">Terms and Conditions</option>
 				          				<option value="bidProxy">Bid Proxy Form</option>
 				          			</select>
+				          			<i class="caret"></i>
 				          		</div>
 				          		<div class="col-sm-2">
 				          			
