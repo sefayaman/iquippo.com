@@ -131,21 +131,27 @@ exports.bulkCreate = function(data, cb) {
   var errObj = [],
     sucessObj = [];
 
-  data = data.filter(function(x) {
-    var err = validateData(x);
-    if (err) {
-      errObj.push({
-        data: x,
-        error: err
-      });
-    } else
-      return x;
-  });
+  // data = data.filter(function(x) {
+  //   var err = validateData(x);
+  //   if (err) {
+  //     errObj.push({
+  //       data: x,
+  //       error: err
+  //     });
+  //   } else
+  //     return x;
+  // });
 
   if (data.length) {
     //AA:If the length of data is non zero
     //insert data asynchronously in mongodb
     async.eachLimit(data, 5, iteration, finalize);
+  }else{
+    console.log('No data for create');
+    return {
+      errObj :errObj,
+      sucessObj : sucessObj
+    }
   }
 
   function iteration(auctionData, next) {
@@ -267,7 +273,6 @@ exports.bulkUpload = function(req, res, next) {
 
 //search based on filter
 exports.getOnFilter = function(req, res) {
-
   var filter = {};
 
   var orFilter = [];

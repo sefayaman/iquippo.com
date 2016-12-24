@@ -1,16 +1,13 @@
 'use strict';
 
 var fs = require('fs');
-var fsExtra = require('fs.extra');
-var gm = require('gm').subClass({
-	imageMagick: true
-});
+
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
-var appNotificationCtrl = require('../api/appnotification/appnotification.controller');
 var UploadRequestModel = require('../api/common/uploadrequest/uploadrequest.model');
 var AuctionController = require('../api/auction/auction.controller');
 var APIError = require('./_error');
+var async = require('async');
 
 var bulkUpload = {};
 
@@ -34,29 +31,37 @@ function _fetchRequestData(options, cb) {
 	}
 }
 
-function _extractImages(taskData, cb) {
+function _extractImages(taskData) {
 	var filename = taskData.taskInfo.filename;
-	var zip = new AdmZip(config.uploadPath + "temp/" + filename);
-	taskData.zip = zip;
-	var zipEntries = zip.getEntries();
-	var zipEntryObj = {};
-	zipEntries.forEach(function(zipEntry) {
-		if (!zipEntry.isDirectory) {
-			var entryName = zipEntry.entryName;
-			var entryNameParts = entryName.split('/');
-			var assetId = entryNameParts[entryNameParts.length - 2];
-			if (!zipEntryObj[assetId]) {
-				zipEntryObj[assetId] = [];
+	try {
+		var zip = new AdmZip(config.uploadPath + "temp/" + filename);
+		taskData.zip = zip;
+		var zipEntries = zip.getEntries();
+		var zipEntryObj = {};
+
+		zipEntries.forEach(function(zipEntry) {
+			if (!zipEntry.isDirectory) {
+				var entryName = zipEntry.entryName;
+				var entryNameParts = entryName.split('/');
+				var assetId = entryNameParts[entryNameParts.length - 2];
+				if (!zipEntryObj[assetId]) {
+					zipEntryObj[assetId] = [];
+				}
+				var obj = {};
+				if (zipEntry.name.match(/\.(jpg|jpeg|png)$/i) && zipEntryObj[assetId].length < 8) {
+					obj.name = zipEntry.name;
+					obj.entryName = zipEntry.entryName;
+					zipEntryObj[assetId].push(obj);
+				}
 			}
-			var obj = {};
-			if (zipEntry.name.match(/\.(jpg|jpeg|png)$/i) && zipEntryObj[assetId].length < 8) {
-				obj.name = zipEntry.name;
-				obj.entryName = zipEntry.entryName;
-				zipEntryObj[assetId].push(obj);
-			}
-		}
-	});
-	return zipEntryObj;
+		});
+		fs.unlink(config.uploadPath + "temp/" + filename);
+		return zipEntryObj;
+	} catch (exc) {
+		console.log(exc);
+		return new Error(exc);
+	}
+
 }
 
 /*
@@ -86,13 +91,21 @@ bulkUpload.init = function(taskData, next) {
 					return next('', taskData);
 
 				var imagesObj = _extractImages(taskData);
+
+				if (imagesObj instanceof Error) {
+					return next('Error while uploading images', data);
+				}
+
 				data.forEach(function(x) {
 					var product = x.product;
 					var obj = {};
+					product.images = [];
+					product.assetDir = new Date().getTime();
 					if (imagesObj[product.assetId] && imagesObj[product.assetId].length) {
-						var obj = {};
-						product.primaryImage = imagesObj[product.assetId][0];
-						imagesObj[product.assetId][0].splice(0, 1);
+						obj = {};
+						taskData.zip.extractEntryTo(imagesObj[product.assetId][0].entryName, config.uploadPath + "/auction/" + product.assetDir + "/", false);
+						product.primaryImage = imagesObj[product.assetId][0].name;
+						imagesObj[product.assetId].splice(0, 1);
 						if (imagesObj[product.assetId].length)
 							product.otherImages = imagesObj[product.assetId];
 						obj.product = product;
@@ -107,39 +120,46 @@ bulkUpload.init = function(taskData, next) {
 							status: x.status,
 							userId: x.user._id
 						}];
-						obj.status = x.status;
+						obj.status = 'request_approved';
 						obj.external = true;
 
 						approvedObj.push(obj);
-						approvedIds.push(x._id);
+						approvedIds.push(x._id.toString());
 					}
 				})
 
-
+				var rejectIds = [];
 				if (approvedObj.length) {
+					async.eachLimit(approvedIds, 5, iterator, finalize);
+				}
+
+
+				function iterator(approveId, cb) {
 					UploadRequestModel.remove({
-						'id': {
-							$in: approvedIds
+						_id: approveId
+					}, function(err, dt) {
+						if (err) {
+							console.log(err);
+							rejectIds.push(approveId);
 						}
-					}, function(delerr) {
-						if (delerr) {
-							console.log(delerr);
+						return cb();
+					})
+				}
+
+				function finalize(err) {
+					AuctionController.bulkCreate(approvedObj, function(response) {
+						if (response && response.Error && response.errObj && !response.sucessObj) {
+							taskData.data = data;
+							return next(null, taskData);
 						}
-						AuctionController.bulkCreate(approvedObj, function(response) {
-							if (response.Error && response.errObj && !response.sucessObj) {
-								console.log(response.Error);
-								taskData.data = data;
-								return next(null, taskData);
-							}
-							if (!response.Error && !response.errObj && response.sucessObj) {
-								return next(data);
-							} else {
-								console.log(response.Error);
-								taskData.data = data;
-								return next(null, taskData);
-							}
-						})
-					});
+
+						if (response && !response.Error && !response.errObj && response.sucessObj) {
+							return next(data);
+						} else {
+							taskData.data = data;
+							return next(null, taskData);
+						}
+					})
 				}
 			})
 			break;
