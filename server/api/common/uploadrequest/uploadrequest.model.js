@@ -23,6 +23,7 @@ var UploadRequestSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	lotNo : String,
 	createdBy: String,
 	isInserted: {
 		type: Boolean,
