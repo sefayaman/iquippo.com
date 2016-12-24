@@ -100,10 +100,10 @@ bulkUpload.init = function(taskData, next) {
 					var product = x.product;
 					var obj = {};
 					product.images = [];
-					product.assetDir = new Date().getTime();
+					product.assetDir = "/auction/" + new Date().getTime();
 					if (imagesObj[product.assetId] && imagesObj[product.assetId].length) {
 						obj = {};
-						taskData.zip.extractEntryTo(imagesObj[product.assetId][0].entryName, config.uploadPath + "/auction/" + product.assetDir + "/", false);
+						taskData.zip.extractEntryTo(imagesObj[product.assetId][0].entryName, config.uploadPath + product.assetDir + "/", false);
 						product.primaryImg = imagesObj[product.assetId][0].name;
 						imagesObj[product.assetId].splice(0, 1);
 						if (imagesObj[product.assetId].length)
