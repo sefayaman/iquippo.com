@@ -1,4 +1,4 @@
-  <div class="container">
+  <div class="container" ng-if="!auctionOnMap">
     <div class="col-sm-12 text-justify">
 		<h3>Auctions</h3>
 		<legend></legend>
@@ -54,7 +54,7 @@
 
                 <td>{{product.state}}</td>
                 <td>{{product.auctionAddr}}</td>
-                <td ng-click="auctionDateVm.openMap(product.auctionAddr,product.state)"><a href="javascript:void(0);">{{product.auctionAddr}}</a></td>
+                <td><a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)" ng-if="product.auctionAddr">{{product.auctionAddr}}</a></td>
                 <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
                 <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
                 <td>{{auctionDateVm.getProductData(product._id, "total_products")}}</td>
@@ -78,17 +78,19 @@
 		
 	</div>
   </div>
-
-<!-- Onclick google map location popup -->
-<script type="text/ng-template" id="">
-  <div>
-    <div class="modal-header">
-      <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-       <h4 class="modal-title">Google Map Location</h4>
-    </div>
-    <div class="modal-body">
-      
-     
+<div class="container" ng-if="auctionOnMap">
+  <div class="row">
+    <div class="col-sm-12" id="map_canvas">
+       <ui-gmap-google-map center='map.center' zoom='map.zoom' control = "map.control">
+           <ui-gmap-marker coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id">
+          </ui-gmap-marker>
+        </ui-gmap-google-map>
     </div>
   </div>
-</script>
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <a href="javascript:void(0);" class="btn btn-danger btn-md map-close" ng-click="auctionDateVm.closeMap()">Close</a>
+    </div>
+  </div>
+</div>
+

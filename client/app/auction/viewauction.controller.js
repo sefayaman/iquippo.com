@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('ViewAuctionCtrl', ViewAuctionCtrl);
 
-  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth, AuctionSvc, UtilSvc,$stateParams,$state) {
+  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth, AuctionSvc, UtilSvc,$stateParams,$state,$uibModal,uiGmapGoogleMapApi, uiGmapIsReady) {
     var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -22,16 +22,30 @@
     vm.auctionListing = [];
     $scope.closeAuctionItems = 0;
     $scope.openAuctionItems = 0;
-    vm.openMap = openMap;
+    //vm.openMap = openMap;
+    vm.showAddress = showAddress;
+    vm.closeMap = closeMap;
 
     vm.fireCommand = fireCommand;
     vm.fireCommandType = fireCommandType;
     vm.getProductData = getProductData;
     $scope.auctionType = 'closed';
+    $scope.auctionOnMap = false;
 
     var dataToSend = {};
     $scope.getConcatData = [];
     var query = $location.search();
+
+    //Map variables
+
+     $scope.map = {
+          center: {
+              latitude: 28.5277396,
+              longitude: 77.21914919999999
+          },
+          zoom: 11,
+          control:{}
+      };
 
     function init() {
       //dataToSend.auctionType = $scope.auctionType;
@@ -152,13 +166,67 @@
       first_id = null;
       last_id = null;
     }
+    
+     $scope.map = {
+          center: {
+              latitude: 28.5277396,
+              longitude: 77.21914919999999
+          },
+          zoom: 11,
+          control:{}
+      };
 
-    function openMap(city, loc) {
-      AuctionSvc.getLatLong(city, loc).then(function(result) {
-        Modal.openMap(result, $scope);
-      }).catch(function(err) {
-        Modal.alert(err)
-      })
+    $scope.marker = {};
+    $scope.marker['id'] = 0;
+    $scope.marker.options = {labelClass:'marker_labels',labelAnchor:'12 60'};
+
+    var geocoder = null;
+    var map = null;
+
+    function initMap(addr,city,state,cb){
+
+      uiGmapIsReady.promise(1).then(function(instances) {
+         instances.forEach(function(instance){
+            map = instance.map;
+          });
+
+         geocoder = new google.maps.Geocoder();
+         map.setZoom(11)
+         if(geocoder)
+            cb(addr,city,state);
+      });
+    }
+
+    function showAddress(addrs, city,state){
+        var addr = "";
+       if(addrs)
+          addr += addrs;
+       if(city)
+          addr += "," + city;
+        if(state)
+          addr += "," + state;
+        addr += ",India";
+        if(!addr)
+          return;
+       $scope.auctionOnMap = true;
+      if(!geocoder)
+        return initMap(addr,city,state,showAddress);
+      
+        geocoder.geocode({'address': addr}, function(results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          var latLan = results[0].geometry.location;
+          $scope.marker.coords = {};
+          $scope.marker.coords['latitude'] = latLan.lat(); 
+          $scope.marker.coords['longitude'] = latLan.lng();
+          $scope.$apply();
+        }else
+          Modal.alert("error in getting position.");
+      });
+
+    }
+
+    function closeMap(){
+      $scope.auctionOnMap = false;
     }
 
 
