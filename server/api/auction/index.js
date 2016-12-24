@@ -27,4 +27,6 @@ router.get('/auctionmaster/fetchAuctionItemsData',auctionDetailController.fetch)
 
 router.post('/upload/excel',controller.bulkUpload);
 
+router.post('/auctionmaster/getauctionwiseproductdata', controller.getAuctionWiseProductData);
+
 module.exports = router;

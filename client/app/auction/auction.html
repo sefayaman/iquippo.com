@@ -3,10 +3,10 @@
 		<h3>Auctions</h3>
 		<legend></legend>
 
-		<div class="btn-group form-group">
-      <button type="button" class="btn btn-default active" ng-click="auctionDateVm.fireCommand('closedAuctions')">Closed Auctions</button>
-      <button type="button" class="btn btn-default" ng-click="auctionDateVm.fireCommand('openAuctions')">Upcoming Auctions</button>
-      <button type="button" class="btn btn-default" ng-click="auctionDateVm.fireCommand('ongoingAuctions')">Ongoing Auctions</button>          
+		<div class="btn-group form-group auction-tab">
+      <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">Closed Auctions</button>
+      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">Upcoming Auctions</button>
+      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'ongoing'}" ng-click="auctionDateVm.fireCommandType('ongoing')">Ongoing Auctions</button>          
     </div>
 
 		<div class="row">
@@ -31,8 +31,8 @@
                 <th>Terms &amp; Condition</th>
                 <th>Proxy Form</th>
                 <th>No. of Assets in Auction</th>
-                <th>No. of Assets in Sold</th>
-                <th>Total Sale Value</th>
+                <th ng-if="auctionType == 'closed'">No. of Assets in Sold</th>
+                <th ng-if="auctionType == 'closed'">Total Sale Value</th>
                 <th>View Details</th>
               </tr>
             </thead>
@@ -55,13 +55,13 @@
                 <td>{{product.state}}</td>
                 <td>{{product.auctionAddr}}</td>
                 <td ng-click="auctionDateVm.openMap(product.auctionAddr,product.state)"><a href="javascript:void(0);">{{product.auctionAddr}}</a></td>
-                <td><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i></a></td>
-                <td><a href="javascript:void(0);"><i class="fa fa-file-text-o"></i></a></td>
-                <td>{{product.itemCount}}</td>
-                <td>{{product.totalItemsSold}}</td>
-                <td>{{product.inSaleValue}}</td>
+                <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
+                <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
+                <td>{{auctionDateVm.getProductData(product._id, "total_products")}}</td>
+                <td ng-if="auctionType == 'closed'">{{auctionDateVm.getProductData(product._id, "total_sold")}}</td>
+                <td ng-if="auctionType == 'closed'">{{auctionDateVm.getProductData(product._id, "total_amount")}}</td>
                	<td>
-                  <a href="/auctiondetail?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
+                  <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
                	    <i class="fa fa-eye"></i>
                   </a>
                	</td> 
@@ -72,7 +72,7 @@
             
           </table>
         </div>
-       <!--  <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->        
+        <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>        
       </div>
 		</div>
 		

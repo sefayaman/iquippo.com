@@ -50,6 +50,7 @@ angular.module('sreizaoApp',[
     $rootScope.uploadImagePrefix = "assets/uploads/";
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
+    $rootScope.auctionDir = auctionDir;
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;

@@ -1117,3 +1117,8 @@ div#jivo_close_button{position: absolute; right: -20px;}
     background-color: #D62929;
 }
 .like-button a{color: #aaabad;padding: 15px;}
+.auction-tab .btn-default:focus,.auction-tab .btn-default.active,.auction-tab .btn-default:active,.auction-tab .open > .btn-default.dropdown-toggle{
+    color: #fff;
+    background-color: #e3000f;
+    border-color: #e3000f;
+}
