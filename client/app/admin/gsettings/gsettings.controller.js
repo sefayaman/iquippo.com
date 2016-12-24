@@ -98,7 +98,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     vm.onCategoryChange = onCategoryChange;
     vm.onBrandChange = onBrandChange;
     $scope.uploadImage = uploadImage;
-    
+    vm.addAuctionClicked = addAuctionClicked;
+	
     function uploadDoc(files){
       if(files.length == 0)
         return;
@@ -524,6 +525,13 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		}
 		return name;
 	}
+	
+	function addAuctionClicked(){
+		vm.auctionEdit = false;
+		$scope.isCollapsed = !$scope.isCollapsed;
+		vm.auctionData = {};
+		loadAuctionData();
+	}
 
 	function resetAuctionValuse(){
     	$scope.isCollapsed = true;
@@ -543,7 +551,9 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		AuctionMasterSvc.saveAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
-				resetAuctionValuse();
+				$scope.isCollapsed = !$scope.isCollapsed;
+				vm.auctionData = {};
+				$scope.submitted = false;
 				loadAuctionData();
 				fireCommand(true,null,"auctionmaster");
 			}
@@ -562,8 +572,10 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		AuctionMasterSvc.updateAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
+				$scope.isCollapsed = true;
+				vm.auctionData = {};
+				$scope.submitted = false;
 				vm.auctionEdit = false;
-				resetAuctionValuse();
 				loadAuctionData();
 				fireCommand(true,null,'auctionmaster');
 			}
