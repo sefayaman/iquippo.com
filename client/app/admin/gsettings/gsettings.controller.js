@@ -562,6 +562,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		AuctionMasterSvc.updateAuctionMaster(vm.auctionData)
 		.then(function(res){
 			if(res.errorCode == 0){
+				vm.auctionEdit = false;
 				resetAuctionValuse();
 				loadAuctionData();
 				fireCommand(true,null,'auctionmaster');
@@ -582,12 +583,16 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 
 	function editAuctionMaster(index){
 		angular.copy(vm.auctions[index], vm.auctionData)
-
-		vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
-		vm.auctionData.endDate = moment(vm.auctionData.endDate).format('MM/DD/YYYY hh:mm A');
-		vm.auctionData.insStartDate = moment(vm.auctionData.insStartDate).format('MM/DD/YYYY hh:mm A');
-		vm.auctionData.insEndDate = moment(vm.auctionData.insEndDate).format('MM/DD/YYYY hh:mm A');
-		vm.auctionData.regEndDate = moment(vm.auctionData.regEndDate).format('MM/DD/YYYY');
+		if(vm.auctionData.startDate)
+			vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
+		if(vm.auctionData.endDate)
+			vm.auctionData.endDate = moment(vm.auctionData.endDate).format('MM/DD/YYYY hh:mm A');
+		if(vm.auctionData.insStartDate)
+			vm.auctionData.insStartDate = moment(vm.auctionData.insStartDate).format('MM/DD/YYYY hh:mm A');
+		if(vm.auctionData.insEndDate)
+			vm.auctionData.insEndDate = moment(vm.auctionData.insEndDate).format('MM/DD/YYYY hh:mm A');
+		if(vm.auctionData.regEndDate)
+			vm.auctionData.regEndDate = moment(vm.auctionData.regEndDate).format('MM/DD/YYYY');
 		vm.auctionEdit = true;
 		$scope.isCollapsed = false;
 	}
