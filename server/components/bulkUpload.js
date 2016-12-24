@@ -93,7 +93,7 @@ bulkUpload.init = function(taskData, next) {
 				var imagesObj = _extractImages(taskData);
 
 				if (imagesObj instanceof Error) {
-					return next('Error while uploading images', data);
+					return next('Error while uploading images', taskData);
 				}
 
 				data.forEach(function(x) {
