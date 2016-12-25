@@ -17,6 +17,25 @@ var APIError = require('../../components/_error');
 var async = require('async');
 var debug = require('debug')('api.auction');
 var uploadReqCtrl = require('../common/uploadrequest/uploadrequest.controller');
+var moment = require('moment');
+var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD'];
+var validTimeFormat = ['DD/MM/YYYY h:mmA','DD/MM/YYYY h:mm A','MM/DD/YYYY h:mm A'];
+
+var dateUtil = {
+  validateAndFormatDate: function(dateString, format) {
+    var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
+    var formattedDate = moment(dateString,format).format(dateFormat);
+    if (formattedDate === 'Invalid date') {
+      formattedDate = null;
+    }
+    return formattedDate;
+  },
+  isValidDateTime: function(dateTimeString, format) {
+    if(!dateTimeString)
+      return {_isValid : false}
+    return moment(dateTimeString,format);
+  }
+}
 
 exports.getAll = function(req, res) {
   AuctionRequest.find(function(err, auctions) {
@@ -26,6 +45,8 @@ exports.getAll = function(req, res) {
     return res.status(200).json(auctions);
   });
 };
+
+
 
 // Get a single auction
 exports.getOnId = function(req, res) {
@@ -90,7 +111,7 @@ exports.create = function(req, res, next) {
         return res.status(201).json({
           errorCode: 0,
           message: "Success."
-        });;
+        });
       });
 
     })
@@ -104,11 +125,16 @@ function validateData(data) {
   //var numericParams = ['lotNo', 'assetId'];
   var err = '';
   var missingParams = [];
-  var nonNumericParams = [];
+  //var nonNumericParams = [];
   manadatoryParams.forEach(function(x) {
     if (!data[x] || (data.product && !data.product[x]))
       missingParams.push(x);
   });
+
+  if(data.isSold){
+    if(!data.saleVal)
+      missingParams.push('Sale Value');
+  }
 
   if (missingParams.length) {
     err = 'Missing Parameters: ' + missingParams.join(',');
@@ -963,49 +989,49 @@ exports.importAuctionMaster = function(req, res) {
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
   //console.log("data",worksheet);
   var data = xlsx.utils.sheet_to_json(worksheet);
-  console.log(data);
-  if (data.length == 0) {
+  if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name', 'Auction_Start_Date', 'Auction_End_Date', "Auction_ID"];
+  var headers = ['Auction_Name', 'Auction_Start_Date', 'Auction_End_Date', 'Auction_ID'];
+  var date_params = ['Auction_Start_Date','Auction_End_Date'];
+  var err = false;
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
     return res.status(500).send("Wrong template");
   }
-  var ret = false;
-  var errorMessage = "";
-  req.errors = [];
-  for (var i = 0; i < data.length; i++) {
-    var title = data[i]['Auction_Name'];
-    var startDate = new Date(data[i]['Auction_Start_Date']);
-    var endDate = new Date(data[i]['Auction_End_Date']);
-    var auctionId = data[i]['Auction_ID'];
-    if (!title) {
-      ret = true;
-      errorMessage += "Title is empty in row " + (i + 2);
-      break;
-    }
-    if (!auctionId) {
-      ret = true;
-      errorMessage += "Auction Id is empty in row " + (i + 2);
-      break;
-    }
-    if (!startDate || !isValid(startDate)) {
-      ret = true;
-      errorMessage += "Start_Date is empty  or invalid format in row " + (i + 2);
-      break;
-    }
-    if (!endDate || !isValid(endDate)) {
-      ret = true;
-      errorMessage += "End_Date is empty or invalid format in row " + (i + 2);
-      break;
-    }
-  }
 
-  if (ret) {
+  req.errors = [];
+  req.totalRecords = data.length;
+  data = data.filter(function(x){
+    headers.forEach(function(head){
+      if(!x[head]){
+        req.errors[req.errors.length] = {
+         rowCount : x.__rowNum__,
+         AuctionID : x.Auction_ID || '',
+         message : 'Missing mandatory params : '+ head
+       }
+       err = true;
+      }
+     
+      if(date_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head],validDateFormat)._isValid){
+        req.errors[req.errors.length] = {
+         rowCount : x.__rowNum__,
+         AuctionID : x.Auction_ID || '',
+         message : 'Invalid Date format : '+ head
+       }
+       err = true;
+      }
+    })
+
+    if(!err){
+      return x;
+    }
+  })  
+  
+  if (!data.length) {
     return res.status(201).json({
       errorCode: 1,
-      message: errorMessage
+      message: 'Invalid Data in excel'
     });
   }
 
@@ -1054,30 +1080,23 @@ function validateHeader(headersInFile, headers) {
   return ret;
 }
 
-function isValid(d) {
-  return d.getTime() === d.getTime();
-}
+// function isValid(d) {
+//   return d.getTime() === d.getTime();
+// }
 
 function importAuctionMaster(req, res, data) {
+  var errorObj = {};
+  var ret = true;
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
-    auctionData.name = data[req.counter]['Auction_Name'];
-
-    auctionData.startDate = new Date(data[req.counter]['Auction_Start_Date']);
-    var startTime = data[req.counter]['Auction_Start_Time'];
-    if(startTime &&  new Date(data[req.counter]['Auction_Start_Date'] + ' ' + startTime) != 'Invalid Date')
-      auctionData.startDate = new Date(data[req.counter]['Auction_Start_Date'] + ' ' + startTime);
-    
-    auctionData.endDate = new Date(data[req.counter]['Auction_End_Date']);
-    var endTime = data[req.counter]['Auction_End_Time'];
-    if(endTime && new Date(data[req.counter]['Auction_End_Date'] + ' ' + endTime) != 'Invalid Date')
-      auctionData.endDate = new Date(data[req.counter]['Auction_End_Date'] + ' ' + endTime);
-    
-    
-    auctionData.auctionId = data[req.counter]['Auction_ID'];
-    auctionData.groupId = req.groupId;
     var field_map = {
+      'Auction_ID' : 'auctionId',
+      'Auction_Name' : 'name',
       'Auction_Owner': 'auctionOwner',
+      'Auction_Start_Date' : 'startDate',
+      'Auction_Start_Time' : 'startTime',
+      'Auction_End_Date' : 'endDate',
+      'Auction_End_Time' : 'endTime',
       'Inspection_Start_Date': 'insStartDate',
       'Inspection_Start_Time':'insStartTime',
       'Inspection_End_Date': 'insEndDate',
@@ -1088,35 +1107,66 @@ function importAuctionMaster(req, res, data) {
       'Location' : 'city'
     };
 
-    Object.keys(field_map).forEach(function(x){
+    var timeMap = {
+      'startDate' : 'startTime',
+      'endDate' : 'endTime',
+      'insStartDate' : 'insStartTime',
+      'insEndDate' : 'insEndTime'
+    }
+
+     Object.keys(field_map).some(function(x){
       if(data[req.counter][x]){
         auctionData[field_map[x]] = data[req.counter][x];
 
-        if(x === 'Inspection_Start_Date' && data[req.counter]['Inspection_Start_Time']){
-          startTime = (data[req.counter]['Inspection_Start_Time']);
-          auctionData[field_map['Inspection_Start_Date']] = new Date(data[req.counter]['Inspection_Start_Date'] + ' ' + endTime);
-          delete x.Inspection_Start_Time;    
-        }
-
-        if(x === 'Inspection_End_Date' && data[req.counter]['Inspection_End_Time']){
-          endTime = (data[req.counter]['Inspection_End_Time']);
-          auctionData[field_map['Inspection_End_Date']] = new Date(data[req.counter]['Inspection_End_Date'] + ' ' + endTime);
-          delete x.Inspection_End_Time;    
+        if(x === 'Auction_Type'){
+          auctionData.auctionType = data[req.counter][x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase();
+          if(auctionData.auctionType !== 'live' && auctionData.auctionType !== 'online'){
+            errorObj.rowCount = req.counter + 2;
+            errorObj.AuctionID = auctionData.auctionId;
+            errorObj.message = "Wrong value of auction type";
+            req.errors[req.errors.length] = errorObj;
+            req.counter++;
+            ret = false;
+            return true;
+          }
         }
       }
     })
 
+    var dateObj = ['startDate','endDate','insStartDate','insEndDate','regEndDate'];
+    dateObj.forEach(function(x){
+      var date = dateUtil.isValidDateTime(auctionData[x],validDateFormat);
+      if(date._isValid){
+        auctionData[x] = moment(auctionData[x],date._f).format('MM/DD/YYYY');
+        if(auctionData[timeMap[x]]) {
+          date =  dateUtil.isValidDateTime((auctionData[x] + ' '+auctionData[timeMap[x]]),validTimeFormat);
+          if(date._isValid){
+            auctionData[x] = date._d;
+          }
+        }
+        auctionData[x]  = new Date(auctionData[x]);
+      }else{
+        delete auctionData[x];
+      }
+    })
+
+    auctionData.groupId = req.groupId;
+    
+    if(!ret){
+      importAuctionMaster(req, res, data);
+      return;
+    }
 
     AuctionMaster.find({
       auctionId: auctionData.auctionId
     }, function(err, auction) {
       if (err)
         handleError(err);
+
       if (auction && auction.length){
-        var errorObj = {};
-        errorObj['rowCount'] = req.counter + 2;
-        errorObj['AuctionID'] = auctionData.auctionId;
-        errorObj['message'] = "Auction with this AuctionID is already exist in Auction Master";
+        errorObj.rowCount = req.counter + 2;
+        errorObj.AuctionID = auctionData.auctionId;
+        errorObj.message = "Auction with this AuctionID is already exist in Auction Master";
         req.errors[req.errors.length] = errorObj;
         req.counter++;
         importAuctionMaster(req, res, data);
@@ -1127,6 +1177,7 @@ function importAuctionMaster(req, res, data) {
         if (err) {
           return handleError(res, err)
         } else {
+          req.successCount++;
           req.counter++;
           importAuctionMaster(req, res, data);
         }
@@ -1135,7 +1186,7 @@ function importAuctionMaster(req, res, data) {
   } else {
     res.status(200).json({
       errorCode: 0,
-      message: "Auction master imported successfully"
+      message: req.successCount.toString() + " out of " + req.totalRecords.toString() + " Uploaded Successfully" 
     });
   }
 }
