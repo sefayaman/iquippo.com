@@ -663,10 +663,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	      AuctionMasterSvc.parseExcel(fileName)
 	      .then(function(res){
 	        $rootScope.loading = false; 
-	        if(res.errorCode)
-	        	Modal.alert(res.message,true);
-	        else
-	        	//getAuctionMaster();	 
+	        Modal.alert(res.message,true);
 	        fireCommand(true,null,"auctionmaster");
 	      })
 	      .catch(function(res){

@@ -131,7 +131,7 @@ function validateData(data) {
       missingParams.push(x);
   });
 
-  if(data.isSold){
+  if(data.isSold && data.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() === 'yes' ){
     if(!data.saleVal)
       missingParams.push('Sale Value');
   }
@@ -280,6 +280,10 @@ exports.bulkUpload = function(req, res, next) {
       });
     } else {
       obj.user = user;
+      if(obj.isSold && obj.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes' ){
+        obj.isSold = '';
+        obj.saleVal = '';
+      }
       uploadData.push(obj);
     }
   });
