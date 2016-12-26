@@ -1210,18 +1210,20 @@ function importAuctionMaster(req, res, data) {
 
     var dateObj = ['startDate','endDate','insStartDate','insEndDate','regEndDate'];
     dateObj.forEach(function(x){
-      var date = dateUtil.isValidDateTime(auctionData[x],validDateFormat);
-      if(date._isValid){
-        auctionData[x] = moment(auctionData[x],date._f).format('MM/DD/YYYY');
-        if(auctionData[timeMap[x]]) {
-          date =  dateUtil.isValidDateTime((auctionData[x] + ' '+auctionData[timeMap[x]]),validTimeFormat);
-          if(date._isValid){
-            auctionData[x] = date._d;
+      if(auctionData[x]){
+        var date = dateUtil.isValidDateTime(auctionData[x],validDateFormat);
+        if(date._isValid){
+          auctionData[x] = moment(auctionData[x],date._f).format('MM/DD/YYYY');
+          if(auctionData[timeMap[x]]) {
+            date =  dateUtil.isValidDateTime((auctionData[x] + ' '+auctionData[timeMap[x]]),validTimeFormat);
+            if(date._isValid){
+              auctionData[x] = date._d;
+            }
           }
+          auctionData[x]  = new Date(auctionData[x]);
+        }else{
+          delete auctionData[x];
         }
-        auctionData[x]  = new Date(auctionData[x]);
-      }else{
-        delete auctionData[x];
       }
     })
 
