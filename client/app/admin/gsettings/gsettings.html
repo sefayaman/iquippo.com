@@ -433,7 +433,7 @@
 							</div>
 							<div class="col-sm-3 form-group">								
 								<span class="btn btn-warning fileinput-button">
-									<span>Browes Asset Image 1</span>
+									<span>Browse Asset Image 1</span>
 									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,1)" accept="files/*" class="ng-scope">
 								</span>
 								<div>
@@ -442,7 +442,7 @@
 							</div>
 							<div class="col-sm-3 form-group">								
 								<span class="btn btn-warning fileinput-button">
-									<span>Browes Asset Image 2</span>
+									<span>Browse Asset Image 2</span>
 									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,2)" accept="files/*" class="ng-scope">
 								</span>
 								<div>
@@ -539,7 +539,7 @@
 								</div>
 							</div>
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.saleVal.$invalid && submitted}">
-								<input type="number" class="form-control" name="saleVal" placeholder="Sale Value" ng-model="gsettingVm.auctionProduct.product.saleVal" ng-required="gsettingVm.auctionProduct.product.isSold"/>
+								<input type="number" class="form-control" name="saleVal" placeholder="Sale Value" ng-model="gsettingVm.auctionProduct.product.saleVal" ng-required="gsettingVm.auctionProduct.product.isSold" ng-disabled="!gsettingVm.auctionProduct.product.isSold"/>
 							</div>							
 						</div>
 						<div class="row form-group">							

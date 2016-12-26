@@ -907,7 +907,7 @@ function addAssetInAuctionClicked(){
 		vm.auctionProduct.statuses[vm.auctionProduct.statuses.length] = stObj;
 		vm.auctionProduct.product = {};
 		vm.auctionProduct.product.originalInvoice = 'Yes';
-		vm.auctionProduct.product.isSold = true;
+		vm.auctionProduct.product.isSold = false;
 		getUpcomingAuctions();
 	}
 	
