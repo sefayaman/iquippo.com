@@ -407,6 +407,8 @@ exports.getOnFilter = function(req, res) {
     filter["_id"] = req.body._id;
   if (req.body.userId)
     filter["user._id"] = req.body.userId;
+  if (req.body.auctionId)
+    filter["auctionId"] = req.body.auctionId;
   if (req.body.valuationId)
     filter["valuation._id"] = req.body.valuationId;
   if (req.body.tid)
@@ -415,17 +417,6 @@ exports.getOnFilter = function(req, res) {
     filter["status"] = req.body.status;
   if (req.body.external)
     filter["external"] = req.body.external == 'y' ? true : false;
-
-  /*if(req.body.pagination){
-    Utility.paginatedResult(req,res,AuctionRequest,filter,{});
-    return;
-  }*/
-  /*var query = AuctionMaster.find({});
-  query.count().exec(
-               function (err, auctions) {
-                      if(err) { return handleError(res, err); }
-                      return res.status(200).json(auctions);
-               }*/
 
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
@@ -858,6 +849,32 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user._id"] = req.body.userId;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
+  if (req.body.auctionType == 'closed'){
+    var currentDate = new Date();
+    filter.endDate={
+      '$lt': currentDate
+    }
+  } else if(req.body.auctionType == 'upcoming') {
+    var currentDate = new Date();
+    filter.startDate={
+    '$gt': currentDate
+    };
+  } else if(req.body.auctionType == 'ongoing'){
+    var bwtDate = [];
+    var currentDate = new Date();
+     bwtDate[bwtDate.length] = {
+      startDate: {
+        '$lt': currentDate
+      }
+    };
+     bwtDate[bwtDate.length] = {
+      endDate: {
+        '$gt': currentDate
+      }
+    };
+    filter['$and'] = bwtDate;
+  }
+
   var arr = [];
 
   if (req.body.searchStr) {
@@ -925,6 +942,81 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   );
 };
 
+exports.getAuctionWiseProductData = function(req, res) {
+  var filter = {};
+  console.log("req.body.auctionIds", req.body.auctionIds);
+  if(req.body.auctionIds)
+    filter['dbAuctionId'] = {$in:req.body.auctionIds};
+  var isClosed = req.body.isClosed;
+  var auctions=[];
+  var isSoldCount=0;
+  var result1 = [];
+  var result2 = [];
+  Seq()
+  .par(function(){
+    var self = this;
+    var query = AuctionRequest.aggregate([{"$match":filter},{
+    "$group": {
+         _id: "$dbAuctionId",
+      total_products: {
+           $sum: 1
+         }
+      }
+    }]);
+    query.exec(
+            function(err, result) {
+                  if (err) {
+                      return next(err);
+                  }
+             result1 = result;
+             self();
+   });
+
+  })
+  .par(function(){
+    var self = this;
+      if(isClosed == 'n')
+       return  self();
+     filter['product.isSold'] = true;
+      var query2 = AuctionRequest.aggregate([{
+            "$match": filter,
+        }, {
+             "$group": {
+                  _id: "$dbAuctionId",
+                  isSoldCount: {
+                      "$sum": 1
+        },
+               sumOfInsale: {
+                      $sum: "$product.saleVal"
+                 }
+           }
+        }]);
+        query2.exec(
+               function(err, isSoldCount) {
+                    result2 = isSoldCount;
+                  self();    
+
+      });
+  })
+  .seq(function(){
+          
+      result1.forEach(function(x){
+                         result2.some(function(y){
+                    if(x._id === y._id){
+                    x.isSoldCount = y.isSoldCount;
+                     x.sumOfInsale = y.sumOfInsale;
+                     return true;
+                   }
+             })
+        })
+      return res.status(200).json(result1);
+  })
+  .catch(function(err){
+    return handleError(res, err);
+  });
+
+}
+
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
@@ -945,23 +1037,6 @@ exports.getAuctionMaster = function(req, res) {
 }
 
 exports.deleteAuctionMaster = function(req, res) {
-  // AuctionMaster.findById(req.params.id, function(err, auctionData) {
-  //   if (err) {
-  //     return handleError(res, err);
-  //   }
-  //   if (!auctionData) {
-  //     return res.status(404).send('Payment master Found');
-  //   }
-  //   AuctionMaster.remove(function(err) {
-  //     if (err) {
-  //       return handleError(res, err);
-  //     }
-  //     return res.status(204).send({
-  //       errorCode: 0,
-  //       message: "Payment master deleted sucessfully!!!"
-  //     });
-  //   });
-  // });
   AuctionMaster.find({_id: req.params.id})
     .remove()
       .exec(function(err, doc) {

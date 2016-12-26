@@ -269,16 +269,16 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-      .state('auctions', {
-        url: '/auctions',
+      .state('viewauctions', {
+        url: '/viewauctions?type',
         templateUrl: 'app/auction/auction.html',
-        controller: 'AuctionDateCtrl as auctionDateVm',
+        controller: 'ViewAuctionCtrl as auctionDateVm',
         layout:'client'
       })
-      .state('auctiondetails', {
-        url: '/auctiondetail',
+      .state('assetinacuction', {
+        url: '/assetinauction',
         templateUrl: 'app/auction/auctionsdetail.html',
-        controller: 'AuctionDetailCtrl as auctionDetailsVm',
+        controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'
       })
       .state('valuationrequests', {

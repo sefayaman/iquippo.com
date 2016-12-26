@@ -25,9 +25,9 @@ angular.module('sreizaoApp',[
   'spare',
   'report',
   'angularjs-datetime-picker',
-  'ngMap'
+   'uiGmapgoogle-maps',
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider
       .otherwise('/');
 
@@ -43,6 +43,11 @@ angular.module('sreizaoApp',[
     $httpProvider.interceptors.push('authInterceptor');
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';
+    uiGmapGoogleMapApiProvider.configure({
+        key: 'AIzaSyDg4HC7YOjDMLqBLX5rvnniMxix-YV7pK8',
+        v: '3.20', //defaults to latest 3.X anyhow
+        libraries: 'weather,geometry,visualization,places'
+    });
   })
   .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc) {
     // Redirect to login if route requires auth and you're not logged in
@@ -50,6 +55,7 @@ angular.module('sreizaoApp',[
     $rootScope.uploadImagePrefix = "assets/uploads/";
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
+    $rootScope.auctionDir = auctionDir;
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;

@@ -1117,3 +1117,20 @@ div#jivo_close_button{position: absolute; right: -20px;}
     background-color: #D62929;
 }
 .like-button a{color: #aaabad;padding: 15px;}
+.auction-tab .btn-default:focus,.auction-tab .btn-default.active,.auction-tab .btn-default:active,.auction-tab .open > .btn-default.dropdown-toggle{
+    color: #fff;
+    background-color: #e3000f;
+    border-color: #e3000f;
+}
+ .like-button a{color: #aaabad;padding: 15px;}
+#map{width:100%;height:100%;}
+#map_canvas{width: 75%;
+    top: 107px;
+    height: 45%;
+    position: absolute;}
+.angular-google-map{width:100%;height:100%;}
+.angular-google-map-container{width:100%;height:100%;/*    position: absolute;*/}
+.map-close{  position: relative;
+    top: 375px;
+    width: 100px;
+    font-size: 16px;}
