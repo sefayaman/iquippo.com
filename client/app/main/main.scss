@@ -747,9 +747,9 @@ footer p{font-size:10px;}
 
 /*.table-responsive{overflow:inherit;}*/
 .table-responsive .btn-default.fileinput-button{width: 40%; float: left;}
-.dataTables_paginate{position:absolute; left:0px; margin-bottom:30px;}
+.dataTables_paginate{position:absolute; left:0px; margin-bottom:30px; bottom:-45px;}
 .dataTables_info{position:absolute; right:0px; left:600px !important; text-align: right;}
-/*.dataTables_wrapper .top{height: 30px;}*/
+.dataTables_wrapper {margin-bottom: 50px;}
 .cart_item{color:#FF0000 !important;}
 
 .ln{padding-top:10px;}
@@ -1134,3 +1134,4 @@ div#jivo_close_button{position: absolute; right: -20px;}
     top: 375px;
     width: 100px;
     font-size: 16px;}
+    .form-control[readonly]{cursor: auto;background: #fff;}

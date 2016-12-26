@@ -166,15 +166,6 @@
       first_id = null;
       last_id = null;
     }
-    
-     $scope.map = {
-          center: {
-              latitude: 28.5277396,
-              longitude: 77.21914919999999
-          },
-          zoom: 11,
-          control:{}
-      };
 
     $scope.marker = {};
     $scope.marker['id'] = 0;
@@ -218,6 +209,8 @@
           $scope.marker.coords = {};
           $scope.marker.coords['latitude'] = latLan.lat(); 
           $scope.marker.coords['longitude'] = latLan.lng();
+          var latLngc = new google.maps.LatLng(latLan.lat(),latLan.lng());
+          map.panTo(latLngc);
           $scope.$apply();
         }else
           Modal.alert("error in getting position.");

@@ -61,7 +61,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  		.then(function(result){
  			if(result.length > 0){
  				auctionReq = result[0];
-
+ 				if(auctionReq.valuation)
+ 					auctionReq.valuation.status = valuationStatuses[3].code;
  				AuctionSvc.updateStatus(auctionReq,auctionStatuses[1].code);
  				AuctionSvc.sendNotification(auctionReq,auctionStatuses[1].notificationText,1);
  				PaymentSvc.sendNotification(vm.payTransaction,auctionReq,1);
