@@ -52,7 +52,7 @@
                     <a href="javascript:void(0);" uib-popover="Seller Information" popover-trigger="mouseenter"></a>
                 </td> -->
 
-                <td>{{product.state}}</td>
+                <td>{{product.city}}</td>
                 <td>{{product.auctionAddr}}</td>
                 <td><a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)" ng-if="product.auctionAddr">{{product.auctionAddr}}</a></td>
                 <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
