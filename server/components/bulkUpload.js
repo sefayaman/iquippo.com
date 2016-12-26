@@ -103,11 +103,19 @@ bulkUpload.init = function(taskData, next) {
 					product.assetDir = "/auction/" + new Date().getTime();
 					if (imagesObj[product.assetId] && imagesObj[product.assetId].length) {
 						obj = {};
-						taskData.zip.extractEntryTo(imagesObj[product.assetId][0].entryName, config.uploadPath + product.assetDir + "/", false);
+						for (var i = 0; i < imagesObj[product.assetId].length; i++) {
+							taskData.zip.extractEntryTo(imagesObj[product.assetId][i].entryName, config.uploadPath + product.assetDir + "/", false);
+						}
 						product.primaryImg = imagesObj[product.assetId][0].name;
 						imagesObj[product.assetId].splice(0, 1);
-						if (imagesObj[product.assetId].length)
-							product.otherImages = imagesObj[product.assetId];
+						if (imagesObj[product.assetId].length) {
+							product.otherImages = [];
+							for (var j = 0; j < imagesObj[product.assetId].length; j++) {
+								product.otherImages.push(imagesObj[product.assetId][j].name)
+							}
+						}
+						product.isSold = product.isSold ? product.isSold : false;
+						product.originalInvoice = product.originalInvoice ? product.originalInvoice : false;
 						obj.product = product;
 						obj.user = x.user;
 						obj.dbAuctionId = x.auction.dbAuctionId;
@@ -122,7 +130,6 @@ bulkUpload.init = function(taskData, next) {
 						}];
 						obj.status = 'request_approved';
 						obj.external = true;
-
 						approvedObj.push(obj);
 						approvedIds.push(x._id.toString());
 					}

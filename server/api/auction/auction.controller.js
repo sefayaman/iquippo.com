@@ -280,10 +280,20 @@ exports.bulkUpload = function(req, res, next) {
       });
     } else {
       obj.user = user;
-      if(obj.isSold && obj.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes' ){
-        obj.isSold = '';
+      ['isSold','originalInvoice'].forEach(function(x){
+        if(obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes'){
+          obj[x] = false;
+        }
+      })
+
+      if(!obj.isSold){
         obj.saleVal = '';
       }
+
+      if(!obj.originalInvoice){
+        obj.invioceDate = '';
+      }
+
       uploadData.push(obj);
     }
   });
