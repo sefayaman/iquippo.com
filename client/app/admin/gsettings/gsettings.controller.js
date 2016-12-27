@@ -76,6 +76,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     vm.getProductData = getProductData;
     $scope.uploadDoc = uploadDoc;
     $scope.getConcatData = [];
+    vm.auctionDateTemplate = 'AuctionDate-Template.xlsx';
+    
     
     //vm.auctionSearchFilter = {};
     var dataToSend = {};
@@ -101,6 +103,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     vm.onBrandChange = onBrandChange;
     $scope.uploadImage = uploadImage;
     vm.addAuctionClicked = addAuctionClicked;
+
 	
     function uploadDoc(files){
       if(files.length == 0)
@@ -138,6 +141,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     		case 'date':
     			resetAuctionValuse();
     			resetPagination();
+
 				getAuctionMaster(dataToSend);
     			loadAuctionData();
 				loadAllCategory();
@@ -909,7 +913,7 @@ function getApprovedAuctionAsset(filter){
 	filter.currentPage = vm.currentPage;
 	filter.first_id = first_id;
 	filter.last_id = last_id;
-
+	filter.auctionId = filter.auctionId;
 	filter['status'] = auctionStatuses[2].code;
 	AuctionSvc.getOnFilter(filter)
 	.then(function(result){
@@ -1091,6 +1095,8 @@ function deleteFn(auct){
 	      filter = filterObj;
 	    if(vm.searchStr)
 	      filter['searchStr'] = vm.searchStr;
+	    if(vm.selectedAuctionId)
+	    	filter['auctionId'] = vm.selectedAuctionId;
 	  switch(requestFor){
 	   case "auctionmaster":
 	  		getAuctionMaster(filter);

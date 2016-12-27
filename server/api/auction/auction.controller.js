@@ -1080,8 +1080,9 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*'];
   var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
+  var time_params = ['Auction_Start_Time*','Auction_End_Time*'];
   var err = false;
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
@@ -1106,6 +1107,15 @@ exports.importAuctionMaster = function(req, res) {
          rowCount : x.__rowNum__,
          AuctionID : x.Auction_ID || '',
          message : 'Invalid Date format : '+ head
+       }
+       err = true;
+      }
+
+      if(time_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head],'h:mmA')._isValid){
+        req.errors[req.errors.length] = {
+         rowCount : x.__rowNum__,
+         AuctionID : x.Auction_ID || '',
+         message : 'Invalid Time format : '+ head
        }
        err = true;
       }
@@ -1182,9 +1192,9 @@ function importAuctionMaster(req, res, data) {
       'Auction_Name*' : 'name',
       'Auction_Owner': 'auctionOwner',
       'Auction_Start_Date*' : 'startDate',
-      'Auction_Start_Time' : 'startTime',
+      'Auction_Start_Time*' : 'startTime',
       'Auction_End_Date*' : 'endDate',
-      'Auction_End_Time' : 'endTime',
+      'Auction_End_Time*' : 'endTime',
       'Inspection_Start_Date': 'insStartDate',
       'Inspection_Start_Time':'insStartTime',
       'Inspection_End_Date': 'insEndDate',
