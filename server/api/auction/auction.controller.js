@@ -1035,7 +1035,7 @@ exports.getAuctionMaster = function(req, res) {
   var queryObj = req.query;
   if (queryObj.yetToStartDate)
     filter['startDate'] = {
-      '$gt': new Date(queryObj.yetToStartDate)
+      '$gt': new Date()
     }
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1

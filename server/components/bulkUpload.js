@@ -114,7 +114,7 @@ bulkUpload.init = function(taskData, next) {
 								product.otherImages.push(imagesObj[product.assetId][j].name)
 							}
 						}
-						product.isSold = product.isSold ? product.isSold : false;
+						product.isSold = product.isSold ? true : false;
 						product.originalInvoice = product.originalInvoice ? product.originalInvoice : false;
 						obj.product = product;
 						obj.user = x.user;
