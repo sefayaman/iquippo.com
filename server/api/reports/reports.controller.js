@@ -143,7 +143,7 @@ var reports = {
 						_.get(x, 'quote.allowed', ''),
 						_.get(x, 'quote.packaging', ''),
 						_.get(x, 'quote.comment', ''),
-						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
+						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY')
 					);
 					break;
 				case 'valuation':
@@ -169,7 +169,7 @@ var reports = {
 						_.get(x,'quote.valuation')|| _.get(x,'quote.otherName',''),
 						_.get(x,'quote.schedule',''),
 						_.get(x,'quote.comment',''),
-						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
+						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY')
 					);
 					break;
 				case 'finance':
@@ -195,7 +195,7 @@ var reports = {
 						_.get(x,'quote.periodInMonths','') ,
 						_.get(x,'quote.contactMethod','') ,
 						_.get(x,'quote.comment','') ,
-						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
+						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY')
 					);
 					break;
 				case 'insurance':
@@ -219,7 +219,7 @@ var reports = {
 						_.get(x,'quote.amountToBeFinanced','') ,
 						_.get(x,'quote.contactMethod','') ,
 						_.get(x,'quote.comment','') ,
-						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
+						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY')
 					);
 					break;
 				default:
@@ -233,7 +233,7 @@ var reports = {
 
 			xlsxData.push(json);
 		})
-		res.xls('data.xlsx', xlsxData);
+		res.xls(type + '_report.xlsx', xlsxData);
 		//res.end();
 	}
 };
