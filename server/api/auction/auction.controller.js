@@ -958,7 +958,6 @@ exports.getFilterOnAuctionMaster = function(req, res) {
 
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
-  console.log("req.body.auctionIds", req.body.auctionIds);
   if(req.body.auctionIds)
     filter['dbAuctionId'] = {$in:req.body.auctionIds};
   var isClosed = req.body.isClosed;

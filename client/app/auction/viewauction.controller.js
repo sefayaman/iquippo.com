@@ -98,7 +98,6 @@
       AuctionSvc.getAuctionWiseProductData(filter)
       .then(function(data){
         $scope.getConcatData = data;
-        console.log($scope.getConcatData);
       })
       .catch(function(){
       })

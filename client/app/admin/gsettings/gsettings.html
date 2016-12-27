@@ -370,6 +370,7 @@
 					                <th>Auction type</th>
 					                <th>Registration charges for auction</th>
 					                <th>Document attachment type</th>
+					                <th>Assets in Auctions</th>
 					                <th class="col-xs-2 col-sm-1">Action</th>
 				                </tr>
 				               
@@ -392,7 +393,7 @@
 				                  		<span ng-if="auc.docType == 'tc'">Terms and Conditions</span> 
 				                  		<span ng-if="auc.docType == 'bidProxy'">Bid Proxy Form</span> 
 				                  </td>
-				                  <!-- <td></td> -->
+				                  <td>{{gsettingVm.getProductData(auc._id, "total_products")}}</td>
 				                <td>										
 									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editAuctionMaster($index)"><i class="fa fa-pencil"></i> </a>
 									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>

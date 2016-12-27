@@ -73,7 +73,9 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
     vm.editAuctionMaster = editAuctionMaster;
     vm.updateAuctionMaster = updateAuctionMaster;
     vm.fireCommand = fireCommand;
+    vm.getProductData = getProductData;
     $scope.uploadDoc = uploadDoc;
+    $scope.getConcatData = [];
     
     //vm.auctionSearchFilter = {};
     var dataToSend = {};
@@ -617,6 +619,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	    filter.last_id = last_id;
 		AuctionMasterSvc.getFilterOnAuctionMaster(filter)
 		.then(function(result){
+			getAuctionWiseProductData(result);
 			vm.auctions = result.items;
 	        vm.totalMItems = result.totalItems;
 	        prevPage = vm.currentPage;
@@ -627,6 +630,40 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 		});
 	}
 
+	 function getAuctionWiseProductData(result){
+      var filter = {};
+      var auctionIds = [];
+      result.items.forEach(function(item){
+        auctionIds[auctionIds.length] = item._id;
+      });
+      filter.auctionIds = auctionIds;
+      filter.isClosed = 'n';
+      AuctionSvc.getAuctionWiseProductData(filter)
+      .then(function(data){
+        $scope.getConcatData = data;
+      })
+      .catch(function(){
+      })
+    }
+
+    function getProductData(id, type){
+      if(angular.isUndefined($scope.getConcatData)) {
+        if(type == "total_products")
+          return 0;
+      } else {
+        var totalItemsInAuction = 0;
+        $scope.getConcatData.forEach(function(data){
+            if(id == data._id) {
+              totalItemsInAuction = data.total_products;
+            }
+          });
+        if(type == "total_products") {
+          if(totalItemsInAuction > 0)
+            return totalItemsInAuction;
+        }
+        return 0;
+      }
+    }
 
 	function loadAuctionData(){
 		PaymentMasterSvc.getAll()
