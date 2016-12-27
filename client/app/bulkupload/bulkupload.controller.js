@@ -7,7 +7,6 @@
 
   function BulkUploadCtrl($scope, $rootScope, bulkuploadSvc, uploadSvc, $location, settingSvc, Modal, Auth, notificationSvc, $uibModal, suggestionSvc, commonSvc) {
     var vm = this;
-    var imageCounter = 0;
     vm.template = '';
     vm.showDataSection = true;
     vm.products = [];
@@ -20,22 +19,30 @@
     $scope.successMessage = "";
     $scope.type = "";
     vm.images = [];
+    vm.uploadTemplate = "Bulk_upload_auction.xlsx";
 
-    $scope.updateTemplate = updateTemplate;
     $scope.uploadZip = uploadZip;
 
     var query = $location.search();
     var type = query.type || 'auction';
     $scope.type = type;
 
+    switch (type) {
+      case 'auction':
+        vm.uploadTemplate = 'Bulk_upload_auction.xlsx';
+        break;
+      default:
+        Modal.alert('Invalod Choice');
+        break;
+    }
     //listen for the file selected event
     $scope.$on("fileSelected", function(event, args) {
-      if (args.files.length == 0)
+      if (args.files.length === 0)
         return;
       $scope.$apply(function() {
-        if (args.type == "image")
-          uploadProductImages(args.files);
-        else
+        // if (args.type === "image")
+        //   uploadProductImages(args.files);
+        // else
           uploadExcel(args.files[0]);
       });
     });
@@ -53,7 +60,7 @@
     function updateTemplate(files) {
       if (!files[0])
         return;
-      if (files[0].name.indexOf('.xlsx') == -1) {
+      if (files[0].name.indexOf('.xlsx') === -1) {
         Modal.alert('Please upload a valid file');
         return;
 
@@ -70,11 +77,11 @@
             })
             .catch(function(stRes) {
               Modal.alert("There are some issue.Please try later.", true);
-            })
+            });
         })
         .catch(function(res) {
           Modal.alert("There are some issue.Please try later.", true);
-        })
+        });
 
     }
 
@@ -86,14 +93,14 @@
         })
         .catch(function(stRes) {
 
-        })
+        });
     }
     getTemplateName();
 
     function uploadExcel(file) {
       if (!file)
         return;
-      if (file.name.indexOf('.xlsx') == -1) {
+      if (file.name.indexOf('.xlsx') === -1) {
         Modal.alert('Please upload a valid file');
         return;
 
@@ -139,7 +146,7 @@
             .catch(function(res) {
               $rootScope.loading = false;
               Modal.alert("error in parsing data", true);
-            })
+            });
         })
         .catch(function(res) {
           Modal.alert("error in file upload", true);
@@ -147,9 +154,9 @@
     }
 
     function uploadZip(files) {
-      if (files.length == 0)
+      if (files.length === 0)
         return;
-      if (files[0].name.indexOf('.zip') == -1) {
+      if (files[0].name.indexOf('.zip') === -1) {
         Modal.alert('Please upload a zip file');
         return;
 
@@ -174,7 +181,7 @@
           commonSvc.createTask(task)
             .then(function(dt) {
               Modal.alert("your bulk product request is submitted successfully.");
-            })
+            });
         })
         .catch(function(res) {
           $rootScope.loading = false;
@@ -260,17 +267,16 @@
 
 
     function mailToCustomerForApprovedAndFeatured(result, product) {
+      var data = {};
       if (result && result.status) {
-        var data = {};
-        data['to'] = product.seller.email;
-        data['subject'] = 'Request for Product Upload : Approved';
+        data.to = product.seller.email;
+        data.subject = 'Request for Product Upload : Approved';
         product.serverPath = serverPath;
         notificationSvc.sendNotification('productUploadEmailToCustomerActive', data, product, 'email');
       }
       if (result && result.featured) {
-        var data = {};
-        data['to'] = product.seller.email;
-        data['subject'] = 'Request for Product Upload : Featured';
+        data.to = product.seller.email;
+        data.subject = 'Request for Product Upload : Featured';
         product.serverPath = serverPath;
         notificationSvc.sendNotification('productUploadEmailToCustomerFeatured', data, product, 'email');
       }
@@ -288,19 +294,19 @@
       });
       localScope.close = function() {
         prvModal.close();
-      }
+      };
     }
 
     function deleteProduct(productId) {
       Modal.confirm("Are you sure want to delete?", function(ret) {
-        if (ret == "yes")
+        if (ret === "yes")
           bulkuploadSvc.deleteIncomingProduct(productId)
           .then(function(result) {
             loadIncomingProduct();
           })
           .catch(function(res) {
-            if (res.data.errorCode == 1) {
-              Modal.alert("This product is already uploaded or removed by system.")
+            if (res.data.errorCode === 1) {
+              Modal.alert("This product is already uploaded or removed by system.");
             }
           });
       });

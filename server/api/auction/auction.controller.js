@@ -240,13 +240,13 @@ exports.bulkUpload = function(req, res, next) {
 
   var data = xlsx.utils.sheet_to_json(worksheet);
   var field_map = {
-    'Auction_ID': 'auctionId',
+    'Auction_ID*': 'auctionId',
     'End_Date': 'endDate',
-    'Asset_No.': 'assetId',
-    'Lot_No.': 'lotNo',
-    'Category': 'category',
-    'Brand': 'brand',
-    'Model': 'model',
+    'Asset_No.*': 'assetId',
+    'Lot_No.*': 'lotNo',
+    'Category*': 'category',
+    'Brand*': 'brand',
+    'Model*': 'model',
     'Asset_Description': 'description',
     'Invoice_Date': 'invioceDate',
     'Asset_Registration_No.': 'registrationNo',
@@ -1081,8 +1081,8 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name', 'Auction_Start_Date', 'Auction_End_Date', 'Auction_ID'];
-  var date_params = ['Auction_Start_Date','Auction_End_Date'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*'];
+  var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
   var err = false;
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
@@ -1179,12 +1179,12 @@ function importAuctionMaster(req, res, data) {
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
     var field_map = {
-      'Auction_ID' : 'auctionId',
-      'Auction_Name' : 'name',
+      'Auction_ID*' : 'auctionId',
+      'Auction_Name*' : 'name',
       'Auction_Owner': 'auctionOwner',
-      'Auction_Start_Date' : 'startDate',
+      'Auction_Start_Date*' : 'startDate',
       'Auction_Start_Time' : 'startTime',
-      'Auction_End_Date' : 'endDate',
+      'Auction_End_Date*' : 'endDate',
       'Auction_End_Time' : 'endTime',
       'Inspection_Start_Date': 'insStartDate',
       'Inspection_Start_Time':'insStartTime',

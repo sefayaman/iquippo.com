@@ -3,7 +3,7 @@
 var Model = require('../services/services.model');
 var APIError = require('../../components/_error');
 var moment = require('moment');
-var json2xls = require('json2xls');
+var _ = require('lodash');
 
 var reports = {
 	count: function(req, res, next) {
@@ -115,10 +115,10 @@ var reports = {
 				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Contact Person', 'Contact Number', 'Purpose of Valutaion', 'Schedule a Call', 'Comments', 'Date of Request']
 			},
 			'finance': {
-				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address' ,'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments', 'Date of Request']
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Amount to be Financed', 'Indicative Rate', 'Tenure\(in Months\)', 'Method Of Contact', 'Comments', 'Date of Request']
 			},
 			'insurance': {
-				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Invoice value', 'Method Of Contact', 'Comments', 'Date of Request',]
+				headers: ['Full Name', 'Country', 'Location', 'Company Name', 'Designation', 'Phone No', 'Mobile No', 'Email Address', 'Category', 'Brand', 'Modal', 'Location of Asset', 'Manufacturing Year', 'Asset Description', 'Invoice value', 'Method Of Contact', 'Comments', 'Date of Request', ]
 			}
 		};
 
@@ -126,126 +126,115 @@ var reports = {
 		var json = {};
 		var arr = [];
 		data.forEach(function(x) {
+			json = {};
+			arr = [];
+
 			switch (type) {
 				case 'shipping':
-					json = {};
-					arr = [];
 					arr.push(
-						(x.quote.fname || '') + ' ' + (x.quote.lname || ''),
-						x.quote.country || '',
-						x.quote.city || '',
-						x.quote.companyname || '',
-						x.quote.designation || '',
-						String(x.quote.phone) || '',
-						String(x.quote.mobile) || '',
-						x.quote.email || '',
-						x.quote.allowed || '',
-						x.quote.packaging || '',
-						x.quote.comment || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || ''
-						);
-
-					for (var i = 0; i < csvData[type].headers.length; i++) {
-						json[csvData[type].headers[i]] = arr[i];
-					}
-					xlsxData.push(json);
+						(_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'quote.country', ''),
+						_.get(x, 'quote.city', ''),
+						_.get(x, 'quote.companyname', ''),
+						_.get(x, 'quote.designation', ''),
+						_.get(x, 'quote.phone', ''),
+						_.get(x, 'quote.mobile', ''),
+						_.get(x, 'quote.email', ''),
+						_.get(x, 'quote.allowed', ''),
+						_.get(x, 'quote.packaging', ''),
+						_.get(x, 'quote.comment', ''),
+						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
+					);
 					break;
 				case 'valuation':
 					json = {};
 					arr = [];
 					arr.push(
-						((x.quote.fname || '') + ' ' + (x.quote.lname || '')),
-						x.quote.country || '',
-						x.quote.city || '',
-						x.quote.companyname || '',
-						x.quote.designation || '',
-						x.quote.phone || '',
-						x.quote.mobile || '',
-						x.quote.email || '',
-						x.quote.product.category || '',
-						x.quote.product.brand || '',
-						x.quote.product.model || '',
-						x.quote.product.city || '',
-						x.quote.product.mfgYear || '',
-						x.quote.product.description || '',
-						x.quote.product.contactPerson || '',
-						x.quote.product.contactNumber || '',
-						x.quote.valuation || x.quote.otherName || '',
-						x.quote.schedule || '',
-						x.quote.comment || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || ''			
+						(_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'quote.country', ''),
+						_.get(x, 'quote.city', ''),
+						_.get(x, 'quote.companyname', ''),
+						_.get(x, 'quote.designation', ''),
+						_.get(x, 'quote.phone', ''),
+						_.get(x, 'quote.mobile', ''),
+						_.get(x, 'quote.email', ''),
+						_.get(x,'quote.product.category',''),
+						_.get(x,'quote.product.brand',''),
+						_.get(x,'quote.product.model',''),
+						_.get(x,'quote.product.city',''),
+						_.get(x,'quote.product.mfgYear',''),
+						_.get(x,'quote.product.description',''),
+						_.get(x,'quote.product.contactPerson',''),
+						_.get(x,'quote.product.contactNumber',''),
+						_.get(x,'quote.valuation')|| _.get(x,'quote.otherName',''),
+						_.get(x,'quote.schedule',''),
+						_.get(x,'quote.comment',''),
+						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
 					);
-					for (var i = 0; i < csvData[type].headers.length; i++) {
-						json[csvData[type].headers[i]] = arr[i];
-					}
-					xlsxData.push(json);
 					break;
 				case 'finance':
 					json = {};
 					arr = [];
 					arr.push(
-						((x.quote.fname || '') + ' ' + (x.quote.lname || '')),
-						x.quote.country || '',
-						x.quote.city || '',
-						x.quote.companyname || '',
-						x.quote.designation || '',
-						x.quote.phone || '',
-						x.quote.mobile || '',
-						x.quote.email || '',
-						x.quote.product.category || '',
-						x.quote.product.brand || '',
-						x.quote.product.model || '',
-						x.quote.product.city || '',
-						x.quote.product.mfgYear || '',
-						x.quote.product.description || '',
-						x.quote.amountToBeFinanced || '',
-						x.quote.indicativeRate || '',
-						x.quote.periodInMonths || '',
-						x.quote.contactMethod || '',
-						x.quote.comment || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || ''
+						(_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'quote.country', ''),
+						_.get(x, 'quote.city', ''),
+						_.get(x, 'quote.companyname', ''),
+						_.get(x, 'quote.designation', ''),
+						_.get(x, 'quote.phone', ''),
+						_.get(x, 'quote.mobile', ''),
+						_.get(x, 'quote.email', ''),
+						_.get(x,'quote.product.category',''),
+						_.get(x,'quote.product.brand',''),
+						_.get(x,'quote.product.model',''),
+						_.get(x,'quote.product.city',''),
+						_.get(x,'quote.product.mfgYear',''),
+						_.get(x,'quote.product.description',''),
+						_.get(x,'quote.amountToBeFinanced','') ,
+						_.get(x,'quote.indicativeRate','') ,
+						_.get(x,'quote.periodInMonths','') ,
+						_.get(x,'quote.contactMethod','') ,
+						_.get(x,'quote.comment','') ,
+						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
 					);
-					for (var i = 0; i < csvData[type].headers.length; i++) {
-						json[csvData[type].headers[i]] = arr[i];
-					}
-					xlsxData.push(json);
 					break;
 				case 'insurance':
 					json = {};
 					arr = [];
 					arr.push(
-						((x.quote.fname || '') + ' ' + (x.quote.lname || '')),
-						x.quote.country || '',
-						x.quote.city || '',
-						x.quote.companyname || '',
-						x.quote.designation || '',
-						x.quote.phone || '',
-						x.quote.mobile || '',
-						x.quote.email || '',
-						x.quote.product.category || '',
-						x.quote.product.brand || '',
-						x.quote.product.model || '',
-						x.quote.product.city || '',
-						x.quote.product.mfgYear || '',
-						x.quote.product.description || '',
-						x.quote.invoiceVal || '',
-						x.quote.contactMethod || '',
-						x.quote.comment || '',
-						moment(x.createdAt).format('MM/DD/YYYY') || ''
+						(_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'quote.country', ''),
+						_.get(x, 'quote.city', ''),
+						_.get(x, 'quote.companyname', ''),
+						_.get(x, 'quote.designation', ''),
+						_.get(x, 'quote.phone', ''),
+						_.get(x, 'quote.mobile', ''),
+						_.get(x, 'quote.email', ''),
+						_.get(x,'quote.product.category',''),
+						_.get(x,'quote.product.brand',''),
+						_.get(x,'quote.product.model',''),
+						_.get(x,'quote.product.city',''),
+						_.get(x,'quote.product.mfgYear',''),
+						_.get(x,'quote.product.description',''),
+						_.get(x,'quote.amountToBeFinanced','') ,
+						_.get(x,'quote.contactMethod','') ,
+						_.get(x,'quote.comment','') ,
+						moment(_.get(x, 'createdAt', '').format('MM/DD/YYYY'))
 					);
-					for (var i = 0; i < csvData[type].headers.length; i++) {
-						json[csvData[type].headers[i]] = arr[i];
-					}
-					xlsxData.push(json);
 					break;
 				default:
 					res.json({
 						err: 'Invalid choice'
 					});
 			}
+			for (var i = 0; i < csvData[type].headers.length; i++) {
+				json[csvData[type].headers[i]] = arr[i];
+			}
+
+			xlsxData.push(json);
 		})
 		res.xls('data.xlsx', xlsxData);
-			//res.end();
+		//res.end();
 	}
 };
 
