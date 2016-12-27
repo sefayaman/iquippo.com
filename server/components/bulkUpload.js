@@ -115,6 +115,9 @@ bulkUpload.init = function(taskData, next) {
 							}
 						}
 						product.isSold = product.isSold ? true : false;
+						if (product.isSold) {
+							product.saleVal = Number(product.saleVal);
+						}
 						product.originalInvoice = product.originalInvoice ? product.originalInvoice : false;
 						obj.product = product;
 						obj.user = x.user;

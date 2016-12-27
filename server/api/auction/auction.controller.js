@@ -11,6 +11,7 @@ var ApiError = require('./../../components/_error.js');
 var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
+var PaymentMasterModel = require('../common/paymentmaster.model');
 // Get list of auctions
 
 var APIError = require('../../components/_error');
@@ -1272,15 +1273,20 @@ function importAuctionMaster(req, res, data) {
         importAuctionMaster(req, res, data);
         return;
       }
-      
-      AuctionMaster.create(auctionData, function(err, act) {
-        if (err) {
-          return handleError(res, err)
-        } else {
-          req.successCount++;
-          req.counter++;
-          importAuctionMaster(req, res, data);
-        }
+
+      PaymentMasterModel.findOne({serviceCode:'Auction'},function(error,regAmount){
+        if(error)
+           auctionData.emdAmount = 0;
+        auctionData.regCharges = Number(regAmount.fees);
+        AuctionMaster.create(auctionData, function(err, act) {
+          if (err) {
+            return handleError(res, err)
+          } else {
+            req.successCount++;
+            req.counter++;
+            importAuctionMaster(req, res, data);
+          }
+        })
       })
     })
   } else {
