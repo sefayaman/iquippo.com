@@ -214,10 +214,12 @@
         	<uib-tabset justified="true">
 				<uib-tab heading="Auction Date">
 					<!-- <form name="invMasterForm" novalidate class="invMasterForm"> -->
+					<p>Download the <a href="javascript:void(0);">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
+						
 						<div class="row">
 							<div class="col-sm-8">
 								<h4>Auction Date</h4>
-							</div>
+							</div>							
 							<div class="col-sm-2">
 								<button class="btn btn-success btn-block" ng-click="gsettingVm.addAuctionClicked()">
 									<i class="fa " class="fa" ng-class="{'fa-minus': !isCollapsed, 'fa-plus': isCollapsed}"></i> Add New						   
@@ -412,9 +414,9 @@
 							</button>
 						</div>
 
-						<span class="col-sm-2" >
-              <a href="/bulkupload?type=auction" class="btn btn-success"><i class="fa fa-database"></i> Bulk Auction Upload</a>
-                   </span>						
+						<div class="col-sm-2" >
+              				<a href="/bulkupload?type=auction" class="btn btn-success"><i class="fa fa-database"></i> Bulk Auction Upload</a>
+               			</div>						
 					</div>
 					<legend></legend>
 
