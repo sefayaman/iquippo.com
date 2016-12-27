@@ -285,6 +285,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
          serviceArr.push('ManPower');
        else if(tempArr[i] == 'Finance')
          serviceArr.push('Finance');
+       else if(tempArr[i] == 'Auction')
+         serviceArr.push('Auction');
     }
     return serviceArr.join();
   }
