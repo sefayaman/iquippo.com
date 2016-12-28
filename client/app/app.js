@@ -43,8 +43,9 @@ angular.module('sreizaoApp',[
     $httpProvider.interceptors.push('authInterceptor');
     tinyMCE.baseURL = '/bower_components/tinymce-dist';
     tinyMCE.suffix = '.min';
+    //AIzaSyDg4HC7YOjDMLqBLX5rvnniMxix-YV7pK8
     uiGmapGoogleMapApiProvider.configure({
-        key: 'AIzaSyDg4HC7YOjDMLqBLX5rvnniMxix-YV7pK8',
+        key: 'AIzaSyBzzK9Zl6Ur1c44Dl_-sh9SPDL-fOtWA5s',
         v: '3.20', //defaults to latest 3.X anyhow
         libraries: 'weather,geometry,visualization,places'
     });

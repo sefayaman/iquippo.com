@@ -913,7 +913,6 @@ function getApprovedAuctionAsset(filter){
 	filter.currentPage = vm.currentPage;
 	filter.first_id = first_id;
 	filter.last_id = last_id;
-	filter.auctionId = filter.auctionId;
 	filter['status'] = auctionStatuses[2].code;
 	AuctionSvc.getOnFilter(filter)
 	.then(function(result){
