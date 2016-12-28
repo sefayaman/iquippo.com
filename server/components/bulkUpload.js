@@ -8,6 +8,8 @@ var UploadRequestModel = require('../api/common/uploadrequest/uploadrequest.mode
 var AuctionController = require('../api/auction/auction.controller');
 var APIError = require('./_error');
 var async = require('async');
+var moment = require('moment');
+var validDateFormat = ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY/MM/DD'];
 
 var bulkUpload = {};
 
@@ -118,7 +120,22 @@ bulkUpload.init = function(taskData, next) {
 						if (product.isSold) {
 							product.saleVal = Number(product.saleVal);
 						}
-						product.originalInvoice = product.originalInvoice ? product.originalInvoice : false;
+						product.originalInvoice = product.originalInvoice ? "Yes" : "No";
+
+						if (product.originalInvoice === "Yes") {
+							product.invoiceDate = (moment(product.invioceDate, validDateFormat).format('MM/DD/YYYY'))
+						} else {
+							delete product.invoiceDate;
+						}
+
+						if (product.contactNumber) {
+							product.contactNumber = Number(product.contactNumber);
+						}
+
+						if (product.vatPercentage) {
+							product.vatPercentage = Number(product.vatPercentage);
+						}
+
 						obj.product = product;
 						obj.user = x.user;
 						obj.dbAuctionId = x.auction.dbAuctionId;

@@ -99,7 +99,7 @@ function fetchModel(model, cb) {
 }
 
 function _insertAuctionData(uploadData, cb) {
-	var productCols = ['assetId', 'brand', 'category', 'city', 'contactName', 'contactNumber', 'description', 'engineNo', 'invioceDate', 'isSold', 'model', 'originalInvoice','registrationNo','vatPercentage','saleVal'];
+	var productCols = ['assetId','productId','brand', 'category', 'city', 'contactName', 'contactNumber', 'description', 'engineNo', 'invioceDate', 'isSold', 'model', 'originalInvoice','registrationNo','vatPercentage','saleVal'];
 	var auctionCols = ['auctionId', 'dbAuctionId', 'endDate', 'external', 'startDate'];
 	var userCols = ['_id', 'email', 'mobile'];
 	var duplicateRecords = [],
