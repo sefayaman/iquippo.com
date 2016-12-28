@@ -55,6 +55,7 @@ exports.search = function(req, res) {
     arr[arr.length] = { "product.productId": { $regex: searchStrReg }};
     arr[arr.length] = { "product.name": { $regex: searchStrReg }};
     arr[arr.length] = { "product.tradeType": { $regex: searchStrReg }};
+    arr[arr.length] = { message : { $regex: searchStrReg }};
   }
 
   if(arr.length > 0)

@@ -14,6 +14,7 @@
     function init() {
       var filter = {};
       filter.auctionId = query.auctionId;
+      filter.status = "request_approved";
       AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           vm.auctionDetailListing = result;

@@ -94,6 +94,7 @@
         auctionIds[auctionIds.length] = item._id;
       });
       filter.auctionIds = auctionIds;
+      filter.status = "request_approved";
       filter.isClosed = $scope.auctionType == 'closed'?'y':'n';
       AuctionSvc.getAuctionWiseProductData(filter)
       .then(function(data){

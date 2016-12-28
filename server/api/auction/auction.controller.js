@@ -963,6 +963,8 @@ exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
   if(req.body.auctionIds)
     filter['dbAuctionId'] = {$in:req.body.auctionIds};
+  if(req.body.status)
+    filter['status'] = req.body.status;
   var isClosed = req.body.isClosed;
   var auctions=[];
   var isSoldCount=0;

@@ -641,6 +641,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
         auctionIds[auctionIds.length] = item._id;
       });
       filter.auctionIds = auctionIds;
+      filter.status = "request_approved";
       filter.isClosed = 'n';
       AuctionSvc.getAuctionWiseProductData(filter)
       .then(function(data){
