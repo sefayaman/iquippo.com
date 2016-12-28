@@ -94,6 +94,7 @@
         auctionIds[auctionIds.length] = item._id;
       });
       filter.auctionIds = auctionIds;
+      filter.status = "request_approved";
       filter.isClosed = $scope.auctionType == 'closed'?'y':'n';
       AuctionSvc.getAuctionWiseProductData(filter)
       .then(function(data){
@@ -209,7 +210,8 @@
           $scope.marker.coords['latitude'] = latLan.lat(); 
           $scope.marker.coords['longitude'] = latLan.lng();
           var latLngc = new google.maps.LatLng(latLan.lat(),latLan.lng());
-          map.panTo(latLngc);
+          if(map)
+            map.panTo(latLngc);
           $scope.$apply();
         }else
           Modal.alert("error in getting position.");
@@ -218,6 +220,7 @@
     }
 
     function closeMap(){
+      geocoder = null;
       $scope.auctionOnMap = false;
     }
 

@@ -641,6 +641,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
         auctionIds[auctionIds.length] = item._id;
       });
       filter.auctionIds = auctionIds;
+      filter.status = "request_approved";
       filter.isClosed = 'n';
       AuctionSvc.getAuctionWiseProductData(filter)
       .then(function(data){
@@ -956,9 +957,10 @@ function addAssetInAuctionClicked(){
 function uploadImage(files,_this,param){
 	if(files.length == 0)
 		return;
-	var assetDir = !vm.auctionProduct.product.assetDir?auctionDir:vm.auctionProduct.product.assetDir;
+	var assetDir = !vm.auctionProduct.product.assetDir? auctionDir:vm.auctionProduct.product.assetDir;
 	$rootScope.loading = true;
-	 uploadSvc.upload(files[0], assetDir,null,true)
+	var isChildDir = assetDir == auctionDir ? true:false;
+	 uploadSvc.upload(files[0], assetDir,null,isChildDir)
 	 .then(function(result){
 	 	$rootScope.loading = false;
 	 	vm.auctionProduct.product.assetDir = result.data.assetDir;

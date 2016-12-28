@@ -462,21 +462,21 @@
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.category.$invalid && submitted}">
 								<select class="form-control" name="category" ng-model="gsettingVm.auctionProduct.product.category" ng-change="gsettingVm.onCategoryChange(gsettingVm.auctionProduct.product.category,true)" required>
 									<option value=""> Select Category*</option>
-									<option ng-repeat="cat in gsettingVm.allCategory" value="{{cat.name}}">{{cat.name}}</option>
+									<option ng-repeat="cat in gsettingVm.allCategory" value="{{cat.name}}" ng-if="cat.name != 'Other'">{{cat.name}}</option>
 								</select>
 								<i class="caret"></i>
 							</div>
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.brand.$invalid && submitted}">								
 								<select class="form-control" name="brand" ng-model="gsettingVm.auctionProduct.product.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.auctionProduct.product.brand,true)"required>
 									<option value=""> Select Brand*</option>
-									<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}">{{br.name}}</option>
+									<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}" ng-if="br.name != 'Other'">{{br.name}}</option>
 								</select>
 								<i class="caret"></i>
 							</div>
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.model.$invalid && submitted}">								
 								<select class="form-control" name="model" ng-model="gsettingVm.auctionProduct.product.model" required>
 									<option value=""> Select Model*</option>
-									<option ng-repeat="md in gsettingVm.modelList" value="{{md.name}}">{{md.name}}</option>
+									<option ng-repeat="md in gsettingVm.modelList" value="{{md.name}}" ng-if="md.name != 'Other'">{{md.name}}</option>
 								</select>
 								<i class="caret"></i>
 							</div>
