@@ -12,6 +12,8 @@ var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
 var PaymentMasterModel = require('../common/paymentmaster.model');
+var vendorModel = require('../vendor/vendor.model');
+
 // Get list of auctions
 
 var APIError = require('../../components/_error');
@@ -989,7 +991,7 @@ exports.getAuctionWiseProductData = function(req, res) {
   })
   .par(function(){
     var self = this;
-      if(isClosed == 'n')
+      if(isClosed === 'n')
        return  self();
      filter['product.isSold'] = true;
       var query2 = AuctionRequest.aggregate([{
@@ -1140,6 +1142,7 @@ exports.importAuctionMaster = function(req, res) {
   req.successCount = 0;
   req.groupId = new Date().getTime();
   importAuctionMaster(req, res, data);
+
 }
 
 
@@ -1186,12 +1189,14 @@ function validateHeader(headersInFile, headers) {
 function importAuctionMaster(req, res, data) {
   var errorObj = {};
   var ret = true;
+
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
     var field_map = {
       'Auction_ID*' : 'auctionId',
       'Auction_Name*' : 'name',
       'Auction_Owner': 'auctionOwner',
+      'Auction_Owner_Mobile':'auctionOwnerMobile',
       'Auction_Start_Date*' : 'startDate',
       'Auction_Start_Time*' : 'startTime',
       'Auction_End_Date*' : 'endDate',
@@ -1274,20 +1279,48 @@ function importAuctionMaster(req, res, data) {
         return;
       }
 
-      PaymentMasterModel.findOne({serviceCode:'Auction'},function(error,regAmount){
-        if(error)
-           auctionData.emdAmount = 0;
-        auctionData.regCharges = Number(regAmount.fees);
-        AuctionMaster.create(auctionData, function(err, act) {
-          if (err) {
-            return handleError(res, err)
-          } else {
-            req.successCount++;
+      if(auctionData.auctionOwnerMobile){
+        vendorModel.find({
+          'user.mobile' : auctionData.auctionOwnerMobile,
+          services : 'Auction'
+        }).exec(function(err,vendor){
+          if(err || !vendor){
+            handleError(err || 'Error while searching vendor');
+          }
+
+          if(!vendor.length){
+            errorObj.rowCount = req.counter + 2;
+            errorObj.AuctionID = auctionData.auctionId;
+            errorObj.message = "Vendor not exist";
+            req.errors[req.errors.length] = errorObj;
             req.counter++;
             importAuctionMaster(req, res, data);
+            return;
           }
+          
+          auctionData.auctionOwner = vendor[0].user.fname + ' ' + vendor[0].user.lname;
+          insertData();
+         })
+      }else{
+        insertData();
+      }
+
+      function insertData(){
+        PaymentMasterModel.findOne({serviceCode:'Auction'},function(error,regAmount){
+          if(error)
+             auctionData.emdAmount = 0;
+          auctionData.regCharges = Number(regAmount.fees);
+          AuctionMaster.create(auctionData, function(err, act) {
+            if (err) {
+              return handleError(res, err)
+            } else {
+              req.successCount++;
+              req.counter++;
+              importAuctionMaster(req, res, data);
+            }
+          })
         })
-      })
+      }
     })
   } else {
     res.status(200).json({
