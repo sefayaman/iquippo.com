@@ -135,8 +135,7 @@ function _insertAuctionData(uploadData, cb) {
 			}
 
 			var productFilter = {
-				assetId: collec.assetId,
-				auctionId: collec.auctionId
+				assetId: collec.assetId
 			}
 
 			fetchAuction(productFilter, function(err, auction) {
