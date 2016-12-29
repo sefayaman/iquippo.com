@@ -103,6 +103,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.onBrandChange = onBrandChange;
     $scope.uploadImage = uploadImage;
     vm.addAuctionClicked = addAuctionClicked;
+    vm.onActionTabClick = onActionTabClick;
 
 	
     function uploadDoc(files){
@@ -544,6 +545,11 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     	$scope.submitted = false;
     	$scope.isAssetCollapsed = true;
     	vm.auctionData = {};
+    }
+    
+    function onActionTabClick(){
+    	$scope.isAssetCollapsed = true;
+    	$scope.isCollapsed = true;
     }
 
 	function saveAuctionMaster(form){
