@@ -22,7 +22,18 @@
     <tr>
         
             <td style="color:#01395c; font-size:13px; padding-bottom:10px;">
-                    Row {{rowCount}} - Asset Id {{AssetId}}: {{Error}}
+                    Row {{rowCount}} - 
+                    {{#if AssetId}}
+                        Asset Id: {{AssetId}} 
+                    {{else}} 
+                        Auction Id :  {{AuctionID}}
+                     {{/if}} 
+                    
+                    {{#if Error}}
+                        {{Error}}
+                    {{else}}
+                        {{message}}
+                    {{/if}}
             </td> 
     </tr>  
     {{/errorList}}

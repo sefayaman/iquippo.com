@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc,brandSvc,modelSvc, ManufacturerSvc, BannerSvc,AuctionSvc) {
+function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notificationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc,brandSvc,modelSvc, ManufacturerSvc, BannerSvc,AuctionSvc) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'loc';
@@ -705,6 +705,16 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,SubCat
 	      AuctionMasterSvc.parseExcel(fileName)
 	      .then(function(res){
 	        $rootScope.loading = false; 
+	        if (res.errObj.length > 0 ) {
+            var data = {};
+            data['to'] = Auth.getCurrentUser().email;
+            data['subject'] = 'Bulk Auction Upload Excel Error Details.';
+            var serData = {};
+            serData.serverPath = serverPath;
+            serData.errorList = res.errObj;
+            notificationSvc.sendNotification('BulkUploadError', data, serData, 'email');
+            res.message += '. Error details has been sent to your email id';
+          }
 	        Modal.alert(res.message,true);
 	        fireCommand(true,null,"auctionmaster");
 	      })

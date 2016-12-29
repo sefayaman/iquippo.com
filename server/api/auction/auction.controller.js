@@ -64,6 +64,67 @@ exports.getOnId = function(req, res) {
   });
 };
 
+function _create(data,cb){
+
+  var assetIdExist = false;
+  if (!data.product.assetId)
+    return cb(new Error('Asset Id Missing'));
+
+  Seq()
+    .par(function() {
+      var self = this;
+      Product.find({
+        assetId: data.product.assetId
+      }, function(err, prds) {
+        if (err) {
+          return self(err)
+        }
+        if (prds.length > 0) {
+          assetIdExist = true;
+        }
+        self();
+
+      });
+    })
+    .par(function() {
+      var self = this;
+      AuctionRequest.find({
+        "product.assetId": data.product.assetId
+      }, function(err, acts) {
+        if (err) {
+          self(err)
+        }
+        if (acts.length > 0) {
+          assetIdExist = true;
+        }
+        self();
+      });
+    })
+    .seq(function() {
+
+      if (assetIdExist)
+        return cb({
+          errorCode: 1,
+          message: "Duplicate asset id found."
+        });
+      data.createdAt = new Date();
+      data.updatedAt = new Date();
+      AuctionRequest.create(data, function(err, auction) {
+        if(err){
+          return new Error('Unable to create auction : ', data.auctionId)
+        }
+        return cb({
+          errorCode: 0,
+          message: "Success."
+        });
+      });
+
+    })
+    .catch(function(err) {
+      return cb(new Error(err || 'Unable to create'));
+    })
+}
+
 // Creates a new valuation in the DB.
 exports.create = function(req, res, next) {
 
@@ -184,11 +245,12 @@ exports.bulkCreate = function(data, cb) {
   }
 
   function iteration(auctionData, next) {
-    AuctionRequest.create(auctionData, function(err, auction) {
-      if (err) {
+    _create(auctionData,function(response){
+    // AuctionRequest.create(auctionData, function(err, auction) {
+      if (response instanceof Error) {
         errObj.push({
           data: auctionData,
-          error: 'Mongo Insert Error'
+          error: response
         })
       } else {
         sucessObj.push(auctionData);
@@ -268,6 +330,7 @@ exports.bulkUpload = function(req, res, next) {
   var err;
   var uploadData = [];
   var errObj = [];
+  var assetIdMap = {};
 
   data.forEach(function(x) {
     var obj = {};
@@ -282,24 +345,42 @@ exports.bulkUpload = function(req, res, next) {
         rowCount: x.__rowNum__
       });
     } else {
-      obj.user = user;
-      ['isSold','originalInvoice'].forEach(function(x){
-        if(obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes'){
-          obj[x] = false;
+      if(assetIdMap[obj.assetId]){
+        errObj.push({
+          Error : 'Duplicate Asset Id in uploaded sheet',
+          rowCount : obj.rowCount
+        })
+      }else{
+        
+        assetIdMap[obj.assetId] = obj.auctionId;
+        obj.user = user;
+        
+        ['isSold','originalInvoice'].forEach(function(x){
+          if(obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes'){
+            obj[x] = false;
+          }
+        })
+
+        if(!obj.isSold){
+          obj.saleVal = '';
         }
-      })
 
-      if(!obj.isSold){
-        obj.saleVal = '';
-      }
+        if(!obj.originalInvoice){
+          obj.invioceDate = '';
+        }
 
-      if(!obj.originalInvoice){
-        obj.invioceDate = '';
-      }
-
-      uploadData.push(obj);
+        uploadData.push(obj);
+      } 
     }
   });
+
+  if(!uploadData.length){
+     var result = {
+        errObj : errObj
+     };
+
+    return res.json(result);
+  }
 
   uploadReqCtrl.create({
     uploadData: uploadData,
@@ -1101,7 +1182,7 @@ exports.importAuctionMaster = function(req, res) {
       if(!x[head]){
         req.errors[req.errors.length] = {
          rowCount : x.__rowNum__,
-         AuctionID : x.Auction_ID || '',
+         AuctionID : x['Auction_ID*'] || '',
          message : 'Missing mandatory params : '+ head
        }
        err = true;
@@ -1110,7 +1191,7 @@ exports.importAuctionMaster = function(req, res) {
       if(date_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head],validDateFormat)._isValid){
         req.errors[req.errors.length] = {
          rowCount : x.__rowNum__,
-         AuctionID : x.Auction_ID || '',
+         AuctionID : x['Auction_ID*'] || '',
          message : 'Invalid Date format : '+ head
        }
        err = true;
@@ -1119,7 +1200,7 @@ exports.importAuctionMaster = function(req, res) {
       if(time_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head],'h:mmA')._isValid){
         req.errors[req.errors.length] = {
          rowCount : x.__rowNum__,
-         AuctionID : x.Auction_ID || '',
+         AuctionID : x['Auction_ID*'] || '',
          message : 'Invalid Time format : '+ head
        }
        err = true;
@@ -1146,9 +1227,6 @@ exports.importAuctionMaster = function(req, res) {
   importAuctionMaster(req, res, data);
 
 }
-
-
-
 
 
 function getHeaders(worksheet) {
@@ -1327,6 +1405,7 @@ function importAuctionMaster(req, res, data) {
   } else {
     res.status(200).json({
       errorCode: 0,
+      errObj : req.errors,
       message: req.successCount.toString() + " out of " + req.totalRecords.toString() + " Uploaded Successfully" 
     });
   }
