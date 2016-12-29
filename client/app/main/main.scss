@@ -387,7 +387,7 @@ ul.alert-dropdown{width:200px;}
 .table-responsive.auctions-table{overflow-x:scroll; overflow-y: hidden; }
 /* Custom tabs Panels */
 .btn,.form-control{border-radius:0;}
-.navbar-default{background-color:#eee;border-color:#ccc;}
+.navbar-default{background-color:#eee;border-color:#ccc;z-index:1;}
 #wrapper{margin-top:45px;}
 #wrapper .nav-tabs{height:41px;}
 #wrapper .nav-tabs,#wrapper .nav-tabs > li{background:#ccc;}
@@ -1132,3 +1132,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     width: 100px;
     font-size: 16px; margin:10px 0;}
     .form-control[readonly]{cursor: auto;background: #fff;}
+.angularjs-datetime-picker{z-index:2;}
+.angularjs-datetime-picker input[type=range] {
+    width: 100%;
+}
