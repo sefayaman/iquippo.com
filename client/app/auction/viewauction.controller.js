@@ -83,7 +83,7 @@
         }
       })
       .catch(function(err){
-        Modal.alert("Error in geting auction master data");
+        //Modal.alert("Error in geting auction master data");
       })
     }
 
