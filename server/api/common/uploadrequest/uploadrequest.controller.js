@@ -15,8 +15,7 @@ var async = require('async');
 
 function fetchAuction(productFilter, cb) {
 	AuctionModel.find({
-		'product.assetId': productFilter.assetId,
-		'auctionId': productFilter.auctionId
+		'product.assetId': productFilter.assetId
 	}).exec(function(err, auction) {
 
 		if (err) {
@@ -117,7 +116,6 @@ function _insertAuctionData(uploadData, cb) {
 		};
 
 		Model.find({
-			'auction.auctionId': collec.auctionId,
 			'product.assetId' : collec.assetId
 		}, function(err, aucReq) {
 			if (err) {
@@ -135,8 +133,7 @@ function _insertAuctionData(uploadData, cb) {
 			}
 
 			var productFilter = {
-				assetId: collec.assetId,
-				auctionId: collec.auctionId
+				assetId: collec.assetId
 			}
 
 			fetchAuction(productFilter, function(err, auction) {
