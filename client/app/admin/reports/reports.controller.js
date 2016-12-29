@@ -141,8 +141,10 @@
       filter.last_id = last_id;
       switch (tabValue) {
         case 'callback':
+              resetCount();
           ReportsSvc.getCallbackOnFilter(filter)
             .then(function(result) {
+            
               vm.callbackListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
@@ -153,8 +155,10 @@
             });
           break;
         case 'quickQuery':
+          resetCount();
           ReportsSvc.getQuickQueryOnFilter(filter)
             .then(function(result) {
+            
               vm.quickQueryListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
@@ -165,9 +169,10 @@
             });
           break;
         case 'additionalServices':
+          resetCount();
           ReportsSvc.getAdditionalServicesOnFilter(filter)
             .then(function(result) {
-              vm.additionalSvcListing = result.items;
+              
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
               if (vm.additionalSvcListing.length > 0) {
@@ -178,6 +183,7 @@
           break;
         case 'buyOrRentOrBoth':
           //filter.tradeType = "SELL";
+              resetCount();
           ReportsSvc.getBuyOrRentOnFilter(filter)
             .then(function(result) {
               vm.buyOrRentListing = result.items;
@@ -448,6 +454,13 @@
       }
 
     }
+    function resetCount(){
+          $scope.shippingTotalItems = 0;
+          $scope.valuationTotalItems=0;
+          $scope.financingTotalItems = 0;
+          $scope.insuranceTotalItems = 0;
+      
+      }
 
   }
 
