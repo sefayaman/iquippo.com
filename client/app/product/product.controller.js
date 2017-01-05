@@ -378,6 +378,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      
     $scope.brandList = [];
     $scope.modelList = [];
+    $scope.product.technicalInfo = {};
      if(!categoryId)
       return;
     var otherBrand = null;
@@ -414,6 +415,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      $scope.container.selectedModelId = "";
     }
     
+    $scope.product.technicalInfo = {};
     $scope.modelList = [];
     if(!brandId)
        return;
@@ -435,6 +437,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       product.model = {};
       return;
     }
+    $scope.product.technicalInfo = {};
     var md = null;
     for(var i=0; i< $scope.modelList.length;i++){
       if($scope.modelList[i]._id == modelId){

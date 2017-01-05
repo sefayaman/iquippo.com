@@ -949,8 +949,8 @@
 	              </div>
 	              <div class="form-group row">
 	              	<div class="col-sm-12 text-right">
-	              		<!-- <button class="btn" type="button">Close</button>
-		                <button class="btn" type="button">Reset</button> -->
+	              		<button class="btn" type="button" ng-click = "gsettingVm.closeTechInfo()">Close</button>
+		                <button class="btn" type="button" ng-click = "gsettingVm.techInformation.information = {}">Reset</button> 
 		                <button ng-if="!isEdit" class="btn btn-danger btn-md" ng-click="gsettingVm.saveTechnicalInfo(techInformationForm)">Save</button>
 
 		                <button ng-if="isEdit" class="btn btn-danger btn-md" ng-click="gsettingVm.updateProductTechInfo(techInformationForm)">Update</button>

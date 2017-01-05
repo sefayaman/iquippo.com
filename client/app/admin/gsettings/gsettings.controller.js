@@ -83,6 +83,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.exportProductTechInfoExcel = exportProductTechInfoExcel;
     vm.totalProductTechInfoCount = 0;
     $scope.productTechTotalItems = 0;
+    vm.closeTechInfo = closeTechInfo;
     
     
     //vm.auctionSearchFilter = {};
@@ -116,6 +117,10 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.saveTechnicalInfo = saveTechnicalInfo;
     vm.updateProductTechInfo = updateProductTechInfo;
     vm.deleteProductTechInfo = deleteProductTechInfo;
+
+    function closeTechInfo(){
+      return $scope.isTechCollapsed = !$scope.isTechCollapsed;
+    }
 
 	
     function uploadDoc(files){
