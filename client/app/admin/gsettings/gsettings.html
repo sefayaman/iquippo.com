@@ -468,7 +468,7 @@
 								<i class="caret"></i>
 							</div>
 							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.brand.$invalid && submitted}">								
-								<select class="form-control" name="brand" ng-model="gsettingVm.auctionProduct.product.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.auctionProduct.product.brand,true)"required>
+								<select class="form-control" name="brand" ng-model="gsettingVm.auctionProduct.product.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.auctionProduct.product.brand,true)" required>
 									<option value=""> Select Brand*</option>
 									<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}" ng-if="br.name != 'Other'">{{br.name}}</option>
 								</select>
@@ -888,123 +888,124 @@
 		<!-- Select Technical Information -->
 		<div ng-if="gsettingVm.tabValue == 'technical'">
 			<div class="col-sm-12">
-				<form class="form" name="form" novalidate>
 					<div class="row">
-			            <div class="col-sm-10">
-			              <h4>Technical Information</h4>
-			            </div>
-			            <div class="col-sm-1">
-			              <h3><button class="btn btn-success btn-md pull-right" ng-click=""><i class="fa" ng-class="{'fa-minus': isCollapsed, 'fa-plus': !isCollapsed}"></i> Add New</button></h3>
-			            </div>
-			            <div class="col-sm-1">
-			              <h3><button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
-			            </div>
-			        </div>
-			        <hr>
+            <div class="col-sm-10">
+              <h4>Technical Information</h4>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            </div>
+        </div>
+        <hr>
 
-			        <div class="form-group">
-			        	<div uib-collapse="!isCollapsed">					
-				              <div class="form-group row">
-				                <div class="col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
-				                  <select class="form-control" name="category" required>
-				                    <option value="">Category</option>
-				                    <option>{{category.name}}</option>
-				                  </select>
-				                  <i class="caret"></i>
-				                </div>
-				                <div class="col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
-				                  <select class="form-control" name="brand" required>
-				                    <option value="" >Brand</option>
-				                    <option >{{brand.name}}</option>
-				                  </select>
-				                  <i class="caret"></i>
-				                </div>
-				                <div class="col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
-				                  <select class="form-control" name="model" required>
-				                    <option value="" >Model</option>
-				                    <option>{{model.name}}</option>
-				                  </select>
-				                  <i class="caret"></i>
-				                </div>
-				              </div>
+        <div class="form-group">
+        	<div uib-collapse="!isTechCollapsed">	
+        			<form class="techInformationForm" name="techInformationForm" novalidate>
+	              <div class="form-group row">
+	                <div class="col-sm-4" ng-class="{'has-error': techInformationForm.category.$invalid && submitted}">
+	                  <select class="form-control" name="category" ng-model="	gsettingVm.techInformation.information.category" ng-change="gsettingVm.onCategoryChange(gsettingVm.techInformation.information.category,true)" required>
+											<option value=""> Select Category*</option>
+											<option ng-repeat="cat in gsettingVm.allCategory" value="{{cat.name}}" ng-if="cat.name != 'Other'">{{cat.name}}</option>
+										</select>
+	                  <i class="caret"></i>
+	                </div>
+	                <div class="col-sm-4" ng-class="{'has-error': techInformationForm.brand.$invalid && submitted}">
+	                 <select class="form-control" name="brand" ng-model="gsettingVm.techInformation.information.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.techInformation.information.brand,true)" required>
+										<option value=""> Select Brand*</option>
+										<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}" ng-if="br.name != 'Other'">{{br.name}}</option>
+									</select>
+	                  <i class="caret"></i>
+	                </div>
+	                <div class="col-sm-4" ng-class="{'has-error': techInformationForm.model.$invalid && submitted}">
+	                 <select class="form-control" name="model" ng-model="gsettingVm.techInformation.information.model" required>
+											<option value=""> Select Model*</option>
+											<option ng-repeat="md in gsettingVm.modelList" value="{{md.name}}" ng-if="md.name != 'Other'">{{md.name}}</option>
+										</select>
+	                  <i class="caret"></i>
+	                </div>
+	              </div>
 
-				              <div class="form-group row">
-				              	<div class="col-sm-4">
-				              		<input type="text" class="form-control" placeholder="Gross Weight">
-				              	</div>
-				              	<div class="col-sm-4">
-				              		<input type="text" class="form-control" placeholder="Operating Weight">
-				              	</div>
-				              	<div class="col-sm-4">
-				              		<input type="text" class="form-control" placeholder="Bucket Capacity">
-				              	</div>
-				              </div>
-				              <div class="form-group row">
-				              	<div class="col-sm-4">
-				              		<input type="text" class="form-control" placeholder="Engine Power">
-				              	</div>
-				              	<div class="col-sm-4">
-				              		<input type="text" class="form-control" placeholder="Lifting Capacity">
-				              	</div>              	
-				              </div>
-				              <div class="form-group row">
-				              	<div class="col-sm-12 text-right">
-				              		<button class="btn" type="button">Close</button>
-					                <button class="btn" type="button">Reset</button>
-					                <input class="btn btn-danger btn-md" name="" type="button" value="Submit">
-				              	</div>              	             	
-				              </div>
-				            
-				        </div>
-			        </div>
-					
-					<div class="row form-group">
-				        <div class="col-sm-12 tablesearch text-right">
-				          Search: <input type="text" placeholder="Search...">
-				        </div>
-				    </div>
+	              <div class="form-group row">
+	              	<div class="col-sm-4">
+	              		<input ng-model = "gsettingVm.techInformation.information.grossWeight" type="text" class="form-control" placeholder="Gross Weight">
+	              	</div>
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.operatingWeight" class="form-control" placeholder="Operating Weight">
+	              	</div>
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.bucketCapacity" class="form-control" placeholder="Bucket Capacity">
+	              	</div>
+	              </div>
+	              <div class="form-group row">
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.enginePower" class="form-control" placeholder="Engine Power">
+	              	</div>
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.liftingCapacity" class="form-control" placeholder="Lifting Capacity">
+	              	</div>              	
+	              </div>
+	              <div class="form-group row">
+	              	<div class="col-sm-12 text-right">
+	              		<!-- <button class="btn" type="button">Close</button>
+		                <button class="btn" type="button">Reset</button> -->
+		                <button ng-if="!isEdit" class="btn btn-danger btn-md" ng-click="gsettingVm.saveTechnicalInfo(techInformationForm)">Save</button>
 
-				    <div class="row">
-				        <div class="col-sm-12">
-				          <div class=" table-responsive ">
-				            <table class="table table-bordered table-striped">
-				              <thead>
-				                <tr>
-				                  <th>Category</th>
-				                  <th>Brand</th>
-				                  <th>Model</th>
-				                  <th>Gross Weight</th>
-				                  <th>Operating Weight</th>		                  
-				                  <th>Bucket Capacity</th>		                  
-				                  <th>Engine Power</th>		                  
-				                  <th>Lifting Capacity</th>		                  
-				                  <th width="10%">Actions</th>
-				                </tr>
-				              </thead>
-				              <tbody>
-				              	<tr>
-				              		<td></td>
-				              		<td></td>
-				              		<td></td>
-				              		<td></td>
-				              		<td></td>
-				              		<td></td>
-				              		<td></td>
-				              		<td></td>
-				              		<td>
-				              			<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="">
-					                      <i class="fa fa-pencil"></i>
-					                    </a>
-					                    <button class="btn btn-danger btn-sm"  uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ng-click=""></i></button>
-				              		</td>
-				              	</tr>
-				              </tbody>
-				            </table>
-				          </div>
-				          <uib-pagination total-items="" ng-model="" items-per-page="" max-size="" class="pagination-sm" rotate="false">  </uib-pagination>
-				        </div>
-				    </div>
-				  </form>
+		                <button ng-if="isEdit" class="btn btn-danger btn-md" ng-click="gsettingVm.updateProductTechInfo(techInformationForm)">Update</button>
+	              	</div>              	             	
+	              </div>
+	            </form>
+	        </div>
+        </div>
+		
+		<div class="row form-group">
+	        <div class="col-sm-12 tablesearch text-right">
+	          Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'technical')" ng-model-options="{debounce:500}">
+	        </div>
+	    </div>
+
+	    <div class="row">
+	        <div class="col-sm-12">
+	          <div class=" table-responsive ">
+	            <table class="table table-bordered table-striped">
+	              <thead>
+	                <tr>
+	                  <th>Category</th>
+	                  <th>Brand</th>
+	                  <th>Model</th>
+	                  <th>Gross Weight</th>
+	                  <th>Operating Weight</th>		                  
+	                  <th>Bucket Capacity</th>		                  
+	                  <th>Engine Power</th>		                  
+	                  <th>Lifting Capacity</th>		                  
+	                  <th width="10%">Actions</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	              	<tr ng-repeat="techInfo in gsettingVm.productTechnicalList">
+	              		<td>{{techInfo.information.category}}</td>
+	              		<td>{{techInfo.information.brand}}</td>
+	              		<td>{{techInfo.information.model}}</td>
+	              		<td>{{techInfo.information.grossWeight}}</td>
+	              		<td>{{techInfo.information.operatingWeight}}</td>
+	              		<td>{{techInfo.information.bucketCapacity}}</td>
+	              		<td>{{techInfo.information.enginePower}}</td>
+	              		<td>{{techInfo.information.liftingCapacity}}</td>
+	              		<td>
+	              			<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="gsettingVm.editProductTechInfo(techInfo)">
+		                      <i class="fa fa-pencil"></i>
+		                    </a>
+		                    <button class="btn btn-danger btn-sm"  uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ng-click="gsettingVm.deleteProductTechInfo(techInfo)"></i></button>
+	              		</td>
+	              	</tr>
+	              </tbody>
+	            </table>
+	          </div>
+	          <uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+	        </div>
+	    </div>
 			</div>
 		</div>
 	</div>

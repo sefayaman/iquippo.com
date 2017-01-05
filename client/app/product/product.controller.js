@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('ProductCtrl',ProductCtrl);
 angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 //Product upload controller
- function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc) {
+ function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc,ProductTechInfoSvc) {
     
     var vm = this;
    //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -445,6 +445,24 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     if(md){
       product.model._id = md._id;
       product.model.name = md.name;
+      var techFilter = {
+        category : product.category.name,
+        brand : product.brand.name,
+        model : product.model.name
+      };
+
+      ProductTechInfoSvc.fetchInfo(techFilter)
+        .then(function(techInfo){
+          if(techInfo.length){
+            $scope.product.technicalInfo = {
+              grossWeight : techInfo[0].information.grossWeight,
+              operatingWeight : techInfo[0].information.operatingWeight, 
+              bucketCapacity : techInfo[0].information.bucketCapacity,
+              enginePower : techInfo[0].information.enginePower, 
+              liftingCapacity : techInfo[0].information.liftingCapacity 
+            } 
+          }
+        })
     }else
       product.model = {};
   }
