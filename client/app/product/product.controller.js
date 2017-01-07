@@ -153,6 +153,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       productSvc.getProductOnId($stateParams.id,true).then(function(response){
         product = $scope.product = response;
+
         if(response.serviceInfo.length > 0){
           for(var i =0; i < response.serviceInfo.length; i++){
             if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
@@ -240,7 +241,26 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         }
         $scope.onTradeTypeChange($scope.product.tradeType);
          prepareImgArr();
-      });
+      }).then(function(){
+        var techFilter = {
+          category : product.category.name,
+          brand : product.brand.name,
+          model : product.model.name
+        };
+
+        ProductTechInfoSvc.fetchInfo(techFilter)
+          .then(function(techInfo){
+            if(techInfo.length){
+              $scope.product.technicalInfo = {
+                grossWeight : techInfo[0].information.grossWeight,
+                operatingWeight : techInfo[0].information.operatingWeight, 
+                bucketCapacity : techInfo[0].information.bucketCapacity,
+                enginePower : techInfo[0].information.enginePower, 
+                liftingCapacity : techInfo[0].information.liftingCapacity 
+              } 
+            }
+          });
+        })
     }else{
       prepareImgArr();
     }
