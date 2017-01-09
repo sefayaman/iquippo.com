@@ -599,7 +599,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 	function getChangeAuctionMasterData(){
 		vm.auctionOwnerLists.forEach(function(item){
             if(item.user.mobile == vm.auctionData.auctionOwnerMobile)
-              vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
+            	vm.auctionData.auctionOwner = item.entityName;
+              //vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
         });
 		if(vm.auctionData.city)
 			vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
