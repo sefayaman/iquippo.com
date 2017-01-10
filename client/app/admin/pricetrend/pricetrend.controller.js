@@ -4,7 +4,7 @@
 angular.module('admin').controller('PriceTrendCtrl', PriceTrendCtrl);
 
 //Controller function
-function PriceTrendCtrl($scope,$rootScope,categorySvc,brandSvc,modelSvc ,Modal,PriceTrendSvc,$filter) {
+function PriceTrendCtrl($scope,$rootScope,Auth,notificationSvc,categorySvc,brandSvc,modelSvc ,Modal,PriceTrendSvc,$filter,uploadSvc) {
     var vm = this;
 
     //pagination variable
@@ -26,11 +26,13 @@ function PriceTrendCtrl($scope,$rootScope,categorySvc,brandSvc,modelSvc ,Modal,P
     vm.openAddTrendPrice = openAddTrendPrice;
     vm.editClick = editClick;
     vm.destroy = destroy;
-    vm.addPriceTrendOrUpdate = addPriceTrendOrUpdate;
+    vm.addOrUpdatePriceTrend = addOrUpdatePriceTrend;
     vm.resetPriceTrend = resetPriceTrend;
     vm.onCategoryChange = onCategoryChange;
     vm.onBrandChange = onBrandChange;
     vm.searchFn = searchFn;
+    vm.exportExcel = exportExcel;
+    $scope.importExcel = importExcel;
     
     function init(){
     	categorySvc.getAllCategory()
@@ -119,7 +121,7 @@ function PriceTrendCtrl($scope,$rootScope,categorySvc,brandSvc,modelSvc ,Modal,P
 	    })
     }
 
-    function addPriceTrendOrUpdate(form){
+    function addOrUpdatePriceTrend(form){
     	
     	if(form.$invalid){
     		$scope.submitted = true;
@@ -189,6 +191,60 @@ function PriceTrendCtrl($scope,$rootScope,categorySvc,brandSvc,modelSvc ,Modal,P
                 }
         });
     	
+    }
+
+    function exportExcel(){
+        PriceTrendSvc.exportExcel({})
+        .then(function(buffData){
+            saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "pricetrend_"+ new Date().getTime() +".xlsx");
+        });
+    }
+
+    function importExcel(files){
+         if(files.length == 0 || !files)
+          return;
+         if(files[0].name.indexOf('.xlsx') == -1){
+            Modal.alert('Please upload a valid file');
+            return;
+
+        }
+        $rootScope.loading = true;
+        uploadSvc.upload(files[0],importDir)
+        .then(function(result){
+          var fileName = result.data.filename;
+          $rootScope.loading = true;
+          PriceTrendSvc.importExcel(fileName)
+          .then(function(res){
+            $rootScope.loading = false;
+            if(res.errorCode == 1){
+                 Modal.alert(res.message,true);
+                return;
+            } 
+            
+            var totalRecord = res.successCount + res.errorList.length;
+            var message =  res.successCount + " out of "+ totalRecord  + " records are  processed successfully.";
+            if (res.errorList.length > 0 ) {
+                var data = {};
+                data['to'] = Auth.getCurrentUser().email;
+                data['subject'] = 'Bulk Price Trend Upload Excel Error Details.';
+                var serData = {};
+                serData.serverPath = serverPath;
+                serData.errorList = res.errorList;
+                notificationSvc.sendNotification('PriceTrendBulkUploadError', data, serData, 'email');
+                message += '. Error details has been sent to your email id';
+             }
+            Modal.alert(message,true);
+            getPriceTrends({});
+          })
+          .catch(function(res){
+            $rootScope.loading = false;
+            Modal.alert("error in parsing data",true);
+          })
+        })
+        .catch(function(res){
+            $rootScope.loading = false;
+           Modal.alert("error in file upload",true);
+        });
     }
 
     function resetPriceTrend(){

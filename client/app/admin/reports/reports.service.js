@@ -16,6 +16,7 @@
     reportService.getBuyOrRentOnFilter = getBuyOrRentOnFilter;
     
     reportService.exportData = exportData;
+    var userMobileList = "";
 
     function getCallbackOnFilter(data) {
       return $http.post(path + "/callback/onfilter", data)
@@ -57,8 +58,12 @@
         })
     }
 
-    function getTotatItemsCount(data, searchstr) {
-      return $http.get(path + "/reports/fetch.count.json?type=" + data + "&searchStr=" + searchstr)
+    function getTotatItemsCount(data, searchstr, userMobiles) {
+      if(userMobiles)
+        userMobileList = "&userMobileNos=" + userMobiles;
+      else
+        userMobileList = "";
+      return $http.get(path + "/reports/fetch.count.json?type=" + data + "&searchStr=" + searchstr + userMobileList)
         .then(function(result) {
           return result
         })
@@ -69,7 +74,11 @@
     }
 
     function getShippingQuotesOnFilter(data) {
-      return $http.get(path + "/reports/fetch.json?type=shipping&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr)
+      if(data.userMobileNos)
+        userMobileList =  "&userMobileNos=" + data.userMobileNos;
+      else
+        userMobileList = "";
+      return $http.get(path + "/reports/fetch.json?type=shipping&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr + userMobileList)
         .then(function(res) {
           return res.data
         })
@@ -79,7 +88,11 @@
     }
 
     function getValuationQuotesOnFilter(data) {
-      return $http.get(path + "/reports/fetch.json?type=valuation&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr)
+      if(data.userMobileNos)
+        userMobileList =  "&userMobileNos=" + data.userMobileNos;
+      else
+        userMobileList = "";
+      return $http.get(path + "/reports/fetch.json?type=valuation&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr + userMobileList)
         .then(function(res) {
           return res.data
         })
@@ -89,7 +102,11 @@
     }
 
     function getFinancingQuotesOnFilter(data) {
-      return $http.get(path + "/reports/fetch.json?type=finance&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr)
+      if(data.userMobileNos)
+        userMobileList =  "&userMobileNos=" + data.userMobileNos;
+      else
+        userMobileList = "";
+      return $http.get(path + "/reports/fetch.json?type=finance&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr + userMobileList)
         .then(function(res) {
           return res.data
         })
@@ -99,7 +116,11 @@
     }
 
     function getInsuranceQuotesOnFilter(data) {
-      return $http.get(path + "/reports/fetch.json?type=insurance&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr)
+      if(data.userMobileNos)
+        userMobileList =  "&userMobileNos=" + data.userMobileNos;
+      else
+        userMobileList = "";
+      return $http.get(path + "/reports/fetch.json?type=insurance&first_id=" + data.first_id + "&last_id=" + data.last_id + "&offset=" + data.offset + "&limit=" + data.itemsPerPage + "&searchStr=" + data.searchstr + userMobileList)
         .then(function(res) {
           return res.data
         })
@@ -117,7 +138,11 @@
       else if (refName == "buyOrRentOrBoth")
         url = path + "/buyer/export";
       else if (refName == "shipping" || refName == "valuation" || refName == "finance" || refName == "insurance") {
-        return path + "/reports/fetch.csv?type=" + refName + "&limit=100";
+        if(data.userMobileNos)
+        userMobileList =  "&userMobileNos=" + data.userMobileNos;
+      else
+        userMobileList = "";
+        return path + "/reports/fetch.csv?type=" + refName + "&limit=100" + userMobileList;
       } else
         url = path + "/productquote/export";
 

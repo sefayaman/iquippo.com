@@ -60,7 +60,8 @@ exports.search = function(req, res) {
 
   if(arr.length > 0)
     filter['$or'] = arr;
-
+  if(req.body.userMobileNos)
+    filter['mobile'] = {$in:req.body.userMobileNos};
   if(req.body._id)
     filter["product._id"] = req.body._id;
 
@@ -149,6 +150,8 @@ exports.getOnFilter = function(req,res){
 exports.exportBuyer = function(req,res){
   var filter = {};
 
+  if(req.body.userMobileNos)
+    filter['mobile'] = {$in:req.body.userMobileNos.split(',')};
   var query = Buyer.find(filter).sort({createdAt: -1});
   query.exec(
      function (err, users) {

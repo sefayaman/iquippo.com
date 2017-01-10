@@ -79,7 +79,7 @@
                       </ul>
                     </li> -->
                     
-                    <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=closed">Auctions</a></li>
+                    <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li>
                     <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
                   </ul>
                 </div><!-- /.navbar-collapse -->
@@ -87,13 +87,13 @@
                   setTimeout(function(){convertSelectToUL();},100);
                 </script>-->
             </nav>
-          <ul class="nav navbar-nav navbar-right hidden-xs">            
+          <ul class="nav navbar-nav navbar-right hidden-xs"> 
+            <li>
+              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
+            </li>           
             <li>
               <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
-            </li>
-            <li>
-              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get a Quick Quote</a>
-            </li>
+            </li>            
             <li>
               <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
             </li>

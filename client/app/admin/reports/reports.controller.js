@@ -3,7 +3,7 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal, userSvc) {
     var vm = this;
     vm.tabValue = "callback";
 
@@ -30,6 +30,7 @@
     vm.buyOrRentListing =[];
     vm.additionalSvcListing = [];
     var dataToSend = {};
+    var userMobileNos = [];
 
 
     $scope.shippingTotalItems = 0;
@@ -70,13 +71,38 @@
     function init() {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
-          if (!Auth.isAdmin())
+          /*if (!Auth.isAdmin())
             dataToSend["mobile"] = Auth.getCurrentUser().mobile;
+            dataToSend.pagination = true;
+            dataToSend.itemsPerPage = vm.itemsPerPage;
+            console.log(vm.tabValue);
+            getReportData(dataToSend, vm.tabValue);
+          */
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
-          console.log(vm.tabValue);
-          getReportData(dataToSend, vm.tabValue);
-
+          if(Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
+              if(Auth.getCurrentUser().role == 'channelpartner') {
+                var userFilter = {};
+                userFilter.userId =  Auth.getCurrentUser()._id;
+                userSvc.getUsers(userFilter).then(function(data){
+                  userMobileNos[userMobileNos.length] = Auth.getCurrentUser().mobile;
+                  data.forEach(function(item){
+                    userMobileNos[userMobileNos.length] = item.mobile;
+                  });
+                  dataToSend["userMobileNos"] = userMobileNos;
+                  getReportData(dataToSend, vm.tabValue);
+                })
+                .catch(function(err){
+                  //Modal.alert("Error in geting user");
+                })
+              }
+              else {
+                userMobileNos[userMobileNos.length] = Auth.getCurrentUser().mobile;
+                dataToSend["userMobileNos"] = userMobileNos;
+                getReportData(dataToSend, vm.tabValue);
+              }
+            } else
+              getReportData(dataToSend, vm.tabValue);
         }
       })
 
@@ -173,6 +199,7 @@
           ReportsSvc.getAdditionalServicesOnFilter(filter)
             .then(function(result) {
               
+              vm.additionalSvcListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
               if (vm.additionalSvcListing.length > 0) {
@@ -198,7 +225,8 @@
           break;
         case 'shipping':
           filter.itemsPerPage = vm.itemsPerPage;
-          //$scope.countShippingItems.totalItems=0;
+          if(userMobileNos.length > 0 && !Auth.isAdmin())
+            filter.userMobileNos = userMobileNos.join();
           if (filter.searchstr) {
             $scope.shippingTotalItems = 0;
           }
@@ -223,7 +251,7 @@
                 prevPage = vm.currentPage;
               });
           } else {
-            ReportsSvc.getTotatItemsCount("shipping", filter.searchstr)
+            ReportsSvc.getTotatItemsCount("shipping", filter.searchstr, filter.userMobileNos)
               .then(function(result) {
                 vm.totalItems = result.data.count;
                 if (filter.searchstr) {
@@ -246,6 +274,8 @@
           break;
         case 'valuation':
           filter.itemsPerPage = vm.itemsPerPage;
+          if(userMobileNos.length > 0 && !Auth.isAdmin())
+            filter.userMobileNos = userMobileNos.join();
           if (filter.searchstr) {
             $scope.valuationTotalItems = 0;
           }
@@ -270,7 +300,7 @@
                 prevPage = vm.currentPage;
               });
           } else {
-            ReportsSvc.getTotatItemsCount("valuation", filter.searchstr)
+            ReportsSvc.getTotatItemsCount("valuation", filter.searchstr, filter.userMobileNos)
               .then(function(result) {
                 vm.totalItems = result.data.count;
                 if (filter.searchstr) {
@@ -292,6 +322,8 @@
           break;
         case 'finance':
           filter.itemsPerPage = vm.itemsPerPage;
+          if(userMobileNos.length > 0 && !Auth.isAdmin())
+            filter.userMobileNos = userMobileNos.join();
           if (filter.searchstr) {
             $scope.financingTotalItems = 0;
           }
@@ -316,7 +348,7 @@
                 prevPage = vm.currentPage;
               });
           } else {
-            ReportsSvc.getTotatItemsCount("finance", filter.searchstr)
+            ReportsSvc.getTotatItemsCount("finance", filter.searchstr, filter.userMobileNos)
               .then(function(result) {
                 vm.totalItems = result.data.count;
                 if (filter.searchstr) {
@@ -338,6 +370,8 @@
           break;
         case 'insurance':
           filter.itemsPerPage = vm.itemsPerPage;
+          if(userMobileNos.length > 0 && !Auth.isAdmin())
+            filter.userMobileNos = userMobileNos.join();
           if (filter.searchstr) {
             $scope.insuranceTotalItems = 0;
           }
@@ -362,7 +396,7 @@
                 prevPage = vm.currentPage;
               });
           } else {
-            ReportsSvc.getTotatItemsCount("insurance", filter.searchstr)
+            ReportsSvc.getTotatItemsCount("insurance", filter.searchstr, filter.userMobileNos)
               .then(function(result) {
                 vm.totalItems = result.data.count;
                 if (filter.searchstr) {
@@ -401,6 +435,9 @@
     function exportExcel() {
       var filter = {};
       var fileName = "";
+      if(userMobileNos.length > 0 && !Auth.isAdmin())
+        filter.userMobileNos = userMobileNos.join();
+      
       if (vm.tabValue == "callback")
         fileName = "Callback_";
       else if (vm.tabValue == "quickQuery")
@@ -411,7 +448,6 @@
         return openWindow(ReportsSvc.exportData(filter, vm.tabValue));
       else
         fileName = "AdditionalServices_";
-
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
 
