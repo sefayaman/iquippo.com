@@ -29,7 +29,7 @@
     vm.fireCommand = fireCommand;
     vm.fireCommandType = fireCommandType;
     vm.getProductData = getProductData;
-    $scope.auctionType = 'closed';
+    $scope.auctionType = 'upcoming';
     $scope.auctionOnMap = false;
 
     var dataToSend = {};
@@ -70,7 +70,7 @@
       if($scope.auctionType)
         filter['auctionType'] = $scope.auctionType;
       else
-        filter['auctionType'] = "closed";
+        filter['auctionType'] = "upcoming";
 
       AuctionSvc.getAuctionDateData(filter).then(function(result){
         getAuctionWiseProductData(result);
