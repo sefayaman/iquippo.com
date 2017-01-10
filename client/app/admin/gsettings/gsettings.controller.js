@@ -599,10 +599,22 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 	function getChangeAuctionMasterData(){
 		vm.auctionOwnerLists.forEach(function(item){
             if(item.user.mobile == vm.auctionData.auctionOwnerMobile)
-              vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
+            	vm.auctionData.auctionOwner = item.entityName;
+              //vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
         });
 		if(vm.auctionData.city)
 			vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
+
+		if(vm.auctionData.startDate)
+			vm.auctionData.startDate = new Date(vm.auctionData.startDate);
+		if(vm.auctionData.endDate)
+			vm.auctionData.endDate = new Date(vm.auctionData.endDate);
+		if(vm.auctionData.insStartDate)
+			vm.auctionData.insStartDate = new Date(vm.auctionData.insStartDate);
+		if(vm.auctionData.insEndDate)
+			vm.auctionData.insEndDate = new Date(vm.auctionData.insEndDate);
+		if(vm.auctionData.regEndDate)
+			vm.auctionData.regEndDate = new Date(vm.auctionData.regEndDate);
 	}
 
 	function editAuctionMaster(index){
