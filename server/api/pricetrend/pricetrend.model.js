@@ -4,9 +4,22 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var TrendvalSchema = {
- 	oemPrice:{},
- 	averagePrice:{},
- 	highestRealisedPrice:{},
+ 	oemPrice:{
+     excellentCondition:Number,
+    goodCondition:Number,
+    averageCondition:Number
+  },
+ 	averagePrice:{
+     excellentCondition:Number,
+    goodCondition:Number,
+    averageCondition:Number
+  },
+ 	highestRealisedPrice:{
+     excellentCondition:Number,
+    goodCondition:Number,
+    averageCondition:Number
+  }
+
 };
 
 var PTrendSchema = new Schema({

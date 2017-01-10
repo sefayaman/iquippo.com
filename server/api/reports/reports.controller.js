@@ -9,6 +9,8 @@ var reports = {
 	count: function(req, res, next) {
 		var options = req.query;
 		var filters = {};
+		if(options.userMobileNos)
+		    filters['quote.mobile'] = {$in:options.userMobileNos.split(',')};
 		filters.type = options && options.type;
 		if (options.searchStr && options.searchStr !== 'undefined') {
 			filters['$text'] = {
@@ -56,6 +58,9 @@ var reports = {
 			};
 		}
 
+		if(options.userMobileNos)
+		    filters['quote.mobile'] = {$in:options.userMobileNos.split(',')};
+		
 		if (options.searchStr && options.searchStr !== 'undefined') {
 			filters['$text'] = {
 				'$search': options.searchStr

@@ -390,7 +390,7 @@
 				                  <td>{{auc.regEndDate | date:'MM/dd/yyyy'}}</td>
 				                  <td>{{auc.city}}</td>
 				                  <td>{{auc.auctionAddr}}</td>
-				                  <td>{{auc.auctionType}}</td>
+				                  <td>{{auc.auctionType | titleCase}}</td>
 				                  <td>{{auc.regCharges}}</td>
 				                  <td>
 				                  		<span ng-if="auc.docType == 'tc'">Terms and Conditions</span> 
