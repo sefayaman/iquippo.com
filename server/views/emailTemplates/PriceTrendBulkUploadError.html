@@ -1,0 +1,49 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+    <table style="width:70%; margin:0 auto;padding:20px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
+    	<tr>
+    		<td valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
+    	</tr>
+        
+        <tr>
+            <td style="color:#01395c;color:#01395c; font-size:14px;font-weight:bold;padding-top: 16px;padding-bottom: 15px;">
+    			The Excel Upload process has been partially completed with one or more error(s).
+            </td>
+        </tr>
+    <tr>
+        
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">
+                There has been a problem with the Excel file which you uploaded. Please correct following errors in your data and try again. 
+            </td>
+    </tr>
+    {{#errorList}} 
+    <tr>
+        
+            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">
+                   Row {{rowCount}}: {{message}}
+            </td> 
+    </tr>  
+    {{/errorList}}
+    <tr>
+        
+            <td style="color:#01395c; font-size:13px;padding-top: 15px;">
+                If the problem persists, you can download a new copy of the template. Paste your data into the template, leaving the top row unchanged.
+            </td>
+    </tr>     
+    <tr>
+        
+            <td style="color:#01395c; font-size:13px;padding-top: 10px;">
+                Please contact iQuippo Support Team if you continue to experience problems with the Bulk Product Excel Upload feature.
+            </td>
+    </tr>  
+    <tr>
+        
+            <td style="color:#01395c; font-size:13px;padding-top: 15px;">
+                 Regards, iQuippo Support Team
+            </td>
+    </tr>                  
+     </table>
+    </body>
+

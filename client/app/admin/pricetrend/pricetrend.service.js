@@ -9,10 +9,13 @@ angular.module('admin').factory("PriceTrendSvc",PriceTrendSvc);
    ptSvc.create = create;
    ptSvc.update = update;
    ptSvc.destroy = destroy;
+   ptSvc.exportExcel = exportExcel;
+   ptSvc.importExcel = importExcel;
 
    ptSvc.saveSurvey = saveSurvey;
    ptSvc.getSurveyAnalytics = getSurveyAnalytics;
    ptSvc.getSurveyOnFilter = getSurveyOnFilter;
+
    function getOnFilter(filter){
 
     return $http.post(path + "/getonfilter",filter)
@@ -24,6 +27,30 @@ angular.module('admin').factory("PriceTrendSvc",PriceTrendSvc);
     })
 
    }
+
+   function exportExcel(filter){
+    return $http.post(path + "/export",filter)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    })
+
+   }
+
+   function importExcel(fileName){
+    return $http.post(path + "/import",{filename:fileName})
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    })
+
+   }
+
+   
 
    function create(ptObj){
       return $http.post(path,ptObj)
