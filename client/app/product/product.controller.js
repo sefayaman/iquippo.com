@@ -1607,38 +1607,32 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       function increaseElement(type){
         switch(type){
           case 'NOCAT':
-          $scope.images.length++;
-          $scope.images[$scope.images.length-1] = {};
+            $scope.images.length++;
+            $scope.images[$scope.images.length-1] = {};
           break;
           case 'GA':
             $scope.imagesGeneralApp.length++;
-            if($scope.isEdit)
-              $scope.imagesGeneralApp[$scope.imagesGeneralApp.length -1] = {};
+            $scope.imagesGeneralApp[$scope.imagesGeneralApp.length -1] = {};
           break;
           case 'ENGINE':
             $scope.imagesEngine.length++;
-            if($scope.isEdit)
-              $scope.imagesEngine[$scope.imagesEngine.length -1] = {};
+            $scope.imagesEngine[$scope.imagesEngine.length -1] = {};
           break;
           case 'HYDRAULIC':
             $scope.imagesHydraulic.length++;
-            if($scope.isEdit)
-              $scope.imagesHydraulic[$scope.imagesHydraulic.length -1] = {};
+            $scope.imagesHydraulic[$scope.imagesHydraulic.length -1] = {};
           break;
           case 'CABIN':
             $scope.imagesCabin.length++;
-            if($scope.isEdit)
-              $scope.imagesCabin[$scope.imagesCabin.length -1] = {};
+            $scope.imagesCabin[$scope.imagesCabin.length -1] = {};
           break;
           case 'UC':
             $scope.imagesUnderCarrage.length++;
-            if($scope.isEdit)
-              $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length -1] = {};
+            $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length -1] = {};
           break;
           case 'OTHER':
             $scope.imagesOther.length++;
-            if($scope.isEdit)
-              $scope.imagesOther[$scope.imagesOther.length -1] = {};
+            $scope.imagesOther[$scope.imagesOther.length -1] = {};
           break;
         }
 
