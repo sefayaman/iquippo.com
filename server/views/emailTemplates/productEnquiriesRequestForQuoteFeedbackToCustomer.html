@@ -15,47 +15,6 @@
         
       </td>
     </tr>
-    {{#if best}}
-    <tr>
-      <td align="center" style="font-size: 16px;
-        padding: 10px;background:#104295;color:#fff;
-      font-family:Verdana, Geneva, sans-serif;">Best Match</td>
-    </tr>
-    <tr>
-      <td align="center" style=" padding-top: 10px;padding-bottom: 10px;">
-        <table style="font-size:11px;line-height:14px; border:3px solid #ccc;" border="0" cellspacing="0" cellpadding="0" width="65%" bgcolor="#ffffff">
-              <tbody>
-                <tr>
-                  <td>                    
-                    <img width="200" src="{{serverPath}}/assets/uploads/{{best.assetDir}}/{{best.primaryImg}}">
-                  </td>
-                  <td>
-                    <p style="font-size:14px;line-height:22px;color:#104295;font-weight:bold; font-family:Verdana, Geneva, sans-serif; text-align:left; margin-bottom: 5px;">
-                      {{best.name}}
-                    </p>
-                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Product Brand :</b> {{best.brand.name}}
-                    </p>
-                    <p  style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Location</b> {{best.city}}
-                    </p>
-                    <p style="font-size:12px;line-height:20px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Model No :</b> {{best.model.name}}</p>
-                    <p style="font-size:12px;line-height:22px;color:#333333; font-family:Verdana, Geneva, sans-serif; text-align: left; margin: 5px 0;">
-                      <b>Call Now :</b> {{this.contactNumber}}
-                    </p>
-                    <p style="padding-bottom:6px;padding-top:6px;background:#ccc; text-align: center; margin: 5px 15px 5px 0;">
-                      <a href="{{serverPath}}/productdetail/{{best._id}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif;" > Click to View </a>
-                    </p>
-                    
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-      </td>
-      
-    </tr>
-    {{/if}}
     {{#if similar}}
     <tr>
       <td align="center"  style="font-size: 16px;

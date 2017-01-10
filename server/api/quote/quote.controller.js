@@ -63,6 +63,9 @@ exports.getOnFilter = function(req, res) {
   if(arr.length > 0)
     filter['$or'] = arr;
 
+  if(req.body.userMobileNos)
+    filter['mobile'] = {$in:req.body.userMobileNos};
+  
   var result = {};
   if(req.body.pagination){
     Utility.paginatedResult(req,res,Quote,filter,{});
@@ -131,6 +134,8 @@ exports.exportQuickQuery = function(req,res){
   
   // if(req.body.filter)
   //   filter = req.body.filter;
+  if(req.body.userMobileNos)
+    filter['mobile'] = {$in:req.body.userMobileNos.split(',')};
   var query = Quote.find(filter).sort({createdAt: -1});
   query.exec(
      function (err, users) {
