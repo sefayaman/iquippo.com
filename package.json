@@ -41,6 +41,7 @@
     "serve-favicon": "~2.0.1",
     "socketio-jwt": "^3.0.0",
     "trim": "0.0.1",
+    "validator": "^6.2.0",
     "xlsx": "^0.8.0"
   },
   "devDependencies": {

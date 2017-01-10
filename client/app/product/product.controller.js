@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('ProductCtrl',ProductCtrl);
 angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 //Product upload controller
- function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc) {
+ function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc,ProductTechInfoSvc) {
     
     var vm = this;
    //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -153,6 +153,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       productSvc.getProductOnId($stateParams.id,true).then(function(response){
         product = $scope.product = response;
+
+        
         if(response.serviceInfo.length > 0){
           for(var i =0; i < response.serviceInfo.length; i++){
             if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
@@ -177,10 +179,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           $scope.product.miscDocuments = [{}];
 
         if(!$scope.product.technicalInfo){
-             $scope.product.technicalInfo = {};
-              $scope.product.technicalInfo.params = [{}];
+            $scope.product.technicalInfo = {};
+            $scope.product.technicalInfo.params = [{}];
         }
-
 
         if(product.assetStatus)
             prevAssetStatus = product.assetStatus;
@@ -240,7 +241,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         }
         $scope.onTradeTypeChange($scope.product.tradeType);
          prepareImgArr();
-      });
+      })
     }else{
       prepareImgArr();
     }
@@ -378,6 +379,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      
     $scope.brandList = [];
     $scope.modelList = [];
+    //$scope.product.technicalInfo = {};
      if(!categoryId)
       return;
     var otherBrand = null;
@@ -414,6 +416,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      $scope.container.selectedModelId = "";
     }
     
+    //$scope.product.technicalInfo = {};
     $scope.modelList = [];
     if(!brandId)
        return;
@@ -435,6 +438,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       product.model = {};
       return;
     }
+    $scope.product.technicalInfo = {};
     var md = null;
     for(var i=0; i< $scope.modelList.length;i++){
       if($scope.modelList[i]._id == modelId){
@@ -445,6 +449,24 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     if(md){
       product.model._id = md._id;
       product.model.name = md.name;
+      var techFilter = {
+        category : product.category.name,
+        brand : product.brand.name,
+        model : product.model.name
+      };
+
+      ProductTechInfoSvc.fetchInfo(techFilter)
+        .then(function(techInfo){
+          if(techInfo.length){
+            $scope.product.technicalInfo = {
+              grossWeight : techInfo[0].information.grossWeight,
+              operatingWeight : techInfo[0].information.operatingWeight, 
+              bucketCapacity : techInfo[0].information.bucketCapacity,
+              enginePower : techInfo[0].information.enginePower, 
+              liftingCapacity : techInfo[0].information.liftingCapacity 
+            } 
+          }
+        })
     }else
       product.model = {};
   }
