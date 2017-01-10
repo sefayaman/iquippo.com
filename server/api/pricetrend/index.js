@@ -9,6 +9,9 @@ router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 router.post('/getonfilter', controller.getPriceTrendOnFilter);
+router.post('/export', controller.exportPriceTrend);
+router.post('/import', controller.importPriceTrend);
+router.get('/migrate', controller.migratePriceTrend);
 
 router.post('/savesurvey', controller.saveSurvey);
 router.post('/surveyanalytics', controller.surveyAnalytics);

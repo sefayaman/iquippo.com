@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('ProductCtrl',ProductCtrl);
 angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 //Product upload controller
- function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc) {
+ function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc,ProductTechInfoSvc) {
     
     var vm = this;
    //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -55,6 +55,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   $scope.onModelChange = onModelChange;
   $scope.onTradeTypeChange = onTradeTypeChange;
   $scope.clickHandler = clickHandler;
+  $scope.increaseElement=increaseElement;
   //$scope.addOrUpdateProduct = addOrUpdateProduct;
   $scope.onUserChange = onUserChange;
   $scope.resetClick = resetClick;
@@ -162,7 +163,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       productSvc.getProductOnId($stateParams.id,true).then(function(response){
         product = $scope.product = response;
-
         $scope.imagesGeneralApp=[];
         $scope.imagesEngine = [];
         $scope.imagesHydraulic = [];
@@ -260,10 +260,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           $scope.product.miscDocuments = [{}];
 
         if(!$scope.product.technicalInfo){
-             $scope.product.technicalInfo = {};
-              $scope.product.technicalInfo.params = [{}];
+            $scope.product.technicalInfo = {};
+            $scope.product.technicalInfo.params = [{}];
         }
-
 
         if(product.assetStatus)
             prevAssetStatus = product.assetStatus;
@@ -323,7 +322,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         }
         $scope.onTradeTypeChange($scope.product.tradeType);
          prepareImgArr();
-      });
+      })
     }else{
       prepareImgArr();
     }
@@ -501,6 +500,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      
     $scope.brandList = [];
     $scope.modelList = [];
+    //$scope.product.technicalInfo = {};
      if(!categoryId)
       return;
     var otherBrand = null;
@@ -537,6 +537,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      $scope.container.selectedModelId = "";
     }
     
+    //$scope.product.technicalInfo = {};
     $scope.modelList = [];
     if(!brandId)
        return;
@@ -558,6 +559,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       product.model = {};
       return;
     }
+    $scope.product.technicalInfo = {};
     var md = null;
     for(var i=0; i< $scope.modelList.length;i++){
       if($scope.modelList[i]._id == modelId){
@@ -568,6 +570,24 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     if(md){
       product.model._id = md._id;
       product.model.name = md.name;
+      var techFilter = {
+        category : product.category.name,
+        brand : product.brand.name,
+        model : product.model.name
+      };
+
+      ProductTechInfoSvc.fetchInfo(techFilter)
+        .then(function(techInfo){
+          if(techInfo.length){
+            $scope.product.technicalInfo = {
+              grossWeight : techInfo[0].information.grossWeight,
+              operatingWeight : techInfo[0].information.operatingWeight, 
+              bucketCapacity : techInfo[0].information.bucketCapacity,
+              enginePower : techInfo[0].information.enginePower, 
+              liftingCapacity : techInfo[0].information.liftingCapacity 
+            } 
+          }
+        })
     }else
       product.model = {};
   }
@@ -1584,38 +1604,78 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       }
 
+      function increaseElement(type){
+        switch(type){
+          case 'NOCAT':
+          $scope.images.length++;
+          $scope.images[$scope.images.length-1] = {};
+          break;
+          case 'GA':
+            $scope.imagesGeneralApp.length++;
+            if($scope.isEdit)
+              $scope.imagesGeneralApp[$scope.imagesGeneralApp.length -1] = {};
+          break;
+          case 'ENGINE':
+            $scope.imagesEngine.length++;
+            if($scope.isEdit)
+              $scope.imagesEngine[$scope.imagesEngine.length -1] = {};
+          break;
+          case 'HYDRAULIC':
+            $scope.imagesHydraulic.length++;
+            if($scope.isEdit)
+              $scope.imagesHydraulic[$scope.imagesHydraulic.length -1] = {};
+          break;
+          case 'CABIN':
+            $scope.imagesCabin.length++;
+            if($scope.isEdit)
+              $scope.imagesCabin[$scope.imagesCabin.length -1] = {};
+          break;
+          case 'UC':
+            $scope.imagesUnderCarrage.length++;
+            if($scope.isEdit)
+              $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length -1] = {};
+          break;
+          case 'OTHER':
+            $scope.imagesOther.length++;
+            if($scope.isEdit)
+              $scope.imagesOther[$scope.imagesOther.length -1] = {};
+          break;
+        }
+
+      }
+
       function prepareImgArr(){
-        var numberOfIteration  = 8 - $scope.images.length;
+        var numberOfIteration  = 1 - $scope.images.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.images[$scope.images.length] = {};
         }
 
-        numberOfIteration  = 8 - $scope.imagesGeneralApp.length;
+        numberOfIteration  = 1- $scope.imagesGeneralApp.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
         }
 
-        numberOfIteration  = 8 - $scope.imagesEngine.length;
+        numberOfIteration  = 1 - $scope.imagesEngine.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesEngine[$scope.imagesEngine.length] = {};
         }
 
-        numberOfIteration  = 8 - $scope.imagesHydraulic.length;
+        numberOfIteration  = 1 - $scope.imagesHydraulic.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};
         }
 
-        numberOfIteration  = 8 - $scope.imagesOther.length;
+        numberOfIteration  = 1 - $scope.imagesOther.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesOther[$scope.imagesOther.length] = {};
         }
 
-        numberOfIteration  = 8 - $scope.imagesCabin.length;
+        numberOfIteration  = 1 - $scope.imagesCabin.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesCabin[$scope.imagesCabin.length] = {};
         }
 
-        numberOfIteration  = 8 - $scope.imagesUnderCarrage.length;
+        numberOfIteration  = 1 - $scope.imagesUnderCarrage.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
         }

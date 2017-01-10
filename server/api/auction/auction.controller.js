@@ -1378,7 +1378,8 @@ function importAuctionMaster(req, res, data) {
             return;
           }
           
-          auctionData.auctionOwner = vendor[0].user.fname + ' ' + vendor[0].user.lname;
+          //auctionData.auctionOwner = vendor[0].user.fname + ' ' + vendor[0].user.lname;
+          auctionData.auctionOwner = vendor[0].entityName;
           insertData();
          })
       }else{

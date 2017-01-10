@@ -196,6 +196,9 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
   }
 
   function getPriceTrendData(){
+    if($scope.currentProduct.tradeType == 'RENT')
+      return;
+    
     var filter = {};
     filter['categoryId'] = $scope.currentProduct.category._id;
     filter['brandId'] = $scope.currentProduct.brand._id;

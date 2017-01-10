@@ -2,7 +2,6 @@
         <div class="text-right">
           <ul class="top-menu">
             
-            <li><a href="javascript:void(0);" ng-click="openDialog('quote')"><i class="fa fa-edit"></i> <span class="hidden-xs">Quick Query</span></a></li>
             <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
             
@@ -88,10 +87,13 @@
                   setTimeout(function(){convertSelectToUL();},100);
                 </script>-->
             </nav>
-          <ul class="nav navbar-nav navbar-right hidden-xs">
+          <ul class="nav navbar-nav navbar-right hidden-xs"> 
+            <li>
+              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
+            </li>           
             <li>
               <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
-            </li>
+            </li>            
             <li>
               <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
             </li>

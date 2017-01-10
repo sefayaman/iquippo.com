@@ -4,7 +4,7 @@
 angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
 //Controller function
-function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notificationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc,brandSvc,modelSvc, ManufacturerSvc, BannerSvc,AuctionSvc) {
+function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notificationSvc,SubCategorySvc, Modal, settingSvc,PaymentMasterSvc,vendorSvc,uploadSvc,AuctionMasterSvc,categorySvc,brandSvc,modelSvc, ManufacturerSvc, BannerSvc,AuctionSvc,ProductTechInfoSvc,$window) {
     $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
     var vm = this;
     vm.tabValue = 'loc';
@@ -18,6 +18,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     // vm.deleteSubCategory = deleteSubCategory;
     $scope.isCollapsed = true;
     $scope.isAssetCollapsed = true;
+    $scope.isTechCollapsed = false;
 
     vm.state = {};
     vm.stateEdit = false;
@@ -77,6 +78,12 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     $scope.uploadDoc = uploadDoc;
     $scope.getConcatData = [];
     vm.auctionDateTemplate = 'AuctionDate-Template.xlsx';
+    vm.addTechnicalInfoClicked = addTechnicalInfoClicked;
+    vm.editProductTechInfo = editProductTechInfo;
+    vm.exportProductTechInfoExcel = exportProductTechInfoExcel;
+    vm.totalProductTechInfoCount = 0;
+    $scope.productTechTotalItems = 0;
+    vm.closeTechInfo = closeTechInfo;
     
     
     //vm.auctionSearchFilter = {};
@@ -94,6 +101,9 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     $scope.resetPagination = resetPagination;
     
     vm.auctionProduct = {};
+    vm.techInformation ={
+    	type : 'technical'
+    };
     vm.addAssetInAuctionClicked = addAssetInAuctionClicked;
     vm.editAssetInAuctionClicked = editAssetInAuctionClicked;
     vm.saveAssetInAuction = saveAssetInAuction;
@@ -104,6 +114,13 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     $scope.uploadImage = uploadImage;
     vm.addAuctionClicked = addAuctionClicked;
     vm.onActionTabClick = onActionTabClick;
+    vm.saveTechnicalInfo = saveTechnicalInfo;
+    vm.updateProductTechInfo = updateProductTechInfo;
+    vm.deleteProductTechInfo = deleteProductTechInfo;
+
+    function closeTechInfo(){
+      return $scope.isTechCollapsed = !$scope.isTechCollapsed;
+    }
 
 	
     function uploadDoc(files){
@@ -163,6 +180,11 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 				resetData();
     			getAllBanner();
 			break;
+			case 'technical':
+				resetPagination();
+				getProductTechInfo({});
+				loadAllCategory();
+				break;
 
     	}
     }
@@ -193,8 +215,16 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     	vm.brandList = [];
     	vm.modelList = [];
     	if(reset){
-    		vm.auctionProduct.product.brand = "";
-    		vm.auctionProduct.product.model = "";
+    		if(vm.auctionProduct.product){
+    			vm.auctionProduct.product.brand = "";
+    			vm.auctionProduct.product.model = "";
+    		}
+
+    		if(vm.techInformation.information){
+    			vm.techInformation.information.brand = "";
+    			vm.techInformation.information.model = "";
+    		}
+    	
     	}
     	
     	if(!catName)
@@ -209,7 +239,10 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     function onBrandChange(brandName,reset){
     	vm.modelList = [];
     	if(reset){
-    		vm.auctionProduct.product.model = "";
+    		if(vm.auctionProduct.product)
+    			vm.auctionProduct.product.model = "";
+    		if(vm.techInformation.information)
+    			vm.techInformation.information.model = "";
     	}
     	if(!brandName)
     	return;
@@ -599,10 +632,22 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 	function getChangeAuctionMasterData(){
 		vm.auctionOwnerLists.forEach(function(item){
             if(item.user.mobile == vm.auctionData.auctionOwnerMobile)
-              vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
+            	vm.auctionData.auctionOwner = item.entityName;
+              //vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
         });
 		if(vm.auctionData.city)
 			vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
+
+		if(vm.auctionData.startDate)
+			vm.auctionData.startDate = new Date(vm.auctionData.startDate);
+		if(vm.auctionData.endDate)
+			vm.auctionData.endDate = new Date(vm.auctionData.endDate);
+		if(vm.auctionData.insStartDate)
+			vm.auctionData.insStartDate = new Date(vm.auctionData.insStartDate);
+		if(vm.auctionData.insEndDate)
+			vm.auctionData.insEndDate = new Date(vm.auctionData.insEndDate);
+		if(vm.auctionData.regEndDate)
+			vm.auctionData.regEndDate = new Date(vm.auctionData.regEndDate);
 	}
 
 	function editAuctionMaster(index){
@@ -1094,6 +1139,176 @@ function deleteAssetFromAuction(auct){
 	});
 }
 
+function addTechnicalInfoClicked(){
+	$scope.isEdit = false;
+	$scope.isTechCollapsed = !$scope.isTechCollapsed;
+	vm.techInformation = {
+		type : 'technical'
+	};
+	vm.brandList = [];
+	vm.modeList = [];
+	if(!$scope.isTechCollapsed){
+		vm.techInformation.information = {};
+	}
+	
+}
+
+
+function getProductTechInfo(filter){
+	var countFilter = {
+		count : true
+	};
+
+	filter.prevPage = prevPage;
+    filter.currentPage = vm.currentPage;
+    filter.first_id = first_id;
+    filter.last_id = last_id;
+	filter.limit = vm.itemsPerPage;
+
+	if(filter.searchStr)
+		$scope.productTechTotalItems = 0;
+
+	if($scope.productTechTotalItems){
+		if (vm.currentPage > prevPage) {
+      filter.first_id = null;
+      filter.last_id = vm.productTechnicalList[vm.productTechnicalList.length - 1]._id;
+      filter.offset = ((vm.currentPage - prevPage) * vm.itemsPerPage) - vm.itemsPerPage;
+    } else {
+      filter.first_id = vm.productTechnicalList[0]._id;
+      filter.last_id = null;
+      filter.offset = ((vm.currentPage - prevPage) * vm.itemsPerPage) + vm.itemsPerPage;
+    }
+
+    ProductTechInfoSvc.fetchInfo(filter).then(function(result){
+			vm.productTechnicalList = result;
+			vm.totalProductTechInfoCount = $scope.productTechTotalItems;	
+			prevPage = vm.currentPage;
+		})
+	}else{
+		if(filter.searchStr){
+			countFilter.searchStr = filter.searchStr;
+		}
+			
+		ProductTechInfoSvc.fetchInfo(countFilter).then(function(infoCount){
+			vm.totalProductTechInfoCount = infoCount;
+			if (filter.searchstr) {
+        $scope.productTechTotalItems = 0;
+      } else {
+        $scope.productTechTotalItems = vm.totalProductTechInfoCount;
+      }
+
+			ProductTechInfoSvc.fetchInfo(filter).then(function(result){
+				vm.productTechnicalList = result;
+				prevPage = vm.currentPage;
+				first_id = vm.productTechnicalList[0]._id;
+        last_id = vm.productTechnicalList[vm.productTechnicalList.length - 1]._id;
+			})
+		})
+	}
+}
+
+function saveTechnicalInfo(form){
+	if(form.$invalid){
+		$scope.submitted = true;
+		return;
+	}
+
+	var createData = {};
+	createData.type = vm.techInformation.type;
+	Object.keys(vm.techInformation.information).forEach(function(x){
+		createData[x] = vm.techInformation.information[x];
+	})
+
+	ProductTechInfoSvc.createInfo(createData).then(function(result){
+		if(result.msg){
+			$scope.submitted = false;
+			$scope.isTechCollapsed = !$scope.isTechCollapsed;
+			fireCommand('true',null,"technical");
+		}
+	})
+	.catch(function(err){
+		if(err.status === 409)
+			Modal.alert('Duplicate Entry');
+		else if(err && err.data && err.data.msg)
+      return Modal.alert(err.data.msg);
+    else
+      return Modal.alert('Error while updating');
+
+		return;
+		
+	});
+}
+
+function editProductTechInfo(techInfo){
+	$scope.isEdit = true;
+	$scope.isTechCollapsed = true;
+	vm.techInformation = {};
+	angular.copy(techInfo,vm.techInformation);
+	onCategoryChange(vm.techInformation.information.category,false);
+	onBrandChange(vm.techInformation.information.brand,false);
+	
+}
+
+function updateProductTechInfo(form){
+  if(form.$invalid){
+    $scope.submitted = true;
+    return;
+  }
+
+	var updateData = {};
+	Object.keys(vm.techInformation.information).forEach(function(x){
+		updateData[x] = vm.techInformation.information[x];
+	})
+
+	updateData.type = 'technical';
+
+	var updateId =  vm.techInformation._id;
+
+	ProductTechInfoSvc.updateInfo(updateId,updateData).then(function(result){
+		if(result.msg){
+			$scope.submitted = false;
+			$scope.isTechCollapsed = !$scope.isTechCollapsed;
+			fireCommand('true',null,"technical");
+		}
+	})
+	.catch(function(err){
+		if(err.status === 409)
+			return Modal.alert('Duplicate Entry');
+		else if(err && err.data && err.data.msg)
+      return Modal.alert(err.data.msg);
+    else
+			return Modal.alert('Error while updating');
+
+		return;
+		
+	});
+}
+
+function openWindow(url){
+  $window.open(url);
+}
+
+function exportProductTechInfoExcel(){
+	var filters = {};
+	filters.limit = 500;
+
+	openWindow(ProductTechInfoSvc.exportExcel(filters));
+
+}
+
+function deleteProductTechInfo(techInfo){
+	if(!techInfo)
+		return;
+	Modal.confirm('Would you want to delete?.',function(ret){
+		if(ret == 'yes'){
+			ProductTechInfoSvc.deleteInfo(techInfo)
+			.then(function(res){
+				fireCommand(true,null,'technical');
+			})
+		}
+	});
+}
+
 function deleteFn(auct){
 	AuctionSvc.delAuction(auct)
 	.then(function(res){
@@ -1120,7 +1335,10 @@ function deleteFn(auct){
 	  	break;
 	  	 case "auctionrequest":
 	  		getApprovedAuctionAsset(filter);
-	  	break;	
+	  	break;
+	  	case "technical":
+	  		getProductTechInfo(filter);
+	  	break;
 	  }
 	    
   	}
@@ -1132,6 +1350,7 @@ function deleteFn(auct){
 	  vm.totalMItems = 0;
 	  first_id = null;
 	  last_id = null;
+	  $scope.productTechTotalItems = 0;
 	}
 //date picker
 	$scope.today = function() {

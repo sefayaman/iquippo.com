@@ -621,4 +621,90 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     return bannerService;
   }  
+
+  angular.module('admin').factory("ProductTechInfoSvc",ProductTechInfoSvc);
+
+  function ProductTechInfoSvc($http,$q,$httpParamSerializer){
+    var techSvc = {};
+    var path = '/api/product/information'
+
+    techSvc.fetchInfo = fetchInfo;
+    techSvc.createInfo = createInfo;
+    techSvc.updateInfo = updateInfo;
+    techSvc.exportExcel = exportExcel;
+    techSvc.deleteInfo = deleteInfo;
+    
+
+    function createInfo(data){
+      var url = path + '/create';
+      return $http.post(url,data)
+        .then(function(res){
+          return res.data;
+        })
+      .catch(function(err){
+          throw err;
+        });
+    }
+
+    function exportExcel(filter){
+      var url = path + '/fetch.xlsx';
+      var qs;
+
+      if(Object.keys(filter).length){
+        qs = $httpParamSerializer(filter);
+      }
+
+      if(qs)
+        url += '?' + qs;
+
+      return url;
+    }
+
+    function fetchInfo(filter){
+      var url = path + '/fetch.json';
+      var qs;
+      if(Object.keys(filter).length){
+        qs = $httpParamSerializer(filter);
+      }
+
+      if(qs)
+        url += '?' + qs;
+      
+      return $http.get(url)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+     
+
+     function updateInfo(id,data){
+        var url = path + '/update/' + id;
+         return $http.put(url,data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+     }
+
+     function deleteInfo(techInfo){
+      var url = path + '/delete/'+techInfo._id;
+      return $http.delete(url)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      });
+     }
+    
+
+    return techSvc;
+
+  }
+
 })();

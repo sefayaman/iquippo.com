@@ -5,15 +5,22 @@
         <div class="col-sm-12">
           
           <div class="row">
-            <div class="col-sm-10">
+            <div class="col-sm-9">
               <h3>Price Trend</h3>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-1">
               <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.openAddTrendPrice()"><i class="fa" ng-class="{'fa-minus': isCollapsed, 'fa-plus': !isCollapsed}"></i> Add New</button></h3>
             </div>
-            <!-- <div class="col-sm-1">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
-            </div> -->
+            <div class="col-sm-1">
+              <h3 class=" btn btn-success btn-md pull-right"><span class="fileinput-button">
+                   <i class="fa fa-file-excel-o"></i> Import
+                   <input type="file" name="template_update" onchange="angular.element(this).scope().importExcel(this.files,this)">
+                   </span></h3>
+              
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            </div>
           </div>
           <hr>
           
@@ -76,18 +83,18 @@
                         <td><b>OEM / Dealer Estimation</b></td>
                         <td>
                           <div>
-                            <input type="number" name="oemPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.workingCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
+                            <input type="number" name="oemPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.excellentCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
                         <td>
                           <div>
-                            <input type="number" name="oemPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.averageCondition" placeholder="Good Condition" min="1" class="form-control"/>
+                            <input type="number" name="oemPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.goodCondition" placeholder="Good Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         <td>
                           <div>
-                            <input type="number" name="oemPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.requireMajorRepair" placeholder="Average Condition" min="1" class="form-control"/>
+                            <input type="number" name="oemPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.averageCondition" placeholder="Average Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
@@ -96,18 +103,18 @@
                         <td><b>Average Price</b></td>
                          <td>
                           <div>
-                            <input type="number" name="mPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.workingCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
+                            <input type="number" name="mPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.averagePrice.excellentCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
                         <td>
                           <div>
-                            <input type="number" name="mPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.averageCondition" placeholder="Good Condition" min="1" class="form-control" />
+                            <input type="number" name="mPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.averagePrice.goodCondition" placeholder="Good Condition" min="1" class="form-control" />
                           </div>
                         </td>
                         <td>
                           <div>
-                            <input type="number" name="mPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.marketPrice.requireMajorRepair" placeholder="Average Condition" min="1" class="form-control" />
+                            <input type="number" name="mPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.averagePrice.averageCondition" placeholder="Average Condition" min="1" class="form-control" />
                           </div>
                         </td>
                         
@@ -116,18 +123,18 @@
                         <td><b>Highest Realised Price</b></td>
                          <td>
                           <div>
-                            <input type="number" name="hrealised_working" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.workingCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
+                            <input type="number" name="hrealised_working" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.excellentCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
                         <td>
                           <div>
-                            <input type="number" name="hrealised_average" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.averageCondition" placeholder="Good Condition" min="1" class="form-control"/>
+                            <input type="number" name="hrealised_average" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.goodCondition" placeholder="Good Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         <td>
                           <div>
-                            <input type="number" name="hrealised_repair" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.requireMajorRepair" placeholder="Average Condition" min="1" class="form-control"/>
+                            <input type="number" name="hrealised_repair" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.averageCondition" placeholder="Average Condition" min="1" class="form-control"/>
                           </div>
                         </td>
                         
@@ -147,7 +154,7 @@
               <div class="col-sm-12 text-right form-group">
                 <button class="btn" type="button" ng-click="priceTrendVm.openAddTrendPrice()">Close</button>
                 <button class="btn" type="button" ng-click="priceTrendVm.resetPriceTrend()">Reset</button>
-                <input class="btn btn-danger btn-md" name="" type="button" value="Submit" ng-click="priceTrendVm.addPriceTrendOrUpdate(form)">
+                <input class="btn btn-danger btn-md" name="" type="button" value="Submit" ng-click="priceTrendVm.addOrUpdatePriceTrend(form)">
               </div>
               
             </form>
@@ -155,7 +162,10 @@
         </div>        
       </div>
       <div class="row form-group">
-        <div class="col-sm-12 tablesearch text-right">
+        <div class="col-sm-9">
+          Download the <a href="/download/templates/Price_Trend_Template.xlsx" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.
+        </div>
+        <div class="col-sm-3 tablesearch text-right">
           Search: <input type="text" placeholder="Search..." ng-model="priceTrendVm.searchStr" ng-change="priceTrendVm.searchFn()" ng-model-options="{debounce:500}">
         </div>
       </div>
