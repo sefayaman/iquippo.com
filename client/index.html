@@ -9,6 +9,8 @@
     <title>iQuippo India</title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+        
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -21,6 +23,8 @@
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
+
+<link rel="stylesheet" href="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.css"/>
 
     <link rel="stylesheet" href="app/app.css">
     <!-- Hotjar Tracking Code for http://www.iquippo.com -->
@@ -143,7 +147,8 @@
       <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
       <script src="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>
-      <script src="bower_components/ngmap/build/scripts/ng-map.js"></script>
+      <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
+      <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
 
@@ -176,8 +181,10 @@
           <script src="app/admin/reports/reports.service.js"></script>
           <script src="app/admin/services/services.controller.js"></script>
           <script src="app/admin/usermanagement/usermanagement.controller.js"></script>
+          <script src="app/auction/assetinauction.controller.js"></script>
           <script src="app/auction/auction.service.js"></script>
           <script src="app/auction/auctionlisting.controller.js"></script>
+          <script src="app/auction/viewauction.controller.js"></script>
           <script src="app/bidValue/bid.controller.js"></script>
           <script src="app/bidValue/bid.service.js"></script>
           <script src="app/bulkupload/bulkupload.controller.js"></script>

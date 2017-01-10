@@ -62,10 +62,10 @@ angular.module('sreizaoApp')
         return;
       }
 
-      if(!quote.agree) {
+      /*if(!quote.agree) {
         Modal.alert("Please Agree to the Terms & Conditions",true);
         return;
-      }
+      }*/
 
       var dataToSend = {};
       dataToSend['fname'] =  quote.fname;
@@ -74,17 +74,17 @@ angular.module('sreizaoApp')
       dataToSend['phone'] = quote.phone;
       dataToSend['mobile'] = quote.mobile;
       dataToSend['email']= quote.email;
-      dataToSend['group']= quote.groupName;
+      //dataToSend['group']= quote.groupName;
       if(quote.catName != 'Other')
         dataToSend['category']= quote.catName;
       else
         dataToSend['category']= quote.otherCategory;
       //dataToSend['subcategory']= quote.subcategory;
-      dataToSend['brand']= quote.brand;
-      dataToSend['model']= quote.model;
-      dataToSend['expPrice']= quote.expPrice;
+      //dataToSend['brand']= quote.brand;
+      //dataToSend['model']= quote.model;
+      //dataToSend['expPrice']= quote.expPrice;
       dataToSend['city']= quote.city;
-      dataToSend['agree']= quote.agree;
+      //dataToSend['agree']= quote.agree;
 
       dataToSend['comment']= quote.comment;
       $http.post('/api/quote',dataToSend).success(function(result) {

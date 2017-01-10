@@ -27,6 +27,8 @@ exports.getOnFilter = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchstr, 'i');
 
   var filter = {};
+  if(req.body.userMobileNos)
+    filter['mobile'] = {$in:req.body.userMobileNos};
   var arr = [];
   if(req.body.searchstr){
     arr[arr.length] = { fname: { $regex: searchStrReg }};
@@ -74,6 +76,8 @@ exports.exportCallback = function(req,res){
   
   // if(req.body.filter)
   //   filter = req.body.filter;
+  if(req.body.userMobileNos)
+    filter['mobile'] = {$in: req.body.userMobileNos.split(',')};
   var query = Callback.find(filter).sort({createdAt: -1});
   query.exec(
      function (err, users) {

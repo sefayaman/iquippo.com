@@ -28,13 +28,13 @@ function getMatchingProductList(data){
   var filter = {};
   filter['status'] = true;
   filter['deleted'] = false;
-  filter['$or'] = [];
-  var bestComb = {};
-  var bestSimilarComb = {};
-  var similarComb = {};
+  //filter['$or'] = [];
+  //var bestComb = {};
+  //var bestSimilarComb = {};
+  //var similarComb = {};
   var found = false;
 
-  if(qr.category && qr.brand && qr.model){
+  /*if(qr.category && qr.brand && qr.model){
     bestComb['category.name'] = qr.category;
     bestComb['brand.name'] = qr.brand;
     bestComb['model.name'] = qr.model;
@@ -47,11 +47,12 @@ if(qr.category && qr.brand){
     bestSimilarComb['brand.name'] = qr.brand;
     filter['$or'].push(bestSimilarComb);
     found = true;
-  }
+  }*/
 
   if(qr.category){
-      similarComb['category.name'] = qr.category;
-      filter['$or'].push(similarComb);
+      //similarComb['category.name'] = qr.category;
+      //filter['$or'].push(similarComb);
+      filter['category.name'] = qr.category;
       found = true;
    }
 
