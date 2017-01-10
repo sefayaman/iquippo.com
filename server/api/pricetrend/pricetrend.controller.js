@@ -108,17 +108,17 @@ var PRICE_TREND_FIELD_MAP = {
                               'Category' : 'category.name',
                               'Brand' : 'brand.name',
                               'Model' :'model.name',
-                              'YOM' : 'mfgYear',
+                              'Manufatcuring Year' : 'mfgYear',
                               'Sale Year' : 'saleYear',
-                              'OEM Price Excellent Condition': 'trendValue.oemPrice.excellentCondition',
-                              'Average Price Excellent Condition':'trendValue.averagePrice.excellentCondition' ,
-                              'Highest Realised Price Excellent Condition' : 'trendValue.highestRealisedPrice.excellentCondition',
-                              'OEM Price Good Condition':'trendValue.oemPrice.goodCondition',
-                              'Average Price Good Condition':'trendValue.averagePrice.goodCondition',
-                              'Highest Realised Price Good Condition':'trendValue.highestRealisedPrice.goodCondition',
-                              'OEM Price Average Condition':'trendValue.oemPrice.averageCondition',
-                              'Average Price Average Condition':'trendValue.averagePrice.averageCondition',
-                              'Highest Realised Price Average Condition':'trendValue.highestRealisedPrice.averageCondition'
+                              'Excellent Condition - OEM/Dealer Estimation': 'trendValue.oemPrice.excellentCondition',
+                              'Excellent Condition - Average Price':'trendValue.averagePrice.excellentCondition' ,
+                              'Excellent Condition - Highest Realised Price' : 'trendValue.highestRealisedPrice.excellentCondition',
+                              'Good Condition - OEM/Dealer Estimation':'trendValue.oemPrice.goodCondition',
+                              'Good Condition - Average Price':'trendValue.averagePrice.goodCondition',
+                              'Good Condition - Highest Realised Price':'trendValue.highestRealisedPrice.goodCondition',
+                              'Average Condition - OEM/Dealer Estimation':'trendValue.oemPrice.averageCondition',
+                              'Average Condition - Average Price':'trendValue.averagePrice.averageCondition',
+                              'Average Condition - Highest Realised Price':'trendValue.highestRealisedPrice.averageCondition'
                             };
 
 
@@ -199,7 +199,7 @@ function importPriceTrend(req,res,data){
     query.exec(function(err,resultData){
       if(err) { return handleError(res, err); }
       if(resultData.length == 0){
-        errorObj = {};
+        var errorObj = {};
         errorObj['rowCount'] = req.counter + 2;
         errorObj['message'] = "Category,Brand,Model combination is not found.";
         req.errors[req.errors.length] = errorObj;
@@ -287,7 +287,7 @@ function _createProperty(obj,keys,counter,val){
 }
 
 function validateTrendData(trenData,rowNumber){
-  var requiredFields = ['Category','Brand','Model','YOM','Sale Year'];
+  var requiredFields = ['Category','Brand','Model','Manufatcuring Year','Sale Year'];
   var errorObj = null;
   for(var i = 0; i < requiredFields.length > 0 ; i++){
     if(!trenData[requiredFields[i]]){
