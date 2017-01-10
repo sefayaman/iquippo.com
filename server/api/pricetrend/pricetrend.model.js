@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var TrendvalSchema = {
  	oemPrice:{},
- 	marketPrice:{},
+ 	averagePrice:{},
  	highestRealisedPrice:{},
 };
 
