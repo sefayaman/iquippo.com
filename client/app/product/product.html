@@ -443,15 +443,84 @@
                                 <i class="caret"></i>
                             </div>
                           </div>
-                          <div class="row upload-picHover form-group">
+                          <p>
+                            To ensure picture quality we suggest minimum image resolutions as 450*300 pixels.
+                          </p>
+                          <div class="row form-group">
                             <div class="form-group col-sm-5 pic-popover">Upload Pictures</div>
                              <div class="col-sm-7 col-xs-12">
-                             <div class="row pic-popover" popover-placement="left" uib-popover="To ensure picture quality we suggest minimum image resolutions as 450*300 pixels." popover-trigger="mouseenter">
+                             <div class="row pic-popover">
                                 <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in images">
                                   <div class="br5">
                                     <span class="fileinput-button browse-icon" ng-show="!img.src">
                                         <span><i class="fa fa-plus-circle"></i></span>
                                           <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadio"  value="{{index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary </span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover" id="pol">General Appearence Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesGeneralApp">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="gA" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioGA" value="{{$index}}" ng-click="makePrimary($index,'GA')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Engine Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesEngine">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="eP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
                                      </span>
 
                                       <span ng-show="img.src">
@@ -467,7 +536,150 @@
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioEP" value="{{$index}}" ng-click="makePrimary($index,
+                                   'EP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Hydraulic Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesHydraulic">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="hP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,'HP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Cabin Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesCabin">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="cP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,'CP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Under Carrage/Tyre Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesUnderCarrage">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="uC" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,'UC')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Others Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesOther">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="oP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,'OP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>

@@ -59,12 +59,14 @@ angular.module('sreizaoApp')
                              Modal.alert("Image height should be " + attrs.height + "px");
                               return;
                          }
-                        var index = 0;
+                        var index = 0,id="";
+                        if(event.currentTarget.id)
+                          id=event.currentTarget.id;
                         if(attrs.index)
                           index = attrs.index;
                         if(files.length == 0)
                           return;
-                        scope.$emit("fileSelected", { files: files,img_src:ev.target.result,index:index,type:"image"});
+                        scope.$emit("fileSelected", { files: files,img_src:ev.target.result,index:index,type:"image",id:id});
                     };
                     img.src = fr.result;
                 };
