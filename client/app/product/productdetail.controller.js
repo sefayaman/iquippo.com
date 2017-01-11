@@ -8,20 +8,39 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   $scope.priceTrendData = null; 
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
+  $scope.financeContact={};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "mobile";
-  $scope.buycontact.interestedIn = "buyORrent";
+
+//certification request
+  $scope.productQuote = {};
+  if(Auth.getCurrentUser()._id){
+      var currUser = Auth.getCurrentUser();
+      $scope.productQuote.fname = currUser.fname;
+      $scope.productQuote.mname = currUser.mname;
+      $scope.productQuote.lname = currUser.lname;
+
+      $scope.productQuote.mobile = currUser.mobile;
+      $scope.productQuote.email = currUser.email;
+      $scope.productQuote.phone = currUser.phone;
+      $scope.productQuote.country = currUser.country;
+    }
+
+
+
+  //$scope.financeContact.interestedIn="finance";
+  $scope.buycontact.interestedIn = "finance" ;
   $scope.zoomLvl = 3;
   $scope.calRent = {};
   $scope.calRent.rateType = "Hours";
   $scope.statusShipping = {};
   $scope.statusShipping.open = false;
-  $scope.valAgencies=[];
+  $scope.valDetailsAgencies=[];
   $scope.totalRent = 0;
   $scope.status = {
     Firstopen: true
   };
-
+  vm.addProductQuote=addProductQuote;
   vm.submitValuationReq = submitValuationReq;
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
@@ -43,9 +62,9 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
           agency.forEach(function(item){
             var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",item._id);
             if(pyMst && pyMst.fees)
-              $scope.valAgencies[$scope.valAgencies.length] = item;
+              $scope.valDetailsAgencies[$scope.valDetailsAgencies.length] = item;
             else if(pyMst && pyMst.fees === 0)
-              $scope.valAgencies[$scope.valAgencies.length] = item;
+              $scope.valDetailsAgencies[$scope.valDetailsAgencies.length] = item;
           })
         });
       })
@@ -68,11 +87,11 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
       stsObj.userId = vm.valuationReq.user._id;
       stsObj.status = valuationStatuses[0].code;
       vm.valuationReq.statuses[vm.valuationReq.statuses.length] = stsObj;
-      for(var i=0; $scope.valAgencies.length;i++){
-        if($scope.valAgencies[i]._id == vm.valuationReq.valuationAgency._id){
-          vm.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
-          vm.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
-          vm.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
+      for(var i=0; $scope.valDetailsAgencies.length;i++){
+        if($scope.valDetailsAgencies[i]._id == vm.valuationReq.valuationAgency._id){
+          vm.valuationReq.valuationAgency.name = $scope.valDetailsAgencies[i].name;
+          vm.valuationReq.valuationAgency.email = $scope.valDetailsAgencies[i].email;
+          vm.valuationReq.valuationAgency.mobile = $scope.valDetailsAgencies[i].mobile;
           break;
         }
       }
@@ -120,6 +139,39 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
       });
 
   }
+
+function addProductQuote(form){
+    if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
+    //var certifiedByIQuippoQuoteArray = [];
+    /*if(!$scope.productQuote.valuationQuote.scheduledTime
+      && $scope.productQuote.valuationQuote.schedule == "yes")
+      $scope.changedValuation($scope.mytime);*/
+    if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
+      && $scope.productQuote.certifiedByIQuippoQuote.scheduleC == "yes")
+      $scope.changedCertified($scope.mytime);
+    $http.post('/api/productquote',$scope.productQuote).then(function(res){
+      //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
+      dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesSubmit);
+      //End
+        var data = {};
+        data['to'] = supportMail;
+        data['subject'] = 'Request for buy a product';
+        $scope.productQuote.certifiedByIQuippoQuote.date = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
+        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToAdmin', data, $scope.productQuote,'email');
+
+        data['to'] = $scope.productQuote.email;
+        data['subject'] = 'No reply: Product Enquiry request received';
+        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
+        $scope.closeDialog();
+        Modal.alert(informationMessage.productQuoteSuccess,true);
+        },function(res){
+            Modal.alert(res,true);
+        });
+    }
 
 
   function loadUserDetail(){
@@ -290,10 +342,10 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
       });
     }
 
-    vendorSvc.getAllVendors()
-    .then(function(){
-      $scope.valAgencies = vendorSvc.getVendorsOnCode('Finance');
-    });
+    // vendorSvc.getAllVendors()
+    // .then(function(){
+    //   $scope.valDetailsAgencies = vendorSvc.getVendorsOnCode('Finance');
+    // });
   }
 
   function getPriceTrendData(){
@@ -411,8 +463,9 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
     buycontact.product[0] = productObj;
     buycontact.tradeType = $scope.currentProduct.tradeType;
     
-    if(buycontact.interestedIn != "finance")
-      delete buycontact.financeInfo;
+    /*if(buycontact.interestedIn != "finance")
+      delete buycontact.financeInfo;*/
+
     BuyContactSvc.submitRequest(buycontact)
     .then(function(result){
       //Start NJ : push toBuyContact object in GTM dataLayer

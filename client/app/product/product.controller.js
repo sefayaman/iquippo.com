@@ -1481,14 +1481,40 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       });*/
   }
 
-   function deleteImg(idx){
-     $scope.images[idx] = {};
-    $scope.images.forEach(function(item,index,arr){
+  function deleteImage(idx,imageArr){
+    $scope[imageArr][idx] = {};
+    $scope[imageArr].forEach(function(item,index,arr){
       if(item.isPrimary)
           $scope.primaryIndex = index;
       });
     if(typeof $scope.primaryIndex === 'undefined')
         $scope.primaryIndex  =  0;
+  }
+
+   function deleteImg(idx,type){
+       switch(type){
+          case 'NOCAT':
+            deleteImage(idx,'images');
+          break;
+          case 'GA':
+            deleteImage(idx,'imagesGeneralApp');
+          break;
+          case 'ENGINE':
+            deleteImage(idx,'imagesEngine');
+          break;
+          case 'HYDRAULIC':
+            deleteImage(idx,'imagesHydraulic');
+          break;
+          case 'CABIN':
+            deleteImage(idx,'imagesCabin');
+          break;
+          case 'UC':
+            deleteImage(idx,'imagesUnderCarrage');
+          break;
+          case 'OTHER':
+            deleteImage(idx,'imagesOther');
+          break;
+        }
 
   }
 

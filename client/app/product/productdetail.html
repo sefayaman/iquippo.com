@@ -586,7 +586,7 @@
                           <div class="form-group" ng-class="{'has-error': form.finAgency.$invalid && form.submitted }">
                             <select class="form-control" name="finAgency" ng-model="buycontact.financeInfo.finAgency" required>
                               <option value="" disabled>* Financing Company</option>
-                              <option  ng-repeat="finAgency in valAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                              <option  ng-repeat="finAgency in valDetailsAgencies track by $index" value="{{finAgency.name}}">{{finAgency.name}}</option>
                             </select>
                             <i class="caret"></i>
                           </div>
@@ -627,7 +627,7 @@
                     <div class="col-sm-6 form-group" ng-class="{'has-error':form.valagency.$invalid && submitted}">
                     <select class="form-control" name="valagency" required ng-model="productDetailVm.valuationReq.valuationAgency._id">
                       <option value="">Agency Name</option>
-                      <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
+                      <option value="{{agency._id}}" ng-repeat="agency in valDetailsAgencies track by $index">{{agency.name}}</option>
                     </select>
                       <i class="caret"></i>
                     </div>
@@ -649,7 +649,7 @@
                 <h3 class="panel-title">Certification Request</h3>
               </div>
               <div class="panel-body">
-                <form  novalidate role="form" name="form">
+                <form  novalidate class="certificationform" name="certificationform">
                   <div class="row text-left">
                       <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
                       <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.valuation && !certifiedByIQuippoQuote.valid && form.submitted}">
@@ -704,7 +704,7 @@
                     <div class="form-group">
                       <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-warning pull-right" ng-click="addProductQuote($event)">Submit</button>
+                    <button class="btn btn-warning pull-right" ng-click="productDetailVm.addProductQuote(certificationform)">Submit</button>
                 </form>
               </div>
             </div>
