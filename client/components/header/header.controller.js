@@ -1,10 +1,27 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc) {
+  .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc) {
 
     $scope.isCollapsed = true;
     var dataToSend = {};
+    $scope.isAuctionType = "upcoming";
+    
+    function init(){
+      var filter = {};
+      filter.auctionType = "ongoing";
+      AuctionSvc.getAuctionDateData(filter).then(function(result){
+        result.length = 0;
+        if(result.length == 0)
+          $scope.isAuctionType = "upcoming";
+        else
+          $scope.isAuctionType = "ongoing";
+      })
+      .catch(function(err){
+      })
+    }
+
+    init();
 
     $scope.isActive = function(states) {
       return states.indexOf($state.current.name) != -1;//routes === $location.path();
@@ -22,6 +39,11 @@ angular.module('sreizaoApp')
         else
           Modal.alert("Please Login/Register for uploading the products!", true);
     };
+
+    $scope.redirectToAuction = function(){
+      $rootScope.showTab = $scope.isAuctionType;
+      $state.go("viewauctions",{type:$scope.isAuctionType});
+    }
 
     $scope.openLogin = function(){
       Auth.doNotRedirect = false;

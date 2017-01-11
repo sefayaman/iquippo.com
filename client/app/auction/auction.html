@@ -3,18 +3,19 @@
 		<h3>Auctions</h3>
 		<legend></legend>
 
-		<div class="btn-group form-group auction-tab">
-      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">Upcoming Auctions</button>
-      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'ongoing'}" ng-click="auctionDateVm.fireCommandType('ongoing')">Ongoing Auctions</button>          
+	  <div class="auction-tab">
+      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'ongoing'}" ng-click="auctionDateVm.fireCommandType('ongoing')">Ongoing Auctions</button> 
+      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'upcoming','pull-left': showTab == 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">Upcoming Auctions</button>
       <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">Closed Auctions</button>
-    </div>
+    </div>          
 
 		<div class="row">
 			<div class="col-sm-12 form-group">                
         <div class="table-responsive auctions-table">
           <table class="table table-bordered table-striped">
             <thead>
-              <tr>
+              <tr class="info-back">
+                <th>View Details</th>
                 <th>Auction Id</th>
                 <th>Type of Auction</th>
                 <th>Auction Name</th>
@@ -33,11 +34,15 @@
                 <th>No. of Assets in Auction</th>
                 <th ng-if="auctionType == 'closed'">No. of Assets in Sold</th>
                 <th ng-if="auctionType == 'closed'">Total Sale Value</th>
-                <th>View Details</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="product in auctionDateVm.auctionListing">
+                <td>
+                  <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
+                    <i class="fa fa-eye"></i>
+                  </a>
+                </td> 
                 <td>{{product.auctionId}}</td>
                 <td>{{product.auctionType}}</td>
                 <td>{{product.name}}</td>
@@ -60,12 +65,6 @@
                 <td>{{auctionDateVm.getProductData(product._id, "total_products")}}</td>
                 <td ng-if="auctionType == 'closed'">{{auctionDateVm.getProductData(product._id, "total_sold")}}</td>
                 <td ng-if="auctionType == 'closed'">{{auctionDateVm.getProductData(product._id, "total_amount")}}</td>
-               	<td>
-                  <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
-               	    <i class="fa fa-eye"></i>
-                  </a>
-               	</td> 
-            
               </tr>
               
             </tbody>
