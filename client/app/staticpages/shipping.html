@@ -1,0 +1,153 @@
+<div class="container">
+    <div class="col-sm-6 text-justify">
+      <h3>Shipping</h3>
+      <legend></legend>
+
+      <ul>
+        <li>
+          We work with professional service providers within India as well as globally.
+        </li>
+        <li>
+          We have transport service tie-ups equipped to meet a broad range of distribution requirements.
+        </li>   
+        <li>
+          We work with modern freighters to provide an efficient and reliable marine transportation service taking care of all vital Pre and Post shipping requirements.
+        </li>
+        <li>
+          If you are looking for help on shipping and transportation of equipment – both locally or across boundaries, please feel free to get in touch with our registered shipping partners for assured quality services at most reasonable prices.
+        </li>
+      </ul>
+     
+      <div class="form-group"></div>
+      <div class="text-center">
+          <img src="assets/images/shipping.jpg">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="form-group"></div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Shipping Quote</h3>
+        </div>
+        <div class="panel-body">
+          
+      <form class="form" ng-submit="addShippingQuote($event)" novalidate name="form">
+        <div class="form-group">                    
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="shippingQuote.fname" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">                                      
+                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="shippingQuote.mname">
+              </div>
+            </div>
+          </div>  
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
+                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="shippingQuote.lname" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+                <select class="form-control" ng-model="shippingQuote.country" name="country" required>
+                  <option value="">*Select Country</option>
+                  <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>  
+
+          <div class="row">
+            <div class="col-xs-6">
+                    <select class="form-control" name="location" ng-model="shippingQuote.city">
+                      <option value="">Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="shippingQuote.companyname">
+              </div>
+            </div>
+            
+          </div>  
+
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="shippingQuote.designation">
+              </div>
+            </div>
+
+            <div class="col-xs-6">
+              <div class="form-group">                          
+                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="shippingQuote.phone">
+              </div>
+            </div>
+            
+          </div>
+          
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
+               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+              <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="shippingQuote.email">
+              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+              Please enter a valid email.
+              </p>
+              </div>
+            </div>
+          </div>    
+          <div class="row text-left">
+                <div class="col-xs-12 col-sm-6">Part shipment allowed</div>
+                <div class="col-xs-6 col-sm-3">
+                  <div class="radio radio-info">
+                      <input type="radio" id="inlineRadio1" name="allowed" ng-model="shippingQuote.allowed" value="yes">
+                      <label for="inlineRadio1"> Yes </label>
+                  </div>                                   
+                </div>
+                <div class="col-xs-6 col-sm-3">
+                  <div class="radio radio-info">
+                      <input type="radio" id="inlineRadio2" name="allowed" ng-model="shippingQuote.allowed" value="no">
+                      <label for="inlineRadio2"> No </label>
+                  </div>
+                </div>
+          </div>
+          <div class="row text-left">
+              <div class="col-xs-12 col-sm-6">Packaging as per international standard</div>
+              <div class="col-xs-6 col-sm-3">
+                <div class="radio radio-info">
+                    <input type="radio" id="inlineRadio3" name="packaging" ng-model="shippingQuote.packaging" value="yes">
+                    <label for="inlineRadio3"> Yes </label>
+                </div>                                  
+              </div>
+              <div class="col-xs-6 col-sm-3">
+                <div class="radio radio-info">
+                    <input type="radio" id="inlineRadio4" name="packaging" ng-model="shippingQuote.packaging" value="no">
+                    <label for="inlineRadio4"> No </label>
+                </div>                                    
+              </div>
+          </div>
+           <div class="form-group">                      
+            <textarea class="form-control" placeholder="Comments if any" ng-model="shippingQuote.comment"></textarea>
+          </div> 
+        </div>
+
+        <div class="modal-footer">
+          <button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
+          <button type="submit" class="btn btn-warning">Submit</button>
+        </div>
+      </form>
+        </div>
+      </div>
+    </div>
+</div>

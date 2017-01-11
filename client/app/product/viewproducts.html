@@ -1,0 +1,274 @@
+  <div class="view-content">
+  <section class="wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 col-md-3 form-group">
+            <div class="well">
+              <h4>Equipment search</h4>
+                <form role="form">
+                <!-- <label for="" class="text-muted">Keyword</label>
+                <div class="form-group input-group">
+                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.searchstr" placeholder="Enter Keywords">
+                  <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-angle-right"></i></a>
+                </div>   -->
+                <label for="" class="text-muted">Trading Type </label>
+                <div class="form-group">
+                  <select class="form-control col-md-2" name="type" ng-model="type" ng-change="viewproductVm.onTypeChange(type)">
+                    <option value="">Both</option>
+                    <option value="SELL">Buy</option>
+                    <option value="RENT">Rent</option>
+                    <option value="rented">Rented</option>
+                    <option value="sold">Sold</option>
+                  </select>
+
+                  <i class="caret"></i>
+                </div>
+
+                <label for="" class="text-muted">Product Group </label>
+                <div class="form-group">
+                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange()">
+                <option value="">Select Group</option>
+                <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
+
+                </select>
+                <!-- <select class="form-control col-md-2" name="group" ng-model="selectedGroup" ng-options="group.name for group in allGroup track by group.name" ng-change="onGroupChange(selectedGroup)">
+                    <option value="">Select Group</option>
+                </select> -->
+                <i class="caret"></i>
+                </div>
+                <label for="" class="text-muted">Category</label>
+                <div class="form-group">
+                <select class="form-control col-md-2" name="category"  ng-model="selectedCategory" ng-change="viewproductVm.onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
+                        <option value="">Select Category</option>
+                </select>
+                <i class="caret"></i>
+
+                </div>
+
+                <!-- <label for="" class="text-muted">Sub Category</label>
+                <div class="form-group">
+                <select class="form-control col-md-2" name="category"  ng-model="equipmentSearchFilter.subCategory" ng-change="viewproductVm.fireCommand()">
+                        <option value="">Select Sub Category</option>
+                         <option ng-repeat="subc in allSubcategory" value="{{subc.name}}">{{subc.name}}</option>
+                </select>
+                <i class="caret"></i>
+
+                </div> -->
+
+                <label for="" class="text-muted">Product Brand</label>
+                <div class="form-group">
+                  <select class="form-control col-md-2" name="brand" ng-model="selectedBrand" ng-change="viewproductVm.onBrandChange(selectedBrand)" ng-options="brand.name for brand in brandList track by brand._id">
+                        <option value="" >Select Brand</option>
+                  </select>
+
+                  <i class="caret"></i>
+
+                </div>
+                <label for="" class="text-muted">Product Model</label>
+                <div class="form-group">
+                   <select class="form-control col-md-2" name="model" ng-model="selectedModel" ng-options="model.name for model in modelList track by model._id" ng-change="viewproductVm.onModelChange(selectedModel)">
+                        <option value="" >Select Model</option>
+                  </select>
+
+                  <i class="caret"></i>
+
+                </div>
+
+                <label for="" class="text-muted">Location</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Location"  ng-model="equipmentSearchFilter.location"  uib-typeahead="address for address in viewproductVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div>
+
+                <label for="" class="text-muted">Operating hrs</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.operatingHour" placeholder="Operating hrs" ng-change="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div>
+
+                <label for="" class="text-muted">Mileage(km)</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.mileage" placeholder="Mileage(km)" ng-change="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div>
+
+                <label for="" class="text-muted">Price</label>
+                <div class="form-group">
+                     <select class="form-control" ng-change="viewproductVm.onCurrencyChange()" ng-model="currencyType">
+                        <option value="">Currency</option>
+                        <option value="INR" selected>&#x20B9; Rupee</option>
+                      </select>
+                      <i class="caret"></i>
+                    <!-- <div class="col-sm-7">
+                      <select class="form-control" onchange="angular.element(this).scope().onCur <select class="form-control" ng-change="viewproductVm.onCurrencyChange()" ng-model="currencyType">
+                            <option value="">Currency</option>
+                            <option value="INR" selected>&#x20B9; Rupee</option>
+                          </select>
+                          <i class="caret"></i>  rencyRangeChange()" id="pricerange">
+                            <option ng-if="!currencyType">Range!</option>
+                            <option ng-if="currencyType" ng-repeat="range in priceRange" data-min="{{range.min}}" data-max="{{range.max}}" ng-selected="range.selected">{{range.min}} - {{range.max}}</option>
+                        </select>
+                      <i class="caret"></i>
+                    </div> -->
+                   </div>
+                   <div class="form-group">
+                      <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                          <div class="input-group">
+                            <input type="number" class="form-control" name="" value="" ng-model="currency.minPrice" placeholder="Min"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 padd-left">
+                          <div class="input-group">
+                            <input type="number" class="form-control" name="" value="" ng-model="currency.maxPrice" placeholder="Max"/>
+                            <a herf class="input-group-addon" ng-click="viewproductVm.productSearchOnPrice($event)"><i class="fa fa-chevron-right"></i></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <div class="form-group">
+                  <label for="" class="text-muted">Manufacturing Year</label>
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="viewproductVm.productSearchOnMfg()"/>
+                    <a href class="input-group-addon" ng-click="open($event,'min')">
+                      <i class="fa fa-calendar-o"></i>
+                    </a>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="viewproductVm.productSearchOnMfg()"/>
+                        <a href class="input-group-addon" ng-click="open($event,'max')">
+                          <i class="fa fa-calendar-o"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="form-group">
+                  <label for="" class="text-muted">Manufacturing Year</label>
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6"><input type="text" class="form-control" id="" placeholder="MIN"></div>
+                    <div class="col-xs-6 col-sm-6 col-md-6"><input type="text" class="form-control" id="" placeholder="MAX"></div>
+                  </div>
+                </div>    -->
+                <!-- <label for="" class="text-muted">Country</label>
+                  <div class="list-group">
+                    <a href="javascript:void(0);" ng-click="fireSearchCommand(country.name)" ng-repeat="country in allCountries" class="list-group-item">{{country.name}}<span class="badge">{{country.count}}</span></a>
+                  </div> -->
+              </form>
+            </div>
+
+          </div>
+          <div class="col-sm-8 col-md-9">
+
+            <div class="row pull-right">
+                <div class="col-xs-2 col-sm-2">
+                  <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="viewproductVm.compare()">
+                     <span class="count-compare" ng-if="viewproductVm.compareCount != 0">{{viewproductVm.compareCount}}</span>
+                     <img src="assets/images/campare-icon.png" width="20">
+                   </a>
+                </div>
+                <div class="col-xs-10 col-sm-10">
+                  <span>Sort by:</span>
+                   <select ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
+                    <option value="">Relevance</option>
+                    <option value="lh">Price : Low to High</option>
+                    <option value="hl">Price : High to Low</option>
+                    <option value="por">Price on Request</option>
+                    <option value="exos">Exclude Out of Stock</option>
+                  </select>
+                <div>
+              </div>
+            </div>
+          </div>
+          <div class="compare-cart">
+                <ul>
+                  <li ng-repeat="prd in viewproductVm.productListToCompare" ng-if="prd._id">
+                    <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a>
+                  </li>
+                </ul>
+              </div>
+            <!-- <ul >
+              <li ng-repeat="comp in viewproductVm.productListToCompare">
+               <a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a>
+              </li>
+            </ul> -->
+
+             <div ng-if="!searching && !noResult">
+                 <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+                 <span class="no-list text-right">Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
+                <div id="search-result_wrapper" class="search-result">
+                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
+                      <div class="media">
+                        <div  class="pull-left result-products">
+                          <a ng-href="/productdetail/{{product._id}}?{{filterType}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right" >
+                            <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
+                            <span class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></span>
+                            <span class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></span>
+                          </a>
+
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">
+                            <span class="text-ellips productname">{{product.name}}</span>
+                            <div class="sell-featured">
+                              <span ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'"><img src="assets/images/rent.png" width="30"></span>
+                              <span ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'"><img src="assets/images/sale.png" width="30"></span>
+                              <span ng-if="product.featured"><img src="assets/images/featured1.png" width="100"></span>
+                            </div>
+                            <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>
+                            <span class="pull-right text-danger" ng-if="!product.priceOnRequest && product.tradeType != 'RENT'">
+                            <!-- <b ng-if="product.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b>
+                            <i class="fa fa-eur" ng-if="product.currencyType == 'EUR'"></i>
+                            <i class="fa fa-gbp" ng-if="product.currencyType == 'GBP'"></i>
+                            <i class="fa fa-usd" ng-if="product.currencyType == 'USD'"></i> -->
+                            <i class="fa fa-inr" ng-if="product.currencyType == 'INR'"></i> {{product.grossPrice | number:0}}</span>
+                          </h4>
+                          <p>
+                            <span ng-if="product.brand.name != 'Other'">{{product.brand.name}}</span>
+                            <span ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</span>
+                          </p>
+                          <p>
+                            <span ng-if="product.model.name != 'Other'">{{product.model.name}}</span>
+                            <span ng-if="product.model.name == 'Other'">{{product.model.otherName}}</span>
+                          </p>
+                          <p>
+                            <span ng-if="product.category.name != 'Other'">{{product.category.name}}</span>
+                            <span ng-if="product.category.name == 'Other'">{{product.category.otherName}}</span>
+                          </p>
+                          <p>{{product.city}}
+
+                            <div class="pull-right">
+                              <label class="btn btn-success text-ellips" ng-if="product.specialOffers">
+                               <i class="fa fa-tags"></i> Special Offers
+                              </label>
+                              <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">
+                               Add to Compare
+                              </a>
+                              <a href="javascript:void(0);" ng-click="viewproductVm.addProductToCart(product)" class="btn btn-primary" >Add to Cart</a>
+                              <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning hvr-icon-wobble-horizontal" >View Details</a>
+
+
+                            </div>
+                          </p>
+                        </div>
+                      </div>
+
+              </div>
+           </div>
+           <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+          </div>
+          <div class="no-result" ng-if="searching && !noResult">
+            <img src="assets/images/assets-loading.gif" class="form-group">
+            <p>Loading...</p>
+          </div>
+          <div class="no-result" ng-if="noResult && !searching">No results found</div>
+        </div>
+      </div>
+    </section>
+    </div>
+<script type="text/ng-template" id="myPopoverTemplate.html">
+        <h4>{{product.name}}</h4>
+        <div>{{product.category.name}}</div>
+</script>

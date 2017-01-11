@@ -1,0 +1,165 @@
+    <div>
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="dismiss()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="panel-titel">Products Information</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-2">
+              <table width="100%" class="tableCompare">
+                <tbody>
+                  <tr>
+                    <td class="compares compare-log">
+                      <img src="assets/images/srei-logo-img.png" width="100">
+                    </td>
+                  </tr>
+                  <tr style="background:#EFEEEE;">
+                    <td align="left" height="40" style="font-size:18px; padding-left: 6px;"><font color="#000">Basic Information</font></td>
+                  </tr>
+                  <tr>
+                    <td  class="bordered1">Product Id</td>
+                  </tr>
+                  <tr>
+                    <td class="bordered1" >Brand / Model</td>
+                  </tr>
+                  <tr> 
+                    <td class="bordered1">Category</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Manufacturing Year</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Operating Hours/HMR</td>
+                  </tr>
+                  <tr> 
+                    <td class="bordered1">Mileage/KMR</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Machine Serial No.</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Country</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Location</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Price (Excl. Tax).</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Product Condition</td>                    
+                  </tr>
+                  <tr style="background:#EFEEEE;">
+                    <td align="left" height="40" style="font-size:18px; padding-left: 6px;"><font color="#000">Technical Information</font></td>
+                  </tr>
+                  <tr>
+                    <td class="bordered1">Gross Weight</td>
+                  </tr>
+                  <tr>
+                    <td class="bordered1">Operating Weight</td>
+                  </tr>
+                  <tr> 
+                    <td class="bordered1">Bucket Capacity</td>
+                  </tr>
+                  <tr> 
+                    <td class="bordered1">Engine Power</td>
+                  </tr>
+                  <tr>  
+                    <td class="bordered1">Lifting Capacity</td>
+                  </tr>
+                  <tr>
+                    <td class="bordered1">Specification Document</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-sm-10 padd-left">
+              <div class="row">
+                <div class="col-sm-3 padd-left padd-right" ng-repeat="prd in productList">
+                  <table width="100%" class="tableCompare">
+                    <tbody>
+                      <tr>
+                        <td class="compares">
+                          <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" ng-if="prd._id">
+                          <a href="" class="cancel-image" ng-if="prd._id" ng-click="removeProductFromCompList($index)"><i class="fa fa-times"></i></a>
+                           <button class="btn btn-default" ng-if="!prd._id" ng-click="dismiss()">
+                            <i class="fa fa-plus"></i> Add to Compare
+                          </button>
+                        </td>
+                      </tr>
+                      <tr style="background:#EFEEEE;">
+                        <td height="40"></td>
+                      </tr>
+                      <tr>
+                        <td  class="bordered">{{prd.productId}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bordered" >
+                          <span ng-if="prd.brand.name != 'Other'">{{prd.brand.name}}</span><span ng-if="prd.brand.name == 'Other'">{{prd.brand.otherName}}</span> / <span ng-if="prd.model.name !='Other'">{{prd.model.name}}</span><span ng-if="prd.model.name =='Other'">{{prd.model.otherName}}</span>
+                        </td>
+                      </tr>
+                      <tr> 
+                        <td class="bordered"><span ng-if="prd.category.name != 'Other'">{{prd.category.name}}</span><span ng-if="prd.category.name == 'Other'">{{prd.category.otherName}}</span></td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.mfgYear}}</td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.operatingHour}}</td>
+                      </tr>
+                      <tr> 
+                        <td class="bordered">{{prd.mileage}}</td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.serialNo}}</td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.country}}</td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.city}}</td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">
+                            <span ng-if="!prd.priceOnRequest">{{prd.grossPrice}}</span>
+                            <span ng-if="prd.priceOnRequest">Price on request</span>
+                        </td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.productCondition|uppercase}}</td>                    
+                      </tr>
+                      <tr style="background:#EFEEEE;">
+                        <td height="40"></td>
+                      </tr>
+                      <tr>
+                        <td class="bordered">{{prd.technicalInfo.grossWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bordered">{{prd.technicalInfo.operatingWeight}}</td>
+                      </tr>
+                      <tr> 
+                        <td class="bordered">{{prd.technicalInfo.bucketCapacity}}</td>
+                      </tr>
+                      <tr> 
+                        <td class="bordered">{{prd.technicalInfo.enginePower}}</td>
+                      </tr>
+                      <tr>  
+                        <td class="bordered">{{prd.technicalInfo.liftingCapacity}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bordered">
+                          <div class="text-ellips">
+                            <a  href="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.documentName}}"  target="_blank" >{{prd.documentName}}</a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+</div>
+        

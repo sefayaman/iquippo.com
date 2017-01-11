@@ -1,0 +1,1012 @@
+<div id="wrapper">
+	<div id="page-wrapper">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>General Settings</h3>
+				</div>
+			</div>
+			<hr>
+			<div class="row form-group">
+				<div class="col-sm-4">
+					<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
+						<!-- <option value="sc">Sub Category</option> -->
+						<option value="loc">Location</option>
+						<option value="date">Auction</option>
+						<option value="inv">Invite Code Setting</option>
+						<option value="paymnt">Payment Master</option>
+						<option value="manu">Manufacturer</option>
+						<option value="banner">Banner Setting</option>
+						<option value="technical">Technical Information</option>
+					</select>
+					<i class="caret"></i>
+				</div>
+			</div>
+			<!--Select category  -->
+			<!-- <div ng-if="gsettingVm.tabValue == 'sc'">
+				<form name="subCategoryForm" novalidate class="subCategoryForm">
+					<h4>Add New Sub Category</h4>
+					<legend></legend>
+					<div class="row">
+						<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
+							<select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
+								<option value="">Select Category</option>
+								<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
+							</select>
+							<i class="caret"></i>
+						</div>
+						<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
+							<input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
+						</div>
+						<div class="form-group col-sm-2 pull-right">
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
+						</div>
+						
+					</div>
+				</form>
+				<div class="table-responsive">
+					<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+						<thead>
+							<th>Category</th>
+							<th>Sub Category</th>
+							<th>Action</th>
+							
+						</thead>
+						<tbody>
+							<tr ng-repeat="sc in gsettingVm.subCategoryList">
+								<td>{{sc.category.name}}</td>
+								<td>{{sc.name}}</td>
+								<td>
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="clearfix form-group"></div> -->
+			<!--Select Location  -->
+			<div ng-if="gsettingVm.tabValue == 'loc'">
+				<uib-tabset justified="true">
+				<uib-tab heading="State">
+			        <form name="stateForm" novalidate class="stateForm">
+			    		<h4>Add New State</h4>
+			    		<legend></legend>
+			          <div class="row">
+			         	 <div class="form-group col-sm-4" ng-class="{'has-error': stateForm.stateName.$invalid && submitted}">
+			                <input id="stateName" name="stateName" ng-model="gsettingVm.state.name" type="text" class="form-control" placeholder="Enter State Name" required>
+			            </div>                           	
+			           	<div class="form-group col-sm-2 pull-right">
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveState(stateForm)" ng-if="!gsettingVm.stateEdit">Save</button>
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateState(stateForm)" ng-if="gsettingVm.stateEdit">Update</button>
+			           	</div>
+			           	
+			          </div>
+			     	</form>	
+				    <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			               <tr>
+			               	 	<th>State</th>                                
+			                	<th>Action</th>
+			               </tr>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="state in gsettingVm.stateList">
+			                <td>{{state.name}}</td>
+			                <td>
+			                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.stateEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteState($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
+			    </uib-tab>
+			    <uib-tab heading="Location">
+			        <form name="locationForm" novalidate class="locationForm">
+			    		<h4>Add Location</h4>
+			    		<legend></legend>
+			          <div class="row">
+			         	 <div class="form-group col-sm-4" ng-class="{'has-error': locationForm.state.$invalid && submitted}">
+			                <select class="form-control" name="state" ng-model="gsettingVm.location.state" ng-options="state.name for state in gsettingVm.stateList track by state._id" required>
+			                	<option value="">Select State</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div>  
+			            <div class="form-group col-sm-4" ng-class="{'has-error': locationForm.locationName.$invalid && submitted}">
+			                <input class="form-control" placeholder="Enter Location" ng-model="gsettingVm.location.name"  name="locationName" required/>
+			            </div>                           	
+			           	<div class="form-group col-sm-2 pull-right">
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveLocation(locationForm)" ng-if="!gsettingVm.locationEdit">Save</button>
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateLocation(locationForm)" ng-if="gsettingVm.locationEdit">Update</button>		           		
+			           	</div>
+			           	
+			          </div>
+			     	</form>	
+				    <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			                <tr>
+			                	<th>State</th>                                
+				                <th>Location</th>
+				                <th>Action</th>
+			                </tr>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="loc in gsettingVm.locationList">
+			                <td>{{loc.state.name}}</td>
+			                <td>{{loc.name}}</td>
+			                <td>
+			                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.locationEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteLocation($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
+			    </uib-tab>
+			</uib-tabset>
+        </div>
+
+        <!--Select Invitation  -->
+        <div ng-if="gsettingVm.tabValue == 'inv'">
+    		<form name="invMasterForm" novalidate class="invMasterForm">
+				<h4>Update Invitation Setting</h4>
+    			<legend></legend>
+				<div class="row">
+					<div class="col-sm-4 form-group">Start Date :</div>
+					<!-- <div class="col-sm-6 form-group"> -->
+					<div class="col-sm-6 form-group" ng-class="{'has-error': invMasterForm.sDate.$invalid && submitted }">
+		                <div class="input-group">
+		                	<input type="text" class="form-control" ng-model="gsettingVm.invSetting.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required />
+			                <span class="input-group-addon">
+			                    <a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
+			                </span>
+		                </div>
+	                </div> 
+					<!-- </div> -->
+				</div>
+				<div class="row">
+					<div class=" col-sm-4 form-group">End Date :</div>
+					<!-- <div class="col-sm-6 form-group"> -->
+						<div class=" col-sm-6 form-group" ng-class="{'has-error': invMasterForm.eDate.$invalid && submitted }">
+		                <div class="input-group">
+		                	<input type="text" class="form-control" ng-model="gsettingVm.invSetting.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" required/>
+			                <span class="input-group-addon">
+			                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
+			                </span>
+		                </div>
+	                </div> 
+					<!-- </div> -->
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-4">Reference Amount :<p> (To be paid to the referrer)</p>
+					</div>
+					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.refAmount.$invalid && submitted}">
+						<input type="number"  name="refAmount"  ng-model="gsettingVm.invSetting.refAmount" min="0" class="form-control">
+					</div>
+					
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-4">Referred Amount:<p> (To be paid to the Invited who signs up)</p> </div>
+					<div class="form-group col-sm-3" ng-class="{'has-error': invMasterForm.joinAmount.$invalid && submitted}">
+						<input type="number"  name="joinAmount"  ng-model="gsettingVm.invSetting.joinAmount" min="0" class="form-control">
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-sm-7 text-right">
+						<button type="button" class="btn btn-warning" ng-click="gsettingVm.saveInvitationSetting(invMasterForm)">Ok</button>
+					</div>
+					
+				</div>
+			</form>
+	    </div>
+
+	    <!--Select Auction  -->
+        <div ng-if="gsettingVm.tabValue == 'date'">
+
+        	<uib-tabset justified="true">
+				<uib-tab heading="Auction" select="gsettingVm.onActionTabClick()">
+					<!-- <form name="invMasterForm" novalidate class="invMasterForm"> -->
+					<p>Download the <a href="/download/templates/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
+						
+						<div class="row">
+							<div class="col-sm-8">
+								<h4>Auction</h4>
+							</div>							
+							<div class="col-sm-2">
+								<button class="btn btn-success btn-block" ng-click="gsettingVm.addAuctionClicked()">
+									<i class="fa " class="fa" ng-class="{'fa-minus': !isCollapsed, 'fa-plus': isCollapsed}"></i> Add New						   
+								</button>
+							</div>
+							<div class="col-sm-2">
+								<div class="btn btn-success btn-block">
+									<span class="fileinput-button">
+								   <i class="fa fa-file-excel-o"></i> Import Excel
+								   <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files,this)">
+								   </span>
+								</div>
+							</div>
+						</div>
+		    			<legend></legend>
+
+				        <div uib-collapse="isCollapsed">
+				        <form class="invMasterForm" name="auctionDateForm" >
+				          	<div class=" row">
+				          		<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.name.$invalid && submitted }">
+				          			
+				          			<input type="text" class="form-control" name="name" ng-model="gsettingVm.auctionData.name" placeholder="Auction Name*" required>
+				          		</div>
+				          		<div class="col-sm-3 form-group" ng-class="{'has-error': auctionDateForm.auctionId.$invalid && submitted }">
+				          			
+				          			<input type="text" class="form-control" placeholder="Auction ID*" name="auctionId" ng-model="gsettingVm.auctionData.auctionId" required>
+				          		</div>
+				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.startDate.$invalid && submitted }">
+				          			
+				          			<input class="form-control" datetime-picker readonly name="startDate" ng-model="gsettingVm.auctionData.startDate" placeholder="Auction Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
+				          		</div>
+				          		<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.endDate.$invalid && submitted }">
+				          			
+				          			<input class="form-control" datetime-picker readonly name="endDate" ng-model="gsettingVm.auctionData.endDate" placeholder="Auction End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
+				          		</div>
+							</div>
+				          	<div class=" row">
+				          		<div class="col-sm-3">
+				          			
+					          			<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" >
+				                	<option value="">Select Owner</option>
+				                	<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.mobile}}">{{svc.entityName}}</option>
+				                </select>
+				                <i class="caret"></i>
+				          		</div>
+				          		
+				          		<div class="col-sm-3 form-group">
+				          			
+				          			<input class="form-control" datetime-picker readonly name="insStartDate" ng-model="gsettingVm.auctionData.insStartDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection Start Date &amp; Time" />
+				          		</div>
+				          		<div class="col-sm-3 form-group">
+				          			
+				          			<input class="form-control" datetime-picker readonly name="insEndDate" ng-model="gsettingVm.auctionData.insEndDate" date-format="MM/dd/yyyy hh:mm a" placeholder="Inspection End Date &amp; Time" />
+				          		</div>
+				          		<div class=" col-sm-3 form-group" >
+									
+				          			<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />
+					            </div>			          					          	
+				          	</div>
+
+				          	<div class=" row">
+				          		 
+				                <div class="col-sm-3 form-group">
+				                	
+						            <select class="form-control" name="location" ng-model="gsettingVm.auctionData.city">
+			                          <option value="" >Current Location</option>
+			                          <option ng-repeat="location in gsettingVm.locationList" value="{{location.name}}">{{location.name}}</option>
+			                        </select>
+			                        <i class="caret"></i>
+			                    </div>
+				                <div class=" col-sm-3 form-group">
+									
+									<input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
+				                </div> 
+				                <div class="col-sm-3 form-group">
+				                	Auction Type
+				                	<div class="row">
+				                		<div class="col-xs-6">
+				                			<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="live"> Live Auction
+				                		</div>
+				                		<div class="col-xs-6">
+				                			<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
+				                		</div>
+				                	</div>
+				                </div>
+				                <div class="col-sm-3 form-group">
+				          			
+				          			<input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled>
+				          		</div>		          					          	
+				          	</div>
+
+				          	<div class="row">
+				          		
+				          		<div class="col-sm-3 form-group">
+				          			
+				          			<select class="form-control" name="docType" ng-model="gsettingVm.auctionData.docType" >
+				          				<option value="">Select Type</option>
+				          				<option value="tc">Terms and Conditions</option>
+				          				<option value="bidProxy">Bid Proxy Form</option>
+				          			</select>
+				          			<i class="caret"></i>
+				          		</div>
+				          		<div class="col-sm-2">
+				          			
+				          			<span class="btn btn-warning fileinput-button">
+										<span>Browse Document</span>
+										<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
+									</span>
+				          		</div>
+				          		<div class="col-sm-3 form-group">
+				          		<span>{{gsettingVm.auctionData.docName}}</span>
+				          		</div>
+				          	</div>
+
+				          	<div class="row form-group">
+				          		<div class="col-sm-2 pull-right">
+				          			<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
+				          		    <button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
+				          		</div>
+				          	</div>
+				          	</form>
+				          </div>
+				        </form>
+				        <!-- <p class="text-right">Showing : {{gsettingVm.totalMItems}} Records</p> -->
+				          <div class="row">
+				          	
+				          	<div class="col-sm-3 pull-right">
+			                    <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'auctionmaster')" ng-model-options="{debounce:500}">
+			                    </div>
+			                 </div>
+				          </div>
+				          <div class="table-responsive">
+				            <table class="table table-bordred table-striped">
+
+				              <thead>
+				                <tr>
+				                	<th>Auction name</th>
+					                <th>Auction id</th>
+					                <th>Auction start date &amp; time</th>
+					                <th>Auction end date &amp; time</th>
+					                <th>Auction Owner</th>                                
+					                <!-- <th>Category</th> -->                                
+					                <th>Inspection start date &amp; time</th>
+					                <th>Inspection end date &amp; time</th>
+					                <th>Registration end date</th>
+					                <th>Location</th>
+					                <th>Address of auction</th>
+					                <th>Auction type</th>
+					                <th>Registration charges for auction</th>
+					                <th>Document attachment type</th>
+					                <th>Assets in Auctions</th>
+					                <th class="col-xs-2 col-sm-1">Action</th>
+				                </tr>
+				               
+				              </thead>
+				              <tbody>
+				              <tr ng-repeat="auc in gsettingVm.auctions">
+				                <td>{{auc.name}}</td>
+				                <td>{{auc.auctionId}}</td>
+				                 <td>{{auc.startDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.endDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.auctionOwner}}</td>
+				                  <td>{{auc.insStartDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.insEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+				                  <td>{{auc.regEndDate | date:'MM/dd/yyyy'}}</td>
+				                  <td>{{auc.city}}</td>
+				                  <td>{{auc.auctionAddr}}</td>
+				                  <td>{{auc.auctionType | titleCase}}</td>
+				                  <td>{{auc.regCharges}}</td>
+				                  <td>
+				                  		<span ng-if="auc.docType == 'tc'">Terms and Conditions</span> 
+				                  		<span ng-if="auc.docType == 'bidProxy'">Bid Proxy Form</span> 
+				                  </td>
+				                  <td>{{gsettingVm.getProductData(auc._id, "total_products")}}</td>
+				                <td>										
+									<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editAuctionMaster($index)"><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAuctionMaster($index)"><i class="fa fa-trash"></i> </a>
+				                </td>
+				               </tr>
+				              </tbody>
+				            </table>
+				        </div>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+				</uib-tab>
+				<uib-tab heading="Assets in Auction" select="gsettingVm.onActionTabClick()">
+					<div class="row">
+						<div class="col-sm-8">
+							<h4>Assets in Auction</h4>
+						</div>
+						<div class="col-sm-2">
+							<button class="btn btn-success btn-block" ng-click="gsettingVm.addAssetInAuctionClicked()">
+								<i class="fa "  ng-class="{'fa-minus': !isAssetCollapsed, 'fa-plus': isAssetCollapsed}"></i> Add New					   
+							</button>
+						</div>
+
+						<div class="col-sm-2" >
+              				<a href="/bulkupload?type=auction" class="btn btn-success"><i class="fa fa-database"></i> Bulk Auction Upload</a>
+               			</div>						
+					</div>
+					<legend></legend>
+
+					<div uib-collapse="isAssetCollapsed">
+				        <form class="assetAuctionForm" name="assetAuctionForm" novalidate>
+						<div class="row">
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.auctionId.$invalid && submitted}">
+								<select class="form-control" name="auctionId" ng-model="gsettingVm.auctionProduct.dbAuctionId" required>
+									<option value=""> Select Auction Id</option>
+									<option ng-repeat="auct in gsettingVm.upcomingAuctions" value="{{auct._id}}">{{auct.auctionId}}({{auct.name}})</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.lotNo.$invalid && submitted}">
+								<input type="text" class="form-control" name="lotNo" placeholder="Lot No*" ng-model="gsettingVm.auctionProduct.lotNo" required>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<span class="btn btn-warning fileinput-button">
+									<span>Browse Asset Image 1</span>
+									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,1)" accept="files/*" class="ng-scope">
+								</span>
+								<div>
+									{{gsettingVm.auctionProduct.product.primaryImg}}
+								</div>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<span class="btn btn-warning fileinput-button">
+									<span>Browse Asset Image 2</span>
+									<input type="file" name="file" onchange="angular.element(this).scope().uploadImage(this.files,this,2)" accept="files/*" class="ng-scope">
+								</span>
+								<div>
+									{{gsettingVm.auctionProduct.product.otherImages[0]}}
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.assetId.$invalid && submitted}">
+								<input type="text" class="form-control" name="assetId" placeholder="Asset ID*" ng-model="gsettingVm.auctionProduct.product.assetId" required/>
+							</div>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.category.$invalid && submitted}">
+								<select class="form-control" name="category" ng-model="gsettingVm.auctionProduct.product.category" ng-change="gsettingVm.onCategoryChange(gsettingVm.auctionProduct.product.category,true)" required>
+									<option value=""> Select Category*</option>
+									<option ng-repeat="cat in gsettingVm.allCategory" value="{{cat.name}}" ng-if="cat.name != 'Other'">{{cat.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.brand.$invalid && submitted}">								
+								<select class="form-control" name="brand" ng-model="gsettingVm.auctionProduct.product.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.auctionProduct.product.brand,true)" required>
+									<option value=""> Select Brand*</option>
+									<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}" ng-if="br.name != 'Other'">{{br.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.model.$invalid && submitted}">								
+								<select class="form-control" name="model" ng-model="gsettingVm.auctionProduct.product.model" required>
+									<option value=""> Select Model*</option>
+									<option ng-repeat="md in gsettingVm.modelList" value="{{md.name}}" ng-if="md.name != 'Other'">{{md.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Asset Desc" ng-model="gsettingVm.auctionProduct.product.description"/>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Invoice Date(mm/dd/yyyy)" ng-model="gsettingVm.auctionProduct.product.invoiceDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Asset Registration No" ng-model="gsettingVm.auctionProduct.product.registrationNo"/>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Engine No" ng-model="gsettingVm.auctionProduct.product.engineNo"/>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-3 form-group">								
+								<select class="form-control" ng-model="gsettingVm.auctionProduct.product.city">
+									<option value=""> Select Asset Location</option>
+									<option value="{{loc.name}}" ng-repeat="loc in gsettingVm.locationList">{{loc.name}}</option>
+									
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="col-sm-3 form-group">								
+								<div>Original Invoice</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<input type="radio" name="invoice" value="Yes" ng-model="gsettingVm.auctionProduct.product.originalInvoice"/> Yes
+									</div>
+									<div class="col-sm-6">
+										<input type="radio" name="invoice" value="No" ng-model="gsettingVm.auctionProduct.product.originalInvoice"/> No
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="number" class="form-control" placeholder="VAT %" ng-model="gsettingVm.auctionProduct.product.vatPercentage"/>
+							</div>
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Contact Person" ng-model="gsettingVm.auctionProduct.product.contactName"/>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-3 form-group">
+								<input type="number" class="form-control" placeholder="Contact No" ng-model="gsettingVm.auctionProduct.product.contactNumber"/>
+							</div>
+							
+							<div class="col-sm-3 form-group">
+								<input type="text" class="form-control" placeholder="Product ID" ng-model="gsettingVm.auctionProduct.product.productId"/>
+							</div>
+							<div class="col-sm-3 form-group">
+								<div>Sold</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<input type="radio" name="sold" ng-value="true" ng-model="gsettingVm.auctionProduct.product.isSold"/> Yes
+									</div>
+									<div class="col-sm-6">
+										<input type="radio" name="sold" ng-value="false" ng-model="gsettingVm.auctionProduct.product.isSold" 
+										ng-click = "gsettingVm.auctionProduct.product.isSold ? gsettingVm.auctionProduct.product.saleVal = gsettingVm.auctionProduct.product.saleVal : gsettingVm.auctionProduct.product.saleVal = '' " /> No 
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 form-group" ng-class="{'has-error' : assetAuctionForm.saleVal.$invalid && submitted}">
+								<input type="number" class="form-control" name="saleVal" placeholder="Sale Value" ng-model="gsettingVm.auctionProduct.product.saleVal"  ng-required="gsettingVm.auctionProduct.product.isSold" ng-disabled="!gsettingVm.auctionProduct.product.isSold"/>
+							</div>							
+						</div>
+						<div class="row form-group">							
+							<div class="col-sm-2 pull-right" ng-if="!isEdit">
+								<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAssetInAuction(assetAuctionForm)">Save </button>
+							</div>
+							<div class="col-sm-2 pull-right" ng-if="isEdit">
+								<button class="btn btn-primary btn-block" ng-click="gsettingVm.updateAssetInAuction(assetAuctionForm)">Update </button>
+							</div>
+						</div>
+						</form>
+				    </div>	
+						<div class="row">
+							<div class="col-sm-3">
+				          		<select ng-model="gsettingVm.selectedAuctionId" ng-change="gsettingVm.fireCommand(true,null,'auctionrequest')">
+				          			<option value = ""> Select Auction Id</option>
+				          			<option ng-repeat="auct in gsettingVm.auctions" value="{{auct.auctionId}}">{{auct.auctionId}}({{auct.name}})</option>
+				          		</select>
+				          	</div>
+				          	<div class="col-sm-3 pull-right">
+			                    <div class="tablesearch text-right form-group">
+			                       Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'auctionrequest')" ng-model-options="{debounce:500}">
+			                    </div>
+			                 </div>
+				          </div>
+				          <div class="table-responsive">
+				            <table class="table table-bordred table-striped">
+
+				              <thead>
+				                <tr>
+				                	<th>Image</th>
+					                <th>Auction id</th>
+					                <th>Lot no</th>
+					              	<th>Asset id</th>
+					                <th>Product id</th>
+					                <th>Asset category</th>
+					                <th>Brand</th>                                
+					                <th>Model</th>                                
+					                <th>Asset desc</th>
+					                <th>Invoice date</th>
+					                <th>Asset registration no</th>
+					                <th>Engine no</th>
+					                <th>Asset location</th>
+					                <th>Original invoice</th>
+					                <th>VAT %</th>
+					                <th>Contact person</th>
+					                <th>Contact no</th>
+					                <th>Sold</th>
+					                <th>Sale Value</th>
+					                <th class="col-xs-2 col-sm-1">Action</th>
+				                </tr>
+				               
+				              </thead>
+				              <tbody>
+				              <tr ng-repeat="auct in gsettingVm.assetsInAuction">
+				                <td><img ng-src="{{uploadImagePrefix}}{{auct.product.assetDir}}/{{auct.product.primaryImg}}" width="40" height="40"></td>
+				                <td>{{auct.auctionId}}</td>
+				                <td>{{auct.lotNo}}</td>
+				                <td>{{auct.product.assetId}}</td>
+				                <td>{{auct.product.productId}}</td>
+				                <td>{{auct.product.category}}</td>
+				                <td>{{auct.product.brand}}</td>
+				                <td>{{auct.product.model}}</td>
+				                <td>{{auct.product.description}}</td>
+				                <td>{{auct.product.invoiceDate}}</td>
+				                <td>{{auct.product.registrationNo}}</td>
+				                <td>{{auct.product.engineNo}}</td>
+				                <td>{{auct.product.city}}</td>
+				                <td>{{auct.product.originalInvoice}}</td>
+				                <td>{{auct.product.vatPercentage}}</td>
+				                <td>{{auct.product.contactName}}</td>
+				                <td>{{auct.product.contactNumber}}</td>
+				                <td>{{auct.product.isSold?'Yes':'No'}}</td>
+				                <td>{{auct.product.saleVal}}</td>
+				                <td>										
+									<a ng-disabled="auct.product.isSold" class="btn btn-primary btn-md" href="javascript:void(0);" ng-click=""><i class="fa fa-pencil" ng-click="gsettingVm.editAssetInAuctionClicked(auct)"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteAssetFromAuction(auct)"><i class="fa fa-trash"></i> </a>
+				                </td>
+				               </tr>
+				              </tbody>
+				            </table>
+				        </div>
+				        <uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionrequest')" class="pagination-sm" rotate="false">  </uib-pagination>
+
+				</uib-tab>
+    		
+	    </div>
+
+	    <!--Select payment master -->
+        <div ng-if="gsettingVm.tabValue == 'paymnt'">
+    			<h4>Payment Master</h4>
+    			<legend></legend>		         
+
+    				<form name="paymentForm" novalidate class="invMasterForm">			    		
+			          <div class="row">
+			         	 <div class="form-group col-sm-3" ng-class="{'has-error': paymentForm.svcType.$invalid && submitted}">
+			                <select class="form-control" name="svcType" ng-change="gsettingVm.onServiceChange(gsettingVm.paymentMaster.serviceCode)" ng-model="gsettingVm.paymentMaster.serviceCode" required>
+			                	<option value="">Select Service*</option>
+			                	<option ng-repeat="svc in gsettingVm.payableServices" value="{{svc.code}}">{{svc.name}}</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div>
+			            <div class="form-group col-sm-3" ng-class="{'has-error': paymentForm.svcPartner.$invalid && submitted}" ng-if="gsettingVm.paymentMaster.multiple == 'y'">
+			                <select class="form-control" name="svcPartner" ng-model="gsettingVm.paymentMaster.partnerId" required>
+			                	<option value="">Select Partner*</option>
+			                	<option value="{{prtr._id}}" ng-repeat="prtr in gsettingVm.partners">{{prtr.name}}</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div> 
+			            <div class="form-group col-sm-3" ng-class="{'has-error': paymentForm.svcFee.$invalid && submitted}">
+			                <input  name="svcFee" ng-model="gsettingVm.paymentMaster.fees" type="text" class="form-control" placeholder="Fee*" required>
+			            </div>                           	
+			           	<div class="form-group col-sm-2 pull-right">
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.savePaymentMaster(paymentForm)" ng-if="!gsettingVm.paymentMasterEdit">Save</button>
+			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updatePaymentMaster(paymentForm)" ng-if="gsettingVm.paymentMasterEdit">Update</button>
+			           	</div>
+			           	
+			          </div>
+			     	</form>	
+			          <div class="table-responsive">
+			            <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+			              <thead>
+			                <th>Service Name</th>                                
+			                <th>Fee</th>                                
+			                <th>Action</th>
+			               
+			              </thead>
+			              <tbody>
+			              <tr ng-repeat="payment in gsettingVm.paymentMasterList">
+			                <td>{{payment.serviceName}}<span ng-if="payment.partnerId">({{gsettingVm.getParnerName(payment.partnerId)}})</span></td>
+			                <td>{{payment.fees}}</td>
+			                <td>
+								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editPaymentMaster($index)"><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deletePaymentMaster($index)"><i class="fa fa-trash"></i> </a>
+			                </td>
+			               </tr>
+			              </tbody>
+			            </table>
+			        </div>
+	    </div>
+
+	    <!--Select Manufacturer -->
+        <div ng-if="gsettingVm.tabValue == 'manu'">
+			<h4>Manufacturer</h4>
+			<legend></legend>
+			<form name="manufactureForm" novalidate class="invMasterForm">
+				<div class="row">
+					
+					<div class="form-group col-sm-4" ng-class="{'has-error': manufactureForm.name.$invalid && submitted}">
+						<input name="name" ng-model="gsettingVm.manufacturer.name" type="text" class="form-control" placeholder="Manufacturers Name*" required>
+					</div>
+					<div class="form-group col-sm-2">
+						<span class="btn btn-warning fileinput-button">
+							<span>Browse image...</span>
+							<input type="file" name="file" onchange="angular.element(this).scope().updateLogo(this.files,this)" accept="image/*" class="ng-scope">
+						</span>
+					</div>
+					<div class="col-sm-4">
+						{{gsettingVm.manufacturer.imgsrc}}
+					</div>
+					<div class="form-group col-sm-2">
+						<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveManufacturer(manufactureForm)" ng-if="!gsettingVm.manufacturerEdit">Save</button>
+						<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateManufacturer(manufactureForm)" ng-if="gsettingVm.manufacturerEdit">Update</button>
+					</div>
+					
+				</div>
+			</form>
+			<div class="table-responsive">
+				<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+					<thead>
+						<tr>
+							<th>Image</th>
+							<th>Manufacturers</th>
+							<th>Action</th>
+						</tr>
+						
+					</thead>
+					<tbody>
+						<tr ng-repeat="mfg in gsettingVm.manufacturerList">
+							<td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{mfg.imgsrc}}" alt="Image"></td>
+							<td>{{mfg.name}}</td>
+							<td>
+								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editManufacturer($index)"><i class="fa fa-pencil"></i> </a>
+								<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteManufacturer($index)"><i class="fa fa-trash"></i> </a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!--Banner setting -->
+		<div ng-if="gsettingVm.tabValue == 'banner'">
+			<form name="bannerForm" novalidate class="invMasterForm">
+				<h4>Banner Setting</h4>
+				<legend></legend>
+				
+				<div class="row">
+				     <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.name.$invalid && submitted}">
+				      Promo Name
+				      <input id="" name="name" ng-model="gsettingVm.banner.name" type="text" class="form-control" placeholder="Enter Promo Name">
+				     </div>
+				     <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.code.$invalid && submitted}">
+				      Promo Code
+				      <input id="" name="code" type="text" class="form-control" placeholder="Enter Promo Code" ng-model="gsettingVm.banner.code">
+				     </div>
+				     <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.regCharge.$invalid && submitted}">
+				      Registration Charge
+				      <input id="" name="regCharge" type="number" class="form-control" placeholder="Enter Registration Charge" ng-model="gsettingVm.banner.regCharge">
+				     </div> 
+				     <div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.sequence.$invalid && submitted}">
+				      Sequence
+				      <input id="" name="sequence" type="number" ng-model="gsettingVm.banner.sequence" class="form-control" placeholder="Enter Sequence" ng-model="gsettingVm.banner.sequence" required>
+				     </div>  
+				     
+				   </div>
+				
+				<div class="row">
+					<div class="col-sm-3 form-group" ng-class="{'has-error': bannerForm.sDate.$invalid && submitted}">
+						Start Date :
+						<div class="input-group">
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.sDate" uib-datepicker-popup="{{format}}" name="sDate" ng-value="" is-open="popup1.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy"/>
+							<span class="input-group-addon">
+								<a href class="btn btn-default" ng-click="open1()"><i class="fa fa-calendar-o fa-1x"></i></a>
+							</span>
+						</div>
+					</div>
+					
+					<div class=" col-sm-3 form-group" ng-class="{'has-error': bannerForm.eDate.$invalid && submitted}">
+						End Date :
+						<div class="input-group">
+							<input type="text" class="form-control" ng-model="gsettingVm.banner.eDate" uib-datepicker-popup="{{format}}" name="eDate" ng-value="" is-open="popup2.opened" min-date="minDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+							<span class="input-group-addon">
+								<a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-1x"></i></a>
+							</span>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						Hyperlink :
+						<div class="row">
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
+							</div>
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="No"> No
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						Ticker :
+						<div class="row">
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="Yes"> Yes
+							</div>
+							<div class="col-xs-6 col-sm-6">
+								<input type="radio" name="ticker" ng-model="gsettingVm.banner.ticker" value="No"> No
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						<span class="btn btn-warning fileinput-button">
+							<span>Browse image...</span>
+							<input type="file" name="file" onchange="angular.element(this).scope().updateBannerImage(this.files,this)" accept="image/*" class="ng-scope">
+						</span>
+						<div class="col-sm-2">
+                          {{gsettingVm.banner.webImg}}
+                    	</div>
+					</div>
+				</div>
+				
+				<div class="row">	
+						<div class="form-group col-sm-2">
+							Show in mobile :
+							<div class="row form-group">
+								<div class="col-xs-6 col-sm-6">
+									<input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="Yes"> Yes
+								</div>
+								<div class="col-xs-6 col-sm-6">
+									<input type="radio" name="showInMobile" ng-model="gsettingVm.banner.showInMobile" value="No"> No
+								</div>																
+							</div>							
+						</div>	
+						<div class="form-group col-sm-offset-1 col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
+							<span class="btn btn-warning fileinput-button">
+								<span>Browse image...</span>
+								<input type="file" name="file" onchange="angular.element(this).scope().updateMobBannerImage(this.files,this)" accept="image/*" class="ng-scope">
+							</span>
+							<div class="col-sm-2">
+	                          {{gsettingVm.banner.mobileImg}}
+	                    	</div>
+						</div>				
+					</div>
+					<div class="row form-group">						
+						<div class="col-sm-offset-10 col-sm-2">
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveBanner(bannerForm)" ng-if="!gsettingVm.bannerEdit">Save</button>
+							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateBanner(bannerForm)" ng-if="gsettingVm.bannerEdit">Update</button>
+						</div>
+					</div>
+
+					<div class="table-responsive">
+						<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+							<thead>
+								<tr>
+									<th>Image</th>
+									<th>Promo Code</th>
+									<th>Hyperlink</th>
+									<th>Ticker</th>
+									<th>Banner start date</th>
+									<th>Banner end date</th>
+									<th>Show in mobile</th>
+									<th>Sequence</th>
+									<th>Action</th>
+								</tr>
+								
+							</thead>
+							<tbody>
+								<tr ng-repeat="banner in gsettingVm.bannerList">
+									<td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{bannerDir}}/{{banner.webImg}}" alt="Image"></td>
+									<td>{{banner.code}}</td>
+									<td>{{banner.hyperlink}}</td>
+									<td>{{banner.ticker}}</td>
+									<td>{{banner.sDate | date:'MM/dd/yyyy'}}</td>
+									<td>{{banner.eDate | date:'MM/dd/yyyy'}}</td>
+									<td>{{banner.showInMobile}}</td>
+									<td>{{banner.sequence}}</td>
+									<td>
+										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editBanner($index)"><i class="fa fa-edit"></i> </a>
+										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteBanner($index)"><i class="fa fa-trash"></i> </a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+				</form>
+			</div>
+		</div>
+
+		<!-- Select Technical Information -->
+		<div ng-if="gsettingVm.tabValue == 'technical'">
+			<div class="col-sm-12">
+					<div class="row">
+            <div class="col-sm-10">
+              <h4>Technical Information</h4>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            </div>
+        </div>
+        <hr>
+
+        <div class="form-group">
+        	<div uib-collapse="!isTechCollapsed">	
+        			<form class="techInformationForm" name="techInformationForm" novalidate>
+	              <div class="form-group row">
+	                <div class="col-sm-4" ng-class="{'has-error': techInformationForm.category.$invalid && submitted}">
+	                  <select class="form-control" name="category" ng-model="	gsettingVm.techInformation.information.category" ng-change="gsettingVm.onCategoryChange(gsettingVm.techInformation.information.category,true)" required>
+											<option value=""> Select Category*</option>
+											<option ng-repeat="cat in gsettingVm.allCategory" value="{{cat.name}}" ng-if="cat.name != 'Other'">{{cat.name}}</option>
+										</select>
+	                  <i class="caret"></i>
+	                </div>
+	                <div class="col-sm-4" ng-class="{'has-error': techInformationForm.brand.$invalid && submitted}">
+	                 <select class="form-control" name="brand" ng-model="gsettingVm.techInformation.information.brand" ng-change="gsettingVm.onBrandChange(gsettingVm.techInformation.information.brand,true)" required>
+										<option value=""> Select Brand*</option>
+										<option ng-repeat="br in gsettingVm.brandList" value="{{br.name}}" ng-if="br.name != 'Other'">{{br.name}}</option>
+									</select>
+	                  <i class="caret"></i>
+	                </div>
+	                <div class="col-sm-4" ng-class="{'has-error': techInformationForm.model.$invalid && submitted}">
+	                 <select class="form-control" name="model" ng-model="gsettingVm.techInformation.information.model" required>
+											<option value=""> Select Model*</option>
+											<option ng-repeat="md in gsettingVm.modelList" value="{{md.name}}" ng-if="md.name != 'Other'">{{md.name}}</option>
+										</select>
+	                  <i class="caret"></i>
+	                </div>
+	              </div>
+
+	              <div class="form-group row">
+	              	<div class="col-sm-4">
+	              		<input ng-model = "gsettingVm.techInformation.information.grossWeight" type="text" class="form-control" placeholder="Gross Weight">
+	              	</div>
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.operatingWeight" class="form-control" placeholder="Operating Weight">
+	              	</div>
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.bucketCapacity" class="form-control" placeholder="Bucket Capacity">
+	              	</div>
+	              </div>
+	              <div class="form-group row">
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.enginePower" class="form-control" placeholder="Engine Power">
+	              	</div>
+	              	<div class="col-sm-4">
+	              		<input type="text" ng-model = "gsettingVm.techInformation.information.liftingCapacity" class="form-control" placeholder="Lifting Capacity">
+	              	</div>              	
+	              </div>
+	              <div class="form-group row">
+	              	<div class="col-sm-12 text-right">
+	              		<button class="btn" type="button" ng-click = "gsettingVm.closeTechInfo()">Close</button>
+		                <button class="btn" type="button" ng-click = "gsettingVm.techInformation.information = {}">Reset</button> 
+		                <button ng-if="!isEdit" class="btn btn-danger btn-md" ng-click="gsettingVm.saveTechnicalInfo(techInformationForm)">Save</button>
+
+		                <button ng-if="isEdit" class="btn btn-danger btn-md" ng-click="gsettingVm.updateProductTechInfo(techInformationForm)">Update</button>
+	              	</div>              	             	
+	              </div>
+	            </form>
+	        </div>
+        </div>
+		<p class="text-right">Showing : {{gsettingVm.productTechnicalList.length}} Records</p>
+		<div class="row form-group">
+	        <div class="col-sm-12 tablesearch text-right">
+	          Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'technical')" ng-model-options="{debounce:500}">
+	        </div>
+	    </div>
+
+	    <div class="row">
+	        <div class="col-sm-12">
+	          <div class=" table-responsive ">
+	            <table class="table table-bordered table-striped">
+	              <thead>
+	                <tr>
+	                  <th>Category</th>
+	                  <th>Brand</th>
+	                  <th>Model</th>
+	                  <th>Gross Weight</th>
+	                  <th>Operating Weight</th>		                  
+	                  <th>Bucket Capacity</th>		                  
+	                  <th>Engine Power</th>		                  
+	                  <th>Lifting Capacity</th>		                  
+	                  <th width="10%">Actions</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	              	<tr ng-repeat="techInfo in gsettingVm.productTechnicalList">
+	              		<td>{{techInfo.information.category}}</td>
+	              		<td>{{techInfo.information.brand}}</td>
+	              		<td>{{techInfo.information.model}}</td>
+	              		<td>{{techInfo.information.grossWeight}}</td>
+	              		<td>{{techInfo.information.operatingWeight}}</td>
+	              		<td>{{techInfo.information.bucketCapacity}}</td>
+	              		<td>{{techInfo.information.enginePower}}</td>
+	              		<td>{{techInfo.information.liftingCapacity}}</td>
+	              		<td>
+	              			<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="gsettingVm.editProductTechInfo(techInfo)">
+		                      <i class="fa fa-pencil"></i>
+		                    </a>
+		                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="gsettingVm.deleteProductTechInfo(techInfo)"><i class="fa fa-trash" ></i></a>
+	              		</td>
+	              	</tr>
+	              </tbody>
+	            </table>
+	          </div>
+	          <uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+	        </div>
+	    </div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,75 @@
+<div  id="login-modal">
+       <div class="modal-header">
+              <button type="button" class="close" ng-click="loginVm.closeDialog()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-signin" name="form" ng-submit="loginVm.login(form,$event)" data-ember-action="2" novalidate>
+                <p class="text-center">
+                  <span class="text-muted">Login with your social account</span>
+                </p>
+              <!-- <div class="row" ng-click="loginVm.loginOauth('facebook')">
+                <div class="col-sm-8 col-sm-offset-2 back-color">
+              <span class="btn btn-success fileinput-button">
+                                <span><i class="fa fa-facebook"></i> Facebook</span>
+                              </span>  
+                       
+            </div>
+            </div>
+            <div class="form-group"></div>
+            <div class="row" ng-click="loginVm.loginOauth('twitter')">
+            <div class="col-sm-8 col-sm-offset-2 back-color1">
+              <span class="btn btn-primary fileinput-button">
+                                <span><i class="fa fa-twitter"></i>  Twitter </span>
+                              </span>
+            </div>
+            </div> -->
+                 <div class="text-center">
+                  <div class="btn-group">
+                    <a class="btn btn-default btn-lg social-facebook" href="javascript:void(0);" ng-click="loginVm.loginOauth('facebook')"><i class="fa fa-facebook"></i></a>
+                    <a class="btn btn-default btn-lg social-twitter" href="javascript:void(0);" ng-click="loginVm.loginOauth('twitter')"><i class="fa fa-twitter"></i></a>
+                     <a class="btn btn-default btn-lg social-linkedin" href="javascript:void(0)" ng-click="loginVm.loginOauth('linkedin')"><i class="fa fa-linkedin"></i></a>
+                    <a class="btn btn-default btn-lg social-google" href="javascript:void(0);" ng-click="loginVm.loginOauth('google')"><i class="fa fa-google-plus"></i></a>
+
+                  </div>
+                </div>
+               
+             <br>
+                    <p class="text-center">
+                      <span class="text-muted">Or login to your account</span>
+                    </p>
+                    <br>
+                    <div class="form-group">
+                      <input class="form-control" placeholder="Mobile Number or Email Address" type="text" name="userId" ng-model="loginVm.user.userId" required>
+                      
+                    </div>
+                    <div class="form-group">
+                      <input class="form-control" placeholder="Password" type="password" name="password" ng-model="loginVm.user.password" required>
+                    </div>
+                <div class="form-group has-error">
+                    <p class="help-block" ng-show="form.userId.$error.required && form.password.$error.required && submitted">
+                       Please enter your user id and password.
+                    </p>
+                    <p class="help-block" ng-show="form.userId.$error.required && !form.password.$error.required && submitted">
+                       Please enter a valid user id.
+                    </p>
+
+                    <p class="help-block">{{ errors.other }}</p>
+                </div>
+                    <div class="form-group text-right">
+                      <a href="javascript:void(0);" ng-click="loginVm.forgotPassword()">Forgot Password?</a>
+                    </div>
+                     <div class="form-group text-center">
+                      <button class="btn btn-lg btn-warning" type="submit">Login</button>
+                    </div>
+                     
+                      <div class="text-center">
+                        <small class="create-account text-muted">Don't have an account?  
+                        <a href="javascript:;" ng-click="loginVm.openRegister()"> Register</a> </small>
+
+                        <a type="button" class="pull-right btn" ng-click="loginVm.closeDialog()" aria-hidden="true">Continue as Guest</a>
+                      </div>
+                      
+                  </form>
+            </div>
+</div>

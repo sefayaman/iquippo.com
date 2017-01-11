@@ -1,0 +1,197 @@
+<section class="banner">
+  <div class="overlay"></div>
+  <div id="static-banner">
+    <img  ng-src="assets/images/Banner2.jpg" class="img-responsive">
+  </div>
+  <div class="static-search-banner">
+    <div class="container">
+      <div class="spare-content">
+          <form>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="">
+                    <input type="text" ng-model="spareHomeVm.categorySearchText" placeholder="Select Asset Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="">
+                    <input type="text" class="form-control" ng-model="spareHomeVm.locationSearchText" placeholder="Spare Part Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                  </div>
+                </div> 
+                <div class="col-sm-3">
+                  <div class="">
+                    <input type="text" class="form-control" placeholder="Spare Part Name" ng-model="spareHomeVm.sparename" class="form-control" ng-keypress="spareHomeVm.myFunct($event)"/>
+                  </div>
+                </div>             
+                <div class="col-sm-3 text-center">
+                  <a href="javascript:;"  class="btn btn-warning btn-block" ng-click="spareHomeVm.doSearch()"><i class="fa fa-search"></i> Search Spare</a>
+                </div>
+              </div>
+          </form>
+        </div>
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="wrapper">
+  <div class="container">
+
+    <div class="row main-container">
+    <div class="col-sm-2 col-md-2 hidden-xs">
+       <a href="/financing" target="_blank">
+          <img ng-if="spareHomeVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgLeftTop.src}}" class="img-responsive add1">
+       </a>
+        <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
+        <div class="form-group"></div>
+        <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
+        <a href="/insurance" target="_blank">
+          <img ng-if="spareHomeVm.imgLeftBottom.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgLeftBottom.src}}" class="img-responsive add1">
+        </a>
+      </div>
+      <div class="col-sm-10 col-md-7 padd-left">
+        <!-- <div class="head">
+
+          <legend class="dull"></legend>
+          <legend class="dark"></legend>
+        </div> -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-th"></i> Spare Parts</h4>
+          </div>
+        </div>
+        <!-- <div class="cat cat-product text-center"> -->
+        <div class="cat text-center">
+          <img src="assets/images/spare-parts.jpg" class="img-responsive">
+          <!-- <ul class="cat-list">            
+            <li ng-repeat="spare in spareHomeVm.spareList">
+              <a href="/sparedetail/{{spare._id}}">
+                 <img ng-src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive">
+                  <span class="overlayer"></span><span>{{spare.name}}</span>
+                  <div class="options">                       
+                    <small ng-if="spare.grossPrice && !spare.priceOnRequest"> <i class="fa fa-inr"></i> {{spare.grossPrice}}</small>
+                    <small ng-if="spare.priceOnRequest"> <i class="fa fa-tag"></i> Price On Request</small>                            
+                </div>
+              </a>
+
+            </li>
+          </ul>    -->       
+          <!-- <div class="show-more">
+            <button type="button" class="btn btn-default" ng-click="spareHomeVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : spareHomeVm.isCollapsed,'fa-chevron-up' : !spareHomeVm.isCollapsed}"></i> </button>
+          </div> -->
+        </div>
+        <h4 class="text-center">Coming soon...</h4>
+
+      </div>
+
+      <div class="col-sm-2 col-md-3 hidden-xs padd-left">
+        <div class="panel-group">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title"><i class="fa fa-hourglass-2"></i> Spare Snapshots</h3>
+            </div>
+            <div class="panel-body">
+             <div class="row form-group">
+             <div class="col-sm-6 text-center">
+                <div class="uploded-asset">
+                  <a href="javascript:void(0);" class="text-primary">
+                    <strong>{{spareHomeVm.spareCountObj.active || 0}}</strong>
+                    <p>Spares Listed</p>
+                  </a>
+               </div>
+             </div>
+             <div class="col-sm-6 text-center">
+             <div class="uploded-asset">
+              <a href="javascript:void(0);" class="text-warning">
+                <strong>{{spareHomeVm.manufacturerList.length || 0}}</strong>
+                <p>Manufacturers</p>
+              </a>
+             </div>
+             </div>
+
+             </div>
+             <div class="row">
+               <div class="col-sm-6 text-center">
+                 <div class="uploded-asset">
+                  <a href="javascript:void(0);" class="text-danger">
+                    <strong>{{spareHomeVm.spareCountObj.sold || 0}}</strong>
+                    <p>Spares Sold</p>
+                  </a>
+                 </div>
+               </div>
+               <div class="col-sm-6 text-center">
+                 <div class="uploded-asset">
+                  <a href="javascript:void(0);" class="text-success">
+                    <strong>{{spareHomeVm.spareCountObj.sold || 0}}</strong>
+                    <p>Sellers Listed</p>
+                  </a>
+                 </div>
+               </div>
+             </div>
+            </div>
+          </div>
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-link"></i> Partners</h3>
+              </div>
+              <div class="panel-body text-center">
+                
+                <div class="form-group">
+                  <a href="http://www.srei.com/" target="_blank">
+                    <img src="assets/images/srei-logo.png" width="100">
+                  </a>
+
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+        <div class="form-group"></div>
+        <div class="form-group clearfix"></div>
+
+        <div class="horizontal-crsl spare-manufacturer">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title"><i class="fa fa-star"></i> Spare Manufacturer</h4>
+            </div>
+          </div>
+          <div id="slides_control_feature">
+            <uib-carousel no-wrap="noWrapSlides">
+              <uib-slide ng-repeat="gpSlide in spareHomeVm.sortedManufacturers">
+                <div class="row">
+                  <div class="col-sm-2" ng-repeat="slide in gpSlide">
+                    <div class="panel panel-default">
+                      <a href="/viewspares/{{slide._id}}">
+                        <img ng-src="{{uploadImagePrefix}}{{manufacturerDir}}/{{slide.imgsrc}}" class="img-responsive">
+                      </a>
+                      <div class="panel-heading">
+                        <h3 class="panel-title">{{slide.name}}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </uib-slide>
+            </uib-carousel>
+          </div>
+        </div>
+
+  </div>
+</section>
+<div class="container text-center form-group">
+  <div class="row">
+    <div class="col-sm-6">
+      <a ng-href="{{spareHomeVm.imgBottomLeft.websiteUrl}}" target="_blank">
+        <img ng-if="spareHomeVm.imgBottomLeft.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgBottomLeft.src}}" class="add2 img-responsive">
+      </a>
+    </div>
+    <div class="col-sm-6">
+      <a ng-href="{{spareHomeVm.imgBottomRight.websiteUrl}}" target="_blank">
+        <img ng-if="spareHomeVm.imgBottomRight.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgBottomRight.src}}" class="add2 img-responsive">
+      </a>
+    </div>
+  </div>
+</div>
+</div>

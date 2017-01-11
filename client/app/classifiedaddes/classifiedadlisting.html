@@ -1,0 +1,70 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">        
+        <div class="col-sm-12">
+          <div id="page-wrapper">
+            <!-- Page Heading -->
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>
+                      Classified Ad
+                  </h3>
+                  <hr>
+                </div>
+              </div>
+              <!-- /.row -->
+
+              <div class="table-responsive">
+                <table datatable="ng"  dt-options= "dtOptions" class="table table-bordred table-striped">
+
+                  <thead>
+                    <tr>
+                      <th width="10%">Image</th>
+                      <th width="20%">Name</th>
+                      <th width="15%">Mobile No.</th>
+                      <th width="20%">Email Id</th>
+                      <th>Position</th>
+                      <th width="10%">Status</th>
+                      <th>Action</th>
+                    </tr>
+                   
+                  </thead>
+                  <tbody>
+
+                    <tr ng-repeat="classified in classifiedadLstVm.classifiedAdList" >
+                      <td> <img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{classified.image}}" alt="Image"></td>
+                      <td>{{classified.fname}}</td>
+                      <td>{{classified.mobile}}</td>
+                      <td>{{classified.email}}</td>
+                      <td> 
+                          {{classified.position}}
+                       
+                      </td>
+                      <td> 
+                          <span ng-if="classified.status">Active</span><span ng-if="!classified.status">Inactive</span>
+                           
+                      </td>
+                      <td>
+                        <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning active-btn" ng-model="classified.status" uib-btn-checkbox ng-click="classifiedadLstVm.updateClasifiedAd(classified)"><span ng-if="!classified.status">Activate</span> <span ng-if="classified.status">Deactivate</span></label>
+                        <button class="btn btn-primary btn-sm" ng-click="classifiedadLstVm.editClassifiedAdd(classified)"><i class="fa fa-edit" ></i></button>
+                      </td> 
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function(){
+    $('.dashboard-nav a').on('click', function(){
+      $('.dashboard-nav a').removeClass('active')
+      $(this).addClass('active')
+    });
+  });
+</script>

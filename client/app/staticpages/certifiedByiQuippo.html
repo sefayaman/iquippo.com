@@ -1,0 +1,162 @@
+<div class="container">
+<div class="col-sm-6 text-justify">
+	<h3>Certified by iQuippo</h3>	
+	<legend></legend>
+
+	<h5>A Mark of Trust and Excellence</h5>
+	<ul>
+		<li>
+			If it is “Certified by iQuippo” it simply ensuring the guarantee for Safety, Condition, Functionality, Quality and Performance features of the equipment listed on the portal. 
+		</li>
+		<li>
+			This program ensures the physical verification of the Asset/equipment put up on the portal and if it meets all conditions and ratings to ensure the usability, it gets tagged as iQuippo certified.
+		</li>
+		<li>
+			The service can be availed both as a Buyer and/or a Seller – it confirms that we stand in for the case.
+		</li>
+	</ul>
+
+
+<div class="form-group clearfix form-group"></div>
+<!-- <div class="serve text-center">
+	<a class="btn btn-block btn-md btn-warning quote-btn" ng-click="openDialog('certifiedbyiquippoquote')">Request a Quote</a>
+</div> -->
+</div>
+<div class="col-sm-6">
+	<div class="form-group"></div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">Certified By iQuippo Quote</h3>
+		</div>
+		<div class="panel-body">			
+		<form class="form" name="form" novalidate>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">
+						<input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="cetifiedByiQuippoQuote.fname" required>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="cetifiedByiQuippoQuote.mname">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">
+						<input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="cetifiedByiQuippoQuote.lname" required>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }">
+						<select class="form-control" ng-model="cetifiedByiQuippoQuote.country" name="country" required>
+							<option value="">*Select Country</option>
+							<option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+                    <select class="form-control" name="location" ng-model="cetifiedByiQuippoQuote.city">
+                      <option value="">Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
+                </div>
+                <div class="col-xs-6">
+					<div class="form-group">
+						<input type="text" name="" class="form-control" placeholder="Company Name" ng-model="cetifiedByiQuippoQuote.companyname">
+					</div>
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<input type="text" name="" class="form-control" placeholder="Designation" ng-model="cetifiedByiQuippoQuote.designation">
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<input type="text" name="" class="form-control" placeholder="Phone No." ng-model="cetifiedByiQuippoQuote.phone">
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+						<input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="cetifiedByiQuippoQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" required>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+						<input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="cetifiedByiQuippoQuote.email">
+						<p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+							Please enter a valid email.
+						</p>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row text-left">
+				<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
+				<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted}">
+					<select class="form-control" ng-model="cetifiedByiQuippoQuote.valuation" name="valuation" required>
+                      <option value="">*Select Purpose</option>
+                      <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                    </select>
+				</div>
+				<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.otherName.$invalid && form.submitted}">
+					<input class="form-control" type="text" name="otherName" ng-model="cetifiedByiQuippoQuote.otherName" ng-disabled ="cetifiedByiQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "cetifiedByiQuippoQuote.valuation == 'Other'">
+				</div>
+			</div>
+			<div class="row text-left">
+              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
+              <div class="col-xs-6 col-sm-4 form-group">
+                <input type="radio"  placeholder=""  name="schedule" ng-model="cetifiedByiQuippoQuote.schedule" value="yes"> Yes 
+              </div>
+              <div class="col-xs-6 col-sm-4 form-group">
+                <input type="radio" placeholder=""  name="schedule" ng-model="cetifiedByiQuippoQuote.schedule" value="no"> No      
+              </div>
+              
+              <div class="clerafix"></div>  
+                                                 
+              <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="cetifiedByiQuippoQuote.schedule == 'yes'">
+              	<small>Pick Date</small>
+                <div class="input-group" ng-class="{'has-error': form.scheduleDate.$invalid && form.submitted }">
+                  <input type="text" class="form-control" ng-model="cetifiedByiQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="cetifiedByiQuippoQuote.schedule == 'yes'" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                  <span class="input-group-addon">
+                    <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o fa-2x"></i></a>
+                  </span>
+                </div>                                       
+              </div>
+              
+			  <div class="col-xs-6 col-sm-4 form-group " ng-if="cetifiedByiQuippoQuote.schedule == 'yes'">
+              	<small>Set Time</small>
+              	<div class="input-group">
+              		<input type="text" class="form-control" placeholder="HH:MM" ng-model="cetifiedByiQuippoQuote.scheduledTime" is-open=""  ng-value="{{cetifiedByiQuippoQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+              		<span class="input-group-addon">
+              			<button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o fa-2x"></i></button>
+              		</span>
+              	</div>
+              	<uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changed(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+				<!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->
+			  </div>
+            </div>
+			<div class="form-group">
+				<textarea class="form-control" name="comment" ng-model="cetifiedByiQuippoQuote.comment" placeholder="Comments if any"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="reset" ng-click="resetClick()" class="btn btn-default">Reset</button>
+				<button type="button" class="btn btn-warning" ng-click="addCetifiedByiQuippoQuote($event)">Submit</button>
+			</div>
+	</form>
+		</div>
+	</div>
+</div>
+</div>

@@ -1,0 +1,80 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Auction Request</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h3><button class="btn btn-success btn-md" ng-click="auctionListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+
+     <!--  <div class="featured-pro">
+        <select>
+          <option>Auction Status</option>
+          <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
+        </select>         
+      </div>
+      <div class="featured-pro">
+        <button class="btn btn-primary">Save</button>
+      </div> -->
+     <div class="table-responsive">
+        <div class="row">                    
+          <div class="col-sm-3 pull-right">
+            <div class="tablesearch text-right form-group">
+               Search: <input type="text" placeholder="Search..." ng-model="auctionListingVm.searchStr" ng-change="auctionListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+            </div>
+          </div>
+      </div>
+          <table class="table table-bordred table-striped">
+            <thead>
+              <tr>
+                <th width="50"><input type="checkbox" ng-model="auctionListingVm.master"> All</th> 
+                <th>Asset Name</th>                                
+                <th>Auction ID</th>                                
+                <th>Asset ID</th>                                
+                <th>Product ID</th>                                
+                <th>Seller Name</th>                                
+                <th>Start Date</th>
+                <th>End Date</th>
+                <!-- <th>EMD Amount</th> -->
+                <th>Auction Status</th>
+                <th>Valuation Status</th>
+                <th>Action</th>  
+              </tr>           
+            </thead>
+            <tbody>
+            <tr ng-repeat="auts in auctionListingVm.auctions">
+              <td><input type="checkbox"  ng-click="auctionListingVm.updateSelection($event,auts._id)" ng-checked="auctionListingVm.master"></td>
+              <td>{{auts.product.name}}</td>              
+              <td>{{auts.auctionId}}</td>
+              <td>{{auts.product.assetId}}</td>
+              <td>{{auts.product.productId}}</td>
+              <td>{{auts.seller.name}}</td>              
+              <td>{{auts.startDate | date:'MM/dd/yyyy'}}</td>              
+              <td>{{auts.endDate | date:'MM/dd/yyyy'}}</td>                            
+              <!-- <td>{{auts.emdAmount}}</td>-->
+              <td>{{getStatusOnCode(auctionStatuses,auts.status).name}}</td>
+              <td>{{getStatusOnCode(valuationStatuses,auts.valuation.status).name}}</td>              
+              
+              <td>
+                <div ng-if="isAdmin()">
+                  <select ng-model="status">
+                  <option value="">Select Status</option>
+                  <option ng-repeat="auctionSts in auctionStatuses" ng-if="$index > 1" value="{{auctionSts.code}}">{{auctionSts.name}}</option>
+                </select>
+                  <button class="btn btn-success btn-sm" ng-click="auctionListingVm.updateStatus(auts,status)"><i class="fa fa-check"></i></button>
+                </div>
+                 <a class="btn btn-primary" href="/payment/{{auts.transactionId}}" ng-if="auts.status == 'payment_pending' && auts.user._id == getCurrentUser()._id">Pay Now</a>    
+              </td>                
+             </tr>
+            </tbody>
+          </table>
+        </div>
+          <uib-pagination total-items="auctionListingVm.totalItems" ng-model="auctionListingVm.currentPage" items-per-page="auctionListingVm.itemsPerPage" max-size="auctionListingVm.maxSize" ng-change="auctionListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+      
+    </div>
+  </div>
+</div>

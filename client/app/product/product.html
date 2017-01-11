@@ -1,0 +1,1200 @@
+<div id="wrapper">
+    <section class="wrapper">
+      <div class="container-fluid">
+        <div id="page-wrapper">
+          <div class="row">
+          <div class="col-sm-12">
+            <h3>
+              Product Upload
+                <div class="pull-right bulks" ng-if="isBulkUpload()">
+                  <span class="fileinput-button" >
+                    <button class="btn btn-warning"><i class="fa fa-database"></i> Bulk Status Update
+                      <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetStatusTemp(this.files,this)">
+                    </button>
+                  </span>
+               </div>
+               <div class="pull-right" ng-if="isBulkUpload()">
+                  <span class="fileinput-button" >
+                      <a href="/bulkproduct" class="btn btn-success"><i class="fa fa-database"></i> Bulk Product Upload</a>
+                   </span>
+               </div>
+            </h3>
+            <hr>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+          <!-- success error start-->
+            <div class="row animate-show" ng-show="isSuccess" >
+              <div class="col-sm-12">
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                   {{successMessage}}
+                </div>
+              </div>
+            </div>
+            <div class="row animate-show" ng-show="isError">
+              <div class="col-sm-12">
+                <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                  <button type="button" class="close" ng-click="closeMeassage()" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    {{errorMessage}}
+                </div>
+              </div>
+            </div>
+            <!-- success error end -->
+
+            <!-- tabs -->
+            <uib-tabset justified="true">
+              <uib-tab heading="Step1" index="0" active="tabObj.step1">
+                <form name="form" novalidate>
+                      <div class="seller_info form-group" ng-if="isActive() || isChannelPartner()">
+                        <h3>Seller Information</h3>
+                        <div class="row">
+                            <div class="form-group col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                              <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
+                                <option value="">* Customer Type</option>
+                                <option value="individual">Individual</option>
+                                <option value="private">Private Entrepreneur</option>
+                                <option value="legalentity">Legal Entity</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-3 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                              <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
+                                    <option value="">* Select User</option>
+                                    <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
+                              </select>
+                              <i class="caret"></i>
+                    
+                            </div>
+                            <div class="col-sm-3 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                              <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
+                                    <option value="">* Select Company</option>
+                                    <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType">{{user.company}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>                            
+                         
+                            <div class="col-sm-3 form-group">
+                              <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
+                            </div>
+                            <div class="col-sm-3 form-group">
+                              <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top">
+                            </div>
+                          </div>
+                          <div class="text-right">
+                            <a href="javascript:void(0)" ng-click="goToUsermanagement()" class="btn btn-default">Create User</a>
+                            </div>
+                          <div class="row col-sm-12 form-group">
+                            <p class="help-block cart_item" ng-show="(form.userName.$error.required || form.company.$error.required || form.userType.$invalid) && submitted">
+                              Selection of Customer type and User/Company is must to upload your product.
+                            </p>
+                          </div>
+                      </div>
+                      <div class="clearfix"></div>
+
+                     <div class="panel panel-default">
+                       <div class="panel-heading">
+                         <h3 class="panel-title">Basic Information</h3>
+                       </div>
+                       <div class="panel-body">
+                          <div class="row">
+                            <div class="form-group col-sm-5">Asset Id</div>
+                            <div class="form-group col-sm-4">
+                            <span ng-if="product.assetId">{{product.assetId}}</span>
+                            <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">List for Auction</div>
+                            <div class="form-group col-sm-7">
+                              <input type="checkbox" ng-value="product.auctionListing" ng-model="product.auctionListing">
+                            </div>
+                            
+                          </div>
+                          <div class="row">
+                              <div class="form-group col-sm-5">Trade Type<span class="text-warning">*</span></div>
+                              <div class="form-group col-sm-7" ng-class="{'has-error': form.tradeType.$invalid && submitted}">
+                                <select class="form-control" ng-model="product.tradeType" name="tradeType" required ng-change = "onTradeTypeChange(product.tradeType)">
+                                  <option value="">Select Trade Type</option>
+                                  <option ng-repeat="trade in tradeType" value="{{trade.code}}">{{trade.name}}</option>
+                                </select>
+                                <i class="caret"></i>
+                              </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-sm-5"> Category<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
+                              <select  class="form-control" name="category"  ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required>
+                                    <option value="">Select Category</option>
+                                    <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherCategory.$invalid && submitted}">
+                              <input type="text" class="form-control" name="otherCategory" ng-model="product.category.otherName" ng-value="{{product.category.otherName}}" ng-disabled ="product.category.name != 'Other'" placeholder="Other" ng-required= "product.category.name == 'Other'">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Product Brand<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
+                               <select  class="form-control" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required>
+                                    <option value="">Select Brand</option>
+                                    <option value="{{brand._id}}" ng-repeat="brand in brandList">{{brand.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherBrand.$invalid && submitted}">
+                              <input type="text" class="form-control" name="otherBrand" ng-model="product.brand.otherName" ng-value="{{product.brand.otherName}}" ng-disabled ="product.brand.name != 'Other'" placeholder="Other" ng-required= "product.brand.name == 'Other'">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Product Model<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
+                             <select  class="form-control" name="model" ng-model="container.selectedModelId" required  ng-change="onModelChange(container.selectedModelId)">
+                                    <option value="">Select Model</option>
+                                    <option value="{{model._id}}" ng-repeat="model in modelList">{{model.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-3 form-group" ng-class="{'has-error': form.otherModel.$invalid && submitted}">
+                              <input type="text" class="form-control" name="otherModel" ng-model="product.model.otherName" ng-value="{{product.model.otherName}}" ng-disabled ="product.model.name != 'Other'" placeholder="Other" ng-required= "product.model.name == 'Other'">
+                            </div>
+                          </div>
+                          <!-- <div class="row">
+                            <div class="form-group col-sm-5">Sub Category</div>
+                            <div class="form-group col-sm-4">
+                              <select class="form-control"  class="form-control" name="subcategory"  ng-model="container.selectedSubCategory" ng-options="subcategory.name for subcategory in allSubCategory track by subcategory._id">
+                                    <option value="">Select Sub Category</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                          </div> -->
+                          <div class="row">
+                            <div class="form-group col-sm-5">Variant</div>
+                            <div class="form-group col-sm-7">
+                              <input type="text" placeholder="Variant" ng-value="product.variant" ng-model="product.variant" name="variant" class="form-control">
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-sm-5">Product Group </div>
+                            <div class="form-group col-sm-4">
+                              <input type="text" placeholder="Group Name" ng-value="product.group.name" ng-model="product.group.name" name="group" class="form-control" ng-disabled="true">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Product Name</div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.productName.$invalid && submitted}">
+                              <input ng-disabled="true" type="text" placeholder="Product Name" ng-value="product.name" ng-model="product.name" name="productName" class="form-control" required>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-sm-5">Manufacturing Year<span class="text-warning">*</span></div>
+                            <div class="form-group col-xs-10 col-sm-6" ng-class="{'has-error': form.mfgyear.$invalid && submitted}">
+                              <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" max-date="maxDate" min-date="minDate" date-disabled="disabled(date, mode)" close-text="Close" required disabled ngMinlength="4" ngMaxlength="4"/>
+                            </div>
+                            <div class="form-group col-xs-2 col-sm-1 text-center padd">
+                              <a href class="form-control" ng-click="open($event, 'mfgYear')">
+                                <i class="fa fa-calendar-o fa-2x"></i>
+                              </a>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Operating Hours/HMR</div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.opHour.$invalid && submitted}">
+                              <input type="text" name="opHour" placeholder="Operating Hours/HMR" ng-value="product.operatingHour" ng-model="product.operatingHour"  class="form-control">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Mileage/KMR</div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.mileage.$invalid && submitted}">
+                              <input type="text" placeholder="Mileage/KMR" name="mileage" ng-value="product.mileage" ng-model="product.mileage"  class="form-control">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Machine Serial No.</div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.srNumber.$invalid && submitted}">
+                              <input type="text" name="srNumber" placeholder="Machine Serial No." ng-value="product.serialNo" ng-model="product.serialNo"  class="form-control">
+                            </div>
+                          </div>
+
+                          <div class="row" ng-if="product.tradeType != 'RENT'">
+                            <div class="form-group col-sm-5">Price (Excl. Tax).<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-4">
+                              <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
+                                <span class="input-group-addon currency-width">
+                                  <select class="form-control"  name="currencyType" ng-model="product.currencyType">
+                                   <option value="" selected>&#x20B9; Rupee</option>
+                                  </select>
+                                  <!-- <i class="caret"></i> -->
+                                </span>
+                                  <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-3 check">
+                              <input type="checkbox" name="" ng-value="true" ng-model="product.priceOnRequest">
+                              Price on Request
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-sm-5">Country<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
+                              <select class="form-control" name="country" ng-model="product.country" required>
+                                    <option value="">Select Country</option>
+                                    <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">State<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.state.$invalid && submitted}">
+                              <select class="form-control" name="state" ng-model="product.state" ng-change="onStateChange()" required >
+                                    <option value="">Select State</option>
+                                    <option value="{{st.name}}" ng-repeat="st in stateList">{{st.name}}</option>
+
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                          </div>
+                          <!-- <div class="row">
+                            <div class="form-group col-sm-5">City<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.city.$invalid && submitted}">
+                              <input type="text" placeholder="Enter City" name="city" ng-value="product.city" ng-model="product.city"  class="form-control" required>
+                            </div>
+                          </div> -->
+                          <div class="row">
+                            <div class="form-group col-sm-5">Location<span class="text-warning">*</span></div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': form.location.$invalid && submitted}">
+                              <select class="form-control" name="location" ng-model="product.city" required>
+                                <option value="">Select Location</option>
+                                <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-sm-5">Product Condition</div>
+                            <div class="form-group col-sm-7">
+                                <div class="row">
+                                  <div class="col-xs-6 col-sm-6">
+                                    <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="product.productCondition" value="used"> Used</span>
+                                  </div>
+                                  <div class="col-xs-6 col-sm-6">
+                                    <span class="condition"><input type="radio" placeholder=""  name="condition" ng-model="product.productCondition" value="new"> New</span>
+                                  </div>
+                                </div>
+                            </div>
+                          </div>
+
+                          <div class="rental-info" ng-if="product.tradeType != 'SELL'">
+                            <div class="row form-group">
+                              <div class="col-sm-5">
+                                Availability of asset<span class="text-warning">*</span>
+                              </div>
+                              <div class="col-sm-7">
+                                <div class="row">
+                                  <div class="col-sm-5 form-group">
+                                    <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
+                                      <span class="input-group-addon">From</span>
+                                      <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL'">
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-5 form-group">
+                                    <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
+                                      <span class="input-group-addon">To</span>
+                                      <input type="date" placeholder="Date" class="form-control" name="toDate" ng-value="toDate" ng-model="product.rent.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup3.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()" ng-required="product.tradeType != 'SELL'">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row form-group">
+                              <div class="col-sm-5 form-group">
+                                Rental Negotiable
+                              </div>
+                              <div class="col-sm-7">
+                                <div class="row">
+                                  <div class="col-xs-4 col-sm-4">
+                                    <input type="checkbox" name="negotiable" ng-model="product.rent.negotiable" ng-value="product.rent.negotiable"> 
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row form-group">
+                              <div class="col-sm-5 form-group">
+                                Check Rental Rate For<span class="text-warning" ng-if="!product.rent.negotiable">*</span>
+                              </div>
+                              <div class="col-sm-7">
+                                <div class="row">
+                                  <div class="col-xs-4 col-sm-4">
+                                    <input type="checkbox" name="hours" ng-model="product.rent.rateHours.rateType" ng-click="clickHandler('hours', product.rent.rateHours.rateType)" ng-true-value="'hours'" ng-false-value="false"> Hours
+                                  </div>
+                                  <div class="col-xs-4 col-sm-4">
+                                    <input type="checkbox" name="days" ng-model="product.rent.rateDays.rateType" ng-click="clickHandler('days', product.rent.rateDays.rateType)" ng-true-value="'days'" ng-false-value="false"> Days
+                                  </div>
+                                  <div class="col-xs-4 col-sm-4">
+                                    <input type="checkbox" name="month" ng-model="product.rent.rateMonths.rateType" ng-click="clickHandler('months', product.rent.rateMonths.rateType)" ng-true-value="'months'" ng-false-value="false"> Months
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th></th>
+                                  <th>Min. Rental Period</th>
+                                  <th>Max. Rental Period</th>
+                                  <th>Rent Amount</th>
+                                  <th>Security Deposit</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr ng-if="product.rent.rateHours.rateType == 'hours'">
+                                  <td><b>Hours</b></td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.minPeriodH.$invalid && submitted}">
+                                      <input type="number" placeholder="Min." min="1" class="form-control" name="minPeriodH" ng-model="product.rent.rateHours.minPeriodH" ng-required="product.rent.rateHours.rateType == 'hours' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.maxPeriodH.$invalid && submitted}">
+                                      <input type="number" placeholder="Max." min="1" class="form-control" name="maxPeriodH" ng-model="product.rent.rateHours.maxPeriodH" ng-required="product.rent.rateHours.rateType == 'hours' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.rentAmountH.$invalid && submitted}">
+                                      <input type="number" placeholder="Rent Amount" min="1" class="form-control" name="rentAmountH" ng-model="product.rent.rateHours.rentAmountH" ng-required="product.rent.rateHours.rateType == 'hours' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.seqDepositH.$invalid && submitted}">
+                                      <input type="number" placeholder="Security Deposit" min="1" class="form-control" name="seqDepositH" ng-model="product.rent.rateHours.seqDepositH" ng-required="product.rent.rateHours.rateType == 'hours' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+
+
+                                </tr>
+                                <tr ng-if="product.rent.rateDays.rateType == 'days'">
+                                  <td><b>Days</b></td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.minPeriodD.$invalid && submitted}">
+                                      <input type="number" placeholder="Min." class="form-control" min="1" name="minPeriodD" ng-model="product.rent.rateDays.minPeriodD" ng-required="product.rent.rateDays.rateType == 'days' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.maxPeriodD.$invalid && submitted}">
+                                      <input type="number" placeholder="Max." class="form-control" min="1" name="maxPeriodD" ng-model="product.rent.rateDays.maxPeriodD" ng-required="product.rent.rateDays.rateType == 'days' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.rentAmountD.$invalid && submitted}">
+                                      <input type="number" placeholder="Rent Amount" class="form-control" min="1" name="rentAmountD" ng-model="product.rent.rateDays.rentAmountD" ng-required="product.rent.rateDays.rateType == 'days' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+                                  <td>
+                                  <div ng-class="{'has-error': form.seqDepositD.$invalid && submitted}">
+                                      <input type="number" placeholder="Security Deposit" class="form-control" min="1" name="seqDepositD" ng-model="product.rent.rateDays.seqDepositD" ng-required="product.rent.rateDays.rateType == 'days' && !product.rent.negotiable"/>
+                                  </div>
+                                  </td>
+
+                                </tr>
+                                <tr ng-if="product.rent.rateMonths.rateType == 'months'">
+                                  <td><b>Months</b></td>
+                                  <td>
+                                    <div ng-class="{'has-error': form.minPeriodM.$invalid && submitted}">
+                                      <input type="number" placeholder="Min." class="form-control" min="1" name="minPeriodM" ng-model="product.rent.rateMonths.minPeriodM" ng-required="product.rent.rateMonths.rateType == 'months' && !product.rent.negotiable"/>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div ng-class="{'has-error': form.maxPeriodM.$invalid && submitted}">
+                                      <input type="number" placeholder="Max." class="form-control" min="1" name="maxPeriodM" ng-model="product.rent.rateMonths.maxPeriodM" ng-required="product.rent.rateMonths.rateType == 'months' && !product.rent.negotiable"/>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div ng-class="{'has-error': form.rentAmountM.$invalid && submitted}">
+                                      <input type="number" placeholder="Rent Amount" class="form-control" min="1" name="rentAmountM" ng-model="product.rent.rateMonths.rentAmountM" ng-required="product.rent.rateMonths.rateType == 'months' && !product.rent.negotiable"/>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div ng-class="{'has-error': form.seqDepositM.$invalid && submitted}">
+                                      <input type="number" placeholder="Security Deposit" class="form-control" min="1" name="seqDepositM" ng-model="product.rent.rateMonths.seqDepositM" ng-required="product.rent.rateMonths.rateType == 'months' && !product.rent.negotiable"/>
+                                    </div>
+                                  </td>
+
+                                </tr>
+
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-sm-5">Rate Equipment</div>
+                            <div class="form-group col-sm-7">
+                                <select class="form-control" name="rateMyEquipment" ng-model="product.rateMyEquipment">
+                                  <option value="" disabled>Rate Equipment</option>
+                                  <option ng-repeat="rateMyEquipment in rateMyEquipmentOpt" value="{{rateMyEquipment.name}}">{{rateMyEquipment.name}}</option>
+                                </select>
+                                <i class="caret"></i>
+                            </div>
+                          </div>
+                          <p>
+                            To ensure picture quality we suggest minimum image resolutions as 450*300 pixels.
+                          </p>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Upload Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in images track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadio"  value="{{index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary </span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('NOCAT')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover" id="pol">General Appearence Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesGeneralApp track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="gA" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioGA" value="{{$index}}" ng-click="makePrimary($index,'GA')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('GA')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Engine Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesEngine track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="eP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioEP" value="{{$index}}" ng-click="makePrimary($index,
+                                   'EP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('ENGINE')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Hydraulic Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesHydraulic track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="hP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,'HP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('HYDRAULIC')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Cabin Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesCabin track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="cP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,'CP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('CABIN')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Under Carrage/Tyre Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesUnderCarrage track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="uC" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,'UC')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('UC')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row form-group">
+                            <div class="form-group col-sm-5 pic-popover">Others Pictures</div>
+                             <div class="col-sm-7 col-xs-12">
+                             <div class="row pic-popover">
+                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesOther track by $index">
+                                  <div class="br5">
+                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
+                                        <span><i class="fa fa-plus-circle"></i></span>
+                                          <input type="file" id="oP" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+                                     </span>
+
+                                      <span ng-show="img.src">
+                                        <div class="icn2">
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                       </div>
+                                       <div class="icn">
+                                          <a href="javascript:void(0);" ng-click="rotate($index)" ng-if="!img.waterMarked"><i class="fa fa-repeat"></i></a>
+                                       </div>
+                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                          </a>
+                                        </span>
+                                      </span>
+                                  </div>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,'OP')" ng-checked="img.isPrimary"/>Primary</span>
+                                </div>
+                                <div class="col-sm-3">
+                                  <button class="btn btn-block" ng-click="increaseElement('OTHER')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+
+                          </div>
+
+                          <div class="form-group row" ng-repeat=" link in product.videoLinks">
+                            <div class="col-sm-4 col-md-5 form-group">
+                              Upload Video Link
+                            </div>
+                            <div class="col-sm-4 col-md-3 form-group"><input type="text" placeholder="Video Url" ng-value="link.uri" ng-model="link.uri" class="form-control" name=""></div>
+                            <div class="col-sm-2">
+                             <!--  <span ng-if="!isActive()">{{video.name}}</span>
+                              <a ng-if="isActive()" ng-href="{{link.uri}}" target="_blank" >{{link.uri}}</a> -->
+                              <a class="btn btn-danger" href="javascript:void(0)" ng-if="link.uri" ng-click="playVideo($index)"><i class="fa fa-play"></i></a>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 pull-right ">
+                              <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="form-group col-sm-5">Special Offers</div>
+                            <div class="form-group col-sm-7">
+                              <textarea type="text" placeholder="Special Offers" name="specialOffers" ng-value="product.specialOffers" ng-model="product.specialOffers"  class="form-control">
+                              </textarea>
+                            </div>
+                          </div>
+                          <div class="row" ng-if="isAdmin() && isEdit">
+                            <div class="form-group col-sm-5">Asset Status</div>
+                            <div class="form-group col-sm-4">
+                             <select class="form-control" ng-model="product.assetStatus">
+                                    <option value="">Asset Status</option>
+                                    <option value="{{st.code}}" ng-repeat="st in assetList">{{st.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>
+
+                          </div>
+                       </div>
+                     </div>
+
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Technical information</h3>
+                        </div>
+                        <div class="panel-body">
+
+
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Gross Weight</div>
+                            <div class="col-sm-7 form-group">
+                              <input type="text" placeholder="Value" value="{{product.technicalInfo.grossWeight}}" ng-model="product.technicalInfo.grossWeight" class="form-control" name="">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Operating Weight</div>
+                            <div class="col-sm-7 form-group">
+                              <input type="text" placeholder="Value" value="{{product.technicalInfo.operatingWeight}}" ng-model="product.technicalInfo.operatingWeight"  class="form-control" name="">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Bucket Capacity</div>
+                            <div class="col-sm-7 form-group">
+                              <input type="text" placeholder="Value"  value="{{product.technicalInfo.bucketCapacity}}" ng-model="product.technicalInfo.bucketCapacity" class="form-control" name="">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Engine Power</div>
+                            <div class="col-sm-7 form-group">
+                              <input type="text" placeholder="Value" value="{{product.technicalInfo.enginePower}}" ng-model="product.technicalInfo.enginePower" class="form-control" name="">
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Lifting Capacity</div>
+                            <div class="col-sm-7 form-group">
+                              <input type="text" placeholder="Value" value="{{product.technicalInfo.liftingCapacity}}" ng-model="product.technicalInfo.liftingCapacity"  class="form-control" name="">
+                            </div>
+                          </div>
+                          <div class="form-group row" ng-repeat=" param in product.technicalInfo.params">
+                            <div class="col-sm-4 col-md-5 form-group">
+                              <input type="text" placeholder="Parameter" ng-value="param.key" ng-model="param.key" class="form-control" name="">
+                            </div>
+                            <div class="col-sm-5 col-md-5 form-group"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
+                            <div class="col-sm-3 col-md-2 form-group">
+                              <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-5 form-group">Upload Document</div>
+                            <div class="col-sm-2">
+                              <span class="btn btn-warning fileinput-button">
+                               <input type="file" name="doc"  data-filetype="doc" file-upload>
+                                <span><i class="fa fa-upload"></i> Upload Document</span>
+                              </span>
+                            </div>
+                            <div class="col-sm-4">
+
+                              <span ng-if="!isEdit">{{product.documentName}}</span>
+
+                              <div ng-if="isEdit" class="uploads-doc">
+                                <a  href="{{uploadImagePrefix}}{{product.assetDir}}/{{product.documentName}}" class="" target="_blank" >{{product.documentName}}</a>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h3 class="panel-title">Service information</h3>
+                        </div>
+                        <div class="panel-body">
+                          <div class="form-group row" ng-repeat="serviceinfo in product.serviceInfo">
+                            <div class="col-sm-3 col-md-3 form-group">
+                              <input type="date" placeholder="Date" class="form-control" ng-model="serviceinfo.servicedate" uib-datepicker-popup="{{formats1}}" is-open="popups[$index].opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="popups[$index].opened = !popups[$index].opened">
+                            </div>
+                            <div class="col-sm-2 col-md-2 form-group"><input type="text" placeholder="Operating Hours" ng-value="serviceinfo.operatingHour" class="form-control" ng-model="serviceinfo.operatingHour"></div>
+                            <div class="col-sm-2 col-md-2 form-group"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo.serviceat" class="form-control" ng-model="serviceinfo.serviceAt"></div>
+                            <div class="col-sm-2 col-md-3 form-group"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo.authServiceStation" class="form-control" ng-model="serviceinfo.authServiceStation"></div>
+                            <div class="col-sm-3 col-md-2 form-group">
+                              <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Request for Valuation
+                        </div>
+                        <div class="panel-body">
+                          <div class="row">
+                            <div class="form-group col-sm-5">Request for Valuation</div>
+                            <div class="form-group col-sm-7">
+                              <input type="checkbox" ng-model="valuationReq.valuate" ng-value="true">
+                            </div>
+                          </div>
+                          <div class="row" ng-if="valuationReq.valuate">
+                            <div class="form-group col-sm-5">Name of Agency </div>
+                            <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.valuationagency.$invalid && auctSubmitted}">
+                              <select class="form-control" name="valuationagency" ng-model="valuationReq.valuationAgency._id" required>
+                                    <option value="">Select Agency</option>
+                                    <option  ng-repeat="ag in valAgencies" value="{{ag._id}}">{{ag.name}}</option>
+                              </select>
+                              <i class="caret"></i>
+                            </div>                            
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h3 class="panel-title">Doc Upload and Categorization</h3>
+                        </div>
+                        <div class="panel-body">
+                          <div class="form-group row" ng-repeat="miscDoc in product.miscDocuments">
+                             <div class="col-sm-3 form-group">Document Category</div>
+
+
+                            <div class="col-sm-2 form-group">
+                              <select class="form-control" ng-model="miscDoc.type">
+                               <option value="">Document Type</option>
+                                <option value="Policy">Policy</option>
+                                <option value="Certification">Certification</option>
+                                <option value="Valuation">Valuation Report</option>
+                                <option value="Other">Other</option>
+                              </select>
+                               <i class="caret"></i>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                              <span class="btn btn-warning fileinput-button">
+                               <input type="file" data-index="{{$index}}" name="doc"  data-filetype="mdoc" file-upload ng-disabled="!miscDoc.type">
+                                <span><i class="fa fa-upload"></i> Upload Document</span>
+
+                              </span>
+                            </div>
+                            <div class="col-sm-2 uploads-doc">
+                              <a href="{{uploadImagePrefix}}{{assetDir}}/{{miscDoc.name}}" target="_blank">{{miscDoc.name}}</a>
+                            </div>
+                            <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
+                              <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
+                              <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                        <div class="clearfix form-group"></div>
+                        <div class="row" ng-if="isAdmin()">
+                          <div class="col-sm-3">Upload Stamp</div>
+                          <div class="form-group col-sm-2">
+                            <span class="btn btn-success fileinput-button">
+                             <input type="file" name="valStamp"  data-filetype="valStamp" file-upload>
+                              <span><i class="fa fa-img"></i> Browse Stamp</span>
+                            </span>
+                          </div>
+                          <div class="col-sm-2 uploads-doc">
+                            {{product.valuationStamp}}
+                          </div>
+                        </div>
+                        <div class="clearfix form-group"></div>
+                        <div class="row form-group">
+                            <div class="col-sm-3">Upload Terms &amp; Conditions</div>
+                            <div class="col-sm-2">
+                              <span class="btn btn-success fileinput-button">
+                                <span>Browse File...</span>
+                                  <input type="file" name="tcDoc"  data-filetype="tcDoc" file-upload>
+                              </span>
+                            </div>
+                            <div class="col-sm-2 uploads-doc">
+                              {{product.tcDocumentName}}
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <table>
+                              <tbody>
+                                <tr>
+                                  <td width="20%">Engine Repaired/Overhauling</td>
+                                  <td width="30%"><input type="radio" id="yesCheck" name="enginstatus" ng-model="product.isEngineRepaired" value="true"> Yes
+                                  </td>
+                                  <td width="20%"><input type="radio" id="noCheck" name="enginstatus" ng-model="product.isEngineRepaired" value="false"> No</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div class="form-group"></div>
+                              <div class="row">
+                                  <div class="col-sm-12">
+                                    <textarea class="form-control" placeholder="Comments" ng-value="product.comment" ng-model="product.comment"></textarea>
+                                  </div>
+                              </div>
+                            </div>
+                          <div class="row" ng-show="isActive()">
+                              <div class="col-xs-6 col-sm-6">
+                                <div class="row">
+                                  <div class="col-xs-1 col-sm-1">
+                                <input type="checkbox" id="" name="featured" ng-model="product.featured" ng-value="product.featured">
+                              </div>
+                              <div class="col-xs-5 col-sm-5">
+                                Featured
+                              </div>
+                                </div>
+                              </div>
+                              <div class="col-xs-6 col-sm-6">
+                                <div class="row">
+                                  <div class="col-xs-1 col-sm-1">
+                                  <input type="checkbox" id="" name="status"  ng-model="product.status" ng-value="product.status">
+                                  </div>
+                                  <div class="col-xs-5 col-sm-5">
+                                    Active
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        <div class="clearfix form-group"></div>
+                         <div class="form-group text-right">
+                            <button class="btn" type="button" ng-click="resetClick(form)" ng-show="!isEdit">Reset</button>
+                            <button class="btn btn-primary" type="button" ng-click="previewProduct()">Preview</button>
+                            <button ng-hide="enableButton" class="btn btn-danger" ng-click="firstStep(form,product)">Submit</button>
+                            <button ng-show="enableButton" class="btn btn-danger" confirmed-click="firstStep(form,product)" ng-confirm-click="This operation will make product inactive and needs administrator approval for activation. Do you want to continue?">Submit</button>
+                        </div>
+                </form>
+              </uib-tab>
+              <uib-tab heading="Step2" index="1" active="tabObj.step2" disable="true">
+                <form name="auctForm" novalidate>
+                  <div class="panel panel-default">
+                   <div class="panel-heading">
+                     <h3 class="panel-title">Auction Details</h3>
+                   </div>
+                   <div class="panel-body">
+                      <div class="row" ng-if="product.auctionListing">
+                        <div class="form-group col-sm-5">Auction</div>
+                        <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.auctionDate.$invalid && auctSubmitted}">
+                          <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
+                                <option value="">Select Date</option>
+                                <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
+                          </select>
+                          <i class="caret"></i>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-sm-5">EMD Ammount </div>
+                        <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.emdAmount.$invalid && auctSubmitted}">
+                          <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" placeholder="EMD Ammount" required>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-sm-5">Valuation Report</div>
+                        <div class="form-group col-sm-7">
+                          <input type="text" class="form-control" placeholder="URL" disabled value="{{auctionReq.valuationReport}}">
+                        </div>
+                      </div>
+                      <div class="form-group text-right">
+                        
+                        <button class="btn btn-danger" ng-click="secondStep(auctForm,product)">Submit</button>
+                    </div>
+
+                   </div>
+                 </div>
+                </form>                
+              </uib-tab>
+            </uib-tabset>            
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+    <div class="form-group"></div>
+<script type="text/ng-template" id="productPreview.html">
+      <div>
+       <div class="modal-header">
+              <button type="button" class="close" ng-click="dismiss()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Preview Product Upload</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+              <ul class="img-magnifier text-center">
+                  <li ng-repeat="img in images" ng-if="img.src">
+                    <div class="removePrinary">
+                      <input type="radio" name="prvRadio" value="{{$index}}" ng-checked="img.isPrimary" ng-click="makePrimary($index)" uib-tooltip="Make it Primary" tooltip-placement="top"tooltip-trigger="mouseenter">
+                      <a href="javascript:void(0);" ng-click="deleteImg($index)" ng-if="!img.isPrimary" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+                        <i class="fa fa-close"></i>
+                      </a>
+                    </div>
+                    <div>
+                        <img width="80" height="80" ng-src="{{prefix}}{{assetDir}}/{{img.src}}" class="img-responsive">
+                    </div>
+                  </li>
+                </ul>
+              </div>
+             <div class="form-group"></div>
+             <h4 class="text-left">Basic Information</h4>
+              <div class="table-responsive">
+                <table class="table table-bordered" align="left">
+                  <tr>
+                    <td>Trading Type</td>
+                    <td>Product Group</td>
+                    <td>Categories</td>
+                    <td>Product Brand</td>
+                    <td>Product Model</td>
+                    <td>Product Name</td>
+                    <td>Mfg. Year</td>
+                    <td>Operating Hours/HMR</td>
+                    <td>Mileage/KMR</td>
+                    <td>Machine Serial No.</td>
+                    <td>Gross Price</td>
+                    <td>Country</td>
+                    <td>Location</td>
+                    <td>Product Condition</td>
+                    <td>Video</td>
+                  </tr>
+                  <tr>
+
+                    <td>{{product.tradeType}}</td>
+                    <td>{{product.group.name}}</td>
+                    <td ng-if="product.category.name != 'Other'">{{product.category.name}}</td>
+                    <td ng-if="product.category.name == 'Other'">{{product.category.otherName}}</td>
+                    <td ng-if="product.brand.name != 'Other'">{{product.brand.name}}</td>
+                    <td ng-if="product.brand.name == 'Other'">{{product.brand.otherName}}</td>
+                    <td ng-if="product.brand.name != 'Other'">{{product.model.name}}</td>
+                    <td ng-if="product.brand.name == 'Other'">{{product.model.otherName}}</td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.mfgYear | date:'yyyy'}}</td>
+                    <td>{{product.operatingHour}}</td>
+                    <td>{{product.mileage}}</td>
+                    <td>{{product.serialNo}}</td>
+                    <td>{{product.grossPrice}}</td>
+                    <td>{{product.country}}</td>
+                    <td>{{product.city}}</td>
+                    <td>{{product.productCondition}}</td>
+                    <td>{{product.videoName}}</td>
+                  </tr>
+              <!--<tr>
+                    <td>Primary Image</td>
+                    <td>
+                    <table>
+                      <tr>
+                        <td>{{product.primaryImage}} </td>
+                      </tr>
+                      <tr>
+                        <td><img widtd="50" height="50" ng-src="{{product.src}}" ng-if="!isEdit">
+                        <img widtd="50" height="50" ng-src="{{prefix}}{{product.src}}" ng-if="isEdit"></td>
+                      </tr>
+
+                    </table>
+                    </td>
+                  </tr>
+                 -->
+                </table>
+              </div>
+              <h4 class="text-left">Renting information</h4>
+                <h5 class="text-left">Availability of asset</h5>
+                <div class="row">
+                  <div class="col-sm-2 text-left">
+                    <label>From </label>
+                    <p>{{getDateFormat(product.rent.fromDate)}}</p>
+                  </div>
+                  <div class="col-sm-2 text-left">
+                    <label>To</label>
+                    <p>{{getDateFormat(product.rent.toDate)}}</p>
+                  </div>
+                </div>
+              <table class="table">
+                <thead>
+                      <tr>
+                        <th></th>
+                        <th>Min. Rental Period</th>
+                        <th>MAx. Rental Period</th>
+                        <th>Rent Amount</th>
+                        <th>Security Deposit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-if="product.rent.rateHours.rateType == 'hours'">
+                        <td><b>Hours</b></td>
+                        <td>{{product.rent.rateHours.minPeriodH}}</td>
+                        <td>{{product.rent.rateHours.maxPeriodH}}</td>
+                        <td>{{product.rent.rateHours.rentAmountH}}</td>
+                        <td>{{product.rent.rateHours.seqDepositH}}</td>
+                      </tr>
+                      <tr ng-if="product.rent.rateDays.rateType == 'days'">
+                        <td><b>Days</b></td>
+                        <td>{{product.rent.rateDays.minPeriodD}}</td>
+                        <td>{{product.rent.rateDays.maxPeriodD}}</td>
+                        <td>{{product.rent.rateDays.rentAmountD}}</td>
+                        <td>{{product.rent.rateDays.seqDepositD}}</td>
+                      </tr>
+                      <tr ng-if="product.rent.rateMonths.rateType == 'months'">
+                        <td><b>Months</b></td>
+                        <td>{{product.rent.rateMonths.minPeriodM}}</td>
+                        <td>{{product.rent.rateMonths.maxPeriodM}}</td>
+                        <td>{{product.rent.rateMonths.rentAmountM}}</td>
+                        <td>{{product.rent.rateMonths.seqDepositM}}</td>
+                      </tr>
+                    </tbody>
+                </table>
+              <h4 class="text-left">Technical Information</h4>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>Document</td>
+                    <td>Gross Weight</td>
+                    <td>Operating Weight</td>
+                    <td>Bucket Capacity</td>
+                    <td>Engine Power</td>
+                    <td>Lifting Capacity</td>
+                    <td ng-repeat="techInfo in product.technicalInfo.params">{{techInfo.key}}</td>
+
+
+                  </tr>
+                  <tr>
+                    <td>{{product.documentName}}</td>
+                    <td>{{product.technicalInfo.grossWeight}}</td>
+                    <td>{{product.technicalInfo.operatingWeight}}</td>
+                    <td>{{product.technicalInfo.bucketCapacity}}</td>
+                    <td>{{product.technicalInfo.enginePower}}</td>
+                    <td>{{product.technicalInfo.liftingCapacity}}</td>
+                    <td ng-repeat="techInfo in product.technicalInfo.params">{{techInfo.value}}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <h4 class="text-left">Service information</h4>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <tr>
+                    <td>Date</td>
+                    <td>Operating hrs</td>
+                    <td>Service At</td>
+                    <td>Autdorized Station</td>
+                  </tr>
+                  <tr ng-repeat="serviceinfo in product.serviceInfo">
+                    <td>{{getDateFormat(serviceinfo.servicedate)}}</td>
+                    <td>{{serviceinfo.operatingHour}}</td>
+                    <td>{{serviceinfo.serviceAt}}</td>
+                    <td>{{serviceinfo.authServiceStation}}</td>
+
+                  </tr>
+                </table>
+                <table class="table table-bordered">
+                  <tr>
+                    <td>Engine Repaired/Overhauling</td>
+                    <td>Comments</td>
+                    <td>Status</td>
+                  </tr>
+                  <tr>
+                    <td>{{isEngineRepaired(product.isEngineRepaired)}}</td>
+                    <td>{{product.comment}}</td>
+                    <td ng-if="product.status">Approved</td>
+                    <td ng-if="!product.status">Not approved</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+    </div>
+
+</script>
+<script type="text/ng-template" id="cropImage.html">
+  <div>
+    <div class="modal-header">
+    <button type="button" class="close"  ng-click="dismissModal()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+       <image-crop image-out="imageOut"  crop-options="options" ng-transclude crop-image-save="saveCrop">
+         <edit-crop></edit-crop>
+       </image-crop>
+    </div>
+     <div class="modal-footer">
+            <button type="button" class="btn btn-success" ng-click="cropImage()">Crop <i class="fa fa-crop"></i></button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="saveImage()">Save</button>
+      </div>
+  </div>
+</script>

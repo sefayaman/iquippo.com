@@ -1,0 +1,69 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>
+            Promo Transaction Summary
+          </h3>
+          <hr>
+        </div>
+        <p class="text-right"></p>
+        <div class="col-sm-12">
+          <div class="row"> 
+            <div class="col-sm-9">
+              Showing : {{bidListingVm.totalItems}} Records
+            </div>                    
+            <div class="col-sm-3 pull-right">
+              <div class="tablesearch text-right form-group">
+                 Search: <input type="text" placeholder="Search..." ng-model="bidListingVm.searchStr" ng-change="bidListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table id="bid_listing_table" class="table table-bordred table-striped">
+              <thead>
+                <tr>
+                  <th>Promo Code</th>
+                  <th>Promo Name</th>
+                  <th>User Name</th>
+                  <th>User Mobile No</th>
+                  <th>User Email ID</th>
+                  <th>Date of Bid</th>
+                  <th>Quantity</th>
+                  <th>Value per Unit</th>
+                  <th>Bank Name</th>
+                  <th>Cheque No.</th>
+                  <th>Payment Amount </th>   
+                  <th>Status</th>         
+                  <th ng-if="isAdmin()">Action</th>
+                </tr>               
+              </thead>
+              <tbody>
+              <tr ng-repeat="bid in bidListingVm.bidListing">
+                <td>{{bid.bannerInfo.code}}</td>
+                <td>{{bid.bannerInfo.name}}</td>
+                <td>{{bid.user.fname}} {{bid.user.lname}}</td>
+                <td>{{bid.user.mobile}}</td>
+                <td>{{bid.user.email}}</td>
+                <td>{{bid.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{bid.quantity}}</td>
+                <td>{{bid.valueperunit}}</td>
+                <td>{{bid.paymentInfo.bankname}}</td>
+                <td>{{bid.paymentInfo.checkno}}</td>
+                <td>{{bid.paymentInfo.amount}}</td>
+                <td>{{bid.status}}</td>
+                <td ng-if="isAdmin()">
+                <button class="btn btn-primary" ng-click="bidListingVm.payNow($index)" ng-if="bid.status == 'Pending'">Pay Now</button>
+                </td>
+                </tr>
+              </tbody>
+            </table>            
+          </div>
+          <uib-pagination total-items="bidListingVm.totalItems" ng-model="bidListingVm.currentPage" items-per-page="bidListingVm.itemsPerPage" max-size="bidListingVm.maxSize" ng-change="bidListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
+         
+        </div>
+      </div>   
+    </div>
+  </div>

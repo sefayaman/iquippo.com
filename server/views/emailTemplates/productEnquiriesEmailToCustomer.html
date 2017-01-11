@@ -1,0 +1,109 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+  <table style="width:80%; margin:0 auto; padding:15px; border: 5px solid rgba(128, 128, 128, 0.28);">
+    <tr>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="images/srei-logo-img.png"></td>
+    </tr>
+    <tr>
+      <td style="font-size:20px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear User, </td>
+    </tr>
+    <tr>
+      <td style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-bottom:10px;" colspan="3">
+        We have received your request for purchase of Equipment on <strong>{{createdAt}}</strong> :.
+        
+      </td>
+    </tr>   
+    {{#if spares}}
+    <tr>
+      <td style="background-color: #104195;color: #fff;padding: 5px;font-family:Verdana, Geneva, sans-serif;"colspan="3"><strong>Spares</strong></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        {{#each spares}}
+        <div style="background: rgba(204, 204, 204, 0.3); float:left;width:49%; margin-bottom:10px;margin-left:10px">
+          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../serverPath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
+          <div style=" float:left;">
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Spare Part Name:</b> {{name}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Spare Part ID / No:</b> {{partNo}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Manufacturer:</b> {{manufacturer}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Location:</b> {{city}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Price:</b> Rs.{{grossPrice}}
+            </p>
+            <p style="font-size:12px;margin:7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Comments(If any):</b> {{comment}}
+            </p>
+            <a href="{{../serverPath}}/sparedetail/{{_id}}" style="font-size:14px;color:#104295;padding: 1px 30px 0;margin-left:10px;background:#ccc; text-align: center; font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >
+            Click to View </a>
+          </div>
+        </div>
+        {{/each}}
+      </td>
+    </tr>
+    
+    <tr>
+      <td height="20">
+      </td>
+    </tr>
+    {{/if}}
+{{#if product}}
+    <tr>
+      <td style="background-color: #104195;color: #fff;padding: 5px;font-family:Verdana, Geneva, sans-serif;" colspan="3"><strong>Assets</strong></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        {{#each product}}
+        <div style="background: rgba(204, 204, 204, 0.3); float:left;width:49%;margin-bottom:10px;margin-left:10px">
+          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../serverPath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
+          <div style=" float:left;">
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Category :</b>{{category}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Sub-Category:</b>{{subCategory}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Model:</b> {{model}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Price:</b> Rs.{{grossPrice}}
+            </p>
+            <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Location:</b> {{city}}
+            </p>
+            <p style="font-size:12px;margin:7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
+              <b>Comments(If any):</b> {{comment}}
+            </p>
+            <a href="{{../serverPath}}/productdetail/{{_id}}" style="font-size:14px;color:#104295;padding: 1px 30px 0;margin-left:10px;background:#ccc; text-align: center; font-weight:bold;font-family:Verdana, Geneva, sans-serif;" >
+            Click to View </a>
+          </div>
+        </div>
+        {{/each}}
+      </td>
+    </tr>
+    {{/if}}
+
+<tr>
+<td colspan="3" style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-top:10px; padding-bottom:10px;">
+Our executives would get in touch with you and help you with your request.
+</td>
+</tr>
+
+<tr>
+<td colspan="3" style="color:#01395c; font-family:Verdana, Geneva, sans-serif; font-size:14px; padding-top:10px; padding-bottom:10px;">
+Please feel free to get in touch with us on +91-8762232453 and/or email us at: <a href="javascript:void(0);">info@iquippo.com</a>
+</td>
+</tr>
+
+</table>
+</body>

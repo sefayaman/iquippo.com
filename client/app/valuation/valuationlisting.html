@@ -1,0 +1,89 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Valuation Request</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+          <h3><button class="btn btn-success btn-md" ng-click="valuationListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+      
+      <div class="row" ng-if="valuationListingVm.isUserMode()">
+        <div class="col-sm-3 form-group">
+          <select class="form-control" ng-change="valuationListingVm.onValuationReqTypeChange(valType)" ng-model="valType">
+            <option value="sent"> Request sent by customer</option>
+            <option value="received"> Request received by customer</option>
+            
+          </select>
+          <i class="caret"></i>
+        </div>
+      </div>
+      
+     
+        <div class="clearfix form-group"></div>
+       <!--  <div class="featured-pro" ng-if="isPartner()">
+            <button class="btn btn-primary">Completed</button>
+            <button class="btn btn-primary">Inprogress</button> 
+          </div> -->
+        <div class="table-responsive">
+          <div class="row">                    
+              <div class="col-sm-3 pull-right">
+                <div class="tablesearch text-right form-group">
+                   Search: <input type="text" placeholder="Search..." ng-model="valuationListingVm.searchStr" ng-change="valuationListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                </div>
+              </div>
+          </div>
+            <table class="table table-bordred table-striped">
+              <thead>
+                <tr>
+                  <th width="50"><input type="checkbox" ng-model="valuationListingVm.master"> All</th>
+                  <th>Request ID</th>                                
+                  <th>Category</th>
+                  <th>Asset Name</th>
+                  <th>Asset Status</th>
+                  <th>Serial Number</th>
+                  <th>Status</th>
+                  <th>Purpose</th>
+                  <th>Request Date</th>
+                  <th width="15%">Action</th>
+                </tr>
+               
+              </thead>
+              <tbody>
+              <tr ng-repeat="valuation in valuationListingVm.valuations">
+                <td><input type="checkbox" ng-checked="valuationListingVm.master" ng-click="valuationListingVm.updateSelection($event,valuation._id)"></td>
+                <td>{{valuation.requestId}}</td>
+                <td>{{valuation.product.category}}</td>
+                <td>{{valuation.product.name}}</td>
+                <td>{{valuation.product.status}}</td>
+                <td>{{valuation.product.serialNumber}}</td>
+                <td>{{getStatusOnCode(valuationStatuses,valuation.status).name}}</td>
+                <td>{{valuation.purpose}}</td>
+                <td>{{valuation.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>
+                  <button class="btn btn-default fileinput-button" ng-if="isPartner()&& (valuation.status == 'request_in_process' || valuation.status == 'request_completed')" uib-popover="Upload" popover-trigger="mouseenter">
+                      <span><i class="fa fa-upload"></i></span>
+                        <input type="file" data-index="{{$index}}" name="report" onchange="angular.element(this).scope().uploadReport(this.files,this)">
+                  </button>
+                  
+                  <button class="btn btn-success" ng-if="isPartner()&& valuation.status == 'request_in_process'" ng-click="valuationListingVm.updateStatus(valuation,'request_completed')" uib-popover="Complete" popover-trigger="mouseenter" ><i class="fa fa-hourglass-end"></i></button>
+
+                   <button class="btn btn-info" ng-if="isPartner()&& valuation.status == 'request_submitted'"  ng-click="valuationListingVm.updateStatus(valuation,'request_in_process')" uib-popover="Inprogress" popover-trigger="mouseenter"><i class="fa fa-hourglass-2"></i></button>
+
+                  <a class="btn btn-success btn-md" ng-if="valType =='received' && valuation.status == 'request_listed'" ng-click="valuationListingVm.updateStatus(valuation,'request_submitted','request_approved')" uib-popover="Approved" popover-trigger="mouseenter"><i class="fa fa-check"></i> </a>
+                  <a class="btn btn-default btn-md" href="/download/{{valuation.product.assetId}}/{{valuation.report}}" ng-if="valuation.report && valuation.status == 'request_completed'" uib-popover="Download" popover-trigger="mouseenter" target="_blank"><i class="fa fa-download"></i> </a>
+                  <a class="btn btn-primary" href="/payment/{{valuation.transactionId}}" ng-if="valuation.status == 'payment_pending' && valuation.user._id == getCurrentUser()._id">Pay Now</a>
+                </td>
+               
+               </tr>
+              </tbody>
+            </table>
+            </div>
+            <uib-pagination total-items="valuationListingVm.totalItems" ng-model="valuationListingVm.currentPage" items-per-page="valuationListingVm.itemsPerPage" max-size="valuationListingVm.maxSize" ng-change="valuationListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        
+    </div>
+  </div>
+</div>

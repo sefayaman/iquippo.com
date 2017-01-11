@@ -1,0 +1,51 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Price Trend Comments</h3>
+          <hr>
+        </div>
+      </div>
+      
+      <div class="row form-group">
+        <div class="col-sm-12 tablesearch text-right">
+          Search: <input type="text" placeholder="Search..." ng-model="priceTrendSurveyListingVm.searchStr" ng-change="priceTrendSurveyListingVm.getPriceTrendComments(true)" ng-model-options="{debounce:500}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class=" table-responsive ">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Manufacturing Year</th>
+                  <th>Sale Year</th>                  
+                  <th>User Name</th>
+                  <th>Agree</th>
+                  <th>Comments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="survey in priceTrendSurveyListingVm.surveys">
+                  <td>{{survey.product.category}}</td>
+                  <td>{{survey.product.brand}}</td>
+                  <td>{{survey.product.model}}</td>
+                  <td>{{survey.product.mfgYear}}</td>
+                  <td>{{survey.priceTrend.saleYear}}</td>
+                  <td>{{survey.user.fname}} {{survey.user.lname}}</td>
+                  <td>{{survey.agree}}</td>
+                  <td>{{survey.comment}}</td>
+                </tr>
+              </tbody>
+            </table>            
+          </div>
+          <uib-pagination total-items="priceTrendSurveyListingVm.totalItems" ng-model="priceTrendSurveyListingVm.currentPage" items-per-page="priceTrendSurveyListingVm.itemsPerPage" max-size="priceTrendSurveyListingVm.maxSize" ng-change="priceTrendSurveyListingVm.getPriceTrendComments(false)" class="pagination-sm" rotate="false"> </uib-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

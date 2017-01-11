@@ -1,0 +1,38 @@
+<div class="table-responsive">
+<!--     <blockquote>Please click on a row</blockquote>
+    <p class="text-danger">You clicked on: <strong>{{ inboxVM.message }}</strong></p>
+    <br> -->
+  <!-- <table datatable="ng" id="inbox_table" dt-options= "dtOptions" dt-instance="dogs" class="table table-bordred table-striped nosort"> -->
+
+ <!-- <table datatable="" dt-options="inboxVM.dtOptions" dt-columns="inboxVM.dtColumns" dt-column-defs="inboxVM.dtColumnDefs" class="row-border hover"> -->
+  <table datatable="ng" id="inbox_table" dt-options="inboxVM.dtOptions" class="row-border hover">
+    <thead>
+      <tr>
+        <!-- <th><input type="checkbox" ng-model="inboxVM.selectAll" ng-click="inboxVM.toggleAll(inboxVM.selectAll, inboxVM.selected)"></th> -->
+        <th>#</th>
+        <th ng-show="!inboxVM.isSentBox">From</th>
+        <th ng-show="inboxVM.isSentBox">To</th>
+        <th>Subject</th>
+        <th>Date</th>
+        <!-- <th visibility="hidden">_id</th> -->
+       </tr>
+    </thead>
+
+    <tbody>
+    	<tr ng-repeat="mess in inboxVM.messages" ng-click="inboxVM.showRow($index)">
+        <!-- <tr ng-repeat="mess in inboxVM.messages"> -->
+    		<td><input type="checkbox" ng-model="inboxVM.selected[ mess._id ]" ng-click="inboxVM.toggleOne(inboxVM.selected, $event)"></td>
+
+    		<!-- <td ng-show="inboxVM.isSentBox">{{mess.showfromorto}}</td> -->
+            <!-- <td ng-show="!inboxVM.isSentBox">{{mess.showfromorto}}</td> -->
+            <td>{{mess.showfromorto}}</td>
+    		<td>{{mess.subject}}</td>
+            <td> {{mess.updatedAt | date:"MM/dd/yyyy 'at' h:mma"}}</td>
+            <!-- <td visibility="hidden">{{ mess._id }}</td> -->
+    	</tr>
+    </tbody>
+
+
+    </table>
+
+</div>

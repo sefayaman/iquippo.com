@@ -1,0 +1,84 @@
+
+<!--for payment -->
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">        
+        <div class="col-sm-12">
+          <div id="page-wrapper" ng-if="!ccAvenue">
+            <!-- Page Heading -->
+              <div class="row">
+                <div class="col-lg-12">
+                  <h3>
+                      Order Summary
+                  </h3>
+                  <hr>
+                </div>
+              </div>
+              <!-- /.row -->
+
+              <div class="row form-group">
+                <div class="col-sm-4">
+                  <h4>Product</h4>
+                </div>
+                <div class="col-sm-4">
+                  <h4>Type</h4>
+                </div>
+                <div class="col-sm-4">
+                  <h4>Price(Rs.)</h4>
+                </div>
+              </div>
+              <legend></legend>
+              <div class="row form-group" ng-repeat="py in paymentVm.payTransaction.payments">
+                <div class="col-sm-4">
+                  <div class="media">
+                    <a class="pull-left" href="javascrip:void(0)">
+                      <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImg}}" alt="Image" width="70" height="70">
+                    </a>
+                    <div class="media-body payment-details">
+                      <h4 class="media-heading"><a href="javascrip:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>                      
+                      <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
+                      <p>{{paymentVm.payTransaction.product.city}}</p>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <span ng-if="py.type=='auctionreq'">Auction (quippoauctions.com)</span>
+                  <span ng-if="py.type=='valuationreq'">Valuation (Agency Name)</span>
+                  <span ng-if="py.type=='sparebuy'">Spares - Buy</span>
+                </div>
+                <div class="col-sm-4">
+                  {{py.charge}}
+                </div>
+              </div>
+
+                <div class="well form-group">
+                  <div class="row">
+                      <div class="col-sm-4">
+                        Payment Mode: <span>{{paymentVm.payTransaction.paymentMode}}</span>
+                      </div>
+                      <div class="col-sm-4 text-left">
+                        Total: 
+                      </div>
+                      <div class="col-sm-4 text-left">
+                        Rs. {{paymentVm.payTransaction.totalAmount}}
+                      </div> 
+                  </div>
+                </div>
+                <div class="clearfix form-group"></div>
+                <div class="text-center">
+                  
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button>
+                  <button class="btn btn-success btn-lg" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online'&& !isAdmin()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
+                </div>
+          </div>
+         <div class="page-wrapper" ng-if="ccAvenue">
+            <iframe width="100%" height="570" scrolling="yes" frameborder="0"  id="paymentFrame" ng-src="{{ ccavenueURLSCE }}"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

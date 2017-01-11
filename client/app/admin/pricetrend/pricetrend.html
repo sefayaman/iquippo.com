@@ -1,0 +1,209 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          
+          <div class="row">
+            <div class="col-sm-9">
+              <h3>Price Trend</h3>
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.openAddTrendPrice()"><i class="fa" ng-class="{'fa-minus': isCollapsed, 'fa-plus': !isCollapsed}"></i> Add New</button></h3>
+            </div>
+            <div class="col-sm-1">
+              <h3 class=" btn btn-success btn-md pull-right"><span class="fileinput-button">
+                   <i class="fa fa-file-excel-o"></i> Import
+                   <input type="file" name="template_update" onchange="angular.element(this).scope().importExcel(this.files,this)">
+                   </span></h3>
+              
+            </div>
+            <div class="col-sm-1">
+              <h3><button class="btn btn-success btn-md pull-right" ng-click="priceTrendVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            </div>
+          </div>
+          <hr>
+          
+          
+        </div>
+      </div>
+      <div uib-collapse="!isCollapsed">
+        <div class="row form-group">
+          <div class="col-sm-12">            
+            <form class="form" name="form" novalidate>
+              <div class="form-group row">
+                <div class="col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
+                  <select class="form-control" name="category" ng-model="priceTrendVm.priceTrend.category._id" ng-change="priceTrendVm.onCategoryChange(priceTrendVm.priceTrend.category._id)" required>
+                    <option value="">Category</option>
+                    <option ng-repeat="category in priceTrendVm.categoryList" value="{{category._id}}" ng-hide="category.name == 'Other'">{{category.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+                <div class="col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
+                  <select class="form-control" name="brand" ng-model="priceTrendVm.priceTrend.brand._id" ng-change="priceTrendVm.onBrandChange(priceTrendVm.priceTrend.brand._id)" required>
+                    <option value="" >Brand</option>
+                    <option ng-repeat="brand in priceTrendVm.brandList" value="{{brand._id}}" ng-hide="brand.name == 'Other'">{{brand.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+                <div class="col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
+                  <select class="form-control" name="model" ng-model="priceTrendVm.priceTrend.model._id" required>
+                    <option value="" >Model</option>
+                    <option ng-repeat="model in priceTrendVm.modelList" value="{{model._id}}" ng-hide="model.name == 'Other'">{{model.name}}</option>
+                  </select>
+                  <i class="caret"></i>
+                </div>
+              </div>
+              
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="form-group row">
+                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
+                      <p>Manufacturing Year :</p>
+                      <input type="number" name="mfgYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.mfgYear"  ng-minlength="4" ng-min="1900" ng-max="currentYear" ng-maxlength="4" required>
+                    </div>
+                    <!-- <div class="form-group"></div> -->
+                    
+                    <div class="form-group col-sm-6" ng-class="{'has-error': form.saleYear.$invalid && submitted}">
+                      <p>Sale Year :</p>
+                      <input type="number" ng-minlength="4" ng-min="1900" name="saleYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.saleYear" ng-max="currentYear" required>
+                    </div>                    
+                  </div>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Excellent Condition </th>
+                        <th>Good Condition</th>
+                        <th>Average Condition</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><b>OEM / Dealer Estimation</b></td>
+                        <td>
+                          <div>
+                            <input type="number" name="oemPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.excellentCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div>
+                            <input type="number" name="oemPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.goodCondition" placeholder="Good Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <input type="number" name="oemPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.oemPrice.averageCondition" placeholder="Average Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        
+                      </tr>
+                      <tr>
+                        <td><b>Average Price</b></td>
+                         <td>
+                          <div>
+                            <input type="number" name="mPrice_working" ng-model="priceTrendVm.priceTrend.trendValue.averagePrice.excellentCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div>
+                            <input type="number" name="mPrice_average" ng-model="priceTrendVm.priceTrend.trendValue.averagePrice.goodCondition" placeholder="Good Condition" min="1" class="form-control" />
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <input type="number" name="mPrice_repair" ng-model="priceTrendVm.priceTrend.trendValue.averagePrice.averageCondition" placeholder="Average Condition" min="1" class="form-control" />
+                          </div>
+                        </td>
+                        
+                      </tr>
+                      <tr>
+                        <td><b>Highest Realised Price</b></td>
+                         <td>
+                          <div>
+                            <input type="number" name="hrealised_working" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.excellentCondition" placeholder="Excellent Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        
+                        <td>
+                          <div>
+                            <input type="number" name="hrealised_average" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.goodCondition" placeholder="Good Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        <td>
+                          <div>
+                            <input type="number" name="hrealised_repair" ng-model="priceTrendVm.priceTrend.trendValue.highestRealisedPrice.averageCondition" placeholder="Average Condition" min="1" class="form-control"/>
+                          </div>
+                        </td>
+                        
+                        
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                  <!-- <div class="row form-group">
+                    <div class="col-xs-12 col-sm-4 col-md-2 pull-right">
+                      <button class="btn btn-block" ng-if="$last" ng-click="priceTrendVm.priceTrend.trendValues.push({})">Add More</button>
+                       <button class="btn btn-block" ng-if="!$last" ng-click="priceTrendVm.priceTrend.trendValues.splice($index,1)">Delete</button>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="col-sm-12 text-right form-group">
+                <button class="btn" type="button" ng-click="priceTrendVm.openAddTrendPrice()">Close</button>
+                <button class="btn" type="button" ng-click="priceTrendVm.resetPriceTrend()">Reset</button>
+                <input class="btn btn-danger btn-md" name="" type="button" value="Submit" ng-click="priceTrendVm.addOrUpdatePriceTrend(form)">
+              </div>
+              
+            </form>
+          </div>
+        </div>        
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-9">
+          Download the <a href="/download/templates/Price_Trend_Template.xlsx" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.
+        </div>
+        <div class="col-sm-3 tablesearch text-right">
+          Search: <input type="text" placeholder="Search..." ng-model="priceTrendVm.searchStr" ng-change="priceTrendVm.searchFn()" ng-model-options="{debounce:500}">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class=" table-responsive ">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Model</th>
+                  <th>Manufacturing Year</th>
+                  <th>Sale Year</th>
+                  
+                  <th width="10%">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="trend in priceTrendVm.filteredData  |startFrom:(priceTrendVm.currentPage -1 )*priceTrendVm.itemsPerPage | limitTo:priceTrendVm.itemsPerPage">
+                  <td>{{trend.category.name}}</td>
+                  <td>{{trend.brand.name}}</td>
+                  <td>{{trend.model.name}}</td>
+                  <td>{{trend.mfgYear}}</td>
+                  <td>{{trend.saleYear}}</td>
+                  <td>
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="priceTrendVm.editClick($index)">
+                      <i class="fa fa-pencil"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm"  uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ng-click="priceTrendVm.destroy(trend._id)"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <uib-pagination total-items="priceTrendVm.totalItems" ng-model="priceTrendVm.currentPage" items-per-page="priceTrendVm.itemsPerPage" max-size="priceTrendVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

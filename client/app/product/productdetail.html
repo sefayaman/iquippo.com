@@ -1,0 +1,834 @@
+  <div class="view-content">
+<section class="wrapper">
+      <div class="container">
+      <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
+        The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
+      </div>
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
+          <li ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</li>
+          <li ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</li>
+          <li><a class="active">{{currentProduct.name}}</a></li>
+        </ol>
+
+        <!-- <div class="valueation-request">
+          <button class="btn btn-info btn-lg" ng-click="productDetailVm.openValuationModal()">Valuation Request</button>
+        </div> -->
+
+        <div class="row">
+          <div class="col-sm-7 col-md-5">
+            <div class="panel-group">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-cube"></i> {{currentProduct.name}}</h3>
+                </div>
+              </div>
+            </div>
+            <ul class="list-inline list-unstyled">
+                <li><span><i class="fa fa-calendar"></i> {{currentProduct.mfgYear}} </span></li>
+                    <li>|</li>
+                    <span><i class="fa fa-dashboard"></i> {{currentProduct.operatingHour}} h</span>
+                    <li>|</li>
+                    <li>
+                       <span><i class="fa fa-map-marker"></i> {{currentProduct.country}}</span>
+                    </li>
+                    <li ng-if="currentProduct.documentName">|</li>
+                    <li ng-if="currentProduct.documentName">
+                      <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="text-muted" target="_blank" ><span><i class="fa fa-file-pdf-o"></i></span></a>
+                    </li>
+
+            </ul>
+            <div class="carousel slide article-slide" id="article-photo-carousel">
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner cont-slider">
+                <div class="item" ng-repeat="thumbnailImage in currentProduct.images" ng-class="{'active':thumbnailImage.isPrimary}">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive" ng-click="productDetailVm.previewProduct(currentProduct.images, $index)">
+
+                </div>
+              </div>
+              <div class="featured-image" ng-if="currentProduct.featured">
+                <img src="assets/images/featured.png" class="img-responsive">
+              </div>
+              <div class="stamp-image" ng-if="currentProduct.valuationStamp">
+                <img ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.valuationStamp}}" class="img-responsive">
+              </div>
+              <!-- Indicators -->
+              <div class="form-group"></div>
+              <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-12">
+                  <h4>See Full Gallery</h4>
+                </div>
+              </div>
+            </div>
+              
+              <ol class="carousel-indicators">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
+                </li>
+              </ol>
+               <div class="well-camera pull-right">
+                  <a href="javascript:void(0);"><i class="fa fa-camera fa-2x" ng-click="productDetailVm.previewProduct(currentProduct.images,0)"></i></a>
+                </div>
+              <!-- <ul>
+                <li ng-if="currentProduct.videoName">
+                    <a href="/download/{{currentProduct.assetDir}}/{{currentProduct.videoName}}" class="text-muted" target="_blank"><span><i class="fa fa-video-camera fa-4x"></i></span></a>
+                  </li>
+              </ul> -->
+            </div>
+            <legend></legend>
+            
+            <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-8">
+                  <h4>General Appearance</h4>
+                </div>
+                <div class="col-sm-2">
+                  <div class="item" ng-repeat="thumbnailImage in currentProduct.gAImages" ng-if="thumbnailImage.isPrimary">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+
+                </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                  <a href="javascript:void(0);" class="camera-color"><i class="fa fa-camera fa-2x" ng-click="productDetailVm.previewProduct(currentProduct.gAImages,0)"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-8">
+                  <h4>Engine</h4>
+                </div>
+                <div class="col-sm-2">
+                  <div class="item" ng-repeat="thumbnailImage in currentProduct.engineImages" ng-if="thumbnailImage.isPrimary">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+
+                </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                  <a href="javascript:void(0);" class="camera-color" ng-click="productDetailVm.previewProduct(currentProduct.engineImages,0)"><i class="fa fa-camera fa-2x"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-8">
+                  <h4>Hydraulic</h4>
+                </div>
+                <div class="col-sm-2">
+                  <div class="item" ng-repeat="thumbnailImage in currentProduct.hydraulicImages" ng-if="thumbnailImage.isPrimary">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+
+                </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                  <a href="javascript:void(0);" class="camera-color" ng-click="productDetailVm.previewProduct(currentProduct.hydraulicImages,0)"><i class="fa fa-camera fa-2x"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-8">
+                  <h4>Cabin</h4>
+                </div>
+                <div class="col-sm-2">
+                  <div class="item" ng-repeat="thumbnailImage in currentProduct.cabinImages" ng-if="thumbnailImage.isPrimary">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+
+                </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                  <a href="javascript:void(0);" class="camera-color" ng-click="productDetailVm.previewProduct(currentProduct.cabinImages,0)"><i class="fa fa-camera fa-2x"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-8">
+                  <h4>Under Carrage/Tyre</h4>
+                </div>
+                <div class="col-sm-2">
+                  <div class="item" ng-repeat="thumbnailImage in currentProduct.underCarrageImages" ng-if="thumbnailImage.isPrimary">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+
+                </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                  <a href="javascript:void(0);" class="camera-color" ng-click="productDetailVm.previewProduct(currentProduct.underCarrageImages,0)"><i class="fa fa-camera fa-2x"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="well well-picture">
+              <div class="row">
+                <div class="col-sm-8">
+                  <h4>Others</h4>
+                </div>
+                <div class="col-sm-2">
+                  <div class="item" ng-repeat="thumbnailImage in currentProduct.otherImages" ng-if="thumbnailImage.isPrimary">
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+
+                </div>
+                </div>
+                <div class="col-sm-2 text-center">
+                  <a href="javascript:void(0);" class="camera-color" ng-click="productDetailVm.previewProduct(currentProduct.otherImages,0)"><i class="fa fa-camera fa-2x"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="well well-picture">              
+              <h4>Videos</h4>
+            </div>
+            <div class="video-link">
+              <ul>
+                <li ng-repeat="link in currentProduct.videoLinks">
+                  <a href="javascript:void(0)" ng-click="productDetailVm.playVideo($index)">
+                    <!-- {{link.uri}} -->
+                    <i class="fa fa-youtube-play fa-2x"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="form-group clearfix"></div>
+
+              <uib-accordion close-others="oneAtATime" class="information">
+                <uib-accordion-group is-open="status.Firstopen" ng-if="currentProduct.specialOffers">
+                  <uib-accordion-heading>
+                    Special Offers<i class="pull-right fa" ng-class="{'fa-minus': status.Firstopen, 'fa-plus': !status.Firstopen}"></i>
+                  </uib-accordion-heading>
+                    <p>{{currentProduct.specialOffers}}</p>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="status.Pricestatus" ng-click="informationTag('pricetrend')" ng-if="priceTrendData">
+                  <uib-accordion-heading>
+                    Price Trend<i class="pull-right fa" ng-class="{'fa-minus': status.Pricestatus, 'fa-plus': !status.Pricestatus}"></i>
+                  </uib-accordion-heading>
+                  <!-- <table class="table table-striped">
+                    <tr>
+                      <td>Category</td>
+                      <td>Excavator</td>
+                    </tr>
+                    <tr>
+                      <td>Brand</td>
+                      <td>Tata</td>
+                    </tr>
+                    <tr>
+                      <td>Model</td>
+                      <td>Tipper</td>
+                    </tr>
+                    <tr>
+                      <td>Manufacturing Year</td>
+                      <td>2016</td>
+                    </tr>
+                    <tr>
+                      <td>Sale Year</td>
+                      <td>2016</td>
+                    </tr>
+                   </table> -->
+
+                  <table class="table">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Excellent Condition </th>
+                          <th>Good Condition</th>
+                          <th>Average Condition</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><b>OEM / Dealer Estimation</b></td>
+                          <td>
+                         Rs.{{priceTrendData.trendValue.oemPrice.excellentCondition}}
+                          </td>
+                          
+                          <td>
+                          Rs.{{priceTrendData.trendValue.oemPrice.goodCondition}}
+                          </td>
+                          <td>
+                           Rs.{{priceTrendData.trendValue.oemPrice.averageCondition}}
+                          </td>
+                         
+                        </tr>
+                        <tr>
+                          <td><b>Average Price</b></td>
+                          <td>
+                         Rs.{{priceTrendData.trendValue.averagePrice.excellentCondition}}
+                          </td>
+                          
+                          <td>
+                          Rs.{{priceTrendData.trendValue.averagePrice.goodCondition}}
+                          </td>
+                          <td>
+                           Rs.{{priceTrendData.trendValue.averagePrice.averageCondition}}
+                          </td>
+                         
+                        </tr>
+                        <tr>
+                          <td><b>Highest Realised Price</b></td>
+                          <td>
+                         Rs.{{priceTrendData.trendValue.highestRealisedPrice.excellentCondition}}
+                          </td>
+                          
+                          <td>
+                          Rs.{{priceTrendData.trendValue.highestRealisedPrice.goodCondition}}
+                          </td>
+                          <td>
+                           Rs.{{priceTrendData.trendValue.highestRealisedPrice.averageCondition}}
+                          </td>
+                         
+                        </tr>
+                       
+
+                      </tbody>
+
+                    </table>
+
+                    <div class="form-group row">
+                      <div class="col-sm-10 col-sm-offset-1">
+                        <div class="row">
+                          <div class="col-sm-6 text-center">
+                             <a href="javascript:void(0);" ng-click="productDetailVm.openPriceTrendSurveyDetailModal('Yes')"><span class="badge">{{priceTrendCountObj.Yes || 0}}</span></a>
+                          </div>
+                          <div class="col-sm-6 text-center">
+                            <a href="javascript:void(0);" ng-click="productDetailVm.openPriceTrendSurveyDetailModal('No')"><span class="badge">{{priceTrendCountObj.No || 0}}</span></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                <div class="form-group row">
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div class="col-sm-6 text-center">
+                        <a href="javascript:void(0);" class="like-button" ng-click="productDetailVm.openPriceTrendSurveyModal('Yes')"><i class="fa fa-thumbs-up fa-2x"></i></a>
+                      </div>
+                      <div class="col-sm-6 text-center">
+                        <a href="javascript:void(0);" class="dislike-button" ng-click="productDetailVm.openPriceTrendSurveyModal('No')"><i class="fa fa-thumbs-down fa-2x"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </uib-accordion-group>
+
+                <uib-accordion-group is-open="status.Basicstatus" ng-click="informationTag('basicInformation')">
+                  <uib-accordion-heading>
+                    Basic information <i class="pull-right fa" ng-class="{'fa-minus': status.Basicstatus, 'fa-plus': !status.Basicstatus}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                    <tr>
+                      <td>Product Id</td>
+                      <td>{{currentProduct.productId}}</td>
+                    </tr>
+                    <tr>
+                      <td>Brand / Model</td>
+                      <td ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name != 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.name}}</td>
+                      <td ng-if="currentProduct.brand.name == 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.otherName}} / {{currentProduct.model.otherName}}</td>
+                      <td ng-if="currentProduct.brand.name != 'Other' && currentProduct.model.name == 'Other'">{{currentProduct.brand.name}} / {{currentProduct.model.otherName}}</td>
+                    </tr>
+                    <tr>
+                      <td>Category</td>
+                      <td ng-if="currentProduct.category.name != 'Other'">{{currentProduct.category.name}}</td>
+                      <td ng-if="currentProduct.category.name == 'Other'">{{currentProduct.category.otherName}}</td>
+                    </tr>
+                    <tr>
+                      <td>Manufacturing Year</td>
+                      <td>{{currentProduct.mfgYear}}</td>
+                    </tr>
+                    <tr>
+                      <td>Operating Hours/HMR</td>
+                      <td>{{currentProduct.operatingHour}}</td>
+                    </tr>
+                    <tr>
+                      <td>Mileage/KMR</td>
+                      <td>{{currentProduct.mileage}}</td>
+                    </tr>
+                    <tr>
+                    <td>Machine Serial No.</td>
+                    <td>{{currentProduct.serialNo}}</td>
+                  </tr>
+                    <tr>
+                      <td>Country</td>
+                      <td>{{currentProduct.country}}</td>
+                    </tr>
+                    <tr>
+                      <td>Location</td>
+                      <td>{{currentProduct.city}}</td>
+                    </tr>
+                    <tr>
+                      <td>Price (Excl. Tax).</td>
+                      <td>
+                      <span ng-if="currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">Price On Request</span>
+                      <span ng-if="!currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">
+                      <!-- <b ng-if="currentProduct.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b> -->
+                      <i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i>
+                      <!-- <i class="fa fa-eur" ng-if="currentProduct.currencyType == 'EUR'"></i>
+                      <i class="fa fa-gbp" ng-if="currentProduct.currencyType == 'GBP'"></i>
+                      <i class="fa fa-usd" ng-if="currentProduct.currencyType == 'USD'"></i> -->
+                       {{currentProduct.grossPrice |number:0}} </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Product Condition</td>
+                      <td>{{currentProduct.productCondition}}</td>
+                    </tr>
+                    <tr>
+                      <td>Documents</td>
+                      <td>                        
+                        <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space"> 
+                          <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
+                        </span>
+                      </td>
+                    </tr>                    
+                    <!-- <tr ng-repeat="link in currentProduct.videoLinks">
+                      <td>Video Link</td>
+                      <td><a ng-href="{{link.uri}}" target="_blank">{{link.uri}}</a></td>
+                    </tr> -->
+                  </table>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="rentstatus.open" ng-if="currentProduct.tradeType != 'SELL'"  ng-click="informationTag('RentInformation')">
+                  <uib-accordion-heading>
+                    Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
+                  </uib-accordion-heading>
+                    <h5 class="text-left"><strong>Availability of asset</strong></h5>
+                      <div class="row">
+                        <div class="col-sm-6 text-left">
+                          <label>From </label>
+                          <p>{{productDetailVm.getDateFormat(currentProduct.rent.fromDate)}}</p>
+                        </div>
+                        <div class="col-sm-6 text-left">
+                          <label>To</label>
+                          <p>{{productDetailVm.getDateFormat(currentProduct.rent.toDate)}}</p>
+                        </div>
+                      </div>
+                  <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Min. Rental Period</th>
+                          <th>Max. Rental Period</th>
+                          <th>Rent Amount</th>
+                          <th>Security Deposit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
+                          <td><b>Hours</b></td>
+                          <td>{{currentProduct.rent.rateHours.minPeriodH}}</td>
+                          <td>{{currentProduct.rent.rateHours.maxPeriodH}}</td>
+                          <td>{{currentProduct.rent.rateHours.rentAmountH}}</td>
+                          <td>{{currentProduct.rent.rateHours.seqDepositH}}</td>
+                        </tr>
+                        <tr ng-if="currentProduct.rent.rateDays.rateType == 'days'">
+                          <td><b>Days</b></td>
+                          <td>{{currentProduct.rent.rateDays.minPeriodD}}</td>
+                          <td>{{currentProduct.rent.rateDays.maxPeriodD}}</td>
+                          <td>{{currentProduct.rent.rateDays.rentAmountD}}</td>
+                          <td>{{currentProduct.rent.rateDays.seqDepositD}}</td>
+                        </tr>
+                        <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
+                          <td><b>Months</b></td>
+                          <td>{{currentProduct.rent.rateMonths.minPeriodM}}</td>
+                          <td>{{currentProduct.rent.rateMonths.maxPeriodM}}</td>
+                          <td>{{currentProduct.rent.rateMonths.rentAmountM}}</td>
+                          <td>{{currentProduct.rent.rateMonths.seqDepositM}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </uib-accordion-group>
+
+                <uib-accordion-group is-open="Techstatus.open" ng-click="informationTag('technicalInformation')">
+                  <uib-accordion-heading>
+                    Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                      <tr ng-repeat="techInfo in currentProduct.technicalInfo.params" ng-if="techInfo.key">
+                        <td widtd="50%">{{techInfo.key}}</td>
+                        <td>{{techInfo.value}}</td>
+                      </tr>
+                      <tr>
+                        <td>Gross Weight</td>
+                        <td>{{currentProduct.technicalInfo.grossWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td>Operating Weight</td>
+                        <td>{{currentProduct.technicalInfo.operatingWeight}}</td>
+                      </tr>
+                      <tr>
+                        <td>Bucket Capacity</td>
+                        <td>{{currentProduct.technicalInfo.bucketCapacity}}</td>
+                      </tr>
+                      <tr>
+                        <td>Engine Power</td>
+                        <td>{{currentProduct.technicalInfo.enginePower}}</td>
+                      </tr>
+                      <tr>
+                        <td>Lifting Capacity</td>
+                        <td>{{currentProduct.technicalInfo.liftingCapacity}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <td>Specification Document</td>
+                        <td><a href="{{uploadImagePrefix}}{{currentProduct.documentName}}" class="text-muted" target="_blank" >{{currentProduct.documentName}}</a></td>
+                      </tr> -->
+                      <!-- <tr>
+                        <td>Product Video</td>
+                        <td>{{currentProduct.videoName}}</td>
+                      </tr> -->
+                  </table>
+                </uib-accordion-group>
+                <uib-accordion-group is-open="Infostatus.open" ng-click="informationTag('ServiceInformation')">
+                  <uib-accordion-heading>
+                    Service information  <i class="pull-right fa" ng-class="{'fa-minus': Infostatus.open, 'fa-plus': !Infostatus.open}"></i>
+                  </uib-accordion-heading>
+                  <table class="table table-striped">
+                      <tr>
+                        <td>Service Date</td>
+                        <td>Operating hrs(km/m.hrs)</td>
+                        <td>Service At</td>
+                        <td>Authorized Service Station</td>
+                      </tr>
+                      <tr ng-repeat="serviceInfo in currentProduct.serviceInfo">
+                        <td>{{serviceInfo.servicedate}}</td>
+                        <td>{{serviceInfo.operatingHour}}</td>
+                        <td>{{serviceInfo.serviceAt}}</td>
+                        <td>{{serviceInfo.authServiceStation}}</td>
+                      </tr>
+                    </table>
+                </uib-accordion-group>
+              </uib-accordion>
+              
+          </div>
+          <div class="col-sm-5 col-md-7 panel-group">
+           
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">To Buy</h3>
+              </div>
+              <div class="panel-body">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          Buy Now Price
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          Rs.25000
+                        </div>
+                      </div>
+                      <div class="col-sm-4 text-right">
+                        <div class="form-group">
+                          <a href="javascript:void(0);" class="btn btn-warning">Submit</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group" >
+                          Make an Offer (by end-user)
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group" >
+                          <input type="text" name="" class="form-control" placeholder="Enter Offer" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 text-right">
+                        <div class="form-group" >
+                          <a href="javascript:void(0);" class="btn btn-warning">Submit</a>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
+              </div>
+            </div>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Payment - Terms &amp; Conditions</h3>
+              </div>
+              <div class="panel-body">
+                <p>Within 3 business days after the auction, the buyer must submit full payment, including applicable taxes &amp; and fees to avoid late fees.</p>
+                <p>This item is subject to New York sales tax.</p>
+                <p>Buyer must pay a transaction fee, based on the final selling price:</p>
+                <p>FINAL SELLING PRICE TRANSACTION FEE</p>
+              </div>
+            </div>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Easy Financing</h3>
+              </div>
+              <div class="panel-body">
+                <form  novalidate role="form" name="form">    
+                    <div>
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <div class="form-group">
+                            <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Amount to be Financed">
+                          </div>
+                        </div>
+                        <div class="col-xs-6">
+                          <div class="form-group">
+                            <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <div class="form-group">
+                            <input type="text" class="form-control" name="periodInMonths" ng-model="buycontact.financeInfo.periodInMonths" ng-value="buycontact.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+                          </div>
+                        </div> 
+                        <div class="col-xs-6">
+                          <div class="form-group" ng-class="{'has-error': form.finAgency.$invalid && form.submitted }">
+                            <select class="form-control" name="finAgency" ng-model="buycontact.financeInfo.finAgency" required>
+                              <option value="" disabled>* Financing Company</option>
+                              <option  ng-repeat="finAgency in valAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                            </select>
+                            <i class="caret"></i>
+                          </div>
+                        </div>                      
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <textarea class="form-control" name="message" ng-model="buycontact.message" placeholder="Comments"></textarea>
+                    </div>
+                    <button type="submit" ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Submit</button>
+                  </form>                  
+              </div>
+            </div>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Valuation Report</h3>
+              </div>
+              <div class="panel-body">
+                <form  novalidate role="form" name="form">
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.category" placeholder="Category" disabled>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.name" placeholder="Asset Name" disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.serialNumber" placeholder="Serial Number" disabled>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" ng-value="valuationReqVm.valuationReq.product.city" placeholder="Asset Location" disabled>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':form.valagency.$invalid && submitted}">
+                    <select class="form-control" name="valagency" required ng-model="valuationReqVm.valuationReq.valuationAgency._id">
+                      <option value="">Agency Name</option>
+                      <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
+                    </select>
+                      <i class="caret"></i>
+                    </div>
+                     <div class="col-sm-6 form-group" ng-class="{'has-error': form.purpose.$invalid && submitted}">
+                      <select class="form-control" name="purpose" ng-model="valuationReqVm.valuationReq.purpose" required>
+                        <option value="">*Select Purpose</option>
+                        <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-warning pull-right">Submit</button>
+                </form>
+              </div>
+
+            </div>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Certification Request</h3>
+              </div>
+              <div class="panel-body">
+                <form  novalidate role="form" name="form">
+                  <div class="row text-left">
+                      <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.valuation && !certifiedByIQuippoQuote.valid && form.submitted}">
+                        <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="valuation" required>
+                          <option value="">*Select Purpose</option>
+                          <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+                        </select>
+                      </div>
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && form.submitted}">
+                        <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
+                      </div>
+                    </div>                                   
+                    <div class="row text-left">
+                      <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
+                      <div class="col-xs-6 col-sm-4 form-group">
+                        <div class="radio radio-info">
+                          <input type="radio"  placeholder="" id="certifiedRadio1" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="yes">
+                          <label for="certifiedRadio1"> Yes </label>
+                        </div>                        
+                      </div>
+                      <div class="col-xs-6 col-sm-4 form-group">
+                        <div class="radio radio-info">
+                          <input type="radio" placeholder="" id="certifiedRadio2" name="scheduleC" ng-model="productQuote.certifiedByIQuippoQuote.scheduleC" value="no">
+                          <label for="certifiedRadio2"> No </label> 
+                        </div> 
+                              
+                      </div>
+                      
+                      <div class="clerafix"></div>                                      
+                      <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">  
+                        <small>Pick Date</small>
+                        <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && form.submitted}">
+                          <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
+                          <span class="input-group-addon">
+                            <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o"></i></a>
+                          </span>
+                        </div>                                      
+                      </div>
+                      
+                      <div class="col-xs-6 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">
+                        <small>Set Time</small>
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="HH:MM" ng-model="productQuote.certifiedByIQuippoQuote.scheduledTime" is-open=""  ng-value="{{productQuote.certifiedByIQuippoQuote.scheduledTime | date:'shortTime' }}" timepicker-options="timepickerOptions">
+                          <span class="input-group-addon">
+                            <button class="btn btn-default" ng-click="toggleMode()"><i class="fa fa-clock-o"></i></button>
+                          </span>
+                        </div>
+                        <uib-timepicker ng-if="isShow" ng-model="mytime" ng-change="changedCertified(mytime)" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></uib-timepicker>
+                             
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning pull-right" ng-click="addProductQuote($event)">Submit</button>
+                </form>
+              </div>
+            </div>
+          </div>          
+        </div>
+      </div>
+    </section>
+    </div>
+     <script type="text/javascript">
+      $(document).ready(function() {
+        $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hidden.bs.collapse', function(){
+        $(this).parent().find("i").removeClass("fa-minus").addClass("fa-plus");
+        });
+      });
+
+      function goTo(dir){
+           $('#article-photo').carousel(dir);
+      }
+
+    </script>
+ <script type="text/ng-template" id="magnifier.html">
+<div id="magnifier-modal">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="carousel slide article-slide" id="article-photo">
+
+              <!-- Wrapper for slides -->
+              <div class="carousel-inner cont-slider">
+                <div class="item" ng-repeat="thumbnailImage in images" ng-class="{'active':$index == idx}" >
+                  <img alt="" title="" ng-src="{{thumbnailImage.displaySrc}}" class="img-responsive">
+                </div>  
+              </div>
+              <!-- Indicators -->
+              <ol class="carousel-indicators">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':$index == idx}" data-target="#article-photo" ng-repeat="thumbnailImage in images">
+                    <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail">
+                </li>
+              </ol>
+
+              <!-- Controls -->
+              <a class="left carousel-control" href="javascript:goTo('prev');"  role="button" ng-non-bindable>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="javascript:goTo('next');"  role="button" ng-non-bindable>
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+      </div>
+    </div>
+</div>
+</script>
+
+
+<!-- popup after click agree button -->
+<script type="text/ng-template" id="price_trend_survey.html">
+      <div>
+          <div class="modal-header">
+              <button type="button" class="close" ng-click="priceTrendSurveyVm.close()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Leave your Comment</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" name="surveyForm" novalidate>
+                <div class="row">
+                  <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.fname.$invalid && submitted}">
+                    <input type="text" class="form-control" name="fname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.fname" placeholder="First Name" required>
+                  </div>
+                
+                  <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.lname.$invalid && submitted}">
+                    <input type="text" class="form-control" name="lname" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.lname" placeholder="Last Name" required>
+                  </div>
+                </div>
+                
+                <div class="row">
+                   <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
+                   <div class="input-group">
+                  <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+                  </div>
+                </div>
+                 <div class="col-sm-6 form-group">
+                    <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >
+                  
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-sm-12 form-group" ng-class="{'has-error': surveyForm.comment.$invalid && agree == 'No' && submitted}">
+                    <textarea class="form-control" name="comment" placeholder="Comments" ng-model="priceTrendSurveyVm.priceTrendSurvey.comment" ng-required="agree == 'No'"></textarea>
+                  </div>
+                </div>
+                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-md btn-default" ng-click="priceTrendSurveyVm.save(surveyForm)">Ok</button>
+              <button type="submit" class="btn btn-md btn-danger" ng-click="priceTrendSurveyVm.close()">Cancel</button>
+            </div>
+      </div>
+      </script>
+      <!-- end poup -->
+
+      <!-- user detail popup -->
+<script type="text/ng-template" id="price_trend_survey_detail.html">
+    <div>
+       <div class="modal-header">
+          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">User Details</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row text-center">
+              <div class="col-sm-12" ng-repeat="survey in surveys">
+                <p class="text-ellips"><strong>{{survey.user.fname}} {{survey.user.lname}}</strong></p>
+                <p class="text-ellips">{{survey.comment}}</p>
+                <hr>
+              </div>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+<!-- end -->

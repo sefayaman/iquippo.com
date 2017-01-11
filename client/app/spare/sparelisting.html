@@ -1,0 +1,187 @@
+<div id="wrapper">
+  <section class="wrapper">
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-sm-12">
+          <div id="page-wrapper">
+            <!-- Page Heading -->
+
+            <div id="products">              
+                  <div class="row">
+                    <div class="col-sm-11">
+                           <h3> Spare Listing</h3>
+                    </div>
+                    <!-- <div class="col-sm-1">
+                      <h3>
+                        <button class="btn btn-md btn-success pull-right" ng-click="spareListingVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+                      </h3>
+                    </div> -->
+                  </div>
+                        
+                        <hr>
+                        <div class="clearfix"></div>
+                    
+                  </div>
+                  <p class="text-right">Showing : {{spareListingVm.totalItems}} Records</p>
+                  <div class="row">
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <select ng-model="spareListingVm.searchType" ng-change="spareListingVm.showFilter(spareListingVm.searchType)">
+                        <option value="">Column Filters </option>
+                        <option value="partNo">Part No</option>
+                        <option value="manufacturer">Spare Manufacturer</option>
+                        <option value="category">Asset Category</option>
+                        <option value="listedBy">Listed By</option>
+                        <option value="status">Status </option>
+                        <option value="ldate">Listing Date</option>
+                        <option value="location">Location</option>
+                      </select>
+                    </div>                   
+                  </div>
+                  <div class="col-sm-3">
+                     <div ng-if="spareListingVm.searchType != 'ldate'">
+                      <input type="text" ng-if="spareListingVm.searchType != ''" name="coulmnSearchStr" ng-model="spareListingVm.spareSearchFilter.coulmnSearchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..." class="form-input-width" />
+                    </div>
+                    <div ng-if="spareListingVm.searchType == 'ldate'">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
+                            <span class="input-group-addon">From</span>
+                            <input type="date" placeholder="Date" name="fromDate" class="form-input-width"  ng-model="spareListingVm.spareSearchFilter.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup1.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open1()" ng-change="spareListingVm.fireCommand(true)">
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
+                            <span class="input-group-addon">To</span>
+                            <input type="date" placeholder="Date" name="toDate" class="form-input-width" ng-value="toDate" ng-model="spareListingVm.spareSearchFilter.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-change="spareListingVm.fireCommand(true)">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                  <div class="col-sm-3 pull-right">
+                    <div class="tablesearch text-right form-group">
+                       Search: <input type="text" placeholder="Search..." ng-model="spareListingVm.spareSearchFilter.searchStr" ng-change="spareListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                    </div>
+                  </div>
+                </div>
+            <!-- <div>
+              <button class="btn btn-primary" ng-click="spareListingVm.bulkUpdate('priceonrequest')">Price on request</button>
+                <button class="btn btn-primary" ng-click="spareListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
+                <button class="btn btn-primary" ng-click="spareListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>
+                <button class="btn btn-primary" ng-click="spareListingVm.bulkUpdate('delete')">Delete</button>
+            </div> -->
+            <div class="table-responsive">
+              <table id="product_listing_table" class="table table-bordred table-striped nosort">
+
+                <thead>
+                  <tr>
+                    <!-- <th>Select</th> -->
+                    <th>Image</th>
+                    <th>Part No</th>
+                    <th>Part Name </th>
+                    <th>Manufacturer </th>
+                    <th>Categories</th>
+                    <th>Listed By</th>
+                    <th>Listed Date</th>
+                    <th>Price (<i class="fa fa-inr"></i>)</th>
+                    <!-- <th>Location</th> -->
+                    <th>Status</th>
+                    <th width="10%">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr ng-repeat="spare in spareListingVm.spareLists" >
+                    <!-- <td><input type="checkbox" ng-click="spareListingVm.updateSelection($event,spare._id)" ng-disabled="spare.isSold"/></td> -->
+                
+                    <td><img ng-src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" width="50" height="50"></td>
+                    <td>{{spare.partNo}}</td>
+                    <td>{{spare.name}}</td>
+                    <td>
+                      {{spare.manufacturers.name}}
+                    </td>
+                    <td>
+                      {{spareListingVm.getCategories(spare.spareDetails)}}
+                    </td>
+                    <td>
+                    <a href="javascript:void(0);" ng-click="spareListingVm.previewSellerDetail(spare)" uib-popover="Seller Information" popover-trigger="mouseenter">
+                      {{spare.user.fname}} {{spare.user.lname}} </a>
+                    </td>
+                    <td>
+                      {{spareListingVm.getDateFormat(spare.createdAt)}}
+                    </td>
+                    <td>
+                      <span ng-if="spare.tradeType != 'RENT'">
+                        <!-- <i class="fa fa-inr" ng-if="spare.currencyType == 'INR' && spare.grossPrice"></i> -->
+                        {{spare.grossPrice |number:0}}</span>
+                      <span ng-if="spare.priceOnRequest && spare.tradeType != 'RENT'">(Price On Request)</span>
+                    </td>
+                    <!-- <td>{{product.images.length}}</td> -->
+                    <td>{{spare.status | uppercase}}</td>
+                    <td>
+                      <a href="javascript:void(0);" ng-disabled="spare.isSold" ng-click="spareListingVm.spareEditHandler(spare)" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <button class="btn btn-danger btn-sm" ng-disabled="spare.isSold" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="spareListingVm.deleteSpare(spare)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
+
+                      </button>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+              <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+  $(document).ready(function(){
+    $('.dashboard-nav a').on('click', function(){
+      $('.dashboard-nav a').removeClass('active')
+      $(this).addClass('active')
+    });
+  });
+</script>
+
+<script type="text/ng-template" id="sellerDetail.html">
+  <div>
+       <div class="modal-header">
+              <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Seller Detail</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Seller Name :</div>
+                  <div class="col-xs-6 text-left">{{spare.fname}} {{spare.lname}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Email :</div>
+                  <div class="col-xs-6 text-left">{{spare.email}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Phone No. :</div>
+                  <div class="col-xs-6 text-left">{{spare.phone}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Mobile No. :</div>
+                  <div class="col-xs-6 text-left">{{spare.mobile}}</div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-xs-offset-1 col-xs-4 text-right">Uploaded By :</div>
+                  <div class="col-xs-6 text-left" ng-if= "spare.role != 'customer'">{{spare.createdBy}}</div>
+                  <div class="col-xs-6 text-left" ng-if= "spare.role == 'customer'">Self</div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-lg btn-default" ng-click="close()">Ok</button>
+            </div>
+  </div>
+</script>

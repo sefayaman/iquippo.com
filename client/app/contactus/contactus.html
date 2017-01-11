@@ -1,0 +1,57 @@
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-offset-1 col-sm-4">
+        <h3>Contact Us</h3>
+        <form class="form" name="form" novalidate>
+                <div class="form-group fill-info">
+                  <div class="row">
+                    <div class="col-md-12 form-group" ng-class="{'has-error': form.name.$invalid && form.submitted }">
+                      <input type="text" name="name" ng-model="contact.name" value="" class="form-control" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-12 form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">
+                      <input type="email" name="email" ng-model="contact.email" value="" class="form-control" placeholder="Email Address">
+                      <p class="help-block" ng-show="form.email.$error.email && form.submitted">
+                      Doesn't look like a valid email.
+                      </p>
+                      <p class="help-block" ng-show="form.email.$error.required && form.submitted">
+                      What's your email address?
+                      </p>
+                      <p class="help-block" ng-show="form.email.$error.mongoose">
+                        {{ errors.email }}
+                      </p>
+                    </div>
+                    <div class="col-md-12 " ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
+                      
+                      <input type="text" name="mobile" ng-model="contact.mobile" value="" class="form-control" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" required>
+                      
+                      <!-- <p class="help-block"
+                       ng-show="(form.mobile.$error.maxlength || form.mobile.$error.required) && 
+                       form.submitted">
+                      Mobile should not blank and 10 digit.
+                      </p> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': form.message.$invalid && form.submitted }">
+                  <textarea class="form-control" name="message" ng-model="contact.message"  placeholder="Comments" required></textarea>
+                </div>
+                <div class="form-group text-right">
+                  <input type="button" name="" ng-click="sendContact(contact)" class="btn btn-warning" value="Send">
+                </div>
+              </form>
+              <address>
+                <h4>Contact iQuippo:</h4>
+                <!-- <p>You can contact us in number of ways:</p> -->
+                <p><strong><i class="fa fa-phone"></i> Telephone:</strong> 033 66022059 / 66245500</p>
+                <!-- <p><strong><i class="fa fa-fax"></i> Fax:</strong> 040 23354574</p> -->
+                <p><strong><i class="fa fa-envelope"></i> Email:</strong> info@iquippo.com</p>
+              </address>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group"></div>
+                     
+              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14736.513303949394!2d88.4342707!3d22.5743033!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc5dee7c03baa298!2sSrei+BNP+Paribas!5e0!3m2!1sen!2sin!4v1476603217559" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+      </div>
+    </div>   
+  </div>

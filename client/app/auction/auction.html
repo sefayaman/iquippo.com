@@ -1,0 +1,96 @@
+  <div class="container" ng-if="!auctionOnMap">
+    <div class="col-sm-12 text-justify">
+		<h3>Auctions</h3>
+		<legend></legend>
+
+		<div class="btn-group form-group auction-tab">
+      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">Upcoming Auctions</button>
+      <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'ongoing'}" ng-click="auctionDateVm.fireCommandType('ongoing')">Ongoing Auctions</button>          
+      <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">Closed Auctions</button>
+    </div>
+
+		<div class="row">
+			<div class="col-sm-12 form-group">                
+        <div class="table-responsive auctions-table">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Auction Id</th>
+                <th>Type of Auction</th>
+                <th>Auction Name</th>
+                <th>Auction Conducted by</th>
+                <th>Auction Start Date &amp; Time</th>
+                <th>Auction End Date &amp; Time</th>
+                <th>Inspection Start Date &amp; Time</th>
+                <th>Inspection End Date &amp; Time</th>
+                <th>Registration Charges</th>
+                <th>Registration End Date</th>
+                <th>Location</th>
+                <th>Address</th>
+                <th>Google map of Location</th>
+                <th>Terms &amp; Condition</th>
+                <th>Proxy Form</th>
+                <th>No. of Assets in Auction</th>
+                <th ng-if="auctionType == 'closed'">No. of Assets in Sold</th>
+                <th ng-if="auctionType == 'closed'">Total Sale Value</th>
+                <th>View Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="product in auctionDateVm.auctionListing">
+                <td>{{product.auctionId}}</td>
+                <td>{{product.auctionType}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.auctionOwner}}</td>
+                <td>{{product.startDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.endDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.insStartDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.insEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.regCharges}}</td>
+                <td>{{product.regEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <!-- <td>
+                    <a href="javascript:void(0);" uib-popover="Seller Information" popover-trigger="mouseenter"></a>
+                </td> -->
+
+                <td>{{product.city}}</td>
+                <td>{{product.auctionAddr}}</td>
+                <td><a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)" ng-if="product.auctionAddr">{{product.auctionAddr}}</a></td>
+                <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
+                <td><a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i></a></td>
+                <td>{{auctionDateVm.getProductData(product._id, "total_products")}}</td>
+                <td ng-if="auctionType == 'closed'">{{auctionDateVm.getProductData(product._id, "total_sold")}}</td>
+                <td ng-if="auctionType == 'closed'">{{auctionDateVm.getProductData(product._id, "total_amount")}}</td>
+               	<td>
+                  <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
+               	    <i class="fa fa-eye"></i>
+                  </a>
+               	</td> 
+            
+              </tr>
+              
+            </tbody>
+            
+          </table>
+        </div>
+        <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>        
+      </div>
+		</div>
+		
+	</div>
+  </div>
+<div class="container" ng-if="auctionOnMap">
+  <div class="row">
+    <div class="col-sm-12" id="map_canvas">
+       <ui-gmap-google-map center='map.center' zoom='map.zoom' control = "map.control">
+           <ui-gmap-marker coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id">
+          </ui-gmap-marker>
+        </ui-gmap-google-map>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <a href="javascript:void(0);" class="btn btn-danger btn-md map-close" ng-click="auctionDateVm.closeMap()">Back</a>
+    </div>
+  </div>
+</div>
+

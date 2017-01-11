@@ -1,0 +1,105 @@
+<div class="container-fluid" ng-controller="HeaderCtrl">
+        <div class="text-right">
+          <ul class="top-menu">
+            
+            <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
+            <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
+            
+            <li><a href="javascript:void(0)" ng-click="openCart()" ng-class="{cart_item:cartCounter > 0}"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs">Cart </span></a></li>
+            <li>
+              <a href="javascript:void(0);" ng-click="redirectToProduct()"  class="hidden-sm hidden-md hidden-lg "><i class="fa fa-upload"></i><span class="hidden-xs">Upload Product</span></a>
+            </li>
+            <li>
+              <a href="javascript:void(0);" ng-click="openDialog('classifiedad')"  class="hidden"><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="hidden-xs">Place a Classified Ad</span></a>
+            </li>
+
+            <li ng-if="isLoggedIn()" class="dropdown" >
+              <a href class="dropdown-toggle" data-toggle="dropdown">
+                 <i class="fa fa-user" style="background-color:#ccc;color:#fff; padding:3px 5px; border-radius:50%;height:20px;width:20px;" ng-if="!getCurrentUser().imgsrc"></i>
+              <img src="{{uploadImagePrefix}}{{avatarDir}}/{{getCurrentUser().imgsrc}}" ng-if="getCurrentUser().imgsrc"> 
+                 <span class="hidden-xs"> {{ getCurrentUser().fname }}</span></a>
+              
+              <ul class="dropdown-menu">
+                  <li>
+                    <a href="/productlisting">
+                      <i class="fa fa-dashboard"></i> Dashboard
+                    </a>
+                  </li>
+                   <li><a href="/myaccount"><span class="fa fa-user"></span> My Account</a></li>                        
+                  <li><a href="javascript:void(0);" ng-click="openDialog('settings')"><span class="fa fa-key"></span> Change Password</a></li>                      
+                  <li><a href="javascript:void(0);" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
+              </ul>
+            </li>
+            <!-- <li>
+              <div id="google_translate_element"></div>
+            </li> -->
+          </ul>
+        </div>
+        <!--<script type="text/javascript">
+          function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ar,fa', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+          }
+          </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        -->
+        <div class="navbar">
+          <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
+           
+           <nav class="navbar navbar-inverse pull-left" role="navigation">
+              <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="mob-menu">Menu</span>
+                  </button>           
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
+               <div class="text-center">
+                  <ul class="nav navbar-nav">
+                    <li ng-class="{active: isActive(['main'])}"><a href="index.html">Home</a></li>
+                    <li ng-class="{active: isActive(['aboutus'])}"><a href="/aboutus">About Us</a></li>
+                    <li ng-class="{active: isActive(['shipping'])}"><a href="/shipping">Shipping</a></li>
+                     <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
+                     <li ng-class="{active: isActive(['financing'])}"><a href="/financing">Financing</a></li>
+                     <li ng-class="{active: isActive(['insurance'])}"><a href="/insurance">Insurance</a></li>
+                     <li ng-class="{active: isActive(['manpower'])}" ><a href="/manpower">Manpower</a></li>
+					           <li ng-class="{active: isActive(['sparehome','sparedetail','manufacturerspare','viewspares'])}"><a href="/sparehome">Spare Parts</a></li>
+                    <!-- <li class="submenu dropdown">
+                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Services</a>
+                      <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                        <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
+                        <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
+                        <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
+                        <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
+                      </ul>
+                    </li> -->
+                    
+                    <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li>
+                    <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
+                  </ul>
+                </div><!-- /.navbar-collapse -->
+                <!--<script type="text/javascript">
+                  setTimeout(function(){convertSelectToUL();},100);
+                </script>-->
+            </nav>
+          <ul class="nav navbar-nav navbar-right hidden-xs"> 
+            <li>
+              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
+            </li>           
+            <li>
+              <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
+            </li>            
+            <li>
+              <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
+            </li>
+          </ul>
+        </div>
+        <!-- common modal container -->
+      </div>  
+
+     

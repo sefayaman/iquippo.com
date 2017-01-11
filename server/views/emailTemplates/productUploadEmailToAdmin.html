@@ -1,0 +1,76 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+<table style="width:80%; margin:0 auto;padding:15px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
+	<tr>
+		<td style="height:70px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
+	</tr>
+    <tr>
+		<td style="font-size:20px; color:#FF4342; padding-bottom:20px;">Hello Support Team,</td>	
+	</tr>
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         This is to notify that product upload request has been submitted with the following details and pending for your approval. 
+		</td>
+    </tr>
+  <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         Kindly login on the portal and take appropriate actions. 
+		</td>
+    </tr>
+      <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+       Details are as follows:
+	    </td>
+    </tr> 
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+        First Name: {{seller.fname}}
+	    </td>
+    </tr>
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+        Last Name: {{seller.lname}}
+	    </td>
+    </tr>
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+        Customer type: {{seller.role}}
+	    </td>
+    </tr>
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+        Country: {{seller.country}}
+	    </td>
+    </tr>
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+        Email Address: {{seller.email}}
+	    </td>
+    </tr>
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         Mobile no: {{seller.mobile}}
+	    </td>
+    </tr>
+<tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         Product Name: {{name}}
+	    </td>
+    </tr> 
+    {{#if assetId}}
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         Asset Id: {{assetId}}
+        </td>
+    </tr> 
+    {{else}}
+    <tr>
+        <td style="color:#01395c;color:#01395c; font-size:13px; padding-bottom:10px;">
+         Part No: {{partNo}}
+        </td>
+    </tr> 
+    {{/if}}
+ </table>
+ </body>

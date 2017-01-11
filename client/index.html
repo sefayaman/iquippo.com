@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msvalidate.01" content="8895FA2B3689834A976D5D572C3E731C" />
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>iQuippo India</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+        
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(client) app/vendor.css -->
+      <!-- bower:css -->
+      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+      <link rel="stylesheet" href="bower_components/DataTables/media/css/jquery.dataTables.css" />
+      <link rel="stylesheet" href="bower_components/Hover/css/hover.css" />
+      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
+      <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,client}) app/app.css -->
+
+<link rel="stylesheet" href="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.css"/>
+
+    <link rel="stylesheet" href="app/app.css">
+    <!-- Hotjar Tracking Code for http://www.iquippo.com -->
+    <!--
+    DevloperName : Nishnat
+    Date: 07/07/2016
+    Description : Add hotjar Tag(IQUIPPO Live Server)
+  -->
+  <script>
+      (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:245774,hjsv:5};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+      })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+
+      <!-- injector:css -->
+      <!-- endinjector -->
+    <!-- endbuild -->
+    <!-- <link rel="stylesheet" href="app/main/style.scss.css"> -->
+
+    <!--
+    DevloperName : Nishnat
+    Date: 06/07/2016
+    Description : Add Google analytics Tag(IQUIPPO Live Server)
+  -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-86294635-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </head>
+  <body ng-app="sreizaoApp">
+
+
+ <!--    <header class="">
+      <ng-include src="'components/header/header.html'"></ng-include>
+    </header> -->
+<div ng-show="!isAdminLayout" ng-include="'components/header/header.html'" class="full-header"></div>
+<div ng-if="isAdminLayout" ng-include="'components/header/admin_header.html'"></div>
+
+    <div id="view-container" ui-view="">
+    </div>
+        <!--
+        Developer Name: Nishnat
+        Date: 06/06/2016
+        Purpose: Add GTM Tag (IQUIPPO Live Server)
+        -->
+        <!-- Google Tag Manager -->
+        <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-KT5NKB"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-KT5NKB');</script>
+
+        <!-- NJ: get login user id -->
+        <script>
+          if (window.sessionStorage.currentUser != undefined) {
+            dataLayer.push({'userID': window.sessionStorage.currentUser});
+          }
+        </script>
+        <!-- End Google Tag Manager -->
+
+<!-- Hotjar Tracking Code for http://iq.com -->
+
+
+    <footer ng-if="!isAdminLayout">
+      <ng-include src="'components/footer/footer.html'"></ng-include>
+    </footer>
+
+      <!-- <div class="chat" ng-if="!isAdminLayout">
+              <ng-include src="'app/adminchat/clientchat.html'"></ng-include>
+      </div> -->
+
+
+     <div class="loading"  ng-show="loading" style="position:fixed;width:100%;height:100%;background-color: rgba(0,0,0,0.8);color:#fff; white-space: nowrap; top:0;left:0;z-index:10000; padding:25% 50%;"><i class="fa fa-spinner fa-spin fa-4x"></i></div>
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- build:js({client,node_modules}) app/vendor.js -->
+      <!-- bower:js -->
+      <script src="bower_components/jquery/dist/jquery.js"></script>
+      <script src="bower_components/angular/angular.js"></script>
+      <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+      <script src="bower_components/angular-resource/angular-resource.js"></script>
+      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script src="bower_components/lodash/lodash.js"></script>
+      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+      <script src="bower_components/DataTables/media/js/jquery.dataTables.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
+      <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
+      <script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/columnfilter/angular-datatables.columnfilter.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/light-columnfilter/angular-datatables.light-columnfilter.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/colvis/angular-datatables.colvis.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/fixedheader/angular-datatables.fixedheader.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/scroller/angular-datatables.scroller.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/tabletools/angular-datatables.tabletools.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
+      <script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script>
+      <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
+      <script src="bower_components/tinymce/tinymce.js"></script>
+      <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
+      <script src="bower_components/angular-animate/angular-animate.js"></script>
+      <script src="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>
+      <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
+      <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+      <!-- endbower -->
+    <!-- endbuild -->
+
+
+        <!-- build:js(.tmp) app/app.js -->
+
+        <script src="app/app.js"></script>
+
+          <!-- injector:js -->
+          <script src="app/account/account.js"></script>
+          <script src="app/account/forgotpassword/forgotpassword.controller.js"></script>
+          <script src="app/account/login/login.controller.js"></script>
+          <script src="app/account/myaccount/myaccount.controller.js"></script>
+          <script src="app/account/mymail/mail.controller.js"></script>
+          <script src="app/account/mymail/mail.service.js"></script>
+          <script src="app/account/settings/settings.controller.js"></script>
+          <script src="app/account/signup/signup.controller.js"></script>
+          <script src="app/admin/dashboard/dashboard.controller.js"></script>
+          <script src="app/admin/emailer/emailer.controller.js"></script>
+          <script src="app/admin/gsettings/gsettings.controller.js"></script>
+          <script src="app/admin/gsettings/gsettings.service.js"></script>
+          <script src="app/admin/masterdata/masterdata.controller.js"></script>
+          <script src="app/admin/masterdata/masterdata.service.js"></script>
+          <script src="app/admin/partnermanagement/partermanagement.service.js"></script>
+          <script src="app/admin/partnermanagement/partnermanagement.controller.js"></script>
+          <script src="app/admin/pricetrend/pricetrend.controller.js"></script>
+          <script src="app/admin/pricetrend/pricetrend.service.js"></script>
+          <script src="app/admin/pricetrend/pricetrendsurveylisting.controller.js"></script>
+          <script src="app/admin/reports/reports.controller.js"></script>
+          <script src="app/admin/reports/reports.service.js"></script>
+          <script src="app/admin/services/services.controller.js"></script>
+          <script src="app/admin/usermanagement/usermanagement.controller.js"></script>
+          <script src="app/auction/assetinauction.controller.js"></script>
+          <script src="app/auction/auction.service.js"></script>
+          <script src="app/auction/auctionlisting.controller.js"></script>
+          <script src="app/auction/viewauction.controller.js"></script>
+          <script src="app/bidValue/bid.controller.js"></script>
+          <script src="app/bidValue/bid.service.js"></script>
+          <script src="app/bulkupload/bulkupload.controller.js"></script>
+          <script src="app/bulkupload/bulkupload.service.js"></script>
+          <script src="app/callback/callback.controller.js"></script>
+          <script src="app/cart/cart.controller.js"></script>
+          <script src="app/cart/cart.service.js"></script>
+          <script src="app/classifiedaddes/classifiedad.service.js"></script>
+          <script src="app/classifiedaddes/classifiedadd.controller.js"></script>
+          <script src="app/classifiedaddes/classifiedadlisting.controller.js"></script>
+          <script src="app/constant.js"></script>
+          <script src="app/contactus/contactus.controller.js"></script>
+          <script src="app/directives.js"></script>
+          <script src="app/filters.js"></script>
+          <script src="app/invitationaccept/invite.controller.js"></script>
+          <script src="app/main/main.controller.js"></script>
+          <script src="app/main/main.js"></script>
+          <script src="app/manpower/manpower.controller.js"></script>
+          <script src="app/manpower/manpower.service.js"></script>
+          <script src="app/payment/payment.controller.js"></script>
+          <script src="app/payment/payment.service.js"></script>
+          <script src="app/payment/paymentlisting.controller.js"></script>
+          <script src="app/payment/paymentresponse.controller.js"></script>
+          <script src="app/product/bulkproduct.controller.js"></script>
+          <script src="app/product/product.controller.js"></script>
+          <script src="app/product/product.service.js"></script>
+          <script src="app/product/productdetail.controller.js"></script>
+          <script src="app/product/producthistory.controller.js"></script>
+          <script src="app/product/productlisting.controller.js"></script>
+          <script src="app/product/viewproducts.controller.js"></script>
+          <script src="app/quote/quote.controller.js"></script>
+          <script src="app/services.js"></script>
+          <script src="app/sotos.crop-image.js"></script>
+          <script src="app/spare/spare.service.js"></script>
+          <script src="app/spare/sparedetail.controller.js"></script>
+          <script src="app/spare/sparehome.controller.js"></script>
+          <script src="app/spare/sparelisting.controller.js"></script>
+          <script src="app/spare/spareupload.controller.js"></script>
+          <script src="app/spare/viewspares.controller.js"></script>
+          <script src="app/staticpages/static.controller.js"></script>
+          <script src="app/util.js"></script>
+          <script src="app/valuation/valuation.service.js"></script>
+          <script src="app/valuation/valuationlisting.controller.js"></script>
+          <script src="app/valuation/valuationrequest.controller.js"></script>
+          <script src="components/auth/auth.service.js"></script>
+          <script src="components/auth/user.service.js"></script>
+          <script src="components/footer/footer.controller.js"></script>
+          <script src="components/header/adminheader.controller.js"></script>
+          <script src="components/header/header.controller.js"></script>
+          <script src="components/lib/FileSaver.js"></script>
+          <script src="components/modal/modal.service.js"></script>
+          <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+          <!-- endinjector -->
+        <!-- endbuild -->
+ </body>
+</html>
