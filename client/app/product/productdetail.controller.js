@@ -2,7 +2,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
 angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
-function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Auth, productSvc, vendorSvc, notificationSvc, Modal, CartSvc, BuyContactSvc, userSvc,PriceTrendSvc) {
+function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, BuyContactSvc, userSvc,PriceTrendSvc,ValuationSvc,$state) {
   var vm = this;
   $scope.currentProduct = {};
   $scope.priceTrendData = null; 
@@ -16,12 +16,13 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
   $scope.calRent.rateType = "Hours";
   $scope.statusShipping = {};
   $scope.statusShipping.open = false;
-
+  $scope.valAgencies=[];
   $scope.totalRent = 0;
   $scope.status = {
     Firstopen: true
   };
 
+  vm.submitValuationReq = submitValuationReq;
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
   vm.sendBuyRequest = sendBuyRequest;
@@ -31,6 +32,94 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
   vm.openValuationModal = openValuationModal;
   vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
   vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
+  vm.valuationReq = {};
+
+  function valinit(){
+     PaymentMasterSvc.getAll()
+      .then(function(result){
+        vendorSvc.getAllVendors()
+        .then(function(){
+          var agency = vendorSvc.getVendorsOnCode('Valuation');
+          agency.forEach(function(item){
+            var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",item._id);
+            if(pyMst && pyMst.fees)
+              $scope.valAgencies[$scope.valAgencies.length] = item;
+            else if(pyMst && pyMst.fees === 0)
+              $scope.valAgencies[$scope.valAgencies.length] = item;
+          })
+        });
+      })
+  }
+  
+  valinit();
+
+  //Submit Valuation Request
+
+   function submitValuationReq(form){
+      if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
+      vm.valuationReq.status = valuationStatuses[0].code;
+      vm.valuationReq.statuses = [];
+      var stsObj = {};
+      stsObj.createdAt = new Date();
+      stsObj.userId = vm.valuationReq.user._id;
+      stsObj.status = valuationStatuses[0].code;
+      vm.valuationReq.statuses[vm.valuationReq.statuses.length] = stsObj;
+      for(var i=0; $scope.valAgencies.length;i++){
+        if($scope.valAgencies[i]._id == vm.valuationReq.valuationAgency._id){
+          vm.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
+          vm.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
+          vm.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
+          break;
+        }
+      }
+      
+      var paymentTransaction = {};
+      paymentTransaction.payments = [];
+      paymentTransaction.totalAmount = 0;
+      paymentTransaction.requestType = "Valuation Request";
+
+      var payObj = {};
+
+      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",vm.valuationReq.valuationAgency._id);
+      payObj.type = "valuationreq";
+      payObj.charge = pyMaster.fees;
+      paymentTransaction.totalAmount += payObj.charge;
+      paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+
+      paymentTransaction.product = $scope.currentProduct;
+      paymentTransaction.product.type = "equipment";
+      
+      paymentTransaction.user = {};
+
+      paymentTransaction.user._id = Auth.getCurrentUser()._id;
+      paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
+      paymentTransaction.user.fname = Auth.getCurrentUser().fname;
+      paymentTransaction.user.city = Auth.getCurrentUser().city;
+      paymentTransaction.user.email = Auth.getCurrentUser().email;
+
+      paymentTransaction.status = transactionStatuses[0].code;
+      paymentTransaction.statuses = [];
+      var sObj = {};
+      sObj.createdAt = new Date();
+      sObj.status = transactionStatuses[0].code;
+      sObj.userId = Auth.getCurrentUser()._id;
+      paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
+      paymentTransaction.paymentMode = "online";
+
+      ValuationSvc.save({valuation:vm.valuationReq,payment:paymentTransaction})
+      .then(function(result){      
+        if(result.transactionId)
+          $state.go('payment',{tid:result.transactionId});
+      })
+      .catch(function(){
+        //error handling
+      });
+
+  }
 
 
   function loadUserDetail(){
@@ -137,6 +226,18 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
       //End
         $scope.currentProduct = result;
         $rootScope.currentProduct = $scope.currentProduct;
+
+        //Valuation Request
+        vm.valuationReq.product = $scope.currentProduct;
+        vm.valuationReq.user ={};
+        vm.valuationReq.user._id = Auth.getCurrentUser()._id;
+        vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
+        vm.valuationReq.user.email = Auth.getCurrentUser().email;
+        vm.valuationReq.seller = {};
+        vm.valuationReq.seller._id = $scope.currentProduct.seller._id;
+        vm.valuationReq.seller.mobile = $scope.currentProduct.seller.mobile;
+        vm.valuationReq.seller.email = $scope.currentProduct.seller.email;
+        
         getPriceTrendData();
         if($scope.currentProduct.tradeType == "SELL")
           vm.showText = "To Buy"
