@@ -154,9 +154,38 @@ function ProductDetailCtrl($scope,$stateParams, $rootScope, $uibModal, $http, Au
           $scope.currentProduct.images.forEach(function(img,index,arr){
             img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir+"/" +img.src;
           });
+
+        $scope.currentProduct.gAImages = [];
+        $scope.currentProduct.engineImages = [];
+        $scope.currentProduct.hydraulicImages = [];
+        $scope.currentProduct.cabinImages = [];
+        $scope.currentProduct.underCarrageImages = [];
+        $scope.currentProduct.otherImages = [];
+        $scope.currentProduct.images.forEach(function(item,index){
+          if(item.catImgType){
+            switch(item.catImgType){
+             case 'gA':
+                $scope.currentProduct.gAImages.push(item);
+             break;
+             case 'eP' :
+                $scope.currentProduct.engineImages.push(item);
+             break;
+             case 'hP':
+                $scope.currentProduct.hydraulicImages.push(item);
+             break;
+             case 'cP':
+                $scope.currentProduct.cabinImages.push(item);
+             break;
+             case 'uC':
+                $scope.currentProduct.underCarrageImages.push(item);
+             break;
+             case 'oP':
+                $scope.currentProduct.otherImages.push(item);
+             break;
+            }
+          }
+        });
         }
-
-
       });
     }
 

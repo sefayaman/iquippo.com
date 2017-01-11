@@ -26,7 +26,16 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     var product = null;
     $scope.isEdit = false;
 
-    $scope.images = [{isPrimary:true}];
+    $scope.images = [{isPrimary:true}]; 
+    $scope.imagesGeneralApp=[{isPrimary:true}];
+    $scope.imagesEngine = [{isPrimary:true}];
+    $scope.imagesHydraulic = [{isPrimary:true}];
+    $scope.imagesCabin = [{isPrimary:true}];
+    $scope.imagesUnderCarrage = [{isPrimary:true}];
+    $scope.imagesOther = [{isPrimary:true}];
+
+    var dbImages=[];
+
     $scope.primaryIndex = 0;
     $scope.enableButton = false;
     var productHistory = $scope.productHistory = {};
@@ -46,6 +55,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   $scope.onModelChange = onModelChange;
   $scope.onTradeTypeChange = onTradeTypeChange;
   $scope.clickHandler = clickHandler;
+  $scope.increaseElement=increaseElement;
   //$scope.addOrUpdateProduct = addOrUpdateProduct;
   $scope.onUserChange = onUserChange;
   $scope.resetClick = resetClick;
@@ -153,8 +163,13 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       productSvc.getProductOnId($stateParams.id,true).then(function(response){
         product = $scope.product = response;
+        $scope.imagesGeneralApp=[];
+        $scope.imagesEngine = [];
+        $scope.imagesHydraulic = [];
+        $scope.imagesCabin = [];
+        $scope.imagesUnderCarrage = [];
+        $scope.imagesOther = [];
 
-        
         if(response.serviceInfo.length > 0){
           for(var i =0; i < response.serviceInfo.length; i++){
             if(response.serviceInfo[i] && response.serviceInfo[i].servicedate)
@@ -163,14 +178,80 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         } else {
           $scope.product.serviceInfo = [{}];
         }
+
+        var deletedIndex = [];
         
         angular.copy($scope.product.images,$scope.images);
+        dbImages=$scope.images;
         $scope.images.forEach(function(item,index){
           if(item.isPrimary)
             $scope.primaryIndex = index;
           item.isEdit = true;
-          item.name = item.src;
+          if(item.catImgType){
+            switch(item.catImgType){
+             case 'gA':
+                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {}; 
+                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].src = item.src;
+                if(item.isPrimary)
+                  $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].isPrimary = true;
+                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].catImgType = item.catImgType;
+                item.name=item.src;
+                deletedIndex.push(index);
+             break;
+             case 'eP' :
+                $scope.imagesEngine[$scope.imagesEngine.length] = {}; 
+                $scope.imagesEngine[$scope.imagesEngine.length-1].src = item.src; 
+                if(item.isPrimary)
+                  $scope.imagesEngine[$scope.imagesEngine.length-1].isPrimary = true;
+                $scope.imagesEngine[$scope.imagesEngine.length-1].catImgType = item.catImgType;
+                item.name=item.src;
+                deletedIndex.push(index);   
+             break;
+             case 'hP':
+                $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {}; 
+                $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].src = item.src;
+                if(item.isPrimary)
+                  $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].isPrimary = true;
+                $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].catImgType = item.catImgType;
+                item.name=item.src;
+                deletedIndex.push(index);
+             break;
+             case 'cP':
+                $scope.imagesCabin[$scope.imagesCabin.length] = {};                  
+                $scope.imagesCabin[$scope.imagesCabin.length-1].src = item.src;
+                if(item.isPrimary)
+                  $scope.imagesCabin[$scope.imagesCabin.length-1].isPrimary = true;
+                $scope.imagesCabin[$scope.imagesCabin.length-1].catImgType = item.catImgType;
+                item.name=item.src;
+                deletedIndex.push(index);
+             break;
+             case 'uC':
+                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]  = {};
+                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].src = item.src;
+                if(item.isPrimary)
+                  $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].isPrimary = true;
+                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].catImgType = item.catImgType;
+                item.name=item.src;
+                deletedIndex.push(index);
+             break;
+             case 'oP':
+                $scope.imagesOther[$scope.imagesOther.length] = {};
+                $scope.imagesOther[$scope.imagesOther.length-1].src = item.src;
+                if(item.isPrimary)
+                  $scope.imagesOther[$scope.imagesOther.length-1].isPrimary = true;
+                $scope.imagesOther[$scope.imagesOther.length-1].catImgType = item.catImgType;
+                item.name=item.src;
+                deletedIndex.push(index);
+             break;
+            }
+          } else
+              item.name = item.src;
         });
+
+        if(deletedIndex.length){
+          for(var k = deletedIndex.length-1;k>=0;k--)
+            $scope.images.splice(deletedIndex[k],1);
+        }
 
         if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
           $scope.product.videoLinks = [{}];
@@ -279,9 +360,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     },true);
 
     //listen for the file selected event
-    $scope.$on("fileSelected", function (event, args) {
+    $scope.$on("fileSelected", function (event, args) {            
       if(args.files.length == 0)
           return;
+        
         $scope.$apply(function () {
           if(args.type == "image") {
             var resizeParam = {};
@@ -295,9 +377,49 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             $scope.assetDir = result.data.assetDir;
             if(!$scope.product.assetId)
               $scope.product.assetId = $scope.assetDir;
-
+            if(args.id){
+              switch(args.id){
+                 case 'gA': 
+                  if(args.type == "image"){
+                    $scope.imagesGeneralApp[parseInt(args.index)].catImgType = args.id;
+                    $scope.imagesGeneralApp[parseInt(args.index)].src = result.data.filename;
+                  }      
+                 break;
+                 case 'eP' : 
+                 if(args.type == "image"){
+                    $scope.imagesEngine[parseInt(args.index)].catImgType = args.id;
+                    $scope.imagesEngine[parseInt(args.index)].src = result.data.filename;    
+                 }
+                 break;
+                 case 'hP': 
+                 if(args.type == "image"){
+                    $scope.imagesHydraulic[parseInt(args.index)].catImgType = args.id;
+                    $scope.imagesHydraulic[parseInt(args.index)].src = result.data.filename;
+                 }
+                 break;
+                 case 'cP':                  
+                 if(args.type == "image"){
+                    $scope.imagesCabin[parseInt(args.index)].catImgType = args.id;
+                    $scope.imagesCabin[parseInt(args.index)].src = result.data.filename;
+                 }
+                 break;
+                 case 'uC':
+                 if(args.type == "image"){
+                    $scope.imagesUnderCarrage[parseInt(args.index)].catImgType = args.id;
+                    $scope.imagesUnderCarrage[parseInt(args.index)].src = result.data.filename;
+                  }
+                 break;
+                 case 'oP':
+                 if(args.type == "image"){
+                    $scope.imagesOther[parseInt(args.index)].catImgType = args.id;
+                    $scope.imagesOther[parseInt(args.index)].src = result.data.filename;
+                 }
+                 break;
+                }
+              } else {
+            
             if(args.type == "image")
-              $scope.images[parseInt(args.index)].src = result.data.filename;
+                  $scope.images[parseInt(args.index)].src = result.data.filename;      
             else if(args.type == "video")
               product.videoName = result.data.filename;
             else if(args.type == "tcDoc")
@@ -309,14 +431,13 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             }else if(args.type == "valStamp")
               product.valuationStamp = result.data.filename;
             else
-              product.documentName = result.data.filename;
-          })
-          .catch(function(err){
-             $rootScope.loading = false;
+              product.documentName = result.data.filename; 
+          }   
+        }).catch(function(err){
+            $rootScope.loading = false;
             Modal.alert("Error in file upload.",true);
-          });
-
         });
+      });
     });
   }
 
@@ -606,10 +727,158 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
                 imgObj.waterMarked = true;
              else
               imgObj.waterMarked = false;
-            $scope.product.images[$scope.product.images.length] = imgObj;
+             if(item.catImgType)
+             imgObj.catImgType=item.catImgType;
+           $scope.product.images[$scope.product.images.length] = imgObj;
           }
+         
 
       });
+       if($scope.imagesGeneralApp.length > 0){
+      $scope.imagesGeneralApp.forEach(function(item,index){
+          if(item.src){
+            var imgObj = {};
+            imgObj.src = item.src;
+            if(item.isPrimary){
+              imgObj.isPrimary = true;
+              product.primaryImg = item.src;
+              primaryFound = true;
+            }else{
+               imgObj.isPrimary = false;
+            }
+            if(item.waterMarked)
+                imgObj.waterMarked = true;
+             else
+              imgObj.waterMarked = false;
+             if(item.catImgType){
+              imgObj.catImgType=item.catImgType;
+             }
+             
+           $scope.product.images[$scope.product.images.length] = imgObj;
+          }
+          
+
+      });
+  }
+       if($scope.imagesEngine.length > 0){
+      $scope.imagesEngine.forEach(function(item,index){
+          if(item.src){
+            var imgObj = {};
+            imgObj.src = item.src;
+            if(item.isPrimary){
+              imgObj.isPrimary = true;
+              product.primaryImg = item.src;
+              primaryFound = true;
+            }else{
+               imgObj.isPrimary = false;
+            }
+            if(item.waterMarked)
+                imgObj.waterMarked = true;
+             else
+              imgObj.waterMarked = false;
+             if(item.catImgType)
+             imgObj.catImgType=item.catImgType;
+           $scope.product.images[$scope.product.images.length] = imgObj;
+          }
+          
+
+      });
+  }
+       if($scope.imagesHydraulic.length > 0){
+      $scope.imagesHydraulic.forEach(function(item,index){
+          if(item.src){
+            var imgObj = {};
+            imgObj.src = item.src;
+            if(item.isPrimary){
+              imgObj.isPrimary = true;
+              product.primaryImg = item.src;
+              primaryFound = true;
+            }else{
+               imgObj.isPrimary = false;
+            }
+            if(item.waterMarked)
+                imgObj.waterMarked = true;
+             else
+              imgObj.waterMarked = false;
+             if(item.catImgType)
+             imgObj.catImgType=item.catImgType;
+           $scope.product.images[$scope.product.images.length] = imgObj;
+          }
+         
+
+      });
+}
+      if($scope.imagesCabin.length > 0){
+      $scope.imagesCabin.forEach(function(item,index){
+          if(item.src){
+            var imgObj = {};
+            imgObj.src = item.src;
+            if(item.isPrimary){
+              imgObj.isPrimary = true;
+              product.primaryImg = item.src;
+              primaryFound = true;
+            }else{
+               imgObj.isPrimary = false;
+            }
+            if(item.waterMarked)
+                imgObj.waterMarked = true;
+             else
+              imgObj.waterMarked = false;
+             if(item.catImgType)
+             imgObj.catImgType=item.catImgType;
+           $scope.product.images[$scope.product.images.length] = imgObj;
+          }
+         
+
+      });
+}
+
+      if($scope.imagesUnderCarrage){
+      $scope.imagesUnderCarrage.forEach(function(item,index){
+          if(item.src){
+            var imgObj = {};
+            imgObj.src = item.src;
+            if(item.isPrimary){
+              imgObj.isPrimary = true;
+              product.primaryImg = item.src;
+              primaryFound = true;
+            }else{
+               imgObj.isPrimary = false;
+            }
+            if(item.waterMarked)
+                imgObj.waterMarked = true;
+             else
+              imgObj.waterMarked = false;
+             if(item.catImgType)
+             imgObj.catImgType=item.catImgType;
+           $scope.product.images[$scope.product.images.length] = imgObj;
+          }
+         
+      });
+  }
+          if($scope.imagesOther.length){
+      $scope.imagesOther.forEach(function(item,index){
+          if(item.src){
+            var imgObj = {};
+            imgObj.src = item.src;
+            if(item.isPrimary){
+              imgObj.isPrimary = true;
+              product.primaryImg = item.src;
+              primaryFound = true;
+            }else{
+               imgObj.isPrimary = false;
+            }
+            if(item.waterMarked)
+                imgObj.waterMarked = true;
+             else
+              imgObj.waterMarked = false;
+             if(item.catImgType)
+             imgObj.catImgType=item.catImgType;
+           $scope.product.images[$scope.product.images.length] = imgObj;
+          }
+          
+      });
+  }
 
       if($scope.product.images.length == 0){
         Modal.alert("Please upload atleast one image.",true);
@@ -1102,14 +1371,114 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.container.mfgYear = null;
   }
 
-  function makePrimary(val){
-    $scope.primaryIndex = val;
-     $scope.images.forEach(function(item,index,arr){
+  function makePrimary(val,type){
+    if(!type){
+      $scope.images.forEach(function(item,index,arr){ 
+        if(val == index)
+        item.isPrimary = true;
+      else
+        item.isPrimary = false;
+      });
+    }else{
+      switch(type){
+        case 'GA':
+          $scope.imagesGeneralApp.forEach(function(item,index,arr){ 
+          if(val == index)
+              item.isPrimary = true;
+            else
+              item.isPrimary = false;
+          }); 
+        break;
+
+        case 'EP':
+          $scope.imagesEngine.forEach(function(item,index,arr){ 
+          if(val == index)
+              item.isPrimary = true;
+            else
+              item.isPrimary = false;
+          }); 
+        break;
+        case 'HP':
+          $scope.imagesHydraulic.forEach(function(item,index,arr){ 
+          if(val == index)
+              item.isPrimary = true;
+            else
+              item.isPrimary = false;
+          }); 
+        break;
+
+        case 'CP':
+          $scope.imagesCabin.forEach(function(item,index,arr){ 
+          if(val == index)
+              item.isPrimary = true;
+            else
+              item.isPrimary = false;
+          }); 
+        break;
+
+        case 'UC':
+          $scope.imagesUnderCarrage.forEach(function(item,index,arr){ 
+          if(val == index)
+              item.isPrimary = true;
+            else
+              item.isPrimary = false;
+          }); 
+        break;
+
+        case 'OP':
+          $scope.imagesOther.forEach(function(item,index,arr){ 
+          if(val == index)
+              item.isPrimary = true;
+            else
+              item.isPrimary = false;
+          }); 
+        break;
+      }
+    }
+      
+
+
+     /*$scope.imagesGeneralApp.forEach(function(item,index,arr){
       if($scope.primaryIndex == index)
           item.isPrimary = true;
         else
           item.isPrimary = false;
       });
+
+     $scope.imagesEngine.forEach(function(item,index,arr){
+      if($scope.primaryIndex == index)
+          item.isPrimary = true;
+        else
+          item.isPrimary = false;
+      });
+
+     $scope.imagesHydraulic.forEach(function(item,index,arr){
+      if($scope.primaryIndex == index)
+          item.isPrimary = true;
+        else
+          item.isPrimary = false;
+      });
+
+     $scope.imagesCabin.forEach(function(item,index,arr){
+      if($scope.primaryIndex == index)
+          item.isPrimary = true;
+        else
+          item.isPrimary = false;
+      });
+
+     $scope.imagesUnderCarrage.forEach(function(item,index,arr){
+      if($scope.primaryIndex == index)
+          item.isPrimary = true;
+        else
+          item.isPrimary = false;
+      });
+
+     $scope.imagesOther.forEach(function(item,index,arr){
+      if($scope.primaryIndex == index)
+          item.isPrimary = true;
+        else
+          item.isPrimary = false;
+      });*/
   }
 
    function deleteImg(idx){
@@ -1235,10 +1604,74 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       }
 
+      function increaseElement(type){
+        switch(type){
+          case 'NOCAT':
+            $scope.images.length++;
+            $scope.images[$scope.images.length-1] = {};
+          break;
+          case 'GA':
+            $scope.imagesGeneralApp.length++;
+            $scope.imagesGeneralApp[$scope.imagesGeneralApp.length -1] = {};
+          break;
+          case 'ENGINE':
+            $scope.imagesEngine.length++;
+            $scope.imagesEngine[$scope.imagesEngine.length -1] = {};
+          break;
+          case 'HYDRAULIC':
+            $scope.imagesHydraulic.length++;
+            $scope.imagesHydraulic[$scope.imagesHydraulic.length -1] = {};
+          break;
+          case 'CABIN':
+            $scope.imagesCabin.length++;
+            $scope.imagesCabin[$scope.imagesCabin.length -1] = {};
+          break;
+          case 'UC':
+            $scope.imagesUnderCarrage.length++;
+            $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length -1] = {};
+          break;
+          case 'OTHER':
+            $scope.imagesOther.length++;
+            $scope.imagesOther[$scope.imagesOther.length -1] = {};
+          break;
+        }
+
+      }
+
       function prepareImgArr(){
-        var numberOfIteration  = 8 - $scope.images.length;
+        var numberOfIteration  = 1 - $scope.images.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.images[$scope.images.length] = {};
+        }
+
+        numberOfIteration  = 1- $scope.imagesGeneralApp.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
+        }
+
+        numberOfIteration  = 1 - $scope.imagesEngine.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.imagesEngine[$scope.imagesEngine.length] = {};
+        }
+
+        numberOfIteration  = 1 - $scope.imagesHydraulic.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};
+        }
+
+        numberOfIteration  = 1 - $scope.imagesOther.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.imagesOther[$scope.imagesOther.length] = {};
+        }
+
+        numberOfIteration  = 1 - $scope.imagesCabin.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.imagesCabin[$scope.imagesCabin.length] = {};
+        }
+
+        numberOfIteration  = 1 - $scope.imagesUnderCarrage.length;
+        for(var i = 0; i < numberOfIteration; i++){
+          $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
         }
       }
 
