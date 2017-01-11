@@ -417,11 +417,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
                  break;
                 }
               } else {
-                if(args.type == "image")
-                  $scope.images[parseInt(args.index)].src = result.data.filename;
-                }
-                
-            if(args.type == "video")
+            
+            if(args.type == "image")
+                  $scope.images[parseInt(args.index)].src = result.data.filename;      
+            else if(args.type == "video")
               product.videoName = result.data.filename;
             else if(args.type == "tcDoc")
               product.tcDocumentName = result.data.filename;
@@ -432,7 +431,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             }else if(args.type == "valStamp")
               product.valuationStamp = result.data.filename;
             else
-              product.documentName = result.data.filename;    
+              product.documentName = result.data.filename; 
+          }   
         }).catch(function(err){
             $rootScope.loading = false;
             Modal.alert("Error in file upload.",true);
