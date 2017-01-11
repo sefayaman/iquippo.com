@@ -192,7 +192,7 @@
                   <td>{{trend.mfgYear}}</td>
                   <td>{{trend.saleYear}}</td>
                   <td>
-                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="priceTrendVm.editClick($index)">
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="priceTrendVm.editClick(trend)">
                       <i class="fa fa-pencil"></i>
                     </a>
                     <button class="btn btn-danger btn-sm"  uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash" ng-click="priceTrendVm.destroy(trend._id)"></i></button>

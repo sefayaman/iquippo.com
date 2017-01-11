@@ -69,13 +69,13 @@ function PriceTrendCtrl($scope,$rootScope,Auth,notificationSvc,categorySvc,brand
     	resetPriceTrend();
     }
 
-    function editClick(idx){
+    function editClick(pTrend){
 
     	$scope.isCollapsed = true;
     	vm.brandList = [];
     	vm.modelList = [];
     	vm.isEdit = true;
-    	vm.priceTrend = angular.copy(vm.filteredData[idx]);
+    	vm.priceTrend = angular.copy(pTrend);
     	onCategoryChange(vm.priceTrend.category._id,true);
     	onBrandChange(vm.priceTrend.brand._id,true);
 
