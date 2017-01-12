@@ -383,6 +383,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
                   if(args.type == "image"){
                     $scope.imagesGeneralApp[parseInt(args.index)].catImgType = args.id;
                     $scope.imagesGeneralApp[parseInt(args.index)].src = result.data.filename;
+                    console.log($scope.imagesGeneralApp);
                   }      
                  break;
                  case 'eP' : 
@@ -1674,6 +1675,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
         }
+
+        console.log("My size after editing");
+        console.log($scope.imagesGeneralApp);
 
         numberOfIteration  = 1 - $scope.imagesEngine.length;
         for(var i = 0; i < numberOfIteration; i++){

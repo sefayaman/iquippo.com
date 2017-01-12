@@ -8,7 +8,7 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   $scope.priceTrendData = null; 
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
-  $scope.financeContact={};
+  //$scope.financeContact={};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "mobile";
 
@@ -29,7 +29,7 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
 
 
   //$scope.financeContact.interestedIn="finance";
-  $scope.buycontact.interestedIn = "finance" ;
+  $scope.buycontact.interestedIn = "buyORrent" ;
   $scope.zoomLvl = 3;
   $scope.calRent = {};
   $scope.calRent.rateType = "Hours";
@@ -42,6 +42,7 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   };
   vm.addProductQuote=addProductQuote;
   vm.submitValuationReq = submitValuationReq;
+  
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
   vm.sendBuyRequest = sendBuyRequest;
@@ -463,8 +464,8 @@ function addProductQuote(form){
     buycontact.product[0] = productObj;
     buycontact.tradeType = $scope.currentProduct.tradeType;
     
-    /*if(buycontact.interestedIn != "finance")
-      delete buycontact.financeInfo;*/
+    if(buycontact.interestedIn != "finance")
+      delete buycontact.financeInfo;
 
     BuyContactSvc.submitRequest(buycontact)
     .then(function(result){
