@@ -2,7 +2,7 @@
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
 angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
-function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, BuyContactSvc, userSvc,PriceTrendSvc,ValuationSvc,$state) {
+function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc,ProductTechInfoSvc, BuyContactSvc, userSvc,PriceTrendSvc,ValuationSvc,$state) {
   var vm = this;
   $scope.currentProduct = {};
   $scope.priceTrendData = null; 
@@ -232,6 +232,22 @@ function addProductQuote(form){
       });
   }
 
+  function isEmpty(myObject) {
+    for(var key in myObject) {
+      if(key != 'params'){
+        if (myObject.hasOwnProperty(key)) {
+            return false;
+        }
+      }
+      else{
+        if(myObject.params && myObject.params.length > 1)
+          return false;
+      }
+    }
+
+    return true;
+}
+
   function init(){
 
      Auth.isLoggedInAsync(function(loggedIn){
@@ -279,6 +295,35 @@ function addProductQuote(form){
       //End
         $scope.currentProduct = result;
         $rootScope.currentProduct = $scope.currentProduct;
+
+        console.log($scope.currentProduct);
+        
+        if(isEmpty($scope.currentProduct.technicalInfo)){
+          var techFilter = {
+        category : $scope.currentProduct.category.name,
+        brand : $scope.currentProduct.brand.name,
+        model : $scope.currentProduct.model.name
+      };
+
+        ProductTechInfoSvc.fetchInfo(techFilter)
+        .then(function(techInfo){
+          console.log(techInfo);
+          if(techInfo.length){
+            $scope.currentProduct.technicalInfo = {
+              grossWeight : techInfo[0].information.grossWeight,
+              operatingWeight : techInfo[0].information.operatingWeight, 
+              bucketCapacity : techInfo[0].information.bucketCapacity,
+              enginePower : techInfo[0].information.enginePower, 
+              liftingCapacity : techInfo[0].information.liftingCapacity 
+            }
+            console.log($scope.currentProduct.technicalInfo); 
+          }
+        });
+        }
+        else{
+          alert("techInfo is dere");
+          
+        }
 
         //Valuation Request
         vm.valuationReq.product = $scope.currentProduct;
