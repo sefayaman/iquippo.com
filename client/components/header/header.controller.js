@@ -11,7 +11,6 @@ angular.module('sreizaoApp')
       var filter = {};
       filter.auctionType = "ongoing";
       AuctionSvc.getAuctionDateData(filter).then(function(result){
-        result.length = 0;
         if(result.length == 0)
           $scope.isAuctionType = "upcoming";
         else
