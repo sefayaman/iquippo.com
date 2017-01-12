@@ -298,8 +298,9 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch;
 }
-.table-responsive .table th{white-space: nowrap; border-bottom-width:0; font-weight: normal !important;}
-.table-responsive .table .info-back{color: #fff; background: #004394;}
+.table-responsive .table th{white-space: nowrap; border-bottom-width:0;}
+.table-responsive .table .info-back, .table-responsive .table th{color: #333; background: #dcdcdc;}
+.table-responsive .table .info-back th{font-weight: normal !important;}
 .table-responsive .table .info-back th:first-child{border-left:0;}
 
 /*footer*/
@@ -1128,9 +1129,9 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .auction-tab{margin-bottom: 5px;}
 .auction-tab .btn{padding: 5px 30px; font-size: 14px; background: #ddd;border: 3px solid #ddd;}
 .auction-tab .btn-default:focus,.auction-tab .btn-default.active,.auction-tab .btn-default:active,.auction-tab .open > .btn-default.dropdown-toggle{
-    color: #000;
-    background-color: #ececec;
-    border-color: #ececec;
+    color: #fff;
+    background-color: #004394;
+    border-color: #004394;
     border-bottom: 4px solid #e31e24;
     box-shadow: none;
     outline: none;
