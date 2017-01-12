@@ -34,6 +34,7 @@ body{top:0 !important;}
 .bid-gif{position: absolute; left: 50px; top: 50px; z-index: 99;}
 .bid-gif img{width: 150px !important; height: 40px !important;}
 /*Created by firoz*/
+@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 body{font-family:'Roboto Condensed',sans-serif;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
@@ -297,6 +298,9 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch;
 }
+.table-responsive .table th{white-space: nowrap; border-bottom-width:0; font-weight: normal !important;}
+.table-responsive .table .info-back{color: #fff; background: #004394;}
+.table-responsive .table .info-back th:first-child{border-left:0;}
 
 /*footer*/
 footer .foot{padding-top:5px;background:url(/assets/images/foot-image.jpg); background-size:cover;color:#fff;}
@@ -403,8 +407,6 @@ ul.alert-dropdown{width:200px;}
 .table{width:100%;max-width:100%;margin-bottom:20px;border:1px solid rgba(128,128,128,0.26);}
 .table>thead>tr>th{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;}
 .table>tbody>tr>td{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;vertical-align:middle;text-align:left;}
-.tab-pane .table>thead>tr>th{padding: 6px;}
-.tab-pane .table>tbody>tr>td{padding: 3px;}
 #add{margin-top:20px;float:right;font-size:12px;}
 .dropdown-toggle img{width:25px;height:25px;border-radius:50%;margin-right:6px;}
 .modal-body .input-group-addon .btn.btn-default{padding:8px 15px; margin-right:0; font-size:10px; background-color:transparent; border-color:transparent;}
@@ -866,7 +868,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .profilePic-button .fileinput-button{background: rgba(255,255,255,0.7); position: absolute; left: 0;top: 120px; overflow: hidden; width: 150px;}
 .profilePic-button .fileinput-button:hover{background: rgba(255,255,255,1);}
 .has-error .basic-detail{border:1px solid #f00;}
-.sold-tag,.rent-tag{display: block;position: absolute;color:#fff;top:0;bottom: 0;border-right:50px solid transparent;border-top:50px solid #E3000F;}
+.sold-tag,.rent-tag{display: block;position: absolute;color:#fff;top:10px;bottom: 0;border-right:50px solid transparent;border-top:50px solid #E3000F;}
 .sold-tag span, .rent-tag span{-webkit-transform:rotate(318deg);-moz-transform:rotate(350deg);-ms-transform:rotate(318deg);-o-transform:rotate(318deg);transform:rotate(318deg);position: absolute;top: -40px;font-size: 11px; left: 3px;}
 .sold-tag span{left: 5px;}
 .rent-tag{border-top:50px solid #004394;}
@@ -1122,10 +1124,16 @@ div#jivo_close_button{position: absolute; right: -20px;}
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.6);
     background-color: #D62929;
 }
+
+.auction-tab{margin-bottom: 5px;}
+.auction-tab .btn{padding: 5px 30px; font-size: 14px; background: #ddd;border: 3px solid #ddd;}
 .auction-tab .btn-default:focus,.auction-tab .btn-default.active,.auction-tab .btn-default:active,.auction-tab .open > .btn-default.dropdown-toggle{
-    color: #fff;
-    background-color: #e3000f;
-    border-color: #e3000f;
+    color: #000;
+    background-color: #ececec;
+    border-color: #ececec;
+    border-bottom: 4px solid #e31e24;
+    box-shadow: none;
+    outline: none;
 }
 .like-button{color: #004394;padding: 15px;}
 .dislike-button{color: #e3000f;padding: 15px;}

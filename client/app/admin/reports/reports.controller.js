@@ -136,8 +136,8 @@
         case 'callback':
           getReportData(filter, 'callback');
           break;
-        case 'quickQuery':
-          getReportData(filter, 'quickQuery');
+        case 'instantQuote':
+          getReportData(filter, 'instantQuote');
           break;
         case 'additionalServices':
           getReportData(filter, 'additionalServices');
@@ -180,7 +180,7 @@
               }
             });
           break;
-        case 'quickQuery':
+        case 'instantQuote':
           resetCount();
           ReportsSvc.getQuickQueryOnFilter(filter)
             .then(function(result) {
@@ -440,8 +440,8 @@
       
       if (vm.tabValue == "callback")
         fileName = "Callback_";
-      else if (vm.tabValue == "quickQuery")
-        fileName = "QuickQuery_";
+      else if (vm.tabValue == "instantQuote")
+        fileName = "InstantQuote_";
       else if (vm.tabValue == "buyOrRentOrBoth")
         fileName = "buyOrRentOrBoth_";
       else if (vm.tabValue == "shipping" || vm.tabValue == "valuation" || vm.tabValue == "finance" || vm.tabValue == "insurance")
