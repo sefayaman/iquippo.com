@@ -133,7 +133,7 @@
       var url = "";
       if (refName == "callback")
         url = path + "/callback/export";
-      else if (refName == "quickQuery")
+      else if (refName == "instantQuote")
         url = path + "/quote/export";
       else if (refName == "buyOrRentOrBoth")
         url = path + "/buyer/export";

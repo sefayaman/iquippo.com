@@ -17,7 +17,7 @@
             <div class="">
               <select ng-model="reportsVm.tabValue" ng-change="reportsVm.selectReportData(reportsVm.tabValue)">
                 <option value="callback">Call Back</option>
-                <option value="quickQuery">Quick Query</option>
+                <option value="instantQuote">Get Instant Quote</option>
                 <option value="additionalServices">Get a Quote for Additional Services</option>
                 <option value="buyOrRentOrBoth">Send Message - To Buy / For Rent / For Both</option>
                 <option value="shipping">Shipping</option>
@@ -60,7 +60,7 @@
           </div>
           <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
         </div>
-        <div ng-if="reportsVm.tabValue == 'quickQuery'">
+        <div ng-if="reportsVm.tabValue == 'instantQuote'">
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
