@@ -1666,7 +1666,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       }
 
       function prepareImgArr(){
-        var numberOfIteration  = 1 - $scope.images.length;
+        var numberOfIteration  = 8 - $scope.images.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.images[$scope.images.length] = {};
         }
