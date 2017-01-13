@@ -232,7 +232,38 @@ function addProductQuote(form){
       });
   }
 
-  function isEmpty(myObject) {
+  function isEmpty(myObject){
+    if(!myObject)
+      return true;
+    
+    if(angular.equals(myObject,{}))
+      return true;
+    var keys= Object.keys(myObject);
+    if(keys.length > 1){
+      for(var i=0; i < keys.length;i++){
+        if(myObject[keys[i]] != "")
+           return false;
+      }
+      return true;
+    }
+    if(keys[0] == 'params')
+      {
+        if(myObject.params.length == 0){
+          return true;
+        }
+
+        if(myObject.params.length > 1)
+          return false;
+
+        if(myObject.params.length == 1 && myObject.params[0])
+          return false;
+        else
+          return true;
+      }
+
+  }
+
+  /*function isEmpty(myObject) {
     for(var key in myObject) {
       if(key != 'params'){
         if (myObject.hasOwnProperty(key)) {
@@ -246,7 +277,7 @@ function addProductQuote(form){
     }
 
     return true;
-}
+}*/
 
   function init(){
 
@@ -320,10 +351,7 @@ function addProductQuote(form){
           }
         });
         }
-        else{
-          alert("techInfo is dere");
-          
-        }
+        
 
         //Valuation Request
         vm.valuationReq.product = $scope.currentProduct;

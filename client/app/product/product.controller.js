@@ -259,11 +259,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         if(!$scope.product.miscDocuments || $scope.product.miscDocuments.length == 0)
           $scope.product.miscDocuments = [{}];
 
-        if(!$scope.product.technicalInfo){
-            $scope.product.technicalInfo = {};
-            $scope.product.technicalInfo.params = [{}];
-        }
-
         if(product.assetStatus)
             prevAssetStatus = product.assetStatus;
         else
@@ -294,7 +289,18 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         $scope.container.selectedCategoryId = $scope.product.category._id;
         $scope.container.selectedBrandId = $scope.product.brand._id;
         $scope.container.selectedModelId = $scope.product.model._id;
-
+        
+        var techFilter = {
+          category:$scope.product.category.name,
+          brand:$scope.product.brand.name,
+          model:$scope.product.model.name,
+        }
+        if(isEmpty($scope.product.technicalInfo)){
+            $scope.product.technicalInfo = {};
+            $scope.product.technicalInfo.params = [{}];
+             getProductInfo(techFilter);
+        }
+           
         //$scope.container.selectedSubCategory = $scope.product.subcategory;
 
 
@@ -444,6 +450,36 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
   init();
 
+   function isEmpty(myObject){
+    if(!myObject)
+      return true;
+    if(angular.equals(myObject,{}))
+      return true;
+    var keys=Object.keys(myObject);
+    if(keys.length > 1){
+      for(var i=0; i < keys.length;i++){
+        if(myObject[keys[i]] != "")
+           return false;
+      }
+      return true;
+    }
+    if(keys[0] == 'params')
+      {
+        if(myObject.params.length == 0){
+          return true;
+        }
+
+        if(myObject.params.length > 1)
+          return false;
+
+        if(myObject.params.length == 1 && myObject.params[0])
+          return false;
+        else
+          return true;
+      }
+
+  }
+
   function onStateChange(noReset){
 
     $scope.locationList = [];
@@ -561,6 +597,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       return;
     }
     $scope.product.technicalInfo = {};
+    $scope.product.technicalInfo.params = [{}];
     var md = null;
     for(var i=0; i< $scope.modelList.length;i++){
       if($scope.modelList[i]._id == modelId){
@@ -576,21 +613,37 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         brand : product.brand.name,
         model : product.model.name
       };
+      getProductInfo(techFilter);
+      
+    }else
+      product.model = {};
+  }
 
-      ProductTechInfoSvc.fetchInfo(techFilter)
+  function getProductInfo(techFilter){
+
+    ProductTechInfoSvc.fetchInfo(techFilter)
         .then(function(techInfo){
+          if(!$scope.product.technicalInfo)
+            {
+              $scope.product.technicalInfo = {};
+              $scope.product.technicalInfo.params = [{}];
+            }
           if(techInfo.length){
-            $scope.product.technicalInfo = {
+            $scope.product.technicalInfo['grossWeight'] = techInfo[0].information.grossWeight;
+            $scope.product.technicalInfo['operatingWeight'] = techInfo[0].information.operatingWeight;
+            $scope.product.technicalInfo['bucketCapacity'] = techInfo[0].information.bucketCapacity;
+            $scope.product.technicalInfo['enginePower'] = techInfo[0].information.enginePower;
+            $scope.product.technicalInfo['liftingCapacity'] = techInfo[0].information.liftingCapacity;            
+
+            /*$scope.product.technicalInfo = {
               grossWeight : techInfo[0].information.grossWeight,
               operatingWeight : techInfo[0].information.operatingWeight, 
               bucketCapacity : techInfo[0].information.bucketCapacity,
               enginePower : techInfo[0].information.enginePower, 
               liftingCapacity : techInfo[0].information.liftingCapacity 
-            } 
+            }*/ 
           }
         })
-    }else
-      product.model = {};
   }
 
   function onTradeTypeChange(tradeType){
