@@ -1482,7 +1482,20 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       });*/
   }
 
-  function deleteImage(idx,imageArr){
+ function deleteImg(idx){
+     $scope.images[idx] = {};
+    $scope.images.forEach(function(item,index,arr){
+      if(item.isPrimary)
+          $scope.primaryIndex = index;
+      });
+    if(typeof $scope.primaryIndex === 'undefined')
+        $scope.primaryIndex  =  0;
+
+  }
+
+
+
+ /* function deleteImage(idx,imageArr){
     $scope[imageArr][idx] = {};
     $scope[imageArr].forEach(function(item,index,arr){
       if(item.isPrimary)
@@ -1490,9 +1503,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       });
     if(typeof $scope.primaryIndex === 'undefined')
         $scope.primaryIndex  =  0;
-  }
+  }*/
 
-   function deleteImg(idx,type){
+   /*function deleteImg(idx,type){
        switch(type){
           case 'NOCAT':
             deleteImage(idx,'images');
@@ -1517,7 +1530,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           break;
         }
 
-  }
+  }*/
 
      // preview uploaded images
     function previewProduct(){
@@ -1671,7 +1684,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           $scope.images[$scope.images.length] = {};
         }
 
-        numberOfIteration  = 1- $scope.imagesGeneralApp.length;
+        /*numberOfIteration  = 1- $scope.imagesGeneralApp.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
         }
@@ -1702,7 +1715,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         numberOfIteration  = 1 - $scope.imagesUnderCarrage.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
-        }
+        }*/
       }
 
      // date picker
