@@ -6,21 +6,6 @@ angular.module('sreizaoApp')
     $scope.isCollapsed = true;
     var dataToSend = {};
     $scope.isAuctionType = "upcoming";
-    
-    function init(){
-      var filter = {};
-      filter.auctionType = "ongoing";
-      AuctionSvc.getAuctionDateData(filter).then(function(result){
-        if(result.length == 0)
-          $scope.isAuctionType = "upcoming";
-        else
-          $scope.isAuctionType = "ongoing";
-      })
-      .catch(function(err){
-      })
-    }
-
-    init();
 
     $scope.isActive = function(states) {
       return states.indexOf($state.current.name) != -1;//routes === $location.path();
@@ -40,8 +25,15 @@ angular.module('sreizaoApp')
     };
 
     $scope.redirectToAuction = function(){
-      $rootScope.showTab = $scope.isAuctionType;
-      $state.go("viewauctions",{type:$scope.isAuctionType});
+      var routeTo = "upcoming";
+      AuctionSvc.getAuctionDateData({auctionType:"ongoing"}).then(function(result){
+        if(result.length > 0)
+            routeTo = "ongoing";
+            $state.go("viewauctions",{type:routeTo});
+      })
+      .catch(function(err){
+        $state.go("viewauctions",{type:routeTo});
+      })
     }
 
     $scope.openLogin = function(){
