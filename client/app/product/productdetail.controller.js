@@ -42,7 +42,8 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   };
   vm.addProductQuote=addProductQuote;
   vm.submitValuationReq = submitValuationReq;
-  vm.originalPrice = originalPrice;
+  //vm.originalPrice = originalPrice;
+  vm.requestForFinance=requestForFinance;
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
   vm.sendBuyRequest = sendBuyRequest;
@@ -76,6 +77,12 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   //Submit Valuation Request
 
    function submitValuationReq(form){
+
+    if(!Auth.getCurrentUser._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
   
 
       if(form.$invalid){
@@ -427,19 +434,19 @@ function addProductQuote(form){
 
   //easy financing and Certification
 
-  function originalPrice(){
+  function requestForFinance(form){
+    
+    if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+      console.log($scope.currentProduct.grossPrice);
 
-      Auth.isLoggedInAsync(function(loggedIn){
-        if(!loggedIn){
-            Modal.openDialog('login');
-            Auth.doNotRedirect = true;
-            Auth.postLoginCallback = loadUserDetail;
-            console.log(loadUserDetail);
-        }
-     });
-
-      console.log( Auth.getCurrentUser());
-
+      var data={};
+      data.type="finance";
+      data.quote={user:Auth.getCurrentUser(),
+                  product:$scope.currentProduct,
+                   quote:reqFinnce}
 
     var serviceReq={};
     serviceReq.user=$scope.currentProduct.user;
@@ -551,6 +558,12 @@ function addProductQuote(form){
   }
 
   function sendBuyRequest(buycontact) {
+    if(!Auth.getCurrentUser._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
+
     var ret = false;
 
     if($scope.form.$invalid || ret){

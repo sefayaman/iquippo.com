@@ -517,12 +517,12 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          {{vm.currentProduct.grossPrice}}
+                          {{currentProduct.grossPrice}}
                         </div>
                       </div>
                       <div class="col-sm-4 text-right">
                         <div class="form-group">
-                          <a href="javascript:void(0);" ng-click="productDetailVm.originalPrice(originalPrice)" class="btn btn-warning">Submit</a>
+                          <a href="javascript:void(0);" ng-click="productDetailVm.sendBuyRequest(originalPrice)" class="btn btn-warning">Submit</a>
                         </div>
                       </div>
                     </div>
@@ -565,31 +565,31 @@
                 <h3 class="panel-title">Easy Financing</h3>
               </div>
               <div class="panel-body">
-                <form  novalidate role="form" name="form">    
+                <form  novalidate class="financeReq" name="financeReq">    
                     <div>
                       <div class="row">
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="number" class="form-control" name="assetCost" ng-model="buycontact.financeInfo.assetCost" ng-value="buycontact.financeInfo.assetCost" placeholder="Amount to be Financed">
+                            <input type="number" class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
                           </div>
                         </div>
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="number" class="form-control" name="financeAmount" ng-model="buycontact.financeInfo.financeAmount" ng-value="buycontact.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
+                            <input type="number" class="form-control" name="financeAmount" ng-model="reqFinance.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
                           </div>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="text" class="form-control" name="periodInMonths" ng-model="buycontact.financeInfo.periodInMonths" ng-value="buycontact.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
+                            <input type="text" class="form-control" name="periodInMonths" ng-model="reqFinance.financeInfo.periodInMonths" min= '0' placeholder="Tenure (in Months)">
                           </div>
                         </div> 
                         <div class="col-xs-6">
                           <div class="form-group" ng-class="{'has-error': form.finAgency.$invalid && form.submitted }">
-                            <select class="form-control" name="finAgency" ng-model="buycontact.financeInfo.finAgency" required>
+                            <select class="form-control" name="finAgency" ng-model="reqFinance.financeInfo.finAgency" required>
                               <option value="" disabled>* Financing Company</option>
-                              <option  ng-repeat="finAgency in valAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                              <option  ng-repeat="finAgency in valDetailAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
                             </select>
                             <i class="caret"></i>
                           </div>
@@ -600,7 +600,7 @@
                     <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="buycontact.message" placeholder="Comments"></textarea>
                     </div>
-                    <button type="submit" ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.sendBuyRequest(buycontact)" class="btn btn-warning pull-right">Submit</button>
+                    <button type="submit" ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-warning pull-right">Submit</button>
                   </form>                  
               </div>
             </div>
@@ -652,7 +652,7 @@
                 <h3 class="panel-title">Certification Request</h3>
               </div>
               <div class="panel-body">
-                <form  novalidate role="form" name="form">
+                <form  novalidate class="reqForCertify" name="reqForCertify">
                   <div class="row text-left">
                       <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
                       <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.valuation && !certifiedByIQuippoQuote.valid && form.submitted}">

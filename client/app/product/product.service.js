@@ -14,6 +14,7 @@
       //public methods
       prdService.getProductOnId = getProductOnId;
       prdService.addProduct = addProduct;
+      prdService.serviceRequest=serviceRequest;
       prdService.addProductInHistory = addProductInHistory;
       prdService.countryWiseCount = countryWiseCount;
       prdService.updateProduct = updateProduct;
@@ -369,6 +370,17 @@
 
       function setFilter(filter){
          searchFilter = filter;
+      }
+
+      function serviceRequest(data){
+       $http.post('api/serviceRequest/',data)
+       .then(function(res){
+        return res;
+       })
+       .catch(function(err){
+
+       })
+
       }
 
      return prdService;
