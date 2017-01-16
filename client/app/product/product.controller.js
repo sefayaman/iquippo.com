@@ -1277,6 +1277,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $rootScope.loading = true;
       productSvc.addProduct(product).then(function(result){
 
+        console.log(result);
+
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
          dataLayer.push(gaMasterObject.uploadProductSubmit);
          //NJ : set upload product Start time
@@ -1535,7 +1537,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       });*/
   }
 
- function deleteImg(idx){
+ /*function deleteImg(idx){
      $scope.images[idx] = {};
     $scope.images.forEach(function(item,index,arr){
       if(item.isPrimary)
@@ -1545,10 +1547,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         $scope.primaryIndex  =  0;
 
   }
+*/
 
 
-
- /* function deleteImage(idx,imageArr){
+ function deleteImage(idx,imageArr){
     $scope[imageArr][idx] = {};
     $scope[imageArr].forEach(function(item,index,arr){
       if(item.isPrimary)
@@ -1556,9 +1558,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       });
     if(typeof $scope.primaryIndex === 'undefined')
         $scope.primaryIndex  =  0;
-  }*/
+  }
 
-   /*function deleteImg(idx,type){
+   function deleteImg(idx,type){
        switch(type){
           case 'NOCAT':
             deleteImage(idx,'images');
@@ -1583,7 +1585,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           break;
         }
 
-  }*/
+  }
 
      // preview uploaded images
     function previewProduct(){
@@ -1732,18 +1734,18 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       }
 
       function prepareImgArr(){
-        var numberOfIteration  = 8 - $scope.images.length;
+        var numberOfIteration  = 1 - $scope.images.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.images[$scope.images.length] = {};
         }
 
-        /*numberOfIteration  = 1- $scope.imagesGeneralApp.length;
+        numberOfIteration  = 1- $scope.imagesGeneralApp.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
         }
 
-        console.log("My size after editing");
-        console.log($scope.imagesGeneralApp);
+        //console.log("My size after editing");
+        //console.log($scope.imagesGeneralApp);
 
         numberOfIteration  = 1 - $scope.imagesEngine.length;
         for(var i = 0; i < numberOfIteration; i++){
@@ -1768,7 +1770,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         numberOfIteration  = 1 - $scope.imagesUnderCarrage.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
-        }*/
+        }
       }
 
      // date picker

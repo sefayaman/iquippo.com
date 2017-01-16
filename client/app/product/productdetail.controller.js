@@ -42,7 +42,7 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   };
   vm.addProductQuote=addProductQuote;
   vm.submitValuationReq = submitValuationReq;
-  
+  vm.originalPrice = originalPrice;
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
   vm.sendBuyRequest = sendBuyRequest;
@@ -76,6 +76,10 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   //Submit Valuation Request
 
    function submitValuationReq(form){
+    alert("I am hit");
+
+    console.log(form);
+
       if(form.$invalid){
         $scope.submitted = true;
         return;
@@ -352,7 +356,7 @@ function addProductQuote(form){
         });
         }
         
-
+           console.log($scope.currentProduct);
         //Valuation Request
         vm.valuationReq.product = $scope.currentProduct;
         vm.valuationReq.user ={};
@@ -416,10 +420,50 @@ function addProductQuote(form){
       });
     }
 
-    // vendorSvc.getAllVendors()
-    // .then(function(){
-    //   $scope.valDetailsAgencies = vendorSvc.getVendorsOnCode('Finance');
-    // });
+   /*vendorSvc.getAllVendors()
+   .then(function(){
+       $scope.valDetailsAgencies = vendorSvc.getVendorsOnCode('Finance');
+   });*/
+  }
+
+  //easy financing and Certification
+
+  function originalPrice(){
+
+      Auth.isLoggedInAsync(function(loggedIn){
+        if(!loggedIn){
+            Modal.openDialog('login');
+            Auth.doNotRedirect = true;
+            Auth.postLoginCallback = loadUserDetail;
+        }
+     });
+
+      console.log($scope.currentProduct.user);
+
+
+    var serviceReq={};
+    serviceReq.user=$scope.currentProduct.user;
+
+
+  }
+
+  function serviceRequest(form,type){
+
+      Auth.isLoggedInAsync(function(loggedIn){
+        if(!loggedIn){
+            Modal.openDialog('login');
+            Auth.doNotRedirect = true;
+            Auth.postLoginCallback = loadUserDetail;
+        }
+     });
+
+      console.log($scope.currentProduct.user);
+
+
+    var serviceReq={};
+    serviceReq.user=$scope.currentProduct.user;
+
+
   }
 
   function getPriceTrendData(){

@@ -40,6 +40,7 @@ module.exports = function(app) {
   app.use('/api/pricetrend', require('./api/pricetrend'));
   app.use('/api/reports',require('./api/reports'));
   app.use('/api/product/information',require('./api/productinfo'));
+  app.use('/api/servicerequest',require('./api/servicerequest'));
   
   //app.use('/api/producthistory', require('./api/producthistory'));
   
