@@ -76,9 +76,7 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   //Submit Valuation Request
 
    function submitValuationReq(form){
-    alert("I am hit");
-
-    console.log(form);
+  
 
       if(form.$invalid){
         $scope.submitted = true;
@@ -290,6 +288,7 @@ function addProductQuote(form){
             Modal.openDialog('login');
             Auth.doNotRedirect = true;
             Auth.postLoginCallback = loadUserDetail;
+
         }
      });
 
@@ -435,10 +434,11 @@ function addProductQuote(form){
             Modal.openDialog('login');
             Auth.doNotRedirect = true;
             Auth.postLoginCallback = loadUserDetail;
+            console.log(loadUserDetail);
         }
      });
 
-      console.log($scope.currentProduct.user);
+      console.log( Auth.getCurrentUser());
 
 
     var serviceReq={};

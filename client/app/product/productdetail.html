@@ -508,6 +508,7 @@
                 <h3 class="panel-title">To Buy</h3>
               </div>
               <div class="panel-body">
+              <form novalidate class="originalPrice" name="originalPrice">
                     <div class="row">
                       <div class="col-sm-4">
                         <div class="form-group">
@@ -516,15 +517,16 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          Rs.25000
+                          {{vm.currentProduct.grossPrice}}
                         </div>
                       </div>
                       <div class="col-sm-4 text-right">
                         <div class="form-group">
-                          <a href="javascript:void(0);" ng-click="productDetailVm.originalPrice()" class="btn btn-warning">Submit</a>
+                          <a href="javascript:void(0);" ng-click="productDetailVm.originalPrice(originalPrice)" class="btn btn-warning">Submit</a>
                         </div>
                       </div>
                     </div>
+                    </form>
                     <div class="row">
                       <div class="col-sm-4">
                         <div class="form-group" >
@@ -607,7 +609,7 @@
                 <h3 class="panel-title">Valuation Report</h3>
               </div>
               <div class="panel-body">
-                <form  novalidate role="form" name="form">
+                <form  novalidate class="valReqForm" name="valReqForm">
                   <div class="row">
                     <div class="col-sm-6 form-group">
                       <input type="text" class="form-control" ng-value="productDetailVm.valuationReq.product.category.name" placeholder="Category" disabled>
@@ -640,7 +642,7 @@
                       <i class="caret"></i>
                     </div>
                   </div>
-                  <button type="submit" ng-click="productDetailVm.submitValuationReq()" class="btn btn-warning pull-right">Submit</button>
+                  <button type="submit" ng-click="productDetailVm.submitValuationReq(valReqForm)" class="btn btn-warning pull-right">Submit</button>
                 </form>
               </div>
 
