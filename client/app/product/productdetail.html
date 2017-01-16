@@ -596,7 +596,7 @@
                           <div class="form-group" ng-class="{'has-error': form.finAgency.$invalid && form.submitted }">
                             <select class="form-control" name="finAgency" ng-model="reqFinance.financeInfo.finAgency" required>
                               <option value="" disabled>* Financing Company</option>
-                              <option  ng-repeat="finAgency in valDetailAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                              <option  ng-repeat="finAgency in valDetailsAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
                             </select>
                             <i class="caret"></i>
                           </div>

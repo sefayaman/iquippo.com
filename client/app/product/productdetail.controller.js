@@ -474,11 +474,13 @@ function addProductQuote(form){
       console.log($scope.currentProduct.grossPrice);
 
       var data={};
-      data.type="finance";
-      data.quote={user:Auth.getCurrentUser(),
-                  product:$scope.currentProduct,
-                   quote:reqFinance}
-      ProductSvc.serviceRequest(data)
+      data={type:"finance",
+             user:Auth.getCurrentUser(),
+            product:$scope.currentProduct,
+            request:$scope.reqFinance
+    }
+      console.log(data);
+      productSvc.serviceRequest(data)
       .then(function(res){
         if(res){
           return;
