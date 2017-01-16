@@ -8,6 +8,7 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   $scope.priceTrendData = null; 
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
+  $scope.reqFinance = {};
   //$scope.financeContact={};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "mobile";
@@ -76,9 +77,27 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
 
   //Submit Valuation Request
 
+  function negotiate(form){
+     if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
+   if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
+    var data={};
+    ProductSvc.negotiation(data)
+    .then(function(res){
+      return;
+    })
+  }
+
    function submitValuationReq(form){
 
-    if(!Auth.getCurrentUser._id) {
+    if(!Auth.getCurrentUser()._id) {
       Modal.alert("Please Login/Register for uploading the products!", true);
       return;
     }
@@ -151,6 +170,14 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   }
 
 function addProductQuote(form){
+    
+
+    if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
+
     if(form.$invalid){
         $scope.submitted = true;
         return;
@@ -163,7 +190,11 @@ function addProductQuote(form){
     if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
       && $scope.productQuote.certifiedByIQuippoQuote.scheduleC == "yes")
       $scope.changedCertified($scope.mytime);
-    $http.post('/api/productquote',$scope.productQuote).then(function(res){
+    //$http.post('/api/productquote',$scope.productQuote).then(function(res){
+      ProductSvc.serviceRequest($scope.productQuote)
+      .then(function(res){
+
+
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
       dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesSubmit);
       //End
@@ -446,12 +477,13 @@ function addProductQuote(form){
       data.type="finance";
       data.quote={user:Auth.getCurrentUser(),
                   product:$scope.currentProduct,
-                   quote:reqFinnce}
-
-    var serviceReq={};
-    serviceReq.user=$scope.currentProduct.user;
-
-
+                   quote:reqFinance}
+      ProductSvc.serviceRequest(data)
+      .then(function(res){
+        if(res){
+          return;
+        }
+      })
   }
 
   function serviceRequest(form,type){

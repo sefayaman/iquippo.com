@@ -15,6 +15,9 @@
       prdService.getProductOnId = getProductOnId;
       prdService.addProduct = addProduct;
       prdService.serviceRequest=serviceRequest;
+
+      prdService.negotiation=negotiation;
+
       prdService.addProductInHistory = addProductInHistory;
       prdService.countryWiseCount = countryWiseCount;
       prdService.updateProduct = updateProduct;
@@ -381,6 +384,16 @@
 
        })
 
+      }
+
+      function negotiation(data){
+        $http.post('api/negotiate/',data)
+        .then(function(res){
+          return res;
+        })
+        .catch(function(err){
+          return err;
+        })
       }
 
      return prdService;

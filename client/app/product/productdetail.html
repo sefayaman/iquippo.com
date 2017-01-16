@@ -516,8 +516,11 @@
                         </div>
                       </div>
                       <div class="col-sm-4">
-                        <div class="form-group">
+                        <div class="form-group" ng-if="currentProduct.grossPrice">
                           {{currentProduct.grossPrice}}
+                        </div>
+                        <div class="form-group" ng-if="!currentProduct.grossPrice">
+                          Price On Request
                         </div>
                       </div>
                       <div class="col-sm-4 text-right">
@@ -528,6 +531,7 @@
                     </div>
                     </form>
                     <div class="row">
+                    <form novalidate class="negotiate" form="negotiate">
                       <div class="col-sm-4">
                         <div class="form-group" >
                           Make an Offer (by end-user)
@@ -535,15 +539,15 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group" >
-                          <input type="text" name="" class="form-control" placeholder="Enter Offer" required>
+                          <input type="text" name="" class="form-control" placeholder="Enter Offer" ng-model="negotiateAmt" required>
                         </div>
                       </div>
                       <div class="col-sm-4 text-right">
                         <div class="form-group" >
-                          <a href="javascript:void(0);" class="btn btn-warning">Submit</a>
+                          <a href="javascript:void(0);"  ng-click="negotiate(negotiate)" class="btn btn-warning">Submit</a>
                         </div>
                       </div>
-                      
+                      </form>
                     </div>
                     
                     <button type="submit" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
@@ -569,8 +573,11 @@
                     <div>
                       <div class="row">
                         <div class="col-xs-6">
-                          <div class="form-group">
-                            <input type="number" class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
+                          <div class="form-group" ng-if="currentProduct.grossPrice">
+                            <input type="number"  class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
+                          </div>
+                          <div class="form-group" ng-if="!currentProduct.grossPrice">
+                            <input type="number"  class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="Requested For Finance" placeholder="Amount to be Financed">
                           </div>
                         </div>
                         <div class="col-xs-6">
@@ -707,7 +714,7 @@
                     <div class="form-group">
                       <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-warning pull-right" ng-click="addProductQuote($event)">Submit</button>
+                    <button type="submit" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
                 </form>
               </div>
             </div>            

@@ -41,7 +41,7 @@ module.exports = function(app) {
   app.use('/api/reports',require('./api/reports'));
   app.use('/api/product/information',require('./api/productinfo'));
   app.use('/api/servicerequest',require('./api/servicerequest'));
-  
+  app.use('/api/negotiate',require('./api/negotiation'));
   //app.use('/api/producthistory', require('./api/producthistory'));
   
   // All undefined asset or api routes should return a 404
