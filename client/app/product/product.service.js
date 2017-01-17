@@ -199,11 +199,11 @@
                 .catch(function(res){
                     throw res;
                 });
-      };
+      }
 
       function setExpiry(ids){
         return $http.post(path + "/setexpiry", ids)
-      };
+      }
 
       function deleteProduct(product){
         return $http.delete(path + "/" + product._id)
@@ -214,7 +214,7 @@
               .catch(function(res){
                 throw res;
               });
-      };
+      }
 
       function bulkProductStatusUpdate(fileName){
         return $http.post(path + "/bulkproductstatusupdate",{filename:fileName})
@@ -376,7 +376,7 @@
       }
 
       function serviceRequest(data){
-       $http.post('api/serviceRequest/',data)
+       return $http.post('api/serviceRequest/',data)
        .then(function(res){
         return res;
        })

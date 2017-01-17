@@ -7,6 +7,7 @@ angular.module("admin",[]);
 angular.module("manpower",[]);
 angular.module("spare",[]);
 angular.module("report",[]);
+angular.module("negotiation",[]);
 //Application module
 angular.module('sreizaoApp',[
   'ngCookies',
@@ -24,6 +25,7 @@ angular.module('sreizaoApp',[
   'manpower',
   'spare',
   'report',
+  'negotiation',
   'angularjs-datetime-picker',
    'uiGmapgoogle-maps',
 ])

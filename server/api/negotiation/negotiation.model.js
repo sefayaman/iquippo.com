@@ -7,6 +7,7 @@ var NegotiationSchema = new Schema({
   user: {},
   product : {},
   offer:Number,
+  negotiation:Boolean,
   createdAt: {type:Date,default:Date.now}
 });
 
