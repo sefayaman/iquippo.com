@@ -44,7 +44,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   };
   $scope.negotiate=negotiate;
   vm.addProductQuote=addProductQuote;
-  vm.submitValuationReq = submitValuationReq;
+
   //vm.originalPrice = originalPrice;
   vm.requestForFinance=requestForFinance;
   vm.getDateFormat = getDateFormat;
@@ -414,7 +414,7 @@ function addProductQuote(form){
         
            console.log($scope.currentProduct);
         //Valuation Request
-        vm.valuationReq.product = $scope.currentProduct;
+        /*vm.valuationReq.product = $scope.currentProduct;
         vm.valuationReq.user ={};
         vm.valuationReq.user._id = Auth.getCurrentUser()._id;
         vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
@@ -422,7 +422,7 @@ function addProductQuote(form){
         vm.valuationReq.seller = {};
         vm.valuationReq.seller._id = $scope.currentProduct.seller._id;
         vm.valuationReq.seller.mobile = $scope.currentProduct.seller.mobile;
-        vm.valuationReq.seller.email = $scope.currentProduct.seller.email;
+        vm.valuationReq.seller.email = $scope.currentProduct.seller.email;*/
         
         getPriceTrendData();
         if($scope.currentProduct.tradeType == "SELL")

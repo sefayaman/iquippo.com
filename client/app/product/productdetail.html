@@ -593,7 +593,7 @@
                           </div>
                         </div> 
                         <div class="col-xs-6">
-                          <div class="form-group" ng-class="{'has-error': financeReq.finAgency.$invalid && submitted }">
+                          <div class="form-group" ng-class="{'has-error': financeReq.finAgency.$invalid && financeSubmitted }">
                             <select class="form-control" name="finAgency" ng-model="reqFinance.financeInfo.finAgency" required>
                               <option value="" disabled>* Financing Company</option>
                               <option  ng-repeat="finAgency in valDetailsAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
@@ -634,14 +634,14 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-sm-6 form-group" ng-class="{'has-error':valReqForm.valagency.$invalid && submitted}">
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':valReqForm.valagency.$invalid && valSubmitted}">
                     <select class="form-control" name="valagency" required ng-model="valuationVm.valuationReq.valuationAgency._id">
                       <option value="">Agency Name</option>
                       <option value="{{agency._id}}" ng-repeat="agency in valAgencies">{{agency.name}}</option>
                     </select>
                       <i class="caret"></i>
                     </div>
-                     <div class="col-sm-6 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && submitted}">
+                     <div class="col-sm-6 form-group" ng-class="{'has-error': valReqForm.purpose.$invalid && valSubmitted}">
                       <select class="form-control" name="purpose" ng-model="valuationVm.valuationReq.purpose" required>
                         <option value="">*Select Purpose</option>
                         <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
@@ -662,13 +662,13 @@
                 <form  novalidate class="reqForCertify" name="reqForCertify">
                   <div class="row text-left">
                       <div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
-                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': reqForCertify.certification.$invalid && submitted}">
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': reqForCertify.certification.$invalid && inspectSubmitted}">
                         <select class="form-control" ng-model="productQuote.certifiedByIQuippoQuote.valuation" name="certification" required>
                           <option value="">*Select Purpose</option>
                           <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
                         </select>
                       </div>
-                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && submitted}">
+                      <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': productQuote.certifiedByIQuippoQuote.valuation == 'Other' &&!productQuote.certifiedByIQuippoQuote.otherName && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
                         <input class="form-control" type="text" name="otherName" ng-model="productQuote.certifiedByIQuippoQuote.otherName" ng-disabled ="productQuote.certifiedByIQuippoQuote.valuation != 'Other'" placeholder="*Other" ng-required= "productQuote.certifiedByIQuippoQuote.valuation == 'Other'">
                       </div>
                     </div>                                   
@@ -691,7 +691,7 @@
                       <div class="clerafix"></div>                                      
                       <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">  
                         <small>Pick Date</small>
-                        <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && form.submitted}">
+                        <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
                           <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                           <span class="input-group-addon">
                             <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o"></i></a>
