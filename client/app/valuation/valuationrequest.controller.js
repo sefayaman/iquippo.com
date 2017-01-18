@@ -69,7 +69,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
     }
 
  		if(form.$invalid){
- 			$scope.submitted = true;
+ 			$scope.valSubmitted = true;
  			return;
  		}
 

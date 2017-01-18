@@ -191,7 +191,7 @@ function addProductQuote(form){
     }
       
       if(form.$invalid){
-        $scope.submitted = true;
+        $scope.inspectSubmitted = true;
         return;
       }
 
@@ -492,7 +492,7 @@ function addProductQuote(form){
     }
 
      if(form.$invalid){
-        $scope.submitted = true;
+        $scope.financeSubmitted = true;
         return;
       }
       //console.log($scope.currentProduct.grossPrice);
