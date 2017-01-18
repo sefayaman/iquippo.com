@@ -4,8 +4,9 @@
 angular.module('manpower').controller('ManpowerCtrl',ManpowerCtrl);
 
 //controller function
-function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, LocationSvc, productSvc, ManpowerSvc) {
+function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, LocationSvc, productSvc, ManpowerSvc,MarketingSvc) {
     var vm = this;
+    var facebookConversionSent = false;
     vm.manpower = {};
     vm.manpowerFilter = {};
     vm.assetsList = [];
@@ -294,6 +295,13 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         vm.manpower = {};
         $scope.submitted = false;
         $scope.selectedAssetsArr = [];
+        //Google and Facbook conversion start
+            MarketingSvc.googleConversion();
+            if(!facebookConversionSent){
+                MarketingSvc.facebookConversion();
+                facebookConversionSent = true;
+            }
+        //Google and Facbook conversion end
         });
       });
     }

@@ -4,9 +4,9 @@
 angular.module('account').controller('SignupCtrl',SignupCtrl);
 
 //controller function
-function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uibModalInstance,InvitationSvc,Modal,LocationSvc, notificationSvc) {
+function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uibModalInstance,InvitationSvc,Modal,LocationSvc, notificationSvc,MarketingSvc) {
     var vm = this;
-
+    var facebookConversionSent = false;
     vm.user = {};
     vm.otpCode;
     vm.user.activationOTP = "mobile";
@@ -79,6 +79,14 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
                 couponData.user = Auth.getCurrentUser();
                 couponData.refBy.refId = $location.search().ref_id;
                 couponData.refBy.code = $location.search().code;
+                 //Google and Facbook conversion start
+                      MarketingSvc.googleConversion();
+                      if(!facebookConversionSent){
+                          MarketingSvc.facebookConversion();
+                          facebookConversionSent = true;
+                      }
+                  //Google and Facbook conversion end
+
                 InvitationSvc.createCoupon(couponData)
                 .then(function(res){
                   console.log("Coupon Created");

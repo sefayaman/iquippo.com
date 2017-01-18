@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal) {
+  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal,MarketingSvc) {
+    var facebookConversionSent = false;
     //Start > NJ : push quickQueryOpen object in GTM data layer
     dataLayer.push(gaMasterObject.quickQueryOpen);
       // ga('set', 'userId', 'abc-123-xyz');
@@ -109,6 +110,13 @@ angular.module('sreizaoApp')
         data['to'] = dataToSend.email;
         data['subject'] = 'No reply: Request for a Quote received';
         notificationSvc.sendNotification('productEnquiriesRequestForQuoteToCustomer', data, dataToSend,'email');
+        //Google and Facbook conversion start
+            MarketingSvc.googleConversion();
+            if(!facebookConversionSent){
+                MarketingSvc.facebookConversion();
+                facebookConversionSent = true;
+            }
+        //Google and Facbook conversion end
       }).error(function(res){
         Modal.alert(res,true);
       });

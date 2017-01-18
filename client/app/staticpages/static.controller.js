@@ -13,11 +13,11 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Shipping controller function
-  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc) {
+  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,MarketingSvc) {
     //NJ start:set current time
     $scope.shippingStartTime = new Date();
     //End
-
+    var facebookConversionSent = false;
     $scope.addShippingQuote = addShippingQuote;
     $scope.resetClick = resetClick;
 
@@ -77,6 +77,15 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.shippingQuote = {};
           $scope.form.submitted = false;
           Modal.alert(informationMessage.productQuoteSuccess,true);
+
+          //Google and Facbook conversion start
+            MarketingSvc.googleConversion();
+            if(!facebookConversionSent){
+                MarketingSvc.facebookConversion();
+                facebookConversionSent = true;
+            }
+         //Google and Facbook conversion end
+
       })
       .catch(function(res){
           //Modal.alert("",true);
@@ -98,11 +107,11 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Valuation controller function
-  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc) {
+  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc) {
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
     //End
-
+    var facebookConversionSent = false;
     $scope.addValuationQuote = addValuationQuote;
     $scope.resetClick = resetClick;
     $scope.onCategoryChange = onCategoryChange;
@@ -228,6 +237,13 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         setUser();
       $scope.form.submitted = false;
       Modal.alert(informationMessage.productQuoteSuccess,true);
+      //Google and Facbook conversion start
+          MarketingSvc.googleConversion();
+          if(!facebookConversionSent){
+              MarketingSvc.facebookConversion();
+              facebookConversionSent = true;
+          }
+      //Google and Facbook conversion end
       },function(res){
           Modal.alert(res,true);
       });
@@ -303,8 +319,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Finance Controller function
-  function FinanceCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc) {
-
+  function FinanceCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc) {
+    var facebookConversionSent = false;
     $scope.addFinanceQuote = addFinanceQuote;
     $scope.resetClick = resetClick;
     $scope.onCategoryChange = onCategoryChange;
@@ -407,6 +423,13 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         setUserData();
         $scope.form.submitted = false;
         Modal.alert(informationMessage.productQuoteSuccess,true);
+        //Google and Facbook conversion start
+          MarketingSvc.googleConversion();
+          if(!facebookConversionSent){
+              MarketingSvc.facebookConversion();
+              facebookConversionSent = true;
+          }
+      //Google and Facbook conversion end
       })
       .catch(function(res){
           //error handling
@@ -422,8 +445,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
   }
   //Valuation controller function
-  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc) {
-   
+  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc) {
+   var facebookConversionSent = false;
     $scope.addInsuranceQuote = addInsuranceQuote;
     $scope.resetClick = resetClick;
     $scope.onCategoryChange = onCategoryChange;
@@ -525,6 +548,13 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         setUserData();
         $scope.form.submitted = false;
         Modal.alert(informationMessage.productQuoteSuccess,true);
+        //Google and Facbook conversion start
+          MarketingSvc.googleConversion();
+          if(!facebookConversionSent){
+              MarketingSvc.facebookConversion();
+              facebookConversionSent = true;
+          }
+      //Google and Facbook conversion end
       })
       .catch(function(res){
           //error handling

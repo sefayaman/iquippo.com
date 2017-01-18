@@ -3,8 +3,9 @@
 
 angular.module('account').controller('LoginCtrl', LoginCtrl);
 
-  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state) {
+  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state,MarketingSvc) {
     var vm = this;
+    var facebookConversionSent = false;
     vm.user = {};
     vm.login = login;
     vm.loginOauth = loginOauth;
@@ -25,6 +26,13 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
         .then( function() {
           closeDialog();
           vm.user = {};
+          //Google and Facbook conversion start
+            MarketingSvc.googleConversion();
+            if(!facebookConversionSent){
+                MarketingSvc.facebookConversion();
+                facebookConversionSent = true;
+            }
+         //Google and Facbook conversion end
 
           /*Loading cart and other data if user is logged in*/
         $rootScope.loading = true;
