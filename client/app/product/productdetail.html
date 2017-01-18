@@ -65,7 +65,7 @@
             </div>
               
               <ol class="carousel-indicators">
-                <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images">
+                <li class="" data-slide-to="{{$index}}" ng-class="{'active':thumbnailImage.isPrimary}" data-target="#article-photo-carousel" ng-repeat="thumbnailImage in currentProduct.images | limitTo:5">
                     <img alt="" ng-src="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{thumbnailImage.src}}" class="img-responsive img-thumbnail" ng-click = "imageClick()">
                 </li>
               </ol>
