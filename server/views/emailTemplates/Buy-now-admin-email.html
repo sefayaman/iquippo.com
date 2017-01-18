@@ -115,6 +115,51 @@
                         
                     </td>
                 </tr>
+                {{#if reqFinance}}
+                <tr>
+                
+                    <td>
+                        <strong>Amount to be Financed :</strong>
+                        
+                    </td>
+                    <td>
+                        {{reqFinance.financeInfo.assetCost}}
+                        
+                    </td>
+                    
+                    <td>
+                        <strong>Indicative Rate :</strong>
+                        
+                    </td>
+                    <td>
+                        {{reqFinance.financeInfo.financeAmount}}
+                        
+                    </td>
+                </tr>
+                 <tr>
+                    <td>
+                        <strong>Tenure in Months :</strong>
+                        
+                    </td>
+                    <td>
+                        {{reqFinance.financeInfo.periodInMonths}}
+                        
+                    </td>
+                    
+                    <td>
+                        <strong>Financing Company :</strong>
+                        
+                    </td>
+                    <td>
+                        {{reqFinance.financeInfo.finAgency}}
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Comments</strong></td>
+                    <td>{{reqFinance.message}}</td>
+                </tr>
+                {{/if}}
                 
             </table>
         </td>

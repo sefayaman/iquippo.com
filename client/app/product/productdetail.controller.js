@@ -215,14 +215,14 @@ function addProductQuote(form){
        Modal.alert("Your request has been submitted successfully",true);
 
         var data = {};
-        data['to'] = $scope.productQuote;
+        data['to'] = supportMail;
         data['subject'] = 'Request for buy a product';
         $scope.productQuote.serverPath = serverPath;
         $scope.productQuote.valuationQuote.date = moment($scope.productQuote.valuationQuote.scheduleDate).format('DD/MM/YYYY');
         $scope.productQuote.certifiedByIQuippoQuote.date = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
         notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToAdmin', data, $scope.productQuote,'email');
 
-        data['to'] = $scope.productQuote.email;
+        data['to'] = Auth.getCurrentUser().email;
         data['subject'] = 'No reply: Product Enquiry request received';
         notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
@@ -508,17 +508,23 @@ function addProductQuote(form){
        Modal.confirm("Do you want to submit?",function(ret){
         if(ret == "yes"){
 
-      var data={};
-      data={type:"finance",
+      var dataFinance={};
+      dataFinance={type:"finance",
              user:Auth.getCurrentUser(),
             product:$scope.currentProduct,
             request:$scope.reqFinance
        }
-      console.log(data);
-      productSvc.serviceRequest(data)
+      //console.log(data);
+      productSvc.serviceRequest(dataFinance)
       .then(function(res){
         if(res){
         Modal.alert("Your request has been submitted successfully",true);     
+        
+        var data = {};
+        data['to'] = supportMail;
+        data['subject'] = ' Bid Received for your' + dataFinance.product.brand.name + ' ' + dataFinance.product.model.name + ' ' + dataFinance.product.category.name + '  Asset ID:'+ dataFinance.product.assetId;
+        notificationSvc.sendNotification('Buy-now-admin-email', data,dataFinance,'email');
+
         }
       })
     }
