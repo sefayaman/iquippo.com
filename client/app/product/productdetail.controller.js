@@ -85,15 +85,17 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
       return;
     }
 
+    if($scope.currentProduct.priceOnRequest){
+      Modal.alert("request Cant be submitted",true);
+      return;
+    }
+
     if(form.$invalid){
         $scope.submitted = true;
         return;
       }
 
-    if($scope.currentProduct.priceOnRequest){
-      Modal.alert("request Cant be submitted",true);
-      return;
-    }
+    
 
      if(flag !== false){
     if($scope.negotiateAmt == '' || $scope.negotiateAmt == undefined)
