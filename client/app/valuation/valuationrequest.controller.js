@@ -1,9 +1,9 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('ValuationRequestCtrl',ValuationRequestCtrl);
-function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$uibModalInstance,vendorSvc,$state,notificationSvc) {
+function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,vendorSvc,$state,notificationSvc) {
  	var vm = this;
- 	vm.close = close;
+ 	//vm.close = close;
  	vm.submitValuationReq = submitValuationReq;
  	vm.resetValuationReq = resetValuationReq;
  	vm.valuationReq = {};
@@ -34,34 +34,46 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		vm.valuationReq.seller = {};
 		vm.valuationReq.valuationAgency = {};
 		vm.valuationReq.initiatedBy = "buyer";
-		if(Auth.getCurrentUser()._id && Auth.getCurrentUser()._id == $scope.product.seller._id)
+		if(Auth.getCurrentUser()._id && Auth.getCurrentUser()._id == $scope.currentProduct.seller._id)
 		vm.valuationReq.initiatedBy = "seller";
-		vm.valuationReq.product._id = $scope.product._id;
-		vm.valuationReq.product.assetId = $scope.product.assetId;
-		vm.valuationReq.product.assetDir = $scope.product.assetDir;
-		vm.valuationReq.product.primaryImg = $scope.product.primaryImg;
-		vm.valuationReq.product.name = $scope.product.name;
-		vm.valuationReq.product.category = $scope.product.category.name;
-		vm.valuationReq.product.status = $scope.product.assetStatus;
-		vm.valuationReq.product.city = $scope.product.city;
-		vm.valuationReq.product.serialNumber = $scope.product.serialNo;
+		vm.valuationReq.product._id = $scope.currentProduct._id;
+		vm.valuationReq.product.assetId = $scope.currentProduct.assetId;
+		vm.valuationReq.product.assetDir = $scope.currentProduct.assetDir;
+		vm.valuationReq.product.primaryImg = $scope.currentProduct.primaryImg;
+		vm.valuationReq.product.name = $scope.currentProduct.name;
+		vm.valuationReq.product.category = $scope.currentProduct.category.name;
+		vm.valuationReq.product.status = $scope.currentProduct.assetStatus;
+		vm.valuationReq.product.city = $scope.currentProduct.city;
+		vm.valuationReq.product.serialNumber = $scope.currentProduct.serialNo;
 
 		vm.valuationReq.user._id = Auth.getCurrentUser()._id;
 		vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
 		vm.valuationReq.user.email = Auth.getCurrentUser().email;
 		
-		vm.valuationReq.seller._id = $scope.product.seller._id;
-		vm.valuationReq.seller.mobile = $scope.product.seller.mobile;
-		vm.valuationReq.seller.email = $scope.product.seller.email;
+		vm.valuationReq.seller._id = $scope.currentProduct.seller._id;
+		vm.valuationReq.seller.mobile = $scope.currentProduct.seller.mobile;
+		vm.valuationReq.seller.email = $scope.currentProduct.seller.email;
 
  	}
 
- 	init();
+ 	$scope.$on('productloaded',function(){
+ 		init();
+ 	});
+
+ 	//init();
  	function submitValuationReq(form){
+ 		
+         if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
  		if(form.$invalid){
  			$scope.submitted = true;
  			return;
  		}
+
+
 
  		vm.valuationReq.status = valuationStatuses[0].code;
  		vm.valuationReq.statuses = [];
@@ -94,14 +106,14 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 
 		paymentTransaction.product = {};
 		paymentTransaction.product.type = "equipment";
-		paymentTransaction.product._id = $scope.product._id;
-		paymentTransaction.product.assetId = $scope.product.assetId;
-		paymentTransaction.product.assetDir = $scope.product.assetDir;
-		paymentTransaction.product.primaryImg = $scope.product.primaryImg;
-		paymentTransaction.product.city = $scope.product.city;
-		paymentTransaction.product.name = $scope.product.name;
-		paymentTransaction.product.category = $scope.product.category.name;
-		paymentTransaction.product.status = $scope.product.assetStatus;
+		paymentTransaction.product._id = $scope.currentProduct._id;
+		paymentTransaction.product.assetId = $scope.currentProduct.assetId;
+		paymentTransaction.product.assetDir = $scope.currentProduct.assetDir;
+		paymentTransaction.product.primaryImg = $scope.currentProduct.primaryImg;
+		paymentTransaction.product.city = $scope.currentProduct.city;
+		paymentTransaction.product.name = $scope.currentProduct.name;
+		paymentTransaction.product.category = $scope.currentProduct.category.name;
+		paymentTransaction.product.status = $scope.currentProduct.assetStatus;
 		paymentTransaction.user = {};
 
 		paymentTransaction.user._id = Auth.getCurrentUser()._id;
@@ -120,8 +132,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 		paymentTransaction.paymentMode = "online";
 
  		ValuationSvc.save({valuation:vm.valuationReq,payment:paymentTransaction})
- 		.then(function(result){
-			close(); 			
+ 		.then(function(result){		
  			if(result.transactionId)
  				$state.go('payment',{tid:result.transactionId});
  		})
@@ -135,9 +146,6 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,$u
 
  	}
 
-    function close(){
-      	 $uibModalInstance.dismiss('cancel');
-    }
 
 }
 

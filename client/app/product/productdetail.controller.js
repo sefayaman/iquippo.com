@@ -56,26 +56,10 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   vm.openValuationModal = openValuationModal;
   vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
   vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
-  vm.valuationReq = {};
-
-  function valinit(){
-     PaymentMasterSvc.getAll()
-      .then(function(result){
-        vendorSvc.getAllVendors()
-        .then(function(){
-          var agency = vendorSvc.getVendorsOnCode('Valuation');
-          agency.forEach(function(item){
-            var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",item._id);
-            if(pyMst && pyMst.fees)
-              $scope.valDetailsAgencies[$scope.valDetailsAgencies.length] = item;
-            else if(pyMst && pyMst.fees === 0)
-              $scope.valDetailsAgencies[$scope.valDetailsAgencies.length] = item;
-          })
-        });
-      })
-  }
   
-  valinit();
+
+  
+ // valinit();
 
   //Submit Valuation Request
 
@@ -138,85 +122,64 @@ function negotiateConfirm(form,flag){
 
 
 
-   function submitValuationReq(form){
+   
 
-    if(!Auth.getCurrentUser()._id) {
-      Modal.alert("Please Login/Register for uploading the products!", true);
-      return;
-    }
-
-   if(form.$invalid){
-        $scope.submitted = true; 
-        return;
+$scope.changed = function (mytime) {
+      if(mytime) {
+        var hours = mytime.getHours();
+        var minutes = mytime.getMinutes();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        $scope.valuationQuote.scheduledTime = hours + ':' + minutes + ' ' + ampm;
       }
+    };
 
-    Modal.confirm("Do you want to submit?",function(ret){
-        if(ret == "yes"){
-      vm.valuationReq.status = valuationStatuses[0].code;
-      vm.valuationReq.statuses = [];
-      var stsObj = {};
-      stsObj.createdAt = new Date();
-      stsObj.userId = vm.valuationReq.user._id;
-      stsObj.status = valuationStatuses[0].code;
-      vm.valuationReq.statuses[vm.valuationReq.statuses.length] = stsObj;
-      for(var i=0; $scope.valDetailsAgencies.length;i++){
-        if($scope.valDetailsAgencies[i]._id == vm.valuationReq.valuationAgency._id){
-          vm.valuationReq.valuationAgency.name = $scope.valDetailsAgencies[i].name;
-          vm.valuationReq.valuationAgency.email = $scope.valDetailsAgencies[i].email;
-          vm.valuationReq.valuationAgency.mobile = $scope.valDetailsAgencies[i].mobile;
-          break;
-        }
-      }
-      
-      var paymentTransaction = {};
-      paymentTransaction.payments = [];
-      paymentTransaction.totalAmount = 0;
-      paymentTransaction.requestType = "Valuation Request";
+    $scope.toggleMode = function() {
+      $scope.isShow = ! $scope.isShow;
+    };
 
-      var payObj = {};
+     $scope.changedCertified = function (mytime) {
+      changed(mytime, 'certified');
+    };
+    
+    //date picker
+    $scope.today = function() {
+      $scope.scheduleDate = new Date();
+    };
+    $scope.today();
 
-      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",vm.valuationReq.valuationAgency._id);
-      payObj.type = "valuationreq";
-      payObj.charge = pyMaster.fees;
-      paymentTransaction.totalAmount += payObj.charge;
-      paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+    $scope.clear = function() {
+      $scope.scheduleDate = null;
+    };
 
-      paymentTransaction.product = $scope.currentProduct;
-      paymentTransaction.product.type = "equipment";
-      
-      paymentTransaction.user = {};
+    $scope.toggleMin = function() {
+      $scope.minDate = $scope.minDate ? null : new Date();
+    };
 
-      paymentTransaction.user._id = Auth.getCurrentUser()._id;
-      paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
-      paymentTransaction.user.fname = Auth.getCurrentUser().fname;
-      paymentTransaction.user.city = Auth.getCurrentUser().city;
-      paymentTransaction.user.email = Auth.getCurrentUser().email;
+    $scope.toggleMin();
+    $scope.maxDate = new Date(2020, 5, 22);
+    $scope.minDate = new Date();
 
-      paymentTransaction.status = transactionStatuses[0].code;
-      paymentTransaction.statuses = [];
-      var sObj = {};
-      sObj.createdAt = new Date();
-      sObj.status = transactionStatuses[0].code;
-      sObj.userId = Auth.getCurrentUser()._id;
-      paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
-      paymentTransaction.paymentMode = "online";
+    $scope.open1 = function() {
+      $scope.popup1.opened = true;
+    };
 
-      ValuationSvc.save({valuation:vm.valuationReq,payment:paymentTransaction})
-      .then(function(result){      
-        if(result.transactionId)
-          $state.go('payment',{tid:result.transactionId});
-      })
-      .catch(function(){
-        //error handling
-      });
-    }
-    });
+     $scope.setDate = function(year, month, day) {
+      $scope.scheduleDate = new Date(year, month, day);
+    };
 
-  }
+    $scope.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1
+    };
 
+    $scope.formats = ['dd/MM/yyyy', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
 
-   $scope.changedCertified = function (mytime) {
-      getTime(mytime, 'certified');
+    $scope.popup1 = {
+      opened: false
     };
 
 function addProductQuote(form){
@@ -250,6 +213,18 @@ function addProductQuote(form){
       .then(function(res){
 
        Modal.alert("Your request has been submitted successfully",true);
+
+        var data = {};
+        data['to'] = $scope.productQuote;
+        data['subject'] = 'Request for buy a product';
+        $scope.productQuote.serverPath = serverPath;
+        $scope.productQuote.valuationQuote.date = moment($scope.productQuote.valuationQuote.scheduleDate).format('DD/MM/YYYY');
+        $scope.productQuote.certifiedByIQuippoQuote.date = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
+        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToAdmin', data, $scope.productQuote,'email');
+
+        data['to'] = $scope.productQuote.email;
+        data['subject'] = 'No reply: Product Enquiry request received';
+        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
         });
       }
@@ -361,6 +336,7 @@ function addProductQuote(form){
     return true;
 }*/
 
+
   function init(){
 
      Auth.isLoggedInAsync(function(loggedIn){
@@ -408,6 +384,7 @@ function addProductQuote(form){
       }
       //End
         $scope.currentProduct = result;
+        $scope.$broadcast('productloaded');
         $rootScope.currentProduct = $scope.currentProduct;
 
         console.log($scope.currentProduct);
