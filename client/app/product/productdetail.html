@@ -80,7 +80,7 @@
             </div>
             <legend></legend>
             
-            <div class="well well-picture">
+            <div class="well well-picture" ng-if="currentProduct.gAImages[0]">
               <div class="row">
                 <div class="col-sm-8">
                   <h4>General Appearance</h4>
@@ -96,7 +96,7 @@
                 </div>
               </div>
             </div>
-            <div class="well well-picture">
+            <div class="well well-picture" ng-if="currentProduct.engineImages[0]">
               <div class="row">
                 <div class="col-sm-8">
                   <h4>Engine</h4>
@@ -112,7 +112,7 @@
                 </div>
               </div>
             </div>
-            <div class="well well-picture">
+            <div class="well well-picture" ng-if="currentProduct.hydraulicImages[0]">
               <div class="row">
                 <div class="col-sm-8">
                   <h4>Hydraulic</h4>
@@ -128,7 +128,7 @@
                 </div>
               </div>
             </div>
-            <div class="well well-picture">
+            <div class="well well-picture" ng-if="currentProduct.cabinImages[0]">
               <div class="row">
                 <div class="col-sm-8">
                   <h4>Cabin</h4>
@@ -144,7 +144,7 @@
                 </div>
               </div>
             </div>
-            <div class="well well-picture">
+            <div class="well well-picture" ng-if="currentProduct.underCarrageImages[0]">
               <div class="row">
                 <div class="col-sm-8">
                   <h4>Under Carrage/Tyre</h4>
@@ -160,7 +160,7 @@
                 </div>
               </div>
             </div>
-            <div class="well well-picture">
+            <div class="well well-picture" ng-if="currentProduct.otherImages[0]">
               <div class="row">
                 <div class="col-sm-8">
                   <h4>Others</h4>
