@@ -14,6 +14,10 @@
       //public methods
       prdService.getProductOnId = getProductOnId;
       prdService.addProduct = addProduct;
+      prdService.serviceRequest=serviceRequest;
+
+      prdService.negotiation=negotiation;
+
       prdService.addProductInHistory = addProductInHistory;
       prdService.countryWiseCount = countryWiseCount;
       prdService.updateProduct = updateProduct;
@@ -195,11 +199,11 @@
                 .catch(function(res){
                     throw res;
                 });
-      };
+      }
 
       function setExpiry(ids){
         return $http.post(path + "/setexpiry", ids)
-      };
+      }
 
       function deleteProduct(product){
         return $http.delete(path + "/" + product._id)
@@ -210,7 +214,7 @@
               .catch(function(res){
                 throw res;
               });
-      };
+      }
 
       function bulkProductStatusUpdate(fileName){
         return $http.post(path + "/bulkproductstatusupdate",{filename:fileName})
@@ -369,6 +373,27 @@
 
       function setFilter(filter){
          searchFilter = filter;
+      }
+
+      function serviceRequest(data){
+       return $http.post('api/serviceRequest/',data)
+       .then(function(res){
+        return res;
+       })
+       .catch(function(err){
+
+       })
+
+      }
+
+      function negotiation(data){
+        $http.post('api/negotiate/',data)
+        .then(function(res){
+          return res;
+        })
+        .catch(function(err){
+          return err;
+        })
       }
 
      return prdService;

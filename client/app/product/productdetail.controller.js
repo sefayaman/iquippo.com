@@ -2,12 +2,14 @@
   'use strict';
 angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
 angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
-function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc,ProductTechInfoSvc, BuyContactSvc, userSvc,PriceTrendSvc,ValuationSvc,$state) {
+function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootScope,PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc,ProductTechInfoSvc, BuyContactSvc, userSvc,PriceTrendSvc,ValuationSvc,$state) {
   var vm = this;
   $scope.currentProduct = {};
   $scope.priceTrendData = null; 
   $rootScope.currntUserInfo = {};
   $scope.buycontact = {};
+  $scope.reqFinance = {};
+  //$scope.certifyProduct={};
   //$scope.financeContact={};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "mobile";
@@ -15,15 +17,15 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
 //certification request
   $scope.productQuote = {};
   if(Auth.getCurrentUser()._id){
-      var currUser = Auth.getCurrentUser();
-      $scope.productQuote.fname = currUser.fname;
-      $scope.productQuote.mname = currUser.mname;
+      //var currUser = Auth.getCurrentUser();
+      $scope.productQuote.user =Auth.getCurrentUser();
+      /*$scope.productQuote.mname = currUser.mname;
       $scope.productQuote.lname = currUser.lname;
 
       $scope.productQuote.mobile = currUser.mobile;
       $scope.productQuote.email = currUser.email;
       $scope.productQuote.phone = currUser.phone;
-      $scope.productQuote.country = currUser.country;
+      $scope.productQuote.country = currUser.country;*/
     }
 
 
@@ -40,9 +42,11 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
   $scope.status = {
     Firstopen: true
   };
+  $scope.negotiate=negotiate;
   vm.addProductQuote=addProductQuote;
   vm.submitValuationReq = submitValuationReq;
-  
+  //vm.originalPrice = originalPrice;
+  vm.requestForFinance=requestForFinance;
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
   vm.sendBuyRequest = sendBuyRequest;
@@ -75,12 +79,79 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
 
   //Submit Valuation Request
 
-   function submitValuationReq(form){
-      if(form.$invalid){
+  function negotiate(form,flag){
+     if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
+    if($scope.currentProduct.priceOnRequest){
+      Modal.alert("request Cant be submitted",true);
+      return;
+    }
+
+    if(form.$invalid){
         $scope.submitted = true;
         return;
       }
 
+    
+
+     if(flag !== false){
+    if($scope.negotiateAmt == '' || $scope.negotiateAmt == undefined)
+        {
+          Modal.alert("Please enter data for submitting the request", true);
+           return;}
+         }
+
+    Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes")
+          negotiateConfirm(form,flag);
+      });
+  }
+
+
+
+function negotiateConfirm(form,flag){
+   
+    if(flag){
+    var dataNegotiate={};
+     dataNegotiate={user:Auth.getCurrentUser(),
+          product:$scope.currentProduct,
+          offer:$scope.negotiateAmt,
+          negotiation:true}
+
+          console.log(dataNegotiate)
+        }else
+        {
+    var dataNegotiate={};
+    dataNegotiate={user:Auth.getCurrentUser(),
+          product:$scope.currentProduct,
+          offer:$scope.currentProduct.grossPrice,
+          negotiation:false}
+        }
+    NegotiationSvc.negotiation(dataNegotiate,flag)
+    .then(function(res){
+       Modal.alert("Your request has been submitted successfully",true);
+    })
+  }
+
+
+
+   function submitValuationReq(form){
+
+    if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
+   if(form.$invalid){
+        $scope.submitted = true; 
+        return;
+      }
+
+    Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes"){
       vm.valuationReq.status = valuationStatuses[0].code;
       vm.valuationReq.statuses = [];
       var stsObj = {};
@@ -138,15 +209,34 @@ function ProductDetailCtrl($scope,vendorSvc,$stateParams, $rootScope,PaymentMast
       .catch(function(){
         //error handling
       });
+    }
+    });
 
   }
 
+
+   $scope.changedCertified = function (mytime) {
+      getTime(mytime, 'certified');
+    };
+
 function addProductQuote(form){
-    if(form.$invalid){
+    
+
+    if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+      
+      if(form.$invalid){
         $scope.submitted = true;
         return;
       }
 
+       Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes"){
+       $scope.productQuote.type="certification Request";
+       $scope.productQuote.product=$scope.currentProduct;
+       $scope.productQuote.request=$scope.productQuote.certifiedByIQuippoQuote;
     //var certifiedByIQuippoQuoteArray = [];
     /*if(!$scope.productQuote.valuationQuote.scheduledTime
       && $scope.productQuote.valuationQuote.schedule == "yes")
@@ -154,24 +244,16 @@ function addProductQuote(form){
     if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
       && $scope.productQuote.certifiedByIQuippoQuote.scheduleC == "yes")
       $scope.changedCertified($scope.mytime);
-    $http.post('/api/productquote',$scope.productQuote).then(function(res){
-      //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
-      dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesSubmit);
-      //End
-        var data = {};
-        data['to'] = supportMail;
-        data['subject'] = 'Request for buy a product';
-        $scope.productQuote.certifiedByIQuippoQuote.date = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
-        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToAdmin', data, $scope.productQuote,'email');
 
-        data['to'] = $scope.productQuote.email;
-        data['subject'] = 'No reply: Product Enquiry request received';
-        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
-        $scope.closeDialog();
-        Modal.alert(informationMessage.productQuoteSuccess,true);
-        },function(res){
-            Modal.alert(res,true);
+    //$http.post('/api/productquote',$scope.productQuote).then(function(res){
+      productSvc.serviceRequest($scope.productQuote)
+      .then(function(res){
+
+       Modal.alert("Your request has been submitted successfully",true);
+      //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
         });
+      }
+    });
     }
 
 
@@ -286,6 +368,7 @@ function addProductQuote(form){
             Modal.openDialog('login');
             Auth.doNotRedirect = true;
             Auth.postLoginCallback = loadUserDetail;
+
         }
      });
 
@@ -352,7 +435,7 @@ function addProductQuote(form){
         });
         }
         
-
+           console.log($scope.currentProduct);
         //Valuation Request
         vm.valuationReq.product = $scope.currentProduct;
         vm.valuationReq.user ={};
@@ -416,10 +499,77 @@ function addProductQuote(form){
       });
     }
 
-    // vendorSvc.getAllVendors()
-    // .then(function(){
-    //   $scope.valDetailsAgencies = vendorSvc.getVendorsOnCode('Finance');
-    // });
+   /*vendorSvc.getAllVendors()
+   .then(function(){
+       $scope.valDetailsAgencies = vendorSvc.getVendorsOnCode('Finance');
+   });*/
+  }
+
+  //easy financing and Certification
+
+  function requestForFinance(form){
+    
+    if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+
+     if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+      //console.log($scope.currentProduct.grossPrice);
+      /*if(angular.equals($scope.reqFinance,{}))
+        {
+          Modal.alert("Please enter data for submitting the request", true);
+           if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+           }*/
+
+       Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes"){
+
+      var data={};
+      data={type:"finance",
+             user:Auth.getCurrentUser(),
+            product:$scope.currentProduct,
+            request:$scope.reqFinance
+       }
+      console.log(data);
+      productSvc.serviceRequest(data)
+      .then(function(res){
+        if(res){
+        Modal.alert("Your request has been submitted successfully",true);     
+        }
+      })
+    }
+    if(ret == "no"){
+      return;
+    }
+     
+    }); 
+    
+  }
+
+  function serviceRequest(form,type){
+
+      Auth.isLoggedInAsync(function(loggedIn){
+        if(!loggedIn){
+            Modal.openDialog('login');
+            Auth.doNotRedirect = true;
+            Auth.postLoginCallback = loadUserDetail;
+        }
+     });
+
+      console.log($scope.currentProduct.user);
+
+
+    var serviceReq={};
+    serviceReq.user=$scope.currentProduct.user;
+
+
   }
 
   function getPriceTrendData(){
@@ -506,11 +656,17 @@ function addProductQuote(form){
     CartSvc.addProductToCart(prdObj);
   }
 
-  function sendBuyRequest(buycontact) {
+  function sendBuyRequest(form) {
+    if(!Auth.getCurrentUser()._id) {
+      Modal.alert("Please Login/Register for uploading the products!", true);
+      return;
+    }
+     //console.log($scope.currentProduct);
+     Modal.confirm("to Confirm press Yes or No",true);
     var ret = false;
 
-    if($scope.form.$invalid || ret){
-      $scope.form.submitted = true;
+    if(form.$invalid || ret){
+      form.submitted = true;
       return;
     }
     var productObj = {};
@@ -528,6 +684,7 @@ function addProductQuote(form){
     productObj.category = $scope.currentProduct.category.name;
     productObj.brand = $scope.currentProduct.brand.name;
     productObj.model = $scope.currentProduct.model.name;
+    productObj.price= $scope.currentProduct.grossPrice;
     if($scope.currentProduct.subCategory)
       productObj.subCategory = $scope.currentProduct.subCategory.name;
     productObj.city = $scope.currentProduct.city;
@@ -537,8 +694,8 @@ function addProductQuote(form){
     buycontact.product[0] = productObj;
     buycontact.tradeType = $scope.currentProduct.tradeType;
     
-    if(buycontact.interestedIn != "finance")
-      delete buycontact.financeInfo;
+    /*if(buycontact.interestedIn != "finance")
+      delete buycontact.financeInfo;*/
 
     BuyContactSvc.submitRequest(buycontact)
     .then(function(result){
@@ -550,6 +707,18 @@ function addProductQuote(form){
       $scope.buycontact.contact = "email";
       $scope.buycontact.interestedIn = "buyORrent";
       $scope.form.submitted = false;
+
+      data['to'] = supportMail;
+        data['subject'] = 'Request for buy a product';
+        $scope.productQuote.certifiedByIQuippoQuote.date = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
+        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToAdmin', data, $scope.productQuote,'email');
+
+        data['to'] = $scope.productQuote.email;
+        data['subject'] = 'No reply: Product Enquiry request received';
+        notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
+        $scope.closeDialog();
+        Modal.alert(informationMessage.productQuoteSuccess,true);
+
     });
   };
 
@@ -791,6 +960,8 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       return;
     }
 
+
+
     //var certifiedByIQuippoQuoteArray = [];
     if(!$scope.productQuote.valuationQuote.scheduledTime
       && $scope.productQuote.valuationQuote.schedule == "yes")
@@ -805,8 +976,10 @@ angular.module('sreizaoApp').controller('ProductQuoteCtrl', function ($scope, $s
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
       dataLayer.push(gaMasterObject.getaQuoteforAdditionalServicesSubmit);
       //End
+
+       console.log($scope.currentProduct);
         var data = {};
-        data['to'] = supportMail;
+        data['to'] = "Selller";
         data['subject'] = 'Request for buy a product';
         $scope.productQuote.serverPath = serverPath;
         $scope.productQuote.valuationQuote.date = moment($scope.productQuote.valuationQuote.scheduleDate).format('DD/MM/YYYY');
