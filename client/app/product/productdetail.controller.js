@@ -85,6 +85,11 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
       return;
     }
 
+    if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+
     if($scope.currentProduct.priceOnRequest){
       Modal.alert("request Cant be submitted",true);
       return;
@@ -106,10 +111,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
 
 
 function negotiateConfirm(form,flag){
-   if(form.$invalid){
-        $scope.submitted = true;
-        return;
-      }
+   
     if(flag){
     var dataNegotiate={};
      dataNegotiate={user:Auth.getCurrentUser(),
@@ -147,10 +149,7 @@ function negotiateConfirm(form,flag){
       }
 
     Modal.confirm("Do you want to submit?",function(ret){
-        if(ret == "yes")
-
-      
-
+        if(ret == "yes"){
       vm.valuationReq.status = valuationStatuses[0].code;
       vm.valuationReq.statuses = [];
       var stsObj = {};
@@ -208,7 +207,7 @@ function negotiateConfirm(form,flag){
       .catch(function(){
         //error handling
       });
-
+    }
     });
 
   }
@@ -226,19 +225,13 @@ function addProductQuote(form){
       return;
     }
       
-      if(angular.equals($scope.productQuote.certifiedByIQuippoQuote,{}) || $scope.productQuote.certifiedByIQuippoQuote == undefined)
-        {
-          Modal.alert("Please enter data for submitting the request", true);
-           return;
-         }
-
-       Modal.confirm("Do you want to submit?",function(ret){
-        if(ret == "yes")
-      
-    if(form.$invalid){
+      if(form.$invalid){
         $scope.submitted = true;
         return;
       }
+
+       Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes"){
        $scope.productQuote.type="certification Request";
        $scope.productQuote.product=$scope.currentProduct;
        $scope.productQuote.request=$scope.productQuote.certifiedByIQuippoQuote;
@@ -257,6 +250,7 @@ function addProductQuote(form){
        Modal.alert("Your request has been submitted successfully",true);
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
         });
+      }
     });
     }
 
@@ -517,30 +511,44 @@ function addProductQuote(form){
       Modal.alert("Please Login/Register for uploading the products!", true);
       return;
     }
+
+     if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
       //console.log($scope.currentProduct.grossPrice);
-      if(angular.equals($scope.reqFinance,{}))
+      /*if(angular.equals($scope.reqFinance,{}))
         {
           Modal.alert("Please enter data for submitting the request", true);
-           return;}
+           if(form.$invalid){
+        $scope.submitted = true;
+        return;
+      }
+           }*/
 
        Modal.confirm("Do you want to submit?",function(ret){
-        if(ret == "yes")
+        if(ret == "yes"){
 
       var data={};
       data={type:"finance",
              user:Auth.getCurrentUser(),
             product:$scope.currentProduct,
             request:$scope.reqFinance
-    }
+       }
       console.log(data);
       productSvc.serviceRequest(data)
       .then(function(res){
         if(res){
-     Modal.alert("Your request has been submitted successfully",true);     
+        Modal.alert("Your request has been submitted successfully",true);     
         }
       })
+    }
+    if(ret == "no"){
+      return;
+    }
      
     }); 
+    
   }
 
   function serviceRequest(form,type){
