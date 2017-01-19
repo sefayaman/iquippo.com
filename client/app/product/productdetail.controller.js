@@ -10,29 +10,18 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   $scope.buycontact = {};
   $scope.reqFinance = {};
   $scope.trade="";
-  //$scope.certifyProduct={};
-  //$scope.financeContact={};
   $scope.oneAtATime = true;
   $scope.buycontact.contact = "mobile";
   $scope.mytime = new Date();
-      $scope.hstep = 1;
-      $scope.mstep = 1;
-      $scope.ismeridian = true;
-//certification request
+  $scope.hstep = 1;
+  $scope.mstep = 1;
+  $scope.ismeridian = true;
+  
+  //certification request
   $scope.productQuote = {};
   if(Auth.getCurrentUser()._id){
-      //var currUser = Auth.getCurrentUser();
-      $scope.productQuote.user =Auth.getCurrentUser();
-      /*$scope.productQuote.mname = currUser.mname;
-      $scope.productQuote.lname = currUser.lname;
-
-      $scope.productQuote.mobile = currUser.mobile;
-      $scope.productQuote.email = currUser.email;
-      $scope.productQuote.phone = currUser.phone;
-      $scope.productQuote.country = currUser.country;*/
+      $scope.productQuote.user = Auth.getCurrentUser();
     }
-
-
 
   //$scope.financeContact.interestedIn="finance";
   $scope.buycontact.interestedIn = "buyORrent" ;
@@ -41,7 +30,6 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   $scope.calRent.rateType = "Hours";
   $scope.statusShipping = {};
   $scope.statusShipping.open = false;
-  $scope.valDetailsAgencies=[];
   $scope.totalRent = 0;
   $scope.status = {
     Firstopen: true
@@ -49,7 +37,6 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   $scope.negotiate=negotiate;
   vm.addProductQuote=addProductQuote;
 
-  //vm.originalPrice = originalPrice;
   vm.requestForFinance=requestForFinance;
   vm.getDateFormat = getDateFormat;
   vm.calculateRent = calculateRent;
@@ -61,31 +48,6 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
   vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
   
-
-  
-
-function valInit(){
-
-     PaymentMasterSvc.getAll()
-      .then(function(result){
-        $scope.payments = result;
-        vendorSvc.getAllVendors()
-        .then(function(){
-          var agency = vendorSvc.getVendorsOnCode('Valuation');
-          
-          agency.forEach(function(item){
-            var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation",item._id);
-            if(pyMst && pyMst.fees)
-              $scope.valDetailsAgencies[$scope.valDetailsAgencies.length] = item;
-            else if(pyMst && pyMst.fees === 0)
-              $scope.valDetailsAgencies[$scope.valDetailsAgencies.length] = item;
-          })
-        });
-      });
-    }
-
- valInit();
-
   //Submit Valuation Request
 
   function negotiate(form,flag){
@@ -93,11 +55,6 @@ function valInit(){
       Modal.alert("Please Login/Register for uploading the products!", true);
       return;
     }
-
-    /*if($scope.currentProduct.priceOnRequest){
-      Modal.alert("request Cant be submitted",true);
-      return;
-    }*/
 
     if(form.$invalid){
         $scope.negotiationSubmitted = true;
@@ -233,10 +190,6 @@ function addProductQuote(form){
        $scope.productQuote.type="certification Request";
        $scope.productQuote.product=$scope.currentProduct;
        $scope.productQuote.request=$scope.productQuote.certifiedByIQuippoQuote;
-    //var certifiedByIQuippoQuoteArray = [];
-    /*if(!$scope.productQuote.valuationQuote.scheduledTime
-      && $scope.productQuote.valuationQuote.schedule == "yes")
-      $scope.changedValuation($scope.mytime);*/
     if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
       && $scope.productQuote.certifiedByIQuippoQuote.scheduleC == "yes")
       $scope.changedCertified($scope.mytime);
@@ -254,7 +207,7 @@ function addProductQuote(form){
         data['to'] = supportMail;
         data['subject'] = 'Request for buy a product';
         $scope.productQuote.serverPath = serverPath;
-        //$scope.productQuote.certifiedByIQuippoQuote.scheduleDate = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
+        $scope.productQuote.certifiedByIQuippoQuote.date = moment($scope.productQuote.certifiedByIQuippoQuote.scheduleDate).format('DD/MM/YYYY');
         notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToAdmin', data, $scope.productQuote,'email');
 
         data['to'] = Auth.getCurrentUser().email;
@@ -355,23 +308,6 @@ function addProductQuote(form){
 
   }
 
-  /*function isEmpty(myObject) {
-    for(var key in myObject) {
-      if(key != 'params'){
-        if (myObject.hasOwnProperty(key)) {
-            return false;
-        }
-      }
-      else{
-        if(myObject.params && myObject.params.length > 1)
-          return false;
-      }
-    }
-
-    return true;
-}*/
-
-
   function init(){
 
      Auth.isLoggedInAsync(function(loggedIn){
@@ -382,6 +318,11 @@ function addProductQuote(form){
 
         }
      });
+
+      vendorSvc.getAllVendors()
+        .then(function(){
+           $scope.valDetailsAgencies  = vendorSvc.getVendorsOnCode('Finance');
+        });
 
      if($rootScope.getCurrentUser().role != 'admin'){
       var filter = {};
@@ -457,17 +398,7 @@ function addProductQuote(form){
         }
         
            console.log($scope.currentProduct);
-        //Valuation Request
-        /*vm.valuationReq.product = $scope.currentProduct;
-        vm.valuationReq.user ={};
-        vm.valuationReq.user._id = Auth.getCurrentUser()._id;
-        vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
-        vm.valuationReq.user.email = Auth.getCurrentUser().email;
-        vm.valuationReq.seller = {};
-        vm.valuationReq.seller._id = $scope.currentProduct.seller._id;
-        vm.valuationReq.seller.mobile = $scope.currentProduct.seller.mobile;
-        vm.valuationReq.seller.email = $scope.currentProduct.seller.email;*/
-        
+
         getPriceTrendData();
         if($scope.currentProduct.tradeType == "SELL")
           vm.showText = "To Buy"
@@ -519,11 +450,6 @@ function addProductQuote(form){
         }
       });
     }
-
-   /*vendorSvc.getAllVendors()
-   .then(function(){
-       $scope.valDetailsAgencies = vendorSvc.getVendorsOnCode('Finance');
-   });*/
   }
 
   //easy financing and Certification
@@ -539,15 +465,6 @@ function addProductQuote(form){
         $scope.financeSubmitted = true;
         return;
       }
-      //console.log($scope.currentProduct.grossPrice);
-      /*if(angular.equals($scope.reqFinance,{}))
-        {
-          Modal.alert("Please enter data for submitting the request", true);
-           if(form.$invalid){
-        $scope.submitted = true;
-        return;
-      }
-           }*/
 
        Modal.confirm("Do you want to submit?",function(ret){
         if(ret == "yes"){
