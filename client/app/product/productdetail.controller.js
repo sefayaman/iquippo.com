@@ -198,7 +198,7 @@ function addProductQuote(form){
       productSvc.serviceRequest($scope.productQuote)
       .then(function(res){
 
-       Modal.alert("Your request has been submitted successfully",true);
+       
 
         var data = {};
 
@@ -214,6 +214,10 @@ function addProductQuote(form){
         data['subject'] = 'No reply: Product Enquiry request received';
         notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
+        Modal.alert("Your request has been submitted successfully",true);
+
+        $scope.productQuote.certifiedByIQuippoQuote={};
+
         });
       }
     });
@@ -475,12 +479,16 @@ function addProductQuote(form){
             product:$scope.currentProduct,
             request:$scope.reqFinance
        }
+
       //console.log(data);
       productSvc.serviceRequest(dataFinance)
       .then(function(res){
         if(res){
-        Modal.alert("Your request has been submitted successfully",true);     
+        Modal.alert("Your request has been submitted successfully",true);
+        $scope.reqFinance={};     
         dataFinance.serverPath=serverPath;
+
+        console.log(dataFinance);
         var data = {};
         data['to'] = supportMail;
         data['subject'] = ' Bid Received for your' + dataFinance.product.brand.name + ' ' + dataFinance.product.model.name + ' ' + dataFinance.product.category.name + '  Asset ID:'+ dataFinance.product.assetId;

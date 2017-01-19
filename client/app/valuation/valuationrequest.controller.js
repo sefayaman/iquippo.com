@@ -132,9 +132,11 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
 		paymentTransaction.paymentMode = "online";
 
  		ValuationSvc.save({valuation:vm.valuationReq,payment:paymentTransaction})
- 		.then(function(result){		
+ 		.then(function(result){	
+ 			vm.valuationReq={};
  			if(result.transactionId)
  				$state.go('payment',{tid:result.transactionId});
+
  		})
  		.catch(function(){
  			//error handling
