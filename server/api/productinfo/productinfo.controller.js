@@ -8,6 +8,10 @@ var ModelModel = require('../model/model.model');
 var debug = require('debug')('api.productinfo.controller');
 var _ = require('lodash');
 var validator = require('validator');
+var xlsx = require('xlsx');
+var config = require('./../../config/environment');
+var importPath = config.uploadPath + config.importDir + "/";
+var async = require('async');
 
 
 function fetchCategory(category, cb) {
@@ -64,6 +68,118 @@ function validateData(data) {
 	});
 	return err;
 }
+
+function getHeaders(worksheet) {
+
+	var headers = [];
+	for (var z in worksheet) {
+		if (z[0] === '!') continue;
+		//parse out the column, row, and value
+		var row = parseInt(z.substring(1));
+		var value = worksheet[z].v;
+		//store header names
+		if (row === 1) {
+			headers[headers.length] = value;
+		}
+	}
+	return headers;
+}
+
+function validateHeader(headersInFile, headers) {
+	var ret = true;
+	//ret = headersInFile.length == headers.length;
+	// if (!ret)
+	//   return ret;
+
+	headers.some(function(x) {
+		if (headersInFile.indexOf(x) < 0) {
+			ret = false;
+			return true;
+		}
+	})
+	return ret;
+}
+
+//AA:private function for creating data
+var _create = function(body, cb) {
+	fetchCategory(body.category, function(err, category) {
+		if (err || !category)
+			return cb(err || new APIError(400, 'Error while fetching category'));
+
+		if (!category.length)
+			return cb(new APIError(404, 'Category not exist'));
+
+		var brandFilter = {
+			name: body.brand,
+			category: body.category,
+			group: category[0]._doc.group.name
+		};
+
+		fetchBrand(brandFilter, function(err, brand) {
+			if (err || !brand)
+				return cb(err || new APIError(400, 'Error while fetching brand'));
+
+			if (!brand.length)
+				return cb(new APIError(404, 'Brand not exist'));
+
+			var modelFilter = {
+				name: body.model,
+				category: body.category,
+				group: category[0]._doc.group.name,
+				brand: body.brand
+			}
+
+			fetchModel(modelFilter, function(err, model) {
+				if (err || !model)
+					return cb(err || new APIError(400, 'Error while fetching model'));
+
+				if (!model.length)
+					return cb(new APIError(404, 'Model not exist'));
+
+				var type = body.type;
+				var createData = {
+					type: type
+				};
+
+				switch (type) {
+					case 'technical':
+						createData = {
+							type: type,
+							information: {
+								model: body.model,
+								category: body.category,
+								brand: body.brand,
+								grossWeight: body.grossWeight,
+								operatingWeight: body.operatingWeight,
+								bucketCapacity: body.bucketCapacity,
+								enginePower: body.enginePower,
+								liftingCapacity: body.liftingCapacity
+							}
+						};
+						break;
+					default:
+						return cb(new APIError(400, 'Invalid choice'));
+				}
+
+				Model.create(createData, function(err, response) {
+					if (err || !response) {
+						debug(err);
+						if (err && err.message && err.message.indexOf('duplicate') > -1) {
+							return cb(new APIError(409, 'Entry already exists'));
+						}
+
+						return cb(err || new APIError(500, 'Error while saving product information'));
+					}
+
+					return cb('', {
+						msg: 'Created Successfully'
+					});
+				})
+			})
+		})
+	})
+};
+
 
 
 var productInfo = {
@@ -199,82 +315,123 @@ var productInfo = {
 		if (error.length)
 			return next(new APIError(422, 'Missing manadatory parameters: ' + error.toString()));
 
-		fetchCategory(body.category, function(err, category) {
-			if (err || !category)
-				return next(err || new APIError(400, 'Error while fetching category'));
+		_create(body, function(err, result) {
+			if (err && err.status === 404) {
+				return res.status(err.status).send(err.message);
+			}
 
-			if (!category.length)
-				return res.status(404).json({msg:'Category not exist'});
+			if (err)
+				return next(err);
 
-			var brandFilter = {
-				name: body.brand,
-				category: body.category,
-				group: category[0]._doc.group.name
-			};
+			return res.send(result);
+		})
+	},
 
-			fetchBrand(brandFilter, function(err, brand) {
-				if (err || !brand)
-					return next(err || new APIError(400, 'Error while fetching brand'));
+	import: function(req, res, next) {
+		var fileName = req.body.fileName;
+		var user = req.body.user;
+		var type = req.query.type || 'technical';
+		debug(user);
+		var workbook = null;
+		try {
+			workbook = xlsx.readFile(importPath + fileName);
+		} catch (e) {
+			debug(e);
+			return next(new APIError(400, 'Error while parsing excel sheet'));
+		}
 
-				if (!brand.length)
-					return res.status(404).json({msg:'Brand not exist'});
+		if (!workbook)
+			return next(new APIError(404, 'No Excel sheet found for upload'));
 
-				var modelFilter = {
-					name: body.model,
-					category: body.category,
-					group: category[0]._doc.group.name,
-					brand: body.brand
+		var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+		var data = xlsx.utils.sheet_to_json(worksheet);
+		var errObj = [];
+		var totalCount = data.length;
+
+		var field_map = {
+			'Category*': 'category',
+			'Brand*': 'brand',
+			'Model*': 'model',
+			'Gross_Weight': 'grossWeight',
+			'Operating_Weight': 'operatingWeight',
+			'Bucket_Capacity': 'bucketCapacity',
+			'Engine_Power': 'enginePower',
+			'Lifting_Capacity': 'liftingCapacity'
+		};
+
+		var hd = getHeaders(worksheet);
+		var headers = ['Category*', 'Brand*', 'Model*', 'Gross_Weight', 'Operating_Weight', 'Bucket_Capacity', 'Engine_Power', 'Lifting_Capacity']
+		if (!validateHeader(hd, headers)) {
+			return res.status(500).send("Wrong template");
+		}
+
+		var err;
+
+		data = data.filter(function(x) {
+			Object.keys(x).forEach(function(key) {
+				if (field_map[key]) {
+					x[field_map[key]] = x[key];
+				}
+				x.rowCount = x.__rowNum__
+				x.type = type;
+				delete x[key];
+			})
+
+			err = validateData(x);
+			if (err.length)
+				errObj.push({
+					Error: err.toString(),
+					rowCount: x.rowCount
+				});
+			else
+				return x;
+		});
+
+		if (!data.length) {
+			return res.json({
+				errObj: errObj,
+				message: 'No data found for upload'
+			});
+		}
+
+
+
+		async.forEachLimit(data, 5, intialize, finalize);
+
+		function intialize(info, cb) {
+			_create(info, function(err, result) {
+				debug(result);
+				if (err && err.status === 409) {
+					errObj.push({
+						Error: 'Duplicate Entry ',
+						rowCount: info.rowCount
+					});
+					return cb();
 				}
 
-				fetchModel(modelFilter, function(err, model) {
-					if (err || !model)
-						return next(err || new APIError(400, 'Error while fetching model'));
+				if (err && err.status === 404) {
+					errObj.push({
+						Error: err.message,
+						rowCount: info.rowCount
+					});
+					return cb();
+				}
 
-					if (!model.length)
-						return res.status(404).json({msg:'Model not exist'});
-
-					var type = body.type;
-					var createData = {
-						type: type
-					};
-
-					switch (type) {
-						case 'technical':
-							createData = {
-								type: type,
-								information: {
-									model: body.model,
-									category: body.category,
-									brand: body.brand,
-									grossWeight: body.grossWeight,
-									operatingWeight: body.operatingWeight,
-									bucketCapacity: body.bucketCapacity,
-									enginePower: body.enginePower,
-									liftingCapacity: body.liftingCapacity
-								}
-							};
-							break;
-						default:
-							return next(new APIError(400, 'Invalid choice'));
-					}
-
-					Model.create(createData, function(err, response) {
-						if (err || !response) {
-							debug(err);
-							if (err && err.message && err.message.indexOf('duplicate') > -1) {
-								return next(new APIError(409, 'Entry already exists'));
-							}
-
-							return next(err || new APIError(500, 'Error while saving product information'));
-						}
-
-						return res.status(200).json({
-							msg: 'Created Successfully'
-						});
-					})
-				})
+				return cb();
 			})
-		})
+		}
+
+		function finalize(err) {
+			if (err) {
+				debug(err);
+			}
+
+			res.json({
+				errObj: errObj,
+				message: (totalCount - errObj.length) + ' out of ' + totalCount + ' uploaded successfully'
+			});
+		}
 	},
 
 	update: function(req, res, next) {
@@ -309,7 +466,9 @@ var productInfo = {
 					return next(err || new APIError(500, 'Error while fetching category'));
 
 				if (!category.length)
-					return res.status(404).json({msg:'Category not exist'});
+					return res.status(404).json({
+						msg: 'Category not exist'
+					});
 
 				var brandFilter = {
 					name: body.brand,
@@ -322,7 +481,9 @@ var productInfo = {
 						return next(err || new APIError(500, 'Error while fetching brand'));
 
 					if (!brand.length)
-						return res.status(404).json({msg:'Brand not exist'});
+						return res.status(404).json({
+							msg: 'Brand not exist'
+						});
 
 					var modelFilter = {
 						name: body.model,
@@ -336,7 +497,9 @@ var productInfo = {
 							return next(err || new APIError(500, 'Error while fetching model'));
 
 						if (!model.length)
-							return res.status(404).json({msg:'Model not exist'});
+							return res.status(404).json({
+								msg: 'Model not exist'
+							});
 
 						var type = body.type;
 						var updateData = {};
