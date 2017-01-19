@@ -763,6 +763,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
          product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
          product.subcategory['name'] = $scope.container.selectedSubCategory['name'];
       }*/
+      var primarySet="";
       product.assetDir = $scope.assetDir;
       $scope.product.images = [];
       var primaryFound = false;
@@ -773,6 +774,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             if(item.isPrimary){
               imgObj.isPrimary = true;
               product.primaryImg = item.src;
+              primarySet="set";
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -795,7 +797,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-             // product.primaryImg = item.src;
+              if(primarySet !== "set")
+             product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -821,7 +824,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-            //  product.primaryImg = item.src;
+             if(primarySet !== "set")
+             product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -845,7 +849,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              //product.primaryImg = item.src;
+              if(primarySet !== "set")
+             product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -869,7 +874,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              //product.primaryImg = item.src;
+               if(primarySet !== "set")
+             product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -894,7 +900,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              //product.primaryImg = item.src;
+               if(primarySet !== "set")
+             product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -917,7 +924,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              //product.primaryImg = item.src;
+               if(primarySet !== "set")
+             product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;

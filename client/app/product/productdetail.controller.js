@@ -98,6 +98,7 @@ function negotiateConfirm(form,flag){
         }
     NegotiationSvc.negotiation(dataNegotiate,flag)
     .then(function(res){
+      $scope.negotiateAmt="";
        Modal.alert("Your request has been submitted successfully",true);
     })
   }
