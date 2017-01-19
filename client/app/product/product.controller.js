@@ -795,7 +795,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              product.primaryImg = item.src;
+             // product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -821,7 +821,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              product.primaryImg = item.src;
+            //  product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -845,7 +845,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              product.primaryImg = item.src;
+              //product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -869,7 +869,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              product.primaryImg = item.src;
+              //product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -894,7 +894,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              product.primaryImg = item.src;
+              //product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
@@ -917,7 +917,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             imgObj.src = item.src;
             if(item.isPrimary){
               imgObj.isPrimary = true;
-              product.primaryImg = item.src;
+              //product.primaryImg = item.src;
               primaryFound = true;
             }else{
                imgObj.isPrimary = false;
