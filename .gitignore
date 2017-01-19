@@ -9,11 +9,15 @@ client/.DS_Store
 client/bower_components
 client/assets/uploads
 client/assets/uploads_bak
+client/app/constant.js
+client/index.html
+server/components/sendEmail.js
+server/components/sms.js
+server/config
+/server/config/local.env.js
 dist
-
 dist/public/app
 dist/public/bower_components
 dist/server
-/server/config/local.env.js
 
 npm-debug.log

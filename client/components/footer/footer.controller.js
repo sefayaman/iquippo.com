@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('FooterCtrl', function ($scope, $http, $location, Auth,Modal, notificationSvc, subscribeSvc) {
+  .controller('FooterCtrl', function ($scope, $http, $location, Auth,Modal, notificationSvc, subscribeSvc,MarketingSvc) {
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
     }];
-
+    var facebookConversionSent = false;
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.isAdmin = Auth.isAdmin;
@@ -47,6 +47,13 @@ angular.module('sreizaoApp')
         data['subject'] = 'No reply: Subscribe request received';
         notificationSvc.sendNotification('subscribeEmailToCustomer', data, {fname:dataToSend.name},'email');*/
         Modal.alert(result.message,true);
+        //Google and Facbook conversion start
+          MarketingSvc.googleConversion();
+          if(!facebookConversionSent){
+              MarketingSvc.facebookConversion();
+              facebookConversionSent = true;
+          }
+        //Google and Facbook conversion end
       }      
     });
   }

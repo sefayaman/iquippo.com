@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
 
-  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal) {
+  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal,MarketingSvc) {
     //Start > NJ:push callBackOpen object in GTM dataLayer
     dataLayer.push(gaMasterObject.callBackOpen);
     //End
@@ -11,7 +11,7 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
     vm.callback = {};
     vm.sendCallback = sendCallback;
     vm.closeDialog = closeDialog;
-
+    var facebookConversionSent = false;
     function sendCallback(callback) {
       var ret = false;
       if($scope.form.$invalid || ret){
@@ -41,6 +41,15 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
         notificationSvc.sendNotification('callbackEmail',data,dataToSend,'email');
         data['to'] = dataToSend['email'];
         notificationSvc.sendNotification('callbackEmailToCustomer',data,dataToSend,'email');
+
+        //Google and Facbook conversion start
+            MarketingSvc.googleConversion();
+            if(!facebookConversionSent){
+                MarketingSvc.facebookConversion();
+                facebookConversionSent = true;
+            }
+        //Google and Facbook conversion end
+
       }).error(function(res){
           Modal.alert(res,true);
       });
