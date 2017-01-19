@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('ContactUsCtrl', function ($scope, $location, $window, $rootScope, $http,notificationSvc,Modal) {
+  .controller('ContactUsCtrl', function ($scope, $location, $window, $rootScope, $http,notificationSvc,Modal,MarketingSvc) {
     $scope.contact = {};
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
+    var facebookConversionSent = false;
+    
     $scope.sendContact = function(contact) {
      if($scope.form.$invalid){
         $scope.form.submitted = true;
@@ -19,6 +21,15 @@ angular.module('sreizaoApp')
         //Start > NJ :push contactUsSend object in GTM dataLayer
         dataLayer.push(gaMasterObject.contactUsSend);
         //End
+
+        //Google and Facbook conversion start
+            MarketingSvc.googleConversion();
+            if(!facebookConversionSent){
+                MarketingSvc.facebookConversion();
+                facebookConversionSent = true;
+            }
+        //Google and Facbook conversion end
+
         $scope.contact = {};
         $scope.form.submitted = false;
         var data = {};

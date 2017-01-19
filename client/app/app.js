@@ -52,7 +52,7 @@ angular.module('sreizaoApp',[
         libraries: 'weather,geometry,visualization,places'
     });
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -150,6 +150,13 @@ angular.module('sreizaoApp',[
         if($rootScope.currentState != 'productlisting' && $rootScope.currentState != 'productedit' && $rootScope.currentState != 'producthistory')
           $rootScope.currentProductListingPage = 0;
         setScroll(0);
+        var google_tag_params = {
+            dynx_itemid: 'REPLACE_WITH_VALUE',
+            dynx_itemid2: 'REPLACE_WITH_VALUE',
+            dynx_pagetype: 'REPLACE_WITH_VALUE',
+            dynx_totalvalue: 'REPLACE_WITH_VALUE',
+        };
+        MarketingSvc.googleRemarketing(google_tag_params);
     });
 
     //$rootScope.isUploadEnable = Auth.isUploadProduct;

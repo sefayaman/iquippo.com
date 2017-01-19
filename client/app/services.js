@@ -730,5 +730,51 @@ function updateWallet(couponData){
     return buycontactSvc;
 
   };
+angular.module('sreizaoApp').factory('MarketingSvc',ReMarketingConversionSvc);
+function ReMarketingConversionSvc(){
+  var svc = {};
+  
+  //google constant
+  var googleConversionConfig = {
+    google_conversion_id : 869774544,
+    google_conversion_language:"en",
+    google_conversion_format:"3",
+    google_conversion_color : "ffffff",
+    google_conversion_label:"Ya-TCLWsqG0Q0OnengM",
+    google_remarketing_only : false
+  }
+
+
+  svc.googleConversion = googleConversion;
+  svc.googleRemarketing = googleRemarketing;
+  svc.facebookConversion = facebookConversion;
+
+  function googleConversion(remarketing,customParams){
+    if(!window.google_trackConversion)
+      return;
+    window.google_trackConversion(googleConversionConfig);
+  }
+
+  function googleRemarketing(customParams){
+    if(!window.google_trackConversion)
+      return;
+    
+    var googleRemarketingConfig = {
+      google_conversion_id : 869774544,
+      google_remarketing_only: true
+    }
+
+    if(customParams)
+      googleRemarketingConfig['google_custom_params'] = customParams;
+      window.google_trackConversion(googleRemarketingConfig);
+  }
+
+  function facebookConversion(){
+    if(!fbq)
+      return;
+    fbq('track', 'lead');
+  }
+  return svc;
+}
 
 })();
