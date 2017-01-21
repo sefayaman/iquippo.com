@@ -722,13 +722,13 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     }
 
 	function loadAuctionData(){
-		PaymentMasterSvc.getAll()
+		/*PaymentMasterSvc.getAll()
   		.then(function(result){
   		  result.forEach(function(item){
             if(item.serviceCode == "Auction")
               vm.auctionData.regCharges = item.fees;
           });
-  		});
+  		});*/
 
 		var filter = {};
 		filter.service = "Auction";

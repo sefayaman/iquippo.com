@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
+var trim = require('trim');
 var AuctionRequest = require('./auction.model');
 var AuctionMaster = require('./auctionmaster.model');
 
@@ -1287,6 +1288,7 @@ function importAuctionMaster(req, res, data) {
       'Inspection_End_Time': 'insEndTime',
       'Registration_End_Date': 'regEndDate',
       'Address_of_Auction': 'auctionAddr',
+      'EMD_Amount': 'emdAmount',
       'Auction_Type': 'auctionType',
       'Location' : 'city'
     };
@@ -1343,6 +1345,20 @@ function importAuctionMaster(req, res, data) {
       return;
     }
 
+    if(auctionData.emdAmount){
+      if(isNaN(auctionData.emdAmount)){
+        errorObj.rowCount = req.counter + 2;
+        errorObj.AuctionID = auctionData.auctionId;
+        errorObj.message = "Wrong value of EMD Amount";
+        req.errors[req.errors.length] = errorObj;
+        req.counter++;
+        importAuctionMaster(req, res, data);
+        return;
+      } else {
+        auctionData.emdAmount = Number(trim(auctionData.emdAmount));
+      }
+    }
+
     AuctionMaster.find({
       auctionId: auctionData.auctionId
     }, function(err, auction) {
@@ -1387,10 +1403,10 @@ function importAuctionMaster(req, res, data) {
       }
 
       function insertData(){
-        PaymentMasterModel.findOne({serviceCode:'Auction'},function(error,regAmount){
-          if(error)
-             auctionData.emdAmount = 0;
-          auctionData.regCharges = Number(regAmount.fees);
+        // PaymentMasterModel.findOne({serviceCode:'Auction'},function(error,regAmount){
+        //   if(error)
+        //      auctionData.emdAmount = 0;
+        //   auctionData.regCharges = Number(regAmount.fees);
           AuctionMaster.create(auctionData, function(err, act) {
             if (err) {
               return handleError(res, err)
@@ -1400,7 +1416,7 @@ function importAuctionMaster(req, res, data) {
               importAuctionMaster(req, res, data);
             }
           })
-        })
+        //})
       }
     })
   } else {
