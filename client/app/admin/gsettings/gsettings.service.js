@@ -633,11 +633,24 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     techSvc.updateInfo = updateInfo;
     techSvc.exportExcel = exportExcel;
     techSvc.deleteInfo = deleteInfo;
+    techSvc.importExcel = importExcel;
     
 
     function createInfo(data){
       var url = path + '/create';
       return $http.post(url,data)
+        .then(function(res){
+          return res.data;
+        })
+      .catch(function(err){
+          throw err;
+        });
+    }
+
+
+    function importExcel(file){
+      var url = path + '/import';
+      return $http.post(url,{fileName:file})
         .then(function(res){
           return res.data;
         })
