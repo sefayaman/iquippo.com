@@ -890,12 +890,23 @@
 		<div ng-if="gsettingVm.tabValue == 'technical'">
 			<div class="col-sm-12">
 					<div class="row">
-            <div class="col-sm-10">
+            <div class="col-sm-8">
               <h4>Technical Information</h4>
+              <p>Download the <a href="/download/templates/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 padd-right">
               <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
             </div>
+            <div class="col-sm-2">
+             	<h3>
+					<div class="btn btn-success btn-block btn-md pull-right">
+						<span class="fileinput-button">
+						  <i class="fa fa-file-excel-o"></i> Import Excel
+						  <input type="file" name="template_update" onchange="angular.element(this).scope().importTechInfoMaster(this.files,this)">
+						 </span>
+					</div>
+				</h3>
+			</div>
             <div class="col-sm-1">
               <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
