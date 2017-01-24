@@ -61,14 +61,6 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
         return;
       }
 
-    
-
-     if(flag !== false){
-    if($scope.negotiateAmt == '' || $scope.negotiateAmt == undefined)
-        {
-          Modal.alert("Please enter data for submitting the request", true);
-           return;}
-         }
 
     Modal.confirm("Do you want to submit?",function(ret){
         if(ret == "yes")

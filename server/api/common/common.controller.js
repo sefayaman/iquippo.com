@@ -229,6 +229,8 @@ exports.updateMasterData = function(req,res){
 				var self = this;
 				Group.update({_id:_id},{$set:reqData},function(err,gp){
 					 if(err) { return handleError(res, err); }
+					 //update Product Information
+					 //Product.update({group._id:_id},{$set:{productName:""}});
 					 self();
 				});
 			})
