@@ -255,6 +255,20 @@ exports.updateMasterData = function(req,res){
 					 res.status(200).send(type + " updated successfully");
 				});
 			})
+
+			 Product.find({"group._id":_id},function(err,res){
+					if(err) { return handleError(res, err); }
+					res.forEach(function(x){
+                    
+                       x.group={"_id":_id,name:reqData.name};
+                       //x.name=x.category.name + x.brand.name + reqData.name + ((x.variant && x.variant.name) || " ");
+                       Product.update({"_id":x._id},{$set:{"group":x.group}},function(err,updt){
+                       	if(err) { return handleError(res, err); }
+                       	console.log(updt);
+                       }) 
+					})
+					
+					});
 		break;
 		case "Category":
 			Seq()
@@ -274,6 +288,7 @@ exports.updateMasterData = function(req,res){
 				var self = this;
 				Category.update({_id:_id},{$set:reqData},function(err,ct){
 					 if(err) { return handleError(res, err); }
+					 console.log(ct);
 					 self();
 				});
 			})
@@ -290,7 +305,24 @@ exports.updateMasterData = function(req,res){
 					 if(err) { return handleError(res, err); }
 					  res.status(200).send(type + " updated successfully");
 				});
+
 			})
+				
+
+				Product.find({"category._id":_id},function(err,res){
+					if(err) { return handleError(res, err); }
+					res.forEach(function(x){
+                    
+                       x.category={"_id":_id,name:reqData.name};
+                       x.name=reqData.name + x.brand.name + x.model.name + ((x.variant && x.variant.name) || " ");
+                       Product.update({"_id":x._id},{$set:{"category":x.category,"name":x.name}},function(err,updt){
+                       	if(err) { return handleError(res, err); }
+                       	console.log(updt);
+                       }) 
+					})
+					
+					});
+			
 		break;
 		case "Brand":
 			Seq()
@@ -320,7 +352,24 @@ exports.updateMasterData = function(req,res){
 					 if(err) { return handleError(res, err); }
 					 res.status(200).send(type + " updated successfully");
 				});
-			})
+                
+                })
+				 
+				Product.find({"brand._id":_id},function(err,res){
+					if(err) { return handleError(res, err); }
+					console.log(res);
+					res.forEach(function(x){
+                   
+                       x.brand={"_id":_id,name:reqData.name};
+                       x.name=x.category.name + reqData.name + x.model.name + ((x.variant && x.variant.name) || " ");
+                       Product.update({"_id":x._id},{$set:{"brand":x.brand,"name":x.name}},function(err,updt){
+                       	if(err) { return handleError(res, err); }
+                       	console.log(updt);
+                       }) 
+					})
+					
+					});
+			
 		break;
 		case "Model":
 			Seq()
@@ -344,7 +393,21 @@ exports.updateMasterData = function(req,res){
 				  res.status(200).send(type + " updated successfully");
 				});
 			});
-			
+  
+            Product.find({"model._id":_id},function(err,res){
+					if(err) { return handleError(res, err); }
+					res.forEach(function(x){
+                    
+                       x.model={"_id":_id,name:reqData.name};
+                       x.name=x.category.name + x.brand.name + reqData.name + ((x.variant && x.variant.name) || " ");
+                       Product.update({"_id":x._id},{$set:{"model":x.model,"name":x.name}},function(err,updt){
+                       	if(err) { return handleError(res, err); }
+                       	console.log(updt);
+                       }) 
+					})
+					
+					});
+
 		break;
 		default:
 		 return res.status(400).send("Invalid request");
