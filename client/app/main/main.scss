@@ -97,11 +97,11 @@ header{background:#fff;}
 .navbar-brand{padding:0px 10px; position:relative; top:-25px; margin-right: 20px;}
 .navbar-brand img{width:125px;}
 .navbar-nav li.submenu .uib-dropdown-menu{display: none;position: absolute; z-index:100; padding: 0;}
-.navbar-nav li.submenu:hover .uib-dropdown-menu{display:block!important;background-color:rgba(255,255,255,1);border:0; width: 670px; left: -190%;}
+.navbar-nav li.submenu:hover .uib-dropdown-menu{display:block!important;background-color:rgba(255,255,255,1);border:0; width:150px; border-radius: 0 0 4px 4px; box-shadow: 1px 2px 3px #999;}
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {color: #444;background-color: transparent;}
-.navbar-nav li.submenu .uib-dropdown-menu li{display: inline-block;}
+.navbar-nav li.submenu .uib-dropdown-menu li{display: block; text-align: left;}
 .navbar-inverse .navbar-nav > li.active{border-bottom:2px solid #e3000f;}
-.navbar-nav li.submenu:hover .uib-dropdown-menu li a{padding:4px 12px; text-decoration: none;}
+.navbar-nav li.submenu:hover .uib-dropdown-menu li a{padding:8px 12px; display: block; text-decoration: none;}
 /*.navbar-nav li.dropdown:hover .dropdown-menu li a:hover{}*/
 
 /*.navbar-form .input-group{width:100%;}*/
@@ -1152,4 +1152,46 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .angularjs-datetime-picker input[type=range] {
     width: 100%;
 }
-.price-request .form-group{border: 1px dotted #ccc; padding:10px 12px;}
+.price-request{
+    height:34px;
+    line-height:34px;
+    position:relative;
+    font-size:16px;
+    margin-left:20px;
+    padding:0 10px 0 15px;
+    background:#004394;
+    color:#fff;
+    text-decoration:none;
+    -moz-border-radius-bottomright:4px;
+    -webkit-border-bottom-right-radius:4px; 
+    border-bottom-right-radius:4px;
+    -moz-border-radius-topright:4px;
+    -webkit-border-top-right-radius:4px;    
+    border-top-right-radius:4px;    }
+.price-request:before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-12px;
+    width:0;
+    height:0;
+    border-color:transparent #004394 transparent transparent;
+    border-style:solid;
+    border-width:17px 12px 17px 0;      
+    }
+.price-request:after{
+    content:"";
+    position:absolute;
+    top:15px;
+    left:0;
+    width:4px;
+    height:4px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;
+    background:#fff;
+    -moz-box-shadow:-1px -1px 2px #666;
+    -webkit-box-shadow:-1px -1px 2px #666;
+    box-shadow:-1px -1px 2px #666;
+    }
+.sale-price strong{padding: 6px 0 0; display: block; font-size: 15px;}
