@@ -509,29 +509,31 @@
               </div>
               <div class="panel-body">
                   <form novalidate class="originalPrice" name="originalPrice">
-                    <div class="row sale-price form-group">
-                      <div class="col-sm-4">
-                        <strong>
-                          Sale Price
-                        </strong>
-                      </div>
-                      <div class="col-sm-4">
-                        <div class="price-request">
-                          <div ng-if="currentProduct.grossPrice">
-                            <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
+                    <div class="sale-price form-group">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <strong>
+                              Sale Price
+                            </strong>
                           </div>
-                          <div ng-if="currentProduct.priceOnRequest" ng-model="valuefor">
-                            <!-- Price On Request  -->
-                            <i class="fa fa-inr"></i> 23,000,000
+                          <div class="col-sm-4">
+                            <div class="price-request">
+                              <div ng-if="currentProduct.grossPrice">
+                                <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
+                              </div>
+                              <div ng-if="currentProduct.priceOnRequest" ng-model="valuefor">
+                                <!-- Price On Request  -->
+                                <i class="fa fa-inr"></i> 23,000,000
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-4">
+                            <div>
+                              <a href="javascript:void(0);" ng-click="negotiate(originalPrice,false)" class="btn btn-warning btn-block">Buy Now</a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-4">
-                        <div>
-                          <a href="javascript:void(0);" ng-click="negotiate(originalPrice,false)" class="btn btn-warning btn-block">Buy Now</a>
-                        </div>
-                      </div>
-                    </div>
                     </form>
                     <div class="row">
                     <form novalidate class="negotiations" name="negotiations">
@@ -615,6 +617,33 @@
                   </li>
                   <li>
                     Payment can be made online through iQuippo payment gateway or directly into the bank account through cheque, DD, RTGS or NetBanking.
+                  </li>
+                  <li class="bank-detail">
+                    <table class="table">
+                      <tr>
+                        <th colspan="2">Bank Details:</th>
+                      </tr>
+                      <tr>
+                        <td>Bank Name:</td>
+                        <td>ICICI Bank</td>
+                      </tr>
+                      <tr>
+                        <td>Branch Name:</td>
+                        <td>RN Mukherjee Road Branch</td>
+                      </tr>
+                      <tr>
+                        <td>Account Number:</td>
+                        <td>000605028861</td>
+                      </tr>
+                       <tr>
+                        <td>Account Holder Name:</td>
+                        <td>Quippo Valuers and Auctioneers Pvt. Ltd</td>
+                      </tr>
+                      <tr>
+                        <td>IFSC Code:</td>
+                        <td>ICIC0000006</td>
+                      </tr>
+                    </table>
                   </li>
                   <li>
                     VAT, TCS and Parking Charges as applicable and payable by the buyer.
