@@ -76,6 +76,14 @@
 			    		<h4>Add New State</h4>
 			    		<legend></legend>
 			          <div class="row">
+			          	<div class="form-group col-sm-4" ng-class="{'has-error': stateForm.country.$invalid && submitted}">
+			                <select class="form-control" name="country" ng-model="gsettingVm.state.country" required>
+			                	<option value="">Select Country</option>
+			                	<option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+			                	<option value="Malaysia">Malaysia</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div>  
 			         	 <div class="form-group col-sm-4" ng-class="{'has-error': stateForm.stateName.$invalid && submitted}">
 			                <input id="stateName" name="stateName" ng-model="gsettingVm.state.name" type="text" class="form-control" placeholder="Enter State Name" required>
 			            </div>                           	
@@ -91,6 +99,7 @@
 
 			              <thead>
 			               <tr>
+			               		<th>Country</th>
 			               	 	<th>State</th>                                
 			                	<th>Action</th>
 			               </tr>
@@ -98,6 +107,7 @@
 			              </thead>
 			              <tbody>
 			              <tr ng-repeat="state in gsettingVm.stateList">
+			              	<td>{{state.country}}</td>
 			                <td>{{state.name}}</td>
 			                <td>
 			                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.stateEditClick($index)" ><i class="fa fa-pencil"></i> </a>

@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 
 var StateSchema = new Schema({
   name: String,
+  country: String,
   user:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
