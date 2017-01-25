@@ -509,7 +509,7 @@
               </div>
               <div class="panel-body">
                   <form novalidate class="originalPrice" name="originalPrice">
-                    <div class="sale-price form-group">
+                    <div class="sale-price form-group" ng-if="currentProduct.grossPrice">
                         <div class="row">
                           <div class="col-sm-4">
                             <strong>
@@ -521,9 +521,9 @@
                               <div ng-if="currentProduct.grossPrice">
                                 <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
                               </div>
-                              <div ng-if="currentProduct.priceOnRequest" ng-model="valuefor">
+                              <div ng-if="!currentProduct.grossPrice" ng-model="valuefor">
                                 <!-- Price On Request  -->
-                                <i class="fa fa-inr"></i> 23,000,000
+                                <i class="fa fa-inr"></i> Price On Request
                               </div>
                             </div>
                           </div>
@@ -560,7 +560,7 @@
                     </div>
               </div>
             </div>
-            <div class="panel panel-primary">
+            <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'RENT' || currentProduct.tradeType == 'BOTH'">
               <div class="panel-heading">
                 <h3 class="panel-title">For Rent</h3>
               </div>
