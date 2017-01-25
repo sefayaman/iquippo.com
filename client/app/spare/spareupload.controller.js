@@ -64,9 +64,12 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       }
       var locObj = {};
       var state = LocationSvc.getStateByCity(city);
-      
+      if(state)
+        var country = LocationSvc.getCountryByState(state);
+
       locObj.city = city;
       locObj.state = state;
+      locObj.country = country;
       vm.spare.locations[vm.spare.locations.length] = locObj;
     }
     
@@ -103,6 +106,8 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
       .then(function(result){
         vm.locationList = result;
       });
+
+      LocationSvc.getAllState();
 
       ManufacturerSvc.getAllManufacturer()
       .then(function(result){
