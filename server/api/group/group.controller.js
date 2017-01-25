@@ -38,6 +38,7 @@ exports.create = function(req, res) {
         else{
         	Group.create(req.body, function(err, group) {
               if(err) { return handleError(res, err); }
+              console.log(group._id);
                return res.status(200).json({message:"Group save sucessfully"});
              });
         }  

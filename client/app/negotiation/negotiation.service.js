@@ -34,19 +34,26 @@
         notificationSvc.sendNotification('Make-offer-admin-email', data, dataNegotiate,'email');
   }
   else{
+    var subject="";
+    if(dataNegotiate.product.tradeType == "RENT"){
+      subject="For Rent";
+    }
+    else{
+      subject=' Bid Received for your' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + '  Asset ID:'+ dataNegotiate.product.assetId;
+        }
         var data = {};
         data['to'] = dataNegotiate.product.seller.email;
-        data['subject'] = ' Bid Received for your' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + '  Asset ID:'+ dataNegotiate.product.assetId;
+        data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-seller-email', data,dataNegotiate,'email');
 
       var data = {};
         data['to'] = Auth.getCurrentUser().email;
-        data['subject'] = ' Bid Received for your' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + '  Asset ID:'+ dataNegotiate.product.assetId;
+        data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-buyer-email', data,dataNegotiate,'email');
         
       var data = {};  
         data['to'] = supportMail;
-        data['subject'] = ' Bid Received for your' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + '  Asset ID:'+ dataNegotiate.product.assetId;
+        data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-admin-email', data, dataNegotiate,'email');
       }
       return res;
