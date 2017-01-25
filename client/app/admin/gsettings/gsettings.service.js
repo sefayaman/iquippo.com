@@ -14,6 +14,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.saveLocation = saveLocation;
       lServices.getLocationOnFilter = getLocationOnFilter;
       lServices.getStateByCity = getStateByCity;
+      lServices.getCountryByState = getCountryByState;
 
       lServices.getAllState = getAllState;
       lServices.deleteState = deleteState;
@@ -64,6 +65,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }
           return deferred.promise; 
       };
+
+      function getCountryByState(state){
+        var country = "";
+        for(var i=0;i < stateCache.length; i++){
+          if(stateCache[i].name == state){
+            country = stateCache[i].country;
+            break;
+          }
+        }
+        return country;
+      }
 
       function saveLocation(data){
       	return $http.post(path + "/city",data)
