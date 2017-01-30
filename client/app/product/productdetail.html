@@ -544,7 +544,7 @@
                       </div>
                       <div class="col-sm-4">
                         <div ng-class="{'has-error': negotiations.amount.$invalid && negotiationSubmitted}">
-                          <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="negotiateAmt" required>
+                          <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
                         </div>
                       </div>
                       <div class="col-sm-4 text-right">
@@ -589,7 +589,7 @@
                         </tr>
                       </table>
                     <div class="text-right">
-                       <button type="submit" class="btn btn-warning">Get it Now</button>
+                       <button type="submit" class="btn btn-warning" ng-click="negotiate('forRent',false)">Get it Now</button>
                     </div>
                   </form>
                     <hr>

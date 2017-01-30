@@ -56,6 +56,10 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
       return;
     }
 
+    if(form == "forRent"){
+      return negotiateConfirm(form,flag);
+    }
+
     if(form.$invalid){
         $scope.negotiationSubmitted = true;
         return;
@@ -76,7 +80,7 @@ function negotiateConfirm(form,flag){
     var dataNegotiate={};
      dataNegotiate={user:Auth.getCurrentUser(),
           product:$scope.currentProduct,
-          offer:$scope.negotiateAmt,
+          offer:vm.negotiateAmt,
           negotiation:true}
 
           console.log(dataNegotiate)
