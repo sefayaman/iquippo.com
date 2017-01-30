@@ -29,7 +29,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
 
   vm.searchType = "";
   var selectedIds = [];
-  vm.searchStr = "";
+  vm.searchstr = "";
   vm.coulmnSearchStr = "";
 
   //$scope.productSearchFilter = {};
@@ -55,13 +55,14 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
             //pagination flag
             dataToSend.pagination = true;
             dataToSend.itemsPerPage = vm.itemsPerPage;
-            var assetVal = $location.search().assetStatus;
-            var tradeType = $location.search().tradeType;
+            var assetVal = $stateParams.assetStatus;
+            var tradeType = $stateParams.tradeType;
             if(assetVal)
-            dataToSend["assetStatus"] = assetVal;
+              dataToSend["assetStatus"] = assetVal;
             if(tradeType)
-            dataToSend["tradeValue"] = tradeType;
-            loadProducts(dataToSend);
+              dataToSend["tradeValue"] = tradeType;
+            restoreState();
+            fireCommand(false);
 
          }else{
              $state.go('main');
@@ -71,12 +72,12 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   }
 
   function loadProducts(filter){
-
     filter.prevPage = prevPage;
     filter.currentPage = vm.currentPage;
     filter.first_id = first_id;
     filter.last_id = last_id;
     selectedIds = [];
+    saveState();
     productSvc.getProductOnFilter(filter)
     .then(function(result){
         $scope.products  = result.products;
@@ -91,6 +92,57 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
 
   init();
   
+  function restoreState(){
+    if($stateParams.searchstr)
+      vm.searchstr = $stateParams.searchstr;
+    if($stateParams.searchType && $stateParams.coulmnSearchStr){
+      vm.searchType = $stateParams.searchType;
+      vm.coulmnSearchStr = $stateParams.coulmnSearchStr;
+    }
+    if($stateParams.featured)
+      vm.featured = $stateParams.featured == 'true'?true:"";
+    if($stateParams.statusText)
+        vm.active = $stateParams.statusText;
+    if($stateParams.first_id)
+      first_id = $stateParams.first_id;
+    if($stateParams.last_id)
+      last_id = $stateParams.last_id;
+    if($stateParams.currentPage){
+      var currentPage = parseInt($stateParams.currentPage);
+      prevPage = parseInt($stateParams.prevPage);
+      vm.totalItems = vm.itemsPerPage * currentPage;
+      vm.currentPage = currentPage;
+    }
+  }
+
+  function saveState(){
+    var statObj = {};
+    statObj['first_id'] = first_id;
+    statObj['last_id'] = last_id;
+    statObj['currentPage'] = vm.currentPage;
+    statObj['prevPage'] = prevPage;
+    if(vm.featured)
+      statObj['featured'] = vm.featured;
+     else
+      statObj['featured'] = "";
+    if(vm.active)
+      statObj['statusText'] = vm.active;
+    else
+      statObj['statusText'] = "";
+    if(vm.searchstr)
+      statObj['searchstr'] = vm.searchstr;
+    else
+      statObj['searchstr'] = "";
+    if(vm.searchType && vm.coulmnSearchStr){
+      statObj['searchType'] = vm.searchType;
+      statObj['coulmnSearchStr'] = vm.coulmnSearchStr;
+    }else{
+      statObj['searchType'] = "";
+      statObj['coulmnSearchStr'] = "";
+    }
+    $state.go("productlisting",statObj,{location:'replace',notify:false});
+  }
+
   function fireCommand(reset,filterObj){
     if(reset)
       resetPagination();
@@ -103,8 +155,8 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
         filter['featured'] = vm.featured;
     if(vm.active)
       filter['statusText'] = vm.active;
-    if(vm.searchStr)
-      filter['searchstr'] = vm.searchStr;
+    if(vm.searchstr)
+      filter['searchstr'] = vm.searchstr;
     if(vm.searchType){
       var colFilter = getCoulmnSearchFilter();
       for(var key in  colFilter){

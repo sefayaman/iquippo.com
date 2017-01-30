@@ -239,8 +239,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       if(vm.searchstr)
         filter['searchstr'] = vm.searchstr.trim();
 
-      productSvc.setFilter(filter);
-      $state.go('viewproduct');
+      //productSvc.setFilter(filter);
+      $state.go('viewproduct',filter);
     }
 
     function beginVertScroll() {

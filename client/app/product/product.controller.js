@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('ProductCtrl',ProductCtrl);
 angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 //Product upload controller
- function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc,ProductTechInfoSvc) {
+ function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth,$uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc,$timeout,$sce,vendorSvc,AuctionMasterSvc,AuctionSvc,PaymentMasterSvc,ValuationSvc,ProductTechInfoSvc,AppStateSvc) {
     
     var vm = this;
    //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -1405,7 +1405,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 		 if(cb)
 			cb(product);
 		  else
-			$state.go('productlisting');
+			   $state.go('productlisting',AppStateSvc.get('productlisting'));
       });
   }
 
