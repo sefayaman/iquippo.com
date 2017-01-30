@@ -53,7 +53,7 @@
                
                 </div>
                 <div class="col-sm-3 tablesearch text-right">
-                   Search: <input type="text" placeholder="Search..." ng-model="productListingVm.searchStr" ng-change="productListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
+                   Search: <input type="text" placeholder="Search..." ng-model="productListingVm.searchstr" ng-change="productListingVm.fireCommand(true)" ng-model-options="{debounce:500}">
                 </div>
                 </div>
                 <div class="row">
@@ -130,7 +130,7 @@
                     
                   </table>                  
                 </div>
-                <uib-pagination total-items="productListingVm.totalItems" ng-model="productListingVm.currentPage" items-per-page="productListingVm.itemsPerPage" max-size="productListingVm.maxSize" ng-change="productListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+                <uib-pagination total-items="productListingVm.totalItems" ng-model="productListingVm.currentPage" items-per-page="productListingVm.itemsPerPage" max-size="productListingVm.maxSize" ng-click="productListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
                 
               </div>
             </div>

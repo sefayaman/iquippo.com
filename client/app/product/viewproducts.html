@@ -26,7 +26,7 @@
 
                 <label for="" class="text-muted">Product Group </label>
                 <div class="form-group">
-                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange()">
+                <select class="form-control col-md-2" name="groupName" ng-model="equipmentSearchFilter.group" ng-change="viewproductVm.onGroupChange(equipmentSearchFilter.group)">
                 <option value="">Select Group</option>
                 <option ng-repeat="group in allGroup" value="{{group.name}}">{{group.name}}</option>
 
@@ -38,8 +38,9 @@
                 </div>
                 <label for="" class="text-muted">Category</label>
                 <div class="form-group">
-                <select class="form-control col-md-2" name="category"  ng-model="selectedCategory" ng-change="viewproductVm.onCategoryChange(selectedCategory)" ng-options="category.name for category in allCategory track by category._id">
+                <select class="form-control col-md-2" name="category"  ng-model="equipmentSearchFilter.category" ng-change="viewproductVm.onCategoryChange(equipmentSearchFilter.category)">
                         <option value="">Select Category</option>
+                        <option value="{{cat.name}}" ng-repeat="cat in allCategory">{{cat.name}}</option>
                 </select>
                 <i class="caret"></i>
 
@@ -57,8 +58,9 @@
 
                 <label for="" class="text-muted">Product Brand</label>
                 <div class="form-group">
-                  <select class="form-control col-md-2" name="brand" ng-model="selectedBrand" ng-change="viewproductVm.onBrandChange(selectedBrand)" ng-options="brand.name for brand in brandList track by brand._id">
+                  <select class="form-control col-md-2" name="brand" ng-model="equipmentSearchFilter.brand" ng-change="viewproductVm.onBrandChange(equipmentSearchFilter.brand)">
                         <option value="" >Select Brand</option>
+                        <option value="{{br.name}}" ng-repeat="br in brandList">{{br.name}}</option>
                   </select>
 
                   <i class="caret"></i>
@@ -66,8 +68,9 @@
                 </div>
                 <label for="" class="text-muted">Product Model</label>
                 <div class="form-group">
-                   <select class="form-control col-md-2" name="model" ng-model="selectedModel" ng-options="model.name for model in modelList track by model._id" ng-change="viewproductVm.onModelChange(selectedModel)">
+                   <select class="form-control col-md-2" name="model" ng-model="equipmentSearchFilter.model" ng-change="viewproductVm.fireCommand()">
                         <option value="" >Select Model</option>
+                         <option value="{{md.name}}" ng-repeat="md in modelList">{{md.name}}</option>
                   </select>
 
                   <i class="caret"></i>
@@ -129,7 +132,7 @@
                   <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                       <div class="input-group">
-                        <input type="text" class="form-control" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="viewproductVm.productSearchOnMfg()"/>
+                        <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="viewproductVm.productSearchOnMfg()"/>
                     <a href class="input-group-addon" ng-click="open($event,'min')">
                       <i class="fa fa-calendar-o"></i>
                     </a>
@@ -137,7 +140,7 @@
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
                       <div class="input-group">
-                        <input type="text" class="form-control" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="viewproductVm.productSearchOnMfg()"/>
+                        <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="viewproductVm.productSearchOnMfg()"/>
                         <a href class="input-group-addon" ng-click="open($event,'max')">
                           <i class="fa fa-calendar-o"></i>
                         </a>
@@ -196,7 +199,7 @@
             </ul> -->
 
              <div ng-if="!searching && !noResult">
-                 <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+                 <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
                  <span class="no-list text-right">Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
                 <div id="search-result_wrapper" class="search-result">
                   <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
@@ -257,7 +260,7 @@
 
               </div>
            </div>
-           <uib-pagination ng-click="categorylistPageClick()" total-items="viewproductVm.totalItems" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+           <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
           </div>
           <div class="no-result" ng-if="searching && !noResult">
             <img src="assets/images/assets-loading.gif" class="form-group">
