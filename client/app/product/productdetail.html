@@ -504,10 +504,10 @@
           <div class="col-sm-5 col-md-7 panel-group">
            
             <div class="panel panel-primary">
-              <div class="panel-heading">
+              <div class="panel-heading" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH'">
                 <h3 class="panel-title">{{trade}}</h3>
               </div>
-              <div class="panel-body">
+              <div class="panel-body" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH'">
                   <form novalidate class="originalPrice" name="originalPrice">
                     <div class="sale-price form-group" ng-if="currentProduct.grossPrice">
                         <div class="row">
@@ -544,7 +544,7 @@
                       </div>
                       <div class="col-sm-4">
                         <div ng-class="{'has-error': negotiations.amount.$invalid && negotiationSubmitted}">
-                          <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="negotiateAmt" required>
+                          <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
                         </div>
                       </div>
                       <div class="col-sm-4 text-right">
@@ -572,24 +572,24 @@
                           <th colspan="2">Rent Information</th>
                           <th>Security Deposit</th>
                         </tr>
-                        <tr>
+                        <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
                           <td>Hourly</td>
-                          <td><i class="fa fa-inr"></i> 100/hour</td>
-                          <td><i class="fa fa-inr"></i> 10,000</td>
+                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateHours.rentAmountH}}</td>
+                          <td><i class="fa fa-inr"></i>{{currentProduct.rent.rateHours.seqDepositH}} </td>
                         </tr>
-                        <tr>
+                        <tr ng-if="currentProduct.rent.rateDays.rateType == 'days'">
                           <td>Daily</td>
-                          <td><i class="fa fa-inr"></i> 2000/day</td>
-                          <td><i class="fa fa-inr"></i> 200,000</td>
+                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateDays.rentAmountD}}</td>
+                          <td><i class="fa fa-inr"></i>{{currentProduct.rent.rateDays.seqDepositD}}</td>
                         </tr>
-                        <tr>
+                        <tr ng-if="currentProduct.rent.rateMonths.rateType == 'months'">
                           <td>Monthly</td>
-                          <td><i class="fa fa-inr"></i> 30,000/month</td>
-                          <td><i class="fa fa-inr"></i> 30,00,000</td>
+                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.rentAmountM}}</td>
+                          <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.seqDepositM}}</td>
                         </tr>
                       </table>
                     <div class="text-right">
-                       <button type="submit" class="btn btn-warning">Get it Now</button>
+                       <button type="submit" class="btn btn-warning" ng-click="negotiate('forRent',false)">Get it Now</button>
                     </div>
                   </form>
                     <hr>
@@ -599,6 +599,61 @@
                     <p class="pull-left">* Other Terms &amp; Conditions applied.</p>
               </div>
             </div>
+            <div class="panel panel-primary" ng-if="currentProduct.dispSellerInfo == 'yes'">
+              <div class="panel-heading">
+                <h3 class="panel-title">Contact Seller</h3>
+              </div>
+              <div class="panel-body">
+                  <form novalidate name="">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          Seller Name
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                           {{currentProduct.seller.fname + ' ' + currentProduct.seller.mname + ' ' + currentProduct.seller.lname}}
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="row" ng-if="currentProduct.dispSellerContact == 'true' ">
+                    <form novalidate name="">
+                      <div class="col-sm-4">
+                        <div class="form-group" >
+                          Seller Contact Number
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          {{currentProduct.seller.mobile}}
+                        </div>
+                      </div>
+                     
+                    </form>
+                  </div>
+
+                   <div class="row" ng-if="currentProduct.dispSellerAlternateContact == 'true' ">
+                    <form novalidate name="">
+                      <div class="col-sm-4">
+                        <div class="form-group" >
+                          Seller Alternate Contact Number
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                         {{currentProduct.seller.alternateMobile}}
+                        </div>
+                      </div>
+                     
+                    </form>
+                  </div>
+                    
+                    
+              </div>
+            </div>
+
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title">Terms &amp; Conditions</h3>

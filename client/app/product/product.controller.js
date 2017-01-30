@@ -59,6 +59,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   $scope.increaseElement=increaseElement;
   //$scope.addOrUpdateProduct = addOrUpdateProduct;
   $scope.onUserChange = onUserChange;
+  $scope.uncheck=uncheck;
   $scope.resetClick = resetClick;
   $scope.makePrimary = makePrimary;
   $scope.deleteImg = deleteImg;
@@ -103,6 +104,12 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq = {};
   }
 
+
+    function uncheck(event) {
+    if ($scope.checked == event.target.value)
+        $scope.checked = false
+  }
+
   function goToUsermanagement(){
     $state.go('usermanagment');
     $timeout(function() { Modal.openDialog('adduser');}, 20);
@@ -134,7 +141,14 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     /*LocationSvc.getAllState()
     .then(function(result){
       $scope.stateList = result;
+
+
     });*/
+
+    if(!Auth.isAdmin()){
+      product.seller=Auth.getCurrentUser();
+      console.log(product.seller);
+    }
 
    
 
@@ -698,6 +712,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       //product.seller.userType = user.userType;
       product.seller.phone = seller.phone;
       $scope.product.seller.mobile = product.seller.mobile = seller.mobile;
+      product.seller.alternateMobile=seller.alternateMobile;
       $scope.product.seller.email = product.seller.email = seller.email;
       product.seller.country = seller.country;
       product.seller.company = seller.company;

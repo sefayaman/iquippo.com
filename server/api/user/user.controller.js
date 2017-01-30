@@ -80,9 +80,13 @@ exports.validateSignup = function(req, res){
 
 exports.create = function (req, res, next) {
   console.log("----create[---",req.body);
+  //console.log(req.body);
   var newUser = new User(req.body);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
+   
+
+
   newUser.save(function(err, user) {
   if (err) return validationError(res, err);
   res.json(user);

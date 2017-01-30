@@ -35,7 +35,7 @@
   }
   else{
     var subject="";
-    if(dataNegotiate.product.tradeType == "RENT"){
+    if((dataNegotiate.product.tradeType == "RENT") || (dataNegotiate.product.tradeType == "BOTH")){
       subject="For Rent";
     }
     else{
@@ -46,12 +46,12 @@
         data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-seller-email', data,dataNegotiate,'email');
 
-      var data = {};
+        var data = {};
         data['to'] = Auth.getCurrentUser().email;
         data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-buyer-email', data,dataNegotiate,'email');
         
-      var data = {};  
+        var data = {};  
         data['to'] = supportMail;
         data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-admin-email', data, dataNegotiate,'email');
