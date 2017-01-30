@@ -67,7 +67,8 @@ angular.module('sreizaoApp')
         layout:'client'
       })
       .state('productlisting', {
-        url: '/productlisting',
+        url: '/productlisting?first_id&last_id&currentPage&prevPage&searchstr&statusText' +
+              '&featured&tradeValue&assetStatus&searchType&coulmnSearchStr&reset',
         templateUrl: 'app/product/productlisting.html',
         controller: 'ProductListingCtrl as productListingVm',
         authenticate:true,
@@ -114,7 +115,9 @@ angular.module('sreizaoApp')
          layout:'client'
       })
       .state('viewproduct', {
-        url:"/viewproducts",
+        url:"/viewproducts?currentPage&group&category&brand&model" + 
+            "&assetStatus&tradeType&currencyType&currencyMin&currencyMax&" +
+            "&mfgYearMin&mfgYearMax&location&searchstr&operatingHour&mileage",
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'

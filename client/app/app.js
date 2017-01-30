@@ -43,7 +43,7 @@ angular.module('sreizaoApp',[
     $httpProvider.defaults.headers.get['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
 
     $httpProvider.interceptors.push('authInterceptor');
-    tinyMCE.baseURL = '/bower_components/tinymce-dist';
+    tinyMCE.baseURL = '/bower_components/tinymce';
     tinyMCE.suffix = '.min';
     //AIzaSyDg4HC7YOjDMLqBLX5rvnniMxix-YV7pK8
     uiGmapGoogleMapApiProvider.configure({
@@ -52,7 +52,7 @@ angular.module('sreizaoApp',[
         libraries: 'weather,geometry,visualization,places'
     });
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -117,8 +117,9 @@ angular.module('sreizaoApp',[
       .catch(function(stRes){
       });
 
-    $rootScope.$on('$stateChangeStart', function (event, next) {
+    $rootScope.$on('$stateChangeStart', function (event, next,toParams, fromState, fromParams) {
     $('#jivo-iframe-container').css("opacity","1");
+    AppStateSvc.set(fromState.name,fromParams);
       Auth.isLoggedInAsync(function(loggedIn) {
         if (next.authenticate && !loggedIn) {
           event.preventDefault();

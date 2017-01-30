@@ -27,6 +27,23 @@
       }
     };
   })
+   .factory('AppStateSvc', function () {
+    var appStateCache = {};
+    var svc = {};
+    svc.get = get;
+    svc.set = set;
+
+    function get(key){
+      return appStateCache[key];
+    }
+
+    function set(key,stateParams){
+      if(!stateParams)
+        return;
+     appStateCache[key] =  stateParams;
+    }
+    return svc;
+  })
   .factory("groupSvc",['$http','$rootScope','$q',function($http,$rootScope,$q){
     var gpService = {};
     var path = '/api/group';
