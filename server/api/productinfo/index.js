@@ -111,6 +111,7 @@ router.get('/fetch.xlsx',controller.fetch,controller.renderXLSX);
  */
 
 router.post('/create', controller.create);
+router.post('/import',controller.import);
 
 /**
  * @apiGroup Product Information

@@ -117,7 +117,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.saveTechnicalInfo = saveTechnicalInfo;
     vm.updateProductTechInfo = updateProductTechInfo;
     vm.deleteProductTechInfo = deleteProductTechInfo;
-
+    vm.productTechInfoTemplate = 'ProductTechInfoTemplate.xlsx';
     function closeTechInfo(){
       return $scope.isTechCollapsed = !$scope.isTechCollapsed;
     }
@@ -142,6 +142,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     //Auction date master
 
     $scope.importAuctionMaster = importAuctionMaster;
+    $scope.importTechInfoMaster = importTechInfoMaster;
     vm.deleteAuctionMaster = deleteAuctionMaster;
 
     function onTabChange(tabValue){
@@ -722,13 +723,13 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     }
 
 	function loadAuctionData(){
-		PaymentMasterSvc.getAll()
+		/*PaymentMasterSvc.getAll()
   		.then(function(result){
   		  result.forEach(function(item){
             if(item.serviceCode == "Auction")
               vm.auctionData.regCharges = item.fees;
           });
-  		});
+  		});*/
 
 		var filter = {};
 		filter.service = "Auction";
@@ -1288,6 +1289,49 @@ function openWindow(url){
   $window.open(url);
 }
 
+//import Product Technical Info
+ function importTechInfoMaster(files){
+  if(files.length == 0 || !files)
+      return;
+     if(files[0].name.indexOf('.xlsx') == -1){
+        Modal.alert('Please upload a valid file');
+        return;
+
+     }
+    
+    $rootScope.loading = true;
+    uploadSvc.upload(files[0],importDir)
+    .then(function(result){
+      var fileName = result.data.filename;
+      $rootScope.loading = true;
+      ProductTechInfoSvc.importExcel(fileName)
+      .then(function(res){
+        $rootScope.loading = false; 
+        if (res.errObj.length > 0 ) {
+        var data = {};
+        data['to'] = Auth.getCurrentUser().email;
+        data['subject'] = 'Bulk Product Technical Information Excel Upload Error Details.';
+        var serData = {};
+        serData.serverPath = serverPath;
+        serData.errorList = res.errObj;
+        notificationSvc.sendNotification('BulkUploadError', data, serData, 'email');
+        res.message += '. Error details has been sent to your email id';
+      }
+        Modal.alert(res.message,true);
+        fireCommand('true',null,"technical");
+      })
+      .catch(function(res){
+        $rootScope.loading = false;
+        Modal.alert("error in parsing data",true);
+      })
+    })
+    .catch(function(res){
+        $rootScope.loading = false;
+       Modal.alert("error in file upload",true);
+    });
+ }
+
+
 function exportProductTechInfoExcel(){
 	var filters = {};
 	filters.limit = 500;
@@ -1295,6 +1339,8 @@ function exportProductTechInfoExcel(){
 	openWindow(ProductTechInfoSvc.exportExcel(filters));
 
 }
+
+
 
 function deleteProductTechInfo(techInfo){
 	if(!techInfo)

@@ -20,6 +20,7 @@ var AuctionMasterSchema = new Schema({
 	auctionAddr: String,
 	auctionType: String,
 	regCharges : Number,
+	emdAmount : Number,
 	docType:String,
 	docName: String,
 	groupId:String,

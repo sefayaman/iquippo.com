@@ -22,14 +22,16 @@
                 First name:
           </td>
           <td width="25%">
-               {{fname}}
+               {{user.fname}}
           </td>
+          {{#if user.mname}}
           <td width="25%">
                         Middle name:
                     </td>
                     <td width="25%">
-                      {{mname}}
+                      {{user.mname}}
                     </td>
+                    {{/if}}
               </tr>
   
           <tr>
@@ -37,13 +39,13 @@
             Last name:
             </td>
           <td >
-            {{lname}}
+            {{user.lname}}
              </td>
              <td>
             Country:
              </td>
             <td >
-          {{country}}
+          {{user.country}}
             </td>
       </tr>
  
@@ -52,14 +54,14 @@
             City:
             </td>
         <td>
-            {{city}}
+            {{user.city}}
             </td>
 
             <td>
             Company name:
            </td>
           <td>
-            {{companyname}}
+            {{user.companyname}}
             </td>
       </tr>
   
@@ -68,14 +70,14 @@
               Designation:
                </td>
             <td>
-              {{designation}}
+              {{user.designation}}
                </td>
    
               <td>
               Phone no:
                </td>
                <td>
-              {{phone}}
+              {{user.phone}}
               </td>
          </tr>
   
@@ -85,7 +87,7 @@
                         
                     </td>
                   <td>
-                        {{mobile}}
+                        {{user.mobile}}
                         
                     </td>
                     
@@ -94,12 +96,12 @@
                         
                     </td>
                 <td>
-                    {{email}}
+                    {{user.email}}
                         
                     </td>
                 </tr>
  
-               <tr>
+               <!-- <tr>
                     <th colspan="2" style="padding:10px 0 0;">
                        Get a shipping quote
                         
@@ -110,8 +112,8 @@
                         
                     </th>
             
-                 </tr>  
-              <tr>
+                 </tr> -->  
+              <!-- <tr>
                     <td>
                         Part shipment allowed
                     </td>
@@ -125,8 +127,8 @@
                   <td>
                         {{valuationQuote.valuation}}
                     </td>
-                </tr>  
-                <tr>
+                </tr>  --> 
+                <!-- <tr>
                         <td>
                            Packaging as per international standard:
                             
@@ -135,19 +137,19 @@
                         <td>
                             {{shippingQuote.packaging}}
                             
-                        </td>
+                        </td> 
                 
                         <td>
                             Schedule a call:
                             
                         </td>
                     <td>
-                          {{valuationQuote.schedule}}
+                          {{certifiedByIquippo.scheduleC}}
                             
                         </td>
                     
-                   </tr>  
-                    <tr>
+                   </tr> -->  
+                    <!-- <tr>
                             <td>
                               Comment:
                                 
@@ -165,8 +167,8 @@
                                {{valuationQuote.date}}
                                 
                             </td>
-                      </tr>  
-                      <tr>
+                      </tr> -->  
+                      <!-- <tr>
                             <td>
                                 
                                 
@@ -185,7 +187,7 @@
                                {{valuationQuote.scheduledTime}}
                                 
                             </td>
-                        </tr>  
+                        </tr> -->  
 
                             <tr>
                                 <th>
@@ -216,7 +218,7 @@
                                         
                                     </td>
                                      <td>
-                                       {{certifiedByIQuippoQuote.schedule}}
+                                       {{certifiedByIQuippoQuote.scheduleC}}
                                     </td>
                                    
                                 </tr>  

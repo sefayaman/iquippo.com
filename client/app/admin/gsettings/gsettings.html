@@ -76,6 +76,14 @@
 			    		<h4>Add New State</h4>
 			    		<legend></legend>
 			          <div class="row">
+			          	<div class="form-group col-sm-4" ng-class="{'has-error': stateForm.country.$invalid && submitted}">
+			                <select class="form-control" name="country" ng-model="gsettingVm.state.country" required>
+			                	<option value="">Select Country</option>
+			                	<option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+			                	<option value="Malaysia">Malaysia</option>
+			                </select>
+			                <i class="caret"></i>
+			            </div>  
 			         	 <div class="form-group col-sm-4" ng-class="{'has-error': stateForm.stateName.$invalid && submitted}">
 			                <input id="stateName" name="stateName" ng-model="gsettingVm.state.name" type="text" class="form-control" placeholder="Enter State Name" required>
 			            </div>                           	
@@ -91,6 +99,7 @@
 
 			              <thead>
 			               <tr>
+			               		<th>Country</th>
 			               	 	<th>State</th>                                
 			                	<th>Action</th>
 			               </tr>
@@ -98,6 +107,7 @@
 			              </thead>
 			              <tbody>
 			              <tr ng-repeat="state in gsettingVm.stateList">
+			              	<td>{{state.country}}</td>
 			                <td>{{state.name}}</td>
 			                <td>
 			                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.stateEditClick($index)" ><i class="fa fa-pencil"></i> </a>
@@ -309,7 +319,8 @@
 				                </div>
 				                <div class="col-sm-3 form-group">
 				          			
-				          			<input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled>
+				          			<!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
+				          			<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount">
 				          		</div>		          					          	
 				          	</div>
 
@@ -371,7 +382,7 @@
 					                <th>Location</th>
 					                <th>Address of auction</th>
 					                <th>Auction type</th>
-					                <th>Registration charges for auction</th>
+					                <th>EMD Amount</th>
 					                <th>Document attachment type</th>
 					                <th>Assets in Auctions</th>
 					                <th class="col-xs-2 col-sm-1">Action</th>
@@ -391,7 +402,7 @@
 				                  <td>{{auc.city}}</td>
 				                  <td>{{auc.auctionAddr}}</td>
 				                  <td>{{auc.auctionType | titleCase}}</td>
-				                  <td>{{auc.regCharges}}</td>
+				                  <td>{{auc.emdAmount}}</td>
 				                  <td>
 				                  		<span ng-if="auc.docType == 'tc'">Terms and Conditions</span> 
 				                  		<span ng-if="auc.docType == 'bidProxy'">Bid Proxy Form</span> 
@@ -889,12 +900,23 @@
 		<div ng-if="gsettingVm.tabValue == 'technical'">
 			<div class="col-sm-12">
 					<div class="row">
-            <div class="col-sm-10">
+            <div class="col-sm-8">
               <h4>Technical Information</h4>
+              <p>Download the <a href="/download/templates/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 padd-right">
               <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
             </div>
+            <div class="col-sm-2">
+             	<h3>
+					<div class="btn btn-success btn-block btn-md pull-right">
+						<span class="fileinput-button">
+						  <i class="fa fa-file-excel-o"></i> Import Excel
+						  <input type="file" name="template_update" onchange="angular.element(this).scope().importTechInfoMaster(this.files,this)">
+						 </span>
+					</div>
+				</h3>
+			</div>
             <div class="col-sm-1">
               <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
