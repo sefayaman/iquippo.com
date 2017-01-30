@@ -93,7 +93,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
           //vm.productListToCompare = [];
 
           if(result.length > 0){
-            vm.currentPage = 1;
+            vm.currentPage = parseInt($stateParams.currentPage) || 1;
             vm.totalItems = result.length;
             $scope.noResult = false;
           }else{
@@ -183,9 +183,9 @@ function onGroupChange(group){
 
       var filter = {};
       angular.copy($scope.equipmentSearchFilter,filter);
-      saveState();
       if(!noReset)
         vm.currentPage = 1;
+      saveState(false);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
@@ -504,10 +504,10 @@ $scope.today = function() {
   }
 
   function onPageChange(){
-    saveState();
+    saveState(true);
   }
 
-  function saveState(){
+  function saveState(retainState){
 
     var stateObj = {};
     if($scope.equipmentSearchFilter.mfgYear){
@@ -541,12 +541,22 @@ $scope.today = function() {
       stateObj['currencyMin'] = "";
       stateObj['currencyMax'] = "";
     }
+    if($scope.equipmentSearchFilter.assetStatus)
+      stateObj['type'] = $scope.equipmentSearchFilter.assetStatus;
+    else if($scope.equipmentSearchFilter.tradeType)
+      stateObj['type'] = $scope.equipmentSearchFilter.tradeType;
+    else
+      stateObj['type'] = "";
+
     for(var key in $scope.equipmentSearchFilter){
       if(key != 'mfgYear' && key != 'currency')
         stateObj[key] =  $scope.equipmentSearchFilter[key];  
     }
     stateObj.currentPage = vm.currentPage;
-    $state.go("viewproduct",stateObj,{location:'replace',notify:false});
+    if(retainState)
+      $state.go($state.current.name,stateObj,{location:'replace',notify:false});
+    else
+      $state.go("viewproduct",stateObj,{location:'replace',notify:false});
   }
 
   function restoreState(){
@@ -578,7 +588,11 @@ $scope.today = function() {
          $scope.currency.maxPrice = parseInt($stateParams.currencyMax)|| 0;
         }
       
-      var excludeFiledArr = ['currencyType','currencyMin','currencyMax','mfgYearMin','mfgYearMax'];
+      if($stateParams.type){
+        $scope.type = $stateParams.type;
+        onTypeChange($scope.type);
+      }
+      var excludeFiledArr = ['currencyType','currencyMin','currencyMax','mfgYearMin','mfgYearMax','type'];
       for(var key in $stateParams){
         if(excludeFiledArr.indexOf(key) == -1)
             $scope.equipmentSearchFilter[key] =  $stateParams[key];  
