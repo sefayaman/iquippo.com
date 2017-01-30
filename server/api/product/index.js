@@ -29,7 +29,7 @@ router.post('/incomingproduct', controller.getIncomingProduct);
 router.post('/unlockincomingproduct', controller.unIncomingProduct);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.post('/createauction', controller.createOrUpdateAuction);
-
+router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelData,controller.updateExcelData);
 
 
 

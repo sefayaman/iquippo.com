@@ -34,6 +34,7 @@
       prdService.exportProduct = exportProduct;
       prdService.bulkProductUpdate = bulkProductUpdate;
       prdService.bulkProductStatusUpdate = bulkProductStatusUpdate;
+      prdService.bulkEditProduct = bulkEditProduct;
       prdService.userWiseProductCount = userWiseProductCount;
       prdService.updateInquiryCounter = updateInquiryCounter;
       prdService.categoryWiseCount = categoryWiseCount;
@@ -218,6 +219,18 @@
 
       function bulkProductStatusUpdate(fileName){
         return $http.post(path + "/bulkproductstatusupdate",{filename:fileName})
+              .then(function(res){
+                return res.data;
+              })
+              .catch(function(res){
+                throw res;
+              })
+      }
+
+
+      //Bulk product update via excel
+      function bulkEditProduct(fileName){
+        return $http.post(path + "/bulkeditproduct",{filename:fileName})
               .then(function(res){
                 return res.data;
               })

@@ -27,6 +27,11 @@ var config = require('./../../config/environment');
 var IncomingProduct = require('./../../components/incomingproduct.model');
 var  xlsx = require('xlsx');
 var importPath = config.uploadPath + config.importDir +"/";
+var async = require('async');
+var productFieldsMap = require('./../../config/product_temp_field_map');
+var productInfoModel = require('../productinfo/productinfo.model');
+
+
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -1303,7 +1308,7 @@ exports.bulkProductStatusUpdate = function(req,res){
     return  handleError(res,"Error in file upload")
   }
   if(!workbook)
-    return res.status(404).send("Error in file upload");
+    return res.status(404).send("Error in file upload")
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   var data = xlsx.utils.sheet_to_json(worksheet);
@@ -1313,6 +1318,642 @@ exports.bulkProductStatusUpdate = function(req,res){
   req.successProductArr = [];
   req.assetIdCache = {};
   bulkProductStatusUpdate(req,res,data);
+}
+
+exports.parseExcel = function(req,res,next){
+  var fileName = req.body.filename;
+  //var user = req.body.user;
+  var workbook = null;
+  try{
+    workbook = xlsx.readFile(importPath + fileName);
+  }catch(e){
+    console.log(e);
+    return  handleError(res,"Error in file upload")
+  }
+  if(!workbook)
+    return res.status(404).send("Error in file upload");
+  var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+  var data = xlsx.utils.sheet_to_json(worksheet);
+  req.excelData = data;
+
+  next();
+}
+
+function fetchCategory(category, cb) {
+  Category.find({
+    name: category
+  }).exec(function(err, categoryData) {
+    if (err) {
+      debug(err);
+      return cb(err);
+    }
+
+    return cb(null, categoryData);
+  });
+}
+
+function fetchBrand(brand, cb) {
+  var filter = {
+    name: brand.name,
+    'group.name': brand.group,
+    'category.name': brand.category
+  };
+
+  Brand.find(filter).exec(function(err, brandData) {
+    if (err) {
+      debug(err);
+      return cb(err);
+    }
+
+    return cb(null, brandData);
+  });
+}
+
+function fetchModel(model, cb) {
+  var filter = {
+    name: model.name,
+    'group.name': model.group,
+    'category.name': model.category,
+    'brand.name': model.brand
+  };
+
+  Model.find(filter).exec(function(err, modelData) {
+    if (err) {
+      debug(err);
+      return cb(err);
+    }
+    return cb(null, modelData);
+  });
+}
+
+
+exports.updateExcelData = function (req,res,next){
+  if(!req.updateData.length && !req.errorList.length)
+    return res.status(500).send('Error while updating');
+
+  var successCount = 0;
+  if(!req.updateData.length && req.errorList.length)
+    return res.json({successCount : successCount,errorList : req.errorList});
+
+  var dataToUpdate = req.updateData;
+
+  async.eachLimit(dataToUpdate,5,intialize,finalize);
+
+  function finalize(err){
+    if(err){
+      console.log(err);
+      res.status(500).send('Error while updating');
+    }
+
+    return res.json({successCount:successCount , errorList : req.errorList});
+  }
+
+  function intialize(data,cb){
+
+    var assetId = data.assetId;
+    delete data.assetId;
+
+    Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
+      console.log(doc);
+      if(err || !doc){
+        req.errorList.push({
+          Error:'Error while updating information',
+          rowCount : data.rowCount
+        })
+        return cb();
+      }
+      successCount++;
+      return cb();
+    })
+  }
+    
+}
+
+exports.validateExcelData = function(req,res,next){
+  var excelData = req.excelData;
+
+  //console.log('-------------------------',excelData);
+
+  if(!excelData || !excelData.length){
+    return res.status(404).send("No Data to update");
+  }
+
+  //console.log(excelData);
+  var updateData = [];
+  var errorList = [];
+
+  async.eachLimit(excelData,10,intialize,finalize);
+
+  function finalize(err){
+    if(err){
+      console.log(err);
+      res.status(500).send('Error while updating');
+    }
+
+    req.errorList = errorList;
+    req.updateData = updateData;
+    next();
+  }
+
+  function intialize(info,cb){
+    var row = {};
+    Object.keys(info).forEach(function(x){
+      if(productFieldsMap[x] && info[x]){
+        row[productFieldsMap[x]] = info[x];
+      }
+    })
+    row.rowCount = info.__rowNum__;
+
+    if(!row.assetId){
+      errorList.push({
+        Error:'Asset Id missing',
+        rowCount : row.rowCount
+      });
+      return cb();
+    }
+
+    /*AA:Process of bulk update
+    validateCategory : validate the category if and only if category related columns present in uploaded sheets
+    validateSeller : validate seller if and only if seller mobile and email exists
+    validateSeller : will take the info from sheet if not exists then check whether the combination of category,brand,model
+    exits in db if found then update
+    validateRentInfo : only update of tradeType is RENT or BOTH
+    validateAdditionalInfo : Any othe column would be added here which does not require any processing
+    */
+  
+    Product.find({assetId : row.assetId},function(err,doc){
+      if(err || !doc.length){
+        errorList.push({
+          Error : 'No asset id found',
+          rowCount : row.rowCount
+        })
+        return cb();
+      }
+      
+      async.parallel({
+        validateCategory : validateCategory, //{}
+        validateSeller: validateSeller,
+        validateTechnicalInfo: validateTechnicalInfo,
+        validateServiceInfo : validateServiceInfo,
+        validateRentInfo : validateRentInfo,
+        validateAdditionalInfo : validateAdditionalInfo
+      },buildData);
+    });
+
+    function buildData(err,parseData){
+      if(err)
+        return cb();
+
+      var obj = {};
+      for(var v in parseData){
+        if(Object.keys(parseData[v]).length){
+          _.extend(obj,parseData[v]);
+        }
+      }
+
+      if(Object.keys(obj).length){
+        obj.assetId = row.assetId;
+        obj.rowCount = row.rowCount;
+        updateData.push(obj);
+      }
+
+      return cb();
+
+    }
+
+    function validateAdditionalInfo(callback){
+      var obj = {};
+
+      if(row.isEngineRepaired){
+        var engRepOver = trim(row.isEngineRepaired || "").toLowerCase();
+        obj.isEngineRepaired = engRepOver == 'yes' || engRepOver == 'y'?true:false;
+      }
+
+      var assetStatus = row["Asset_Status*"];
+      if(assetStatus && row.tradeType){
+        assetStatus = trim(assetStatus).toLowerCase();
+        if(['listed','sold','rented'].indexOf(assetStatus) == -1){
+           errorList.push({
+            Error : 'Not valid status',
+            rowCount : row.rowCount
+          });
+          return callback('Error'); 
+        }
+      var ret = checkValidTransition(row.tradeType,assetStatus);
+
+      if(!ret){
+         errorList.push({
+            Error : 'Invalid status transition',
+            rowCount : row.rowCount
+          });
+          return callback('Error'); 
+      }else{
+          obj.updatedAt = new Date();
+          obj.assetStatus = assetStatus;
+          if(assetStatus != 'listed') {
+            obj.featured = false;
+            obj.isSold = true;
+          }
+        }
+      }
+
+      ['country','state','city'].forEach(function(x){
+        if(row[x])
+          obj[x] = trim(row[x]);
+      })
+
+      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','productCondition'];
+      additionalCols.forEach(function(x){
+        if(row[x]){
+          obj[x] = row[x];
+        }
+      });
+      return callback(null,obj);
+    }
+
+    function validateRentInfo(callback){
+      var product = {};
+      if (row.tradeType && row.tradeType != "SELL") {
+        product["rent"] = {};
+
+        var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
+        if (rateTypeH == "yes" || rateTypeH == 'y') {
+          product["rent"].rateHours = {};
+          product["rent"].rateHours.rateType = "hours";
+        }
+
+        var rateTypeD = trim(row["ratedays"] || "").toLowerCase();
+        if (rateTypeD == "yes" || rateTypeD == 'y') {
+          product["rent"].rateDays = {};
+          product["rent"].rateDays.rateType = "days";
+        }
+
+        var rateTypeM = trim(row["rateMonths"] || "").toLowerCase();
+        if (rateTypeM == "yes" || rateTypeM == 'y') {
+          product["rent"].rateMonths = {};
+          product["rent"].rateMonths.rateType = "months";
+        }
+        var fromDate = new Date(row["fromDate"]);
+        var validDate = isValid(fromDate);
+
+        if (!fromDate || !validDate) {
+          errorList.push({
+            Error : 'Mandatory field Availability_of_Asset_From is invalid or not present',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        product["rent"].fromDate = fromDate;
+        var toDate = new Date(row["toDate"]);
+        validDate = isValid(fromDate);
+        if (!toDate || !validDate) {
+         errorList.push({
+            Error : 'Mandatory field Availability_of_Asset_To is invalid or not present',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        product["rent"].toDate = toDate;
+        
+        //rent hours
+        var negotiableFlag = true;
+        if (rateTypeH == "yes" || rateTypeH == 'y') {
+          negotiableFlag = false;
+          var minPeriodH = row["minPeriodH"];
+          if (!minPeriodH) {
+            errorList.push({
+              Error : 'Mandatory field Min_Rental_Period_Hours is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateHours.minPeriodH = Number(trim(minPeriodH));
+
+          var maxPeriodH = row["maxPeriodH"];
+          if (!maxPeriodH) {
+            errorList.push({
+              Error : 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateHours.maxPeriodH = Number(trim(maxPeriodH));
+
+          var rentAmountH = row["rentAmountH"];
+          if (!rentAmountH) {
+            errorList.push({
+              Error : 'Mandatory field Rent_Amount_Hours is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateHours.rentAmountH = Number(trim(rentAmountH));
+
+          var seqDepositH = row["seqDepositH"];
+          if (!seqDepositH) {
+            errorList.push({
+              Error : 'Mandatory field Security_Deposit_Hours is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateHours.seqDepositH = Number(trim(seqDepositH));
+        }
+        // rent days
+        if (rateTypeD == "yes" || rateTypeD == 'y') {
+          negotiableFlag = false;
+          var minPeriodD = row["minPeriodD"];
+          if (!minPeriodD) {
+            errorList.push({
+              Error : 'Mandatory field Min_Rental_Period_Days is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateDays.minPeriodD = Number(trim(minPeriodD));
+
+          var maxPeriodD = row["maxPeriodD"];
+          if (!maxPeriodD) {
+            errorList.push({
+              Error : 'Mandatory field Max_Rental_Period_Days is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateDays.maxPeriodD = Number(trim(maxPeriodD));
+
+          var rentAmountD = row["rentAmountD"];
+          if (!rentAmountD) {
+            errorList.push({
+              Error : 'Mandatory field Rent_Amount_Days is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateDays.rentAmountD = Number(trim(rentAmountD));
+
+          var seqDepositD = row["seqDepositD"];
+          if (!seqDepositD) {
+            errorList.push({
+              Error : 'Mandatory field Security_Deposit_Days is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateDays.seqDepositD = Number(trim(seqDepositD));
+        }
+        //rent months
+        if (rateTypeM == "yes" || rateTypeM == 'y') {
+          negotiableFlag = false;
+          var minPeriodM = row["minPeriodM"];
+          if (!minPeriodM) {
+            errorList.push({
+              Error : 'Mandatory field Min_Rental_Period_Months is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateMonths.minPeriodM = Number(trim(minPeriodM));
+
+          var maxPeriodM = row["maxPeriodM"];
+          if (!maxPeriodM) {
+            errorList.push({
+              Error : 'Mandatory field Max_Rental_Period_Months is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateMonths.maxPeriodM = Number(trim(maxPeriodM));
+
+          var rentAmountM = row["rentAmountM"];
+          if (!rentAmountM) {
+            errorList.push({
+              Error : 'Mandatory field Rent_Amount_Months is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateMonths.rentAmountM = Number(trim(rentAmountM));
+
+          var seqDepositM = row["seqDepositM"];
+          if (!seqDepositM) {
+            errorList.push({
+              Error : 'Mandatory field Security_Deposit_Months is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
+        }
+        product["rent"].negotiable = negotiableFlag;
+      }
+
+      return callback(null,product);
+    }
+
+    //validate service related information
+    function validateServiceInfo(callback){
+      var obj = {};
+       ['authServiceStation','serviceAt','operatingHour','servicedate'].forEach(function(x){
+        if(row[x]){
+          if(!obj.serviceInfo)
+            obj.serviceInfo = [{}]
+          obj[0][x] = row[x];
+        }
+      })
+      return callback(null,obj);
+    }
+
+    //validate Technical information
+    function validateTechnicalInfo(callback){
+      var obj = {};
+      ['gross_weight','operating_weight','bucket_capacity','engine_power','lifting_capacity'].forEach(function(x){
+        if(row[x]){
+          obj.technicalInfo[x] = row[x];
+        }
+      })
+
+      if(!obj.technicalInfo && row.category && row.brand && row.model){
+        productInfoModel.find({
+          type : 'technical',
+          'information.category' : row.category,
+          'information.brand' : row.brand,
+          'information.model' : row.model
+        }).exec(function(err,data){
+          if(!err && data.length){
+            obj.technicalInfo = {};
+            obj.technicalInfo.gross_weight = data[0]._doc.grossWeight;
+            obj.technicalInfo.operating_weight = data[0]._doc.operatingWeight;
+            obj.technicalInfo.bucket_capacity = data[0]._doc.bucketCapacity;
+            obj.technicalInfo.engine_power = data[0]._doc.enginePower;
+            obj.technicalInfo.lifting_capacity = data[0]._doc.liftingCapacity;  
+          }
+          return callback(null,obj);
+        })
+      } else {
+        return callback(null,obj);
+      }
+    }
+
+
+    //validate seller information if exists
+    function validateSeller(callback){
+      var obj = {};
+      if(row.seller_mobile && row.seller_email){
+        User.find({
+          mobile : row.seller_mobile,
+          email : row.seller_email
+        },function(err,seller){
+          if(err || !seller){
+            errorList.push({
+              Error : 'Error while fetching seller',
+              rowCount : row.rowCount
+            })
+            return callback('Error');
+          }
+
+          if(!seller.length){
+            errorList.push({
+              Error : 'Seller not exist',
+              rowCount : row.rowCount
+            })
+            return callback('Error');
+
+            obj.seller = {};
+            obj.seller["country"] = seller[0]['country'];
+            obj.seller["email"] = seller[0]['email'];
+            obj.seller["mobile"] = seller[0]['mobile'];
+            obj.seller["company"] = seller[0]['company'];
+            obj.seller["countryCode"] = seller[0]['countryCode'];
+            obj.seller["userType"] = seller[0]['userType'];
+            obj.seller["role"] = seller[0]['role'];
+            obj.seller["lname"] = seller[0]['lname'];
+            obj.seller["fname"] = seller[0]['fname'];
+            obj.seller["_id"] = seller[0]['_id'] + "";
+            return callback(null,obj);
+          }
+        })
+      }else
+        return callback(null,obj);
+    } 
+
+
+    //validate Category if exists
+    function validateCategory(callback){
+      var obj = {};
+      var e ;
+      if(row.category && row.brand && row.model ){
+        if(row.category === 'Other'){
+          e = ['other_category','other_brand','other_model'].some(function(x){
+            if(!row[x]){
+              errorList.push({
+                Error:'Missing mandatory parameter: ' + x,
+                rowCount : row.rowCount
+              });
+              return true;
+            }
+          })
+
+          if(e)
+            return callback('Error');
+        } 
+
+        fetchCategory(row.category,function(err,category){
+          if(err || !category){
+            errorList.push({
+              Error : 'Error while fetching category',
+              rowCount : row.rowCount
+            })
+            return callback('Error');
+          }
+
+          if(!category.length){
+            errorList.push({
+              Error : 'Category not exist',
+              rowCount : row.rowCount
+            })
+            return callback('Error');
+          }
+
+          var brandFilter = {
+            name: row.brand,
+            category: row.category,
+            group: category[0]._doc.group.name
+          };
+
+          fetchBrand(brandFilter,function(err,brand){
+            if(err || !brand){
+              errorList.push({
+                Error : 'Error while fetching brand',
+                rowCount : row.rowCount
+              })
+              return callback('Error');
+            }
+
+            if(!brand.length){
+              errorList.push({
+                Error : 'Brand not exist',
+                rowCount : row.rowCount
+              })
+              return callback('Error');
+            }
+
+            var modelFilter = {
+              name: row.model,
+              category: row.category,
+              group: category[0]._doc.group.name,
+              brand: row.brand
+            }
+
+            fetchModel(modelFilter,function(err,model){
+              if(err || !model){
+                errorList.push({
+                  Error : 'Error while fetching model',
+                  rowCount : row.rowCount
+                })
+                return callback('Error');
+              }
+
+              if(!model.length){
+                errorList.push({
+                  Error : 'model not exist',
+                  rowCount : row.rowCount
+                })
+                return callback('Error');
+              }
+
+              obj.category = {
+                _id : category[0]._doc._id,
+                name : category[0]._doc.name
+              };
+
+              obj.brand = {
+                _id : brand[0]._doc._id,
+                name : brand[0]._doc.name
+              };
+
+              obj.model = {
+                _id : model[0]._doc._id,
+                name : model[0]._doc.name
+              };
+
+              if(row.category === 'Other'){
+                obj.category.otherName =  row.other_category;
+                obj.brand.otherName =  row.other_brand;
+                obj.model.otherName =  row.other_model;
+              }
+              return callback(null,obj);
+            })
+          })
+        })
+      }
+      else {
+        return callback(null,obj);
+      }
+    }
+  }
 }
 
 function bulkProductStatusUpdate(req,res,data){

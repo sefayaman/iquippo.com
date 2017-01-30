@@ -47,7 +47,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.tabObj.step1   = true;
 
   //All method declaration
-  $scope.updateAssetStatusTemp = updateAssetStatusTemp;
+  $scope.updateAssetTemp = updateAssetTemp;
   $scope.onStateChange = onStateChange;
   $scope.onCountryChange = onCountryChange;
   $scope.onRoleChange = onRoleChange;
@@ -718,7 +718,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       product.seller.company = seller.company;
   }
 
-  function updateAssetStatusTemp(files){
+  function updateAssetTemp(files){
     if(!files[0])
       return;
     if(files[0].name.indexOf('.xlsx') == -1){
@@ -729,7 +729,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     .then(function(result){
       var fileName = result.data.filename;
       $rootScope.loading = true;
-      productSvc.bulkProductStatusUpdate(fileName)
+      productSvc.bulkEditProduct(fileName)
       .then(function(res){
           $rootScope.loading = false;
           var totalRecord = res.successCount + res.errorList.length;
@@ -737,7 +737,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           if(res.errorList.length > 0){
              var data = {};
             data['to'] = Auth.getCurrentUser().email;
-            data['subject'] = 'Bulk produt status update error details.';
+            data['subject'] = 'Bulk produt  Update error details.';
             var serData = {};
             serData.serverPath = serverPath;
             serData.errorList = res.errorList;
