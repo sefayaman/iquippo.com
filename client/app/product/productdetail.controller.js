@@ -180,7 +180,7 @@ function addProductQuote(form){
 
        Modal.confirm("Do you want to submit?",function(ret){
         if(ret == "yes"){
-       $scope.productQuote.type="certification Request";
+       $scope.productQuote.type="INSPECTION_REQUEST";
        $scope.productQuote.product=$scope.currentProduct;
        $scope.productQuote.request=$scope.productQuote.certifiedByIQuippoQuote;
     if(!$scope.productQuote.certifiedByIQuippoQuote.scheduledTime
@@ -467,7 +467,7 @@ function addProductQuote(form){
         if(ret == "yes"){
 
       var dataFinance={};
-      dataFinance={type:"finance",
+      dataFinance={type:"EASY_FINANCE",
              user:Auth.getCurrentUser(),
             product:$scope.currentProduct,
             request:$scope.reqFinance

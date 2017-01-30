@@ -23,6 +23,7 @@ var UserSchema = new Schema({
   hashedPassword: String,
   phone: String,
   mobile: String,
+  alternateMobile:String,
   agree: Boolean,
   company: String,
   imgsrc: String,

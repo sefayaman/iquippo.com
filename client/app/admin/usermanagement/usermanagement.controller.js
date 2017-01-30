@@ -243,7 +243,8 @@ angular.module('sreizaoApp')
         dataToSend['email'] = $scope.newUser.email;
       if($scope.newUser.mobile) 
         dataToSend['mobile'] = $scope.newUser.mobile;
-      
+      if($scope.newUser.alternateMobile) 
+        dataToSend['alternateMobile']=$scope.newUser.alternateMobile;
       Auth.validateSignup(dataToSend).then(function(data){
         if(data.errorCode == 1){
            Modal.alert("Mobile number already in use. Please use another mobile number",true);
@@ -282,6 +283,7 @@ angular.module('sreizaoApp')
       $scope.newUser.createdBy.userType = $rootScope.getCurrentUser().userType;
       $scope.newUser.createdBy.phone = $rootScope.getCurrentUser().phone;
       $scope.newUser.createdBy.mobile = $rootScope.getCurrentUser().mobile;
+      $scope.newUser.createdBy.alternateMobile = $rootScope.getCurrentUser().alternateMobile;
       $scope.newUser.createdBy.email = $rootScope.getCurrentUser().email;
       $scope.newUser.createdBy.country = $rootScope.getCurrentUser().country;
       $scope.newUser.createdBy.company = $rootScope.getCurrentUser().company;
