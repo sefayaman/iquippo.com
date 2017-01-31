@@ -1450,7 +1450,7 @@ exports.validateExcelData = function(req,res,next){
       console.log(err);
       res.status(500).send('Error while updating');
     }
-    
+    console.log('---------',updateData);
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1558,12 +1558,17 @@ exports.validateExcelData = function(req,res,next){
         }
       }
 
+      if(row.productCondition)
+        obj["productCondition"] = trim(row.productCondition || "").toLowerCase();
+
       ['country','state','city'].forEach(function(x){
         if(row[x])
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','productCondition','mfgYear','variant','tradeType'];
+
+
+      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','mfgYear','variant','tradeType'];
       additionalCols.forEach(function(x){
         if(row[x]){
           obj[x] = row[x];
@@ -1596,7 +1601,6 @@ exports.validateExcelData = function(req,res,next){
         }
         var fromDate = new Date(row["fromDate"]);
         var validDate = isValid(fromDate);
-
         if (!fromDate || !validDate) {
           errorList.push({
             Error : 'Mandatory field Availability_of_Asset_From is invalid or not present',
@@ -1779,22 +1783,36 @@ exports.validateExcelData = function(req,res,next){
     //validate service related information
     function validateServiceInfo(callback){
       var obj = {};
-       ['authServiceStation','serviceAt','operatingHour','servicedate'].forEach(function(x){
+       ['authServiceStation','serviceAt','operatingHour'].forEach(function(x){
         if(row[x]){
-          if(!obj.serviceInfo)
+          if(!obj.serviceInfo){
             obj.serviceInfo = [{}]
-          obj[0][x] = row[x];
+          }
+          obj.serviceInfo[0][x] = row[x];
         }
       })
+
+      if(row.servicedate){
+        var servicedate = new Date(row["servicedate"]);
+        var validDate = isValid(servicedate);
+        if(servicedate && validDate) {
+          obj["serviceInfo"][0].servicedate =  servicedate; 
+        }
+
+      }
       return callback(null,obj);
     }
 
     //validate Technical information
     function validateTechnicalInfo(callback){
       var obj = {};
-      ['gross_weight','operating_weight','bucket_capacity','engine_power','lifting_capacity'].forEach(function(x){
-        if(row[x]){
-          obj.technicalInfo[x] = row[x];
+      var techCols = ['grossWeight','operatingWeight','bucketCapacity','enginePower','liftingCapacity'];
+      techCols.forEach(function(x){
+        if(row[x] && !isNaN(row[x])){
+          if(!obj.technicalInfo){
+            obj.technicalInfo = {};
+          }
+          obj.technicalInfo[x] = Number(row[x]);
         }
       })
 
@@ -1807,11 +1825,11 @@ exports.validateExcelData = function(req,res,next){
         }).exec(function(err,data){
           if(!err && data.length){
             obj.technicalInfo = {};
-            obj.technicalInfo.gross_weight = data[0]._doc.grossWeight;
-            obj.technicalInfo.operating_weight = data[0]._doc.operatingWeight;
-            obj.technicalInfo.bucket_capacity = data[0]._doc.bucketCapacity;
-            obj.technicalInfo.engine_power = data[0]._doc.enginePower;
-            obj.technicalInfo.lifting_capacity = data[0]._doc.liftingCapacity;  
+            obj.technicalInfo.grossWeight = data[0]._doc.information.grossWeight;
+            obj.technicalInfo.operatingWeight = data[0]._doc.information.operatingWeight;
+            obj.technicalInfo.bucketCapacity = data[0]._doc.information.bucketCapacity;
+            obj.technicalInfo.enginePower = data[0]._doc.information.enginePower;
+            obj.technicalInfo.liftingCapacity = data[0]._doc.information.liftingCapacity;  
           }
           return callback(null,obj);
         })
@@ -1843,20 +1861,20 @@ exports.validateExcelData = function(req,res,next){
               rowCount : row.rowCount
             })
             return callback('Error');
-
-            obj.seller = {};
-            obj.seller["country"] = seller[0]['country'];
-            obj.seller["email"] = seller[0]['email'];
-            obj.seller["mobile"] = seller[0]['mobile'];
-            obj.seller["company"] = seller[0]['company'];
-            obj.seller["countryCode"] = seller[0]['countryCode'];
-            obj.seller["userType"] = seller[0]['userType'];
-            obj.seller["role"] = seller[0]['role'];
-            obj.seller["lname"] = seller[0]['lname'];
-            obj.seller["fname"] = seller[0]['fname'];
-            obj.seller["_id"] = seller[0]['_id'] + "";
-            return callback(null,obj);
           }
+
+          obj.seller = {};
+          obj.seller["country"] = seller[0]['country'];
+          obj.seller["email"] = seller[0]['email'];
+          obj.seller["mobile"] = seller[0]['mobile'];
+          obj.seller["company"] = seller[0]['company'];
+          obj.seller["countryCode"] = seller[0]['countryCode'];
+          obj.seller["userType"] = seller[0]['userType'];
+          obj.seller["role"] = seller[0]['role'];
+          obj.seller["lname"] = seller[0]['lname'];
+          obj.seller["fname"] = seller[0]['fname'];
+          obj.seller["_id"] = seller[0]['_id'] + "";
+          return callback(null,obj);
         })
       }else
         return callback(null,obj);
