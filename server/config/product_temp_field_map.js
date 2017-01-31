@@ -22,7 +22,7 @@ module.exports = {
 	'Seller_Mobile*' : 'seller_mobile',
 	'Seller_Email_Address*' : 'seller_email',
 	//seller information start  end
-	Motor_Operating_Hours: 'operatingHour',
+	Motor_Operating_Hours: 'motoroperatingHour',
 	Mileage: 'mileage',
 	Machine_Serial_No: 'serialNo',
 	Product_Condition: 'productCondition',

@@ -1572,7 +1572,7 @@ exports.validateExcelData = function(req,res,next){
 
 
 
-      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','mfgYear','variant','tradeType'];
+      var additionalCols = ['comment','rateMyEquipment','motorOperatingHour','mileage','serialNo','mfgYear','variant','tradeType'];
       additionalCols.forEach(function(x){
         if(row[x]){
           obj[x] = row[x];
