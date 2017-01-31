@@ -76,22 +76,33 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
 
 function negotiateConfirm(form,flag){
    
-    if(flag){
+    if(flag == "true"){
     var dataNegotiate={};
      dataNegotiate={user:Auth.getCurrentUser(),
           product:$scope.currentProduct,
+          type:"BUY_NEGOTIATE",
           offer:vm.negotiateAmt,
           negotiation:true}
 
           console.log(dataNegotiate)
-        }else
+        }else if(flag == "false")
         {
     var dataNegotiate={};
     dataNegotiate={user:Auth.getCurrentUser(),
           product:$scope.currentProduct,
+          type:"BUY",
           offer:$scope.currentProduct.grossPrice,
           negotiation:false}
         }
+else{
+  var dataNegotiate={};
+    dataNegotiate={user:Auth.getCurrentUser(),
+          product:$scope.currentProduct,
+          type:"FOR_RENT",
+          offer:$scope.currentProduct.grossPrice,
+          negotiation:false}
+}
+
     NegotiationSvc.negotiation(dataNegotiate,flag)
     .then(function(res){
       $scope.negotiateAmt="";

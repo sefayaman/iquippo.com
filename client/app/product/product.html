@@ -813,12 +813,12 @@
                              {{product.seller.fname + ' ' +product.seller.mname + ' ' + product.seller.lname}}
                             </div>
                           </div>
-                          <div class="row">
+                          <div class="row" ng-if="product.seller.mobile">
                             <div class="form-group col-xs-5">Seller Contact Number</div>
                             <div class="form-group col-xs-1">
                              {{product.seller.mobile}}</div>
                              <div class="form-group col-xs-3">
-                             <input type="radio" id="" name="" ng-model="product.dispSellerContact" value="true" ng-change="p.uncheck($event)" value="true"> to be displayed in front-end
+                             <input type="checkbox" id="" name="" ng-model="product.dispSellerContact"> to be displayed in front-end
                             </div>
                           </div>
                           <div class="row" ng-if="product.seller.alternateMobile">
@@ -826,7 +826,7 @@
                             <div class="form-group col-xs-1">
                              {{product.seller.alternateMobile}}</div>
                              <div class="form-group col-xs-3">
-                             <input type="radio" id="" name="" ng-model="product.dispSellerAlternateContact" value="true" ng-change="uncheck($event)"> to be displayed in front-end
+                             <input type="checkbox" id="" name="" ng-model="product.dispSellerAlternateContact"> to be displayed in front-end
                             </div>
                           </div>
                         </div>

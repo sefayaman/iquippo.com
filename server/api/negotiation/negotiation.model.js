@@ -6,8 +6,9 @@ var mongoose = require('mongoose'),
 var NegotiationSchema = new Schema({
   user: {},
   product : {},
+  type:String,
   offer:Number,
-  negotiation:Boolean,
+  negotiation:String,
   createdAt: {type:Date,default:Date.now}
 });
 
