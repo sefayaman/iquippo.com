@@ -1570,9 +1570,10 @@ exports.validateExcelData = function(req,res,next){
           obj[x] = trim(row[x]);
       })
 
+      if(row.motorOperatingHour)
+        obj.operatingHour = row.motorOperatingHour;
 
-
-      var additionalCols = ['comment','rateMyEquipment','motorOperatingHour','mileage','serialNo','mfgYear','variant','tradeType'];
+      var additionalCols = ['comment','rateMyEquipment','mileage','serialNo','mfgYear','variant','tradeType'];
       additionalCols.forEach(function(x){
         if(row[x]){
           obj[x] = row[x];
