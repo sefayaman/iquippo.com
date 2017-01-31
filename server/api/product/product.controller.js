@@ -28,6 +28,7 @@ var IncomingProduct = require('./../../components/incomingproduct.model');
 var  xlsx = require('xlsx');
 var importPath = config.uploadPath + config.importDir +"/";
 var async = require('async');
+var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
 
@@ -1415,7 +1416,6 @@ exports.updateExcelData = function (req,res,next){
     delete data.assetId;
 
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
-      console.log(doc);
       if(err || !doc){
         req.errorList.push({
           Error:'Error while updating information',
@@ -1450,7 +1450,7 @@ exports.validateExcelData = function(req,res,next){
       console.log(err);
       res.status(500).send('Error while updating');
     }
-
+    
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1563,7 +1563,7 @@ exports.validateExcelData = function(req,res,next){
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','productCondition','mfgYear'];
+      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','productCondition','mfgYear','variant','tradeType'];
       additionalCols.forEach(function(x){
         if(row[x]){
           obj[x] = row[x];
@@ -1748,8 +1748,31 @@ exports.validateExcelData = function(req,res,next){
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      }
-
+      } else if(row.tradeType === 'SELL'){
+        var gp = row["grossPrice"];
+        var prOnReq = row["priceOnRequest"];
+        var cr = row["currencyType"];
+        if(gp && cr){
+            product["grossPrice"] = Number(trim(gp));
+            product["currencyType"] = trim(cr);
+          } else {
+            errorList.push({
+              Error : 'Mandatory field Gross_Price and Price_on_Request is invalid or not present',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+          if(!prOnReq){
+            product["priceOnRequest"] = false;
+          }else{
+            prOnReq = trim(prOnReq).toLowerCase();
+            if(prOnReq == 'yes' || prOnReq == 'y') {
+              product["priceOnRequest"] = true; 
+            }else {
+              product["priceOnRequest"] = false;
+            }
+          }
+        }
       return callback(null,product);
     }
 
