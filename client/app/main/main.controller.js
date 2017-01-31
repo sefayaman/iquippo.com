@@ -233,7 +233,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       if(vm.categorySearchText)
         filter['category'] = vm.categorySearchText.trim();
       if(vm.radioModel)
-        filter['tradeType'] = vm.radioModel;
+        filter['type'] = vm.radioModel;
       if(vm.locationSearchText)
         filter['location'] = vm.locationSearchText.trim();
       if(vm.searchstr)
