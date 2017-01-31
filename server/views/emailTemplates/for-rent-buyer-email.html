@@ -52,18 +52,24 @@
                     <th>Rent Information</th>
                     <th>Security Deposit</th>
                 </tr>
+                {{#if product.rent.rateHours}}
                 <tr>
                     <td>Hourly – {{product.rent.rateHours.rentAmountH}}</td>
                     <td>{{product.rent.rateHours.seqDepositH}}</td>
                 </tr>
+                {{/if}}
+                {{#if product.rent.rateDays}}
                 <tr>
                     <td>Daily – {{product.rent.rateDays.rentAmountD}}</td>
                     <td>{{product.rent.rateDays.seqDepositD}}</td>
                 </tr>
+                {{/if}}
+                {{#if product.rent.rateMonths}}
                 <tr>
                     <td>Monthly – {{product.rent.rateMonths.rentAmountM}}</td>
                     <td>{{product.rent.rateMonths.seqDepositM}}</td>
                 </tr>
+                {{/if}}
             </table>
         </td>
     </tr>
