@@ -1860,20 +1860,20 @@ exports.validateExcelData = function(req,res,next){
               rowCount : row.rowCount
             })
             return callback('Error');
-
-            obj.seller = {};
-            obj.seller["country"] = seller[0]['country'];
-            obj.seller["email"] = seller[0]['email'];
-            obj.seller["mobile"] = seller[0]['mobile'];
-            obj.seller["company"] = seller[0]['company'];
-            obj.seller["countryCode"] = seller[0]['countryCode'];
-            obj.seller["userType"] = seller[0]['userType'];
-            obj.seller["role"] = seller[0]['role'];
-            obj.seller["lname"] = seller[0]['lname'];
-            obj.seller["fname"] = seller[0]['fname'];
-            obj.seller["_id"] = seller[0]['_id'] + "";
-            return callback(null,obj);
           }
+
+          obj.seller = {};
+          obj.seller["country"] = seller[0]['country'];
+          obj.seller["email"] = seller[0]['email'];
+          obj.seller["mobile"] = seller[0]['mobile'];
+          obj.seller["company"] = seller[0]['company'];
+          obj.seller["countryCode"] = seller[0]['countryCode'];
+          obj.seller["userType"] = seller[0]['userType'];
+          obj.seller["role"] = seller[0]['role'];
+          obj.seller["lname"] = seller[0]['lname'];
+          obj.seller["fname"] = seller[0]['fname'];
+          obj.seller["_id"] = seller[0]['_id'] + "";
+          return callback(null,obj);
         })
       }else
         return callback(null,obj);
