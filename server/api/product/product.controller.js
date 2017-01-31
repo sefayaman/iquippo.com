@@ -1815,6 +1815,7 @@ exports.validateExcelData = function(req,res,next){
           obj.technicalInfo[x] = Number(row[x]);
         }
       })
+
       if(!obj.technicalInfo && row.category && row.brand && row.model){
         productInfoModel.find({
           type : 'technical',
@@ -1824,12 +1825,13 @@ exports.validateExcelData = function(req,res,next){
         }).exec(function(err,data){
           if(!err && data.length){
             obj.technicalInfo = {};
-            obj.technicalInfo.grossWeight = data[0]._doc.grossWeight;
-            obj.technicalInfo.operatingWeight = data[0]._doc.operatingWeight;
-            obj.technicalInfo.bucketCapacity = data[0]._doc.bucketCapacity;
-            obj.technicalInfo.enginePower = data[0]._doc.enginePower;
-            obj.technicalInfo.liftingCapacity = data[0]._doc.liftingCapacity;  
+            obj.technicalInfo.grossWeight = data[0]._doc.information.grossWeight;
+            obj.technicalInfo.operatingWeight = data[0]._doc.information.operatingWeight;
+            obj.technicalInfo.bucketCapacity = data[0]._doc.information.bucketCapacity;
+            obj.technicalInfo.enginePower = data[0]._doc.information.enginePower;
+            obj.technicalInfo.liftingCapacity = data[0]._doc.information.liftingCapacity;  
           }
+          debugger;
           return callback(null,obj);
         })
       } else {
