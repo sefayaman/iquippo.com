@@ -1831,7 +1831,6 @@ exports.validateExcelData = function(req,res,next){
             obj.technicalInfo.enginePower = data[0]._doc.information.enginePower;
             obj.technicalInfo.liftingCapacity = data[0]._doc.information.liftingCapacity;  
           }
-          debugger;
           return callback(null,obj);
         })
       } else {
