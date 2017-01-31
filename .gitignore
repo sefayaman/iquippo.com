@@ -13,7 +13,6 @@ client/app/constant.js
 client/index.html
 server/components/sendEmail.js
 server/components/sms.js
-server/config
 /server/config/local.env.js
 dist
 dist/public/app
