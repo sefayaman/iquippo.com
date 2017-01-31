@@ -1450,7 +1450,6 @@ exports.validateExcelData = function(req,res,next){
       console.log(err);
       res.status(500).send('Error while updating');
     }
-    console.log('---------',updateData);
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1561,6 +1560,11 @@ exports.validateExcelData = function(req,res,next){
       if(row.productCondition)
         obj["productCondition"] = trim(row.productCondition || "").toLowerCase();
 
+      if(row.featured){
+        var featured = trim(row.featured || "").toLowerCase();
+        obj["featured"] =  featured == 'yes' || featured == 'y'?true:false;
+      }
+        
       ['country','state','city'].forEach(function(x){
         if(row[x])
           obj[x] = trim(row[x]);
@@ -1886,7 +1890,7 @@ exports.validateExcelData = function(req,res,next){
       var obj = {};
       var e ;
       if(row.category && row.brand && row.model ){
-        if(row.category === 'Other'){
+        if(row.category === 'Other' && row.brand === 'Other' && row.model === 'Other'){
           e = ['other_category','other_brand','other_model'].some(function(x){
             if(!row[x]){
               errorList.push({
@@ -1982,12 +1986,15 @@ exports.validateExcelData = function(req,res,next){
 
               obj.name = row.category + ' ' + row.brand + ' ' + row.model;
 
-              if(row.category === 'Other'){
+              if(row.category === 'Other' && row.brand === 'Other' && row.model === 'Other'){
                 obj.category.otherName =  row.other_category;
                 obj.brand.otherName =  row.other_brand;
                 obj.model.otherName =  row.other_model;
                 obj.name = row.other_category + ' ' + row.other_brand + ' ' + row.other_model;
               }
+
+              if(row.variant)
+                obj.name += ' ' + row.variant;
               return callback(null,obj);
             })
           })
