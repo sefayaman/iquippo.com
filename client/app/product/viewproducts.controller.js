@@ -207,7 +207,7 @@ function onGroupChange(group){
       })
   };
 
-  function onTypeChange(type){
+  function onTypeChange(type,getData){
     if(type == 'rented' || type == 'sold') {
       //NJ start: pass Product TradingType dropdown change data to GTM
       gaMasterObject.EquipmentSearchAssetStatus.eventLabel = type;
@@ -225,7 +225,8 @@ function onGroupChange(group){
       if($scope.equipmentSearchFilter.assetStatus)
         delete $scope.equipmentSearchFilter.assetStatus;
     }
-    fireCommand();
+    if(getData)
+      fireCommand();
   }
 
   function fireSearchCommand(countrySearch){
