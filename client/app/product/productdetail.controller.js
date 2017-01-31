@@ -73,7 +73,6 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   }
 
 
-
 function negotiateConfirm(form,flag){
    
     if(flag == "true"){

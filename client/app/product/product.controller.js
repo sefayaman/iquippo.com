@@ -320,7 +320,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
            
            console.log(response);
         //$scope.container.selectedSubCategory = $scope.product.subcategory;
-         //$scope.product.dispSellerContact=response;
+        //$scope.product.dispSellerInfo=response.dispSellerInfo;
+         $scope.product.dispSellerContact;
+         $scope.product.dispSellerAlternateContact;
 
         $scope.getUsersOnUserType = [];
         $scope.onRoleChange($scope.product.seller.userType,true);
