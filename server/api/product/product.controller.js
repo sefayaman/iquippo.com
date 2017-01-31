@@ -1563,7 +1563,7 @@ exports.validateExcelData = function(req,res,next){
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','productCondition'];
+      var additionalCols = ['comment','rateMyEquipment','operatingHour','mileage','serialNo','productCondition','mfgYear'];
       additionalCols.forEach(function(x){
         if(row[x]){
           obj[x] = row[x];
@@ -1939,10 +1939,13 @@ exports.validateExcelData = function(req,res,next){
                 name : model[0]._doc.name
               };
 
+              obj.name = row.category + ' ' + row.brand + ' ' + row.model;
+
               if(row.category === 'Other'){
                 obj.category.otherName =  row.other_category;
                 obj.brand.otherName =  row.other_brand;
                 obj.model.otherName =  row.other_model;
+                obj.name = row.other_category + ' ' + row.other_brand + ' ' + row.other_model;
               }
               return callback(null,obj);
             })
