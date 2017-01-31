@@ -27,11 +27,11 @@ module.exports = {
 	Machine_Serial_No: 'serialNo',
 	Product_Condition: 'productCondition',
 	//technical information column start
-	Gross_Weight: 'gross_weight',
-	Operating_Weight: 'operating_weight',
-	Bucket_Capacity: 'bucket_capacity',
-	Engine_Power: 'engine_power',
-	Lifting_Capacity: 'lifting_capacity',
+	Gross_Weight: 'grossWeight',
+	Operating_Weight: 'operatingWeight',
+	Bucket_Capacity: 'bucketCapacity',
+	Engine_Power: 'enginePower',
+	Lifting_Capacity: 'liftingCapacity',
 	//technical information column end
 	//serviceInfo column starts
 	Service_Date: 'servicedate',
