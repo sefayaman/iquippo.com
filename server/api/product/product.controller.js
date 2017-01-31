@@ -1788,7 +1788,7 @@ exports.validateExcelData = function(req,res,next){
           if(!obj.serviceInfo){
             obj.serviceInfo = [{}]
           }
-          obj.serviceInfo[0][x] = Number(row[x]);
+          obj.serviceInfo[0][x] = row[x];
         }
       })
 
