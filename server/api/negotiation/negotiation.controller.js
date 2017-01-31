@@ -15,6 +15,7 @@ exports.create = function(req, res) {
   req.body.createdAt = new Date();
   Negotiation.create(req.body, function(err, service) {
     if(err) { return handleError(res, err); }
+    console.log(service);
     return res.status(200).json(service);
   });
 };

@@ -75,7 +75,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
        }
        if($scope.equipmentSearchFilter.brand)
           onBrandChange($scope.equipmentSearchFilter.brand,true);
-          fireCommand(true);
+          fireCommand(true,true);
 
     }else if($state.current.name == "categoryproduct"){
         $scope.equipmentSearchFilter = {};
@@ -174,7 +174,7 @@ function onGroupChange(group){
    fireCommand();
 }
 */
-  function fireCommand(noReset){
+  function fireCommand(noReset,doNotSaveState){
 
     if($scope.currency && !$scope.currency.minPrice && !$scope.currency.maxPrice)
       delete $scope.equipmentSearchFilter.currency;
@@ -185,7 +185,8 @@ function onGroupChange(group){
       angular.copy($scope.equipmentSearchFilter,filter);
       if(!noReset)
         vm.currentPage = 1;
-      saveState(false);
+      if(!doNotSaveState)
+        saveState(false);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;

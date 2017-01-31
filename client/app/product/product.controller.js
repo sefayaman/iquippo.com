@@ -59,7 +59,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   $scope.increaseElement=increaseElement;
   //$scope.addOrUpdateProduct = addOrUpdateProduct;
   $scope.onUserChange = onUserChange;
-  $scope.uncheck=uncheck;
   $scope.resetClick = resetClick;
   $scope.makePrimary = makePrimary;
   $scope.deleteImg = deleteImg;
@@ -105,11 +104,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   }
 
 
-    function uncheck(event) {
+  /*  function uncheck(event) {
     if ($scope.checked == event.target.value)
         $scope.checked = false
   }
-
+*/
   function goToUsermanagement(){
     $state.go('usermanagment');
     $timeout(function() { Modal.openDialog('adduser');}, 20);
@@ -177,6 +176,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.isEdit = true;
 
       productSvc.getProductOnId($stateParams.id,true).then(function(response){
+ 
+        console.log(response);
+
         product = $scope.product = response;
         $scope.imagesGeneralApp=[];
         $scope.imagesEngine = [];
@@ -316,8 +318,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
              getProductInfo(techFilter);
         }
            
+           console.log(response);
         //$scope.container.selectedSubCategory = $scope.product.subcategory;
-
+        //$scope.product.dispSellerInfo=response.dispSellerInfo;
+         $scope.product.dispSellerContact;
+         $scope.product.dispSellerAlternateContact;
 
         $scope.getUsersOnUserType = [];
         $scope.onRoleChange($scope.product.seller.userType,true);

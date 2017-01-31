@@ -17,7 +17,7 @@
           
           console.log(dataNegotiate);
 
-     if(flag){
+     if(flag == "negotiate"){
       var data = {};
         data['to'] = dataNegotiate.product.seller.email;
         data['subject'] = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
@@ -33,14 +33,18 @@
         data['subject'] = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
         notificationSvc.sendNotification('Make-offer-admin-email', data, dataNegotiate,'email');
   }
-  else{
+  /*else{
     var subject="";
     if((dataNegotiate.product.tradeType == "RENT") || (dataNegotiate.product.tradeType == "BOTH")){
       subject="For Rent";
-    }
-    else{
-      data['subject'] = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
-        }
+    }*/
+    
+      
+  
+
+        else if(flag == "NoNegotiate" ){
+        var subject = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
+
         var data = {};
         data['to'] = dataNegotiate.product.seller.email;
         data['subject'] = subject;
@@ -55,6 +59,24 @@
         data['to'] = supportMail;
         data['subject'] = subject;
         notificationSvc.sendNotification('Buy-now-admin-email', data, dataNegotiate,'email');
+      }
+
+      else{
+       var subject="for Rent"
+       var data = {};
+        data['to'] = dataNegotiate.product.seller.email;
+        data['subject'] = subject;
+        notificationSvc.sendNotification('for-rent-seller-email', data,dataNegotiate,'email');
+
+        var data = {};
+        data['to'] = Auth.getCurrentUser().email;
+        data['subject'] = subject;
+        notificationSvc.sendNotification('for-rent-buyer-email', data,dataNegotiate,'email');
+        
+        var data = {};  
+        data['to'] = supportMail;
+        data['subject'] = subject;
+        notificationSvc.sendNotification('for-rent-admin-email', data, dataNegotiate,'email'); 
       }
       return res;
     })
