@@ -340,8 +340,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         if($scope.product.currencyType == "INR")
           $scope.product.currencyType = "";
         $scope.productName = $scope.product.name;
-        if($scope.product.category.name == 'Other')
-            $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
+        if($scope.product.category.name == 'Other'){
+          $scope.selectedCategory = {};
+          $scope.selectedCategory['otherName'] = $scope.product.category.otherName;
+        }
+            
 
         if($state.current.name == "productedit"){
           $scope.enableButton = !Auth.isAdmin() && product.status;
