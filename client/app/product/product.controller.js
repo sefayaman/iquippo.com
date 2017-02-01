@@ -1691,8 +1691,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      }
 
      $scope.timestamp = new Date().getTime();
-      function rotate(idx){
-        var img = $scope.images[idx];
+      function rotate(img){
+        if(!img.src)
+          return;
+        //var img = $scope.images[idx];
         var imagePath = $scope.assetDir + "/" + img.src;
         $http.post("/api/common/rotate",{imgPath:imagePath})
         .then(function(res){
