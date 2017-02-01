@@ -64,7 +64,7 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
  	function submitValuationReq(form){
  		
          if(!Auth.getCurrentUser()._id) {
-      Modal.alert("Please Login/Register for uploading the products!", true);
+      Modal.alert("Please Login/Register for submitting your request!", true);
       return;
     }
 
@@ -73,8 +73,9 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
  			return;
  		}
 
-
-
+ 	 Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes")
+        {
  		vm.valuationReq.status = valuationStatuses[0].code;
  		vm.valuationReq.statuses = [];
  		var stsObj = {};
@@ -141,6 +142,8 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
  		.catch(function(){
  			//error handling
  		});
+ 	}
+ 	});
 
  	}
 

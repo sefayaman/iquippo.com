@@ -188,7 +188,7 @@ function addProductQuote(form){
     
 
     if(!Auth.getCurrentUser()._id) {
-      Modal.alert("Please Login/Register for uploading the products!", true);
+      Modal.alert("Please Login/Register for submitting your request!", true);
       return;
     }
       
@@ -473,7 +473,7 @@ function addProductQuote(form){
   function requestForFinance(form){
     
     if(!Auth.getCurrentUser()._id) {
-      Modal.alert("Please Login/Register for uploading the products!", true);
+      Modal.alert("Please Login/Register for submitting your request!", true);
       return;
     }
 
