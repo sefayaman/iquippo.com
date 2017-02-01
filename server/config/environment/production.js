@@ -23,5 +23,7 @@ module.exports = {
   uploadPath: "./../public/assets/uploads/",
   contactNumber: "011 66025672",
   //serverPath: "http://54.255.186.7:9010"
-  serverPath: "http://iquippo.com"
+  serverPath: "http://iquippo.com",
+  mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "info@iquippo.com", Mailpassword: "Quippo123#@!",from:"info@iquippo.com"}
+
 };
