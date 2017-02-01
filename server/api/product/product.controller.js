@@ -737,7 +737,7 @@ function excel_from_data(data, isAdmin) {
   var ws = {};
   var range;
   if(isAdmin)
-    range = {s: {c:0, r:0}, e: {c:40, r:data.length }};
+    range = {s: {c:0, r:0}, e: {c:41, r:data.length }};
   else
     range = {s: {c:0, r:0}, e: {c:26, r:data.length }};
 
@@ -1074,6 +1074,19 @@ function excel_from_data(data, isAdmin) {
         cell = {v: "Sale date"};
       else
         cell = {v: saleDate};
+      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
+      setType(cell);
+      ws[cell_ref] = cell;
+
+      var alternateMobile;
+      if(product && product.alternateMobile)
+        alternateMobile = product.alternateMobile;
+      else
+        alternateMobile = '';
+      if(R == 0)
+        cell = {v: "Alternate Mobile"};
+      else
+        cell = {v: alternateMobile};
       var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
       setType(cell);
       ws[cell_ref] = cell;

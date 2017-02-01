@@ -38,6 +38,7 @@ var ProductSchema = new Schema({
   dispSellerInfo:String,
   dispSellerContact:String,
   dispSellerAlternateContact:String,
+  alternateMobile:String,
   comment:String,
   videoName:String,
   documentName:String,

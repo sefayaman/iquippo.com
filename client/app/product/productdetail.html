@@ -539,7 +539,7 @@
                     <form novalidate class="negotiations" name="negotiations">
                       <div class="col-sm-4">
                         <h5>
-                          Make an Offer (by end-user)
+                          Make an Offer
                         </h5>
                       </div>
                       <div class="col-sm-4">
@@ -567,10 +567,12 @@
               <div class="panel-body">
                   <form novalidate class="originalPrice" name="originalPrice">
                     
-                      <table class="table table-hover">
-                        <tr class="active">
-                          <th colspan="2">Rent Information</th>
-                          <th>Security Deposit</th>
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th class="col-sm-4">Time Duration</th>
+                          <th class="col-sm-4">Rate</th>
+                          <th class="col-sm-4">Security Deposit</th>
                         </tr>
                         <tr ng-if="currentProduct.rent.rateHours.rateType == 'hours'">
                           <td>Hourly</td>
@@ -588,15 +590,16 @@
                           <td><i class="fa fa-inr"></i> {{currentProduct.rent.rateMonths.seqDepositM}}</td>
                         </tr>
                       </table>
+                    </div>
                     <div class="text-right">
                        <button type="submit" class="btn btn-warning" ng-click="negotiate('forRent','rent')">Get it Now</button>
                     </div>
                   </form>
                     <hr>
-                    <div class="pull-right form-group">                      
+                    <div class="text-right">                      
                       <button type="submit" class="btn btn-warning" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                     </div>
-                    <p class="pull-left">* Other Terms &amp; Conditions applied.</p>
+                    <small>* Other Terms &amp; Conditions applied.</small>
               </div>
             </div>
             <div class="panel panel-primary" ng-if="currentProduct.dispSellerInfo == 'yes'">
@@ -608,7 +611,7 @@
                     <div class="row">
                       <div class="col-sm-4">
                         <div class="form-group">
-                          Seller Name
+                          Name
                         </div>
                       </div>
                       <div class="col-sm-4">
@@ -622,7 +625,7 @@
                     <form novalidate name="">
                       <div class="col-sm-4">
                         <div class="form-group" >
-                          Seller Contact Number
+                          Contact Number
                         </div>
                       </div>
                       <div class="col-sm-4">
@@ -638,12 +641,12 @@
                     <form novalidate name="">
                       <div class="col-sm-4">
                         <div class="form-group" >
-                          Seller Alternate Contact Number
+                          Alternate Contact Number
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                         {{currentProduct.seller.alternateMobile}}
+                         {{currentProduct.alternateMobile}}
                         </div>
                       </div>
                      

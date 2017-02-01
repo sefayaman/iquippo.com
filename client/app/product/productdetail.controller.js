@@ -52,25 +52,30 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
 
   function negotiate(form,flag){
      if(!Auth.getCurrentUser()._id) {
-      Modal.alert("Please Login/Register for uploading the products!", true);
+      Modal.alert("Please Login/Register for submitting your request!", true);
       return;
     }
 
-    if(form == "forRent"){
-      return negotiateConfirm(form,flag);
-    }
-
-    if(form.$invalid){
+     if(form.$invalid){
         $scope.negotiationSubmitted = true;
         return;
       }
 
 
+    if(form == "forRent")
+      {  Modal.confirm("Do you want to submit?",function(ret){
+        if(ret == "yes")
+          return negotiateConfirm(form,flag);
+      });
+    }
+
+     else{
     Modal.confirm("Do you want to submit?",function(ret){
         if(ret == "yes")
-          negotiateConfirm(form,flag);
+         return negotiateConfirm(form,flag);
       });
   }
+}
 
 
 function negotiateConfirm(form,flag){
