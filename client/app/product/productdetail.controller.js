@@ -56,6 +56,9 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
       return;
     }
 
+  if(Auth.getCurrentUser().profileStatus == "incomplete"){
+    return $state.go("myaccount");
+  }
      if(form.$invalid){
         $scope.negotiationSubmitted = true;
         return;
@@ -190,6 +193,10 @@ function addProductQuote(form){
     if(!Auth.getCurrentUser()._id) {
       Modal.alert("Please Login/Register for submitting your request!", true);
       return;
+    }
+
+    if(Auth.getCurrentUser().profileStatus == "incomplete"){
+      return $state.go("myaccount");
     }
       
       if(form.$invalid){
@@ -476,6 +483,10 @@ function addProductQuote(form){
       Modal.alert("Please Login/Register for submitting your request!", true);
       return;
     }
+
+  if(Auth.getCurrentUser().profileStatus == "incomplete"){
+    return $state.go("myaccount");
+  }
 
      if(form.$invalid){
         $scope.financeSubmitted = true;

@@ -68,6 +68,10 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
       return;
     }
 
+    if(Auth.getCurrentUser().profileStatus == "incomplete"){
+    return $state.go("myaccount");
+  }
+
  		if(form.$invalid){
  			$scope.valSubmitted = true;
  			return;
