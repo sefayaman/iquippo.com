@@ -7,5 +7,7 @@ var router = express.Router();
 
 
 router.post('/', controller.create);
+router.post('/search', controller.search);
+router.post('/export', controller.exportData);
 
 module.exports = router;

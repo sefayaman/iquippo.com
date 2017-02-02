@@ -7,13 +7,15 @@
     var path = '/api';
     reportService.getCallbackOnFilter = getCallbackOnFilter;
     reportService.getQuickQueryOnFilter = getQuickQueryOnFilter;
-    reportService.getAdditionalServicesOnFilter = getAdditionalServicesOnFilter;
+    //reportService.getAdditionalServicesOnFilter = getAdditionalServicesOnFilter;
     reportService.getShippingQuotesOnFilter = getShippingQuotesOnFilter;
     reportService.getTotatItemsCount = getTotatItemsCount;
     reportService.getValuationQuotesOnFilter = getValuationQuotesOnFilter;
     reportService.getFinancingQuotesOnFilter = getFinancingQuotesOnFilter;
     reportService.getInsuranceQuotesOnFilter = getInsuranceQuotesOnFilter;
     reportService.getBuyOrRentOnFilter = getBuyOrRentOnFilter;
+    reportService.getBuyRentNowOnFilter = getBuyRentNowOnFilter;
+    reportService.getEasyFinanceOnFilter = getEasyFinanceOnFilter;
     
     reportService.exportData = exportData;
     var userMobileList = "";
@@ -38,8 +40,18 @@
         })
     }
 
-    function getAdditionalServicesOnFilter(data) {
+   /* function getAdditionalServicesOnFilter(data) {
       return $http.post(path + "/productquote/onfilter", data)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+    }*/
+
+    function getBuyOrRentOnFilter(data) {
+      return $http.post(path + "/buyer/search", data)
         .then(function(res) {
           return res.data
         })
@@ -48,8 +60,18 @@
         })
     }
 
-    function getBuyOrRentOnFilter(data) {
-      return $http.post(path + "/buyer/search", data)
+    function getBuyRentNowOnFilter(data) {
+      return $http.post(path + "/negotiate/search", data)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+    }
+
+    function getEasyFinanceOnFilter(data) {
+      return $http.post(path + "/servicerequest/getservices", data)
         .then(function(res) {
           return res.data
         })
@@ -143,8 +165,12 @@
       else
         userMobileList = "";
         return path + "/reports/fetch.csv?type=" + refName + "&limit=100" + userMobileList;
-      } else
-        url = path + "/productquote/export";
+      } else if (refName == "buyrentnow" || refName == "forRent") {
+        url = path + "/negotiate/export";
+      } else if (refName == "easyfinance" || refName == "inspection") {
+        url = path + "/servicerequest/export";
+      } //else
+        //url = path + "/productquote/export";
 
       return $http.post(url, data)
         .then(function(res) {
