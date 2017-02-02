@@ -135,7 +135,7 @@ exports.exportData = function(req,res){
     FIELD_MAP = RENT_REQUEST_FIELD_MAP;
     filter["type"] = "FOR_RENT";
   }
-  var query = Negotiation.find(filter).sort({saleYear:-1});
+  var query = Negotiation.find(filter).sort({createdAt:-1});
   query.exec(
      function (err, trends) {
         if(err) { return handleError(res, err); }
