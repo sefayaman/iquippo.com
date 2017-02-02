@@ -15,7 +15,7 @@
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;
-
+    $scope.count = 0;
     vm.fireCommand = fireCommand;
     vm.selectReportData = selectReportData;
     vm.exportExcel = exportExcel;
@@ -182,11 +182,12 @@
       filter.currentPage = vm.currentPage;
       filter.first_id = first_id;
       filter.last_id = last_id;
+      $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
       switch (tabValue) {
         case 'callback':
               resetCount();
-          ReportsSvc.getCallbackOnFilter(filter)
-            .then(function(result) {
+              ReportsSvc.getCallbackOnFilter(filter)
+              .then(function(result) {
             
               vm.callbackListing = result.items;
               vm.totalItems = result.totalItems;
@@ -233,7 +234,6 @@
               vm.buyOrRentListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
-              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.buyOrRentListing.length > 0) {
                 first_id = vm.buyOrRentListing[0]._id;
                 last_id = vm.buyOrRentListing[vm.buyOrRentListing.length - 1]._id;
@@ -442,7 +442,6 @@
               vm.buyNowListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
-              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.buyNowListing.length > 0) {
                 first_id = vm.buyNowListing[0]._id;
                 last_id = vm.buyNowListing[vm.buyNowListing.length - 1]._id;
@@ -458,7 +457,6 @@
               vm.forRentNowListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
-              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.forRentNowListing.length > 0) {
                 first_id = vm.forRentNowListing[0]._id;
                 last_id = vm.forRentNowListing[vm.forRentNowListing.length - 1]._id;
@@ -474,7 +472,6 @@
               vm.easyFinanceListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
-              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.easyFinanceListing.length > 0) {
                 first_id = vm.easyFinanceListing[0]._id;
                 last_id = vm.easyFinanceListing[vm.easyFinanceListing.length - 1]._id;
@@ -490,7 +487,6 @@
               vm.inspectionListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
-              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.inspectionListing.length > 0) {
                 first_id = vm.inspectionListing[0]._id;
                 last_id = vm.inspectionListing[vm.inspectionListing.length - 1]._id;
