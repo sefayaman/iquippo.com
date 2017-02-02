@@ -124,7 +124,7 @@ exports.exportData = function(req,res){
 
   var filter = {};
   if(req.body.userMobileNos)
-    filter['user.mobile'] = {$in:req.body.userMobileNos};
+    filter['user.mobile'] = {$in:req.body.userMobileNos.split(',')};
   var FIELD_MAP = {};
   if(req.body.reqType == "buyRequest") {
     FIELD_MAP = BUY_REQUEST_FIELD_MAP;
