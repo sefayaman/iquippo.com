@@ -24,6 +24,10 @@
                 <option value="valuation">Valuation</option>
                 <option value="finance">Financing</option>
                 <option value="insurance">Insurance</option>
+                <option value="buyrentnow">To Buy Now</option>
+                <option value="forRent">For Rent</option>
+                <option value="easyfinance">Easy Financing</option>
+                <option value="inspection">Inspection Request</option>
               </select>
             </div>
           </div>                  
@@ -170,40 +174,7 @@
           </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div> -->
-          <div ng-if="reportsVm.tabValue == 'toBuyOrRent'">
-          <div class="table-responsive" >
-            <table class="table table-bordred table-striped">
-              <thead>
-                <th>Sr. No</th> 
-                <th>Customer</th>                                
-                <th>Mobile No.</th>                                
-                <th>Phone No.</th>                                
-                <th>Email</th>                                
-                <th>Date of Request</th>  
-                <th>Country</th>  
-                <th>Location</th>  
-                <th>Request Type</th>
-                <th>interested In</th>    
-              </thead>
-              <tbody>
-              <tr  ng-repeat="addSvc in reportsVm.toBuyOrRentListing">
-                <td>{{$index + 1+count}}</td>
-                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
-                <td>{{addSvc.quote.mobile}}</td>
-                <td>{{addSvc.quote.phone}}</td>
-                <td>{{addSvc.quote.email}}</td>
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
-                <td>{{addSvc.quote.country}}</td>                    
-                <td>{{addSvc.quote.city}}</td>                    
-                <td>{{addSvc.quote.requesType}}</td>                    
-                <td>{{addSvc.quote.interestedIn}}</td>                    
-                </tr>
-              </tbody>
-            </table>
-          </div>
-            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-          </div>
-
+          
           <div ng-if="reportsVm.tabValue == 'buyOrRentOrBoth'">
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
@@ -298,7 +269,7 @@
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
      
-       <div ng-if="reportsVm.tabValue == 'valuation'">
+        <div ng-if="reportsVm.tabValue == 'valuation'">
           <div class="table-responsive" >
             <table class="table table-bordred table-striped">
               <thead>
@@ -357,63 +328,63 @@
             </table>
           </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-          </div>
+        </div>
           
           <div ng-if="reportsVm.tabValue == 'finance'">
-          <div class="table-responsive" >
-            <table class="table table-bordred table-striped">
-              <thead>
-                  <tr>
-                    <th>Sr. No</th> 
-                    <th>Full Name</th> 
-                    <th>Country</th>                                
-                    <th>Location</th>                                
-                    <th>Company Name</th>                                
-                    <th>Designation</th>                                
-                    <th>Phone No.</th>  
-                    <th>Mobile No.</th>  
-                    <th>Email Address</th>
-                    <th>Category</th>
-                    <th>Brand</th>
-                    <th>Modal</th>
-                    <th>Location of Asset</th>
-                    <th>Manufacturing Year</th>
-                    <th>Asset Description</th>
-                    <th>Amount to be Financed</th>
-                    <th>Indicative Rate</th>
-                    <th>Tenure(in Months)</th>
-                    <th>Method Of Contact</th>
-                    <th>Comments</th>    
-                    <th>Date of Request</th> 
-                  </tr>
-              </thead>
-              <tbody>
-              <tr ng-repeat="addSvc in reportsVm.financingListing">
-                <td>{{$index + 1+count}}</td>             
-                <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
-                <td>{{addSvc.quote.country}}</td>
-                <td>{{addSvc.quote.city}}</td>
-                <td>{{addSvc.quote.companyname}}</td>                    
-                <td>{{addSvc.quote.designation}}</td>                                        
-                <td>{{addSvc.quote.phone}}</td>
-                <td>{{addSvc.quote.mobile}}</td>
-                <td>{{addSvc.quote.email}}</td>
-                <td>{{addSvc.quote.product.category}}</td>
-                <td>{{addSvc.quote.product.brand}}</td>
-                <td>{{addSvc.quote.product.model}}</td>
-                <td>{{addSvc.quote.product.city}}</td>
-                <td>{{addSvc.quote.product.mfgYear}}</td>
-                <td>{{addSvc.quote.product.description}}</td>
-                <td>{{addSvc.quote.amountToBeFinanced}}</td>
-                <td>{{addSvc.quote.indicativeRate}}</td>
-                <td>{{addSvc.quote.periodInMonths}}</td>
-                <td>{{addSvc.quote.contactMethod}}</td>               
-                <td>{{addSvc.quote.comment}}</td>
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
-               </tr>
-              </tbody>
-            </table>
-          </div>
+            <div class="table-responsive" >
+              <table class="table table-bordred table-striped">
+                <thead>
+                    <tr>
+                      <th>Sr. No</th> 
+                      <th>Full Name</th> 
+                      <th>Country</th>                                
+                      <th>Location</th>                                
+                      <th>Company Name</th>                                
+                      <th>Designation</th>                                
+                      <th>Phone No.</th>  
+                      <th>Mobile No.</th>  
+                      <th>Email Address</th>
+                      <th>Category</th>
+                      <th>Brand</th>
+                      <th>Modal</th>
+                      <th>Location of Asset</th>
+                      <th>Manufacturing Year</th>
+                      <th>Asset Description</th>
+                      <th>Amount to be Financed</th>
+                      <th>Indicative Rate</th>
+                      <th>Tenure(in Months)</th>
+                      <th>Method Of Contact</th>
+                      <th>Comments</th>    
+                      <th>Date of Request</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="addSvc in reportsVm.financingListing">
+                  <td>{{$index + 1+count}}</td>             
+                  <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                  <td>{{addSvc.quote.country}}</td>
+                  <td>{{addSvc.quote.city}}</td>
+                  <td>{{addSvc.quote.companyname}}</td>                    
+                  <td>{{addSvc.quote.designation}}</td>                                        
+                  <td>{{addSvc.quote.phone}}</td>
+                  <td>{{addSvc.quote.mobile}}</td>
+                  <td>{{addSvc.quote.email}}</td>
+                  <td>{{addSvc.quote.product.category}}</td>
+                  <td>{{addSvc.quote.product.brand}}</td>
+                  <td>{{addSvc.quote.product.model}}</td>
+                  <td>{{addSvc.quote.product.city}}</td>
+                  <td>{{addSvc.quote.product.mfgYear}}</td>
+                  <td>{{addSvc.quote.product.description}}</td>
+                  <td>{{addSvc.quote.amountToBeFinanced}}</td>
+                  <td>{{addSvc.quote.indicativeRate}}</td>
+                  <td>{{addSvc.quote.periodInMonths}}</td>
+                  <td>{{addSvc.quote.contactMethod}}</td>               
+                  <td>{{addSvc.quote.comment}}</td>
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                 </tr>
+                </tbody>
+              </table>
+            </div>
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
 
@@ -446,7 +417,7 @@
                 <tbody>
                 <tr ng-repeat="addSvc in reportsVm.insuranceListing">
                   <td>{{$index + 1+count}}</td>            
-                 <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
+                  <td>{{addSvc.quote.fname}} {{addSvc.quote.lname}}</td>              
                   <td>{{addSvc.quote.country}}</td>
                   <td>{{addSvc.quote.city}}</td>
                   <td>{{addSvc.quote.companyname}}</td>                    
@@ -464,6 +435,225 @@
                   <td>{{addSvc.quote.contactMethod}}</td>               
                   <td>{{addSvc.quote.comment}}</td>    
                   <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                 </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          
+          <div ng-if="reportsVm.tabValue == 'buyrentnow'">
+            <div class="table-responsive" >
+              <table class="table table-bordred table-striped">
+                <thead>
+                 <tr>
+                  <th>Sr. No.</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                                
+                  <th>Location</th>                                
+                  <th>Company Name</th>                                
+                  <th>Designation</th>                                
+                  <th>Phone No.</th>  
+                  <th>Mobile No.</th>  
+                  <th>Email Address</th>
+                  <th>Buy Now Price</th>                                
+                  <th>Make an Offer Price</th>                                
+                  <th>Asset ID</th>                                
+                  <th>Product Name</th>                                
+                  <th>Location of Asset</th>
+                  <th>Manufacturing Year</th>
+                  <th>Seller Name</th>
+                  <th>Seller Contact Number</th>  
+                  <th>Date of Request</th>                
+                 </tr> 
+                </thead>
+                <tbody>
+                <tr ng-repeat="addSvc in reportsVm.buyNowListing">
+                  <td>{{$index + 1+count}}</td>            
+                  <td>{{addSvc.user.fname}} {{addSvc.user.lname}}</td>              
+                  <td>{{addSvc.user.country}}</td>
+                  <td>{{addSvc.user.city}}</td>
+                  <td>{{addSvc.user.companyname}}</td>                    
+                  <td>{{addSvc.user.designation}}</td>                                        
+                  <td>{{addSvc.user.phone}}</td>
+                  <td>{{addSvc.user.mobile}}</td>
+                  <td>{{addSvc.user.email}}</td>
+                  <td>{{addSvc.product.grossPrice}}</td>                  
+                  <td>{{addSvc.offer}}</td>
+                  <td>{{addSvc.product.assetId}}</td>                  
+                  <td>{{addSvc.product.name}}</td>
+                  <td>{{addSvc.product.city}}</td>                  
+                  <td>{{addSvc.product.mfgYear}}</td>
+                  <td>{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
+                  <td>{{addSvc.product.seller.mobile}}</td>
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>                  
+                 </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'forRent'">
+            <div class="table-responsive" >
+              <table class="table table-bordred table-striped">
+                <thead>
+                 <tr>
+                  <th>Sr. No.</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                                
+                  <th>Location</th>                                
+                  <th>Company Name</th>                                
+                  <th>Designation</th>                                
+                  <th>Phone No.</th>  
+                  <th>Mobile No.</th>  
+                  <th>Email Address</th>
+                  <th>Asset ID</th>                                
+                  <th>Product Name</th>                                
+                  <th>Location of Asset</th>
+                  <th>Manufacturing Year</th>
+                  <th>Seller Name</th>
+                  <th>Seller Contact Number</th>                 
+                  <th>Rent Information – Hours</th>                  
+                  <th>Rent Information – Days</th>                  
+                  <th>Rent Information – Months</th>                  
+                  <th>Security Deposit – Hours</th>                  
+                  <th>Security Deposit – Days</th>                  
+                  <th>Security Deposit - Months</th>  
+                  <th>Date of Request</th>                
+                 </tr> 
+                </thead>
+                <tbody>
+                <tr ng-repeat="addSvc in reportsVm.forRentNowListing">
+                  <td>{{$index + 1+count}}</td>            
+                  <td>{{addSvc.user.fname}} {{addSvc.user.lname}}</td>              
+                  <td>{{addSvc.user.country}}</td>
+                  <td>{{addSvc.user.city}}</td>
+                  <td>{{addSvc.user.companyname}}</td>                    
+                  <td>{{addSvc.user.designation}}</td>                                        
+                  <td>{{addSvc.user.phone}}</td>
+                  <td>{{addSvc.user.mobile}}</td>
+                  <td>{{addSvc.user.email}}</td>
+                  <td>{{addSvc.product.assetId}}</td>                  
+                  <td>{{addSvc.product.name}}</td>
+                  <td>{{addSvc.product.city}}</td>                  
+                  <td>{{addSvc.product.mfgYear}}</td>
+                  <td>{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
+                  <td>{{addSvc.product.seller.mobile}}</td>
+                  <td>{{addSvc.product.rent.rateHours.rentAmountH}}</td>
+                  <td>{{addSvc.product.rent.rateDays.rentAmountD}}</td>
+                  <td>{{addSvc.product.rent.rateMonths.rentAmountM}}</td>
+                  <td>{{addSvc.product.rent.rateHours.seqDepositH}}</td>
+                  <td>{{addSvc.product.rent.rateDays.seqDepositD}}</td>
+                  <td>{{addSvc.product.rent.rateMonths.seqDepositM}}</td>
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>                  
+                 </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'easyfinance'">
+            <div class="table-responsive" >
+              <table class="table table-bordred table-striped">
+                <thead>
+                 <tr>
+                  <th>Sr. No.</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                                
+                  <th>Location</th>                                
+                  <th>Company Name</th>                                
+                  <th>Designation</th>                                
+                  <th>Phone No.</th>  
+                  <th>Mobile No.</th>  
+                  <th>Email Address</th>
+                  <th>Asset ID</th>                                
+                  <th>Product Name</th>
+                  <th>Location of Asset</th>
+                  <th>Manufacturing Year</th>
+                  <th>Amount to be Financed</th> 
+                  <th>Indicative Rate</th> 
+                  <th>Tenure(in months)</th>                                
+                  <th>Financing Company</th>                                
+                  <th>Comments</th>     
+                  <th>Date of Request</th>           
+                 </tr> 
+                </thead>
+                <tbody>
+                <tr ng-repeat="eFinance in reportsVm.easyFinanceListing">
+                  <td>{{$index + 1+count}}</td>            
+                  <td>{{eFinance.user.fname}} {{eFinance.user.lname}}</td>              
+                  <td>{{eFinance.user.country}}</td>
+                  <td>{{eFinance.user.city}}</td>
+                  <td>{{eFinance.user.companyname}}</td>                    
+                  <td>{{eFinance.user.designation}}</td>                                        
+                  <td>{{eFinance.user.phone}}</td>
+                  <td>{{eFinance.user.mobile}}</td>
+                  <td>{{eFinance.user.email}}</td>
+                  <td>{{eFinance.product.assetId}}</td>                  
+                  <td>{{eFinance.product.name}}</td>
+                  <td>{{eFinance.product.city}}</td>
+                  <td>{{eFinance.product.mfgYear}}</td>  
+                  <td>{{eFinance.request.financeInfo.assetCost}}</td>              
+                  <td>{{eFinance.request.financeInfo.financeAmount}}</td>
+                  <td>{{eFinance.request.financeInfo.periodInMonths}}</td>
+                  <td>{{eFinance.request.financeInfo.finAgency}}</td>                    
+                  <td>{{eFinance.request.message}}</td>      
+                  <td>{{eFinance.createdAt | date:'MM/dd/yyyy'}}</td>                          
+                 </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'inspection'">
+            <div class="table-responsive" >
+              <table class="table table-bordred table-striped">
+                <thead>
+                 <tr>
+                  <th>Sr. No.</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                                
+                  <th>Location</th>                                
+                  <th>Company Name</th>                                
+                  <th>Designation</th>                                
+                  <th>Phone No.</th>  
+                  <th>Mobile No.</th>  
+                  <th>Email Address</th>
+                  <th>Asset ID</th>                                
+                  <th>Product Name</th>
+                  <th>Location of Asset</th>
+                  <th>Manufacturing Year</th> 
+                  <th>Purpose of valuation</th> 
+                  <th>Schedule a call</th> 
+                  <th>Date &amp; Time</th>                               
+                  <th>Comments</th>    
+                  <th>Date of Request</th>            
+                 </tr> 
+                </thead>
+                <tbody>
+                <tr ng-repeat="insReq in reportsVm.inspectionListing">
+                  <td>{{$index + 1+count}}</td>            
+                  <td>{{insReq.user.fname}} {{insReq.user.lname}}</td>              
+                  <td>{{insReq.user.country}}</td>
+                  <td>{{insReq.user.city}}</td>
+                  <td>{{insReq.user.companyname}}</td>                    
+                  <td>{{insReq.user.designation}}</td>                                        
+                  <td>{{insReq.user.phone}}</td>
+                  <td>{{insReq.user.mobile}}</td>
+                  <td>{{insReq.user.email}}</td>
+                  <td>{{insReq.product.assetId}}</td>                  
+                  <td>{{insReq.product.name}}</td>
+                  <td>{{insReq.product.city}}</td>
+                  <td>{{insReq.product.mfgYear}}</td>  
+                  <td>{{insReq.request.valuation}}</td>              
+                  <td>{{insReq.request.scheduleC}}</td>
+                  <td>{{insReq.request.scheduleDate | date:'MM/dd/yyyy'}} {{insReq.request.scheduledTime}}</td>
+                  <td>{{insReq.request.comment}}</td>  
+                  <td>{{insReq.createdAt | date:'MM/dd/yyyy'}}</td>          
                  </tr>
                 </tbody>
               </table>
