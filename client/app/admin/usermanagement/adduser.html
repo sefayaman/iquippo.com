@@ -85,11 +85,11 @@
                    
                 </div>
                 <div class="row">
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
+                  <!-- <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
                     <input type="text" class="form-control" name="mobile" ng-model="newUser.alternateMobile" value="" placeholder="* Alternate Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.country.$invalid && submitted }">
                     <select class="form-control" name="country" ng-model="newUser.country" required>
                       <option value="" disabled>*Select Country</option>
@@ -98,12 +98,13 @@
                     </select>
                     <i class="caret"></i>
                   </div>
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
+                  </div>
                  
                 </div>
                 <div class="row">
-                   <div class="form-group col-sm-6" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
-                  </div>
+                   
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.location.$invalid && submitted }">
                     <select class="form-control" name="location" ng-model="newUser.city" required>
                       <option value="" disabled>*Select Location</option>

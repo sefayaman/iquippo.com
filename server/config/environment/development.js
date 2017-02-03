@@ -11,5 +11,6 @@ module.exports = {
   serverPath: "http://192.168.14.120:8100",
   contactNumber: "011 66025672",
 
-  seedDB: true
+  seedDB: true,
+  mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"info@iquippo.com"}
 };

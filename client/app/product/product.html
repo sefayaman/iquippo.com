@@ -792,7 +792,7 @@
                       </div>
 
 
-                      <div class="panel panel-default">
+                      <div class="panel panel-default" ng-if="isAdmin()">
                         <div class="panel-heading">
                             Contact Seller
                         </div>
@@ -803,28 +803,28 @@
                              <input type="radio" id="" name="" ng-model="product.dispSellerInfo" value="yes"> Yes
                             </div>
                             <div class="form-group col-xs-3">
-                             <input type="radio" id="" name="enginstatus" ng-model="product.dispSellerInfo" value="no"> No
+                             <input type="radio" ng-model="product.dispSellerInfo" value="no"> No
                             </div>
                           </div>
                           
                           <div class="row">
-                            <div class="form-group col-xs-5">Seller Name</div>
+                            <div class="form-group col-xs-5">Name</div>
                             <div class="form-group col-xs-7">
                              {{product.seller.fname + ' ' +product.seller.mname + ' ' + product.seller.lname}}
                             </div>
                           </div>
                           <div class="row" ng-if="product.seller.mobile">
-                            <div class="form-group col-xs-5">Seller Contact Number</div>
+                            <div class="form-group col-xs-5">Contact Number</div>
                             <div class="form-group col-xs-1">
                              {{product.seller.mobile}}</div>
                              <div class="form-group col-xs-3">
                              <input type="checkbox" id="" name="" ng-model="product.dispSellerContact" ng-true-value="'true'"> to be displayed in front-end
                             </div>
                           </div>
-                          <div class="row" ng-if="product.seller.alternateMobile">
+                          <div class="row" ng-if="isAdmin()">
                             <div class="form-group col-xs-5">Alternate Contact Number</div>
-                            <div class="form-group col-xs-1">
-                             {{product.seller.alternateMobile}}</div>
+                            <div class="form-group col-xs-2">
+                             <input type="text" id="" class="form-control" name="" ng-model="product.alternateMobile" ng-true-value="true" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top"></div>
                              <div class="form-group col-xs-3">
                              <input type="checkbox" id="" name="" ng-model="product.dispSellerAlternateContact" ng-true-value="'true'"> to be displayed in front-end
                             </div>

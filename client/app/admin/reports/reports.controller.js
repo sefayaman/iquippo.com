@@ -15,7 +15,7 @@
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;
-
+    $scope.count = 0;
     vm.fireCommand = fireCommand;
     vm.selectReportData = selectReportData;
     vm.exportExcel = exportExcel;
@@ -28,7 +28,12 @@
     vm.insuranceListing = [];
     vm.quickQueryListing = [];
     vm.buyOrRentListing =[];
-    vm.additionalSvcListing = [];
+    //vm.additionalSvcListing = [];
+    vm.buyNowListing = [];
+    vm.forRentNowListing = [];
+    vm.easyFinanceListing = [];
+    vm.inspectionListing =[];
+
     var dataToSend = {};
     var userMobileNos = [];
 
@@ -139,9 +144,9 @@
         case 'instantQuote':
           getReportData(filter, 'instantQuote');
           break;
-        case 'additionalServices':
-          getReportData(filter, 'additionalServices');
-          break;
+        // case 'additionalServices':
+        //   getReportData(filter, 'additionalServices');
+        //   break;
         case 'buyOrRentOrBoth':
           getReportData(filter, 'buyOrRentOrBoth');
           break;
@@ -157,6 +162,18 @@
         case 'insurance':
           getReportData(filter, 'insurance');
           break;
+        case 'buyrentnow':
+          getReportData(filter, 'buyrentnow');
+          break;
+        case 'forRent':
+          getReportData(filter, 'forRent');
+          break;
+        case 'easyfinance':
+          getReportData(filter, 'easyfinance');
+          break;
+        case 'inspection':
+          getReportData(filter, 'inspection');
+          break;
       }
     }
 
@@ -165,11 +182,12 @@
       filter.currentPage = vm.currentPage;
       filter.first_id = first_id;
       filter.last_id = last_id;
+      $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
       switch (tabValue) {
         case 'callback':
               resetCount();
-          ReportsSvc.getCallbackOnFilter(filter)
-            .then(function(result) {
+              ReportsSvc.getCallbackOnFilter(filter)
+              .then(function(result) {
             
               vm.callbackListing = result.items;
               vm.totalItems = result.totalItems;
@@ -194,20 +212,20 @@
               }
             });
           break;
-        case 'additionalServices':
-          resetCount();
-          ReportsSvc.getAdditionalServicesOnFilter(filter)
-            .then(function(result) {
+        // case 'additionalServices':
+        //   resetCount();
+        //   ReportsSvc.getAdditionalServicesOnFilter(filter)
+        //     .then(function(result) {
               
-              vm.additionalSvcListing = result.items;
-              vm.totalItems = result.totalItems;
-              prevPage = vm.currentPage;
-              if (vm.additionalSvcListing.length > 0) {
-                first_id = vm.additionalSvcListing[0]._id;
-                last_id = vm.additionalSvcListing[vm.additionalSvcListing.length - 1]._id;
-              }
-            });
-          break;
+        //       vm.additionalSvcListing = result.items;
+        //       vm.totalItems = result.totalItems;
+        //       prevPage = vm.currentPage;
+        //       if (vm.additionalSvcListing.length > 0) {
+        //         first_id = vm.additionalSvcListing[0]._id;
+        //         last_id = vm.additionalSvcListing[vm.additionalSvcListing.length - 1]._id;
+        //       }
+        //     });
+        //   break;
         case 'buyOrRentOrBoth':
           //filter.tradeType = "SELL";
               resetCount();
@@ -216,7 +234,6 @@
               vm.buyOrRentListing = result.items;
               vm.totalItems = result.totalItems;
               prevPage = vm.currentPage;
-              $scope.count = (vm.currentPage-1) * vm.itemsPerPage;
               if (vm.buyOrRentListing.length > 0) {
                 first_id = vm.buyOrRentListing[0]._id;
                 last_id = vm.buyOrRentListing[vm.buyOrRentListing.length - 1]._id;
@@ -416,6 +433,66 @@
               })
           }
           break;
+      case 'buyrentnow':
+          //filter.tradeType = "SELL";
+          resetCount();
+          filter.reqType = "buyRequest";
+          ReportsSvc.getBuyRentNowOnFilter(filter)
+            .then(function(result) {
+              vm.buyNowListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.buyNowListing.length > 0) {
+                first_id = vm.buyNowListing[0]._id;
+                last_id = vm.buyNowListing[vm.buyNowListing.length - 1]._id;
+              }
+            });
+          break;
+          case 'forRent':
+          //filter.tradeType = "SELL";
+          resetCount();
+          filter.reqType = "rentRequest";
+          ReportsSvc.getBuyRentNowOnFilter(filter)
+            .then(function(result) {
+              vm.forRentNowListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.forRentNowListing.length > 0) {
+                first_id = vm.forRentNowListing[0]._id;
+                last_id = vm.forRentNowListing[vm.forRentNowListing.length - 1]._id;
+              }
+            });
+          break;
+          case 'easyfinance':
+          //filter.tradeType = "SELL";
+          resetCount();
+          filter.type = "EASY_FINANCE";
+          ReportsSvc.getEasyFinanceOnFilter(filter)
+            .then(function(result) {
+              vm.easyFinanceListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.easyFinanceListing.length > 0) {
+                first_id = vm.easyFinanceListing[0]._id;
+                last_id = vm.easyFinanceListing[vm.easyFinanceListing.length - 1]._id;
+              }
+            });
+          break;
+          case 'inspection':
+          //filter.tradeType = "SELL";
+          resetCount();
+          filter.type = "INSPECTION_REQUEST";
+          ReportsSvc.getEasyFinanceOnFilter(filter)
+            .then(function(result) {
+              vm.inspectionListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.inspectionListing.length > 0) {
+                first_id = vm.inspectionListing[0]._id;
+                last_id = vm.inspectionListing[vm.inspectionListing.length - 1]._id;
+              }
+            });
+          break;
       }
     }
 
@@ -446,8 +523,20 @@
         fileName = "buyOrRentOrBoth_";
       else if (vm.tabValue == "shipping" || vm.tabValue == "valuation" || vm.tabValue == "finance" || vm.tabValue == "insurance")
         return openWindow(ReportsSvc.exportData(filter, vm.tabValue));
-      else
-        fileName = "AdditionalServices_";
+      else if (vm.tabValue == "buyrentnow") {
+        filter.reqType = "buyRequest";
+        fileName = "BuyReport_";
+      } else if (vm.tabValue == "forRent") {
+        filter.reqType = "rentRequest";
+        fileName = "RentReport_";
+      } else if (vm.tabValue == "easyfinance") {
+        filter.type = "EASY_FINANCE";
+        fileName = "EasyFinanceReport_";
+      } else if (vm.tabValue == "inspection") {
+        filter.type = "INSPECTION_REQUEST";
+        fileName = "InspectionReport_";
+      } //else
+        //fileName = "AdditionalServices_";
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
 

@@ -321,6 +321,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
            console.log(response);
         //$scope.container.selectedSubCategory = $scope.product.subcategory;
         //$scope.product.dispSellerInfo=response.dispSellerInfo;
+       console.log($scope.product.alternateMobile);
          $scope.product.dispSellerContact;
          $scope.product.dispSellerAlternateContact;
 

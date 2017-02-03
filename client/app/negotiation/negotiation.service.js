@@ -17,7 +17,7 @@
           
           console.log(dataNegotiate);
 
-     if(flag == "negotiate"){
+     if(flag == "true"){
       var data = {};
         data['to'] = dataNegotiate.product.seller.email;
         data['subject'] = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
@@ -42,7 +42,7 @@
       
   
 
-        else if(flag == "NoNegotiate" ){
+        else if(flag == "false" ){
         var subject = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
 
         var data = {};
