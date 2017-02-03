@@ -65,12 +65,23 @@ exports.getOnFilter = function(req, res) {
 
   var filter = {};
   var orFilter = [];
-  
-  if(req.body.searchStr){
-     var term = new RegExp(req.body.searchStr, 'i');
+  if(req.body.userMobileNos)
+    filter['user.mobile'] = {$in:req.body.userMobileNos};
+
+  if(req.body.searchstr){
+     var term = new RegExp(req.body.searchstr, 'i');
+     orFilter[orFilter.length] = { "user.fname": { $regex: term }};
+     orFilter[orFilter.length] = { "user.lname": { $regex: term }};
+     orFilter[orFilter.length] = { "user.mobile": { $regex: term }};
+     orFilter[orFilter.length] = { "user.phone": { $regex: term }};
+     orFilter[orFilter.length] = { "user.email": { $regex: term }};
+     orFilter[orFilter.length] = { "user.country": { $regex: term }};
      orFilter[orFilter.length] = {"product.name":{$regex:term}};
      orFilter[orFilter.length] = {"product.category":{$regex:term}};
      orFilter[orFilter.length] = {"product.status":{$regex:term}};
+     orFilter[orFilter.length] = {"product.mfgYear":{$regex:term}};
+     orFilter[orFilter.length] = {"valuationAgency.name":{$regex:term}};
+     orFilter[orFilter.length] = {requestId:{$regex:term}};
      orFilter[orFilter.length] = {status:{$regex:term}};
      orFilter[orFilter.length] = {purpose:{$regex:term}};
   }
@@ -172,7 +183,7 @@ function setCell(ws,cell,R,C){
 function excel_from_data(data, isAdmin) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:11, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:18, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     var C = 0;
@@ -180,6 +191,55 @@ function excel_from_data(data, isAdmin) {
     if(R != 0)
       valuation = data[R-1];
     var cell = null;
+
+    if(R == 0)
+      cell = {v: "Full Name"};
+    else{
+      if(valuation)
+        cell =  {v: (valuation.user.fname || "") + " " + (valuation.user.lname || "")};
+    }
+    setCell(ws,cell,R,C++);
+
+    if(R == 0)
+      cell = {v: "Country"};
+    else{
+      if(valuation)
+        cell =  {v: valuation.user.country || ""};
+    }
+    setCell(ws,cell,R,C++);
+
+    if(R == 0)
+      cell = {v: "Location"};
+    else{
+      if(valuation)
+        cell =  {v: valuation.user.city || ""};
+    }
+    setCell(ws,cell,R,C++);
+
+    if(R == 0)
+      cell = {v: "Phone No."};
+    else{
+      if(valuation)
+        cell =  {v: valuation.user.phone || ""};
+    }
+    setCell(ws,cell,R,C++);
+
+    if(R == 0)
+      cell = {v: "Mobile No."};
+    else{
+      if(valuation)
+        cell =  {v: valuation.user.mobile || ""};
+    }
+    setCell(ws,cell,R,C++);
+
+    if(R == 0)
+      cell = {v: "Email Address"};
+    else{
+      if(valuation)
+        cell =  {v: valuation.user.email || ""};
+    }
+    setCell(ws,cell,R,C++);
+
     if(R == 0)
       cell = {v: "Valuation Request Id"};
     else{
@@ -198,13 +258,13 @@ function excel_from_data(data, isAdmin) {
     setCell(ws,cell,R,C++);
 
 
-    /*if(R == 0)
+    if(R == 0)
       cell = {v: "Asset Id"};
     else{
       if(valuation)
         cell =  {v: valuation.product.assetId};
     }
-    setCell(ws,cell,R,C++);*/
+    setCell(ws,cell,R,C++);
 
     if(R == 0)
       cell = {v: "Asset Name"};
@@ -300,6 +360,10 @@ exports.exportValuation = function(req,res){
   }
   if(req.body.ids)
     filter['_id'] = {$in:req.body.ids};
+
+  if(req.body.userMobileNos)
+    filter['user.mobile'] = {$in: req.body.userMobileNos.split(',')};
+
   var query = ValuationReq.find(filter).sort({auctionId:1});
   query.exec(
      function (err, valuatios) {

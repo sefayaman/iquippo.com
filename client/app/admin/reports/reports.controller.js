@@ -3,7 +3,7 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal, userSvc) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal, userSvc, ValuationSvc) {
     var vm = this;
     vm.tabValue = "callback";
 
@@ -33,6 +33,8 @@
     vm.forRentNowListing = [];
     vm.easyFinanceListing = [];
     vm.inspectionListing =[];
+    vm.valuationListing =[];
+    $scope.valuationStatuses = valuationStatuses;
 
     var dataToSend = {};
     var userMobileNos = [];
@@ -173,6 +175,9 @@
           break;
         case 'inspection':
           getReportData(filter, 'inspection');
+          break;
+        case 'valuationReport':
+          getReportData(filter, 'valuationReport');
           break;
       }
     }
@@ -434,7 +439,6 @@
           }
           break;
       case 'buyrentnow':
-          //filter.tradeType = "SELL";
           resetCount();
           filter.reqType = "buyRequest";
           ReportsSvc.getBuyRentNowOnFilter(filter)
@@ -449,7 +453,6 @@
             });
           break;
           case 'forRent':
-          //filter.tradeType = "SELL";
           resetCount();
           filter.reqType = "rentRequest";
           ReportsSvc.getBuyRentNowOnFilter(filter)
@@ -464,7 +467,6 @@
             });
           break;
           case 'easyfinance':
-          //filter.tradeType = "SELL";
           resetCount();
           filter.type = "EASY_FINANCE";
           ReportsSvc.getEasyFinanceOnFilter(filter)
@@ -479,7 +481,6 @@
             });
           break;
           case 'inspection':
-          //filter.tradeType = "SELL";
           resetCount();
           filter.type = "INSPECTION_REQUEST";
           ReportsSvc.getEasyFinanceOnFilter(filter)
@@ -490,6 +491,19 @@
               if (vm.inspectionListing.length > 0) {
                 first_id = vm.inspectionListing[0]._id;
                 last_id = vm.inspectionListing[vm.inspectionListing.length - 1]._id;
+              }
+            });
+          break;
+          case 'valuationReport':
+          resetCount();
+          ValuationSvc.getOnFilter(filter)
+            .then(function(result) {
+              vm.valuationListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.valuationListing.length > 0) {
+                first_id = vm.valuationListing[0]._id;
+                last_id = vm.valuationListing[vm.valuationListing.length - 1]._id;
               }
             });
           break;
@@ -535,7 +549,9 @@
       } else if (vm.tabValue == "inspection") {
         filter.type = "INSPECTION_REQUEST";
         fileName = "InspectionReport_";
-      } //else
+      } else 
+        fileName = "ValuationReport_";
+       //else
         //fileName = "AdditionalServices_";
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
@@ -553,28 +569,24 @@
       switch(filter){
         
         case 'shipping':
-          //$scope.shippingTotalItems = 0;
           $scope.valuationTotalItems=0;
           $scope.financingTotalItems = 0;
           $scope.insuranceTotalItems = 0;
           break;
         case 'valuation':
           $scope.shippingTotalItems = 0;
-          //$scope.valuationTotalItems=0;
           $scope.financingTotalItems = 0;
           $scope.insuranceTotalItems = 0;
           break;
         case 'finance':
           $scope.shippingTotalItems = 0;
           $scope.valuationTotalItems=0;
-          //$scope.financingTotalItems = 0;
           $scope.insuranceTotalItems = 0;
           break;
         case 'insurance':
           $scope.shippingTotalItems = 0;
           $scope.valuationTotalItems=0;
           $scope.financingTotalItems = 0;
-          //$scope.insuranceTotalItems = 0;
           break;
       }
 

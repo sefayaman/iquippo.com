@@ -42,11 +42,17 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
 		vm.valuationReq.product.primaryImg = $scope.currentProduct.primaryImg;
 		vm.valuationReq.product.name = $scope.currentProduct.name;
 		vm.valuationReq.product.category = $scope.currentProduct.category.name;
+		vm.valuationReq.product.mfgYear = $scope.currentProduct.mfgYear;
 		vm.valuationReq.product.status = $scope.currentProduct.assetStatus;
 		vm.valuationReq.product.city = $scope.currentProduct.city;
 		vm.valuationReq.product.serialNumber = $scope.currentProduct.serialNo;
 
 		vm.valuationReq.user._id = Auth.getCurrentUser()._id;
+		vm.valuationReq.user.fname = Auth.getCurrentUser().fname;
+	    vm.valuationReq.user.lname = Auth.getCurrentUser().lname;
+	    vm.valuationReq.user.country = Auth.getCurrentUser().country;
+	    vm.valuationReq.user.city = Auth.getCurrentUser().city;
+	    vm.valuationReq.user.phone = Auth.getCurrentUser().phone;
 		vm.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
 		vm.valuationReq.user.email = Auth.getCurrentUser().email;
 		
@@ -118,13 +124,17 @@ function ValuationRequestCtrl($scope,Modal,Auth,ValuationSvc,PaymentMasterSvc,ve
 		paymentTransaction.product.city = $scope.currentProduct.city;
 		paymentTransaction.product.name = $scope.currentProduct.name;
 		paymentTransaction.product.category = $scope.currentProduct.category.name;
+		paymentTransaction.product.mfgYear = $scope.currentProduct.mfgYear;
 		paymentTransaction.product.status = $scope.currentProduct.assetStatus;
 		paymentTransaction.user = {};
 
 		paymentTransaction.user._id = Auth.getCurrentUser()._id;
-		paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
 		paymentTransaction.user.fname = Auth.getCurrentUser().fname;
-		paymentTransaction.user.city = Auth.getCurrentUser().city;
+	    paymentTransaction.user.lname = Auth.getCurrentUser().lname;
+	    paymentTransaction.user.country = Auth.getCurrentUser().country;
+	    paymentTransaction.user.city = Auth.getCurrentUser().city;
+	    paymentTransaction.user.phone = Auth.getCurrentUser().phone;
+		paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
 		paymentTransaction.user.email = Auth.getCurrentUser().email;
 
 		paymentTransaction.status = transactionStatuses[0].code;

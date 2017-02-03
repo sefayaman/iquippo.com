@@ -20,14 +20,15 @@
                 <option value="instantQuote">Get Instant Quote</option>
                 <!-- <option value="additionalServices">Get a Quote for Additional Services</option> -->
                 <option value="buyOrRentOrBoth">Send Message - To Buy / For Rent / For Both</option>
-                <option value="shipping">Shipping</option>
-                <option value="valuation">Valuation</option>
-                <option value="finance">Financing</option>
-                <option value="insurance">Insurance</option>
+                <option value="shipping">Shipping Quote</option>
+                <option value="valuation">Valuation Quote</option>
+                <option value="finance">Financing Quote</option>
+                <option value="insurance">Insurance Quote</option>
                 <option value="buyrentnow">To Buy Now</option>
                 <option value="forRent">For Rent</option>
                 <option value="easyfinance">Easy Financing</option>
                 <option value="inspection">Inspection Request</option>
+                <option value="valuationReport">Valuation Report</option>
               </select>
             </div>
           </div>                  
@@ -452,8 +453,6 @@
                   <th>Full Name</th> 
                   <th>Country</th>                                
                   <th>Location</th>                                
-                  <th>Company Name</th>                                
-                  <th>Designation</th>                                
                   <th>Phone No.</th>  
                   <th>Mobile No.</th>  
                   <th>Email Address</th>
@@ -474,8 +473,6 @@
                   <td>{{addSvc.user.fname}} {{addSvc.user.lname}}</td>              
                   <td>{{addSvc.user.country}}</td>
                   <td>{{addSvc.user.city}}</td>
-                  <td>{{addSvc.user.companyname}}</td>                    
-                  <td>{{addSvc.user.designation}}</td>                                        
                   <td>{{addSvc.user.phone}}</td>
                   <td>{{addSvc.user.mobile}}</td>
                   <td>{{addSvc.user.email}}</td>
@@ -504,8 +501,6 @@
                   <th>Full Name</th> 
                   <th>Country</th>                                
                   <th>Location</th>                                
-                  <th>Company Name</th>                                
-                  <th>Designation</th>                                
                   <th>Phone No.</th>  
                   <th>Mobile No.</th>  
                   <th>Email Address</th>
@@ -530,8 +525,6 @@
                   <td>{{addSvc.user.fname}} {{addSvc.user.lname}}</td>              
                   <td>{{addSvc.user.country}}</td>
                   <td>{{addSvc.user.city}}</td>
-                  <td>{{addSvc.user.companyname}}</td>                    
-                  <td>{{addSvc.user.designation}}</td>                                        
                   <td>{{addSvc.user.phone}}</td>
                   <td>{{addSvc.user.mobile}}</td>
                   <td>{{addSvc.user.email}}</td>
@@ -564,8 +557,6 @@
                   <th>Full Name</th> 
                   <th>Country</th>                                
                   <th>Location</th>                                
-                  <th>Company Name</th>                                
-                  <th>Designation</th>                                
                   <th>Phone No.</th>  
                   <th>Mobile No.</th>  
                   <th>Email Address</th>
@@ -587,8 +578,6 @@
                   <td>{{eFinance.user.fname}} {{eFinance.user.lname}}</td>              
                   <td>{{eFinance.user.country}}</td>
                   <td>{{eFinance.user.city}}</td>
-                  <td>{{eFinance.user.companyname}}</td>                    
-                  <td>{{eFinance.user.designation}}</td>                                        
                   <td>{{eFinance.user.phone}}</td>
                   <td>{{eFinance.user.mobile}}</td>
                   <td>{{eFinance.user.email}}</td>
@@ -618,8 +607,6 @@
                   <th>Full Name</th> 
                   <th>Country</th>                                
                   <th>Location</th>                                
-                  <th>Company Name</th>                                
-                  <th>Designation</th>                                
                   <th>Phone No.</th>  
                   <th>Mobile No.</th>  
                   <th>Email Address</th>
@@ -640,8 +627,6 @@
                   <td>{{insReq.user.fname}} {{insReq.user.lname}}</td>              
                   <td>{{insReq.user.country}}</td>
                   <td>{{insReq.user.city}}</td>
-                  <td>{{insReq.user.companyname}}</td>                    
-                  <td>{{insReq.user.designation}}</td>                                        
                   <td>{{insReq.user.phone}}</td>
                   <td>{{insReq.user.mobile}}</td>
                   <td>{{insReq.user.email}}</td>
@@ -654,6 +639,64 @@
                   <td>{{insReq.request.scheduleDate | date:'MM/dd/yyyy'}} {{insReq.request.scheduledTime}}</td>
                   <td>{{insReq.request.comment}}</td>  
                   <td>{{insReq.createdAt | date:'MM/dd/yyyy'}}</td>          
+                 </tr>
+                </tbody>
+              </table>
+            </div>
+            <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+          </div>
+
+          <div ng-if="reportsVm.tabValue == 'valuationReport'">
+            <div class="table-responsive" >
+              <table class="table table-bordred table-striped">
+                <thead>
+                 <tr>
+                  <th>Sr. No.</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                                
+                  <th>Location</th>                                
+                  <th>Phone No.</th>  
+                  <th>Mobile No.</th>  
+                  <th>Email Address</th>
+                  <th>Valuation Request ID</th>
+                  <!-- <th>Category</th>
+                  <th>Brand</th>
+                  <th>Model</th> -->
+                  <th>Asset ID</th>                                
+                  <th>Product Name</th>
+                  <th>Asset Status</th>
+                  <th>Asset Location</th> 
+                  <th>Manufacturing Year</th> 
+                  <th>Machine Serial No.</th> 
+                  <th>Agency Name</th>                               
+                  <th>Request Date</th>    
+                  <th>Request Purpose</th>            
+                  <th>Request Status</th>            
+                 </tr> 
+                </thead>
+                <tbody>
+                <tr ng-repeat="valReq in reportsVm.valuationListing">
+                  <td>{{$index + 1 + count}}</td>            
+                  <td>{{valReq.user.fname}} {{valReq.user.lname}}</td>              
+                  <td>{{valReq.user.country}}</td>
+                  <td>{{valReq.user.city}}</td>
+                  <td>{{valReq.user.phone}}</td>
+                  <td>{{valReq.user.mobile}}</td>
+                  <td>{{valReq.user.email}}</td>
+                  <td>{{valReq.requestId}}</td>        
+                  <!-- <td>{{valReq.product.category}}</td>        
+                  <td>{{valReq.product.brand}}</td>
+                  <td>{{valReq.product.model}}</td> -->        
+                  <td>{{valReq.product.assetId}}</td>                  
+                  <td>{{valReq.product.name}}</td>
+                  <td>{{valReq.product.status}}</td>
+                  <td>{{valReq.product.city}}</td>
+                  <td>{{valReq.product.mfgYear}}</td>       
+                  <td>{{valReq.product.serialNumber}}</td>        
+                  <td>{{valReq.valuationAgency.name}}</td>        
+                  <td>{{valReq.createdAt | date:'MM/dd/yyyy'}}</td>        
+                  <td>{{valReq.purpose}}</td>
+                  <td>{{getStatusOnCode(valuationStatuses,valReq.status).name}}</td>        
                  </tr>
                 </tbody>
               </table>
