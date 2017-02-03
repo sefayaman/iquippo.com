@@ -189,7 +189,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       };
 
     function register(form) {
-       alert("I am hit"+form);
+       
       var ret = false;
     
       /*if($scope.selectedAssetsArr.length < 1){
