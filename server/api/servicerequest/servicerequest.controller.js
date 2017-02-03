@@ -114,7 +114,7 @@ exports.exportData = function(req,res){
 
   var filter = {};
   if(req.body.userMobileNos)
-    filter['user.mobile'] = {$in:req.body.userMobileNos};
+    filter['user.mobile'] = {$in:req.body.userMobileNos.split(',')};
   var FIELD_MAP = {};
   if(req.body.type) {
     filter['type'] = req.body.type;
@@ -124,7 +124,7 @@ exports.exportData = function(req,res){
       FIELD_MAP = INSPECTION_REQUEST_FIELD_MAP;
   }
 
-  var query = ServiceRequest.find(filter).sort({saleYear:-1});
+  var query = ServiceRequest.find(filter).sort({createdAt:-1});
   query.exec(
      function (err, trends) {
         if(err) { return handleError(res, err); }
@@ -136,8 +136,12 @@ exports.exportData = function(req,res){
           headers.forEach(function(header){
             if(FIELD_MAP[header] == 'fullName')
               dataArr[idx + 1].push(_.get(item, 'user.fname', '') + ' ' + _.get(item, 'user.lname', ''));
-            else if(FIELD_MAP[header] == 'scheduledDateTime')
-              dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('MM/DD/YYYY') + ' ' + _.get(item, 'request.scheduledTime', ''));
+            else if(FIELD_MAP[header] == 'scheduledDateTime') {
+              if(item.request.scheduleDate)
+                dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('MM/DD/YYYY') + ' ' + _.get(item, 'request.scheduledTime', ''));
+              else
+                dataArr[idx + 1].push('');
+            }
             else
               dataArr[idx + 1].push(_.get(item,FIELD_MAP[header],''));
             

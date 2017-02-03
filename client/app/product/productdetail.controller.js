@@ -221,7 +221,7 @@ function addProductQuote(form){
 
         var data = {};
 
-        console.log($scope.productQuote.certifiedByIQuippoQuote.scheduleDate.getDate());
+        //console.log($scope.productQuote.certifiedByIQuippoQuote.scheduleDate.getDate());
         
         data['to'] = supportMail;
         data['subject'] = 'Request for buy a product';
