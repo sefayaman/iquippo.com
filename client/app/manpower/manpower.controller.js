@@ -24,6 +24,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     vm.myFunct = myFunct;
     vm.doSearch = doSearch;
     vm.onExpRangeChange = onExpRangeChange;
+   
 
     //vm.exportExcel=exportExcel;
     //vm.login = login;
@@ -95,6 +96,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     /*function forgotPassword(){
       $scope.openDialog('forgotpassword');
     };*/
+
 
     function onExpRangeChange(exp){ 
       vm.manpowerFilter.experience = {};
@@ -467,7 +469,11 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     vm.fireCommand = fireCommand;
     vm.updateManpowerUser = updateManpowerUser;
     vm.exportExcel=exportExcel;
+    vm.updateSelection = updateSelection;
+    vm.bulkUpdate = bulkUpdate;
+    var selectedIds =[];
     var dataToSend = {};
+    
     function init(){
       dataToSend.pagination = true;
       dataToSend.itemsPerPage = vm.itemsPerPage;
@@ -490,6 +496,33 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
         console.log("error in manpower user update", err);
       });
     }
+
+
+    function bulkUpdate(action){
+      var body = {};
+      body.ids = selectedIds;
+      body.status = action === 'active' ? true : false;
+
+      ManpowerSvc.bulkUpdate(body).then(function(result){
+        $rootScope.loading = false;
+        //getAllUsers();
+        Modal.alert(result.data.res,true);
+        fireCommand(true);
+        
+      })
+      .catch(function(err){
+        console.log("error in manpower user update", err);
+      });
+    }
+
+    function updateSelection(event,id){
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add' && selectedIds.indexOf(id) == -1)
+          selectedIds.push(id)
+        if(action == 'remove' && selectedIds.indexOf(id) != -1)
+          selectedIds.splice(selectedIds.indexOf(id),1);
+     }
 
     function fireCommand(reset,filterObj){
       if(reset)
