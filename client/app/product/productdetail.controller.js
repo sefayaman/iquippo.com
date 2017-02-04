@@ -495,6 +495,8 @@ function addProductQuote(form){
 
        Modal.confirm("Do you want to submit?",function(ret){
         if(ret == "yes"){
+       if($scope.currentProduct.grossPrice)
+       $scope.reqFinance.financeInfo.assetCost=$scope.currentProduct.grossPrice;
 
       var dataFinance={};
       dataFinance={type:"EASY_FINANCE",

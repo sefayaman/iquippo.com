@@ -82,6 +82,16 @@
                   <input type="text" class="form-control" placeholder="Location"  ng-model="equipmentSearchFilter.location"  uib-typeahead="address for address in viewproductVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
                 </div>
 
+                <!-- <label for="" class="text-muted">State</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="State"  ng-model="equipmentSearchFilter.location"  uib-typeahead="address for address in viewproductVm.getStateByCity($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div>
+
+                <label for="" class="text-muted">Asset Id</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Asset Id"  ng-model="equipmentSearchFilter.state"  uib-typeahead="address for address in viewproductVm.getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div> -->
+
                 <label for="" class="text-muted">Operating hrs</label>
                 <div class="form-group">
                   <input type="text" class="form-control" name="" value="" ng-model="equipmentSearchFilter.operatingHour" placeholder="Operating hrs" ng-change="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">

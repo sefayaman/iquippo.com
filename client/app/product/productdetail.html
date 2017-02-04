@@ -742,13 +742,10 @@
                           <div class="form-group" ng-if="currentProduct.grossPrice">
                             <input type="number"  class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
                           </div>
-                          <div class="form-group" ng-if="!currentProduct.grossPrice">
-                            <input type="number"  class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="'Requested For Finance'" placeholder="Amount to be Financed">
-                          </div>
                         </div>
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="number" class="form-control" name="financeAmount" ng-model="reqFinance.financeInfo.financeAmount" min= '0' placeholder="Indicative Rate">
+                            <input type="number" class="form-control" name="indicativeRate" ng-model="reqFinance.financeInfo.indicativeRate" min= '0' placeholder="Indicative Rate">
                           </div>
                         </div>
                       </div>
