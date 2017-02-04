@@ -43,8 +43,6 @@ exports.search = function(req, res) {
     arr[arr.length] = { "user.phone": { $regex: searchStrReg }};
     arr[arr.length] = { "user.email": { $regex: searchStrReg }};
     arr[arr.length] = { "user.country": { $regex: searchStrReg }};
-    arr[arr.length] = { "user.companyname": { $regex: searchStrReg }};
-    arr[arr.length] = { "user.designation": { $regex: searchStrReg }};
     arr[arr.length] = { "product.assetId": { $regex: searchStrReg }};
     arr[arr.length] = { "product.productId": { $regex: searchStrReg }};
     arr[arr.length] = { "product.name": { $regex: searchStrReg }};
@@ -81,8 +79,6 @@ var BUY_REQUEST_FIELD_MAP = {
                               'Full Name' : 'fullName',
                               'Country' : 'user.country',
                               'Location' : 'user.city',
-                              'Company Name' : 'user.companyname',
-                              'Designation' : 'user.designation',
                               'Phone No.' : 'user.phone',
                               'Mobile No.' : 'user.mobile',
                               'Email Address' : 'user.email',
@@ -101,8 +97,6 @@ var RENT_REQUEST_FIELD_MAP = {
                               'Full Name' : 'fullName',
                               'Country' : 'user.country',
                               'Location' : 'user.city',
-                              'Company Name' : 'user.companyname',
-                              'Designation' : 'user.designation',
                               'Phone No.' : 'user.phone',
                               'Mobile No.' : 'user.mobile',
                               'Email Address' : 'user.email',

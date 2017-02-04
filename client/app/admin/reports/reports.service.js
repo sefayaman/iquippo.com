@@ -169,6 +169,8 @@
         url = path + "/negotiate/export";
       } else if (refName == "easyfinance" || refName == "inspection") {
         url = path + "/servicerequest/export";
+      } else if (refName == "valuationReport") {
+        url = path + "/valuation/export";
       } //else
         //url = path + "/productquote/export";
 

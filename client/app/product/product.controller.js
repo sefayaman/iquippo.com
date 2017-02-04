@@ -1168,6 +1168,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       $scope.valuationReq.user = {};
       $scope.valuationReq.user._id = Auth.getCurrentUser()._id;
+      $scope.valuationReq.user.fname = Auth.getCurrentUser().fname;
+      $scope.valuationReq.user.lname = Auth.getCurrentUser().lname;
+      $scope.valuationReq.user.country = Auth.getCurrentUser().country;
+      $scope.valuationReq.user.city = Auth.getCurrentUser().city;
+      $scope.valuationReq.user.phone = Auth.getCurrentUser().phone;
       $scope.valuationReq.user.mobile = Auth.getCurrentUser().mobile;
       $scope.valuationReq.user.email = Auth.getCurrentUser().email;
       $scope.valuationReq.seller = {};
@@ -1183,6 +1188,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       $scope.valuationReq.product.assetDir = productObj.assetDir;
       $scope.valuationReq.product.primaryImg = productObj.primaryImg;
       $scope.valuationReq.product.category = productObj.category.name;
+      $scope.valuationReq.product.mfgYear = productObj.mfgYear;
       $scope.valuationReq.product.city = productObj.city;
       $scope.valuationReq.product.status = productObj.assetStatus;
       $scope.valuationReq.product.serialNumber = productObj.serialNo;
@@ -1701,8 +1707,10 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
      }
 
      $scope.timestamp = new Date().getTime();
-      function rotate(idx){
-        var img = $scope.images[idx];
+      function rotate(img){
+        if(!img.src)
+          return;
+        //var img = $scope.images[idx];
         var imagePath = $scope.assetDir + "/" + img.src;
         $http.post("/api/common/rotate",{imgPath:imagePath})
         .then(function(res){

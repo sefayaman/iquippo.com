@@ -73,7 +73,7 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 	 		resetPagination();
 	 	var fltr = formFilter($scope.valType);
 	 	if(vm.searchStr)
-	 		fltr.searchStr = vm.searchStr;
+	 		fltr.searchstr = vm.searchStr;
 	 	if(isUserMode())
 	 		getValuations(fltr,$scope.valType);
 	 	else

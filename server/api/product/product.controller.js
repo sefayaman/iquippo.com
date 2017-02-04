@@ -1008,7 +1008,7 @@ function excel_from_data(data, isAdmin) {
     ws[cell_ref] = cell;
 
     var serialNo = "";
-    if(product && product.grossPrice) 
+    if(product && product.serialNo) 
       serialNo = product.serialNo;
     else
       serialNo = "";
