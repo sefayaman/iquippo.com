@@ -7,7 +7,6 @@ var SubCategory = require('./../category/subcategory.model');
 var User = require('./../user/user.model');
 var Utility = require('./../../components/utility.js');
 var moment = require('moment');
-var async = require('async');
 
 // Get list of services
 exports.getAll = function(req, res, next) {
@@ -146,56 +145,6 @@ exports.update = function(req, res) {
     });
   });
 };
-
-exports.bulkUpdate = function(req,res){
-  if(!req.body || !req.body.ids)
-    return res.status(404).json({res:'Nothing to update'}); 
-  
-  var updateIds;
-  
-  if(Array.isArray(req.body.ids)){
-    updateIds = req.body.ids;
-  }else{
-    updateIds = req.body.ids.split(',');
-  }
-
-  if(!updateIds.length)
-    return res.status(404).json({res:'Nothing to update'}); 
-
-  var updateStatus = req.body.status || false;
-  var successIds = [],
-    failed_ids = [];
-  async.eachLimit(updateIds,10,intialize,finalize);
-
-  function finalize(err){
-    if(err){
-      console.log(err);
-      return res.status(500).json({res:'Error while updating...Please try again'});
-    }
-
-    res.json({res:successIds.length + ' records updated from ' + updateIds.length + ' records'});
-  }
-
-  function intialize(id,cb){
-    ManpowerUser.findByIdAndUpdate(id,{$set:{status:updateStatus}}).exec(updateManPower);
-    function updateManPower(err,doc){
-      if(err){
-        failed_ids.push(id);
-        return cb(); 
-      }
-      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus}}).exec(updateUser);
-
-      function updateUser(err,doc){
-        if(err || !doc){
-          failed_ids.push(id);
-          return cb();
-        }
-        successIds.push(id);
-        return cb();
-      }
-    }
-  }
-}
 
 
 

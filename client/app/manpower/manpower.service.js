@@ -18,7 +18,6 @@
     manpowerService.createManpower = createManpower;
     manpowerService.updateManpower = updateManpower;
     manpowerService.getStatusWiseCount = getStatusWiseCount;
-    manpowerService.bulkUpdate = bulkUpdate;
 
 
     function getCatSubCatOnFilter(filter) {
@@ -131,16 +130,6 @@
           throw err;
         });
     };
-
-    function bulkUpdate(body){
-      return $http.put(path + "/bulkupdate", body)
-        .then(function(res) {
-          return res;
-        })
-        .catch(function(err) {
-          throw err;
-        });
-    }
 
     /*function validateSignup(data){
           return $http.post(path + '/validatesignup', data)
