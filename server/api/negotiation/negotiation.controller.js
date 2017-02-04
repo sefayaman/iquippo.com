@@ -108,10 +108,10 @@ var RENT_REQUEST_FIELD_MAP = {
                               'Seller Contact Number' : 'product.seller.mobile',
                               'Rent Information – Hours' : 'product.rent.rateHours.rentAmountH',
                               'Rent Information – Days' : 'product.rent.rateDays.rentAmountD',
-                              'Rent Information – Months' : 'product.rent.rateDays.rentAmountM',
+                              'Rent Information – Months' : 'product.rent.rateMonths.rentAmountM',
                               'Security Deposit – Hours' : 'product.rent.rateHours.seqDepositH',
-                              'Security Deposit – Days' : 'product.rent.rateHours.seqDepositD',
-                              'Security Deposit – Months' : 'product.rent.rateHours.seqDepositM',
+                              'Security Deposit – Days' : 'product.rent.rateDays.seqDepositD',
+                              'Security Deposit – Months' : 'product.rent.rateMonths.seqDepositM',
                               'Date of Request' : 'createdAt'
                             };
 exports.exportData = function(req,res){

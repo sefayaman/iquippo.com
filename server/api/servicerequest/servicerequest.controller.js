@@ -80,7 +80,7 @@ var EASY_FINANCE_FIELD_MAP = {
                               'Location of Asset' : 'product.city',
                               'Manufacturing Year' :'product.mfgYear',
                               'Amount to be Financed' : 'request.financeInfo.assetCost',
-                              'Indicative Rate' : 'request.financeInfo.financeAmount',
+                              'Indicative Rate' : 'request.financeInfo.indicativeRate',
                               'Tenure(in months)' : 'request.financeInfo.periodInMonths',
                               'Financing Company' : 'request.financeInfo.finAgency',
                               'Comments' : 'request.message',
