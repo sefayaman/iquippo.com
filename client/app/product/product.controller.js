@@ -207,59 +207,28 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           item.isEdit = true;
           if(item.catImgType){
             switch(item.catImgType){
-             case 'gA':
-
-                /*$scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};*/ 
+             case 'gA': 
                 $scope.imagesGeneralApp[$scope.imagesGeneralApp.length]= item;
-               /* if(item.isPrimary)
-                  $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].isPrimary = true;
-                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].catImgType = item.catImgType;
-                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'eP' :
-                /*$scope.imagesEngine[$scope.imagesEngine.length] = {}; */
                 $scope.imagesEngine[$scope.imagesEngine.length] = item; 
-                /*if(item.isPrimary)
-                  $scope.imagesEngine[$scope.imagesEngine.length-1].isPrimary = true;
-                $scope.imagesEngine[$scope.imagesEngine.length-1].catImgType = item.catImgType;
-                item.name=item.src;*/
                 deletedIndex.push(index);   
              break;
              case 'hP':
-                /*$scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};*/ 
                 $scope.imagesHydraulic[$scope.imagesHydraulic.length]=item;
-                /*if(item.isPrimary)
-                  $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].isPrimary = true;
-                $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].catImgType = item.catImgType;
-                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'cP':
-                /*$scope.imagesCabin[$scope.imagesCabin.length] = {}; */                 
                 $scope.imagesCabin[$scope.imagesCabin.length]= item;
-                /*if(item.isPrimary)
-                  $scope.imagesCabin[$scope.imagesCabin.length-1].isPrimary = true;
-                $scope.imagesCabin[$scope.imagesCabin.length-1].catImgType = item.catImgType;
-                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'uC':
-                /*$scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]  = {};*/
                 $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]= item;
-                /*if(item.isPrimary)
-                  $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].isPrimary = true;
-                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].catImgType = item.catImgType;
-                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'oP':
-                /*$scope.imagesOther[$scope.imagesOther.length] = {};*/
                 $scope.imagesOther[$scope.imagesOther.length] = item;
-                /*if(item.isPrimary)
-                  $scope.imagesOther[$scope.imagesOther.length-1].isPrimary = true;
-                $scope.imagesOther[$scope.imagesOther.length-1].catImgType = item.catImgType;
-                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
             }
@@ -1770,39 +1739,53 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       function increaseElement(type){
         switch(type){
           case 'NOCAT':
-            $scope.images.length++;
-            $scope.images[$scope.images.length-1] = {};
+            $scope.images[$scope.images.length] = {};
           break;
           case 'GA':
-            $scope.imagesGeneralApp.length++;
-            $scope.imagesGeneralApp[$scope.imagesGeneralApp.length -1] = {};
+            $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
           break;
           case 'ENGINE':
-            $scope.imagesEngine.length++;
-            $scope.imagesEngine[$scope.imagesEngine.length -1] = {};
+            $scope.imagesEngine[$scope.imagesEngine.length] = {};
           break;
           case 'HYDRAULIC':
-            $scope.imagesHydraulic.length++;
-            $scope.imagesHydraulic[$scope.imagesHydraulic.length -1] = {};
+            $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};
           break;
           case 'CABIN':
-            $scope.imagesCabin.length++;
-            $scope.imagesCabin[$scope.imagesCabin.length -1] = {};
+            $scope.imagesCabin[$scope.imagesCabin.length] = {};
           break;
           case 'UC':
-            $scope.imagesUnderCarrage.length++;
-            $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length -1] = {};
+            $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
           break;
           case 'OTHER':
-            $scope.imagesOther.length++;
-            $scope.imagesOther[$scope.imagesOther.length -1] = {};
+            $scope.imagesOther[$scope.imagesOther.length] = {};
           break;
         }
 
       }
 
       function prepareImgArr(){
-        var numberOfIteration  = 1 - $scope.images.length;
+        if($scope.images.length == 0)
+          $scope.images[0] = {isPrimary:true};
+        
+        if($scope.imagesGeneralApp.length == 0)
+          $scope.imagesGeneralApp[0] = {isPrimary:true};
+        
+        if($scope.imagesEngine.length == 0)
+          $scope.imagesEngine[0] = {isPrimary:true};
+        
+        if($scope.imagesHydraulic.length == 0)
+          $scope.imagesHydraulic[0] = {isPrimary:true};
+        
+        if($scope.imagesOther.length == 0)
+          $scope.imagesOther[0] = {isPrimary:true};
+        
+        if($scope.imagesCabin.length == 0)
+          $scope.imagesCabin[0] = {isPrimary:true};
+        
+        if($scope.imagesUnderCarrage.length == 0)
+          $scope.imagesUnderCarrage[0] = {isPrimary:true};
+        
+        /*var numberOfIteration  = 1 - $scope.images.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.images[$scope.images.length] = {};
         }
@@ -1838,7 +1821,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         numberOfIteration  = 1 - $scope.imagesUnderCarrage.length;
         for(var i = 0; i < numberOfIteration; i++){
           $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
-        }
+        }*/
       }
 
      // date picker
