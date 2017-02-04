@@ -201,63 +201,65 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         angular.copy($scope.product.images,$scope.images);
         dbImages=$scope.images;
         $scope.images.forEach(function(item,index){
-          if(item.isPrimary)
+          if(item.isPrimary){
             $scope.primaryIndex = index;
+          }
           item.isEdit = true;
           if(item.catImgType){
             switch(item.catImgType){
              case 'gA':
-                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {}; 
-                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].src = item.src;
-                if(item.isPrimary)
+
+                /*$scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};*/ 
+                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length]= item;
+               /* if(item.isPrimary)
                   $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].isPrimary = true;
                 $scope.imagesGeneralApp[$scope.imagesGeneralApp.length-1].catImgType = item.catImgType;
-                item.name=item.src;
+                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'eP' :
-                $scope.imagesEngine[$scope.imagesEngine.length] = {}; 
-                $scope.imagesEngine[$scope.imagesEngine.length-1].src = item.src; 
-                if(item.isPrimary)
+                /*$scope.imagesEngine[$scope.imagesEngine.length] = {}; */
+                $scope.imagesEngine[$scope.imagesEngine.length] = item; 
+                /*if(item.isPrimary)
                   $scope.imagesEngine[$scope.imagesEngine.length-1].isPrimary = true;
                 $scope.imagesEngine[$scope.imagesEngine.length-1].catImgType = item.catImgType;
-                item.name=item.src;
+                item.name=item.src;*/
                 deletedIndex.push(index);   
              break;
              case 'hP':
-                $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {}; 
-                $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].src = item.src;
-                if(item.isPrimary)
+                /*$scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};*/ 
+                $scope.imagesHydraulic[$scope.imagesHydraulic.length]=item;
+                /*if(item.isPrimary)
                   $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].isPrimary = true;
                 $scope.imagesHydraulic[$scope.imagesHydraulic.length-1].catImgType = item.catImgType;
-                item.name=item.src;
+                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'cP':
-                $scope.imagesCabin[$scope.imagesCabin.length] = {};                  
-                $scope.imagesCabin[$scope.imagesCabin.length-1].src = item.src;
-                if(item.isPrimary)
+                /*$scope.imagesCabin[$scope.imagesCabin.length] = {}; */                 
+                $scope.imagesCabin[$scope.imagesCabin.length]= item;
+                /*if(item.isPrimary)
                   $scope.imagesCabin[$scope.imagesCabin.length-1].isPrimary = true;
                 $scope.imagesCabin[$scope.imagesCabin.length-1].catImgType = item.catImgType;
-                item.name=item.src;
+                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'uC':
-                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]  = {};
-                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].src = item.src;
-                if(item.isPrimary)
+                /*$scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]  = {};*/
+                $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]= item;
+                /*if(item.isPrimary)
                   $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].isPrimary = true;
                 $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length-1].catImgType = item.catImgType;
-                item.name=item.src;
+                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
              case 'oP':
-                $scope.imagesOther[$scope.imagesOther.length] = {};
-                $scope.imagesOther[$scope.imagesOther.length-1].src = item.src;
-                if(item.isPrimary)
+                /*$scope.imagesOther[$scope.imagesOther.length] = {};*/
+                $scope.imagesOther[$scope.imagesOther.length] = item;
+                /*if(item.isPrimary)
                   $scope.imagesOther[$scope.imagesOther.length-1].isPrimary = true;
                 $scope.imagesOther[$scope.imagesOther.length-1].catImgType = item.catImgType;
-                item.name=item.src;
+                item.name=item.src;*/
                 deletedIndex.push(index);
              break;
             }
@@ -392,6 +394,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {            
+     // console.log("hell yeah");
+
       if(args.files.length == 0)
           return;
         
@@ -409,9 +413,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             if(!$scope.product.assetId)
               $scope.product.assetId = $scope.assetDir;
             if(args.id){
+              console.log(args);
               switch(args.id){
                  case 'gA': 
                   if(args.type == "image"){
+                    /*$scope.imagesGeneralApp[parseInt(args.index)]={};*/
                     $scope.imagesGeneralApp[parseInt(args.index)].catImgType = args.id;
                     $scope.imagesGeneralApp[parseInt(args.index)].src = result.data.filename;
                     console.log($scope.imagesGeneralApp);
@@ -419,6 +425,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
                  break;
                  case 'eP' : 
                  if(args.type == "image"){
+              
                     $scope.imagesEngine[parseInt(args.index)].catImgType = args.id;
                     $scope.imagesEngine[parseInt(args.index)].src = result.data.filename;    
                  }
@@ -1602,7 +1609,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
 
  function deleteImage(idx,imageArr){
-    $scope[imageArr][idx] = {};
+    //$scope[imageArr][idx] = {};
+      $scope[imageArr].splice(idx,1);
     $scope[imageArr].forEach(function(item,index,arr){
       if(item.isPrimary)
           $scope.primaryIndex = index;
@@ -1614,6 +1622,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
    function deleteImg(idx,type){
        switch(type){
           case 'NOCAT':
+          console.log($scope.images);
             deleteImage(idx,'images');
           break;
           case 'GA':
