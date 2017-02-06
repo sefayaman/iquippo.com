@@ -193,6 +193,9 @@ function onGroupChange(group){
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
+       
+       console.log(filter);
+
       productSvc.getProductOnFilter(filter)
       .then(function(result){
           $scope.searching = false;
@@ -349,7 +352,7 @@ $scope.today = function() {
 
   function getStateHelp(val) {
       var serData = {};
-      serData['searchStr'] = $scope.equipmentSearchFilter.state;
+      serData['searchStr'] = $scope.equipmentSearchFilter.stateName;
      return LocationSvc.getStateHelp(serData)
       .then(function(result){
          return result.map(function(item){
@@ -361,7 +364,7 @@ $scope.today = function() {
 
     function getCityHelp(val) {
       var serData = {};
-      serData['searchStr'] = $scope.equipmentSearchFilter.city;
+      serData['searchStr'] = $scope.equipmentSearchFilter.cityName;
      return LocationSvc.getCityHelp(serData)
       .then(function(result){
          return result.map(function(item){
