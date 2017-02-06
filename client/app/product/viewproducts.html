@@ -254,13 +254,17 @@
 
                             <div class="pull-right">
                               <label class="btn btn-success text-ellips" ng-if="product.specialOffers">
-                               <i class="fa fa-tags"></i> Special Offers
+                               <i class="fa fa-tags"></i> <span class="hidden-xs">Special Offers</span>
                               </label>
                               <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">
-                               Add to Compare
+                                <img src="assets/images/campare-icon.png" class="visible-xs" width="15">  <span class="hidden-xs">Add to Compare</span>
                               </a>
-                              <a href="javascript:void(0);" ng-click="viewproductVm.addProductToCart(product)" class="btn btn-primary" >Add to Cart</a>
-                              <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning hvr-icon-wobble-horizontal" >View Details</a>
+                              <a href="javascript:void(0);" ng-click="viewproductVm.addProductToCart(product)" class="btn btn-primary" >
+                                <i class="fa fa-shopping-cart visible-xs"></i> <span class="hidden-xs">Add to Cart</span>
+                              </a>
+                              <a ng-href="/productdetail/{{product._id}}" class="btn btn-warning hvr-icon-wobble-horizontal" >
+                                <i class="fa fa-eye visible-xs"></i> <span class="hidden-xs">View Details</span>
+                              </a>
 
 
                             </div>

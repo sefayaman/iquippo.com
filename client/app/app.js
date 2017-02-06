@@ -8,6 +8,7 @@ angular.module("manpower",[]);
 angular.module("spare",[]);
 angular.module("report",[]);
 angular.module("negotiation",[]);
+angular.module("yard",[]);
 //Application module
 angular.module('sreizaoApp',[
   'ngCookies',
@@ -28,6 +29,7 @@ angular.module('sreizaoApp',[
   'negotiation',
   'angularjs-datetime-picker',
    'uiGmapgoogle-maps',
+   'yard',
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider

@@ -511,12 +511,12 @@
                   <form novalidate class="originalPrice" name="originalPrice">
                     <div class="sale-price form-group" ng-if="currentProduct.grossPrice">
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-xs-4 col-sm-4">
                             <strong>
                               Sale Price
                             </strong>
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-xs-8 col-sm-4">
                             <div class="price-request">
                               <div ng-if="currentProduct.grossPrice">
                                 <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
@@ -527,7 +527,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-sm-4">
+                          <div class="col-xs-12 col-sm-4">
                             <div>
                               <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" class="btn btn-warning btn-block">Buy Now</a>
                             </div>
