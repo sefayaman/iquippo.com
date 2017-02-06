@@ -9,18 +9,18 @@
             <div class="col-sm-10">
               <h3>User Management</h3>
             </div>
-            <div class="col-sm-1">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="openDialog('adduser')"><i class="fa fa-plus"></i> Add User</button></h3>
+            <div class="col-xs-6 col-sm-1">
+              <h3><button class="btn btn-success btn-md" ng-click="openDialog('adduser')"><i class="fa fa-plus"></i> Add User</button></h3>
             </div>
-            <div class="col-sm-1">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            <div class="col-xs-6 col-sm-1">
+              <h3><button class="btn btn-success btn-md" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
           </div>
 
           <hr>
           <p class="text-right">Showing : {{userManagementVm.totalItems}} Records</p>
           <div class="row">
-            <div class="col-sm-9">
+            <div class="col-sm-9 form-group">
               <div ng-if="isAdmin()" class="">            
                 <label>Channel Partners:</label>
                 <select ng-model="selectedUser" ng-change="userManagementVm.onUserChange(selectedUser)" ng-options="user as (user.fname+ ' '+ user.lname +' ('+user.mobile+')') for user in userManagementVm.getUsersOnRole track by user._id" >

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-conroller="AdminHeaderCtrl">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -23,7 +23,7 @@
             </li>
         </ul>
         <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">              
+        <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">              
             <div class="side-nav scrollbar" id="style-2">
                 <ul class="nav navbar-nav force-overflow">                
                     <!-- <li ng-if="isAdmin()">
@@ -36,6 +36,10 @@
                     <li >
                         <a href="/sparelisting"><i class="fa fa-list"></i>    
                             Spare Listing</a>
+                    </li>
+                    <li >
+                        <a href="/yardlisting" ng-show="isLoggedIn()"><i class="fa fa-list"></i>    
+                            Yard Listing</a>
                     </li>
                     <li>
                         <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
