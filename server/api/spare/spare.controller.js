@@ -14,6 +14,8 @@ var Group = require('./../group/group.model');
 var Category = require('./../category/category.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
+var APIError = require('../../components/_error');
+var moment = require('moment');
 
 //var PaymentTransaction = require('./../payment/payment.model');
 //var appNotificationCtrl = require('./../appnotification/appnotification.controller');
@@ -308,6 +310,51 @@ exports.create = function(req, res) {
     } 
   });
 };
+
+exports.exportXLSX = function(req,res,next){
+  var query = null;
+  //var options = req.query || {};
+  var filters = {};
+  var sort = {
+    '_id': -1
+  };
+ 
+  query = Spare.find(filters);
+  query = query.sort(sort);
+  query.exec(fetchData);
+
+  function fetchData(err,results){
+    if(err || !results)
+      return next(err || new APIError(500,'Error while fethcing records...Please try after some time...'));
+
+    var xlsxData = [];
+    var json = {};
+    var arr =[];
+    var headers = ['Part No','Part Name','Manufacturer','Categories','Listed By','Listed Date','Price (₹)'];
+
+    results.forEach(function(x){
+      json = {};
+      arr = [];
+      arr.push(
+          _.get(x,'partNo',''),
+          _.get(x,'name',''),
+          _.get(x,'manufacturers.name',''),
+          _.get(x,'spareDetails[0].category.name',''),
+          _.get(x,'seller.fname','') + ' ' + _.get(x,'seller.lname',''),
+          moment(_.get(x,'spareStatuses[0].createdAt','')).format('MM/DD/YYYY'),
+          _.get(x,'grossPrice','')
+        );
+
+      for(var i = 0; i< headers.length;i++){
+        json[headers[i]] = arr[i];
+      }
+
+      xlsxData.push(json);
+    })
+
+    res.xls('sparelist.xlsx', xlsxData);
+  }
+}
 
 function checkAndCopyImage(req,res,cb){
   
