@@ -30,7 +30,9 @@ router.post('/city', controller.createCity);
 router.put('/city/:id', controller.updateCity);
 router.delete('/city/:id', controller.deleteCity);
 router.post('/city/search', controller.searchCity);
-router.post('/location/search', controller.searchLocation);
+router.post('/state/search', controller.searchState);
+router.post('/cities/search', controller.searchCities);
+router.post('/assetId/search',controller.searchAssetId);
 
 router.get('/subscribe', controller.getAllSubscriber);
 router.post('/subscribe', controller.createSubscribe);

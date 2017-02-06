@@ -35,7 +35,10 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
   vm.fireCommand = fireCommand;
-  vm.getLocationHelp = getLocationHelp;
+  vm.getStateHelp = getStateHelp;
+  vm.getCityHelp = getCityHelp;
+  vm.getAssetIdHelp = getAssetIdHelp;
+
   vm.sortBy = sortBy;
   //vm.updateSelection = updateSelection;
   vm.addProductToCart = addProductToCart;
@@ -344,12 +347,37 @@ $scope.today = function() {
       fireCommand();
   }
 
-  function getLocationHelp(val) {
+  function getStateHelp(val) {
       var serData = {};
-      serData['searchStr'] = $scope.equipmentSearchFilter.location;
-     return LocationSvc.getLocationHelp(serData)
+      serData['searchStr'] = $scope.equipmentSearchFilter.state;
+     return LocationSvc.getStateHelp(serData)
       .then(function(result){
          return result.map(function(item){
+              console.log(item);
+              return item.name;
+        });
+      });
+    };
+
+    function getCityHelp(val) {
+      var serData = {};
+      serData['searchStr'] = $scope.equipmentSearchFilter.city;
+     return LocationSvc.getCityHelp(serData)
+      .then(function(result){
+         return result.map(function(item){
+              console.log(item);
+              return item.name;
+        });
+      });
+    };
+
+    function getAssetIdHelp(val) {
+      var serData = {};
+      serData['searchStr'] = $scope.equipmentSearchFilter.assetId;
+     return LocationSvc.getAssetIdHelp(serData)
+      .then(function(result){
+         return result.map(function(item){
+              console.log(item);
               return item.name;
         });
       });
