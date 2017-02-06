@@ -364,7 +364,12 @@ $scope.today = function() {
 
     function getCityHelp(val) {
       var serData = {};
+      if($scope.equipmentSearchFilter.stateName){
+        serData['state']=$scope.equipmentSearchFilter.stateName;
+      }
       serData['searchStr'] = $scope.equipmentSearchFilter.cityName;
+
+      console.log(serData);
      return LocationSvc.getCityHelp(serData)
       .then(function(result){
          return result.map(function(item){

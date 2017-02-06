@@ -89,10 +89,7 @@ exports.unIncomingProduct = function(req,res){
 //search products
 exports.search = function(req, res) {
   var term = new RegExp(req.body.searchstr, 'i');
-  console.log(term);
-
-  console.log(req.body);
-
+  
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
@@ -161,6 +158,10 @@ exports.search = function(req, res) {
     arr[arr.length] = {city:{$regex:locRegEx}};
     arr[arr.length] = {state:{$regex:locRegEx}};
   }
+
+
+
+
 
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
