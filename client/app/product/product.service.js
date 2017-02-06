@@ -104,6 +104,7 @@
       };
 
       function getProductOnFilter(filter){
+        console.log(filter);
         return $http.post(path + "/search",filter)
           .then(function(res){
             if(filter.pagination)

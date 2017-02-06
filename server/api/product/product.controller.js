@@ -89,6 +89,10 @@ exports.unIncomingProduct = function(req,res){
 //search products
 exports.search = function(req, res) {
   var term = new RegExp(req.body.searchstr, 'i');
+  console.log(term);
+
+  console.log(req.body);
+
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
@@ -1008,7 +1012,7 @@ function excel_from_data(data, isAdmin) {
     ws[cell_ref] = cell;
 
     var serialNo = "";
-    if(product && product.serialNo) 
+    if(product && product.grossPrice) 
       serialNo = product.serialNo;
     else
       serialNo = "";
