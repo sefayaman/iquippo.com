@@ -1189,7 +1189,7 @@ exports.searchState = function(req,res){
 
 exports.searchCities = function(req,res){
   
-console.log(req.body);
+
 
   var filter = {};
   if(!req.body.searchStr)
@@ -1204,15 +1204,12 @@ console.log(req.body);
     filter['name'] = {$regex:term};
   }
 
-  console.log(filter);
+ 
 
   var cityQry = City.find(filter);
 
        cityQry.exec(function (err, ctArr) {
 	    if(err) { return handleError(res, err); }
-         
-         console.log(ctArr);
-
 	    return res.status(200).json(ctArr);
    })
 }

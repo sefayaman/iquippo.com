@@ -193,8 +193,6 @@ function onGroupChange(group){
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
-       
-       console.log(filter);
 
       productSvc.getProductOnFilter(filter)
       .then(function(result){
@@ -356,7 +354,7 @@ $scope.today = function() {
      return LocationSvc.getStateHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              console.log(item);
+              
               return item.name;
         });
       });
@@ -368,12 +366,10 @@ $scope.today = function() {
         serData['state']=$scope.equipmentSearchFilter.stateName;
       }
       serData['searchStr'] = $scope.equipmentSearchFilter.cityName;
-
-      console.log(serData);
      return LocationSvc.getCityHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              console.log(item);
+              
               return item.name;
         });
       });
@@ -385,7 +381,7 @@ $scope.today = function() {
      return LocationSvc.getAssetIdHelp(serData)
       .then(function(result){
          return result.map(function(item){
-              console.log(item);
+              
               return item.name;
         });
       });
