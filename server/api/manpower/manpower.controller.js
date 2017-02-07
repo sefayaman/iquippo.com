@@ -8,10 +8,10 @@ var User = require('./../user/user.model');
 var Utility = require('./../../components/utility.js');
 var moment = require('moment');
 var async = require('async');
+var validator = require('validator');
 
 // Get list of services
 exports.getAll = function(req, res, next) {
-  debugger;
   var filter = {};
   filter['deleted'] = false;
   ManpowerUser.find(filter, function(err, users) {
@@ -55,6 +55,41 @@ exports.renderXlsx = function(req, res, next) {
 
   });
 };
+
+exports.delete = function(req,res,next){
+  var id = req.params && req.params.id;
+  if(!id){
+    return res.send(404).json({res:'No id sent for delete'});
+  }
+
+  if(!validator.isMongoId(id))
+    return res.send(400).json({res:'Invalid mongo id'});
+
+  var updateData = {
+    deleted : true,
+    status:false
+  }
+
+  ManpowerUser.findByIdAndUpdate(id,{$set:updateData}).exec(updateManPower);
+    function updateManPower(err,doc){
+      if(err){
+        if(err || !doc){
+          return res.send(500).json({res:'Unable to update...Please try again after some time'});
+        }   
+      }
+    User.findByIdAndUpdate(doc.user.userId,{$set:{status:{isManpower : false}}}).exec(updateUser);
+
+    function updateUser(err,doc){
+      if(err || !doc){
+        return res.send(500).json({res:'Unable to update...Please try again after some time'});
+      }
+
+      return res.json({res:'Deleted Successfully...'});
+    }
+  }
+
+
+}
 
 
 // Get a single services
