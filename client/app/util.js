@@ -173,7 +173,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
     function getLocationHelp(locationSearchText) {
       var serData = {};
       serData['searchStr'] = locationSearchText;
-     return LocationSvc.getLocationHelp(serData)
+     return LocationSvc.getStateHelp(serData)
       .then(function(result){
          return result.map(function(item){
              return item.name;
