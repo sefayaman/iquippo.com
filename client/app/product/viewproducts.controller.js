@@ -194,6 +194,9 @@ function onGroupChange(group){
       filter['sort'] = {featured:-1};
       $scope.searching = true;
 
+      if($scope.equipmentSearchFilter && ($scope.equipmentSearchFilter.stateName || $scope.equipmentSearchFilter.cityName))
+       delete filter.location;
+
       productSvc.getProductOnFilter(filter)
       .then(function(result){
           $scope.searching = false;
