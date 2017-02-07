@@ -107,14 +107,14 @@
                        </div>
                        <div class="panel-body">
                           <div class="row">
-                            <div class="form-group col-sm-5">Asset Id</div>
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-xs-6 col-sm-5">Asset Id</div>
+                            <div class="form-group col-xs-6  col-sm-4">
                             <span ng-if="product.assetId">{{product.assetId}}</span>
                             <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
                           </div>
                           <div class="row">
-                            <div class="form-group col-sm-5">List for Auction</div>
-                            <div class="form-group col-sm-7">
+                            <div class="form-group col-xs-6  col-sm-5">List for Auction</div>
+                            <div class="form-group col-xs-6  col-sm-7">
                               <input type="checkbox" ng-value="product.auctionListing" ng-model="product.auctionListing">
                             </div>
                             
@@ -821,10 +821,10 @@
                             </div>
                           </div>
                           <div class="row" ng-if="product.seller.mobile">
-                            <div class="form-group col-xs-4 col-sm-5">Contact Number</div>
-                            <div class="form-group col-xs-4 col-sm-3">
+                            <div class="form-group col-xs-6 col-sm-5">Contact Number</div>
+                            <div class="form-group col-xs-6 col-sm-3">
                              {{product.seller.mobile}}</div>
-                             <div class="form-group col-xs-4 col-sm-3">
+                             <div class="form-group col-xs-12 col-sm-3">
                              <input type="checkbox" id="" name="" ng-model="product.dispSellerContact" ng-true-value="'true'"> to be displayed in front-end
                             </div>
                           </div>

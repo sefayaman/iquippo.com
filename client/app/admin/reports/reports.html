@@ -2,10 +2,10 @@
   <div id="page-wrapper">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <h3>Reports</h3>
         </div>
-        <div class="col-sm-6 text-right">
+        <div class="col-xs-6 col-sm-6 text-right">
             <h3><button class="btn btn-success btn-md" ng-click="reportsVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
         </div>     
       </div>
@@ -13,8 +13,8 @@
       <p class="text-right">Showing : {{reportsVm.totalItems}} Records</p>
      
         <div class="row"> 
-          <div class="col-sm-9">
-            <div class="">
+          <div class="col-sm-9 form-group">
+            <div class="filter-select">
               <select ng-model="reportsVm.tabValue" ng-change="reportsVm.selectReportData(reportsVm.tabValue)">
                 <option value="callback">Call Back</option>
                 <option value="instantQuote">Get Instant Quote</option>
@@ -32,7 +32,7 @@
               </select>
             </div>
           </div>                  
-          <div class="col-sm-3 pull-right">
+          <div class="col-xs-12 col-sm-3 pull-right">
             <div class="tablesearch text-right form-group">
                Search: <input type="text" placeholder="Search..." ng-model="reportsVm.searchStr" ng-change="reportsVm.fireCommand(true)" ng-model-options="{debounce:500}">
             </div>
