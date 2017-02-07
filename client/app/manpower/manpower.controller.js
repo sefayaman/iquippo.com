@@ -467,6 +467,24 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     vm.fireCommand = fireCommand;
     vm.updateManpowerUser = updateManpowerUser;
     vm.exportExcel=exportExcel;
+    vm.deleteManPower = deleteManPower;
+
+
+    function deleteManPower(manpower){
+      var id = manpower._id;
+      ManpowerSvc.deleteManPower(id).then(function(result){
+        $rootScope.loading = false;
+        //getAllUsers();
+        Modal.alert(result.res,true);
+        fireCommand(true);
+      })
+      .catch(function(err){
+        console.log("error in manpower user update", err);
+      });
+    }
+
+
+
     var dataToSend = {};
     function init(){
       dataToSend.pagination = true;
