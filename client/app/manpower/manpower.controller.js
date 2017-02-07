@@ -469,9 +469,26 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     vm.fireCommand = fireCommand;
     vm.updateManpowerUser = updateManpowerUser;
     vm.exportExcel=exportExcel;
+
     vm.updateSelection = updateSelection;
     vm.bulkUpdate = bulkUpdate;
     var selectedIds =[];
+    vm.deleteManPower = deleteManPower;
+
+
+    function deleteManPower(manpower){
+      var id = manpower._id;
+      ManpowerSvc.deleteManPower(id).then(function(result){
+        $rootScope.loading = false;
+        //getAllUsers();
+        Modal.alert(result.res,true);
+        fireCommand(true);
+      })
+      .catch(function(err){
+        console.log("error in manpower user update", err);
+      });
+    }
+
     var dataToSend = {};
     
     function init(){
@@ -483,6 +500,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
 
     function updateManpowerUser(user){
       $rootScope.loading = true;
+      user.updatedBy = {userId : Auth.getCurrentUser()._id};
       ManpowerSvc.updateManpower(user).then(function(result){
         $rootScope.loading = false;
         //getAllUsers();
@@ -502,6 +520,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       var body = {};
       body.ids = selectedIds;
       body.status = action === 'active' ? true : false;
+      body.updatedBy = {userId : Auth.getCurrentUser()._id};
 
       ManpowerSvc.bulkUpdate(body).then(function(result){
         $rootScope.loading = false;

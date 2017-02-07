@@ -19,7 +19,18 @@
     manpowerService.updateManpower = updateManpower;
     manpowerService.getStatusWiseCount = getStatusWiseCount;
     manpowerService.bulkUpdate = bulkUpdate;
+    manpowerService.deleteManPower = deleteManPower;
 
+
+    function deleteManPower(id){
+      return $http.delete(path + "/"+id)
+        .then(function(res) {
+          return res.data;
+        })
+        .catch(function(res) {
+          throw res;
+        })
+    }
 
     function getCatSubCatOnFilter(filter) {
       return $http.post(path + "/getequipment", filter)
