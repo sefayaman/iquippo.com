@@ -23,7 +23,11 @@ var ManpowerUserSchema = new Schema({
   certificates: String,
   notes: String,
   createdAt: {type:Date,default:Date.now},
-  updatedAt: {type:Date,default:Date.now}
+  updatedAt: {type:Date,default:Date.now},
+  createdBy : {},
+  updatedBy : {},
+  activatedBy : {}
 });
+
 
 module.exports = mongoose.model('ManpowerUser', ManpowerUserSchema);

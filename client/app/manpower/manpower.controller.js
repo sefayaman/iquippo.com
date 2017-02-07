@@ -500,6 +500,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
 
     function updateManpowerUser(user){
       $rootScope.loading = true;
+      user.updatedBy = {userId : Auth.getCurrentUser()._id};
       ManpowerSvc.updateManpower(user).then(function(result){
         $rootScope.loading = false;
         //getAllUsers();
@@ -519,6 +520,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       var body = {};
       body.ids = selectedIds;
       body.status = action === 'active' ? true : false;
+      body.updatedBy = {userId : Auth.getCurrentUser()._id};
 
       ManpowerSvc.bulkUpdate(body).then(function(result){
         $rootScope.loading = false;

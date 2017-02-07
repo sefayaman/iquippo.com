@@ -198,9 +198,45 @@ exports.bulkUpdate = function(req,res){
     return res.status(404).json({res:'Nothing to update'}); 
 
   var updateStatus = req.body.status || false;
+  var updatedBy = req.body && req.body.updatedBy;
+  var totalRecords = updateIds.length;
+  
   var successIds = [],
-    failed_ids = [];
-  async.eachLimit(updateIds,10,intialize,finalize);
+    failed_ids = [],
+    statusMap = {};
+  
+  var searchFilter = {
+    '_id' : {
+      '$in' : updateIds
+    },
+    deleted : false
+  };
+
+  ManpowerUser.find(searchFilter,function(err,docs){
+    if(err || !docs){
+      console.log(err);
+      return res.status(500).json({res:'Error while fetching records...Please try again'});
+    }
+
+    if(!docs.length)
+      return res.status(404).json({res:'No Records found to update'});
+
+    docs.forEach(function(x){
+      statusMap[x._id] = x.status;
+    })
+
+    updateIds = updateIds.filter(function(x){
+      if(statusMap[x] !== updateStatus)
+        return x;
+    })
+
+    if(!updateIds.length)
+      return res.status(200).json({res:'Nothing to update.Updated Status is same'}); 
+
+
+    async.eachLimit(updateIds,10,intialize,finalize); 
+  })
+
 
   function finalize(err){
     if(err){
@@ -208,24 +244,25 @@ exports.bulkUpdate = function(req,res){
       return res.status(500).json({res:'Error while updating...Please try again'});
     }
 
-    res.json({res:successIds.length + ' records updated from ' + updateIds.length + ' records'});
+    res.json({res:successIds.length + ' records updated from ' + totalRecords + ' records'});
   }
 
   function intialize(id,cb){
-    ManpowerUser.findByIdAndUpdate(id,{$set:{status:updateStatus}}).exec(updateManPower);
+    ManpowerUser.findByIdAndUpdate(id,{$set:{status:updateStatus,updatedBy : updatedBy,updatedAt:new Date()}}).exec(updateManPower);
     function updateManPower(err,doc){
-      if(err){
+      if(err || !doc){
         failed_ids.push(id);
         return cb(); 
       }
-      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus}}).exec(updateUser);
 
-      function updateUser(err,doc){
-        if(err || !doc){
+      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus,updatedAt : new Date()}}).exec(updateUser);
+
+      function updateUser(err,userDoc){
+        if(err || !userDoc){
           failed_ids.push(id);
           return cb();
         }
-        successIds.push(id);
+      
         return cb();
       }
     }
