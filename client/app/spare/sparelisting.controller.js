@@ -2,7 +2,7 @@
 'use strict';
 angular.module('spare').controller('SpareListingCtrl', SpareListingCtrl);
 
-function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams) {
+function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classifiedSvc, Modal, DTOptionsBuilder, $uibModal, $state, Auth, notificationSvc,uploadSvc,$timeout,$stateParams,$window) {
   var vm  = this;
 
   //pagination variables
@@ -29,6 +29,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
   vm.spareLists = [];
   //vm.orgspareLists = [];
   vm.spareSearchFilter = {};
+  vm.exportExcel = exportExcel;
   var dataToSend = {};
   
   function getCategories(dataObj){
@@ -97,6 +98,17 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
       }
     }
     loadSpares(filter);
+  }
+
+  function openWindow(url){
+    $window.open(url);
+  }
+
+  function exportExcel(){
+    var filters = {};
+    filters.limit = 500;
+
+    openWindow(spareSvc.exportExcel(filters));
   }
 
   function showFilter(type)

@@ -2,7 +2,7 @@
  'use strict';
  angular.module("spare").factory("spareSvc",spareSvc);
 
- function spareSvc($http,$rootScope,$q,Auth,BuyContactSvc,$state,Modal){
+ function spareSvc($http,$rootScope,$q,Auth,BuyContactSvc,$state,Modal,$httpParamSerializer){
       var spareService = {};
       var path = '/api/spare';
       
@@ -22,6 +22,7 @@
       spareService.getFilter = getFilter;
       spareService.setFilter = setFilter;
       spareService.buyNow = buyNow;
+      spareService.exportExcel = exportExcel;
       
       function getSpareOnId(id,fromServer){
 
@@ -68,6 +69,20 @@
                 .catch(function(res){
                   throw res;
                 })
+      }
+
+      function exportExcel(filter){
+        var url = path + '/fetch/export.xlsx';
+        var qs;
+
+        if(Object.keys(filter).length){
+          qs = $httpParamSerializer(filter);
+        }
+
+        if(qs)
+          url += '?' + qs;
+
+        return url;
       }
 
       function addSpare(spareData){
