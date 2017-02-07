@@ -107,14 +107,14 @@
                        </div>
                        <div class="panel-body">
                           <div class="row">
-                            <div class="form-group col-sm-5">Asset Id</div>
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-xs-6 col-sm-5">Asset Id</div>
+                            <div class="form-group col-xs-6  col-sm-4">
                             <span ng-if="product.assetId">{{product.assetId}}</span>
                             <span ng-if="!product.assetId">{{product.assetDir}}</span></div>
                           </div>
                           <div class="row">
-                            <div class="form-group col-sm-5">List for Auction</div>
-                            <div class="form-group col-sm-7">
+                            <div class="form-group col-xs-6  col-sm-5">List for Auction</div>
+                            <div class="form-group col-xs-6  col-sm-7">
                               <input type="checkbox" ng-value="product.auctionListing" ng-model="product.auctionListing">
                             </div>
                             
@@ -479,7 +479,7 @@
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                 <div class="col-sm-3">
+                                 <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('NOCAT')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div> 
@@ -512,7 +512,7 @@
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadioGA" value="{{$index}}" ng-click="makePrimary($index,'GA')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('GA')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
@@ -547,7 +547,7 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioEP" value="{{$index}}" ng-click="makePrimary($index,
                                    'EP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('ENGINE')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
@@ -581,7 +581,7 @@
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,'HP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('HYDRAULIC')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
@@ -615,7 +615,7 @@
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,'CP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('CABIN')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
@@ -650,7 +650,7 @@
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,'UC')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('UC')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
@@ -685,7 +685,7 @@
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,'OP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 clearfix">
                                   <button class="btn btn-block" ng-click="increaseElement('OTHER')" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
@@ -805,34 +805,34 @@
                         </div>
                         <div class="panel-body">
                           <div class="row">
-                            <div class="form-group col-xs-5">To be shown under Product Information</div>
-                            <div class="form-group col-xs-1">
+                            <div class="form-group col-xs-12 col-sm-5">To be shown under Product Information</div>
+                            <div class="form-group col-xs-6 col-sm-1">
                              <input type="radio" id="" name="" ng-model="product.dispSellerInfo" value="yes"> Yes
                             </div>
-                            <div class="form-group col-xs-3">
+                            <div class="form-group col-xs-6 col-sm-1">
                              <input type="radio" ng-model="product.dispSellerInfo" value="no"> No
                             </div>
                           </div>
                           
                           <div class="row">
-                            <div class="form-group col-xs-5">Name</div>
-                            <div class="form-group col-xs-7">
+                            <div class="form-group col-xs-6 col-sm-5">Name</div>
+                            <div class="form-group col-xs-6 col-sm-7">
                              {{product.seller.fname + ' ' +product.seller.mname + ' ' + product.seller.lname}}
                             </div>
                           </div>
                           <div class="row" ng-if="product.seller.mobile">
-                            <div class="form-group col-xs-5">Contact Number</div>
-                            <div class="form-group col-xs-1">
+                            <div class="form-group col-xs-6 col-sm-5">Contact Number</div>
+                            <div class="form-group col-xs-6 col-sm-3">
                              {{product.seller.mobile}}</div>
-                             <div class="form-group col-xs-3">
+                             <div class="form-group col-xs-12 col-sm-3">
                              <input type="checkbox" id="" name="" ng-model="product.dispSellerContact" ng-true-value="'true'"> to be displayed in front-end
                             </div>
                           </div>
                           <div class="row" ng-if="isAdmin()">
-                            <div class="form-group col-xs-5">Alternate Contact Number</div>
-                            <div class="form-group col-xs-2">
+                            <div class="form-group col-sm-5">Alternate Contact Number</div>
+                            <div class="form-group col-sm-2">
                              <input type="text" id="" class="form-control" name="" ng-model="product.alternateMobile" ng-true-value="true" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top"></div>
-                             <div class="form-group col-xs-3">
+                             <div class="form-group col-sm-3">
                              <input type="checkbox" id="" name="" ng-model="product.dispSellerAlternateContact" ng-true-value="'true'"> to be displayed in front-end
                             </div>
                           </div>
