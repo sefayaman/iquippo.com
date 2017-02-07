@@ -17,6 +17,7 @@
       <div class="row"> 
         <div class="col-sm-9">
           Showing : {{manpowerListingVm.totalItems}} Records
+          <button class="btn btn-primary btn-xs" ng-show="getCurrentUser().role == 'admin'" ng-click="manpowerListingVm.bulkUpdate('active')" >Activate</button>
         </div>                   
           <div class="col-sm-3 pull-right">
             <div class="tablesearch text-right form-group">
@@ -27,6 +28,7 @@
       <div class="table-responsive">                
         <table class="table table-bordred table-striped">
           <thead>
+            <th ng-show="getCurrentUser().role == 'admin'">Select</th>
             <th>Name</th>
             <th>Mobile No.</th>
             <th>Email Id</th>
@@ -37,6 +39,7 @@
           <tbody>
 
             <tr ng-repeat="manpower in manpowerListingVm.allManpowerList" >
+              <td ng-show="getCurrentUser().role == 'admin'"><input type="checkbox" ng-click="manpowerListingVm.updateSelection($event,manpower._id)"/></td>
               <td>{{manpower.user.fname}} {{manpower.user.lname}}</td>
               <td>{{manpower.user.mobile}}</td>
               <td>{{manpower.user.email}}</td>
