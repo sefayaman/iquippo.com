@@ -474,6 +474,15 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     vm.bulkUpdate = bulkUpdate;
     var selectedIds =[];
     vm.deleteManPower = deleteManPower;
+    vm.searchType = '';
+    vm.showFilter = showFilter;
+    vm.coulmnSearchStr = '';
+
+    function showFilter(type)
+    {
+      vm.coulmnSearchStr = "";
+      fireCommand(true);
+    }
 
 
     function deleteManPower(manpower){
@@ -553,6 +562,8 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
         filter = filterObj;
       if(vm.searchStr)
         filter['searchstr'] = vm.searchStr;
+      if(vm.coulmnSearchStr)
+        filter[vm.searchType] = vm.coulmnSearchStr;
       
       getAllUsers(filter);
     }

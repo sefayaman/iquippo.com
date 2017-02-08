@@ -18,6 +18,12 @@
         <div class="col-sm-9">
           Showing : {{manpowerListingVm.totalItems}} Records
           <button class="btn btn-primary btn-xs" ng-show="getCurrentUser().role == 'admin'" ng-click="manpowerListingVm.bulkUpdate('active')" >Activate</button>
+          
+          <select ng-model="manpowerListingVm.searchType" ng-change="manpowerListingVm.showFilter(manpowerListingVm.searchType)">
+            <option value="">Column Filters </option>
+            <option value="location">Location</option>
+          </select>
+          <input type="text" ng-if="manpowerListingVm.searchType != ''" name="searchTxt" ng-model="manpowerListingVm.coulmnSearchStr" ng-change="manpowerListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..."/>
         </div>                   
           <div class="col-sm-3 pull-right">
             <div class="tablesearch text-right form-group">
