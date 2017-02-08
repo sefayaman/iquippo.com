@@ -20,6 +20,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.deleteState = deleteState;
       lServices.updateState = updateState;
       lServices.saveState = saveState;
+      lServices.getLocationHelp = getLocationHelp;
       lServices.getStateHelp = getStateHelp;
       lServices.getCityHelp = getCityHelp;
       lServices.getAssetIdHelp = getAssetIdHelp;
@@ -154,6 +155,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         .catch(function(err){
           throw err
         })
+    }
+
+    function getLocationHelp(data){
+      return $http.post(path + "/location/search",data)
+      .then (function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
     }
 
      function getStateHelp(data){
