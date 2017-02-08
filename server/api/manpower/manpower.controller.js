@@ -262,7 +262,8 @@ exports.bulkUpdate = function(req,res){
           failed_ids.push(id);
           return cb();
         }
-      
+        
+        successIds.push(id);
         return cb();
       }
     }
