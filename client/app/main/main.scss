@@ -540,7 +540,7 @@ footer .footer-icon li{margin-bottom:5px;}
 
 @media (max-width:767px){
 .navbar-nav {border-top:0; margin: 0 -15px;}
-.nav > li {position: relative;display: inline-block;}
+.nav > li {position: relative;display:block;}
 
 .navbar-inverse .navbar-nav li{box-shadow: 0px 1px 0px #ccc}
 .navbar-inverse .navbar-nav li a{top:0; padding: 10px; color: #fff !important;}
@@ -555,7 +555,7 @@ footer .footer-icon li{margin-bottom:5px;}
 
 .top-menu li{display:inline-block;line-height: 35px;padding: 0px;}
 
-.top-menu li a{font-size:18px;}
+.top-menu li a{font-size:18px; display: block;}
 .top-menu > .open > .dropdown-menu{left: -115px;}
 .top-menu > .open > .dropdown-menu li a{font-size: 14px;}
 .horizontal-crsl img{height: 200px;}
@@ -605,10 +605,11 @@ footer .nav{margin-bottom:15px;}
 
 /*view cart css*/
 .cart-item.table > tbody > tr > td {border-right:1px solid #FFF;border-top:1px solid #FFF;}
+.cart-item.table > tbody > tr > td:nth-child(3),.cart-item.table > tbody > tr > td:nth-child(4), .cart-item.table > tbody > tr > td:nth-child(5),.cart-item.table > tbody > tr > td:nth-child(6){width: 100%;}
 .cart-item tr th{display:none;}
 .cart-item.table-bordered>tbody>tr>td {border: 0;}
 .cart-item tr {border-bottom:1px solid #ccc;};
-.cart-item .products-img img{float: left;padding-bottom: 0;}
+.cart-item .products-img img{float: left;padding-bottom: 0; width: 80px; height:80px;}
 .cart-item tr td:nth-child(3){float: right;width: 25%;padding:0;}
 .cart-item tr td:nth-child(4){float: right;width: 75%;padding:0;}
 .cart-item tr td:nth-child(5){float: right;width: 25%;padding:0;}
@@ -636,6 +637,7 @@ footer .nav{margin-bottom:15px;}
 #jivo-iframe-container, #jivo_container, .jivo-iframe-container-bottom{display: none !important;}
 .nav-justified > li > a, .nav-tabs.nav-justified > li > a{margin-bottom: 0 !important;}
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover{margin: 0 !important;}
+#wrapper .asset-auction .nav-tabs > li, #wrapper .asset-auction .nav-tabs > li.active{width: 40%;}
 }
 
 @media (max-width:640px){
@@ -734,7 +736,6 @@ footer p{font-size:12px;}
 .product-gallery .modal-dialog .modal-body{height: 330px;}
  .product-gallery .carousel-inner{height: 330px;}
 .pagination {margin: 0 0px 0;}
-.cart-item.table > tbody > tr > td {font-size: 12px;}
 .logo{width: 285px;}
 .top-nav{float:right;margin:-50px 0;}
 .check{margin-left:20px;}

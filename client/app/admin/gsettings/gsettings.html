@@ -87,7 +87,7 @@
 			         	 <div class="form-group col-sm-4" ng-class="{'has-error': stateForm.stateName.$invalid && submitted}">
 			                <input id="stateName" name="stateName" ng-model="gsettingVm.state.name" type="text" class="form-control" placeholder="Enter State Name" required>
 			            </div>                           	
-			           	<div class="form-group col-sm-2 pull-right">
+			           	<div class="form-group col-xs-4 col-sm-2 pull-right">
 			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveState(stateForm)" ng-if="!gsettingVm.stateEdit">Save</button>
 			           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateState(stateForm)" ng-if="gsettingVm.stateEdit">Update</button>
 			           	</div>
@@ -223,21 +223,21 @@
 	    <!--Select Auction  -->
         <div ng-if="gsettingVm.tabValue == 'date'">
 
-        	<uib-tabset justified="true">
+        	<uib-tabset justified="true" class="asset-auction">
 				<uib-tab heading="Auction" select="gsettingVm.onActionTabClick()">
 					<!-- <form name="invMasterForm" novalidate class="invMasterForm"> -->
 					<p>Download the <a href="/download/templates/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
 						
-						<div class="row">
+						<div class="row form-group">
 							<div class="col-sm-8">
 								<h4>Auction</h4>
 							</div>							
-							<div class="col-sm-2">
+							<div class="col-xs-6 col-sm-2">
 								<button class="btn btn-success btn-block" ng-click="gsettingVm.addAuctionClicked()">
 									<i class="fa " class="fa" ng-class="{'fa-minus': !isCollapsed, 'fa-plus': isCollapsed}"></i> Add New						   
 								</button>
 							</div>
-							<div class="col-sm-2">
+							<div class="col-xs-6 col-sm-2">
 								<div class="btn btn-success btn-block">
 									<span class="fileinput-button">
 								   <i class="fa fa-file-excel-o"></i> Import Excel

@@ -6,8 +6,25 @@
             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
             
             <li><a href="javascript:void(0)" ng-click="openCart()" ng-class="{cart_item:cartCounter > 0}"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs">Cart </span></a></li>
-            <li>
-              <a href="javascript:void(0);" ng-click="redirectToProduct()"  class="hidden-sm hidden-md hidden-lg "><i class="fa fa-upload"></i><span class="hidden-xs">Upload Product</span></a>
+
+            <li class="hidden-sm hidden-md hidden-lg">
+              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span></a>
+            </li>
+
+            <li class="dropdown hidden-sm hidden-md hidden-lg">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-upload"></i></a>
+              <ul class="dropdown-menu">                  
+                  <li>
+                    <a href="" ng-click="redirectToSpare()()">
+                      <i class="fa fa-wrench"></i> Add Spare
+                    </a>
+                  </li>
+                  <li>
+                    <a href="" ng-click="redirectToProduct()">
+                      <i class="fa fa-truck"></i> Add Product
+                    </a>
+                  </li>
+              </ul>
             </li>
             <li>
               <a href="javascript:void(0);" ng-click="openDialog('classifiedad')"  class="hidden"><i class="fa fa-bullhorn" aria-hidden="true"></i><span class="hidden-xs">Place a Classified Ad</span></a>
