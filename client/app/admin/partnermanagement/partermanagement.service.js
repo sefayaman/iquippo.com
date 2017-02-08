@@ -9,6 +9,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
 	  var certifiedByIQuippoVendorList = [];
     var financeVendorList =[];
     var manpowerVendorList =[];
+    var auctionVendorList =[];
+    var dealerVendorList =[];
       var vendorService = {};
       var path = '/api/vendor';
       
@@ -81,6 +83,8 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
 			    certifiedByIQuippoVendorList = [];
           manpowerVendorList = [];
           financeVendorList = [];
+          auctionVendorList =[];
+          dealerVendorList =[];
       		return res.data;
       	})
       	.catch(function(err){
@@ -91,12 +95,14 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       function deleteVendor(vendor){
           return $http.delete(path + "/" + vendor._id)
           .then(function(res){
-          	 vendorCache = [];
-          	 shippingVendorList = [];
-      			 valuationVendorList = [];
-      			 certifiedByIQuippoVendorList = [];
-             manpowerVendorList = [];
-             financeVendorList = [];
+          	vendorCache = [];
+          	shippingVendorList = [];
+      			valuationVendorList = [];
+      			certifiedByIQuippoVendorList = [];
+            manpowerVendorList = [];
+            financeVendorList = [];
+            auctionVendorList =[];
+            dealerVendorList =[];
             return res.data.vendor + 1;
           })
           .catch(function(err){
@@ -107,13 +113,15 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       function updateVendor(vendor){
         return $http.put(path + "/" + vendor._id, vendor)
         .then(function(res){
-        	 vendorCache = [];
-          	 shippingVendorList = [];
-      			 valuationVendorList = [];
-      			 certifiedByIQuippoVendorList = [];
-             manpowerVendorList = [];
-             financeVendorList = [];
-          	return res.data;
+      	  vendorCache = [];
+        	shippingVendorList = [];
+    			valuationVendorList = [];
+    			certifiedByIQuippoVendorList = [];
+          manpowerVendorList = [];
+          financeVendorList = [];
+          auctionVendorList =[];
+          dealerVendorList =[];
+        	return res.data;
         })
         .catch(function(err){
           throw err;
@@ -147,17 +155,25 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
           else if(data[i].services[j] == 'Finance' && data[i].status){
             financeVendorList.push(vd);
           }
+          else if(data[i].services[j] == 'Auction' && data[i].status){
+            auctionVendorList.push(vd);
+          }
+          else if(data[i].services[j] == 'Dealer' && data[i].status){
+            dealerVendorList.push(vd);
+          }
         }
       }
   }
 
   function clearCache(){
-  	 vendorCache = [];
- 	 shippingVendorList = [];
-	 valuationVendorList = [];
-	 certifiedByIQuippoVendorList = [];
-   manpowerVendorList = [];
-   financeVendorList = [];
+  	vendorCache = [];
+ 	  shippingVendorList = [];
+	  valuationVendorList = [];
+	  certifiedByIQuippoVendorList = [];
+    manpowerVendorList = [];
+    financeVendorList = [];
+    auctionVendorList = [];
+    dealerVendorList = [];
   }
 
   function getShippingVendors(){
@@ -196,7 +212,12 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       case 'Finance':
         return financeVendorList;
       break
-
+      case 'Auction':
+        return auctionVendorList;
+      break;
+      case 'Dealer':
+        return dealerVendorList;
+      break
     }
   }
       return vendorService;
