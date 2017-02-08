@@ -857,7 +857,7 @@
                       <div class="col-xs-6 col-sm-offset-4 col-sm-4 form-group" ng-if="productQuote.certifiedByIQuippoQuote.scheduleC == 'yes'">  
                         <small>Pick Date</small>
                         <div class="input-group" ng-class="{'has-error': !productQuote.certifiedByIQuippoQuote.scheduleDate && !certifiedByIQuippoQuote.valid && inspectSubmitted}">
-                          <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" datetime-picker readonly date-only ng-name="scheduleDate" ng-value="" ng-required="true" date-format="MM/dd/yyyy" placeholder="dd/mm/yyyy" />
+                          <input type="text" class="form-control pick-width" ng-model="productQuote.certifiedByIQuippoQuote.scheduleDate" uib-datepicker-popup="{{format}}" ng-name="scheduleDate" ng-value="" is-open="popup2.opened" min-date="minDate" max-date="maxDate" datepicker-options="datepickerOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" placeholder="dd/mm/yyyy" />
                           <span class="input-group-addon">
                             <a href class="btn btn-default" ng-click="open2()"><i class="fa fa-calendar-o"></i></a>
                           </span>

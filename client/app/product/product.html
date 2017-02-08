@@ -480,8 +480,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                  <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('NOCAT')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn active btn-default btn-block" ng-click="increaseElement('NOCAT')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div> 
                             </div>
                             </div>
@@ -513,8 +513,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioGA" value="{{$index}}" ng-click="makePrimary($index,'GA')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('GA')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="active btn btn-default btn-block" ng-click="increaseElement('GA')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                               </div>
                             </div>
@@ -548,8 +548,8 @@
                                    'EP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('ENGINE')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="active btn btn-default btn-block" ng-click="increaseElement('ENGINE')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -582,8 +582,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,'HP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('HYDRAULIC')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="active btn btn-default btn-block" ng-click="increaseElement('HYDRAULIC')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -616,8 +616,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,'CP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('CABIN')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="active btn btn-default btn-block" ng-click="increaseElement('CABIN')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -651,8 +651,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,'UC')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('UC')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="active btn btn-default btn-block" ng-click="increaseElement('UC')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -686,8 +686,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,'OP')" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('OTHER')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="active btn btn-default btn-block" ng-click="increaseElement('OTHER')" ng-if="!$last">Add More</button>
+                                  <button class="active btn btn-default btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -705,8 +705,8 @@
                               <a class="btn btn-danger" href="javascript:void(0)" ng-if="link.uri" ng-click="playVideo($index)"><i class="fa fa-play"></i></a>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-2 pull-right ">
-                              <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                           <div class="row">
@@ -773,8 +773,8 @@
                             </div>
                             <div class="col-sm-5 col-md-5 form-group"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
                             <div class="col-sm-3 col-md-2 form-group">
-                              <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                           <div class="row">
@@ -852,8 +852,8 @@
                             <div class="col-sm-2 col-md-2 form-group"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo.serviceat" class="form-control" ng-model="serviceinfo.serviceAt"></div>
                             <div class="col-sm-2 col-md-3 form-group"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo.authServiceStation" class="form-control" ng-model="serviceinfo.authServiceStation"></div>
                             <div class="col-sm-3 col-md-2 form-group">
-                              <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                         </div>
@@ -912,8 +912,8 @@
                               <a href="{{uploadImagePrefix}}{{assetDir}}/{{miscDoc.name}}" target="_blank">{{miscDoc.name}}</a>
                             </div>
                             <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
-                              <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                         </div>
