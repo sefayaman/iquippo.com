@@ -904,12 +904,12 @@
               <h4>Technical Information</h4>
               <p>Download the <a href="/download/templates/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
             </div>
-            <div class="col-sm-1 padd-right">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
+            <div class="col-xs-12 col-sm-1 padd-left">
+              <h3><button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
             </div>
-            <div class="col-sm-2">
+            <div class="col-xs-12 col-sm-2 padd-left">
              	<h3>
-					<div class="btn btn-success btn-block btn-md pull-right">
+					<div class="btn btn-success btn-block btn-md">
 						<span class="fileinput-button">
 						  <i class="fa fa-file-excel-o"></i> Import Excel
 						  <input type="file" name="template_update" onchange="angular.element(this).scope().importTechInfoMaster(this.files,this)">
@@ -917,8 +917,8 @@
 					</div>
 				</h3>
 			</div>
-            <div class="col-sm-1">
-              <h3><button class="btn btn-success btn-md pull-right" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+            <div class="col-xs-12 col-sm-1 padd-left">
+              <h3><button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.exportProductTechInfoExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
         </div>
         <hr>
