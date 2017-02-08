@@ -40,6 +40,8 @@
             <th>Email Id</th>
             <th>Product</th>
             <th>Status</th>
+            <th>Added by</th>
+            <th>Last Modified By</th>
             <th width="25%">Action</th>                   
           </thead>
           <tbody>
@@ -57,6 +59,8 @@
                   <span ng-if="manpower.status">Active</span><span ng-if="!manpower.status">Inactive</span>
                    
               </td>
+              <td>{{manpower.createdBy.name}}</td>
+              <td>{{manpower.updatedBy.name}}</td>
               <td>
                 <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="manpower.status" uib-btn-checkbox ng-click="manpowerListingVm.updateManpowerUser(manpower)"><span ng-if="!manpower.status">Activate</span> <span ng-if="manpower.status">Deactivate</span></label>
                 <a class="btn btn-default" href="{{uploadImagePrefix}}{{manpower.docDir}}/{{manpower.resumeDoc}}" ng-if="manpower.resumeDoc" target="_blank"><i class="fa fa-download"></i></a>

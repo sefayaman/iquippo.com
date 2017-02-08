@@ -259,7 +259,15 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     function saveNewManpowerUser(){
       vm.manpower.isManpower =  true; 
       vm.manpower.country = $rootScope.allCountries[0].name;
-      vm.manpower.status =  false;   
+      vm.manpower.status =  false; 
+      vm.manpower.createdBy = {
+        name : 'Self'
+      };
+
+      vm.manpower.updatedBy = {
+        name : 'Self'
+      }
+
       $rootScope.loading = true; 
       ManpowerSvc.createUser(vm.manpower).then(function(result) {
         vm.manpower.user = {};
@@ -511,7 +519,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       $rootScope.loading = true;
       user.updatedBy = {userId : Auth.getCurrentUser()._id,
                         email:Auth.getCurrentUser().email,
-                        name : Auth.getCurrentUser().fname +' ' +Auth.getCurrentUser().lname,
+                        name : Auth.getCurrentUser().fname +' ' + Auth.getCurrentUser().lname,
                         mobile : Auth.getCurrentUser().mobile};
       
       ManpowerSvc.updateManpower(user).then(function(result){
@@ -535,7 +543,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       body.status = action === 'active' ? true : false;
       body.updatedBy = {userId : Auth.getCurrentUser()._id,
                         email:Auth.getCurrentUser().email,
-                        name : Auth.getCurrentUser().fname + Auth.getCurrentUser().lname,
+                        name : Auth.getCurrentUser().fname + ' ' +Auth.getCurrentUser().lname,
                         mobile : Auth.getCurrentUser().mobile};
 
       ManpowerSvc.bulkUpdate(body).then(function(result){
@@ -584,6 +592,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         //vm.allManpowerList = result;
+        console.log(result.items);
         vm.allManpowerList = result.items;
         vm.totalItems = result.totalItems;
         prevPage = vm.currentPage;
