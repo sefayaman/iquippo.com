@@ -70,7 +70,7 @@
                             <div class="col-sm-3 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
                               <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
                                     <option value="">* Select User</option>
-                                    <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
+                                    <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'fname'">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
                               </select>
                               <i class="caret"></i>
                     
@@ -78,7 +78,7 @@
                             <div class="col-sm-3 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
                               <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
                                     <option value="">* Select Company</option>
-                                    <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType" >{{user.company}}</option>
+                                    <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'company'" >{{user.company}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>                            
@@ -124,7 +124,7 @@
                               <div class="form-group col-sm-7" ng-class="{'has-error': form.tradeType.$invalid && submitted}">
                                 <select class="form-control" ng-model="product.tradeType" name="tradeType" required ng-change = "onTradeTypeChange(product.tradeType)">
                                   <option value="">Select Trade Type</option>
-                                  <option ng-repeat="trade in tradeType" value="{{trade.code}}">{{trade.name}}</option>
+                                  <option ng-repeat="trade in tradeType| orderBy:'name'" value="{{trade.code}}">{{trade.name}}</option>
                                 </select>
                                 <i class="caret"></i>
                               </div>
@@ -135,7 +135,7 @@
                             <div class="form-group col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
                               <select  class="form-control" name="category"  ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required>
                                     <option value="">Select Category</option>
-                                    <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
+                                    <option value="{{category._id}}" ng-repeat="category in allCategory| orderBy:'name'">{{category.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
@@ -148,7 +148,7 @@
                             <div class="form-group col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
                                <select  class="form-control" name="brand" ng-model="container.selectedBrandId" ng-change="onBrandChange(container.selectedBrandId)" required>
                                     <option value="">Select Brand</option>
-                                    <option value="{{brand._id}}" ng-repeat="brand in brandList">{{brand.name}}</option>
+                                    <option value="{{brand._id}}" ng-repeat="brand in brandList| orderBy:'name'">{{brand.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
@@ -161,7 +161,7 @@
                             <div class="form-group col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
                              <select  class="form-control" name="model" ng-model="container.selectedModelId" required  ng-change="onModelChange(container.selectedModelId)">
                                     <option value="">Select Model</option>
-                                    <option value="{{model._id}}" ng-repeat="model in modelList">{{model.name}}</option>
+                                    <option value="{{model._id}}" ng-repeat="model in modelList| orderBy:'name'">{{model.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
@@ -252,7 +252,7 @@
                             <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
                               <select class="form-control" name="country" ng-model="product.country" ng-change="onCountryChange()" required>
                                     <option value="">Select Country</option>
-                                    <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                                    <option  ng-repeat="country in allCountries| orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                                     <option value="Bhutan">Bhutan</option>
                                     <option value="Malaysia">Malaysia</option>
                                     <option value="Nepal">Nepal</option>
@@ -265,7 +265,7 @@
                             <div class="form-group col-sm-7" ng-class="{'has-error': form.state.$invalid && submitted}">
                               <select class="form-control" name="state" ng-model="product.state" ng-change="onStateChange()" required >
                                     <option value="">Select State</option>
-                                    <option value="{{st.name}}" ng-repeat="st in stateList">{{st.name}}</option>
+                                    <option value="{{st.name}}" ng-repeat="st in stateList| orderBy:'name'">{{st.name}}</option>
 
                               </select>
                               <i class="caret"></i>
@@ -282,7 +282,7 @@
                             <div class="form-group col-sm-7" ng-class="{'has-error': form.location.$invalid && submitted}">
                               <select class="form-control" name="location" ng-model="product.city" required>
                                 <option value="">Select Location</option>
-                                <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                                <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
@@ -844,7 +844,7 @@
                             <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.valuationagency.$invalid && auctSubmitted}">
                               <select class="form-control" name="valuationagency" ng-model="valuationReq.valuationAgency._id" required>
                                     <option value="">Select Agency</option>
-                                    <option  ng-repeat="ag in valAgencies" value="{{ag._id}}">{{ag.name}}</option>
+                                    <option  ng-repeat="ag in valAgencies| orderBy:'name'" value="{{ag._id}}">{{ag.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>                            
