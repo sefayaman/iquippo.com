@@ -134,6 +134,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Finance);
     if($scope.Auction)
       $scope.services.push($scope.Auction);
+    if($scope.Dealer)
+      $scope.services.push($scope.Dealer);
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
       vm.vendorReg.user.state = LocationSvc.getStateByCity(vm.vendorReg.user.city);      
@@ -179,6 +181,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     $scope.ManPower = "";
     $scope.Finance = "";
     $scope.Auction = "";
+    $scope.Dealer = "";
     $scope.isEdit = false;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -287,6 +290,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
          serviceArr.push('Finance');
        else if(tempArr[i] == 'Auction')
          serviceArr.push('Auction');
+       else if(tempArr[i] == 'Dealer')
+         serviceArr.push('Dealer');
     }
     return serviceArr.join();
   }
@@ -350,6 +355,7 @@ function updateVendor(vendor) {
     $scope.Finance = "";
     $scope.ManPower = "";
     $scope.Auction = "";
+    $scope.Dealer = "";
     for (var i=0; i< vendor.services.length; i++) {
       if(vendor.services[i] == 'Shipping')
         $scope.Shipping = vendor.services[i];
@@ -363,6 +369,8 @@ function updateVendor(vendor) {
         $scope.Finance = vendor.services[i];
       else if(vendor.services[i] == 'Auction')
         $scope.Auction = vendor.services[i];
+      else if(vendor.services[i] == 'Dealer')
+        $scope.Dealer = vendor.services[i];
     }
     $scope.isEdit = true;
     vm.existFlag = true;

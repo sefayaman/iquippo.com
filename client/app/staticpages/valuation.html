@@ -232,7 +232,7 @@
 						</div>
 						<div class="col-xs-6">
 							<div class="checkbox checkbox-info checkbox-circle">
-		                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="">
+		                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
 		                        <label for="checkbox1">
 		                            same as above
 		                        </label>
@@ -247,7 +247,7 @@
 						</div>
 						<div class="col-xs-6">
 							<div class="checkbox checkbox-info checkbox-circle">
-		                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="">
+		                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
 		                        <label for="checkbox2">
 		                            same as above
 		                        </label>

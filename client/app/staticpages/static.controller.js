@@ -116,12 +116,13 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.resetClick = resetClick;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
-
+    $scope.onChange = onChange;
 
     $scope.valuationQuote = {};
     $scope.valuationQuote.product = {};
     $scope.valuationService = {};
     $scope.currentYear = new Date().getFullYear();
+
 
     function init(){
          setUser();
@@ -194,6 +195,21 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
     init();
 
+    function onChange(val){
+      if(val == 'contactPerson') {
+        if($scope.valuationQuote.product.contactPersonAsAbove)
+          $scope.valuationQuote.product.contactPerson = $scope.valuationQuote.fname + " " + $scope.valuationQuote.lname;
+        else
+          $scope.valuationQuote.product.contactPerson = "";
+      }
+      if(val == 'contactNumber') {
+        if($scope.valuationQuote.product.contactNumberAsAbove)
+          $scope.valuationQuote.product.contactNumber = $scope.valuationQuote.mobile;
+        else
+          $scope.valuationQuote.product.contactNumber = "";
+      }
+    }
+
     function addValuationQuote(evt) {
 
       if($scope.valuationQuote.schedule == 'yes') {
@@ -207,6 +223,12 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         $scope.form.submitted = true;
         return;
       }
+
+      if($scope.valuationQuote.product.contactPersonAsAbove)
+        $scope.valuationQuote.product.contactPerson = $scope.valuationQuote.fname + " " + $scope.valuationQuote.lname;
+
+     if($scope.valuationQuote.product.contactNumberAsAbove)
+        $scope.valuationQuote.product.contactNumber = $scope.valuationQuote.mobile;
 
       if(!$scope.valuationQuote.scheduledTime
         && $scope.valuationQuote.schedule == "yes")
