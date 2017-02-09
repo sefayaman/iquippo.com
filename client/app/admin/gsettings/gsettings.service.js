@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 angular.module('admin').factory("LocationSvc",LocationSvc);
- function LocationSvc($http, $q){
+ function LocationSvc($http, $q,$httpParamSerializer){
  	  var locationCache = [];
     var stateCache = [];
     var lServices = {};
@@ -24,6 +24,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getStateHelp = getStateHelp;
       lServices.getCityHelp = getCityHelp;
       lServices.getAssetIdHelp = getAssetIdHelp;
+      lServices.exportExcel=exportExcel;
 
 
       function getAllLocation(){
@@ -185,6 +186,20 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         .catch(function(err){
           throw err
         })
+    }
+
+     function exportExcel(filter){
+      var url = path + '/render.xlsx';
+      var qs;
+
+      if(Object.keys(filter).length){
+        qs = $httpParamSerializer(filter);
+      }
+
+      if(qs)
+        url += '?' + qs;
+
+      return url;
     }
 
     function getAssetIdHelp(data){
