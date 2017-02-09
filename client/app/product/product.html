@@ -11,8 +11,11 @@
             <div class="col-xs-6 col-sm-2 text-right">
               <h3>
                 <div class="bulks" ng-if="isBulkUpload()">
-                    <span class="btn btn-warning btn-block fileinput-button"><i class="fa fa-database"></i> Bulk Product Update
+                    <span class="btn btn-warning btn-block fileinput-button">
                       <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetTemp(this.files,this)">
+                      <span>
+                        <i class="fa fa-database"></i> Bulk Product Update
+                      </span>
                     </span>
                </div>               
               </h3>

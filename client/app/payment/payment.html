@@ -30,25 +30,25 @@
               </div>
               <legend></legend>
               <div class="row form-group" ng-repeat="py in paymentVm.payTransaction.payments">
-                <div class="col-sm-4">
+                <div class="col-xs-4 col-sm-4">
                   <div class="media">
                     <a class="pull-left" href="javascrip:void(0)">
                       <img class="img-circle media-object" ng-src="{{uploadImagePrefix}}{{paymentVm.payTransaction.product.assetDir}}/{{paymentVm.payTransaction.product.primaryImg}}" alt="Image" width="70" height="70">
                     </a>
                     <div class="media-body payment-details">
-                      <h4 class="media-heading"><a href="javascrip:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>                      
+                      <h4 class="media-heading"><a href="javascript:void(0);">{{paymentVm.payTransaction.product.name}}</a></h4>                      
                       <p ng-if="paymentVm.payTransaction.product.type == 'spare'">{{paymentVm.payTransaction.product.partNo}} {{paymentVm.payTransaction.product.manufacturer}}</p>
                       <p>{{paymentVm.payTransaction.product.city}}</p>
 
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-4 col-sm-4">
                   <span ng-if="py.type=='auctionreq'">Auction (quippoauctions.com)</span>
                   <span ng-if="py.type=='valuationreq'">Valuation (Agency Name)</span>
                   <span ng-if="py.type=='sparebuy'">Spares - Buy</span>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-4 col-sm-4">
                   {{py.charge}}
                 </div>
               </div>
@@ -58,10 +58,10 @@
                       <div class="col-sm-4">
                         Payment Mode: <span>{{paymentVm.payTransaction.paymentMode}}</span>
                       </div>
-                      <div class="col-sm-4 text-left">
+                      <div class="col-xs-6 col-sm-4 text-left">
                         Total: 
                       </div>
-                      <div class="col-sm-4 text-left">
+                      <div class="col-xs-6 col-sm-4 text-left">
                         Rs. {{paymentVm.payTransaction.totalAmount}}
                       </div> 
                   </div>

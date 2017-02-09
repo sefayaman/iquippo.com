@@ -238,12 +238,14 @@
 								</button>
 							</div>
 							<div class="col-xs-6 col-sm-2">
-								<div class="btn btn-success btn-block">
-									<span class="fileinput-button">
-								   <i class="fa fa-file-excel-o"></i> Import Excel
-								   <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files,this)">
+								
+									<span class="btn btn-success btn-block fileinput-button">
+									   <input type="file" name="template_update" onchange="angular.element(this).scope().importAuctionMaster(this.files,this)">
+									   <span>
+									   	<i class="fa fa-file-excel-o"></i> Import Excel
+									   </span>
 								   </span>
-								</div>
+								
 							</div>
 						</div>
 		    			<legend></legend>
