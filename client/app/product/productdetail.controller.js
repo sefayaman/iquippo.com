@@ -32,7 +32,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   $scope.statusShipping.open = false;
   $scope.totalRent = 0;
   $scope.status = {
-    Firstopen: true
+    basicInformation: true
   };
   $scope.negotiate=negotiate;
   vm.addProductQuote=addProductQuote;
@@ -48,6 +48,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
   vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
   vm.isEmpty = isEmpty;
+  vm.checkServiceInfo = checkServiceInfo;
   
   //Submit Valuation Request
 
@@ -321,6 +322,21 @@ function addProductQuote(form){
 
   }
 
+  function checkServiceInfo(serviceInfo){
+    if(!serviceInfo)
+      return true;
+    if(serviceInfo.length == 0)
+      return true;
+    var ret = true;
+    serviceInfo.forEach(function(item){
+      if(item){
+        var itemKeys = Object.keys(item);
+        if(itemKeys.length > 0)
+          ret = false;
+      }
+    });
+    return ret;
+  }
   function init(){
 
      Auth.isLoggedInAsync(function(loggedIn){
@@ -373,6 +389,10 @@ function addProductQuote(form){
       }
       //End
         $scope.currentProduct = result;
+        if($scope.currentProduct.specialOffers){
+          $scope.status.basicInformation = false;
+          $scope.status.specialOffers = true;
+        }
 
         $scope.$broadcast('productloaded');
         $rootScope.currentProduct = $scope.currentProduct;
@@ -405,12 +425,9 @@ function addProductQuote(form){
               enginePower : techInfo[0].information.enginePower, 
               liftingCapacity : techInfo[0].information.liftingCapacity 
             }
-            console.log($scope.currentProduct.technicalInfo); 
           }
         });
         }
-        
-           console.log($scope.currentProduct);
 
         getPriceTrendData();
         if($scope.currentProduct.tradeType == "SELL")
@@ -552,6 +569,10 @@ function addProductQuote(form){
       if(result.length > 0){
         $scope.priceTrendData = result[0];
         getPriceTrendSurveyCount();
+        if(!$scope.currentProduct.specialOffers){
+          $scope.status.basicInformation = false;
+          $scope.status.pricetrend = true;
+        }
       }
     })
   }
