@@ -47,6 +47,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   vm.openValuationModal = openValuationModal;
   vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
   vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
+  vm.isEmpty = isEmpty;
   
   //Submit Valuation Request
 
@@ -63,21 +64,10 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
         $scope.negotiationSubmitted = true;
         return;
       }
-
-
-    if(form == "forRent")
-      {  Modal.confirm("Do you want to submit?",function(ret){
-        if(ret == "yes")
-          return negotiateConfirm(form,flag);
-      });
-    }
-
-     else{
-    Modal.confirm("Do you want to submit?",function(ret){
-        if(ret == "yes")
-         return negotiateConfirm(form,flag);
-      });
-  }
+     Modal.confirm("Do you want to submit?",function(ret){
+      if(ret == "yes")
+        return negotiateConfirm(form,flag);
+    });
 }
 
 
@@ -449,9 +439,6 @@ function addProductQuote(form){
         $scope.currentProduct.images.forEach(function(item,index){
           if(item.catImgType){
             switch(item.catImgType){
-             case 'gA':
-                $scope.currentProduct.gAImages.push(item);
-             break;
              case 'eP' :
                 $scope.currentProduct.engineImages.push(item);
              break;
@@ -468,7 +455,8 @@ function addProductQuote(form){
                 $scope.currentProduct.otherImages.push(item);
              break;
             }
-          }
+          }else
+              $scope.currentProduct.gAImages.push(item);
         });
         }
       });
