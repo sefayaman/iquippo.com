@@ -144,9 +144,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
     });*/
 
-    if(!Auth.isAdmin()){
+    if(!Auth.isAdmin() && !Auth.isChannelPartner()){
       product.seller=Auth.getCurrentUser();
-      console.log(product.seller);
     }
 
    
