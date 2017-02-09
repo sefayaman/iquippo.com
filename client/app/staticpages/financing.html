@@ -1,208 +1,210 @@
 <div class="container">
-    <div class="col-sm-6 text-justify">
-      <h3>Financing Made Easy</h3>
-      <legend></legend>
+    <div class="row">
+      <div class="col-sm-6 text-justify">
+        <h3>Financing Made Easy</h3>
+        <legend></legend>
 
-        <p>
-          iQuippo, through its financing partners, helps you meet all your equipment financing needs.
-        </p>
-        <p>
-          With partners present throughout India, iQuippo helps you get the best offers for both new and used equipment.
-        </p>   
-        <p>
-          Having served a wide spectrum of clients – from first time buyers to fleet owners and corporates – we understand the needs for each buyer and help tailor solutions best suited for your varied needs.
-        </p>
-      
-      <div class="form-group"></div>
-      <div class="text-center">
-          <img src="assets/images/finance-ad-image.jpg" class="shipps">
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="form-group"></div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Financing Quote</h3>
+          <p>
+            iQuippo, through its financing partners, helps you meet all your equipment financing needs.
+          </p>
+          <p>
+            With partners present throughout India, iQuippo helps you get the best offers for both new and used equipment.
+          </p>   
+          <p>
+            Having served a wide spectrum of clients – from first time buyers to fleet owners and corporates – we understand the needs for each buyer and help tailor solutions best suited for your varied needs.
+          </p>
+        
+        <div class="form-group"></div>
+        <div class="text-center">
+            <img src="assets/images/finance-ad-image.jpg" class="shipps">
         </div>
-        <div class="panel-body">
-          
-      <form class="form" ng-submit="addFinanceQuote($event)" novalidate name="form">
-        <div class="form-group">                    
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
-                <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="financeQuote.fname" required>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">                                      
-                <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="financeQuote.mname">
-              </div>
-            </div>
-          </div>  
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
-                <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="financeQuote.lname" required>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
-                <select class="form-control" ng-model="financeQuote.country" name="country" required>
-                  <option value="">*Select Country</option>
-                  <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
-                </select>
-              </div>
-            </div>
-          </div>  
-
-          <div class="row">
-            <div class="col-xs-6">
-                    <select class="form-control" name="location" ng-model="financeQuote.city">
-                      <option value="">Select Location</option>
-                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                    </select>
-                    <i class="caret"></i>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="financeQuote.companyname">
-              </div>
-            </div>
-            
-          </div>  
-
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Designation" ng-model="financeQuote.designation">
-              </div>
-            </div>
-
-            <div class="col-xs-6">
-              <div class="form-group">                          
-                <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="financeQuote.phone">
-              </div>
-            </div>
-            
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group"></div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Financing Quote</h3>
           </div>
-          
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
-               <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="financeQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
-              <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="financeQuote.email">
-              <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
-              Please enter a valid email.
-              </p>
-              </div>
-            </div>
-          </div>  
-          <hr>
-          <div class="row">
-            <div class="col-xs-12">
-              <div class="form-group">
-                <label>Product Detail:</label>
-              </div>
-            </div>
+          <div class="panel-body">
             
-          </div>
-          <div class="row form-group">
-            <div class="col-xs-6">
-              <select class="form-control" name="category" ng-model="financeQuote.product.category" ng-change="onCategoryChange(financeQuote.product.category)">
-                <option value="">Select Category </option>
-                  <option ng-repeat="cat in allCategory" value="{{cat.name}}">{{cat.name}}</option>
-              </select>
-              <i class="caret"></i>
-            </div>
-            <div class="col-xs-6">
-              <select class="form-control" name="brand" ng-model="financeQuote.product.brand" ng-change="onBrandChange(financeQuote.product.brand)">
-                <option value="">Select Brand </option>
-                  <option ng-repeat="br in brandList" value="{{br.name}}">{{br.name}}</option>
-              </select>
-              <i class="caret"></i>
-            </div>            
-          </div>  
-          <div class="row">
-            <div class="col-xs-6">
-              <select class="form-control" name="model" ng-model="financeQuote.product.model">
-                <option value="">Select Model </option>
-                  <option ng-repeat="md in modelList" value="{{md.name}}">{{md.name}}</option>
-              </select>
-              <i class="caret"></i>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.prdDesc.$invalid && form.submitted }">                          
-                <input type="text" name="prdDesc" class="form-control" placeholder="* Asset Description " ng-model="financeQuote.product.description" required>
-              </div>
-            </div>            
-          </div>  
-          <div class="row form-group">
-            <div class="col-xs-6" ng-class="{'has-error': form.prdLocation.$invalid && form.submitted }">
-              <select class="form-control" name="prdLocation" ng-model="financeQuote.product.city" required>
-                <option value="">* Select Asset Location </option>
-                  <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-              </select>
-              <i class="caret"></i>
-            </div>
-            <div class="col-xs-6">
-              <div class="" ng-class="{'has-error': form.prdMfgYear.$invalid && form.submitted }">                          
-                <input type="number" name="prdMfgYear" class="form-control" placeholder="* Manufacturing Year" ng-model="financeQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
-              </div>
-            </div>            
-          </div>  
-
-           <div class="row">
-              <div class="col-xs-6">
-                <div class="form-group" ng-class="{'has-error': form.amountToBeFinanced.$invalid && form.submitted }">
-                  <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" ng-value="financeQuote.amountToBeFinanced" placeholder="Amount to be Financed*" required>
-                </div>
-              </div>
-              <div class="col-xs-6">
-                <div class="form-group" ng-class="{'has-error': form.indicativeRate.$invalid && form.submitted }">
-                  <input type="number" class="form-control" name="indicativeRate" ng-model="financeQuote.indicativeRate" ng-value="financeQuote.indicativeRate" min= '0' placeholder="Indicative Rate*" required>
-                </div>
-              </div>
-            </div>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group" ng-class="{'has-error': form.periodInMonths.$invalid && form.submitted }">
-                <input type="number" class="form-control" name="periodInMonths" ng-model="financeQuote.periodInMonths" ng-value="financeQuote.periodInMonths" ng-minlength="1"  min="1"  placeholder="Tenure (in Months)*" required>
-              </div>
-            </div> 
-                             
-          </div>
-
-          <span>Method of contact </span>
+        <form class="form" ng-submit="addFinanceQuote($event)" novalidate name="form">
+          <div class="form-group">                    
             <div class="row">
               <div class="col-xs-6">
-                <div class="radio radio-info">
-                    <input type="radio" id="inlineRadio1" name="contact" ng-model="financeQuote.contactMethod" value="email" checked="">
-                    <label for="inlineRadio1"> E-mail </label>
-                </div>               
+                <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
+                  <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="financeQuote.fname" required>
+                </div>
               </div>
               <div class="col-xs-6">
-               <div class="radio radio-info">
-                    <input type="radio" id="inlineRadio2" name="contact" ng-model="financeQuote.contactMethod" value="mobile">
-                    <label for="inlineRadio2"> Phone </label>
-                </div>               
+                <div class="form-group">                                      
+                  <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="financeQuote.mname">
+                </div>
               </div>
+            </div>  
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
+                  <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="financeQuote.lname" required>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+                  <select class="form-control" ng-model="financeQuote.country" name="country" required>
+                    <option value="">*Select Country</option>
+                    <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>  
+
+            <div class="row">
+              <div class="col-xs-6">
+                      <select class="form-control" name="location" ng-model="financeQuote.city">
+                        <option value="">Select Location</option>
+                          <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                      </select>
+                      <i class="caret"></i>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">                          
+                  <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="financeQuote.companyname">
+                </div>
+              </div>
+              
+            </div>  
+
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group">                          
+                  <input type="text" name="" class="form-control" placeholder="Designation" ng-model="financeQuote.designation">
+                </div>
+              </div>
+
+              <div class="col-xs-6">
+                <div class="form-group">                          
+                  <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="financeQuote.phone">
+                </div>
+              </div>
+              
             </div>
             
-           <div class="form-group">                      
-            <textarea class="form-control" placeholder="Comments if any" ng-model="financeQuote.comment"></textarea>
-          </div> 
-        </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
+                 <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="financeQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
+                <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="financeQuote.email">
+                <p class="help-block" ng-show="(form.email.$error.email || form.email.$error.pattern) && form.submitted">
+                Please enter a valid email.
+                </p>
+                </div>
+              </div>
+            </div>  
+            <hr>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group">
+                  <label>Product Detail:</label>
+                </div>
+              </div>
+              
+            </div>
+            <div class="row form-group">
+              <div class="col-xs-6">
+                <select class="form-control" name="category" ng-model="financeQuote.product.category" ng-change="onCategoryChange(financeQuote.product.category)">
+                  <option value="">Select Category </option>
+                    <option ng-repeat="cat in allCategory" value="{{cat.name}}">{{cat.name}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>
+              <div class="col-xs-6">
+                <select class="form-control" name="brand" ng-model="financeQuote.product.brand" ng-change="onBrandChange(financeQuote.product.brand)">
+                  <option value="">Select Brand </option>
+                    <option ng-repeat="br in brandList" value="{{br.name}}">{{br.name}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>            
+            </div>  
+            <div class="row">
+              <div class="col-xs-6">
+                <select class="form-control" name="model" ng-model="financeQuote.product.model">
+                  <option value="">Select Model </option>
+                    <option ng-repeat="md in modelList" value="{{md.name}}">{{md.name}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group" ng-class="{'has-error': form.prdDesc.$invalid && form.submitted }">                          
+                  <input type="text" name="prdDesc" class="form-control" placeholder="* Asset Description " ng-model="financeQuote.product.description" required>
+                </div>
+              </div>            
+            </div>  
+            <div class="row form-group">
+              <div class="col-xs-6" ng-class="{'has-error': form.prdLocation.$invalid && form.submitted }">
+                <select class="form-control" name="prdLocation" ng-model="financeQuote.product.city" required>
+                  <option value="">* Select Asset Location </option>
+                    <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>
+              <div class="col-xs-6">
+                <div class="" ng-class="{'has-error': form.prdMfgYear.$invalid && form.submitted }">                          
+                  <input type="number" name="prdMfgYear" class="form-control" placeholder="* Manufacturing Year" ng-model="financeQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+                </div>
+              </div>            
+            </div>  
 
-        <div class="modal-footer">
-          <button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
-          <button type="submit" class="btn btn-warning">Submit</button>
-        </div>
-      </form>
+             <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group" ng-class="{'has-error': form.amountToBeFinanced.$invalid && form.submitted }">
+                    <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" ng-value="financeQuote.amountToBeFinanced" placeholder="Amount to be Financed*" required>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group" ng-class="{'has-error': form.indicativeRate.$invalid && form.submitted }">
+                    <input type="number" class="form-control" name="indicativeRate" ng-model="financeQuote.indicativeRate" ng-value="financeQuote.indicativeRate" min= '0' placeholder="Indicative Rate*" required>
+                  </div>
+                </div>
+              </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group" ng-class="{'has-error': form.periodInMonths.$invalid && form.submitted }">
+                  <input type="number" class="form-control" name="periodInMonths" ng-model="financeQuote.periodInMonths" ng-value="financeQuote.periodInMonths" ng-minlength="1"  min="1"  placeholder="Tenure (in Months)*" required>
+                </div>
+              </div> 
+                               
+            </div>
+
+            <span>Method of contact </span>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="radio radio-info">
+                      <input type="radio" id="inlineRadio1" name="contact" ng-model="financeQuote.contactMethod" value="email" checked="">
+                      <label for="inlineRadio1"> E-mail </label>
+                  </div>               
+                </div>
+                <div class="col-xs-6">
+                 <div class="radio radio-info">
+                      <input type="radio" id="inlineRadio2" name="contact" ng-model="financeQuote.contactMethod" value="mobile">
+                      <label for="inlineRadio2"> Phone </label>
+                  </div>               
+                </div>
+              </div>
+              
+             <div class="form-group">                      
+              <textarea class="form-control" placeholder="Comments if any" ng-model="financeQuote.comment"></textarea>
+            </div> 
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" ng-click="resetClick()" class="btn btn-default">Reset</button>
+            <button type="submit" class="btn btn-warning">Submit</button>
+          </div>
+        </form>
+          </div>
         </div>
       </div>
     </div>
