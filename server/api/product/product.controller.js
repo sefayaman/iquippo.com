@@ -2622,7 +2622,7 @@ function importProducts(req,res,data){
         product["mfgYear"] = mfgYear;
 
         product["isSold"] = false;
-        product["status"] = true;
+        product["status"] = false;
         product["expiryAlert"] = false;
         product["expired"] = false;
         product["deleted"] = false;
