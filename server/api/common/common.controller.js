@@ -17,6 +17,7 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var gm = require("gm");
 var fsExtra = require('fs.extra');
+var _ = require('lodash');
 
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
@@ -1526,6 +1527,59 @@ exports.getBannerOnFilter = function(req,res){
 	    if(err) { return handleError(res, err); }
 	     return res.status(200).json(banners);   
 	});
+}
+
+exports.renderXLSX=function(req, res) {	
+	    if(req.query.type == "state"){
+		var headers = ['Country','State'];
+		var json = {};
+		var xlsxData = [];
+		var arr = [];
+		
+		State.find(function (err, st) {
+    if(err) { return handleError(res, err); }
+ 
+		st.forEach(function(x) {
+			json = {};
+			arr = [];
+			arr.push(_.get(x, 'country', ''));
+			arr.push(_.get(x, 'name', ''));
+			
+			for (var i = 0; i < headers.length; i++) {
+				json[headers[i]] = arr[i];
+			}
+
+			xlsxData.push(json);
+		})
+
+		res.xls('StateList.xlsx', xlsxData);
+	});
+	}
+	else{
+		var headers = ['State','Location'];
+		var json = {};
+		var xlsxData = [];
+		var arr = [];
+		
+		City.find(function (err, st) {
+    if(err) { return handleError(res, err); }
+ 
+		st.forEach(function(x) {
+			json = {};
+			arr = [];
+			arr.push(_.get(x, 'state.name', ''));
+			arr.push(_.get(x, 'name', ''));
+			
+			for (var i = 0; i < headers.length; i++) {
+				json[headers[i]] = arr[i];
+			}
+
+			xlsxData.push(json);
+		})
+
+		res.xls('LocationList.xlsx', xlsxData);
+	});
+	}
 }
 
 function isValid(d) {
