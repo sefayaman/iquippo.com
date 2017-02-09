@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 angular.module('admin').factory("LocationSvc",LocationSvc);
- function LocationSvc($http, $q){
+ function LocationSvc($http, $q,$httpParamSerializer){
  	  var locationCache = [];
     var stateCache = [];
     var lServices = {};
@@ -21,6 +21,11 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.updateState = updateState;
       lServices.saveState = saveState;
       lServices.getLocationHelp = getLocationHelp;
+      lServices.getStateHelp = getStateHelp;
+      lServices.getCityHelp = getCityHelp;
+      lServices.getAssetIdHelp = getAssetIdHelp;
+      lServices.exportExcel=exportExcel;
+
 
       function getAllLocation(){
         var deferred = $q.defer();
@@ -153,27 +158,53 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         })
     }
 
-     function getLocationHelp(data){
-       return $http.post(path + "/location/search",data)
+    function getLocationHelp(data){
+      return $http.post(path + "/location/search",data)
+      .then (function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
+    }
+
+     function getStateHelp(data){
+       return $http.post(path + "/state/search",data)
         .then(function(res){
-          //var filterdArr = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
 
-        /*  res.data.forEach(function(item){
-           if(item.name.indexOf(data.searchStr) != -1 && item.state.name.indexOf(data.searchStr) != -1){
-             if(filterdArr.indexOf(item.name) == -1){
-                filterdArr[filterdArr.length] = item.name;
-              if(filterdArr.indexOf(item.state.name) == -1)
-                  filterdArr[filterdArr.length] = item.state.name;
+    function getCityHelp(data){
+       return $http.post(path + "/cities/search",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
 
-            }else if(item.name.indexOf(data.searchStr) != -1){
-              if(filterdArr.indexOf(item.name) == -1)
-                  filterdArr[filterdArr.length] = item.name;
-            }
-            else if(item.state.name.indexOf(data.searchStr) != -1){
-              if(filterdArr.indexOf(item.state.name) == -1)
-                    filterdArr[filterdArr.length] = item.state.name;
-            }
-          });*/
+     function exportExcel(filter){
+      var url = path + '/render.xlsx';
+      var qs;
+
+      if(Object.keys(filter).length){
+        qs = $httpParamSerializer(filter);
+      }
+
+      if(qs)
+        url += '?' + qs;
+
+      return url;
+    }
+
+    function getAssetIdHelp(data){
+       return $http.post(path + "/assetId/search",data)
+        .then(function(res){
           return res.data;
         })
         .catch(function(err){

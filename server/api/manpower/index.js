@@ -13,6 +13,8 @@ router.post('/create', controller.create);
 router.post('/getequipment',controller.getConcatCatSubCat);
 router.post('/getmanpoweruserfilter', controller.getSearchedUser);
 router.put('/update/:id', controller.update);
+router.put('/bulkupdate',controller.bulkUpdate);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.get('/data/fetch.xlsx',controller.renderXlsx);
+router.delete('/:id',controller.delete);
 module.exports = router;

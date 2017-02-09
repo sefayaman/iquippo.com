@@ -35,7 +35,10 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
   vm.fireCommand = fireCommand;
-  vm.getLocationHelp = getLocationHelp;
+  vm.getStateHelp = getStateHelp;
+  vm.getCityHelp = getCityHelp;
+  vm.getAssetIdHelp = getAssetIdHelp;
+
   vm.sortBy = sortBy;
   //vm.updateSelection = updateSelection;
   vm.addProductToCart = addProductToCart;
@@ -190,6 +193,10 @@ function onGroupChange(group){
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
+
+      if($scope.equipmentSearchFilter && ($scope.equipmentSearchFilter.stateName || $scope.equipmentSearchFilter.cityName))
+       delete filter.location;
+
       productSvc.getProductOnFilter(filter)
       .then(function(result){
           $scope.searching = false;
@@ -344,12 +351,40 @@ $scope.today = function() {
       fireCommand();
   }
 
-  function getLocationHelp(val) {
+  function getStateHelp(val) {
       var serData = {};
-      serData['searchStr'] = $scope.equipmentSearchFilter.location;
-     return LocationSvc.getLocationHelp(serData)
+      serData['searchStr'] = $scope.equipmentSearchFilter.stateName;
+     return LocationSvc.getStateHelp(serData)
       .then(function(result){
          return result.map(function(item){
+              
+              return item.name;
+        });
+      });
+    };
+
+    function getCityHelp(val) {
+      var serData = {};
+      if($scope.equipmentSearchFilter.stateName){
+        serData['state']=$scope.equipmentSearchFilter.stateName;
+      }
+      serData['searchStr'] = $scope.equipmentSearchFilter.cityName;
+     return LocationSvc.getCityHelp(serData)
+      .then(function(result){
+         return result.map(function(item){
+              
+              return item.name;
+        });
+      });
+    };
+
+    function getAssetIdHelp(val) {
+      var serData = {};
+      serData['searchStr'] = $scope.equipmentSearchFilter.assetId;
+     return LocationSvc.getAssetIdHelp(serData)
+      .then(function(result){
+         return result.map(function(item){
+              
               return item.name;
         });
       });

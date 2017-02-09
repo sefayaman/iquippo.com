@@ -31,6 +31,7 @@ var async = require('async');
 var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
+var async = require('async');
 
 
 
@@ -89,6 +90,7 @@ exports.unIncomingProduct = function(req,res){
 //search products
 exports.search = function(req, res) {
   var term = new RegExp(req.body.searchstr, 'i');
+  
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
@@ -157,6 +159,10 @@ exports.search = function(req, res) {
     arr[arr.length] = {city:{$regex:locRegEx}};
     arr[arr.length] = {state:{$regex:locRegEx}};
   }
+
+
+
+
 
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
@@ -279,6 +285,7 @@ exports.search = function(req, res) {
   
 
 };
+
 
 function paginatedProducts(req,res,filter,result){
 
@@ -1008,7 +1015,7 @@ function excel_from_data(data, isAdmin) {
     ws[cell_ref] = cell;
 
     var serialNo = "";
-    if(product && product.serialNo) 
+    if(product && product.grossPrice) 
       serialNo = product.serialNo;
     else
       serialNo = "";
@@ -1342,7 +1349,7 @@ exports.parseExcel = function(req,res,next){
     workbook = xlsx.readFile(importPath + fileName);
   }catch(e){
     console.log(e);
-    return  handleError(res,"Error in file upload")
+    return  handleError(res,new Error("Error in file upload"))
   }
   if(!workbook)
     return res.status(404).send("Error in file upload");
@@ -2160,7 +2167,7 @@ exports.importProducts = function(req,res){
     workbook = xlsx.readFile(importPath + fileName);
   }catch(e){
     console.log(e);
-    return  handleError(res,"Error in file upload")
+    return  handleError(res,new Error("Error in file upload"))
   }
   if(!workbook)
     return res.status(404).send("Error in file upload");
@@ -2945,7 +2952,7 @@ exports.createOrUpdateAuction = function(req,res){
         self();
       else{
         PaymentTransaction.create(req.body.payment,function(err,paytm){
-          if(err){return handleError(err,res)}
+          if(err){return handleError(res,err)}
           else{
             req.payTransId = paytm._id;
             self();     
@@ -2961,7 +2968,7 @@ exports.createOrUpdateAuction = function(req,res){
         if(req.payTransId)
         req.body.valuation.transactionId = req.payTransId + "";
         ValuationReq.create(req.body.valuation,function(err,vals){
-          if(err){return handleError(err,res)}
+          if(err){return handleError(res,err)}
           else{
             req.valuationId = vals._id;
             self();     
@@ -2981,7 +2988,7 @@ exports.createOrUpdateAuction = function(req,res){
 
       if(req.body.auction._id){
         AuctionReq.update({_id:req.body.auction._id},{$set:req.body.auction},function(err,acts){
-          if(err){return handleError(err,res)}
+          if(err){return handleError(res,err)}
           else{
             req.auctionId = req.body.auction._id;
             self();
@@ -2989,11 +2996,11 @@ exports.createOrUpdateAuction = function(req,res){
         })
       }else{
         AuctionReq.create(req.body.auction,function(err,acts){
-          if(err){return handleError(err,res)}
+          if(err){return handleError(res,err);}
           else{
             req.auctionId = acts._id;
-            self();     
-          }
+            self();
+            }     
         })
       }
     })
@@ -3004,7 +3011,7 @@ exports.createOrUpdateAuction = function(req,res){
       if(req.valuationId)
         auctionUpdate.valuationId = req.valuationId + "";
       Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){
-         if(err){return handleError(err,res)}
+         if(err){return handleError(res,err)}
           else{
             var resObj = {};
             resObj.auctionId =  req.auctionId;
@@ -3018,7 +3025,49 @@ exports.createOrUpdateAuction = function(req,res){
     })
 }
 
-function handleError(res, err) {
+//functionality for assigning  Uniq assetIds
+exports.updateAssetId = function(req,res){
+  Product.find({$or:[{"assetId":""},{"assetId":{$exists:false}}]},function(err,results){
+    if(err){ return handleError(res,err);}
+    if(results.length >0){
+    req.counter = 0;
+    req.totalCount = results.length;
+    req.products = results;
+    updateAssetId(req,res);
+  }
+  else
+    return handleError(res,"No record to update");
+  });
+}
+
+function updateAssetId(req,res){
+  if(req.counter < req.totalCount){
+    var doc = req.products[req.counter];
+    var uniqId = new Date().getTime();
+       Product.find({"assetId":uniqId},function(err,prods){
+        if(err)return handleError(res,err);
+        if(prods.length > 0){
+           updateAssetId(req,res);
+          return;
+        }
+      });
+      Product.update({'_id':doc._id},{$set:{"assetId":uniqId}},function(err,result){
+        if(err){return handleError(res,err)};
+         req.counter ++;
+         updateAssetId(req,res);
+      });      
+  }else
+res.status(200).send("successful updation of" + req.counter +" "+ "records");
+
+  }
+
+  function handleError(res, err) {
   console.log(err);
+  if(res instanceof Error)
+   {var temp=res;
+    res=err;
+    err=temp;
+   }
   return res.status(500).send(err);
 }
+

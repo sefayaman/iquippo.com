@@ -17,6 +17,13 @@
       <div class="row"> 
         <div class="col-sm-9">
           Showing : {{manpowerListingVm.totalItems}} Records
+          <button class="btn btn-primary btn-xs" ng-show="getCurrentUser().role == 'admin'" ng-click="manpowerListingVm.bulkUpdate('active')" >Activate</button>
+          
+          <select ng-model="manpowerListingVm.searchType" ng-change="manpowerListingVm.showFilter(manpowerListingVm.searchType)">
+            <option value="">Column Filters </option>
+            <option value="location">Location</option>
+          </select>
+          <input type="text" ng-if="manpowerListingVm.searchType != ''" name="searchTxt" ng-model="manpowerListingVm.coulmnSearchStr" ng-change="manpowerListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..."/>
         </div>                   
           <div class="col-sm-3 pull-right">
             <div class="tablesearch text-right form-group">
@@ -27,16 +34,20 @@
       <div class="table-responsive">                
         <table class="table table-bordred table-striped">
           <thead>
+            <th ng-show="getCurrentUser().role == 'admin'">Select</th>
             <th>Name</th>
             <th>Mobile No.</th>
             <th>Email Id</th>
             <th>Product</th>
             <th>Status</th>
+            <th>Added by</th>
+            <th>Last Modified By</th>
             <th width="25%">Action</th>                   
           </thead>
           <tbody>
 
             <tr ng-repeat="manpower in manpowerListingVm.allManpowerList" >
+              <td ng-show="getCurrentUser().role == 'admin'"><input type="checkbox" ng-click="manpowerListingVm.updateSelection($event,manpower._id)"/></td>
               <td>{{manpower.user.fname}} {{manpower.user.lname}}</td>
               <td>{{manpower.user.mobile}}</td>
               <td>{{manpower.user.email}}</td>
@@ -48,9 +59,13 @@
                   <span ng-if="manpower.status">Active</span><span ng-if="!manpower.status">Inactive</span>
                    
               </td>
+              <td>{{manpower.createdBy.name}}</td>
+              <td>{{manpower.updatedBy.name}}</td>
               <td>
                 <label ng-show="getCurrentUser().role == 'admin'" class="btn btn-warning" ng-model="manpower.status" uib-btn-checkbox ng-click="manpowerListingVm.updateManpowerUser(manpower)"><span ng-if="!manpower.status">Activate</span> <span ng-if="manpower.status">Deactivate</span></label>
                 <a class="btn btn-default" href="{{uploadImagePrefix}}{{manpower.docDir}}/{{manpower.resumeDoc}}" ng-if="manpower.resumeDoc" target="_blank"><i class="fa fa-download"></i></a>
+                <button class="btn btn-danger btn-sm" ng-show="getCurrentUser().role == 'admin'" class="btn btn-primary btn-xs" uib-popover="Delete" popover-trigger="mouseenter"  confirmed-click="manpowerListingVm.deleteManPower(manpower)" ng-confirm-click="Would you like to delete this record?"><i class="fa fa-trash"></i>
+                </button>
               </td> 
             </tr>
 

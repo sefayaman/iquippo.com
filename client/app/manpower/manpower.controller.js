@@ -24,6 +24,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     vm.myFunct = myFunct;
     vm.doSearch = doSearch;
     vm.onExpRangeChange = onExpRangeChange;
+   
 
     //vm.exportExcel=exportExcel;
     //vm.login = login;
@@ -95,6 +96,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     /*function forgotPassword(){
       $scope.openDialog('forgotpassword');
     };*/
+
 
     function onExpRangeChange(exp){ 
       vm.manpowerFilter.experience = {};
@@ -257,7 +259,15 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     function saveNewManpowerUser(){
       vm.manpower.isManpower =  true; 
       vm.manpower.country = $rootScope.allCountries[0].name;
-      vm.manpower.status =  false;   
+      vm.manpower.status =  false; 
+      vm.manpower.createdBy = {
+        name : 'Self'
+      };
+
+      vm.manpower.updatedBy = {
+        name : 'Self'
+      }
+
       $rootScope.loading = true; 
       ManpowerSvc.createUser(vm.manpower).then(function(result) {
         vm.manpower.user = {};
@@ -467,7 +477,37 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     vm.fireCommand = fireCommand;
     vm.updateManpowerUser = updateManpowerUser;
     vm.exportExcel=exportExcel;
+
+    vm.updateSelection = updateSelection;
+    vm.bulkUpdate = bulkUpdate;
+    var selectedIds =[];
+    vm.deleteManPower = deleteManPower;
+    vm.searchType = '';
+    vm.showFilter = showFilter;
+    vm.coulmnSearchStr = '';
+
+    function showFilter(type)
+    {
+      vm.coulmnSearchStr = "";
+      fireCommand(true);
+    }
+
+
+    function deleteManPower(manpower){
+      var id = manpower._id;
+      ManpowerSvc.deleteManPower(id).then(function(result){
+        $rootScope.loading = false;
+        //getAllUsers();
+        Modal.alert(result.res,true);
+        fireCommand(true);
+      })
+      .catch(function(err){
+        console.log("error in manpower user update", err);
+      });
+    }
+
     var dataToSend = {};
+    
     function init(){
       dataToSend.pagination = true;
       dataToSend.itemsPerPage = vm.itemsPerPage;
@@ -477,6 +517,11 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
 
     function updateManpowerUser(user){
       $rootScope.loading = true;
+      user.updatedBy = {userId : Auth.getCurrentUser()._id,
+                        email:Auth.getCurrentUser().email,
+                        name : Auth.getCurrentUser().fname +' ' + Auth.getCurrentUser().lname,
+                        mobile : Auth.getCurrentUser().mobile};
+      
       ManpowerSvc.updateManpower(user).then(function(result){
         $rootScope.loading = false;
         //getAllUsers();
@@ -491,6 +536,37 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       });
     }
 
+
+    function bulkUpdate(action){
+      var body = {};
+      body.ids = selectedIds;
+      body.status = action === 'active' ? true : false;
+      body.updatedBy = {userId : Auth.getCurrentUser()._id,
+                        email:Auth.getCurrentUser().email,
+                        name : Auth.getCurrentUser().fname + ' ' +Auth.getCurrentUser().lname,
+                        mobile : Auth.getCurrentUser().mobile};
+
+      ManpowerSvc.bulkUpdate(body).then(function(result){
+        $rootScope.loading = false;
+        //getAllUsers();
+        Modal.alert(result.data.res,true);
+        fireCommand(true);
+        
+      })
+      .catch(function(err){
+        console.log("error in manpower user update", err);
+      });
+    }
+
+    function updateSelection(event,id){
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add' && selectedIds.indexOf(id) == -1)
+          selectedIds.push(id)
+        if(action == 'remove' && selectedIds.indexOf(id) != -1)
+          selectedIds.splice(selectedIds.indexOf(id),1);
+     }
+
     function fireCommand(reset,filterObj){
       if(reset)
         resetPagination();
@@ -501,6 +577,8 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
         filter = filterObj;
       if(vm.searchStr)
         filter['searchstr'] = vm.searchStr;
+      if(vm.coulmnSearchStr)
+        filter[vm.searchType] = vm.coulmnSearchStr;
       
       getAllUsers(filter);
     }
@@ -514,6 +592,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         //vm.allManpowerList = result;
+        console.log(result.items);
         vm.allManpowerList = result.items;
         vm.totalItems = result.totalItems;
         prevPage = vm.currentPage;

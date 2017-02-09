@@ -17,6 +17,7 @@ var handlebars = require('handlebars');
 var fs = require('fs');
 var gm = require("gm");
 var fsExtra = require('fs.extra');
+var _ = require('lodash');
 
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
@@ -1191,6 +1192,70 @@ exports.searchLocation = function(req,res){
    });
 }
 
+exports.searchState = function(req,res){
+  var filter = {};
+  if(!req.body.searchStr)
+  	res.status(200).json([]);
+  if(req.body.searchStr){
+    var term = new RegExp(req.body.searchStr, 'i');
+    filter['name'] = {$regex:term};
+  }
+  //var cityQry = City.find(filter);
+  var stateQry = State.find(filter);
+	     
+	     stateQry.exec(function(err,stArr){
+	     	if(err) { return handleError(res, err); }
+	     	return res.status(200).json(stArr);
+	     })    
+   
+}
+
+exports.searchCities = function(req,res){
+  
+
+
+  var filter = {};
+  if(!req.body.searchStr)
+  	res.status(200).json([]);
+  
+  if(req.body.state){
+  	filter['state.name']=req.body.state;
+  	}  	//console.log(filter);
+
+  if(req.body.searchStr){
+    var term = new RegExp(req.body.searchStr, 'i');
+    filter['name'] = {$regex:term};
+  }
+
+ 
+
+  var cityQry = City.find(filter);
+
+       cityQry.exec(function (err, ctArr) {
+	    if(err) { return handleError(res, err); }
+	    return res.status(200).json(ctArr);
+   })
+}
+
+exports.searchAssetId= function(req,res){
+	
+	var filter={};
+	if(!req.body.searchStr)
+  	res.status(200).json([]);
+  if(req.body.searchStr){
+    var term = new RegExp(req.body.searchStr, 'i');
+    filter['assetId'] = {$regex:term};
+  }
+  var proQry = Product.find(filter);
+ 
+  proQry.exec(
+	   function (err, ptArr) {
+	    if(err) { 
+	    	return handleError(res, err); 
+	    }
+	  return res.status(200).json(ptArr);
+	     });    
+}
 // save search
 
 // Get a single user save search
@@ -1462,6 +1527,59 @@ exports.getBannerOnFilter = function(req,res){
 	    if(err) { return handleError(res, err); }
 	     return res.status(200).json(banners);   
 	});
+}
+
+exports.renderXLSX=function(req, res) {	
+	    if(req.query.type == "state"){
+		var headers = ['Country','State'];
+		var json = {};
+		var xlsxData = [];
+		var arr = [];
+		
+		State.find(function (err, st) {
+    if(err) { return handleError(res, err); }
+ 
+		st.forEach(function(x) {
+			json = {};
+			arr = [];
+			arr.push(_.get(x, 'country', ''));
+			arr.push(_.get(x, 'name', ''));
+			
+			for (var i = 0; i < headers.length; i++) {
+				json[headers[i]] = arr[i];
+			}
+
+			xlsxData.push(json);
+		})
+
+		res.xls('StateList.xlsx', xlsxData);
+	});
+	}
+	else{
+		var headers = ['State','Location'];
+		var json = {};
+		var xlsxData = [];
+		var arr = [];
+		
+		City.find(function (err, st) {
+    if(err) { return handleError(res, err); }
+ 
+		st.forEach(function(x) {
+			json = {};
+			arr = [];
+			arr.push(_.get(x, 'state.name', ''));
+			arr.push(_.get(x, 'name', ''));
+			
+			for (var i = 0; i < headers.length; i++) {
+				json[headers[i]] = arr[i];
+			}
+
+			xlsxData.push(json);
+		})
+
+		res.xls('LocationList.xlsx', xlsxData);
+	});
+	}
 }
 
 function isValid(d) {

@@ -253,7 +253,9 @@
                               <select class="form-control" name="country" ng-model="product.country" ng-change="onCountryChange()" required>
                                     <option value="">Select Country</option>
                                     <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                                    <option value="Bhutan">Bhutan</option>
                                     <option value="Malaysia">Malaysia</option>
+                                    <option value="Nepal">Nepal</option>
                               </select>
                               <i class="caret"></i>
                             </div>
@@ -455,7 +457,7 @@
                             To ensure picture quality we suggest minimum image resolutions as 450*300 pixels.
                           </p>
                           <div class="row form-group">
-                            <div class="form-group col-sm-5 pic-popover">Upload Pictures</div>
+                            <div class="form-group col-sm-5 pic-popover">General Appearence Pictures</div>
                              <div class="col-sm-7 col-xs-12">
                              <div class="row pic-popover">
                                 <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in images track by $index">
@@ -466,7 +468,7 @@
                                      </span>
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'NOCAT')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index,images)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
                                           <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
@@ -477,46 +479,13 @@
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index)" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index,images)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                  <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('NOCAT')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="images.push({})" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div> 
                             </div>
-                            </div>
-
-                          </div>
-                          <div class="row form-group">
-                            <div class="form-group col-sm-5 pic-popover" id="pol">General Appearence Pictures</div>
-                             <div class="col-sm-7 col-xs-12">
-                             <div class="row pic-popover">
-                                <div class="col-sm-3 col-xs-6 primary-upload text-center" ng-repeat="img in imagesGeneralApp track by $index">
-                                  <div class="br5">
-                                    <span class="fileinput-button browse-icon" ng-show="!img.src">
-                                        <span><i class="fa fa-plus-circle"></i></span>
-                                          <input type="file" id="gA" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
-                                     </span>
-                                      <span ng-show="img.src">
-                                        <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'GA')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
-                                       </div>
-                                       <div class="icn">
-                                          <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
-                                       </div>
-                                        <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
-                                            <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
-                                          </a>
-                                        </span>
-                                      </span>
-                                  </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadioGA" value="{{$index}}" ng-click="makePrimary($index,'GA')" ng-checked="img.isPrimary"/>Primary</span>
-                                </div>
-                                <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('GA')" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
-                                </div>
-                              </div>
                             </div>
 
                           </div>
@@ -533,7 +502,7 @@
 
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'ENGINE')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index,imagesEngine)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
                                           <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
@@ -545,10 +514,10 @@
                                       </span>
                                   </div>
                                    <span ng-show="img.src"><input type="radio" name="prvRadioEP" value="{{$index}}" ng-click="makePrimary($index,
-                                   'EP')" ng-checked="img.isPrimary"/>Primary</span>
+                                   imagesEngine)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('ENGINE')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="imagesEngine.push({catImgType:'eP'})" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
@@ -568,7 +537,7 @@
 
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'HYDRAULIC')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index,imagesHydraulic)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
                                           <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
@@ -579,10 +548,10 @@
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,'HP')" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,imagesHydraulic)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('HYDRAULIC')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="imagesHydraulic.push({catImgType:'hP'})" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
@@ -602,7 +571,7 @@
 
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'CABIN')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index,imagesCabin)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
                                           <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
@@ -613,10 +582,10 @@
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,'CP')" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,imagesCabin)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('CABIN')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="imagesCabin.push({catImgType:'cP'})" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
@@ -637,7 +606,7 @@
 
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'UC')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index,imagesUnderCarrage)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
                                           <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
@@ -648,10 +617,10 @@
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,'UC')" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,imagesUnderCarrage)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('UC')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="imagesUnderCarrage.push({catImgType:'uC'})" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
@@ -672,7 +641,7 @@
 
                                       <span ng-show="img.src">
                                         <div class="icn2">
-                                          <a href="javascript:void(0);" ng-click="deleteImg($index,'OTHER')"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+                                          <a href="javascript:void(0);" ng-click="deleteImg($index,imagesOther)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
                                        </div>
                                        <div class="icn">
                                           <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
@@ -683,10 +652,10 @@
                                         </span>
                                       </span>
                                   </div>
-                                   <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,'OP')" ng-checked="img.isPrimary"/>Primary</span>
+                                   <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,imagesOther)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="increaseElement('OTHER')" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block" ng-click="imagesOther.push({catImgType:'oP'})" ng-if="!$last">Add More</button>
                                   <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
@@ -1051,8 +1020,8 @@
               <ul class="img-magnifier text-center">
                   <li ng-repeat="img in images" ng-if="img.src">
                     <div class="removePrinary">
-                      <input type="radio" name="prvRadio" value="{{$index}}" ng-checked="img.isPrimary" ng-click="makePrimary($index)" uib-tooltip="Make it Primary" tooltip-placement="top"tooltip-trigger="mouseenter">
-                      <a href="javascript:void(0);" ng-click="deleteImg($index)" ng-if="!img.isPrimary" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+                      <input type="radio" name="prvRadio" value="{{$index}}" ng-checked="img.isPrimary" ng-click="makePrimary($index,images)" uib-tooltip="Make it Primary" tooltip-placement="top"tooltip-trigger="mouseenter">
+                      <a href="javascript:void(0);" ng-click="deleteImg($index,images)" ng-if="!img.isPrimary" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
                         <i class="fa fa-close"></i>
                       </a>
                     </div>
@@ -1104,22 +1073,6 @@
                     <td>{{product.productCondition}}</td>
                     <td>{{product.videoName}}</td>
                   </tr>
-              <!--<tr>
-                    <td>Primary Image</td>
-                    <td>
-                    <table>
-                      <tr>
-                        <td>{{product.primaryImage}} </td>
-                      </tr>
-                      <tr>
-                        <td><img widtd="50" height="50" ng-src="{{product.src}}" ng-if="!isEdit">
-                        <img widtd="50" height="50" ng-src="{{prefix}}{{product.src}}" ng-if="isEdit"></td>
-                      </tr>
-
-                    </table>
-                    </td>
-                  </tr>
-                 -->
                 </table>
               </div>
               <h4 class="text-left">Renting information</h4>

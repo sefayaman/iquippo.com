@@ -440,7 +440,7 @@
                     </table>
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="Techstatus.open" ng-click="informationTag('technicalInformation')">
+                <uib-accordion-group is-open="Techstatus.open" ng-click="informationTag('technicalInformation')" ng-if="!productDetailVm.isEmpty(currentProduct.technicalInfo)">{{productDetailVm.isEmpty(currentProduct.technicalInfo)}}
                   <uib-accordion-heading>
                     Technical information  <i class="pull-right fa" ng-class="{'fa-minus': Techstatus.open, 'fa-plus': !Techstatus.open}"></i>
                   </uib-accordion-heading>
@@ -449,23 +449,23 @@
                         <td widtd="50%">{{techInfo.key}}</td>
                         <td>{{techInfo.value}}</td>
                       </tr>
-                      <tr>
+                      <tr ng-if="currentProduct.technicalInfo.grossWeight">
                         <td>Gross Weight</td>
                         <td>{{currentProduct.technicalInfo.grossWeight}}</td>
                       </tr>
-                      <tr>
+                      <tr ng-if="currentProduct.technicalInfo.operatingWeight">
                         <td>Operating Weight</td>
                         <td>{{currentProduct.technicalInfo.operatingWeight}}</td>
                       </tr>
-                      <tr>
+                      <tr ng-if="currentProduct.technicalInfo.bucketCapacity">
                         <td>Bucket Capacity</td>
                         <td>{{currentProduct.technicalInfo.bucketCapacity}}</td>
                       </tr>
-                      <tr>
+                      <tr ng-if="currentProduct.technicalInfo.enginePower">
                         <td>Engine Power</td>
                         <td>{{currentProduct.technicalInfo.enginePower}}</td>
                       </tr>
-                      <tr>
+                      <tr ng-if="currentProduct.technicalInfo.liftingCapacity">
                         <td>Lifting Capacity</td>
                         <td>{{currentProduct.technicalInfo.liftingCapacity}}</td>
                       </tr>

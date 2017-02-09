@@ -18,7 +18,19 @@
     manpowerService.createManpower = createManpower;
     manpowerService.updateManpower = updateManpower;
     manpowerService.getStatusWiseCount = getStatusWiseCount;
+    manpowerService.bulkUpdate = bulkUpdate;
+    manpowerService.deleteManPower = deleteManPower;
 
+
+    function deleteManPower(id){
+      return $http.delete(path + "/"+id)
+        .then(function(res) {
+          return res.data;
+        })
+        .catch(function(res) {
+          throw res;
+        })
+    }
 
     function getCatSubCatOnFilter(filter) {
       return $http.post(path + "/getequipment", filter)
@@ -130,6 +142,16 @@
           throw err;
         });
     };
+
+    function bulkUpdate(body){
+      return $http.put(path + "/bulkupdate", body)
+        .then(function(res) {
+          return res;
+        })
+        .catch(function(err) {
+          throw err;
+        });
+    }
 
     /*function validateSignup(data){
           return $http.post(path + '/validatesignup', data)

@@ -7,10 +7,11 @@ var SubCategory = require('./../category/subcategory.model');
 var User = require('./../user/user.model');
 var Utility = require('./../../components/utility.js');
 var moment = require('moment');
+var async = require('async');
+var validator = require('validator');
 
 // Get list of services
 exports.getAll = function(req, res, next) {
-  debugger;
   var filter = {};
   filter['deleted'] = false;
   ManpowerUser.find(filter, function(err, users) {
@@ -54,6 +55,41 @@ exports.renderXlsx = function(req, res, next) {
 
   });
 };
+
+exports.delete = function(req,res,next){
+  var id = req.params && req.params.id;
+  if(!id){
+    return res.send(404).json({res:'No id sent for delete'});
+  }
+
+  if(!validator.isMongoId(id))
+    return res.send(400).json({res:'Invalid mongo id'});
+
+  var updateData = {
+    deleted : true,
+    status:false
+  }
+
+  ManpowerUser.findByIdAndUpdate(id,{$set:updateData}).exec(updateManPower);
+    function updateManPower(err,doc){
+      if(err){
+        if(err || !doc){
+          return res.send(500).json({res:'Unable to update...Please try again after some time'});
+        }   
+      }
+    User.findByIdAndUpdate(doc.user.userId,{$set:{status:{isManpower : false}}}).exec(updateUser);
+
+    function updateUser(err,doc){
+      if(err || !doc){
+        return res.send(500).json({res:'Unable to update...Please try again after some time'});
+      }
+
+      return res.json({res:'Deleted Successfully...'});
+    }
+  }
+
+
+}
 
 
 // Get a single services
@@ -145,6 +181,94 @@ exports.update = function(req, res) {
     });
   });
 };
+
+exports.bulkUpdate = function(req,res){
+  if(!req.body || !req.body.ids)
+    return res.status(404).json({res:'Nothing to update'}); 
+  
+  var updateIds;
+  
+  if(Array.isArray(req.body.ids)){
+    updateIds = req.body.ids;
+  }else{
+    updateIds = req.body.ids.split(',');
+  }
+
+  if(!updateIds.length)
+    return res.status(404).json({res:'Nothing to update'}); 
+
+  var updateStatus = req.body.status || false;
+  var updatedBy = req.body && req.body.updatedBy;
+  var totalRecords = updateIds.length;
+  
+  var successIds = [],
+    failed_ids = [],
+    statusMap = {};
+  
+  var searchFilter = {
+    '_id' : {
+      '$in' : updateIds
+    },
+    deleted : false
+  };
+
+  ManpowerUser.find(searchFilter,function(err,docs){
+    if(err || !docs){
+      console.log(err);
+      return res.status(500).json({res:'Error while fetching records...Please try again'});
+    }
+
+    if(!docs.length)
+      return res.status(404).json({res:'No Records found to update'});
+
+    docs.forEach(function(x){
+      statusMap[x._id] = x.status;
+    })
+
+    updateIds = updateIds.filter(function(x){
+      if(statusMap[x] !== updateStatus)
+        return x;
+    })
+
+    if(!updateIds.length)
+      return res.status(200).json({res:'Nothing to update.Updated Status is same'}); 
+
+
+    async.eachLimit(updateIds,10,intialize,finalize); 
+  })
+
+
+  function finalize(err){
+    if(err){
+      console.log(err);
+      return res.status(500).json({res:'Error while updating...Please try again'});
+    }
+
+    res.json({res:successIds.length + ' records updated from ' + totalRecords + ' records'});
+  }
+
+  function intialize(id,cb){
+    ManpowerUser.findByIdAndUpdate(id,{$set:{status:updateStatus,updatedBy : updatedBy,updatedAt:new Date()}}).exec(updateManPower);
+    function updateManPower(err,doc){
+      if(err || !doc){
+        failed_ids.push(id);
+        return cb(); 
+      }
+
+      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus,updatedAt : new Date()}}).exec(updateUser);
+
+      function updateUser(err,userDoc){
+        if(err || !userDoc){
+          failed_ids.push(id);
+          return cb();
+        }
+        
+        successIds.push(id);
+        return cb();
+      }
+    }
+  }
+}
 
 
 

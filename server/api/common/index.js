@@ -3,8 +3,11 @@
 var express = require('express');
 var controller = require('./common.controller');
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
+var json2xls = require('json2xls');
 
 var router = express.Router();
+
+router.use(json2xls.middleware);
 
 router.get('/countries', controller.getAllCountry);
 router.post('/sendOtp', controller.sendOtp);
@@ -31,6 +34,9 @@ router.put('/city/:id', controller.updateCity);
 router.delete('/city/:id', controller.deleteCity);
 router.post('/city/search', controller.searchCity);
 router.post('/location/search', controller.searchLocation);
+router.post('/state/search', controller.searchState);
+router.post('/cities/search', controller.searchCities);
+router.post('/assetId/search',controller.searchAssetId);
 
 router.get('/subscribe', controller.getAllSubscriber);
 router.post('/subscribe', controller.createSubscribe);
@@ -55,6 +61,9 @@ router.post('/banner', controller.createBanner);
 router.put('/banner/:id', controller.updateBanner);
 router.delete('/banner/:id', controller.deleteBanner);
 router.post('/banner/onfilter', controller.getBannerOnFilter);
+
+//render excel
+router.get('/render.xlsx',controller.renderXLSX);
 
 
 //Bulk Upload Routes
