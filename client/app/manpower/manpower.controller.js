@@ -259,7 +259,15 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     function saveNewManpowerUser(){
       vm.manpower.isManpower =  true; 
       vm.manpower.country = $rootScope.allCountries[0].name;
-      vm.manpower.status =  false;   
+      vm.manpower.status =  false; 
+      vm.manpower.createdBy = {
+        name : 'Self'
+      };
+
+      vm.manpower.updatedBy = {
+        name : 'Self'
+      }
+
       $rootScope.loading = true; 
       ManpowerSvc.createUser(vm.manpower).then(function(result) {
         vm.manpower.user = {};
@@ -474,6 +482,15 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     vm.bulkUpdate = bulkUpdate;
     var selectedIds =[];
     vm.deleteManPower = deleteManPower;
+    vm.searchType = '';
+    vm.showFilter = showFilter;
+    vm.coulmnSearchStr = '';
+
+    function showFilter(type)
+    {
+      vm.coulmnSearchStr = "";
+      fireCommand(true);
+    }
 
 
     function deleteManPower(manpower){
@@ -500,7 +517,11 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
 
     function updateManpowerUser(user){
       $rootScope.loading = true;
-      user.updatedBy = {userId : Auth.getCurrentUser()._id};
+      user.updatedBy = {userId : Auth.getCurrentUser()._id,
+                        email:Auth.getCurrentUser().email,
+                        name : Auth.getCurrentUser().fname +' ' + Auth.getCurrentUser().lname,
+                        mobile : Auth.getCurrentUser().mobile};
+      
       ManpowerSvc.updateManpower(user).then(function(result){
         $rootScope.loading = false;
         //getAllUsers();
@@ -520,7 +541,10 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       var body = {};
       body.ids = selectedIds;
       body.status = action === 'active' ? true : false;
-      body.updatedBy = {userId : Auth.getCurrentUser()._id};
+      body.updatedBy = {userId : Auth.getCurrentUser()._id,
+                        email:Auth.getCurrentUser().email,
+                        name : Auth.getCurrentUser().fname + ' ' +Auth.getCurrentUser().lname,
+                        mobile : Auth.getCurrentUser().mobile};
 
       ManpowerSvc.bulkUpdate(body).then(function(result){
         $rootScope.loading = false;
@@ -553,6 +577,8 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
         filter = filterObj;
       if(vm.searchStr)
         filter['searchstr'] = vm.searchStr;
+      if(vm.coulmnSearchStr)
+        filter[vm.searchType] = vm.coulmnSearchStr;
       
       getAllUsers(filter);
     }
@@ -566,6 +592,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
         //vm.allManpowerList = result;
+        console.log(result.items);
         vm.allManpowerList = result.items;
         vm.totalItems = result.totalItems;
         prevPage = vm.currentPage;
