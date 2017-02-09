@@ -7,6 +7,8 @@ var router = express.Router();
 
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
+
+router.get('/unique/assetId',controller.updateAssetId);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.post('/setexpiry', controller.setExpiry);

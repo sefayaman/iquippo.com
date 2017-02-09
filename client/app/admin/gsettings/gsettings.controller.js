@@ -81,6 +81,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.addTechnicalInfoClicked = addTechnicalInfoClicked;
     vm.editProductTechInfo = editProductTechInfo;
     vm.exportProductTechInfoExcel = exportProductTechInfoExcel;
+    vm.exportProductState=exportProductState;
     vm.totalProductTechInfoCount = 0;
     $scope.productTechTotalItems = 0;
     vm.closeTechInfo = closeTechInfo;
@@ -195,6 +196,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     	LocationSvc.getAllState()
     	.then(function(result){
     		vm.stateList = result;
+            console.log(vm.stateList);
     	})
     }
 
@@ -1331,6 +1333,14 @@ function openWindow(url){
     });
  }
 
+function exportProductState(type){
+    var filters = {};
+    filters.limit = 500;
+    filters.type=type;
+
+    openWindow(LocationSvc.exportExcel(filters));
+
+}
 
 function exportProductTechInfoExcel(){
 	var filters = {};

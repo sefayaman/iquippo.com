@@ -27,7 +27,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.isEdit = false;
 
     $scope.images = [{isPrimary:true}]; 
-    $scope.imagesGeneralApp=[{isPrimary:true}];
     $scope.imagesEngine = [{isPrimary:true}];
     $scope.imagesHydraulic = [{isPrimary:true}];
     $scope.imagesCabin = [{isPrimary:true}];
@@ -36,7 +35,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
     var dbImages=[];
 
-    $scope.primaryIndex = 0;
+    //$scope.primaryIndex = 0;
     $scope.enableButton = false;
     var productHistory = $scope.productHistory = {};
     var ALLOWED_DATA_SIZE = 15*1024*1024;
@@ -56,7 +55,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
   $scope.onModelChange = onModelChange;
   $scope.onTradeTypeChange = onTradeTypeChange;
   $scope.clickHandler = clickHandler;
-  $scope.increaseElement=increaseElement;
   //$scope.addOrUpdateProduct = addOrUpdateProduct;
   $scope.onUserChange = onUserChange;
   $scope.resetClick = resetClick;
@@ -103,12 +101,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.auctionReq = {};
   }
 
-
-  /*  function uncheck(event) {
-    if ($scope.checked == event.target.value)
-        $scope.checked = false
-  }
-*/
   function goToUsermanagement(){
     $state.go('usermanagment');
     $timeout(function() { Modal.openDialog('adduser');}, 20);
@@ -144,9 +136,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
     });*/
 
-    if(!Auth.isAdmin()){
+    if(!Auth.isAdmin() && !Auth.isChannelPartner()){
       product.seller=Auth.getCurrentUser();
-      console.log(product.seller);
     }
 
    
@@ -180,12 +171,12 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         console.log(response);
 
         product = $scope.product = response;
-        $scope.imagesGeneralApp=[];
         $scope.imagesEngine = [];
         $scope.imagesHydraulic = [];
         $scope.imagesCabin = [];
         $scope.imagesUnderCarrage = [];
         $scope.imagesOther = [];
+        $scope.images = [];
 
         if(response.serviceInfo.length > 0){
           for(var i =0; i < response.serviceInfo.length; i++){
@@ -196,50 +187,28 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           $scope.product.serviceInfo = [{}];
         }
 
-        var deletedIndex = [];
-        
-        angular.copy($scope.product.images,$scope.images);
-        dbImages=$scope.images;
-        $scope.images.forEach(function(item,index){
-          if(item.isPrimary){
-            $scope.primaryIndex = index;
-          }
-          item.isEdit = true;
+        $scope.product.images.forEach(function(item,index){
           if(item.catImgType){
             switch(item.catImgType){
-             case 'gA': 
-                $scope.imagesGeneralApp[$scope.imagesGeneralApp.length]= item;
-                deletedIndex.push(index);
-             break;
              case 'eP' :
-                $scope.imagesEngine[$scope.imagesEngine.length] = item; 
-                deletedIndex.push(index);   
+                $scope.imagesEngine[$scope.imagesEngine.length] = item;    
              break;
              case 'hP':
                 $scope.imagesHydraulic[$scope.imagesHydraulic.length]=item;
-                deletedIndex.push(index);
              break;
              case 'cP':
                 $scope.imagesCabin[$scope.imagesCabin.length]= item;
-                deletedIndex.push(index);
              break;
              case 'uC':
                 $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length]= item;
-                deletedIndex.push(index);
              break;
              case 'oP':
                 $scope.imagesOther[$scope.imagesOther.length] = item;
-                deletedIndex.push(index);
              break;
             }
           } else
-              item.name = item.src;
+              $scope.images[$scope.images.length] = item;
         });
-
-        if(deletedIndex.length){
-          for(var k = deletedIndex.length-1;k>=0;k--)
-            $scope.images.splice(deletedIndex[k],1);
-        }
 
         if(!$scope.product.videoLinks || $scope.product.videoLinks.length == 0)
           $scope.product.videoLinks = [{}];
@@ -382,16 +351,8 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             if(!$scope.product.assetId)
               $scope.product.assetId = $scope.assetDir;
             if(args.id){
-              console.log(args);
+              //console.log(args);
               switch(args.id){
-                 case 'gA': 
-                  if(args.type == "image"){
-                    /*$scope.imagesGeneralApp[parseInt(args.index)]={};*/
-                    $scope.imagesGeneralApp[parseInt(args.index)].catImgType = args.id;
-                    $scope.imagesGeneralApp[parseInt(args.index)].src = result.data.filename;
-                    console.log($scope.imagesGeneralApp);
-                  }      
-                 break;
                  case 'eP' : 
                  if(args.type == "image"){
               
@@ -651,14 +612,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             $scope.product.technicalInfo['bucketCapacity'] = techInfo[0].information.bucketCapacity;
             $scope.product.technicalInfo['enginePower'] = techInfo[0].information.enginePower;
             $scope.product.technicalInfo['liftingCapacity'] = techInfo[0].information.liftingCapacity;            
-
-            /*$scope.product.technicalInfo = {
-              grossWeight : techInfo[0].information.grossWeight,
-              operatingWeight : techInfo[0].information.operatingWeight, 
-              bucketCapacity : techInfo[0].information.bucketCapacity,
-              enginePower : techInfo[0].information.enginePower, 
-              liftingCapacity : techInfo[0].information.liftingCapacity 
-            }*/ 
           }
         })
   }
@@ -810,167 +763,21 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       });
 
       if($scope.product.images.length == 0){
-        Modal.alert("Please upload atleast one image in Upload Pictures section.",true);
+        Modal.alert("Please upload atleast one image in General Appearence section.",true);
         $rootScope.loading = false;
         return;
       }
-
-       if($scope.imagesGeneralApp.length > 0){
-      $scope.imagesGeneralApp.forEach(function(item,index){
-          if(item.src){
-            var imgObj = {};
-            imgObj.src = item.src;
-            if(item.isPrimary){
-              imgObj.isPrimary = true;
-              /*if(primarySet !== "set")
-             product.primaryImg = item.src;*/
-              primaryFound = true;
-            }else{
-               imgObj.isPrimary = false;
-            }
-            if(item.waterMarked)
-                imgObj.waterMarked = true;
-             else
-              imgObj.waterMarked = false;
-             if(item.catImgType){
-              imgObj.catImgType=item.catImgType;
-             }
-             
-           $scope.product.images[$scope.product.images.length] = imgObj;
-          }
-          
-
-      });
-  }
-       if($scope.imagesEngine.length > 0){
-      $scope.imagesEngine.forEach(function(item,index){
-          if(item.src){
-            var imgObj = {};
-            imgObj.src = item.src;
-            if(item.isPrimary){
-              imgObj.isPrimary = true;
-             //if(primarySet !== "set")
-            // product.primaryImg = item.src;
-              primaryFound = true;
-            }else{
-               imgObj.isPrimary = false;
-            }
-            if(item.waterMarked)
-                imgObj.waterMarked = true;
-             else
-              imgObj.waterMarked = false;
-             if(item.catImgType)
-             imgObj.catImgType=item.catImgType;
-           $scope.product.images[$scope.product.images.length] = imgObj;
-          }
-          
-
-      });
-  }
-       if($scope.imagesHydraulic.length > 0){
-      $scope.imagesHydraulic.forEach(function(item,index){
-          if(item.src){
-            var imgObj = {};
-            imgObj.src = item.src;
-            if(item.isPrimary){
-              imgObj.isPrimary = true;
-              //if(primarySet !== "set")
-             //product.primaryImg = item.src;
-              primaryFound = true;
-            }else{
-               imgObj.isPrimary = false;
-            }
-            if(item.waterMarked)
-                imgObj.waterMarked = true;
-             else
-              imgObj.waterMarked = false;
-             if(item.catImgType)
-             imgObj.catImgType=item.catImgType;
-           $scope.product.images[$scope.product.images.length] = imgObj;
-          }
-         
-
-      });
-}
-      if($scope.imagesCabin.length > 0){
-      $scope.imagesCabin.forEach(function(item,index){
-          if(item.src){
-            var imgObj = {};
-            imgObj.src = item.src;
-            if(item.isPrimary){
-              imgObj.isPrimary = true;
-               //if(primarySet !== "set")
-             //product.primaryImg = item.src;
-              primaryFound = true;
-            }else{
-               imgObj.isPrimary = false;
-            }
-            if(item.waterMarked)
-                imgObj.waterMarked = true;
-             else
-              imgObj.waterMarked = false;
-             if(item.catImgType)
-             imgObj.catImgType=item.catImgType;
-           $scope.product.images[$scope.product.images.length] = imgObj;
-          }
-         
-
-      });
-}
-
-      if($scope.imagesUnderCarrage){
-      $scope.imagesUnderCarrage.forEach(function(item,index){
-          if(item.src){
-            var imgObj = {};
-            imgObj.src = item.src;
-            if(item.isPrimary){
-              imgObj.isPrimary = true;
-             //  if(primarySet !== "set")
-             //product.primaryImg = item.src;
-              primaryFound = true;
-            }else{
-               imgObj.isPrimary = false;
-            }
-            if(item.waterMarked)
-                imgObj.waterMarked = true;
-             else
-              imgObj.waterMarked = false;
-             if(item.catImgType)
-             imgObj.catImgType=item.catImgType;
-           $scope.product.images[$scope.product.images.length] = imgObj;
-          }
-         
-      });
-  }
-          if($scope.imagesOther.length){
-      $scope.imagesOther.forEach(function(item,index){
-          if(item.src){
-            var imgObj = {};
-            imgObj.src = item.src;
-            if(item.isPrimary){
-              imgObj.isPrimary = true;
-              // if(primarySet !== "set")
-             //product.primaryImg = item.src;
-              primaryFound = true;
-            }else{
-               imgObj.isPrimary = false;
-            }
-            if(item.waterMarked)
-                imgObj.waterMarked = true;
-             else
-              imgObj.waterMarked = false;
-             if(item.catImgType)
-             imgObj.catImgType=item.catImgType;
-           $scope.product.images[$scope.product.images.length] = imgObj;
-          }
-          
-      });
-  }
 
       if(!primaryFound){
         $scope.product.primaryImg = $scope.product.images[0].src;
         $scope.product.images[0].isPrimary = true;
       }
+      
+      checkPrimaryAndMergeOnSubmit($scope.imagesEngine,$scope.product.images);
+      checkPrimaryAndMergeOnSubmit($scope.imagesHydraulic,$scope.product.images);
+      checkPrimaryAndMergeOnSubmit($scope.imagesCabin,$scope.product.images);
+      checkPrimaryAndMergeOnSubmit($scope.imagesOther,$scope.product.images);
+      checkPrimaryAndMergeOnSubmit($scope.imagesUnderCarrage,$scope.product.images);
 
       if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role == 'admin' && product.status) {
         product.applyWaterMark = true;
@@ -989,6 +796,38 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         addOrUpdate(cb);
       }
       
+  }
+
+  function checkPrimaryAndMergeOnSubmit(sourceArr){
+      if(sourceArr.length == 0)
+        return;
+      var primaryFound = false;
+      var tempArr = [];
+      sourceArr.forEach(function(item,index){
+            if(item.src){
+              var imgObj = {};
+              imgObj.src = item.src;
+              if(item.isPrimary){
+                imgObj.isPrimary = true;
+                primaryFound = true;
+              }else{
+                 imgObj.isPrimary = false;
+              }
+              if(item.waterMarked)
+                  imgObj.waterMarked = true;
+               else
+                imgObj.waterMarked = false;
+               if(item.catImgType)
+                  imgObj.catImgType = item.catImgType;
+              tempArr[tempArr.length] = imgObj;
+            }
+            
+        });
+
+      if(!primaryFound && tempArr.length > 0){
+          tempArr[0].isPrimary = true;
+      }
+      $scope.product.images = $scope.product.images.concat(tempArr);
   }
   
   function goToSecondStep(){
@@ -1460,166 +1299,19 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
     $scope.container.mfgYear = null;
   }
 
-  function makePrimary(val,type){
-    if(!type){
-      $scope.images.forEach(function(item,index,arr){ 
+  function makePrimary(val,imageArr){
+     imageArr.forEach(function(item,index,arr){ 
         if(val == index)
         item.isPrimary = true;
       else
         item.isPrimary = false;
       });
-    }else{
-      switch(type){
-        case 'GA':
-          $scope.imagesGeneralApp.forEach(function(item,index,arr){ 
-          if(val == index)
-              item.isPrimary = true;
-            else
-              item.isPrimary = false;
-          }); 
-        break;
-
-        case 'EP':
-          $scope.imagesEngine.forEach(function(item,index,arr){ 
-          if(val == index)
-              item.isPrimary = true;
-            else
-              item.isPrimary = false;
-          }); 
-        break;
-        case 'HP':
-          $scope.imagesHydraulic.forEach(function(item,index,arr){ 
-          if(val == index)
-              item.isPrimary = true;
-            else
-              item.isPrimary = false;
-          }); 
-        break;
-
-        case 'CP':
-          $scope.imagesCabin.forEach(function(item,index,arr){ 
-          if(val == index)
-              item.isPrimary = true;
-            else
-              item.isPrimary = false;
-          }); 
-        break;
-
-        case 'UC':
-          $scope.imagesUnderCarrage.forEach(function(item,index,arr){ 
-          if(val == index)
-              item.isPrimary = true;
-            else
-              item.isPrimary = false;
-          }); 
-        break;
-
-        case 'OP':
-          $scope.imagesOther.forEach(function(item,index,arr){ 
-          if(val == index)
-              item.isPrimary = true;
-            else
-              item.isPrimary = false;
-          }); 
-        break;
-      }
     }
-      
 
-
-     /*$scope.imagesGeneralApp.forEach(function(item,index,arr){
-      if($scope.primaryIndex == index)
-          item.isPrimary = true;
-        else
-          item.isPrimary = false;
-      });
-
-     $scope.imagesEngine.forEach(function(item,index,arr){
-      if($scope.primaryIndex == index)
-          item.isPrimary = true;
-        else
-          item.isPrimary = false;
-      });
-
-     $scope.imagesHydraulic.forEach(function(item,index,arr){
-      if($scope.primaryIndex == index)
-          item.isPrimary = true;
-        else
-          item.isPrimary = false;
-      });
-
-     $scope.imagesCabin.forEach(function(item,index,arr){
-      if($scope.primaryIndex == index)
-          item.isPrimary = true;
-        else
-          item.isPrimary = false;
-      });
-
-     $scope.imagesUnderCarrage.forEach(function(item,index,arr){
-      if($scope.primaryIndex == index)
-          item.isPrimary = true;
-        else
-          item.isPrimary = false;
-      });
-
-     $scope.imagesOther.forEach(function(item,index,arr){
-      if($scope.primaryIndex == index)
-          item.isPrimary = true;
-        else
-          item.isPrimary = false;
-      });*/
-  }
-
- /*function deleteImg(idx){
-     $scope.images[idx] = {};
-    $scope.images.forEach(function(item,index,arr){
-      if(item.isPrimary)
-          $scope.primaryIndex = index;
-      });
-    if(typeof $scope.primaryIndex === 'undefined')
-        $scope.primaryIndex  =  0;
-
-  }
-*/
-
-
- function deleteImage(idx,imageArr){
-    //$scope[imageArr][idx] = {};
-      $scope[imageArr].splice(idx,1);
-    $scope[imageArr].forEach(function(item,index,arr){
-      if(item.isPrimary)
-          $scope.primaryIndex = index;
-      });
-    if(typeof $scope.primaryIndex === 'undefined')
-        $scope.primaryIndex  =  0;
-  }
-
-   function deleteImg(idx,type){
-       switch(type){
-          case 'NOCAT':
-          console.log($scope.images);
-            deleteImage(idx,'images');
-          break;
-          case 'GA':
-            deleteImage(idx,'imagesGeneralApp');
-          break;
-          case 'ENGINE':
-            deleteImage(idx,'imagesEngine');
-          break;
-          case 'HYDRAULIC':
-            deleteImage(idx,'imagesHydraulic');
-          break;
-          case 'CABIN':
-            deleteImage(idx,'imagesCabin');
-          break;
-          case 'UC':
-            deleteImage(idx,'imagesUnderCarrage');
-          break;
-          case 'OTHER':
-            deleteImage(idx,'imagesOther');
-          break;
-        }
-
+ function deleteImg(idx,imgArr){
+    if(imgArr.length < 1)
+        return;
+    imgArr.splice(idx,1);
   }
 
      // preview uploaded images
@@ -1633,19 +1325,13 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       ga('send', gaMasterObject.uploadProductPreviewTime);
       //End
       var prevScope = $rootScope.$new();
-      prevScope.selectedRadio = $scope.primaryIndex;
       prevScope.images = $scope.images;
       prevScope.prefix = $rootScope.uploadImagePrefix;
       prevScope.assetDir = $scope.assetDir;
       prevScope.isEdit = $scope.isEdit;
       var prvProduct = {};
       angular.copy($scope.product,prvProduct);
-      var img = $scope.images[$scope.primaryIndex];
-      if(img.name)
-        prvProduct.primaryImage = img.name;
-      else
-        prvProduct.primaryImage = img.src;
-      prvProduct.src = img.src;
+
       prvProduct.mfgYear = $scope.container.mfgYear;
       prevScope.product = prvProduct;
       var prvProductModal = $uibModal.open({
@@ -1655,7 +1341,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           size: 'lg'
       });
 
-      prevScope.deleteImg = $scope.deleteImg
+      prevScope.deleteImg = $scope.deleteImg;
       prevScope.makePrimary = $scope.makePrimary;
       prevScope.getDateFormat = function(serviceDate){
         if(!serviceDate)
@@ -1679,7 +1365,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
       function rotate(img){
         if(!img.src)
           return;
-        //var img = $scope.images[idx];
         var imagePath = $scope.assetDir + "/" + img.src;
         $http.post("/api/common/rotate",{imgPath:imagePath})
         .then(function(res){
@@ -1736,39 +1421,9 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       }
 
-      function increaseElement(type){
-        switch(type){
-          case 'NOCAT':
-            $scope.images[$scope.images.length] = {};
-          break;
-          case 'GA':
-            $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
-          break;
-          case 'ENGINE':
-            $scope.imagesEngine[$scope.imagesEngine.length] = {};
-          break;
-          case 'HYDRAULIC':
-            $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};
-          break;
-          case 'CABIN':
-            $scope.imagesCabin[$scope.imagesCabin.length] = {};
-          break;
-          case 'UC':
-            $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
-          break;
-          case 'OTHER':
-            $scope.imagesOther[$scope.imagesOther.length] = {};
-          break;
-        }
-
-      }
-
       function prepareImgArr(){
         if($scope.images.length == 0)
           $scope.images[0] = {isPrimary:true};
-        
-        if($scope.imagesGeneralApp.length == 0)
-          $scope.imagesGeneralApp[0] = {isPrimary:true};
         
         if($scope.imagesEngine.length == 0)
           $scope.imagesEngine[0] = {isPrimary:true};
@@ -1785,43 +1440,6 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
         if($scope.imagesUnderCarrage.length == 0)
           $scope.imagesUnderCarrage[0] = {isPrimary:true};
         
-        /*var numberOfIteration  = 1 - $scope.images.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.images[$scope.images.length] = {};
-        }
-
-        numberOfIteration  = 1- $scope.imagesGeneralApp.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.imagesGeneralApp[$scope.imagesGeneralApp.length] = {};
-        }
-
-        //console.log("My size after editing");
-        //console.log($scope.imagesGeneralApp);
-
-        numberOfIteration  = 1 - $scope.imagesEngine.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.imagesEngine[$scope.imagesEngine.length] = {};
-        }
-
-        numberOfIteration  = 1 - $scope.imagesHydraulic.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.imagesHydraulic[$scope.imagesHydraulic.length] = {};
-        }
-
-        numberOfIteration  = 1 - $scope.imagesOther.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.imagesOther[$scope.imagesOther.length] = {};
-        }
-
-        numberOfIteration  = 1 - $scope.imagesCabin.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.imagesCabin[$scope.imagesCabin.length] = {};
-        }
-
-        numberOfIteration  = 1 - $scope.imagesUnderCarrage.length;
-        for(var i = 0; i < numberOfIteration; i++){
-          $scope.imagesUnderCarrage[$scope.imagesUnderCarrage.length] = {};
-        }*/
       }
 
      // date picker
