@@ -1779,7 +1779,7 @@ exports.validateExcelData = function(req,res,next){
             product["currencyType"] = trim(cr);
           } else {
             errorList.push({
-              Error : 'Mandatory field Gross_Price and Price_on_Request is invalid or not present',
+              Error : 'Mandatory field Gross_Price and Currency is invalid or not present',
               rowCount : row.rowCount
             });
             return callback('Error');
