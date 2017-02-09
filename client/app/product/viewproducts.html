@@ -176,7 +176,7 @@
           <div class="col-sm-8 col-md-9">
 
             <div class="row pull-right">
-                <div class="col-xs-2 col-sm-2">
+                <div class="col-xs-2 col-sm-2 hidden-xs">
                   <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="viewproductVm.compare()">
                      <span class="count-compare" ng-if="viewproductVm.compareCount != 0">{{viewproductVm.compareCount}}</span>
                      <img src="assets/images/campare-icon.png" width="20">
@@ -256,7 +256,7 @@
                               <label class="btn btn-success text-ellips" ng-if="product.specialOffers">
                                <i class="fa fa-tags"></i> <span class="hidden-xs">Special Offers</span>
                               </label>
-                              <a herf="javascript:void(0)" class="btn btn-default" ng-click="viewproductVm.addToCompare(product)">
+                              <a herf="javascript:void(0)" class="btn btn-default hidden-xs" ng-click="viewproductVm.addToCompare(product)">
                                 <img src="assets/images/campare-icon.png" class="visible-xs" width="15">  <span class="hidden-xs">Add to Compare</span>
                               </a>
                               <a href="javascript:void(0);" ng-click="viewproductVm.addProductToCart(product)" class="btn btn-primary" >
