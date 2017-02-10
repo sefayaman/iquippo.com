@@ -299,12 +299,12 @@ function addProductQuote(form){
       return true;
     var retVal = true;
     var params = myObject.params;
-    delete myObject.params;
+    //delete myObject.params;
     var keys= Object.keys(myObject);
 
     if(keys.length > 0){
       for(var i=0; i < keys.length;i++){
-        if(myObject[keys[i]] != ""){
+        if(myObject[keys[i]] != "" && keys[i] != 'params'){
           retVal = false;
           break;
         }
