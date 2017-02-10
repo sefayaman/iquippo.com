@@ -304,9 +304,10 @@ function addProductQuote(form){
 
     if(keys.length > 0){
       for(var i=0; i < keys.length;i++){
-        if(myObject[keys[i]] != "")
-           retVal = false;
-         break;
+        if(myObject[keys[i]] != ""){
+          retVal = false;
+          break;
+        }
       }
     }
 
