@@ -200,6 +200,14 @@ function excel_from_data(data) {
     ws[cell_ref] = cell;
 
     if(R == 0)
+      cell = {v: "Ticket Id"};
+    else {
+      if(user)
+        cell = {v: user.ticketId || ""};
+    }
+    setType(cell);
+
+    if(R == 0)
       cell = {v: "Full Name"};
     else{
       if(user)

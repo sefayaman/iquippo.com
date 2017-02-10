@@ -1,5 +1,7 @@
 'use strict';
 
+var seqGenerator = require('../../components/seqgenerator');
+
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -23,7 +25,19 @@ var QuoteSchema = new Schema({
   },
   agree:Boolean,
   comment: String,
+  ticketId : String,
   createdAt: Date
 });
+
+QuoteSchema.pre('save',function(next){
+  var self = this;
+  var prefix = 'QQ_' + self.mobile;
+  var sequence = seqGenerator.sequence();
+  sequence.next(function(seqnum){
+    self.ticketId = prefix+'_'+seqnum;
+    return next();
+  },'quotes',100002);
+
+})
 
 module.exports = mongoose.model('Quote', QuoteSchema);
