@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+abort() {
+  echo
+  echo "  $@" 1>&2
+  echo
+  exit 1
+}
+
+log() {
+  echo "  ○ $@"
+}
+
+PROJDIR=../
+
+echo "Running npm install in $PWD"
+npm install
+rc=$?
+if [[ $rc != 0 ]] ; then
+    abort 'NPM install failed ' $rc
+fi
+
+echo "Running bower install in $PWD"
+bower install
+rc=$?
+if [[ $rc != 0 ]] ; then
+    abort 'Bower install failed ' $rc
+fi
+
+
+echo "Running grunt build for creating build"
+grunt build
+rc=$?
+if [[ $rc != 0 ]] ; then
+    abort 'grunt build failed ' $rc
+fi
+
+tar -czvf server.tar.gz PROJDIR/dist/server/
+tar -czvf app.tar.gz PROJDIR/dist/public/app/
+
+scp -i ~/Downloads/iquippo.pem server.tar.gz       ubuntu@54.169.110.34:/home/ubuntu/sreiglobal/dist/
+scp -i ~/Downloads/iquippo.pem app.tar.gz       ubuntu@54.169.110.34:/home/ubuntu/sreiglobal/dist/public/
+scp -i ~/Downloads/iquippo.pem PROJDIR/dist/public/index.html ubuntu@54.169.110.34:/home/ubuntu/sreiglobal/dist/public/
+
+

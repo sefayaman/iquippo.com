@@ -11,11 +11,12 @@
             <div class="col-xs-6 col-sm-2 text-right">
               <h3>
                 <div class="bulks" ng-if="isBulkUpload()">
-                  <span class="fileinput-button" >
-                    <button class="btn btn-warning btn-block"><i class="fa fa-database"></i> Bulk Product Update
+                    <span class="btn btn-warning btn-block fileinput-button">
                       <input type="file" name="template_update" onchange="angular.element(this).scope().updateAssetTemp(this.files,this)">
-                    </button>
-                  </span>
+                      <span>
+                        <i class="fa fa-database"></i> Bulk Product Update
+                      </span>
+                    </span>
                </div>               
               </h3>
             </div>
@@ -674,8 +675,8 @@
                               <a class="btn btn-danger" href="javascript:void(0)" ng-if="link.uri" ng-click="playVideo($index)"><i class="fa fa-play"></i></a>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-2 pull-right ">
-                              <button class="btn btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.videoLinks.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.videoLinks.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                           <div class="row">
@@ -742,8 +743,8 @@
                             </div>
                             <div class="col-sm-5 col-md-5 form-group"><input type="text" placeholder="Value" ng-value="param.value" ng-model="param.value" class="form-control" name=""></div>
                             <div class="col-sm-3 col-md-2 form-group">
-                              <button class="btn btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.technicalInfo.params.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.technicalInfo.params.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                           <div class="row">
@@ -821,8 +822,8 @@
                             <div class="col-sm-2 col-md-2 form-group"><input type="text" placeholder="Service at(KMs)" ng-value="serviceinfo.serviceat" class="form-control" ng-model="serviceinfo.serviceAt"></div>
                             <div class="col-sm-2 col-md-3 form-group"><input type="text" placeholder="Authorized Station" ng-value="serviceinfo.authServiceStation" class="form-control" ng-model="serviceinfo.authServiceStation"></div>
                             <div class="col-sm-3 col-md-2 form-group">
-                              <button class="btn btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.serviceInfo.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.serviceInfo.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                         </div>
@@ -881,8 +882,8 @@
                               <a href="{{uploadImagePrefix}}{{assetDir}}/{{miscDoc.name}}" target="_blank">{{miscDoc.name}}</a>
                             </div>
                             <div class="col-xs-12 col-sm-3 col-md-2 pull-right">
-                              <button class="btn btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
-                              <button class="btn btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.push({})" ng-if="$last">Add More</button>
+                              <button class="active btn btn-default btn-block" ng-click="product.miscDocuments.splice($index,1)" ng-if="!$last">Delete</button>
                             </div>
                           </div>
                         </div>
