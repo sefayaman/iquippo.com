@@ -76,6 +76,7 @@ exports.search = function(req, res) {
 //data export
 
 var BUY_REQUEST_FIELD_MAP = {
+                              'Ticket Id' : 'ticketId',
                               'Full Name' : 'fullName',
                               'Country' : 'user.country',
                               'Location' : 'user.city',
@@ -94,6 +95,7 @@ var BUY_REQUEST_FIELD_MAP = {
                             };
 
 var RENT_REQUEST_FIELD_MAP = {
+                              'Ticket Id' : 'ticketId',
                               'Full Name' : 'fullName',
                               'Country' : 'user.country',
                               'Location' : 'user.city',

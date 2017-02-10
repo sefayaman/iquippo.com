@@ -297,15 +297,29 @@ function addProductQuote(form){
     
     if(angular.equals(myObject,{}))
       return true;
+    var retVal = true;
+    var params = myObject.params;
+    delete myObject.params;
     var keys= Object.keys(myObject);
-    if(keys.length > 1){
+
+    if(keys.length > 0){
       for(var i=0; i < keys.length;i++){
         if(myObject[keys[i]] != "")
-           return false;
+           retVal = false;
+         break;
       }
-      return true;
     }
-    if(keys[0] == 'params')
+
+    if(retVal && params && params.length > 0){
+      for(var i = 0;i < params.length; i++){
+          if(params[i] && params[i].value){
+                retVal = false;
+                break;
+            }
+          }
+    }
+    return retVal;
+    /*if(keys[0] == 'params')
       {
         if(myObject.params.length == 0){
           return true;
@@ -318,7 +332,7 @@ function addProductQuote(form){
           return false;
         else
           return true;
-      }
+      }*/
 
   }
 

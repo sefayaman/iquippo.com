@@ -69,6 +69,7 @@ exports.create = function(req, res) {
 //data export
 
 var EASY_FINANCE_FIELD_MAP = {
+                              'Ticket Id' : 'ticketId',
                               'Full Name' : 'fullName',
                               'Country' : 'user.country',
                               'Location' : 'user.city',
@@ -88,6 +89,7 @@ var EASY_FINANCE_FIELD_MAP = {
                             };
 
 var INSPECTION_REQUEST_FIELD_MAP = {
+                              'Ticket Id' : 'ticketId',
                               'Full Name' : 'fullName',
                               'Country' : 'user.country',
                               'Location' : 'user.city',

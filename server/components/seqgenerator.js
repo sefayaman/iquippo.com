@@ -12,13 +12,16 @@ var SequenceSchema, Sequence;
 
 function sequenceGenerator(){
   return {
-    next: function(callback,colName){
+    next: function(callback,colName,nextSeqNumber){
       Sequence.find({collectionName:colName},function(err, data){
         if(err){ throw(err); }
 
         if(data.length < 1){
+          var createObj = {collectionName:colName};
+          if(nextSeqNumber)
+            createObj.nextSeqNumber = nextSeqNumber;
           // create if doesn't exist create and return first
-          Sequence.create({collectionName:colName}, function(err, seq){
+          Sequence.create(createObj, function(err, seq){
             if(err) { throw(err); }
             callback(seq.nextSeqNumber - 1);
           });
