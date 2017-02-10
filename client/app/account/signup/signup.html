@@ -87,7 +87,7 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.location.$invalid && submitted }">
-                    <select class="form-control" name="location" ng-model="signupVm.user.city" required>
+                    <select class="form-control" name="location" ng-model="signupVm.user.city" ng-change="signupVm.onLocationChange(signupVm.user.city)" required>
                       <option value="" disabled>Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                     </select>

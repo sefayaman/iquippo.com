@@ -19,6 +19,10 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};
     $scope.isRegister = true;
+    vm.onLocationChange = onLocationChange;
+    function onLocationChange(city){      
+      vm.user.state = LocationSvc.getStateByCity(city);    
+    }
 
     function init(){
       LocationSvc.getAllLocation()

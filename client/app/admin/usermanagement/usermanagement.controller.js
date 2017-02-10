@@ -225,6 +225,7 @@ angular.module('sreizaoApp')
     //$scope.users = [];
     $rootScope.userList = [];
     $scope.locationList = [];
+    $scope.onLocationChange = onLocationChange;
     LocationSvc.getAllLocation()
     .then(function(result){
       $scope.locationList = result;
@@ -235,6 +236,10 @@ angular.module('sreizaoApp')
     if($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;
+    }
+
+    function onLocationChange(city){ 
+      $scope.newUser.state = LocationSvc.getStateByCity(city);  
     }
 
     if($scope.newUser.agree) {
