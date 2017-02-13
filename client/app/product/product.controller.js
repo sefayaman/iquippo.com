@@ -1200,7 +1200,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
       if($rootScope.getCurrentUser()._id && $rootScope.getCurrentUser().role != 'admin') {
         product.status = false;
-        product.featured = false;
+        //product.featured = false;
       }
       if($scope.product.currencyType == "")
         $scope.product.currencyType = "INR";
@@ -1214,11 +1214,11 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
             $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
             if($scope.product.assetStatus == assetStatuses[2].code){
               $scope.product.isSold = true;
-              $scope.product.featured = false;
+              //$scope.product.featured = false;
               //$scope.product.status = false;
             } else if($scope.product.assetStatus == assetStatuses[1].code){
               $scope.product.isSold = true;
-              $scope.product.featured = false;
+              //$scope.product.featured = false;
             }
         }
 

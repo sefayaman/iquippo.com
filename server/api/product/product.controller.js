@@ -555,7 +555,7 @@ exports.setExpiry = function(req, res) {
   var obj = {};
   obj['updatedAt'] = new Date();
   obj['status'] = false;
-  obj['featured'] = false;
+  //obj['featured'] = false;
   obj['expired'] = true;
   console.log("setExpiry:::", req.body.ids);
   Product.update({_id : {"$in":ids}}, {$set:obj}, {multi: true} , function(err, product) {
@@ -1571,7 +1571,7 @@ exports.validateExcelData = function(req,res,next){
           obj.updatedAt = new Date();
           obj.assetStatus = assetStatus;
           if(assetStatus != 'listed') {
-            obj.featured = false;
+            //obj.featured = false;
             obj.isSold = true;
           }
         }
@@ -2101,7 +2101,7 @@ function bulkProductStatusUpdate(req,res,data){
                 dataToSet.updatedAt = new Date();
                 dataToSet.assetStatus = assetStatus;
                 if(assetStatus != 'listed') {
-                  dataToSet.featured = false;
+                  //dataToSet.featured = false;
                   dataToSet.isSold = true;
                 }
                 //console.log(assetIdVal);
