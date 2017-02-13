@@ -231,15 +231,16 @@ angular.module('sreizaoApp')
       $scope.locationList = result;
     });
 
+    function onLocationChange(city){ 
+      $scope.newUser.state = LocationSvc.getStateByCity(city);  
+    }
+
+
     $scope.register = function(evt){
     var ret = false;
     if($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;
-    }
-
-    function onLocationChange(city){ 
-      $scope.newUser.state = LocationSvc.getStateByCity(city);  
     }
 
     if($scope.newUser.agree) {

@@ -555,7 +555,7 @@ exports.setExpiry = function(req, res) {
   var obj = {};
   obj['updatedAt'] = new Date();
   obj['status'] = false;
-  obj['featured'] = false;
+  //obj['featured'] = false;
   obj['expired'] = true;
   console.log("setExpiry:::", req.body.ids);
   Product.update({_id : {"$in":ids}}, {$set:obj}, {multi: true} , function(err, product) {
@@ -1298,12 +1298,18 @@ exports.exportProducts = function(req,res){
   filter["deleted"] = false;
   var isAdmin = true;
   if(req.body.userid){
-    if(req.body.role == "channelpartner")
-      filter["user._id"] = req.body.userid;
+    if(req.body.role == "channelpartner"){ 
+     filter['$or'] = [{
+        "user._id" : req.body.userid
+      },{
+        "seller._id" : req.body.userid
+      }];  
+    }
     else
       filter["seller._id"] = req.body.userid;
     isAdmin = false;
   }
+  
   var query = Product.find(filter).sort({productId:1});
   query.exec(
      function (err, products) {
@@ -1571,7 +1577,7 @@ exports.validateExcelData = function(req,res,next){
           obj.updatedAt = new Date();
           obj.assetStatus = assetStatus;
           if(assetStatus != 'listed') {
-            obj.featured = false;
+            //obj.featured = false;
             obj.isSold = true;
           }
         }
@@ -2101,7 +2107,7 @@ function bulkProductStatusUpdate(req,res,data){
                 dataToSet.updatedAt = new Date();
                 dataToSet.assetStatus = assetStatus;
                 if(assetStatus != 'listed') {
-                  dataToSet.featured = false;
+                  //dataToSet.featured = false;
                   dataToSet.isSold = true;
                 }
                 //console.log(assetIdVal);

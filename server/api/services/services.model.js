@@ -17,24 +17,21 @@ ServiceEnquirySchema.pre('save',function(next){
 	var prefix = '';
 	switch(type){
 		case 'shipping' :
-			prefix = 'SQ_';
+			prefix = 'SQ';
 			break;
 		case 'valuation' :
-			prefix = 'VQ_';
+			prefix = 'VQ';
 			break;
 		case 'finance' :
-			prefix = 'FQ_';
+			prefix = 'FQ';
 			break;
 		case 'insurance' :
-			prefix = 'IQ_';
+			prefix = 'IQ';
 			break;
 	}
-
-	prefix = prefix + self.quote.mobile;
-	console.log(prefix);
 	var sequence = seqGenerator.sequence();
 	sequence.next(function(seqnum){
-		self.ticketId = prefix+'_'+seqnum;
+		self.ticketId = prefix+seqnum;
 		return next();
 	},'serviceenquiries',100002);
 
