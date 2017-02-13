@@ -20,16 +20,15 @@ ServiceRequesetSchema.pre('save',function(next){
 
 	switch(type){
 		case 'EASY_FINANCE' :
-			prefix = 'EF_'
+			prefix = 'EF'
 			break;
 		case 'INSPECTION_REQUEST' : 
-			prefix = 'IR_'
+			prefix = 'IR'
 			break;
 	}
-	prefix = prefix + self.user.mobile;
 	var sequence = seqGenerator.sequence();
 	sequence.next(function(seqnum){
-		self.ticketId = prefix+'_'+seqnum;
+		self.ticketId = prefix+seqnum;
 		return next();
 	},'servicerequesets',100002);
 
