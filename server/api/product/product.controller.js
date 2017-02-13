@@ -1298,12 +1298,18 @@ exports.exportProducts = function(req,res){
   filter["deleted"] = false;
   var isAdmin = true;
   if(req.body.userid){
-    if(req.body.role == "channelpartner")
-      filter["user._id"] = req.body.userid;
+    if(req.body.role == "channelpartner"){ 
+     filter['$or'] = [{
+        "user._id" : req.body.userid
+      },{
+        "seller._id" : req.body.userid
+      }];  
+    }
     else
       filter["seller._id"] = req.body.userid;
     isAdmin = false;
   }
+  
   var query = Product.find(filter).sort({productId:1});
   query.exec(
      function (err, products) {
