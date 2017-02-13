@@ -136,7 +136,7 @@
                             <div class="form-group col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
                               <select  class="form-control" name="category"  ng-model="container.selectedCategoryId" ng-change="onCategoryChange(container.selectedCategoryId)" required>
                                     <option value="">Select Category</option>
-                                    <option value="{{category._id}}" ng-repeat="category in allCategory| orderBy:'name'">{{category.name}}</option>
+                                    <option value="{{category._id}}" ng-repeat="category in allCategory">{{category.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
