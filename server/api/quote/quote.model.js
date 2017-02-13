@@ -31,10 +31,10 @@ var QuoteSchema = new Schema({
 
 QuoteSchema.pre('save',function(next){
   var self = this;
-  var prefix = 'QQ_' + self.mobile;
+  var prefix = 'GQ';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
-    self.ticketId = prefix+'_'+seqnum;
+    self.ticketId = prefix+seqnum;
     return next();
   },'quotes',100002);
 
