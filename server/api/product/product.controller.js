@@ -160,10 +160,6 @@ exports.search = function(req, res) {
     arr[arr.length] = {state:{$regex:locRegEx}};
   }
 
-
-
-
-
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
     filter['city'] = {$regex:cityRegex};
@@ -239,49 +235,70 @@ exports.search = function(req, res) {
   if(req.body.role && req.body.userid) {
     arr[arr.length] = { "user._id": req.body.userid};
     arr[arr.length] = { "seller._id": req.body.userid}; 
+      
+    if(req.body.role === "channelpartner"){
+      fetchUsers(req.body.userid,function(data){
+        var usersArr = []; 
+        if(data && data.length){
+          data.forEach(function(x){
+            usersArr.push(x._id.toString());
+          })
+        } 
+        if(usersArr.length){
+          usersArr = usersArr.concat(req.body.userid);
+            arr[arr.length-1] = { "seller._id": {"$in":usersArr}}; 
+        }
+        fetchResults();
+      }) 
+    }
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
+    fetchResults();
+  } else {
+    fetchResults();
   }
 
   if(arr.length > 0)
     filter['$or'] = arr;
  
-  var result = {};
-  if(req.body.pagination){
-    paginatedProducts(req,res,filter,result);
-    return;    
-  }
-  var maxItem = 600;
-  if(req.body.maxItem)
-    maxItem = req.body.maxItem;
+  function fetchResults(){
+    var result = {};
+    if(req.body.pagination){
+      paginatedProducts(req,res,filter,result);
+      return;    
+    }
+    var maxItem = 600;
+    if(req.body.maxItem)
+      maxItem = req.body.maxItem;
 
-  var sortObj = {}; 
-  if(req.body.sort)
-    sortObj = req.body.sort;
-  sortObj['createdAt'] = -1;
+    var sortObj = {}; 
+    if(req.body.sort)
+      sortObj = req.body.sort;
+    sortObj['createdAt'] = -1;
 
-  var query = Product.find(filter).sort(sortObj).limit(maxItem);
-  Seq()
-  .par(function(){
-    var self = this;
-    Product.count(filter,function(err,counts){
-      result.totalItems = counts;
-      self(err);
+    var query = Product.find(filter).sort(sortObj).limit(maxItem);
+    Seq()
+    .par(function(){
+      var self = this;
+      Product.count(filter,function(err,counts){
+        result.totalItems = counts;
+        self(err);
+      })
     })
-  })
-  .par(function(){
-    var self = this;
-    query.exec(function (err, products) {
-        if(err) { return handleError(res, err); }
-        result.products = products;
-        self();
-       }
-    );
+    .par(function(){
+      var self = this;
+      query.exec(function (err, products) {
+          if(err) { return handleError(res, err); }
+          result.products = products;
+          self();
+         }
+      );
 
-  })
-  .seq(function(){
-    return res.status(200).json(result.products);
-  })
+    })
+    .seq(function(){
+      return res.status(200).json(result.products);
+    })
+  }
   
 
 };
@@ -1291,6 +1308,16 @@ else
   return "N";
 }
 
+function fetchUsers(id,cb){
+  User.find({'createdBy._id' : id},function(err,results){
+    if(err){
+      console.log(err);
+      return cb();
+    }
+    return cb(results);
+  })
+}
+
 //export data into excel
 exports.exportProducts = function(req,res){
   var filter = {};
@@ -1298,21 +1325,44 @@ exports.exportProducts = function(req,res){
   filter["deleted"] = false;
   var isAdmin = true;
   if(req.body.userid){
-    if(req.body.role == "channelpartner"){ 
-     filter['$or'] = [{
+    if(req.body.role == "channelpartner"){
+      filter['$or'] = [{
         "user._id" : req.body.userid
       },{
         "seller._id" : req.body.userid
-      }];  
+      }];
+
+      fetchUsers(req.body.userid,function(data){
+        var usersArr = []; 
+        if(data && data.length){
+          data.forEach(function(x){
+            usersArr.push(x._id.toString());
+          })
+        } 
+        if(usersArr.length){
+          usersArr = usersArr.concat(req.body.userid);
+          filter["$or"][1]["seller._id"] = {
+            "$in" : usersArr
+          }
+        }
+        fetchResults();
+      }) 
     }
-    else
+    else{
       filter["seller._id"] = req.body.userid;
+      fetchResults();
+    }
     isAdmin = false;
+  } else {
+    fetchResults();
   }
+
+
   
-  var query = Product.find(filter).sort({productId:1});
-  query.exec(
-     function (err, products) {
+  function fetchResults(){
+    var query = Product.find(filter).sort({productId:1});
+    query.exec(
+      function (err, products) {
         if(err) { return handleError(res, err); }
         var ws_name = "products"
         var wb = new Workbook();
@@ -1321,7 +1371,8 @@ exports.exportProducts = function(req,res){
         wb.Sheets[ws_name] = ws;
         var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
         res.end(wbout);
-     });
+    });
+  }
 }
 //Bulk product status update
 exports.bulkProductStatusUpdate = function(req,res){
