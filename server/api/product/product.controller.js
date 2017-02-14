@@ -257,11 +257,10 @@ exports.search = function(req, res) {
   } else {
     fetchResults();
   }
-
-  if(arr.length > 0)
-    filter['$or'] = arr;
  
   function fetchResults(){
+    if(arr.length > 0)
+      filter['$or'] = arr;
     var result = {};
     if(req.body.pagination){
       paginatedProducts(req,res,filter,result);
