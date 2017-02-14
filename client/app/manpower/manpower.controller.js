@@ -501,6 +501,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
     function bulkUpdate(action){
       var body = {};
       body.ids = selectedIds;
+      console.log(selectedIds.join(','));
       body.status = action === 'active' ? true : false;
 
       ManpowerSvc.bulkUpdate(body).then(function(result){
@@ -543,6 +544,7 @@ function ManpowerListingCtrl($scope, $rootScope, $window,  Auth, $http, $log, Mo
       filter.currentPage = vm.currentPage;
       filter.first_id = first_id;
       filter.last_id = last_id;
+      selectedIds = [];
       //var filter = {};
       //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result){
