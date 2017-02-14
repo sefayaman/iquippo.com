@@ -30,6 +30,7 @@ exports.getService = function(req, res) {
     arr[arr.length] = { "request.financeInfo.finAgency": { $regex: searchStrReg }};
     arr[arr.length] = { "request.financeInfo.periodInMonths": { $regex: searchStrReg }};
     arr[arr.length] = { "request.message": { $regex: searchStrReg }};
+    arr[arr.length] = {ticketId : {$regex :searchStrReg}};
   }
 
   if(arr.length > 0)
