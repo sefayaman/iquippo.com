@@ -233,23 +233,16 @@ exports.search = function(req, res) {
     filter["category._id"] = req.body.categoryId;
 
   if(req.body.role && req.body.userid) {
-    arr[arr.length] = { "seller._id": req.body.userid}; 
-      
-    if(req.body.role === "channelpartner"){
-      fetchUsers(req.body.userid,function(data){
-        var usersArr = []; 
-        if(data && data.length){
-          data.forEach(function(x){
-            usersArr.push(x._id.toString());
-          })
-        } 
-        if(usersArr.length){
-          usersArr = usersArr.concat(req.body.userid);
-            arr[arr.length-1] = { "seller._id": {"$in":usersArr}}; 
-        }
-        fetchResults();
-      }) 
-    }
+    var usersArr = [req.body.userid];
+    fetchUsers(req.body.userid,function(data){
+      if(data && data.length){
+        data.forEach(function(x){
+          usersArr.push(x._id.toString());
+        })
+      } 
+      arr[arr.length] = { "seller._id": {"$in":usersArr}}; 
+      fetchResults();
+    }) 
   } else if(req.body.userid) {
     filter["seller._id"] = req.body.userid;
     fetchResults();
@@ -1324,22 +1317,15 @@ exports.exportProducts = function(req,res){
   var isAdmin = true;
   if(req.body.userid){
     if(req.body.role == "channelpartner"){
-      filter['$or'] = [{
-        "seller._id" : req.body.userid
-      }];
-
+      var usersArr = [req.body.userid];
       fetchUsers(req.body.userid,function(data){
-        var usersArr = []; 
         if(data && data.length){
           data.forEach(function(x){
             usersArr.push(x._id.toString());
           })
         } 
-        if(usersArr.length){
-          usersArr = usersArr.concat(req.body.userid);
-          filter["$or"][1]["seller._id"] = {
-            "$in" : usersArr
-          }
+        filter["seller._id"] = {
+          "$in" : usersArr
         }
         fetchResults();
       }) 
