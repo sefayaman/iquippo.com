@@ -9,7 +9,7 @@ exports.getAllCategory = function(req, res) {
   /*var filter = {};
   filter["deleted"] = false;
   filter["status"] = true;*/
-  Category.find(function (err, category) {
+  Category.find().sort({'name':1}).exec(function (err, category) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(category);
   });
