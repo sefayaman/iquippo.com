@@ -263,7 +263,9 @@ exports.bulkUpdate = function(req,res){
           return cb();
         }
         
-        successIds.push(id);
+        if(doc.status !== req.body.status)
+          successIds.push(id);
+
         return cb();
       }
     }
