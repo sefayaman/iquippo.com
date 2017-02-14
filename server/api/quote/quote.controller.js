@@ -58,6 +58,7 @@ exports.getOnFilter = function(req, res) {
     arr[arr.length] = { city: { $regex: searchStrReg }};
     arr[arr.length] = { comment: { $regex: searchStrReg }};
     arr[arr.length] = { expPrice: { $regex: searchStrReg }}; 
+    arr[arr.length] = {ticketId : {$regex :searchStrReg}};
   }
 
   if(arr.length > 0)
