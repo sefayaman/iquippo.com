@@ -233,7 +233,6 @@ exports.search = function(req, res) {
     filter["category._id"] = req.body.categoryId;
 
   if(req.body.role && req.body.userid) {
-    arr[arr.length] = { "user._id": req.body.userid};
     arr[arr.length] = { "seller._id": req.body.userid}; 
       
     if(req.body.role === "channelpartner"){
@@ -1326,8 +1325,6 @@ exports.exportProducts = function(req,res){
   if(req.body.userid){
     if(req.body.role == "channelpartner"){
       filter['$or'] = [{
-        "user._id" : req.body.userid
-      },{
         "seller._id" : req.body.userid
       }];
 
