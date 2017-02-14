@@ -36,7 +36,7 @@ var  xslx = require('xlsx');
 
 // Get list of countries
 exports.getAllCountry = function(req, res) {
-  Country.find(function (err, countries) {
+  Country.find().sort({name:1}).exec(function (err, countries) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(countries);
   });
@@ -1021,7 +1021,7 @@ exports.createSubscribe = function(req, res) {
 
 // Get list of State
 exports.getAllState = function(req, res) {
-  State.find(function (err, st) {
+  State.find().sort({name:1}).exec(function (err, st) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(st);
   });

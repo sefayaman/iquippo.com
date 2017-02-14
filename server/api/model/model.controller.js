@@ -62,7 +62,7 @@ exports.getModelOnFilter = function(req,res){
   if(data.brandName)
     tempFilter['brand.name'] = data.brandName;
   filter['$or'].push(tempFilter);
-  Model.find(filter,function(err,result){
+  Model.find(filter).sort({name:1}).exec(function(err,result){
    if(err) { return handleError(res, err); }
     return res.status(200).json(result);
 

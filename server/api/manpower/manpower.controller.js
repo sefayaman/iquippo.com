@@ -255,9 +255,9 @@ exports.bulkUpdate = function(req,res){
         return cb(); 
       }
 
-      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus,updatedAt : new Date()}}).exec(updateUser);
+      User.findByIdAndUpdate(doc.user.userId,{$set:{status:updateStatus,isManpower :updateStatus,updatedAt : new Date()}}).exec(updateUserCollec);
 
-      function updateUser(err,userDoc){
+      function updateUserCollec(err,userDoc){
         if(err || !userDoc){
           failed_ids.push(id);
           return cb();

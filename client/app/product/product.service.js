@@ -53,6 +53,7 @@
             var filter = {};
             filter['status'] = true;
             filter["featured"] = true;
+            filter["assetStatus"] = assetStatuses[0].code;
             $http.post(path + "/search",filter)
             .then(function(res){
               featuredProductCache = res.data;
@@ -121,6 +122,7 @@
       function addProduct(product){
         return $http.post(path,product)
         .then(function(res){
+          featuredProductCache = [];
           return res.data;
         })
         .catch(function(res){
@@ -195,6 +197,7 @@
 
         return $http.put(path + "/" + product._id,product).
                 then(function(res){
+                  featuredProductCache = [];
                    deleteFromCache(product);
                    return res.data;
                 })
@@ -221,6 +224,7 @@
       function bulkProductStatusUpdate(fileName){
         return $http.post(path + "/bulkproductstatusupdate",{filename:fileName})
               .then(function(res){
+                featuredProductCache = [];
                 return res.data;
               })
               .catch(function(res){
@@ -233,6 +237,7 @@
       function bulkEditProduct(fileName){
         return $http.post(path + "/bulkeditproduct",{filename:fileName})
               .then(function(res){
+                featuredProductCache = [];
                 return res.data;
               })
               .catch(function(res){
@@ -313,6 +318,7 @@
       function bulkProductUpdate(data){
         return $http.post('/api/products/bulkupdate', data)
             .then(function(res){
+              featuredProductCache = [];
               return res.data;
             })
             .catch(function(res){

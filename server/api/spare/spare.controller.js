@@ -29,7 +29,7 @@ exports.getAll = function(req, res) {
   var filter = {};
   filter["status"] = true;
   filter["deleted"] = false;
-  Spare.find(filter,function (err, spares) {
+  Spare.find(filter).sort({name:1}).exec(function (err, spares) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(spares);
   });
