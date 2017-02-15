@@ -18,10 +18,10 @@ var CallbackSchema = new Schema({
 
 CallbackSchema.pre('save',function(next){
 	var self = this;
-	var prefix = 'CB_' + self.mobile;
+	var prefix = 'CB';
 	var sequence = seqGenerator.sequence();
 	sequence.next(function(seqnum){
-		self.ticketId = prefix+'_'+seqnum;
+		self.ticketId = prefix+seqnum;
 		return next();
 	},'callbacks',100002);
 

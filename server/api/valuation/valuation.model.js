@@ -26,7 +26,7 @@ ValuationRequestSchema.pre('save', function(next){
   var doc = this;
   // get the next sequence
   sequence.next(function(nextSeq){
-    doc.requestId = nextSeq;
+    doc.requestId = 'VR'+nextSeq;
     next();
   },"valuation");
 });

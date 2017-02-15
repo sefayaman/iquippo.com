@@ -21,19 +21,18 @@ NegotiationSchema.pre('save',function(next){
 
 	switch(type){
 		case 'BUY_NEGOTIATE' :
-			prefix = 'SM-BN_'
+			prefix = 'SB'
 			break;
 		case 'FOR_RENT' : 
-			prefix = 'SM-FR_'
+			prefix = 'GN'
 			break;
 		case 'BUY' : 
-			prefix = 'SM-FB_'
+			prefix = 'BN'
 			break;
 	}
-	prefix = prefix + self.user.mobile;
 	var sequence = seqGenerator.sequence();
 	sequence.next(function(seqnum){
-		self.ticketId = prefix+'_'+seqnum;
+		self.ticketId = prefix+seqnum;
 		return next();
 	},'negotiations',100002);
 
