@@ -36,6 +36,7 @@ exports.getOnFilter = function(req, res) {
     arr[arr.length] = { mobile: { $regex: searchStrReg }};
     arr[arr.length] = { phone: { $regex: searchStrReg }};
     arr[arr.length] = { email: { $regex: searchStrReg }};
+    arr[arr.length] = {ticketId : {$regex :searchStrReg}};
   }
 
   if(arr.length > 0)
