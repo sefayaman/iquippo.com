@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Seq = require('seq');
 var trim = require('trim');
  var fs = require('fs');
- var gm = require('gm');
+ var gm = require('gm').subClass({imageMagick: true});;
  var fsExtra = require('fs.extra');
 
 var Product = require('./product.model');

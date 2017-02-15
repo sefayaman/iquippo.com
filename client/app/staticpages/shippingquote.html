@@ -28,7 +28,7 @@
                           <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
                             <select class="form-control" ng-model="shippingQuote.country" name="country" required>
                               <option value="">*Select Country</option>
-                              <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                              <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                             </select>
                           </div>
                         </div>
