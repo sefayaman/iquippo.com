@@ -48,7 +48,7 @@
                 <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
                   <select class="form-control" ng-model="insuranceQuote.country" name="country" required>
                     <option value="">*Select Country</option>
-                    <option ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                    <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                   </select>
                 </div>
               </div>
@@ -58,7 +58,7 @@
               <div class="col-xs-6">
                       <select class="form-control" name="location" ng-model="insuranceQuote.city">
                         <option value="">Select Location</option>
-                          <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                          <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                       </select>
                       <i class="caret"></i>
               </div>
@@ -114,14 +114,14 @@
               <div class="col-xs-6">
                 <select class="form-control" name="category" ng-model="insuranceQuote.product.category" ng-change="onCategoryChange(insuranceQuote.product.category)">
                   <option value="">Select Category </option>
-                    <option ng-repeat="ct in allCategory" value="{{ct.name}}">{{ct.name}}</option>
+                    <option ng-repeat="ct in allCategory | orderBy:'name'" value="{{ct.name}}">{{ct.name}}</option>
                 </select>
                 <i class="caret"></i>
               </div>
               <div class="col-xs-6">
                 <select class="form-control" name="brand" ng-model="insuranceQuote.product.brand" ng-change="onBrandChange(insuranceQuote.product.brand)">
                   <option value="">Select Brand </option>
-                    <option ng-repeat="br in brandList" value="{{br.name}}">{{br.name}}</option>
+                    <option ng-repeat="br in brandList | orderBy:'name'" value="{{br.name}}">{{br.name}}</option>
                 </select>
                 <i class="caret"></i>
               </div>            
@@ -130,7 +130,7 @@
               <div class="col-xs-6">
                 <select class="form-control" name="model" ng-model="insuranceQuote.product.model">
                   <option value="">Select Model </option>
-                    <option ng-repeat="md in modelList" value="{{md.name}}">{{md.name}}</option>
+                    <option ng-repeat="md in modelList | orderBy:'name'" value="{{md.name}}">{{md.name}}</option>
                 </select>
                 <i class="caret"></i>
               </div>
@@ -144,7 +144,7 @@
               <div class="col-xs-6" ng-class="{'has-error': form.prdlocation.$invalid && form.submitted }">
                 <select class="form-control" name="prdlocation" ng-model="insuranceQuote.product.city" required>
                   <option value="">* Select Asset Location </option>
-                    <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                 </select>
                 <i class="caret"></i>
               </div>

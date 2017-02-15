@@ -1,0 +1,28 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+
+      	<div class="row">
+	      <div class="col-sm-6">
+	      	<h3>Privacy Policy Editor</h3>
+	      </div>     
+	    </div>
+	    <hr>
+	    <div class="row">
+	    	<div class="col-sm-12">
+        	<form name="form" novalidate>      		
+					<div class="form-group" ng-class="{'has-error':form.content.$invalid && submitted}">
+						<textarea ui-tinymce ng-model="policiesVm.mailData.content" name="content" rows="10" ></textarea>
+					</div>
+					<div class="row form-group">						
+						<div class="col-sm-2">{{docObj.name}}</div>
+						<div class="col-sm-offset-6 col-sm-2">
+							<button class="btn btn-primary btn-block" ng-click="policiesVm.sendEmail()" ng-disabled="disabled">Send</button>
+						</div>
+					</div>
+				</form> 
+	      	</div> 
+	    </div>          
+    </div>
+  </div>
+</div>

@@ -147,7 +147,7 @@
                         <div class="form-group" ng-class="{'has-error': form.country.$invalid && submitted }">
                           <select class="form-control" name="country" ng-model="spareDetailVm.buycontact.country" required>
                             <option value="" disabled>* Select Country</option>
-                            <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                            <option  ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                           </select>
                           <i class="caret"></i>
                         </div>
@@ -224,7 +224,7 @@
                           <div class="form-group" ng-class="{'has-error': form.finAgency.$invalid && submitted }">
                             <select class="form-control" name="finAgency" ng-model="spareDetailVm.buycontact.financeInfo.finAgency" required>
                               <option value="" disabled>* Financing Company</option>
-                              <option  ng-repeat="finAgency in spareDetailVm.valAgencies" value="{{finAgency.name}}">{{finAgency.name}}</option>
+                              <option  ng-repeat="finAgency in spareDetailVm.valAgencies | orderBy:'name'" value="{{finAgency.name}}">{{finAgency.name}}</option>
                             </select>
                             <i class="caret"></i>
                           </div>
