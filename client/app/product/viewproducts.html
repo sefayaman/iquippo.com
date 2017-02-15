@@ -89,7 +89,7 @@
 
                 <label for="" class="text-muted">Asset Id</label>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId"  uib-typeahead="address for address in viewproductVm.getAssetIdHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                  <input type="text" class="form-control" placeholder="Asset Id"  ng-model="equipmentSearchFilter.assetId"  class="form-control"  ng-change="viewproductVm.fireCommand()">
                 </div> 
 
                 <label for="" class="text-muted">Operating hrs</label>

@@ -260,6 +260,8 @@ exports.search = function(req, res) {
     sortObj = req.body.sort;
   sortObj['createdAt'] = -1;
 
+  console.log(filter);
+
   var query = Product.find(filter).sort(sortObj).limit(maxItem);
   Seq()
   .par(function(){
