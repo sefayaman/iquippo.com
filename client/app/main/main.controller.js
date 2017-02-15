@@ -179,6 +179,11 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
               vm.imgLeftTop.src = srchres[i].image;
               vm.imgLeftTop.websiteUrl = srchres[i].websiteUrl;
             }
+            if(srchres[i].position == 'leftCenter'){
+              vm.imgLeftCenter = {};
+              vm.imgLeftCenter.src = srchres[i].image;
+              vm.imgLeftCenter.websiteUrl = srchres[i].websiteUrl;
+            }
             if(srchres[i].position == 'leftBottom'){
               vm.imgLeftBottom = {};
               vm.imgLeftBottom.src = srchres[i].image;
