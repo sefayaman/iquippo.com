@@ -14,7 +14,7 @@ body{top:0 !important;}
 .banner{min-height:400px; position: relative;}
 #static-banner{margin-bottom: 25px;}
 #static-banner img{height: 380px;}
-.static-search-banner{position: absolute; bottom: 0; padding: 20px 0; width: 100%; background: rgba(0,0,0,0.6); z-index: 10;}
+.static-search-banner{position: absolute; bottom: 20px; padding: 20px 0 0; width: 100%; background: rgba(0,0,0,0.6); z-index: 9;}
 .static-search-banner .spare-content{position: relative; z-index: 10; }
 .static-search-banner .spare-content .btn{height: 40px; padding: 7px 10px; font-size: 18px;}
 .overlay{position:absolute; background:rgba(0,0,0,0.1); height:380px; z-index:7; width:100%;}
@@ -92,7 +92,7 @@ ul.verContainer li img{width:100%; height: 200px;}*/
 /*navigation*/
 header{background:#fff;}
 .navbar.navbar-inverse{background:none;border-radius:0;border:0;min-height:0;margin:0;}
-.navbar-inverse .navbar-nav li a{color:#000 !important;font-size:15px; background:none !important; padding:8px 10px;}
+.navbar-inverse .navbar-nav li a{color:#000 !important;font-size:14px; background:none !important; padding:8px 10px;}
 
 .navbar{margin-bottom:0px;}
 .navbar-brand{padding:0px 10px; position:relative; top:-25px; margin-right: 20px;}
@@ -232,6 +232,9 @@ header{background:#fff;}
 .seller-info .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:50px;}
 .table .btn.btn-sm{padding:5px 0; width:30px; height:33px; margin:0 2px;}
 .active-btn{width: 80px; float: left;}
+/*yard list*/
+.yard-list{padding-bottom: 15px; border-bottom: 1px solid #efefef;}
+.yard-list img{width: 150px;}
 /* Indicators list style */
 .article-slide .carousel-indicators{position:inherit;margin-top:10px;left:0;bottom:0;margin-left:5px;width:100%;z-index:3; height: 60px;}
 
@@ -302,6 +305,9 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
     -webkit-overflow-scrolling: touch;
 }
 .table-responsive .table th{white-space: nowrap; border-bottom-width:0;}
+.table-responsive .table td:last-child {
+    white-space: nowrap;
+}
 .table-responsive .table .info-back, .table-responsive .table th{color: #333; background: #dcdcdc;}
 .table-responsive .table .info-back th{font-weight: normal !important;}
 .table-responsive .table .info-back th:first-child{border-left:0;}

@@ -483,8 +483,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index,images)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                  <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="images.push({})" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn btn-block active" ng-click="images.push({})" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
                                 </div> 
                             </div>
                             </div>
@@ -518,8 +518,8 @@
                                    imagesEngine)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="imagesEngine.push({catImgType:'eP'})" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn btn-block active" ng-click="imagesEngine.push({catImgType:'eP'})" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -552,8 +552,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioHP" value="{{$index}}" ng-click="makePrimary($index,imagesHydraulic)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="imagesHydraulic.push({catImgType:'hP'})" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn btn-block active" ng-click="imagesHydraulic.push({catImgType:'hP'})" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -586,8 +586,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioCP" value="{{$index}}" ng-click="makePrimary($index,imagesCabin)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="imagesCabin.push({catImgType:'cP'})" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn btn-block active" ng-click="imagesCabin.push({catImgType:'cP'})" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -621,8 +621,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioUC" value="{{$index}}" ng-click="makePrimary($index,imagesUnderCarrage)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="imagesUnderCarrage.push({catImgType:'uC'})" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn btn-block active" ng-click="imagesUnderCarrage.push({catImgType:'uC'})" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -656,8 +656,8 @@
                                    <span ng-show="img.src"><input type="radio" name="prvRadioOP" value="{{$index}}" ng-click="makePrimary($index,imagesOther)" ng-checked="img.isPrimary"/>Primary</span>
                                 </div>
                                 <div class="col-sm-3 clearfix">
-                                  <button class="btn btn-block" ng-click="imagesOther.push({catImgType:'oP'})" ng-if="!$last">Add More</button>
-                                  <button class="btn btn-block" ng-click="" ng-if="$last">Delete</button>
+                                  <button class="btn btn-block active" ng-click="imagesOther.push({catImgType:'oP'})" ng-if="!$last">Add More</button>
+                                  <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -800,7 +800,7 @@
                           </div>
                           <div class="row" ng-if="isAdmin()">
                             <div class="form-group col-sm-5">Alternate Contact Number</div>
-                            <div class="form-group col-sm-2">
+                            <div class="form-group col-sm-3">
                              <input type="text" id="" class="form-control" name="" ng-model="product.alternateMobile" ng-true-value="true" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top"></div>
                              <div class="form-group col-sm-3">
                              <input type="checkbox" id="" name="" ng-model="product.dispSellerAlternateContact" ng-true-value="'true'"> to be displayed in front-end

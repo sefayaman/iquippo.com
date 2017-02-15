@@ -115,39 +115,36 @@
                     {{partnerVM.vendorReg.user.imgsrc}}
                   </div>
                 
-                </div>
-                <div class="row">
-                  
-                  <div class="col-sm-10 form-group">
-                    <div class="row">
+                </div>               
+                    <div class="row form-group">
                       <div class="col-sm-2">
                         <input type="checkbox" name="Shipping" ng-model="Shipping" ng-true-value="'Shipping'"> Shipping
                       </div>
                       <div class="col-sm-2">
                         <input type="checkbox" name="Valuation" ng-model="Valuation" ng-true-value="'Valuation'"> Valuation
                       </div>
-                      <div class="col-sm-2">
+                      <div class="col-sm-3">
                         <input type="checkbox"  name="CertifiedByIQuippo" ng-model="CertifiedByIQuippo" ng-true-value="'CertifiedByIQuippo'" ng-cha> Certified by iQuippo
                       </div>
                       <div class="col-sm-2">
                         <input type="checkbox"  name="ManPower" ng-model="ManPower" ng-true-value="'ManPower'" ng-cha> Manpower
                       </div>
-                      <div class="col-sm-2">
+                      <div class="col-sm-1 padd-left">
                         <input type="checkbox"  name="Finance" ng-model="Finance" ng-true-value="'Finance'" ng-cha> Finance
                       </div>
-                      <div class="col-sm-2">
+                      <div class="col-sm-1 padd-left">
                         <input type="checkbox"  name="Auction" ng-model="Auction" ng-true-value="'Auction'" ng-cha> Auction
                       </div>
-                      <div class="col-sm-2">
+                      <div class="col-sm-1 padd-left">
                         <input type="checkbox"  name="Dealer" ng-model="Dealer" ng-true-value="'Dealer'" ng-cha> Dealer
                       </div>
-                    </div>
                   </div>
-                  <div class="col-sm-2 form-group">
-                  <button class="btn" type="button" ng-click="partnerVM.resetClick(form)" >Reset</button>
-                  <input class="btn btn-danger btn-md" name="" type="button" ng-click="partnerVM.register(form)" value="Register"></div>
+                  <div class="row form-group">
+                    <div class="col-sm-12 text-right">
+                    <button class="btn" type="button" ng-click="partnerVM.resetClick(form)" >Reset</button>
+                    <input class="btn btn-danger btn-md" name="" type="button" ng-click="partnerVM.register(form)" value="Register"></div>
+                  </div>
                 </div>
-              </div>
               
             </form>
           </div>
