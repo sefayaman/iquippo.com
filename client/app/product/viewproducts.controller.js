@@ -185,12 +185,13 @@ function onGroupChange(group){
     if(!$scope.mfgyr.min && !$scope.mfgyr.max)
        delete $scope.equipmentSearchFilter.mfgYear;
 
-      var filter = {};
-      angular.copy($scope.equipmentSearchFilter,filter);
       if(!noReset)
         vm.currentPage = 1;
-      if(!doNotSaveState)
+      if(!doNotSaveState){
         saveState(false);
+      }
+      var filter = {};
+      angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
@@ -592,10 +593,12 @@ $scope.today = function() {
       stateObj['type'] = "";
 
     for(var key in $scope.equipmentSearchFilter){
-      if(key != 'mfgYear' && key != 'currency')
+      if(key != 'mfgYear' && key != 'currency' && key != 'productName')
         stateObj[key] =  $scope.equipmentSearchFilter[key];  
     }
     stateObj.currentPage = vm.currentPage;
+    stateObj.productName = "";
+    delete $scope.equipmentSearchFilter.productName;
     if(retainState)
       $state.go($state.current.name,stateObj,{location:'replace',notify:false});
     else

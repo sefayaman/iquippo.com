@@ -170,6 +170,10 @@ exports.search = function(req, res) {
     filter['state'] = {$regex:stateRegex};
   }
   
+   if(req.body.productName){
+    var pdNameRegex = new RegExp(req.body.productName, 'i');
+    filter['name'] = {$regex:pdNameRegex};
+  }
   if(req.body.tradeType){
    filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
   }

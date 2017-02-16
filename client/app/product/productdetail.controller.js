@@ -320,20 +320,6 @@ function addProductQuote(form){
           }
     }
     return retVal;
-    /*if(keys[0] == 'params')
-      {
-        if(myObject.params.length == 0){
-          return true;
-        }
-
-        if(myObject.params.length > 1)
-          return false;
-
-        if(myObject.params.length == 1 && myObject.params[0])
-          return false;
-        else
-          return true;
-      }*/
 
   }
 
@@ -343,13 +329,15 @@ function addProductQuote(form){
     if(serviceInfo.length == 0)
       return true;
     var ret = true;
-    serviceInfo.forEach(function(item){
-      if(item){
-        var itemKeys = Object.keys(item);
-        if(itemKeys.length > 0)
-          ret = false;
+    for(var i = 0; i < serviceInfo.length; i++){
+      var item = serviceInfo[i];
+      for(var key in item){
+         if(item[key])
+           ret = false; 
       }
-    });
+      if(!ret)
+        break;
+    }
     return ret;
   }
   function init(){

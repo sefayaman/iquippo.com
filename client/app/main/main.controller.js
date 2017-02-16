@@ -237,7 +237,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       if(vm.locationSearchText)
         filter['location'] = vm.locationSearchText.trim();
       if(vm.searchstr)
-        filter['searchstr'] = vm.searchstr.trim();
+        filter['productName'] = vm.searchstr.trim();
 
       //productSvc.setFilter(filter);
       $state.go('viewproduct',filter);
