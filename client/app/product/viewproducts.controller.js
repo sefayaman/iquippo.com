@@ -593,12 +593,14 @@ $scope.today = function() {
       stateObj['type'] = "";
 
     for(var key in $scope.equipmentSearchFilter){
-      if(key != 'mfgYear' && key != 'currency' && key != 'productName')
+      if(key != 'mfgYear' && key != 'currency' && key != 'productName' && key != 'location')
         stateObj[key] =  $scope.equipmentSearchFilter[key];  
     }
     stateObj.currentPage = vm.currentPage;
     stateObj.productName = "";
+    stateObj.location = "";
     delete $scope.equipmentSearchFilter.productName;
+     delete $scope.equipmentSearchFilter.location;
     if(retainState)
       $state.go($state.current.name,stateObj,{location:'replace',notify:false});
     else
