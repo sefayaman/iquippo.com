@@ -32,6 +32,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   //vm.onModelChange = onModelChange;
   vm.onGroupChange = onGroupChange;
   vm.onCurrencyChange = onCurrencyChange;
+  vm.onStateChange = onStateChange;
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
   vm.fireCommand = fireCommand;
@@ -349,6 +350,11 @@ $scope.today = function() {
     else
       delete $scope.equipmentSearchFilter.mfgYear.max;
       fireCommand();
+  }
+
+  function onStateChange(){
+    $scope.equipmentSearchFilter.cityName = "";
+    fireCommand();
   }
 
   function getStateHelp(val) {

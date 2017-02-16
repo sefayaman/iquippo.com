@@ -79,7 +79,7 @@
 
                 <label for="" class="text-muted">State</label>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="State"  ng-model="equipmentSearchFilter.stateName"  uib-typeahead="address for address in viewproductVm.getStateHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                  <input type="text" class="form-control" placeholder="State"  ng-model="equipmentSearchFilter.stateName"  uib-typeahead="address for address in viewproductVm.getStateHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.onStateChange()" typeahead-on-select="viewproductVm.onStateChange()" ng-model-options="{debounce:1000}">
                 </div>
 
                 <label for="" class="text-muted">Location</label>
