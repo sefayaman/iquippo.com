@@ -21,6 +21,7 @@ module.exports = {
             'mongodb://iquippo_user:1quipp0123@localhost/sreiglobaldb'
   },
   uploadPath: "./../public/assets/uploads/",
+  templatePath:'./../public/assets',
   contactNumber: "011 66025672",
   //serverPath: "http://54.255.186.7:9010"
   serverPath: "http://iquippo.com",
