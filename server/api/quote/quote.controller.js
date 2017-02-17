@@ -207,6 +207,8 @@ function excel_from_data(data) {
         cell = {v: user.ticketId || ""};
     }
     setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R})
+    ws[cell_ref] = cell;
 
     if(R == 0)
       cell = {v: "Full Name"};
