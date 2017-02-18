@@ -27,6 +27,10 @@ exports.getOnId = function(req, res) {
 // Creates a new valuation in the DB.
 exports.create = function(req, res) {
 
+  if(!req.body.user){
+    return handleError(res,new Error("No User found in request"));
+  }
+
   Seq()
   .seq(function(){
     var self = this;
