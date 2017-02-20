@@ -8,6 +8,7 @@ module.exports = {
     uri: 'mongodb://iquippo_user:1quipp0123@localhost/sreiglobaldb'
   },
   uploadPath: 'client/assets/uploads/',
+  templatePath:'client/assets',
   serverPath: "http://192.168.14.120:8100",
   contactNumber: "011 66025672",
 
