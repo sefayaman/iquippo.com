@@ -13,8 +13,9 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
     //End
     var vm = this;
     $scope.checked = "";
-    var leftTopDim = {width:165,height:255};
-    var leftBottomDim = {width:165,height:255};
+    var leftTopDim = {width:165,height:135};
+    var leftCenterDim = {width:165,height:135};
+    var leftBottomDim = {width:165,height:135};
     var bottomLeftDim = {width:680,height:100};
     var bottomRightDim = {width:680,height:100};
     vm.classified = {};
@@ -65,6 +66,10 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
             case 'leftTop':
               resizeParam.width = leftTopDim.width;
               resizeParam.height = leftTopDim.height;
+            break;
+             case 'leftCenter':
+             resizeParam.width = leftCenterDim.width;
+             resizeParam.height = leftCenterDim.height;
             break;
             case 'leftBottom':
              resizeParam.width = leftBottomDim.width;
