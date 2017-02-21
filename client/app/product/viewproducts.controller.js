@@ -32,6 +32,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   //vm.onModelChange = onModelChange;
   vm.onGroupChange = onGroupChange;
   vm.onCurrencyChange = onCurrencyChange;
+  vm.onStateChange = onStateChange;
   vm.productSearchOnMfg = productSearchOnMfg;
   vm.productSearchOnPrice = productSearchOnPrice;
   vm.fireCommand = fireCommand;
@@ -184,15 +185,18 @@ function onGroupChange(group){
     if(!$scope.mfgyr.min && !$scope.mfgyr.max)
        delete $scope.equipmentSearchFilter.mfgYear;
 
-      var filter = {};
-      angular.copy($scope.equipmentSearchFilter,filter);
       if(!noReset)
         vm.currentPage = 1;
-      if(!doNotSaveState)
+      if(!doNotSaveState){
         saveState(false);
+      }
+      var filter = {};
+      angular.copy($scope.equipmentSearchFilter,filter);
       filter['status'] = true;
       filter['sort'] = {featured:-1};
       $scope.searching = true;
+
+      console.log(filter);
 
       if($scope.equipmentSearchFilter && ($scope.equipmentSearchFilter.stateName || $scope.equipmentSearchFilter.cityName))
        delete filter.location;
@@ -349,6 +353,11 @@ $scope.today = function() {
     else
       delete $scope.equipmentSearchFilter.mfgYear.max;
       fireCommand();
+  }
+
+  function onStateChange(){
+    $scope.equipmentSearchFilter.cityName = "";
+    fireCommand();
   }
 
   function getStateHelp(val) {
@@ -586,10 +595,14 @@ $scope.today = function() {
       stateObj['type'] = "";
 
     for(var key in $scope.equipmentSearchFilter){
-      if(key != 'mfgYear' && key != 'currency')
+      if(key != 'mfgYear' && key != 'currency' && key != 'productName' && key != 'location')
         stateObj[key] =  $scope.equipmentSearchFilter[key];  
     }
     stateObj.currentPage = vm.currentPage;
+    stateObj.productName = "";
+    stateObj.location = "";
+    delete $scope.equipmentSearchFilter.productName;
+     delete $scope.equipmentSearchFilter.location;
     if(retainState)
       $state.go($state.current.name,stateObj,{location:'replace',notify:false});
     else

@@ -97,6 +97,7 @@ function EmailerCtrl($scope, $location, $window, $rootScope, $http, Modal, uploa
        Modal.alert("Please enter content",true);
       return;
     }
+  
     if($scope.selectedRegValuesArr && $scope.selectedSubValuesArr) {
       $scope.allToEmails = $scope.selectedRegValuesArr.concat($scope.selectedSubValuesArr.filter(function (item) {
         return $scope.selectedRegValuesArr.indexOf(item) < 0;

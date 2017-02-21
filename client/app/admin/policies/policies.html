@@ -1,0 +1,27 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+
+      	<div class="row">
+	      <div class="col-sm-6">
+	      	<h3>General Editor</h3>
+	      </div>     
+	    </div>
+	    <hr>
+	    <div class="row">
+	    	<div class="col-sm-12">
+        	<form name="form" novalidate>      		
+					<div class="form-group" ng-class="{'has-error':form.content.$invalid && submitted}">
+						<textarea ui-tinymce ng-model="policiesVm.editingData.content" name="content" rows="30" ></textarea>
+					</div>
+					<div class="row form-group">						
+						<div class="col-sm-offset-6 col-sm-2">
+							<button class="btn btn-primary btn-block" ng-click="policiesVm.saveData()">Save</button>
+						</div>
+					</div>
+				</form> 
+	      	</div> 
+	    </div>          
+    </div>
+  </div>
+</div>
