@@ -8,10 +8,11 @@ function SpareHomeCtrl($scope,$stateParams, $rootScope, $uibModal, $state, $http
 	vm.doSearch = doSearch;
 	vm.toggleCategory = toggleCategory;
 
-	vm.imgLeftTop = "";
+	  /*vm.imgLeftTop = "";
     vm.imgLeftBottom = "";
     vm.imgBottomLeft = "";
-    vm.imgBottomRight = "";
+    vm.imgBottomRight = "";*/
+    vm.classified = {};
     vm.productCountObj = {};
     vm.spareList = [{},{},{}];
     vm.sortedManufacturers = [];
@@ -104,11 +105,12 @@ function SpareHomeCtrl($scope,$stateParams, $rootScope, $uibModal, $state, $http
 
     }
 
-    var flag = true;
+    //var flag = true;
     function getActiveClassifiedAd(){
       classifiedSvc.getActiveClassifiedAd()
       .then(function(srchres){
-        if(flag == true) {
+        vm.classifiedAd = classifiedSvc.sortClassifiedAd(srchres);
+        /*if(flag == true) {
           for(var i=0 ; i < srchres.length; i++)
           {
             if(srchres[i].position == 'leftTop'){
@@ -133,7 +135,7 @@ function SpareHomeCtrl($scope,$stateParams, $rootScope, $uibModal, $state, $http
             }
             flag = false;
           }
-        }
+        }*/
       });
     }
 
