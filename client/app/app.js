@@ -54,7 +54,7 @@ angular.module('sreizaoApp',[
         libraries: 'weather,geometry,visualization,places'
     });
   })
-  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,countrySvc,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc) {
+  .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc, LocationSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = "assets/uploads/";
@@ -85,7 +85,7 @@ angular.module('sreizaoApp',[
     $rootScope.loadingCount = 0;
     $rootScope.loading = true;
 
-    $rootScope.allCountries = allCountries;
+    $rootScope.allCountries = [];
     $rootScope.valuationList = valuationList;
     $rootScope.tradeType = tradeType;
     $rootScope.rateMyEquipmentOpt = rateMyEquipmentOpt;
@@ -97,11 +97,6 @@ angular.module('sreizaoApp',[
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 
-    if($rootScope.allCountries.length > 0) {
-      for(var i=0; i< $rootScope.allCountries.length; i++)
-          $rootScope.allCountries[i]['count'] = 0;
-    }
-
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
@@ -110,6 +105,16 @@ angular.module('sreizaoApp',[
    categorySvc.getAllCategory().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
+    });
+
+    LocationSvc.getAllCountry()
+    .then(function(result){
+      $rootScope.allCountries = result;
+
+      if($rootScope.allCountries.length > 0) {
+        for(var i=0; i< $rootScope.allCountries.length; i++)
+            $rootScope.allCountries[i]['count'] = 0;
+      }
     });
 
    settingSvc.get(UPDATE_INVITATION_MASTER)

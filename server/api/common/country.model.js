@@ -5,7 +5,9 @@ var mongoose = require('mongoose'),
 
 var CountrySchema = new Schema({
   name: String,
-  code: String
+  countryCode: String,
+  createdAt: {type:Date,default:Date.now},
+  updatedAt: {type:Date,default:Date.now}
 });
 
 module.exports = mongoose.model('Country', CountrySchema);

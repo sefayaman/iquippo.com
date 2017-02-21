@@ -27,6 +27,15 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.stateEditClick = stateEditClick;
     vm.deleteState = deleteState;
 
+    vm.country = {};
+    vm.country = "";
+    vm.countryEdit = false;
+    vm.saveCountry = saveCountry;
+    vm.updateCountry = updateCountry;
+    vm.countryEditClick = countryEditClick;
+    vm.deleteCountry = deleteCountry;
+    vm.onCountryChange = onCountryChange;
+
     vm.location = {};
     vm.locationEdit = false;
     vm.saveLocation = saveLocation;
@@ -146,6 +155,16 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     $scope.importTechInfoMaster = importTechInfoMaster;
     vm.deleteAuctionMaster = deleteAuctionMaster;
 
+    function onCountryChange(country){
+        $scope.stateList = [];
+        if(!country)
+          return;
+        
+        vm.filterStateList = vm.stateList.filter(function(item){
+            return item.country == country;
+        });
+    }
+
     function onTabChange(tabValue){
     	dataToSend.pagination = true;
 		dataToSend.itemsPerPage = vm.itemsPerPage;
@@ -155,6 +174,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     		// 	 loadAllSubcategory();
     		// break;
     		case 'loc':
+                loadAllCountry();
     			loadAllState();
     			loadAllLocation();
     		break;
@@ -192,12 +212,18 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     }
     onTabChange(vm.tabValue);
     
+    function loadAllCountry(){
+        LocationSvc.getAllCountry()
+        .then(function(result){
+            vm.countryList = result;
+        })
+    }
+
     function loadAllState(){
     	LocationSvc.getAllState()
     	.then(function(result){
     		vm.stateList = result;
-            console.log(vm.stateList);
-    	})
+        })
     }
 
     function loadAllLocation(){
@@ -337,6 +363,61 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 		})
     }*/
 
+    //country functions
+    function saveCountry(form){
+        if(form.$invalid){
+            $scope.submitted = true;
+            return;
+        }
+        LocationSvc.saveCountry(vm.country)
+        .then(function(result){
+            if(result.errorCode == 1)
+                Modal.alert(result.message,true);
+            else {
+                vm.country = {};
+                loadAllCountry();
+            }
+        })
+    }
+    
+    function updateCountry(form){
+        if(form.$invalid){
+            $scope.submitted = true;
+            return;
+        }
+        LocationSvc.updateCountry(vm.country)
+        .then(function(result){
+             vm.country = {};
+             vm.countryEdit = false;
+             loadAllCountry();
+        })
+    }
+
+    function countryEditClick(idx){
+        vm.country = vm.countryList[idx];
+        vm.countryEdit = true;
+    }
+    
+    function deleteCountry(idx){
+        Modal.confirm("Are you sure want to delete?",function(ret){
+            if(ret == "yes")
+                submitDeleteCountry(idx);
+        });
+    }
+
+    function submitDeleteCountry(idx){
+        LocationSvc.deleteCountry(vm.countryList[idx])
+        .then(function(result){
+            if(!result.errorCode)
+                loadAllCountry();
+             else
+                Modal.alert(result.message,true);
+        })
+        .catch(function(res){
+            //error handling
+        })
+    }
+
     //state functions
 	function saveState(form){
 		if(form.$invalid){
@@ -398,6 +479,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 		LocationSvc.saveLocation(vm.location)
 		.then(function(result){
 			 vm.location = {};
+             vm.country = "";
 			 loadAllLocation();
 		})
     }
@@ -410,6 +492,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 		LocationSvc.updateLocation(vm.location)
 		.then(function(result){
 			 vm.location = {};
+             vm.country = "";
 			 vm.locationEdit = false;
 			 loadAllLocation();
 		})
@@ -417,6 +500,8 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 
     function locationEditClick(idx){
 		vm.location = vm.locationList[idx];
+        vm.country = vm.location.state.country;
+        onCountryChange(vm.country);
     	vm.locationEdit = true;
     }
  	
