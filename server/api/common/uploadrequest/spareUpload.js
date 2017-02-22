@@ -219,8 +219,6 @@ function _insertSpareData(uploadData, cb) {
 
 		function vaildateLocation(callback) {
 			var locations = doc.countryStateLocArr.split(';');
-			var err;
-
 			async.eachLimit(locations, 10, init, end);
 
 			function init(x, middleCb) {
@@ -417,7 +415,21 @@ function _insertSpareData(uploadData, cb) {
 				doc.productCondition = '';
 			}
 
+			if(!validCatBrandModel.length){
+				errObj.push({
+					Error: 'No valid category,brand,model',
+					rowCount: doc.__rowNum__
+				})
+				return insertCb();
+			}
 
+			if(!validLocations.length){
+				errObj.push({
+					Error: 'No valid location',
+					rowCount: doc.__rowNum__
+				})
+				return insertCb();
+			}
 
 			var spareDetails = {
 				partId: doc.partId,
