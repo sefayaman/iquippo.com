@@ -17,6 +17,7 @@ module.exports = function(app) {
   app.use('/api/category', require('./api/category'));
   app.use('/api/callback', require('./api/callback'));
   app.use('/api/group', require('./api/group'));
+  app.use('/api/assetType', require('./api/assetType'));
   app.use('/api/vendor', require('./api/vendor'));
   app.use('/api/quote', require('./api/quote'));
   app.use('/api/buyer', require('./api/buyer'));

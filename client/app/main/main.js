@@ -7,7 +7,11 @@ angular.module('sreizaoApp')
         url: '/',
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl as mainVm',
-        layout:'client'
+        layout:'client',
+        onEnter: function ($rootScope) {
+           $rootScope.choosenTitle = pagesTitles.index.title;
+           $rootScope.metaDescription=pagesTitles.index.meta;
+       }
       })
       .state('contactus', {
         url: '/contactus',
@@ -52,13 +56,53 @@ angular.module('sreizaoApp')
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
+        onEnter:function($rootScope,$stateParams,$http){
+          $http.post('/api/getseo',{categoryId:$stateParams.id})
+          .then(function(res){
+           $rootScope.choosenTitle=res.data.title;
+           $rootScope.metaDescription=res.data.meta;
+          })
+          .catch(function(err){
+           
+          })
+
+
+          /*switch($stateParams.id){
+          case "570e04e0213d8d7c368252e2"
+            $rootScope.choosenTitle=pagesTitles.viewproducts.backhoeloadersmachine.title;
+            $rootScope.metaDescription=pagesTitles.viewproducts.backhoeloadersmachine.meta;
+          break;
+          case "570e04e0213d8d7c368252df"
+          $rootScope.choosenTitle=pagesTitles.viewproducts.excavators.title;
+            $rootScope.metaDescription=pagesTitles.viewproducts.excavators.meta;
+          break;
+          case "570e04e0213d8d7c368252e9"
+          $rootScope.choosenTitle=pagesTitles.viewproducts.tractors.title;
+            $rootScope.metaDescription=pagesTitles.viewproducts.tractors.meta;
+          break;
+          case "570e04e0213d8d7c368252dc"
+          $rootScope.choosenTitle=pagesTitles.viewproducts.tippers.title;
+            $rootScope.metaDescription=pagesTitles.viewproducts.tippers.meta;
+          break;
+          case "570f5c79d74e41dc2f99bc12"
+          $rootScope.choosenTitle=pagesTitles.viewproducts.cranes.title;
+            $rootScope.metaDescription=pagesTitles.viewproducts.cranes.meta;
+          break;
+          case "5732f7ea58ef5de755086622"
+          $rootScope.choosenTitle=pagesTitles.viewproducts.transitmixers.title;
+            $rootScope.metaDescription=pagesTitles.viewproducts.transitmixers.meta;
+          break;*/
+         },
         layout:'client'
       })
       .state('productdetail', {
         url: '/productdetail/:id',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          //console.log(url);
+        }
       })
       .state('getquote', {
         url: '/getquote',
@@ -126,6 +170,10 @@ angular.module('sreizaoApp')
         url:"/aboutus",
         templateUrl: 'app/staticpages/aboutus.html',
          controller:"StaticCtrl",
+         onEnter: function ($rootScope) {
+           $rootScope.choosenTitle = pagesTitles.aboutus.title;
+           $rootScope.metaDescription=pagesTitles.aboutus.meta;
+       },
          layout:'client'
       })
       .state('manpower', {
@@ -233,6 +281,14 @@ angular.module('sreizaoApp')
         url: '/policies',
         templateUrl: 'app/admin/policies/policies.html',
         controller: 'policyCtrl as policiesVm',
+        authenticate:true,
+        layout:'admin',
+        restrict:true
+      })
+       .state('metaData', {
+        url: '/metaData',
+        templateUrl: 'app/admin/meta/meta.html',
+        controller: 'metaCtrl as metaVm',
         authenticate:true,
         layout:'admin',
         restrict:true
