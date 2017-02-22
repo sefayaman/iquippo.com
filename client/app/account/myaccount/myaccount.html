@@ -143,7 +143,7 @@
                   <span ng-if="!myAccountVm.userInfo.personalInfo.dob">Add DOB</span>
                   <span ng-if="myAccountVm.userInfo.personalInfo.dob">{{myAccountVm.userInfo.personalInfo.dob}}</span>
                 </div>
-                <div class="col-sm-8 form-group">
+                <div class="col-sm-9 form-group">
                   <div><label>Marital Status</label></div>
                   <span ng-if="!myAccountVm.userInfo.personalInfo.maritalStatus">Add Status</span>
                   <div class="row">
@@ -153,6 +153,18 @@
                     <div class="col-sm-9" ng-if="myAccountVm.userInfo.personalInfo.maritalStatus == 'Married'">Anniversary Date : <span ng-if="myAccountVm.userInfo.personalInfo.maritalStatus">{{myAccountVm.userInfo.personalInfo.anniversyDate}}</span></div>
                   </div>
                   
+                </div>
+                <div class="col-sm-12 form-group">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <label>PAN Number</label> <br>
+                      <span>{{myAccountVm.userInfo.panNumber}}</span>
+                    </div>
+                    <div class="col-sm-3">
+                      <label>AADHAAR Number</label> <br>
+                      <span>{{myAccountVm.userInfo.aadhaarNumber}}</span>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-sm-12 form-group">
                   <div>
@@ -203,6 +215,21 @@
                       
                     </div>
                   </div>
+                </div>
+
+                <div class="row form-group">
+                  <div class="col-sm-3">
+                    <label>PAN Number</label> <br>
+                    <input type="text" placeholder="PAN Number" ng-model="myAccountVm.userInfo.panNumber">
+                  </div>
+                  <div class="col-sm-3">
+                    <label>AADHAAR Number</label><br>
+                    <input type="text" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber">
+                  </div>
+                </div>
+
+                <div>
+                  <label>Education</label>
                 </div>
                 <div class="row form-group" ng-repeat="college in myAccountVm.userInfo.personalInfo.educations">
                   <div class="col-sm-3">

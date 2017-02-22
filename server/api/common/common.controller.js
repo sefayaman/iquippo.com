@@ -34,14 +34,6 @@ var importPath = config.uploadPath + config.importDir + "/";
 
 var  xslx = require('xlsx');
 
-// Get list of countries
-exports.getAllCountry = function(req, res) {
-  Country.find().sort({name:1}).exec(function (err, countries) {
-    if(err) { return handleError(res, err); }
-    return res.status(200).json(countries);
-  });
-};
-
 exports.sendOtp = function(req,res){
 	var isOnMobile = req.body.otpOn == 'mobile'?true:false;
 	 var otp = Math.round(Math.random() * 1000000) + "";
@@ -1018,6 +1010,84 @@ exports.createSubscribe = function(req, res) {
 
 
 //location functions
+
+// Get list of Country
+exports.getAllCountry = function(req, res) {
+  Country.find().sort({name:1}).exec(function (err, country) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(country);
+  });
+};
+
+// Creates a new state in the DB.
+exports.createCountry = function(req, res) {
+  req.body.createdAt = new Date();
+  req.body.updatedAt = req.body.createdAt;
+  var filter = {};
+  var arr = [];
+  if(req.body.name)
+    arr[arr.length] = {name: req.body.name};
+  if(req.body.countryCode)
+    arr[arr.length] = {countryCode: req.body.countryCode};
+    
+  if(arr.length > 0)
+      filter['$or'] = arr;
+  //console.log("filter###", filter);
+  Country.find(filter,function (err, country) {
+    if(err) { return handleError(res, err); }
+    else
+    {
+    	if(country.length>0)
+    	{
+    		return res.status(201).json({errorCode:1, message:"Country or Code already exits!!!"});
+    	}
+        else{
+        	Country.create(req.body, function(err, resulst) {
+              if(err) { return handleError(res, err); }
+               return res.status(200).json({errorCode:0, message:"Country save sucessfully"});
+             });
+        }  
+    
+    }
+    
+  });
+  
+};
+// Updates an existing country in the DB.
+exports.updateCountry = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  req.body.updatedAt = new Date();
+  Country.findById(req.params.id, function (err, country) {
+    if (err) { return handleError(res, err); }
+    if(!country) { return res.status(404).send('Not Found'); }
+    Country.update({_id:req.params.id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(req.body);
+    });
+  });
+};
+
+// Deletes a country from the DB.
+exports.deleteCountry = function(req, res) {
+  State.find({country:req.params.name},function(err,states){
+  	 if(err) { return handleError(res, err); }
+  	 if(states && states.length > 0){
+  	 	return res.status(200).json({errorCode:1,message:'States are associated with this country'});
+  	 }else
+  	 	deleteCountry(req,res);
+  })
+};
+
+function deleteCountry(req,res){
+	Country.findById(req.params.id, function (err, country) {
+    if(err) { return handleError(res, err); }
+    if(!country) { return res.status(404).send('Country Not Found'); }
+    country.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.status(204).json({message:"Country deleted sucessfully!!!"});
+    });
+  });
+}
 
 // Get list of State
 exports.getAllState = function(req, res) {

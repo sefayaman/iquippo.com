@@ -43,7 +43,7 @@
                
                 <h4>Please choose your ad option:</h4>
                 <div class="row">
-                  <div class="col-sm-3">
+                  <div class="col-sm-4">
                     <div class="radio radio-info">
                         <input type="radio" name="rad1" value="leftTop" ng-change="classifiedadVm.resetImages()" id="left-top" ng-model="checked">
                         <label for="left-top"> Left Top </label>
@@ -54,7 +54,18 @@
                       </div> -->
                       
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-4">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="leftCenter" ng-change="classifiedadVm.resetImages()" id="left-bottom" ng-model="checked">
+                        <label for="left-bottom"> Left Center </label>
+                    </div>
+                    <!-- <div class="form-group checkbox">
+                        <input type="radio" name="rad1" value="leftBottom" ng-change="classifiedadVm.resetImages()" id="left-bottom" ng-model="checked"><label for="left-bottom">Left Bottom</label>
+                      </div> -->
+                      
+                  </div>
+
+                  <div class="col-sm-4">
                     <div class="radio radio-info">
                         <input type="radio" name="rad1" value="leftBottom" ng-change="classifiedadVm.resetImages()" id="left-bottom" ng-model="checked">
                         <label for="left-bottom"> Left Bottom </label>
@@ -64,32 +75,13 @@
                       </div> -->
                       
                   </div>
-                  <div class="col-sm-3">
-                    <div class="radio radio-info">
-                        <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked">
-                        <label for="bottom-left"> Bottom Left </label>
-                    </div>
-                   <!--  <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked"><label for="bottom-left">Bottom Left</label>
-                      </div> -->
-                      
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="radio radio-info">
-                        <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked">
-                        <label for="bottom-right">Bottom Right</label>
-                    </div>
-                    <!-- <div class="form-group checkbox">
-                        <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked"><label for="bottom-right">Bottom right</label>
-                      </div> -->
-                      
-                  </div>
+                  
                 </div>
                  <div class="row">
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <!-- <small>(Recommended size: 165 x 255px )</small> -->
                           <span class="fileinput-button smallImg">
-                              <span><small>165px x 255px</small>
+                              <span><small>165px x 135px</small>
                               <br>
                               Browse Image
                               </span>
@@ -101,36 +93,75 @@
 
                           <button class="btn btn-primary btn-block" ng-disabled="checked != 'leftTop'" ng-click="classifiedadVm.previewImg('leftTopImg')">Preview</button>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                       <!-- <small>(Recommended size: 165 x 255px )</small> -->
                           <span class="fileinput-button smallImg">
-                              <span><small>165px x 255px</small>
+                              <span><small>165px x 135px</small>
+                              <br>
+                              Browse Image</span>
+                              <input type="file" name="file"  ng-disabled="checked != 'leftCenter'" image-upload>
+                          </span>
+                          <div class="browse-image">
+						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftCenter'&&classifiedadVm.classified.image" class="img-responsive">
+                          </div>
+                          <button class="btn btn-primary btn-block" ng-disabled="checked != 'leftCenter'" ng-click="classifiedadVm.previewImg('leftCenterImg')">Preview</button>
+                    </div>
+                     <div class="form-group col-sm-4">
+                      <!-- <small>(Recommended size: 165 x 255px )</small> -->
+                          <span class="fileinput-button smallImg">
+                              <span><small>165px x 135px</small>
                               <br>
                               Browse Image</span>
                               <input type="file" name="file"  ng-disabled="checked != 'leftBottom'" image-upload>
                           </span>
                           <div class="browse-image">
-						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftBottom'&&classifiedadVm.classified.image" class="img-responsive">
+                            <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='leftBottom'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
                           <button class="btn btn-primary btn-block" ng-disabled="checked != 'leftBottom'" ng-click="classifiedadVm.previewImg('leftBottomImg')">Preview</button>
                     </div>
-                    <div class="form-group col-sm-3">
+                    
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked">
+                        <label for="bottom-left"> Bottom Left </label>
+                    </div>
+                   <!--  <div class="form-group checkbox">
+                        <input type="radio" name="rad1" value="bottomLeft" ng-change="classifiedadVm.resetImages()" id="bottom-left" ng-model="checked"><label for="bottom-left">Bottom Left</label>
+                      </div> -->
+                      
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="radio radio-info">
+                        <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked">
+                        <label for="bottom-right">Bottom Right</label>
+                    </div>
+                    <!-- <div class="form-group checkbox">
+                        <input type="radio" name="rad1" value="bottomRight" ng-change="classifiedadVm.resetImages()" id="bottom-right" ng-model="checked"><label for="bottom-right">Bottom right</label>
+                      </div> -->
+                      
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-sm-4">
                         <!-- <small>(Recommended size: 680 x 100px )</small> -->
-                          <span class="fileinput-button largeImg">
+                          <span class="fileinput-button smallImg">
                               <span><small>680px x 100px</small>
                               <br>
                               Browse Image</span>
                               <input type="file" name="file" ng-disabled="checked != 'bottomLeft'" image-upload>
                           </span>
                           <div class="browse-land">
-						                <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomLeft'&&classifiedadVm.classified.image" class="img-responsive">
+                            <img ng-src="{{uploadImagePrefix}}classifiedad/{{classifiedadVm.classified.image}}" ng-if="checked=='bottomLeft'&&classifiedadVm.classified.image" class="img-responsive">
                           </div>
                           <button class="btn btn-primary btn-block" ng-disabled="checked != 'bottomLeft'" ng-click="classifiedadVm.previewImg('bottomLeftImg')">Preview</button>
 
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <!-- <small>(Recommended size: 680 x 100px )</small> -->
-                          <span class="fileinput-button largeImg">
+                          <span class="fileinput-button smallImg">
                               <span><small>680px x 100px</small>
                               <br>
                               Browse Image</span>
@@ -143,7 +174,6 @@
 
                     </div>
                 </div>
-
               </form>
             </div>
             <div class="modal-footer">

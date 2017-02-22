@@ -12,10 +12,13 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.noWrapSlides = false;
     vm.slides = [];//HOME_BANNER;
     vm.featuredslides = [];
-    vm.imgLeftTop = "";
+    
+    /*vm.imgLeftTop = "";
     vm.imgLeftBottom = "";
     vm.imgBottomLeft = "";
-    vm.imgBottomRight = "";
+    vm.imgBottomRight = "";*/
+    vm.classifiedAd = {};
+
     vm.radioModel = 'SELL';
     vm.isCollapsed = true;
     vm.sortedFeaturedProduct = [];
@@ -167,36 +170,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
     }
 
-    var flag = true;
     function getActiveClassifiedAd(){
       classifiedSvc.getActiveClassifiedAd()
       .then(function(srchres){
-        if(flag == true) {
-          for(var i=0 ; i < srchres.length; i++)
-          {
-            if(srchres[i].position == 'leftTop'){
-              vm.imgLeftTop = {};
-              vm.imgLeftTop.src = srchres[i].image;
-              vm.imgLeftTop.websiteUrl = srchres[i].websiteUrl;
-            }
-            if(srchres[i].position == 'leftBottom'){
-              vm.imgLeftBottom = {};
-              vm.imgLeftBottom.src = srchres[i].image;
-              vm.imgLeftBottom.websiteUrl = srchres[i].websiteUrl;
-            }
-            if(srchres[i].position == 'bottomLeft'){
-              vm.imgBottomLeft = {};
-              vm.imgBottomLeft.src = srchres[i].image;
-              vm.imgBottomLeft.websiteUrl = srchres[i].websiteUrl;
-            }
-            if(srchres[i].position == 'bottomRight'){
-              vm.imgBottomRight = {};
-              vm.imgBottomRight.src = srchres[i].image;
-              vm.imgBottomRight.websiteUrl = srchres[i].websiteUrl;
-            }
-            flag = false;
-          }
-        }
+        vm.classifiedAd = classifiedSvc.sortClassifiedAd(srchres);
       });
     }
 

@@ -11,6 +11,7 @@
       classifiedService.addClassifiedAd = addClassifiedAd;
       classifiedService.updateClassifiedAd = updateClassifiedAd;
       classifiedService.deleteClassifiedAd = deleteClassifiedAd;
+      classifiedService.sortClassifiedAd = sortClassifiedAd;
 
      function getClassifiedAdOnFilter(filter){
 
@@ -76,6 +77,39 @@
 
         return deferred.promise; 
       	
+      }
+
+      function sortClassifiedAd(srchres){
+        var vm = {};
+         for(var i=0 ; i < srchres.length; i++)
+        {
+          if(srchres[i].position == 'leftTop'){
+            vm.imgLeftTop = {};
+            vm.imgLeftTop.src = srchres[i].image;
+            vm.imgLeftTop.websiteUrl = srchres[i].websiteUrl;
+          }
+          if(srchres[i].position == 'leftCenter'){
+            vm.imgLeftCenter = {};
+            vm.imgLeftCenter.src = srchres[i].image;
+            vm.imgLeftCenter.websiteUrl = srchres[i].websiteUrl;
+          }
+          if(srchres[i].position == 'leftBottom'){
+            vm.imgLeftBottom = {};
+            vm.imgLeftBottom.src = srchres[i].image;
+            vm.imgLeftBottom.websiteUrl = srchres[i].websiteUrl;
+          }
+          if(srchres[i].position == 'bottomLeft'){
+            vm.imgBottomLeft = {};
+            vm.imgBottomLeft.src = srchres[i].image;
+            vm.imgBottomLeft.websiteUrl = srchres[i].websiteUrl;
+          }
+          if(srchres[i].position == 'bottomRight'){
+            vm.imgBottomRight = {};
+            vm.imgBottomRight.src = srchres[i].image;
+            vm.imgBottomRight.websiteUrl = srchres[i].websiteUrl;
+          }
+        }
+        return vm;
       }
 
 

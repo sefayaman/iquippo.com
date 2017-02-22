@@ -20,6 +20,8 @@ var UserSchema = new Schema({
   createdBy : {},
   country: String,
   email: { type: String, lowercase: true },
+  panNumber:String,
+  aadhaarNumber:String,
   hashedPassword: String,
   phone: String,
   mobile: String,
