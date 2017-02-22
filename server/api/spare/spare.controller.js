@@ -523,16 +523,16 @@ exports.bulkCreate = function(data, cb) {
     }
   }
 
-  function iteration(auctionData, next) {
-    _create(auctionData,function(response){
+  function iteration(spareData, next) {
+    _create(spareData,function(response){
     // AuctionRequest.create(auctionData, function(err, auction) {
       if (response instanceof Error) {
         errObj.push({
-          data: auctionData,
+          data: spareData,
           error: response
         })
       } else {
-        sucessObj.push(auctionData);
+        sucessObj.push(spareData);
       }
 
       return next();
@@ -541,7 +541,7 @@ exports.bulkCreate = function(data, cb) {
 
   function finalize(err) {
     if (err)
-      debug(err);
+      console.log(err);
 
     if (errObj.length && !sucessObj.length)
       return cb({

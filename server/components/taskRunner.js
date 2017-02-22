@@ -84,11 +84,17 @@ function pushNotification(taskData) {
   if (taskData.user && !taskData.user.email)
     return;
 
+  var subject = 'Product uploaded Notification';
+
+  if(taskData.taskType === 'bulkSpare'){
+    Uploaded_TEMPLATE_NAME = 'BulkSpareUpload';
+    subject  = 'Spare uploaded Notification';
+  }
   var emailData = {};
   emailData.to = taskData.user && taskData.user.email;
   var tmplName = Uploaded_TEMPLATE_NAME;
   emailData.notificationType = "email";
-  emailData.subject = "Product uploaded Notification";
+  emailData.subject = subject;
 
   commonController.compileTemplate(taskData, config.serverPath, tmplName, function(ret, res) {
     if (!ret) {

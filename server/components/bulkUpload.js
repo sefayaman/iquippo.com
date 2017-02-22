@@ -81,6 +81,8 @@ bulkUpload.init = function(taskData, next) {
 	var taskType = taskData.taskType;
 	var approvedObj = [];
 	var approvedIds = [];
+	var spareUploaded = [];
+	var uploadedProducts = [];
 	switch (taskType) {
 		case 'bulkauction':
 			var options = {
@@ -151,6 +153,7 @@ bulkUpload.init = function(taskData, next) {
 						}];
 						obj.status = 'request_approved';
 						obj.external = true;
+						uploadedProducts.push(product.assetId);
 						approvedObj.push(obj);
 						approvedIds.push(x._id.toString());
 					}
@@ -176,17 +179,13 @@ bulkUpload.init = function(taskData, next) {
 
 				function finalize(err) {
 					console.log(err);
-					AuctionController.bulkCreate(approvedObj, function(response) {
-						if (response && response.Error && response.errObj && !response.sucessObj) {
-							taskData.data = data;
-							return next(null, taskData);
-						}
-
+					AuctionController.bulkCreate(approvedObj, function(err,response) {
+						taskData.data = data;
 						if (response && !response.Error && !response.errObj && response.sucessObj) {
-							return next(data);
+							taskData.uploadedProducts = uploadedProducts;
+							return next(true,taskData);
 						} else {
-							taskData.data = data;
-							return next(null, taskData);
+							return next(false, taskData);
 						}
 					})
 				}
@@ -239,6 +238,7 @@ bulkUpload.init = function(taskData, next) {
 								userId : x.user._id
 							}
 						];
+						spareUploaded.push(spareUploads.partNo);
 						approvedIds.push(x._id.toString());
 						approvedObj.push(spareUploads);
 					}
@@ -263,17 +263,13 @@ bulkUpload.init = function(taskData, next) {
 
 				function finalize(err) {
 					console.log(err);
-					spareController.bulkCreate(approvedObj, function(response) {
-						if (response && response.Error && response.errObj && !response.sucessObj) {
-							taskData.data = data;
-							return next(null, taskData);
-						}
-
+					spareController.bulkCreate(approvedObj, function(err,response) {
+						taskData.data = data;
 						if (response && !response.Error && !response.errObj && response.sucessObj) {
-							return next(data);
+							taskData.spareUploaded = spareUploaded;
+							return next(true,taskData);
 						} else {
-							taskData.data = data;
-							return next(null, taskData);
+							return next(false, taskData);
 						}
 					})
 				}

@@ -524,7 +524,6 @@ function onCategoryChange(idx,noChange){
       vm.spare.spareStatuses[vm.spare.spareStatuses.length] = stObj;
       
       $rootScope.loading = true;
-      console.log(vm.spare);
       spareSvc.addSpare(vm.spare).then(function(result){
         $rootScope.loading = false;
           
