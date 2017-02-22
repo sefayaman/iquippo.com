@@ -16,6 +16,7 @@ router.put('/:id', controller.update);
 router.post('/searchspare', controller.searchSpare);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.get('/fetch/export.xlsx',controller.exportXLSX);
+router.post('/upload/excel',controller.uploadExcel);
 
 
 module.exports = router;

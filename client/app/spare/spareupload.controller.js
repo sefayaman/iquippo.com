@@ -3,7 +3,7 @@
 angular.module('spare').controller('SpareUploadCtrl',SpareUploadCtrl);
 
 //Spare upload controller
-function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spareSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, ManufacturerSvc) {
+function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spareSvc, categorySvc,SubCategorySvc,LocationSvc, uploadSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, ManufacturerSvc) {
     var vm = this;
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
@@ -39,6 +39,18 @@ function SpareUploadCtrl($scope, $http, $rootScope, $stateParams, groupSvc, spar
     vm.rotate = rotate;
     vm.addMoreMaster = addMoreMaster;
     vm.goToUsermanagement = goToUsermanagement;
+    vm.openLocationList = openLocationList;
+    //vm.closeDialog = closeDialog;
+
+
+    // function closeDialog() {
+    //   $uibModalInstance.dismiss('cancel');
+    //   $rootScope.$broadcast('resetBannerTimer');
+    // }
+
+    function openLocationList(){
+      Modal.openDialog('locationList');
+    }
     
     function addMoreMaster(){
       var tmpObj = {};
@@ -512,6 +524,7 @@ function onCategoryChange(idx,noChange){
       vm.spare.spareStatuses[vm.spare.spareStatuses.length] = stObj;
       
       $rootScope.loading = true;
+      console.log(vm.spare);
       spareSvc.addSpare(vm.spare).then(function(result){
         $rootScope.loading = false;
           

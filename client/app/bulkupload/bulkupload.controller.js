@@ -10,6 +10,7 @@
     vm.template = '';
     vm.showDataSection = true;
     vm.products = [];
+    vm.spareUploads = [];
     vm.currentProduct = null;
     //vm.deleteImg = deleteImg;
     //vm.makePrimary = makePrimary;
@@ -31,6 +32,9 @@
       case 'auction':
         vm.uploadTemplate = 'Bulk_upload_auction.xlsx';
         break;
+      case 'spareUpload':
+        vm.uploadTemplate = 'Spares_Bulk_Upload_Template.xlsx';
+        break;
       default:
         Modal.alert('Invalod Choice');
         break;
@@ -51,7 +55,8 @@
       vm.products = [];
       bulkuploadSvc.loadIncomingProduct()
         .then(function(result) {
-          vm.products = result.data;
+          vm.spareUploads = result.data.spareUploads;
+          vm.products =  result.data.productUploads;
         });
     }
 
@@ -116,6 +121,11 @@
               vm.uploadType = 'bulkauction';
               vm.template = 'Bulk_upload_auction.xlsx';
               break;
+            case 'spareUpload':
+              url = '/api/spare/upload/excel';
+              vm.uploadType = 'spareUpload';
+              vm.template = 'Spares_Bulk_Upload_Template.xlsx';
+              break;
             default:
               Modal.alert('Invalod Choice');
               break;
@@ -124,6 +134,7 @@
 
           bulkuploadSvc.parseExcel(fileName, url)
             .then(function(res) {
+              var template = 'BulkUploadError';
               loadIncomingProduct();
               $rootScope.loading = false;
               var totalRecord = res.successObj + res.errObj.length + res.duplicateRecords.length;
@@ -137,7 +148,10 @@
                 serData.errorList = res.errObj;
                 if (res.duplicateRecords.length)
                   serData.errorList = serData.errorList.concat(res.duplicateRecords);
-                notificationSvc.sendNotification('BulkUploadError', data, serData, 'email');
+                if(type === 'spareUpload'){
+                  template = 'BulkSpareUploadError';
+                }
+                notificationSvc.sendNotification(template, data, serData, 'email');
                 message += "Error details have been sent on registered email id.";
               }
               $scope.successMessage = message;
@@ -168,6 +182,9 @@
             case 'auction':
               task.taskType = 'bulkauction';
               break;
+            case 'spareUpload':
+              task.taskType = 'bulkSpare';
+              break;
             default:
               Modal.alert('Invalod Choice');
               break;
@@ -180,7 +197,11 @@
           task.taskInfo.filename = result.data.filename;
           commonSvc.createTask(task)
             .then(function(dt) {
-              Modal.alert("your bulk product request is submitted successfully.");
+              var msg = "your bulk product request is submitted successfully.";
+              if(type === 'spareUpload')
+                msg = "Your Bulk Spare Upload Request Submitted Successfully";
+              
+              Modal.alert(msg);
             });
         })
         .catch(function(res) {

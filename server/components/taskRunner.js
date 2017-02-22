@@ -42,6 +42,9 @@ function executeTask(taskData) {
     case "bulkauction":
       bulkUpload.init(taskData, updateTask);
       break;
+    case "bulkSpare" :
+      bulkUpload.init(taskData,updateTask);
+      break;
   }
 }
 
