@@ -220,7 +220,6 @@ bulkUpload.init = function(taskData, next) {
 							taskData.zip.extractEntryTo(imagesObj[spareUploads.partNo][i].entryName, config.uploadPath + spareUploads.assetDir + "/", false);
 						}
 						spareUploads.primaryImg = imagesObj[spareUploads.partNo][0].name;
-						imagesObj[spareUploads.partNo].splice(0, 1);
 						if (imagesObj[spareUploads.partNo].length) {
 							spareUploads.images = [];
 							for (var j = 0; j < imagesObj[spareUploads.partNo].length; j++) {
