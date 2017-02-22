@@ -14,7 +14,7 @@ var ManufacturerModel = require('../manufacturer.model');
 
 
 
-function fetchManufacturer(options,cb){
+function fetchManufacturer(options, cb) {
 	ManufacturerModel.find(options).exec(cb);
 }
 
@@ -94,7 +94,6 @@ function fetchBrand(brand, cb) {
 		'group.name': brand.group,
 		'category.name': brand.category
 	};
-
 	BrandModel.find(filter).exec(function(err, brandData) {
 		if (err) {
 			return cb(err);
@@ -107,12 +106,14 @@ function fetchBrand(brand, cb) {
 function fetchModel(model, cb) {
 	var filter = {};
 	if (Object.keys(model).length) {
-		filter = {
-			name: model.name,
-			'group.name': model.group,
-			'category.name': model.category,
-			'brand.name': model.brand
-		};
+		if (model.group)
+			filter['group.name'] = model.group;
+		if (model.name)
+			filter.name = model.name;
+		if (model.category)
+			filter['category.name'] = model.category;
+		if (model.brand)
+			filter['brand.name'] = model.brand;
 	}
 
 	ModelModel.find(filter).exec(function(err, modelData) {
@@ -140,7 +141,7 @@ var commonFunc = {
 	fetchCities: fetchCities,
 	fetchStates: fetchStates,
 	fetchUser: fetchUser,
-	fetchManufacturer : fetchManufacturer 
+	fetchManufacturer: fetchManufacturer
 };
 
 module.exports = commonFunc;

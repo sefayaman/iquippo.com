@@ -8,7 +8,7 @@ var commonFunc = require('./commonFunc');
 var debug = require('debug')('api.common.uploadrequest.spareUpload');
 
 function validateRow(data) {
-	var mandatoryCols = ['partNo', 'name', 'madeIn', 'sellerMobile', 'currencyType', 'grossPrice', 'manufacturers'];
+	var mandatoryCols = ['partNo', 'name', 'madeIn', 'sellerMobile', 'currencyType', 'manufacturers'];
 	var missingParams, err;
 	missingParams = mandatoryCols.filter(function(x) {
 		if (!data[x])
@@ -97,7 +97,7 @@ function _insertSpareData(uploadData, cb) {
 
 	function intitalize(doc, insertCb) {
 		debug(doc);
-		if(processedRecords[doc.partNo]){
+		if (processedRecords[doc.partNo]) {
 			errObj.push({
 				Error: 'Duplicate record in excel sheet',
 				rowCount: doc.__rowNum__
@@ -118,6 +118,15 @@ function _insertSpareData(uploadData, cb) {
 			})
 			return insertCb();
 		}
+
+		if(!doc.priceOnRequest && !doc.grossPrice){
+			errObj.push({
+				Error: 'Price missing',
+				rowCount: doc.__rowNum__
+			})
+			return insertCb();
+		}
+
 
 
 		/*AA:
@@ -145,7 +154,7 @@ function _insertSpareData(uploadData, cb) {
 
 		function validateExistingReq(callback) {
 			var options = {
-				'spareUploads.partNo' : doc.partNo
+				'spareUploads.partNo': doc.partNo
 			};
 
 			Model.find(options, function(err, spare) {
@@ -180,7 +189,7 @@ function _insertSpareData(uploadData, cb) {
 					name: manu[0].name,
 					_id: manu[0].id
 				};
-				
+
 				return callback();
 
 			})
@@ -190,10 +199,8 @@ function _insertSpareData(uploadData, cb) {
 			var options = {
 				'$or': [{
 					partNo: doc.partNo
-				}, {
-					name: doc.name
 				}],
-				deleted : false
+				deleted: false
 			};
 
 			commonFunc.fetchSpare(options, function(err, spare) {
@@ -223,12 +230,12 @@ function _insertSpareData(uploadData, cb) {
 					return middleCb();
 				}
 
-				if(singleLocationArr.length < 3){
+				if (singleLocationArr.length < 3) {
 					err = 'Missing Country/State/City';
 					return middleCb();
 				}
 
-				if (singleLocationArr[2] !== 'All') {
+				if (singleLocationArr[2].toLowerCase() !== 'all') {
 					var locationsList = citiesObj[singleLocationArr[2]];
 					if (!locationsList || !locationsList.length) {
 						err = 'Invalid Locations';
@@ -292,15 +299,15 @@ function _insertSpareData(uploadData, cb) {
 					return middleCb();
 				}
 
-				if(singleCatBrandModel.length < 3){
+				if (singleCatBrandModel.length < 3) {
 					err = 'Missing Category/Brand/Model';
 					return middleCb();
 				}
 
-				if(singleCatBrandModel[3])
+				if (singleCatBrandModel[3])
 					variant = singleCatBrandModel[3];
 
-				if (singleCatBrandModel[2] !== 'All') {
+				if (singleCatBrandModel[2].toLowerCase() !== 'all') {
 					var modelsList = modelsObj[singleCatBrandModel[2]];
 					if (!modelsList.length) {
 						err = 'Invalid Locations';
@@ -315,7 +322,7 @@ function _insertSpareData(uploadData, cb) {
 									name: singleCatBrandModel[2],
 									_id: l[3]
 								},
-								variant : variant || ''
+								variant: variant || ''
 							});
 						}
 					})
@@ -323,8 +330,8 @@ function _insertSpareData(uploadData, cb) {
 					return middleCb();
 				} else {
 					commonFunc.fetchModel({
-						category: singleCatBrandModel[1],
-						brand: singleCatBrandModel[2]
+						'category': singleCatBrandModel[0],
+						'brand': singleCatBrandModel[1]
 					}, function(fetchErr, modelsList) {
 						if (fetchErr || !modelsList) {
 							err = 'Invalid category or barnd';
@@ -344,7 +351,7 @@ function _insertSpareData(uploadData, cb) {
 									name: x.name,
 									_id: x.id
 								},
-								variant : variant || ''
+								variant: variant || ''
 							})
 						})
 						return middleCb();
@@ -380,9 +387,9 @@ function _insertSpareData(uploadData, cb) {
 					lname: sellerInfo[0].lname,
 					role: sellerInfo[0].role,
 					_id: sellerInfo[0].id,
-					userType : sellerInfo[0].userType,
-					mobile : sellerInfo[0].mobile,
-					phone : sellerInfo[0].phone
+					userType: sellerInfo[0].userType,
+					mobile: sellerInfo[0].mobile,
+					phone: sellerInfo[0].phone
 				};
 				return callback();
 			})
@@ -398,15 +405,15 @@ function _insertSpareData(uploadData, cb) {
 				return insertCb();
 			}
 
-			var validStatus = ['active','inactive','sold'];
+			var validStatus = ['active', 'sold'];
 
-			if(validStatus.indexOf(doc.status) < 0){
+			if (validStatus.indexOf(doc.status && doc.status.toLowerCase()) < 0) {
 				doc.status = 'inactive';
 			}
 
-			var validConditions = ['used','new'];
+			var validConditions = ['used', 'new'];
 
-			if(validConditions.indexOf(doc.productCondition) < 0){
+			if (validConditions.indexOf(doc.productCondition && doc.productCondition.toLowerCase()) < 0) {
 				doc.productCondition = '';
 			}
 
@@ -430,15 +437,15 @@ function _insertSpareData(uploadData, cb) {
 				priceOnRequest: doc.priceOnRequest,
 				currencyType: doc.currencyType,
 				status: doc.status && doc.status.toLowerCase(),
-				deleted : false,
-				isSold : false,
-				inquiryCounter : 0
+				deleted: false,
+				isSold: false,
+				inquiryCounter: 0
 			};
 
 			Model.create({
 				user: uploadData.user,
 				spareUploads: spareDetails,
-				type : 'spareUpload'
+				type: 'spareUpload'
 			}, function(err, response) {
 				if (err || !response) {
 					errObj.push({
@@ -460,10 +467,10 @@ function _insertSpareData(uploadData, cb) {
 			debug(err);
 		}
 
-		return cb(null,{
+		return cb(null, {
 			errObj: errObj,
 			successObj: successCount,
-			duplicateRecords : []
+			duplicateRecords: []
 		});
 	}
 
