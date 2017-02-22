@@ -45,7 +45,14 @@
                       <div class="form-group col-sm-offset-1 col-sm-10">
                         <hr>
                         <h3 class="text-right">
-                          <div class="btn btn-success" ng-if="BulkUploadCtrl.products.length > 0">
+                          <div class="btn btn-success" ng-if="BulkUploadCtrl.products.length > 0 && type === 'auction' ">
+                              <span class="fileinput-button" >
+                                 <i class="fa fa-file-excel-o"></i> Upload Zip file
+                                 <input type="file" name="template_update" onchange="angular.element(this).scope().uploadZip(this.files,this)">
+                                 </span>
+                             </div>
+
+                        <div class="btn btn-success" ng-if="BulkUploadCtrl.spareUploads.length > 0 && type === 'spareUpload' ">
                               <span class="fileinput-button" >
                                  <i class="fa fa-file-excel-o"></i> Upload Zip file
                                  <input type="file" name="template_update" onchange="angular.element(this).scope().uploadZip(this.files,this)">
@@ -69,7 +76,7 @@
                           
                   <div class="form-group"></div>
                   <div class="row">
-                      <div class=" col-md-10 col-md-offset-1">
+                      <div ng-if="type === 'auction'" class=" col-md-10 col-md-offset-1">
                         <table class="table table-bordered">
                           <thead>
                             <tr class="success">
@@ -90,6 +97,39 @@
                               <td>{{prd.product.category}}</td>
                               <td>{{prd.product.brand}}</td>
                               <td>{{prd.product.model}}</td>
+                              <td> <!-- <a href="javascript:void(0);"  ng-click="bulkProduct.goToImageUpload(prd._id)" class="btn btn-primary btn-xs" uib-popover="Add images" popover-trigger="mouseenter">
+                                  </i>Add Images
+                                </a> -->
+                                  <a href="javascript:void(0);"  ng-click="BulkUploadCtrl.deleteProduct(prd._id)" class="btn btn-warning btn-xs">
+                                  </i>Delete
+                                </a> 
+                                </td>
+                            </tr>
+                          </tbody>
+                      </table>  
+                  </div>
+                  <div ng-if="type === 'spareUpload'" class=" col-md-10 col-md-offset-1">
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr class="success">
+                              <th>Part Number</th>
+                              <th>Part Name</th>
+                              <th width="30%">Price</th>
+                              <th>Manufacturer</th>
+                              <th>Part Description</th>
+                              <th>Made In</th>
+                              <th width="10%">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <tr ng-repeat="prd in BulkUploadCtrl.spareUploads  track by $index ">
+                              <td>{{prd.spareUploads.partNo}}</td>
+                              <td>{{prd.spareUploads.name}}</td>
+                              <td>{{prd.spareUploads.grossPrice}}</td>
+                              <td>{{prd.spareUploads.manufacturers.name}}</td>
+                              <td>{{prd.spareUploads.description}}</td>
+                              <td>{{prd.spareUploads.madeIn}}</td>
                               <td> <!-- <a href="javascript:void(0);"  ng-click="bulkProduct.goToImageUpload(prd._id)" class="btn btn-primary btn-xs" uib-popover="Add images" popover-trigger="mouseenter">
                                   </i>Add Images
                                 </a> -->

@@ -15,7 +15,9 @@ var Category = require('./../category/category.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var APIError = require('../../components/_error');
+var uploadRequest = require('../common/uploadrequest/uploadrequest.controller');
 var moment = require('moment');
+var async = require('async');
 
 //var PaymentTransaction = require('./../payment/payment.model');
 //var appNotificationCtrl = require('./../appnotification/appnotification.controller');
@@ -420,6 +422,8 @@ function updateSpare(req,res){
      filter['_id'] = {$ne:_id}; 
   if(req.body.partNo)
     filter['partNo'] = req.body.partNo;
+  filter['delete'] = false;
+
   Spare.find(filter,function(err,spare){
     if(err) return handleError(res, err); 
     if(spare.length > 0){
@@ -441,8 +445,17 @@ function updateSpare(req,res){
   });*/
 }
 
-function addSpare(req,res){
+function _create(data,cb){
+  data.createdAt = new Date();
+  data.relistingDate = new Date();
+  data.updatedAt = new Date();
+  Spare.create(data, function(err, spare) {
+    if(err) { cb(err) }
+    return cb();
+  });
+}
 
+function addSpare(req,res){
   req.body.createdAt = new Date();
   req.body.relistingDate = new Date();
   req.body.updatedAt = new Date();
@@ -465,7 +478,90 @@ exports.destroy = function(req, res) {
   });
 };
 
+
+exports.uploadExcel = function(req,res){
+  var data = {
+    uploadData : req.body,
+    type : 'spareUpload'
+  }
+  uploadRequest.create(data, function(err, result) {
+    if (err)
+      return res.sendStatus(500).send(err);
+    return res.json(result);
+  });
+}
+
 function handleError(res, err) {
   console.log(err);
   return res.status(500).send(err);
+}
+
+exports.bulkCreate = function(data, cb) {
+  var errObj = [],
+    sucessObj = [];
+
+  // data = data.filter(function(x) {
+  //   var err = validateData(x);
+  //   if (err) {
+  //     errObj.push({
+  //       data: x,
+  //       error: err
+  //     });
+  //   } else
+  //     return x;
+  // });
+
+  if (data.length) {
+    //AA:If the length of data is non zero
+    //insert data asynchronously in mongodb
+    async.eachLimit(data, 5, iteration, finalize);
+  }else{
+    console.log('No data for create');
+    return {
+      errObj :errObj,
+      sucessObj : sucessObj
+    }
+  }
+
+  function iteration(spareData, next) {
+    _create(spareData,function(response){
+    // AuctionRequest.create(auctionData, function(err, auction) {
+      if (response instanceof Error) {
+        errObj.push({
+          data: spareData,
+          error: response
+        })
+      } else {
+        sucessObj.push(spareData);
+      }
+
+      return next();
+    });
+  }
+
+  function finalize(err) {
+    if (err)
+      console.log(err);
+
+    if (errObj.length && !sucessObj.length)
+      return cb({
+        Error: 'Error while inserting these data:' + errObj.toString(),
+        errObj: errObj
+      });
+
+    if (sucessObj.length && !errObj.length)
+      return cb(null, {
+        Error: '',
+        sucessObj: sucessObj
+      });
+
+    if (errObj.length && sucessObj.length)
+      return cb({
+        Error: 'Error while inserting these data:' + errObj.toString() +
+          'Inserted Successfully:' + sucessObj.toString(),
+        sucessObj: sucessObj,
+        errObj: errObj
+      });
+  }
+
 }

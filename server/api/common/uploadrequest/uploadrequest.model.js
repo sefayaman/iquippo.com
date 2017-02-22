@@ -28,7 +28,8 @@ var UploadRequestSchema = new Schema({
 	isInserted: {
 		type: Boolean,
 		default: 0
-	}
+	},
+	spareUploads : {}
 });
 
 

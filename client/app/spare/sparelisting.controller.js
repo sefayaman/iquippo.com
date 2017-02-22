@@ -220,7 +220,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Spare Deleted';
-        result.data.serverPath = serverPath;
+        data.serverPath = serverPath;
         notificationSvc.sendNotification('productDeletedEmailToAdmin', data, result.data,'email');
       });
   }
