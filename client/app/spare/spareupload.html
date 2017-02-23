@@ -154,12 +154,13 @@
                             <div class="form-group col-sm-3" ng-class="{'has-error': form.location.$invalid && submitted}">
                               <select class="form-control" name="location" ng-model="spareVm.location" ng-change="spareVm.onLocationChange(spareVm.location)" ng-required="spareVm.spare.locations.length < 1">
                                 <option value="">Select Location</option>
-                                <option ng-repeat="location in spareVm.locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+                                <option uib-tooltip="Country:{{location.state.country}},State:{{location.state.name}}" tooltip-placement="top" tooltip-trigger="mouseenter" ng-repeat="location in spareVm.locationList| orderBy:'name'"  value="{{location.name}}">{{location.name}}</option>
                               </select>
                               <i class="caret"></i>
                             </div>
                             <div class="form-group col-sm-4">
-                              <span class="badge" ng-repeat="loc in spareVm.spare.locations" ng-if="loc.city">{{loc.city}} 
+                              <span class="badge" uib-tooltip="Country:{{loc.country}},State:{{loc.state}}" tooltip-placement="bottom" tooltip-trigger="mouseenter"
+              ng-repeat="loc in spareVm.spare.locations | limitTo : 3" ng-if="loc.city">{{loc.city}} 
                               <a href="javascript:void(0);" ng-click="spareVm.spare.locations.splice($index, 1)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
                               <i class="fa fa-times" ></i></a></span>
                             </div>
