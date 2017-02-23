@@ -10,6 +10,7 @@ var APIError = require('./_error');
 var async = require('async');
 var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY/MM/DD'];
+var spareController = require('../api/spare/spare.controller')
 
 var bulkUpload = {};
 
@@ -80,6 +81,8 @@ bulkUpload.init = function(taskData, next) {
 	var taskType = taskData.taskType;
 	var approvedObj = [];
 	var approvedIds = [];
+	var spareUploaded = [];
+	var uploadedProducts = [];
 	switch (taskType) {
 		case 'bulkauction':
 			var options = {
@@ -150,6 +153,7 @@ bulkUpload.init = function(taskData, next) {
 						}];
 						obj.status = 'request_approved';
 						obj.external = true;
+						uploadedProducts.push(product.assetId);
 						approvedObj.push(obj);
 						approvedIds.push(x._id.toString());
 					}
@@ -174,17 +178,97 @@ bulkUpload.init = function(taskData, next) {
 				}
 
 				function finalize(err) {
-					AuctionController.bulkCreate(approvedObj, function(response) {
-						if (response && response.Error && response.errObj && !response.sucessObj) {
-							taskData.data = data;
-							return next(null, taskData);
-						}
-
+					console.log(err);
+					AuctionController.bulkCreate(approvedObj, function(err,response) {
+						taskData.data = data;
 						if (response && !response.Error && !response.errObj && response.sucessObj) {
-							return next(data);
+							taskData.uploadedProducts = uploadedProducts;
+							return next(true,taskData);
 						} else {
-							taskData.data = data;
-							return next(null, taskData);
+							return next(false, taskData);
+						}
+					})
+				}
+			})
+			break;
+		case "bulkSpare":
+			approvedObj = [];
+			options = {
+				type: 'spareUpload'
+			};
+
+			_fetchRequestData(options, function(err, data) {
+				if (err)
+					return next('', taskData);
+				if (!data.length)
+					return next('', taskData);
+
+				var imagesObj = _extractImages(taskData);
+
+				if (imagesObj instanceof Error) {
+					return next('Error while uploading images', taskData);
+				}
+
+				data.forEach(function(x) {
+					var spareUploads = x.spareUploads;
+					var obj = {};
+					spareUploads.images = [];
+					spareUploads.assetDir = new Date().getTime();
+					if (imagesObj[spareUploads.partNo] && imagesObj[spareUploads.partNo].length) {
+						obj = {};
+						for (var i = 0; i < imagesObj[spareUploads.partNo].length; i++) {
+							taskData.zip.extractEntryTo(imagesObj[spareUploads.partNo][i].entryName, config.uploadPath + spareUploads.assetDir + "/", false);
+						}
+						spareUploads.primaryImg = imagesObj[spareUploads.partNo][0].name;
+						if (imagesObj[spareUploads.partNo].length) {
+							spareUploads.images = [];
+							for (var j = 0; j < imagesObj[spareUploads.partNo].length; j++) {
+								spareUploads.images.push({
+									"waterMarked" : false,
+									"isPrimary" : false,
+									"src" : imagesObj[spareUploads.partNo][j].name
+								})
+							}
+						}
+						spareUploads.user = x.user;
+						spareUploads.spareStatuses = [{
+								createdAt : new Date(),
+								status : spareUploads.status,
+								userId : x.user._id
+							}
+						];
+						spareUploaded.push(spareUploads.partNo);
+						approvedIds.push(x._id.toString());
+						approvedObj.push(spareUploads);
+					}
+				})
+				var rejectIds = [];
+				if (approvedObj.length) {
+					async.eachLimit(approvedIds, 5, iterator, finalize);
+				}
+
+
+				function iterator(approveId, cb) {
+					UploadRequestModel.remove({
+						_id: approveId
+					}, function(err, dt) {
+						if (err) {
+							console.log(err);
+							rejectIds.push(approveId);
+						}
+						return cb();
+					})
+				}
+
+				function finalize(err) {
+					console.log(err);
+					spareController.bulkCreate(approvedObj, function(err,response) {
+						taskData.data = data;
+						if (response && !response.Error && !response.errObj && response.sucessObj) {
+							taskData.spareUploaded = spareUploaded;
+							return next(true,taskData);
+						} else {
+							return next(false, taskData);
 						}
 					})
 				}

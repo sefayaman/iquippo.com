@@ -8,22 +8,22 @@
       <div class="spare-content">
           <form>
               <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-3 form-group">
                   <div class="">
                     <input type="text" ng-model="spareHomeVm.categorySearchText" placeholder="Select Asset Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                   </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3 form-group">
                   <div class="">
                     <input type="text" class="form-control" ng-model="spareHomeVm.locationSearchText" placeholder="Spare Part Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                   </div>
                 </div> 
-                <div class="col-sm-3">
+                <div class="col-sm-3 form-group">
                   <div class="">
                     <input type="text" class="form-control" placeholder="Spare Part Name" ng-model="spareHomeVm.sparename" class="form-control" ng-keypress="spareHomeVm.myFunct($event)"/>
                   </div>
                 </div>             
-                <div class="col-sm-3 text-center">
+                <div class="col-sm-3 form-group text-center">
                   <a href="javascript:;"  class="btn btn-warning btn-block" ng-click="spareHomeVm.doSearch()"><i class="fa fa-search"></i> Search Spare</a>
                 </div>
               </div>
@@ -40,14 +40,19 @@
 
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
-       <a href="/financing" target="_blank">
-          <img ng-if="spareHomeVm.imgLeftTop.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgLeftTop.src}}" class="img-responsive add1">
+       <a ng-href="{{spareHomeVm.classifiedAd.imgLeftTop.websiteUrl}}" target="_blank" ng-if="spareHomeVm.classifiedAd.imgLeftTop.src">
+          <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.classifiedAd.imgLeftTop.src}}" class="img-responsive add1">
        </a>
         <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
         <div class="form-group"></div>
         <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
-        <a href="/insurance" target="_blank">
-          <img ng-if="spareHomeVm.imgLeftBottom.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgLeftBottom.src}}" class="img-responsive add1">
+
+        <a ng-href="{{spareHomeVm.classifiedAd.imgLeftCenter.websiteUrl}}" target="_blank" ng-if="spareHomeVm.classifiedAd.imgLeftCenter.src">
+          <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.classifiedAd.imgLeftCenter.src}}" class="img-responsive add1">
+        </a>
+        <div class="form-group"></div>
+        <a ng-href="{{spareHomeVm.classifiedAd.imgLeftBottom.websiteUrl}}" target="_blank" ng-if="spareHomeVm.classifiedAd.imgLeftBottom.src">
+          <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.classifiedAd.imgLeftBottom.src}}" class="img-responsive add1">
         </a>
       </div>
       <div class="col-sm-10 col-md-7 padd-left">
@@ -63,8 +68,8 @@
         </div>
         <!-- <div class="cat cat-product text-center"> -->
         <div class="cat text-center">
-          <img src="assets/images/spare-parts.jpg" class="img-responsive">
-          <!-- <ul class="cat-list">            
+         <!--  <img src="assets/images/spare-parts.jpg" class="img-responsive"> -->
+          <ul class="cat-list">            
             <li ng-repeat="spare in spareHomeVm.spareList">
               <a href="/sparedetail/{{spare._id}}">
                  <img ng-src="{{uploadImagePrefix}}{{spare.assetDir}}/{{spare.primaryImg}}" class="img-responsive">
@@ -76,12 +81,12 @@
               </a>
 
             </li>
-          </ul>    -->       
+          </ul>          
           <!-- <div class="show-more">
             <button type="button" class="btn btn-default" ng-click="spareHomeVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : spareHomeVm.isCollapsed,'fa-chevron-up' : !spareHomeVm.isCollapsed}"></i> </button>
           </div> -->
         </div>
-        <h4 class="text-center">Coming soon...</h4>
+        <!-- <h4 class="text-center">Coming soon...</h4> -->
 
       </div>
 
@@ -183,13 +188,13 @@
 <div class="container text-center form-group">
   <div class="row">
     <div class="col-sm-6">
-      <a ng-href="{{spareHomeVm.imgBottomLeft.websiteUrl}}" target="_blank">
-        <img ng-if="spareHomeVm.imgBottomLeft.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgBottomLeft.src}}" class="add2 img-responsive">
+      <a ng-href="{{spareHomeVm.classifiedAd.imgBottomLeft.websiteUrl}}" target="_blank" ng-if="spareHomeVm.classifiedAd.imgBottomRight.src">
+        <img ng-if="spareHomeVm.classifiedAd.imgBottomLeft.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.classifiedAd.imgBottomLeft.src}}" class="add2 img-responsive">
       </a>
     </div>
     <div class="col-sm-6">
-      <a ng-href="{{spareHomeVm.imgBottomRight.websiteUrl}}" target="_blank">
-        <img ng-if="spareHomeVm.imgBottomRight.src" ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.imgBottomRight.src}}" class="add2 img-responsive">
+      <a ng-href="{{spareHomeVm.classifiedAd.imgBottomRight.websiteUrl}}" target="_blank" ng-if="spareHomeVm.classifiedAd.imgBottomRight.src">
+        <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{spareHomeVm.classifiedAd.imgBottomRight.src}}" class="add2 img-responsive">
       </a>
     </div>
   </div>

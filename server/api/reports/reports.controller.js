@@ -137,8 +137,8 @@ var reports = {
 			switch (type) {
 				case 'shipping':
 					arr.push(
-						(_.get(x, 'ticketId', ''),
-						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'ticketId', ''),
+						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
 						_.get(x, 'quote.companyname', ''),
@@ -156,8 +156,8 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						(_.get(x, 'ticketId', ''),
-						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'ticketId', ''),
+						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
 						_.get(x, 'quote.companyname', ''),
@@ -183,8 +183,8 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						(_.get(x, 'ticketId', ''),
-						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'ticketId', ''),
+						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
 						_.get(x, 'quote.companyname', ''),
@@ -210,8 +210,8 @@ var reports = {
 					json = {};
 					arr = [];
 					arr.push(
-						(_.get(x, 'ticketId', ''),
-						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', '')),
+						_.get(x, 'ticketId', ''),
+						_.get(x, 'quote.fname', '') + ' ' + _.get(x, 'quote.lname', ''),
 						_.get(x, 'quote.country', ''),
 						_.get(x, 'quote.city', ''),
 						_.get(x, 'quote.companyname', ''),
@@ -236,6 +236,7 @@ var reports = {
 						err: 'Invalid choice'
 					});
 			}
+			
 			for (var i = 0; i < csvData[type].headers.length; i++) {
 				json[csvData[type].headers[i]] = arr[i];
 			}

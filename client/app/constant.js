@@ -42,6 +42,10 @@ var Modals = {
   biddingReq:{
     tplUrl:"app/bidValue/bidnow.html",
     Ctrl:'BidCtrl as bidVm'
+  },
+  locationList : {
+    tplUrl : "app/spare/locationList.html",
+    Ctrl : 'SpareUploadCtrl as spareVm'
   }
 };
 

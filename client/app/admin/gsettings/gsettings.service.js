@@ -4,6 +4,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
  function LocationSvc($http, $q,$httpParamSerializer){
  	  var locationCache = [];
     var stateCache = [];
+    var countryCache = [];
     var lServices = {};
     var path = '/api/common';
       
@@ -16,10 +17,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getStateByCity = getStateByCity;
       lServices.getCountryByState = getCountryByState;
 
+      lServices.getAllCountry = getAllCountry;
+      lServices.deleteCountry = deleteCountry;
+      lServices.updateCountry = updateCountry;
+      lServices.saveCountry = saveCountry;
+
       lServices.getAllState = getAllState;
       lServices.deleteState = deleteState;
       lServices.updateState = updateState;
       lServices.saveState = saveState;
+
       lServices.getLocationHelp = getLocationHelp;
       lServices.getStateHelp = getStateHelp;
       lServices.getCityHelp = getCityHelp;
@@ -82,6 +89,22 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         return country;
       }
 
+      function getAllCountry(){
+        var deferred = $q.defer();
+        if(countryCache && countryCache.length > 0){
+          deferred.resolve(countryCache);
+        }else{
+          $http.get(path + "/country").then(function(res){
+              countryCache = res.data;
+              deferred.resolve(res.data);
+          },function(errors){
+            console.log("Errors in country fetch list :"+ JSON.stringify(errors));
+            deferred.reject(errors);
+          });
+        }
+          return deferred.promise; 
+      };
+
       function saveLocation(data){
       	return $http.post(path + "/city",data)
       	.then(function(res){
@@ -97,6 +120,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         return $http.post(path + "/state",data)
         .then(function(res){
            stateCache = [];
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+      }
+
+      function saveCountry(data){
+        return $http.post(path + "/country",data)
+        .then(function(res){
+           countryCache = [];
           return res.data;
         })
         .catch(function(err){
@@ -126,6 +160,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
           });
       };
 
+      function deleteCountry(data){
+          return $http.delete(path + "/country/" + data._id)
+          .then(function(res){
+             countryCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+      };
+
       function updateLocation(loc){
         return $http.put(path + "/city/" + loc._id, loc)
         .then(function(res){
@@ -141,6 +186,17 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         return $http.put(path + "/state/" + st._id, st)
         .then(function(res){
           stateCache = [];
+            return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+      };
+
+      function updateCountry(data){
+        return $http.put(path + "/country/" + data._id, data)
+        .then(function(res){
+          countryCache = [];
             return res.data;
         })
         .catch(function(err){
@@ -213,8 +269,9 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     }
 
     function clearCache(){
-    	 stateCache = [];
-       locationCache = [];
+      countryCache = [];
+    	stateCache = [];
+      locationCache = [];
     }
       return lServices;
   }

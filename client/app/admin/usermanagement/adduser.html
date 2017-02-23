@@ -4,7 +4,7 @@
             <h4 class="modal-title">Add User</h4>
         </div>
           <div class="modal-body">            
-            <form class="form-signin" name="form" novalidate>
+            <form name="form" novalidate>
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
@@ -39,7 +39,7 @@
                     <i class="caret"></i>
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.company.$invalid && submitted }">
-                    <input type="text" class="form-control" name="company" ng-model="newUser.company" placeholder="*Company Name" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
+                    <input type="text" class="form-control" name="company" ng-model="newUser.company" placeholder="*Legal Entity Name" ng-required= "newUser.userType == 'legalentity'" ng-disabled="newUser.userType != 'legalentity'">
                   </div>
                 </div>
 
@@ -83,14 +83,19 @@
                     </div>
                   </div>
                    
-                </div>
+              </div>
+                <!--   <div class="row">
+                  <div class="form-group col-sm-12">
+                    <input type="text" class="form-control" name="" value="" placeholder="Address">
+                  </div>                  
+                </div>  -->
                 <div class="row">
                   <!-- <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
                     <input type="text" class="form-control" name="mobile" ng-model="newUser.alternateMobile" value="" placeholder="* Alternate Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                     </div>
                   </div> -->
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.country.$invalid && submitted }">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
                     <select class="form-control" name="country" ng-model="newUser.country" required>
                       <option value="" disabled>*Select Country</option>
                       <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
@@ -98,22 +103,44 @@
                     </select>
                     <i class="caret"></i>
                   </div>
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
                   </div>
-                 
-                </div>
-                <div class="row">
-                   
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.location.$invalid && submitted }">
+                  <!-- <div class="form-group col-sm-4">
+                    <select class="form-control">
+                      <option value="">*Select State</option>
+                      <option>State1</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>  -->
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
                     <select class="form-control" name="location" ng-model="newUser.city" ng-change="onLocationChange(newUser.city)" required>
                       <option value="" disabled>*Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                     </select>
                     <i class="caret"></i>
                   </div>
-                  <div class="form-group col-sm-6"></div>
+                  
+                 
                 </div>
+                <!-- <div class="row">
+                  
+                  <div class="form-group col-sm-4">
+                    <input class="form-control" type="text" placeholder="*Other State" disabled>
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <input class="form-control" type="text" placeholder="Other Location" disabled>
+                  </div> 
+                </div> -->
+                <div class="row">
+                  <div class="form-group col-sm-6">
+                    <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="newUser.panNumber">
+                  </div>   
+                  <div class="form-group col-sm-6">
+                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" ng-model="newUser.aadhaarNumber">
+                  </div>                  
+                </div>   
                 <!-- <div class="row">
                   <div class="col-sm-6 form-group">
                     <span class="btn btn-warning fileinput-button">

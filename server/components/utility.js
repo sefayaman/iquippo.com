@@ -1,11 +1,16 @@
 'use strict';
 var Seq = require('seq');
 var  xlsx = require('xlsx');
+var config = require('../config/environment');
+var importPath = config.uploadPath + config.importDir + "/";
+var debug = require('debug');
+
 
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
+exports.toJSON = toJSON;
 
 function paginatedResult(req,res,modelRef,filter,result){
 
@@ -148,4 +153,62 @@ function excel_from_data(data,headers) {
   }
   ws['!ref'] = xlsx.utils.encode_range(range);
   return ws;
+}
+
+
+
+/*
+AA:
+
+*/
+function toJSON(options) {
+  var file = options.file;
+  var headers = options.headers;
+
+  if(!headers || !headers.length)
+    return new Error('Invalid or Missing headers');
+
+  if (!file)
+    return new Error('Invalid or Missing file');
+
+  var workbook = null;
+  try {
+    workbook = xlsx.readFile(importPath + file);
+  } catch (e) {
+    debug(e);
+    return new Error('Error while generating worksheet');
+  }
+
+  if (!workbook)
+    return new Error('No workbook found');
+
+  var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+  var ret = validateExcelHeader(worksheet,headers);
+
+  if(!ret)
+    return new Error('Invalid Excel file');
+
+  var data = xlsx.utils.sheet_to_json(worksheet);
+  
+  var fieldMapping = options.mapping;
+
+  if(!fieldMapping || !Object.keys(fieldMapping).length){
+    return new Error('Invalid or Missing mapping');
+  }
+
+  if(!fieldMapping.__rowNum__)
+    fieldMapping.__rowNum__ = 'rowCount';
+
+  data = data.filter(function(x) {
+    Object.keys(x).forEach(function(key) {
+      if (fieldMapping[key]) {
+        x[fieldMapping[key]] = x[key];
+      }
+      delete x[key];
+    })
+    return x;
+  });
+
+  return data;
+       
 }

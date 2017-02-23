@@ -7,10 +7,13 @@
             <h3>
               Spare Upload
             </h3>
+            <div class=" pull-right" >
+              <h3><a href="/bulkupload?type=spareUpload" class="btn btn-success"><i class="fa fa-database"></i> Bulk Spare Upload</a></h3>
+            </div>  
             <hr>
           </div>
         </div>
-
+        
         <div class="row">
           <div class="col-sm-12">
           <!-- success error start-->
@@ -159,6 +162,9 @@
                               <span class="badge" ng-repeat="loc in spareVm.spare.locations" ng-if="loc.city">{{loc.city}} 
                               <a href="javascript:void(0);" ng-click="spareVm.spare.locations.splice($index, 1)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
                               <i class="fa fa-times" ></i></a></span>
+                            </div>
+                            <div class="form-group col-sm-1">
+                              <h5><a href="javascript:void(0);" ng-click="spareVm.openLocationList()" >more..</a></h5>
                             </div>                            
                           </div>
                           <div class="row">                            

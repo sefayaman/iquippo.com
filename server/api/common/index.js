@@ -9,7 +9,6 @@ var router = express.Router();
 
 router.use(json2xls.middleware);
 
-router.get('/countries', controller.getAllCountry);
 router.post('/sendOtp', controller.sendOtp);
 router.post('/notificationTemplate', controller.compileHtml);
 router.post('/gethelp', controller.getHelp);
@@ -27,6 +26,11 @@ router.get('/state', controller.getAllState);
 router.post('/state', controller.createState);
 router.put('/state/:id', controller.updateState);
 router.delete('/state/:id', controller.deleteState);
+
+router.get('/country', controller.getAllCountry);
+router.post('/country', controller.createCountry);
+router.put('/country/:id', controller.updateCountry);
+router.delete('/country/:id', controller.deleteCountry);
 
 router.get('/city', controller.getAllCity);
 router.post('/city', controller.createCity);

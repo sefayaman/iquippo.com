@@ -38,7 +38,8 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
    var categoryArr = [];
     if(dataObj.length > 0){
           angular.forEach(dataObj, function(categories, key){
-          categoryArr.push(categories.category.name);
+            if(categoryArr.indexOf(categories.category.name) < 0)
+              categoryArr.push(categories.category.name);
        });
         }
     return categoryArr.join();
@@ -220,7 +221,7 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
         var data = {};
         data['to'] = supportMail;
         data['subject'] = 'Spare Deleted';
-        result.data.serverPath = serverPath;
+        data.serverPath = serverPath;
         notificationSvc.sendNotification('productDeletedEmailToAdmin', data, result.data,'email');
       });
   }
