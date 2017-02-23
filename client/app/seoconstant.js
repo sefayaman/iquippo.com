@@ -1,55 +1,29 @@
+
 var pagesTitles={
  index:{
    title:"IQuippo - New & Used Construction Equipment Online",
    meta:"Buy, Sell and Rent Used Mining and Construction Equipment across India. Best Deals on Backhoe Loaders, Excavators, Tippers, Tractors and Cranes"	
  },
  aboutus:{
- 	tile:"About Us - iQuippo.com",
+ 	title:"About Us - iQuippo.com",
  	meta:"iQuippo is India's #1 marketplace for used construction equipment, as well as services like vaulation, spare parts and financing"
  },
  valuation:{
- 	tile:"",
- 	meta:""
+ 	title:"Equipment Valuation by Trained Professionals - iQuippo",
+ 	meta:"Valuation services for Construction Equipment across India. Get detailed valuation report along with pictures delivered to your mailbox."
  },
  financing:{
- 	tile:"",
- 	meta:""
+ 	title:"Best Deals on Construction Equipment Loans - iQuippo",
+ 	meta:"Get best rates for loans on new & used construction equipment - tippers, loaders, cranes, exacavators, and many more"
  },
  insurance:{
- 	tile:"",
- 	meta:""
+ 	title:"Comprehensive Insurance Solutions for Construction Equipment",
+ 	meta:"Get instant quotes and tailor-made insurance solutions for construction equipment"
  },
  viewauctions:{
- 	tile:"",
- 	meta:""
- },
- viewproducts:{
- 	backhoeloadersmachine:{
- 	title:"Buy, Rent and Sell on iQuippo - Best deals on used Backhoe Loaders",
- 	meta:"Used backhoe loaders from JCB, Caterpillar, Terex, Leyland, Escorts & Mahindra. Best deals on verified equipment from India"
- },
- excavators:{
- 	title:"",
- 	meta:""
- },
- tractors:{
- 	title:"",
- 	meta:""
- },
- tippers:{
- 	title:"iQuippo - Buy/Rent used and certified Tippers online",
- 	meta:"Best deals in used tippers and trucks from Eicher, Ashok Leyland, Tata, Bharat Benz, Volvo and MAN."
- },
- cranes:{
- 	title:"",
- 	meta:""
- },
- transitmixers:{
- 	title:"",
- 	meta:""
+ 	title:"iQuippo - Auctions for Used Heavy Construction Equipment",
+ 	meta:"Particiapte and bid for used construction and heavy equipment auctions. Online and  Live Auctions for Backhoes, Excavators, Tractors, Cranes and many more."
  }
-
-}
-
-
 };
+
+ 

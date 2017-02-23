@@ -9,7 +9,6 @@ exports.save = function(req, res) {
   Model.create(req.body,function (err, data) {
     if(err) { return res.status(500); }
     return res.status(200).json({message:"Data saved sucessfully"});
-    }
   });
   
 };
@@ -21,4 +20,23 @@ exports.get = function(req, res) {
     if(err) { return res.status(204); }
     return res.status(200).json(data);
   });
+};
+
+exports.update = function(req, res) {
+    var upObj={};
+    var filter = {};
+  filter["categoryId"] =req.body.categoryId;
+  if(req.body.title){
+    upObj.title=req.body.title;
+  }
+  if(req.body.meta){
+   upObj.meta=req.body.meta; 
+  }
+  Model.update(filter,{$set:upObj},function (err, data) {
+    if(err) { return res.status(500); }
+    
+        return res.status(200).json({message:"sucessfully updated"});
+  });
+
+  
 };

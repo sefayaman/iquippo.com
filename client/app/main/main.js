@@ -9,8 +9,8 @@ angular.module('sreizaoApp')
         controller: 'MainCtrl as mainVm',
         layout:'client',
         onEnter: function ($rootScope) {
-           $rootScope.choosenTitle = pagesTitles.index.title;
-           $rootScope.metaDescription=pagesTitles.index.meta;
+         $rootScope.choosenTitle=pagesTitles.index.title;
+         $rootScope.meta=pagesTitles.index.meta;
        }
       })
       .state('contactus', {
@@ -56,15 +56,7 @@ angular.module('sreizaoApp')
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
-        onEnter:function($rootScope,$stateParams,$http){
-          $http.post('/api/getseo',{categoryId:$stateParams.id})
-          .then(function(res){
-           $rootScope.choosenTitle=res.data.title;
-           $rootScope.metaDescription=res.data.meta;
-          })
-          .catch(function(err){
-           
-          })
+        
 
 
           /*switch($stateParams.id){
@@ -92,8 +84,20 @@ angular.module('sreizaoApp')
           $rootScope.choosenTitle=pagesTitles.viewproducts.transitmixers.title;
             $rootScope.metaDescription=pagesTitles.viewproducts.transitmixers.meta;
           break;*/
-         },
-        layout:'client'
+         
+        layout:'client',
+        onEnter:function ($rootScope,$stateParams,$http){
+           console.log("fulwa");
+          $http.post('/api/getseo/',{categoryId:$stateParams.id})
+          .then(function(res){
+            console.log(res);
+           $rootScope.choosenTitle=res.data[0].title;
+           $rootScope.metaDescription=res.data[0].meta;
+          })
+          .catch(function(err){
+           
+          })
+        }
       })
       .state('productdetail', {
         url: '/productdetail/:id',
@@ -170,11 +174,12 @@ angular.module('sreizaoApp')
         url:"/aboutus",
         templateUrl: 'app/staticpages/aboutus.html',
          controller:"StaticCtrl",
+         layout:'client',
          onEnter: function ($rootScope) {
+           console.log("aboutus");
            $rootScope.choosenTitle = pagesTitles.aboutus.title;
            $rootScope.metaDescription=pagesTitles.aboutus.meta;
-       },
-         layout:'client'
+       }
       })
       .state('manpower', {
         url:"/manpower",
@@ -206,19 +211,31 @@ angular.module('sreizaoApp')
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
         controller:"ValuationCtrl",
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.valuation.title;
+          $rootScope.metaDescription=pagesTitles.valuation.meta;
+        }
       })
       .state('financing', {
         url:"/financing",
         templateUrl: 'app/staticpages/financing.html',
         controller:"FinanceCtrl",
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.financing.title;
+          $rootScope.metaDescription=pagesTitles.financing.meta;
+        }
       })
       .state('insurance', {
         url:"/insurance",
         templateUrl: 'app/staticpages/insurance.html',
         controller:"InsuranceCtrl",
-    	  layout:'client'
+    	  layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.insurance.title;
+          $rootScope.metaDescription=pagesTitles.insurance.meta;
+        }
       })
       .state('privacy', {
         url:"/privacy",
@@ -340,7 +357,11 @@ angular.module('sreizaoApp')
         url: '/viewauctions?type',
         templateUrl: 'app/auction/auction.html',
         controller: 'ViewAuctionCtrl as auctionDateVm',
-        layout:'client'
+        layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.viewauctions.title;
+          $rootScope.metaDescription=pagesTitles.viewauctions.meta;
+        }
       })
       .state('assetinacuction', {
         url: '/assetinauction',
