@@ -9,7 +9,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   
   //Controller for static pages
   function StaticCtrl($scope, $rootScope) {
-
+          
   }
 
   //Shipping controller function

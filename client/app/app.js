@@ -30,6 +30,7 @@ angular.module('sreizaoApp',[
   'angularjs-datetime-picker',
    'uiGmapgoogle-maps',
    'yard',
+   'viewhead',
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider
@@ -64,6 +65,8 @@ angular.module('sreizaoApp',[
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;
+    $rootScope.choosenTitle=choosenTitle;
+    $rootScope.metaDescription=metaDescription;
     $rootScope.classifiedAdDir = classifiedAdDir;
     $rootScope.newsEventsDir = newsEventsDir;
     $rootScope.refresh = true;

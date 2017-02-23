@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="" ng-app="sreizaoApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msvalidate.01" content="8895FA2B3689834A976D5D572C3E731C" />
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>iQuippo - New &amp; Used Construction Equipment Online</title>
-
+    <title ng-bind-template={{choosenTitle}}></title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
         
-    <meta name="description" content="Buy, Sell and Rent Used Mining and Construction Equipment across India. Best Deals on Backhoe Loaders, Excavators, Tippers, Tractors and Cranes – 033 66022059">
+    <meta view-head name=”description” content={{metaDescription}}>
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
@@ -81,7 +80,7 @@
   <!-- End Facebook Pixel Code -->
     <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion_async.js" charset="utf-8"></script>
   </head>
-  <body ng-app="sreizaoApp">
+  <body>
 
 
  <!--    <header class="">
@@ -166,6 +165,7 @@
       <script src="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>
       <script src="bower_components/angular-simple-logger/dist/angular-simple-logger.js"></script>
       <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+      <script src="bower_components/angularjs-viewhead/angularjs-viewhead.js"></script>
       <!-- endbower -->
     <!-- endbuild -->
 
@@ -189,8 +189,10 @@
           <script src="app/admin/gsettings/gsettings.service.js"></script>
           <script src="app/admin/masterdata/masterdata.controller.js"></script>
           <script src="app/admin/masterdata/masterdata.service.js"></script>
+          <script src="app/admin/meta/meta.controller.js"></script>
           <script src="app/admin/partnermanagement/partermanagement.service.js"></script>
           <script src="app/admin/partnermanagement/partnermanagement.controller.js"></script>
+          <script src="app/admin/policies/policies.controller.js"></script>
           <script src="app/admin/pricetrend/pricetrend.controller.js"></script>
           <script src="app/admin/pricetrend/pricetrend.service.js"></script>
           <script src="app/admin/pricetrend/pricetrendsurveylisting.controller.js"></script>
@@ -233,6 +235,7 @@
           <script src="app/product/productlisting.controller.js"></script>
           <script src="app/product/viewproducts.controller.js"></script>
           <script src="app/quote/quote.controller.js"></script>
+          <script src="app/seoconstant.js"></script>
           <script src="app/services.js"></script>
           <script src="app/sotos.crop-image.js"></script>
           <script src="app/spare/spare.service.js"></script>
