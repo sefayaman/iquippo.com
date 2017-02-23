@@ -48,6 +48,9 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   vm.removeProductFromCompList = removeProductFromCompList;
   vm.onTypeChange = onTypeChange;
   vm.onPageChange = onPageChange;
+  $scope.filterbutton = {
+    value1: false
+  }
 
    $scope.dynamicPopover = {
     templateUrl: 'myPopoverTemplate.html'

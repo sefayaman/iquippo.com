@@ -497,7 +497,8 @@ overflow: hidden;
 .featured-pro1 {position: relative;left: 460px;top: 25px;margin-right: 20px;z-index: 9;float: left;}
 .featured-pro1 label{font-weight:normal;}
 .featured-pro1 select{width: 220px;height: 24px;}
-.no-list{float: right;margin: -20px 0;width: 100%;}
+.no-list,.no-list .pagination{margin:0;}
+.no-list span{margin:15px 0 0;}
 @media (max-width:1199px){
 .icn2{left:65px;}
 .navbar-form{margin-left:20px;padding-left:30px;width:60%;}
@@ -714,7 +715,7 @@ footer p{font-size:12px;}
  .product-gallery .modal-dialog .modal-body{height: 330px;}
  .product-gallery .carousel-inner{height: 330px;}
  .shipps,.rental-info .input-group{width: 100%;}
- 
+ .no-list {text-align: center;padding: 15px 0 0;}
 .logo{width:480px;}
 .top-nav{float:right;margin: -50px 0;}
 .check{margin-left:20px;}
@@ -727,6 +728,8 @@ footer p{font-size:12px;}
 .navbar .navbar-inverse.pull-left li.submenu.dropdown.open .uib-dropdown-menu{background: #fff;display: block !important;width: 135px;box-shadow: 0px 6px 15px 0px #ccc;margin: 9px -17px;}
 .navbar-nav li.submenu .uib-dropdown-menu li{ line-height: 40px;border-bottom: 1px solid #CCC;width: 100%;}   
 .navbar-nav li.submenu:hover .uib-dropdown-menu{display: none !important;background-color: white;left: 0px;}
+.filter-display{position: relative; left: 0px; z-index: 5;}
+.hidefilter{display: none;}
 }
 
 @media (max-width:480px){
@@ -753,7 +756,6 @@ footer p{font-size:12px;}
 .calctr-info-fixed {position: static;width: 310px;z-index: 5;}
 .seller-info-fixed {position: static;width: 310px;z-index: 5;}
 .avail-date{width: 275px;}
-.no-list {text-align: center;padding: 20px 0;}
 .cat-product img{height: 135px;}
 /*.navbar-nav li.submenu:hover .uib-dropdown-menu ul li a{ display: none;}*/
 .navbar .navbar-inverse.pull-left li.submenu.dropdown.open .uib-dropdown-menu{display: block !important;background: #fff;width: 135px;box-shadow: 0px 6px 15px 0px #ccc;margin: 9px -17px;}
