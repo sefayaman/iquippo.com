@@ -6,6 +6,7 @@ var async = require('async');
 var Utility = require('../../../components/utility');
 var commonFunc = require('./commonFunc');
 var debug = require('debug')('api.common.uploadrequest.spareUpload');
+var _ = require('lodash');
 
 function validateRow(data) {
 	var mandatoryCols = ['partNo', 'name', 'madeIn', 'sellerMobile', 'currencyType', 'manufacturers'];
@@ -119,6 +120,11 @@ function _insertSpareData(uploadData, cb) {
 			return insertCb();
 		}
 
+		if(doc.priceOnRequest && doc.priceOnRequest.toLowerCase() === 'yes'){
+				doc.priceOnRequest = true;
+			}else
+				doc.priceOnRequest = false;
+
 		if(!doc.priceOnRequest && !doc.grossPrice){
 			errObj.push({
 				Error: 'Price missing',
@@ -126,6 +132,8 @@ function _insertSpareData(uploadData, cb) {
 			})
 			return insertCb();
 		}
+
+
 
 
 
@@ -431,6 +439,15 @@ function _insertSpareData(uploadData, cb) {
 				return insertCb();
 			}
 
+			validLocations = _.uniq(validLocations,function(e){
+				return e.country,e.state,e.city;
+			});
+
+			validCatBrandModel = _.uniq(validCatBrandModel,function(e){
+				return e.category.name,e.brand.name,e.model.name;
+			});
+
+
 			var spareDetails = {
 				partId: doc.partId,
 				madeIn: doc.madeIn,
@@ -446,7 +463,7 @@ function _insertSpareData(uploadData, cb) {
 				spareDetails: validCatBrandModel,
 				locations: validLocations,
 				paymentOption: [doc.paymentOption],
-				priceOnRequest: doc.priceOnRequest,
+				priceOnRequest: doc.priceOnRequest  ,
 				currencyType: doc.currencyType,
 				status: doc.status && doc.status.toLowerCase(),
 				deleted: false,
