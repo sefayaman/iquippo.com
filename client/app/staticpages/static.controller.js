@@ -20,6 +20,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     var facebookConversionSent = false;
     $scope.addShippingQuote = addShippingQuote;
     $scope.resetClick = resetClick;
+    $scope.onCountryChange = onCountryChange;
 
     $scope.shippingService = {};
     $scope.shippingQuote = {};
@@ -35,11 +36,25 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         $scope.shippingQuote.email = currUser.email;
         $scope.shippingQuote.phone = currUser.phone;
         $scope.shippingQuote.country = currUser.country;
+        $scope.shippingQuote.city = currUser.city;
+        onCountryChange(currUser.country, true);
       }
 
-      LocationSvc.getAllLocation()
+     /* LocationSvc.getAllLocation()
        .then(function(result){
         $scope.locationList = result;
+      });*/
+    }
+
+    function onCountryChange(country,noChange){
+      if(!noChange)
+        $scope.shippingQuote.city = "";
+      
+      $scope.locationList = [];
+      var filter = {};
+      filter.country = country;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
       });
     }
     
@@ -117,6 +132,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.onChange = onChange;
+    $scope.onCountryChange = onCountryChange;
 
     $scope.valuationQuote = {};
     $scope.valuationQuote.product = {};
@@ -131,15 +147,27 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         $scope.mstep = 1;
         $scope.ismeridian = true;
 
-        LocationSvc.getAllLocation()
+        /*LocationSvc.getAllLocation()
          .then(function(result){
           $scope.locationList = result;
-        });
+        });*/
 
         categorySvc.getAllCategory()
         .then(function(result){
           $scope.allCategory = result;
         });
+    }
+
+    function onCountryChange(country,noChange){
+      if(!noChange)
+        $scope.valuationQuote.city = "";
+      
+      $scope.locationList = [];
+      var filter = {};
+      filter.country = country;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
     }
 
     function setUser(){
@@ -153,6 +181,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.valuationQuote.email = currUser.email;
           $scope.valuationQuote.phone = currUser.phone;
           $scope.valuationQuote.country = currUser.country;
+          $scope.valuationQuote.city = currUser.city;
+          onCountryChange(currUser.country, true);
         }
     }
 
@@ -348,7 +378,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.currentYear = new Date().getFullYear();
-
+    $scope.onCountryChange = onCountryChange;
 
     $scope.financeQuote = {};
     $scope.financeQuote.product = {};
@@ -356,10 +386,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
     function init(){
         setUserData();
-        LocationSvc.getAllLocation()
+        /*LocationSvc.getAllLocation()
          .then(function(result){
           $scope.locationList = result;
-        });
+        });*/
 
         categorySvc.getAllCategory()
         .then(function(result){
@@ -379,7 +409,21 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.financeQuote.email = currUser.email;
           $scope.financeQuote.phone = currUser.phone;
           $scope.financeQuote.country = currUser.country;
+          $scope.financeQuote.city = currUser.city;
+          onCountryChange(currUser.country);
         }
+    }
+
+    function onCountryChange(country,noChange){
+      if(!noChange)
+        $scope.financeQuote.city = "";
+      
+      $scope.locationList = [];
+      var filter = {};
+      filter.country = country;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
     }
 
     function onCategoryChange(categoryName){
@@ -482,10 +526,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
     function init(){
         setUserData();
-        LocationSvc.getAllLocation()
+        /*LocationSvc.getAllLocation()
          .then(function(result){
           $scope.locationList = result;
-        });
+        });*/
 
         categorySvc.getAllCategory()
         .then(function(result){
@@ -505,7 +549,21 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.insuranceQuote.email = currUser.email;
           $scope.insuranceQuote.phone = currUser.phone;
           $scope.insuranceQuote.country = currUser.country;
+          $scope.insuranceQuote.city = currUser.city;
+          onCountryChange(currUser.country);
         }
+    }
+
+    function onCountryChange(country,noChange){
+      if(!noChange)
+        $scope.insuranceQuote.city = "";
+      
+      $scope.locationList = [];
+      var filter = {};
+      filter.country = country;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
     }
 
     function onCategoryChange(categoryName){

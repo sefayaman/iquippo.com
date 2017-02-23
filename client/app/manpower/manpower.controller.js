@@ -258,7 +258,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
     function saveNewManpowerUser(){
       vm.manpower.isManpower =  true; 
-      vm.manpower.country = $rootScope.allCountries[0].name;
+      vm.manpower.country = LocationSvc.getCountryByState(vm.manpower.state);
       vm.manpower.status =  false; 
       vm.manpower.createdBy = {
         name : 'Self'

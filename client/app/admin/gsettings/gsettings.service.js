@@ -16,7 +16,8 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getLocationOnFilter = getLocationOnFilter;
       lServices.getStateByCity = getStateByCity;
       lServices.getCountryByState = getCountryByState;
-
+      lServices.getCountryStateByCity = getCountryStateByCity;
+      
       lServices.getAllCountry = getAllCountry;
       lServices.deleteCountry = deleteCountry;
       lServices.updateCountry = updateCountry;
@@ -60,6 +61,18 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }
       }
       return state;
+      }
+
+      function getCountryStateByCity(city){
+        var CountryStateInfo = {};
+        for(var i=0;i < locationCache.length; i++){
+          if(locationCache[i].name == city){
+            CountryStateInfo.state = locationCache[i].state.name;
+            CountryStateInfo.country = locationCache[i].state.country;
+            break;
+          }
+        }
+        return CountryStateInfo;
       }
 
       function getAllState(){

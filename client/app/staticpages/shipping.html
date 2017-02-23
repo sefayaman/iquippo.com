@@ -54,10 +54,11 @@
               </div>
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
-                  <select class="form-control" ng-model="shippingQuote.country" name="country" required>
+                  <select class="form-control" ng-model="shippingQuote.country" name="country" ng-change="onCountryChange(shippingQuote.country)" required>
                     <option value="">*Select Country</option>
                     <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
                   </select>
+                  <i class="caret"></i>
                 </div>
               </div>
             </div>  

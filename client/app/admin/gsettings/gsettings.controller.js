@@ -156,7 +156,7 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.deleteAuctionMaster = deleteAuctionMaster;
 
     function onCountryChange(country){
-        $scope.stateList = [];
+        vm.filterStateList = [];
         if(!country)
           return;
         

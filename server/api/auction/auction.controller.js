@@ -1244,7 +1244,6 @@ function getHeaders(worksheet) {
       headers[headers.length] = value;
     }
   }
-  console.log("gggg", headers);
   return headers;
 }
 

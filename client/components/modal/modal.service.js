@@ -80,6 +80,7 @@ angular.module('sreizaoApp')
           scope: scope,
           size: 'lg'
         });
+        return  modalInstance;
       },
 
       openMap: function(loc, scope, NgMap) {
