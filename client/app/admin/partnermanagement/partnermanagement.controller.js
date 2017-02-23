@@ -98,7 +98,11 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
         delete vm.vendorReg.user.city;
       if(user.state)
         vm.vendorReg.user.state = user.state;
-      vm.vendorReg.user.country = $rootScope.allCountries[0].name;
+      //vm.vendorReg.user.country = $rootScope.allCountries[0].name;
+      if(user.country)
+        vm.vendorReg.user.country = user.country;
+      else
+        vm.vendorReg.user.country = LocationSvc.getCountryStateByCity(user.city).country;
       if(user.imgsrc)
         vm.vendorReg.user.imgsrc = user.imgsrc; 
       else
@@ -116,6 +120,11 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     }
     if(vm.existFlag && !vm.vendorReg.user.password)
       form.password.$invalid = false;
+    else if(vm.vendorReg.user.password)
+      form.password.$invalid = false;
+    else
+      form.password.$invalid = true;
+    
     if(form.$invalid){
       $scope.submitted = true;
       return;
@@ -138,8 +147,9 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Dealer);
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
-      vm.vendorReg.user.state = LocationSvc.getStateByCity(vm.vendorReg.user.city);      
-    vm.vendorReg.user.country = $rootScope.allCountries[0].name;  
+      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).name; 
+    if(!vm.vendorReg.user.country)     
+      vm.vendorReg.user.country = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).country;
     setUserData(vm.vendorReg);
     
     var dataToSend = {};
@@ -229,7 +239,10 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       vm.existingUser.phone = userData.user.phone;
     vm.existingUser.city = userData.user.city;
     vm.existingUser.state = userData.user.state;
-    vm.existingUser.country = $rootScope.allCountries[0].name;
+    if(userData.user.country)
+      vm.existingUser.country = userData.user.country;
+    else
+      vm.existingUser.country = LocationSvc.getCountryStateByCity(userData.user.city).country;
     vm.existingUser.imgsrc = userData.user.imgsrc;
     if(userData.user.password && !vm.existFlag)
       vm.existingUser.password = userData.user.password;

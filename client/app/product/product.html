@@ -254,9 +254,6 @@
                               <select class="form-control" name="country" ng-model="product.country" ng-change="onCountryChange()" required>
                                     <option value="">Select Country</option>
                                     <option  ng-repeat="country in allCountries| orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
-                                    <option value="Bhutan">Bhutan</option>
-                                    <option value="Malaysia">Malaysia</option>
-                                    <option value="Nepal">Nepal</option>
                               </select>
                               <i class="caret"></i>
                             </div>

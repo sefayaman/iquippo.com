@@ -43,13 +43,15 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
     //vm.closeDialog = closeDialog;
 
 
-    // function closeDialog() {
-    //   $uibModalInstance.dismiss('cancel');
-    //   $rootScope.$broadcast('resetBannerTimer');
-    // }
-
+    function closeDialog() {
+      if(modal)
+          modal.close();
+    }
+    var modal = null;
+    var scope = $rootScope.$new();
     function openLocationList(){
-      Modal.openDialog('locationList');
+      scope.closeDialog = closeDialog;
+      modal = Modal.openDialog('locationList', scope);
     }
     
     function addMoreMaster(){

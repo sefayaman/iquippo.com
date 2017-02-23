@@ -60,8 +60,8 @@
                   </div>
 
                 <div class="form-group col-sm-3">
-                    <div class="form-group" ng-class="{'has-error': form.password && submitted }">
-                        <input type="password" name="password" class="form-control" placeholder="* Password" ng-model="partnerVM.vendorReg.user.password" ng-minlength="4" ng-disabled="partnerVM.existFlag" >
+                    <div class="form-group" ng-class="{'has-error': form.password.$invalid && submitted }">
+                        <input type="password" name="password" class="form-control" placeholder="* Password" ng-model="partnerVM.vendorReg.user.password" ng-minlength="4" ng-disabled="partnerVM.existFlag" ng-required="!partnerVM.existFlag">
                       </div>
                       <p class="help-block"
                        ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
