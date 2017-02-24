@@ -1,5 +1,4 @@
-  <view-title>{{choosenTitle}}</view-title>
-  <meta view-head name=”description” content={{metaDescription}}>
+
   <div class="view-content">
   <section class="wrapper">
       <div class="container">        
@@ -81,16 +80,21 @@
 
                 </div>
 
-                <label for="" class="text-muted">State</label>
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="State"  ng-model="equipmentSearchFilter.stateName"  uib-typeahead="address for address in viewproductVm.getStateHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.onStateChange()" typeahead-on-select="viewproductVm.onStateChange()" ng-model-options="{debounce:1000}">
-                </div>
-
                 <label for="" class="text-muted">Location</label>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Location"  ng-model="equipmentSearchFilter.cityName"  uib-typeahead="address for address in viewproductVm.getCityHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"
+                   ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}"/>
                 </div>
 
+                <!-- <div class="form-group">
+                  <input type="text" class="form-control" placeholder="State"  ng-model="equipmentSearchFilter.stateName"  uib-typeahead="address for address in viewproductVm.getStateHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div> -->
+
+                <!-- <label for="" class="text-muted">Location</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Location"  ng-model="equipmentSearchFilter.cotyName"  uib-typeahead="address for address in viewproductVm.getCityHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}">
+                </div>
+ -->
                 <label for="" class="text-muted">Asset Id</label>
                 <div class="form-group">
 

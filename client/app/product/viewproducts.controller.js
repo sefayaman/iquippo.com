@@ -201,8 +201,10 @@ function onGroupChange(group){
 
       console.log(filter);
 
-      if($scope.equipmentSearchFilter && ($scope.equipmentSearchFilter.stateName || $scope.equipmentSearchFilter.cityName))
-       delete filter.location;
+      if($scope.equipmentSearchFilter && $scope.equipmentSearchFilter.locationName){
+        filter.location=$scope.equipmentSearchFilter.locationName;
+         delete filter.locationName;
+        }
 
       productSvc.getProductOnFilter(filter)
       .then(function(result){

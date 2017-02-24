@@ -1251,6 +1251,7 @@ exports.searchLocation = function(req,res){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = {$regex:term};
   }
+  var countryQry=Country.find(filter);
   var cityQry = City.find(filter);
   var stateQry = State.find(filter);
 
@@ -1259,20 +1260,28 @@ exports.searchLocation = function(req,res){
 	    if(err) { return handleError(res, err); }
 	     stateQry.exec(function(err,stArr){
 	     	if(err) { return handleError(res, err); }
-	     	var finalArr = ctArr.concat(stArr);
-	     	return res.status(200).json(finalArr);
+	     	countryQry.exec(function(err,coArr){
+	     	   if(err) { return handleError(res, err); }
+	     	   var finalArr = ctArr.concat(stArr).concat(coArr);
+	     	   return res.status(200).json(finalArr);
+	     	})
 	     })    
    });
 }
 
 exports.searchState = function(req,res){
   var filter = {};
-  if(!req.body.searchStr)
-  	res.status(200).json([]);
+  // if(!req.body.searchStr)
+  // 	res.status(200).json([]);
+
   if(req.body.searchStr){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = {$regex:term};
   }
+
+  if(req.body.country)
+  	filter['state.country']=req.body.country;
+  
   //var cityQry = City.find(filter);
   var stateQry = State.find(filter);
 	     
@@ -1288,19 +1297,19 @@ exports.searchCities = function(req,res){
 
 
   var filter = {};
-  if(!req.body.searchStr)
-  	res.status(200).json([]);
+  /*if(!req.body.searchStr)
+  	res.status(200).json([]);*/
   
-  if(req.body.state){
-  	filter['state.name']=req.body.state;
-  	}  	//console.log(filter);
+    	//console.log(filter);
 
   if(req.body.searchStr){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = {$regex:term};
   }
 
- 
+  if(req.body.state){
+  	filter['state.name']=req.body.state;
+  	}
 
   var cityQry = City.find(filter);
 

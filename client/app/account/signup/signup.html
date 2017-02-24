@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="row">
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.userType.$invalid && submitted }">
                     <select class="form-control" name="userType" ng-model="signupVm.user.userType" required>
                       <option value="" disabled>*Customer Type</option>
                       <option value="individual">Individual</option>
@@ -28,24 +28,24 @@
                     </select>
                     <i class="caret"></i>
                   </div>
-                  <div  class="form-group col-sm-6" ng-class="{'has-error': form.company.$invalid && submitted }">
+                  <div  class="form-group col-sm-4" ng-class="{'has-error': form.company.$invalid && submitted }">
                     <input type="text" class="form-control" name="company" ng-model="signupVm.user.company" placeholder="*Legal Entity Name" ng-required= "signupVm.user.userType == 'legalentity'" ng-disabled="signupVm.user.userType != 'legalentity'">
+                  </div>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.email.$invalid && submitted }">
+                    <input type="email" class="form-control" name="email" ng-model="signupVm.user.email" value="" placeholder="Email Address" mongoose-error/>
+                    <p class="help-block" ng-show="form.email.$error.email&& submitted">
+                    Doesn't look like a valid email.
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.required && submitted">
+                    What's your email address?
+                    </p>
+                    <p class="help-block" ng-show="form.email.$error.mongoose">
+                      {{ errors.email }}
+                    </p>
                   </div>
                 </div>
 
-                <div class="row">
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.email.$invalid && submitted }">
-                  <input type="email" class="form-control" name="email" ng-model="signupVm.user.email" value="" placeholder="Email Address" mongoose-error/>
-                  <p class="help-block" ng-show="form.email.$error.email&& submitted">
-                  Doesn't look like a valid email.
-                  </p>
-                  <p class="help-block" ng-show="form.email.$error.required && submitted">
-                  What's your email address?
-                  </p>
-                  <p class="help-block" ng-show="form.email.$error.mongoose">
-                    {{ errors.email }}
-                  </p>
-                  </div>
+                <div class="row">                  
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
                   <input type="password" name="password" class="form-control" ng-model="signupVm.user.password"
                   placeholder="*Password" 
@@ -60,8 +60,64 @@
                       {{ errors.password }}
                     </p>
                   </div>
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
+                  <input type="password" name="password" class="form-control" ng-model="signupVm.user.password"
+                  placeholder="*Confirm Password" 
+                     ng-minlength="4"
+                     required
+                     mongoose-error/>
+                    <p class="help-block"
+                       ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
+                     Confirm Password must be same as Password.
+                    </p>
+                    <p class="help-block" ng-show="form.password.$error.mongoose">
+                      {{ errors.password }}
+                    </p>
+                  </div>
                 </div>
+                
+                <div class="row">
+                  <div class="form-group col-sm-12">
+                    <input type="text" class="form-control" name="" value="" placeholder="Address">
+                  </div>                  
+                </div> 
 
+                <div class="row">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
+                    <select class="form-control" name="country" ng-model="signupVm.user.country" ng-change="getCountryWiseState(signupVm.user.country)" required>
+                      <option value="" disabled>*Select Country</option>
+                      <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>                   
+                  <div class="form-group col-sm-4">
+                    <select class="form-control" name="state" ng-model="signupVm.user.state" ng-change="getStateWiseLocation(signupVm.user.state)" required>
+                      <option value="" disabled="">*Select State</option>
+                      <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div> 
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
+                    <select class="form-control" name="location" ng-model="signupVm.user.city" ng-change="onLocationChange(signupVm.user.city)" required>
+                      <option value="" disabled>Select Location</option>
+                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>                 
+                </div>
+                <div class="row">
+                  <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <input class="form-control" type="text" placeholder="*Other State" disabled>
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <input class="form-control" type="text" placeholder="Other Location" disabled>
+                  </div>                
+                </div> 
                 <div class="row">
                   <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="phone" ng-model="signupVm.user.phone" value="" placeholder="Phone No.">
@@ -70,48 +126,6 @@
                     <input type="text" class="form-control" name="mobile" ng-model="signupVm.user.mobile" value="" placeholder="* Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                   </div>
                 </div>
-                <!-- <div class="row">
-                  <div class="form-group col-sm-12">
-                    <input type="text" class="form-control" name="" value="" placeholder="Address">
-                  </div>                  
-                </div>  -->               
-                <div class="row">
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
-                    <select class="form-control" name="country" ng-model="signupVm.user.country" required>
-                      <option value="" disabled>*Select Country</option>
-                      <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    <i class="caret"></i>
-                  </div> 
-                  <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
-                  </div>
-                  <!-- <div class="form-group col-sm-4">
-                    <select class="form-control">
-                      <option value="">*Select State</option>
-                      <option>State1</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    <i class="caret"></i>
-                  </div>  -->
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
-                    <select class="form-control" name="location" ng-model="signupVm.user.city" ng-change="signupVm.onLocationChange(signupVm.user.city)" required>
-                      <option value="" disabled>Select Location</option>
-                        <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
-                    </select>
-                    <i class="caret"></i>
-                  </div>                 
-                </div>
-                <!-- <div class="row">
-                  
-                  <div class="form-group col-sm-4">
-                    <input class="form-control" type="text" placeholder="*Other State" disabled>
-                  </div>
-                  <div class="form-group col-sm-4">
-                    <input class="form-control" type="text" placeholder="Other Location" disabled>
-                  </div>                
-                </div>  -->
                 <div class="row">
                   <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="signupVm.user.panNumber">
@@ -119,7 +133,8 @@
                   <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" ng-model="signupVm.user.aadhaarNumber">
                   </div>                  
-                </div>               
+                </div> 
+
                 <div class="form-group">
                   <div class="row">
                     <div class="col-sm-12 text-left">
