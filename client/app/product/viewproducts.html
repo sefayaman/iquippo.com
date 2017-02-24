@@ -1,9 +1,11 @@
 
   <div class="view-content">
   <section class="wrapper">
-      <div class="container">
+      <div class="container">        
         <div class="row">
-          <div class="col-sm-4 col-md-3 form-group">
+        
+          <div class="col-sm-4 col-md-3 form-group" ng-class="{hidefilter: !filterbutton.value1}">
+            <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1">Close</button>
             <div class="well">
               <h4>Equipment search</h4>
                 <form role="form">
@@ -183,14 +185,28 @@
           </div>
           <div class="col-sm-8 col-md-9">
 
-            <div class="row pull-right">
-                <div class="col-xs-2 col-sm-2 hidden-xs">
+            <div class="row text-center">
+                <div class="col-sm-8 text-right hidden-xs">
+                  <div class="compare-cart">
+                    <ul>
+                      <li ng-repeat="prd in viewproductVm.productListToCompare" ng-if="prd._id">
+                        <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-xs-1 col-sm-1 hidden-xs">
                   <a href="javascript:void(0);" uib-tooltip="Compare Products" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="viewproductVm.compare()">
                      <span class="count-compare" ng-if="viewproductVm.compareCount != 0">{{viewproductVm.compareCount}}</span>
                      <img src="assets/images/campare-icon.png" width="20">
                    </a>
                 </div>
-                <div class="col-xs-10 col-sm-10">
+                <div class="col-xs-4 visible-xs">
+                  <button class="btn-block" ng-click="filterbutton.value1 = !filterbutton.value1">
+                    <i class="fa fa-filter"></i> Filter
+                  </button>
+                </div>
+                <div class="col-xs-8 col-sm-3">
                   <span>Sort by:</span>
                    <select ng-change="viewproductVm.sortBy()" ng-model="viewproductVm.sortByFlag">
                     <option value="">Relevance</option>
@@ -202,14 +218,7 @@
                 <div>
               </div>
             </div>
-          </div>
-          <div class="compare-cart">
-                <ul>
-                  <li ng-repeat="prd in viewproductVm.productListToCompare" ng-if="prd._id">
-                    <img ng-src="{{uploadImagePrefix}}{{prd.assetDir}}/{{prd.primaryImg}}" width="24" height="24"><a href="javascript:void(0);" ng-click="viewproductVm.removeProductFromCompList($index)"><i class="fa fa-times" aria-hidden="true"></i></a>
-                  </li>
-                </ul>
-              </div>
+          </div>          
             <!-- <ul >
               <li ng-repeat="comp in viewproductVm.productListToCompare">
                <a href="javascript:void(0);"><i class="fa fa-times" aria-hidden="true"></i></a>
@@ -217,8 +226,15 @@
             </ul> -->
 
              <div ng-if="!searching && !noResult">
-                 <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
-                 <span class="no-list text-right">Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
+                 <div class="row no-list ">
+                   <div class="col-sm-8 text-left">
+                      <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
+                   </div>
+                   <div class="col-sm-4">
+                     <span class="text-right">Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
+                   </div>
+                 </div>
+                 
                 <div id="search-result_wrapper" class="search-result">
                   <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
                       <div class="media">

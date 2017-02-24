@@ -5,7 +5,7 @@
   </div>
   <div class="modal-body">
      <div class="form-group col-sm-4">
-        <span class="badge" ng-repeat="loc in spareVm.spare.locations" ng-if="loc.city">{{loc.city}} 
+        <span class="badge" uib-tooltip="Country:{{loc.country}},State:{{loc.state}}" tooltip-placement="bottom" tooltip-trigger="mouseenter" ng-repeat="loc in spareVm.spare.locations" ng-if="loc.city">{{loc.city}} 
         <a href="javascript:void(0);" ng-click="spareVm.spare.locations.splice($index, 1)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
         <i class="fa fa-times" ></i></a></span>
         </div>

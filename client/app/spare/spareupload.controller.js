@@ -48,10 +48,13 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
           modal.close();
     }
     var modal = null;
-    var scope = $rootScope.$new();
+    
     function openLocationList(){
-      scope.closeDialog = closeDialog;
-      modal = Modal.openDialog('locationList', scope);
+      $scope.closeDialog = closeDialog;
+      modal = $uibModal.open({
+        templateUrl: 'app/spare/locationList.html',
+        scope: $scope
+      });
     }
     
     function addMoreMaster(){
