@@ -10,7 +10,7 @@ angular.module('sreizaoApp')
         layout:'client',
         onEnter: function ($rootScope) {
          $rootScope.choosenTitle=pagesTitles.index.title;
-         $rootScope.meta=pagesTitles.index.meta;
+         $rootScope.metaDescription=pagesTitles.index.meta;
        }
       })
       .state('contactus', {
@@ -87,12 +87,11 @@ angular.module('sreizaoApp')
          
         layout:'client',
         onEnter:function ($rootScope,$stateParams,$http){
-           console.log("fulwa");
           $http.post('/api/getseo/',{categoryId:$stateParams.id})
           .then(function(res){
             console.log(res);
-           $rootScope.choosenTitle=res.data[0].title;
-           $rootScope.metaDescription=res.data[0].meta;
+           $rootScope.choosenTitle=res.data[res.data.length-1].title;
+           $rootScope.metaDescription=res.data[res.data.length-1].meta;
           })
           .catch(function(err){
            

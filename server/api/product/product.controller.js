@@ -116,6 +116,7 @@ exports.search = function(req, res) {
     arr[arr.length] = { "model.otherName": { $regex: term }};
     arr[arr.length] = { "brand.name": { $regex: term }};
     arr[arr.length] = { "brand.otherName": { $regex: term }};
+    arr[arr.length] = { country: { $regex: term }};
     arr[arr.length] = { city: { $regex: term }};
     arr[arr.length] = { state: { $regex: term }};
     arr[arr.length] = { assetStatus: { $regex: term }};
@@ -158,6 +159,7 @@ exports.search = function(req, res) {
     var locRegEx = new RegExp(req.body.location, 'i');
     arr[arr.length] = {city:{$regex:locRegEx}};
     arr[arr.length] = {state:{$regex:locRegEx}};
+    arr[arr.length] = {country:{$regex:locRegEx}};
   }
 
   if(req.body.cityName){
