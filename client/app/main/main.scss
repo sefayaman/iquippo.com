@@ -139,17 +139,17 @@ header{background:#fff;}
 .head .dull{position:absolute;width:150px}
 .head .dark{position:absolute;width:80px;border-width:0 0 1px;border-color:#104095;}
 .cat-product{margin-top:-10px;display:inline-table;width:100%;position: relative;}
-.cat-product img{height:120px; width: 130px;}
 .cat .cat-list{list-style:none;padding:0;width:100%;}
-.cat .cat-list li{display:inline-block;width:25%;float:left;padding: 5px 2px;margin-bottom: -5px;}
+.cat .cat-list li{display:inline-block;width:25%;float:left;padding: 0px 2px;margin-bottom: 5px;}
 .cat .cat-list li a{display:block;color:#333;text-align:justify;font-size:16px;text-decoration:none; white-space: nowrap; text-overflow:ellipsis; overflow: hidden;padding: 0; position:relative; text-align:center;}
-.cat .cat-list li a img{display:block;margin:0 auto;
+.cat .cat-list li a img{display:block;margin:0 auto; height: 120px;
     -webkit-transition: all .8s ease-in-out;
    -moz-transition: all 1s ease;
     -ms-transition: all 1s ease;
      -o-transition: all 1s ease;
         transition: all 1s ease;
 }
+.cat-product img{height:120px; width: 130px;}
 .cat.cat-product .cat-list li a:hover img{
         -webkit-transform: scaleX(1.2);
     -moz-transform: scale(1.2);
@@ -497,7 +497,8 @@ overflow: hidden;
 .featured-pro1 {position: relative;left: 460px;top: 25px;margin-right: 20px;z-index: 9;float: left;}
 .featured-pro1 label{font-weight:normal;}
 .featured-pro1 select{width: 220px;height: 24px;}
-.no-list{float: right;margin: -20px 0;width: 100%;}
+.no-list,.no-list .pagination{margin:0;}
+.no-list span{margin:15px 0 0;}
 @media (max-width:1199px){
 .icn2{left:65px;}
 .navbar-form{margin-left:20px;padding-left:30px;width:60%;}
@@ -714,7 +715,7 @@ footer p{font-size:12px;}
  .product-gallery .modal-dialog .modal-body{height: 330px;}
  .product-gallery .carousel-inner{height: 330px;}
  .shipps,.rental-info .input-group{width: 100%;}
- 
+ .no-list {text-align: center;padding: 15px 0 0;}
 .logo{width:480px;}
 .top-nav{float:right;margin: -50px 0;}
 .check{margin-left:20px;}
@@ -727,6 +728,8 @@ footer p{font-size:12px;}
 .navbar .navbar-inverse.pull-left li.submenu.dropdown.open .uib-dropdown-menu{background: #fff;display: block !important;width: 135px;box-shadow: 0px 6px 15px 0px #ccc;margin: 9px -17px;}
 .navbar-nav li.submenu .uib-dropdown-menu li{ line-height: 40px;border-bottom: 1px solid #CCC;width: 100%;}   
 .navbar-nav li.submenu:hover .uib-dropdown-menu{display: none !important;background-color: white;left: 0px;}
+.filter-display{position: relative; left: 0px; z-index: 5;}
+.hidefilter{display: none;}
 }
 
 @media (max-width:480px){
@@ -753,7 +756,6 @@ footer p{font-size:12px;}
 .calctr-info-fixed {position: static;width: 310px;z-index: 5;}
 .seller-info-fixed {position: static;width: 310px;z-index: 5;}
 .avail-date{width: 275px;}
-.no-list {text-align: center;padding: 20px 0;}
 .cat-product img{height: 135px;}
 /*.navbar-nav li.submenu:hover .uib-dropdown-menu ul li a{ display: none;}*/
 .navbar .navbar-inverse.pull-left li.submenu.dropdown.open .uib-dropdown-menu{display: block !important;background: #fff;width: 135px;box-shadow: 0px 6px 15px 0px #ccc;margin: 9px -17px;}
@@ -891,17 +893,11 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .manpower-lists img{height: 130px;width: 100%;}
 .search-manpower .btn-warning{padding: 10px; border:0;}
 .payment-icon{margin: 190px auto;}
-.manpower-img img {
-    margin: 0 auto;
-    
-    border-radius: 50%;
-    height: 100px;
-    border: 1px solid #000;
-}
+.manpower-img img {margin: 0 auto; border-radius: 50%; height: 100px;border: 1px solid #000;}
 
 /*spares parts design*/
-.spareViews {padding: 0; min-height: 240px; margin: 0 -10px;}
-.spareViews li{list-style: none; width: 25%; float: left; position: relative; padding: 15px 10px 2px;}
+.spareViews {padding: 0; min-height: 240px; margin:8px -10px;}
+.spareViews li{list-style: none; width: 25%; float: left; position: relative; padding: 0px 10px 2px;}
 .horizontal-crsl.spare-manufacturer img{width: 120px; height: 100px; margin: 0 auto;}
 .ad-btn{position: absolute; top: 25px; right: 105px; z-index: 99; background: rgba(0,67,148,0.9); border:0; padding: 10px 15px; border-radius: 2px;}
 .ad-btn:focus{background: rgba(0,67,148,0.9) !important;}
