@@ -380,10 +380,10 @@ $scope.today = function() {
     function getCityHelp(val) {
       var serData = {};
       if($scope.equipmentSearchFilter.stateName){
-        serData['state']=$scope.equipmentSearchFilter.stateName;
+        serData['stateName']=$scope.equipmentSearchFilter.stateName;
       }
       serData['searchStr'] = $scope.equipmentSearchFilter.cityName;
-     return LocationSvc.getCityHelp(serData)
+     return LocationSvc.getLocationOnFilter(serData)
       .then(function(result){
          return result.map(function(item){
               

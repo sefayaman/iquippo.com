@@ -226,11 +226,29 @@ angular.module('sreizaoApp')
     $rootScope.userList = [];
     $scope.locationList = [];
     $scope.onLocationChange = onLocationChange;
-    $scope.getCountryWiseLocation=getCountryWiseLocation;
+    $scope.getCountryWiseState=getCountryWiseState;
+    $scope.getStateWiseLocation=getStateWiseLocation;
     
-    function getCountryWiseLocation(country){
+    function getCountryWiseState(country){
+      $scope.newUser.state="";
+      $scope.newUser.city="";
      var filter={};
      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+          $scope.locationList="";
+      });
+      $rootScope.allCountries.some(function(x){
+        if(x.name == country){
+          $scope.code=x.countryCode;
+        return true;
+        }
+      })
+  }
+  function getStateWiseLocation(state){
+     $scope.newUser.city="";
+     var filter={};
+     filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });

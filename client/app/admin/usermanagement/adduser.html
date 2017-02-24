@@ -98,24 +98,25 @@
                     </div>
                   </div> -->
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
-                    <select class="form-control" name="country" ng-model="newUser.country" ng-change="getCountryWiseLocation(newUser.country)" required>
+                    <select class="form-control" name="country" ng-model="newUser.country" ng-change="getCountryWiseState(newUser.country)" required>
                       <option value="" disabled>*Select Country</option>
                       <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
-                      <option value="Other">Other</option>
+                      <!-- <option value="Other">Other</option> -->
                     </select>
                     <i class="caret"></i>
                   </div>
                   
                   <div class="form-group col-sm-4">
-                    <select class="form-control">
-                      <option value="">*Select State</option>
-                      <option>State1</option>
-                      <option value="Other">Other</option>
+                    <select class="form-control" name="state" ng-model="newUser.state" ng-change="getStateWiseLocation(newUser
+                    .state)" required>
+                      <option value="" disabled>*Select State</option>
+                      <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
+                      <!-- <option value="Other">Other</option> -->
                     </select>
                     <i class="caret"></i>
                   </div> 
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
-                    <select class="form-control" name="location" ng-model="newUser.city" ng-change="onLocationChange(newUser.city)" required>
+                    <select class="form-control" name="location" ng-model="newUser.city" required>
                       <option value="" disabled>*Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                     </select>
@@ -124,7 +125,7 @@
                   
                  
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
                   </div>
@@ -134,7 +135,7 @@
                   <div class="form-group col-sm-4">
                     <input class="form-control" type="text" placeholder="Other Location" disabled>
                   </div> 
-                </div>
+                </div> -->
                 <div class="row">
                   <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="phone" ng-model="newUser.phone" value="" placeholder="Phone No.">
@@ -142,9 +143,9 @@
 
                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
-                    <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                      <span class="input-group-addon">{{code}}</span>
+                      <input type="text" class="form-control" name="mobile" ng-model="signupVm.user.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                     </div>
-                  </div>
                    
               </div>
                 <div class="row">

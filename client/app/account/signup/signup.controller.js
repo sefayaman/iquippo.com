@@ -16,10 +16,43 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     vm.closeDialog = closeDialog;
     vm.loginOauth = loginOauth;
     vm.sendOTP = sendOTP;
+
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};
     $scope.isRegister = true;
     vm.onLocationChange = onLocationChange;
+
+    $scope.getCountryWiseState=getCountryWiseState;
+    $scope.getStateWiseLocation=getStateWiseLocation;
+
+    function getCountryWiseState(country){
+     vm.user.state="";
+     vm.user.city="";
+     var filter={};
+     filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+          $scope.locationList="";
+      });
+      $rootScope.allCountries.some(function(x){
+        if(x.name == country){
+          $scope.code=x.countryCode;
+        return true;
+        }
+      })
+  }
+
+  function getStateWiseLocation(state){
+     vm.user.city="";
+     var filter={};
+     filter.stateName = state;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
+  }
+
+
+
     function onLocationChange(city){      
       vm.user.state = LocationSvc.getStateByCity(city);    
     }
@@ -27,7 +60,7 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     function init(){
       LocationSvc.getAllLocation()
       .then(function(result){
-        $scope.locationList = result;
+        //$scope.locationList = result;
       })
     }
     init();
@@ -38,7 +71,8 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
         $scope.submitted = true;
         return;
       }
-
+      
+      
       if(vm.user.agree) 
       {
         var dataToSend = {};
@@ -155,6 +189,9 @@ function sendOTP(){
       return;
     }
   }else if(vm.user.activationOTP == 'mobile') {
+    if($scope.code)
+      dataToSend['countryCode']=$scope.code;
+
     if(vm.user.mobile) {
        dataToSend['mobile'] = vm.user.mobile;
     }else {
