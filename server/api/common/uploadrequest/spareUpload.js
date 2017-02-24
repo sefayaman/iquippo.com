@@ -415,7 +415,13 @@ function _insertSpareData(uploadData, cb) {
 
 			if (validStatus.indexOf(doc.status && doc.status.toLowerCase()) < 0) {
 				doc.status = 'inactive';
+
 			}
+
+			doc.isSold = false;
+			if(doc.status.toLowerCase() === 'sold')
+				doc.isSold = true;
+
 
 			var validConditions = ['used', 'new'];
 
@@ -467,7 +473,6 @@ function _insertSpareData(uploadData, cb) {
 				currencyType: doc.currencyType,
 				status: doc.status && doc.status.toLowerCase(),
 				deleted: false,
-				isSold: false,
 				inquiryCounter: 0
 			};
 
