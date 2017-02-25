@@ -220,6 +220,9 @@ angular.module('sreizaoApp')
   .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance',
    function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance) {
     $scope.newUser ={};
+    $scope.newUser.isOtherCountry=false;
+    $scope.newUser.isOtherState=false;
+    $scope.newUser.isOtherCity=false;
     $scope.errors = {};
     //$scope.editImage = false;
     //$scope.users = [];
@@ -244,6 +247,10 @@ angular.module('sreizaoApp')
         return true;
         }
       })
+      if(country=="Other"){
+        $scope.code="";
+      }
+
   }
   function getStateWiseLocation(state){
      $scope.newUser.city="";
@@ -319,6 +326,15 @@ angular.module('sreizaoApp')
     } else {
       delete newUser.createdBy;
     }
+    if($scope.newUser.country == "Other")
+      $scope.newUser.isOtherCountry=true;
+
+    if($scope.newUser.state == "Other")
+      $scope.newUser.isOtherState=true;
+    
+    if($scope.newUser.city == "Other")
+      $scope.newUser.isOtherCity=true;
+
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){
         Modal.alert(result.message, true);

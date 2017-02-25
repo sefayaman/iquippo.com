@@ -32,7 +32,7 @@
                     <input type="text" class="form-control" name="company" ng-model="signupVm.user.company" placeholder="*Legal Entity Name" ng-required= "signupVm.user.userType == 'legalentity'" ng-disabled="signupVm.user.userType != 'legalentity'">
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.email.$invalid && submitted }">
-                    <input type="email" class="form-control" name="email" ng-model="signupVm.user.email" value="" placeholder="Email Address" mongoose-error/>
+                    <input type="email" class="form-control" name="email" ng-model="signupVm.user.email" value="" placeholder="Email Address" ng-required="isDisabled == true" mongoose-error/>
                     <p class="help-block" ng-show="form.email.$error.email&& submitted">
                     Doesn't look like a valid email.
                     </p>
@@ -56,7 +56,7 @@
                        ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
                       Password must be at least 4 characters.
                     </p>
-                    <p class="help-block" ng-show="form.password.$error.mongoose">
+                    <p class="help-block" ng-show=" form.password.$error.mongoose">
                       {{ errors.password }}
                     </p>
                   </div>
@@ -87,7 +87,7 @@
                     <select class="form-control" name="country" ng-model="signupVm.user.country" ng-change="getCountryWiseState(signupVm.user.country)" required>
                       <option value="" disabled>*Select Country</option>
                       <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
-                      <!-- <option value="Other">Other</option> -->
+                      <option value="Other">Other</option>
                     </select>
                     <i class="caret"></i>
                   </div>                   
@@ -95,7 +95,7 @@
                     <select class="form-control" name="state" ng-model="signupVm.user.state" ng-change="getStateWiseLocation(signupVm.user.state)" required>
                       <option value="" disabled="">*Select State</option>
                       <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
-                      <!-- <option value="Other">Other</option> -->
+                      <option value="Other">Other</option> 
                     </select>
                     <i class="caret"></i>
                   </div> 
@@ -103,21 +103,22 @@
                     <select class="form-control" name="location" ng-model="signupVm.user.city" required>
                       <option value="" disabled>Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    <option value="Other">Other</option>
                     </select>
                     <i class="caret"></i>
                   </div>                 
                 </div>
-                <!-- <div class="row">
+                <div class="row">
                   <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4">
-                    <input class="form-control" type="text" placeholder="*Other State" disabled>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherState" ng-model="signupVm.user.otherState" placeholder="*Other State" ng-required= "signupVm.user.state == 'Other'" ng-disabled="signupVm.user.state != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4">
-                    <input class="form-control" type="text" placeholder="Other Location" disabled>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherLocation" ng-model="signupVm.user.otherLocation" placeholder="*Other Location" ng-required= "signupVm.user.Location == 'Other'" ng-disabled="signupVm.user.state != 'Other'">
                   </div>                
-                </div> --> 
+                </div> 
                 <div class="row">
                   <div class="form-group col-sm-6">
                     <input type="text" class="form-control" name="phone" ng-model="signupVm.user.phone" value="" placeholder="Phone No.">
@@ -130,11 +131,12 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="signupVm.user.panNumber">
+                  <div class="form-group col-sm-6" ng-class="{'has-error':form.panNumber.$invalid && submitted}">
+                    <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="signupVm.user.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
                   </div>   
-                  <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" ng-model="signupVm.user.aadhaarNumber">
+                  <div class="form-group col-sm-6" ng-class="{'has-error':form.aadhaarNumber.$invalid && submitted}">
+                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" ng-model="signupVm.user.aadhaarNumber" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$"
+                    tooltip-placement="top">
                   </div>                  
                 </div> 
 
@@ -156,14 +158,14 @@
                   <div class="row">
                    <div class="col-sm-6 text-left">
                     <div class="radio radio-info">
-                        <input type="radio" id="inlineRadio1" name="activationOTP" ng-model="signupVm.user.activationOTP" value="mobile">
+                        <input type="radio" id="inlineRadio1" name="activationOTP" ng-model="signupVm.user.activationOTP" value="mobile" ng-disabled="isDisabled">
                         <label for="inlineRadio1"> Verification OTP on SMS </label>
                     </div>
                       <!-- <input type="radio" name="activationOTP" ng-model="signupVm.user.activationOTP" value="mobile"> <small>Verification OTP on SMS</small> -->
                     </div>
                     <div class="col-sm-6 text-left">
                       <div class="radio radio-info">
-                        <input type="radio" id="inlineRadio2" name="activationOTP" ng-model="signupVm.user.activationOTP" value="email">
+                        <input type="radio" id="inlineRadio2" name="activationOTP" ng-model="signupVm.user.activationOTP" value="email" ng-disabled="isDisabled">
                         <label for="inlineRadio2"> Verification OTP on Email </label>
                       </div>
                       <!-- <input type="radio" name="activationOTP" ng-model="signupVm.user.activationOTP"  value="email"> <small>Verification OTP on Email</small> -->

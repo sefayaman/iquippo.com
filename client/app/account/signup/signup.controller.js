@@ -16,6 +16,7 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     vm.closeDialog = closeDialog;
     vm.loginOauth = loginOauth;
     vm.sendOTP = sendOTP;
+    $scope.isDisabled=false;
 
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};
@@ -26,6 +27,7 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     $scope.getStateWiseLocation=getStateWiseLocation;
 
     function getCountryWiseState(country){
+     $scope.isDisabled=false;
      vm.user.state="";
      vm.user.city="";
      var filter={};
@@ -40,6 +42,11 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
         return true;
         }
       })
+      if(country=="Other"){
+        vm.user.activationOTP="email";
+        $scope.isDisabled=true;
+        $scope.code="";
+      }
   }
 
   function getStateWiseLocation(state){
