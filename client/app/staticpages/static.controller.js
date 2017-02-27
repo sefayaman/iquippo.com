@@ -21,9 +21,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.addShippingQuote = addShippingQuote;
     $scope.resetClick = resetClick;
     $scope.onCountryChange = onCountryChange;
-
+    $scope.onStateChange = onStateChange;
     $scope.shippingService = {};
     $scope.shippingQuote = {};
+    var filter = {};
 
     function init(){
       if(Auth.getCurrentUser()._id){
@@ -37,7 +38,9 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         $scope.shippingQuote.phone = currUser.phone;
         $scope.shippingQuote.country = currUser.country;
         $scope.shippingQuote.city = currUser.city;
+        $scope.shippingQuote.state = currUser.state;
         onCountryChange(currUser.country, true);
+        onStateChange(currUser.state, true);
       }
 
      /* LocationSvc.getAllLocation()
@@ -47,12 +50,27 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function onCountryChange(country,noChange){
+      if(!noChange) {
+        $scope.shippingQuote.state = "";
+        $scope.shippingQuote.city = "";
+      }
+      
+      $scope.stateList = [];
+      $scope.locationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+      });
+    }
+
+    function onStateChange(state,noChange){
       if(!noChange)
         $scope.shippingQuote.city = "";
       
       $scope.locationList = [];
-      var filter = {};
-      filter.country = country;
+      filter = {};
+      filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
@@ -133,11 +151,15 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.onBrandChange = onBrandChange;
     $scope.onChange = onChange;
     $scope.onCountryChange = onCountryChange;
-
+    $scope.onStateChange = onStateChange;
+    $scope.onPrdCountryChange = onPrdCountryChange;
+    $scope.onPrdStateChange = onPrdStateChange;
+    
     $scope.valuationQuote = {};
     $scope.valuationQuote.product = {};
     $scope.valuationService = {};
     $scope.currentYear = new Date().getFullYear();
+    var filter = {};
 
 
     function init(){
@@ -159,14 +181,53 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function onCountryChange(country,noChange){
+      if(!noChange) {
+        $scope.valuationQuote.state = "";
+        $scope.valuationQuote.city = "";
+      }
+      
+      $scope.stateList = [];
+      $scope.locationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+      });
+    }
+
+    function onStateChange(state,noChange){
       if(!noChange)
         $scope.valuationQuote.city = "";
       
       $scope.locationList = [];
-      var filter = {};
-      filter.country = country;
+      filter = {};
+      filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
+      });
+    }
+
+    function onPrdCountryChange(country){
+      $scope.valuationQuote.product.state = "";
+      $scope.valuationQuote.product.city = "";
+      
+      $scope.prdStateList = [];
+      $scope.prdLocationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.prdStateList = result;
+      });
+    }
+
+    function onPrdStateChange(state){
+      $scope.valuationQuote.product.city = "";
+      
+      $scope.prdLocationList = [];
+      filter = {};
+      filter.stateName = state;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.prdLocationList = result;
       });
     }
 
@@ -181,8 +242,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.valuationQuote.email = currUser.email;
           $scope.valuationQuote.phone = currUser.phone;
           $scope.valuationQuote.country = currUser.country;
+          $scope.valuationQuote.state = currUser.state;
           $scope.valuationQuote.city = currUser.city;
           onCountryChange(currUser.country, true);
+          onStateChange(currUser.state, true);
         }
     }
 
@@ -198,7 +261,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       brandSvc.getBrandOnFilter(filter)
       .then(function(result){
         $scope.brandList = result;
-
       })
       .catch(function(res){
         console.log("error in fetching brand",res);
@@ -206,7 +268,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   function onBrandChange(brandName){
-    
     $scope.modelList = [];
     $scope.valuationQuote.product.model = "";
     if(!brandName)
@@ -220,7 +281,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     .catch(function(res){
       console.log("error in fetching model",res);
     })
-
   }
 
     init();
@@ -379,10 +439,14 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.onBrandChange = onBrandChange;
     $scope.currentYear = new Date().getFullYear();
     $scope.onCountryChange = onCountryChange;
-
+    $scope.onStateChange = onStateChange;
+    $scope.onPrdCountryChange = onPrdCountryChange;
+    $scope.onPrdStateChange = onPrdStateChange;
+    
     $scope.financeQuote = {};
     $scope.financeQuote.product = {};
     $scope.financeService = {};
+    var filter = {};
 
     function init(){
         setUserData();
@@ -409,20 +473,60 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.financeQuote.email = currUser.email;
           $scope.financeQuote.phone = currUser.phone;
           $scope.financeQuote.country = currUser.country;
+          $scope.financeQuote.state = currUser.state;
           $scope.financeQuote.city = currUser.city;
-          onCountryChange(currUser.country);
+          onCountryChange(currUser.country, true);
+          onStateChange(currUser.state, true);
         }
     }
 
     function onCountryChange(country,noChange){
+      if(!noChange) {
+        $scope.financeQuote.state = "";
+        $scope.financeQuote.city = "";
+      }
+      $scope.stateList = [];
+      $scope.locationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+      });
+    }
+
+    function onStateChange(state,noChange){
       if(!noChange)
         $scope.financeQuote.city = "";
       
       $scope.locationList = [];
-      var filter = {};
-      filter.country = country;
+      filter = {};
+      filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
+      });
+    }
+
+    function onPrdCountryChange(country){
+      $scope.financeQuote.product.state = "";
+      $scope.financeQuote.product.city = "";
+      
+      $scope.prdStateList = [];
+      $scope.prdLocationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.prdStateList = result;
+      });
+    }
+
+    function onPrdStateChange(state){
+      $scope.financeQuote.product.city = "";
+      
+      $scope.prdLocationList = [];
+      filter = {};
+      filter.stateName = state;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.prdLocationList = result;
       });
     }
 
@@ -446,7 +550,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   function onBrandChange(brandName){
-    
     $scope.modelList = [];
     $scope.financeQuote.product.model = "";
     if(!brandName)
@@ -460,13 +563,11 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     .catch(function(res){
       console.log("error in fetching model",res);
     })
-
   }
 
     init();
 
     function addFinanceQuote(evt) {
-
       if($scope.form.$invalid){
         $scope.form.submitted = true;
         return;
@@ -517,12 +618,16 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.resetClick = resetClick;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
-
+    $scope.onCountryChange = onCountryChange;
+    $scope.onStateChange = onStateChange;
+    $scope.onPrdCountryChange = onPrdCountryChange;
+    $scope.onPrdStateChange = onPrdStateChange;
 
     $scope.insuranceQuote = {};
     $scope.insuranceQuote.product = {};
     var insuranceService = {};
     $scope.currentYear = new Date().getFullYear();
+    var filter = {};
 
     function init(){
         setUserData();
@@ -538,7 +643,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function setUserData(){
-
        if(Auth.getCurrentUser()._id){
           var currUser = Auth.getCurrentUser();
           $scope.insuranceQuote.fname = currUser.fname;
@@ -549,28 +653,68 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.insuranceQuote.email = currUser.email;
           $scope.insuranceQuote.phone = currUser.phone;
           $scope.insuranceQuote.country = currUser.country;
+          $scope.insuranceQuote.state = currUser.state;
           $scope.insuranceQuote.city = currUser.city;
-          onCountryChange(currUser.country);
+          onCountryChange(currUser.country, true);
+          onStateChange(currUser.state, true);
         }
     }
 
     function onCountryChange(country,noChange){
+      if(!noChange) {
+        $scope.insuranceQuote.state = "";
+        $scope.insuranceQuote.city = "";
+      }
+      $scope.stateList = [];
+      $scope.locationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+      });
+    }
+
+    function onStateChange(state,noChange){
       if(!noChange)
         $scope.insuranceQuote.city = "";
       
       $scope.locationList = [];
-      var filter = {};
-      filter.country = country;
+      filter = {};
+      filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
+      });
+    }
+
+    function onPrdCountryChange(country){
+      $scope.insuranceQuote.product.state = "";
+      $scope.insuranceQuote.product.city = "";
+      
+      $scope.prdStateList = [];
+      $scope.prdLocationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.prdStateList = result;
+      });
+    }
+
+    function onPrdStateChange(state){
+      $scope.insuranceQuote.product.city = "";
+      
+      $scope.prdLocationList = [];
+      filter = {};
+      filter.stateName = state;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.prdLocationList = result;
       });
     }
 
     function onCategoryChange(categoryName){
       $scope.brandList = [];
       $scope.modelList = [];
-      $scope.insuranceQuote.brand = "";
-      $scope.insuranceQuote.model = "";
+      $scope.insuranceQuote.product.brand = "";
+      $scope.insuranceQuote.product.model = "";
        if(!categoryName)
         return;
       var filter = {};
@@ -586,9 +730,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   function onBrandChange(brandName){
-    
     $scope.modelList = [];
-    $scope.insuranceQuote.model = "";
+    $scope.insuranceQuote.product.model = "";
     if(!brandName)
       return;
     var filter = {};
@@ -600,7 +743,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     .catch(function(res){
       console.log("error in fetching model",res);
     })
-
   }
 
     init();

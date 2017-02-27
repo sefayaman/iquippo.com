@@ -180,7 +180,24 @@
                       </div>
                     </div>      
                     
-
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
+                          <select class="form-control" ng-model="manpowerVm.manpower.country" name="country" ng-change="manpowerVm.onCountryChange(manpowerVm.manpower.country)" required>
+                            <option value="">*Select Country</option>
+                            <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+                          </select>
+                          <i class="caret"></i>
+                        </div>
+                      </div>
+                      <div class="col-xs-6" ng-class="{'has-error': form.state.$invalid && form.submitted }">
+                        <select class="form-control" name="state" ng-model="manpowerVm.manpower.state" ng-change="manpowerVm.onStateChange(manpowerVm.manpower.state)" required>
+                          <option value="">*Select State</option>
+                            <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>  
+                    </div>
                     <div class="row">
                       <div class="col-xs-6 form-group" ng-class="{'has-error': form.location.$invalid && submitted }">
                           <select class="form-control" name="location" ng-model="manpowerVm.manpower.city" ng-change="manpowerVm.onLocationChange(manpowerVm.manpower.city)" required>
