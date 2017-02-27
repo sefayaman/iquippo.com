@@ -16,7 +16,9 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     $scope.selectedAssetsArr = [];
     vm.register = register;
     vm.onChangedValue = onChangedValue;
-    vm.onLocationChange = onLocationChange;
+    vm.onCountryChange = onCountryChange;
+    vm.onStateChange = onStateChange;
+    //vm.onLocationChange = onLocationChange;
     vm.viewAllUser = viewAllUser;
     vm.viewUserProfile = viewUserProfile;
     //vm.getEquipmentHelp = getEquipmentHelp;
@@ -36,10 +38,10 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
     //$scope.loginObj = {};
 
     function init(){
-      LocationSvc.getAllLocation()
+      /*LocationSvc.getAllLocation()
       .then(function(result){
         $scope.locationList = result;
-      });
+      });*/
       /*var dataToSend = {};
       ManpowerSvc.getCatSubCatOnFilter(dataToSend)
        .then(function(result){
@@ -73,6 +75,30 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
         });
       })
     };*/
+
+    function onCountryChange(country){
+      vm.manpower.state = "";
+      vm.manpower.city = "";
+      
+      $scope.stateList = [];
+      $scope.locationList = [];
+      var filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+      });
+    }
+
+    function onStateChange(state){
+      vm.manpower.city = "";
+      
+      $scope.locationList = [];
+      var filter = {};
+      filter.stateName = state;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
+    }
 
     function getLocationHelp(val) {
       var serData = {};
@@ -176,9 +202,9 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
       });
     }
 
-    function onLocationChange(city){
+    /*function onLocationChange(city){
       vm.manpower.state = LocationSvc.getStateByCity(city);
-    }
+    }*/
     
     function onChangedValue(selectedAssets){
       $scope.selectedAssetsArr = [];
@@ -258,7 +284,7 @@ function ManpowerCtrl($scope, $rootScope, $window,  Auth, $http, $log, Modal, $u
 
     function saveNewManpowerUser(){
       vm.manpower.isManpower =  true; 
-      vm.manpower.country = LocationSvc.getCountryByState(vm.manpower.state);
+      //vm.manpower.country = LocationSvc.getCountryByState(vm.manpower.state);
       vm.manpower.status =  false; 
       vm.manpower.createdBy = {
         name : 'Self'

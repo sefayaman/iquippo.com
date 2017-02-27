@@ -175,7 +175,7 @@ exports.update = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
-      updateUser(req.body, req.body.user.userId);
+      updateUser(req, res);
 
       return res.status(200).json(req.body);
     });
@@ -276,7 +276,9 @@ exports.bulkUpdate = function(req,res){
 
 //update user collection 
 
-function updateUser(userData, userId) {
+function updateUser(req, res) {
+  var userData = req.body;
+  var userId = req.body.user.userId
   var dataObj = {};
   dataObj.updatedAt = new Date();
   User.findById(userId, function(err, user) {

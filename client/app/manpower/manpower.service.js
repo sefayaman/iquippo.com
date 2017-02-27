@@ -98,7 +98,6 @@
     };
 
     function createUser(data) {
-      console.log("p---", data);
       return $http.post('/api/users/register', data)
         .then(function(res) {
           manpowerCache = [];

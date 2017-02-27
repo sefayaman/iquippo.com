@@ -35,24 +35,24 @@
         <form class="form" ng-submit="addShippingQuote($event)" novalidate name="form">
           <div class="form-group">                    
             <div class="row">
-              <div class="col-xs-6">
+              <div class="col-xs-4">
                 <div class="form-group" ng-class="{'has-error': form.fname.$invalid && form.submitted }">                          
                   <input type="text" name="fname" class="form-control" placeholder="* First Name" ng-model="shippingQuote.fname" required>
                 </div>
               </div>
-              <div class="col-xs-6">
+              <div class="col-xs-4">
                 <div class="form-group">                                      
                   <input type="text" name="mname" class="form-control" placeholder="Middle Name" ng-model="shippingQuote.mname">
                 </div>
               </div>
-            </div>  
-            <div class="row">
-              <div class="col-xs-6">
+              <div class="col-xs-4">
                 <div class="form-group" ng-class="{'has-error': form.lname.$invalid && form.submitted }">                          
                   <input type="text" name="lname" class="form-control" placeholder="* Last Name" ng-model="shippingQuote.lname" required>
                 </div>
               </div>
-              <div class="col-xs-6">
+            </div>  
+            <div class="row">              
+              <div class="col-xs-4">
                 <div class="form-group" ng-class="{'has-error': form.country.$invalid && form.submitted }"> 
                   <select class="form-control" ng-model="shippingQuote.country" name="country" ng-change="onCountryChange(shippingQuote.country)" required>
                     <option value="">*Select Country</option>
@@ -61,45 +61,49 @@
                   <i class="caret"></i>
                 </div>
               </div>
+              <div class="col-xs-4" ng-class="{'has-error': form.state.$invalid && form.submitted }">
+                <select class="form-control" name="state" ng-model="shippingQuote.state" ng-change="onStateChange(shippingQuote.state)" required>
+                  <option value="">*Select State</option>
+                    <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>
+              <div class="col-xs-4" ng-class="{'has-error': form.location.$invalid && form.submitted }">
+                <select class="form-control" name="location" ng-model="shippingQuote.city" required>
+                  <option value="">*Select Location</option>
+                    <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>
             </div>  
 
-            <div class="row">
-              <div class="col-xs-6">
-                      <select class="form-control" name="location" ng-model="shippingQuote.city">
-                        <option value="">Select Location</option>
-                          <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
-                      </select>
-                      <i class="caret"></i>
-              </div>
+            <div class="row">              
               <div class="col-xs-6">
                 <div class="form-group">                          
                   <input type="text" name="" class="form-control" placeholder="Company Name" ng-model="shippingQuote.companyname">
                 </div>
               </div>
-              
-            </div>  
-
-            <div class="row">
               <div class="col-xs-6">
                 <div class="form-group">                          
                   <input type="text" name="" class="form-control" placeholder="Designation" ng-model="shippingQuote.designation">
                 </div>
               </div>
+            </div>  
 
+            <div class="row">
               <div class="col-xs-6">
                 <div class="form-group">                          
                   <input type="text" name="" class="form-control" placeholder="Phone No." ng-model="shippingQuote.phone">
                 </div>
               </div>
-              
-            </div>
-            
-            <div class="row">
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
                  <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="shippingQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                 </div>
-              </div>
+              </div>              
+            </div>
+            
+            <div class="row">              
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.email.$invalid && form.submitted }">                              
                 <input type="email" name="email" class="form-control" placeholder="Email Address" ng-model="shippingQuote.email">

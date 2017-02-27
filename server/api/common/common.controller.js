@@ -1641,7 +1641,7 @@ exports.renderXLSX=function(req, res) {
 	});
 	}
 	else{
-		var headers = ['State','Location'];
+		var headers = ['Country','State','Location'];
 		var json = {};
 		var xlsxData = [];
 		var arr = [];
@@ -1652,6 +1652,7 @@ exports.renderXLSX=function(req, res) {
 		st.forEach(function(x) {
 			json = {};
 			arr = [];
+			arr.push(_.get(x, 'state.country', ''));
 			arr.push(_.get(x, 'state.name', ''));
 			arr.push(_.get(x, 'name', ''));
 			
