@@ -120,20 +120,18 @@ function _insertSpareData(uploadData, cb) {
 			return insertCb();
 		}
 
-		if(doc.priceOnRequest && doc.priceOnRequest.toLowerCase() === 'yes'){
-				doc.priceOnRequest = true;
-			}else
-				doc.priceOnRequest = false;
+		if (doc.priceOnRequest && doc.priceOnRequest.toLowerCase() === 'yes') {
+			doc.priceOnRequest = true;
+		} else
+			doc.priceOnRequest = false;
 
-		if(!doc.priceOnRequest && !doc.grossPrice){
+		if (!doc.priceOnRequest && !doc.grossPrice) {
 			errObj.push({
 				Error: 'Price missing',
 				rowCount: doc.__rowNum__
 			})
 			return insertCb();
 		}
-
-
 
 
 
@@ -419,6 +417,7 @@ function _insertSpareData(uploadData, cb) {
 			}
 
 			doc.isSold = false;
+
 			if(doc.status.toLowerCase() === 'sold')
 				doc.isSold = true;
 
@@ -429,7 +428,7 @@ function _insertSpareData(uploadData, cb) {
 				doc.productCondition = '';
 			}
 
-			if(!validCatBrandModel.length){
+			if (!validCatBrandModel.length) {
 				errObj.push({
 					Error: 'No valid category,brand,model',
 					rowCount: doc.__rowNum__
@@ -437,7 +436,7 @@ function _insertSpareData(uploadData, cb) {
 				return insertCb();
 			}
 
-			if(!validLocations.length){
+			if (!validLocations.length) {
 				errObj.push({
 					Error: 'No valid location',
 					rowCount: doc.__rowNum__
@@ -445,13 +444,24 @@ function _insertSpareData(uploadData, cb) {
 				return insertCb();
 			}
 
-			validLocations = _.uniq(validLocations,function(e){
-				return e.country,e.state,e.city;
+			validLocations = _.uniq(validLocations, function(e) {
+				return e.country, e.state, e.city;
 			});
 
-			validCatBrandModel = _.uniq(validCatBrandModel,function(e){
-				return e.category.name,e.brand.name,e.model.name;
+			validCatBrandModel = _.uniq(validCatBrandModel, function(e) {
+				return e.category.name, e.brand.name, e.model.name;
 			});
+
+			var validPayOptions = ['Online', 'Offline', 'COD'];
+
+			doc.paymentOption = doc.paymentOption && doc.paymentOption.split(',');
+			if (doc.paymentOption.length) {
+				doc.paymentOption.forEach(function(x,idx) {
+					if(validPayOptions.indexOf(x) < 0){
+						doc.paymentOption.splice(idx,1);
+					}
+				})
+			}
 
 
 			var spareDetails = {
@@ -468,10 +478,11 @@ function _insertSpareData(uploadData, cb) {
 				commission: doc.commission,
 				spareDetails: validCatBrandModel,
 				locations: validLocations,
-				paymentOption: [doc.paymentOption],
-				priceOnRequest: doc.priceOnRequest  ,
+				paymentOption: doc.paymentOption,
+				priceOnRequest: doc.priceOnRequest,
 				currencyType: doc.currencyType,
 				status: doc.status && doc.status.toLowerCase(),
+				isSold : doc.isSold,
 				deleted: false,
 				inquiryCounter: 0
 			};
