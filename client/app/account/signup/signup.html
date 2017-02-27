@@ -108,15 +108,15 @@
                     <i class="caret"></i>
                   </div>                 
                 </div>
-                <div class="row" ng-if="signupVm.user.country=='Other'">
+                <div class="row" ng-if="signupVm.user.country=='Other' ||signupVm.user.state=='Other'|| signupVm.user.city=='Other' ">
                   <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
+                    <input class="form-control" ng-show="signupVm.user.country=='Other'" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherState.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherState" ng-model="signupVm.user.otherState" placeholder="*Other State" ng-required= "signupVm.user.state == 'Other'" ng-disabled="signupVm.user.state != 'Other'">
+                  <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherState.$invalid && submitted}">
+                    <input class="form-control" ng-show="signupVm.user.country =='Other' || signupVm.user.state =='Other'" type="text" name="otherState" ng-model="signupVm.user.otherState" placeholder="*Other State" ng-required= "signupVm.user.state == 'Other'" ng-disabled="signupVm.user.state != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherLocation.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherLocation" ng-model="signupVm.user.otherCity" placeholder="*Other Location" ng-required= "signupVm.user.city == 'Other'" ng-disabled="signupVm.user.city != 'Other'">
+                  <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherLocation.$invalid && submitted}">
+                    <input class="form-control" ng-show="signupVm.user.city=='Other'|| signupVm.user.country =='Other' || signupVm.user.state =='Other'" type="text" name="otherLocation" ng-model="signupVm.user.otherCity" placeholder="*Other Location" ng-required= "signupVm.user.city == 'Other'" ng-disabled="signupVm.user.city != 'Other'">
                   </div>                
                 </div> 
                 <div class="row">
