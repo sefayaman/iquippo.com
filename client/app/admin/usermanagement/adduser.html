@@ -126,7 +126,7 @@
                   
                  
                 </div>
-                 <div class="row">
+                 <div class="row" ng-if="newUser.country=='Other'">
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
                   </div>
@@ -147,7 +147,7 @@
                       <span class="input-group-addon">{{code}}</span>
                       <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                     </div>
-                   
+                  </div>
               </div>
                 <div class="row">
                   <div class="form-group col-sm-6" ng-class="{'has-error':form.panNumber.$invalid && submitted}">
@@ -168,10 +168,10 @@
                     </div>
                   </div>
                  </div>  -->
-                <div class="form-group" ng-class="{'has-error': form.agree.$invalid && submitted }">
+                <div class="form-group">
                   <div class="row">
                     <div class="col-sm-3 text-left" >
-                      <input type="checkbox" name="agree" ng-model="newUser.agree" value="" required> I Agree
+                      <input type="checkbox" name="agree" ng-model="newUser.agree" value=""> I Agree
                     </div>
                     <div class="col-sm-9 text-left">
                       <small>By clicking submit, you agree to the Terms &amp; Conditions.</small>

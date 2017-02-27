@@ -108,7 +108,7 @@
                     <i class="caret"></i>
                   </div>                 
                 </div>
-                <div class="row">
+                <div class="row" ng-if="signupVm.user.country=='Other'">
                   <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
                   </div>
@@ -144,7 +144,7 @@
                   <div class="row">
                     <div class="col-sm-12 text-left">
                       <div class="checkbox checkbox-info checkbox-circle">
-                        <input id="checkbox3" type="checkbox" name="agree" ng-model="signupVm.user.agree" value="" required>
+                        <input id="checkbox3" type="checkbox" name="agree" ng-model="signupVm.user.agree" value="">
                         <label for="checkbox3">
                             I Agree
                             <span>By clicking submit, you agree to the <a href="/privacy" target="_blank" aria-hidden="true">Terms &amp; Conditions</a>.</span>
