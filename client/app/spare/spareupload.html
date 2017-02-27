@@ -164,7 +164,7 @@
                               <a href="javascript:void(0);" ng-click="spareVm.spare.locations.splice($index, 1)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
                               <i class="fa fa-times" ></i></a></span>
                             </div>
-                            <div class="form-group col-sm-1">
+                            <div ng-if = "spareVm.spare.locations.length > 3" class="form-group col-sm-1">
                               <h5><a href="javascript:void(0);" ng-click="spareVm.openLocationList()" >more..</a></h5>
                             </div>                            
                           </div>
