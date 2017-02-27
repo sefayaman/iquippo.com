@@ -113,6 +113,24 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
             vm.user.emailVerified = true;
         if(vm.user.activationOTP == 'mobile')
             vm.user.mobileVerified = true;
+
+         if(vm.user.country == "Other"){
+      vm.user.isOtherCountry=true;
+      vm.user.country=vm.user.otherCountry;
+    }
+
+    if(vm.user.state == "Other"){
+      vm.user.isOtherState=true;
+     vm.user.state=vm.user.otherState; 
+    }
+
+    
+    if(vm.user.city == "Other"){
+      vm.user.isOtherCity=true;
+      vm.user.city=vm.user.otherLocation;
+    }
+
+
         Auth.createUser(vm.user)
         .then( function(result) {
           if($location.search().ref_id && $location.search().code) {

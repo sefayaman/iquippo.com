@@ -1249,7 +1249,7 @@ exports.searchCity = function(req,res){
 exports.searchLocation = function(req,res){
   var filter = {};
   if(!req.body.searchStr)
-  	res.status(200).json([]);
+  	return res.status(200).json([]);
   if(req.body.searchStr){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = {$regex:term};

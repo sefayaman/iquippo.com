@@ -91,7 +91,7 @@
                     </select>
                     <i class="caret"></i>
                   </div>                   
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.state.$invalid && submitted }">
                     <select class="form-control" name="state" ng-model="signupVm.user.state" ng-change="getStateWiseLocation(signupVm.user.state)" required>
                       <option value="" disabled="">*Select State</option>
                       <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
@@ -112,11 +112,11 @@
                   <div class="form-group col-sm-4"  ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="signupVm.user.otherCountry" placeholder="*Other Country" ng-required= "signupVm.user.country == 'Other'" ng-disabled="signupVm.user.country != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherState.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherState" ng-model="signupVm.user.otherState" placeholder="*Other State" ng-required= "signupVm.user.state == 'Other'" ng-disabled="signupVm.user.state != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherLocation" ng-model="signupVm.user.otherLocation" placeholder="*Other Location" ng-required= "signupVm.user.Location == 'Other'" ng-disabled="signupVm.user.state != 'Other'">
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherLocation.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherLocation" ng-model="signupVm.user.otherCity" placeholder="*Other Location" ng-required= "signupVm.user.city == 'Other'" ng-disabled="signupVm.user.city != 'Other'">
                   </div>                
                 </div> 
                 <div class="row">
@@ -144,7 +144,7 @@
                   <div class="row">
                     <div class="col-sm-12 text-left">
                       <div class="checkbox checkbox-info checkbox-circle">
-                        <input id="checkbox3" type="checkbox" name="agree" ng-model="signupVm.user.agree" value="">
+                        <input id="checkbox3" type="checkbox" name="agree" ng-model="signupVm.user.agree" value="" required>
                         <label for="checkbox3">
                             I Agree
                             <span>By clicking submit, you agree to the <a href="/privacy" target="_blank" aria-hidden="true">Terms &amp; Conditions</a>.</span>

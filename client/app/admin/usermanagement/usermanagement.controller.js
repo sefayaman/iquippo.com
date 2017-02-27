@@ -304,8 +304,6 @@ angular.module('sreizaoApp')
            Modal.alert("Please Agree to the Terms & Conditions",true);
     }
 
-      if($scope.newUser.country == 'Other')
-          $scope.newUser.country = $scope.newUser.otherCountry;
     };
 
   function saveNewUser(){
@@ -326,14 +324,21 @@ angular.module('sreizaoApp')
     } else {
       delete newUser.createdBy;
     }
-    if($scope.newUser.country == "Other")
+    if($scope.newUser.country == "Other"){
       $scope.newUser.isOtherCountry=true;
+      $scope.newUser.country=$scope.newUser.otherCountry;
+    }
 
-    if($scope.newUser.state == "Other")
+    if($scope.newUser.state == "Other"){
       $scope.newUser.isOtherState=true;
+     $scope.newUser.state=$scope.newUser.otherState; 
+    }
+
     
-    if($scope.newUser.city == "Other")
+    if($scope.newUser.city == "Other"){
       $scope.newUser.isOtherCity=true;
+      $scope.newUser.city=$scope.newUser.otherCity;
+    }
 
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){
