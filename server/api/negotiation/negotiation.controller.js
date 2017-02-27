@@ -52,7 +52,6 @@ exports.search = function(req, res) {
 
   if(arr.length > 0)
     filter['$or'] = arr;
-
   var result = {};
   if(req.body.pagination){
     Utility.paginatedResult(req,res,Negotiation,filter,{});
@@ -84,7 +83,7 @@ var BUY_REQUEST_FIELD_MAP = {
                               'Phone No.' : 'user.phone',
                               'Mobile No.' : 'user.mobile',
                               'Email Address' : 'user.email',
-                              'Buy Now Price' : 'product.grossPrice',
+                              'Buy Now Price' : 'buyNowPrice',
                               'Make an Offer Price' : 'offer',
                               'Asset ID' : 'product.assetId',
                               'Product Name' : 'product.name',
@@ -146,10 +145,15 @@ exports.exportData = function(req,res){
               dataArr[idx + 1].push(_.get(item, 'user.fname', '') + ' ' + _.get(item, 'user.lname', ''));
             else if(FIELD_MAP[header] == 'sellerFullName')
               dataArr[idx + 1].push(_.get(item, 'product.seller.fname', '') + ' ' + _.get(item, 'product.seller.lname', ''));
+            else if(FIELD_MAP[header] == 'buyNowPrice') {
+              if(item.product.grossPrice)
+                dataArr[idx + 1].push(_.get(item, 'product.grossPrice', ''));
+              else
+                dataArr[idx + 1].push('');
+            }
             else
               dataArr[idx + 1].push(_.get(item,FIELD_MAP[header],''));
           });
-
         });
 
         var ws = Utility.excel_from_data(dataArr,headers);
@@ -160,7 +164,6 @@ exports.exportData = function(req,res){
         var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
         res.end(wbout);
      });
-
 }
 
 function handleError(res, err) {
