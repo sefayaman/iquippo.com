@@ -96,6 +96,7 @@ exports.searchSpare = function(req, res) {
     arr[arr.length] = { "spareDetails.category.otherName": { $regex: searchStrReg }};
     arr[arr.length] = { city: { $regex: searchStrReg }};
     arr[arr.length] = { state: { $regex: searchStrReg }};
+    arr[arr.length] = { country: { $regex: searchStrReg }};
     arr[arr.length] = { partNo: { $regex: searchStrReg }};
     arr[arr.length] = { "manufacturers.name": { $regex: searchStrReg }};
     arr[arr.length] = { "user.fname": { $regex: searchStrReg }};
@@ -107,6 +108,7 @@ exports.searchSpare = function(req, res) {
     var locRegEx = new RegExp(req.body.location, 'i');
     arr[arr.length] = {'locations.city':{$regex:locRegEx}};
     arr[arr.length] = {'locations.state':{$regex:locRegEx}};
+    arr[arr.length] = {'locations.country':{$regex:locRegEx}};  
   }
 
   if(req.body.category){
@@ -119,6 +121,11 @@ exports.searchSpare = function(req, res) {
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
     filter['locations.city'] = {$regex:cityRegex};
+  }
+
+  if(req.body.countryName){
+    var countryRegex = new RegExp(req.body.countryName, 'i');
+    filter['locations.country'] = {$regex:countryRegex};
   }
 
   if(req.body.stateName){

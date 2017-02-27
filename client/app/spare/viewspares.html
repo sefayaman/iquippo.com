@@ -32,7 +32,7 @@
 
                 <label for="" class="text-muted">Location</label>
                 <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Location"  ng-model="viewSpareVm.equipmentSearchFilter.location"  uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewSpareVm.fireCommand()" typeahead-on-select="viewSpareVm.fireCommand()" ng-model-options="{debounce:1000}">
+                  <input type="text" class="form-control" placeholder="Country/State/Location"  ng-model="viewSpareVm.equipmentSearchFilter.location"  uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control"  typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="viewSpareVm.fireCommand()" typeahead-on-select="viewSpareVm.fireCommand()" ng-model-options="{debounce:1000}">
                 </div>
 
                 <label for="" class="text-muted">Price</label>                
