@@ -60,19 +60,20 @@
                       {{ errors.password }}
                     </p>
                   </div>
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
-                  <input type="password" name="password" class="form-control" ng-model="signupVm.user.password"
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.passwordCompare.$invalid && submitted }">
+                  <input type="password" name="passwordCompare" class="form-control" ng-model="signupVm.user.passwordConfirm" valid-password-c="signupVm.user.password"
                   placeholder="*Confirm Password" 
                      ng-minlength="4"
                      required
                      mongoose-error/>
                     <p class="help-block"
-                       ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
+                       ng-show="(form.password.$error.minlength || form.passwordCompare.$error.required) && submitted">
                      Confirm Password must be same as Password.
                     </p>
-                    <p class="help-block" ng-show="form.password.$error.mongoose">
-                      {{ errors.password }}
+                    <p class="help-block" ng-show="form.passwordCompare.$error.noMatch">
+                      Passwords Do not match
                     </p>
+                    <p ng-show="form.passwordCompare.$error.required" class="error">*</p>
                   </div>
                 </div>
                 
