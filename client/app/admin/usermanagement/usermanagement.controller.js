@@ -220,17 +220,42 @@ angular.module('sreizaoApp')
   .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance',
    function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance) {
     $scope.newUser ={};
+    $scope.newUser.isOtherCountry=false;
+    $scope.newUser.isOtherState=false;
+    $scope.newUser.isOtherCity=false;
     $scope.errors = {};
     //$scope.editImage = false;
     //$scope.users = [];
     $rootScope.userList = [];
     $scope.locationList = [];
     $scope.onLocationChange = onLocationChange;
-    $scope.getCountryWiseLocation=getCountryWiseLocation;
+    $scope.getCountryWiseState=getCountryWiseState;
+    $scope.getStateWiseLocation=getStateWiseLocation;
     
-    function getCountryWiseLocation(country){
+    function getCountryWiseState(country){
+      $scope.newUser.state="";
+      $scope.newUser.city="";
      var filter={};
      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+          $scope.locationList="";
+      });
+      $rootScope.allCountries.some(function(x){
+        if(x.name == country){
+          $scope.code=x.countryCode;
+        return true;
+        }
+      })
+      if(country=="Other"){
+        $scope.code="";
+      }
+
+  }
+  function getStateWiseLocation(state){
+     $scope.newUser.city="";
+     var filter={};
+     filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
@@ -279,8 +304,6 @@ angular.module('sreizaoApp')
            Modal.alert("Please Agree to the Terms & Conditions",true);
     }
 
-      if($scope.newUser.country == 'Other')
-          $scope.newUser.country = $scope.newUser.otherCountry;
     };
 
   function saveNewUser(){
@@ -301,6 +324,22 @@ angular.module('sreizaoApp')
     } else {
       delete newUser.createdBy;
     }
+    if($scope.newUser.country == "Other"){
+      $scope.newUser.isOtherCountry=true;
+      $scope.newUser.country=$scope.newUser.otherCountry;
+    }
+
+    if($scope.newUser.state == "Other"){
+      $scope.newUser.isOtherState=true;
+     $scope.newUser.state=$scope.newUser.otherState; 
+    }
+
+    
+    if($scope.newUser.city == "Other"){
+      $scope.newUser.isOtherCity=true;
+      $scope.newUser.city=$scope.newUser.otherCity;
+    }
+
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){
         Modal.alert(result.message, true);

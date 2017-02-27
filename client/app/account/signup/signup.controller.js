@@ -16,10 +16,50 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     vm.closeDialog = closeDialog;
     vm.loginOauth = loginOauth;
     vm.sendOTP = sendOTP;
+    $scope.isDisabled=false;
+
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};
     $scope.isRegister = true;
     vm.onLocationChange = onLocationChange;
+
+    $scope.getCountryWiseState=getCountryWiseState;
+    $scope.getStateWiseLocation=getStateWiseLocation;
+
+    function getCountryWiseState(country){
+     $scope.isDisabled=false;
+     vm.user.state="";
+     vm.user.city="";
+     var filter={};
+     filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+          $scope.locationList="";
+      });
+      $rootScope.allCountries.some(function(x){
+        if(x.name == country){
+          $scope.code=x.countryCode;
+        return true;
+        }
+      })
+      if(country=="Other"){
+        vm.user.activationOTP="email";
+        $scope.isDisabled=true;
+        $scope.code="";
+      }
+  }
+
+  function getStateWiseLocation(state){
+     vm.user.city="";
+     var filter={};
+     filter.stateName = state;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
+  }
+
+
+
     function onLocationChange(city){      
       vm.user.state = LocationSvc.getStateByCity(city);    
     }
@@ -27,7 +67,7 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
     function init(){
       LocationSvc.getAllLocation()
       .then(function(result){
-        $scope.locationList = result;
+        //$scope.locationList = result;
       })
     }
     init();
@@ -38,7 +78,8 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
         $scope.submitted = true;
         return;
       }
-
+      
+      
       if(vm.user.agree) 
       {
         var dataToSend = {};
@@ -72,6 +113,24 @@ function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window,$uib
             vm.user.emailVerified = true;
         if(vm.user.activationOTP == 'mobile')
             vm.user.mobileVerified = true;
+
+         if(vm.user.country == "Other"){
+      vm.user.isOtherCountry=true;
+      vm.user.country=vm.user.otherCountry;
+    }
+
+    if(vm.user.state == "Other"){
+      vm.user.isOtherState=true;
+     vm.user.state=vm.user.otherState; 
+    }
+
+    
+    if(vm.user.city == "Other"){
+      vm.user.isOtherCity=true;
+      vm.user.city=vm.user.otherLocation;
+    }
+
+
         Auth.createUser(vm.user)
         .then( function(result) {
           if($location.search().ref_id && $location.search().code) {
@@ -155,6 +214,9 @@ function sendOTP(){
       return;
     }
   }else if(vm.user.activationOTP == 'mobile') {
+    if($scope.code)
+      dataToSend['countryCode']=$scope.code;
+
     if(vm.user.mobile) {
        dataToSend['mobile'] = vm.user.mobile;
     }else {

@@ -1,11 +1,13 @@
 var request = require('request');
 // configuration ===============================================================
-var smsConfig = { host:"https://control.msg91.com", URL: "/api/sendhttp.php",sender:"iQuipo",authKey:"129263AJDKJkzoHwY4580e186b",countryCode:"91",route:4}
+var smsConfig = { host:"https://control.msg91.com", URL: "/api/sendhttp.php",sender:"iQuipo",authKey:"129263AJDKJkzoHwY4580e186b",route:4}
  var sms = {}
  sms.sendSMS = function(data,req,res,cb) {   
     //var path = smsConfig.URL + "?user=" + smsConfig.user + "&password=" + smsConfig.password +  "&to=" + data.to+ "&from=" + smsConfig.from + "&message="+encodeURI(data.content);
-    var path = smsConfig.URL + "?authkey=" + smsConfig.authKey +  "&mobiles=" + ( smsConfig.countryCode + data.to)+ "&sender=" + smsConfig.sender + "&message="+encodeURI(data.content) + "&route=" + smsConfig.route + "&country=" +smsConfig.countryCode;   
-   
+    var path = smsConfig.URL + "?authkey=" + smsConfig.authKey +  "&mobiles=" + ( data.countryCode + data.to)+ "&sender=" + smsConfig.sender + "&message="+encodeURI(data.content) + "&route=" + smsConfig.route + "&country=" +data.countryCode;   
+    
+    console.log(path);
+
 	request(smsConfig.host  + path, {timeout: 5*60*60*1000},function (error, response, body) {
 		if(!error){
 			if(response.statusCode == 200){

@@ -98,7 +98,7 @@
                     </div>
                   </div> -->
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
-                    <select class="form-control" name="country" ng-model="newUser.country" ng-change="getCountryWiseLocation(newUser.country)" required>
+                    <select class="form-control" name="country" ng-model="newUser.country" ng-change="getCountryWiseState(newUser.country)" required>
                       <option value="" disabled>*Select Country</option>
                       <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
                       <option value="Other">Other</option>
@@ -106,33 +106,35 @@
                     <i class="caret"></i>
                   </div>
                   
-                  <div class="form-group col-sm-4">
-                    <select class="form-control">
-                      <option value="">*Select State</option>
-                      <option>State1</option>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.state.$invalid && submitted }">
+                    <select class="form-control" name="state" ng-model="newUser.state" ng-change="getStateWiseLocation(newUser
+                    .state)" required>
+                      <option value="" disabled>*Select State</option>
+                      <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
                       <option value="Other">Other</option>
                     </select>
                     <i class="caret"></i>
                   </div> 
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.location.$invalid && submitted }">
-                    <select class="form-control" name="location" ng-model="newUser.city" ng-change="onLocationChange(newUser.city)" required>
+                    <select class="form-control" name="location" ng-model="newUser.city" required>
                       <option value="" disabled>*Select Location</option>
                         <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
+                    <option value="Other">Other</option>
                     </select>
                     <i class="caret"></i>
                   </div>
                   
                  
                 </div>
-                <div class="row">
+                 <div class="row">
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
                     <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4">
-                    <input class="form-control" type="text" placeholder="*Other State" disabled>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherState.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherState" ng-model="newUser.otherState" placeholder="*Other State" ng-required= "newUser.state == 'Other'" ng-disabled="newUser.state != 'Other'">
                   </div>
-                  <div class="form-group col-sm-4">
-                    <input class="form-control" type="text" placeholder="Other Location" disabled>
+                  <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCity.$invalid && submitted}">
+                    <input class="form-control" type="text" name="otherCity" ng-model="newUser.otherCity" placeholder="*Other Location" ng-required= "newUser.city == 'Other'" ng-disabled="newUser.city != 'Other'">
                   </div> 
                 </div>
                 <div class="row">
@@ -142,17 +144,17 @@
 
                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
-                    <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                      <span class="input-group-addon">{{code}}</span>
+                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                     </div>
-                  </div>
                    
               </div>
                 <div class="row">
-                  <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" ng-model="newUser.panNumber">
+                  <div class="form-group col-sm-6" ng-class="{'has-error':form.panNumber.$invalid && submitted}">
+                    <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top" ng-model="newUser.panNumber">
                   </div>   
-                  <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" ng-model="newUser.aadhaarNumber">
+                  <div class="form-group col-sm-6" ng-class="{'has-error':form.aadhaarNumber.$invalid && submitted}">
+                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$" tooltip-placement="top" ng-model="newUser.aadhaarNumber">
                   </div>                  
                 </div>   
                 <!-- <div class="row">
@@ -166,10 +168,10 @@
                     </div>
                   </div>
                  </div>  -->
-                <div class="form-group">
+                <div class="form-group" ng-class="{'has-error': form.agree.$invalid && submitted }">
                   <div class="row">
-                    <div class="col-sm-3 text-left">
-                      <input type="checkbox" name="agree" ng-model="newUser.agree" value=""> I Agree
+                    <div class="col-sm-3 text-left" >
+                      <input type="checkbox" name="agree" ng-model="newUser.agree" value="" required> I Agree
                     </div>
                     <div class="col-sm-9 text-left">
                       <small>By clicking submit, you agree to the Terms &amp; Conditions.</small>
