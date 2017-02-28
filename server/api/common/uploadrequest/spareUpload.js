@@ -455,7 +455,7 @@ function _insertSpareData(uploadData, cb) {
 			var validPayOptions = ['Online', 'Offline', 'COD'];
 
 			doc.paymentOption = doc.paymentOption && doc.paymentOption.split(',');
-			if (doc.paymentOption.length) {
+			if (doc.paymentOption && doc.paymentOption.length) {
 				doc.paymentOption.forEach(function(x,idx) {
 					if(validPayOptions.indexOf(x) < 0){
 						doc.paymentOption.splice(idx,1);
