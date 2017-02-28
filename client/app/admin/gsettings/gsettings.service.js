@@ -33,6 +33,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getCityHelp = getCityHelp;
       lServices.getAssetIdHelp = getAssetIdHelp;
       lServices.exportExcel=exportExcel;
+      lServices.importExcel=importExcel;
 
 
       function getAllLocation(){
@@ -255,6 +256,18 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         .catch(function(err){
           throw err
         })
+    }
+
+    function importExcel(file){
+      var url = path + '/importLocation';
+      alert("I am in lservices");
+      return $http.post(url,{fileName:file})
+        .then(function(res){
+          return res.data;
+        })
+      .catch(function(err){
+          throw err;
+        });
     }
 
      function exportExcel(filter){

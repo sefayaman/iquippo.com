@@ -400,6 +400,7 @@ var productInfo = {
 		async.forEachLimit(data, 5, intialize, finalize);
 
 		function intialize(info, cb) {
+			console.log("initialize info",info)
 			_create(info, function(err, result) {
 				debug(result);
 				if (err && err.status === 409) {

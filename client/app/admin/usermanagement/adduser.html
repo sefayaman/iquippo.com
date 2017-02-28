@@ -70,18 +70,18 @@
                       {{ errors.password }}
                     </p>
                   </div>
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
-                  <input type="password" name="password" class="form-control" ng-model="newUser.password"
+                  <div class="form-group col-sm-6" ng-class="{'has-error': form.passwordCompare.$invalid && submitted }">
+                  <input type="password" name="passwordCompare" class="form-control" ng-model="newUser.passwordConfirm" valid-password-c="newUser.password"
                   placeholder="*Confirm Password" 
                      ng-minlength="4"
                      required
                      mongoose-error/>
                     <p class="help-block"
-                       ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
+                       ng-show="(form.password.$error.minlength || form.passwordCompare.$error.required) && submitted">
                       Confirm Password must be same as Password.
                     </p>
-                    <p class="help-block" ng-show="form.password.$error.mongoose">
-                      {{ errors.password }}
+                    <p class="help-block" ng-show="form.passwordCompare.$error.noMatch">
+                      Passwords do not match.
                     </p>
                   </div>
                 </div>
@@ -126,15 +126,15 @@
                   
                  
                 </div>
-                 <div class="row" ng-if="newUser.country=='Other'">
+                 <div class="row" ng-if="newUser.country=='Other' ||newUser.state=='Other'|| newUser.city=='Other' ">
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCountry.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
+                    <input class="form-control" ng-show="newUser.country =='Other'" type="text" name="otherCountry" ng-model="newUser.otherCountry" placeholder="*Other Country" ng-required= "newUser.country == 'Other'" ng-disabled="newUser.country != 'Other'">
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.otherState.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherState" ng-model="newUser.otherState" placeholder="*Other State" ng-required= "newUser.state == 'Other'" ng-disabled="newUser.state != 'Other'">
+                    <input class="form-control" ng-show="newUser.country =='Other' || newUser.state =='Other'" type="text" name="otherState" ng-model="newUser.otherState" placeholder="*Other State" ng-required= "newUser.state == 'Other'" ng-disabled="newUser.state != 'Other'">
                   </div>
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.otherCity.$invalid && submitted}">
-                    <input class="form-control" type="text" name="otherCity" ng-model="newUser.otherCity" placeholder="*Other Location" ng-required= "newUser.city == 'Other'" ng-disabled="newUser.city != 'Other'">
+                    <input class="form-control" ng-show="newUser.city=='Other'|| newUser.country =='Other' || newUser.state =='Other'" type="text" name="otherCity" ng-model="newUser.otherCity" placeholder="*Other Location" ng-required= "newUser.city == 'Other'" ng-disabled="newUser.city != 'Other'">
                   </div> 
                 </div>
                 <div class="row">

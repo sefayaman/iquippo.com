@@ -64,6 +64,7 @@ router.post('/banner', controller.createBanner);
 router.put('/banner/:id', controller.updateBanner);
 router.delete('/banner/:id', controller.deleteBanner);
 router.post('/banner/onfilter', controller.getBannerOnFilter);
+router.post('/importLocation',controller.importLocation);
 
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
