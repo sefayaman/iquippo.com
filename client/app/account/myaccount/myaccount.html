@@ -74,7 +74,7 @@
                     <div class="row form-group">
                       <div class="col-sm-3">
                         <div class="input-group" ng-class="{'has-error': basicInfoForm.country.$invalid && submitted}">
-                          <select class="basic-detail" ng-model="myAccountVm.userInfo.country" name="country" required>
+                          <select class="basic-detail" ng-model="myAccountVm.userInfo.country" name="country" ng-change="myAccountVm.onCountryChange(myAccountVm.userInfo.country)" required>
                             <option value="">Select Country*</option>
                             <option  ng-repeat ="country in allCountries" value="{{country.name}}">{{country.name}}</option>
                           </select>
