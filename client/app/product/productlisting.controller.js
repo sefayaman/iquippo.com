@@ -72,6 +72,9 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   }
 
   function loadProducts(filter){
+    if(vm.currentPage == prevPage)
+      return;
+    
     filter.prevPage = prevPage;
     filter.currentPage = vm.currentPage;
     filter.first_id = first_id;
