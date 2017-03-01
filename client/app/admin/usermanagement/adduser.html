@@ -86,7 +86,7 @@
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.address.$invalid && submitted }">
                     <input type="text" class="form-control" name="address" value="" placeholder="Address" ng-model="newUser.address" ng-maxlength="150" >
                     <p class="help-block"
-                       ng-show="(form.address.$error.maxlength || submitted">
+                       ng-show="form.address.$error.maxlength && submitted">
                       Address must not exceed 150 characters.
                     </p>
                   </div>                  

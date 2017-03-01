@@ -22,6 +22,7 @@ var UserSchema = new Schema({
   email: { type: String, lowercase: true },
   panNumber:String,
   aadhaarNumber:String,
+  address:String,
   isOtherCountry:Boolean,
   isOtherState:Boolean,
   isOtherCity:Boolean,

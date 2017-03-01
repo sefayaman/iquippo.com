@@ -37,7 +37,7 @@
                   </h3>
                   <!-- Full Name end -->
                   <!-- Location start -->
-                  <h4><i class="fa fa-map-marker"></i> <span ng-if="myAccountVm.userInfo.country || myAccountVm.userInfo.city">{{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}</span><span ng-if="!myAccountVm.userInfo.country && !myAccountVm.userInfo.city">Add country and location</span></h4>
+                  <h4><i class="fa fa-map-marker"></i> <span ng-if="myAccountVm.userInfo.address">{{myAccountVm.userInfo.address}}</span> <span ng-if="myAccountVm.userInfo.country || myAccountVm.userInfo.city">{{myAccountVm.userInfo.country}}, {{myAccountVm.userInfo.city}}</span><span ng-if="!myAccountVm.userInfo.country && !myAccountVm.userInfo.city">Add country and location</span></h4>
                   
                   <!-- Location end -->
                   <!-- Company Name Start-->
@@ -72,6 +72,17 @@
                     <!-- Full Name end -->
                     <!-- Location start -->
                     <div class="row form-group">
+                      <div class="col-sm-12">
+                        <div class="input-group" ng-class="{'has-error': basicInfoForm.address.$invalid && submitted }">
+                          <textarea class="basic-detail" ng-model="myAccountVm.userInfo.address" cols="52" name="address" placeholder="Address" ng-maxlength="150"></textarea>
+                          <p class="help-block"
+                             ng-show="basicInfoForm.address.$error.maxlength && submitted">
+                            Address must not exceed 150 characters.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group">
                       <div class="col-sm-3">
                         <div class="input-group" ng-class="{'has-error': basicInfoForm.country.$invalid && submitted}">
                           <select class="basic-detail" ng-model="myAccountVm.userInfo.country" name="country" ng-change="myAccountVm.onCountryChange(myAccountVm.userInfo.country)" required>
@@ -81,9 +92,17 @@
                         </div>
                       </div>
                       <div class="col-sm-3">
-                        <div class="input-group">
-                          <select ng-model="myAccountVm.userInfo.city" ng-change="myAccountVm.onLocationChange(myAccountVm.userInfo.city)">
-                            <option value="">Select City</option>
+                        <div class="input-group" ng-class="{'has-error': basicInfoForm.country.$invalid && submitted}">
+                          <select class="basic-detail" ng-model="myAccountVm.userInfo.state" name="country" ng-change="myAccountVm.onStateChange(myAccountVm.userInfo.state)" required>
+                            <option value="">*Select State</option>
+                            <option ng-repeat="state in stateList" value="{{state.name}}">{{state.name}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="input-group" ng-class="{'has-error': form.location.$invalid && submitted }">
+                          <select name="location" ng-model="myAccountVm.userInfo.city" required>
+                            <option value="">*Select Location</option>
                             <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                           </select>
                         </div>
