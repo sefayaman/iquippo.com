@@ -17,6 +17,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     $scope.uploadDoc = uploadDoc;
     vm.updateManpowerUser = updateManpowerUser;
     vm.onCountryChange = onCountryChange;
+    vm.onLocationChange = onLocationChange;
 
     vm.editBasicInfo = false;
     vm.editPersonalInfo = false;
@@ -232,6 +233,10 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
+    }
+
+    function onLocationChange(city) {
+      vm.userInfo.state = LocationSvc.getStateByCity(city);
     }
 
     function cloneUser(){

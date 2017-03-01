@@ -82,7 +82,7 @@
                       </div>
                       <div class="col-sm-3">
                         <div class="input-group">
-                          <select ng-model="myAccountVm.userInfo.city">
+                          <select ng-model="myAccountVm.userInfo.city" ng-change="myAccountVm.onLocationChange(myAccountVm.userInfo.city)">
                             <option value="">Select City</option>
                             <option ng-repeat="location in locationList" value="{{location.name}}">{{location.name}}</option>
                           </select>
@@ -191,7 +191,7 @@
               </div>
               <!-- lable end -->
               <!-- form start -->
-              <form  ng-if="myAccountVm.editPersonalInfo">
+              <form ng-if="myAccountVm.editPersonalInfo" novalidate name="personalInfoForm">
                 <div class="row form-group">
                   <div class="col-sm-3 form-group">
                     <div><label>Date of Birth</label></div>
@@ -220,11 +220,16 @@
                 <div class="row form-group">
                   <div class="col-sm-3">
                     <label>PAN Number</label> <br>
-                    <input type="text" placeholder="PAN Number" ng-model="myAccountVm.userInfo.panNumber">
+                    <div class="form-group" ng-class="{'has-error':personalInfoForm.panNumber.$invalid && submitted}">
+                      <input type="text" class="basic-detail" placeholder="PAN Number" name="panNumber" ng-disabled="!isAdmin()" ng-model="myAccountVm.userInfo.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
+                    </div>
                   </div>
                   <div class="col-sm-3">
                     <label>AADHAAR Number</label><br>
-                    <input type="text" placeholder="AADHAAR Number" ng-model="myAccountVm.userInfo.aadhaarNumber">
+                    <div class="form-group" ng-class="{'has-error':personalInfoForm.aadhaarNumber.$invalid && submitted}">
+                      <input type="text" class="basic-detail" placeholder="AADHAAR Number" name="aadhaarNumber" ng-disabled="!isAdmin()" ng-model="myAccountVm.userInfo.aadhaarNumber" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$"
+                      tooltip-placement="top">
+                    </div>
                   </div>
                 </div>
 
@@ -253,12 +258,11 @@
                 <div class="row form-group">
                   <div class="col-sm-12">
                     
-                    <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save()">Save</button>
+                    <button class="btn btn-sm btn-primary" ng-click="myAccountVm.save(personalInfoForm, false)">Save</button>
                     <button class="btn btn-sm btn-default" ng-click="myAccountVm.cancelEditOrAdd('personal')">Cancel</button>
                   </div>
                 </div>
               </form>
-              
               <!-- form end -->
               </uib-accordion-group>
               <uib-accordion-group is-open="status.Secdopen" ng-if="!myAccountVm.userInfo.isManpower">
