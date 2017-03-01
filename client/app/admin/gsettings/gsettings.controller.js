@@ -278,22 +278,26 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
 
         }
 
-        alert("I am through")
+       // alert("I am through")
         $rootScope.loading = true;
         uploadSvc.upload(files[0],importDir)
         .then(function(result){
           var fileName = result.data.filename;
           var user=Auth.getCurrentUser();
-          alert(fileName);
+          //alert(fileName);
           $rootScope.loading = true;
           return LocationSvc.importExcel(fileName,user);
         })
          .then(function(res){
-            alert(res);
-            console.log("importExcel",res)
+        Modal.alert(res.message);
+           loadAllLocation();
+           loadAllCountry();
+           loadAllState();
+           $rootScope.loading = false;
          })
          .catch(function(err){
             console.log(err);
+            $rootScope.loading = false;
 
         })
     }
