@@ -16,6 +16,8 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     $scope.updateAvatar = updateAvatar;
     $scope.uploadDoc = uploadDoc;
     vm.updateManpowerUser = updateManpowerUser;
+    vm.onCountryChange = onCountryChange;
+    vm.onLocationChange = onLocationChange;
 
     vm.editBasicInfo = false;
     vm.editPersonalInfo = false;
@@ -27,10 +29,10 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     $scope.docDir = "";
   
     function inti(){
-      LocationSvc.getAllLocation()
+      /*LocationSvc.getAllLocation()
           .then(function(result){
           $scope.locationList = result;
-      });
+      });*/
       /*SubCategorySvc.getAllSubCategory()
       .then(function(result){
         result.forEach(function(item){
@@ -221,10 +223,26 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       });
     }
 
+    function onCountryChange(country,noChange){
+      if(!noChange)
+        vm.userInfo.city = "";
+      
+      $scope.locationList = [];
+      var filter = {};
+      filter.country = country;
+      LocationSvc.getLocationOnFilter(filter).then(function(result){
+          $scope.locationList = result;
+      });
+    }
+
+    function onLocationChange(city) {
+      vm.userInfo.state = LocationSvc.getStateByCity(city);
+    }
+
     function cloneUser(){
        if(Auth.getCurrentUser()._id){
         angular.copy(Auth.getCurrentUser(), vm.userInfo);
-
+      onCountryChange(vm.userInfo.country, true);  
       ManpowerSvc.getManpowerDataOnUserId(Auth.getCurrentUser()._id).then(function(data){
         angular.copy(data, vm.manpowerInfo);
         if(vm.manpowerInfo.availableFrom)
