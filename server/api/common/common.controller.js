@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var xslx = require('xlsx');
+var xlsx = require('xlsx');
 var Seq = require('seq');
 var trim = require('trim');
 var Country = require('./country.model');
@@ -1334,8 +1334,16 @@ exports.searchState = function(req,res){
 	    return res.status(200).json(ctArr);
    })
 }*/
+
+
+var _create = function(body, cb) {
+
+	
+};
+
+
 function validateData(data) {
-	var err = ['country', 'state','Location'].filter(function(x) {
+	var err = ['country', 'state','location','countryCode'].filter(function(x) {
 		if (!data[x])
 			return x;
 	});
@@ -1346,52 +1354,61 @@ exports.importLocation=function(req,res,next){
 		var fileName = req.body.fileName;
 		//var user = req.body.user;
 		//var type = req.query.type || 'technical';
-		 console.log("I am here",fileName);
+		 //console.log("I am here",fileName);
 
 		//debug(user);
-		var workbooks = null;
+		var workbook = null;
 		try {
 			console.log("Path where file uploaded",importPath + fileName);
-			workbooks = xlsx.readFile(importPath + fileName);
+			workbook = xlsx.readFile(importPath + fileName);
 		} catch (e) {
+			console.log(e);
 			//debug(e);
 			return next(new APIError(400, 'Error while parsing excel sheet'));
 		}
 
-		if (!workbooks)
+		if (!workbook)
 			return next(new APIError(404, 'No Excel sheet found for upload'));
 
 		var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
 		var data = xlsx.utils.sheet_to_json(worksheet);
           
-          console.log(data);
+          //console.log(data);
+		
 		var errObj = [];
 		var totalCount = data.length;
+		//console.log("data.length",totalCount);
 
 		var field_map = {
 			'Country': 'country',
 			'State': 'state',
-			'Location':'Location'
+			'Location':'location',
+			'Country Code':'countryCode'
 		};
 
 		var hd = getHeaders(worksheet);
-		var headers = ['Country','State','Location']
+		console.log("hd",hd);
+		var headers = ['Country','State','Location','Country Code']
 		if (!validateHeader(hd, headers)) {
+			//console.log("not in");
 			return res.status(500).send("Wrong template");
 		}
 
 		var err;
 
 		data = data.filter(function(x) {
+			console.log("x",x);
 			Object.keys(x).forEach(function(key) {
+				console.log("key",key);
 				if (field_map[key]) {
 					x[field_map[key]] = x[key];
 				}
 				x.rowCount = x.__rowNum__
-				x.type = type;
+				//x.type = type;
 				delete x[key];
 			})
+			//console.log("data filter",data);
 
 			err = validateData(x);
 			if (err.length)
@@ -1403,6 +1420,7 @@ exports.importLocation=function(req,res,next){
 				return x;
 		});
 
+          		
 		if (!data.length) {
 			return res.json({
 				errObj: errObj,
@@ -1415,28 +1433,39 @@ exports.importLocation=function(req,res,next){
 		async.forEachLimit(data, 5, intialize, finalize);
 
 		function intialize(info, cb) {
-			console.log("initialize info",info)
-			/*_create(info, function(err, result) {
-				debug(result);
-				if (err && err.status === 409) {
-					errObj.push({
-						Error: 'Duplicate Entry ',
-						rowCount: info.rowCount
-					});
-					return cb();
-				}
+			var query={name:info.country}
+            var stateObj={
+            	name:"info.state",
+            	country:"info.country",
+            	user:"info.user"
+            }
 
-				if (err && err.status === 404) {
-					errObj.push({
-						Error: err.message,
-						rowCount: info.rowCount
-					});
-					return cb();
-				}
+			Country.find(query)
+			.then(function(data){
+				if(data.length)
+				return State.find({name:info.state});
+			    else
+			    return Country.create({name:"info.Country",countryCode:"info.countryCode"});
+			})
+			.then(function(data){
+				if(data.length)
+					return City.find({name:info.city});
+                else 
+                	return State.create({name:"info.state",country:"info.country",user:"info.user"});
+			})
+			.then(function(data){
+				if(data.length)
+					return cb(null,"already exists");
+				else
+					return City.create({name:"info.location",})
 
-				return cb();
-			})*/
-		}
+			})
+			.catch(function(err){
+             console.log(err);
+			})
+
+			}
+		
 
 		function finalize(err) {
 			/*if (err) {
