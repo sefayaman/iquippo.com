@@ -260,7 +260,6 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     function importExcel(file,currentUser){
       var url = path + '/importLocation';
-      alert("I am in lservices");
       return $http.post(url,{fileName:file,user:currentUser})
         .then(function(res){
           return res.data;
