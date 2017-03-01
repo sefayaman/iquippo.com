@@ -221,13 +221,13 @@
                   <div class="col-sm-3">
                     <label>PAN Number</label> <br>
                     <div class="form-group" ng-class="{'has-error':personalInfoForm.panNumber.$invalid && submitted}">
-                      <input type="text" class="basic-detail" placeholder="PAN Number" name="panNumber" ng-disabled="myAccountVm.userInfo.panNumber" ng-model="myAccountVm.userInfo.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
+                      <input type="text" class="basic-detail" placeholder="PAN Number" name="panNumber" ng-disabled="panNumber" ng-model="myAccountVm.userInfo.panNumber" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top">
                     </div>
                   </div>
                   <div class="col-sm-3">
                     <label>AADHAAR Number</label><br>
                     <div class="form-group" ng-class="{'has-error':personalInfoForm.aadhaarNumber.$invalid && submitted}">
-                      <input type="text" class="basic-detail" placeholder="AADHAAR Number" name="aadhaarNumber" ng-disabled="myAccountVm.userInfo.aadhaarNumber" ng-model="myAccountVm.userInfo.aadhaarNumber" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$"
+                      <input type="text" class="basic-detail" placeholder="AADHAAR Number" name="aadhaarNumber" ng-disabled="aadhaarNumber" ng-model="myAccountVm.userInfo.aadhaarNumber" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$"
                       tooltip-placement="top">
                     </div>
                   </div>

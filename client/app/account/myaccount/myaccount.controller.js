@@ -109,6 +109,12 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
           break;
           case 'personal':
           vm.editPersonalInfo = true;
+          $scope.panNumber = "";
+          $scope.aadhaarNumber = "";
+          if(vm.userInfo.panNumber)
+            $scope.panNumber = vm.userInfo.panNumber;
+          if(vm.userInfo.aadhaarNumber)
+            $scope.aadhaarNumber = vm.userInfo.aadhaarNumber;
           break;
           case 'professional':
            vm.editProfessionalInfo = true;
