@@ -186,6 +186,12 @@
 			    			<div class="col-sm-6 text-right">
 			    				<h4>
 			    					<button class="btn btn-success" ng-click="gsettingVm.exportProductState('location')"> <i class="fa fa-file-excel-o"></i> Export</button>
+			    					<div class="btn btn-success pull-right">
+					      <span class="fileinput-button">
+		                         <span><i class="fa fa-file-excel-o"></i> Import Excel</span>
+		                         <input type="file" name="importfile" onchange="angular.element(this).scope().importLocation(this.files,this)">
+		                     </span>
+					     </div>
 			    				</h4>
 			    			</div>
 			    		</div>

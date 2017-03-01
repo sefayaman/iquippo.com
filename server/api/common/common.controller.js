@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var xslx = require('xlsx');
 var Seq = require('seq');
 var trim = require('trim');
 var Country = require('./country.model');
@@ -18,7 +19,6 @@ var fs = require('fs');
 var gm = require("gm");
 var fsExtra = require('fs.extra');
 var _ = require('lodash');
-
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
 var Category = require('./../category/category.model');
@@ -32,7 +32,18 @@ var SavedSearch = require('./savedsearch.model');
 
 var importPath = config.uploadPath + config.importDir + "/";
 
-var  xslx = require('xlsx');
+
+
+//
+
+var APIError = require('../../components/_error');
+var debug = require('debug')('api.productinfo.controller');
+//var _ = require('lodash');
+var validator = require('validator');
+var async = require('async');
+
+
+//
 
 exports.sendOtp = function(req,res){
 	var isOnMobile = req.body.otpOn == 'mobile'?true:false;
@@ -663,6 +674,8 @@ function validateHeader(headersInFile,headers){
 
 	return ret;
 }
+
+
 
 function getHeaders(worksheet){
 	var headers = [];
@@ -1321,6 +1334,121 @@ exports.searchState = function(req,res){
 	    return res.status(200).json(ctArr);
    })
 }*/
+function validateData(data) {
+	var err = ['country', 'state','Location'].filter(function(x) {
+		if (!data[x])
+			return x;
+	});
+	return err;
+}
+
+exports.importLocation=function(req,res,next){
+		var fileName = req.body.fileName;
+		//var user = req.body.user;
+		//var type = req.query.type || 'technical';
+		 console.log("I am here",fileName);
+
+		//debug(user);
+		var workbooks = null;
+		try {
+			console.log("Path where file uploaded",importPath + fileName);
+			workbooks = xlsx.readFile(importPath + fileName);
+		} catch (e) {
+			//debug(e);
+			return next(new APIError(400, 'Error while parsing excel sheet'));
+		}
+
+		if (!workbooks)
+			return next(new APIError(404, 'No Excel sheet found for upload'));
+
+		var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+		var data = xlsx.utils.sheet_to_json(worksheet);
+          
+          console.log(data);
+		var errObj = [];
+		var totalCount = data.length;
+
+		var field_map = {
+			'Country': 'country',
+			'State': 'state',
+			'Location':'Location'
+		};
+
+		var hd = getHeaders(worksheet);
+		var headers = ['Country','State','Location']
+		if (!validateHeader(hd, headers)) {
+			return res.status(500).send("Wrong template");
+		}
+
+		var err;
+
+		data = data.filter(function(x) {
+			Object.keys(x).forEach(function(key) {
+				if (field_map[key]) {
+					x[field_map[key]] = x[key];
+				}
+				x.rowCount = x.__rowNum__
+				x.type = type;
+				delete x[key];
+			})
+
+			err = validateData(x);
+			if (err.length)
+				errObj.push({
+					Error: err.toString(),
+					rowCount: x.rowCount
+				});
+			else
+				return x;
+		});
+
+		if (!data.length) {
+			return res.json({
+				errObj: errObj,
+				message: 'No data found for upload'
+			});
+		}
+
+
+
+		async.forEachLimit(data, 5, intialize, finalize);
+
+		function intialize(info, cb) {
+			console.log("initialize info",info)
+			/*_create(info, function(err, result) {
+				debug(result);
+				if (err && err.status === 409) {
+					errObj.push({
+						Error: 'Duplicate Entry ',
+						rowCount: info.rowCount
+					});
+					return cb();
+				}
+
+				if (err && err.status === 404) {
+					errObj.push({
+						Error: err.message,
+						rowCount: info.rowCount
+					});
+					return cb();
+				}
+
+				return cb();
+			})*/
+		}
+
+		function finalize(err) {
+			/*if (err) {
+				debug(err);
+			}
+
+			res.json({
+				errObj: errObj,
+				message: (totalCount - errObj.length) + ' out of ' + totalCount + ' uploaded successfully'
+			});*/
+		}
+	}
 
 exports.searchAssetId= function(req,res){
 	

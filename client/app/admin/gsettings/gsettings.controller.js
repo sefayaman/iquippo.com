@@ -94,6 +94,9 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     vm.totalProductTechInfoCount = 0;
     $scope.productTechTotalItems = 0;
     vm.closeTechInfo = closeTechInfo;
+
+    //import location
+    $scope.importLocation=importLocation;
     
     
     //vm.auctionSearchFilter = {};
@@ -263,6 +266,35 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
     		vm.brandList = result;
     	})
 
+    }
+
+    function importLocation(files,_this){
+        if(!files[0])
+            return;
+        if(files[0].name.indexOf('.xlsx') == -1){
+            Modal.alert('Please upload a valid file');
+            $(_this).val('')
+            return;
+
+        }
+
+        alert("I am through")
+        $rootScope.loading = true;
+        uploadSvc.upload(files[0],importDir)
+        .then(function(result){
+          var fileName = result.data.filename;
+          alert(fileName);
+          $rootScope.loading = true;
+          return LocationSvc.importExcel(fileName);
+        })
+         .then(function(res){
+            alert(res);
+            console.log("importExcel",res)
+         })
+         .catch(function(err){
+            console.log(err);
+
+        })
     }
 
     function onBrandChange(brandName,reset){
