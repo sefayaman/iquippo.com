@@ -283,9 +283,10 @@ function GSettingCtrl($scope,$rootScope,Auth,DTOptionsBuilder,LocationSvc,notifi
         uploadSvc.upload(files[0],importDir)
         .then(function(result){
           var fileName = result.data.filename;
+          var user=Auth.getCurrentUser();
           alert(fileName);
           $rootScope.loading = true;
-          return LocationSvc.importExcel(fileName);
+          return LocationSvc.importExcel(fileName,user);
         })
          .then(function(res){
             alert(res);
