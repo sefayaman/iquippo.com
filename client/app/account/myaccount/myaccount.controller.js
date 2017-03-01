@@ -17,8 +17,8 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     $scope.uploadDoc = uploadDoc;
     vm.updateManpowerUser = updateManpowerUser;
     vm.onCountryChange = onCountryChange;
-    vm.onLocationChange = onLocationChange;
-
+    vm.onStateChange = onStateChange;
+    
     vm.editBasicInfo = false;
     vm.editPersonalInfo = false;
     vm.editProfessionalInfo = false;
@@ -27,6 +27,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     vm.getDateFormat = getDateFormat;
     var path = '/api/products';
     $scope.docDir = "";
+    var filter = {};
   
     function inti(){
       /*LocationSvc.getAllLocation()
@@ -106,9 +107,22 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         switch(param){
           case 'basic':
             vm.editBasicInfo = true; 
+            onCountryChange(vm.userInfo.country, true);  
+            if(vm.userInfo.state)
+              onStateChange(vm.userInfo.state, true);  
+            else {
+              var state = LocationSvc.getStateByCity(vm.userInfo.city);
+              onStateChange(state, true);
+            }
           break;
           case 'personal':
           vm.editPersonalInfo = true;
+          $scope.panNumber = "";
+          $scope.aadhaarNumber = "";
+          if(vm.userInfo.panNumber)
+            $scope.panNumber = vm.userInfo.panNumber;
+          if(vm.userInfo.aadhaarNumber)
+            $scope.aadhaarNumber = vm.userInfo.aadhaarNumber;
           break;
           case 'professional':
            vm.editProfessionalInfo = true;
@@ -224,25 +238,37 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     }
 
     function onCountryChange(country,noChange){
+      if(!noChange) {
+        vm.userInfo.state = "";
+        vm.userInfo.city = "";
+      }
+      
+      $scope.stateList = [];
+      $scope.locationList = [];
+      filter = {};
+      filter.country = country;
+      LocationSvc.getStateHelp(filter).then(function(result){
+          $scope.stateList = result;
+      });
+    }
+
+     function onStateChange(state,noChange){
       if(!noChange)
         vm.userInfo.city = "";
       
       $scope.locationList = [];
-      var filter = {};
-      filter.country = country;
+      filter = {};
+      filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
     }
 
-    function onLocationChange(city) {
-      vm.userInfo.state = LocationSvc.getStateByCity(city);
-    }
-
     function cloneUser(){
        if(Auth.getCurrentUser()._id){
         angular.copy(Auth.getCurrentUser(), vm.userInfo);
-      onCountryChange(vm.userInfo.country, true);  
+      // onCountryChange(vm.userInfo.country, true);  
+      // onStateChange(vm.userInfo.state, true);  
       ManpowerSvc.getManpowerDataOnUserId(Auth.getCurrentUser()._id).then(function(data){
         angular.copy(data, vm.manpowerInfo);
         if(vm.manpowerInfo.availableFrom)
