@@ -41,6 +41,8 @@
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>PAN Number</th>
+                  <th>AADHAAR Number</th>
                   <th>Role</th>
                   <th>User Type</th>
                   <th>Company Name</th>
@@ -58,6 +60,8 @@
                 <tr ng-repeat="user in userManagementVm.userList">
                   <td>{{user.fname}} {{user.mname}} {{user.lname}}</td>
                   <td>{{user.email}}</td>
+                  <td>{{user.panNumber}}</td>
+                  <td>{{user.aadhaarNumber}}</td>
                   <td>
                     <span ng-if="user.role == 'customer'">Customer</span>
                     <!-- <span ng-if="user.role == 'admin'">Admin</span> -->
