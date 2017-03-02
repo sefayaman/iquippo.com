@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var xlsx = require('xlsx');
+var xslx = require('xlsx');
 var Seq = require('seq');
 var trim = require('trim');
 var Country = require('./country.model');
@@ -1765,7 +1765,7 @@ exports.importLocation = function(req, res, next) {
 	//debug(user);
 	var workbook = null;
 	try {
-		workbook = xlsx.readFile(importPath + fileName);
+		workbook = xslx.readFile(importPath + fileName);
 	} catch (e) {
 		
 		//debug(e);
@@ -1777,7 +1777,7 @@ exports.importLocation = function(req, res, next) {
 
 	var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-	var data = xlsx.utils.sheet_to_json(worksheet);
+	var data = xslx.utils.sheet_to_json(worksheet);
 
 	//console.log(data);
 
@@ -1867,7 +1867,7 @@ exports.importLocation = function(req, res, next) {
 		}
 
 		function fetchState(callback){
-			State.find({name : info.state}, function(err, states) {
+			State.find({name : info.state,country:info.country}, function(err, states) {
 				if (err || !states)
 					return callback(err || 'Error while fetching states');
 				
@@ -1884,7 +1884,7 @@ exports.importLocation = function(req, res, next) {
 		}
 
 		function fetchLocation(callback){
-			City.find({name : info.location}, function(err, cities) {
+			City.find({name : info.location,"state.name":stateObj.name,"state.country":stateObj.country}, function(err, cities) {
 				if (err || !cities)
 					return callback(err || 'Error while fetching countries');
 				
@@ -1915,6 +1915,7 @@ exports.importLocation = function(req, res, next) {
 
 	function finalize(err) {
 		return res.json({
+			errObj: errObj,
 			message: (totalCount - errObj.length) +' '+ 'records uploaded successfully' 
 		});
 	}

@@ -180,20 +180,24 @@
 			    <uib-tab heading="Location">
 			        <form name="locationForm" novalidate class="locationForm">
 			    		<div class="row">
-			    			<div class="col-sm-6">
+			    			<div class="col-sm-8">
 			    				<h4>Add Location</h4>
 			    			</div>
-			    			<div class="col-sm-6 text-right">
+			    			<div class="col-sm-2 text-right">
 			    				<h4>
 			    					<button class="btn btn-success" ng-click="gsettingVm.exportProductState('location')"> <i class="fa fa-file-excel-o"></i> Export</button>
-			    					<div class="btn btn-success pull-right">
-					      <span class="fileinput-button">
-		                         <span><i class="fa fa-file-excel-o"></i> Import Excel</span>
-		                         <input type="file" name="importfile" onchange="angular.element(this).scope().importLocation(this.files,this)">
-		                     </span>
-					     </div>
 			    				</h4>
 			    			</div>
+			    			<div class="col-sm-2">
+					      		<h4>
+					      			<button class="btn btn-block btn-success">
+						      			<span class="fileinput-button">
+			                         		<span><i class="fa fa-file-excel-o"></i> Import Excel</span>
+			                         		<input type="file" name="importfile" onchange="angular.element(this).scope().importLocation(this.files,this)">
+			                     		</span>
+						      		</button>
+					      		</h4>
+					     	</div>
 			    		</div>
 			    		<legend></legend>
 			          <div class="row">
