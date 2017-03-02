@@ -529,7 +529,7 @@
                           </div>
                           <div class="col-xs-12 col-sm-4">
                             <div>
-                              <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" class="btn btn-warning btn-block">Buy Now</a>
+                              <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning btn-block">Buy Now</a>
                             </div>
                           </div>
                         </div>
@@ -549,7 +549,7 @@
                       </div>
                       <div class="col-sm-4 text-right">
                         <div>
-                          <a href="javascript:void(0);"  ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
+                          <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
                         </div>
                       </div>
                       </form>
@@ -592,7 +592,7 @@
                       </table>
                     </div>
                     <div class="text-right">
-                       <button type="submit" class="btn btn-warning" ng-click="negotiate('forRent','rent')">Get it Now</button>
+                       <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning" ng-click="negotiate('forRent','rent')">Get it Now</button>
                     </div>
                   </form>
                     <hr>
@@ -704,7 +704,7 @@
                       </tr>
                     </table>
                   </li>
-                  <li>
+                  <li ng-if="currentProduct.assetStatus != 'sold'">
                     VAT, TCS and Parking Charges as applicable and payable by the buyer.
                   </li>
                 </ul>
@@ -770,7 +770,7 @@
                     <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="reqFinance.message" placeholder="Comments"></textarea>
                     </div>
-                    <button type="submit" ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-warning pull-right">Submit</button>
+                    <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-warning pull-right">Submit</button>
                   </form>   
                   <strong>Note:</strong> Financing at the sole discretion of the financier.               
               </div>
@@ -813,7 +813,7 @@
                       <i class="caret"></i>
                     </div>
                   </div>
-                  <button type="submit" ng-click="valuationVm.submitValuationReq(valReqForm)" class="btn btn-warning pull-right">Submit</button>
+                  <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="valuationVm.submitValuationReq(valReqForm)" class="btn btn-warning pull-right">Submit</button>
                   <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
                 </form>
               </div>
@@ -879,7 +879,7 @@
                     <div class="form-group">
                       <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
+                    <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
                     <strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000
                 </form>
               </div>
