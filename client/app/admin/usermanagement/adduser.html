@@ -144,7 +144,7 @@
 
                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
-                      <span class="input-group-addon">{{code}}</span>
+                      <span class="input-group-addon" ng-show="newUser.country">+{{code}}</span>
                       <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
                     </div>
                   </div>
