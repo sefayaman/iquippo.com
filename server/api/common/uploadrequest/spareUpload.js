@@ -315,7 +315,7 @@ function _insertSpareData(uploadData, cb) {
 					var modelsList = modelsObj[singleCatBrandModel[2]];
 					if (!modelsList || !modelsList.length) {
 						err = 'Invalid Locations';
-						return true;
+						return middleCb();
 					}
 					modelsList.forEach(function(l) {
 						if (singleCatBrandModel[0] === l[1].name && singleCatBrandModel[1] === l[2].name) {
