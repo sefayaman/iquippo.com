@@ -313,7 +313,7 @@ function _insertSpareData(uploadData, cb) {
 
 				if (singleCatBrandModel[2].toLowerCase() !== 'all') {
 					var modelsList = modelsObj[singleCatBrandModel[2]];
-					if (!modelsList.length) {
+					if (!modelsList || !modelsList.length) {
 						err = 'Invalid Locations';
 						return true;
 					}
