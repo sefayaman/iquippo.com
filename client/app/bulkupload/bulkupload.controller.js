@@ -141,16 +141,19 @@
               var message = res.successObj + " out of " + totalRecord + " records are  processed successfully.";
               if (res.errObj.length > 0 || res.duplicateRecords.length) {
                 var data = {};
+                var subject = 'Bulk produt upload error details.';
+                if(type === 'spareUpload'){
+                  template = 'BulkSpareUploadError';
+                  subject = 'Bulk Spare upload error details';
+                }
                 data['to'] = Auth.getCurrentUser().email;
-                data['subject'] = 'Bulk produt upload error details.';
+                data['subject'] = subject ;
                 var serData = {};
                 serData.serverPath = serverPath;
                 serData.errorList = res.errObj;
                 if (res.duplicateRecords.length)
                   serData.errorList = serData.errorList.concat(res.duplicateRecords);
-                if(type === 'spareUpload'){
-                  template = 'BulkSpareUploadError';
-                }
+                
                 notificationSvc.sendNotification(template, data, serData, 'email');
                 message += "Error details have been sent on registered email id.";
               }
