@@ -1782,6 +1782,7 @@ exports.importLocation = function(req, res, next) {
 	//console.log(data);
 
 	var errObj = [];
+	var successCount = 0;
 	var totalCount = data.length;
 	//console.log("data.length",totalCount);
 
@@ -1801,17 +1802,17 @@ exports.importLocation = function(req, res, next) {
 	var err;
 
 	data = data.filter(function(x) {
-		console.log("x", x);
 		Object.keys(x).forEach(function(key) {
 				console.log("key", key);
 				if (field_map[key]) {
-					x[field_map[key]] = x[key];
+					x[field_map[key]] = x[key] && x[key].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 				}
 				x.rowCount = x.__rowNum__
 					//x.type = type;
 				delete x[key];
 			})
-			//console.log("data filter",data);
+	    
+	 		//console.log("data filter",data);
 
 		err = validateData(x);
 		if (err.length)
@@ -1823,19 +1824,41 @@ exports.importLocation = function(req, res, next) {
 			return x;
 	});
 
+	var dupRowNums = data.filter(function(x){
+		return x.rowCount;
+	});
+
+	data = _.uniq(data,function(e){
+		return e.country,e.state,e.location,e.countryCode,e.rowCount;
+	});
+
+	data.forEach(function(x){
+		dupRowNums.splice(dupRowNums.indexOf(x.rowCount),1);	
+	});
+
+	dupRowNums.forEach(function(x){
+		errObj.push({
+			Error : 'Duplicate Row in excel',
+			rowCount : x
+		})
+	});
+	
+
+
 
 	if (!data.length) {
 		return res.json({
 			errObj: errObj,
-			message: 'No data found for upload'
+			message: 'No data found for upload,error has been sent to your email id'
 		});
 	}
 
-
+    
 
 	async.forEachLimit(data, 5, intialize, finalize);
 
 	function intialize(info, cb) {
+
 		info.user = user;
 		var query = {
 			name: info.country
@@ -1894,6 +1917,7 @@ exports.importLocation = function(req, res, next) {
 					City.create({name:info.location,state:stateObj},function(err,resp){
 						if(err || !resp)
 							return callback(err || 'Error while creating new city');
+						successCount++;
 						return callback();
 					})
 				}
@@ -1916,7 +1940,7 @@ exports.importLocation = function(req, res, next) {
 	function finalize(err) {
 		return res.json({
 			errObj: errObj,
-			message: (totalCount - errObj.length) +' '+ 'records uploaded successfully' 
+			message: successCount +' '+ 'records uploaded successfully' 
 		});
 	}
 }
