@@ -522,7 +522,7 @@ function setType(cell){
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:11, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:15, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     
@@ -552,7 +552,27 @@ function excel_from_data(data) {
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-     if(R == 0)
+    if(R == 0)
+      cell = {v: "PAN Number"};
+    else {
+      if(user)
+        cell = {v: user.panNumber || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "AADHAAR Number"};
+    else {
+      if(user)
+        cell = {v: user.aadhaarNumber || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
       cell = {v: "Role"};
     else {
       if(user)
@@ -607,6 +627,26 @@ function excel_from_data(data) {
     else {
       if(user)
         cell = {v: user.country || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "State"};
+    else {
+      if(user)
+        cell = {v: user.state || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
+
+    if(R == 0)
+      cell = {v: "Location"};
+    else {
+      if(user)
+        cell = {v: user.city || ""};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
