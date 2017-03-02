@@ -549,7 +549,7 @@
                       </div>
                       <div class="col-sm-4 text-right">
                         <div>
-                          <a href="javascript:void(0);"  ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
+                          <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
                         </div>
                       </div>
                       </form>
@@ -704,7 +704,7 @@
                       </tr>
                     </table>
                   </li>
-                  <li>
+                  <li ng-if="currentProduct.assetStatus != 'sold'">
                     VAT, TCS and Parking Charges as applicable and payable by the buyer.
                   </li>
                 </ul>
