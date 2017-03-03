@@ -1803,7 +1803,7 @@ exports.importLocation = function(req, res, next) {
 
 	data = data.filter(function(x) {
 		Object.keys(x).forEach(function(key) {
-				console.log("key", key);
+				
 				if (field_map[key]) {
 					x[field_map[key]] = x[key] && x[key].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 				}
