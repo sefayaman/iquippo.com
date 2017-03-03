@@ -10,8 +10,9 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
     vm.assetDir = "";
     vm.spare = {};
     vm.container = {};
-
+    $scope.show = true;
     vm.isEdit = false;
+    $scope.spare = [];
 
     vm.images = [{isPrimary:true}];
     vm.primaryIndex = 0;
@@ -137,7 +138,7 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
         vm.isEdit = true;
 
       spareSvc.getSpareOnId($stateParams.id, true).then(function(response){
-          
+          $scope.spare = response;
           vm.spare = response;
           angular.copy(vm.spare.images, vm.images);
           vm.images.forEach(function(item,index){
