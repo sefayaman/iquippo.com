@@ -83,7 +83,7 @@
                    <tr>
                       <td>Location</td>
                       <td class="description-ellips">
-                        <span uib-tooltip="Country:{{loc.country}},State:{{loc.state}}" tooltip-placement="bottom" tooltip-trigger="mouseenter" ng-repeat="loc in spareDetailVm.currentSpare.locations | limitTo : 3" ng-if="loc.city">{{loc.city}} </span> 
+                        <span uib-tooltip="Country:{{loc.country}},State:{{loc.state}}" tooltip-placement="bottom" tooltip-trigger="mouseenter" ng-repeat="loc in spareDetailVm.currentSpare.locations | limitTo : 3" ng-if="loc.city">{{loc.city}}, </span> 
                         <a href="javascript:void(0);" ng-click="spareDetailVm.openLocationList()" >more..</a> 
                       </td>
                       <!-- <td class="description-ellips" uib-popover="{{spareDetailVm.currentSpare.locations}}" popover-trigger="mouseenter">{{spareDetailVm.currentSpare.locations}}</td> -->
