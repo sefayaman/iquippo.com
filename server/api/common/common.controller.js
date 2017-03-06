@@ -1641,6 +1641,9 @@ exports.searchCity = function(req, res) {
 		};
 	}
 
+	if (req.body.cityName)
+		filter['name'] = req.body.cityName;
+
 	if (req.body.country)
 		filter['state.country'] = req.body.country;
 
