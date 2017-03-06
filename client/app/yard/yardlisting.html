@@ -1,0 +1,487 @@
+<div id="wrapper">
+  	<div id="page-wrapper">
+    	<div class="container-fluid">
+	      	<h3>Yards &amp; Workshops</h3>		      	
+		    <hr>	
+		    <div class="row form-group">
+		    	<div class="col-sm-3">
+		    		<select class="form-control">
+		    			<option value="yard">Yards Listing</option>
+		    			<option value="workshop">Workshops Listing</option>
+		    			<option value="booking">Booking Listing</option>
+		    			<option value="invoice">Invoice Listing</option>
+		    		</select>
+		    		<i class="caret"></i>
+		    	</div>
+		    </div>
+		    <!-- Yard Listing -->
+		    <div>
+			    <div class="row form-group">
+			    	<div class="col-sm-8">
+			    		<h4>Yards Listing</h4>
+			    	</div>
+			    	<div class="col-sm-4 text-right">
+			    		<button type="button" class="btn btn-success"ng-click="isCollapsed = !isCollapsed"><i class="fa" ng-class="{'fa-minus': !isCollapsed, 'fa-plus': isCollapsed}"></i> Add New</button>
+			    	</div>
+			    </div>	   
+			    <legend></legend>
+
+			    <!-- add new -->
+			    <uib-tabset justified="true" uib-collapse="isCollapsed">
+	              <uib-tab heading="Yard Information" index="0" active="tabObj.step1">  
+	              <div class="form-group"></div>            	
+	              	<div class="asset-details">
+		              	<div class="row form-group">
+		              		<div class="col-sm-4 form-group">
+		              			<input type="text" class="form-control" placeholder="*Yard Name">
+		              		</div>
+		              		<div class="col-sm-4 form-group">
+		              			<input type="text" class="form-control" placeholder="*Yard Location">
+		              		</div>
+		              		<div class="col-sm-4 form-group">
+		              			<select class="form-control">
+		              				<option>*Yard Manager</option>
+		              				<option>1</option>
+		              				<option>2</option>
+		              				<option>3</option>
+		              			</select>
+		              			<i class="caret"></i>
+		              		</div>	              		          		
+		              	</div>
+		              	
+		              	
+		                <div class="panel panel-default">
+		                	<div class="panel-heading">
+		                		<h3 class="panel-title">Services Available</h3>
+		                	</div>
+		                	<div class="panel-body">
+		                		<div class="row">
+				                	<div class="col-sm-3">
+				                		<input id="checkbox1" type="checkbox">
+			                        		<label for="checkbox1">
+			                        		 	Asset Cleaning
+			                        		 </label>
+			                        </div>
+
+				                	<div class="col-sm-3">
+				                		<input id="checkbox2" type="checkbox">
+			                        		<label for="checkbox2">
+			                        		 	Operator Assistance
+			                        		 </label>
+			                        </div>
+
+				                	<div class="col-sm-3">
+				                		<input id="checkbox3" type="checkbox">
+			                        		<label for="checkbox3">
+			                        		 	Battery Top-up &amp;Charging
+			                        		</label>
+			                        </div>
+
+				                	<div class="col-sm-3">
+				                		<input id="checkbox4" type="checkbox">
+			                        		<label for="checkbox4">
+			                        		 	 Fuel Refilling
+			                        		 </label>
+			                        </div>
+		                		</div>
+		                	</div>
+		                </div>
+
+		                <div class="panel panel-default">
+	                     	<div class="panel-heading">
+	                     		<h3 class="panel-title">Amenities</h3>
+	                     	</div>
+		                        <div class="panel-body">
+		                         	<div class="row">
+					                	<div class="col-sm-5 form-group">
+					                		<input id="checkbox5" type="checkbox">
+			                        			<label for="checkbox5">
+			                        		 	Assesing Equipment &amp; Providing Repair Estimate
+			                        		 	</label>
+			                        	</div>
+					                	<div class="col-sm-3 form-group">
+					                		<input id="checkbox6" type="checkbox">
+			                        			<label for="checkbox6">
+			                        		 	Spare Parts
+			                        		 	</label>
+			                        	</div>
+					                	<div class="col-sm-4 form-group">
+					                		<input id="checkbox7" type="checkbox">
+			                        			<label for="checkbox7">
+			                        		 	Inward &amp; Outward Register
+			                        		 	</label>
+			                        	</div>
+		                			</div>
+					                <div class="row">
+					                	<div class="col-sm-5 form-group">
+					                		<input id="checkbox8" type="checkbox">
+			                        			<label for="checkbox8">
+			                        		 	Cafe (Food &amp; Tea Junction)
+			                        		 	</label>
+			                        	</div>
+					                	<div class="col-sm-3 form-group">
+					                		<input id="checkbox9" type="checkbox">
+			                        			<label for="checkbox9">
+			                        		 	Security
+			                        		 	</label>
+			                        	</div>
+					                	<div class="col-sm-4 form-group">
+					                		<input id="checkbox10" type="checkbox">
+			                        			<label for="checkbox10">
+			                        		 	Compund Wall
+			                        		 	</label>
+			                        	</div>
+					                </div>
+					                <div class="row">
+					                		<div class="col-sm-5">
+					                		<input id="checkbox11" type="checkbox">
+			                        			<label for="checkbox11">
+			                        		 	Documention
+			                        		 	</label>
+			                        	</div>
+					                	<div class="col-sm-3">
+					                		<input id="checkbox12" type="checkbox">
+			                        			<label for="checkbox12">
+			                        		 	CCTV Coverage
+			                        		 	</label>
+			                        	</div>
+					                	</div>
+		                        </div>
+		                </div>         
+		                
+
+		                <div class="panel panel-default">
+		                	<div class="panel-heading">
+		                		<h3 class="panel-title">Workshop Available </h3>
+		                	</div>
+		                	<div class="panel-body">
+				                <div class="row">
+				                	<div class="col-sm-3">
+						              	<input type="radio" id="Radio1" name="rad" value="yes">
+				                            <label for="Radio1"> Yes </label>	               
+					              	</div>
+				                	<div class="col-sm-3">
+						              	<input type="radio" id="Radio2" name="rad" value="no">
+				                            <label for="Radio2"> No </label>		               
+					              	</div>
+				                </div>
+		                	</div>
+		                </div>
+		               
+		               
+		              	<div class="row form-group">
+		              		<div class="col-sm-offset-8 col-sm-2">
+		              			<button type="button" class="btn btn-default btn-block">Reset</button>
+		              		</div>
+		              		<div class="col-sm-2">
+		              			<button type="button" class="btn btn-danger btn-block">Submit</button>
+		              		</div>
+		              	</div>	              	
+	              	</div>
+	              </uib-tab>
+	              <uib-tab heading="Slot &amp; Rental Information" index="1" active="tabObj.step2">
+	              	<h4>Rental Information</h4>
+	              	<legend></legend>
+	              	
+		            <table class="table table-bordered">
+	            		<thead>
+	            			<tr>
+	            				<th>Asset Type</th>
+	            				<th>Quantity(Slots)</th>
+	            				<th>Cost For 1 day(upto 6 days)</th>
+	            				<th>Cost For a week(upto 2 weeks)</th>
+	            				<th>Cost For a month(more than 2 weeks)</th>
+	            				<th>Action</th>
+	            			</tr>
+	            		</thead>
+	            		<tbody>
+	            			<tr>            				
+	            				<td>Type 1</td>
+	            				<td>
+	            					<input type="number" class="form-control" name="" value="" placeholder="Quantity">
+	            				</td>
+	            				<td>
+	            					<input type="number" class="form-control" name="" value="" placeholder="Rs.">
+	            				</td>
+	            				<td>
+	            					<input type="number" class="form-control" name="" value="" placeholder="Rs.">
+	            				</td>
+	            				<td>
+	            					<input type="number" class="form-control" name="" value="" placeholder="Rs.">
+	            				</td>
+	            				<td>
+			                        <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+			                        <i class="fa fa-pencil"></i>
+			                      	</a>			                      	
+			                      	<button class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash"></i>
+	                      			</button>
+	                      			<button class="btn btn-success btn-sm" uib-popover="Add more" popover-trigger="mouseenter"><i class="fa fa-plus"></i>
+	                      			</button>
+	                    		</td>
+	            				
+	            			</tr>
+	            		</tbody>
+	            	</table>              
+	             	<div class="row form-group">
+	              		<div class="col-sm-offset-8 col-sm-2">
+	              			<button type="button" class="btn btn-default btn-block">Reset</button>
+	              		</div>
+	              		<div class="col-sm-2">
+	              			<button type="button" class="btn btn-danger btn-block">Submit</button>
+	              		</div>
+	              	</div>	   
+	              </uib-tab>
+	            </uib-tabset>
+
+	            <div class="table-responsive">
+	            	<table class="table table-bordered">
+	            		<thead>
+	            			<tr>
+	            				
+	            				<th>Yard Name</th>
+	            				<th>Yard Location</th>
+	            				<th>Yard Manager</th>
+	            				<th>Total No. of Slots</th>
+	            				<th>No. of Slots Booked</th>
+	            				<th>No. of Slots Vacant</th>
+	            				<th>Workshop Available</th>
+	            				<th>Action</th>
+	            			</tr>
+	            		</thead>
+	            		<tbody>
+	            			<tr>            				
+	            				
+	            				<td></td>
+	            				<td></td>
+	            				<td></td>
+	            				<td></td>
+	            				<td></td>
+	            				<td></td>
+	            				<td></td>
+	            				<td>
+			                      <a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter">
+			                        <i class="fa fa-pencil"></i>
+			                      </a>
+			                      <button class="btn btn-danger btn-sm" uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash"></i>
+	                      		</button>
+	                    		</td>
+	            			</tr>
+	            		</tbody>
+	            	</table>            	
+	            </div>
+	            <uib-pagination total-items="spareListingVm.totalItems" ng-model="spareListingVm.currentPage" items-per-page="spareListingVm.itemsPerPage" max-size="spareListingVm.maxSize" ng-change="spareListingVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	        </div>
+
+	        <!-- workshop listing -->
+	       <!--  <div>
+	        	<h4>Add New Workshop</h4>
+              	<legend></legend>
+              	<div class="row">
+              		<div class="col-sm-9">
+		              	<div class="row">
+		              		<div class="col-sm-4 form-group">
+		              			<input type="text" class="form-control" placeholder="Workshop Name">
+		              		</div>              		
+		              		<div class="col-sm-4 form-group">
+		              			<select class="form-control">
+		              				<option>Select Category *</option>
+		              			</select>
+		              			<i class="caret"></i>
+		              		</div>
+		              		<div class="col-sm-4 form-group">
+		              			<select class="form-control">
+		              				<option>Select Brand*</option>
+		              			</select>
+		              			<i class="caret"></i>
+		              		</div>
+		              		<div class="col-sm-4 form-group">
+		              			<input type="text" class="form-control" placeholder="Address">
+		              		</div>            		
+		              		<div class="col-sm-4 form-group">
+		              			<select class="form-control">
+		              				<option>Select Country*</option>
+		              			</select>
+		              			<i class="caret"></i>
+		              		</div>	              		
+		              		<div class="col-sm-4 form-group">
+		              			<select class="form-control">
+		              				<option>Select State*</option>
+		              			</select>
+		              			<i class="caret"></i>
+		              		</div>
+		              		<div class="col-sm-4 form-group">
+		              			<select class="form-control">
+		              				<option>Select Location*</option>
+		              			</select>
+		              			<i class="caret"></i>
+		              		</div>
+		              	</div>
+		            </div>
+		            <div class="col-sm-3">
+		            	<select class="form-control" name="" multiple>
+		            		<option value="">Select Model*</option>
+		            		<option value="">Model1</option>
+		            		<option value="">Model2</option>
+		            		<option value="">Model3</option>
+		            		<option value="">Model4</option>
+		            		
+		            	</select>         	
+		            </div>
+	            </div>
+	            <div class="panel panel-default">
+	            	<div class="panel-heading">
+	            		<h3 class="panel-title">Types of services </h3>
+	            	</div>
+	            	<div class="panel-body">
+	            		<div class="row form-group">
+	            			<div class="col-sm-5">
+	            				<input type="text" class="form-control" placeholder="Service type name">
+	            			</div>
+	            			<div class="col-sm-5">
+	            				<input type="text" class="form-control" placeholder="Description of that service">
+	            			</div>
+	            			<div class="col-sm-2">
+	            				<button class="btn btn-block active" ng-click="" ng-if="!$last">Add More</button>
+	                          <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+	            			</div>
+	            		</div>
+	            		
+	            	</div>
+	            </div>
+	            <div class="panel panel-default">
+	            	<div class="panel-heading">
+	            		<h3 class="panel-title">Contact Information of the Workshop (Service Station)</h3>
+	            	</div>
+	            	<div class="panel-body">
+	            		<form action="" method="">
+	            			<div class="row">
+	            				<div class="col-sm-3 form-group">
+	            					<input type="text" class="form-control" placeholder="First Name*">
+	            				</div>
+	            				<div class="col-sm-3 form-group">
+	            					<input type="text" class="form-control" placeholder="Middel Name">
+	            				</div>
+	            				<div class="col-sm-3 form-group">
+	            					<input type="text" class="form-control" placeholder="Last Name*">
+	            				</div>
+	            				<div class="col-sm-3 form-group">
+	            					<input type="text" class="form-control" placeholder="Address">
+	            				</div>
+	            			</div>
+	            			<div class="row">
+	            				<div class="col-sm-3 form-group">
+			              			<select class="form-control">
+			              				<option>Select Country*</option>
+			              			</select>
+			              			<i class="caret"></i>
+			              		</div>	              		
+			              		<div class="col-sm-3 form-group">
+			              			<select class="form-control">
+			              				<option>Select State*</option>
+			              			</select>
+			              			<i class="caret"></i>
+			              		</div>
+			              		<div class="col-sm-3 form-group">
+			              			<select class="form-control">
+			              				<option>Select Location*</option>
+			              			</select>
+			              			<i class="caret"></i>
+			              		</div>
+			              		<div class="col-sm-3">
+	            					<input type="number" class="form-control" placeholder="ZIP Code">
+	            				</div>
+	            			</div>
+	            			<div class="row">
+	            				<div class="col-sm-3">
+	            					<input type="text" class="form-control" placeholder="Phone Number">
+	            				</div>
+	            				<div class="col-sm-3">
+	            					<div class="input-group">
+	            						<span class="input-group-addon"></span>
+	            						<input type="text" class="form-control" placeholder="Mobile Number">
+	            					</div>
+	            				</div>
+	            				<div class="col-sm-3">
+	            					<input type="email" class="form-control" placeholder="Email">
+	            				</div>	            				
+	            			</div>
+	            		</form>
+	            	</div>
+	            </div>
+	            <div class="panel panel-default">
+	            	<div class="panel-heading">
+	            		<h3 class="panel-title">Upload Workshop images</h3>
+	            	</div>
+	            	<div class="panel-body">
+	            		<div class="row pic-popover">
+	                        <div class="col-sm-2 col-xs-6 primary-upload text-center">
+		                        <div class="br5">
+		                            <span class="fileinput-button browse-icon" ng-show="!img.src">
+		                                <span><i class="fa fa-plus-circle"></i></span>
+		                                  <input type="file" name="files_{{$index}}"  data-index="{{$index}}" data-filetype="image" image-upload>
+		                             </span>
+		                              <span ng-show="img.src">
+		                                <div class="icn2">
+		                                  <a href="javascript:void(0);" ng-click="deleteImg($index,images)"><i class="fa fa-times" ng-if="!img.isPrimary"></i></a>
+		                               </div>
+		                               <div class="icn">
+		                                  <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
+		                               </div>
+		                                <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
+		                                    <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+		                                  </a>
+		                                </span>
+		                              </span>
+		                        </div>
+	                           <span ng-show="img.src"><input type="radio" name="prvRadio" value="{{$index}}" ng-click="makePrimary($index,images)" ng-checked="img.isPrimary"/>Primary</span>
+	                        </div>
+	                         <div class="col-sm-2 clearfix">
+	                          <button class="btn btn-block active" ng-click="images.push({})" ng-if="!$last">Add More</button>
+	                          <button class="btn btn-block active" ng-click="" ng-if="$last">Delete</button>
+	                        </div> 
+	                    </div>
+	            	</div>
+	            </div>
+
+	            <div class="panel panel-default">
+	            	<div class="panel-heading">
+	            		<h3 class="panel-title">Authorized Workshop(Service Station)</h3>
+	            	</div>
+	            	<div class="panel-body">
+	            		<div class="row">
+	            			<div class="col-sm-3">
+	            				<select class="form-control">
+	            					<option>Select Model</option>
+	            					<option>Model1</option>
+	            					<option>Model2</option>
+	            					<option>Model3</option>
+	            				</select>
+	            				<i class="caret"></i>
+	            			</div>
+	            			<div class="col-sm-1">
+	            				<input type="radio" name="authorized"> Yes
+	            			</div>	            			
+	            			<div class="col-sm-1">
+	            				<input type="radio" name="authorized"> No
+	            			</div>
+	            			<div class="col-sm-2">
+	            				<span class="btn btn-warning fileinput-button">
+	                           		<input type="file" name="doc"  data-filetype="doc" file-upload>
+	                            	<span><i class="fa fa-upload"></i> Upload Certificate</span>
+	                          	</span>
+	            			</div>
+	            		</div>
+	            	</div>
+	            </div>
+
+	            <div class="row">
+	            	<div class="col-sm-12 text-right">
+	            		<button type="button" class="btn btn-default">Reset</button>
+	            		<button type="button" class="btn btn-danger">Submit</button>
+	            	</div>
+	            </div>
+	        </div> -->
+
+		</div>
+	</div>
+</div>

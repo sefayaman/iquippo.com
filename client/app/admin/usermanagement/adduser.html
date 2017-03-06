@@ -12,6 +12,7 @@
                       <option value="" disabled>*Role</option>
                       <option value="customer">Customer</option>
                       <option value="channelpartner" ng-if="!isChannelPartner()">Channel Partner</option>
+                      <option value="enterprise">Enterprise Valuation</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -54,7 +55,23 @@
                   </p>
                   </div>
                 </div>
-
+                <div class="row">
+                  <div class="col-sm-4 form-group">
+                    <input type="checkbox" name="" value=""> New
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <select class="form-control">
+                      <option>Select Enterprise</option>
+                      <option>Option1</option>
+                      <option>Option2</option>
+                      <option>Option3</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>
+                  <div class="col-sm-4 form-group">
+                    <input type="text" name="" value="" class="form-control" placeholder="Full Name" disabled>
+                  </div>
+                </div>
                 <div class="row">                  
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
                   <input type="password" name="password" class="form-control" ng-model="newUser.password"
@@ -64,7 +81,7 @@
                      mongoose-error/>
                     <p class="help-block"
                        ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
-                      Password must be at least 4 characters.
+                      <small>Password must be at least 4 characters.</small>
                     </p>
                     <p class="help-block" ng-show="form.password.$error.mongoose">
                       {{ errors.password }}
