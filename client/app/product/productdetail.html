@@ -205,28 +205,6 @@
                   <uib-accordion-heading>
                     Price Trend<i class="pull-right fa" ng-class="{'fa-minus': status.pricetrend, 'fa-plus': !status.pricetrend}"></i>
                   </uib-accordion-heading>
-                  <!-- <table class="table table-striped">
-                    <tr>
-                      <td>Category</td>
-                      <td>Excavator</td>
-                    </tr>
-                    <tr>
-                      <td>Brand</td>
-                      <td>Tata</td>
-                    </tr>
-                    <tr>
-                      <td>Model</td>
-                      <td>Tipper</td>
-                    </tr>
-                    <tr>
-                      <td>Manufacturing Year</td>
-                      <td>2016</td>
-                    </tr>
-                    <tr>
-                      <td>Sale Year</td>
-                      <td>2016</td>
-                    </tr>
-                   </table> -->
 
                   <table class="table">
                       <thead>
@@ -239,7 +217,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
+                        <tr ng-if="priceTrendData.trendValue.oemPrice.excellentCondition || priceTrendData.trendValue.oemPrice.goodCondition || priceTrendData.trendValue.oemPrice.averageCondition">
                           <td><b>OEM / Dealer Estimation</b></td>
                           <td>
                          Rs.{{priceTrendData.trendValue.oemPrice.excellentCondition}}
@@ -253,7 +231,7 @@
                           </td>
                          
                         </tr>
-                        <tr>
+                        <tr ng-if="priceTrendData.trendValue.averagePrice.excellentCondition || priceTrendData.trendValue.averagePrice.goodCondition || priceTrendData.trendValue.averagePrice.averageCondition">
                           <td><b>Average Price</b></td>
                           <td>
                          Rs.{{priceTrendData.trendValue.averagePrice.excellentCondition}}
@@ -267,7 +245,7 @@
                           </td>
                          
                         </tr>
-                        <tr>
+                        <tr ng-if="priceTrendData.trendValue.highestRealisedPrice.excellentCondition || priceTrendData.trendValue.highestRealisedPrice.goodCondition || priceTrendData.trendValue.highestRealisedPrice.averageCondition">
                           <td><b>Highest Realised Price</b></td>
                           <td>
                          Rs.{{priceTrendData.trendValue.highestRealisedPrice.excellentCondition}}
@@ -337,15 +315,15 @@
                       <td>Manufacturing Year</td>
                       <td>{{currentProduct.mfgYear}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.operatingHour">
                       <td>Operating Hours/HMR</td>
                       <td>{{currentProduct.operatingHour}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.mileage">
                       <td>Mileage/KMR</td>
                       <td>{{currentProduct.mileage}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.serialNo">
                     <td>Machine Serial No.</td>
                     <td>{{currentProduct.serialNo}}</td>
                   </tr>
@@ -370,11 +348,11 @@
                        {{currentProduct.grossPrice |number:0}} </span>
                       </td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.productCondition">
                       <td>Product Condition</td>
                       <td>{{currentProduct.productCondition}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.documentName">
                       <td>Documents</td>
                       <td>                        
                         <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space"> 

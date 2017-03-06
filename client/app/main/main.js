@@ -232,8 +232,24 @@ angular.module('sreizaoApp')
       })
       .state('gSettings', {
         url: '/gsettings',
-        templateUrl: 'app/admin/gsettings/gsettings.html',
-         controller: 'GSettingCtrl as gsettingVm',
+        views : {
+          '' : {
+            templateUrl: 'app/admin/gsettings/gsettings.html',
+            controller: 'GSettingCtrl as gsettingVm',
+          },
+          'yardassettype@gSettings' : {
+            templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+            controller: 'AssetTypeCtrl as AssetTypeVm', 
+          },
+          // 'yardasservices@gSettings' : {
+          //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+          //   controller: 'AssetTypeCtrl as AssetTypeVm', 
+          // },
+          // 'yardasmanagement@gSettings' : {
+          //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+          //   controller: 'AssetTypeCtrl as AssetTypeVm', 
+          // }
+        },
         authenticate:true,
         layout:'admin',
         restrict:true
@@ -404,6 +420,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      // .state('yardassettype',{
+      //   url: '/gsettings/yards/assettype',
+      //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+      //   controller: 'AssetTypeCtrl as AssetTypeVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
 
        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
