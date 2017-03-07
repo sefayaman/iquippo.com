@@ -251,8 +251,6 @@ angular.module('sreizaoApp')
     function init(){
       if($scope.isEdit) {
         angular.copy($scope.userInfo, $scope.newUser);
-        // getCountryWiseState($scope.newUser.country, true);
-        // getStateWiseLocation($scope.newUser.state, true);
         if($scope.newUser.isOtherCountry == true){
           $scope.newUser.otherCountry = $scope.newUser.country;
           $scope.newUser.country = "Other"

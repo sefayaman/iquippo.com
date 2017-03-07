@@ -8,7 +8,7 @@
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
-                    <select class="form-control" name="role" ng-model="newUser.role" required>
+                    <select class="form-control" name="role" ng-model="newUser.role" ng-disabled="isEdit" required>
                       <option value="" disabled>*Role</option>
                       <option value="customer">Customer</option>
                       <option value="channelpartner" ng-if="!isChannelPartner()">Channel Partner</option>
