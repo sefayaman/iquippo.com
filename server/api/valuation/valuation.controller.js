@@ -200,7 +200,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Full Name"};
     else{
       if(valuation)
-        cell =  {v: (valuation.user.fname || "") + " " + (valuation.user.lname || "")};
+        cell =  {v: (valuation.user && valuation.user.fname || "") + " " + (valuation.user && valuation.user.lname || "")};
     }
     setCell(ws,cell,R,C++);
 
@@ -208,7 +208,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Country"};
     else{
       if(valuation)
-        cell =  {v: valuation.user.country || ""};
+        cell =  {v: valuation.user && valuation.user.country || ""};
     }
     setCell(ws,cell,R,C++);
 
@@ -216,7 +216,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Location"};
     else{
       if(valuation)
-        cell =  {v: valuation.user.city || ""};
+        cell =  {v: valuation.user && valuation.user.city || ""};
     }
     setCell(ws,cell,R,C++);
 
@@ -224,7 +224,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Phone No."};
     else{
       if(valuation)
-        cell =  {v: valuation.user.phone || ""};
+        cell =  {v: valuation.user && valuation.user.phone || ""};
     }
     setCell(ws,cell,R,C++);
 
@@ -232,7 +232,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Mobile No."};
     else{
       if(valuation)
-        cell =  {v: valuation.user.mobile || ""};
+        cell =  {v: valuation.user && valuation.user.mobile || ""};
     }
     setCell(ws,cell,R,C++);
 
@@ -240,7 +240,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Email Address"};
     else{
       if(valuation)
-        cell =  {v: valuation.user.email || ""};
+        cell =  {v: valuation.user && valuation.user.email || ""};
     }
     setCell(ws,cell,R,C++);
 
