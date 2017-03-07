@@ -319,32 +319,34 @@ exports.update = function(req, res) {
           dataObj['user.state'] = req.body.state;
         if(req.body.imgsrc)
           dataObj['user.imgsrc'] = req.body.imgsrc;
-        if(req.body.isPartner) {
-          updateVendor(dataObj, req.params.id);
-        }
-        if(req.body.isManpower) {
-          updateManpower(dataObj, req.params.id);
-        }
+        //if(req.body.isPartner) {
+          updateVendor(dataObj, req, res);
+        //}
+        //if(req.body.isManpower) {
+          updateManpower(dataObj, req, res);
+        //}
         return res.status(200).json(req.body);
     });
   });
 };
 
 //update partner
-  function updateVendor(userData, userId){
+  function updateVendor(userData, req, res){
+    var userId = req.params.id;
     userData.updatedAt = new Date();
     
     Vendor.update({'user.userId':userId},{$set:userData},function(err,userObj){
-      if(err){return handleError(res, err);}
+      if(err){console.log('error in partner updation',err);}
     });
   };
 
   //update manpower
-  function updateManpower(userData, userId){
+  function updateManpower(userData, req, res){
+    var userId = req.params.id;
     userData.updatedAt = new Date();
     
     ManpowerUser.update({'user.userId':userId},{$set:userData},function(err,userObj){
-      if(err){return handleError(res, err);}
+      if(err){console.log('error in manpower updation',err);}
     });
   };
 

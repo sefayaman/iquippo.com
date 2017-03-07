@@ -1,10 +1,10 @@
 <div id="adduser-modal">
         <div class="modal-header">
             <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Add User</h4>
+            <h4 class="modal-title">{{headerName}}</h4>
         </div>
           <div class="modal-body">            
-            <form name="form" novalidate>
+            <form class="form-signin" name="form" novalidate>
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
@@ -74,10 +74,10 @@
                 </div>
                 <div class="row">                  
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
-                  <input type="password" name="password" class="form-control" ng-model="newUser.password"
+                  <input type="password" name="password" class="form-control" ng-model="newUser.password" ng-disabled="isEdit"
                   placeholder="*Password" 
                      ng-minlength="4"
-                     required
+                     ng-required= "!isEdit"
                      mongoose-error/>
                     <p class="help-block"
                        ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
@@ -88,10 +88,10 @@
                     </p>
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.passwordCompare.$invalid && submitted }">
-                  <input type="password" name="passwordCompare" class="form-control" ng-model="newUser.passwordConfirm" valid-password-c="newUser.password"
+                  <input type="password" name="passwordCompare" class="form-control" ng-model="newUser.passwordConfirm" valid-password-c="newUser.password" ng-disabled="isEdit"
                   placeholder="*Confirm Password" 
                      ng-minlength="4"
-                     required
+                     ng-required= "!isEdit"
                      mongoose-error/>
                     <p class="help-block" ng-show="form.passwordCompare.$error.noMatch && submitted">
                       Passwords do not match.
@@ -161,8 +161,8 @@
 
                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
-                      <span class="input-group-addon" ng-show="newUser.country">+{{code}}</span>
-                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                      <span class="input-group-addon" ng-show="newUser.country != 'Other'">+{{code}}</span>
+                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" ng-disabled="isEdit" ng-required= "!isEdit">
                     </div>
                   </div>
               </div>

@@ -21,14 +21,30 @@ angular.module('sreizaoApp')
     vm.updateUser = updateUser;
     vm.fireCommand = fireCommand;
     vm.getRegisteredBy = getRegisteredBy;
-
+    vm.editUserClick = editUserClick;
+    vm.openAddUserDialog = openAddUserDialog;
+    
     vm.userSearchFilter = {};
     var dataToSend = {};
     vm.getProductData = getProductData;
     $scope.getConcatData = [];
+    $scope.userInfo = {};
     $scope.$on('updateUserList',function(){
       fireCommand(true);
     })
+
+    function editUserClick(userData) {
+      angular.copy(userData, $scope.userInfo)
+      var userScope = $rootScope.$new();
+      userScope.userInfo = $scope.userInfo;
+      userScope.isEdit = true;
+      Modal.openDialog('adduser', userScope);
+    }
+
+    function openAddUserDialog() {
+      $scope.isEdit = false;
+      Modal.openDialog('adduser');
+    } 
 
     function init(){
       Auth.isLoggedInAsync(function(loggedIn){
@@ -232,11 +248,44 @@ angular.module('sreizaoApp')
     $scope.getCountryWiseState=getCountryWiseState;
     $scope.getStateWiseLocation=getStateWiseLocation;
     
-    function getCountryWiseState(country){
-      $scope.newUser.state="";
-      $scope.newUser.city="";
-     var filter={};
-     filter.country = country;
+    function init(){
+      if($scope.isEdit) {
+        angular.copy($scope.userInfo, $scope.newUser);
+        // getCountryWiseState($scope.newUser.country, true);
+        // getStateWiseLocation($scope.newUser.state, true);
+        if($scope.newUser.isOtherCountry == true){
+          $scope.newUser.otherCountry = $scope.newUser.country;
+          $scope.newUser.country = "Other"
+          } else 
+          getCountryWiseState($scope.newUser.country, true);
+
+        if($scope.newUser.isOtherState == true){
+          $scope.newUser.otherState = $scope.newUser.state; 
+          $scope.newUser.state = "Other"
+        } else 
+          getStateWiseLocation($scope.newUser.state, true);
+        
+        if($scope.newUser.isOtherCity == true){
+          $scope.newUser.otherCity = $scope.newUser.city;
+          $scope.newUser.city = "Other"
+        }
+        $scope.headerName = "Edit User";
+      }
+      else {
+        $scope.newUser = {};
+        $scope.headerName = "Add User";
+      }
+    }
+
+    init();
+
+    function getCountryWiseState(country, noChange){
+      if(!noChange) {
+        $scope.newUser.state="";
+        $scope.newUser.city="";
+      }
+      var filter={};
+      filter.country = country;
       LocationSvc.getStateHelp(filter).then(function(result){
           $scope.stateList = result;
           $scope.locationList="";
@@ -252,8 +301,10 @@ angular.module('sreizaoApp')
       }
 
   }
-  function getStateWiseLocation(state){
-     $scope.newUser.city="";
+  function getStateWiseLocation(state,noChange){
+    if(!noChange) {
+      $scope.newUser.city="";
+    }
      var filter={};
      filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
@@ -274,38 +325,74 @@ angular.module('sreizaoApp')
     }
 
     if($scope.newUser.agree) {
-      var dataToSend = {};
-      if($scope.newUser.email) 
-        dataToSend['email'] = $scope.newUser.email;
-      if($scope.newUser.mobile) 
-        dataToSend['mobile'] = $scope.newUser.mobile;
-      if($scope.newUser.alternateMobile) 
-        dataToSend['alternateMobile']=$scope.newUser.alternateMobile;
-      Auth.validateSignup(dataToSend).then(function(data){
-        if(data.errorCode == 1){
-           Modal.alert("Mobile number already in use. Please use another mobile number",true);
-           return;
-        } else if(data.errorCode == 2){
-          Modal.alert("Email address already in use. Please use another email address",true);
-           return;
-        } else {
-          /*if(!$scope.newUser.imgsrc || angular.isUndefined($scope.newUser.imgsrc)){
+      if(!$scope.isEdit) {
+        var dataToSend = {};
+        if($scope.newUser.email) 
+          dataToSend['email'] = $scope.newUser.email;
+        if($scope.newUser.mobile) 
+          dataToSend['mobile'] = $scope.newUser.mobile;
+        if($scope.newUser.alternateMobile) 
+          dataToSend['alternateMobile']=$scope.newUser.alternateMobile;
+        Auth.validateSignup(dataToSend).then(function(data){
+          if(data.errorCode == 1){
+             Modal.alert("Mobile number already in use. Please use another mobile number",true);
+             return;
+          } else if(data.errorCode == 2){
+            Modal.alert("Email address already in use. Please use another email address",true);
+             return;
+          } else {
+            /*if(!$scope.newUser.imgsrc || angular.isUndefined($scope.newUser.imgsrc)){
+              saveNewUser();
+              return;
+            }
+            uploadSvc.upload($scope[$scope.imgsrc],avatarDir).then(function(result){
+              $scope.newUser.imgsrc = result.data.filename;
+              saveNewUser();
+            });*/
             saveNewUser();
-            return;
           }
-          uploadSvc.upload($scope[$scope.imgsrc],avatarDir).then(function(result){
-            $scope.newUser.imgsrc = result.data.filename;
-            saveNewUser();
-          });*/
-          saveNewUser();
-        }
-      });
+        });
+      } else {
+        updateUser();
+      }
     } else {
            Modal.alert("Please Agree to the Terms & Conditions",true);
     }
 
     };
 
+    function updateUser(){
+      $rootScope.loading = true;
+      setLocationData();
+      userSvc.updateUser($scope.newUser).then(function(result){
+        $rootScope.loading = false;
+        $scope.closeDialog();
+        Modal.alert("User updated successfully!",true);
+        $scope.newUser = {};
+        $rootScope.$broadcast('updateUserList');
+      })
+      .catch(function(err){
+        console.log("error in user update", err);
+      });
+    }
+
+    function setLocationData() {
+      if($scope.newUser.country == "Other"){
+      $scope.newUser.isOtherCountry=true;
+      $scope.newUser.country=$scope.newUser.otherCountry;
+    }
+
+    if($scope.newUser.state == "Other"){
+      $scope.newUser.isOtherState=true;
+     $scope.newUser.state=$scope.newUser.otherState; 
+    }
+
+    
+    if($scope.newUser.city == "Other"){
+      $scope.newUser.isOtherCity=true;
+      $scope.newUser.city=$scope.newUser.otherCity;
+    }
+    }
   function saveNewUser(){
      $scope.newUser.createdBy = {};
     if(Auth.getCurrentUser()._id) {
@@ -324,21 +411,8 @@ angular.module('sreizaoApp')
     } else {
       delete newUser.createdBy;
     }
-    if($scope.newUser.country == "Other"){
-      $scope.newUser.isOtherCountry=true;
-      $scope.newUser.country=$scope.newUser.otherCountry;
-    }
-
-    if($scope.newUser.state == "Other"){
-      $scope.newUser.isOtherState=true;
-     $scope.newUser.state=$scope.newUser.otherState; 
-    }
-
     
-    if($scope.newUser.city == "Other"){
-      $scope.newUser.isOtherCity=true;
-      $scope.newUser.city=$scope.newUser.otherCity;
-    }
+    setLocationData();
 
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){
