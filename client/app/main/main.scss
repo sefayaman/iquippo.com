@@ -225,7 +225,7 @@ header{background:#fff;}
 .sell-featured{position: relative; top: -4px;}
 .result-products img{width:150px;height:130px;}
 .input-group .input-group-addon{padding:0; border-radius:0; width:40px;}
-.input-group .input-group-addon.currency-width{width:100px;}
+.input-group .input-group-addon.currency-width{width:100px; border:0;}
 .calctr-info .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:80px;}
 .modal-content .input-group{width:100%;}
 .modal-content .input-group .input-group-addon{padding:0; border-radius:0; width:50px;}
@@ -1197,6 +1197,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     -webkit-box-shadow:-1px -1px 2px #666;
     box-shadow:-1px -1px 2px #666;
     }
-.sale-price{background: #e9e9e9; padding: 10px;}
+.sale-price{background: #e9e9e9; padding: 10px 15px;}
 .sale-price strong{padding: 5px 0 0; display: block; font-size: 18px; color: #444; font-weight: normal;}
 .bank-detail{list-style: none; margin-top: 15px;}
+.btn-warning.disabled, .btn-warning.disabled.active, .btn-warning.disabled:active, .btn-warning.disabled:focus, .btn-warning.disabled:hover, .btn-warning[disabled], .btn-warning[disabled].active, .btn-warning[disabled]:active, .btn-warning[disabled]:focus, .btn-warning[disabled]:hover, fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning.active, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:hover{background: #e5525b; border-color: #e5525b;}

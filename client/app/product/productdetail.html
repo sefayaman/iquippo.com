@@ -513,28 +513,29 @@
                         </div>
                       </div>
                     </form>
-                    <div class="row">
-                    <form novalidate class="negotiations" name="negotiations">
-                      <div class="col-sm-4">
-                        <h5>
-                          Make an Offer
-                        </h5>
-                      </div>
-                      <div class="col-sm-4">
-                        <div ng-class="{'has-error': negotiations.amount.$invalid && negotiationSubmitted}">
-                          <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
+                    <div class="">
+                      <form novalidate class="negotiations" name="negotiations">
+                        <div class="col-sm-4">
+                          <h5>
+                            Make an Offer
+                          </h5>
                         </div>
-                      </div>
-                      <div class="col-sm-4 text-right">
-                        <div>
-                          <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
+                        <div class="col-sm-4">
+                          <div ng-class="{'has-error': negotiations.amount.$invalid && negotiationSubmitted}">
+                            <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
+                          </div>
                         </div>
-                      </div>
+                        <div class="col-sm-4 text-right">
+                          <div>
+                            <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
+                          </div>
+                        </div>
                       </form>
                     </div>
+                    <div class="clearfix form-group"></div>
                     <hr>
-                    <div class="text-right">
-                      <button type="submit" class="btn btn-warning" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
+                    <div class="col-sm-offset-8 col-sm-4 text-right">
+                      <button type="submit" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                     </div>
               </div>
             </div>

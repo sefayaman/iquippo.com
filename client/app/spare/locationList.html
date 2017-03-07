@@ -4,11 +4,33 @@
     <h4 class="modal-title text-center">Location List</h4>
   </div>
   <div class="modal-body">
-     <div class="form-group col-sm-4">
-        <span class="badge" uib-tooltip="Country:{{loc.country}},State:{{loc.state}}" tooltip-placement="bottom" tooltip-trigger="mouseenter" ng-repeat="loc in spareVm.spare.locations" ng-if="loc.city">{{loc.city}} 
-        <a href="javascript:void(0);" ng-click="spareVm.spare.locations.splice($index, 1)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
-        <i class="fa fa-times" ></i></a></span>
-        </div>
+    <table class="table table-bordered">
+      <tr>
+        <th>Country</th>
+        <th>State</th>
+        <th>Location</th>
+        <th ng-if = "show">Action</th>
+      </tr>
+      <tr ng-repeat="loc in spare.locations" ng-if="loc.city">
+        <td>
+            {{loc.country}} 
+        </td>
+        <td>
+            {{loc.state}} 
+        </td>
+        <td>
+            {{loc.city}} 
+        </td>
+        <td ng-if = "show">
+          <a href="javascript:void(0);" ng-click="spareVm.spare.locations.splice($index, 1)" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+            <i class="fa fa-times" ></i></a>
+        </td>
+      </tr>
+    </table>
+     <!-- <div class="form-group col-sm-4">
+        <span class="badge" uib-tooltip="Country:{{loc.country}},State:{{loc.state}}" tooltip-placement="bottom" tooltip-trigger="mouseenter" >
+        </span>
+        </div> -->
   </div>  
   <div class="modal-footer">
     <button type="button" class="btn btn-lg btn-warning" ng-click="closeDialog()">Close</button>

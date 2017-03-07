@@ -74,6 +74,56 @@
 			<!--Select Location  -->
 			<div ng-if="gsettingVm.tabValue == 'loc'">
 				<uib-tabset justified="true">
+				<uib-tab heading="Country">
+					<form name="countryForm" novalidate class="countryForm">
+						<div class="row">
+			    			<div class="col-sm-6">
+			    				<h4>Add New Country</h4>
+			    			</div>
+			    			<!-- <div class="col-sm-6 text-right">
+			    				<h4>
+			    					<button class="btn btn-success" ng-click="gsettingVm.exportProductState('country')"> <i class="fa fa-file-excel-o"></i> Export</button>
+			    				</h4>
+			    			</div> -->
+			    		</div>
+			    		<legend></legend>
+			    		<div class="row">
+				          	<div class="form-group col-sm-4" ng-class="{'has-error': countryForm.countryName.$invalid && submitted}">
+				                <input id="countryName" name="countryName" ng-model="gsettingVm.country.name" type="text" class="form-control" placeholder="*Enter Country" required>
+				            </div>  
+				         	 <div class="form-group col-sm-4" ng-class="{'has-error': countryForm.countryCode.$invalid && submitted}">
+				                <input id="countryCode" name="countryCode" ng-model="gsettingVm.country.countryCode" type="text" class="form-control" placeholder="Enter ISD Code without '+' prefix" pattern="^\d{1,5}$" required>
+				            </div>                           	
+				           	<div class="form-group col-xs-4 col-sm-2 pull-right">
+				           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveCountry(countryForm)" ng-if="!gsettingVm.countryEdit">Save</button>
+				           		<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateCountry(countryForm)" ng-if="gsettingVm.countryEdit">Update</button>
+				           	</div>
+				           	
+				          </div>
+
+				          <table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+
+				              <thead>
+				               <tr>
+				               		<th>Country</th>
+				               	 	<th>ISD Code</th>                                
+				                	<th>Action</th>
+				               </tr>
+				               
+				              </thead>
+				              <tbody>
+				              <tr ng-repeat="country in gsettingVm.countryList">
+				              	<td>{{country.name}}</td>
+				                <td>{{country.countryCode}}</td>
+				                <td>
+				                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.countryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+									<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteCountry($index)"><i class="fa fa-trash"></i> </a>
+				                </td>
+				               </tr>
+				              </tbody>
+				            </table>
+					</form>
+				</uib-tab>
 				<uib-tab heading="State">
 			        <form name="stateForm" novalidate class="stateForm">
 			    		<div class="row">

@@ -7,11 +7,26 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
   vm.buycontact = {};
   vm.buycontact.contact = "mobile";
   vm.buycontact.interestedIn = "buyORrent";
-
+  $scope.show = false;
   vm.sendBuyRequest = sendBuyRequest;
   vm.previewProduct = previewProduct;
   vm.addSpareToCart = addSpareToCart;
   vm.buyNow = buyNow;
+  vm.openLocationList = openLocationList;
+
+  function closeDialog() {
+      if(modal)
+          modal.close();
+    }
+    var modal = null;
+    
+    function openLocationList(){
+      $scope.closeDialog = closeDialog;
+      modal = $uibModal.open({
+        templateUrl: 'app/spare/locationList.html',
+        scope: $scope
+      });
+    }
 
   function loadUserDetail(){
 
@@ -40,7 +55,9 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
 
     if($stateParams.id) {
       spareSvc.getSpareOnId($stateParams.id).then(function(result){
+        $scope.spare = result;
         vm.currentSpare = result;
+        console.log(result);
         $rootScope.currentSpare = vm.currentSpare;
         
         if(vm.currentSpare.images.length > 0){
