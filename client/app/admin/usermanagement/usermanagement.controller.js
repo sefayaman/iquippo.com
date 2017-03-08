@@ -49,7 +49,7 @@ angular.module('sreizaoApp')
     function init(){
       Auth.isLoggedInAsync(function(loggedIn){
         if(loggedIn){
-          if(Auth.getCurrentUser().role == 'admin') {
+          if(Auth.isAdmin()) {
             var filter = {};
             filter.role = "channelpartner";
             userSvc.getUsers(filter).then(function(data){
@@ -58,11 +58,20 @@ angular.module('sreizaoApp')
             .catch(function(err){
               Modal.alert("Error in geting user");
             })
+
+            filter.role = "enterprise";
+            filter.enterprise = true;
+            userSvc.getUsers(filter).then(function(data){
+            vm.enterpeises = data;
+            })
+            .catch(function(err){
+              Modal.alert("Error in geting user");
+            })
           }
 
-          if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
+          if(Auth.isChannelPartner() || Auth.isEnterprise()) {
             dataToSend["userId"] = Auth.getCurrentUser()._id;
-           }
+          }
 
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
@@ -128,9 +137,12 @@ angular.module('sreizaoApp')
         return user.createdBy.fname + " " + user.createdBy.lname + ' (Admin)';
       else if(user.createdBy.role == 'channelpartner') 
         return user.createdBy.fname + " " + user.createdBy.lname + ' (Channel Partner)';
-      else 
+      else if(user.createdBy.role == 'enterprise')
+        return user.createdBy.fname + " " + user.createdBy.lname + ' (Eneterprise)';
+      else
         return user.createdBy.fname + " " + user.createdBy.lname + ' (Self)';
     }
+
     function getProductsCountWithUser(result){
       var filter = {};
       var userIds = [];
@@ -244,6 +256,7 @@ angular.module('sreizaoApp')
     //$scope.users = [];
     $rootScope.userList = [];
     $scope.locationList = [];
+    $scope.enterprises = [];
     $scope.onLocationChange = onLocationChange;
     $scope.getCountryWiseState=getCountryWiseState;
     $scope.getStateWiseLocation=getStateWiseLocation;
@@ -276,6 +289,18 @@ angular.module('sreizaoApp')
     }
 
     init();
+
+    function getEnterprises(){
+      if(!Auth.isAdmin() && Auth.isEnterprise())
+        return;
+      var serData = {};
+      serData['status'] = true;
+      serData['role'] = 'enterprise';
+      if(Auth.isEnterprise())
+        serData['enterpriseName'] = Auth.getCurrentUser().enterpriseName;
+      userSvc.get
+
+    }
 
     function getCountryWiseState(country, noChange){
       if(!noChange) {
@@ -339,14 +364,6 @@ angular.module('sreizaoApp')
             Modal.alert("Email address already in use. Please use another email address",true);
              return;
           } else {
-            /*if(!$scope.newUser.imgsrc || angular.isUndefined($scope.newUser.imgsrc)){
-              saveNewUser();
-              return;
-            }
-            uploadSvc.upload($scope[$scope.imgsrc],avatarDir).then(function(result){
-              $scope.newUser.imgsrc = result.data.filename;
-              saveNewUser();
-            });*/
             saveNewUser();
           }
         });

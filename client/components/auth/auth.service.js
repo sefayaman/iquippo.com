@@ -185,6 +185,12 @@ angular.module('sreizaoApp')
        
         return currentUser.role === 'channelpartner';
       },
+      isEnterprise : function(){
+        return currentUser.role === 'enterprise' && currentUser.enterprise;
+      },
+      isEnterpriseUser : function(){
+        return currentUser.role === 'enterprise' && !currentUser.enterprise && currentUser.enterpriseName;
+      },
       isPartner: function() {
         return currentUser.isPartner;
       },
