@@ -335,11 +335,11 @@
                       <td>Location</td>
                       <td>{{currentProduct.city}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.tradeType != 'RENT'">
                       <td>Price (Excl. Tax).</td>
                       <td>
-                      <span ng-if="currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">Price On Request</span>
-                      <span ng-if="!currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">
+                      <span ng-if="currentProduct.priceOnRequest">Price On Request</span>
+                      <span ng-if="!currentProduct.priceOnRequest">
                       <!-- <b ng-if="currentProduct.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b> -->
                       <i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i>
                       <!-- <i class="fa fa-eur" ng-if="currentProduct.currencyType == 'EUR'"></i>
