@@ -169,6 +169,8 @@ bulkUpload.init = function(taskData, next) {
 				var rejectIds = [];
 				if (approvedObj.length) {
 					async.eachLimit(approvedIds, 5, iterator, finalize);
+				} else {
+					return next(false, taskData);
 				}
 
 
@@ -186,7 +188,7 @@ bulkUpload.init = function(taskData, next) {
 
 				function finalize(err) {
 					console.log(err);
-					AuctionController.bulkCreate(approvedObj, function(err,response) {
+					AuctionController.bulkCreate(approvedObj, function(err, response) {
 						taskData.data = data;
 						if (response && !response.Error && !response.errObj && response.sucessObj) {
 							taskData.uploadedProducts = uploadedProducts;
@@ -251,6 +253,8 @@ bulkUpload.init = function(taskData, next) {
 				var rejectIds = [];
 				if (approvedObj.length) {
 					async.eachLimit(approvedIds, 5, iterator, finalize);
+				} else {
+					return next(false, taskData);
 				}
 
 
