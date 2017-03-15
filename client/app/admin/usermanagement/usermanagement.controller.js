@@ -286,6 +286,7 @@ angular.module('sreizaoApp')
         $scope.newUser = {};
         $scope.headerName = "Add User";
       }
+      getEnterprises();
     }
 
     init();
@@ -296,9 +297,13 @@ angular.module('sreizaoApp')
       var serData = {};
       serData['status'] = true;
       serData['role'] = 'enterprise';
+      if(Auth.isAdmin())
+        serData['enterprise'] = true;
       if(Auth.isEnterprise())
         serData['enterpriseName'] = Auth.getCurrentUser().enterpriseName;
-      userSvc.get
+      userSvc.getUsers(serData).then(function(data){
+            $scope.enterprises = data;
+      });
 
     }
 
@@ -428,6 +433,10 @@ angular.module('sreizaoApp')
     }
     
     setLocationData();
+
+    if($scope.newUser.role == 'enterprise' && $scope.newUser.enterprise)
+        $scope.newUser.enterpriseName = $scope.newUser.fname + "_" + $scope.newUser.lname + "_" + $scope.newUser.mobile;
+
 
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){

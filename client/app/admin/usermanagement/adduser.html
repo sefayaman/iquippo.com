@@ -60,9 +60,9 @@
                     <input type="checkbox" name="isnew" ng-model="newUser.enterprise"> New
                   </div>
                   <div class="col-sm-8 form-group" ng-class="{'has-error': form.enterprise_name.$invalid && submitted }">
-                    <select class="form-control" name="enterprise_name"  ng-required="!newUser.enterprise" ng-disabled="newUser.enterprise" ng-model="newUser.entpriseName">
+                    <select class="form-control" name="enterprise_name"  ng-required="!newUser.enterprise" ng-disabled="newUser.enterprise" ng-model="newUser.enterpriseName">
                       <option value="">Select Enterprise</option>
-                      <option value="{{ent.entpriseName}}" ng-repeat="ent in enterprises">{{ent.fname}} {{ent.mname}} {{ent.lname}}({{ent.mobile}})</option>
+                      <option value="{{ent.enterpriseName}}" ng-repeat="ent in enterprises">{{ent.fname}} {{ent.mname}} {{ent.lname}}({{ent.mobile}})</option>
                     </select>
                     <i class="caret"></i>
                   </div>
