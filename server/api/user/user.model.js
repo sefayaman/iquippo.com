@@ -34,6 +34,8 @@ var UserSchema = new Schema({
   imgsrc: String,
   city:String,
   state: String,
+  enterprise:Boolean,
+  enterpriseName:String,
   status:{
     type: Boolean,
     default: true

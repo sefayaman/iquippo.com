@@ -1313,7 +1313,7 @@ exports.createSubscribe = function(req, res) {
 
 // Get list of Country
 exports.getAllCountry = function(req, res) {
-	Country.find().sort({
+	Country.find({}).sort({
 		name: 1
 	}).exec(function(err, country) {
 		if (err) {
