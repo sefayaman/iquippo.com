@@ -408,15 +408,10 @@ angular.module('sreizaoApp')
         controller: 'YardListingCtrl as YardListingVm',
         layout:'client'
       })
-      .state('usercreation', {
-        url: '/usercreation',
-        templateUrl: 'app/enterprises/usercreation.html',
-        authenticate:true,
-        layout:'admin'
-      })
       .state('enterprisevaluation', {
         url: '/enterprisevaluation',
-        templateUrl: 'app/enterprises/enterprisevaluation.html',
+        templateUrl: 'app/enterprise/enterprisevaluation.html',
+        controller: 'EnterpriseValuationCtrl as enterpriseVm',
         authenticate:true,
         layout:'admin'
       })
