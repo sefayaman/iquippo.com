@@ -24,7 +24,17 @@ function EnterpriseValuationCtrl($scope, $rootScope, Modal, Auth, $state, notifi
   var dataToSend = {};
   //$scope.isCollapsed = false;
 
- 	vm.requestTypeList = requestTypeList;
+ 	//vm.requestTypeList = requestTypeList;
+
+  vm.requestTypeList = [
+  {
+    name:"Valuation"
+  },
+  {
+    name:"Inspection"
+  }
+  ];
+
  	//vm.enterpriseNameList = enterpriseNameList;
 
  	vm.onCountryChange = onCountryChange;
