@@ -410,18 +410,45 @@ angular.module('sreizaoApp')
       })
       .state('enterprisevaluation', {
         url: '/enterprisevaluation',
+        abstract:true,
         templateUrl: 'app/enterprise/enterprisevaluation.html',
-        controller: 'EnterpriseValuationCtrl as enterpriseVm',
+        controller: 'EnterpriseValuationCtrl as enterpriseVm'
+      })
+      .state('enterprisevaluation.dashborad', {
+        url: '/dashboard',
+        templateUrl: 'app/enterprise/dashborad.html',
+        controller: 'EnterpriseDashboradCtrl as enterpriseDashboradVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('enterprisevaluation.transaction', {
+        url: '/transaction',
+        templateUrl: 'app/enterprise/transaction.html',
+        controller: 'EnterpriseTransactionCtrl as enterpriseTransactionVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('enterprisevaluation.invoicing', {
+        url: '/invoicing',
+        templateUrl: 'app/enterprise/invoicing.html',
+        controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('addtransaction', {
+        url: '/addtransaction',
+        templateUrl: 'app/enterprise/addtransaction.html',
+        controller: 'AddTransactionCtrl as addTransactionVm',
         authenticate:true,
         layout:'admin'
       })
-      // .state('yardassettype',{
-      //   url: '/gsettings/yards/assettype',
-      //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
-      //   controller: 'AssetTypeCtrl as AssetTypeVm',
-      //   authenticate:true,
-      //   layout:'admin'
-      // })
+      .state('edittransaction', {
+        url: '/addtransaction/:id',
+        templateUrl: 'app/enterprise/addtransaction.html',
+        controller: 'AddTransactionCtrl as addTransactionVm',
+        authenticate:true,
+        layout:'admin'
+      })
 
-       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+      $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

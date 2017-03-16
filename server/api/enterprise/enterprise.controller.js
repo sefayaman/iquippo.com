@@ -241,6 +241,8 @@ exports.getOnFilter = function(req, res) {
     filter["_id"] = req.body._id;
   if (req.body.mobile)
     filter["mobile"] = req.body.mobile;
+  if (req.body.enterpriseName)
+    filter["enterpriseName"] = req.body.enterpriseName;
   if (req.body.userId)
     filter["user._id"] = req.body.userId;
   if (req.body.pagination) {
