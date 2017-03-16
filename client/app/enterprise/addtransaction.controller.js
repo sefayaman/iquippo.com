@@ -185,9 +185,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       EnterpriseSvc.save(vm.enterpriseValuation)
           .then(function(res) {
-            fireCommand(true);
             reset();
             Modal.alert("Save sucessfully!");
+            $state.go('enterprisevaluation.transaction');
         })
     }
 
@@ -195,9 +195,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       setUserData();
       EnterpriseSvc.update(vm.enterpriseValuation)
           .then(function(res) {
-            fireCommand(true);
             reset();
             Modal.alert("Update sucessfully!");
+            $state.go('enterprisevaluation.transaction');
         })
     }
 
@@ -213,12 +213,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation = {};
       $scope.enterpriseSubmitted = false;
       $scope.enterpriseValSubmitted = false;
-      setData();
     }
 
     function setData() {
       if(Auth.getCurrentUser()._id) {
-        //vm.enterpriseValuation.enterpriseName = "BCTPL"//Auth.getCurrentUser().company;
+        if(Auth.getCurrentUser().enterpriseName)
+          vm.enterpriseValuation.enterpriseName = Auth.getCurrentUser().enterpriseName;
         vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
       }
       vm.enterpriseValuation.requestDate = moment(new Date()).format('MM/DD/YYYY');
