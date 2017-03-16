@@ -7,35 +7,17 @@ var EnterpriseValuation = require('./enterprisevaluation.model');
 
 var xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
-//var ApiError = require('./../../components/_error.js');
-//var config = require('./../../config/environment');
-//var importPath = config.uploadPath + config.importDir + "/";
+var config = require('./../../config/environment');
+var importPath = config.uploadPath + config.importDir + "/";
 //var vendorModel = require('../vendor/vendor.model');
 
 // Get list of auctions
-
-//var APIError = require('../../components/_error');
-//var async = require('async');
-//var debug = require('debug')('api.auction');
+var commonFunc = require('../common/uploadrequest/commonFunc');
+var async = require('async');
+var APIError = require('../../components/_error');
+var debug = require('debug')('api.enterprise');
 var moment = require('moment');
-var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD'];
-var validTimeFormat = ['DD/MM/YYYY h:mmA','DD/MM/YYYY h:mm A','MM/DD/YYYY h:mm A'];
-
-var dateUtil = {
-  validateAndFormatDate: function(dateString, format) {
-    var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
-    var formattedDate = moment(dateString,format).format(dateFormat);
-    if (formattedDate === 'Invalid date') {
-      formattedDate = null;
-    }
-    return formattedDate;
-  },
-  isValidDateTime: function(dateTimeString, format) {
-    if(!dateTimeString)
-      return {_isValid : false}
-    return moment(dateTimeString,format);
-  }
-}
+var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD',moment.ISO_8601];
 
 exports.getAll = function(req, res) {
   EnterpriseValuation.find(function(err, enterpriseData) {
@@ -69,9 +51,31 @@ EnterpriseValuation.create(req.body, function(err, enterpriseData) {
   });
 }
 
-/*exports.bulkUpload = function(req, res, next) {
-  var fileName = req.body.filename;
+function validateData(obj){
+  var madnatoryParams = ['category','brand','model','country','state','city'];
+  var err;
+  madnatoryParams.some(function(x){
+    if(!obj[x]){
+      err = 'Missing Parameter:  ' + x;
+      return true;
+    }
+  });
+  return err;
+}
+
+exports.bulkUpload = function(req, res, next) {
+  var body = req.body;
+  ['fileName','user','requestType','purpose','agencyName'].forEach(function(x){
+    if(!body[x])
+      return res.send(412).json({Err:'Missing madnatory parameter' + x });
+  });
+
+  var fileName = req.body.fileName;
   var user = req.body.user;
+  var requestType = req.body.requestType;
+  var purpose = req.body.purpose;
+  var agencyName = req.body.agencyName;
+  
   var workbook = null;
   try {
     workbook = xlsx.readFile(importPath + fileName);
@@ -87,33 +91,39 @@ EnterpriseValuation.create(req.body, function(err, enterpriseData) {
 
   var data = xlsx.utils.sheet_to_json(worksheet);
   var field_map = {
-    'Auction_ID*': 'auctionId',
-    'End_Date': 'endDate',
-    'Asset_No.*': 'assetId',
-    'Lot_No.*': 'lotNo',
-    'Category*': 'category',
-    'Brand*': 'brand',
+    'Enterprise_Name': 'enterpriseName',
+    'Customer_Transaction_ID': 'customerTransactionId',
+    'Customer_Valuation_Number': 'customerValuationNo',
+    'Customer_Party_No': 'customerPartyNo',
+    'Customer_Party_Name': 'customerPartyName',
+    'User_Name': 'user',
+    'Request_Date': 'requestDate',
+    'Asset_No': 'assetId',
+    'Repo_Date': 'repoDate',
+    'Asset_Type/Category*': 'category',
+    'Make/Brand*': 'brand',
     'Model*': 'model',
-    'Asset_Description': 'description',
-    'Invoice_Date': 'invioceDate',
-    'Asset_Registration_No.': 'registrationNo',
-    'Engine_No.': 'engineNo',
-    'Asset_Location': 'city',
-    'Original_Invoice': 'originalInvoice',
-    'VAT%': 'vatPercentage',
-    'Contact_Person': 'contactName',
-    'Contact_No.': 'contactNumber',
-    'Product_ID': 'productId',
-    'Sold': 'isSold',
-    'Sale Value': 'saleVal',
-    'Start_Date': 'startDate'
+    'Asset_Description': 'assetDescription',
+    'Engine_No': 'engineNo',
+    'Chassis_No': 'chassisNo',
+    'Registration_No': 'registrationNo',
+    'Invoice_Date': 'invoiceDate',
+    'Yard_Parked': 'yardParked',
+    'Country*': 'country',
+    'State*': 'state',
+    'Location*': 'city',
+    'Contact_Person': 'contactPerson',
+    'Contact_Person_Tel_No': 'contactPersonTelNo',
+    'Distance_from_Customer_Office': 'disFromCustomerOffice'
   };
 
-  var err;
-  var uploadData = [];
-  var errObj = [];
-  var assetIdMap = {};
 
+
+   var err;
+   var uploadData = [];
+   var errObj = [];
+  // var assetIdMap = {};
+  var totalCount = data.length;
   data.forEach(function(x) {
     var obj = {};
     Object.keys(x).forEach(function(key) {
@@ -127,56 +137,192 @@ EnterpriseValuation.create(req.body, function(err, enterpriseData) {
         rowCount: x.__rowNum__
       });
     } else {
-      if(assetIdMap[obj.assetId]){
-        errObj.push({
-          Error : 'Duplicate Asset Id in uploaded sheet',
-          rowCount : obj.rowCount
-        })
-      }else{
-        
-        assetIdMap[obj.assetId] = obj.auctionId;
         obj.user = user;
-        
-        ['isSold','originalInvoice'].forEach(function(x){
-          if(obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes'){
-            obj[x] = false;
+        obj.agencyName = agencyName;
+        obj.requestType = requestType;
+        obj.purpose = purpose;
+
+        var numericCols = ['customerTransactionId','customerValuationNo','customerPartyNo','engineNo','chassisNo','registrationNo','contactPersonTelNo'];
+
+        numericCols.forEach(function(x){
+          if(obj[x] && isNaN(obj[x])){
+            delete obj[x];
           }
-        })
+        });
 
-        if(!obj.isSold){
-          obj.saleVal = '';
-        }
+        var dateParams = ['requestDate','invoiceDate','repoDate'];
+        dateParams.forEach(function(x){
+          if(obj[x]){
+            var d = Utility.dateUtil.isValidDateTime(obj[x],validDateFormat);
+            if(d.isValid()){
+              obj[x] = new Date(Utility.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
+            } else {
+              delete obj[x];
+            }
+          }
+        });
 
-        if(!obj.originalInvoice){
-          obj.invioceDate = '';
-        }
-
-        uploadData.push(obj);
-      } 
-    }
+        var validData = {};
+        Object.keys(obj).forEach(function(x){
+          if(obj[x])
+            validData[x] = obj[x];
+        });
+        uploadData.push(validData);
+      }
   });
 
   if(!uploadData.length){
-     var result = {
-        errObj : errObj
-     };
+    var result = {
+      errObj : errObj
+    };
 
     return res.json(result);
   }
 
-  uploadReqCtrl.create({
-    uploadData: uploadData,
-    type: 'auction'
-  }, function(err, result) {
-    if (err)
-      return res.sendStatus(500).send(err);
-    if (errObj.length)
-      result.errObj = result.errObj.concat(errObj);
+  async.eachLimit(uploadData,5,intitalize,finalize);
 
-    return res.json(result);
-  });
+  function intitalize(row,cb){
+    /*AA:
+    * Process for bulk Upload:
+    * verfiy category brand and model 
+    * verfiy country,state,location
+    * if every thing is fine then upload data
+    * validateCategory is for validating category,brand,model
+    * validateCountry is for validating country,state,city
+    */
+    async.parallel([validateCategory,validateCountry],middleManProcessing);
+
+    function validateCategory(callback){
+      commonFunc.fetchCategory(row.category,function(err,category){
+        if(err || !category)
+          return callback('Error while validating category');
+
+        if(!category.length)
+          return callback('Invalid Category');
+
+        var brandParams = {
+          group : category[0]._doc.group.name,
+          category : row.category,
+          name : row.brand
+        };
+
+        commonFunc.fetchBrand(brandParams,function(err,brand){
+          if(err || !brand)
+            return callback('Error while validating brand');
+
+          if(!brand.length)
+            return callback('Invalid Brand');
+
+          var modelParams = {
+            group : category[0]._doc.group.name,
+            category : row.category,
+            brand : row.brand,
+            name : row.model
+          };          
+
+          commonFunc.fetchModel(modelParams,function(err,model){
+            if(err || !model)
+              return callback('Error while validating model');
+
+            if(!model.length)
+              return callback('Invalid Model');            
+            });
+
+            return callback();
+        })
+      })
+    }
+
+    function validateCountry(callback){
+      var countryParams = {
+        name : row.country
+      };
+
+      commonFunc.fetchCountry(countryParams,function(err,country){
+        if(err || !country)
+          return callback('Error while validating country');
+
+        if(!country.length)
+          return callback('Invalid Country');
+
+        var stateParams = {
+          country : row.country,
+          name : row.state
+        };
+
+        commonFunc.fetchStates(stateParams,function(err,state){
+          if(err || !state)
+          return callback('Error while validating state');
+
+          if(!state.length)
+            return callback('Invalid State');
+
+          var cityParams = {
+              'state.name' : row.state,
+              'state.country' :row.country,
+              name : row.city
+          };
+
+          commonFunc.fetchCities(cityParams,function(err,city){
+            if(err || !city)
+              return callback('Error while validating city');
+
+            if(!city.length)
+              return callback('Invalid City');
+
+            return callback();
+          })
+        })        
+      });
+    }
+
+    function middleManProcessing(err,result){
+      debug(result);
+      if(err){
+        errObj.push({
+          Error: err,
+          rowCount: row.rowCount
+        });
+        return cb();
+      }
+
+      EnterpriseValuation.create(row, function(err, enterpriseData) {
+        console.log(err);
+        if(err || !enterpriseData) { 
+          errObj.push({
+            Error: 'Error while inserting data',
+            rowCount: row.rowCount
+          });
+        }
+        return cb();
+      });
+    }
+  }
+
+
+  function finalize(err){
+    debug(err);
+
+    return res.json({
+      msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' uploaded sucessfully',
+      errObj : errObj 
+    });
+  }
+ 
+
+  // uploadReqCtrl.create({
+  //   uploadData: uploadData,
+  //   type: 'auction'
+  // }, function(err, result) {
+  //   if (err)
+  //     return res.sendStatus(500).send(err);
+  //   if (errObj.length)
+  //     result.errObj = result.errObj.concat(errObj);
+
+  //   return res.json(result);
+  // });
 };
-*/
+
 //search based on filter
 exports.getOnFilter = function(req, res) {
   var filter = {};

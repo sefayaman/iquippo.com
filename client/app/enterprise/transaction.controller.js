@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseTransactionCtrl',EnterpriseTransactionCtrl);
-function EnterpriseTransactionCtrl($scope, $rootScope, Modal, Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc) {
+function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc) {
   var vm = this;
 
   //pagination variables
@@ -22,6 +22,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, Auth, $state, noti
   $scope.docObj = {};
   $scope.isEdit = false;
   var dataToSend = {};
+  $scope.uploadedExcel = '';
   //$scope.isCollapsed = false;
 
   //vm.requestTypeList = requestTypeList;
@@ -47,6 +48,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, Auth, $state, noti
   vm.onBrandChange = onBrandChange;
   vm.deleteEnterprise = deleteEnterprise;
   vm.fireCommand = fireCommand;
+  vm.uploadTemplate = 'Valuation_Template.xlsx';
 
   function init(){
     Auth.isLoggedInAsync(function(loggedIn) {
@@ -165,15 +167,35 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, Auth, $state, noti
             })
     }
 
-  //listen for the file selected event
+    //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
         if(args.files.length == 0)
           return;
         $scope.$apply(function () {           
-          $scope.docObj.file = args.files[0];
-          $scope.docObj.name = args.files[0].name;
+          uploadExcel(args.files[0]);
         });
     });
+
+    function uploadExcel(file){
+      if (!file){
+        Modal.alert('Please select a file');
+        return;
+      }
+      if (file.name.indexOf('.xlsx') === -1) {
+        Modal.alert('Please upload a valid file');
+        return;
+      }
+
+      uploadSvc.upload(file, importDir)
+        .then(function(result) {
+          setUserData();
+          $scope.uploadedExcel = result.data.filename;
+          $rootScope.loading = false;
+          console.log($scope.uploadedExcel);
+        }).catch(function(res) {
+          Modal.alert("error in file upload", true);
+        });
+    }
 
     function submitUploadTemp(form) {
       if(form.$invalid){
@@ -181,13 +203,36 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, Auth, $state, noti
           return;
       }
       
-      $rootScope.valuationList.forEach(function(item){
-        if(item.name == vm.enterpriseValuation.purpose)
-            $scope.docObj.purpose = item.code;
-      });
-      $scope.docObj.requestType = vm.enterpriseValuation.requestType;
-      $scope.docObj.agencyName = vm.enterpriseValuation.agencyName;
-      console.log("$scope.docObj", $scope.docObj);
+      var uploadData = {
+        fileName : $scope.uploadedExcel,
+        agencyName : vm.enterpriseValuation.agencyName,
+        requestType : vm.enterpriseValuation.requestType,
+        purpose : vm.enterpriseValuation.purpose,
+        user : vm.enterpriseValuation.user
+      };
+
+      EnterpriseSvc.uploadExcel(uploadData).then(function(res){
+        vm.enterpriseValuation = {};
+        $scope.uploadedExcel = '';
+        var message = res.msg;
+        if (res.errObj.length > 0) {
+          var data = {};
+          var subject = 'Bulk Valuation upload error details.';
+          var template = 'BulkSpareUploadError';
+          data.to = Auth.getCurrentUser().email;
+          data.subject = subject ;
+          var serData = {};
+          serData.serverPath = serverPath;
+          serData.errorList = res.errObj;
+          
+          notificationSvc.sendNotification(template, data, serData, 'email');
+          message += " Error details have been sent on registered email id.";
+        }
+        fireCommand(true);
+       return Modal.alert(message);
+      }).catch(function(err){
+        Modal.alert('Error while uploading');
+      }) ;
     }
 
   function onCountryChange(country,noChange){

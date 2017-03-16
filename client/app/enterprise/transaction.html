@@ -1,5 +1,5 @@
 <div>
-  <p>Download the <a href="javascript:void(0);">template</a> and fill all fields. (*) mark fields are mandatory. System will accept multiple records in a single file.</p>
+  <p>Download the <a href="/download/templates/{{enterpriseTransactionVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept multiple records in a single file.</p>
   <div class="row form-group">
     <div class="col-sm-6">
       <h4>Add New Request                    
@@ -41,9 +41,10 @@
           </div>
           <div class="col-sm-2">
             <span class="btn btn-warning fileinput-button">
-             <input type="file" name="doc"  data-filetype="doc" file-upload>
+             <input type="file" name="doc"  data-filetype="doc" file-upload required>
               <span><i class="fa fa-upload"></i> Upload File</span>
             </span>
+             <span>{{uploadedExcel}}</span>
           </div>
         </div>
         <div class="row form-group">

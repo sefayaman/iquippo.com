@@ -38,8 +38,8 @@ function EnterpriseValuationCtrl($scope, $rootScope, $state) {
           vm.tabValue = 'invoicing';
           $state.go("enterprisevaluation.invoicing");
         break;
-      }
-      
+
+      } 
     }
 
 }
