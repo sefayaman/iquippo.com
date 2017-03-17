@@ -11,6 +11,6 @@ router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.post('/onfilter', controller.getOnFilter);
 //router.post('/export', controller.exportAuction);
-//router.post('/upload/excel',controller.bulkUpload);
+router.post('/upload/excel',controller.bulkUpload);
 
 module.exports = router;

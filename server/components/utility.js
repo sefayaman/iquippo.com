@@ -4,7 +4,7 @@ var  xlsx = require('xlsx');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug');
-
+var moment = require('moment');
 
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
@@ -212,3 +212,21 @@ function toJSON(options) {
   return data;
        
 }
+
+var dateUtil = {
+  validateAndFormatDate: function(dateString, format) {
+    var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
+    var formattedDate = moment(dateString,format).format(dateFormat);
+    if (formattedDate === 'Invalid date') {
+      formattedDate = null;
+    }
+    return formattedDate;
+  },
+  isValidDateTime: function(dateTimeString, format) {
+    if(!dateTimeString)
+      return function isValid(){return false;}
+    return moment(dateTimeString,format, true);
+  }
+}
+
+exports.dateUtil = dateUtil;

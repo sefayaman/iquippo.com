@@ -1,0 +1,102 @@
+<div>
+  <p>Download the <a href="/download/templates/{{enterpriseTransactionVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept multiple records in a single file.</p>
+  <div class="row form-group">
+    <div class="col-sm-6">
+      <h4>Add New Request                    
+      </h4>
+    </div>
+    <div class="col-sm-6 text-right">
+      <h4>
+      <a href="/addtransaction" class="btn btn-success btn-md"><i class="fa fa-plus"></i> Add New Request</a>
+      <!-- <button class="btn btn-success btn-md"><i class="fa"></i> Add New Request</button> -->
+      <!-- <button class="btn btn-success" ng-click=""> <i class="fa fa-file-excel-o"></i> Import Excel</button> -->
+      </h4>
+    </div>
+  </div>
+    <legend></legend>
+      <div >
+
+      <form class="enterpriseForm" name="enterpriseForm" novalidate>
+        <div class="row form-group ">                            
+          <div class="form-group col-sm-3" ng-class="{'has-error': enterpriseForm.requestType.$invalid && enterpriseSubmitted}">
+            <select class="form-control" name="requestType" ng-model="enterpriseTransactionVm.enterpriseValuation.requestType" required>
+              <option value="">Request Type*</option>
+              <option ng-repeat="req in enterpriseTransactionVm.requestTypeList" value="{{req.name}}">{{req.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="form-group col-sm-3" ng-class="{'has-error': enterpriseForm.purpose.$invalid && enterpriseSubmitted}">
+            <select class="form-control" name="purpose" ng-model="enterpriseTransactionVm.enterpriseValuation.purpose" required>
+               <option value="">Select Purpose*</option>
+                <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+              </select>
+            <i class="caret"></i>
+          </div>
+          <div class="form-group col-sm-3" ng-class="{'has-error': enterpriseForm.agencyName.$invalid && enterpriseSubmitted}">
+            <select class="form-control" name="agencyName" ng-model="enterpriseTransactionVm.enterpriseValuation.agencyName" required>
+              <option value="">Select Agency*</option>
+              <option  ng-repeat="ag in enterpriseTransactionVm.valAgencies | orderBy:'name'" value="{{ag._id}}">{{ag.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-2">
+            <span class="btn btn-warning fileinput-button">
+             <input type="file" name="doc"  data-filetype="doc" file-upload required>
+              <span><i class="fa fa-upload"></i> Upload File</span>
+            </span>
+             <span>{{uploadedExcel}}</span>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-12 text-right">
+            <button class="btn btn-primary" ng-click="enterpriseTransactionVm.submitUploadTemp(enterpriseForm)">Submit</button>
+          </div>
+        </div>
+        <legend></legend>
+      </form>
+      </div> 
+    <div class="row form-group">                    
+      <div class="col-sm-offset-9 col-sm-3 tablesearch text-right">
+        Search: <input type="text" placeholder="Search...">
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordred table-striped">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Unique Control No</th>
+            <th>Request Type</th>
+            <th>Purpose</th>
+            <th>Agency Name</th>
+            <th>Enterprise</th>
+            <th>Customer Transaction ID</th>
+            <th>Customer Valuation No</th>
+            <th>Asset No.</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
+            <td>
+            <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
+            <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
+            <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)"><i class="fa fa-trash"></i> </a>
+
+            </td>
+            <td>{{enterpriseValuation.uniqueControlNo}}</td>
+            <td>{{enterpriseValuation.requestType}}</td>
+            <td>{{enterpriseValuation.purpose}}</td>
+            <td>{{enterpriseValuation.agencyName}}</td>
+            <td>{{enterpriseValuation.enterpriseName}}</td>
+            <td>{{enterpriseValuation.customerTransactionId}}</td>
+            <td>{{enterpriseValuation.customerValuationNo}}</td>
+            <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
+            <td><a href="javascript:void(0);" title=""> More..</a></td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <uib-pagination total-items="enterpriseTransactionVm.totalItems" ng-model="enterpriseTransactionVm.currentPage" items-per-page="enterpriseTransactionVm.itemsPerPage" max-size="enterpriseTransactionVm.maxSize" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+</div>

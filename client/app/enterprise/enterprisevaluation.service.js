@@ -2,18 +2,32 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http,$q, notificationSvc, Auth){
+function EnterpriseSvc($http, $q, notificationSvc, Auth){
   var entSvc = {};
   var path = "/api/enterprise";
   entSvc.getAll = getAll;
   entSvc.save = save;
   entSvc.update = update;
   entSvc.getOnFilter = getOnFilter;
+  entSvc.getRequestOnId = getRequestOnId;
+  entSvc.uploadExcel = uploadExcel;
   //entSvc.export = exportValuation;
   //entSvc.sendNotification = sendNotification;
   //entSvc.updateStatus = updateStatus;
 
-  function getAll(){
+  function getRequestOnId(id) {
+    var deferred = $q.defer();
+      $http.get(path + "/" + id)
+      .then(function(res){
+        deferred.resolve(res.data);
+      })
+      .catch(function(res){
+        deferred.reject(res);
+      })
+    return deferred.promise;
+  }
+
+  function getAll() {
         return $http.get(path)
         .then(function(res){
           return res.data
@@ -53,6 +67,14 @@ function EnterpriseSvc($http,$q, notificationSvc, Auth){
         .catch(function(err){
           throw err;
         });
+    }
+
+    function uploadExcel(data){
+      return $http.post(path+"/upload/excel",data).then(function(res){
+        return res.data;
+      }).catch(function(err){
+        throw err;
+      });
     }
 
     /*function sendNotification(valReqData,status,sendTo){
