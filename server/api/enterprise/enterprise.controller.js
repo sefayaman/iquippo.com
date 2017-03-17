@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
-var trim = require('trim');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 
 var xlsx = require('xlsx');
@@ -18,6 +17,8 @@ var APIError = require('../../components/_error');
 var debug = require('debug')('api.enterprise');
 var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD',moment.ISO_8601];
+
+var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Request Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 
 exports.getAll = function(req, res) {
   EnterpriseValuation.find(function(err, enterpriseData) {

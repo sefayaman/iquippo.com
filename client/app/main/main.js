@@ -456,7 +456,7 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-      .state('edittransaction', {
+      .state('enterprisevaluation.edittransaction', {
         url: '/addtransaction/:id',
         templateUrl: 'app/enterprise/addtransaction.html',
         controller: 'AddTransactionCtrl as addTransactionVm',

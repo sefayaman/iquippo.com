@@ -17,6 +17,15 @@ function EnterpriseValuationCtrl($scope, $rootScope, $state) {
             case 'enterprisevaluation.invoicing':
                 $scope.tabValue = 'invoicing';  
             break;
+           case "enterprisevaluation.paymentreceived":
+              $scope.tabValue = 'paymentreceived';
+            break;
+             case "enterprisevaluation.paymentmade":
+              $scope.tabValue = 'paymentmade';
+            break;
+            default:
+              $scope.tabValue = '';
+              break;
         }
         onTabChange($scope.tabValue);
     }
