@@ -1,3 +1,86 @@
-<div>
-  <h4>Invoicing</h4>
+<div class="row">
+  <div class="col-sm-6">
+    <h4>Invoicing</h4>
+  </div>
+  <div class="col-sm-6 text-right">
+    <h4>
+    <button class="btn btn-success btn-md"><i class="fa fa-file-excel-o"></i> Export</button>                 
+    </h4>
+  </div>
 </div>
+<legend></legend>
+
+<div class="row form-group featured"> 
+  <div class="col-sm-offset-7 col-sm-2">                   
+    <button class="btn btn-primary btn-block">Genrate Invoice</button>                   
+  </div>                   
+  <div class="col-sm-3 tablesearch text-right">
+    Search: <input type="text" placeholder="Search...">
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Invoice Date</th>
+        <th>Invoice No.</th>
+        <th>Enterprise Name</th>
+        <th>Enterprise User Name</th>
+        <th>Enterprise User Contact No.</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+        	<input type="checkbox" name="" value="">
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+           <a class="btn btn-primary btn-md" href="javascript:void(0);"><i class="fa fa-pencil"></i> </a>
+            <a class="btn btn-danger btn-md" href="javascript:void(0);"><i class="fa fa-trash"></i> </a>
+            <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ <uib-pagination total-items="masterDataVm.mTotalItems" ng-model="masterDataVm.mCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
+
+ <!-- for popup -->
+ <!-- <form>
+ 	<div class="row">
+ 		<div class="col-sm-8 form-group">
+ 			Total No. of valuation request selected 			
+ 		</div>
+ 		<div class="col-sm-4">
+ 			5
+ 		</div>
+ 	</div>
+ 	<div class="row"> 		
+ 		<div class="col-sm-4 form-group">
+ 			<select class="form-control">
+ 				<option>Select Rate for Invoice</option>
+ 			</select>
+ 			<i class="caret"></i>
+ 		</div>
+ 		<div class="col-sm-4 form-group">
+ 			<select class="form-control">
+ 				<option>Select Service Tax</option>
+ 			</select>
+ 			<i class="caret"></i>
+ 		</div>
+ 	</div>
+ 	<div class="row">
+ 		<div class="col-sm-12 text-right">
+ 			<button type="button" class="btn btn-danger">Genrate</button>
+ 		</div>
+ 	</div>
+</form> -->
