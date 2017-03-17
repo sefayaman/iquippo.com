@@ -21,7 +21,7 @@ var _error = function(httpStatus, message, errorCode, title) {
     return this.message;
   };
 
-  Error.captureStackTrace(this, _error);
+  //Error.captureStackTrace(this, _error);
 };
 
 util.inherits(_error, Error);

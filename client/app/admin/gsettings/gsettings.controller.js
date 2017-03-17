@@ -682,7 +682,7 @@
             vendorSvc.getAllVendors()
                 .then(function(res) {
                     vm.partners = vendorSvc.getVendorsOnCode(code);
-                })
+            })
 
         }
 

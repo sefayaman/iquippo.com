@@ -62,10 +62,7 @@ angular.module('sreizaoApp')
             filter.role = "enterprise";
             filter.enterprise = true;
             userSvc.getUsers(filter).then(function(data){
-            vm.enterpeises = data;
-            })
-            .catch(function(err){
-              Modal.alert("Error in geting user");
+              vm.enterprises = data;
             })
           }
 
