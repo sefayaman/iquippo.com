@@ -91,7 +91,7 @@ exports.bulkUpload = function(req, res, next) {
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   var data = xlsx.utils.sheet_to_json(worksheet);
-  var field_map = {
+  var enterprise_field_map = {
     'Enterprise_Name': 'enterpriseName',
     'Customer_Transaction_ID': 'customerTransactionId',
     'Customer_Valuation_Number': 'customerValuationNo',
@@ -128,7 +128,7 @@ exports.bulkUpload = function(req, res, next) {
   data.forEach(function(x) {
     var obj = {};
     Object.keys(x).forEach(function(key) {
-      obj[field_map[key]] = x[key];
+      obj[enterprise_field_map[key]] = x[key];
     })
     obj.rowCount = x.__rowNum__;
     err = validateData(obj);

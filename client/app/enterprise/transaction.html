@@ -7,12 +7,12 @@
     </div>
     <div class="col-sm-6 text-right">
       <h4>
-      <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-md"><i class="fa fa-plus"></i> Add New Request</a>
+      <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-md" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
       </h4>
     </div>
   </div>
     <legend></legend>
-    <!-- <div class="col-sm-2">
+    <div class="col-sm-2">
         <span class="btn btn-warning fileinput-button">
          <input type="file" name="doc"  data-filetype="doc" file-upload required>
           <span><i class="fa fa-upload"></i> Upload Request</span>
@@ -25,8 +25,8 @@
             <span><i class="fa fa-upload"></i> Update Request</span>
           </span>
            <span>{{uploadedExcel}}</span>
-        </div> -->
-      <div >
+        </div>
+      <!-- <div >
 
       <form class="enterpriseForm" name="enterpriseForm" novalidate ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">
         <div class="row form-group ">                            
@@ -66,7 +66,7 @@
         </div>
         <legend></legend>
       </form>
-      </div> 
+      </div> --> 
     <div class="row form-group">                    
       <div class="col-sm-offset-7 col-sm-2">
         <button type="button" class="btn btn-primary btn-block">Submit to Agency</button>
@@ -104,8 +104,8 @@
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>
-            <td>{{enterpriseValuation.agencyName}}</td>
-            <td>{{enterpriseValuation.enterpriseName}}</td>
+            <td>{{enterpriseValuation.agency.name}}</td>
+            <td>{{enterpriseValuation.enterprise.name}}</td>
             <td>{{enterpriseValuation.customerTransactionId}}</td>
             <td>{{enterpriseValuation.customerValuationNo}}</td>
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>

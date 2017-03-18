@@ -18,16 +18,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   $scope.isEdit = false;
   var dataToSend = {};
   $scope.uploadedExcel = '';
-
-  vm.requestTypeList = [
-  {
-    name:"Valuation"
-  },
-  {
-    name:"Inspection"
-  }
-  ];
-
+  
+  vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
   vm.enterpriseNameList = [];
 
   vm.submitUploadTemp = submitUploadTemp;

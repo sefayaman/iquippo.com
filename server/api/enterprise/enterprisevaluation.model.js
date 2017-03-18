@@ -15,7 +15,7 @@ var EnterpriseValuationSchema = new Schema({
   customerValuationNo:String,
   customerPartyNo:String,
   customerPartyName:String,
-  user: String,
+  userName: String,
   requestDate: {type:Date,default:Date.now},
   assetId:String,
   repoDate: {type:Date,default:Date.now},
@@ -37,6 +37,7 @@ var EnterpriseValuationSchema = new Schema({
   deleted:{type:Boolean,default:false},
   status:{type:String,default:"Request Initiated"},
   statuses:[],
+  createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });
