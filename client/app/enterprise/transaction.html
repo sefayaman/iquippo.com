@@ -5,73 +5,37 @@
       <h4>Add New Request                    
       </h4>
     </div>
-    <div class="col-sm-6 text-right">
-      <h4>
-      <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-md" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
-      </h4>
-    </div>
-  </div>
-    <legend></legend>
     <div class="col-sm-2">
+      <h4>
         <span class="btn btn-warning fileinput-button">
          <input type="file" name="doc"  data-filetype="doc" file-upload required>
           <span><i class="fa fa-upload"></i> Upload Request</span>
         </span>
          <span>{{uploadedExcel}}</span>
-      </div>
-        <div class="col-sm-2">
-          <span class="btn btn-warning fileinput-button">
-           <input type="file" name="doc"  data-filetype="doc" file-upload required>
-            <span><i class="fa fa-upload"></i> Update Request</span>
-          </span>
-           <span>{{uploadedExcel}}</span>
-        </div>
-      <!-- <div >
-
-      <form class="enterpriseForm" name="enterpriseForm" novalidate ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">
-        <div class="row form-group ">                            
-          <div class="form-group col-sm-3" ng-class="{'has-error': enterpriseForm.requestType.$invalid && enterpriseSubmitted}">
-            <select class="form-control" name="requestType" ng-model="enterpriseTransactionVm.enterpriseValuation.requestType" required>
-              <option value="">Request Type*</option>
-              <option ng-repeat="req in enterpriseTransactionVm.requestTypeList" value="{{req.name}}">{{req.name}}</option>
-            </select>
-            <i class="caret"></i>
-          </div>
-          <div class="form-group col-sm-3" ng-class="{'has-error': enterpriseForm.purpose.$invalid && enterpriseSubmitted}">
-            <select class="form-control" name="purpose" ng-model="enterpriseTransactionVm.enterpriseValuation.purpose" required>
-               <option value="">Select Purpose*</option>
-                <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
-              </select>
-            <i class="caret"></i>
-          </div>
-          <div class="form-group col-sm-3" ng-class="{'has-error': enterpriseForm.agencyName.$invalid && enterpriseSubmitted}">
-            <select class="form-control" name="agencyName" ng-model="enterpriseTransactionVm.enterpriseValuation.agencyName" required>
-              <option value="">Select Agency*</option>
-              <option  ng-repeat="ag in enterpriseTransactionVm.valAgencies | orderBy:'name'" value="{{ag._id}}">{{ag.name}}</option>
-            </select>
-            <i class="caret"></i>
-          </div>
-          <div class="col-sm-2">
-            <span class="btn btn-warning fileinput-button">
-             <input type="file" name="doc"  data-filetype="doc" file-upload required>
-              <span><i class="fa fa-upload"></i> Upload File</span>
-            </span>
-             <span>{{uploadedExcel}}</span>
-          </div>
-        </div>
-        <div class="row form-group">
-          <div class="col-sm-12 text-right">
-            <button class="btn btn-primary" ng-click="enterpriseTransactionVm.submitUploadTemp(enterpriseForm)">Submit</button>
-          </div>
-        </div>
-        <legend></legend>
-      </form>
-      </div> --> 
+      </h4>
+    </div>
+    <div class="col-sm-2">
+      <h4>
+        <span class="btn btn-warning fileinput-button">
+         <input type="file" name="doc"  data-filetype="doc" file-upload required>
+          <span><i class="fa fa-upload"></i> Update Request</span>
+        </span>
+         <span>{{uploadedExcel}}</span>
+      </h4>
+    </div>
+    <div class="col-sm-2 text-right">
+      <h4>
+        <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-md" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
+      </h4>
+    </div>
+  </div>
+    <legend></legend>
+     
     <div class="row form-group">                    
-      <div class="col-sm-offset-7 col-sm-2">
+      <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block">Submit to Agency</button>
       </div>
-      <div class="col-sm-3 tablesearch text-right">
+      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search...">
       </div>
     </div>

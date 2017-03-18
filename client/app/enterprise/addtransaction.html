@@ -161,7 +161,7 @@
 
     </div>
     <!-- Agency block -->
-    <div ng-if="true">
+    <div>
       <div class="row form-group ">                              
           <div class="col-sm-3">
             <input type="number" class="form-control" name="" value="" placeholder="Report No." required/>
@@ -185,12 +185,8 @@
            <input type="text" class="form-control" name="" value="" placeholder="Inspection By" required/>
         </div>
         <div class="col-sm-3">
-          <input type="text" class="form-control" name="" value="" placeholder="Physical Condition" required/>
-            
-          </div>
-      </div>
-
-      <div class="row form-group ">
+          <input type="text" class="form-control" name="" value="" placeholder="Physical Condition" required/>            
+        </div>
         <div class="col-sm-3">
            GPS Installed
             <div class="row">
@@ -202,6 +198,9 @@
               </div>
             </div>
         </div>
+      </div>
+
+      <div class="row form-group ">        
         <div class="col-sm-3">
          <input type="number" class="form-control" name="" value="" placeholder="GPS Device No." required/>
         </div>
@@ -210,178 +209,87 @@
         </div>
         
       </div>
+      <h5><strong>Upload Asset Images</strong></h5>
       <div class="row form-group">
-          <div class="col-sm-3 pic-popover">Asset Image General</div>
-            <div class="col-sm-9 col-xs-12">
-               <div class="row pic-popover">
-                  <div class="col-sm-2 col-xs-6 primary-upload text-center">
-                    <div class="br5">
-                      <span class="fileinput-button browse-icon">
-                          <span><i class="fa fa-plus-circle"></i></span>
-                            <input type="file" name="">
-                       </span>
-                        <span>
-                          <div class="icn2">
-                            <a href="javascript:void(0);"><i class="fa fa-times" ></i></a>
-                          </div>
-                           <div class="icn">
-                              <a href="javascript:void(0);"><i class="fa fa-repeat"></i></a>
-                           </div>
-                        </span>
-                    </div>
-                     <span><input type="radio" name="" value="">Primary</span>
-                  </div>
-                   <div class="col-sm-2 clearfix">
-                    <button class="btn btn-block active">Add More</button>
-                    <button class="btn btn-block active">Delete</button>
-                  </div> 
-              </div>
+          <div class="col-sm-2  text-center">
+            General
+             <div class="pic-popover">
+                <div class="primary-upload">
+                  <div class="br5">
+                    <span class="fileinput-button browse-icon">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="">
+                     </span>                        
+                  </div>                    
+                </div>                    
             </div>
-      </div>
-
-      <div class="row form-group">
-          <div class="col-sm-3 pic-popover">Asset Image Engine</div>
-            <div class="col-sm-9 col-xs-12">
-               <div class="row pic-popover">
-                  <div class="col-sm-2 col-xs-6 primary-upload text-center">
-                    <div class="br5">
-                      <span class="fileinput-button browse-icon">
-                          <span><i class="fa fa-plus-circle"></i></span>
-                            <input type="file" name="">
-                       </span>
-                        <span>
-                          <div class="icn2">
-                            <a href="javascript:void(0);"><i class="fa fa-times" ></i></a>
-                          </div>
-                           <div class="icn">
-                              <a href="javascript:void(0);"><i class="fa fa-repeat"></i></a>
-                           </div>
-                        </span>
-                    </div>
-                     <span><input type="radio" name="" value="">Primary</span>
-                  </div>
-                   <div class="col-sm-2 clearfix">
-                    <button class="btn btn-block active">Add More</button>
-                    <button class="btn btn-block active">Delete</button>
-                  </div> 
-              </div>
+          </div>
+          <div class="col-sm-2  text-center">
+            Engine
+             <div class="pic-popover">
+                <div class="primary-upload">
+                  <div class="br5">
+                    <span class="fileinput-button browse-icon">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="">
+                     </span>                        
+                  </div>                    
+                </div>                    
             </div>
-      </div>
-
-      <div class="row form-group">
-          <div class="col-sm-3 pic-popover">Asset Image Hydraulic</div>
-            <div class="col-sm-9 col-xs-12">
-               <div class="row pic-popover">
-                  <div class="col-sm-2 col-xs-6 primary-upload text-center">
-                    <div class="br5">
-                      <span class="fileinput-button browse-icon">
-                          <span><i class="fa fa-plus-circle"></i></span>
-                            <input type="file" name="">
-                       </span>
-                        <span>
-                          <div class="icn2">
-                            <a href="javascript:void(0);"><i class="fa fa-times" ></i></a>
-                          </div>
-                           <div class="icn">
-                              <a href="javascript:void(0);"><i class="fa fa-repeat"></i></a>
-                           </div>
-                        </span>
-                    </div>
-                     <span><input type="radio" name="" value="">Primary</span>
-                  </div>
-                   <div class="col-sm-2 clearfix">
-                    <button class="btn btn-block active">Add More</button>
-                    <button class="btn btn-block active">Delete</button>
-                  </div> 
-              </div>
+          </div>
+          <div class="col-sm-2  text-center">
+            Hydraulic
+             <div class="pic-popover">
+                <div class="primary-upload">
+                  <div class="br5">
+                    <span class="fileinput-button browse-icon">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="">
+                     </span>                        
+                  </div>                    
+                </div>                    
             </div>
-      </div>
-
-      <div class="row form-group ">
-          <div class="col-sm-3 pic-popover">Asset Image Cabin</div>
-            <div class="col-sm-9 col-xs-12">
-               <div class="row pic-popover">
-                  <div class="col-sm-2 col-xs-6 primary-upload text-center">
-                    <div class="br5">
-                      <span class="fileinput-button browse-icon">
-                          <span><i class="fa fa-plus-circle"></i></span>
-                            <input type="file" name="">
-                       </span>
-                        <span>
-                          <div class="icn2">
-                            <a href="javascript:void(0);"><i class="fa fa-times" ></i></a>
-                          </div>
-                           <div class="icn">
-                              <a href="javascript:void(0);"><i class="fa fa-repeat"></i></a>
-                           </div>
-                        </span>
-                    </div>
-                     <span><input type="radio" name="" value="">Primary</span>
-                  </div>
-                   <div class="col-sm-2 clearfix">
-                    <button class="btn btn-block active">Add More</button>
-                    <button class="btn btn-block active">Delete</button>
-                  </div> 
-              </div>
+          </div>
+          <div class="col-sm-2  text-center">
+            Cabin
+             <div class="pic-popover">
+                <div class="primary-upload">
+                  <div class="br5">
+                    <span class="fileinput-button browse-icon">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="">
+                     </span>                        
+                  </div>                    
+                </div>                    
             </div>
-      </div>
-
-      <div class="row form-group ">
-          <div class="col-sm-3 pic-popover">Asset Image Under-Carriage / Tyre</div>
-            <div class="col-sm-9 col-xs-12">
-               <div class="row pic-popover">
-                  <div class="col-sm-2 col-xs-6 primary-upload text-center">
-                    <div class="br5">
-                      <span class="fileinput-button browse-icon">
-                          <span><i class="fa fa-plus-circle"></i></span>
-                            <input type="file" name="">
-                       </span>
-                        <span>
-                          <div class="icn2">
-                            <a href="javascript:void(0);"><i class="fa fa-times" ></i></a>
-                          </div>
-                           <div class="icn">
-                              <a href="javascript:void(0);"><i class="fa fa-repeat"></i></a>
-                           </div>
-                        </span>
-                    </div>
-                     <span><input type="radio" name="" value="">Primary</span>
-                  </div>
-                   <div class="col-sm-2 clearfix">
-                    <button class="btn btn-block active">Add More</button>
-                    <button class="btn btn-block active">Delete</button>
-                  </div> 
-              </div>
+          </div>
+          <div class="col-sm-2  text-center">
+            Under-Carriage / Tyre
+             <div class="pic-popover">
+                <div class="primary-upload">
+                  <div class="br5">
+                    <span class="fileinput-button browse-icon">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="">
+                     </span>                        
+                  </div>                    
+                </div>                    
             </div>
-      </div>
-
-      <div class="row form-group">
-          <div class="col-sm-3 pic-popover">Asset Image Others</div>
-            <div class="col-sm-9 col-xs-12">
-               <div class="row pic-popover">
-                  <div class="col-sm-2 col-xs-6 primary-upload text-center">
-                    <div class="br5">
-                      <span class="fileinput-button browse-icon">
-                          <span><i class="fa fa-plus-circle"></i></span>
-                            <input type="file" name="">
-                       </span>
-                        <span>
-                          <div class="icn2">
-                            <a href="javascript:void(0);"><i class="fa fa-times" ></i></a>
-                          </div>
-                           <div class="icn">
-                              <a href="javascript:void(0);"><i class="fa fa-repeat"></i></a>
-                           </div>
-                        </span>
-                    </div>
-                     <span><input type="radio" name="" value="">Primary</span>
-                  </div>
-                   <div class="col-sm-2 clearfix">
-                    <button class="btn btn-block active">Add More</button>
-                    <button class="btn btn-block active">Delete</button>
-                  </div> 
-              </div>
+          </div>
+          <div class="col-sm-2  text-center">
+            Others
+             <div class="pic-popover">
+                <div class="primary-upload">
+                  <div class="br5">
+                    <span class="fileinput-button browse-icon">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="">
+                     </span>                        
+                  </div>                    
+                </div>                    
             </div>
+          </div>
+          
       </div>
       <div class="row form-group ">
         <div class="col-sm-3">Valuation Report</div>
