@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var EnterpriseValuationSchema = new Schema({
+  /* Enterprise fields*/
   uniqueControlNo:String,
   requestType:String,
   purpose:String,
@@ -34,6 +35,32 @@ var EnterpriseValuationSchema = new Schema({
   contactPerson:String,
   contactPersonTelNo:String,
   disFromCustomerOffice:String,
+  /* Valuation agency  field */
+  reportDate:Date,
+  reportNo:String,
+  yearOfManufacturing:String,
+  hmr_kmr:String,
+  assessedValue:Number,
+  inspectionBy:String,
+  physicalCondition:String,
+  gpsInstalled:{type:Boolean,default:false},
+  gpsDeeviceNo:String,
+  generalImage:{},
+  engineImage:{},
+  hydraulicImage:{},
+  cabinImage:{},
+  underCarriageImage:{},
+  otherImage:{},
+  valuationReport:{},
+  /*Invoicing detail*/
+  invoiceDetail:{},
+  /*Payemnt received detail */
+  paymentReceivedDetail:{},
+  /*Payment made detail*/
+  paymentMadeDetail:{},
+
+  assetDir:String,
+  failureReason:String,
   deleted:{type:Boolean,default:false},
   status:{type:String,default:"Request Initiated"},
   statuses:[],
