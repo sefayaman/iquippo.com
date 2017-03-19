@@ -435,14 +435,28 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
-      .state('addtransaction', {
+       .state('enterprisevaluation.paymentmade', {
+        url: '/paymentmade',
+        templateUrl: 'app/enterprise/paymentmade.html',
+        controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
+        layout:'admin',
+        authenticate:true
+      })
+        .state('enterprisevaluation.paymentreceived', {
+        url: '/paymentreceived',
+        templateUrl: 'app/enterprise/paymentreceived.html',
+        controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('enterprisevaluation.addtransaction', {
         url: '/addtransaction',
         templateUrl: 'app/enterprise/addtransaction.html',
         controller: 'AddTransactionCtrl as addTransactionVm',
         authenticate:true,
         layout:'admin'
       })
-      .state('edittransaction', {
+      .state('enterprisevaluation.edittransaction', {
         url: '/addtransaction/:id',
         templateUrl: 'app/enterprise/addtransaction.html',
         controller: 'AddTransactionCtrl as addTransactionVm',

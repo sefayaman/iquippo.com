@@ -11,12 +11,12 @@
         </div>
       </div>
           <!-- success error end -->
-          <div class="btn-group enterprise-value">
-            <button type="button" class="btn" ng-class="{'btn-warning': enterpriseVm.tabValue == 'dashboard'}" ng-click="enterpriseVm.onTabChange('dashboard')">Dashboard</button>
-            <button type="button" class="btn" ng-class="{'btn-warning': enterpriseVm.tabValue == 'transaction'}" ng-click="enterpriseVm.onTabChange('transaction')">Transaction</button>
-            <button type="button" class="btn" ng-class="{'btn-warning': enterpriseVm.tabValue == 'invoicing'}" ng-click="enterpriseVm.onTabChange('invoicing')">Invoicing</button>
-            <button type="button" class="btn" ng-click="enterpriseVm.onTabChange('payment-received')">Payment Received</button>
-            <button type="button" class="btn" ng-click="enterpriseVm.onTabChange('payment-made')">Payment Made</button>
+          <div class="btn-group enterprise-value form-group">
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'dashboard'}" ng-click="onTabChange('dashboard')">Dashboard</button>
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'transaction'}" ng-click="onTabChange('transaction')">Transaction</button>
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'invoicing'}" ng-click="onTabChange('invoicing')">Invoicing</button>
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'paymentreceived'}" ng-click="onTabChange('paymentreceived')">Payment Received</button>
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'paymentmade'}" ng-click="onTabChange('paymentmade')">Payment Made</button>
           </div>
           <div ui-view></div>
         </div> 

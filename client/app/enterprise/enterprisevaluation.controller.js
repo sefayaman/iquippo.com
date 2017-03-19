@@ -2,24 +2,32 @@
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseValuationCtrl',EnterpriseValuationCtrl);
 function EnterpriseValuationCtrl($scope, $rootScope, $state) {
-  var vm = this;
-    vm.onTabChange = onTabChange;
-    vm.tabValue = 'dashboard';
+    var vm = this;
+    $scope.onTabChange = onTabChange;
+    $scope.tabValue = 'dashboard';
     var viewSvc = null;
     function init() {
-      //console.log("###", $state.current.name);
       switch($state.current.name){
             case 'enterprisevaluation.dashborad':
-                vm.tabValue = 'dashboard';
+                $scope.tabValue = 'dashboard';
             break;
             case 'enterprisevaluation.transaction':
-                vm.tabValue = 'transaction';
+                $scope.tabValue = 'transaction';
             break;
             case 'enterprisevaluation.invoicing':
-                vm.tabValue = 'invoicing';  
+                $scope.tabValue = 'invoicing';  
             break;
+           case "enterprisevaluation.paymentreceived":
+              $scope.tabValue = 'paymentreceived';
+            break;
+             case "enterprisevaluation.paymentmade":
+              $scope.tabValue = 'paymentmade';
+            break;
+            default:
+              $scope.tabValue = '';
+              break;
         }
-        onTabChange(vm.tabValue);
+        onTabChange($scope.tabValue);
     }
 
     init();
@@ -27,16 +35,28 @@ function EnterpriseValuationCtrl($scope, $rootScope, $state) {
     function onTabChange(tabValue){
       switch(tabValue){
         case "dashboard":
-          vm.tabValue = 'dashboard';
+          $scope.tabValue = 'dashboard';
           $state.go("enterprisevaluation.dashborad");
         break;
         case "transaction":
-          vm.tabValue = 'transaction';
+          $scope.tabValue = 'transaction';
           $state.go("enterprisevaluation.transaction");
         break;
         case "invoicing":
-          vm.tabValue = 'invoicing';
+          $scope.tabValue = 'invoicing';
           $state.go("enterprisevaluation.invoicing");
+        break;
+         case "paymentreceived":
+          $scope.tabValue = 'paymentreceived';
+          $state.go("enterprisevaluation.paymentreceived");
+        break;
+         case "paymentmade":
+          $scope.tabValue = 'paymentmade';
+          $state.go("enterprisevaluation.paymentmade");
+        break;
+          case "addtransaction":
+          $scope.tabValue = '';
+          $state.go("enterprisevaluation.addtransaction");
         break;
 
       } 

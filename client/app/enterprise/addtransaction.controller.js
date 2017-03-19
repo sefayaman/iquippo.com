@@ -1,54 +1,44 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
-function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc) {
+function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc) {
   var vm = this;
 
   vm.enterpriseValuation = {};
-  vm.enterpriseValuationListing = [];
-  vm.enterpriseValuation.user = {};
-  $scope.enterpriseSubmitted = false;
-  $scope.enterpriseValSubmitted = false;
-  var filter = {};
-  $scope.docObj = {};
+
   $scope.isEdit = false;
-  var dataToSend = {};
-  //$scope.isCollapsed = false;
 
-  //vm.requestTypeList = requestTypeList;
-
-  vm.requestTypeList = [
-  {
-    name:"Valuation"
-  },
-  {
-    name:"Inspection"
-  }
-  ];
-
-  vm.enterpriseNameList = [];
+  vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
 
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
-  vm.submitUploadTemp = submitUploadTemp;
-  vm.reset = reset;
-  vm.addOrEditRequest = addOrEditRequest;
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
+  vm.reset = reset;
+
+  vm.addOrUpdateRequest = addOrUpdateRequest;
+  
   
   function init(){
-    setData();
+
     var userFilter = {};
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
+    if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+      userFilter.enterpriseName = Auth.getCurrentUser().enterpriseName;
+
     userSvc.getUsers(userFilter).then(function(data){
-      vm.enterpriseNameList = data;
+      vm.enterprises = data;
     })
-    .catch(function(err){
-    })
+
     vendorSvc.getAllVendors()
       .then(function(){
         vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
+      });
+
+      ValuationPurposeSvc.get(null)
+      .then(function(result){
+        $scope.valuationList = result;
       });
       loadAllCategory();
       if($stateParams.id) {
@@ -84,10 +74,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             vm.enterpriseValuation.brand = "";
             vm.enterpriseValuation.model = "";
         }
-
         if (!catName)
             return;
-
         vm.brandList = [];
         vm.modelList = [];
         brandSvc.getBrandOnFilter({
@@ -115,31 +103,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             })
     }
 
-  //listen for the file selected event
-    $scope.$on("fileSelected", function (event, args) {
-        if(args.files.length == 0)
-          return;
-        $scope.$apply(function () {           
-          $scope.docObj.file = args.files[0];
-          $scope.docObj.name = args.files[0].name;
-        });
-    });
-
-    function submitUploadTemp(form) {
-      if(form.$invalid){
-          $scope.enterpriseSubmitted = true;
-          return;
-      }
-      
-      $rootScope.valuationList.forEach(function(item){
-        if(item.name == vm.enterpriseValuation.purpose)
-            $scope.docObj.purpose = item.code;
-      });
-      $scope.docObj.requestType = vm.enterpriseValuation.requestType;
-      $scope.docObj.agencyName = vm.enterpriseValuation.agencyName;
-      console.log("$scope.docObj", $scope.docObj);
-    }
-
   function onCountryChange(country,noChange){
       if(!noChange) {
         vm.enterpriseValuation.state = "";
@@ -148,7 +111,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       
       $scope.stateList = [];
       $scope.locationList = [];
-      filter = {};
+      var filter = {};
       filter.country = country;
       LocationSvc.getStateHelp(filter).then(function(result){
           $scope.stateList = result;
@@ -160,68 +123,76 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         vm.enterpriseValuation.city = "";
       
       $scope.locationList = [];
-      filter = {};
+      var filter = {};
       filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
     }
 
-    function addOrEditRequest(form) {
+    function addOrUpdateRequest(form) {
       if(form.$invalid){
-          $scope.enterpriseValSubmitted = true;
+          $scope.submitted = true;
           return;
       }
-      $scope.enterpriseValSubmitted = false;
+      $scope.submitted = false;
 
       if(!$scope.isEdit)
-        addEnterpriseRequest();
+        save();
       else 
-        updateEnterpriseRequest();
+        update();
     }
 
-    function addEnterpriseRequest() {
-      setUserData();
+    function save() {
+      setData();
+      vm.enterpriseValuation.createdBy = {};
+      vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
+      vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+
+      var stObj = {};
+      stObj.userId = Auth.getCurrentUser()._id;
+      stObj.status = EnterpriseValuationStatuses[0];
+      stObj.createdAt = new Date();
+      vm.enterpriseValuation.statuses = [stObj];
 
       EnterpriseSvc.save(vm.enterpriseValuation)
           .then(function(res) {
-            reset();
-            Modal.alert("Save sucessfully!");
             $state.go('enterprisevaluation.transaction');
         })
     }
 
-    function updateEnterpriseRequest() {
-      setUserData();
+    function update() {
+      setData();
       EnterpriseSvc.update(vm.enterpriseValuation)
           .then(function(res) {
-            reset();
-            Modal.alert("Update sucessfully!");
             $state.go('enterprisevaluation.transaction');
         })
     }
 
-    function setUserData(){
-      vm.enterpriseValuation.user = {};
-      vm.enterpriseValuation.user._id = Auth.getCurrentUser()._id;
-      vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      vm.enterpriseValuation.user.mobile = Auth.getCurrentUser().mobile;
-      vm.enterpriseValuation.user.email = Auth.getCurrentUser().email;
+    function setData(){
+
+       vm.enterprises.forEach(function(item){
+        if(item.enterpriseName == vm.enterpriseValuation.enterprise.name){
+          vm.enterpriseValuation.enterprise._id = item._id;
+          vm.enterpriseValuation.enterprise.mobile = item.mobile;
+          vm.enterpriseValuation.enterprise.email = item.email;
+        }
+
+      });
+
+      vm.valAgencies.forEach(function(item){
+        if(item._id == vm.enterpriseValuation.agency._id){
+          vm.enterpriseValuation.agency.name = item.name;
+          vm.enterpriseValuation.agency.mobile = item.mobile;
+          vm.enterpriseValuation.agency.email = item.email;
+        }
+
+      });
     }
 
     function reset() {
       vm.enterpriseValuation = {};
-      $scope.enterpriseSubmitted = false;
-      $scope.enterpriseValSubmitted = false;
-    }
-
-    function setData() {
-      if(Auth.getCurrentUser()._id) {
-        if(Auth.getCurrentUser().enterpriseName)
-          vm.enterpriseValuation.enterpriseName = Auth.getCurrentUser().enterpriseName;
-        vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      }
-      vm.enterpriseValuation.requestDate = moment(new Date()).format('MM/DD/YYYY');
+      $scope.submitted = false;
     }
 
 }

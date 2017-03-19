@@ -207,3 +207,60 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
 
   return utilSvc;
 });
+
+//Pagination service
+angular.module('sreizaoApp').factory('PagerSvc',PagerService);
+
+    function PagerService() {
+
+      var service = {};
+   
+      service.getPager = getPager;
+   
+      return service;
+  
+      function getPager(totalItems, currentPage, itemsPerPage) {
+
+          var pager = {};
+          pager.itemsPerPage = itemsPerPage || 50;
+          pager.currentPage = currentPage || 1;
+          pager.totalItems = totalItems || 0;
+          pager.prevPage = 0 ;
+          pager.first_id = null;
+          pager.last_id = null;
+
+          pager.reset = reset;
+          pager.copy = copy;
+          pager.update = update;
+
+          function reset(){
+              this.prevPage = 0;
+              this.currentPage = 1;
+              this.first_id = null;
+              this.last_id = null;
+          }
+
+          function copy(filter){
+            filter["currentPage"] = this.currentPage;
+            filter["prevPage"] = this.prevPage;
+            filter['itemsPerPage'] = this.itemsPerPage;
+            filter['first_id'] = this.first_id;
+            filter['last_id'] = this.last_id;
+          }
+
+          function update(items,totalItems,currentPage){
+            if(items && items.length > 0){
+              this.first_id = items[0]._id;
+              this.last_id = items[items.length -1 ]._id;
+            }
+            if(currentPage)
+              this.currentPage = currentPage;
+            else
+              this.prevPage = this.currentPage;
+            this.totalItems = totalItems;
+          }
+
+          return pager;
+      }
+  }
+

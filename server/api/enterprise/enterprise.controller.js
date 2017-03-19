@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
-var trim = require('trim');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 
 var xlsx = require('xlsx');
@@ -18,6 +17,8 @@ var APIError = require('../../components/_error');
 var debug = require('debug')('api.enterprise');
 var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD',moment.ISO_8601];
+
+var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Request Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 
 exports.getAll = function(req, res) {
   EnterpriseValuation.find(function(err, enterpriseData) {
@@ -90,7 +91,7 @@ exports.bulkUpload = function(req, res, next) {
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
   var data = xlsx.utils.sheet_to_json(worksheet);
-  var field_map = {
+  var enterprise_field_map = {
     'Enterprise_Name': 'enterpriseName',
     'Customer_Transaction_ID': 'customerTransactionId',
     'Customer_Valuation_Number': 'customerValuationNo',
@@ -127,7 +128,7 @@ exports.bulkUpload = function(req, res, next) {
   data.forEach(function(x) {
     var obj = {};
     Object.keys(x).forEach(function(key) {
-      obj[field_map[key]] = x[key];
+      obj[enterprise_field_map[key]] = x[key];
     })
     obj.rowCount = x.__rowNum__;
     err = validateData(obj);
