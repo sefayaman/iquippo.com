@@ -198,8 +198,16 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       if(!filterObj)
         return queryStr;
       for( var prop in filterObj){
-        queryStr += prop + "=" + filterObj[prop];
-        queryStr += "&";
+        var valStr = "";
+        if(angular.isArray(filterObj[prop])){
+          valStr = filterObj[prop].join(',')
+        }else
+          valStr = filterObj[prop];
+        if(valStr){
+          queryStr += prop + "=" + valStr;
+          queryStr += "&";
+        }
+
       }
       queryStr = queryStr.substr(0,queryStr.length - 1);
       return queryStr;

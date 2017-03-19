@@ -14,9 +14,9 @@
           <div class="btn-group enterprise-value form-group">
             <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'dashboard'}" ng-click="onTabChange('dashboard')">Dashboard</button>
             <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'transaction'}" ng-click="onTabChange('transaction')">Transaction</button>
-            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'invoicing'}" ng-click="onTabChange('invoicing')">Invoicing</button>
-            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'paymentreceived'}" ng-click="onTabChange('paymentreceived')">Payment Received</button>
-            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'paymentmade'}" ng-click="onTabChange('paymentmade')">Payment Made</button>
+            <button type="button"  ng-if="isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'invoicing'}" ng-click="onTabChange('invoicing')">Invoicing</button>
+            <button type="button" ng-if="isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'paymentreceived'}" ng-click="onTabChange('paymentreceived')">Payment Received</button>
+            <button type="button" ng-if="isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'paymentmade'}" ng-click="onTabChange('paymentmade')">Payment Made</button>
           </div>
           <div ui-view></div>
         </div> 

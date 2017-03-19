@@ -12,7 +12,7 @@
 
 <div class="row form-group featured"> 
   <div class=" col-sm-2">                   
-    <button class="btn btn-primary btn-block">Genrate Invoice</button>                   
+    <button class="btn btn-primary btn-block" ng-click="enterpriseInvoiceVm.openInvoiceModal()">Genrate Invoice</button>                   
   </div>                   
   <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
     Search: <input type="text" placeholder="Search...">
@@ -33,16 +33,16 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr ng-repeat="entVal in enterpriseInvoiceVm.dataList">
         <td>
-        	<input type="checkbox" name="" value="">
+        	<input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{entVal.invoiceDate}}</td>
+        <td>{{entVal.invoiceNo}}</td>
+        <td>{{entVal.enterpriseName}}</td>
+        <td>{{entVal.userName}}</td>
+        <td>{{entVal.contactNo}}</td>
+        <td>{{entVal.status}}</td>
         <td>
            <a class="btn btn-primary btn-md" href="javascript:void(0);"><i class="fa fa-pencil"></i> </a>
             <a class="btn btn-danger btn-md" href="javascript:void(0);"><i class="fa fa-trash"></i> </a>
@@ -52,35 +52,46 @@
     </tbody>
   </table>
 </div>
- <uib-pagination total-items="masterDataVm.mTotalItems" ng-model="masterDataVm.mCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
-
+  <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseInvoiceVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
  <!-- for popup -->
- <form>
- 	<div class="row">
- 		<div class="col-sm-8 form-group">
- 			Total No. of valuation request selected 			
- 		</div>
- 		<div class="col-sm-4">
- 			5
- 		</div>
- 	</div>
- 	<div class="row"> 		
- 		<div class="col-sm-4 form-group">
- 			<select class="form-control">
- 				<option>Select Rate for Invoice</option>
- 			</select>
- 			<i class="caret"></i>
- 		</div>
- 		<div class="col-sm-4 form-group">
- 			<select class="form-control">
- 				<option>Select Service Tax</option>
- 			</select>
- 			<i class="caret"></i>
- 		</div>
- 	</div>
- 	<div class="row">
- 		<div class="col-sm-12 text-right">
- 			<button type="button" class="btn btn-danger">Genrate</button>
- 		</div>
- 	</div>
-</form>
+ <script type="text/ng-template" id="invoiceForm.html">
+   <div class="modal-header">
+    <button  type="button"  class="close" ng-click="close()">&times;</button>
+  </div>
+ <div class="modal-body">
+   <form name="invoiceForm" novalidate>
+   	<div class="row">
+   		<div class="col-md-8 form-group">
+   			Total No. of valuation request selected 			
+   		</div>
+   		<div class="col-md-4">
+   			{{selectedItems.length}}
+   		</div>
+   	</div>
+   	<div class="row" ng-repeat="ent in selectedItems"> 		
+   		<div class="col-md-4 form-group">
+   		   Unique Control No : {{ent.uniqueControlNo}}
+   		</div>
+   		<div class="col-md-4 form-group">
+   			<input type="text" class="form-control" name="engineNo" ng-value="{{getServiceFee(ent).amount}}" ng-model="ent.invoiceDetail.serviceFee" placeholder="Service Fee"/>
+   		</div>
+   	</div>
+    <div class="row">     
+      <div class="col-md-4 form-group">
+        <select class="form-control" ng-model="taxRate">
+          <option value="">Select Rate for Invoice</option>
+          <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
+        </select>
+        <i class="caret"></i>
+      </div>
+      <div class="col-md-4 form-group">
+      </div>
+    </div>
+   	<div class="row">
+   		<div class="col-md-12 text-right">
+   			<button type="button" class="btn btn-danger" ng-click="generateInvoice()">Genrate</button>
+   		</div>
+   	</div>
+  </form>
+  </div>
+</script>

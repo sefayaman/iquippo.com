@@ -13,8 +13,11 @@
 <legend></legend>
 	
     <div class="row form-group">
-      <div class="col-sm-12 text-right">
-        Search : <input type="text" placeholder="Invoice No.">
+      <div class=" col-sm-2">                   
+        <button class="btn btn-primary btn-block" ng-click="enterprisePaymentMadeVm.openModal()">Update Payment Details</button>                   
+      </div>                   
+      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+        Search:  <input type="text" placeholder="Invoice No.">
       </div>
     </div>
         
@@ -39,61 +42,63 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>7738273</td>
+        <tr ng-repeat="entVal in enterprisePaymentMadeVm.dataList">
+            <td><input type="checkbox" ng-click="enterprisePaymentMadeVm.updateSelection($event,entVal)"></td>
+            <td>{{entVal.invoiceNo}}</td>
+            <td>{{entVal.requestType}}</td>
+            <td>{{entVal.enterprise.name}}</td>
+            <td>{{entVal.createdBy.name}}</td>
+            <td>{{entVal.createdBy.mobile}}</td>               
+            <td>{{entVal.status}}</td>
+            <td>{{entVal.paymentMadeDetail.bankName}}</td>
+            <td>{{entVal.paymentMadeDetail.branchName}}</td>
+            <td>{{entVal.paymentMadeDetail.chequeNo}}</td>
+            <td>{{entVal.paymentMadeDetail.chequeDate}}</td>
+            <td>{{entVal.paymentMadeDetail.chequeValue}}</td>
+            <td>Rs.{{entVal.paymentMadeDetail.deductedTds}}</td>
             <td></td>
-            <td>Rafia</td>
-            <td>xyz</td>
-            <td>9272372966</td>               
-            <td>Request Submitted</td>
-            <td>SBI</td>
-            <td>Saket</td>
-            <td>3589</td>
-            <td>01/03/2017</td>
-            <td>5657</td>
-            <td>Rs.24000</td>
-            <td>
-            <label class="btn btn-primary">Update</label>
-            <a class="btn btn-danger btn-sm" href="javascript:void(0);"><i class="fa fa-trash"></i> </a>
-           
           </tr>
         </tbody>
       </table>              
     </div>
-    <uib-pagination total-items="enterpriseTransactionVm.totalItems" ng-model="enterpriseTransactionVm.currentPage" items-per-page="enterpriseTransactionVm.itemsPerPage" max-size="enterpriseTransactionVm.maxSize" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterprisePaymentMadeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 
 <!-- popup -->
-<form class="form" name="form">
+<script type="text/ng-template" id="formModal.html">
+<div class="modal-header"> <button  type="button"  class="close" ng-click="close()">&times;</button></div>
+<div class="modal-body">
+  <form class="form" name="form" novalidate>
         <div class="row form-group ">
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="" value="" placeholder="Bank Name" required/>
+            <input type="text" class="form-control" name="bankName" ng-model="paymentDetai.bankName"  placeholder="Bank Name" required/>
           </div>
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="" value="" placeholder="Branch Name" required/>
+            <input type="text" class="form-control" name="branchName" ng-model="paymentDetai.branchName" placeholder="Branch Name" required/>
           </div>
           <div class="col-sm-4">
-             <input type="text" class="form-control" name="" value="" placeholder="Cheque Number" required/>
+             <input type="text" class="form-control" name="chequeNo" ng-model="paymentDetai.chequeNo" placeholder="Cheque Number" required/>
           </div>
           
         </div>
         <div class="row form-group ">
           <div class="col-sm-4">
-             <input type="text" class="form-control" name="" value="" placeholder="Cheque Date" required/>
+             <input type="text" class="form-control" name="chequeDate" ng-model="paymentDetai.chequeDate" placeholder="Cheque Date" required/>
           </div>
           <div class="col-sm-4">
-            <input type="number" class="form-control" name="" value="" placeholder="Cheque Value" required/>
+            <input type="number" class="form-control" name="chequeValue" ng-model="paymentDetai.chequeValue" placeholder="Cheque Value" required/>
           </div>
           <div class="col-sm-4">
-            <input type="number" class="form-control" name="" value="" placeholder="Deducted TDS" required/>
+            <input type="number" class="form-control" name="deductedValue" ng-model="paymentDetai.deductedValue" placeholder="Deducted TDS" required/>
           </div>
           
         </div>
         <div class="row form-group">
             <div class="col-sm-2 pull-right">
-              <input class="btn btn-primary btn-md btn-block" name="" type="button" value="Submit">
+              <input class="btn btn-primary btn-md btn-block" ng-click="updatePaymentDetail(form)" type="button" value="Submit">
             </div>
         </div>
         <legend></legend>
               
     </form>
+</div>
+</script>

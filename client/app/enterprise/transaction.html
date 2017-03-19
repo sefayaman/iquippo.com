@@ -33,7 +33,7 @@
      
     <div class="row form-group">                    
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block">Submit to Agency</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()">Submit to Agency</button>
       </div>
       <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search...">
@@ -58,7 +58,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" name="" value=""></td>
+            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="enterpriseValuation.status != EnterpriseValuationStatuses[0]"></td>
             <td>
             <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
             <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>

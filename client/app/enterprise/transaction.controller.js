@@ -4,15 +4,15 @@ angular.module('sreizaoApp').controller('EnterpriseTransactionCtrl',EnterpriseTr
 function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
   
   var vm = this;
-
-  var statuses = EnterpriseValuationStatuses.slice(0,4);
+  var selectedItems = [];
+  $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
-
   vm.enterpriseValuation = {};
   vm.enterpriseValuationListing = [];
   vm.enterpriseValuation.user = {};
   $scope.enterpriseSubmitted = false;
   $scope.enterpriseValSubmitted = false;
+  
   var filter = {};
   $scope.docObj = {};
   $scope.isEdit = false;
@@ -27,6 +27,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   vm.editEnterpriseRequest = editEnterpriseRequest;
   vm.deleteEnterprise = deleteEnterprise;
   vm.fireCommand = fireCommand;
+  vm.updateSelection = updateSelection;
+  vm.submitToAgency = submitToAgency;
   vm.uploadTemplate = 'Valuation_Template.xlsx';
 
   function init(){
@@ -61,7 +63,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
 
  function getEnterpriseData(filter){
       $scope.pager.copy(filter);
-      EnterpriseSvc.getOnFilter(filter)
+      EnterpriseSvc.get(filter)
       .then(function(result){
         vm.enterpriseValuationListing = result.items;
         vm.totalItems = result.totalItems;
@@ -178,6 +180,39 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
       EnterpriseSvc.update(enterpriseValuation).then(function(result){
         Modal.alert("Request deleted succesfully", true);
       });
+    }
+
+    function updateSelection(event,item){
+        var checkbox = event.target;
+        var index = -1
+        selectedItems.forEach(function(obj,idx){
+           if(obj._id == item._id)
+             index = idx;
+        });
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add' && index == -1)
+          selectedItems.push(item)
+        if(action == 'remove' && index != -1)
+          selectedItems.splice(index,1);
+        console.log(selectedItems.length);
+     }
+
+     function submitToAgency(){
+        //api integration
+        if(selectedItems.length == 0){
+          Modal.alert('Please select entries to be updated');
+          return;
+        }
+        selectedItems.forEach(function(item){
+          EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[1])
+        });
+
+        EnterpriseSvc.bulkUpdate(selectedItems)
+        .then(function(res){
+          selectedItems = [];
+          fireCommand(true);
+        })
+      
     }
 
 }
