@@ -64,6 +64,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       }*/
 
       function createUser(data){
+        console.log(data);
         return $http.post('/api/users/register', data)
         .then(function(res){
           vendorCache = [];

@@ -152,6 +152,12 @@
             var data = {};
             if (vm.user.mobile)
               data['to'] = vm.user.mobile;
+            $rootScope.allCountries.some(function(x) {
+            if (x.name == Auth.getCurrentUser().country) {
+              data['countryCode']=x.countryCode;
+              return true;
+            }
+          })
             data['subject'] = 'New User Registration: Success';
             var dataToSend = {};
             dataToSend['fname'] = vm.user.fname;

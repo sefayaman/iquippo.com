@@ -861,6 +861,7 @@ exports.createAuctionMaster = function(req, res) {
         message: "Auction Id already exist."
       });
     } else {
+      console.log("--auction requests--",req.body);
       AuctionMaster.create(req.body, function(err, auctionData) {
         if (err) {
           return handleError(res, err);
@@ -1132,6 +1133,7 @@ exports.getAuctionMaster = function(req, res) {
       console.log("err", err);
       return handleError(res, err);
     }
+    console.log("+++++++",auctions);
     return res.status(200).json(auctions);
   });
 }
