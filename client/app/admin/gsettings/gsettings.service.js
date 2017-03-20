@@ -107,12 +107,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       }
       
       function getCountryCode(country){
+        var code = '';
         $rootScope.allCountries.some(function(x){
           if(x.name==country){
            
-           return x.countryCode;
+           code =  x.countryCode;
+           return true;
           }
         })
+
+        return code;
       }
 
       function getAllCountry(){

@@ -102,6 +102,7 @@
 							vm.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
 							vm.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
 							vm.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
+							vm.valuationReq.valuationAgency.countryCode=$scope.valAgencies[i].country;
 							break;
 						}
 					}

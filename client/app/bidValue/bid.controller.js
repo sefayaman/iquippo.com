@@ -59,12 +59,7 @@
 							notificationSvc.sendNotification('biddingEmailToCustomer', data, dataToSend, 'email');
 							if (vm.biddingInfo.user.mobile)
 								data['to'] = vm.biddingInfo.user.mobile;
-							$rootScope.allCountries.some(function(x) {
-								if (x.name == vm.biddingInfo.user.country) {
-									data['countryCode'] = x.countryCode;
-									return true;
-								}
-							})
+							data['countryCode']=LocationSvc.getCountryCode(vm.biddingInfo.user.country);
 							notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend, 'sms');
 							vm.biddingInfo = {};
 							closeDialog();

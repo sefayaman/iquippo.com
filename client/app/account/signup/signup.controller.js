@@ -36,12 +36,7 @@
         $scope.stateList = result;
         $scope.locationList = "";
       });
-      $rootScope.allCountries.some(function(x) {
-        if (x.name == country) {
-          $scope.code = x.countryCode;
-          return true;
-        }
-      })
+      $scope.code=LocationSvc.getCountryCode(country);
       if (country == "Other") {
         vm.user.activationOTP = "email";
         $scope.isDisabled = true;
