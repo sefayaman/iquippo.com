@@ -104,6 +104,14 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }
         return country;
       }
+      function getCountryCode(country){
+        $rootscope.allCountries.some(function(x){
+          if(x.name==country){
+           
+           return x.countryCode;
+          }
+        })
+      }
 
       function getAllCountry(){
         var deferred = $q.defer();
