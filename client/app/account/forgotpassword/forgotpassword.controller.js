@@ -97,6 +97,12 @@
           dataToSend['serverPath'] = serverPath;
           notificationSvc.sendNotification('userPasswordChangedEmail', data, dataToSend, 'email');
           data['to'] = Auth.getCurrentUser().mobile;
+          $rootScope.allCountries.some(function(x) {
+            if (x.name == $scope.user.country) {
+              data['countryCode']=x.countryCode;
+              return true;
+            }
+          })
           notificationSvc.sendNotification('passwordChangesSmsToUser', data, dataToSend, 'sms');
           closeDialog();
         })

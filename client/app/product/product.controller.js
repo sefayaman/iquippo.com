@@ -1007,7 +1007,7 @@
       $scope.valuationReq.seller = {};
       $scope.valuationReq.seller._id = productObj.seller._id;
       $scope.valuationReq.seller.mobile = productObj.seller.mobile;
-      $scope.valuationReq.seller.mobile=productObj.seller.countryCode;
+      $scope.valuationReq.seller.countryCode=productObj.seller.countryCode;
       $scope.valuationReq.seller.email = productObj.seller.email;
 
       $scope.valuationReq.initiatedBy = "seller";
