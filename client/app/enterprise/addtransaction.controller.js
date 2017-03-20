@@ -1,12 +1,18 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
-function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc) {
+function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc) {
   var vm = this;
+  var currentState = $state.current.name;
 
   vm.enterpriseValuation = {};
 
   $scope.isEdit = false;
+  $scope.showEnterpriseSection = showEnterpriseSection;
+  $scope.showAgencySection = showAgencySection;
+  $scope.editEnterpriseField = editEnterpriseField;
+  $scope.editAgencyField = editAgencyField;
+  $scope.upload = upload;
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
 
@@ -17,7 +23,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.reset = reset;
 
   vm.addOrUpdateRequest = addOrUpdateRequest;
-  
   
   function init(){
 
@@ -40,6 +45,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       .then(function(result){
         $scope.valuationList = result;
       });
+
       loadAllCategory();
       if($stateParams.id) {
         $scope.isEdit = true;
@@ -61,6 +67,37 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         });
       }
   }
+
+  function showEnterpriseSection(){
+     return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser();
+
+  }
+
+  function editEnterpriseField(){
+    if(Auth.isAdmin())
+      return true;
+    else if((Auth.isEnterprise() || Auth.isEnterpriseUser()) && vm.enterpriseValuation.status == EnterpriseValuationStatuses[0])
+      return true;
+    else
+      return false;
+  }
+
+  function editAgencyField(){
+    if(Auth.isAdmin())
+      return true;
+    else if(Auth.isPartner() && vm.enterpriseValuation.status == EnterpriseValuationStatuses[1])
+      return true;
+    else
+      false;
+  }
+
+  function showAgencySection(){
+     return (Auth.isAdmin() || Auth.isPartner()) 
+            && currentState == 'enterprisevaluation.edittransaction';
+            //&& EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status); //> 0;
+
+  }
+
   init();
   function loadAllCategory() {
         categorySvc.getAllCategory()
@@ -130,6 +167,16 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       });
     }
 
+    function upload(files,fieldName){
+      if(files.length == 0)
+        return;
+      uploadSvc.upload(files[0],vm.enterpriseValuation.assetDir)
+      .then(function(res){
+        vm.enterpriseValuation.assetDir = res.data.assetDir;
+        vm.enterpriseValuation[fieldName] = {extrenal:false,filename:res.data.filename};
+      });
+    }
+
     function addOrUpdateRequest(form) {
       if(form.$invalid){
           $scope.submitted = true;
@@ -144,16 +191,13 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     function save() {
+      
       setData();
       vm.enterpriseValuation.createdBy = {};
       vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
 
-      var stObj = {};
-      stObj.userId = Auth.getCurrentUser()._id;
-      stObj.status = EnterpriseValuationStatuses[0];
-      stObj.createdAt = new Date();
-      vm.enterpriseValuation.statuses = [stObj];
+      EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[0]);
 
       EnterpriseSvc.save(vm.enterpriseValuation)
           .then(function(res) {
@@ -188,6 +232,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         }
 
       });
+
+      if((Auth.isPartner() || Auth.isAdmin()) && 
+          vm.enterpriseValuation && vm.enterpriseValuation.valuationReport.filename
+          && vm.enterpriseValuation.status == EnterpriseValuationStatuses[1]
+        )
+        EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[3]);
     }
 
     function reset() {

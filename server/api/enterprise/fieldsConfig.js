@@ -32,11 +32,11 @@ module.exports = {
 			'Distance_from_Customer_Office': 'disFromCustomerOffice'
 		},
 		'MODIFY': {
-			'Unique_Control_No' : 'uniqueControlNo',
+			'Unique_Control_No*' : 'uniqueControlNo',
 			'Request_Type*': 'requestType',
 			'Purpose*': 'purpose',
 			'Agency_Name*': 'agencyName',
-			'Enterprise': 'enterpriseName',
+			'Enterprise*': 'enterpriseName',
 			'Customer_Transaction_ID': 'customerTransactionId',
 			'Customer_Valuation_No': 'customerValuationNo',
 			'Customer_Party_No': 'customerPartyNo',

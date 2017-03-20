@@ -22,15 +22,95 @@ var purposeModel = require('../common/valuationpurpose.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Request Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var validRequestType = ['Valuation','Insepection'];
 var UserModel = require('../user/user.model');
-exports.getAll = function(req, res) {
-  EnterpriseValuation.find(function(err, enterpriseData) {
-    if (err) {
-      return handleError(res, err);
-    }
-    return res.status(200).json(enterpriseData);
-  });
-};
 
+exports.get = function(req, res) {
+  
+  var queryParam = req.query;
+  var filter = {};
+  var orFilter = [];
+
+  if (queryParam.searchStr) {
+
+    var term = new RegExp(queryParam.searchStr, 'i');
+    orFilter[orFilter.length] = {
+      requestType: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      purpose: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      agencyName: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      enterpriseName: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      category: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      brand: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      model: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      assetId: {
+        $regex: term
+      }
+    };
+    orFilter[orFilter.length] = {
+      uniqueControlNo: {
+        $regex: term
+      }
+    };
+  }
+
+  if (orFilter.length > 0) {
+    filter['$or'] = orFilter;
+  }
+
+  if (queryParam._id)
+    filter["_id"] = queryParam._id;
+  if (queryParam.status){
+    var stsArr = queryParam.status.split(',');
+    filter["status"] = {$in:stsArr};
+  }
+  if (queryParam.mobile)
+    filter["mobile"] = queryParam.mobile;
+  if (queryParam.enterpriseName)
+    filter["enterpriseName"] = queryParam.enterpriseName;
+  if (queryParam.userId)
+    filter["user._id"] = queryParam.userId;
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
+    return;
+  }
+
+  var query = EnterpriseValuation.find(filter);
+  query.exec(
+    function(err, enterpriseData) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(enterpriseData);
+    }
+
+  );
+};
 
 
 // Get a single enterprise valuation data
@@ -633,90 +713,6 @@ exports.bulkModify = function(req, res) {
   }
 };
 
-//search based on filter
-exports.getOnFilter = function(req, res) {
-  var filter = {};
-
-  var orFilter = [];
-
-  if (req.body.searchStr) {
-
-    var term = new RegExp(req.body.searchStr, 'i');
-    orFilter[orFilter.length] = {
-      requestType: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      purpose: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      agencyName: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      enterpriseName: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      category: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      brand: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      model: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      assetId: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      uniqueControlNo: {
-        $regex: term
-      }
-    };
-  }
-
-  if (orFilter.length > 0) {
-    filter['$or'] = orFilter;
-  }
-
-  if (req.body._id)
-    filter["_id"] = req.body._id;
-  if (req.body.mobile)
-    filter["mobile"] = req.body.mobile;
-  if (req.body.enterpriseName)
-    filter["enterpriseName"] = req.body.enterpriseName;
-  if (req.body.userId)
-    filter["user._id"] = req.body.userId;
-  if (req.body.pagination) {
-    Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
-    return;
-  }
-
-  var query = EnterpriseValuation.find(filter);
-  query.exec(
-    function(err, enterpriseData) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(200).json(enterpriseData);
-    }
-
-  );
-};
 
 // Updates an existing enterprise valuation in the DB.
 exports.update = function(req, res) {
@@ -731,6 +727,25 @@ exports.update = function(req, res) {
     });
   });
 };
+
+exports.bulkUpdate = function(req,res){
+  var dataArr = req.body;
+  bulkUpdate(dataArr,function(err){
+    if (err) { return handleError(res, err); }
+     return res.status(200).send("Enterprise valuations updated sucessfully");
+  })
+}
+
+function bulkUpdate(dataArr,cb){
+    async.eachLimit(dataArr,5,update,cb);
+    function update(dt,callback){
+      var _id = dt._id;
+      delete dt._id;
+       EnterpriseValuation.update({_id:_id},{$set:dt},function(err){
+        callback(err)
+      });
+    }
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

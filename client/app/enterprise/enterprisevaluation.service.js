@@ -2,16 +2,18 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http, $q, notificationSvc, Auth){
+function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   var entSvc = {};
   var path = "/api/enterprise";
-  entSvc.getAll = getAll;
+  entSvc.get = get;
   entSvc.save = save;
   entSvc.update = update;
-  entSvc.getOnFilter = getOnFilter;
   entSvc.getRequestOnId = getRequestOnId;
   entSvc.uploadExcel = uploadExcel;
+
   entSvc.modifyExcel = modifyExcel;
+  entSvc.setStatus = setStatus;
+  entSvc.bulkUpdate = bulkUpdate;
   //entSvc.export = exportValuation;
   //entSvc.sendNotification = sendNotification;
   //entSvc.updateStatus = updateStatus;
@@ -28,8 +30,14 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
     return deferred.promise;
   }
 
-  function getAll() {
-        return $http.get(path)
+  function get(data) {
+        var serPath = path;
+        var queryParam = "";
+        if(data)
+            queryParam = UtilSvc.buildQueryParam(data);
+        if(queryParam)
+          serPath = serPath + "?" + queryParam;
+        return $http.get(serPath)
         .then(function(res){
           return res.data
         })
@@ -38,7 +46,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
         })
     }
 
-    function getOnFilter(data){
+   /* function getOnFilter(data){
       return $http.post(path + "/onfilter",data)
         .then(function(res){
           return res.data;
@@ -46,7 +54,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
         .catch(function(err){
           throw err
         })
-    }
+    }*/
 
     function save(data){
       return $http.post(path, data)
@@ -70,6 +78,17 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
         });
     }
 
+    function bulkUpdate(dtArr){
+      return $http.post(path + "/bulkupdate", dtArr)
+        .then(function(res){
+            return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+
     function uploadExcel(data){
       return $http.post(path+"/upload/excel",data).then(function(res){
         return res.data;
@@ -85,6 +104,17 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
         throw err;
       }); 
     }
+    
+    function setStatus(entValuation,status){
+      entValuation.status = status;
+      var stObj = {};
+      stObj.status = status;
+      stObj.createdAt = new Date();
+      stObj.userId = Auth.getCurrentUser()._id;
+      if(!entValuation.statuses)
+        entValuation.statuses = [];
+      entValuation.statuses.push(stObj);
+    };
 
     /*function sendNotification(valReqData,status,sendTo){
       var data = {};
