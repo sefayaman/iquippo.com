@@ -471,11 +471,13 @@ exports.bulkModify = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
     if(!body[x])
-      return res.send(412).json({Err:'Missing madnatory parameter' + x });
+      return res.status(412).json({Err:'Missing madnatory parameter' + x });
   });
 
   var fileName = req.body.fileName;
   var user = req.body.user;
+  
+
   var options = {
     fileName : fileName,
     user : user,
@@ -485,6 +487,13 @@ exports.bulkModify = function(req, res) {
     dateParams : ['requestDate','invoiceDate','repoDate'],
     madnatoryParams : ['uniqueControlNo','agencyName','purpose','enterpriseName','requestType','category','brand','model','country','state','city']
   };
+  var enterpriseRoles = ['admin','enterprise'];
+  if(enterpriseRoles.indexOf(user.role) < 0){
+    options.partnerType = 'VALUATION_PARTNER';
+    options.numericCols = [];
+    options.dateParams = ['reportDate'];
+    options.madnatoryParams = ['uniqueControlNo'];
+  }
   
   var parsedResult = parseExcel(options);
   var errObj = [];
@@ -505,7 +514,7 @@ exports.bulkModify = function(req, res) {
 
   function intitalize(row,cb){
     /*AA:
-    * Process for bulk Upload:
+    * Process for bulk Upload(Enterprise and Admin users):
     * verify Request_Type,Purpose,Agency_Name
     * verfiy category brand and model 
     * verfiy country,state,location
@@ -513,8 +522,14 @@ exports.bulkModify = function(req, res) {
     * validateCategory is for validating category,brand,model
     * validateCountry is for validating country,state,city
     */
-    async.parallel([validateEnterprise,validateValuation,validateRequestType,validatePurpose,validateAgency,validateCategory,validateCountry],middleManProcessing);
 
+    if(enterpriseRoles.indexOf(user.role) < 0){
+      async.parallel([validateValuation],middleManProcessing)
+    }else{
+      async.parallel([validateEnterprise,validateValuation,validateRequestType,validatePurpose,validateAgency,validateCategory,validateCountry],middleManProcessing);  
+    }
+
+    
     function validateEnterprise(callback){
       UserModel.find({enterpriseName : row.enterpriseName,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
@@ -545,7 +560,7 @@ exports.bulkModify = function(req, res) {
         var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
 
         if(enterpriseValidStatus.indexOf(result[0].status) < 0 && user.role !== 'admin')
-          return callback('Enterprise user does not have privilege to update record');
+          return callback('User does not have privilege to update record');
 
         return callback();
       })
@@ -688,6 +703,13 @@ exports.bulkModify = function(req, res) {
 
       var uniqueControlNo = row.uniqueControlNo;
       delete row.uniqueControlNo;
+
+      if(row.gpsInstalled){
+        if(row.gpsInstalled.toLowerCase() === 'yes')
+          row.gpsInstalled = true;
+        else
+          row.gpsInstalled = false;
+      }
 
       EnterpriseValuation.update({uniqueControlNo : uniqueControlNo},{$set:row}, function(err, enterpriseData) {
         console.log(err);

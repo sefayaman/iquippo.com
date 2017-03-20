@@ -32,7 +32,7 @@ module.exports = {
 			'Distance_from_Customer_Office': 'disFromCustomerOffice'
 		},
 		'MODIFY': {
-			'Unique_Control_No*' : 'uniqueControlNo',
+			'Unique_Control_No*': 'uniqueControlNo',
 			'Request_Type*': 'requestType',
 			'Purpose*': 'purpose',
 			'Agency_Name*': 'agencyName',
@@ -64,6 +64,21 @@ module.exports = {
 		'EXPORT': {
 			'TRANSACTION': {},
 			'INVOICE': {}
+		}
+	},
+	'VALUATION_PARTNER': {
+		'MODIFY': {
+			'Unique_Control_No*': 'uniqueControlNo',
+			'Report_Date': 'reportDate',
+			'Report_No': 'reportNo',
+			'Year_of_Manufacture': 'yearOfManufacturing',
+			'HMR/KMR': 'hmr_kmr',
+			'Assessed_Value': 'assessedValue',
+			'Inspection_By': 'inspectionBy',
+			'Physical_Condition': 'physicalCondition',
+			'GPS_Installed': 'gpsInstalled',
+			'GPS_Device_No': 'gpsDeviceNo',
+			'IMIE_No': 'gpsIMEINo'
 		}
 	}
 }
