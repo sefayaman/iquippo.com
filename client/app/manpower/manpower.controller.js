@@ -4,7 +4,7 @@
   angular.module('manpower').controller('ManpowerCtrl', ManpowerCtrl);
 
   //controller function
-  function ManpowerCtrl($scope, $rootScope,LocationSvc, $window, Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, productSvc, ManpowerSvc, MarketingSvc) {
+  function ManpowerCtrl($scope, $rootScope, LocationSvc, $window, Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, productSvc, ManpowerSvc, MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
     vm.manpower = {};
@@ -244,11 +244,7 @@
           dataToSend['email'] = vm.manpower.email;
         if (vm.manpower.mobile)
           dataToSend['mobile'] = vm.manpower.mobile;
-        $rootScope.allCountries.some(function(x) {
-          if (x.name == vm.manpower.country) {
-            dataToSend['countryCode'] = x.countryCode;
-          }
-        })
+        dataToSend['countryCode'] = LocationSvc.getCountryCode(vm.manpower.country);
         Auth.validateSignup(dataToSend).then(function(data) {
           if (data.errorCode == 1) {
             Modal.alert("Mobile number already in use. Please use another mobile number", true);
@@ -315,7 +311,7 @@
           dataToSend['fname'] = vm.manpower.fname;
           dataToSend['lname'] = vm.manpower.lname;
           dataToSend['mobile'] = vm.manpower.mobile;
-          data['countryCode']=LocationSvc.getCountryCode(vm.manpower.country);
+          data['countryCode'] = LocationSvc.getCountryCode(vm.manpower.country);
           dataToSend['email'] = vm.manpower.email;
           dataToSend['password'] = vm.manpower.password;
           dataToSend['serverPath'] = serverPath;

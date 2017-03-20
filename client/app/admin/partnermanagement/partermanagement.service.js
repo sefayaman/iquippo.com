@@ -139,6 +139,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             vd._id =  data[i]._id;
             vd.name =  data[i].entityName;
             vd.mobile =  data[i].user.mobile;
+            vd.country=data[i].user.country;
             if(data[i].user.email)
               vd.email =  data[i].user.email;
           if(data[i].services[j] == 'Shipping' && data[i].status){
