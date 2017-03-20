@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 angular.module('admin').factory("LocationSvc",LocationSvc);
- function LocationSvc($http, $q,$httpParamSerializer){
+ function LocationSvc($http, $q,$httpParamSerializer,$rootScope){
  	  var locationCache = [];
     var stateCache = [];
     var countryCache = [];
@@ -107,7 +107,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       }
       
       function getCountryCode(country){
-        $rootscope.allCountries.some(function(x){
+        $rootScope.allCountries.some(function(x){
           if(x.name==country){
            
            return x.countryCode;
