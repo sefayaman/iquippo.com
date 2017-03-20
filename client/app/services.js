@@ -393,6 +393,7 @@
         $http.post('/api/common/notificationTemplate',tempData)
         .success(function(res){
             dataTosend['content'] = res;
+            dataTosend['countryCode']=data.countryCode;
             $http.post(path,dataTosend).then(function(res){
               console.log('email has been posted');
             });
