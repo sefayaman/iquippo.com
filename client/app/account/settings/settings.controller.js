@@ -25,6 +25,12 @@ function SettingsCtrl($scope, $rootScope, User, Auth,$uibModalInstance,Modal, no
           dataToSend['serverPath'] = serverPath;
           notificationSvc.sendNotification('userPasswordChangedEmail', data, dataToSend,'email');
           data['to'] = Auth.getCurrentUser().mobile;
+          $rootScope.allCountries.some(function(x) {
+            if (x.name == Auth.getCurrentUser().country) {
+              data['countryCode']=x.countryCode;
+              return true;
+            }
+          })
           notificationSvc.sendNotification('passwordChangesSmsToUser', data, dataToSend,'sms');
           closeDialog();
           Modal.alert($scope.message,true);

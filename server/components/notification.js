@@ -13,6 +13,7 @@ var notificationSchema = new Schema({
   to: String,
   subject:String,
   content: String,
+  countryCode:String,
   counter: String,
   document:String,
   createdAt: {type:Date,default:Date.now}

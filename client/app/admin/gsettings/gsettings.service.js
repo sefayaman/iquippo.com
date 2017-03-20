@@ -43,6 +43,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }else{
         	$http.get(path + "/city").then(function(res){
 	            locationCache = res.data;
+              console.log(locationCache);
 	            deferred.resolve(res.data);
           },function(errors){
             console.log("Errors in location list :"+ JSON.stringify(errors));
@@ -68,6 +69,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         var CountryStateInfo = {};
         for(var i=0;i < locationCache.length; i++){
           if(locationCache[i].name == city){
+            console.log(locationCache[i]);
             CountryStateInfo.state = locationCache[i].state.name;
             CountryStateInfo.country = locationCache[i].state.country;
             break;

@@ -105,8 +105,9 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
     }
 
     function sendNotification(mailData,statusName,flag){
+      console.log(mailData);
       var data = {};
-      data['to'] = mailData.user.email;
+      data['to'] = mailData.seller.email;
       mailData.serverPath = serverPath;
       switch(flag){
         case 1:
@@ -117,7 +118,9 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
             data['subject'] = 'Request for Listing in auction';
             mailData.statusName = statusName;
             notificationSvc.sendNotification('auctionCustomerEmail', data, mailData,'email');
-            data['to'] = mailData.user.mobile;
+            data['to'] = mailData.seller.mobile;
+            if(mailData.seller.countryCode)
+              data['countryCode']=mailData.seller.countryCode;
             notificationSvc.sendNotification('auctionCustomerSms',data, mailData,'sms');
           break;
 
