@@ -1247,7 +1247,7 @@
         			<div class="row">
         				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.typeOfservice.$invalid && submitted}">
         				<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" ng-change="svcFeeVm.getPartners(svcFeeVm.dataModel.serviceType)" required>
-			              <option value="">Request Type*</option>
+			              <option value="">*Request Type</option>
 			              <option ng-repeat="req in svcFeeVm.serviceList" value="{{req.name}}">{{req.name}}</option>
 			            </select>
 			            <i class="caret"></i>
@@ -1255,14 +1255,14 @@
         				</div>
         				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.enterpriseName.$invalid && submitted}">
         					<select class="form-control" name="enterpriseName" ng-model="svcFeeVm.dataModel.enterpriseName" required>
-        						<option value="">Select Enterprise Name</option>
+        						<option value="">*Select Enterprise Name</option>
         						<option value="{{ent.enterpriseName}}" ng-repeat="ent in svcFeeVm.enterprises">{{ent.enterpriseName}}</option>
         					</select>
         					<i class="caret"></i>
         				</div>
         				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.agencyName.$invalid && submitted}">
         					<select class="form-control" name="agencyName" ng-model="svcFeeVm.dataModel.agency._id" required>
-        						<option value="">Select Agency Name</option>
+        						<option value="">*Select Agency Name</option>
         						<option ng-repeat="ag in svcFeeVm.agencies" value="{{ag._id}}">{{ag.name}}</option>
         					</select>
         					<i class="caret"></i>
@@ -1273,13 +1273,19 @@
         			</div>
         			<div class="row">
         				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.chargeBasis.$invalid && submitted}">
-        					<div class="input-group">
+        					<!-- <div class="input-group">
         						<input type="text" class="form-control" name="chargeBasis" ng-model="svcFeeVm.dataModel.chargeBasis" placeholder="Charge Basis" required />
         						<span class="input-group-addon">%</span>
-        					</div>
+        					</div> -->
+        					<select class="form-control">
+        						<option>*Slect Charge Basis</option>
+        						<option>Flat</option>
+        						<option>%</option>
+        					</select>
+        					<i class="caret"></i>
         				</div>
         				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.feeAmount.$invalid && submitted}">
-        					<input type="number" class="form-control" name="feeAmount" ng-model="svcFeeVm.dataModel.amount" placeholder="Amount" required />
+        					<input type="number" class="form-control" name="feeAmount" ng-model="svcFeeVm.dataModel.amount" placeholder="*Amount" required />
         				</div>
         				<div class="col-sm-offset-4 col-sm-2 text-right">
         					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcFeeVm.update(feemasterForm)">Update</button>

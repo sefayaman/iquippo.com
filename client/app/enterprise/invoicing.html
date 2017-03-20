@@ -35,8 +35,7 @@
           <th>Invoice Date</th>
           <th>Invoice No.</th>
           <th>Enterprise Name</th>
-          <th>Enterprise User Name</th>
-          <th>Enterprise User Contact No.</th>
+          <th>Agency Name</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -45,11 +44,11 @@
           <td>
             <input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
+          <td></td>
           <td>{{entVal.invoiceDate}}</td>
           <td>{{entVal.invoiceNo}}</td>
           <td>{{entVal.enterpriseName}}</td>
-          <td>{{entVal.userName}}</td>
-          <td>{{entVal.contactNo}}</td>
+          <td>{{entVal.agencyName}}</td>
           <td>{{entVal.status}}</td>          
         </tr>
       </tbody>
@@ -91,8 +90,7 @@
           <th>Invoice Date</th>
           <th>Invoice No.</th>
           <th>Enterprise Name</th>
-          <th>Enterprise User Name</th>
-          <th>Enterprise User Contact No.</th>
+          <th>Agency Name</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -102,11 +100,11 @@
           <td>
             <input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
+          <td></td>
           <td>{{entVal.invoiceDate}}</td>
           <td>{{entVal.invoiceNo}}</td>
           <td>{{entVal.enterpriseName}}</td>
-          <td>{{entVal.userName}}</td>
-          <td>{{entVal.contactNo}}</td>
+          <td>{{entVal.agencyName}}</td>
           <td>{{entVal.status}}</td>
           <td>          
               <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
