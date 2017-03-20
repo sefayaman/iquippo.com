@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 var EnterpriseValuationSchema = new Schema({
   /* Enterprise fields*/
   uniqueControlNo:String,
+  invoiceNo:String,
   requestType:String,
   purpose:String,
   agency:{},

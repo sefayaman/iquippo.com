@@ -433,21 +433,24 @@ angular.module('sreizaoApp')
         templateUrl: 'app/enterprise/invoicing.html',
         controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
         layout:'admin',
-        authenticate:true
+        authenticate:true,
+        restrict:true
       })
        .state('enterprisevaluation.paymentmade', {
         url: '/paymentmade',
         templateUrl: 'app/enterprise/paymentmade.html',
         controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
         layout:'admin',
-        authenticate:true
+        authenticate:true,
+        restrict:true
       })
         .state('enterprisevaluation.paymentreceived', {
         url: '/paymentreceived',
         templateUrl: 'app/enterprise/paymentreceived.html',
         controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
         layout:'admin',
-        authenticate:true
+        authenticate:true,
+        restrict:true
       })
       .state('enterprisevaluation.addtransaction', {
         url: '/addtransaction',

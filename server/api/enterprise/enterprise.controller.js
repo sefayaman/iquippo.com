@@ -27,6 +27,7 @@ exports.get = function(req, res) {
   
   var queryParam = req.query;
   var filter = {};
+  filter['deleted'] = false;
   var orFilter = [];
 
   if (queryParam.searchStr) {

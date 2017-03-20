@@ -234,8 +234,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       });
 
       if((Auth.isPartner() || Auth.isAdmin()) && 
-          vm.enterpriseValuation && vm.enterpriseValuation.valuationReport.filename
-          && vm.enterpriseValuation.status == EnterpriseValuationStatuses[1]
+          vm.enterpriseValuation && vm.enterpriseValuation.status == EnterpriseValuationStatuses[1]
+          && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename
         )
         EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[3]);
     }

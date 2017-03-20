@@ -4,11 +4,11 @@ angular.module('sreizaoApp').controller('EnterpriseInvoiceCtrl',EnterpriseInvoic
 function EnterpriseInvoiceCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc) {
  	var vm = this;
 
- 	var serviceFees = [];
- 	var serviceTaxes = [];
  	var selectedItems = [];
  	var statuses = [EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6],EnterpriseValuationStatuses[6]]
  	$scope.pager = PagerSvc.getPager();
+  $scope.getServiceFee  = getServiceFee;
+  $scope.generateInvoice = generateInvoice;
 
  	vm.fireCommand = fireCommand;
  	vm.updateSelection = updateSelection;
@@ -18,12 +18,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,S
 
  		ServiceFeeSvc.get()
  		.then(function(res){
- 			serviceFees = res;
+ 			$scope.serviceFees = res;
  		})
 
  		ServiceTaxSvc.get()
  		.then(function(res){
- 			serviceTaxes = res;
+ 			$scope.serviceTaxes = res;
  		})
 
  		getEnterpriseData({});
@@ -74,54 +74,57 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,S
      		return;
      	}
 
-     	var scope = $rootScope.$new();
-     	scope.serviceTaxes = serviceTaxes;
-     	scope.selectedItems = selectedItems;
-     	scope.taxRate = "";
+      $scope.selectedItems = selectedItems;
+
      	selectedItems.forEach(function(item){
-     		if(!item.invoiceDetail)
-      			item.invoiceDetail = {};
+       		if(!item.invoiceDetail){
+            item.invoiceDetail = {};
+            var serFee = getServiceFee(item);
+            if(serFee)
+              item.invoiceDetail.serviceFee = serFee.amount;
+          }      			
       	});
 
      	 var invoiceModal = $uibModal.open({
      	  animation: true,
           templateUrl: "invoiceForm.html",
-          scope: scope,
+          scope: $scope,
           size: 'lg'
       });
 
-      scope.close = function () {
+      $scope.close = function () {
         invoiceModal.dismiss('cancel');
       };
 
-      scope.getServiceFee = function(entVal){
-      	var svsFee = null;
-      	for(var i = 0; i < serviceFees.length; i++){
-      		if(entVal.requestType == serviceFees[i].serviceType && entVal.agency._id == serviceFees[i].agency._id && entVal.enterprise.name == serviceFees[i].enterpriseName){
-      			svsFee = serviceFees[i];
-      			break;
-      		}
-      	}
-
-      	return svsFee;
-      }
-
-       scope.generateInvoice = function(){
-      	selectedItems.forEach(function(item){
-      		item.invoiceDetail.serviceTax = scope.taxRate;
-      		EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[5]);
-      	});
-
-      	EnterpriseSvc.bulkUpdate(selectedItems)
-        .then(function(res){
-          	selectedItems = [];
-          	$scope.pager.reset();
-         	getEnterpriseData({});
-         	scope.close();
-        })
-      }
 
      }
+
+    function getServiceFee(entVal){
+        var svsFee = null;
+        for(var i = 0; i < $scope.serviceFees.length; i++){
+          if(entVal.requestType == $scope.serviceFees[i].serviceType && entVal.agency._id == $scope.serviceFees[i].agency._id && entVal.enterprise.name == $scope.serviceFees[i].enterpriseName){
+            svsFee = $scope.serviceFees[i];
+            break;
+          }
+        }
+
+        return svsFee;
+      }
+
+      function generateInvoice(){
+        selectedItems.forEach(function(item){
+          EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[5]);
+          item.invoiceNumber =  "INV" + item.uniqueControlNo;
+        });
+
+        EnterpriseSvc.bulkUpdate(selectedItems)
+        .then(function(res){
+          selectedItems = [];
+          $scope.pager.reset();
+          getEnterpriseData({});
+          $scope.close();
+        })
+      }
 
 
      init();
