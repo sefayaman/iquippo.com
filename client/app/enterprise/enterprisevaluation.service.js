@@ -11,6 +11,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
   entSvc.getOnFilter = getOnFilter;
   entSvc.getRequestOnId = getRequestOnId;
   entSvc.uploadExcel = uploadExcel;
+  entSvc.modifyExcel = modifyExcel;
   //entSvc.export = exportValuation;
   //entSvc.sendNotification = sendNotification;
   //entSvc.updateStatus = updateStatus;
@@ -75,6 +76,14 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth){
       }).catch(function(err){
         throw err;
       });
+    }
+
+    function modifyExcel(data){
+      return $http.put(path+"/upload/excel",data).then(function(res){
+        return res.data;
+      }).catch(function(err){
+        throw err;
+      }); 
     }
 
     /*function sendNotification(valReqData,status,sendTo){

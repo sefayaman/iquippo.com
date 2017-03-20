@@ -128,6 +128,9 @@ angular.module('sreizaoApp')
                      emitObj.type = attrs.filetype;
                  if(files.length == 0)
                    return;
+                 if(event.currentTarget && event.currentTarget.id)
+                  emitObj.id = event.currentTarget.id;
+
                   if(attrs.index)
                       emitObj.index = attrs.index;
                 scope.$emit("fileSelected", emitObj);                                   
