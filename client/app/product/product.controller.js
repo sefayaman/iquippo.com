@@ -665,6 +665,7 @@
       product.seller.alternateMobile = seller.alternateMobile;
       $scope.product.seller.email = product.seller.email = seller.email;
       product.seller.country = seller.country;
+      product.seller.countryCode=LocationSvc.getCountryCode(seller.country);
       product.seller.company = seller.company;
     }
 
@@ -1028,6 +1029,7 @@
           $scope.valuationReq.valuationAgency.name = $scope.valAgencies[i].name;
           $scope.valuationReq.valuationAgency.email = $scope.valAgencies[i].email;
           $scope.valuationReq.valuationAgency.mobile = $scope.valAgencies[i].mobile;
+          $scope.valuationReq.valuationAgency.countryCode=LocationSvc.getCountryCode($scope.valAgencies[i].country);
           break;
         }
       }
@@ -1151,12 +1153,7 @@
       product.user.mobile = Auth.getCurrentUser().mobile;
       product.user.email = Auth.getCurrentUser().email;
       product.user.country = Auth.getCurrentUser().country;
-      $rootScope.allCountries.some(function(x) {
-        if (x.name == product.user.country) {
-          product.user.countryCode = x.countryCode;
-          return true;
-        }
-      })
+      product.user.countryCode=LocationSvc.getCountryCode(product.user.country);
       product.user.company = Auth.getCurrentUser().company;
       if ($.isEmptyObject(product.seller)) {
         product.seller = {};
