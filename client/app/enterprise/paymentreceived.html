@@ -67,7 +67,9 @@
 
 <!-- popup -->
 <script type="text/ng-template" id="formModal.html">
-<div class="modal-header"> <button  type="button"  class="close" ng-click="close()">&times;</button></div>
+<div class="modal-header">
+  <button  type="button"  class="close" ng-click="close()">&times;</button></div>
+  <h4 class="modal-title">Payment Received</h4>
 <div class="modal-body">
   <form class="form" name="form" novalidate>
         <div class="row form-group ">
@@ -98,9 +100,7 @@
             <div class="col-sm-2 pull-right">
               <input class="btn btn-primary btn-md btn-block" ng-click="updatePaymentDetail(form)" type="button" value="Submit">
             </div>
-        </div>
-        <legend></legend>
-              
+        </div>              
     </form>
 </div>
 </script>
