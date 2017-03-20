@@ -19,6 +19,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getCountryStateByCity = getCountryStateByCity;
       
       lServices.getAllCountry = getAllCountry;
+      lServices.getCountryCode = getCountryCode;
       lServices.deleteCountry = deleteCountry;
       lServices.updateCountry = updateCountry;
       lServices.saveCountry = saveCountry;
@@ -104,6 +105,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }
         return country;
       }
+      
       function getCountryCode(country){
         $rootscope.allCountries.some(function(x){
           if(x.name==country){
