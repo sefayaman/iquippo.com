@@ -10,6 +10,8 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   entSvc.update = update;
   entSvc.getRequestOnId = getRequestOnId;
   entSvc.uploadExcel = uploadExcel;
+
+  entSvc.modifyExcel = modifyExcel;
   entSvc.setStatus = setStatus;
   entSvc.bulkUpdate = bulkUpdate;
   //entSvc.export = exportValuation;
@@ -95,6 +97,14 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       });
     }
 
+    function modifyExcel(data){
+      return $http.put(path+"/upload/excel",data).then(function(res){
+        return res.data;
+      }).catch(function(err){
+        throw err;
+      }); 
+    }
+    
     function setStatus(entValuation,status){
       entValuation.status = status;
       var stObj = {};

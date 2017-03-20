@@ -18,6 +18,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   $scope.isEdit = false;
   var dataToSend = {};
   $scope.uploadedExcel = '';
+  $scope.modifiedExcel = '';
+  $scope.uploadType = '';
   
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
   vm.enterpriseNameList = [];
@@ -89,6 +91,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
 
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
+        $scope.uploadType = args.id;
         if(args.files.length == 0)
           return;
         $scope.$apply(function () {           
@@ -109,51 +112,80 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
       uploadSvc.upload(file, importDir)
         .then(function(result) {
           setUserData();
-          $scope.uploadedExcel = result.data.filename;
+          if($scope.uploadType === 'upload')
+            $scope.uploadedExcel = result.data.filename;
+          if($scope.uploadType === 'modify')
+            $scope.modifiedExcel = result.data.filename;
           $rootScope.loading = false;
-          console.log($scope.uploadedExcel);
         }).catch(function(res) {
           Modal.alert("error in file upload", true);
         });
     }
 
-    function submitUploadTemp(form) {
-      if(form.$invalid){
-          $scope.enterpriseSubmitted = true;
-          return;
-      }
+    function submitUploadTemp() {
+      var uploadData = {};
       
-      var uploadData = {
-        fileName : $scope.uploadedExcel,
-        agencyName : vm.enterpriseValuation.agencyName,
-        requestType : vm.enterpriseValuation.requestType,
-        purpose : vm.enterpriseValuation.purpose,
-        user : vm.enterpriseValuation.user
-      };
+      if($scope.uploadType === 'upload'){
+        uploadData = {
+          fileName : $scope.uploadedExcel,
+          user : vm.enterpriseValuation.user
+        };
 
-      EnterpriseSvc.uploadExcel(uploadData).then(function(res){
-        vm.enterpriseValuation = {};
-        $scope.uploadedExcel = '';
-        var message = res.msg;
-        if (res.errObj.length > 0) {
-          var data = {};
-          var subject = 'Bulk Valuation upload error details.';
-          var template = 'BulkSpareUploadError';
-          data.to = Auth.getCurrentUser().email;
-          data.subject = subject ;
-          var serData = {};
-          serData.serverPath = serverPath;
-          serData.errorList = res.errObj;
-          
-          notificationSvc.sendNotification(template, data, serData, 'email');
-          message += " Error details have been sent on registered email id.";
-        }
-        fireCommand(true);
-       return Modal.alert(message);
-      }).catch(function(err){
-        Modal.alert('Error while uploading');
-      }) ;
-    }
+        EnterpriseSvc.uploadExcel(uploadData).then(function(res){
+          vm.enterpriseValuation = {};
+          $scope.uploadedExcel = '';
+          var message = res.msg;
+          if (res.errObj.length > 0) {
+            var data = {};
+            var subject = 'Bulk Valuation upload error details.';
+            var template = 'BulkSpareUploadError';
+            data.to = Auth.getCurrentUser().email;
+            data.subject = subject ;
+            var serData = {};
+            serData.serverPath = serverPath;
+            serData.errorList = res.errObj;
+            
+            notificationSvc.sendNotification(template, data, serData, 'email');
+            message += " Error details have been sent on registered email id.";
+          }
+          fireCommand(true);
+         return Modal.alert(message);
+        }).catch(function(err){
+          Modal.alert('Error while uploading');
+        });
+      }else if($scope.uploadType === 'modify'){
+        uploadData = {
+          fileName : $scope.modifiedExcel,
+          user : vm.enterpriseValuation.user
+        };
+
+        EnterpriseSvc.modifyExcel(uploadData).then(function(res){
+          vm.enterpriseValuation = {};
+          $scope.modifiedExcel = '';
+          var message = res.msg;
+          if (res.errObj.length > 0) {
+            var data = {};
+            var subject = 'Bulk Valuation Modify error details.';
+            var template = 'BulkSpareUploadError';
+            data.to = Auth.getCurrentUser().email;
+            data.subject = subject ;
+            var serData = {};
+            serData.serverPath = serverPath;
+            serData.errorList = res.errObj;
+            
+            notificationSvc.sendNotification(template, data, serData, 'email');
+            message += " Error details have been sent on registered email id.";
+          }
+          fireCommand(true);
+         return Modal.alert(message);
+        }).catch(function(err){
+          Modal.alert('Error while uploading');
+        });
+      } else {
+        Modal.alert('Invalid Choice');
+        return;
+      }
+    } 
 
     function editEnterpriseRequest(enterpriseData) {
       $state.go('enterprisevaluation.edittransaction', {id:enterpriseData._id});
@@ -166,6 +198,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
       vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
       vm.enterpriseValuation.user.mobile = Auth.getCurrentUser().mobile;
       vm.enterpriseValuation.user.email = Auth.getCurrentUser().email;
+      vm.enterpriseValuation.user.role = Auth.getCurrentUser().role;
     }
 
     function setData() {

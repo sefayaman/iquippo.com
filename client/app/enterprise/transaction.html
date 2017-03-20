@@ -5,10 +5,10 @@
       <h4>Add New Request                    
       </h4>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-2" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">
       <h4>
         <span class="btn btn-warning fileinput-button">
-         <input type="file" name="doc"  data-filetype="doc" file-upload required>
+         <input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
           <span><i class="fa fa-upload"></i> Upload Request</span>
         </span>
          <span>{{uploadedExcel}}</span>
@@ -17,10 +17,10 @@
     <div class="col-sm-2">
       <h4>
         <span class="btn btn-warning fileinput-button">
-         <input type="file" name="doc"  data-filetype="doc" file-upload required>
+         <input type="file" id="modify" name="modify"  data-filetype="doc" file-upload required>
           <span><i class="fa fa-upload"></i> Update Request</span>
         </span>
-         <span>{{uploadedExcel}}</span>
+         <span>{{modifiedExcel}}</span>
       </h4>
     </div>
     <div class="col-sm-2 text-right">
@@ -32,6 +32,9 @@
     <legend></legend>
      
     <div class="row form-group">                    
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Upload Excel</button>
+      </div>
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()">Submit to Agency</button>
       </div>
