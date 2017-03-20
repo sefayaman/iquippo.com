@@ -4,7 +4,7 @@
   angular.module('account').controller('ForgotPasswordCtrl', ForgotPasswordCtrl);
 
   //Controller function
-  function ForgotPasswordCtrl($scope, Auth, $rootScope, $uibModal, $uibModalInstance, commonSvc, Modal, notificationSvc) {
+  function ForgotPasswordCtrl($scope, Auth,LocationSvc, $rootScope, $uibModal, $uibModalInstance, commonSvc, Modal, notificationSvc) {
 
     var vm = this;
     vm.data = {};
@@ -36,12 +36,7 @@
       success(function(res) {
         if (res && res.errorCode == 0) {
           $scope.user = res.user;
-          $rootScope.allCountries.some(function(x) {
-            if (x.name == $scope.user.country) {
-              data['countryCode']=x.countryCode;
-              return true;
-            }
-          })
+          data['countryCode']=LocationSvc.getCountryCode($scope.user.country);
           data['userId'] = res.user._id;
           data['content'] = 'Your verification OTP is';
           commonSvc.sendOtp(data)
@@ -97,12 +92,7 @@
           dataToSend['serverPath'] = serverPath;
           notificationSvc.sendNotification('userPasswordChangedEmail', data, dataToSend, 'email');
           data['to'] = Auth.getCurrentUser().mobile;
-          $rootScope.allCountries.some(function(x) {
-            if (x.name == $scope.user.country) {
-              data['countryCode']=x.countryCode;
-              return true;
-            }
-          })
+          data['countryCode']=LocationSvc.getCountryCode($scope.user.country);
           notificationSvc.sendNotification('passwordChangesSmsToUser', data, dataToSend, 'sms');
           closeDialog();
         })

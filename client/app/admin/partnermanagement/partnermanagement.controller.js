@@ -262,11 +262,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
           var data = {};
           if(vm.vendorReg.user.mobile)
           data['to'] = vm.vendorReg.user.mobile;
-          $rootScope.allCountries.some(function(x){
-            if(x.name==vm.vendorReg.user.country)
-              data['countryCode']=x.countryCode;
-            return true;
-          })
+          data['countryCode']=LocationSvc.getCountryCode(vm.vendorReg.user.country);
           data['subject'] = 'Partner Registration: Success';
           var dataToSend = {};
           dataToSend['fname'] = vm.vendorReg.user.fname; 

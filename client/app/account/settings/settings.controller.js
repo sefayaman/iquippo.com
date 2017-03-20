@@ -2,7 +2,7 @@
   'use strict';
 angular.module('account').controller('SettingsCtrl',SettingsCtrl);
 
-function SettingsCtrl($scope, $rootScope, User, Auth,$uibModalInstance,Modal, notificationSvc) {
+function SettingsCtrl($scope, $rootScope,LocationSvc, User, Auth,$uibModalInstance,Modal, notificationSvc) {
     var vm = this;
 
     vm.data = {};
@@ -25,12 +25,7 @@ function SettingsCtrl($scope, $rootScope, User, Auth,$uibModalInstance,Modal, no
           dataToSend['serverPath'] = serverPath;
           notificationSvc.sendNotification('userPasswordChangedEmail', data, dataToSend,'email');
           data['to'] = Auth.getCurrentUser().mobile;
-          $rootScope.allCountries.some(function(x) {
-            if (x.name == Auth.getCurrentUser().country) {
-              data['countryCode']=x.countryCode;
-              return true;
-            }
-          })
+          data['countryCode']=LocationSvc.getCountryCode(Auth.getCurrentUser().country);
           notificationSvc.sendNotification('passwordChangesSmsToUser', data, dataToSend,'sms');
           closeDialog();
           Modal.alert($scope.message,true);
