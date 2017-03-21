@@ -29,9 +29,10 @@
             </div>
           </div>
             <div class="col-sm-5 padd-right">
-              <select class="form-control">
-                <option>Code</option>
-              </select>
+              <select class="form-control" ng-model="bidVm.biddingInfo.user.countryCode" required>
+                          <option value="" disabled>*Select Country Code</option>
+                          <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">{{country.countryCode}}</option>
+                        </select>
               <i class="caret"></i>
             </div>                      
             <div class="col-sm-7 padd-left">
