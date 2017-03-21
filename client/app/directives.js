@@ -87,6 +87,7 @@ angular.module('sreizaoApp')
         link: function (scope, el, attrs) {
             el.bind('change', function (event) {
                 var files = event.target.files;
+                console.log(attrs);
                 var fr = new FileReader;
                 fr.onload = function(ev) {
                     var img = new Image;
