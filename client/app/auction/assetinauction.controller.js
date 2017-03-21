@@ -13,7 +13,7 @@
     $scope.openUrl = openUrl;
 
     function openUrl(_id){
-      $window.open('/productdetail/'+_id,'_self');
+      $window.open('/productdetail/'+_id,'_blank');
     }
 
     function init() {
