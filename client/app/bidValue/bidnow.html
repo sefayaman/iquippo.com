@@ -19,6 +19,7 @@
         </div>
         <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
           <div class="row">
+
             <div class="col-sm-4 padd-right search-field">
               <select class="form-control" ng-model="bidVm.biddingInfo.user.countryCode" required>
                 <option value="" disabled>*Code</option>
@@ -26,11 +27,18 @@
               </select>
               <i class="caret"></i>
             </div>
-            <div class="col-sm-8 padd-left">
-              <input type="text" class="form-control" placeholder="* Mobile No." name="mobile" ng-model="bidVm.biddingInfo.user.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" required>
-            </div>
           </div>
-        </div>
+            <div class="col-sm-5 padd-right">
+              <select class="form-control">
+                <option>Code</option>
+              </select>
+              <i class="caret"></i>
+            </div>                      
+            <div class="col-sm-7 padd-left">
+              <input type="text" class="form-control" placeholder="* Mobile No." name="mobile" ng-model="bidVm.biddingInfo.user.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" required>
+            </div>                      
+          </div>
+                  </div>
       </div>
       <div class="row">
         <div class="form-group col-sm-6">
