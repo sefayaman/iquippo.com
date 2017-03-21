@@ -3,7 +3,7 @@
 	angular.module('sreizaoApp').controller('BidCtrl', BidCtrl);
 	angular.module('sreizaoApp').controller('BidListingCtrl', BidListingCtrl);
 
-	function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance, notificationSvc) {
+	function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,LocationSvc, notificationSvc) {
 		var vm = this;
 		vm.biddingInfo = {};
 		vm.biddingInfo.user = {};
