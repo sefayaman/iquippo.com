@@ -60,9 +60,10 @@
 							if (vm.biddingInfo.user.mobile)
 								data['to'] = vm.biddingInfo.user.mobile;
 							data['countryCode'] = LocationSvc.getCountryCode(vm.biddingInfo.user.country);
-							if (data.countryCode != "") {
-								notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend, 'sms');
-							}
+							if (data.countryCode == "")
+								data.countryCode = vm.biddingInfo.user.countryCode;
+							notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend, 'sms');
+
 							vm.biddingInfo = {};
 							closeDialog();
 						} else
