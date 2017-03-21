@@ -153,6 +153,7 @@ bulkUpload.init = function(taskData, next) {
 						obj.auctionId = x.auction.auctionId;
 						obj.startDate = x.auction.startDate;
 						obj.endDate = x.auction.endDate;
+						obj.external = true;
 						obj.statuses = [{
 							createdAt: new Date(),
 							status: x.status,

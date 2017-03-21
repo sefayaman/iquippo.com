@@ -31,9 +31,13 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+                    <tr ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
                     <td>{{auctionProduct.lotNo}}</td>
-                    <td><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></td>
+                    
+                    <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></a></td>
+                    
+                    <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></td>
+                    
                     <td><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></td>
                     <td>{{auctionProduct.product.assetId}}</td>
                     <td>{{auctionProduct.product.category}}</td>
