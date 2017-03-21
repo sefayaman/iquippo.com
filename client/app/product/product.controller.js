@@ -714,7 +714,7 @@ angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
           form.mfgyear.$invalid = true;
           ret = true;
       }
-      if($scope.product.tradeType != "SELL"){
+      if($scope.product.tradeType != "SELL" && $scope.product.tradeType != 'NOT_AVAILABLE'){
         if($scope.product.rent && !$scope.product.rent.negotiable && angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
           ret = true;
           Modal.alert("Please select at-least one check box in 'Check Rental Rate For'.",true);
