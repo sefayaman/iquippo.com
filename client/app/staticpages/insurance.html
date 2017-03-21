@@ -54,7 +54,7 @@
                 </div>
               </div>
               <div class="col-xs-4" ng-class="{'has-error': form.state.$invalid && form.submitted }">
-                  <select class="form-control" name="state" ng-model="insuranceQuote.state" ng-change="onCountryChange(insuranceQuote.state)" required>
+                  <select class="form-control" name="state" ng-model="insuranceQuote.state" ng-change="onStateChange(insuranceQuote.state)" required>
                     <option value="">*Select State</option>
                       <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
                   </select>
