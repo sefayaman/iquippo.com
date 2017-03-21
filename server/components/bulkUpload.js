@@ -35,7 +35,14 @@ function _fetchRequestData(options, cb) {
 }
 
 function _extractImages(taskData) {
-	var filename = taskData.taskInfo.filename;
+	var filename;
+	if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+		filename = taskData.taskInfo.filename;
+	} else {
+		return new Error('Invalid taskinfo/file');
+	}
+
+
 	try {
 		var zip = new AdmZip(config.uploadPath + "temp/" + filename);
 		taskData.zip = zip;
@@ -163,6 +170,8 @@ bulkUpload.init = function(taskData, next) {
 				var rejectIds = [];
 				if (approvedObj.length) {
 					async.eachLimit(approvedIds, 5, iterator, finalize);
+				} else {
+					return next(false, taskData);
 				}
 
 
@@ -245,6 +254,8 @@ bulkUpload.init = function(taskData, next) {
 				var rejectIds = [];
 				if (approvedObj.length) {
 					async.eachLimit(approvedIds, 5, iterator, finalize);
+				} else {
+					return next(false, taskData);
 				}
 
 
