@@ -3,7 +3,7 @@
 	angular.module('sreizaoApp').controller('BidCtrl', BidCtrl);
 	angular.module('sreizaoApp').controller('BidListingCtrl', BidListingCtrl);
 
-	function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance,LocationSvc, notificationSvc) {
+	function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance, LocationSvc, notificationSvc) {
 		var vm = this;
 		vm.biddingInfo = {};
 		vm.biddingInfo.user = {};
@@ -59,8 +59,10 @@
 							notificationSvc.sendNotification('biddingEmailToCustomer', data, dataToSend, 'email');
 							if (vm.biddingInfo.user.mobile)
 								data['to'] = vm.biddingInfo.user.mobile;
-							data['countryCode']=LocationSvc.getCountryCode(vm.biddingInfo.user.country);
-							notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend, 'sms');
+							data['countryCode'] = LocationSvc.getCountryCode(vm.biddingInfo.user.country);
+							if (data.countryCode != "") {
+								notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend, 'sms');
+							}
 							vm.biddingInfo = {};
 							closeDialog();
 						} else
