@@ -38,8 +38,13 @@
                     
                     <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></td>
                     
-                    <td><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></td>
-                    <td>{{auctionProduct.product.assetId}}</td>
+                    <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></a></td>
+
+                    <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></td>
+                    
+                    <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)">{{auctionProduct.product.assetId}}</a></td>
+                    
+                    <td ng-if="!auctionProduct.product._id">{{auctionProduct.product.assetId}}</td>
                     <td>{{auctionProduct.product.category}}</td>
                     <td>{{auctionProduct.product.brand}}</td>
                     <td>{{auctionProduct.product.model}}</td>
