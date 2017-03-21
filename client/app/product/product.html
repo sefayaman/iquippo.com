@@ -126,6 +126,7 @@
                                 <select class="form-control" ng-model="product.tradeType" name="tradeType" required ng-change = "onTradeTypeChange(product.tradeType)">
                                   <option value="">Select Trade Type</option>
                                   <option ng-repeat="trade in tradeType| orderBy:'name'" value="{{trade.code}}">{{trade.name}}</option>
+                                  <option value="NOT_AVAILABLE" ng-if="isAdmin()">Not Available</option>
                                 </select>
                                 <i class="caret"></i>
                               </div>
@@ -300,7 +301,7 @@
                             </div>
                           </div>
 
-                          <div class="rental-info" ng-if="product.tradeType != 'SELL'">
+                          <div class="rental-info" ng-if="product.tradeType != 'SELL' && product.tradeType != 'NOT_AVAILABLE'">
                             <div class="row form-group">
                               <div class="col-sm-5">
                                 Availability of asset<span class="text-warning">*</span>
@@ -310,13 +311,13 @@
                                   <div class="col-sm-5 form-group">
                                     <div class="input-group" ng-class="{'has-error': form.fromDate.$invalid && submitted}">
                                       <span class="input-group-addon">From</span>
-                                      <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL'">
+                                      <input type="date" placeholder="Date" class="form-control" name="fromDate"  ng-model="product.rent.fromDate" uib-datepicker-popup="{{formats1}}" is-open="popup2.opened" min-date="minDate" datepicker-options="dateOptions" close-text="Close" alt-input-formats="altInputFormats" ng-click="open2()" ng-required="product.tradeType != 'SELL' && product.tradeType != 'NOT_AVAILABLE'">
                                     </div>
                                   </div>
                                   <div class="col-sm-5 form-group">
                                     <div class="input-group" ng-class="{'has-error': form.toDate.$invalid && submitted}">
                                       <span class="input-group-addon">To</span>
-                                      <input type="date" placeholder="Date" class="form-control" name="toDate" ng-value="toDate" ng-model="product.rent.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup3.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()" ng-required="product.tradeType != 'SELL'">
+                                      <input type="date" placeholder="Date" class="form-control" name="toDate" ng-value="toDate" ng-model="product.rent.toDate" uib-datepicker-popup="{{formats1}}" is-open="popup3.opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" close-text="Close" alt-input-formats="altInputFormats" ng-click="open3()" ng-required="product.tradeType != 'SELL' && product.tradeType != 'NOT_AVAILABLE'">
                                     </div>
                                   </div>
                                 </div>

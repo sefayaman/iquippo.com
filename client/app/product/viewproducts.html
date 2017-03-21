@@ -22,6 +22,7 @@
                     <option value="RENT">Rent</option>
                     <option value="rented">Rented</option>
                     <option value="sold">Sold</option>
+                    <option value="NOT_AVAILABLE">Not Available</option>
                   </select>
 
                   <i class="caret"></i>
@@ -243,6 +244,7 @@
                             <img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}">
                             <span class="sold-tag" ng-if="product.assetStatus == 'sold'"><span>Sold</span></span>
                             <span class="rent-tag" ng-if="product.assetStatus == 'rented'"><span>Rented</span></span>
+                            <span class="vailablity-tag" ng-if="product.tradeType == 'NOT_AVAILABLE'"><span>Not Available</span></span>
                           </a>
 
                         </div>
@@ -251,7 +253,7 @@
                             <span class="text-ellips productname">{{product.name}}</span>
                             <div class="sell-featured">
                               <span ng-if="product.tradeType == 'RENT' || product.tradeType == 'BOTH'"><img src="assets/images/rent.png" width="30"></span>
-                              <span ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH'"><img src="assets/images/sale.png" width="30"></span>
+                              <span ng-if="product.tradeType == 'SELL' || product.tradeType == 'BOTH' || product.tradeType == 'NOT_AVAILABLE'"><img src="assets/images/sale.png" width="30"></span>
                               <span ng-if="product.featured"><img src="assets/images/featured1.png" width="100"></span>
                             </div>
                             <span class="pull-right text-danger" ng-if="product.priceOnRequest && product.tradeType != 'RENT'">Price On Request</span>

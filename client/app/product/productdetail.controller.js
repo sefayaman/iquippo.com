@@ -400,7 +400,7 @@ function addProductQuote(form){
         $scope.$broadcast('productloaded');
         $rootScope.currentProduct = $scope.currentProduct;
 
-        if($scope.currentProduct.tradeType == "SELL"){
+        if($scope.currentProduct.tradeType == "SELL" || $scope.currentProduct.tradeType == "NOT_AVAILABLE"){
           $scope.trade="To Buy"
         }
         else if($scope.currentProduct.tradeType == "RENT"){
