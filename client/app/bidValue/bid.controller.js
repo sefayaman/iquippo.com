@@ -60,7 +60,7 @@
 							if (vm.biddingInfo.user.mobile)
 								data['to'] = vm.biddingInfo.user.mobile;
 							data['countryCode'] = LocationSvc.getCountryCode(vm.biddingInfo.user.country);
-							if (data.countryCode != undefined) {
+							if (data.countryCode != "") {
 								notificationSvc.sendNotification('biddingSMSToCustomer', data, dataToSend, 'sms');
 							}
 							vm.biddingInfo = {};
