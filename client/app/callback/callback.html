@@ -31,9 +31,9 @@
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid &&
                    form.submitted }">
                     <div class="row">
-                      <div class="col-sm-5 padd-right">
+                      <div class="col-sm-5 padd-right search-field">
                         <select class="form-control" ng-model="callbackVm.callback.countryCode" required>
-                          <option value="" disabled>*Select Country Code</option>
+                          <option value="" disabled>Code</option>
                           <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">{{country.countryCode}}</option>
                         </select>
                         <i class="caret"></i>
