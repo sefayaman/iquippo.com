@@ -25,7 +25,6 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
       dataToSend['lname'] = callback.lname;
       dataToSend['phone'] = callback.phone;
       dataToSend['mobile'] = callback.mobile;
-      dataToSend['countryCode']=callback.countryCode;
       dataToSend['email'] = callback.email;
 
       $http.post('/api/callback',dataToSend).success(function(result) {
