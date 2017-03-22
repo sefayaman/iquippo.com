@@ -35,7 +35,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
 
   function init(){
 
-    Auth.isLoggedInAsync(function(loggedIn) {
       Auth.isLoggedInAsync(function(loggedIn){
         if(loggedIn){
             
@@ -47,7 +46,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
               getEnterpriseData(dataToSend);
             }
         })
-      })
     setData();
     var userFilter = {};
     userFilter.role = "enterprise";

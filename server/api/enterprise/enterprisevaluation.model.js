@@ -54,13 +54,8 @@ var EnterpriseValuationSchema = new Schema({
   underCarriageImage:{},
   otherImage:{},
   valuationReport:{},
-  /*Invoicing detail*/
-  invoiceDetail:{},
-  /*Payemnt received detail */
-  paymentReceivedDetail:{},
-  /*Payment made detail*/
-  paymentMadeDetail:{},
-
+  paymentReceived:{type:Boolean,default:false},
+  paymentMade:{type:Boolean,default:false},
   assetDir:String,
   failureReason:String,
   deleted:{type:Boolean,default:false},

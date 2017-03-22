@@ -21,6 +21,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
   vm.reset = reset;
+  vm.deleteImg = deleteImg;
 
   vm.addOrUpdateRequest = addOrUpdateRequest;
   
@@ -238,6 +239,11 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename
         )
         EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[3]);
+    }
+
+    function deleteImg(fieldName){
+      if(vm.enterpriseValuation[fieldName].filename)
+        delete vm.enterpriseValuation[fieldName].filename;
     }
 
     function reset() {

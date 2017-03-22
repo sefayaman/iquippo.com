@@ -11,16 +11,15 @@
 </div>
 </div>
 <legend></legend>
-	
+  
     <div class="row form-group">
-      <div class=" col-sm-2">                   
-        <button class="btn btn-primary btn-block" ng-click="enterprisePaymentMadeVm.openModal()">Update Payment Details</button>                   
+        <div class=" col-sm-2">                   
+        <!-- <button class="btn btn-primary btn-block" ng-click="enterprisePaymentMadeVm.openModal()">Update Payment Details</button -->                 
       </div>                   
       <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search:  <input type="text" placeholder="Invoice No.">
       </div>
-    </div>
-        
+  </div>
     <div class="table-responsive">
       <table class="table table-bordered">
         <thead>
@@ -29,9 +28,9 @@
             <th>Invoice No.</th>
             <th>Type of Request</th>
             <th>Enterprise Name</th>
-            <th>Enterprise User</th>
-            <th>Enterprise User No.</th>
+            <th>Enterprise Contact No.</th>
             <th>Agency Name</th>
+            <th>Agency Contact No.</th>
             <th>Status</th>
             <th>Bank Name</th>
             <th>Branch Name</th>
@@ -42,23 +41,24 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-        <tr ng-repeat="entVal in enterprisePaymentMadeVm.dataList">
-            <td><input type="checkbox" ng-click="enterprisePaymentMadeVm.updateSelection($event,entVal)"></td>
+        <tbody ng-repeat="entVal in enterprisePaymentMadeVm.dataList">
+          <tr ng-repeat="dtl in entVal.paymentMadeDetail.paymentDetails">
+            <td><!-- <input type="checkbox" ng-click="enterprisePaymentMadeVm.updateSelection($event,entVal)"> --></td>
             <td>{{entVal.invoiceNo}}</td>
             <td>{{entVal.requestType}}</td>
             <td>{{entVal.enterprise.name}}</td>
-            <td>{{entVal.createdBy.name}}</td>
-            <td>{{entVal.createdBy.mobile}}</td> 
-            <td></td>              
+            <td>{{entVal.enterprise.mobile}}</td>
+            <td>{{entVal.agency.name}}</td> 
+            <td>{{entVal.agency.mobile}}</td>              
             <td>{{entVal.status}}</td>
-            <td>{{entVal.paymentMadeDetail.bankName}}</td>
-            <td>{{entVal.paymentMadeDetail.branchName}}</td>
-            <td>{{entVal.paymentMadeDetail.chequeNo}}</td>
-            <td>{{entVal.paymentMadeDetail.chequeDate}}</td>
-            <td>{{entVal.paymentMadeDetail.chequeValue}}</td>
-            <td>Rs.{{entVal.paymentMadeDetail.deductedTds}}</td>
-            <td></td>
+            <td>{{dtl.bankName}}</td>
+            <td>{{dtl.branchName}}</td>
+            <td>{{dtl.chequeNo}}</td>
+            <td>{{dtl.chequeDate}}</td>
+            <td>{{dtl.chequeValue}}</td>
+            <td><span ng-if="dtl.deductedTds">Rs.{{dtl.deductedTds}}</span></td>
+            <td> <a class="btn btn-primary btn-block btn-xs" href="javascript:void(0);" ng-click="enterprisePaymentMadeVm.openModal(entVal,$index)" ng-if="!dtl.attached"></i>Update Payment Details</a>
+            </td>
           </tr>
         </tbody>
       </table>              
@@ -72,27 +72,27 @@
 </div>
 <div class="modal-body">
   <form class="form" name="form" novalidate>
-        <div class="row form-group ">
+        <div class="row form-group " ng-class="{'has-error':form.bankName.$invalid && submitted}">
           <div class="col-sm-4">
-            <input type="text" class="form-control" name="bankName" ng-model="paymentDetai.bankName"  placeholder="Bank Name" required/>
+            <input type="text" class="form-control" name="bankName" ng-model="paymentDetail.bankName"  placeholder="Bank Name" required/>
           </div>
-          <div class="col-sm-4">
-            <input type="text" class="form-control" name="branchName" ng-model="paymentDetai.branchName" placeholder="Branch Name" required/>
+          <div class="col-sm-4" ng-class="{'has-error':form.branchName.$invalid && submitted}">
+            <input type="text" class="form-control" name="branchName" ng-model="paymentDetail.branchName" placeholder="Branch Name" required/>
           </div>
-          <div class="col-sm-4">
-             <input type="text" class="form-control" name="chequeNo" ng-model="paymentDetai.chequeNo" placeholder="Cheque Number" required/>
+          <div class="col-sm-4" ng-class="{'has-error':form.chequeNo.$invalid && submitted}">
+             <input type="text" class="form-control" name="chequeNo" ng-model="paymentDetail.chequeNo" placeholder="Cheque Number" required/>
           </div>
           
         </div>
-        <div class="row form-group ">
+        <div class="row form-group " ng-class="{'has-error':form.chequeDate.$invalid && submitted}">
           <div class="col-sm-4">
-             <input type="text" class="form-control" name="chequeDate" ng-model="paymentDetai.chequeDate" placeholder="Cheque Date" required/>
+             <input type="text" class="form-control" name="chequeDate" ng-model="paymentDetail.chequeDate" placeholder="Cheque Date" required/>
           </div>
-          <div class="col-sm-4">
-            <input type="number" class="form-control" name="chequeValue" ng-model="paymentDetai.chequeValue" placeholder="Cheque Value" required/>
+          <div class="col-sm-4" ng-class="{'has-error':form.chequeValue.$invalid && submitted}">
+            <input type="number" class="form-control" name="chequeValue" ng-model="paymentDetail.chequeValue" placeholder="Cheque Value" required/>
           </div>
-          <div class="col-sm-4">
-            <input type="number" class="form-control" name="deductedValue" ng-model="paymentDetai.deductedValue" placeholder="Deducted TDS" required/>
+          <div class="col-sm-4" ng-class="{'has-error':form.deductedValue.$invalid && submitted}">
+            <input type="number" class="form-control" name="deductedValue" ng-model="paymentDetail.deductedTds" placeholder="Deducted TDS" required/>
           </div>
           
         </div>

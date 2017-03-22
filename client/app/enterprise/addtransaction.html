@@ -216,17 +216,18 @@
              <div class="pic-popover">
                 <div class="primary-upload">
                   <div class="br5">
-                    <span class="fileinput-button browse-icon">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.generalImage.filename">
                         <span><i class="fa fa-plus-circle"></i></span>
                           <input type="file" name="general" onchange="angular.element(this).scope().upload(this.files,'generalImage')" ng-disabled="!editAgencyField()" accept="image/*">
                      </span> 
-                      <div ng-show="img.src">
+                      <div ng-if="addTransactionVm.enterpriseValuation.generalImage.filename">
                         <div class="icn2">
-                          <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('generalImage')"><i class="fa fa-times"></i></a>
                        </div>
                         <span class="fileinput-button">
                           <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.generalImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.generalImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.generalImage.external">
                           </a>
                         </span> 
                       </div>                      
@@ -239,17 +240,18 @@
              <div class="pic-popover">
                 <div class="primary-upload">
                   <div class="br5">
-                    <span class="fileinput-button browse-icon">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.engineImage.filename">
                         <span><i class="fa fa-plus-circle"></i></span>
                           <input type="file" name="engine" onchange="angular.element(this).scope().upload(this.files,'engineImage')" ng-disabled="!editAgencyField()" accept="image/*">
                      </span>
-                     <div ng-show="img.src">
+                     <div ng-if="addTransactionVm.enterpriseValuation.engineImage.filename">
                         <div class="icn2">
-                          <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('engineImage')"><i class="fa fa-times"></i></a>
                        </div>
                         <span class="fileinput-button">
                           <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.engineImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.engineImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.engineImage.external">
                           </a>
                         </span> 
                       </div>                        
@@ -262,17 +264,18 @@
              <div class="pic-popover">
                 <div class="primary-upload">
                   <div class="br5">
-                    <span class="fileinput-button browse-icon">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.hydraulicImage.filename">
                         <span><i class="fa fa-plus-circle"></i></span>
                           <input type="file" name="hydraulic" onchange="angular.element(this).scope().upload(this.files,'hydraulicImage')" ng-disabled="!editAgencyField()" accept="image/*">
                      </span> 
-                     <div ng-show="img.src">
+                     <div ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.filename">
                         <div class="icn2">
-                          <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('hydraulicImage')"><i class="fa fa-times"></i></a>
                        </div>
                         <span class="fileinput-button">
                           <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.hydraulicImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.hydraulicImage.external">
                           </a>
                         </span> 
                       </div>                       
@@ -285,17 +288,18 @@
              <div class="pic-popover">
                 <div class="primary-upload">
                   <div class="br5">
-                    <span class="fileinput-button browse-icon">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.cabinImage.filename">
                         <span><i class="fa fa-plus-circle"></i></span>
                           <input type="file" name="cabin" onchange="angular.element(this).scope().upload(this.files,'cabinImage')" ng-disabled="!editAgencyField()" accept="image/*">
                      </span> 
-                     <div ng-show="img.src">
+                     <div ng-if="addTransactionVm.enterpriseValuation.cabinImage.filename">
                         <div class="icn2">
-                          <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('cabinImage')"><i class="fa fa-times"></i></a>
                        </div>
                         <span class="fileinput-button">
-                          <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive">
+                         <a href="javascript:void(0);">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.cabinImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.cabinImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.cabinImage.external">
                           </a>
                         </span> 
                       </div>                       
@@ -308,17 +312,18 @@
              <div class="pic-popover">
                 <div class="primary-upload">
                   <div class="br5">
-                    <span class="fileinput-button browse-icon">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.underCarriageImage.filename">
                         <span><i class="fa fa-plus-circle"></i></span>
                           <input type="file" name="undercarriage" onchange="angular.element(this).scope().upload(this.files,'underCarriageImage')" ng-disabled="!editAgencyField()" accept="image/*">
                      </span>    
-                     <div ng-show="img.src">
+                     <div ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.filename">
                         <div class="icn2">
-                          <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('underCarriageImage')"><i class="fa fa-times"></i></a>
                        </div>
                         <span class="fileinput-button">
                           <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.underCarriageImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.underCarriageImage.external">
                           </a>
                         </span> 
                       </div>                    
@@ -331,17 +336,18 @@
              <div class="pic-popover">
                 <div class="primary-upload">
                   <div class="br5">
-                    <span class="fileinput-button browse-icon">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.otherImage.filename">
                         <span><i class="fa fa-plus-circle"></i></span>
                           <input type="file" name="other" onchange="angular.element(this).scope().upload(this.files,'otherImage')" ng-disabled="!editAgencyField()" accept="image/*">
                      </span> 
-                     <div ng-show="img.src">
+                     <div ng-if="addTransactionVm.enterpriseValuation.otherImage.filename">
                         <div class="icn2">
-                          <a href="javascript:void(0);"><i class="fa fa-times"></i></a>
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('otherImage')"><i class="fa fa-times"></i></a>
                        </div>
                         <span class="fileinput-button">
                           <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.otherImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.otherImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.otherImage.external">
                           </a>
                         </span> 
                       </div>                       
@@ -359,7 +365,7 @@
             <span><i class="fa fa-upload"></i> Upload</span>
           </span>
         </div>
-        <div class="col-sm-4"></div>
+        <div class="col-sm-4">{{addTransactionVm.enterpriseValuation.valuationReport.filename}}</div>
       </div>
       
     </div>

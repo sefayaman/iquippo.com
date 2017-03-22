@@ -3,27 +3,37 @@
 angular.module('sreizaoApp').controller('EnterprisePaymentMadeCtrl',EnterprisePaymentMadeCtrl);
 function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,notificationSvc, EnterpriseSvc, userSvc,PagerSvc) {
  	var vm = this;
- 	var selectedItems = [];
- 	var statuses = [EnterpriseValuationStatuses[6],EnterpriseValuationStatuses[7]]
- 	$scope.pager = PagerSvc.getPager();
+  
+  //var selectedItems = [];
+  var statuses = [EnterpriseValuationStatuses[5]];
+  
+   var checkdetailObj = {
+          bankName:"",
+          branchName:"",
+          chequeNo:"",
+          chequeDate:"",
+          chequeValue:"",
+          deductedTds:"",
+          attached:false
+        };
 
- 	$scope.paymentDetai = {};
- 	$scope.updatePaymentDetail = updatePaymentDetail;
+  $scope.pager = PagerSvc.getPager();
 
- 	vm.fireCommand = fireCommand;
- 	vm.updateSelection = updateSelection;
- 	vm.openModal = openModal;
+  vm.fireCommand = fireCommand;
+  vm.updateSelection = updateSelection;
+  vm.openModal = openModal;
 
- 	function init(){
+  function init(){
 
- 		getEnterpriseData({});
- 	}
+    getInvoiceData({});
+  }
 
- 	function getEnterpriseData(filter){
+  function getInvoiceData(filter){
       $scope.pager.copy(filter);
       filter.status = statuses;
       filter.pagination = true;
-      EnterpriseSvc.get(filter)
+      filter.paymentMade = 'n';
+      EnterpriseSvc.getInvoice(filter)
       .then(function(result){
         vm.dataList = result.items;
         vm.totalItems = result.totalItems;
@@ -39,7 +49,7 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
       if(vm.searchStr)
         filter['searchStr'] = vm.searchStr;
       
-      getEnterpriseData(filter);
+      getInvoiceData(filter);
     }
 
 
@@ -57,43 +67,75 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
           selectedItems.splice(index,1);
      }
 
-     function openModal(){
+     function openModal(evtVal,idx){
 
-     	if(selectedItems.length == 0){
-     		Modal.alert('No recoord selcted');
-     		return;
-     	}
+        $scope.paymentDetail = evtVal.paymentMadeDetail.paymentDetails[idx]; 
+         var formModal = $uibModal.open({
+          animation: true,
+            templateUrl: "formModal.html",
+            scope: $scope,
+            size: 'lg'
+        });
 
-     	 var formModal = $uibModal.open({
-     	  animation: true,
-          templateUrl: "formModal.html",
-          scope: $scope,
-          size: 'lg'
-      });
+        $scope.close = function () {
+          formModal.dismiss('cancel');
+        };
 
-      $scope.close = function () {
-        formModal.dismiss('cancel');
-      };
+        $scope.updatePaymentDetail = function(form){
+          
+          if(form.$invalid){
+            $scope.submitted = true;
+            return;
+          }
+          var checkVal = $scope.paymentDetail.chequeValue + $scope.paymentDetail.deductedTds;
+          var remainingVal = evtVal.paymentMadeDetail.remainingAmount - checkVal;
+          if(remainingVal < 0){
+            Modal.alert("Invalid cheque amount");
+            return;
+          }
+          $scope.paymentDetail.attached = true;
+          $scope.paymentDetail.createdAt = new Date();
+          if(remainingVal > 0){
+             evtVal.paymentMadeDetail.remainingAmount = remainingVal;
+             evtVal.paymentMadeDetail.paymentDetails[evtVal.paymentMadeDetail.paymentDetails.length] = checkdetailObj;
+          }
+
+          if(remainingVal == 0){
+            evtVal.paymentMadeDetail.remainingAmount = 0;
+            evtVal.paymentMade = true;
+             EnterpriseSvc.setStatus(evtVal,EnterpriseValuationStatuses[7],true);
+          }
+          EnterpriseSvc.updateInvoice(evtVal)
+          .then(function(result){
+              $scope.close();
+              var isCompleted =  evtVal.paymentReceived && evtVal.paymentMade;
+              getInvoiceData({});
+              if(remainingVal == 0)
+                updateValuationRequest($scope.paymentDetail.invoiceNo,isCompleted);
+              $scope.paymentDetail = {};                
+          });
+      }
+
+      function updateValuationRequest(invoiceNo,isCompleted){
+        EnterpriseSvc.get({invoiceNo:invoiceNo})
+        .then(function(valList){
+          valList.forEach(function(item){
+            item.paymentMade = true;
+            EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[7],true);
+            if(isCompleted)
+              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[8]);
+          });
+          EnterpriseSvc.bulkUpdate(valList);
+        })
+        .catch(function(err){
+          console.log('err in valuation request',err);
+        });
+      }
 
      }
 
-    function updatePaymentDetail(){
-      	selectedItems.forEach(function(item){
-      		item.paymentMadeDetail = $scope.paymentDetai;
-      		EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[7]);
-      	});
-
-      	EnterpriseSvc.bulkUpdate(selectedItems)
-        .then(function(res){
-          	selectedItems = [];
-          	$scope.pager.reset();
-         	getEnterpriseData({});
-         	$scope.close();
-        })
-      }
 
      init();
-
 }
 
 })();

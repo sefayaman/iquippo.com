@@ -3,9 +3,9 @@
     <h4>Invoicing</h4>
   </div>
   <div class="col-sm-3">
-    <select class="form-control">
-      <option>Invoice to be Genrated</option>
-      <option>Invoice Genrated</option>
+    <select class="form-control" ng-if="isAdmin()" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
+      <option value="generated">Invoice Generated</option>
+      <option value="tobegenerate">Invoice to be Generated</option>
     </select>
     <i class="caret"></i>
   </div> 
@@ -17,10 +17,38 @@
 </div>
 <legend></legend>
 <!-- invoice to be genrated -->
-<div ng-show="false">
+<div ng-if="enterpriseInvoiceVm.type == 'tobegenerate' && isAdmin()">
+  <form name="searchForm">
+    <div class="row form-group">          
+    <div class="col-sm-3">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseName" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+        <option value="">Select Enterprise Name</option>
+        <option value="{{ent.enterpriseName}}" ng-repeat="ent in enterpriseInvoiceVm.enterprises">{{ent.enterpriseName}}</option>
+      </select>
+      <i class="caret"></i>
+    </div>
+    <div class="col-sm-3">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-change="enterpriseInvoiceVm.getPartners(enterpriseInvoiceVm.reqType)">
+        <option value="">Select Type of Request</option>
+        <option ng-repeat="req in enterpriseInvoiceVm.serviceList" value="{{req.name}}">{{req.name}}</option>
+      </select>
+      <i class="caret"></i>
+    </div>
+    <div class="col-sm-3">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.agencyId" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+        <option value="">Select Valuation Partner</option>
+        <option value="{{val._id}}" ng-repeat="val in enterpriseInvoiceVm.agencies">{{val.name}}</option>
+      </select>
+      <i class="caret"></i>
+    </div>
+    <div class="col-sm-offset-1 col-sm-2">
+     <!--  <button type="button" class="btn btn-danger btn-block" >Search</button> -->
+    </div>
+  </div>
+  </form>
   <div class="row form-group featured"> 
     <div class=" col-sm-2">                   
-      <button class="btn btn-primary btn-block" ng-click="enterpriseInvoiceVm.openInvoiceModal()">Genrate Invoice</button>                   
+      <button class="btn btn-primary btn-block" ng-click="enterpriseInvoiceVm.openInvoiceModal()">Generate Invoice</button>                   
     </div>      
     <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
       Search: <input type="text" placeholder="Search...">
@@ -32,23 +60,29 @@
         <tr>
           <th>Select</th>
           <th>Unique Control No</th>
-          <th>Invoice Date</th>
-          <th>Invoice No.</th>
-          <th>Enterprise Name</th>
+          <th>Request Type</th>
+          <th>Purpose</th>
           <th>Agency Name</th>
+          <th>Enterprise</th>
+          <th>Customer Transaction ID</th>
+          <th>Customer Valuation No</th>
+          <th>Asset No.</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="entVal in enterpriseInvoiceVm.dataList">
           <td>
-            <input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
+            <input type="checkbox" ng-disabled="entVal.status == EnterpriseValuationStatuses[5]" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
-          <td></td>
-          <td>{{entVal.invoiceDate}}</td>
-          <td>{{entVal.invoiceNo}}</td>
-          <td>{{entVal.enterpriseName}}</td>
-          <td>{{entVal.agencyName}}</td>
+          <td>{{entVal.uniqueControlNo}}</td>
+          <td>{{entVal.requestType}}</td>
+          <td>{{entVal.purpose}}</td>
+          <td>{{entVal.agency.name}}</td>
+          <td>{{entVal.enterprise.name}}</td>
+          <td>{{entVal.customerTransactionId}}</td>
+          <td>{{entVal.customerValuationNo}}</td>
+          <td>{{entVal.assetId}}</td>
           <td>{{entVal.status}}</td>          
         </tr>
       </tbody>
@@ -57,40 +91,17 @@
     <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseInvoiceVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 </div>
 <!-- invoice genrated -->
-<div ng-show="true">
-  <div class="row form-group">          
-    <div class="col-sm-3">
-      <select class="form-control">
-        <option>Select Enterprise Name</option>
-      </select>
-      <i class="caret"></i>
-    </div>
-    <div class="col-sm-3">
-      <select class="form-control">
-        <option>Select Type of Request</option>
-      </select>
-      <i class="caret"></i>
-    </div>
-    <div class="col-sm-3">
-      <select class="form-control">
-        <option>Select Valuation Partner</option>
-      </select>
-      <i class="caret"></i>
-    </div>
-    <div class="col-sm-offset-1 col-sm-2">
-      <button type="button" class="btn btn-danger btn-block">Search</button>
-    </div>
-  </div>
+<div ng-if="enterpriseInvoiceVm.type == 'generated'">
   <div class="table-responsive">
     <table class="table table-bordered">
       <thead>
         <tr>
           <th>Select</th>
-          <th>Unique Control No</th>
-          <th>Invoice Date</th>
-          <th>Invoice No.</th>
+          <th>Invoice Number</th>
           <th>Enterprise Name</th>
-          <th>Agency Name</th>
+          <th>Enterprise Contact No.</th>
+          <th>Valuation Partner Name</th>
+          <th>Valuation Partner Contact No.</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -100,11 +111,11 @@
           <td>
             <input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
-          <td></td>
-          <td>{{entVal.invoiceDate}}</td>
           <td>{{entVal.invoiceNo}}</td>
-          <td>{{entVal.enterpriseName}}</td>
-          <td>{{entVal.agencyName}}</td>
+          <td>{{entVal.enterprise.name}}</td>
+          <td>{{entVal.enterprise.mobile}}</td>
+          <td>{{entVal.agency.name}}</td>
+           <td>{{entVal.agency.mobile}}</td>
           <td>{{entVal.status}}</td>
           <td>          
               <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
@@ -126,32 +137,27 @@
    <form name="invoiceForm" novalidate>
    	<div class="row">
    		<div class="col-md-10 form-group">
-   			Total No. of valuation request selected 			
+   			Valuation Request Count:			
    		</div>
    		<div class="col-md-2">
-   			{{selectedItems.length}}
+   			{{invoice.requestCount}}
    		</div>
    	</div>
-   	<div class="row" ng-repeat="ent in selectedItems"> 		
-   		<div class="col-md-6 form-group">
-   		   Unique Control No : {{ent.uniqueControlNo}}
+   	<div class="row"> 		
+   		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">
+   		  <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Service Fee" required/>
    		</div>
-   		<div class="col-md-6 form-group">
-   			<input type="text" class="form-control" name="engineNo" ng-value="{{getServiceFee(ent).amount}}" ng-model="ent.invoiceDetail.serviceFee" placeholder="Service Fee"/>
-   		</div>
-   	</div>
-    <div class="row">     
-      <div class="col-md-6 form-group">
-        <select class="form-control" ng-model="taxRate">
+   		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
+   			<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
           <option value="">Select Rate for Invoice</option>
           <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
         </select>
         <i class="caret"></i>
-      </div>      
-    </div>
+   		</div>
+   	</div>
    	<div class="row">
    		<div class="col-md-12 text-right">
-   			<button type="button" class="btn btn-danger" ng-click="generateInvoice()">Genrate</button>
+   			<button type="button" class="btn btn-danger" ng-click="generateInvoice(invoiceForm)">Genrate</button>
    		</div>
    	</div>
   </form>

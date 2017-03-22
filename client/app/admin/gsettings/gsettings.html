@@ -1277,10 +1277,10 @@
         						<input type="text" class="form-control" name="chargeBasis" ng-model="svcFeeVm.dataModel.chargeBasis" placeholder="Charge Basis" required />
         						<span class="input-group-addon">%</span>
         					</div> -->
-        					<select class="form-control">
-        						<option>*Slect Charge Basis</option>
-        						<option>Flat</option>
-        						<option>%</option>
+        					<select class="form-control" ng-model="svcFeeVm.dataModel.chargeBasis" required>
+        						<option value="">*Slect Charge Basis</option>
+        						<option value="flat">Flat</option>
+        						<option value="percent">%</option>
         					</select>
         					<i class="caret"></i>
         				</div>

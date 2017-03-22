@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Seq = require("seq");
 var EnterpriseValuation = require('./enterprisevaluation.model');
+var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
 
 var xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
@@ -24,6 +25,18 @@ var validRequestType = ['Valuation','Insepection'];
 var UserModel = require('../user/user.model');
 
 exports.get = function(req, res) {
+  
+  if(req.query.type == 'request')
+    return getValuationRequest(req,res);
+  else if(req.query.type == 'invoice')
+    return getInvoice(req,res);
+  else
+    res.status(404).send('Not Found');
+
+  
+};
+
+function getValuationRequest(req,res){
   
   var queryParam = req.query;
   var filter = {};
@@ -93,9 +106,16 @@ exports.get = function(req, res) {
   if (queryParam.mobile)
     filter["mobile"] = queryParam.mobile;
   if (queryParam.enterpriseName)
-    filter["enterpriseName"] = queryParam.enterpriseName;
+    filter["enterprise.name"] = queryParam.enterpriseName;
+  if (queryParam.agencyId)
+    filter["agency._id"] = queryParam.agencyId;
+  if (queryParam.requestType)
+    filter["requestType"] = queryParam.requestType;
   if (queryParam.userId)
     filter["user._id"] = queryParam.userId;
+  if (queryParam.invoiceNo)
+    filter["invoiceNo"] = queryParam.invoiceNo;
+
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
     return;
@@ -111,9 +131,48 @@ exports.get = function(req, res) {
     }
 
   );
-};
+}
 
+function getInvoice(req,res){
 
+  var queryParam = req.query;
+  var filter = {};
+  //filter['deleted'] = false;
+  if (queryParam._id)
+    filter["_id"] = queryParam._id;
+  
+  if (queryParam.status){
+    var stsArr = queryParam.status.split(',');
+    filter["status"] = {$in:stsArr};
+  }
+
+  if(queryParam.paymentReceived){
+     filter["paymentReceived"] = queryParam.paymentReceived == 'n'?false:true;
+  }
+  if(queryParam.paymentMade){
+     filter["paymentMade"] = queryParam.paymentMade == 'n'?false:true;
+  }
+  if (queryParam.enterpriseName)
+    filter["enterprise.name"] = queryParam.enterpriseName;
+  if (queryParam.parnerId)
+    filter["agency._id"] = queryParam.parnerId;
+  console.log("@@@@@@",filter);
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
+    return;
+  }
+
+  var query = EnterpriseValuationInvoice.find(filter);
+  query.exec(
+    function(err, invoiceData) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(invoiceData);
+    }
+
+  );
+}
 // Get a single enterprise valuation data
 exports.getOnId = function(req, res) {
   EnterpriseValuation.findById(req.params.id, function(err, enterpriseData) {
@@ -751,6 +810,16 @@ exports.update = function(req, res) {
   });
 };
 
+/*//update on invoce number
+exports.updateOnInvoice = function(req, res) {
+  if(req.body.invoiceNo) { delete req.body.invoiceNo; }
+  req.body.updatedAt = new Date();
+    EnterpriseValuation.update({_id:req.params.id},{$set:req.body}{multi:true},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
+    });
+};*/
+
 exports.bulkUpdate = function(req,res){
   var dataArr = req.body;
   bulkUpdate(dataArr,function(err){
@@ -769,6 +838,31 @@ function bulkUpdate(dataArr,cb){
       });
     }
 }
+
+//Invoice functions
+exports.createInvoice = function(req,res){
+  EnterpriseValuationInvoice.create(req.body, function(err, enterpriseData) {
+    if(err) { return handleError(res, err); }
+    return res.status(201).json(enterpriseData);
+  });
+
+}
+
+// Updates an existing enterprise valuation in the DB.
+exports.updateInvoice = function(req, res) {
+  //if(req.body._id) { delete req.body._id; }
+  var _id = req.body._id;
+  if(req.body._id) { delete req.body._id; }
+  req.body.updatedAt = new Date();
+  EnterpriseValuationInvoice.findById(_id, function (err, invoice) {
+    if (err) { return handleError(res, err); }
+    if(!invoice) { return res.status(404).send('Not Found'); }
+    EnterpriseValuationInvoice.update({_id:_id},{$set:req.body},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).send("Invoice updated sucessfully");
+    });
+  });
+};
 
 function handleError(res, err) {
   return res.status(500).send(err);

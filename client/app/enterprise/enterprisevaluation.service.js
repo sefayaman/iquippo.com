@@ -6,6 +6,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   var entSvc = {};
   var path = "/api/enterprise";
   entSvc.get = get;
+  entSvc.getInvoice = getInvoice;
   entSvc.save = save;
   entSvc.update = update;
   entSvc.getRequestOnId = getRequestOnId;
@@ -14,13 +15,12 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   entSvc.modifyExcel = modifyExcel;
   entSvc.setStatus = setStatus;
   entSvc.bulkUpdate = bulkUpdate;
-  //entSvc.export = exportValuation;
-  //entSvc.sendNotification = sendNotification;
-  //entSvc.updateStatus = updateStatus;
+  entSvc.generateInvoice = generateInvoice;
+  entSvc.updateInvoice = updateInvoice;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
-      $http.get(path + "/" + id)
+      $http.get(path + "/" + id + "?type=request")
       .then(function(res){
         deferred.resolve(res.data);
       })
@@ -31,12 +31,12 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   }
 
   function get(data) {
-        var serPath = path;
+        var serPath = path + "?type=request";
         var queryParam = "";
         if(data)
             queryParam = UtilSvc.buildQueryParam(data);
         if(queryParam)
-          serPath = serPath + "?" + queryParam;
+          serPath = serPath + "&" + queryParam;
         return $http.get(serPath)
         .then(function(res){
           return res.data
@@ -46,15 +46,34 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
         })
     }
 
-   /* function getOnFilter(data){
-      return $http.post(path + "/onfilter",data)
+    function getInvoiceOnId(id) {
+    var deferred = $q.defer();
+      $http.get(path + "/" + id + "?type=invoice")
+      .then(function(res){
+        deferred.resolve(res.data);
+      })
+      .catch(function(res){
+        deferred.reject(res);
+      })
+    return deferred.promise;
+  }
+
+  function getInvoice(data) {
+        var serPath = path + "?type=invoice";
+        var queryParam = "";
+        if(data)
+            queryParam = UtilSvc.buildQueryParam(data);
+        if(queryParam)
+          serPath = serPath + "&" + queryParam;
+        return $http.get(serPath)
         .then(function(res){
-          return res.data;
+          return res.data
         })
         .catch(function(err){
           throw err
         })
-    }*/
+    }
+
 
     function save(data){
       return $http.post(path, data)
@@ -90,23 +109,28 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
 
 
     function uploadExcel(data){
-      return $http.post(path+"/upload/excel",data).then(function(res){
+      return $http.post(path+"/upload/excel",data)
+      .then(function(res){
         return res.data;
-      }).catch(function(err){
+      })
+      .catch(function(err){
         throw err;
       });
     }
 
     function modifyExcel(data){
-      return $http.put(path+"/upload/excel",data).then(function(res){
+      return $http.put(path+"/upload/excel",data)
+      .then(function(res){
         return res.data;
-      }).catch(function(err){
+      })
+      .catch(function(err){
         throw err;
       }); 
     }
     
-    function setStatus(entValuation,status){
-      entValuation.status = status;
+    function setStatus(entValuation,status,doNotChangeStatus){
+      if(!doNotChangeStatus)
+          entValuation.status = status;
       var stObj = {};
       stObj.status = status;
       stObj.createdAt = new Date();
@@ -116,29 +140,29 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       entValuation.statuses.push(stObj);
     };
 
-    /*function sendNotification(valReqData,status,sendTo){
-      var data = {};
-      if(sendTo == "customer"){
-        data['to'] = valReqData.user.email;
-        data['subject'] = 'Request for valuation/inspection';
-        valReqData.serverPath = serverPath;
-        valReqData.statusName = status;
-        notificationSvc.sendNotification('valuationCustomerEmail', data, valReqData,'email');
-        data['to'] = valReqData.user.mobile;
-        notificationSvc.sendNotification('valuationCustomerSms', data, valReqData,'sms');
-      }else if(sendTo == "valagency"){
-        data['to'] = valReqData.valuationAgency.email;
-        data['subject'] = 'Request for valuation/inspection';
-        valReqData.serverPath = serverPath;
-        valReqData.statusName = status;
-        notificationSvc.sendNotification('valuationAgencyEmail', data, valReqData,'email');
-        data['to'] = valReqData.valuationAgency.mobile;
-        notificationSvc.sendNotification('valuationAgencySms', data, valReqData,'sms');
-      }else if(sendTo == "seller"){
-        //need to send to seller 
-      }
-      
-    }*/
-  return entSvc;
+   
+   function generateInvoice(invoice){
+    return $http.post(path + "/createinvoice",invoice)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+
+   }
+
+   function updateInvoice(invoice){
+    return $http.post(path + "/updateinvoice",invoice)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+
+   }
+
+   return entSvc;
 }
 })();

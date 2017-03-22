@@ -63,7 +63,7 @@
             <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="enterpriseValuation.status != EnterpriseValuationStatuses[0]"></td>
             <td>
             <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
-            <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
+            <a class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}" ng-if="enterpriseValuation.valuationReport.filename" target="_blank"><i class="fa fa-download"></i> </a>
             <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)"><i class="fa fa-trash"></i> </a>
 
             </td>
