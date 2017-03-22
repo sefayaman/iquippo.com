@@ -186,10 +186,19 @@ angular.module('sreizaoApp')
         return currentUser.role === 'channelpartner';
       },
       isEnterprise : function(){
-        return currentUser.role === 'enterprise' && currentUser.enterprise;
+         var retVal = false;
+        retVal = currentUser.role === 'enterprise' && currentUser.enterprise;
+        if(!currentUser.enterpriseName)
+          retVal = false;
+        return retVal;
+       // return currentUser.role === 'enterprise' && currentUser.enterprise;
       },
       isEnterpriseUser : function(){
-        return currentUser.role === 'enterprise' && !currentUser.enterprise && currentUser.enterpriseName;
+        var retVal = false;
+        retVal = currentUser.role === 'enterprise' && !currentUser.enterprise;
+        if(!currentUser.enterpriseName)
+          retVal = false;
+        return retVal;
       },
       isPartner: function() {
         return currentUser.isPartner;

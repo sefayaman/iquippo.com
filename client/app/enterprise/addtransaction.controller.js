@@ -3,7 +3,7 @@
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
 function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc) {
   var vm = this;
-  var currentState = $state.current.name;
+  var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
   vm.enterpriseValuation = {};
 
@@ -77,8 +77,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   function editEnterpriseField(){
     if(Auth.isAdmin())
       return true;
-    else if((Auth.isEnterprise() || Auth.isEnterpriseUser()) && vm.enterpriseValuation.status == EnterpriseValuationStatuses[0])
-      return true;
+    else if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
+      if(!editMode)
+        return true;
+      if(vm.enterpriseValuation.status == EnterpriseValuationStatuses[0])
+        return true;
+      else
+        return false;
+    } 
+      
     else
       return false;
   }
