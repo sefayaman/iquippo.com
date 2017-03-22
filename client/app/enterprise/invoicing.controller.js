@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseInvoiceCtrl',EnterpriseInvoiceCtrl);
-function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc,vendorSvc,UtilSvc) {
+function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc,vendorSvc,UtilSvc,$window) {
  	var vm = this;
 
   var INVOICE_TEMPLATE = "EValuation_Invoice"
@@ -24,6 +24,15 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
  	vm.openInvoiceModal = openInvoiceModal;
   vm.getPartners = getPartners;
   vm.print = printInvoice;
+  vm.downloadInvoice = downloadInvoice;
+
+  function openWindow(url) {
+    $window.open(url);
+  }
+
+  function downloadInvoice(invoiceNo){
+    openWindow(EnterpriseSvc.generateinvoice(invoiceNo));    
+  }
 
  	function init(){
     vm.type = Auth.isAdmin()?'tobegenerate':"generated";

@@ -17,6 +17,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   entSvc.bulkUpdate = bulkUpdate;
   entSvc.generateInvoice = generateInvoice;
   entSvc.updateInvoice = updateInvoice;
+  entSvc.generateinvoice = generateinvoice;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
@@ -161,6 +162,10 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
             throw err;
           });
 
+   }
+
+   function generateinvoice(invoiceNo){
+    return path + "/generateinvoice/" + invoiceNo;    
    }
 
    return entSvc;

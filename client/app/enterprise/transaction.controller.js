@@ -110,10 +110,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
       uploadSvc.upload(file, importDir)
         .then(function(result) {
           setUserData();
-          if($scope.uploadType === 'upload')
+          if($scope.uploadType === 'upload'){
             $scope.uploadedExcel = result.data.filename;
-          if($scope.uploadType === 'modify')
+            $scope.modifiedExcel = '';
+          }
+          if($scope.uploadType === 'modify'){
             $scope.modifiedExcel = result.data.filename;
+            $scope.uploadedExcel = '';
+          }
           $rootScope.loading = false;
         }).catch(function(res) {
           Modal.alert("error in file upload", true);

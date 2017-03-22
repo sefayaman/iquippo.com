@@ -118,7 +118,7 @@
            <td>{{entVal.agency.mobile}}</td>
           <td>{{entVal.status}}</td>
           <td>          
-              <a class="btn btn-default btn-md" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
+              <a class="btn btn-default btn-md" ng-click="enterpriseInvoiceVm.downloadInvoice(entVal.invoiceNo)" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
           </td>
         </tr>
       </tbody>

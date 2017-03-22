@@ -2,6 +2,7 @@
   <meta charset="utf-8" content="width=device-width, initial-screen=1"/>
 </head>
 <body>
+<div style="page-break-inside: avoid;">
   <table cellpadding="0" cellspacing="0" align="center" style="width:90%;border:1px solid #000;font-family:Verdana, Geneva, sans-serif;font-size:14px;padding: 5px;">
    <tr>
       <td width="60%"><img src="images/srei-logo-img.png" width="150px"></td>
@@ -29,8 +30,8 @@
                 <p style="margin-bottom:-12px;padding-left:25px;"><strong>Kolkata</strong></p>
                 <p style="padding-left:25px;"><strong>West-Bengal - 700091</strong></p></td>
             <td align="left">
-              <p><strong>Invoice No.:</strong><span style="text-decoration:underline;">QPV/VAL/16-17/00119</span></p>
-              <p><strong>Date:</strong><span style="text-decoration:underline;">16-09-2016</span></p>
+              <p><strong>Invoice No.:</strong><span style="text-decoration:underline;">{{invoceNo}}</span></p>
+              <p><strong>Date:</strong><span style="text-decoration:underline;">{{invoiceDate}}</span></p>
               <p><strong>Reference:</strong><span style="text-decoration:underline;">QVA/16-17/01</span></p>
             </td>
           </tr>
@@ -55,7 +56,7 @@
                 Valuation fee towards the valuation of 14 nos Various Assets
               </td>
               <td>
-               <strong>34,500.0</strong>
+               <strong>{{invoiceAmount}}</strong>
               </td>
             </tr>
              <tr>
@@ -67,7 +68,7 @@
                 <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:14px;font-weight:bold;float: right;padding: 25px;">
                   <tr>
                     <td align="right">
-                     <strong>14.0% SERVICE TAX</strong>
+                     <strong>{{serviceTaxPercentage}} SERVICE TAX</strong>
                     </td>
                   </tr>
                   <tr>
@@ -97,21 +98,21 @@
                         <td>
                           <tr>
                             <td>
-                              4,830.00
+                             {{serviceTaxValue}}
                             </td>
                           </tr>
                           <tr>
-                            <td>173.00
+                            <td>{{swatchBharatValue}}
                             </td>
                           </tr>
                           <tr>
                             <td>
-                             173.00
+                             {{krishiKalyanValue}}
                             </td>
                           </tr>
                           <tr>
                             <td style="border-top:2px solid #000;">
-                             39,676.00
+                             {{totalValue}}
                             </td>
                           </tr>
                         </td>
@@ -191,7 +192,7 @@
         </td>
         
       </tr>
-       
-               
-    </table>    
+          
+    </table> 
+    </div>   
 </body>

@@ -15,7 +15,7 @@ router.put('/upload/excel',controller.bulkModify);
 router.post('/bulkUpdate',controller.bulkUpdate);
 router.post('/createinvoice',auth.hasRole('admin'),controller.createInvoice);
 router.post('/updateinvoice',auth.hasRole('admin'),controller.updateInvoice);
-
+router.get('/generateinvoice/:invoiceNo',auth.hasRole('admin'),controller.generateInvoice);
 
 
 module.exports = router;

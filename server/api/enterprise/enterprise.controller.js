@@ -23,6 +23,12 @@ var purposeModel = require('../common/valuationpurpose.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Request Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var validRequestType = ['Valuation','Insepection'];
 var UserModel = require('../user/user.model');
+var fs = require('fs');
+var Handlebars = require('handlebars');
+var pdf = require('html-pdf');
+var validator = require('validator');
+var minify = require('html-minifier').minify;
+
 
 exports.get = function(req, res) {
   
@@ -846,6 +852,59 @@ exports.createInvoice = function(req,res){
     return res.status(201).json(enterpriseData);
   });
 
+}
+
+exports.generateInvoice = function(req,res){
+  var invoiceNo = req.params.invoiceNo;
+  if(!invoiceNo){
+    return res.status(412).json({Err:'Invalid invoice Number'});
+  }
+    
+  EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
+    if(err || !invoiceData)
+      return res.send(err || new APIError(400,'Error while fetching invoice'));    
+
+    fs.readFile(__dirname + '/../../views/emailTemplates/EValuation_Invoice.html', 'utf8', function(err, source) {
+     if (err) {
+        return handleError(res, err);
+      }
+
+      source = source.toString();
+      //source += '</body></html>';
+      var template = Handlebars.compile(source);
+
+      var data = {
+        invoiceNo : invoiceNo,
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData.createdAt,'MM/DD/YYYY')
+      };
+
+      var result = template(data);
+      var pdfInput = minify(result, {
+        removeAttributeQuotes: true
+      });
+
+      var options = {
+        height: "15.5in",        // allowed units: mm, cm, in, px 
+        width: "10in",
+        border: {
+          "top": "2mm",            // default is 0, units: mm, cm, in, px 
+          "right": "1mm",
+          "bottom": "2mm",
+          "left": "1.5mm"
+        }
+      };
+
+      pdf.create(pdfInput, options).toStream(function (err, pdfOutput) {
+        if (!err){
+          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf"' + '"');
+          res.setHeader('Content-type', 'application/pdf');
+          pdfOutput.pipe(res);
+        } else {
+          res.send(new APIError(400,'Error while creating invoice'));
+        }
+      });
+    });
+  });
 }
 
 // Updates an existing enterprise valuation in the DB.
