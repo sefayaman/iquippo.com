@@ -433,7 +433,8 @@ angular.module('sreizaoApp')
         templateUrl: 'app/enterprise/invoicing.html',
         controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
         layout:'admin',
-        restrict:true
+        authenticate:true
+
       })
        .state('enterprisevaluation.paymentmade', {
         url: '/paymentmade',
