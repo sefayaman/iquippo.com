@@ -14,7 +14,12 @@ var Model = require('./../api/model/model.model');
 var appNotificationCtrl = require('../api/appnotification/appnotification.controller');
 
 bulkProductUpload.commitProduct = function(taskData,cb){
-  var filename = taskData.taskInfo.filename;
+  var filename;
+  if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+    filename = taskData.taskInfo.filename;
+  } else {
+    return cb(new Error('Invalid taskinfo/file'),taskData);
+  }
   var zip = new AdmZip(config.uploadPath + "temp/" + filename);
   taskData.zip = zip;
   var zipEntries = zip.getEntries();

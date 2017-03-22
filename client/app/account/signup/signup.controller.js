@@ -36,12 +36,7 @@
         $scope.stateList = result;
         $scope.locationList = "";
       });
-      $rootScope.allCountries.some(function(x) {
-        if (x.name == country) {
-          $scope.code = x.countryCode;
-          return true;
-        }
-      })
+      $scope.code=LocationSvc.getCountryCode(country);
       if (country == "Other") {
         vm.user.activationOTP = "email";
         $scope.isDisabled = true;
@@ -152,6 +147,12 @@
             var data = {};
             if (vm.user.mobile)
               data['to'] = vm.user.mobile;
+            $rootScope.allCountries.some(function(x) {
+            if (x.name == Auth.getCurrentUser().country) {
+              data['countryCode']=x.countryCode;
+              return true;
+            }
+          })
             data['subject'] = 'New User Registration: Success';
             var dataToSend = {};
             dataToSend['fname'] = vm.user.fname;

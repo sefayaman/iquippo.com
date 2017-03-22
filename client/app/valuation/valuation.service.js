@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("ValuationSvc",ValuationSvc);
-function ValuationSvc($http,$q,notificationSvc,Auth){
+function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
   var svc = {};
   var path = "/api/valuation";
   svc.getAll = getAll;
@@ -111,6 +111,7 @@ function ValuationSvc($http,$q,notificationSvc,Auth){
         valReqData.statusName = status;
         notificationSvc.sendNotification('valuationCustomerEmail', data, valReqData,'email');
         data['to'] = valReqData.user.mobile;
+        data['countryCode']=LocationSvc.getCountryCode(valReqData.user.country);
         notificationSvc.sendNotification('valuationCustomerSms', data, valReqData,'sms');
       }else if(sendTo == "valagency"){
         data['to'] = valReqData.valuationAgency.email;
@@ -119,6 +120,7 @@ function ValuationSvc($http,$q,notificationSvc,Auth){
         valReqData.statusName = status;
         notificationSvc.sendNotification('valuationAgencyEmail', data, valReqData,'email');
         data['to'] = valReqData.valuationAgency.mobile;
+        data['countryCode']=LocationSvc.getCountryCode(valReqData.valuationAgency.country);
         notificationSvc.sendNotification('valuationAgencySms', data, valReqData,'sms');
       }else if(sendTo == "seller"){
         //need to send to seller 

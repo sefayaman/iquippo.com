@@ -48,6 +48,7 @@
             <tbody>
             <tr ng-repeat="auts in auctionListingVm.auctions">
               <td><input type="checkbox"  ng-click="auctionListingVm.updateSelection($event,auts._id)" ng-checked="auctionListingVm.master"></td>
+              {{auts}}
               <td>{{auts.product.name}}</td>              
               <td>{{auts.auctionId}}</td>
               <td>{{auts.product.assetId}}</td>

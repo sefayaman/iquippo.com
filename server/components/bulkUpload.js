@@ -35,7 +35,14 @@ function _fetchRequestData(options, cb) {
 }
 
 function _extractImages(taskData) {
-	var filename = taskData.taskInfo.filename;
+	var filename;
+	if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
+		filename = taskData.taskInfo.filename;
+	} else {
+		return new Error('Invalid taskinfo/file');
+	}
+
+
 	try {
 		var zip = new AdmZip(config.uploadPath + "temp/" + filename);
 		taskData.zip = zip;
@@ -146,6 +153,7 @@ bulkUpload.init = function(taskData, next) {
 						obj.auctionId = x.auction.auctionId;
 						obj.startDate = x.auction.startDate;
 						obj.endDate = x.auction.endDate;
+						obj.external = true;
 						obj.statuses = [{
 							createdAt: new Date(),
 							status: x.status,
@@ -162,6 +170,8 @@ bulkUpload.init = function(taskData, next) {
 				var rejectIds = [];
 				if (approvedObj.length) {
 					async.eachLimit(approvedIds, 5, iterator, finalize);
+				} else {
+					return next(false, taskData);
 				}
 
 
@@ -179,11 +189,11 @@ bulkUpload.init = function(taskData, next) {
 
 				function finalize(err) {
 					console.log(err);
-					AuctionController.bulkCreate(approvedObj, function(err,response) {
+					AuctionController.bulkCreate(approvedObj, function(err, response) {
 						taskData.data = data;
 						if (response && !response.Error && !response.errObj && response.sucessObj) {
 							taskData.uploadedProducts = uploadedProducts;
-							return next(true,taskData);
+							return next(true, taskData);
 						} else {
 							return next(false, taskData);
 						}
@@ -224,19 +234,18 @@ bulkUpload.init = function(taskData, next) {
 							spareUploads.images = [];
 							for (var j = 0; j < imagesObj[spareUploads.partNo].length; j++) {
 								spareUploads.images.push({
-									"waterMarked" : false,
-									"isPrimary" : false,
-									"src" : imagesObj[spareUploads.partNo][j].name
+									"waterMarked": false,
+									"isPrimary": false,
+									"src": imagesObj[spareUploads.partNo][j].name
 								})
 							}
 						}
 						spareUploads.user = x.user;
 						spareUploads.spareStatuses = [{
-								createdAt : new Date(),
-								status : spareUploads.status,
-								userId : x.user._id
-							}
-						];
+							createdAt: new Date(),
+							status: spareUploads.status,
+							userId: x.user._id
+						}];
 						spareUploaded.push(spareUploads.partNo);
 						approvedIds.push(x._id.toString());
 						approvedObj.push(spareUploads);
@@ -245,6 +254,8 @@ bulkUpload.init = function(taskData, next) {
 				var rejectIds = [];
 				if (approvedObj.length) {
 					async.eachLimit(approvedIds, 5, iterator, finalize);
+				} else {
+					return next(false, taskData);
 				}
 
 
@@ -262,11 +273,11 @@ bulkUpload.init = function(taskData, next) {
 
 				function finalize(err) {
 					console.log(err);
-					spareController.bulkCreate(approvedObj, function(err,response) {
+					spareController.bulkCreate(approvedObj, function(err, response) {
 						taskData.data = data;
 						if (response && !response.Error && !response.errObj && response.sucessObj) {
 							taskData.spareUploaded = spareUploaded;
-							return next(true,taskData);
+							return next(true, taskData);
 						} else {
 							return next(false, taskData);
 						}

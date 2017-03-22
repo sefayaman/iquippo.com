@@ -147,7 +147,10 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Dealer);
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
-      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).name; 
+    {
+      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).name;
+        console.log(vm.vendorReg.user.state);} 
+    
     if(!vm.vendorReg.user.country)     
       vm.vendorReg.user.country = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).country;
     setUserData(vm.vendorReg);
@@ -258,7 +261,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
           $scope.autoSuccessMessage(20);
           var data = {};
           if(vm.vendorReg.user.mobile)
-            data['to'] = vm.vendorReg.user.mobile;
+          data['to'] = vm.vendorReg.user.mobile;
+          data['countryCode']=LocationSvc.getCountryCode(vm.vendorReg.user.country);
           data['subject'] = 'Partner Registration: Success';
           var dataToSend = {};
           dataToSend['fname'] = vm.vendorReg.user.fname; 

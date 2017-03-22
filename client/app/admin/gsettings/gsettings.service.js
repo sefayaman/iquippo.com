@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 angular.module('admin').factory("LocationSvc",LocationSvc);
- function LocationSvc($http, $q,$httpParamSerializer){
+ function LocationSvc($http, $q,$httpParamSerializer,$rootScope){
  	  var locationCache = [];
     var stateCache = [];
     var countryCache = [];
@@ -19,6 +19,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getCountryStateByCity = getCountryStateByCity;
       
       lServices.getAllCountry = getAllCountry;
+      lServices.getCountryCode = getCountryCode;
       lServices.deleteCountry = deleteCountry;
       lServices.updateCountry = updateCountry;
       lServices.saveCountry = saveCountry;
@@ -43,6 +44,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }else{
         	$http.get(path + "/city").then(function(res){
 	            locationCache = res.data;
+              console.log(locationCache);
 	            deferred.resolve(res.data);
           },function(errors){
             console.log("Errors in location list :"+ JSON.stringify(errors));
@@ -68,6 +70,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         var CountryStateInfo = {};
         for(var i=0;i < locationCache.length; i++){
           if(locationCache[i].name == city){
+            console.log(locationCache[i]);
             CountryStateInfo.state = locationCache[i].state.name;
             CountryStateInfo.country = locationCache[i].state.country;
             break;
@@ -101,6 +104,19 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
           }
         }
         return country;
+      }
+      
+      function getCountryCode(country){
+        var code = '';
+        $rootScope.allCountries.some(function(x){
+          if(x.name==country){
+           
+           code =  x.countryCode;
+           return true;
+          }
+        })
+
+        return code;
       }
 
       function getAllCountry(){

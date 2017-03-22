@@ -13,6 +13,7 @@ var notificationSchema = new Schema({
   to: String,
   subject:String,
   content: String,
+  countryCode:String,
   counter: String,
   document:String,
   createdAt: {type:Date,default:Date.now}
@@ -22,6 +23,9 @@ var notification = mongoose.model('Notification', notificationSchema, 'notificat
 
 exports.create = function(req,res){
   var data = req.body;
+  if(data.notificationType == 'email'){
+    delete data.countryCode;
+  }
   data['counter'] = 0;
   data['createdAt'] = new Date();
   notification.create(req.body, function(err, data){

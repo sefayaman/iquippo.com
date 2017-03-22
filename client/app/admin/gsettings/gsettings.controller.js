@@ -1135,6 +1135,7 @@
                 vm.auctionProduct.user._id = Auth.getCurrentUser()._id;
                 vm.auctionProduct.user.email = Auth.getCurrentUser().email;
                 vm.auctionProduct.user.mobile = Auth.getCurrentUser().mobile;
+                vm.auctionProduct.user.country=Auth.getCurrentUser().country;
                 vm.auctionProduct.status = auctionStatuses[2].code;
                 vm.auctionProduct.statuses = [];
                 var stObj = {};

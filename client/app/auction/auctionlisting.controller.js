@@ -59,6 +59,7 @@
       AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           vm.auctions = result.items;
+          console.log("+++++---+++",vm.auctions);
           vm.totalItems = result.totalItems;
           prevPage = vm.currentPage;
           if (result.items.length > 0) {
