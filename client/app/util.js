@@ -136,6 +136,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.getLocationHelp = getLocationHelp;
   utilSvc.getLocations = getLocations;
   utilSvc.buildQueryParam = buildQueryParam;
+  utilSvc.compileTemplate = compileTemplate;
   
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -193,6 +194,18 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       return locationArr.join(", ");
     }
 
+    function compileTemplate(templateName,data){
+      var tempData = {};
+      tempData['templateName'] = templateName;
+      tempData['data'] = data;
+      return $http.post('/api/common/notificationTemplate',tempData)
+             .then(function(res){
+                return res.data;
+             })
+             .catch(function(err){
+                throw err;
+             })
+    }
     function buildQueryParam(filterObj){
       var queryStr = "";
       if(!filterObj)

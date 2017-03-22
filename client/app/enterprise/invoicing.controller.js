@@ -1,9 +1,10 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseInvoiceCtrl',EnterpriseInvoiceCtrl);
-function EnterpriseInvoiceCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc,vendorSvc) {
+function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth, $state,ServiceTaxSvc,ServiceFeeSvc,notificationSvc, EnterpriseSvc, userSvc,PagerSvc,vendorSvc,UtilSvc) {
  	var vm = this;
 
+  var INVOICE_TEMPLATE = "EValuation_Invoice"
   var selectedItems = [];
   var selectedFee = null;
   vm.serviceList = [{name:"Valuation"},{name:"Inspection"}];
@@ -22,6 +23,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,S
  	vm.updateSelection = updateSelection;
  	vm.openInvoiceModal = openInvoiceModal;
   vm.getPartners = getPartners;
+  vm.print = printInvoice;
 
  	function init(){
     vm.type = Auth.isAdmin()?'tobegenerate':"generated";
@@ -250,6 +252,18 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,S
         return total;
       }
 
+      function printInvoice(){
+        UtilSvc.compileTemplate(INVOICE_TEMPLATE,{})
+        .then(function(htmlStr){
+          var newWin = window.open('','Print-Window');
+          newWin.document.open();
+          newWin.document.write('<html><body onload="window.print()">'+htmlStr+'</body></html>');
+          newWin.document.close();
+          $timeout(function(){
+            newWin.close();
+          },10);
+        });
+      }
       //starting point
       Auth.isLoggedInAsync(function(loggedIn){
         if(loggedIn){
