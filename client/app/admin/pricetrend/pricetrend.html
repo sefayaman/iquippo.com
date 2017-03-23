@@ -34,21 +34,21 @@
               <div class="form-group row">
                 <div class="col-sm-4" ng-class="{'has-error': form.category.$invalid && submitted}">
                   <select class="form-control" name="category" ng-model="priceTrendVm.priceTrend.category._id" ng-change="priceTrendVm.onCategoryChange(priceTrendVm.priceTrend.category._id)" required>
-                    <option value="">Category</option>
+                    <option value="">*Category</option>
                     <option ng-repeat="category in priceTrendVm.categoryList" value="{{category._id}}" ng-hide="category.name == 'Other'">{{category.name}}</option>
                   </select>
                   <i class="caret"></i>
                 </div>
                 <div class="col-sm-4" ng-class="{'has-error': form.brand.$invalid && submitted}">
                   <select class="form-control" name="brand" ng-model="priceTrendVm.priceTrend.brand._id" ng-change="priceTrendVm.onBrandChange(priceTrendVm.priceTrend.brand._id)" required>
-                    <option value="" >Brand</option>
+                    <option value="" >*Brand</option>
                     <option ng-repeat="brand in priceTrendVm.brandList" value="{{brand._id}}" ng-hide="brand.name == 'Other'">{{brand.name}}</option>
                   </select>
                   <i class="caret"></i>
                 </div>
                 <div class="col-sm-4" ng-class="{'has-error': form.model.$invalid && submitted}">
                   <select class="form-control" name="model" ng-model="priceTrendVm.priceTrend.model._id" required>
-                    <option value="" >Model</option>
+                    <option value="" >*Model</option>
                     <option ng-repeat="model in priceTrendVm.modelList" value="{{model._id}}" ng-hide="model.name == 'Other'">{{model.name}}</option>
                   </select>
                   <i class="caret"></i>
@@ -59,13 +59,13 @@
                 <div class="panel-body">
                   <div class="form-group row">
                     <div class="form-group col-sm-6" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
-                      <p>Manufacturing Year :</p>
+                      <p>*Manufacturing Year :</p>
                       <input type="number" name="mfgYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.mfgYear"  ng-minlength="4" ng-min="1900" ng-max="currentYear" ng-maxlength="4" required>
                     </div>
                     <!-- <div class="form-group"></div> -->
                     
                     <div class="form-group col-sm-6" ng-class="{'has-error': form.saleYear.$invalid && submitted}">
-                      <p>Sale Year :</p>
+                      <p>*Sale Year :</p>
                       <input type="number" ng-minlength="4" ng-min="1900" name="saleYear" class="form-control" placeholder="yyyy" ng-model="priceTrendVm.priceTrend.saleYear" ng-max="currentYear" required>
                     </div>                    
                   </div>
