@@ -17,6 +17,7 @@ var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
 var fs = require('fs');
 var gm = require("gm");
+var lwip = require('lwip');
 var fsExtra = require('fs.extra');
 var _ = require('lodash');
 var User = require('./../user/user.model');
@@ -1205,15 +1206,29 @@ function buildSuggestion(req, res, suggestions) {
 }
 
 exports.rotate = function(req, res) {
-	var imgPath = req.body.imgPath;
-	gm(config.uploadPath + imgPath)
-		.rotate("white", -90)
-		.write(config.uploadPath + imgPath, function(e) {
+	var imgPath = config.uploadPath + req.body.imgPath;
+    lwip.open(imgPath,function(err,image){
+     	if(err)
+     		throw err;
+
+     	image.batch()
+	    .rotate(-90,"white")
+		.writeFile(imgPath, function(e) {
 			if (e) {
-				return handleError(res, e);
+				throw e;
 			} else
 				res.send("done");
-		});
+		}); 	
+    })
+	// image.batch()
+	// gm(config.uploadPath + imgPath)
+	// 	.rotate("white", -90)
+	// 	.write(config.uploadPath + imgPath, function(e) {
+	// 		if (e) {
+	// 			return handleError(res, e);
+	// 		} else
+	// 			res.send("done");
+	// 	});
 }
 
 exports.saveAsImage = function(req, res) {
