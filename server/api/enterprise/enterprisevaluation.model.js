@@ -8,7 +8,6 @@ var mongoose = require('mongoose'),
 var EnterpriseValuationSchema = new Schema({
   /* Enterprise fields*/
   uniqueControlNo:String,
-  invoiceNo:String,
   requestType:String,
   purpose:String,
   agency:{},
@@ -22,12 +21,17 @@ var EnterpriseValuationSchema = new Schema({
   assetId:String,
   repoDate: {type:Date,default:Date.now},
   category:String,
+  otherCategory:String,
   brand:String,
+  otherBrand:String,
   model:String,
+  otherModel:String,
   assetDescription:String,
   engineNo:String,
   chassisNo:String,
   registrationNo:String,
+  serialNo:String,
+  yearOfManufacturing:String,
   invoiceDate:{type:Date},
   yardParked:String,
   country:String,
@@ -37,9 +41,14 @@ var EnterpriseValuationSchema = new Schema({
   contactPersonTelNo:String,
   disFromCustomerOffice:String,
   /* Valuation agency  field */
+  jobId:String,
   reportDate:Date,
   reportNo:String,
-  yearOfManufacturing:String,
+  agencyYearOfManufacturing:String,
+  agencyEngineNo:String,
+  agencyChasisNo:String,
+  agencyRegistrationNo:String,
+  agencySerialNo:String,
   hmr_kmr:String,
   assessedValue:Number,
   inspectionBy:String,
@@ -54,8 +63,12 @@ var EnterpriseValuationSchema = new Schema({
   underCarriageImage:{},
   otherImage:{},
   valuationReport:{},
+  /*Admin update field*/
+  invoiceNo:String,
+  invoiceDate:String,
   paymentReceived:{type:Boolean,default:false},
   paymentMade:{type:Boolean,default:false},
+  /*Common fields*/
   assetDir:String,
   failureReason:String,
   deleted:{type:Boolean,default:false},
@@ -68,12 +81,19 @@ var EnterpriseValuationSchema = new Schema({
 
 EnterpriseValuationSchema.pre('save',function(next){
   var self = this;
-  var prefix = 'EVR';
+  var cprefix = 'IQ';
+  var tprefix = 'EVT';
+  var vprefix = 'EVN';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
-    self.uniqueControlNo = prefix+seqnum;
+    var date = new Date();
+    var dateStr = date.getDate()+ "" + (date.getMonth() + 1)+ "" + date.getFullYear();
+    console.log(dateStr);
+    self.uniqueControlNo = cprefix + dateStr + seqnum;
+    self.customerTransactionId = tprefix + dateStr + seqnum;
+    self.customerValuationNo = vprefix + dateStr + seqnum;
     return next();
-  },'EnterpriseValuation',10000002);
+  },'EnterpriseValuation',002);
 
 })
 

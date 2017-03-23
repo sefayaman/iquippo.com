@@ -242,12 +242,23 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
           EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[1])
         });
 
-        EnterpriseSvc.bulkUpdate(selectedItems)
+        EnterpriseSvc.submitToAgency(selectedItems)
+        .then(function(res){
+          console.log("res",res);
+            //bulkUpdate();          
+        })
+        .catch(function(err){
+          Modal.alert("error occured in integration");
+        })
+      
+    }
+
+    function bulkUpdate(){
+      EnterpriseSvc.bulkUpdate(selectedItems)
         .then(function(res){
           selectedItems = [];
           fireCommand(true);
-        })
-      
+      })
     }
 
 }

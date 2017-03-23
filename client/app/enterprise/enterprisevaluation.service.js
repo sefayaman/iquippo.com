@@ -18,6 +18,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   entSvc.generateInvoice = generateInvoice;
   entSvc.updateInvoice = updateInvoice;
   entSvc.generateinvoice = generateinvoice;
+  entSvc.submitToAgency = submitToAgency;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
@@ -168,6 +169,61 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
     return path + "/generateinvoice/" + invoiceNo;    
    }
 
+   var Field_MAP = {
+    uniqueControlNo : "uniqueControlNo",
+    requestType:"requestType",
+    purpose : "purpose",
+    agencyName : "agency.name",
+    enterprise:"enterprise.name",
+    customerTransactionId : "customerTransactionId",
+    customerValuationNo : "customerValuationNo",
+    customerPartyNo : "customerPartyNo",
+    customerPartyName : "customerPartyName",
+    userName : "userName",
+    requestDate : "requestDate",
+    assetId:"assetId",
+    repoDate : "repoDate",
+    assetDescription : "assetDescription",
+    engineNo:"engineNo",
+    chassisNo :"chassisNo",
+    registrationNo :"registrationNo",
+    serialNo:"serialNo",
+    yearOfManufacturing :"yearOfManufacturing",
+    category:"category",
+    brand:"brand",
+    model:"model",
+    yardParked:"yardParked",
+    country:"country",
+    state:"state",
+    city:"city",
+    contactPerson:"contactPerson",
+    contactPersonTelNo:"contactPersonTelNo",
+    disFromCustomerOffice:"disFromCustomerOffice"
+  }
+
+   function submitToAgency(items){
+    if(!items || items.length == 0)
+        return;
+    var dataArr = [];
+    var keys = Object.keys(Field_MAP);
+    items.forEach(function(item){
+      var obj = {};
+      keys.forEach(function(key){
+        obj[key] = _.get(item,Field_MAP[key]);
+      })
+      dataArr[dataArr.length] = obj; 
+    });
+    //console.log("",dataArr);
+      var apiUrl = "http://quippoauctions.com/valuation/api.php?type=jobcreation";
+      return $http.post(apiUrl,dataArr[0])
+      .then(function(res){
+        console.log("success res",res.data)
+        return res.data;  
+      })
+      .catch(function(err){
+        throw err;
+      })
+   }
    return entSvc;
 }
 })();

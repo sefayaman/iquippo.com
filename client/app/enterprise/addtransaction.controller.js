@@ -22,6 +22,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.onBrandChange = onBrandChange;
   vm.reset = reset;
   vm.deleteImg = deleteImg;
+  vm.setCustomerData = setCustomerData;
 
   vm.addOrUpdateRequest = addOrUpdateRequest;
   
@@ -30,13 +31,23 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     var userFilter = {};
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
-    if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+    var isEnterprise = false;
+    if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
       userFilter.enterpriseName = Auth.getCurrentUser().enterpriseName;
-
+      isEnterprise = true;
+    }
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
-    })
-
+      if(!editMode && isEnterprise && data.length > 0){
+        vm.enterpriseValuation.enterprise = {};
+        vm.enterpriseValuation.enterprise.name = data[0].enterpriseName;
+        setCustomerData(data[0].enterpriseName);
+      }
+    });
+    if(!editMode){
+      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
+    }
+    
     vendorSvc.getAllVendors()
       .then(function(){
         vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
@@ -101,12 +112,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
   function showAgencySection(){
      return (Auth.isAdmin() || Auth.isPartner()) 
-            && currentState == 'enterprisevaluation.edittransaction';
-            //&& EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status); //> 0;
+            && editMode && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) > 0;
 
   }
 
-  init();
   function loadAllCategory() {
         categorySvc.getAllCategory()
             .then(function(result) {
@@ -221,6 +230,17 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         })
     }
 
+    function setCustomerData(entName){
+      vm.enterprises.forEach(function(item){
+        if(item.enterpriseName == entName){
+           vm.enterpriseValuation.customerPartyNo = item.mobile;
+           vm.enterpriseValuation.customerPartyName = (item.fname || "") + " " + (item.mname || "") + " "+ (item.lname || "");
+           return true;
+        }
+      })
+     
+    }
+
     function setData(){
 
        vm.enterprises.forEach(function(item){
@@ -257,6 +277,14 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation = {};
       $scope.submitted = false;
     }
+
+     //starting point
+      Auth.isLoggedInAsync(function(loggedIn){
+        if(loggedIn){
+            init();
+          }else
+            $state.go("main")
+        })
 
 }
 
