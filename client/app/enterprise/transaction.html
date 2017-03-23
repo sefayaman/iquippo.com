@@ -1,43 +1,46 @@
 <div>
   <p>Download the <a href="/download/templates/{{enterpriseTransactionVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept multiple records in a single file.</p>
-  <div class="row form-group">
+  <div class="row">
     <div class="col-sm-6">
       <h4>Add New Request  </h4>
-    </div>
-    <div class="col-sm-2" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">
+    </div>    
+    <div class="col-sm-offset-2 col-sm-2 text-right">
       <h4>
-        <span class="btn btn-warning fileinput-button">
-         <input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
-          <span><i class="fa fa-upload"></i> Upload Request</span>
-        </span>
-         <span>{{uploadedExcel}}</span>
-      </h4>
-    </div>
-    <div class="col-sm-2">
-      <h4>
-        <span class="btn btn-warning fileinput-button">
-         <input type="file" id="modify" name="modify"  data-filetype="doc" file-upload required>
-          <span><i class="fa fa-upload"></i> Update Request</span>
-        </span>
-         <span>{{modifiedExcel}}</span>
+        <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-block" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
       </h4>
     </div>
     <div class="col-sm-2 text-right">
       <h4>
-        <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-md" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
+        <button class="btn btn-success btn-block"><i class="fa fa-file-excel-o"></i> Export Excel</button>
       </h4>
     </div>
   </div>
     <legend></legend>
      
-    <div class="row form-group">                    
-      <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Upload Excel</button>
+    <div class="row form-group">
+      <div class="col-sm-2" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">        
+          <span class="btn btn-default fileinput-button">
+           <input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
+            <span><i class="fa fa-upload"></i> Upload Request</span>
+          </span>
+           <span>{{uploadedExcel}}</span>        
       </div>
+      <div class="col-sm-2">
+          <span class="btn btn-default fileinput-button">
+           <input type="file" id="modify" name="modify"  data-filetype="doc" file-upload required>
+            <span><i class="fa fa-upload"></i> Update Request</span>
+          </span>
+           <span>{{modifiedExcel}}</span>
+      </div>
+      <div class="col-sm-2">
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Excel</button>
+      </div>
+    </div>
+    <div class="row form-group">
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()">Submit to Agency</button>
       </div>
-      <div class="col-sm-offset-5 col-sm-3 tablesearch text-right">
+      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search...">
       </div>
     </div>
