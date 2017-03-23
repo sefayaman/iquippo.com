@@ -10,9 +10,9 @@
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
                     <select class="form-control" name="role" ng-model="newUser.role" ng-disabled="isEdit" required>
                       <option value="" disabled>*Role</option>
-                      <option value="customer">Customer</option>
-                      <option value="channelpartner" ng-if="!isChannelPartner()">Channel Partner</option>
-                      <option value="enterprise">Enterprise Valuation</option>
+                      <option value="customer" ng-if="isChannelPartner() || isAdmin()">Customer</option>
+                      <option value="channelpartner" ng-if="isAdmin()">Channel Partner</option>
+                      <option value="enterprise" ng-if="isEnterprise() || isAdmin()">Enterprise</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -34,8 +34,8 @@
                     <select class="form-control" name="userType" ng-model="newUser.userType" required>
                       <option value="" disabled>*Type</option>
                       <option value="individual">Individual</option>
-                      <option value="private">Private Entrepreneur</option>
-                      <option value="legalentity">Legal Entity</option>
+                      <option value="private" ng-if="newUser.role != 'enterprise'">Private Entrepreneur</option>
+                      <option value="legalentity" ng-if="newUser.role != 'enterprise'">Legal Entity</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -55,22 +55,20 @@
                   </p>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row" ng-if="newUser.role == 'enterprise'">
                   <div class="col-sm-4 form-group">
-                    <input type="checkbox" name="" value=""> New
+                    <input type="checkbox" name="isnew" ng-model="newUser.enterprise"> New
                   </div>
-                  <div class="col-sm-4 form-group">
-                    <select class="form-control">
-                      <option>Select Enterprise</option>
-                      <option>Option1</option>
-                      <option>Option2</option>
-                      <option>Option3</option>
+                  <div class="col-sm-8 form-group" ng-class="{'has-error': form.enterprise_name.$invalid && submitted }">
+                    <select class="form-control" name="enterprise_name"  ng-required="!newUser.enterprise" ng-disabled="newUser.enterprise" ng-model="newUser.enterpriseName">
+                      <option value="">Select Enterprise</option>
+                      <option value="{{ent.enterpriseName}}" ng-repeat="ent in enterprises">{{ent.fname}} {{ent.mname}} {{ent.lname}}({{ent.mobile}})</option>
                     </select>
                     <i class="caret"></i>
                   </div>
-                  <div class="col-sm-4 form-group">
+                 <!--  <div class="col-sm-4 form-group">
                     <input type="text" name="" value="" class="form-control" placeholder="Full Name" disabled>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="row">                  
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">

@@ -229,6 +229,8 @@ var transactionStatuses = [
 }
 ];
 
+var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Report Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+
 var tradeType = [
 {
   "name" : "Rent",

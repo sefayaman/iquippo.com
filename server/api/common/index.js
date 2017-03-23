@@ -2,6 +2,10 @@
 
 var express = require('express');
 var controller = require('./common.controller');
+var valuationPurposeCtrl = require('./valuationpurpose.controller');
+var servicefeeCtrl = require('./servicefee.controller');
+var servicetaxCtrl = require('./servicetax.controller');
+
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
 
@@ -65,6 +69,22 @@ router.put('/banner/:id', controller.updateBanner);
 router.delete('/banner/:id', controller.deleteBanner);
 router.post('/banner/onfilter', controller.getBannerOnFilter);
 router.post('/importLocation',controller.importLocation);
+
+router.get('/valuationpurpose', valuationPurposeCtrl.get);
+router.post('/valuationpurpose', valuationPurposeCtrl.create);
+router.put('/valuationpurpose/:id', valuationPurposeCtrl.update);
+router.delete('/valuationpurpose/:id', valuationPurposeCtrl.destroy);
+
+router.get('/servicefee', servicefeeCtrl.get);
+router.post('/servicefee', servicefeeCtrl.create);
+router.put('/servicefee/:id', servicefeeCtrl.update);
+router.delete('/servicefee/:id', servicefeeCtrl.destroy);
+
+router.get('/servicetax', servicetaxCtrl.get);
+router.post('/servicetax', servicetaxCtrl.create);
+router.put('/servicetax/:id', servicetaxCtrl.update);
+router.delete('/servicetax/:id', servicetaxCtrl.destroy);
+
 
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);

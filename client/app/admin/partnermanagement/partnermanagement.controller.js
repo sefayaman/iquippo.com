@@ -18,7 +18,6 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   vm.verify = verify;
   vm.onLocationChange = onLocationChange;
   vm.getServiceString = getServiceString;
-  //vm.deleteVendor = deleteVendor;
   vm.updateVendorUser = updateVendorUser;
   vm.editVendorClick = editVendorClick;
   $scope.updateAvatar = updateAvatar;
@@ -147,9 +146,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Dealer);
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
-    {
-      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).name;
-        console.log(vm.vendorReg.user.state);} 
+      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).state;
     
     if(!vm.vendorReg.user.country)     
       vm.vendorReg.user.country = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).country;
@@ -332,19 +329,6 @@ function updateVendor(vendor) {
 }
 
  $scope.isCollapsed = true;
-
- /*function deleteVendor(vendor){
-    Modal.confirm(informationMessage.deletePartnerConfirm,function(isGo){
-        if(isGo == 'no')
-          return;
-        vendorSvc.deleteVendor(vendor).then(function(result){
-        loadVendors();
-      })
-      .catch(function(err){
-        console.log("error in vendor delete",err.data);
-      });
-    });
-  }*/
 
   function updateVendorUser(vendor){
       $rootScope.loading = true;

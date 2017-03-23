@@ -18,6 +18,9 @@
 						<option value="manu">Manufacturer</option>
 						<option value="banner">Banner Setting</option>
 						<option value="technical">Technical Information</option>
+						<option value="svcfeemaster">Service Fee Master</option>
+						<option value="svctaxmaster">Service Tax Master</option>
+						<option value="vpurpose">Valuation Purpose Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -1227,5 +1230,234 @@
 			  
         	</div>
 
+        	<!-- Service fee master -->
+        	<div ng-if="gsettingVm.tabValue == 'svcfeemaster'" ng-controller="ServiceFeeMasterCtrl as svcFeeVm">
+        		<form name="feemasterForm" novalidate class="feemaster">
+        			<div class="row">
+		    			<div class="col-sm-6">
+		    				<h4>Add New Services Fee</h4>
+		    			</div>
+		    			<div class="col-sm-6 text-right">
+		    				<h4>
+		    					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+		    				</h4>
+		    			</div>
+		    		</div>
+		    		<legend></legend>
+        			<div class="row">
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.typeOfservice.$invalid && submitted}">
+        				<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" ng-change="svcFeeVm.getPartners(svcFeeVm.dataModel.serviceType)" required>
+			              <option value="">*Request Type</option>
+			              <option ng-repeat="req in svcFeeVm.serviceList" value="{{req.name}}">{{req.name}}</option>
+			            </select>
+			            <i class="caret"></i>
+        					<!-- <input type="text" name="typeOfservice" class="form-control" ng-model="svcFeeVm.dataModel.serviceType" placeholder="Type of Service" required> -->
+        				</div>
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.enterpriseName.$invalid && submitted}">
+        					<select class="form-control" name="enterpriseName" ng-model="svcFeeVm.dataModel.enterpriseName" required>
+        						<option value="">*Select Enterprise Name</option>
+        						<option value="{{ent.enterpriseName}}" ng-repeat="ent in svcFeeVm.enterprises">{{ent.enterpriseName}}</option>
+        					</select>
+        					<i class="caret"></i>
+        				</div>
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.agencyName.$invalid && submitted}">
+        					<select class="form-control" name="agencyName" ng-model="svcFeeVm.dataModel.agency._id" required>
+        						<option value="">*Select Agency Name</option>
+        						<option ng-repeat="ag in svcFeeVm.agencies" value="{{ag._id}}">{{ag.name}}</option>
+        					</select>
+        					<i class="caret"></i>
+        				</div>
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveToDate.$invalid && submitted}">
+        					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective to Date" required/>
+        				</div>
+        			</div>
+        			<div class="row">
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.chargeBasis.$invalid && submitted}">
+        					<!-- <div class="input-group">
+        						<input type="text" class="form-control" name="chargeBasis" ng-model="svcFeeVm.dataModel.chargeBasis" placeholder="Charge Basis" required />
+        						<span class="input-group-addon">%</span>
+        					</div> -->
+        					<select class="form-control" ng-model="svcFeeVm.dataModel.chargeBasis" required>
+        						<option value="">*Slect Charge Basis</option>
+        						<option value="flat">Flat</option>
+        						<option value="percent">%</option>
+        					</select>
+        					<i class="caret"></i>
+        				</div>
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.feeAmount.$invalid && submitted}">
+        					<input type="number" class="form-control" name="feeAmount" ng-model="svcFeeVm.dataModel.amount" placeholder="*Amount" required />
+        				</div>
+        				<div class="col-sm-offset-4 col-sm-2 text-right">
+        					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcFeeVm.update(feemasterForm)">Update</button>
+        					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcFeeVm.save(feemasterForm)">Save</button>
+        				</div>
+        			</div>
+        			
+        			<legend></legend>
+        		</form>
+
+        		<div class="row">						
+		          	<div class="col-sm-3 pull-right">
+	                    <div class="tablesearch text-right form-group">
+	                       Search: <input type="text" placeholder="Search..." ng-model="svcFeeVm.searchStr" ng-change="svcFeeVm.searchFn()" ng-model-options="{debounce:500}">
+	                    </div>
+	                </div>
+		        </div>
+			    <div class="table-responsive">
+		            <table class="table table-bordred table-striped">
+		              <thead>
+		               <tr>
+		               	 	<th>Type of Service</th>                                
+		               	 	<th>Enterprise Name</th>                                
+		               	 	<th>Agency Name</th>                                
+		               	 	<th>Effective to Date</th>                                
+		               	 	<th>Charge Basis(%)</th>                                
+		               	 	<th>Amount</th>                                
+		                	<th>Action</th>
+		               </tr>
+		               
+		              </thead>
+		              <tbody>
+		              <tr ng-repeat="svcFee in svcFeeVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">			              	
+		                <td>{{svcFee.serviceType}}</td>
+		                <td>{{svcFee.enterpriseName}}</td>
+		                <td>{{svcFee.agency.name}}</td>
+		                <td>{{svcFee.effectiveToDate | date:'MM/dd/yyyy' }}</td>
+		                <td>{{svcFee.chargeBasis}}</td>
+		                <td>{{svcFee.amount}}</td>
+		                <td>
+		                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="svcFeeVm.editClicked(svcFee)"><i class="fa fa-pencil"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="svcFeeVm.destroy(svcFee._id)"><i class="fa fa-trash"></i> </a>
+		                </td>
+		               </tr>
+		              </tbody>
+		            </table>
+		        </div>
+		         <uib-pagination  total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" rotate="false"></uib-pagination>
+        	</div>
+
+        	<!-- Service Tax Master -->
+        	<div ng-if="gsettingVm.tabValue == 'svctaxmaster'" ng-controller="ServiceTaxMasterCtrl as svcTaxVm">
+        		<form name="taxmasterForm" novalidate class="taxmaster">
+        			<div class="row">
+		    			<div class="col-sm-6">
+		    				<h4>Add New Services Tax</h4>
+		    			</div>
+		    			<div class="col-sm-6 text-right">
+		    				<h4>
+		    					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+		    				</h4>
+		    			</div>
+		    		</div>
+		    		<legend></legend>
+        			<div class="row">        				
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveFromDate.$invalid && submitted}">
+        					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective From Date" required>
+        				</div>
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveToDate.$invalid && submitted}">
+        					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective To Date" required>
+        				</div>
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.taxRate.$invalid && submitted}">
+        					<input type="number" class="form-control" name="taxRate" ng-model="svcTaxVm.dataModel.taxRate" value="" placeholder="Service Tax Rate" required>
+        				</div>
+        				<div class="form-group col-sm-offset-1 col-sm-2 text-right">
+        					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcTaxVm.update(taxmasterForm)">Update</button>
+        					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcTaxVm.save(taxmasterForm)">Save</button>
+        				</div>
+        			</div>  			
+        			
+        			<legend></legend>
+        		</form>
+
+        		<div class="row">						
+		          	<div class="col-sm-3 pull-right">
+	                    <div class="tablesearch text-right form-group">
+	                       Search: <input type="text" placeholder="Search..." ng-model="svcTaxVm.searchStr" ng-change="svcTaxVm.searchFn()" ng-model-options="{debounce:500}">
+	                    </div>
+	                </div>
+		        </div>
+			    <div class="table-responsive">
+		            <table class="table table-bordred table-striped">
+		              <thead>
+		               <tr>		               	 	                            
+		               	 	<th>Effective From Date</th>                                
+		               	 	<th>Effective To Date</th>                                
+		               	 	<th>Service Tax Rate</th>                     
+		                	<th>Action</th>
+		               </tr>
+		               
+		              </thead>
+		              <tbody>
+		              <tr ng-repeat="taxRate in svcTaxVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">			              	
+		                <td>{{taxRate.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
+		                <td>{{taxRate.effectiveToDate | date:'MM/dd/yyyy'}}</td>
+		                <td>{{taxRate.taxRate}}</td>
+		                <td>
+		                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="svcTaxVm.editClicked(taxRate)"><i class="fa fa-pencil"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);"><i class="fa fa-trash" ng-click="svcTaxVm.destroy(taxRate._id)"></i> </a>
+		                </td>
+		               </tr>
+		              </tbody>
+		            </table>
+		        </div>
+		        <uib-pagination  total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" rotate="false"></uib-pagination>
+        	</div>
+
+        	<!-- Valuation purpose -->
+        	<div ng-if="gsettingVm.tabValue == 'vpurpose'" ng-controller="ValuationPurposeMasterCtrl as valuationPurposeVm">
+        		<form name="purposeForm" novalidate class="purpose">
+        			<div class="row">
+		    			<div class="col-sm-6">
+		    				<h4>Add New Valuation Purpose</h4>
+		    			</div>
+		    			<div class="col-sm-6 text-right">
+		    				<!-- <h4>
+		    					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+		    				</h4> -->
+		    			</div>
+		    		</div>
+		    		<legend></legend>
+        			<div class="row">  
+        				<div class="col-sm-3 form-group" ng-class="{'has-error':purposeForm.purpose.$invalid && submitted}">
+        					<input type="text" class="form-control" name="purpose"  ng-model="valuationPurposeVm.dataModel.name" placeholder="Valuation Purpose" required>
+        				</div>
+        				<div class="form-group col-sm-offset-7 col-sm-2 text-right">
+        					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="valuationPurposeVm.update(purposeForm)">Update</button>
+        					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="valuationPurposeVm.save(purposeForm)">Save</button>
+        				</div>
+        			</div>  			
+        			
+        			<legend></legend>
+        		</form>
+
+        		<div class="row">						
+		          	<div class="col-sm-3 pull-right">
+	                    <div class="tablesearch text-right form-group">
+	                       Search: <input type="text" placeholder="Search..."  ng-model="valuationPurposeVm.searchStr" ng-change="valuationPurposeVm.searchFn()" ng-model-options="{debounce:500}">
+	                    </div>
+	                </div>
+		        </div>
+			    <div class="table-responsive">
+		            <table class="table table-bordred table-striped">
+		              <thead>
+		               <tr>		               	 	                            
+		               	 	<th>Valuation Purpose</th>                  
+		                	<th>Action</th>
+		               </tr>
+		               
+		              </thead>
+		              <tbody>
+		              <tr ng-repeat="vl in valuationPurposeVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">			              	
+		                <td>{{vl.name}}</td>
+		                <td>
+		                	<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="valuationPurposeVm.editClicked(vl)"><i class="fa fa-pencil"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="valuationPurposeVm.destroy(vl._id)"><i class="fa fa-trash"></i> </a>
+		                </td>
+		               </tr>
+		              </tbody>
+		            </table>
+		        </div>
+		         <uib-pagination  total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" rotate="false"></uib-pagination>
+        	</div>
 	</div>
 </div>
