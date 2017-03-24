@@ -20,28 +20,28 @@
         <div class="row form-group ">                            
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.requestType.$invalid && submitted}">
             <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField()" required>
-              <option value="">Request Type*</option>
+              <option value="">*Request Type</option>
               <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}">{{req.name}}</option>
             </select>
             <i class="caret"></i>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.purpose.$invalid && submitted}">
             <select class="form-control" name="purpose" ng-model="addTransactionVm.enterpriseValuation.purpose" ng-disabled="!editEnterpriseField()" required>
-              <option value="">Select Purpose*</option>
+              <option value="">*Select Purpose</option>
               <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
             </select>
             <i class="caret"></i>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.agencyName.$invalid && submitted}">
             <select class="form-control" name="agencyName" ng-model="addTransactionVm.enterpriseValuation.agency._id" ng-disabled="!editEnterpriseField()" required>
-              <option value="">Select Agency*</option>
+              <option value="">*Select Agency</option>
               <option  ng-repeat="ag in addTransactionVm.valAgencies | orderBy:'name'" value="{{ag._id}}">{{ag.name}}</option>
             </select>
             <i class="caret"></i>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.enterpriseName.$invalid && submitted}">
             <select class="form-control" name="enterpriseName" ng-model="addTransactionVm.enterpriseValuation.enterprise.name" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.setCustomerData(addTransactionVm.enterpriseValuation.enterprise.name)" required>
-              <option value="">Select Enterprise*</option>
+              <option value="">*Select Enterprise</option>
               <option ng-repeat="enterprise in addTransactionVm.enterprises" value="{{enterprise.enterpriseName}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.mobile}})</option>
             </select>
             <i class="caret"></i>
@@ -83,16 +83,17 @@
         </div>
         <div class="row form-group">
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.category.$invalid || enterpriseValForm.otherCategory.$invalid) && submitted}">
-            <select class="form-control form-group" name="category" ng-model="addTransactionVm.enterpriseValuation.category" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onCategoryChange(addTransactionVm.enterpriseValuation.category)" required>
+            <input type="text" class="form-control" name="" value="" placeholder="Asset Group">
+            <!-- <select class="form-control form-group" name="category" ng-model="addTransactionVm.enterpriseValuation.category" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onCategoryChange(addTransactionVm.enterpriseValuation.category)" required>
               <option value="">Select Category/Asset Type*</option>
               <option ng-repeat="cat in addTransactionVm.allCategory" value="{{cat.name}}">{{cat.name}}</option>
             </select>
-            <i class="caret"></i>
-             <input type="text" ng-if="addTransactionVm.enterpriseValuation.category == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherCategory" class="form-control" name="otherCategory" placeholder="Other Category Name" ng-required = "addTransactionVm.enterpriseValuation.category == 'Other'">
+            <i class="caret"></i> -->
+             <!-- <input type="text" ng-if="addTransactionVm.enterpriseValuation.category == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherCategory" class="form-control" name="otherCategory" placeholder="Other Category Name" ng-required = "addTransactionVm.enterpriseValuation.category == 'Other'"> -->
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
             <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)" required>
-              <option value="">Select Brand*</option>
+              <option value="">Select Brand</option>
               <option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
             </select>
             <i class="caret"></i>
@@ -100,7 +101,7 @@
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.model.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
             <select class="form-control form-group" name="model" ng-model="addTransactionVm.enterpriseValuation.model" ng-disabled="!editEnterpriseField()" required>
-              <option value="">Select Model*</option>
+              <option value="">Select Model</option>
               <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
             </select>
             <i class="caret"></i>
