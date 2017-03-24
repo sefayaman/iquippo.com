@@ -143,56 +143,41 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var extPart = fileNameParts[fileNameParts.length - 1];
       var namePart = fileNameParts[0];
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
-      var val = {};
-      val.size = {};
-      fsExtra.copy(imgPath, originalFilePath,{replace:true}, function(err, result) {
+      fsExtra.copy(imgPath, originalFilePath, {
+        replace: true
+      }, function(err, result) {
         if (err) throw err;
-
         lwip.open(imgPath, function(err, image) {
-          val.size.width = image.width();
-          val.size.height = image.height();
-          var resizeToW = dimension.width;
-          var resizeToH = dimension.height;
-          var wRatio= 700/image.width();
-          //var hRatio=459/image.height();
-          //var ratio = Math.min(wRatio, hRatio);
-
-          if (val.size && val.size.width <= dimension.width)
-            resizeToW = null;
-          if (val.size && val.size.height <= dimension.height)
-            resizeToH = null;
-          if (!resizeToW && !resizeToH) {
-            req.counter++;
-            return resizeImg(req, res, assetDir, dimension, isMultiple);
-          } else {
-            image.scale(wRatio,function(err, rzdImage) {
-              if (extPart === 'jpg' || extPart === 'jpeg') {
+          /*var wRatio = 700 / image.width();
+          var hRatio= 450 / image.height();*/
+          image.scale(0.90, function(err, rzdImage) {
+            if (extPart === 'jpg' || extPart === 'jpeg') {
+              rzdImage.toBuffer(extPart, {
+                quality: 100
+              }, function(err, buffer) {
+                fs.writeFile(imgPath, buffer, function(err) {
+                  if (err) throw err;
+                  req.counter++;
+                })
+              })
+              resizeImg(req, res, assetDir, dimension, isMultiple);
+            } else {
+              if (extPart == 'png') {
                 rzdImage.toBuffer(extPart, {
-                  quality: 50
+                  compression: "high",
+                  interlaced: false,
+                  transparency: 'auto'
                 }, function(err, buffer) {
                   fs.writeFile(imgPath, buffer, function(err) {
                     if (err) throw err;
                     req.counter++;
                   })
                 })
-                resizeImg(req, res, assetDir, dimension, isMultiple);
-              } else {
-                if (extPart == 'png') {
-                  rzdImage.toBuffer(extPart, {
-                    compression: "high",
-                    interlaced: false,
-                    transparency: 'auto'
-                  }, function(err, buffer) {
-                    fs.writeFile(imgPath, buffer, function(err) {
-                      if (err) throw err;
-                      req.counter++;
-                    })
-                  })
-                  return resizeImg(req, res, assetDir, dimension, isMultiple);
-                }
+                return resizeImg(req, res, assetDir, dimension, isMultiple);
               }
-            })
-          }
+            }
+          })
+
         })
       });
 

@@ -351,8 +351,9 @@
       $scope.$on("fileSelected", function(event, args) {
         // console.log("hell yeah");
 
-        if (args.files.length == 0)
+        if (args.files.length == 0){
           return;
+        }
 
         $scope.$apply(function() {
           if (args.type == "image") {
@@ -362,6 +363,11 @@
             resizeParam.height = imgDim.height;
           }
           $rootScope.loading = true;
+          /*if(args.files[0].size < 50000){
+            $rootScope.loading = false;
+            Modal.alert("Error in file upload.the size of the file should be more than 50KB", true);
+            return;
+          }*/
           uploadSvc.upload(args.files[0], $scope.assetDir, resizeParam).then(function(result) {
             $rootScope.loading = false;
             $scope.assetDir = result.data.assetDir;
