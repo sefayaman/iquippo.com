@@ -24,7 +24,7 @@ var checkSearchMatchingNotificationService = require('./components/checkSearchMa
 var http = require('http');
 var fsExtra = require('fs.extra');
 var gm = require('gm');
-var lwip = require('lwip');
+//var lwip = require('lwip');
 var task = require('./components/task.js');
 var taskRunner = require('./components/taskRunner.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
@@ -134,7 +134,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
   });
 });
 
-function resizeImg(req, res, assetDir, dimension, isMultiple) {
+/*function resizeImg(req, res, assetDir, dimension, isMultiple) {
   try {
     if (req.counter < req.total) {
       var fileName = req.files[req.counter].filename;
@@ -210,6 +210,50 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       }
     }
   } catch (err) {
+    handleError(res, err);
+  }
+}*/
+
+function resizeImg(req,res,assetDir,dimension,isMultiple){
+  try{
+      if(req.counter < req.total){
+          var fileName = req.files[req.counter].filename;
+          var imgPath = config.uploadPath + assetDir +"/" + fileName;
+          var imgRef = gm(imgPath);
+          imgRef.identify(function(err,val){
+          var resizeToW = dimension.width;
+          var resizeToH = dimension.height; 
+
+          if(val.size && val.size.width <= dimension.width)
+            resizeToW = null;
+          if(val.size && val.size.height <= dimension.height)
+            resizeToH = null;
+          if(!resizeToW && !resizeToH){
+            req.counter ++;
+            resizeImg(req,res,assetDir,dimension,isMultiple);
+          }else{
+                var fileNameParts = fileName.split('.');
+                var extPart = fileNameParts[fileNameParts.length -1];
+                var namePart = fileNameParts[0];
+                var originalFilePath = config.uploadPath + assetDir + "/" + namePart +"_original." + extPart;
+                fsExtra.copy(imgPath,originalFilePath,function(err,result){
+                    imgRef.resize(resizeToW,resizeToH,"!")
+                    .write(imgPath, function(e){
+                        req.counter ++;
+                        resizeImg(req,res,assetDir,dimension,isMultiple);
+                    });
+                });
+          }
+        })
+
+      }else{
+        if(isMultiple){
+            res.status(200).json({assetDir:assetDir,files:req.files});
+        }else{
+            res.status(200).json({assetDir:assetDir,filename:req.files[0].filename});
+        }
+      }
+  }catch(err){
     handleError(res, err);
   }
 }

@@ -27,6 +27,8 @@ var EnterpriseValuationSchema = new Schema({
   model:String,
   otherModel:String,
   assetDescription:String,
+  quippoAssetId:Number,
+  quippoGroupId:Number,
   engineNo:String,
   chassisNo:String,
   registrationNo:String,
