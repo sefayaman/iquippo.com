@@ -458,7 +458,7 @@ div[data-role="editor-toolbar"]{-webkit-user-select:none;-moz-user-select:none;-
 .calendar .input-group input{height:30px;padding-left:25px;padding-right:0;}
 #article-photo-carousel .carousel-inner{height:275px; border: 1px solid #ccc;}
 #article-photo-carousel .carousel-inner > .item{height:100%; transition:0s; -webkit-transition: 0s;}
-#article-photo-carousel .carousel-inner  > .item > img{cursor:pointer; position: absolute;left: 0;right: 0;top: 0;bottom: 0;margin: auto;}
+#article-photo-carousel .carousel-inner  > .item > img{cursor:pointer; position: absolute;left: 0;right: 0;top: 0;bottom: 0;margin: auto; max-height: 275px;}
 .popover.right {margin-left: 9px;width: 250px;}
 table.table thead .sorting_desc::before,table.table thead .sorting_asc::before{content:none;}
 table.dataTable thead .sorting:first-child,table.dataTable thead .sorting_asc:first-child,table.dataTable thead .sorting_desc:first-child,table.dataTable thead .sorting:last-child,table.dataTable thead .sorting_asc:last-child,table.dataTable thead .sorting_desc:last-child{background:none;}
