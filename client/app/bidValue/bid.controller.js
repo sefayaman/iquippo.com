@@ -3,7 +3,7 @@
 	angular.module('sreizaoApp').controller('BidCtrl', BidCtrl);
 	angular.module('sreizaoApp').controller('BidListingCtrl', BidListingCtrl);
 
-	function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance, LocationSvc, notificationSvc) {
+	function BidCtrl($scope, $rootScope, Modal, Auth, BiddingSvc, $uibModalInstance, LocationSvc, notificationSvc, UtilSvc) {
 		var vm = this;
 		vm.biddingInfo = {};
 		vm.biddingInfo.user = {};
@@ -12,7 +12,8 @@
 		vm.biddingInfo.paymentmode = "Offline";
 		vm.closeDialog = closeDialog;
 		vm.submit = submit;
-
+		vm.onCodeChange = onCodeChange;
+		
 		function init() {
 			if (!$scope.isPayNow) {
 				Auth.isLoggedInAsync(function(loggedIn) {
@@ -23,6 +24,7 @@
 						vm.biddingInfo.user.lname = Auth.getCurrentUser().lname;
 						vm.biddingInfo.user.mobile = Auth.getCurrentUser().mobile;
 						vm.biddingInfo.user.country = Auth.getCurrentUser().country;
+						vm.biddingInfo.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
 						vm.biddingInfo.user.email = Auth.getCurrentUser().email;
 					} else {
 						vm.biddingInfo.user = {};
@@ -39,8 +41,26 @@
 		}
 		init();
 
+		function onCodeChange(code) {
+			vm.biddingInfo.user.country = LocationSvc.getCountryNameByCode(code);
+		}
+
 		function submit(form) {
-			if (form.$invalid) {
+			var ret = false;
+			if(!vm.biddingInfo.user.country && vm.biddingInfo.user.countryCode)
+				vm.biddingInfo.user.country = LocationSvc.getCountryNameByCode(vm.biddingInfo.user.countryCode);
+
+			if(vm.biddingInfo.user.country && vm.biddingInfo.user.mobile) { 
+		      var value = UtilSvc.validateMobile(vm.biddingInfo.user.country, vm.biddingInfo.user.mobile);
+		      if(!value) {
+		        $scope.form.mobile.$invalid = true;
+		        ret = true;
+		      } else {
+		        $scope.form.mobile.$invalid = false;
+		        ret = false;
+		      }
+		    }
+			if (form.$invalid || ret) {
 				$scope.submitted = true;
 				return;
 			}

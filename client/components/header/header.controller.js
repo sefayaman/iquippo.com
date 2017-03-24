@@ -64,6 +64,7 @@ angular.module('sreizaoApp')
         dataToServer['fname'] = Auth.getCurrentUser().fname;
         dataToServer['mname'] = Auth.getCurrentUser().mname;
         dataToServer['lname'] = Auth.getCurrentUser().lname;
+        dataToServer['country'] = Auth.getCurrentUser().country;
         dataToServer['phone'] = Auth.getCurrentUser().phone;
         dataToServer['mobile'] = Auth.getCurrentUser().mobile;
         dataToServer['email'] = Auth.getCurrentUser().email;

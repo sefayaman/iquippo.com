@@ -4,7 +4,7 @@
 angular.module('account').controller('MyAccountCtrl',MyAccountCtrl);
 
 //controller function
-function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
+function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadSvc,productSvc, UtilSvc, ManpowerSvc, InvitationSvc, SubCategorySvc, categorySvc) {
     var vm = this;
     vm.currentTab = "basic";
     vm.userInfo = {};
@@ -70,7 +70,19 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     inti();
    
     function save(form,isBasic){
-      if(form && form.$invalid){
+      var ret = false;
+      if(vm.userInfo.country && vm.userInfo.mobile) { 
+        var value = UtilSvc.validateMobile(vm.userInfo.country, vm.userInfo.mobile);
+        if(!value) {
+          form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
+
+      if(form && form.$invalid || ret){
         $scope.submitted = true;
         return;
       }
@@ -94,7 +106,6 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
       }else{
         updateUser();
       }
-      //console.log("user information",vm.userInfo)
     }
 
     function editOrAddClick(param){
@@ -159,7 +170,6 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     }
 
      function updateUser(noAlert){
-      //console.log("user info",vm.userInfo);
        userSvc.updateUser(vm.userInfo).then(function(result){
         Auth.refreshUser();
         vm.editBasicInfo = false;

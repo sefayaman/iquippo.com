@@ -8,6 +8,7 @@ var ClassifiedadSchema = new Schema({
   fname: String,
   mname: String,
   lname: String,
+  country:String,
   phone: String,
   mobile: String,
   email: String,

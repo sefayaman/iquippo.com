@@ -136,6 +136,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.getLocationHelp = getLocationHelp;
   utilSvc.getLocations = getLocations;
   utilSvc.buildQueryParam = buildQueryParam;
+  utilSvc.validateMobile = validateMobile;
   
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -203,6 +204,18 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       }
       queryStr = queryStr.substr(0,queryStr.length - 1);
       return queryStr;
+    }
+
+    function validateMobile(country, mobileNo) {
+      var validFlag = true;
+      if(!mobileNo)
+        return false;
+      if(country == "India")
+        validFlag = /^\d{10}$/.test(mobileNo)   
+      if(country != "India")
+        validFlag = /^\d+$/.test(mobileNo) 
+
+      return validFlag;
     }
 
   return utilSvc;

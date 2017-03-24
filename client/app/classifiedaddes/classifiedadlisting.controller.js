@@ -81,7 +81,6 @@ function ClassifiedAdListingCtrl($scope, $rootScope,Auth ,$http, productSvc, cla
         });
 
        classifedAdModal.result.then(function(param) {
-              console.log('vfdgfd',param);
               getClassifiedData();
         });
   }
