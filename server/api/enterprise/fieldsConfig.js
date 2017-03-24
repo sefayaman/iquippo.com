@@ -80,5 +80,14 @@ module.exports = {
 			'GPS_Device_No': 'gpsDeviceNo',
 			'IMIE_No': 'gpsIMEINo'
 		}
+	},
+	'ASSETGROUP' : {
+		'Valuer_Group_ID' : 'valuerGroupId' ,
+		'Valuer_Asset_ID' : 'valuerAssetId' ,
+		'Valuer_Name' : 'valuerName',
+		'Valuer_Code'  : 'valuerCode',
+		'ASSET_CATEGORY' : 'assetCategory',
+		'Enterprise_Name' : 'enterpriseName',
+		'Enterprise_ID': 'enterpriseId'
 	}
 }

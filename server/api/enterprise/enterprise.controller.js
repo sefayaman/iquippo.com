@@ -298,7 +298,7 @@ exports.bulkUpload = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
     if(!body[x])
-      return res.send(412).json({Err:'Missing madnatory parameter' + x });
+      return res.status(412).json({Err:'Missing madnatory parameter' + x });
   });
 
   var fileName = req.body.fileName;
@@ -896,7 +896,7 @@ exports.generateInvoice = function(req,res){
 
       pdf.create(pdfInput, options).toStream(function (err, pdfOutput) {
         if (!err){
-          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf"' + '"');
+          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf');
           res.setHeader('Content-type', 'application/pdf');
           pdfOutput.pipe(res);
         } else {
