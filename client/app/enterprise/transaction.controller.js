@@ -238,19 +238,40 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
           Modal.alert('Please select entries to be updated');
           return;
         }
-        selectedItems.forEach(function(item){
+        /*selectedItems.forEach(function(item){
           EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[1])
-        });
+        });*/
 
         EnterpriseSvc.submitToAgency(selectedItems)
-        .then(function(res){
-          console.log("res",res);
-            //bulkUpdate();          
+        .then(function(resList){
+          //console.log("res",res);
+            if(resList && resList.length > 0){
+              resList.forEach(function(item){
+                if(item.success){
+                   var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
+                   valReq.jobId = item.jobId;
+                   EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[1]);
+                }
+
+              })
+              bulkUpdate(selectedItems);
+            }          
         })
         .catch(function(err){
           Modal.alert("error occured in integration");
         })
       
+    }
+
+    function getValReqByUniqueCtrlNo(list,unCtrlNo){
+      var retVal = null;
+      list.forEach(function(item){
+        if(item.uniqueControlNo == unCtrlNo){
+          retVal = item;
+          return true;
+        }
+      })
+      return retVal;
     }
 
     function bulkUpdate(){

@@ -214,10 +214,10 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       dataArr[dataArr.length] = obj; 
     });
     //console.log("",dataArr);
-      var apiUrl = "http://quippoauctions.com/valuation/api.php?type=jobcreation";
-      return $http.post(apiUrl,dataArr[0])
+      var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
+      return $http.post(apiUrl,dataArr)
       .then(function(res){
-        console.log("success res",res.data)
+        console.log("success res",JSON.stringify(res.data))
         return res.data;  
       })
       .catch(function(err){

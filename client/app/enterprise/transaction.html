@@ -33,7 +33,7 @@
            <span>{{modifiedExcel}}</span>
       </div>
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Excel</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Request</button>
       </div>
     </div>
     <div class="row form-group">
@@ -48,7 +48,7 @@
       <table class="table table-bordred table-striped">
         <thead>
           <tr>
-            <th>Select</th>
+            <th><input type="checkbox"> All</th>
             <th>Action</th>
             <th>Unique Control No</th>
             <th>Request Type</th>
@@ -56,9 +56,10 @@
             <th>Agency Name</th>
             <th>Enterprise</th>
             <th>Customer Transaction ID</th>
-            <th>Customer Valuation No</th>
+            <th>Job ID</th>
             <th>Asset No.</th>
             <th>Status</th>
+            <th>Remark</th>
             <th></th>
           </tr>
         </thead>
@@ -79,6 +80,7 @@
             <td>{{enterpriseValuation.customerTransactionId}}</td>
             <td>{{enterpriseValuation.customerValuationNo}}</td>
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
+            <td></td>
             <td></td>
             <td><a href="javascript:void(0);" title=""> More..</a></td>
             
