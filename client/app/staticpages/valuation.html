@@ -180,7 +180,7 @@
 								<div class="col-xs-4">
 									<div class="form-group">
 										<select class="form-control" ng-model="valuationQuote.product.category" ng-change="onCategoryChange(valuationQuote.product.category)">
-											<option value="">Select category</option>
+											<option value="">Select Category</option>
 											<option value="{{cat.name}}" ng-repeat="cat in allCategory | orderBy:'name'">{{cat.name}}</option>
 										</select>
 										<i class="caret"></i>
@@ -198,7 +198,7 @@
 								<div class="col-xs-4">
 									<div class="form-group">
 										<select class="form-control" ng-model="valuationQuote.product.model">
-											<option value="">Select Modal</option>
+											<option value="">Select Model</option>
 											<option value="{{md.name}}" ng-repeat="md in modelList | orderBy:'name'">{{md.name}}</option>
 										</select>
 										<i class="caret"></i>
@@ -226,7 +226,7 @@
 								<div class="col-xs-4">
 									<div class="form-group" ng-class="{'has-error': form.prdLocation.$invalid && form.submitted }">
 										<select class="form-control" name="prdLocation"  ng-model="valuationQuote.product.city" required>
-											<option value="">Select Location*</option>
+											<option value="">*Select Location</option>
 											<option ng-repeat="location in prdLocationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
 										</select>
 										<i class="caret"></i>
@@ -237,12 +237,12 @@
 							<div class="row">
 								<div class="col-xs-6">
 									<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
-										<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year*" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+										<input type="number" name="prdMfg" class="form-control" placeholder="*Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
 									</div>
 								</div>
 								<div class="col-xs-6">
 									<div class="form-group" ng-class="{'has-error': form.prddescription.$invalid && form.submitted }">
-										<input type="text" name="prddescription" class="form-control" placeholder="Asset Description*" ng-model="valuationQuote.product.description" required>
+										<input type="text" name="prddescription" class="form-control" placeholder="*Asset Description" ng-model="valuationQuote.product.description" required>
 									</div>
 								</div>
 								
@@ -251,7 +251,7 @@
 					<div class="row">
 						<div class="col-xs-6">
 							<div class="form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted }">
-								<input type="text" name="contactPerson" class="form-control" placeholder="Contact Person*"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
+								<input type="text" name="contactPerson" class="form-control" placeholder="*Contact Person"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
 							</div>							
 						</div>
 						<div class="col-xs-6">
@@ -266,7 +266,7 @@
 					<div class="row">
 						<div class="col-xs-6">
 							<div class="form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted }">
-								<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="Contact Number*" ng-required="!valuationQuote.product.contactNumberAsAbove">
+								<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="*Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
 							</div>							
 						</div>
 						<div class="col-xs-6">
