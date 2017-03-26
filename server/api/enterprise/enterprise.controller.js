@@ -111,8 +111,8 @@ function getValuationRequest(req,res){
   }
   if (queryParam.mobile)
     filter["mobile"] = queryParam.mobile;
-  if (queryParam.enterpriseName)
-    filter["enterprise.name"] = queryParam.enterpriseName;
+  if (queryParam.enterpriseId)
+    filter["enterprise.enterpriseId"] = queryParam.enterpriseId;
   if (queryParam.agencyId)
     filter["agency._id"] = queryParam.agencyId;
   if (queryParam.requestType)
@@ -158,11 +158,10 @@ function getInvoice(req,res){
   if(queryParam.paymentMade){
      filter["paymentMade"] = queryParam.paymentMade == 'n'?false:true;
   }
-  if (queryParam.enterpriseName)
-    filter["enterprise.name"] = queryParam.enterpriseName;
-  if (queryParam.parnerId)
-    filter["agency._id"] = queryParam.parnerId;
-  console.log("@@@@@@",filter);
+  if (queryParam.enterpriseId)
+    filter["enterprise.enterpriseId"] = queryParam.enterpriseId;
+  if (queryParam.partnerId)
+    filter["agency.partnerId"] = queryParam.partnerId;
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;

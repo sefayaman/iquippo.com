@@ -20,15 +20,12 @@ var EnterpriseValuationSchema = new Schema({
   requestDate: {type:Date,default:Date.now},
   assetId:String,
   repoDate: {type:Date,default:Date.now},
-  category:String,
-  otherCategory:String,
   brand:String,
   otherBrand:String,
   model:String,
   otherModel:String,
+  assetCategory:String,
   assetDescription:String,
-  quippoAssetId:Number,
-  quippoGroupId:Number,
   engineNo:String,
   chassisNo:String,
   registrationNo:String,
@@ -72,7 +69,7 @@ var EnterpriseValuationSchema = new Schema({
   paymentMade:{type:Boolean,default:false},
   /*Common fields*/
   assetDir:String,
-  failureReason:String,
+  remarks:String,
   deleted:{type:Boolean,default:false},
   status:{type:String,default:"Request Initiated"},
   statuses:[],
@@ -83,17 +80,12 @@ var EnterpriseValuationSchema = new Schema({
 
 EnterpriseValuationSchema.pre('save',function(next){
   var self = this;
-  var cprefix = 'IQ';
-  var tprefix = 'EVT';
-  var vprefix = 'EVN';
+  var cprefix = 'EV';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
     var date = new Date();
     var dateStr = date.getDate()+ "" + (date.getMonth() + 1)+ "" + date.getFullYear();
-    console.log(dateStr);
     self.uniqueControlNo = cprefix + dateStr + seqnum;
-    self.customerTransactionId = tprefix + dateStr + seqnum;
-    self.customerValuationNo = vprefix + dateStr + seqnum;
     return next();
   },'EnterpriseValuation',002);
 

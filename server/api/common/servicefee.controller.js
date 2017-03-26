@@ -33,7 +33,7 @@ exports.create = function(req, res,next) {
 function _getRecord(data,cb){
   var filter = {};
   filter["serviceType"] = data.serviceType;
-  filter["enterpriseName"] = data.enterpriseName;
+  filter["enterpriseId"] = data.enterpriseId;
   filter["agency._id"] = data.agency._id;
   filter["effectiveToDate"] = {$lte:data.effectiveToDate};
   Model.find(filter,function(err,result){

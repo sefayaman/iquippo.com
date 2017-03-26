@@ -157,6 +157,7 @@
               <thead>
                 <tr>
                   <th>Image</th>
+                  <th>Partner Id</th>
                   <th>Name</th>
                   <th>Legal Entity</th>
                   <th>Services</th>
@@ -170,6 +171,7 @@
               <tbody>
                <tr ng-repeat="vendor in vendorList">
                 <td><img class="sheduleImg img-circle" ng-src="{{uploadImagePrefix}}{{avatarDir}}/{{vendor.user.imgsrc}}" alt="Image"></td>
+                 <td>{{vendor.partnerId}}</td>
                 <td>{{vendor.user.fname}}</td>
                 <td>{{vendor.entityName}}</td>
                 <td>{{partnerVM.getServiceString(vendor.services.join())}}</td>

@@ -238,19 +238,19 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
           Modal.alert('Please select entries to be updated');
           return;
         }
-        /*selectedItems.forEach(function(item){
-          EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[1])
-        });*/
 
         EnterpriseSvc.submitToAgency(selectedItems)
         .then(function(resList){
           //console.log("res",res);
             if(resList && resList.length > 0){
               resList.forEach(function(item){
+                var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
                 if(item.success){
-                   var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
                    valReq.jobId = item.jobId;
-                   EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[1]);
+                   EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[2]);
+                }else{
+                  valReq.remarks = item.msg;
+                   EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[1]);
                 }
 
               })
@@ -265,10 +265,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
 
     function getValReqByUniqueCtrlNo(list,unCtrlNo){
       var retVal = null;
-      list.forEach(function(item){
+      list.some(function(item){
         if(item.uniqueControlNo == unCtrlNo){
           retVal = item;
-          return true;
+          return false;
         }
       })
       return retVal;

@@ -99,6 +99,8 @@ exports.create = function(req, res) {
     if(vendors.length > 0){
       return res.status(200).json({errorCode:1, message:"Entity Name already exist."});
     }else{
+      if(!req.body.partnerId)
+        req.body.partnerId = "QP" + req.body.user.mobile + "" + Math.floor(Math.random()*10);
       Vendor.create(req.body, function(err, vendor) {
         if(err) { return handleError(res, err); }
         return res.status(201).json({errorCode:0, message:""});
@@ -126,6 +128,8 @@ exports.update = function(req, res) {
     if(vendors.length > 0){
       return res.status(200).json({errorCode:1, message:"Entity Name already exist."});
     } else {
+       if(!req.body.partnerId)
+           req.body.partnerId = "QP" + req.body.user.mobile + "" + Math.floor(Math.random()*10);;
       Vendor.update({_id:_id},{$set:req.body},function (err) {
         if (err) {return handleError(res, err); }
 

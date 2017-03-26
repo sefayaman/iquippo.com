@@ -1211,7 +1211,7 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.typeOfservice.$invalid && submitted}">
-					<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" ng-change="svcFeeVm.getPartners(svcFeeVm.dataModel.serviceType)" required>
+					<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" required>
 						<option value="">*Request Type</option>
 						<option ng-repeat="req in svcFeeVm.serviceList" value="{{req.name}}">{{req.name}}</option>
 					</select>
@@ -1219,9 +1219,9 @@
 					<!-- <input type="text" name="typeOfservice" class="form-control" ng-model="svcFeeVm.dataModel.serviceType" placeholder="Type of Service" required> -->
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.enterpriseName.$invalid && submitted}">
-					<select class="form-control" name="enterpriseName" ng-model="svcFeeVm.dataModel.enterpriseName" required>
+					<select class="form-control" name="enterpriseName" ng-model="svcFeeVm.dataModel.enterpriseId" required>
 						<option value="">*Select Enterprise Name</option>
-						<option value="{{ent.enterpriseName}}" ng-repeat="ent in svcFeeVm.enterprises">{{ent.enterpriseName}}</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in svcFeeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}})</option>
 					</select>
 					<i class="caret"></i>
 				</div>
@@ -1284,7 +1284,7 @@
 				<tbody>
 					<tr ng-repeat="svcFee in svcFeeVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
 						<td>{{svcFee.serviceType}}</td>
-						<td>{{svcFee.enterpriseName}}</td>
+						<td>{{svcFee.enterpriseName}}({{svcFee.enterpriseId}})</td>
 						<td>{{svcFee.agency.name}}</td>
 						<td>{{svcFee.effectiveToDate | date:'MM/dd/yyyy' }}</td>
 						<td>{{svcFee.chargeBasis}}</td>

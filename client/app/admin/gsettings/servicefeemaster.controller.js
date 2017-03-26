@@ -26,7 +26,7 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.getPartners = getPartners;//
+        //vm.getPartners = getPartners;//
 
         function init(){
             var filter = {};
@@ -35,7 +35,11 @@
             userSvc.getUsers(filter).then(function(data){
                 vm.enterprises = data;
             });
-             vendorSvc.getAllVendors();
+             vendorSvc.getAllVendors()
+             .then(function(){
+                getPartners();
+             });
+
         }
 
         function loadViewData(){
@@ -54,8 +58,8 @@
             $scope.pager.update(null,vm.filteredList.length,1);
         }
 
-        function getPartners(serviceCode){
-            vm.agencies = vendorSvc.getVendorsOnCode(serviceCode);
+        function getPartners(){
+            vm.agencies = vendorSvc.getVendorsOnCode("Valuation");
         }
 
         function save(form){
@@ -68,8 +72,17 @@
             vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
             
             vm.agencies.forEach(function(item){
-                if(item._id == vm.dataModel.agency._id)
+                if(item._id == vm.dataModel.agency._id){
                     vm.dataModel.agency.name = item.name;
+                    vm.dataModel.agency.partnerId = item.partnerId;
+
+                }
+            });
+
+            vm.enterprises.forEach(function(item){
+                if(item.enterpriseId == vm.dataModel.enterpriseId){
+                    vm.dataModel.enterpriseName = item.fname  + " " + (item.mname || "") + " " + item.lname;
+                }
             });
 
             ServiceFeeSvc.save(vm.dataModel)
@@ -89,7 +102,7 @@
             vm.dataModel = angular.copy(rowData);
               if (vm.dataModel.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(vm.dataModel.effectiveToDate).format('MM/DD/YYYY');
-            getPartners(vm.dataModel.serviceType);
+            //getPartners(vm.dataModel.serviceType);
             $scope.edit = true;
         }
 
@@ -99,9 +112,18 @@
                 return;
             }
 
-             vm.agencies.forEach(function(item){
-                if(item._id == vm.dataModel.agency._id)
+              vm.agencies.forEach(function(item){
+                if(item._id == vm.dataModel.agency._id){
                     vm.dataModel.agency.name = item.name;
+                    vm.dataModel.agency.partnerId = item.partnerId;
+
+                }
+            });
+
+            vm.enterprises.forEach(function(item){
+                if(item.enterpriseId == vm.dataModel.enterpriseId){
+                    vm.dataModel.enterpriseName = item.fname  + " " + (item.mname || "") + " " + item.lname;
+                }
             });
 
             ServiceFeeSvc.update(vm.dataModel)

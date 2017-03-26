@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
-function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc) {
+function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc,AssetGroupSvc) {
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
@@ -9,16 +9,17 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
   $scope.isEdit = false;
   $scope.showEnterpriseSection = showEnterpriseSection;
+  $scope.showPaymentSection = showPaymentSection;
   $scope.showAgencySection = showAgencySection;
   $scope.editEnterpriseField = editEnterpriseField;
   $scope.editAgencyField = editAgencyField;
   $scope.upload = upload;
+  $scope.getAssetGroup = getAssetGroup;
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
 
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
-  vm.onCategoryChange = onCategoryChange;
   vm.onBrandChange = onBrandChange;
   vm.reset = reset;
   vm.deleteImg = deleteImg;
@@ -58,14 +59,18 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         $scope.valuationList = result;
       });
 
-      loadAllCategory();
+      brandSvc.getBrandOnFilter({})
+      .then(function(result) {
+          vm.brandList = result;
+      })
+      //loadAllCategory();
       if($stateParams.id) {
         $scope.isEdit = true;
         EnterpriseSvc.getRequestOnId($stateParams.id)
           .then(function(result){
             if(result) {
               vm.enterpriseValuation = result;
-              onCategoryChange(vm.enterpriseValuation.category, true);
+              //onCategoryChange(vm.enterpriseValuation.category, true);
               onBrandChange(vm.enterpriseValuation.brand, true);
               onCountryChange(vm.enterpriseValuation.country, true);
               onStateChange(vm.enterpriseValuation.state, true);
@@ -75,71 +80,71 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
                 vm.enterpriseValuation.repoDate = moment(vm.enterpriseValuation.repoDate).format('MM/DD/YYYY');
               if (vm.enterpriseValuation.invoiceDate)
                 vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
+              if (vm.enterpriseValuation.reportDate)
+                vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
+              
+              
             }
         });
       }
   }
 
   function showEnterpriseSection(){
-     return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser();
+     return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser() || Auth.isPartner();
 
   }
 
+  function showPaymentSection(){
+    return Auth.isAdmin() && editMode && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) > 4;
+  }
+
   function editEnterpriseField(){
-    if(Auth.isAdmin())
+    var validRole = Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser();
+    if(validRole && !editMode)
       return true;
-    else if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
-      if(!editMode)
-        return true;
-      if(vm.enterpriseValuation.status == EnterpriseValuationStatuses[0])
-        return true;
-      else
-        return false;
-    } 
-      
+    else if(validRole && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) < 2)
+      return true
     else
       return false;
   }
 
   function editAgencyField(){
+    var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
     if(Auth.isAdmin())
       return true;
-    else if(Auth.isPartner() && vm.enterpriseValuation.status == EnterpriseValuationStatuses[1])
+    else if(Auth.isPartner() && statusIndex > 1 && statusIndex < 4)
       return true;
     else
       false;
   }
 
   function showAgencySection(){
-     return (Auth.isAdmin() || Auth.isPartner()) 
-            && editMode && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) > 0;
-
+    var validRole = Auth.isAdmin() || Auth.isPartner();
+    var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
+    if(validRole && statusIndex > 1)
+      return true;
+    else
+      return false;
   }
 
-  function loadAllCategory() {
-        categorySvc.getAllCategory()
-            .then(function(result) {
-                vm.allCategory = result;
-            })
-    }
-
-    function onCategoryChange(catName, noChange) {
-        if (!noChange) {
-            vm.enterpriseValuation.brand = "";
-            vm.enterpriseValuation.model = "";
-        }
-        if (!catName)
-            return;
-        vm.brandList = [];
-        vm.modelList = [];
-        brandSvc.getBrandOnFilter({
-                categoryName: catName
-            })
-            .then(function(result) {
-                vm.brandList = result;
-            })
-
-    }
+    function getAssetGroup(val) {
+     /* if( !vm.enterpriseValuation.agency || !vm.enterpriseValuation.agency.partnerId || vm.enterpriseValuation.enterprise || vm.enterpriseValuation.enterprise.enterpriseId){
+        Modal.alert("Please select valuation agency");
+        return [];
+      }*/
+      var serData = {};
+      serData['assetCategory'] = val;
+      if(vm.enterpriseValuation.agency && vm.enterpriseValuation.agency.partnerId)
+        serData['partnerId'] = vm.enterpriseValuation.agency.partnerId;
+      if(vm.enterpriseValuation.enterprise && vm.enterpriseValuation.enterprise.enterpriseId)
+      serData['enterpriseId'] = vm.enterpriseValuation.enterprise.enterpriseId;
+     return AssetGroupSvc.get(serData)
+      .then(function(result){
+         return result.map(function(item){
+              return item.assetCategory;
+        });
+      });
+    };
 
     function onBrandChange(brandName, noChange) {
         if (!noChange)
@@ -230,9 +235,11 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         })
     }
 
-    function setCustomerData(entName){
+    function setCustomerData(entId){
+      vm.enterpriseValuation.customerPartyNo = "";
+      vm.enterpriseValuation.customerPartyName = "";
       vm.enterprises.forEach(function(item){
-        if(item.enterpriseName == entName){
+        if(item.enterpriseId == entId){
            vm.enterpriseValuation.customerPartyNo = item.mobile;
            vm.enterpriseValuation.customerPartyName = (item.fname || "") + " " + (item.mname || "") + " "+ (item.lname || "");
            return true;
@@ -244,7 +251,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     function setData(){
 
        vm.enterprises.forEach(function(item){
-        if(item.enterpriseName == vm.enterpriseValuation.enterprise.name){
+        if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
           vm.enterpriseValuation.enterprise._id = item._id;
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
           vm.enterpriseValuation.enterprise.email = item.email;
@@ -253,7 +260,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       });
 
       vm.valAgencies.forEach(function(item){
-        if(item._id == vm.enterpriseValuation.agency._id){
+        if(item.partnerId == vm.enterpriseValuation.agency.partnerId){
+          vm.enterpriseValuation.agency._id = item._id;
           vm.enterpriseValuation.agency.name = item.name;
           vm.enterpriseValuation.agency.mobile = item.mobile;
           vm.enterpriseValuation.agency.email = item.email;
@@ -261,11 +269,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       });
 
-      if((Auth.isPartner() || Auth.isAdmin()) && 
-          vm.enterpriseValuation && vm.enterpriseValuation.status == EnterpriseValuationStatuses[1]
-          && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename
-        )
-        EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[3]);
+      if(editMode && (Auth.isPartner() || Auth.isAdmin())){
+        var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
+        if(statusIndex > 1 && statusIndex < 4 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
+          EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[4]);
+      }
+        
     }
 
     function deleteImg(fieldName){

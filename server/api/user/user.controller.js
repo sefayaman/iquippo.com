@@ -141,8 +141,8 @@ exports.getUser = function(req, res) {
   
   if(req.body.userId)
     filter["createdBy._id"] = req.body.userId;
-   if(req.body.enterpriseName)
-    filter["enterpriseName"] = req.body.enterpriseName;
+   if(req.body.enterpriseId)
+    filter["enterpriseId"] = req.body.enterpriseId;
    if(req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
   
