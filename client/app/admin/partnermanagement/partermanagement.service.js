@@ -138,6 +138,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
             var vd = {};
             vd._id =  data[i]._id;
             vd.name =  data[i].entityName;
+            vd.partnerId =  data[i].partnerId;
             vd.mobile =  data[i].user.mobile;
             if(data[i].partnerId)
               vd.partnerId=data[i].partnerId;

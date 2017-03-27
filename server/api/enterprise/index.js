@@ -24,6 +24,7 @@ router.post('/iqvl/update',controller.updateFromAgency);
 * Asset Group Master Routes
 */
 router.post('/asset/group',auth.hasRole('admin'),assetGroupCtrl.create);
+router.put('/asset/group/:id', auth.hasRole('admin'), assetGroupCtrl.update);
 router.get('/asset/group',auth.hasRole('admin'),assetGroupCtrl.fetch,assetGroupCtrl.renderJson);
 
 router.get('/asset/group/count',auth.hasRole('admin'),assetGroupCtrl.count);

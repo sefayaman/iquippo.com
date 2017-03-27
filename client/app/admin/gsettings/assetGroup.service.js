@@ -9,7 +9,7 @@
     svc.get = get;
     svc.getCount = getCount;
     svc.save = save;
-    //svc.update = update;
+    svc.update = update;
     svc.destroy = destroy;
     svc.uploadExcel = uploadExcel;
 
@@ -66,15 +66,15 @@
        })
     }
 
-    // function update(data){
-    //    return $http.put(svcPath + "/" + data._id,data)
-    //    .then(function(res){
-    //      return res.data;
-    //    })
-    //    .catch(function(err){
-    //      throw err;
-    //    })
-    // }
+    function update(data){
+       return $http.put(svcPath + "/" + data._id, data)
+       .then(function(res){
+         return res.data;
+       })
+       .catch(function(err){
+         throw err;
+       })
+    }
 
     function destroy(id) {
       return $http.delete(svcPath + "/" + id)
