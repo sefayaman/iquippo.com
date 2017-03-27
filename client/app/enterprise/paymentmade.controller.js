@@ -22,6 +22,7 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.openModal = openModal;
+  vm.exportExcel = exportExcel;
 
   function init(){
 
@@ -134,6 +135,9 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
 
      }
 
+     function exportExcel(){
+          EnterpriseSvc.exportExcel("paymentmade",{});
+     }
 
      init();
 }

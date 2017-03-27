@@ -11,7 +11,7 @@
     </div>
     <div class="col-sm-2 text-right">
       <h4>
-        <button class="btn btn-success btn-block"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+        <button class="btn btn-success btn-block" ng-click="enterpriseTransactionVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
       </h4>
     </div>
   </div>
@@ -82,7 +82,7 @@
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
             <td>{{enterpriseValuation.status}}</td>
             <td>{{enterpriseValuation.remarks}}</td>
-            <td><a href="javascript:void(0);" title=""> More..</a></td>
+            <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>
             
           </tr>
         </tbody>

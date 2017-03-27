@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseTransactionCtrl',EnterpriseTransactionCtrl);
-function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
+function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
   
   var vm = this;
   var selectedItems = [];
@@ -32,6 +32,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
   vm.uploadTemplate = 'Valuation_Template.xlsx';
+  vm.showDetail = showDetail;
+  vm.exportExcel = exportExcel;
 
   function init(){
 
@@ -280,6 +282,25 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
           selectedItems = [];
           fireCommand(true);
       })
+    }
+
+    function showDetail(valReq){
+      var scope = $rootScope.$new()
+      scope.valuation = valReq;
+       var formModal = $uibModal.open({
+          animation: true,
+            templateUrl: "app/enterprise/valuation-details-popup.html",
+            scope: scope,
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          formModal.dismiss('cancel');
+        };
+    }
+
+    function exportExcel(){
+      EnterpriseSvc.exportExcel("transaction",{});
     }
 
 }

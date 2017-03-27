@@ -8,6 +8,7 @@ var assetGroupCtrl = require('./assetgroup.controller');
 var router = express.Router();
 
 router.get('/', controller.get);
+router.get('/export', controller.exportExcel);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
 router.put('/:id', controller.update);

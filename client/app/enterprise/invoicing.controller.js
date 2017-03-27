@@ -22,6 +22,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   vm.fireCommand = fireCommand;
  	vm.updateSelection = updateSelection;
  	vm.openInvoiceModal = openInvoiceModal;
+  vm.exportExcel = exportExcel;
   //vm.getPartners = getPartners;
   vm.print = printInvoice;
   vm.downloadInvoice = downloadInvoice;
@@ -276,6 +277,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           },10);
         });
       }
+
+    function exportExcel(){
+      EnterpriseSvc.exportExcel("invoice",{});
+    }
       //starting point
       Auth.isLoggedInAsync(function(loggedIn){
         if(loggedIn){

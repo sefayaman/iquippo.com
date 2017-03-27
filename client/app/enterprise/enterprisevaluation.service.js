@@ -11,6 +11,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
   entSvc.update = update;
   entSvc.getRequestOnId = getRequestOnId;
   entSvc.uploadExcel = uploadExcel;
+  entSvc.exportExcel = exportExcel;
 
   entSvc.modifyExcel = modifyExcel;
   entSvc.setStatus = setStatus;
@@ -130,6 +131,23 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       }); 
     }
     
+    function exportExcel(reportType,filter){
+      var serPath = path + "/export" + "?type=" + reportType + "&role=" + Auth.getCurrentUser().role;
+        var queryParam = "";
+        if(filter)
+            queryParam = UtilSvc.buildQueryParam(filter);
+        if(queryParam)
+          serPath = serPath + "&" + queryParam;
+        return $http.get(serPath)
+        .then(function(res){
+           saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".xlsx");
+          //return res.data
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
     function setStatus(entValuation,status,doNotChangeStatus){
       if(!doNotChangeStatus)
           entValuation.status = status;

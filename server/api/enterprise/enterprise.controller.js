@@ -1065,6 +1065,123 @@ function valiadeDataType(val,type){
   return ret;
 }
 
+exports.exportExcel = function(req,res){
+  var queryParam = req.query;
+  console.log("@@@@@@",queryParam.type);
+  var filter = {};
+  switch(queryParam.type){
+    case "transaction":
+      var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
+      var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
+      query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          exportExcel(req,res,fieldMap,dataArr);
+      })
+      break;
+    case 'invoice':
+      var fieldMap = fieldsConfig["INVOICE_EXPORT"];
+      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          exportExcel(req,res,fieldMap,dataArr);
+      })
+       break;
+    case 'paymentmade':
+       var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
+      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          var jsonArr = [];
+          dataArr.forEach(function(item,index){
+             if(item.paymentMadeDetail && item.paymentMadeDetail.paymentDetails){
+              item.paymentMadeDetail.paymentDetails.forEach(function(innerItem){
+                _formatPayments(item,innerItem,jsonArr);
+              })
+            }
+          })
+          console.log("payment made",jsonArr);
+          exportExcel(req,res,fieldMap,jsonArr);
+      })
+      break;
+    case "paymentreceived":
+      var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
+      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          var jsonArr = [];
+          dataArr.forEach(function(item,index){
+            if(item.paymentReceivedDetail && item.paymentReceivedDetail.paymentDetails){
+              item.paymentReceivedDetail.paymentDetails.forEach(function(innerItem){
+                _formatPayments(item,innerItem,jsonArr);
+              })
+            }
+            
+          })
+          exportExcel(req,res,fieldMap,jsonArr);
+      })
+      break;
+      default:
+        //exportTransaction(req,res);
+  }
+
+  function _formatPayments(item,innerItem,jsonArr){
+    var obj = {};
+    obj['invoiceNo'] = item.invoiceNo || "";
+    obj['requestType'] = item.requestType || "";
+    obj['enterpriseName'] = item.enterprise.enterpriseId || "";
+    obj['enterpriseContactNo'] = item.enterprise.mobile|| "" ;
+    obj['valuationPartnerName'] = item.agency.name || "" ;
+    obj['valuationPartnerContactNo'] = item.agency.mobile || "";
+    obj['bankName'] = innerItem.bankName || "";
+    obj['branchName'] = innerItem.branchName || "";
+    obj['chequeNo'] = innerItem.chequeNo || "";
+    obj['chequeValue'] = innerItem.chequeValue || "";
+    obj['chequeDate'] = innerItem.chequeDate || ""
+    obj['deductedTds'] = innerItem.deductedTds || "";
+    jsonArr.push(obj);
+  }
+  
+}
+
+function exportExcel(req,res,fieldMap,jsonArr){
+
+  var queryParam = req.query;
+  var role = queryParam.role;
+  var dataArr = [];
+  var headers = Object.keys(fieldMap);
+  var allowedHeaders = [];
+  for(var i=0;i < headers.length;i++){
+      var hd = headers[i];
+      var obj = fieldMap[hd];
+      if(obj.allowedRoles && obj.allowedRoles.indexOf(role) == -1){
+        continue;
+      }
+      allowedHeaders.push(hd);
+  }
+
+  dataArr.push(allowedHeaders);
+  jsonArr.forEach(function(item,idx){
+    dataArr[idx + 1] = [];
+    allowedHeaders.forEach(function(header){
+      var keyObj = fieldMap[header];
+      var val = _.get(item,keyObj.key,'');
+      if(keyObj.type && keyObj.type == 'boolean')
+          val = val?'YES':'NO';
+       dataArr[idx + 1].push(val);
+    });
+
+  });
+
+  //jsonToXSLX(req,res,dataArr,allowedHeaders);
+  var ws = Utility.excel_from_data(dataArr,allowedHeaders);
+  var ws_name = "entvaluation_" + new Date().getTime();
+  var wb = Utility.getWorkbook();
+  wb.SheetNames.push(ws_name);
+  wb.Sheets[ws_name] = ws;
+  var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+  res.end(wbout);
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

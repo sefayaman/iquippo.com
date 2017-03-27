@@ -22,6 +22,7 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
  	vm.fireCommand = fireCommand;
  	vm.updateSelection = updateSelection;
  	vm.openModal = openModal;
+  vm.exportExcel = exportExcel;
 
  	function init(){
 
@@ -133,6 +134,10 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
       }
 
      }
+
+      function exportExcel(){
+          EnterpriseSvc.exportExcel("paymentreceived",{});
+      }
 
 
      init();
