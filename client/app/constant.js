@@ -229,7 +229,7 @@ var transactionStatuses = [
 }
 ];
 
-var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Report Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 
 var tradeType = [
 {

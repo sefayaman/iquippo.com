@@ -249,6 +249,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function createPartner(data){
+    
     vendorSvc.createPartner(vm.vendorReg)
       .then(function(result){
         if(result && result.errorCode == 1){

@@ -33,26 +33,26 @@
             <i class="caret"></i>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.agencyName.$invalid && submitted}">
-            <select class="form-control" name="agencyName" ng-model="addTransactionVm.enterpriseValuation.agency._id" ng-disabled="!editEnterpriseField()" required>
+            <select class="form-control" name="agencyName" ng-model="addTransactionVm.enterpriseValuation.agency.partnerId" ng-disabled="!editEnterpriseField()" required>
               <option value="">*Select Agency</option>
-              <option  ng-repeat="ag in addTransactionVm.valAgencies | orderBy:'name'" value="{{ag._id}}">{{ag.name}}</option>
+              <option  ng-repeat="ag in addTransactionVm.valAgencies | orderBy:'name'" value="{{ag.partnerId}}">{{ag.name}}</option>
             </select>
             <i class="caret"></i>
           </div>
-          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.enterpriseName.$invalid && submitted}">
-            <select class="form-control" name="enterpriseName" ng-model="addTransactionVm.enterpriseValuation.enterprise.name" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.setCustomerData(addTransactionVm.enterpriseValuation.enterprise.name)" required>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.enterpriseId.$invalid && submitted}">
+            <select class="form-control" name="enterpriseId" ng-model="addTransactionVm.enterpriseValuation.enterprise.enterpriseId" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.setCustomerData(addTransactionVm.enterpriseValuation.enterprise.enterpriseId)" required>
               <option value="">*Select Enterprise</option>
-              <option ng-repeat="enterprise in addTransactionVm.enterprises" value="{{enterprise.enterpriseName}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.mobile}})</option>
+              <option ng-repeat="enterprise in addTransactionVm.enterprises" value="{{enterprise.enterpriseId}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.mobile}})</option>
             </select>
             <i class="caret"></i>
           </div>
         </div>
         <div class="row form-group">                            
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" disabled placeholder="Customer Transaction ID"/>
+            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="Customer Transaction ID"/>
           </div>
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="customerValuationNo" ng-model="addTransactionVm.enterpriseValuation.customerValuationNo" disabled placeholder="Customer Valuation Number"/>
+            <input type="text" class="form-control" name="customerValuationNo" ng-model="addTransactionVm.enterpriseValuation.customerValuationNo" ng-disabled="!editEnterpriseField()" placeholder="Customer Valuation Number"/>
           </div>
           <div class="col-sm-3">
             <input type="text" class="form-control" name="customerPartyNo" ng-model="addTransactionVm.enterpriseValuation.customerPartyNo" disabled placeholder="Customer Party No."/>
@@ -82,14 +82,8 @@
           </div>
         </div>
         <div class="row form-group">
-          <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.category.$invalid || enterpriseValForm.otherCategory.$invalid) && submitted}">
-            <input type="text" class="form-control" name="" value="" placeholder="Asset Group">
-            <!-- <select class="form-control form-group" name="category" ng-model="addTransactionVm.enterpriseValuation.category" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onCategoryChange(addTransactionVm.enterpriseValuation.category)" required>
-              <option value="">Select Category/Asset Type*</option>
-              <option ng-repeat="cat in addTransactionVm.allCategory" value="{{cat.name}}">{{cat.name}}</option>
-            </select>
-            <i class="caret"></i> -->
-             <!-- <input type="text" ng-if="addTransactionVm.enterpriseValuation.category == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherCategory" class="form-control" name="otherCategory" placeholder="Other Category Name" ng-required = "addTransactionVm.enterpriseValuation.category == 'Other'"> -->
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.assetCategory.$invalid && submitted}">
+            <input type="text" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
             <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)" required>
@@ -124,12 +118,12 @@
              <input type="text" class="form-control" name="registrationNo" ng-model="addTransactionVm.enterpriseValuation.registrationNo" ng-disabled="!editEnterpriseField()" placeholder="Registration No."/>
           </div>
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No." />
+             <input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No." ng-disabled="!editEnterpriseField()"/>
           </div>
         </div>
         <div class="row form-group">
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing"  placeholder="Year of Manufacture"/>
+            <input type="text" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture"/>
           </div>
           <div class="col-sm-3">          
             <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
@@ -176,50 +170,50 @@
     </div>
     <!-- Agency block -->
     <!-- <div class="panel panel-default" ng-if="showAgencySection()"> -->
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-if="showAgencySection()">
       <div class="panel-heading">
         <h3 class="panel-title">Agency Information</h3>
       </div>
       <div class="panel-body">
         <div class="row form-group">                              
-            <div class="col-sm-3">
-              <input type="text" class="form-control" name="reportNo" ng-model="addTransactionVm.enterpriseValuation.reportNo" placeholder="Report No." ng-disabled="!editAgencyField()" required/>
+            <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.reportNo.$invalid && submitted}">
+              <input type="text" class="form-control" name="reportNo" ng-model="addTransactionVm.enterpriseValuation.reportNo" placeholder="Report No.*" ng-disabled="!editAgencyField()" required/>
             </div>
             <div class="col-sm-3">
-               <div class="input-group">
-                 <input class="form-control" name="reportDate" ng-model="addTransactionVm.enterpriseValuation.reportDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Report Date" ng-disabled="!editAgencyField()"/>
+               <div class="input-group" ng-class="{'has-error':enterpriseValForm.reportDate.$invalid && submitted}">
+                 <input class="form-control" name="reportDate" ng-model="addTransactionVm.enterpriseValuation.reportDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Report Date*" ng-disabled="!editAgencyField()" required/>
                  <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                </div>
             </div>
-            <div class="col-sm-3">
-              <input type="text" class="form-control" name="yom" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" placeholder="Year of Manufacture" ng-disabled="!editAgencyField()" required/>
+            <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.agencYom.$invalid && submitted}">
+              <input type="text" class="form-control" name="agencYom" ng-model="addTransactionVm.enterpriseValuation.agencyYearOfManufacturing" placeholder="Year of Manufacture" ng-disabled="!editAgencyField()" required/>
             </div>
             <div class="col-sm-3">
-              <input type="text" class="form-control" name="engineNo" placeholder="Engine No."/>
+              <input type="text" class="form-control" name="agencyEngineNo" ng-model="addTransactionVm.enterpriseValuation.agencyEngineNo" ng-disabled="!editAgencyField()" placeholder="Engine No."/>
             </div>
         </div>
         <div class="row form-group">        
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="chassisNo" placeholder="Chassis No."/>
+             <input type="text" class="form-control" name="agencyChassisNo" ng-model="addTransactionVm.enterpriseValuation.agencyChasisNo" ng-disabled="!editAgencyField()" placeholder="Chassis No."/>
           </div>
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="registrationNo" placeholder="Registration No."/>
+             <input type="text" class="form-control" name="agencyRegistrationNo" ng-model="addTransactionVm.enterpriseValuation.agencyRegistrationNo"  ng-disabled="!editAgencyField()" placeholder="Registration No."/>
           </div>
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="" placeholder="Serial No." />
+             <input type="text" class="form-control" name="agencySerialNo" ng-model="addTransactionVm.enterpriseValuation.agencySerialNo" ng-disabled="!editAgencyField()" placeholder="Serial No." />
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.hmr_kmr.$invalid && submitted}">
               <input type="text" class="form-control" name="hmr_kmr" ng-model="addTransactionVm.enterpriseValuation.hmr_kmr" placeholder="HMR / KMR" ng-disabled="!editAgencyField()" required/>
             </div>
         </div>
         <div class="row form-group ">                            
-          <div class="col-sm-3">
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assessedValue.$invalid && submitted}">
             <input type="number" class="form-control" name="assessedValue" ng-model="addTransactionVm.enterpriseValuation.assessedValue" ng-disabled="!editAgencyField()" placeholder="Assessed Value" required/>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.inspectionBy.$invalid && submitted}">
              <input type="text" class="form-control" name="inspectionBy" ng-model="addTransactionVm.enterpriseValuation.inspectionBy" ng-disabled="!editAgencyField()" placeholder="Inspection By" required/>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.physicalCondition.$invalid && submitted}">
             <input type="text" class="form-control" name="physicalCondition" ng-model="addTransactionVm.enterpriseValuation.physicalCondition" ng-disabled="!editAgencyField()" placeholder="Physical Condition" required/>            
           </div>
           <div class="col-sm-3">
@@ -383,7 +377,7 @@
     </div>
 
     <!-- for admin -->
-    <div class="panel panel-default" ng-if="isAdmin()">
+    <div class="panel panel-default" ng-if="showPaymentSection()">
       <div class="panel-heading">
         <h3 class="panel-title">Payment Details</h3>
       </div>
@@ -402,7 +396,7 @@
           </div>
           <div class="col-sm-3">
             <div class="input-group">
-               <input class="form-control" disabled name="reportDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Invoice Date"/>
+               <input class="form-control" disabled name="reportDate" ng-model="invoiceDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Invoice Date"/>
                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
              </div>
           </div>

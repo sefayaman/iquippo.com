@@ -216,10 +216,24 @@ assetGroup.fetch = function(req, res, next) {
 		}
 	}
 
+	try{
+		if (options.assetCategory && options.assetCategory !== 'undefined') {
+			filters['assetCategory'] = {$regex: new RegExp(options.assetCategory, 'i')};
+		}
+	}catch(e){
+
+	}
+
+	if(options.enterpriseId)
+		filters['enterpriseId'] = options.enterpriseId;
+	if(options.partnerId)
+		filters['valuerCode'] = options.partnerId;
+
 	filters.deleted = 0;
 	if (options.status)
 		filters.status = options.status;
 
+	console.log("query@@@@@@",filters);
 	query = Model.find(filters);
 
 	query = query.sort(sort);

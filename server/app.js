@@ -24,7 +24,7 @@ var checkSearchMatchingNotificationService = require('./components/checkSearchMa
 var http = require('http');
 var fsExtra = require('fs.extra');
 ///var gm = require('gm');
-var lwip = require('lwip');
+//var lwip = require('lwip');
 var task = require('./components/task.js');
 var taskRunner = require('./components/taskRunner.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
@@ -137,7 +137,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
   });
 });
 
-function resizeImg(req, res, assetDir, dimension, isMultiple) {
+/*function resizeImg(req, res, assetDir, dimension, isMultiple) {
   try {
     if (req.counter < req.total) {
       var fileName = req.files[req.counter].filename;
@@ -154,8 +154,8 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
 
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
-          /*var wRatio = 700 / image.width();
-          var hRatio= 450 / image.height();*/
+          //var wRatio = 700 / image.width();
+          //var hRatio= 450 / image.height();
           image.scale(0.75, function(err, rzdImage) {
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
@@ -209,8 +209,8 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
     handleError(res, err);
   }
 }
-
-/*function resizeImg(req,res,assetDir,dimension,isMultiple){
+*/
+function resizeImg(req,res,assetDir,dimension,isMultiple){
   try{
       if(req.counter < req.total){
           var fileName = req.files[req.counter].filename;
@@ -252,7 +252,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
   }catch(err){
     handleError(res, err);
   }
-}*/
+}
 
 var otp;
 app.post('/api/sms', function(req, res) {

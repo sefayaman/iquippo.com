@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var VendorSchema = new Schema({
   user:{},
   entityName: String,
+  partnerId:String,
   services: [String],
   url: String,
   status:{

@@ -183,6 +183,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
     requestDate : "requestDate",
     assetId:"assetId",
     repoDate : "repoDate",
+    assetCategory:"assetCategory",
     assetDescription : "assetDescription",
     engineNo:"engineNo",
     chassisNo :"chassisNo",

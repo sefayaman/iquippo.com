@@ -297,7 +297,7 @@ angular.module('sreizaoApp')
       if(Auth.isAdmin())
         serData['enterprise'] = true;
       if(Auth.isEnterprise())
-        serData['enterpriseName'] = Auth.getCurrentUser().enterpriseName;
+        serData['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(serData).then(function(data){
             $scope.enterprises = data;
       });
@@ -426,9 +426,9 @@ angular.module('sreizaoApp')
     
     setLocationData();
 
-    if($scope.newUser.role == 'enterprise' && $scope.newUser.enterprise)
-        $scope.newUser.enterpriseName = $scope.newUser.fname + "_" + $scope.newUser.lname + "_" + $scope.newUser.mobile;
-
+    if($scope.newUser.role == 'enterprise' && $scope.newUser.enterprise){
+      $scope.newUser.enterpriseId = "E" + $scope.newUser.mobile + "" + Math.floor(Math.random() *10);
+    }
 
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){

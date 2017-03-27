@@ -5,10 +5,12 @@ var mongoose = require('mongoose'),
 
 var ServiceFeeSchema = new Schema({
   serviceType:String,
+  enterpriseId:String,
   enterpriseName:String,
   agency:{
     _id:String,
-    name:String
+    name:String,
+    partnerId:String,
   },
   effectiveToDate:Date,
   chargeBasis:String,

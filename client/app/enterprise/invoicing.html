@@ -21,14 +21,14 @@
   <form name="searchForm">
     <div class="row form-group">          
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseName" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseId" ng-click="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Enterprise Name</option>
-        <option value="{{ent.enterpriseName}}" ng-repeat="ent in enterpriseInvoiceVm.enterprises">{{ent.enterpriseName}}</option>
+        <option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseInvoiceVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
       </select>
       <i class="caret"></i>
     </div>
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-change="enterpriseInvoiceVm.getPartners(enterpriseInvoiceVm.reqType)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-click="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Type of Request</option>
         <option ng-repeat="req in enterpriseInvoiceVm.serviceList" value="{{req.name}}">{{req.name}}</option>
       </select>
@@ -79,7 +79,7 @@
           <td>{{entVal.requestType}}</td>
           <td>{{entVal.purpose}}</td>
           <td>{{entVal.agency.name}}</td>
-          <td>{{entVal.enterprise.name}}</td>
+          <td>{{entVal.customerPartyName}}</td>
           <td>{{entVal.customerTransactionId}}</td>
           <td>{{entVal.customerValuationNo}}</td>
           <td>{{entVal.assetId}}</td>

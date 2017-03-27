@@ -8,7 +8,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   var selectedItems = [];
   var selectedFee = null;
   vm.serviceList = [{name:"Valuation"},{name:"Inspection"}];
-  var statuses = [EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[5]]
+  var statuses = [EnterpriseValuationStatuses[4]]
  	
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
@@ -22,7 +22,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   vm.fireCommand = fireCommand;
  	vm.updateSelection = updateSelection;
  	vm.openInvoiceModal = openInvoiceModal;
-  vm.getPartners = getPartners;
+  //vm.getPartners = getPartners;
   vm.print = printInvoice;
   vm.downloadInvoice = downloadInvoice;
 
@@ -53,7 +53,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       userSvc.getUsers(userFilter).then(function(data){
         vm.enterprises = data;
       })
-      vendorSvc.getAllVendors();
+      vendorSvc.getAllVendors()
+      .then(function(){
+         vm.agencies = vendorSvc.getVendorsOnCode("Valuation");
+      });
     }
     if(Auth.isAdmin())
       getEnterpriseData({});
@@ -61,10 +64,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       getInvoiceData({});
  	}
 
-  function getPartners(sercType){
+  /*function getPartners(sercType){
     vm.agencyId = "";
      vm.agencies = vendorSvc.getVendorsOnCode(sercType);
-  }
+  }*/
 
   function onTypeChange(){
     vm.enterpriseName = "";
@@ -81,12 +84,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
   function getInvoiceData(filter){
       $scope.pager.copy(filter);
-      filter.status = statuses;
+      //filter.status = [EnterpriseValuationStatuses[5]];
       filter.pagination = true;
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
-        filter['enterpriseName'] = Auth.getCurrentUser().enterpriseName;
+        filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       if(Auth.isPartner())
-        filter['partnerId'] = Auth.getCurrentUser()._id;
+        filter['partnerId'] = Auth.getCurrentUser().partnerId;
       EnterpriseSvc.getInvoice(filter)
       .then(function(result){
         vm.dataList = result.items;
@@ -117,8 +120,8 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
        if(vm.type == 'generated')
         getInvoiceData(filter);
       else{
-        if(vm.enterpriseName)
-          filter['enterpriseName'] = vm.enterpriseName;
+        if(vm.enterpriseId)
+          filter['enterpriseId'] = vm.enterpriseId;
         if(vm.reqType)
           filter['requestType'] = vm.reqType;
         if(vm.agencyId)
@@ -146,7 +149,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
      function openInvoiceModal(){
 
-      if(!vm.enterpriseName || !vm.agencyId || !vm.reqType){
+      if(!vm.enterpriseId|| !vm.agencyId || !vm.reqType){
         Modal.alert('Please filter record based on enterprise,service type and agency.');
         return;
       }
@@ -156,7 +159,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
      		return;
      	}
 
-      selectedFee = getServiceFee(vm.reqType,vm.agencyId,vm.enterpriseName);
+      selectedFee = getServiceFee(vm.reqType,vm.agencyId,vm.enterpriseId);
       if(!selectedFee){
         Modal.alert('Service fee not found.Please check service fee master data');
         return;
@@ -180,12 +183,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
      }
 
-    function getServiceFee(requestType,agencyId,enterprise){
+    function getServiceFee(requestType,agencyId,enterpriseId){
         var svsFee = null;
         for(var i = 0; i < $scope.serviceFees.length; i++){
           if(requestType == $scope.serviceFees[i].serviceType 
             && agencyId == $scope.serviceFees[i].agency._id 
-            && enterprise == $scope.serviceFees[i].enterpriseName)
+            && enterpriseId == $scope.serviceFees[i].enterpriseId)
           {
 
             svsFee = $scope.serviceFees[i];
