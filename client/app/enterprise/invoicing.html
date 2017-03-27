@@ -68,6 +68,7 @@
           <th>Customer Valuation No</th>
           <th>Asset No.</th>
           <th>Status</th>
+          <th>Remark</th>
         </tr>
       </thead>
       <tbody>
@@ -83,7 +84,9 @@
           <td>{{entVal.customerTransactionId}}</td>
           <td>{{entVal.customerValuationNo}}</td>
           <td>{{entVal.assetId}}</td>
-          <td>{{entVal.status}}</td>          
+          <td>{{entVal.status}}</td>
+          <td></td>
+
         </tr>
       </tbody>
     </table>
@@ -103,6 +106,7 @@
           <th>Valuation Partner Name</th>
           <th>Valuation Partner Contact No.</th>
           <th>Status</th>
+          <th>Remark</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -117,6 +121,7 @@
           <td>{{entVal.agency.name}}</td>
            <td>{{entVal.agency.mobile}}</td>
           <td>{{entVal.status}}</td>
+          <td></td>
           <td>          
               <a class="btn btn-default btn-md" ng-click="enterpriseInvoiceVm.downloadInvoice(entVal.invoiceNo)" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
           </td>

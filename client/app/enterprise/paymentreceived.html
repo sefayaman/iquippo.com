@@ -24,20 +24,21 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Select</th>
+            <th><input type="checkbox" name="" value=""> All</th>
             <th>Invoice No.</th>
             <th>Type of Request</th>
             <th>Enterprise Name</th>
             <th>Enterprise Contact No.</th>
             <th>Agency Name</th>
-            <th>Agency Contact No.</th>
-            <th>Status</th>
+            <th>Agency Contact No.</th>            
             <th>Bank Name</th>
             <th>Branch Name</th>
             <th>Cheque Number</th>
             <th>Cheque Date</th>
             <th>Cheque Value</th>
             <th>Deducted TDS</th>
+            <th>Status</th>
+            <th>Remark</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -49,14 +50,15 @@
             <td>{{entVal.enterprise.name}}</td>
             <td>{{entVal.enterprise.mobile}}</td>
             <td>{{entVal.agency.name}}</td> 
-            <td>{{entVal.agency.mobile}}</td>              
-            <td>{{entVal.status}}</td>
+            <td>{{entVal.agency.mobile}}</td> 
             <td>{{dtl.bankName}}</td>
             <td>{{dtl.branchName}}</td>
             <td>{{dtl.chequeNo}}</td>
             <td>{{dtl.chequeDate}}</td>
             <td>{{dtl.chequeValue}}</td>
             <td><span ng-if="dtl.deductedTds">Rs.{{dtl.deductedTds}}</span></td>
+            <td>{{entVal.status}}</td>
+            <td></td>
             <td> <a class="btn btn-primary btn-block btn-xs" href="javascript:void(0);" ng-click="enterprisePaymentReceivedVm.openModal(entVal,$index)" ng-if="!dtl.attached"></i>Update Payment Details</a>
             </td>
           </tr>
