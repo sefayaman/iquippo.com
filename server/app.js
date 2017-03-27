@@ -89,9 +89,10 @@ app.post('/api/uploads', function(req, res) {
       var dimension = {};
       dimension.width = req.query.width;
       dimension.height = req.query.height;
+      dimension.size=req.query.size;
       req.counter = 0;
       req.total = 1;
-      resizeImg(req, res, assetDir, dimension, false)
+      resizeImg(req, res, assetDir, dimension, false);
     } else {
       try {
         res.status(200).json({
@@ -123,6 +124,8 @@ app.post('/api/multiplefile/upload', function(req, res) {
       var dimension = {};
       dimension.width = req.query.width;
       dimension.height = req.query.height;
+      dimension.size=req.query.size;
+
       req.counter = 0;
       req.total = req.files.length;
       resizeImg(req, res, assetDir, dimension, true);
@@ -142,11 +145,14 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var fileNameParts = fileName.split('.');
       var extPart = fileNameParts[fileNameParts.length - 1];
       var namePart = fileNameParts[0];
+      console.log("size",dimension.size);
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
       }, function(err, result) {
         if (err) throw err;
+
+        if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
           /*var wRatio = 700 / image.width();
           var hRatio= 450 / image.height();*/
@@ -179,6 +185,11 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
           })
 
         })
+    }
+    else{
+      req.counter++;
+      resizeImg(req, res, assetDir, dimension, isMultiple);
+    }
       });
 
     } else {

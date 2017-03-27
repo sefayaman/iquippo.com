@@ -361,6 +361,7 @@
             resizeParam.resize = true;
             resizeParam.width = imgDim.width;
             resizeParam.height = imgDim.height;
+            resizeParam.size=args.files[0].size;
           }
           $rootScope.loading = true;
           /*if(args.files[0].size < 50000){
