@@ -1452,8 +1452,38 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="row form-group">
+			<div class="col-sm-3">
+				<input type="text" name="" class="form-control" value="" placeholder="Valuation Partner Group ID">
+			</div>
+			<div class="col-sm-3">
+				<input type="text" name="" class="form-control" value="" placeholder="Valuation Partner Asset ID">
+			</div>
+			<div class="col-sm-3">
+				<select class="form-control">
+					<option>Select Valuation Partner</option>
+				</select>
+				<i class="caret"></i>
+			</div>
+			<div class="col-sm-3">
+				<input type="text" name="" class="form-control" value="" placeholder="Asset Group Category">
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-sm-3">
+				<select class="form-control">
+					<option>Select Enterprise</option>
+				</select>
+				<i class="caret"></i>
+			</div>
+			<div class="col-sm-offset-7 col-sm-2">
+				<button type="button" class="btn btn-block btn-primary">Update</button>
+			</div>
+		</div>
+
 		<legend></legend>
-		<divc class="table-responsive">
+		<div class="table-responsive">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -1476,7 +1506,9 @@
 						<td>{{assetGroup.assetCategory}}</td>
 						<td>{{assetGroup.enterpriseName}}</td>
 						<td>{{assetGroup.enterpriseId}}</td>
-						<td><button ng-click="assetGroupVm.deleteAssetGroup(assetGroup._id)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></button>
+							<button ng-click="assetGroupVm.deleteAssetGroup(assetGroup._id)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
