@@ -10,8 +10,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.enterpriseValuation = {};
   vm.enterpriseValuationListing = [];
   vm.enterpriseValuation.user = {};
-  $scope.enterpriseSubmitted = false;
-  $scope.enterpriseValSubmitted = false;
   
   var filter = {};
   $scope.docObj = {};

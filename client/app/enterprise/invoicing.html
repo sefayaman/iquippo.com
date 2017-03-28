@@ -51,7 +51,7 @@
       <button class="btn btn-primary btn-block" ng-click="enterpriseInvoiceVm.openInvoiceModal()">Generate Invoice</button>                   
     </div>      
     <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
-      Search: <input type="text" placeholder="Search...">
+      Search: <input type="text" placeholder="Search..." ng-model="enterpriseInvoiceVm.searchStr" ng-change="enterpriseInvoiceVm.fireCommand(true)" ng-model-options="{debounce:500}">
     </div>
   </div>
   <div class="table-responsive">

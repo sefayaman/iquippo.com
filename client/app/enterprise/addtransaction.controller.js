@@ -63,14 +63,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       .then(function(result) {
           vm.brandList = result;
       })
-      //loadAllCategory();
       if($stateParams.id) {
         $scope.isEdit = true;
         EnterpriseSvc.getRequestOnId($stateParams.id)
           .then(function(result){
             if(result) {
               vm.enterpriseValuation = result;
-              //onCategoryChange(vm.enterpriseValuation.category, true);
               onBrandChange(vm.enterpriseValuation.brand, true);
               onCountryChange(vm.enterpriseValuation.country, true);
               onStateChange(vm.enterpriseValuation.state, true);
@@ -128,10 +126,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   }
 
     function getAssetGroup(val) {
-     /* if( !vm.enterpriseValuation.agency || !vm.enterpriseValuation.agency.partnerId || vm.enterpriseValuation.enterprise || vm.enterpriseValuation.enterprise.enterpriseId){
-        Modal.alert("Please select valuation agency");
-        return [];
-      }*/
+
       var serData = {};
       serData['assetCategory'] = val;
       if(vm.enterpriseValuation.agency && vm.enterpriseValuation.agency.partnerId)
@@ -254,6 +249,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
           vm.enterpriseValuation.enterprise._id = item._id;
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
+          vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
           vm.enterpriseValuation.enterprise.email = item.email;
         }
 

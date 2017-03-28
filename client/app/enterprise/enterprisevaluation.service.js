@@ -202,6 +202,8 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
     assetId:"assetId",
     repoDate : "repoDate",
     assetCategory:"assetCategory",
+    valuerGroupId:"valuerGroupId",
+    valuerAssetId:"valuerAssetId",
     assetDescription : "assetDescription",
     engineNo:"engineNo",
     chassisNo :"chassisNo",

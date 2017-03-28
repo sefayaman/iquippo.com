@@ -81,7 +81,7 @@
 
             vm.enterprises.forEach(function(item){
                 if(item.enterpriseId == vm.dataModel.enterpriseId){
-                    vm.dataModel.enterpriseName = item.fname  + " " + (item.mname || "") + " " + item.lname;
+                    vm.dataModel.enterpriseName = item.fname  + " " + item.lname;
                 }
             });
 

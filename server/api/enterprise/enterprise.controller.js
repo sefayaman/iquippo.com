@@ -20,6 +20,7 @@ var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD',moment.ISO_8601];
 var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
+var AssetGroupModel = require('./assetgroup.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Report Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var validRequestType = ['Valuation','Insepection'];
 var UserModel = require('../user/user.model');
@@ -47,62 +48,12 @@ function getValuationRequest(req,res){
   var queryParam = req.query;
   var filter = {};
   filter['deleted'] = false;
-  var orFilter = [];
 
   if (queryParam.searchStr) {
-
-    var term = new RegExp(queryParam.searchStr, 'i');
-    orFilter[orFilter.length] = {
-      requestType: {
-        $regex: term
+       filter['$text'] = {
+        '$search': queryParam.searchStr
       }
-    };
-    orFilter[orFilter.length] = {
-      purpose: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      agencyName: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      enterpriseName: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      category: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      brand: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      model: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      assetId: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      uniqueControlNo: {
-        $regex: term
-      }
-    };
   }
-
-  if (orFilter.length > 0) {
-    filter['$or'] = orFilter;
-  }
-
   if (queryParam._id)
     filter["_id"] = queryParam._id;
   if (queryParam.status){
@@ -144,6 +95,11 @@ function getInvoice(req,res){
   var queryParam = req.query;
   var filter = {};
   //filter['deleted'] = false;
+  if (queryParam.searchStr) {
+       filter['$text'] = {
+        '$search': queryParam.searchStr
+      }
+  }
   if (queryParam._id)
     filter["_id"] = queryParam._id;
   
@@ -192,11 +148,85 @@ exports.getOnId = function(req, res) {
 };
 
 // Creates a new valuation in the DB.
-exports.create = function(req, res, next) {
-EnterpriseValuation.create(req.body, function(err, enterpriseData) {
-    if(err) { return handleError(res, err); }
-    return res.status(201).json(enterpriseData);
-  });
+exports.create = function(req, res, next){
+  var bodyData = req.body;
+  _getAssetGroupCategory(bodyData.assetCategory,bodyData.agency.partnerId,bodyData.enterprise.enterpriseId,function(acErr,assetGroupCat){
+     if(assetGroupCat){
+      bodyData.valuerGroupId = assetGroupCat.valuerGroupId || "";
+      bodyData.valuerAssetId = assetGroupCat.valuerAssetId || "";
+     }else{
+        _createAssetGroupCategory(bodyData);
+     }
+     EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
+        if(err) { return handleError(res, err); }
+        return res.status(201).json(enterpriseData);
+      });
+  });  
+ 
+}
+
+function _getAssetGroupCategory(assetCategory,partnerId,enterpriseId,cb){
+  var exTerm = "";
+  var lkTerm = "";
+  try{
+    exTerm = {$regex: new RegExp( "^"+ assetCategory + "$", 'i')}
+    lkTerm = {$regex: new RegExp( "^"+ assetCategory, 'i')}
+  }catch(err){
+    cb(err);
+  }
+
+    var filter = {};
+    //filter.status = true;
+    filter['enterpriseId'] = enterpriseId;
+    filter['valuerCode'] = partnerId;
+  async.parallel([equalMatch,likeMatch],onComplete);
+
+  function likeMatch(callback){
+    filter['assetCategory'] = lkTerm;
+    console.log("lk",filter);
+    AssetGroupModel.find(filter,function(err,likeRes){
+      if(err){return callback(err)};
+      callback(null,likeRes);
+    });
+  }
+
+  function equalMatch(callback){
+    filter['assetCategory'] = exTerm;
+    console.log("ex",filter);
+    AssetGroupModel.find(filter,function(err,eqRes){
+      if(err){return callback(err)};
+      callback(null,eqRes);
+    });
+  }
+
+  function onComplete(err,results){
+    console.log(results);
+    if(err){return cb(err)}
+    if(results.length > 0 && results[0].length > 0)
+      cb(null,results[0][0]);
+    else if(results.length > 1 && results[1].length > 0)
+      cb(null,results[1][0]);
+    else
+      cb(null,null);
+  }
+}
+
+function _createAssetGroupCategory(bodyData){
+  var assetGroup = {};
+  assetGroup.status = false;
+  assetGroup.deleted = false;
+  assetGroup.createdBy = bodyData.createdBy;
+  assetGroup.updatedBy = bodyData.createdBy;
+  assetGroup.enterpriseId = bodyData.enterprise.enterpriseId;
+  assetGroup.enterpriseName = bodyData.enterprise.name;
+  assetGroup.assetCategory = bodyData.assetCategory;
+  assetGroup.valuerName = bodyData.agency.name;
+  assetGroup.valuerCode = bodyData.agency.partnerId;
+  AssetGroupModel.create(assetGroup,function(err,result){
+    if(err)
+      console.log("err in asset group creation",err);
+  })
+
 }
 
 function validateData(options,obj){
@@ -815,16 +845,6 @@ exports.update = function(req, res) {
   });
 };
 
-/*//update on invoce number
-exports.updateOnInvoice = function(req, res) {
-  if(req.body.invoiceNo) { delete req.body.invoiceNo; }
-  req.body.updatedAt = new Date();
-    EnterpriseValuation.update({_id:req.params.id},{$set:req.body}{multi:true},function(err){
-        if (err) { return handleError(res, err); }
-        return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
-    });
-};*/
-
 exports.bulkUpdate = function(req,res){
   var dataArr = req.body;
   bulkUpdate(dataArr,function(err){
@@ -1067,7 +1087,6 @@ function valiadeDataType(val,type){
 
 exports.exportExcel = function(req,res){
   var queryParam = req.query;
-  console.log("@@@@@@",queryParam.type);
   var filter = {};
   switch(queryParam.type){
     case "transaction":
@@ -1172,7 +1191,6 @@ function exportExcel(req,res,fieldMap,jsonArr){
 
   });
 
-  //jsonToXSLX(req,res,dataArr,allowedHeaders);
   var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
   var wb = Utility.getWorkbook();
