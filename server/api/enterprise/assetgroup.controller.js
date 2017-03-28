@@ -358,15 +358,19 @@ assetGroup.delete = function(req, res, next) {
 	});
 }
 
-assetGroup.uploadExcel = function(req, res) {
+assetGroup.uploadExcel = function(req, res,next) {
 	var body = req.body;
-	['fileName', 'user'].forEach(function(x) {
-		if (!body[x])
-			return res.status(412).json({
-				Err: 'Missing madnatory parameter' + x
-			});
+	var err;
+	['fileName', 'user'].some(function(x) {
+		if (!body[x]) {
+			err = new APIError(412, 'Missing Madnatory Params :  ' + x);
+			return true;
+		}
 	});
 
+	if (err)
+		return next(err);
+	
 	var fileName = req.body.fileName;
 	var user = req.body.user;
 	var madnatoryParams = ['valuerGroupId', 'valuerAssetId', 'valuerName', 'valuerCode', 'assetCategory', 'enterpriseName', 'enterpriseId'];
