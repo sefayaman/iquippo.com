@@ -1233,7 +1233,7 @@
 					<i class="caret"></i>
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveToDate.$invalid && submitted}">
-					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective to Date" required/>
+					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective to Date" required/>
 				</div>
 			</div>
 			<div class="row">
@@ -1315,13 +1315,13 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveFromDate.$invalid && submitted}">
-					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective From Date" required>
+					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveToDate.$invalid && submitted}">
-					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective To Date" required>
+					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.taxRate.$invalid && submitted}">
-					<input type="number" class="form-control" name="taxRate" ng-model="svcTaxVm.dataModel.taxRate" value="" placeholder="Service Tax Rate" required>
+					<input type="number" class="form-control" name="taxRate" ng-model="svcTaxVm.dataModel.taxRate" value="" placeholder="*Service Tax Rate" required>
 				</div>
 				<div class="form-group col-sm-offset-1 col-sm-2 text-right">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcTaxVm.update(taxmasterForm)">Update</button>
@@ -1380,7 +1380,7 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error':purposeForm.purpose.$invalid && submitted}">
-					<input type="text" class="form-control" name="purpose"  ng-model="valuationPurposeVm.dataModel.name" placeholder="Valuation Purpose" required>
+					<input type="text" class="form-control" name="purpose"  ng-model="valuationPurposeVm.dataModel.name" placeholder="*Valuation Purpose" required>
 				</div>
 				<div class="form-group col-sm-offset-7 col-sm-2 text-right">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="valuationPurposeVm.update(purposeForm)">Update</button>
@@ -1439,20 +1439,20 @@
 				</span>
 				</h4>
 			</div> -->
-			<div class="row form-group">
-				<div class="col-sm-2">
-					<span class="btn btn-default fileinput-button">
-						<input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
-						<span><i class="fa fa-upload"></i> Import Excel</span>
-					</span>
-					<span>{{uploadedExcel}}</span>
-				</div>
-				<div class="col-sm-2">
-					<button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit Excel</button>
-				</div>
+			<div class="col-sm-offset-2 col-sm-2">
+				<span class="btn btn-default fileinput-button">
+					<input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
+					<span><i class="fa fa-upload"></i> Import Excel</span>
+				</span>
+				<span>{{uploadedExcel}}</span>
 			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit Excel</button>
+			</div>
+			
 		</div>
-		<div >
+		<legend></legend>
+		<div>
 		<form class="assetGroupForm" name="assetGroupForm" >
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerGroupId.$invalid && submitted}">

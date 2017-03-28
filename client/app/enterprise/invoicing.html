@@ -139,22 +139,21 @@
     <h4 class="modal-title">Invoicing</h4>
   </div>
  <div class="modal-body">
-   <form name="invoiceForm" novalidate>
+   <form name="invoiceForm" class="text-left" novalidate>
    	<div class="row">
-   		<div class="col-md-10 form-group">
-   			Valuation Request Count:			
-   		</div>
-   		<div class="col-md-2">
-   			{{invoice.requestCount}}
+   		<div class="col-md-12">
+   			<div class="alert alert-info">Valuation Request Count: {{invoice.requestCount}}</div>
    		</div>
    	</div>
    	<div class="row"> 		
    		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">
+        Service Fee
    		  <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Service Fee" required/>
    		</div>
    		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
+        Rate for Invoice
    			<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
-          <option value="">Select Rate for Invoice</option>
+          <option value="">Select</option>
           <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
         </select>
         <i class="caret"></i>

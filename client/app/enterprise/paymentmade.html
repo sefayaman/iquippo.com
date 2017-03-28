@@ -98,11 +98,10 @@
           </div>
           
         </div>
-        <div class="row form-group">
-            <div class="col-sm-12 text-right">
-              <input class="btn btn-primary btn-md btn-block" ng-click="updatePaymentDetail(form)" type="button" value="Submit">
-            </div>
-        </div>              
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+          <input class="btn btn-primary btn-md" ng-click="updatePaymentDetail(form)" type="button" value="Submit">
+        </div>               
     </form>
 </div>
 </script>
