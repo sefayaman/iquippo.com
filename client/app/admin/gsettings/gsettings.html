@@ -1456,26 +1456,26 @@
 		<form class="assetGroupForm" name="assetGroupForm" >
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerGroupId.$invalid && submitted}">
-					<input type="text" name="valuerGroupId" ng-model="assetGroupVm.assetGroup.valuerGroupId" class="form-control" placeholder="Valuation Partner Group ID" required>
+					<input type="text" name="valuerGroupId" ng-model="assetGroupVm.assetGroup.valuerGroupId" class="form-control" placeholder="*Valuation Partner Group ID" required>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerAssetId.$invalid && submitted}">
-					<input type="text" name="valuerAssetId" ng-model="assetGroupVm.assetGroup.valuerAssetId" class="form-control" placeholder="Valuation Partner Asset ID" required>
+					<input type="text" name="valuerAssetId" ng-model="assetGroupVm.assetGroup.valuerAssetId" class="form-control" placeholder="*Valuation Partner Asset ID" required>
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.partnerId.$invalid && submitted}">
+				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerCode.$invalid && submitted}">
 					<select class="form-control" name="valuerCode" ng-model="assetGroupVm.assetGroup.valuerCode" ng-change="assetGroupVm.getValueOnChange(assetGroupVm.assetGroup.valuerCode, 'valuation')" required>
-						<option value="">Select Valuation Partner</option>
+						<option value="">*Select Valuation Partner</option>
 						<option  ng-repeat="ag in assetGroupVm.valAgencies | orderBy:'name'" value="{{ag.partnerId}}">{{ag.name}} - {{ag.partnerId}}</option>
 					</select>
 					<i class="caret"></i>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.assetCategory.$invalid && submitted}">
-					<input type="text" name="assetCategory" ng-model="assetGroupVm.assetGroup.assetCategory" class="form-control" placeholder="Asset Group Category" required>
+					<input type="text" name="assetCategory" ng-model="assetGroupVm.assetGroup.assetCategory" class="form-control" placeholder="*Asset Group Category" required>
 				</div>
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.enterpriseId.$invalid && submitted}">
 					<select class="form-control" name="enterpriseId" ng-model="assetGroupVm.assetGroup.enterpriseId" ng-change="assetGroupVm.getValueOnChange(assetGroupVm.assetGroup.enterpriseId, 'enterprise')" required>
-						<option value="">Select Enterprise</option>
+						<option value="">*Select Enterprise</option>
 						<option ng-repeat="enterprise in assetGroupVm.enterprises" value="{{enterprise.enterpriseId}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.enterpriseId}})</option>
 					</select>
 					<i class="caret"></i>

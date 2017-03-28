@@ -253,7 +253,6 @@
     }
 
     function fireCommand(reset, filterObj) {
-      dataToSend = {};
       if (reset) {
         resetPagination();
       }
