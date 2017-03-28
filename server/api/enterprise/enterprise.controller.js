@@ -943,143 +943,146 @@ exports.updateInvoice = function(req, res) {
 };
 
 var parameters = {
-  jobID:"jobId",
-  unique_controll_no:"uniqueControlNo",
-  reportNo:"reportNo",
-  assetNo:"assetNo",
-  imeiNo:"gpsIMEINo",
-  hmr_Kmr:"hmr_kmr",
-  assessed_Value:"assessedValue",
-  inspection_By:"inspectionBy",
-  physical_Condition:"physicalCondition",
-  gps_Installed:"gpsInstalled",
-  gps_Device_No:"gpsDeviceNo"
+  jobID:{key:"jobId",required:true},
+  unique_controll_no:{key:"uniqueControlNo",required:true},
+  reportNo:{key:"reportNo",required:true},
+  assetNo:{key:"assetNo"},
+  imeiNo:{key:"gpsIMEINo"},
+  hmr_Kmr:{key:"hmr_kmr"},
+  assessed_Value:{key:"assessedValue",type:'numeric'},
+  inspection_By:{key:"inspectionBy"},
+  physical_Condition:{key:"physicalCondition"},
+  gps_Installed:{key:"gpsInstalled",type:"boolean"},
+  gps_Device_No:{key:"gpsDeviceNo"},
+  yearOfManufacturing:{key:"agencyYearOfManufacturing"},
+  engineNo:{key:"agencyEngineNo"},
+  chasisNo:{key:"agencyChasisNo"},
+  registrationNo:{key:"agencyRegistrationNo"},
+  report_url:{key:"valuationReport",type:"file",required:true}
 }
-
- /* reportDate:"reportDate",
-  reportNo:"reportNo",
-  agencyYearOfManufacturing:"agencyYearOfManufacturing",
-  agencyEngineNo:"agencyEngineNo",
-  agencyChasisNo:"agencyChasisNo",
-  agencyRegistrationNo:"agencyRegistrationNo",
-  agencySerialNo:"agencySerialNo",
-  hmr_kmr:"hmr_kmr",
-  assessedValue:"assessedValue",
-  inspectionBy:"inspectionBy",
-  physicalCondition:"physicalCondition",
-  gpsInstalled:"gpsInstalled",
-  gpsDeviceNo:"gpsDeviceNo",
-  gpsIMEINo:"gpsIMEINo",*/
 
 exports.updateFromAgency = function(req,res){
   
   var bodyData = req.body;
   console.log("request body  data",bodyData);
-  if(bodyData.length == 0){
-    return res.status(200).send("No Data submitted");
-  }
-  var retList = validateRequest(bodyData);
-  var keys = Object.keys(parameters);
 
-  try{
-    async.eachLimit(bodyData,5,update,onComplete);  
-  }catch(e){
-    res.status(500).send(e);
+  var result = {};
+  result['success'] = true;
+  result['jobID'] = bodyData.jobID;
+  result['unique_controll_no']= bodyData.unique_controll_no;
+  var msg = validateRequest(bodyData);
+  if(msg){
+    result['msg'] = msg;
+    result['success'] = false;
+    return sendResponse();
   }
-  
-  function update(dt,callback){
-    getEnterpriseVal(dt.unique_controll_no,function(err,valArr){
-          
-          var obj = {};
-          obj['jobID'] = dt.jobID;
-          obj['unique_controll_no']= dt.unique_controll_no;
-          obj['success'] = false;
-          retList[retList.length] = obj;
 
+  checkRecordInDB(bodyData.unique_controll_no,function(msg,valReq){
+    if(msg){
+       result['msg'] = msg;
+       result['status'] = false;
+       return sendResponse();
+    }else
+        update(valReq);      
+
+  })
+
+  function update(valReq){
+
+      var keys = Object.keys(parameters);
+      var updateObj = {};
+      keys.forEach(function(key){
+        var val = bodyData[key];
+        if(!parameters[key].type == 'boolean')
+          val = val == 'YES' || val == 'yes'?true:false;
+        if(parameters[key].type == 'file'){
+          var valObj = {external:true};
+          valObj.filename = val;
+          val = valObj;
+         }
+        updateObj[parameters[key].key] = val;
+       
+      });
+
+      updateObj.status = EnterpriseValuationStatuses[3];
+      updateObj.statuses = valReq.statuses;
+      var stsObj = {};
+      stsObj.createdAt = new Date();
+      stsObj.userId = "IQVL";
+      stsObj.status = EnterpriseValuationStatuses[3];
+      if(updateObj.statuses)
+        updateObj.statuses[updateObj.statuses.length] = stsObj;
+       console.log("QV data upadted",updateObj);
+
+       //return sendResponse();
+      EnterpriseValuation.update({_id:valReq._id},{$set:updateObj},function(err){
+          if(err){
+             result['success'] = false;
+             result['msg'] = "System error at iQuippo";
+          }
+          return sendResponse();
+      });
+  }
+
+  function sendResponse(){
+    res.status(200).json(result);
+  }
+
+  function checkRecordInDB(unCtlNo,cb){
+    EnterpriseValuation.find({uniqueControlNo:unCtlNo},function(err,valArr){
+      var msg = "";
       if(err){
-          obj['msg'] = "System error at iQuippo";
-          return callback();
+         msg = "System error at iQuippo";
       }else if(valArr.length == 0){
-          obj['msg'] = "Record not found at iQuippo";
-          return callback();
-      }else{
-         var updateObj = {};
-          keys.forEach(function(key){
-            updateObj[parameters[key]] = dt[key];
-          });
-          updateObj.status = EnterpriseValuationStatuses[3];
-          updateObj.statuses = valArr[0].statuses;
-          var stsObj = {};
-          stsObj.createdAt = new Date();
-          stsObj.userId = "IQVL";
-          stsObj.status = EnterpriseValuationStatuses[3];
-          if(updateObj.statuses)
-            updateObj.statuses[updateObj.statuses.length] = stsObj;
-           console.log("QV data upadted",updateObj);
-
-          EnterpriseValuation.update({_id:valArr[0]._id},{$set:updateObj},function(err){
-            if(err){
-              console.log("err",err);
-               obj['msg'] = "System error at iQuippo";
-            }else{
-               obj['success'] = true;
-            }
-            return callback();
-          });
+          msg = "Record not found at iQuippo";
       }
-    })
-  }
-  
-  function onComplete(){
-    res.status(200).json(retList);
-  }
-
-  function getEnterpriseVal(unCtlNo,cb){
-    EnterpriseValuation.find({uniqueControlNo:unCtlNo},function(err,retArr){
-      cb(err,retArr);
+      if(msg)
+        return cb(msg);
+      else  
+        return cb(null,valArr[0]);
     })
   }
 
-}
+  function validateRequest(reqData){
+    
+    var msg = "";
+    var keys = Object.keys(parameters);
+    for(var i=0;i < keys.length;i++){
 
-function validateRequest(dataArr){
+      var key = keys[i];
+      var keyObj = parameters[key];
 
-  var requiredParams = [{key:"jobID"},{key:"unique_controll_no"},{key:"reportNo"},{key:"assessed_Value",type : "numeric"},{key:"reportFileToUpload"}];
-  var errorList = [];
-  var totalItems = dataArr.length;
-  for(var i=0; i < totalItems;i++){
-    var item = dataArr[i];
-    requiredParams.some(function(paramObj){
-        var obj = {};
-        obj['success'] = false;
-        obj['jobID'] = item.jobID;
-        obj['unique_controll_no']= item.unique_controll_no;
-      if(!item[paramObj.key]){
-        obj['msg'] = paramObj.key + " is missing";
-        errorList[errorList.length] = obj;
-        dataArr.splice(i,1);
-        return true;
-      }else{
-        if(paramObj.type){
-            if(!valiadeDataType(item[paramObj.key],paramObj.type)){
-              obj['msg'] = paramObj.key + " must be of " + paramObj.type + " type";
-              errorList[errorList.length] = obj;
-              dataArr.splice(i,1);
-              return true;
+      //console.log("key obj",keyObj);
 
-            }
+      var value = reqData[key];
+      if(keyObj.required && !value){
+        msg = key + " is missing";
+        break;
+      }
+
+      if(keyObj.type){
+        var retVal = valiadeDataType(value,keyObj.type);
+          if(!retVal){
+            msg = key + " must be of " + keyObj.type + " type";
         }
       }
-    });
+
+    }
+    return msg;
   }
-  return errorList;
+
 }
+
+
 
 function valiadeDataType(val,type){
   var ret = true; 
   switch(type){
     case"numeric":
       ret = !isNaN(val);
+    break;
+    case "file":
+      ret = true;
     break;
   }
   return ret;
