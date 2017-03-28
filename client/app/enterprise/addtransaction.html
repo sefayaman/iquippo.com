@@ -72,7 +72,7 @@
             </div>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
-            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="Asset No.*" required/>
+            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="*Asset No." required/>
           </div>
           <div class="col-sm-3">
             <div class="input-group">
@@ -87,7 +87,7 @@
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
             <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)" required>
-              <option value="">Select Brand</option>
+              <option value="">*Select Brand</option>
               <option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
             </select>
             <i class="caret"></i>
@@ -95,7 +95,7 @@
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.model.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
             <select class="form-control form-group" name="model" ng-model="addTransactionVm.enterpriseValuation.model" ng-disabled="!editEnterpriseField()" required>
-              <option value="">Select Model</option>
+              <option value="">*Select Model</option>
               <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
             </select>
             <i class="caret"></i>
@@ -157,10 +157,10 @@
             <i class="caret"></i>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPerson.$invalid && submitted}">
-            <input type="text" class="form-control" name="contactPerson" ng-model="addTransactionVm.enterpriseValuation.contactPerson" ng-disabled="!editEnterpriseField()" placeholder="Contact Person" required/>
+            <input type="text" class="form-control" name="contactPerson" ng-model="addTransactionVm.enterpriseValuation.contactPerson" ng-disabled="!editEnterpriseField()" placeholder="*Contact Person" required/>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPerson.$invalid && submitted}">
-             <input type="text" class="form-control" name="contactPersonTelNo" ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" ng-disabled="!editEnterpriseField()" placeholder="Contact Person Tel No" required/>
+             <input type="text" class="form-control" name="contactPersonTelNo" ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" ng-disabled="!editEnterpriseField()" placeholder="*Contact Person Tel No" required/>
           </div>
           <div class="col-sm-3">
              <input type="text" class="form-control" name="disFromCustomerOffice" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice" ng-disabled="!editEnterpriseField()" placeholder="Distance From Customer Office"/>
