@@ -217,8 +217,8 @@ angular.module('sreizaoApp')
 
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance',
-   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance', 'UtilSvc',
+   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance, UtilSvc) {
     $scope.newUser ={};
     $scope.newUser.isOtherCountry=false;
     $scope.newUser.isOtherState=false;
@@ -263,6 +263,17 @@ angular.module('sreizaoApp')
 
     $scope.register = function(evt){
     var ret = false;
+    if($scope.newUser.country && $scope.newUser.mobile) { 
+      var value = UtilSvc.validateMobile($scope.newUser.country, $scope.newUser.mobile);
+      if(!value) {
+        $scope.form.mobile.$invalid = true;
+        ret = true;
+      } else {
+        $scope.form.mobile.$invalid = false;
+        ret = false;
+      }
+    }
+
     if($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;

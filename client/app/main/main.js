@@ -89,9 +89,10 @@ angular.module('sreizaoApp')
         onEnter:function ($rootScope,$stateParams,$http){
           $http.post('/api/getseo/',{categoryId:$stateParams.id})
           .then(function(res){
-            console.log(res);
-           $rootScope.choosenTitle=res.data[res.data.length-1].title;
-           $rootScope.metaDescription=res.data[res.data.length-1].meta;
+            if(res && res.data.length > 0) {
+              $rootScope.choosenTitle=res.data[res.data.length-1].title;
+              $rootScope.metaDescription=res.data[res.data.length-1].meta;
+            }
           })
           .catch(function(err){
            

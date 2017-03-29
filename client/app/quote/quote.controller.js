@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal,MarketingSvc) {
+  .controller('QuoteRequestCtrl', function ($scope, $location, $window, $rootScope,groupSvc,categorySvc,SubCategorySvc,LocationSvc, $http, $uibModalInstance, notificationSvc, Modal,MarketingSvc, UtilSvc) {
     var facebookConversionSent = false;
     //Start > NJ : push quickQueryOpen object in GTM data layer
     dataLayer.push(gaMasterObject.quickQueryOpen);
@@ -20,6 +20,8 @@ angular.module('sreizaoApp')
       $scope.quote.phone = $rootScope.getCurrentUser().phone;
       $scope.quote.mobile = $rootScope.getCurrentUser().mobile;
       $scope.quote.email = $rootScope.getCurrentUser().email;
+      if($rootScope.getCurrentUser().city)
+        $scope.quote.city = $rootScope.getCurrentUser().city;
     } else {
       $scope.quote = {}
     }
@@ -56,8 +58,21 @@ angular.module('sreizaoApp')
     $scope.locationList = result;
   });
 
+  $scope.onLocationChange = function(city){
+    $scope.quote.country = LocationSvc.getCountryStateByCity(city).country;
+  }
   $scope.sendQuoteRequest = function(quote) {
       var ret = false;
+      if($scope.quote.country && $scope.quote.mobile) { 
+        var value = UtilSvc.validateMobile($scope.quote.country, $scope.quote.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
       if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;

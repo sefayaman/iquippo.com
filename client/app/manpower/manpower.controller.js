@@ -4,7 +4,7 @@
   angular.module('manpower').controller('ManpowerCtrl', ManpowerCtrl);
 
   //controller function
-  function ManpowerCtrl($scope, $rootScope, LocationSvc, $window, Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, productSvc, ManpowerSvc, MarketingSvc) {
+  function ManpowerCtrl($scope, $rootScope, LocationSvc, $window, Auth, $http, $log, Modal, $uibModal, categorySvc, notificationSvc, uploadSvc, productSvc, ManpowerSvc, MarketingSvc, UtilSvc) {
     var vm = this;
     var facebookConversionSent = false;
     vm.manpower = {};
@@ -231,13 +231,21 @@
         Modal.alert("Please upload resume.",true);
         return;
       }*/
+      if(vm.manpower.country && vm.manpower.mobile) { 
+        var value = UtilSvc.validateMobile(vm.manpower.country, vm.manpower.mobile);
+        if(!value) {
+          form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
       if (form.$invalid || ret) {
         $scope.submitted = true;
         return;
       }
-      //vm.manpower.assetOperated = $scope.selectedAssetsArr;
-      //vm.manpower.role = "manpower";
-      /*adding manpower info */
+
       if (vm.manpower.agree) {
         var dataToSend = {};
         if (vm.manpower.email)
@@ -569,7 +577,6 @@
     function bulkUpdate(action) {
       var body = {};
       body.ids = selectedIds;
-      console.log(selectedIds.join(','));
       body.status = action === 'active' ? true : false;
       body.updatedBy = {
         userId: Auth.getCurrentUser()._id,
@@ -621,11 +628,7 @@
       filter.first_id = first_id;
       filter.last_id = last_id;
       selectedIds = [];
-      //var filter = {};
-      //filter['status'] = true;
       ManpowerSvc.getManpowerUserOnFilter(filter).then(function(result) {
-        //vm.allManpowerList = result;
-        console.log(result.items);
         vm.allManpowerList = result.items;
         vm.totalItems = result.totalItems;
         prevPage = vm.currentPage;
