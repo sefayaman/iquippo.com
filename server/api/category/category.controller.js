@@ -11,7 +11,7 @@ exports.getAllCategory = function(req, res) {
   filter["status"] = true;*/
   Category.find().sort({'name':1}).exec(function (err, category) {
     if(err) { return handleError(res, err); }
-    res.setHeader('Cache-Control', 'private, max-age=60');
+    res.setHeader('Cache-Control', 'private, max-age=2592000');
     return res.status(200).json(category);
   });
 };
@@ -74,7 +74,7 @@ exports.searchCategory = function(req, res) {
   query.exec(
        function (err, category) {
               if(err) { return handleError(res, err); }
-              res.setHeader('Cache-Control', 'private, max-age=60');
+              res.setHeader('Cache-Control', 'private, max-age=2592000');
               return res.status(200).json(category);
        }
   );

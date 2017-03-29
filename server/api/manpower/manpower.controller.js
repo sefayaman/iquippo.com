@@ -120,7 +120,7 @@ exports.statusWiseCount = function(req, res) {
     },
     function(err, result) {
       if (err) return handleError(err);
-      res.setHeader('Cache-Control', 'private, max-age=60');
+      res.setHeader('Cache-Control', 'private, max-age=2592000');
       return res.status(200).json(result);
     }
   );

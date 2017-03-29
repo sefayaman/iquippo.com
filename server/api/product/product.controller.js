@@ -629,7 +629,7 @@ exports.categoryWiseCount = function(req,res){
     {$sort:{count:-1}},
     function (err, result) {
       if (err) return handleError(err);
-      res.setHeader('Cache-Control', 'private, max-age=86400');
+      res.setHeader('Cache-Control', 'private, max-age=2592000');
       return res.status(200).json(result);
     }
   );
@@ -654,7 +654,7 @@ exports.statusWiseCount = function(req,res){
           obj.count = count;
           result.push(obj);
         }
-        res.setHeader('Cache-Control', 'private, max-age=86400');
+        res.setHeader('Cache-Control', 'private, max-age=2592000');
         return res.status(200).json(result);
       });
     }
@@ -726,7 +726,7 @@ exports.getHistory = function(req, res) {
   query.exec(
                function (err, product) {
                       if(err) { return handleError(res, err); }
-                      res.setHeader('Cache-Control', 'private, max-age=86400');
+                      res.setHeader('Cache-Control', 'private, max-age=2592000');
                       return res.status(200).json(product);
                }
   );
