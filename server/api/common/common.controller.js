@@ -226,6 +226,7 @@ exports.getSettingByKey = function(req, res) {
 		if (err) {
 			return handleError(res, err)
 		} else {
+			res.setHeader('Cache-Control', 'private, max-age=60');
 			res.status(200).json(dt)
 		}
 
@@ -1319,6 +1320,7 @@ exports.getAllCountry = function(req, res) {
 		if (err) {
 			return handleError(res, err);
 		}
+		res.setHeader('Cache-Control', 'private, max-age=60');
 		return res.status(200).json(country);
 	});
 };
@@ -2393,6 +2395,7 @@ exports.getBannerOnFilter = function(req, res) {
 			if (err) {
 				return handleError(res, err);
 			}
+			res.setHeader('Cache-Control', 'private, max-age=60');
 			return res.status(200).json(banners);
 		});
 }

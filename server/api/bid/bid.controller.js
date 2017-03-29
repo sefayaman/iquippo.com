@@ -134,6 +134,7 @@ exports.getHighestBids = function(req,res){
     {$sort:{count: -1}},
     function (err, result) {
       if (err) return handleError(err);
+      res.setHeader('Cache-Control', 'private, max-age=60');
       return res.status(200).json(result);
     }
   );

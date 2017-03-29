@@ -65,6 +65,7 @@ exports.statusWiseCount = function(req,res){
           obj.count = count;
           result.push(obj);
         }
+        res.setHeader('Cache-Control', 'private, max-age=60');
         return res.status(200).json(result);
       });
     }
