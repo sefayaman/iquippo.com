@@ -270,9 +270,6 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/public/assets/images'
         ],
         blockReplacements: {
-  css: function(block) {
-    return '<link async rel="stylesheet" type="text/css" href="' + block.dest + ' />';
-  },
   js: function(block) {
     return '<script defer src="' + block.dest + '"></script>';
   }
@@ -527,9 +524,6 @@ module.exports = function (grunt) {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
             filePath = filePath.replace('/.tmp/', '');
-            if(filePath.split('/').indexOf('main') < 0)
-              return '<script defer src="' + filePath + '"></script>';
-            else
               return '<script src="' + filePath + '"></script>';
           },
           starttag: '<!-- injector:js -->',
@@ -574,7 +568,7 @@ module.exports = function (grunt) {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
             filePath = filePath.replace('/.tmp/', '');
-            return '<link async rel="stylesheet" href="' + filePath + '">';
+            return '<link rel="stylesheet" href="' + filePath + '">';
           },
           starttag: '<!-- injector:css -->',
           endtag: '<!-- endinjector -->'
