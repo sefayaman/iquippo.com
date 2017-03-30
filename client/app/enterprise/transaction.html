@@ -25,10 +25,17 @@
           </span>
            <span>{{uploadedExcel}}</span>        
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-2" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">
           <span class="btn btn-default fileinput-button">
            <input type="file" id="modify" name="modify"  data-filetype="doc" file-upload required>
             <span><i class="fa fa-upload"></i> Update Request</span>
+          </span>
+           <span>{{modifiedExcel}}</span>
+      </div>
+      <div class="col-sm-2" ng-if="isAdmin() || isPartner()">
+          <span class="btn btn-default fileinput-button">
+           <input type="file" id="reportupload" name="modify"  data-filetype="doc" file-upload required>
+            <span><i class="fa fa-upload"></i> Upload Report Data</span>
           </span>
            <span>{{modifiedExcel}}</span>
       </div>

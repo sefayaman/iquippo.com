@@ -17,6 +17,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   var dataToSend = {};
   $scope.uploadedExcel = '';
   $scope.modifiedExcel = '';
+  $scope.reportUploadedExcel = '';
   $scope.uploadType = '';
   
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
@@ -62,7 +63,13 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   }
 
  function getEnterpriseData(filter){
+      
       $scope.pager.copy(filter);
+      if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+          filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
+      if(Auth.isPartner())
+          filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+
       EnterpriseSvc.get(filter)
       .then(function(result){
         vm.enterpriseValuationListing = result.items;
@@ -70,8 +77,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
          $scope.pager.update(result.items,result.totalItems);
       });
     }
-
-  init();
 
   function fireCommand(reset,filterObj){
       if(reset)
@@ -106,20 +111,28 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         Modal.alert('Please upload a valid file');
         return;
       }
-
+      $rootScope.loading = true;
       uploadSvc.upload(file, importDir)
         .then(function(result) {
           setUserData();
           if($scope.uploadType === 'upload'){
             $scope.uploadedExcel = result.data.filename;
             $scope.modifiedExcel = '';
+            $scope.reportUploadedExcel = "";
           }
           if($scope.uploadType === 'modify'){
             $scope.modifiedExcel = result.data.filename;
             $scope.uploadedExcel = '';
+            $scope.reportUploadedExcel = "";
+          }
+          if($scope.uploadType === 'reportupload'){
+            $scope.modifiedExcel = "";
+            $scope.uploadedExcel = '';
+            $scope.reportUploadedExcel =  result.data.filename;
           }
           $rootScope.loading = false;
         }).catch(function(res) {
+          $rootScope.loading = false;
           Modal.alert("error in file upload", true);
         });
     }
@@ -155,11 +168,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         }).catch(function(err){
           Modal.alert('Error while uploading');
         });
-      }else if($scope.uploadType === 'modify'){
+      }else if(['modify','reportupload'].indexOf($scope.uploadType) != -1){
         uploadData = {
           fileName : $scope.modifiedExcel,
           user : vm.enterpriseValuation.user
         };
+        if($scope.uploadType == 'modify')
+            uploadData['updateType'] = "enterprise";
+        else
+          uploadData['updateType'] = "agency";
 
         EnterpriseSvc.modifyExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
@@ -300,6 +317,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     function exportExcel(){
       EnterpriseSvc.exportExcel("transaction",{});
     }
+
+    //init();
+    //starting point
+    Auth.isLoggedInAsync(function(loggedIn){
+      if(loggedIn){
+          init();
+        }else
+          $state.go("main")
+      })
 
 }
 
