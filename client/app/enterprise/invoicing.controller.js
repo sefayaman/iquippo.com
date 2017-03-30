@@ -90,7 +90,8 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
         filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       if(Auth.isPartner())
-        filter['partnerId'] = Auth.getCurrentUser().partnerId;
+        filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+
       EnterpriseSvc.getInvoice(filter)
       .then(function(result){
         vm.dataList = result.items;

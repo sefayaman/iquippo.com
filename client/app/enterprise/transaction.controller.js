@@ -228,10 +228,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     }
 
     function deleteEnterprise(enterpriseValuation){
-      enterpriseValuation.deleted = true;
-      EnterpriseSvc.update(enterpriseValuation).then(function(result){
-        Modal.alert("Request deleted succesfully", true);
-      });
+      Modal.confirm("Would you like to delete this record?",function(ret){
+        if(ret != 'yes')
+          return;
+        enterpriseValuation.deleted = true;
+        EnterpriseSvc.update(enterpriseValuation).then(function(result){
+          Modal.alert("Request deleted succesfully", true);
+        });
+      })
+      
     }
 
     function updateSelection(event,item){
@@ -262,7 +267,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             if(resList && resList.length > 0){
               resList.forEach(function(item){
                 var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
-                if(item.success){
+                if(item.success == "true"){
                    valReq.jobId = item.jobId;
                    EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[2]);
                 }else{
@@ -306,6 +311,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           animation: true,
             templateUrl: "app/enterprise/valuation-details-popup.html",
             scope: scope,
+            windowTopClass: 'product-preview',
             size: 'lg'
         });
 
@@ -315,7 +321,12 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     }
 
     function exportExcel(){
-      EnterpriseSvc.exportExcel("transaction",{});
+      var filter = {};
+       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+          filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
+      if(Auth.isPartner())
+          filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+      EnterpriseSvc.exportExcel("transaction",filter);
     }
 
     //init();

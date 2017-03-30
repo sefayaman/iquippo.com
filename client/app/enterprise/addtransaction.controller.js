@@ -144,11 +144,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     function onBrandChange(brandName, noChange) {
         if (!noChange)
             vm.enterpriseValuation.model = "";
-        
+        vm.modelList = [];
         if (!brandName)
             return;
-
-        vm.modelList = [];
         modelSvc.getModelOnFilter({
                 brandName: brandName
             })

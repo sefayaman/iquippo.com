@@ -221,10 +221,13 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
     contactPersonTelNo:"contactPersonTelNo",
     disFromCustomerOffice:"disFromCustomerOffice"
   }
-
+  var submmitted = false;
    function submitToAgency(items){
+    if(submmitted)
+        return;
     if(!items || items.length == 0)
         return;
+    submmitted = true;
     var dataArr = [];
     var keys = Object.keys(Field_MAP);
     items.forEach(function(item){
@@ -239,9 +242,11 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       return $http.post(apiUrl,dataArr)
       .then(function(res){
         console.log("success res",JSON.stringify(res.data))
+        submmitted = false;
         return res.data;  
       })
       .catch(function(err){
+        submmitted = false;
         throw err;
       })
    }

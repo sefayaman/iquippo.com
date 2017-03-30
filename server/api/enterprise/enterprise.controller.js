@@ -116,8 +116,8 @@ function getInvoice(req,res){
   }
   if (queryParam.enterpriseId)
     filter["enterprise.enterpriseId"] = queryParam.enterpriseId;
-  if (queryParam.partnerId)
-    filter["agency.partnerId"] = queryParam.partnerId;
+  if (queryParam.agencyId)
+    filter["agency._id"] = queryParam.agencyId;
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
@@ -1240,6 +1240,11 @@ function valiadeDataType(val,type){
 exports.exportExcel = function(req,res){
   var queryParam = req.query;
   var filter = {};
+  if(queryParam.enterpriseId)
+    filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
+  if(queryParam.agencyId)
+    filter['agency._id'] = queryParam.agencyId;
+
   switch(queryParam.type){
     case "transaction":
       var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
@@ -1259,6 +1264,7 @@ exports.exportExcel = function(req,res){
        break;
     case 'paymentmade':
        var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
+       filter['paymentMade'] = true;
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
@@ -1276,6 +1282,7 @@ exports.exportExcel = function(req,res){
       break;
     case "paymentreceived":
       var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
+      filter['paymentReceived'] = true;
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }

@@ -2,8 +2,8 @@
   <div class="col-sm-2">
     <h4>Invoicing</h4>
   </div>
-  <div class="col-sm-3">
-    <select class="form-control" ng-if="isAdmin()" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
+  <div class="col-sm-3" ng-if="isAdmin()">
+    <select class="form-control" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
       <option value="generated">Invoice Generated</option>
       <option value="tobegenerate">Invoice to be Generated</option>
     </select>
@@ -105,6 +105,7 @@
           <th>Enterprise Contact No.</th>
           <th>Valuation Partner Name</th>
           <th>Valuation Partner Contact No.</th>
+          <th>Amount</th>
           <th>Status</th>
           <th>Remark</th>
           <th>Action</th>
@@ -120,6 +121,7 @@
           <td>{{entVal.enterprise.mobile}}</td>
           <td>{{entVal.agency.name}}</td>
            <td>{{entVal.agency.mobile}}</td>
+           <td>{{entVal.invoiceAmount}}</td>
           <td>{{entVal.status}}</td>
           <td></td>
           <td>          

@@ -55,8 +55,7 @@
       <table class="table table-bordred table-striped">
         <thead>
           <tr>
-            <th><input type="checkbox"> All</th>
-            <th>Action</th>
+            <th><input type="checkbox"> All</th>            
             <th>Unique Control No</th>
             <th>Request Type</th>
             <th>Purpose</th>
@@ -68,18 +67,12 @@
             <th>Status</th>
             <th>Remark</th>
             <th></th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="enterpriseValuation.status != EnterpriseValuationStatuses[0]"></td>
-            <td>
-            <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
-            <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-            <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-            <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)"><i class="fa fa-trash"></i> </a>
-
-            </td>
+            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="enterpriseValuation.status != EnterpriseValuationStatuses[0]"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>
@@ -91,6 +84,13 @@
             <td>{{enterpriseValuation.status}}</td>
             <td>{{enterpriseValuation.remarks}}</td>
             <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>
+            <td>
+              <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
+              <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
+              <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
+              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)"><i class="fa fa-trash"></i> </a>
+
+            </td>
             
           </tr>
         </tbody>
