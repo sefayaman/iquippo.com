@@ -915,7 +915,7 @@ exports.generateInvoice = function(req,res){
 
       pdf.create(pdfInput, options).toStream(function (err, pdfOutput) {
         if (!err){
-          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf"' + '"');
+          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf');
           res.setHeader('Content-type', 'application/pdf');
           pdfOutput.pipe(res);
         } else {
