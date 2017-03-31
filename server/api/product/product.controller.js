@@ -296,6 +296,7 @@ exports.search = function(req, res) {
 
     })
     .seq(function(){
+         res.setHeader('Cache-Control','private,max-age=2592000');
       return res.status(200).json(result.products);
     })
   }
