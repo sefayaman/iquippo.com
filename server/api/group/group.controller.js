@@ -7,6 +7,7 @@ var Group = require('./group.model');
 exports.getAll = function(req, res) {
   Group.find().sort({name:1}).exec(function (err, group) {
     if(err) { return handleError(res, err); }
+    res.setHeader('Cache-Control', 'private, max-age=2592000');
     return res.status(200).json(group);
   });
 };
