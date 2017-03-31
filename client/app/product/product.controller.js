@@ -350,10 +350,10 @@
       //listen for the file selected event
       $scope.$on("fileSelected", function(event, args) {
         // console.log("hell yeah");
-
         if (args.files.length == 0){
           return;
         }
+
 
         $scope.$apply(function() {
           if (args.type == "image") {
@@ -603,6 +603,7 @@
           break;
         }
       }
+      
       if (md) {
         product.model._id = md._id;
         product.model.name = md.name;
@@ -733,8 +734,10 @@
         form.mfgyear.$invalid = true;
         ret = true;
       }
-      if ($scope.product.tradeType != "SELL") {
-        if (!$scope.product.rent.negotiable && angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
+
+
+      if($scope.product.tradeType != "SELL" && $scope.product.tradeType != 'NOT_AVAILABLE'){
+        if($scope.product.rent && !$scope.product.rent.negotiable && angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
           ret = true;
           Modal.alert("Please select at-least one check box in 'Check Rental Rate For'.", true);
           return;
@@ -842,6 +845,7 @@
             imgObj.catImgType = item.catImgType;
           tempArr[tempArr.length] = imgObj;
         }
+
 
       });
 

@@ -3,7 +3,7 @@
 angular.module('sreizaoApp').controller('PartnerManagementCtrl', PartnerManagementCtrl);
 
 //controller function
-function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, notificationSvc, vendorSvc, LocationSvc) {
+function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth, User, Modal, userSvc, uploadSvc, UtilSvc, notificationSvc, vendorSvc, LocationSvc) {
   var vm = this;
 	vm.vendorReg ={};
   vm.existingUser ={};
@@ -44,7 +44,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   init();
 
   function onLocationChange(city){
-    vm.vendorReg.user.state = LocationSvc.getStateByCity(city);
+    vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).state;
+    vm.vendorReg.user.country = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).country;
   }
 
   function verify(){
@@ -97,7 +98,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
         delete vm.vendorReg.user.city;
       if(user.state)
         vm.vendorReg.user.state = user.state;
-      //vm.vendorReg.user.country = $rootScope.allCountries[0].name;
+      else
+        vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(user.city).state;
       if(user.country)
         vm.vendorReg.user.country = user.country;
       else
@@ -113,6 +115,7 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
   }
 
   function register(form){
+    var ret = false;
     if(!vm.vendorReg.user.imgsrc){
       Modal.alert("Please upload the partner logo image.",true);
       return;
@@ -124,7 +127,18 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
     else
       form.password.$invalid = true;
     
-    if(form.$invalid){
+    if(vm.vendorReg.user.country && vm.vendorReg.user.mobile) { 
+      var value = UtilSvc.validateMobile(vm.vendorReg.user.country, vm.vendorReg.user.mobile);
+      if(!value) {
+        form.mobile.$invalid = true;
+        ret = true
+      } else {
+        form.mobile.$invalid = false;
+        ret = false;
+      }
+    }
+
+    if(form.$invalid || ret){
       $scope.submitted = true;
       return;
     }
@@ -146,8 +160,8 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Dealer);
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
-      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).state;
-    
+      vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).state; 
+
     if(!vm.vendorReg.user.country)     
       vm.vendorReg.user.country = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).country;
     setUserData(vm.vendorReg);

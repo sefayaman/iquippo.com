@@ -78,13 +78,6 @@
     function init() {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
-          /*if (!Auth.isAdmin())
-            dataToSend["mobile"] = Auth.getCurrentUser().mobile;
-            dataToSend.pagination = true;
-            dataToSend.itemsPerPage = vm.itemsPerPage;
-            console.log(vm.tabValue);
-            getReportData(dataToSend, vm.tabValue);
-          */
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
           if(Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
@@ -519,7 +512,6 @@
     }
 
     function openWindow(url){
-      console.log(url);
       $window.open(url);
     }
 

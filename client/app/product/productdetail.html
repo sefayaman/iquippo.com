@@ -4,6 +4,9 @@
       <div class="alert alert-danger" ng-if="currentProduct.assetStatus == 'sold' || currentProduct.assetStatus == 'rented'">
         The product has been <span ng-if="currentProduct.assetStatus == 'sold'">sold</span><span ng-if="currentProduct.assetStatus == 'rented'">rented</span>
       </div>
+      <div class="alert alert-danger" ng-if="currentProduct.tradeType == 'NOT_AVAILABLE'">
+        This asset is currently not available for sale
+      </div>
         <ol class="breadcrumb">
           <li><a href="/">Home</a></li>
           <li><a href="/viewproducts">{{currentProduct.group.name}}</a></li>
@@ -367,7 +370,7 @@
                   </table>
                 </uib-accordion-group>
 
-                <uib-accordion-group is-open="rentstatus.open" ng-if="currentProduct.tradeType != 'SELL'"  ng-click="informationTag('RentInformation')">
+                <uib-accordion-group is-open="rentstatus.open" ng-if="currentProduct.tradeType != 'SELL' && currentProduct.tradeType != 'NOT_AVAILABLE'"  ng-click="informationTag('RentInformation')">
                   <uib-accordion-heading>
                     Rent information  <i class="pull-right fa" ng-class="{'fa-minus': rentstatus.open, 'fa-plus': !rentstatus.open}"></i>
                   </uib-accordion-heading>
@@ -481,7 +484,7 @@
           </div>
           <div class="col-sm-5 col-md-7 panel-group">
            
-            <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH'">
+            <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>
               </div>
@@ -507,7 +510,7 @@
                           </div>
                           <div class="col-xs-12 col-sm-4">
                             <div>
-                              <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning btn-block">Buy Now</a>
+                              <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-warning btn-block">Buy Now</a>
                             </div>
                           </div>
                         </div>
@@ -527,7 +530,7 @@
                         </div>
                         <div class="col-sm-4 text-right">
                           <div>
-                            <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
+                            <a href="javascript:void(0);" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="negotiate(negotiations,'true')" class="btn btn-warning btn-block">Submit Bid</a>
                           </div>
                         </div>
                       </form>
@@ -637,7 +640,7 @@
               </div>
             </div>
 
-            <div class="panel panel-primary" ng-if="(currentProduct.tradeType == 'BOTH') || (currentProduct.tradeType == 'SELL')">
+            <div class="panel panel-primary" ng-if="(currentProduct.tradeType == 'BOTH') || (currentProduct.tradeType == 'SELL') || (currentProduct.tradeType == 'NOT_AVAILABLE')">
               <div class="panel-heading">
                 <h3 class="panel-title">Terms &amp; Conditions</h3>
               </div>
@@ -753,7 +756,7 @@
                     <div class="form-group">
                       <textarea class="form-control" name="message" ng-model="reqFinance.message" placeholder="Comments"></textarea>
                     </div>
-                    <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-warning pull-right">Submit</button>
+                    <button type="submit"  ng-if="currentProduct.assetStatus == 'listed'" ng-disabled="currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="productDetailVm.requestForFinance(financeReq)" class="btn btn-warning pull-right">Submit</button>
                   </form>   
                   <strong>Note:</strong> Financing at the sole discretion of the financier.               
               </div>
@@ -796,7 +799,7 @@
                       <i class="caret"></i>
                     </div>
                   </div>
-                  <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" ng-click="valuationVm.submitValuationReq(valReqForm)" class="btn btn-warning pull-right">Submit</button>
+                  <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" ng-click="valuationVm.submitValuationReq(valReqForm)" class="btn btn-warning pull-right">Submit</button>
                   <strong>Note:</strong> Valuation Charges - <i class="fa fa-inr"></i> 5,000
                 </form>
               </div>
@@ -862,7 +865,7 @@
                     <div class="form-group">
                       <textarea class="form-control" placeholder="Comments" ng-model="productQuote.certifiedByIQuippoQuote.comment"></textarea>
                     </div>
-                    <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold'" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
+                    <button type="submit" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-warning pull-right" ng-click="productDetailVm.addProductQuote(reqForCertify)">Submit</button>
                     <strong>Note:</strong> Inspection Charges - <i class="fa fa-inr"></i> 3,000
                 </form>
               </div>
@@ -944,9 +947,18 @@
                 
                 <div class="row">
                    <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
-                   <div class="input-group">
-                  <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
-                  </div>
+                    <div class="row">
+                      <div class="col-sm-4 padd-right search-field">
+                        <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
+                          <option value="" disabled>*Code</option>
+                          <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>                      
+                      <div class="col-sm-8 padd-left">
+                        <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+                      </div>                      
+                    </div>                   
                 </div>
                  <div class="col-sm-6 form-group">
                     <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >

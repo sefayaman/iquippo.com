@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var ContactUsSchema = new Schema({
   name: String,
   email: String,
+  country: String,
   mobile: String,
   message: String,
   createdAt:Date

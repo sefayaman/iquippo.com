@@ -56,7 +56,7 @@
                 </p>
                 </div>
                 <div class="form-group col-sm-3" ng-class="{'has-error': form.mobile.$invalid && submitted }">
-                      <input class="form-control" name="mobile" ng-model="partnerVM.vendorReg.user.mobile" placeholder="* Mobile No." type="text" value="" ng-blur="partnerVM.verify()" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                      <input class="form-control" name="mobile" ng-model="partnerVM.vendorReg.user.mobile" placeholder="* Mobile No." type="text" value="" ng-blur="partnerVM.verify()" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                   </div>
 
                 <div class="form-group col-sm-3">
@@ -68,29 +68,11 @@
                       Password must be at least 4 characters.
                     </p>  
                 </div>
-                <!-- <div class="form-group col-sm-3">
-  	                <input type="url" name="url" class="form-control" ng-model="partnerVM.vendorReg.url" placeholder="Your URL" />
-  	                  
-                </div>
-                 --><div class="form-group col-sm-3">
+                <div class="form-group col-sm-3">
                   <input type="text" class="form-control" name="phone" ng-model="partnerVM.vendorReg.user.phone" value="" placeholder="Phone No.">
                 </div>
               </div>
   				        <div class="row">
-                    
-                    <!-- <div class="form-group col-sm-3" ng-class="{'has-error': form.mobile.$invalid && submitted }">
-                      <input class="form-control" name="mobile" ng-model="partnerVM.vendorReg.mobile" placeholder="* Mobile No." type="text" value="" ng-blur="partnerVM.verify()" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
-  	              </div> -->
-              
-                  <!-- <div class="col-xs-4">
-                        <div class="form-group" ng-class="{'has-error': form.country.$invalid && submitted }">
-                            <select class="form-control" name="country" ng-model="partnerVM.vendorReg.country" required>
-                              <option value="" disabled>*Select Country</option>
-                              <option  ng-repeat="country in allCountries" value="{{country.name}}">{{country.name}}</option>                          
-                            </select>
-                            <i class="caret"></i>
-                    </div>
-                  </div> -->
                   <div class="col-xs-3">
                         <div class="form-group" ng-class="{'has-error': form.location.$invalid && submitted }">
                             <select class="form-control" name="location" ng-model="partnerVM.vendorReg.user.city" ng-change="partnerVM.onLocationChange(partnerVM.vendorReg.user.city)" required>

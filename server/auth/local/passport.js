@@ -9,8 +9,7 @@ exports.setup = function (User, config) {
     },
     function(req, userId, password, done) {
       var dataToSend ={};
-      
-      if (/^\d{10}$/.test(userId)) {
+      if (/^\d+$/.test(userId)) {
         dataToSend['mobile'] = userId;
       } else {
         dataToSend['email'] = userId.toLowerCase();
@@ -23,20 +22,6 @@ exports.setup = function (User, config) {
         if (!user) {
           return done(null, false, { message: 'This user is not registered.' });
         }
-
-        /*if (req.body.isManpower && !user.isManpower) {
-          return done(null, false, { message: 'Not valid crediential.' });
-        }*/
-        /*var isManpower = false;
-        if(req.body.isManpower)
-          var isManpower = true;
-        else
-          var isManpower = false;
-        if(!(user.isPartner && user.isManpower)) {
-          if ((!isManpower && user.isManpower) || (isManpower && !user.isManpower)) {
-            return done(null, false, { message: 'Not valid crediential.' });
-          }
-        }*/
 
         if (!user.status) {
           return done(null, false, { message: 'This user is Deactived.' });

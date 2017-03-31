@@ -177,7 +177,10 @@ exports.search = function(req, res) {
     filter['name'] = {$regex:pdNameRegex};
   }
   if(req.body.tradeType){
-   filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
+    if(req.body.tradeType != "NOT_AVAILABLE" )
+      filter["tradeType"] = {$in:[req.body.tradeType,'BOTH']};
+    else
+      filter["tradeType"] = req.body.tradeType;
   }
   if(req.body.tradeValue)
    filter["tradeType"] = {$regex:new RegExp(req.body.tradeValue,'i')}; 
