@@ -30,7 +30,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
-  vm.uploadTemplate = 'Valuation_Template.xlsx';
+  vm.enterpriseTemplate = 'Valuation_Template.xlsx';
+  vm.agencyTemplate = 'Valuation_Report.xlsx';
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
 
@@ -307,6 +308,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     function showDetail(valReq){
       var scope = $rootScope.$new()
       scope.valuation = valReq;
+      scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
+      scope.isAdmin = $scope.isAdmin;
        var formModal = $uibModal.open({
           animation: true,
             templateUrl: "app/enterprise/valuation-details-popup.html",

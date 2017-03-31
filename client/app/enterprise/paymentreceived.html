@@ -56,7 +56,11 @@
             <td>{{dtl.chequeDate}}</td>
             <td>{{dtl.chequeValue}}</td>
             <td><span ng-if="dtl.deductedTds">Rs.{{dtl.deductedTds}}</span></td>
-            <td>{{entVal.status}}</td>
+            <td>
+              <span ng-if="entVal.invoiceAmount == entVal.paymentReceivedDetail.remainingAmount">Invoice Generated</span>
+              <span ng-if="entVal.invoiceAmount > entVal.paymentReceivedDetail.remainingAmount">Part Payment Received</span>
+              <span ng-if="entVal.paymentReceivedDetail.remainingAmount == 0">Full Payment Received</span>
+            </td>
             <td> <a class="btn btn-primary btn-block btn-xs" href="javascript:void(0);" ng-click="enterprisePaymentReceivedVm.openModal(entVal,$index)" ng-if="!dtl.attached"></i>Update Payment Details</a>
             </td>
           </tr>
