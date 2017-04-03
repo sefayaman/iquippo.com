@@ -16,8 +16,8 @@ var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
 var fs = require('fs');
-var gm = require("gm");
-//var lwip = require('lwip');
+//var gm = require("gm");
+var lwip = require('lwip');
 var fsExtra = require('fs.extra');
 var _ = require('lodash');
 var User = require('./../user/user.model');
@@ -1207,7 +1207,7 @@ function buildSuggestion(req, res, suggestions) {
 
 exports.rotate = function(req, res) {
 	var imgPath = config.uploadPath + req.body.imgPath;
-    /*lwip.open(imgPath,function(err,image){
+    lwip.open(imgPath,function(err,image){
      	if(err)
      		throw err;
 
@@ -1219,16 +1219,16 @@ exports.rotate = function(req, res) {
 			} else
 				res.send("done");
 		}); 	
-    })*/
+    })
 	// image.batch()
-	gm(config.uploadPath + imgPath)
+	/*gm(config.uploadPath + imgPath)
 		.rotate("white", -90)
 		.write(config.uploadPath + imgPath, function(e) {
 			if (e) {
 				return handleError(res, e);
 			} else
 				res.send("done");
-		});
+		});*/
 }
 
 exports.saveAsImage = function(req, res) {

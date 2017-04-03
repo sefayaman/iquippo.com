@@ -23,8 +23,8 @@ var checkQuickQueryNotificationService = require('./components/checkQuickQueryNo
 var checkSearchMatchingNotificationService = require('./components/checkSearchMatchingNotification.js');
 var http = require('http');
 var fsExtra = require('fs.extra');
-///var gm = require('gm');
-//var lwip = require('lwip');
+//var gm = require('gm');
+var lwip = require('lwip');
 var task = require('./components/task.js');
 var taskRunner = require('./components/taskRunner.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
@@ -137,7 +137,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
   });
 });
 
-/*function resizeImg(req, res, assetDir, dimension, isMultiple) {
+function resizeImg(req, res, assetDir, dimension, isMultiple) {
   try {
     if (req.counter < req.total) {
       var fileName = req.files[req.counter].filename;
@@ -209,8 +209,8 @@ app.post('/api/multiplefile/upload', function(req, res) {
     handleError(res, err);
   }
 }
-*/
-function resizeImg(req,res,assetDir,dimension,isMultiple){
+
+/*function resizeImg(req,res,assetDir,dimension,isMultiple){
   try{
       if(req.counter < req.total){
           var fileName = req.files[req.counter].filename;
@@ -252,7 +252,7 @@ function resizeImg(req,res,assetDir,dimension,isMultiple){
   }catch(err){
     handleError(res, err);
   }
-}
+}*/
 
 var otp;
 app.post('/api/sms', function(req, res) {
