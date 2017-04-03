@@ -1105,7 +1105,7 @@ var parameters = {
   gps_Device_No:{key:"gpsDeviceNo"},
   yearOfManufacturing:{key:"agencyYearOfManufacturing"},
   engineNo:{key:"agencyEngineNo"},
-  chasisNo:{key:"agencyChasisNo"},
+  chasisNo:{key:"agencyChassisNo"},
   registrationNo:{key:"agencyRegistrationNo"},
   report_url:{key:"valuationReport",type:"file",required:true}
 }

@@ -117,7 +117,7 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
               //getInvoiceData({});
               fireCommand(true);
               if(remainingVal == 0)
-                updateValuationRequest($scope.paymentDetail.invoiceNo,isCompleted);
+                updateValuationRequest(evtVal.invoiceNo,isCompleted);
               $scope.paymentDetail = {};                
           });
       }

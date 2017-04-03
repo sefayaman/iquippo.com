@@ -34,15 +34,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     userFilter.enterprise = true;
     var isEnterprise = false;
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
-      userFilter.enterpriseName = Auth.getCurrentUser().enterpriseName;
+      userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
     }
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
         vm.enterpriseValuation.enterprise = {};
-        vm.enterpriseValuation.enterprise.name = data[0].enterpriseName;
-        setCustomerData(data[0].enterpriseName);
+        vm.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
+        setCustomerData(data[0].enterpriseId);
       }
     });
     if(!editMode){

@@ -115,7 +115,7 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
               fireCommand(true);
               var isCompleted =  evtVal.paymentReceived && evtVal.paymentMade;
               if(remainingVal == 0)
-                updateValuationRequest($scope.paymentDetail.invoiceNo,isCompleted);
+                updateValuationRequest(evtVal.invoiceNo,isCompleted);
               $scope.paymentDetail = {};                
           });
       }
