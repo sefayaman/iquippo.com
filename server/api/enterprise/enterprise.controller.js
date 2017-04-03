@@ -325,7 +325,7 @@ exports.bulkUpload = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
     if(!body[x])
-      return res.send(412).json({Err:'Missing madnatory parameter' + x });
+      return res.status(412).json({Err:'Missing madnatory parameter' + x });
   });
 
   var fileName = req.body.fileName;
