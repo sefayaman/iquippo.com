@@ -9,6 +9,7 @@ var config = require('./../../config/environment');
 var FEEDBACK_TEMPLATE_NAME = "productEnquiriesRequestForQuoteFeedbackToCustomer";
 var Utility = require('./../../components/utility.js');
 var  xlsx = require('xlsx');
+var moment = require('moment');
 
 // Get list of quote
 exports.getAll = function(req, res) {
@@ -254,7 +255,7 @@ function excel_from_data(data) {
       cell = {v: "Date of Request"};
     else {
       if(user)
-        cell = {v: user.createdAt};
+        cell = {v: moment(_.get(user, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
