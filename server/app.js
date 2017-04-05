@@ -88,6 +88,7 @@ app.post('/api/uploads',function(req,res){
       var dimension = {};
       dimension.width = req.query.width;
       dimension.height = req.query.height;
+      dimension.size=req.query.size;
       req.counter = 0;
       req.total = 1;
       resizeImg(req,res,assetDir,dimension,false)
@@ -120,6 +121,7 @@ app.post('/api/multiplefile/upload',function(req,res){
         var dimension = {};
         dimension.width = req.query.width;
         dimension.height = req.query.height;
+        dimension.size=req.query.size;
         req.counter = 0;
         req.total = req.files.length;
         resizeImg(req,res,assetDir,dimension,true);
@@ -146,9 +148,11 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
 
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
+          console.log("----image",image);
           //var wRatio = 700 / image.width();
           //var hRatio= 450 / image.height();
           image.scale(0.75, function(err, rzdImage) {
+            console.log("--rzd",rzdImage);
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
                 quality: 85
