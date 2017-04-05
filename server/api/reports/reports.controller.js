@@ -2,8 +2,8 @@
 
 var Model = require('../services/services.model');
 var APIError = require('../../components/_error');
-var moment = require('moment');
 var _ = require('lodash');
+var utility = require('../../components/utility');
 
 var reports = {
 	count: function(req, res, next) {
@@ -149,7 +149,7 @@ var reports = {
 						_.get(x, 'quote.allowed', ''),
 						_.get(x, 'quote.packaging', ''),
 						_.get(x, 'quote.comment', ''),
-						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')
+						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
 				case 'valuation':
@@ -176,7 +176,7 @@ var reports = {
 						_.get(x,'quote.valuation')|| _.get(x,'quote.otherName',''),
 						_.get(x,'quote.schedule',''),
 						_.get(x,'quote.comment',''),
-						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')
+						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
 				case 'finance':
@@ -203,7 +203,7 @@ var reports = {
 						_.get(x,'quote.periodInMonths','') ,
 						_.get(x,'quote.contactMethod','') ,
 						_.get(x,'quote.comment','') ,
-						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')
+						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
 				case 'insurance':
@@ -228,7 +228,7 @@ var reports = {
 						_.get(x,'quote.amountToBeFinanced','') ,
 						_.get(x,'quote.contactMethod','') ,
 						_.get(x,'quote.comment','') ,
-						moment(_.get(x, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')
+						utility.toIST(_.get(x, 'createdAt', ''))
 					);
 					break;
 				default:

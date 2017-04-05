@@ -135,11 +135,11 @@ exports.exportData = function(req,res){
               dataArr[idx + 1].push(_.get(item, 'user.fname', '') + ' ' + _.get(item, 'user.lname', ''));
             else if(FIELD_MAP[header] == 'scheduledDateTime') {
               if(item.request.scheduleDate)
-                dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('MM/DD/YYYY') + ' ' + _.get(item, 'request.scheduledTime', ''));
+                dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('MM/DD/YYYY') + ' ' + moment(_.get(item, 'request.scheduledTime', '')).utcOffset('+0530').format('hh:mm a'));
               else
                 dataArr[idx + 1].push('');
             }else if(FIELD_MAP[header] == 'createdAt') {
-              dataArr[idx + 1].push(moment(_.get(item, 'createdAt', '')).format('MM/DD/YYYY hh:mm a'));
+              dataArr[idx + 1].push(Utility.toIST(_.get(item, 'createdAt', '')));
             }else
               dataArr[idx + 1].push(_.get(item,FIELD_MAP[header],''));
             
