@@ -28,7 +28,7 @@
                   <td><b>Job ID:</b></td>
                   <td>{{valuation.jobId}}</td>
                   <td><b>Asset No:</b></td>
-                  <td>{{valuation.assetNo}}</td>
+                  <td>{{valuation.assetId}}</td>
                 </tr>
 
                  <tr>
@@ -55,80 +55,73 @@
                 <tr>
                   <td><b>Request Date:</b></td>
                   <td>{{valuation.requestDate}}</td>
-                  <td><b>Asset No:</b></td>
-                  <td>{{valuation.assetId}}</td>
+                  <!-- <td><b>Asset No:</b></td>
+                  <td>{{valuation.assetId}}</td> -->
+                   <td><b>Repo. Date:</b></td>
+                  <td>{{valuation.repoDate}}</td>
                 </tr>
                 <tr>
-                  <td><b>Repo. Date:</b></td>
-                  <td>{{valuation.repoDate}}</td>
                   <td><b>Asset Category:</b></td>
                   <td>{{valuation.assetCategory}}</td>
-                 
-                </tr>
-
-                <tr>
                   <td><b>Brand/Make:</b></td>
                   <td>{{valuation.brand}}</td>
+                </tr>
+
+                <tr>
                   <td><b>Model:</b></td>
                   <td>{{valuation.model}}</td>
-                   
-                </tr>
-
-                <tr>
                   <td><b>Asset Description:</b></td>
                   <td>{{valuation.assetDescription}}</td>
-                  <td><b>Engine No.:</b></td>
-                  <td>{{valuation.engineNo}}</td>
-                 
                 </tr>
 
                 <tr>
+                  
+                  <td><b>Engine No.:</b></td>
+                  <td>{{valuation.engineNo}}</td>
                   <td><b>Chassis No.:</b></td>
                   <td>{{valuation.chassisNo}}</td>
-                   <td><b>Regn. No.:</b></td>
+                </tr>
+
+                <tr>
+                  <td><b>Regn. No.:</b></td>
                   <td>{{valuation.registrationNo}}</td>
-                  
+                  <td><b>Serial No.</b></td>
+                  <td>{{valuation.serialNo}}</td>
                 </tr>
                 
                 <tr>
-                 
-                  <td><b>Serial No.</b></td>
-                  <td>{{valuation.serialno}}</td>
                   <td><b>Year of Manufacture:</b></td>
                   <td>{{valuation.yearOfManufacturing}}</td>
+                  <td><b>Yard Parked:</b></td>
+                  <td>{{valuation.yardParked}}</td>
                 </tr>
 
                 <tr>
                   
                   <!-- <td><b>Invoice Date:</b></td>
                   <td>{{valuation.invoiceDate}}</td> -->
-                  <td><b>Yard Parked:</b></td>
-                  <td>{{valuation.yardParked}}</td>
+                  
                   <td><b>Country:</b></td>
                   <td>{{valuation.country}}</td>
-                </tr>
-
-                <tr>
-                
                   <td><b>State:</b></td>
                   <td>{{valuation.state}}</td>
-                  <td><b>Location:</b></td>
-                  <td>{{valuation.city}}</td>
-                </tr>
-                
-                <tr>
-                 
-                  <td><b>Contact Person:</b></td>
-                  <td>{{valuation.contactPerson}}</td>
-                   <td><b>Contact Person TelNo:</b></td>
-                  <td>{{valuation.contactPersonTelNo}}</td>
                 </tr>
 
                 <tr>
-                 
-                  <td colspan="3"><b>Distance From Customer Office:</b></td>
-                  <td>{{valuation.disFromCustomerOffice}}</td>                  
+                  <td><b>Location:</b></td>
+                  <td>{{valuation.city}}</td>
+                  <td><b>Contact Person:</b></td>
+                  <td>{{valuation.contactPerson}}</td>
                 </tr>
+                
+                <tr>
+                  <td><b>Contact Person TelNo:</b></td>
+                  <td>{{valuation.contactPersonTelNo}}</td>
+                  <td><b>Distance From Customer Office:</b></td>
+                  <td>{{valuation.disFromCustomerOffice}}</td>  
+                </tr>
+
+               
               </table>
                 <!-- <tr>
                   
@@ -147,10 +140,10 @@
                   <td><b>Year of Manufacture:</b></td>
                   <td>{{valuation.agencyYearOfManufacturing}}</td>
                   <td><b>Engine No.:</b></td>
-                  <td>{{valuation.agencyengineNo}}</td>
+                  <td>{{valuation.agencyEngineNo}}</td>
                   <tr>
                     <td><b>Chassis No.:</b></td>
-                    <td>{{valuation.agencyChassissNo}}</td>
+                    <td>{{valuation.agencyChassisNo}}</td>
                     <td><b>Regn. No.:</b></td>
                     <td>{{valuation.agencyRegistrationNo}}</td>
                   </tr>
@@ -218,7 +211,7 @@
                     <span ng-if="!valuation.invoiceNo">No</span>
                   </td>
                   <td class="col-sm-3"><b> Invoice Date:</b></td>
-                  <td class="col-sm-3">{{"valuation.invoiceDate | date:'MM/dd/yyyyy'"}}</td>
+                  <td class="col-sm-3">{{valuation.invoiceDate | date:'MM/dd/yyyy'}}</td>
                 </tr>
                 <tr>
                   <td><b>Payment Received</b></td>

@@ -41,7 +41,7 @@
            <input type="file" id="reportupload" name="modify"  data-filetype="doc" file-upload required>
             <span><i class="fa fa-upload"></i> Upload Report Data</span>
           </span>
-           <span>{{modifiedExcel}}</span>
+           <span>{{reportUploadedExcel}}</span>
       </div>
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Request</button>
@@ -49,7 +49,7 @@
     </div>
     <div class="row form-group">
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()">Submit to Agency</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">Submit to Agency</button>
       </div>
       <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
@@ -76,7 +76,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="enterpriseValuation.status != EnterpriseValuationStatuses[0]"></td>            
+            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>

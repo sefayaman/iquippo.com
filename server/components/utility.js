@@ -25,14 +25,14 @@ function paginatedResult(req,res,modelRef,filter,result){
   var prevPage = bodyData.prevPage || 0;
   var isNext = currentPage - prevPage >= 0?true:false;
   Seq()
-  .par(function(){
+  .seq(function(){
     var self = this;
     modelRef.count(filter,function(err,counts){
       result.totalItems = counts;
       self(err);
     })
   })
-  .par(function(){
+  .seq(function(){
 
       var self = this;
       var sortFilter = {_id : -1};
@@ -65,7 +65,7 @@ function paginatedResult(req,res,modelRef,filter,result){
       return res.status(200).json(result);
   })
   .catch(function(err){
-    console.log("######",err);
+    console.log("######rrrr",err);
     handleError(res,err);
   })
  

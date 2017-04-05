@@ -83,7 +83,7 @@
         </div>
         <div class="row form-group">
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.assetCategory.$invalid && submitted}">
-            <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
+            <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
             <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)" required>
@@ -194,7 +194,7 @@
         </div>
         <div class="row form-group">        
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="agencyChassisNo" ng-model="addTransactionVm.enterpriseValuation.agencyChasisNo" ng-disabled="!editAgencyField()" placeholder="Chassis No."/>
+             <input type="text" class="form-control" name="agencyChassisNo" ng-model="addTransactionVm.enterpriseValuation.agencyChassisNo" ng-disabled="!editAgencyField()" placeholder="Chassis No."/>
           </div>
           <div class="col-sm-3">
              <input type="text" class="form-control" name="agencyRegistrationNo" ng-model="addTransactionVm.enterpriseValuation.agencyRegistrationNo"  ng-disabled="!editAgencyField()" placeholder="Registration No."/>
@@ -383,20 +383,20 @@
       </div>
       <div class="panel-body">
         <div class="row form-group">
-          <div class="col-sm-3">
-             Invoiced to Customer
+          <div class="col-sm-3" ng-init="invoicedToCustomer = addTransactionVm.enterpriseValuation.invoiceNo?true:false">
+             Invoiced to Customer{{invoicedToCustomer}}
               <div class="row">
                 <div class="col-xs-6">
-                  <input type="radio" name="inv" disabled> Yes
+                  <input type="radio" name="inv" ng-model="invoicedToCustomer" ng-value="true" disabled> Yes
                 </div>
                 <div class="col-xs-6">
-                  <input type="radio" name="inv" disabled> No
+                  <input type="radio" name="inv" ng-mode="invoicedToCustomer" ng-value="false" disabled> No
                 </div>
               </div>
           </div>
           <div class="col-sm-3">
             <div class="input-group">
-               <input class="form-control" disabled name="reportDate" ng-model="invoiceDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Invoice Date"/>
+               <input type="text" class="form-control" disabled name="invoiceDate" ng-model="addTransactionVm.enterpriseValuation.invoiceDate" placeholder="Invoice Date"/>
                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
              </div>
           </div>
@@ -404,10 +404,10 @@
               Payment Received
               <div class="row">
                 <div class="col-xs-6">
-                  <input type="radio" name="rec" disabled> Yes
+                  <input type="radio" name="rec" ng-model="addTransactionVm.enterpriseValuation.paymentReceived" ng-value="true" disabled> Yes
                 </div>
                 <div class="col-xs-6">
-                  <input type="radio" name="rec" disabled> No
+                  <input type="radio" name="rec" ng-model="addTransactionVm.enterpriseValuation.paymentReceived" ng-value="false" disabled> No
                 </div>
               </div>
           </div>
@@ -415,10 +415,10 @@
              Payment Made to Agency
               <div class="row">
                 <div class="col-xs-6">
-                  <input type="radio" name="mad" disabled> Yes
+                  <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="true" disabled> Yes
                 </div>
                 <div class="col-xs-6">
-                  <input type="radio" name="mad" disabled> No
+                  <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="fale"disabled> No
                 </div>
               </div>
           </div>

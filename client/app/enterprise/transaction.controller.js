@@ -146,10 +146,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           fileName : $scope.uploadedExcel,
           user : vm.enterpriseValuation.user
         };
-
+        if(!uploadData.fileName){
+          Modal.alert("Please upload template first.");
+          return;
+        }
         EnterpriseSvc.uploadExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
           $scope.uploadedExcel = '';
+          $scope.uploadType = "";
           var message = res.msg;
           if (res.errObj.length > 0) {
             var data = {};
@@ -171,17 +175,27 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         });
       }else if(['modify','reportupload'].indexOf($scope.uploadType) != -1){
         uploadData = {
-          fileName : $scope.modifiedExcel,
           user : vm.enterpriseValuation.user
         };
-        if($scope.uploadType == 'modify')
-            uploadData['updateType'] = "enterprise";
-        else
+        if($scope.uploadType == 'modify'){
+          uploadData['updateType'] = "enterprise";
+          uploadData['fileName'] = $scope.modifiedExcel;
+        }
+        else{
           uploadData['updateType'] = "agency";
+          uploadData['fileName'] = $scope.reportUploadedExcel;
+        }
 
+        if(!uploadData.fileName){
+          Modal.alert("Please upload template first.");
+          return;
+        }
         EnterpriseSvc.modifyExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
-          $scope.modifiedExcel = '';
+          $scope.modifiedExcel = "";
+          $scope.reportUploadedExcel = "";
+          $scope.uploadType = "";
+
           var message = res.msg;
           if (res.errObj.length > 0) {
             var data = {};
@@ -234,6 +248,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           return;
         enterpriseValuation.deleted = true;
         EnterpriseSvc.update(enterpriseValuation).then(function(result){
+          fireCommand(true);
           Modal.alert("Request deleted succesfully", true);
         });
       })
