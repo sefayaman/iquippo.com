@@ -49,7 +49,7 @@
     </div>
     <div class="row form-group">
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="isPartner() || isAdmin()">Submit to Agency</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">Submit to Agency</button>
       </div>
       <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
