@@ -83,7 +83,7 @@
         </div>
         <div class="row form-group">
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.assetCategory.$invalid && submitted}">
-            <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
+            <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
             <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)" required>

@@ -17,7 +17,7 @@ var async = require('async');
 var APIError = require('../../components/_error');
 var debug = require('debug')('api.enterprise');
 var moment = require('moment');
-var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD',moment.ISO_8601];
+var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
 var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
 var AssetGroupModel = require('./assetgroup.model');
@@ -313,7 +313,7 @@ function parseExcel(options){
         uploadData.push(validData);
       }
   });
-
+  
   return {
     errObj : errObj,
     totalCount : totalCount,
