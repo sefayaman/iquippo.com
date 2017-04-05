@@ -92,7 +92,7 @@
               <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
               <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
               <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)"><i class="fa fa-trash"></i> </a>
+              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2"><i class="fa fa-trash"></i> </a>
 
             </td>
             
