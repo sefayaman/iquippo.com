@@ -138,8 +138,9 @@ exports.exportData = function(req,res){
                 dataArr[idx + 1].push(moment(_.get(item, 'request.scheduleDate', '')).format('MM/DD/YYYY') + ' ' + _.get(item, 'request.scheduledTime', ''));
               else
                 dataArr[idx + 1].push('');
-            }
-            else
+            }else if(FIELD_MAP[header] == 'createdAt') {
+              dataArr[idx + 1].push(moment(_.get(item, 'createdAt', '')).format('MM/DD/YYYY hh:mm a'));
+            }else
               dataArr[idx + 1].push(_.get(item,FIELD_MAP[header],''));
             
           });

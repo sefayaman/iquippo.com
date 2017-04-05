@@ -4,6 +4,7 @@ var _ = require('lodash');
 var Callback = require('./callback.model');
 var Utility = require('./../../components/utility.js');
 var  xlsx = require('xlsx');
+var moment = require('moment');
 
 // Get list of callback
 exports.getAll = function(req, res) {
@@ -196,7 +197,7 @@ function excel_from_data(data) {
       cell = {v: "Date of Request"};
     else {
       if(user)
-        cell = {v: user.createdAt};
+        cell = {v: moment(_.get(user, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
