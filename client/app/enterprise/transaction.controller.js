@@ -4,6 +4,7 @@ angular.module('sreizaoApp').controller('EnterpriseTransactionCtrl',EnterpriseTr
 function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
   
   var vm = this;
+  $scope.$parent.tabValue = 'transaction';
   var selectedItems = [];
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
@@ -34,6 +35,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.agencyTemplate = 'Valuation_Report.xlsx';
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
+  vm.selectAll = selectAll;
 
   function init(){
 
@@ -68,8 +70,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       $scope.pager.copy(filter);
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
-          filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+      if(Auth.isPartner()){
+        filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+        filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
+      }
 
       EnterpriseSvc.get(filter)
       .then(function(result){
@@ -267,7 +271,23 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           selectedItems.push(item)
         if(action == 'remove' && index != -1)
           selectedItems.splice(index,1);
-        console.log(selectedItems.length);
+     }
+
+     function selectAll(event){
+
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add'){
+          selectedItems = [];
+          vm.enterpriseValuationListing.forEach(function(item){
+            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1)
+                selectedItems.push(item);
+          })
+          
+        }
+        if(action == 'remove'){
+          selectedItems = [];
+        }
      }
 
      function submitToAgency(){
@@ -315,6 +335,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     function bulkUpdate(){
       EnterpriseSvc.bulkUpdate(selectedItems)
         .then(function(res){
+          vm.selectAllReq = "";
           selectedItems = [];
           fireCommand(true);
       })
@@ -344,6 +365,13 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       if(Auth.isPartner())
           filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+      if(selectedItems && selectedItems.length > 0){
+        var ids = [];
+        selectedItems.forEach(function(item){
+          ids[ids.length] = item._id;
+        });
+          filter.ids = ids;
+      }
       EnterpriseSvc.exportExcel("transaction",filter);
     }
 

@@ -26,6 +26,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   //vm.getPartners = getPartners;
   vm.print = printInvoice;
   vm.downloadInvoice = downloadInvoice;
+  vm.selectAll = selectAll;
 
   function openWindow(url) {
     $window.open(url);
@@ -71,9 +72,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   }*/
 
   function onTypeChange(){
-    vm.enterpriseName = "";
+    vm.enterpriseId = "";
     vm.reqType = "";;
     vm.agencyId = "";
+    selectedItems = [];
+    vm.selectAllInv = "";
+    vm.selectAllReq = "";
 
     $scope.pager.reset();
     if(vm.type == 'generated')
@@ -116,6 +120,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       if(reset)
         $scope.pager.reset();
       var filter = {};
+      
+      selectedItems = [];
+      vm.selectAllInv = "";
+      vm.selectAllReq = "";
 
       if(vm.searchStr)
         filter['searchStr'] = vm.searchStr;
@@ -131,7 +139,6 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         getEnterpriseData(filter);
 
       }
-      selectedItems = [];
     }
 
 
@@ -147,6 +154,21 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           selectedItems.push(item)
         if(action == 'remove' && index != -1)
           selectedItems.splice(index,1);
+     }
+
+     function selectAll(event){
+
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add'){
+          selectedItems = [];
+           vm.dataList.forEach(function(item){
+              selectedItems[selectedItems.length] = item;
+           });
+        }
+        if(action == 'remove'){
+          selectedItems = [];
+        }
      }
 
      function openInvoiceModal(){
@@ -245,6 +267,8 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
          EnterpriseSvc.bulkUpdate(selectedItems)
           .then(function(res){
             selectedItems = [];
+            vm.selectAllInv = "";
+            vm.selectAllReq = "";
             fireCommand(true);
             $scope.close();
           })
@@ -281,6 +305,14 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       }
 
     function exportExcel(){
+      var filter = {};
+      if(selectedItems && selectedItems.length > 0){
+        var ids = [];
+        selectedItems.forEach(function(item){
+          ids[ids.length] = item;
+        })
+        filter['ids'] = ids;
+      }
       EnterpriseSvc.exportExcel("invoice",{});
     }
       //starting point

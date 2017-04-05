@@ -11,7 +11,7 @@
   </div> 
   <div class="col-sm-7 text-right">
     <h4>
-    <button class="btn btn-success btn-md" ng-click="enterpriseInvoiceVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>                 
+    <button class="btn btn-success btn-md" ng-click="enterpriseInvoiceVm.exportExcel()" ng-if="enterpriseInvoiceVm.type == 'generated'"><i class="fa fa-file-excel-o"></i> Export Excel</button>                 
     </h4>
   </div>
 </div>
@@ -21,21 +21,21 @@
   <form name="searchForm">
     <div class="row form-group">          
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseId" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseId" ng-change="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Enterprise Name</option>
         <option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseInvoiceVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
       </select>
       <i class="caret"></i>
     </div>
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-change="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Type of Request</option>
         <option ng-repeat="req in enterpriseInvoiceVm.serviceList" value="{{req.name}}">{{req.name}}</option>
       </select>
       <i class="caret"></i>
     </div>
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.agencyId" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.agencyId" ng-change="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Valuation Partner</option>
         <option value="{{val._id}}" ng-repeat="val in enterpriseInvoiceVm.agencies">{{val.name}}</option>
       </select>
@@ -58,7 +58,7 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th><input type="checkbox" name="" value=""> All</th>
+          <th><input type="checkbox" ng-model="enterpriseInvoiceVm.selectAllReq" ng-click="enterpriseInvoiceVm.selectAll($event)"> All</th>
           <th>Unique Control No</th>
           <th>Request Type</th>
           <th>Purpose</th>
@@ -74,7 +74,7 @@
       <tbody>
         <tr ng-repeat="entVal in enterpriseInvoiceVm.dataList">
           <td>
-            <input type="checkbox" ng-disabled="entVal.status == EnterpriseValuationStatuses[5]" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
+            <input type="checkbox" ng-checked="enterpriseInvoiceVm.selectAllReq" ng-disabled="entVal.status == EnterpriseValuationStatuses[5]" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
           <td>{{entVal.uniqueControlNo}}</td>
           <td>{{entVal.requestType}}</td>
@@ -99,7 +99,7 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th><input type="checkbox" name="" value=""> All</th>
+          <th><input type="checkbox"  ng-model="enterpriseInvoiceVm.selectAllInv" ng-click="enterpriseInvoiceVm.selectAll($event)"> All</th>
           <th>Invoice Number</th>
           <th>Enterprise Name</th>
           <th>Enterprise Contact No.</th>
@@ -114,7 +114,7 @@
       <tbody>
         <tr ng-repeat="entVal in enterpriseInvoiceVm.dataList">
           <td>
-            <input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
+            <input type="checkbox" ng-checked="enterpriseInvoiceVm.selectAllInv" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
           <td>{{entVal.invoiceNo}}</td>
           <td>{{entVal.enterprise.name}}</td>

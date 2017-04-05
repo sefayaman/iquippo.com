@@ -339,7 +339,7 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : [],
     dateParams : ['requestDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory','brand','model','country','state','city','contactPerson','contactPersonTelNo']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory','country','state','city','contactPerson','contactPersonTelNo']
   };
   
   if(user.role == 'admin')
@@ -1244,6 +1244,10 @@ exports.exportExcel = function(req,res){
     filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
   if(queryParam.agencyId)
     filter['agency._id'] = queryParam.agencyId;
+  if(queryParam.ids){
+    var ids = queryParam.ids.split(',');
+    filter['_id'] = {$in:ids};
+  }
 
   switch(queryParam.type){
     case "transaction":

@@ -165,6 +165,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       $scope.locationList = [];
       var filter = {};
       filter.country = country;
+      if(!country)
+        return;
       LocationSvc.getStateHelp(filter).then(function(result){
           $scope.stateList = result;
       });
@@ -177,6 +179,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       $scope.locationList = [];
       var filter = {};
       filter.stateName = state;
+      if(!state)
+        return;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });

@@ -59,7 +59,7 @@
       <table class="table table-bordred table-striped">
         <thead>
           <tr>
-            <th><input type="checkbox"> All</th>            
+            <th><input type="checkbox" ng-model="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.selectAll($event)"> All</th>            
             <th>Unique Control No</th>
             <th>Request Type</th>
             <th>Purpose</th>
@@ -76,7 +76,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1"></td>            
+            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>
