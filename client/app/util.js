@@ -68,6 +68,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
           uploadPath += "&";
         else
           uploadPath += "?";
+        
         uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height + "&size=" + resizeParam.size;
       }
       var fd = new FormData();

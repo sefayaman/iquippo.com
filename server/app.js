@@ -23,8 +23,9 @@ var checkQuickQueryNotificationService = require('./components/checkQuickQueryNo
 var checkSearchMatchingNotificationService = require('./components/checkSearchMatchingNotification.js');
 var http = require('http');
 var fsExtra = require('fs.extra');
-///var gm = require('gm');
-//var lwip = require('lwip');
+
+ //var gm = require('gm');
+var lwip=require('lwip');
 var task = require('./components/task.js');
 var taskRunner = require('./components/taskRunner.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
@@ -137,7 +138,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
   });
 });
 
-/*function resizeImg(req, res, assetDir, dimension, isMultiple) {
+function resizeImg(req, res, assetDir, dimension, isMultiple) {
   try {
     if (req.counter < req.total) {
       var fileName = req.files[req.counter].filename;
@@ -145,13 +146,11 @@ app.post('/api/multiplefile/upload', function(req, res) {
       var fileNameParts = fileName.split('.');
       var extPart = fileNameParts[fileNameParts.length - 1];
       var namePart = fileNameParts[0];
-      console.log("size",dimension.size);
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
       }, function(err, result) {
         if (err) throw err;
-
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
           //var wRatio = 700 / image.width();
@@ -182,8 +181,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
                 return resizeImg(req, res, assetDir, dimension, isMultiple);
               }
             }
-          })
-
+          });
         })
     }
     else{
@@ -209,8 +207,8 @@ app.post('/api/multiplefile/upload', function(req, res) {
     handleError(res, err);
   }
 }
-*/
-function resizeImg(req,res,assetDir,dimension,isMultiple){
+
+/*function resizeImg(req,res,assetDir,dimension,isMultiple){
   try{
       if(req.counter < req.total){
           var fileName = req.files[req.counter].filename;
@@ -252,7 +250,7 @@ function resizeImg(req,res,assetDir,dimension,isMultiple){
   }catch(err){
     handleError(res, err);
   }
-}
+}*/
 
 var otp;
 app.post('/api/sms', function(req, res) {
