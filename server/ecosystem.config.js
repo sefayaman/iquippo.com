@@ -10,7 +10,8 @@ module.exports = {
       env : {
         NODE_ENV: process.env.NODE_ENV
       },
-     //"instances" : 1,	
+     "exec_mode": "fork",
+     "instances" : 1,	
      "error_file"      : "/home/ubuntu/sreiglobal/dist/logs/err.log",
      "out_file"        : "/home/ubuntu/sreiglobal/dist/logs/out.log",
      "log_date_format" : "YYYY-MM-DD HH:mm Z"
