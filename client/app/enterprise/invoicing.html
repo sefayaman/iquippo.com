@@ -116,7 +116,7 @@
           <td>
             <input type="checkbox" ng-checked="enterpriseInvoiceVm.selectAllInv" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
-          <td><a href="javascript:void(0);">{{entVal.invoiceNo}}</a></td>
+          <td><a href="javascript:void(0);" ng-click="enterpriseInvoiceVm.showDetail(entVal)">{{entVal.invoiceNo}}</a></td>
           <td>{{entVal.enterprise.name}}</td>
           <td>{{entVal.enterprise.mobile}}</td>
           <td>{{entVal.agency.name}}</td>
@@ -170,53 +170,90 @@
   </div>
 </script>
 
-<script type="text/javascript">
+<script type="text/ng-template" id="invDetail.html">
   <div class="modal-header">
     <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
     <h4 class="modal-title">Invoice Details</h4>
   </div>
   <div class="modal-body">
+    <!--payment recieved -->
     <table class="table table-bordred">               
       <tr>
+
         <td class="col-sm-3"><b>Invoice No.:</b></td>
-        <td class="col-sm-3"></td>
+        <td class="col-sm-3">{{invoice.invoiceNo}}</td>
         <td class="col-sm-3"><b>Type of Request:</b></td>
-        <td class="col-sm-3"></td>                  
+        <td class="col-sm-3">{{invoice.requestType}}</td>                  
       </tr>
       <tr>
         <td><b>Enterprise Name:</b></td>
-        <td></td>
+        <td>{{invoice.enterprise.name}}</td>
         <td><b>Enterprise Contact No.:</b></td>
-        <td></td>
+        <td>{{invoice.enterprise.mobile}}</td>
       </tr>
       <tr>
         <td><b>Agency Name:</b></td>
-        <td></td>
+        <td>{{invoice.agency.name}}</td>
          <td><b>Agency Contact No.:</b></td>
-        <td></td>
-      </tr>                 
-      <tr>
-        <td><b>Bank Name:</b></td>
-        <td></td>
-        <td><b>Branch Name:</b></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><b>Cheque Number:</b></td>
-        <td></td>
-        <td><b>Cheque Date:</b></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><b>Cheque Value:</b></td>
-        <td></td>
-        <td><b>Deducted TDS:</b></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><b>Status:</b></td>
-        <td colspan="3"></td>
-      </tr>
+        <td>{{invoice.agency.mobile}}</td>
+      </tr>              
+           
     </table>
+
+    <div class="panel panel-default" ng-if="invoice.paymentReceived && isAdmin()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Payment Received Details</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordred" ng-repeat="pmt in invoice.paymentReceivedDetail.paymentDetails" ng-if="pmt.attached">
+          <tr>
+            <td class="col-sm-3"><b>Bank Name:</b></td>
+            <td class="col-sm-3">{{pmt.bankName}}</td>
+            <td class="col-sm-3"><b>Branch Name:</b></td>
+            <td class="col-sm-3">{{pmt.branchName}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Number:</b></td>
+            <td>{{pmt.chequeNo}}</td>
+            <td><b>Cheque Date:</b></td>
+            <td>{{pmt.chequeDate}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Value:</b></td>
+            <td>{{pmt.chequeValue}}</td>
+            <td><b>Deducted TDS:</b></td>
+            <td>{{pmt.deductedTds}}</td>
+          </tr> 
+        </table>
+      </div>
+    </div>
+    <!-- payment made -->
+    <div class="panel panel-default" ng-if="invoice.paymentMade && isAdmin()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Payment Made Details</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordred" ng-repeat="pmt in invoice.paymentMadeDetail.paymentDetails" ng-if="pmt.attached">
+          <tr>
+            <td class="col-sm-3"><b>Bank Name:</b></td>
+            <td class="col-sm-3">{{pmt.bankName}}</td>
+            <td class="col-sm-3"><b>Branch Name:</b></td>
+            <td class="col-sm-3">{{pmt.branchName}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Number:</b></td>
+            <td>{{pmt.chequeNo}}</td>
+            <td><b>Cheque Date:</b></td>
+            <td>{{pmt.chequeDate}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Value:</b></td>
+            <td>{{pmt.chequeValue}}</td>
+            <td><b>Deducted TDS:</b></td>
+            <td>{{pmt.deductedTds}}</td>
+          </tr> 
+        </table>
+      </div>
+    </div>
   </div>
 </script>

@@ -27,6 +27,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   vm.print = printInvoice;
   vm.downloadInvoice = downloadInvoice;
   vm.selectAll = selectAll;
+  vm.showDetail = showDetail;
 
   function openWindow(url) {
     $window.open(url);
@@ -302,6 +303,23 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
             newWin.close();
           },10);
         });
+      }
+
+      function showDetail(invoiceObj){
+         
+         var scope = $rootScope.$new();
+         scope.invoice = invoiceObj;
+         scope.isAdmin = $scope.isAdmin;
+         var detailModal = $uibModal.open({
+            animation: true,
+            templateUrl: "invDetail.html",
+            scope: scope,
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          detailModal.dismiss('cancel');
+        };
       }
 
     function exportExcel(){
