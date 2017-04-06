@@ -1232,11 +1232,14 @@
 					</select>
 					<i class="caret"></i>
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveToDate.$invalid && submitted}">
-					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective to Date" required/>
+				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveFromDate.$invalid && submitted}">
+					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective from Date" required/>
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveToDate.$invalid && submitted}">
+					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective to Date" required/>
+				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.chargeBasis.$invalid && submitted}">
 					<!-- <div class="input-group">
 								<input type="text" class="form-control" name="chargeBasis" ng-model="svcFeeVm.dataModel.chargeBasis" placeholder="Charge Basis" required />
@@ -1274,6 +1277,7 @@
 						<th>Type of Service</th>
 						<th>Enterprise Name</th>
 						<th>Agency Name</th>
+						<th>Effective From Date</th>
 						<th>Effective to Date</th>
 						<th>Charge Basis(%)</th>
 						<th>Amount</th>
@@ -1286,6 +1290,7 @@
 						<td>{{svcFee.serviceType}}</td>
 						<td>{{svcFee.enterpriseName}}({{svcFee.enterpriseId}})</td>
 						<td>{{svcFee.agency.name}}</td>
+						<td>{{svcFee.effectiveFromDate | date:'MM/dd/yyyy' }}</td>
 						<td>{{svcFee.effectiveToDate | date:'MM/dd/yyyy' }}</td>
 						<td>{{svcFee.chargeBasis}}</td>
 						<td>{{svcFee.amount}}</td>
@@ -1316,7 +1321,7 @@
 			<div class="row">
 				<div class="col-sm-3">
 					<select class="form-control">
-						<option>Select Type</option>
+						<option>Select Type of Taxe</option>
 						<option>Service Tax</option>
 						<option>Swachh Bharat Cess</option>
 						<option>Krishi Kalyan Cess</option>
@@ -1352,6 +1357,7 @@
 			<table class="table table-bordred table-striped">
 				<thead>
 					<tr>
+						<th>Type of Taxe</th>
 						<th>Effective From Date</th>
 						<th>Effective To Date</th>
 						<th>Service Tax Rate</th>
@@ -1361,6 +1367,7 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="taxRate in svcTaxVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+						<td></td>
 						<td>{{taxRate.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{taxRate.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{taxRate.taxRate}}</td>
