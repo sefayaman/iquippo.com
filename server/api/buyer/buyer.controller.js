@@ -5,7 +5,6 @@ var Buyer = require('./buyer.model');
 var Seq = require('seq');
 var PaymentTransaction = require('./../payment/payment.model');
 var Utility = require('./../../components/utility.js');
-var moment = require('moment');
 var  xlsx = require('xlsx');
 // Get list of buyer
 exports.getAll = function(req, res) {
@@ -350,7 +349,7 @@ function excel_from_data(data) {
       cell = {v: "Date of Request"};
     else {
       if(user)
-        cell = {v: moment(_.get(user, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')};
+        cell = {v: Utility.toIST(_.get(user, 'createdAt', ''))};
     }
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 

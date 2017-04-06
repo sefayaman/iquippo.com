@@ -139,7 +139,7 @@ exports.exportData = function(req,res){
               else
                 dataArr[idx + 1].push('');
             }else if(FIELD_MAP[header] == 'createdAt') {
-              dataArr[idx + 1].push(moment(_.get(item, 'createdAt', '')).format('MM/DD/YYYY hh:mm a'));
+              dataArr[idx + 1].push(Utility.toIST(_.get(item, 'createdAt', '')));
             }else
               dataArr[idx + 1].push(_.get(item,FIELD_MAP[header],''));
             
