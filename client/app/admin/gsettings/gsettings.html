@@ -1314,6 +1314,14 @@
 			</div>
 			<legend></legend>
 			<div class="row">
+				<div class="col-sm-3">
+					<select class="form-control">
+						<option>Select Type</option>
+						<option>Service Tax</option>
+						<option>Swachh Bharat Cess</option>
+						<option>Krishi Kalyan Cess</option>
+					</select>
+				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveFromDate.$invalid && submitted}">
 					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
 				</div>
@@ -1322,8 +1330,10 @@
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.taxRate.$invalid && submitted}">
 					<input type="number" class="form-control" name="taxRate" ng-model="svcTaxVm.dataModel.taxRate" value="" placeholder="*Service Tax Rate" required>
-				</div>
-				<div class="form-group col-sm-offset-1 col-sm-2 text-right">
+				</div>				
+			</div>
+			<div class="row">
+				<div class="form-group col-sm-offset-10 col-sm-2">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcTaxVm.update(taxmasterForm)">Update</button>
 					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcTaxVm.save(taxmasterForm)">Save</button>
 				</div>

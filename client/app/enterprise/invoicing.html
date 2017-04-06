@@ -147,20 +147,42 @@
    			<div class="alert alert-info">Valuation Request Count: {{invoice.requestCount}}</div>
    		</div>
    	</div>
-   	<div class="row"> 		
-   		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">
-        Service Fee
-   		  <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Service Fee" required/>
-   		</div>
+    <div class="row">
+      <div class="col-sm-4 text-right">
+        Service Fee:
+      </div>
+      <div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">        
+        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Enter Service Fee" required/>
+      </div>
+    </div>
+    <legend></legend>
+   	<div class="row"> 	
+      <div class="col-sm-6 form-group">
+        <select class="form-control">
+          <option>Select Type of Taxes</option>
+          <option>Service Tax</option>
+          <option>Swachh Bharat Cess</option>
+          <option>Krishi Kalyan Cess</option>
+        </select>
+      </div>
    		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
-        Rate for Invoice
    			<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
-          <option value="">Select</option>
+          <option value="">Select Rate for Invoice</option>
           <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
         </select>
         <i class="caret"></i>
    		</div>
    	</div>
+    <div class="row">
+      <div class="col-sm-12">
+        <span class="badge">
+          Service Tax : 12 
+          <a href="javascript:void(0);" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+            <i class="fa fa-times" ></i>
+          </a>
+        </span>
+      </div>
+    </div>
    	<div class="row">
    		<div class="col-md-12 text-right">
    			<button type="button" class="btn btn-danger" ng-click="generateInvoice(invoiceForm)">Generate</button>
