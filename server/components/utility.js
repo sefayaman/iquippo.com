@@ -232,7 +232,7 @@ var dateUtil = {
   isValidDateTime: function(dateTimeString, format) {
     if(!dateTimeString)
       return function isValid(){return false;}
-    return moment(dateTimeString,format, true);
+    return moment(dateTimeString.toString(),format);
   }
 }
 
