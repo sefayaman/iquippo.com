@@ -6,11 +6,19 @@ var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug');
 var moment = require('moment');
 
+exports.toIST = toIST;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
+
+function toIST(value){
+  if(!value)
+    return '';
+
+  return  moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
+}
 
 function paginatedResult(req,res,modelRef,filter,result){
 

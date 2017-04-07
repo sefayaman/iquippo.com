@@ -6,7 +6,6 @@ var PaymentTransaction = require('./../payment/payment.model');
 var Seq = require('seq');
 var  xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
-var moment = require('moment');
 
 // Get list of Valuation
 exports.getAll = function(req, res) {
@@ -331,7 +330,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Request Date"};
     else{
       if(valuation)
-        cell =  {v: moment(_.get(valuation, 'createdAt', '')).format('MM/DD/YYYY hh:mm a')};
+        cell =  {v: Utility.toIST(_.get(valuation, 'createdAt', ''))};
     }
     setCell(ws,cell,R,C++);
 

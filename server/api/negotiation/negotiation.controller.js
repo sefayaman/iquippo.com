@@ -4,7 +4,6 @@ var _ = require('lodash');
 var Negotiation = require('./negotiation.model');
 var Utility = require('./../../components/utility.js');
 var  xlsx = require('xlsx');
-var moment = require('moment');
 
 // Get list of services
 
@@ -152,7 +151,7 @@ exports.exportData = function(req,res){
               else
                 dataArr[idx + 1].push('');
             } else if(FIELD_MAP[header] == 'createdAt') {
-              dataArr[idx + 1].push(moment(_.get(item, 'createdAt', '')).format('MM/DD/YYYY hh:mm a') + ' ' + _.get(item, 'request.scheduledTime', ''));
+              dataArr[idx + 1].push(Utility.toIST(_.get(item, 'createdAt', '')));
             }
             else
               dataArr[idx + 1].push(_.get(item,FIELD_MAP[header],''));
