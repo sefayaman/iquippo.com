@@ -56,7 +56,7 @@
                   </div>
                 </div>
                 <div class="row" ng-if="newUser.role == 'enterprise'">
-                  <div class="col-sm-4 form-group">
+                  <div class="col-sm-4 form-group" ng-if="isAdmin()">
                     <input type="checkbox" name="isnew" ng-model="newUser.enterprise"> New
                   </div>
                   <div class="col-sm-8 form-group" ng-class="{'has-error': form.enterprise_name.$invalid && submitted }">

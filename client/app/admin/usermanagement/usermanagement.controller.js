@@ -66,8 +66,12 @@ angular.module('sreizaoApp')
             })
           }
 
-          if(Auth.isChannelPartner() || Auth.isEnterprise()) {
+          if(Auth.isChannelPartner()) {
             dataToSend["userId"] = Auth.getCurrentUser()._id;
+          }
+
+          if(Auth.isEnterprise()){
+            dataToSend["enterpriseId"] = Auth.getCurrentUser().enterpriseId; 
           }
 
           dataToSend.pagination = true;
@@ -281,6 +285,10 @@ angular.module('sreizaoApp')
       }
       else {
         $scope.newUser = {};
+        if(Auth.isEnterprise()){
+          $scope.newUser.role = "enterprise";
+          $scope.newUser.enterpriseId = Auth.getCurrentUser().enterpriseId;
+        }
         $scope.headerName = "Add User";
       }
       getEnterprises();
@@ -289,13 +297,12 @@ angular.module('sreizaoApp')
     init();
 
     function getEnterprises(){
-      if(!Auth.isAdmin() && Auth.isEnterprise())
+      if(!Auth.isAdmin() && !Auth.isEnterprise())
         return;
       var serData = {};
       serData['status'] = true;
       serData['role'] = 'enterprise';
-      if(Auth.isAdmin())
-        serData['enterprise'] = true;
+      serData['enterprise'] = true;
       if(Auth.isEnterprise())
         serData['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(serData).then(function(data){
@@ -450,6 +457,8 @@ angular.module('sreizaoApp')
         data['to'] = $scope.newUser.email;
         if($scope.newUser.role == 'customer')
           data['subject'] = 'New User Registration: Success';
+        else if($scope.newUser.role == 'enterprise')
+          data['subject'] = 'New Enterprise Registration: Success'
         else
           data['subject'] = 'New Channel Partner Registration: Success';
         $scope.newUser.serverPath = serverPath;
