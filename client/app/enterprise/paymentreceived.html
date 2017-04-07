@@ -24,7 +24,7 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th><!-- <input type="checkbox" name="" value=""> All --></th>
+            <!-- <th><input type="checkbox" name="" value=""> All</th> -->
             <th>Invoice No.</th>
             <th>Type of Request</th>
             <th>Enterprise Name</th>
@@ -43,7 +43,7 @@
         </thead>
         <tbody ng-repeat="entVal in enterprisePaymentReceivedVm.dataList">
           <tr ng-repeat="dtl in entVal.paymentReceivedDetail.paymentDetails">
-            <td><!-- <input type="checkbox" ng-click="enterprisePaymentReceivedVm.updateSelection($event,entVal)"> --></td>
+            <!-- <td><input type="checkbox" ng-click="enterprisePaymentReceivedVm.updateSelection($event,entVal)"></td> -->
             <td>{{entVal.invoiceNo}}</td>
             <td>{{entVal.requestType}}</td>
             <td>{{entVal.enterprise.name}}</td>
