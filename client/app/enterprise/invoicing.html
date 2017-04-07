@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-sm-2">
+<div class="row form-group">
+  <div class="col-sm-1 padd-right">
     <h4>Invoicing</h4>
   </div>
   <div class="col-sm-3" ng-if="isAdmin()">
@@ -9,7 +9,7 @@
     </select>
     <i class="caret"></i>
   </div> 
-  <div class="col-sm-7 text-right">
+  <div class="col-sm-8 text-right">
     <h4>
     <button class="btn btn-success btn-md" ng-click="enterpriseInvoiceVm.exportExcel()" ng-if="enterpriseInvoiceVm.type == 'generated'"><i class="fa fa-file-excel-o"></i> Export Excel</button>                 
     </h4>
@@ -95,6 +95,11 @@
 </div>
 <!-- invoice genrated -->
 <div ng-if="enterpriseInvoiceVm.type == 'generated'">
+  <div class="row form-group featured">        
+    <div class="col-sm-offset-9 col-sm-3 tablesearch text-right">
+      Search: <input type="text" placeholder="Search...">
+    </div>
+  </div>
   <div class="table-responsive">
     <table class="table table-bordered">
       <thead>
