@@ -16,6 +16,7 @@
     reportService.getBuyOrRentOnFilter = getBuyOrRentOnFilter;
     reportService.getBuyRentNowOnFilter = getBuyRentNowOnFilter;
     reportService.getEasyFinanceOnFilter = getEasyFinanceOnFilter;
+    reportService.getContactUsOnFilter = getContactUsOnFilter;
     
     reportService.exportData = exportData;
     var userMobileList = "";
@@ -72,6 +73,16 @@
 
     function getEasyFinanceOnFilter(data) {
       return $http.post(path + "/servicerequest/getservices", data)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+    }
+
+    function getContactUsOnFilter(data) {
+      return $http.post(path + "/contactus/onfilter", data)
         .then(function(res) {
           return res.data
         })
@@ -155,6 +166,8 @@
       var url = "";
       if (refName == "callback")
         url = path + "/callback/export";
+      if (refName == "contactUs")
+        url = path + "/contactus/export";
       else if (refName == "instantQuote")
         url = path + "/quote/export";
       else if (refName == "buyOrRentOrBoth")

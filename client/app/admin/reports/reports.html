@@ -29,6 +29,7 @@
                 <option value="easyfinance">Easy Financing</option>
                 <option value="inspection">Inspection Request</option>
                 <option value="valuationReport">Valuation Report</option>
+                <option value="contactUs">Contact Us</option>
               </select>
             </div>
           </div>                  
@@ -728,6 +729,37 @@
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
 
+          <div ng-if="reportsVm.tabValue == 'contactUs'">
+          <div class="table-responsive">
+            <table class="table table-bordred table-striped">
+              <thead>
+               <tr>
+                  <th>Sr. No</th>
+                  <th>Ticket Id</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                               
+                  <th>Mobile No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Comments</th>                                
+                  <th>Date of Request</th>  
+               </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="contact in reportsVm.contactUsListing">
+                <td>{{$index + 1 + count}}</td>
+                <td>{{contact.ticketId}}</td>
+                <td>{{contact.name}}</td>              
+                <td>{{contact.country}}</td>              
+                <td>{{contact.mobile}}</td>
+                <td>{{contact.email}}</td>
+                <td>{{contact.message}}</td>
+                <td>{{contact.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                    
+               </tr>
+              </tbody>
+            </table>
+          </div>
+          <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
 
     </div>
   </div>
