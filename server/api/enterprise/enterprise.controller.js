@@ -387,7 +387,7 @@ exports.bulkUpload = function(req, res) {
         row.enterprise = {
           email : result[0].email,
           mobile : result[0].mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           enterpriseId : result[0].enterpriseId,
           name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
@@ -429,7 +429,7 @@ exports.bulkUpload = function(req, res) {
         row.agency = {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           partnerId : row.partnerId,
           name : result[0].entityName
         };
@@ -698,7 +698,7 @@ exports.bulkModify = function(req, res) {
         row.enterprise = {
           email : result[0].email,
           mobile : result[0].mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
           name : (result[0].fname || "") + " "+ (result[0].lname || "") 
         };
@@ -785,7 +785,7 @@ exports.bulkModify = function(req, res) {
         row.agency = {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           name : result[0].entityName
         };
 
@@ -1030,7 +1030,10 @@ exports.generateInvoice = function(req,res){
     
   EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
     if(err || !invoiceData)
-      return res.send(err || new APIError(400,'Error while fetching invoice'));    
+      return res.send(err || new APIError(400,'Error while fetching invoice'));
+    
+    if(invoiceData.length == 0)
+      res.status(412).json({Err:'Invalid invoice Number'});
 
     fs.readFile(__dirname + '/../../views/emailTemplates/EValuation_Invoice.html', 'utf8', function(err, source) {
      if (err) {
@@ -1042,14 +1045,20 @@ exports.generateInvoice = function(req,res){
       var template = Handlebars.compile(source);
 
       var data = {
-        invoiceNo : invoiceNo,
-        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData.createdAt,'MM/DD/YYYY')
+        invoiceData : invoiceData[0],
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
+        serverPath:config.serverPath
       };
-
+      
       var result = template(data);
       var pdfInput = minify(result, {
         removeAttributeQuotes: true
       });
+      var ret = true;
+      if(ret){
+        res.status(200).send(result);
+        return;
+      }
 
       var options = {
         height: "15.5in",        // allowed units: mm, cm, in, px 

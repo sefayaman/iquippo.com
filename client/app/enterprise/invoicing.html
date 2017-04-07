@@ -156,33 +156,35 @@
       </div>
     </div>
     <legend></legend>
-   	<div class="row"> 	
-      <div class="col-sm-6 form-group">
-        <select class="form-control">
-          <option>Select Type of Taxes</option>
-          <option>Service Tax</option>
-          <option>Swachh Bharat Cess</option>
-          <option>Krishi Kalyan Cess</option>
-        </select>
-      </div>
-   		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
-   			<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
-          <option value="">Select Rate for Invoice</option>
-          <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
-        </select>
-        <i class="caret"></i>
-   		</div>
-   	</div>
-    <div class="row">
+    <div class="row form-group">
       <div class="col-sm-12">
-        <span class="badge">
-          Service Tax : 12 
-          <a href="javascript:void(0);" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter">
+        <span class="badge" ng-repeat="token in selectedTax">
+          {{token.type}} : {{token.taxRate}} 
+          <a href="javascript:void(0);" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="deleteTaxToken($index)">
             <i class="fa fa-times" ></i>
           </a>
         </span>
       </div>
     </div>
+   	<div class="row"> 	
+      <div class="col-sm-5 form-group">
+        <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType">
+          <option value="">Select Type of Taxes</option>
+          <option ng-repeat="tx in taxList" value="{{tx}}">{{tx}}</option>
+        </select>
+      </div>
+   		<div class="col-md-5 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
+   			<!--<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
+          <option value="">Select Rate for Invoice</option>
+          <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
+        </select>  -->
+        <input type="number" class="form-control" placeholder="Enter Rate" ng-model="currentTax.taxRate" disabled>     
+   		</div>
+      <div class="col-md-2">
+      <button class="btn btn-primary" ng-click="addTaxToken(currentTax)"> Add</button>
+      </div>
+   	</div>
+    
    	<div class="row">
    		<div class="col-md-12 text-right">
    			<button type="button" class="btn btn-danger" ng-click="generateInvoice(invoiceForm)">Generate</button>

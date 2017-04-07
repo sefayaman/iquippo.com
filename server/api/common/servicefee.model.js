@@ -12,6 +12,7 @@ var ServiceFeeSchema = new Schema({
     name:String,
     partnerId:String,
   },
+  effectiveFromDate:Date,
   effectiveToDate:Date,
   chargeBasis:String,
   amount:Number,
