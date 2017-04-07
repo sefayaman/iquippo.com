@@ -1255,7 +1255,7 @@
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.feeAmount.$invalid && submitted}">
 					<input type="number" class="form-control" name="feeAmount" ng-model="svcFeeVm.dataModel.amount" placeholder="*Amount" required />
 				</div>
-				<div class="col-sm-offset-4 col-sm-2 text-right">
+				<div class="col-sm-2 pull-right">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcFeeVm.update(feemasterForm)">Update</button>
 					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcFeeVm.save(feemasterForm)">Save</button>
 				</div>
