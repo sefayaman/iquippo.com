@@ -1506,7 +1506,7 @@
 		<div class="row">
 			<div class="col-sm-3 pull-right">
 				<div class="tablesearch text-right form-group">
-					Search: <input type="text" placeholder="Search...">
+					Search: <input type="text" placeholder="Search..." ng-model="assetGroupVm.searchStr" ng-change="assetGroupVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>

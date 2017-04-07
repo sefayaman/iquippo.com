@@ -5,6 +5,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   
   var vm = this;
   $scope.$parent.tabValue = 'transaction';
+  $scope.refresh = true;
   var selectedItems = [];
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
@@ -117,9 +118,9 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         return;
       }
       $rootScope.loading = true;
+      $scope.refresh = !$scope.refresh;
       uploadSvc.upload(file, importDir)
         .then(function(result) {
-          setUserData();
           if($scope.uploadType === 'upload'){
             $scope.uploadedExcel = result.data.filename;
             $scope.modifiedExcel = '';
@@ -136,8 +137,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             $scope.reportUploadedExcel =  result.data.filename;
           }
           $rootScope.loading = false;
+          $scope.refresh = !$scope.refresh;
         }).catch(function(res) {
           $rootScope.loading = false;
+          $scope.refresh = !$scope.refresh;
           Modal.alert("error in file upload", true);
         });
     }
@@ -148,7 +151,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       if($scope.uploadType === 'upload'){
         uploadData = {
           fileName : $scope.uploadedExcel,
-          user : vm.enterpriseValuation.user
+          user : Auth.getCurrentUser()
         };
         if(!uploadData.fileName){
           Modal.alert("Please upload template first.");
@@ -179,7 +182,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         });
       }else if(['modify','reportupload'].indexOf($scope.uploadType) != -1){
         uploadData = {
-          user : vm.enterpriseValuation.user
+          user : Auth.getCurrentUser()
         };
         if($scope.uploadType == 'modify'){
           uploadData['updateType'] = "enterprise";
@@ -229,15 +232,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       $state.go('enterprisevaluation.edittransaction', {id:enterpriseData._id});
     }
 
-
-    function setUserData(){
-      vm.enterpriseValuation.user = {};
-      vm.enterpriseValuation.user._id = Auth.getCurrentUser()._id;
-      vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      vm.enterpriseValuation.user.mobile = Auth.getCurrentUser().mobile;
-      vm.enterpriseValuation.user.email = Auth.getCurrentUser().email;
-      vm.enterpriseValuation.user.role = Auth.getCurrentUser().role;
-    }
 
     function setData() {
       if(Auth.getCurrentUser()._id) {

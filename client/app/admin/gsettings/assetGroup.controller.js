@@ -246,6 +246,8 @@
           prevPage = vm.currentPage;
           first_id = vm.assetGroupList[0].id;
           last_id = vm.assetGroupList[vm.assetGroupList.length - 1].id;
+        }else{
+          vm.assetGroupList = [];
         }
       }).catch(function(err) {
         Modal.alert('Error while fetching');

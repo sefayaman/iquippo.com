@@ -22,7 +22,7 @@ var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
 var AssetGroupModel = require('./assetgroup.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
-var validRequestType = ['Valuation','Insepection'];
+var validRequestType = ['Valuation','Inspection'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
 var Handlebars = require('handlebars');
@@ -376,7 +376,8 @@ exports.bulkUpload = function(req, res) {
 
     function validateEnterprise(callback){
       if(user.role== 'enterprise')
-        row.enterpriseId = row.user.enterpriseId;
+        row.enterpriseId = user.enterpriseId;
+      console.log("",user);
       UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
@@ -423,7 +424,7 @@ exports.bulkUpload = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
+        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
@@ -571,7 +572,7 @@ exports.bulkUpload = function(req, res) {
       row.customerPartyNo = row.enterprise.mobile;
       row.userName = user.userName;
       row.createdBy = {
-        name : user.userName,
+        name : user.fname + " " + user.lname,
         _id : user._id,
         role : user.role
       };
@@ -627,6 +628,8 @@ exports.bulkModify = function(req, res) {
   var fileName = req.body.fileName;
   var user = req.body.user;
   var updateType = req.body.updateType; 
+
+  console.log("update type",updateType);
 
   var options = {
     fileName : fileName,
@@ -1049,7 +1052,7 @@ exports.generateInvoice = function(req,res){
         invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
         serverPath:config.serverPath
       };
-      
+
       var result = template(data);
       var pdfInput = minify(result, {
         removeAttributeQuotes: true
@@ -1358,6 +1361,8 @@ function exportExcel(req,res,fieldMap,jsonArr){
       var val = _.get(item,keyObj.key,'');
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
+      if(keyObj.type && keyObj.type == 'date')
+        val = moment(val).format('MM/DD/YYYY')
        dataArr[idx + 1].push(val);
     });
 
