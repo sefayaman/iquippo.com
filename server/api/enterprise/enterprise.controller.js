@@ -1361,7 +1361,7 @@ function exportExcel(req,res,fieldMap,jsonArr){
       var val = _.get(item,keyObj.key,'');
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
-      if(keyObj.type && keyObj.type == 'date')
+      if(keyObj.type && keyObj.type == 'date' && val)
         val = moment(val).format('MM/DD/YYYY')
        dataArr[idx + 1].push(val);
     });
