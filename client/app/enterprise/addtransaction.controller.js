@@ -6,6 +6,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
   vm.enterpriseValuation = {};
+  $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
   $scope.showEnterpriseSection = showEnterpriseSection;
@@ -34,15 +35,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     userFilter.enterprise = true;
     var isEnterprise = false;
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
-      userFilter.enterpriseName = Auth.getCurrentUser().enterpriseName;
+      userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
     }
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
         vm.enterpriseValuation.enterprise = {};
-        vm.enterpriseValuation.enterprise.name = data[0].enterpriseName;
-        setCustomerData(data[0].enterpriseName);
+        vm.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
+        setCustomerData(data[0].enterpriseId);
       }
     });
     if(!editMode){
@@ -165,6 +166,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       $scope.locationList = [];
       var filter = {};
       filter.country = country;
+      if(!country)
+        return;
       LocationSvc.getStateHelp(filter).then(function(result){
           $scope.stateList = result;
       });
@@ -177,6 +180,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       $scope.locationList = [];
       var filter = {};
       filter.stateName = state;
+      if(!state)
+        return;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });

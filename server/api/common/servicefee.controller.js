@@ -5,7 +5,22 @@ var Model = require('./servicefee.model');
 var ApiError = require('../../components/_error');
 
 exports.get = function(req, res) {
+ 
   var filter = {};
+  var queryParam = req.query;
+  if(queryParam.agencyId)
+    filter['agency._id'] = queryParam.agencyId;
+  if(queryParam.enterpriseId)
+    filter['enterpriseId'] = queryParam.enterpriseId;
+  if(queryParam.requestType)
+    filter['serviceType'] = queryParam.requestType;
+
+  if(queryParam.current == 'y'){
+     filter["effectiveFromDate"] = {$lte:new Date()};
+     filter["effectiveToDate"] = {$gte:new Date()};
+  }
+  
+  console.log("@@@@@@",filter);
   var query = Model.find(filter);
   query.exec(function (err, result) {
     if(err) { return handleError(res, err); }
@@ -35,7 +50,8 @@ function _getRecord(data,cb){
   filter["serviceType"] = data.serviceType;
   filter["enterpriseId"] = data.enterpriseId;
   filter["agency._id"] = data.agency._id;
-  filter["effectiveToDate"] = {$lte:data.effectiveToDate};
+  filter["effectiveFromDate"] = {$lte:data.effectiveToDate};
+  filter["effectiveToDate"] = {$gte:data.effectiveFromDate};
   Model.find(filter,function(err,result){
     return cb(err,result);
   })

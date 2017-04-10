@@ -47,7 +47,7 @@ var EnterpriseValuationSchema = new Schema({
   reportNo:String,
   agencyYearOfManufacturing:String,
   agencyEngineNo:String,
-  agencyChasisNo:String,
+  agencyChassisNo:String,
   agencyRegistrationNo:String,
   agencySerialNo:String,
   hmr_kmr:String,
@@ -66,7 +66,7 @@ var EnterpriseValuationSchema = new Schema({
   valuationReport:{},
   /*Admin update field*/
   invoiceNo:String,
-  invoiceDate:String,
+  invoiceDate:Date,
   paymentReceived:{type:Boolean,default:false},
   paymentMade:{type:Boolean,default:false},
   /*Common fields*/

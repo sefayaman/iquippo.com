@@ -1,6 +1,9 @@
 <div>
-  <div>Download the <a href="/download/templates/{{enterpriseTransactionVm.uploadTemplate}}" target="_blank">template</a> for Upload/Update Request which is visible to Enterprise only.</div>
-  <div>Download the <a href="javascript:void(0);" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
+  <div  ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
+    Download the <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplate}}" target="_blank">template</a> for Upload/Update Request which is visible to Enterprise only.
+  </div>
+  <div  ng-if="isPartner() || isAdmin()">
+    Download the <a href="/download/templates/{{enterpriseTransactionVm.agencyTemplate}}" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
   <div class="row">
     <div class="col-sm-6">
       <h4>Add New Request  </h4>
@@ -21,24 +24,24 @@
     <div class="row form-group">
       <div class="col-sm-2" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">        
           <span class="btn btn-default fileinput-button">
-           <input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
+           <input type="file" id="upload" name="upload" data-filetype="doc" file-upload required ng-if="refresh">
             <span><i class="fa fa-upload"></i> Upload Request</span>
           </span>
            <span>{{uploadedExcel}}</span>        
       </div>
       <div class="col-sm-2" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">
           <span class="btn btn-default fileinput-button">
-           <input type="file" id="modify" name="modify"  data-filetype="doc" file-upload required>
+           <input type="file" id="modify" name="modify"  data-filetype="doc" file-upload required ng-if="refresh">
             <span><i class="fa fa-upload"></i> Update Request</span>
           </span>
            <span>{{modifiedExcel}}</span>
       </div>
       <div class="col-sm-2" ng-if="isAdmin() || isPartner()">
           <span class="btn btn-default fileinput-button">
-           <input type="file" id="reportupload" name="modify"  data-filetype="doc" file-upload required>
+           <input type="file" id="reportupload" name="modify"  data-filetype="doc" file-upload required ng-if="refresh">
             <span><i class="fa fa-upload"></i> Upload Report Data</span>
           </span>
-           <span>{{modifiedExcel}}</span>
+           <span>{{reportUploadedExcel}}</span>
       </div>
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Request</button>
@@ -46,7 +49,7 @@
     </div>
     <div class="row form-group">
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()">Submit to Agency</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">Submit to Agency</button>
       </div>
       <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
@@ -56,7 +59,7 @@
       <table class="table table-bordred table-striped">
         <thead>
           <tr>
-            <th><input type="checkbox"> All</th>            
+            <th><input type="checkbox" ng-model="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.selectAll($event)"> All</th>            
             <th>Unique Control No</th>
             <th>Request Type</th>
             <th>Purpose</th>
@@ -73,7 +76,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-disabled="enterpriseValuation.status != EnterpriseValuationStatuses[0]"></td>            
+            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>
@@ -89,7 +92,7 @@
               <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
               <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
               <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)"><i class="fa fa-trash"></i> </a>
+              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2"><i class="fa fa-trash"></i> </a>
 
             </td>
             

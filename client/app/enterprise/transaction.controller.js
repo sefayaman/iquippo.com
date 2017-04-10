@@ -4,6 +4,8 @@ angular.module('sreizaoApp').controller('EnterpriseTransactionCtrl',EnterpriseTr
 function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
   
   var vm = this;
+  $scope.$parent.tabValue = 'transaction';
+  $scope.refresh = true;
   var selectedItems = [];
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
@@ -30,9 +32,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
-  vm.uploadTemplate = 'Valuation_Template.xlsx';
+  vm.enterpriseTemplate = 'Valuation_Template.xlsx';
+  vm.agencyTemplate = 'Valuation_Report.xlsx';
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
+  vm.selectAll = selectAll;
 
   function init(){
 
@@ -67,8 +71,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       $scope.pager.copy(filter);
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
-          filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+      if(Auth.isPartner()){
+        filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+        filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
+      }
 
       EnterpriseSvc.get(filter)
       .then(function(result){
@@ -112,9 +118,9 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         return;
       }
       $rootScope.loading = true;
+      $scope.refresh = !$scope.refresh;
       uploadSvc.upload(file, importDir)
         .then(function(result) {
-          setUserData();
           if($scope.uploadType === 'upload'){
             $scope.uploadedExcel = result.data.filename;
             $scope.modifiedExcel = '';
@@ -131,8 +137,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             $scope.reportUploadedExcel =  result.data.filename;
           }
           $rootScope.loading = false;
+          $scope.refresh = !$scope.refresh;
         }).catch(function(res) {
           $rootScope.loading = false;
+          $scope.refresh = !$scope.refresh;
           Modal.alert("error in file upload", true);
         });
     }
@@ -143,12 +151,16 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       if($scope.uploadType === 'upload'){
         uploadData = {
           fileName : $scope.uploadedExcel,
-          user : vm.enterpriseValuation.user
+          user : Auth.getCurrentUser()
         };
-
+        if(!uploadData.fileName){
+          Modal.alert("Please upload template first.");
+          return;
+        }
         EnterpriseSvc.uploadExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
           $scope.uploadedExcel = '';
+          $scope.uploadType = "";
           var message = res.msg;
           if (res.errObj.length > 0) {
             var data = {};
@@ -170,17 +182,27 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         });
       }else if(['modify','reportupload'].indexOf($scope.uploadType) != -1){
         uploadData = {
-          fileName : $scope.modifiedExcel,
-          user : vm.enterpriseValuation.user
+          user : Auth.getCurrentUser()
         };
-        if($scope.uploadType == 'modify')
-            uploadData['updateType'] = "enterprise";
-        else
+        if($scope.uploadType == 'modify'){
+          uploadData['updateType'] = "enterprise";
+          uploadData['fileName'] = $scope.modifiedExcel;
+        }
+        else{
           uploadData['updateType'] = "agency";
+          uploadData['fileName'] = $scope.reportUploadedExcel;
+        }
 
+        if(!uploadData.fileName){
+          Modal.alert("Please upload template first.");
+          return;
+        }
         EnterpriseSvc.modifyExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
-          $scope.modifiedExcel = '';
+          $scope.modifiedExcel = "";
+          $scope.reportUploadedExcel = "";
+          $scope.uploadType = "";
+
           var message = res.msg;
           if (res.errObj.length > 0) {
             var data = {};
@@ -211,15 +233,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     }
 
 
-    function setUserData(){
-      vm.enterpriseValuation.user = {};
-      vm.enterpriseValuation.user._id = Auth.getCurrentUser()._id;
-      vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      vm.enterpriseValuation.user.mobile = Auth.getCurrentUser().mobile;
-      vm.enterpriseValuation.user.email = Auth.getCurrentUser().email;
-      vm.enterpriseValuation.user.role = Auth.getCurrentUser().role;
-    }
-
     function setData() {
       if(Auth.getCurrentUser()._id) {
         vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
@@ -233,6 +246,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           return;
         enterpriseValuation.deleted = true;
         EnterpriseSvc.update(enterpriseValuation).then(function(result){
+          fireCommand(true);
           Modal.alert("Request deleted succesfully", true);
         });
       })
@@ -251,7 +265,23 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           selectedItems.push(item)
         if(action == 'remove' && index != -1)
           selectedItems.splice(index,1);
-        console.log(selectedItems.length);
+     }
+
+     function selectAll(event){
+
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add'){
+          selectedItems = [];
+          vm.enterpriseValuationListing.forEach(function(item){
+            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1)
+                selectedItems.push(item);
+          })
+          
+        }
+        if(action == 'remove'){
+          selectedItems = [];
+        }
      }
 
      function submitToAgency(){
@@ -299,6 +329,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     function bulkUpdate(){
       EnterpriseSvc.bulkUpdate(selectedItems)
         .then(function(res){
+          vm.selectAllReq = "";
           selectedItems = [];
           fireCommand(true);
       })
@@ -307,6 +338,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     function showDetail(valReq){
       var scope = $rootScope.$new()
       scope.valuation = valReq;
+      scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
+      scope.isAdmin = $scope.isAdmin;
        var formModal = $uibModal.open({
           animation: true,
             templateUrl: "app/enterprise/valuation-details-popup.html",
@@ -326,6 +359,13 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       if(Auth.isPartner())
           filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+      if(selectedItems && selectedItems.length > 0){
+        var ids = [];
+        selectedItems.forEach(function(item){
+          ids[ids.length] = item._id;
+        });
+          filter.ids = ids;
+      }
       EnterpriseSvc.exportExcel("transaction",filter);
     }
 

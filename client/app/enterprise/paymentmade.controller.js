@@ -70,7 +70,7 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
 
      function openModal(evtVal,idx){
 
-        $scope.paymentDetail = evtVal.paymentMadeDetail.paymentDetails[idx]; 
+        $scope.paymentDetail = angular.copy(evtVal.paymentMadeDetail.paymentDetails[idx]); 
          var formModal = $uibModal.open({
           animation: true,
             templateUrl: "formModal.html",
@@ -96,6 +96,8 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
           }
           $scope.paymentDetail.attached = true;
           $scope.paymentDetail.createdAt = new Date();
+          $scope.paymentDetail.createdBy = Auth.getCurrentUser()._id;
+
           if(remainingVal > 0){
              evtVal.paymentMadeDetail.remainingAmount = remainingVal;
              evtVal.paymentMadeDetail.paymentDetails[evtVal.paymentMadeDetail.paymentDetails.length] = checkdetailObj;
@@ -106,13 +108,16 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
             evtVal.paymentMade = true;
              EnterpriseSvc.setStatus(evtVal,EnterpriseValuationStatuses[7],true);
           }
+          
+          evtVal.paymentMadeDetail.paymentDetails[idx] = $scope.paymentDetail;
           EnterpriseSvc.updateInvoice(evtVal)
           .then(function(result){
               $scope.close();
               var isCompleted =  evtVal.paymentReceived && evtVal.paymentMade;
-              getInvoiceData({});
+              //getInvoiceData({});
+              fireCommand(true);
               if(remainingVal == 0)
-                updateValuationRequest($scope.paymentDetail.invoiceNo,isCompleted);
+                updateValuationRequest(evtVal.invoiceNo,isCompleted);
               $scope.paymentDetail = {};                
           });
       }

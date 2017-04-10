@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ServiceTaxSchema = new Schema({
+  type:String,
   effectiveFromDate:{type:Date},
   effectiveToDate:{type:Date},
   taxRate:{type:Number},

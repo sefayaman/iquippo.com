@@ -33,14 +33,14 @@ function paginatedResult(req,res,modelRef,filter,result){
   var prevPage = bodyData.prevPage || 0;
   var isNext = currentPage - prevPage >= 0?true:false;
   Seq()
-  .par(function(){
+  .seq(function(){
     var self = this;
     modelRef.count(filter,function(err,counts){
       result.totalItems = counts;
       self(err);
     })
   })
-  .par(function(){
+  .seq(function(){
 
       var self = this;
       var sortFilter = {_id : -1};
@@ -73,7 +73,7 @@ function paginatedResult(req,res,modelRef,filter,result){
       return res.status(200).json(result);
   })
   .catch(function(err){
-    console.log("######",err);
+    console.log("######rrrr",err);
     handleError(res,err);
   })
  
@@ -161,6 +161,8 @@ function excel_from_data(data,headers) {
     var C = 0;
     var rowItems = data[R];
     rowItems.forEach(function(item){
+      if(!item)
+          item = "";
        var cell = {v :item};
       setCell(ws, cell, R, C++);
     })
@@ -240,7 +242,7 @@ var dateUtil = {
   isValidDateTime: function(dateTimeString, format) {
     if(!dateTimeString)
       return function isValid(){return false;}
-    return moment(dateTimeString,format, true);
+    return moment(dateTimeString.toString(),format);
   }
 }
 
