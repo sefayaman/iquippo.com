@@ -397,6 +397,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
     function exportExcel(){
       var filter = {};
+       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+          filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
+      if(Auth.isPartner())
+          filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
       if(selectedItems && selectedItems.length > 0){
         var ids = [];
         selectedItems.forEach(function(item){
