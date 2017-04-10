@@ -408,7 +408,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         })
         filter['ids'] = ids;
       }
-      EnterpriseSvc.exportExcel("invoice",{});
+      EnterpriseSvc.exportExcel("invoice",filter);
     }
       //starting point
       Auth.isLoggedInAsync(function(loggedIn){

@@ -151,9 +151,10 @@ module.exports = {
 		"Payment Made to Agency":{key:"paymentMade",type:"boolean",allowedRoles:['admin']}
 	},
 	'INVOICE_EXPORT':{
-		"Unique Invoive Number":{key:"invoiceNo"},
+		"Unique Invoice Number":{key:"invoiceNo"},
 		"Request Type":{key:"requestType"},
-		"Enterprise Name":{key : "enterprise.enterpriseId"},
+		"Enterprise Id":{key : "enterprise.enterpriseId"},
+		"Enterprise Name":{key : "enterprise.name"},
 		"Enterprise Contact No":{key:"enterprise.mobile"},
 		"Valuation Partner Name":{key:"agency.name"},
 		"Valuation Partner Contact No":{key:"agency.mobile"},
@@ -163,8 +164,9 @@ module.exports = {
 		"Payment Made":{key:"paymentMade",type:'boolean',allowedRoles:['admin']},
 	},
 	'EXPORT_PAYMENT':{
-		"Unique Invoive Number":{key:"invoiceNo"},
+		"Unique Invoice Number":{key:"invoiceNo"},
 		"Request Type":{key:"requestType"},
+		"Enterprise Id":{key:"enterpriseId"},
 		"Enterprise Name":{key:"enterpriseName"},
 		"Enterprise Contact No":{key:"enterpriseContactNo"},
 		"Valuation Partner Name":{key:"valuationPartnerName"},
