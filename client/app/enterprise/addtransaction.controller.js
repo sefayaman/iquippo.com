@@ -6,6 +6,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
   vm.enterpriseValuation = {};
+  $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
   $scope.showEnterpriseSection = showEnterpriseSection;

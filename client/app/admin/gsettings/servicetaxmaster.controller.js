@@ -11,11 +11,13 @@
         $scope.edit = false;
         $scope.pager = PagerSvc.getPager();
 
+        $scope.taxList = TaxList;
+
         vm.save = save;
         vm.update = update;
         vm.destroy = destroy;
         vm.editClicked = editClicked;
-        vm.searchFn = searchFn;
+        vm.searchFn = searchFn; 
 
         function loadViewData(){
             ServiceTaxSvc.get()

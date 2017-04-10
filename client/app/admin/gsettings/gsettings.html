@@ -1204,7 +1204,7 @@
 				</div>
 				<div class="col-sm-6 text-right">
 					<h4>
-					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+					<!-- <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button> -->
 					</h4>
 				</div>
 			</div>
@@ -1255,7 +1255,7 @@
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.feeAmount.$invalid && submitted}">
 					<input type="number" class="form-control" name="feeAmount" ng-model="svcFeeVm.dataModel.amount" placeholder="*Amount" required />
 				</div>
-				<div class="col-sm-offset-4 col-sm-2 text-right">
+				<div class="col-sm-2 pull-right">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcFeeVm.update(feemasterForm)">Update</button>
 					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcFeeVm.save(feemasterForm)">Save</button>
 				</div>
@@ -1313,18 +1313,16 @@
 				</div>
 				<div class="col-sm-6 text-right">
 					<h4>
-					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+					<!-- <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button> -->
 					</h4>
 				</div>
 			</div>
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3">
-					<select class="form-control">
-						<option>Select Type of Taxe</option>
-						<option>Service Tax</option>
-						<option>Swachh Bharat Cess</option>
-						<option>Krishi Kalyan Cess</option>
+					<select class="form-control" ng-model="svcTaxVm.dataModel.type" required>
+						<option value="">Select Type of Taxe</option>
+						<option value="{{txl}}" ng-repeat="txl in taxList">{{txl}}</option>
 					</select>
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveFromDate.$invalid && submitted}">
@@ -1367,7 +1365,7 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="taxRate in svcTaxVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
-						<td></td>
+						<td>{{taxRate.type}}</td>
 						<td>{{taxRate.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{taxRate.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{taxRate.taxRate}}</td>
@@ -1508,7 +1506,7 @@
 		<div class="row">
 			<div class="col-sm-3 pull-right">
 				<div class="tablesearch text-right form-group">
-					Search: <input type="text" placeholder="Search...">
+					Search: <input type="text" placeholder="Search..." ng-model="assetGroupVm.searchStr" ng-change="assetGroupVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>

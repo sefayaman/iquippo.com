@@ -251,7 +251,7 @@ assetGroup.fetch = function(req, res, next) {
 	filters.deleted = 0;
 	if (options.status)
 		filters.status = options.status;
-
+	console.log("####",filters);
 	query = Model.find(filters);
 
 	query = query.sort(sort);
@@ -374,7 +374,7 @@ assetGroup.uploadExcel = function(req, res,next) {
 	var fileName = req.body.fileName;
 	var user = req.body.user;
 	var madnatoryParams = ['valuerGroupId', 'valuerAssetId', 'valuerName', 'valuerCode', 'assetCategory', 'enterpriseName', 'enterpriseId'];
-	var numericCols = ['valuerGroupId', 'valuerAssetId'];
+	var numericCols = [];
 
 	var options = {
 		fileName: fileName,

@@ -5,7 +5,14 @@ var Model = require('./servicetax.model');
 var ApiError = require('../../components/_error');
 
 exports.get = function(req, res) {
+  var queryParam = req.query;
   var filter = {};
+  if(queryParam.type)
+    filter['type'] = queryParam.type;
+  if(queryParam.current == 'y'){
+     filter["effectiveFromDate"] = {$lte:new Date()};
+     filter["effectiveToDate"] = {$gte:new Date()};
+  }
   var query = Model.find(filter);
   query.exec(function (err, result) {
     if(err) { return handleError(res, err); }
@@ -33,7 +40,9 @@ exports.create = function(req, res,next) {
 
 function _getRecord(data,cb){
   var filter = {};
-  filter["effectiveToDate"] = {$lte:data.effectiveFromDate};
+  filter["type"] = data.type;
+  filter["effectiveFromDate"] = {$lte:data.effectiveToDate};
+  filter["effectiveToDate"] = {$gte:data.effectiveFromDate};
   Model.find(filter,function(err,result){
     cb(err,result);
   })

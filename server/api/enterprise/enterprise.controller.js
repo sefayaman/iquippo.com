@@ -22,7 +22,7 @@ var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
 var AssetGroupModel = require('./assetgroup.model');
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
-var validRequestType = ['Valuation','Insepection'];
+var validRequestType = ['Valuation','Inspection'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
 var Handlebars = require('handlebars');
@@ -372,11 +372,12 @@ exports.bulkUpload = function(req, res) {
     * validateCategory is for validating category,brand,model
     * validateCountry is for validating country,state,city
     */
-    async.parallel([validateEnterprise,validateRequestType,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);
+    async.parallel([validateEnterprise,validateRequestType,validatePurpose,validateYearOfManufacturing,validateAgency,validateMasterData,validateCountry],middleManProcessing);
 
     function validateEnterprise(callback){
       if(user.role== 'enterprise')
-        row.enterpriseId = row.user.enterpriseId;
+        row.enterpriseId = user.enterpriseId;
+      console.log("",user);
       UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
@@ -387,7 +388,7 @@ exports.bulkUpload = function(req, res) {
         row.enterprise = {
           email : result[0].email,
           mobile : result[0].mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           enterpriseId : result[0].enterpriseId,
           name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
@@ -401,6 +402,21 @@ exports.bulkUpload = function(req, res) {
         return callback('Invalid Request Type');
 
       return callback();
+    }
+
+    function validateYearOfManufacturing(callback){
+      if(!row.yearOfManufacturing)
+        return callback();
+      var currentYear = new Date().getFullYear();
+      var isInvalid = isNaN(row.yearOfManufacturing);
+      if(isInvalid || row.yearOfManufacturing.length != 4)
+        return callback("Invalid manufacturing year.");
+       var mfgYear = parseInt(row.yearOfManufacturing);
+       if(mfgYear > 1900 && mfgYear <= currentYear)
+        return callback();
+       else
+        return callback("Invalid manufacturing year.");
+
     }
 
     function validatePurpose(callback){
@@ -423,13 +439,13 @@ exports.bulkUpload = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
+        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           partnerId : row.partnerId,
           name : result[0].entityName
         };
@@ -569,9 +585,9 @@ exports.bulkUpload = function(req, res) {
 
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = row.enterprise.mobile;
-      row.userName = user.userName;
+      row.userName = user.fname + " " + user.lname;
       row.createdBy = {
-        name : user.userName,
+        name : user.fname + " " + user.lname,
         _id : user._id,
         role : user.role
       };
@@ -677,7 +693,7 @@ exports.bulkModify = function(req, res) {
     if(updateType == 'agency'){
       async.parallel([validateValuation],middleManProcessing)
     }else{
-      async.parallel([validateEnterprise,validateValuation,validateRequestType,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
+      async.parallel([validateEnterprise,validateValuation,validateRequestType,validateYearOfManufacturing,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
     }
 
     
@@ -698,7 +714,7 @@ exports.bulkModify = function(req, res) {
         row.enterprise = {
           email : result[0].email,
           mobile : result[0].mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
           name : (result[0].fname || "") + " "+ (result[0].lname || "") 
         };
@@ -718,12 +734,13 @@ exports.bulkModify = function(req, res) {
 
         
         var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
         
         row.valData = result[0];
         if(updateType == 'agency'){
           if(user.role == 'admin')
             return callback();
-          if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id)
+          if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id && agencyValidStatus.indexOf(result[0].status) != -1)
               return callback();
           else
             return callback('User does not have privilege to update record');
@@ -731,17 +748,27 @@ exports.bulkModify = function(req, res) {
           var isValidForUpdate = enterpriseValidStatus.indexOf(result[0].status) != -1;
           if(isValidForUpdate && user.role == 'admin')
             return callback();
-          else if(isValidForUpdate && user.enterpriseId == result[0].enterpriseId)
+          else if(isValidForUpdate && user.enterpriseId == result[0].enterprise.enterpriseId)
             return callback();
           else
              return callback('User does not have privilege to update record');
         }
-        
-       /* if(enterpriseValidStatus.indexOf(result[0].status) < 0 && user.role !== 'admin')
-          return callback('User does not have privilege to update record');
-
-        return callback();*/
       })
+    }
+
+     function validateYearOfManufacturing(callback){
+      if(!row.yearOfManufacturing)
+        return callback();
+      var currentYear = new Date().getFullYear();
+      var isInvalid = isNaN(row.yearOfManufacturing);
+      if(isInvalid || row.yearOfManufacturing.length != 4)
+        return callback("Invalid manufacturing year.");
+       var mfgYear = parseInt(row.yearOfManufacturing);
+       if(mfgYear > 1900 && mfgYear <= currentYear)
+        return callback();
+       else
+        return callback("Invalid manufacturing year.");
+
     }
 
     function validateRequestType(callback){
@@ -785,7 +812,7 @@ exports.bulkModify = function(req, res) {
         row.agency = {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           name : result[0].entityName
         };
 
@@ -1030,7 +1057,10 @@ exports.generateInvoice = function(req,res){
     
   EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
     if(err || !invoiceData)
-      return res.send(err || new APIError(400,'Error while fetching invoice'));    
+      return res.send(err || new APIError(400,'Error while fetching invoice'));
+    
+    if(invoiceData.length == 0)
+      res.status(412).json({Err:'Invalid invoice Number'});
 
     fs.readFile(__dirname + '/../../views/emailTemplates/EValuation_Invoice.html', 'utf8', function(err, source) {
      if (err) {
@@ -1042,14 +1072,20 @@ exports.generateInvoice = function(req,res){
       var template = Handlebars.compile(source);
 
       var data = {
-        invoiceNo : invoiceNo,
-        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData.createdAt,'MM/DD/YYYY')
+        invoiceData : invoiceData[0],
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
+        serverPath:config.serverPath
       };
 
       var result = template(data);
       var pdfInput = minify(result, {
         removeAttributeQuotes: true
       });
+      var ret = true;
+      if(ret){
+        res.status(200).send(result);
+        return;
+      }
 
       var options = {
         height: "15.5in",        // allowed units: mm, cm, in, px 
@@ -1310,7 +1346,8 @@ exports.exportExcel = function(req,res){
     var obj = {};
     obj['invoiceNo'] = item.invoiceNo || "";
     obj['requestType'] = item.requestType || "";
-    obj['enterpriseName'] = item.enterprise.enterpriseId || "";
+    obj['enterpriseId'] = item.enterprise.enterpriseId || "";
+    obj['enterpriseName'] = item.enterprise.name || "";
     obj['enterpriseContactNo'] = item.enterprise.mobile|| "" ;
     obj['valuationPartnerName'] = item.agency.name || "" ;
     obj['valuationPartnerContactNo'] = item.agency.mobile || "";
@@ -1349,11 +1386,15 @@ function exportExcel(req,res,fieldMap,jsonArr){
       var val = _.get(item,keyObj.key,'');
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
+      if(keyObj.type && keyObj.type == 'date' && val)
+        val = moment(val).format('MM/DD/YYYY')
        dataArr[idx + 1].push(val);
     });
 
   });
-
+ /* var ret = true;
+  if(ret)
+    return res.status(200).send(dataArr);*/
   var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
   var wb = Utility.getWorkbook();
