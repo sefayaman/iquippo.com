@@ -113,7 +113,7 @@ module.exports = {
 		"Request Date":{key:"requestDate",type:'date'},
 		"Asset No":{key:"assetId"},
 		"Repo. Date":{key:"repoDate",type:'date'},
-		"Brand/Make":{key:"Brand"},
+		"Brand/Make":{key:"brand"},
 		"Model":{key:"model"},
 		"Asset Category":{key:"assetCategory"},
 		"Asset Description":{key:"assetDescription"},

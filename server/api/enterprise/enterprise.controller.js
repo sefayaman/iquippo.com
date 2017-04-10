@@ -1367,7 +1367,9 @@ function exportExcel(req,res,fieldMap,jsonArr){
     });
 
   });
-
+ /* var ret = true;
+  if(ret)
+    return res.status(200).send(dataArr);*/
   var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
   var wb = Utility.getWorkbook();
