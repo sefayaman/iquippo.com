@@ -67,8 +67,8 @@
           </div>
           <div class="col-sm-3"> 
             <div class="input-group">
-              <input class="form-control" name="requestDate" ng-model="addTransactionVm.enterpriseValuation.requestDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Request Date"/>
-              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <input class="form-control" name="requestDate" id="requestdate" ng-model="addTransactionVm.enterpriseValuation.requestDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Request Date"/>
+              <label for="requestdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
@@ -76,8 +76,8 @@
           </div>
           <div class="col-sm-3">
             <div class="input-group">
-              <input class="form-control" name="repoDate" ng-model="addTransactionVm.enterpriseValuation.repoDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo. Date" />
-              <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+              <input class="form-control" name="repoDate" id="repodate" ng-model="addTransactionVm.enterpriseValuation.repoDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo. Date" />
+              <label for="repodate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
         </div>

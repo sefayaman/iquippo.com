@@ -2,12 +2,14 @@
   <div class="col-sm-1 padd-right">
     <h4>Invoicing</h4>
   </div>
-  <div class="col-sm-3" ng-if="isAdmin()">
-    <select class="form-control" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
-      <option value="generated">Invoice Generated</option>
-      <option value="tobegenerate">Invoice to be Generated</option>
-    </select>
-    <i class="caret"></i>
+  <div class="col-sm-3">
+    <div ng-if="isAdmin()">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
+        <option value="generated">Invoice Generated</option>
+        <option value="tobegenerate">Invoice to be Generated</option>
+      </select>
+      <i class="caret"></i>
+    </div>
   </div> 
   <div class="col-sm-8 text-right">
     <h4>
