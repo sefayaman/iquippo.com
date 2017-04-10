@@ -372,7 +372,7 @@ exports.bulkUpload = function(req, res) {
     * validateCategory is for validating category,brand,model
     * validateCountry is for validating country,state,city
     */
-    async.parallel([validateEnterprise,validateRequestType,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);
+    async.parallel([validateEnterprise,validateRequestType,validatePurpose,validateYearOfManufacturing,validateAgency,validateMasterData,validateCountry],middleManProcessing);
 
     function validateEnterprise(callback){
       if(user.role== 'enterprise')
@@ -402,6 +402,21 @@ exports.bulkUpload = function(req, res) {
         return callback('Invalid Request Type');
 
       return callback();
+    }
+
+    function validateYearOfManufacturing(callback){
+      if(!row.yearOfManufacturing)
+        return callback();
+      var currentYear = new Date().getFullYear();
+      var isInvalid = isNaN(row.yearOfManufacturing);
+      if(isInvalid || row.yearOfManufacturing.length != 4)
+        return callback("Invalid manufacturing year.");
+       var mfgYear = parseInt(row.yearOfManufacturing);
+       if(mfgYear > 1900 && mfgYear <= currentYear)
+        return callback();
+       else
+        return callback("Invalid manufacturing year.");
+
     }
 
     function validatePurpose(callback){
@@ -570,7 +585,7 @@ exports.bulkUpload = function(req, res) {
 
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = row.enterprise.mobile;
-      row.userName = user.userName;
+      row.userName = user.fname + " " + user.lname;
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
@@ -629,8 +644,6 @@ exports.bulkModify = function(req, res) {
   var user = req.body.user;
   var updateType = req.body.updateType; 
 
-  console.log("update type",updateType);
-
   var options = {
     fileName : fileName,
     user : user,
@@ -680,7 +693,7 @@ exports.bulkModify = function(req, res) {
     if(updateType == 'agency'){
       async.parallel([validateValuation],middleManProcessing)
     }else{
-      async.parallel([validateEnterprise,validateValuation,validateRequestType,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
+      async.parallel([validateEnterprise,validateValuation,validateRequestType,validateYearOfManufacturing,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
     }
 
     
@@ -721,12 +734,13 @@ exports.bulkModify = function(req, res) {
 
         
         var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
         
         row.valData = result[0];
         if(updateType == 'agency'){
           if(user.role == 'admin')
             return callback();
-          if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id)
+          if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id && agencyValidStatus.indexOf(result[0].status) != -1)
               return callback();
           else
             return callback('User does not have privilege to update record');
@@ -734,17 +748,27 @@ exports.bulkModify = function(req, res) {
           var isValidForUpdate = enterpriseValidStatus.indexOf(result[0].status) != -1;
           if(isValidForUpdate && user.role == 'admin')
             return callback();
-          else if(isValidForUpdate && user.enterpriseId == result[0].enterpriseId)
+          else if(isValidForUpdate && user.enterpriseId == result[0].enterprise.enterpriseId)
             return callback();
           else
              return callback('User does not have privilege to update record');
         }
-        
-       /* if(enterpriseValidStatus.indexOf(result[0].status) < 0 && user.role !== 'admin')
-          return callback('User does not have privilege to update record');
-
-        return callback();*/
       })
+    }
+
+     function validateYearOfManufacturing(callback){
+      if(!row.yearOfManufacturing)
+        return callback();
+      var currentYear = new Date().getFullYear();
+      var isInvalid = isNaN(row.yearOfManufacturing);
+      if(isInvalid || row.yearOfManufacturing.length != 4)
+        return callback("Invalid manufacturing year.");
+       var mfgYear = parseInt(row.yearOfManufacturing);
+       if(mfgYear > 1900 && mfgYear <= currentYear)
+        return callback();
+       else
+        return callback("Invalid manufacturing year.");
+
     }
 
     function validateRequestType(callback){

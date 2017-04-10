@@ -75,7 +75,7 @@ module.exports = {
 			'Report_No*': 'reportNo',
 			'Year_of_Manufacture*': 'agencyYearOfManufacturing',
 			'Engine_No':'agencyEngineNo',
-			'Chassis_No':'agencyChasisNo',
+			'Chassis_No':'agencyChassisNo',
 			'Registration_No':'agencyRegistrationNo',
 			'Serial_No':'agencySerialNo',
 			'HMR/KMR*': 'hmr_kmr',
