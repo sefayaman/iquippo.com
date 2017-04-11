@@ -1141,6 +1141,7 @@ var parameters = {
   gps_Device_No:{key:"gpsDeviceNo"},
   yearOfManufacturing:{key:"agencyYearOfManufacturing"},
   engineNo:{key:"agencyEngineNo"},
+  serialNo:{key:"agencySerialNo"},
   chasisNo:{key:"agencyChassisNo"},
   registrationNo:{key:"agencyRegistrationNo"},
   report_url:{key:"valuationReport",type:"file",required:true}
@@ -1189,12 +1190,12 @@ exports.updateFromAgency = function(req,res){
        
       });
 
-      updateObj.status = EnterpriseValuationStatuses[3];
+      updateObj.status = EnterpriseValuationStatuses[4];
       updateObj.statuses = valReq.statuses;
       var stsObj = {};
       stsObj.createdAt = new Date();
       stsObj.userId = "IQVL";
-      stsObj.status = EnterpriseValuationStatuses[3];
+      stsObj.status = EnterpriseValuationStatuses[4];
       if(updateObj.statuses)
         updateObj.statuses[updateObj.statuses.length] = stsObj;
        console.log("QV data upadted",updateObj);
