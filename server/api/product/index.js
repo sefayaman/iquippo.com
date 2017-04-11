@@ -19,6 +19,7 @@ router.post('/countrywiseCount', controller.countryWiseProductCount);
 router.post('/gethistory', controller.getHistory);
 router.post('/createhistory', controller.createHistory);
 router.post('/export', controller.exportProducts);
+//will deprecate this api and will inport using only v1 api
 router.post('/import', controller.importProducts);
 router.post('/bulkproductstatusupdate', controller.bulkProductStatusUpdate);
 router.post('/bulkupdate', controller.bulkUpdate);
@@ -31,7 +32,10 @@ router.post('/incomingproduct', controller.getIncomingProduct);
 router.post('/unlockincomingproduct', controller.unIncomingProduct);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.post('/createauction', controller.createOrUpdateAuction);
+
 router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelData,controller.updateExcelData);
+//vi version of bulk create product
+router.post('/v1/import',controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
 
 
 
