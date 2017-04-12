@@ -76,6 +76,9 @@
 </div>
 <div class="modal-body">
   <form class="form" name="form" novalidate>
+        <div class="alert alert-danger">          
+          Remaining Invoice Amount: <strong><i class="fa fa-inr"></i> 2,000</strong>
+        </div>
         <div class="row form-group " ng-class="{'has-error':form.bankName.$invalid && submitted}">
           <div class="col-sm-4">
             <input type="text" class="form-control" name="bankName" ng-model="paymentDetail.bankName"  placeholder="Bank Name" required/>
