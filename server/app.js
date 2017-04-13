@@ -154,6 +154,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
 
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
+          console.log("-----image",image);
           //var wRatio = 700 / image.width();
           //var hRatio= 450 / image.height();
           image.scale(0.75, function(err, rzdImage) {
