@@ -7,7 +7,7 @@
     <form name="form" novalidate class="form">
       <div class="row">
         <div class="form-group col-sm-6" ng-class="{'has-error': form.fname.$invalid && submitted }">
-          <input type="text" class="form-control" placeholder="* First Name" name="fname" ng-model="bidVm.biddingInfo.user.fname" required>
+          <input type="text" class="form-control" placeholder="*First Name" name="fname" ng-model="bidVm.biddingInfo.user.fname" required>
         </div>
         <div class="form-group col-sm-6">
           <input type="text" class="form-control" placeholder="Middle Name" name="mname" ng-model="bidVm.biddingInfo.user.mname" >
@@ -15,19 +15,19 @@
       </div>
       <div class="row">
         <div class="form-group col-sm-6" ng-class="{'has-error': form.lname.$invalid && submitted }">
-          <input type="text" class="form-control" placeholder="* Last Name" name="lname" ng-model="bidVm.biddingInfo.user.lname" required>
+          <input type="text" class="form-control" placeholder="*Last Name" name="lname" ng-model="bidVm.biddingInfo.user.lname" required>
         </div>
         <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
           <div class="row">
             <div class="col-sm-4 padd-right search-field">
-              <select class="form-control" ng-model="bidVm.biddingInfo.user.countryCode" required>
+              <select class="form-control" ng-model="bidVm.biddingInfo.user.countryCode" ng-change="bidVm.onCodeChange(bidVm.biddingInfo.user.countryCode)" required>
                           <option value="" disabled>*Code</option>
-                          <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">{{country.countryCode}}</option>
+                          <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
                         </select>
               <i class="caret"></i>
             </div>                      
             <div class="col-sm-8 padd-left">
-              <input type="text" class="form-control" placeholder="* Mobile No." name="mobile" ng-model="bidVm.biddingInfo.user.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" required>
+              <input type="text" class="form-control" placeholder="* Mobile No." name="mobile" ng-model="bidVm.biddingInfo.user.mobile" uib-tooltip="98-XXXX-XXXX"  required>
             </div>                      
           </div>
           
@@ -38,20 +38,20 @@
           <input type="email" class="form-control" placeholder="Email Address" name="email" ng-model="bidVm.biddingInfo.user.email">
         </div>
         <div class="form-group col-sm-6" ng-class="{'has-error': form.quantity.$invalid && submitted }">
-          <input type="number" class="form-control" name="quantity*" ng-model="bidVm.biddingInfo.quantity" placeholder=" Quantity" required>
+          <input type="number" class="form-control" name="quantity*" ng-model="bidVm.biddingInfo.quantity" placeholder="*Quantity" required>
         </div>
       </div>
       
       <div class="row">
         <div class="form-group col-sm-6" ng-class="{'has-error': form.valueperunit.$invalid && submitted }">
           <input type="number" class="form-control" placeholder="Value per Unit*" name="valueperunit" ng-model="bidVm.biddingInfo.valueperunit" required>
-        </div>        
+        </div>
       </div>
       <div class="text-left">
         Mode of Payment
         <div class="radio radio-info">
-            <input type="radio" id="inlineRadio2" name="paymentmode" ng-model="bidVm.biddingInfo.paymentmode" value="Offline">
-            <label for="inlineRadio2"> Offline Pay </label>
+          <input type="radio" id="inlineRadio2" name="paymentmode" ng-model="bidVm.biddingInfo.paymentmode" value="Offline">
+          <label for="inlineRadio2"> Offline Pay </label>
         </div>
       </div>
       <!-- <div class="row">
@@ -66,17 +66,17 @@
             <input type="radio" id="inlineRadio2" name="paymentmode" ng-model="bidVm.biddingInfo.paymentmode" value="Offline">
             <label for="inlineRadio2"> Offline Pay </label>
           </div>
-        </div>        
+        </div>
       </div> -->
       <div class="row" ng-if="isAdmin()">
-        <div class="form-group col-sm-6">                   
-          <input type="text" class="form-control" placeholder="Bank Name" name="bankname" ng-model="bidVm.biddingInfo.paymentInfo.bankname">         
+        <div class="form-group col-sm-6">
+          <input type="text" class="form-control" placeholder="Bank Name" name="bankname" ng-model="bidVm.biddingInfo.paymentInfo.bankname">
         </div>
-         <div class="form-group col-sm-6">          
-          <input type="text" class="form-control" placeholder="Cheque No" name="checkno" ng-model="bidVm.biddingInfo.paymentInfo.checkno">          
+        <div class="form-group col-sm-6">
+          <input type="text" class="form-control" placeholder="Cheque No" name="checkno" ng-model="bidVm.biddingInfo.paymentInfo.checkno">
         </div>
-        <div class="form-group col-sm-6" ng-class="{'has-error': form.amount.$invalid && submitted }">          
-          <input type="number" min="0" class="form-control" placeholder="Payment Amount" name="amount" ng-model="bidVm.biddingInfo.paymentInfo.amount" required>        
+        <div class="form-group col-sm-6" ng-class="{'has-error': form.amount.$invalid && submitted }">
+          <input type="number" min="0" class="form-control" placeholder="Payment Amount" name="amount" ng-model="bidVm.biddingInfo.paymentInfo.amount" required>
         </div>
       </div>
       <div class="row">

@@ -1,17 +1,19 @@
-<div class="row">
-  <div class="col-sm-2">
+<div class="row form-group">
+  <div class="col-sm-1 padd-right">
     <h4>Invoicing</h4>
   </div>
   <div class="col-sm-3">
-    <select class="form-control" ng-if="isAdmin()" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
-      <option value="generated">Invoice Generated</option>
-      <option value="tobegenerate">Invoice to be Generated</option>
-    </select>
-    <i class="caret"></i>
+    <div ng-if="isAdmin()">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.type" ng-change="enterpriseInvoiceVm.onTypeChange()">
+        <option value="generated">Invoice Generated</option>
+        <option value="tobegenerate">Invoice to be Generated</option>
+      </select>
+      <i class="caret"></i>
+    </div>
   </div> 
-  <div class="col-sm-7 text-right">
+  <div class="col-sm-8 text-right">
     <h4>
-    <button class="btn btn-success btn-md"><i class="fa fa-file-excel-o"></i> Export Excel</button>                 
+    <button class="btn btn-success btn-md" ng-click="enterpriseInvoiceVm.exportExcel()" ng-if="enterpriseInvoiceVm.type == 'generated'"><i class="fa fa-file-excel-o"></i> Export Excel</button>                 
     </h4>
   </div>
 </div>
@@ -21,21 +23,21 @@
   <form name="searchForm">
     <div class="row form-group">          
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseId" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.enterpriseId" ng-change="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Enterprise Name</option>
         <option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseInvoiceVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
       </select>
       <i class="caret"></i>
     </div>
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.reqType" ng-change="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Type of Request</option>
         <option ng-repeat="req in enterpriseInvoiceVm.serviceList" value="{{req.name}}">{{req.name}}</option>
       </select>
       <i class="caret"></i>
     </div>
     <div class="col-sm-3">
-      <select class="form-control" ng-model="enterpriseInvoiceVm.agencyId" ng-click="enterpriseInvoiceVm.fireCommand(true)">
+      <select class="form-control" ng-model="enterpriseInvoiceVm.agencyId" ng-change="enterpriseInvoiceVm.fireCommand(true)">
         <option value="">Select Valuation Partner</option>
         <option value="{{val._id}}" ng-repeat="val in enterpriseInvoiceVm.agencies">{{val.name}}</option>
       </select>
@@ -51,14 +53,14 @@
       <button class="btn btn-primary btn-block" ng-click="enterpriseInvoiceVm.openInvoiceModal()">Generate Invoice</button>                   
     </div>      
     <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
-      Search: <input type="text" placeholder="Search...">
+      Search: <input type="text" placeholder="Search..." ng-model="enterpriseInvoiceVm.searchStr" ng-change="enterpriseInvoiceVm.fireCommand(true)" ng-model-options="{debounce:500}">
     </div>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Select</th>
+          <th><input type="checkbox" ng-model="enterpriseInvoiceVm.selectAllReq" ng-click="enterpriseInvoiceVm.selectAll($event)"> All</th>
           <th>Unique Control No</th>
           <th>Request Type</th>
           <th>Purpose</th>
@@ -68,12 +70,13 @@
           <th>Customer Valuation No</th>
           <th>Asset No.</th>
           <th>Status</th>
+          <th>Remark</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="entVal in enterpriseInvoiceVm.dataList">
           <td>
-            <input type="checkbox" ng-disabled="entVal.status == EnterpriseValuationStatuses[5]" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
+            <input type="checkbox" ng-checked="enterpriseInvoiceVm.selectAllReq" ng-disabled="entVal.status == EnterpriseValuationStatuses[5]" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
           <td>{{entVal.uniqueControlNo}}</td>
           <td>{{entVal.requestType}}</td>
@@ -83,7 +86,9 @@
           <td>{{entVal.customerTransactionId}}</td>
           <td>{{entVal.customerValuationNo}}</td>
           <td>{{entVal.assetId}}</td>
-          <td>{{entVal.status}}</td>          
+          <td>{{entVal.status}}</td>
+          <td></td>
+
         </tr>
       </tbody>
     </table>
@@ -92,31 +97,40 @@
 </div>
 <!-- invoice genrated -->
 <div ng-if="enterpriseInvoiceVm.type == 'generated'">
+  <div class="row form-group featured">        
+    <div class="col-sm-offset-9 col-sm-3 tablesearch text-right">
+      Search: <input type="text" placeholder="Search..." ng-model="enterpriseInvoiceVm.searchStr" ng-change="enterpriseInvoiceVm.fireCommand(true)" ng-model-options="{debounce:500}">
+    </div>
+  </div>
   <div class="table-responsive">
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Select</th>
+          <th><input type="checkbox"  ng-model="enterpriseInvoiceVm.selectAllInv" ng-click="enterpriseInvoiceVm.selectAll($event)"> All</th>
           <th>Invoice Number</th>
           <th>Enterprise Name</th>
           <th>Enterprise Contact No.</th>
           <th>Valuation Partner Name</th>
           <th>Valuation Partner Contact No.</th>
+          <th>Amount</th>
           <th>Status</th>
+          <th>Remark</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="entVal in enterpriseInvoiceVm.dataList">
           <td>
-            <input type="checkbox" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
+            <input type="checkbox" ng-checked="enterpriseInvoiceVm.selectAllInv" ng-click="enterpriseInvoiceVm.updateSelection($event,entVal)">
           </td>
-          <td>{{entVal.invoiceNo}}</td>
+          <td><a href="javascript:void(0);" ng-click="enterpriseInvoiceVm.showDetail(entVal)">{{entVal.invoiceNo}}</a></td>
           <td>{{entVal.enterprise.name}}</td>
           <td>{{entVal.enterprise.mobile}}</td>
           <td>{{entVal.agency.name}}</td>
            <td>{{entVal.agency.mobile}}</td>
+           <td>{{entVal.totalAmount}}</td>
           <td>{{entVal.status}}</td>
+          <td></td>
           <td>          
               <a class="btn btn-default btn-md" ng-click="enterpriseInvoiceVm.downloadInvoice(entVal.invoiceNo)" href="javascript:void(0);"><i class="fa fa-download"></i> </a>
           </td>
@@ -134,32 +148,143 @@
     <h4 class="modal-title">Invoicing</h4>
   </div>
  <div class="modal-body">
-   <form name="invoiceForm" novalidate>
+   <form name="invoiceForm" class="text-left" novalidate>
    	<div class="row">
-   		<div class="col-md-10 form-group">
-   			Valuation Request Count:			
-   		</div>
-   		<div class="col-md-2">
-   			{{invoice.requestCount}}
+   		<div class="col-md-12">
+   			<div class="alert alert-info">Valuation Request Count: {{invoice.requestCount}}</div>
    		</div>
    	</div>
-   	<div class="row"> 		
-   		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">
-   		  <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Service Fee" required/>
-   		</div>
-   		<div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
-   			<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
+    <div class="row">
+      <div class="col-sm-4 text-right">
+        Service Fee:
+      </div>
+      <div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">        
+        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Enter Service Fee" required/>
+      </div>
+    </div>
+    <legend></legend>
+    <div class="row form-group">
+      <div class="col-sm-12">
+        <span class="badge" ng-repeat="token in selectedTax">
+          {{token.type}} : {{token.taxRate}} 
+          <a href="javascript:void(0);" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="deleteTaxToken($index)">
+            <i class="fa fa-times" ></i>
+          </a>
+        </span>
+      </div>
+    </div>
+   	<div class="row"> 	
+      <div class="col-sm-5 form-group">
+        <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType">
+          <option value="">Select Type of Taxes</option>
+          <option ng-repeat="tx in taxList" value="{{tx}}">{{tx}}</option>
+        </select>
+      </div>
+   		<div class="col-md-5 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">
+   			<!--<select class="form-control" name="servicetax" ng-model="invoice.taxRate" required>
           <option value="">Select Rate for Invoice</option>
           <option value="{{tax.taxRate}}" ng-repeat="tax in serviceTaxes">{{tax.taxRate}}</option>
-        </select>
-        <i class="caret"></i>
+        </select>  -->
+        <input type="number" class="form-control" placeholder="Enter Rate" ng-model="currentTax.taxRate" disabled>     
    		</div>
+      <div class="col-md-2">
+      <button class="btn btn-primary" ng-click="addTaxToken(currentTax)"> Add</button>
+      </div>
    	</div>
+    
    	<div class="row">
    		<div class="col-md-12 text-right">
-   			<button type="button" class="btn btn-danger" ng-click="generateInvoice(invoiceForm)">Genrate</button>
+   			<button type="button" class="btn btn-danger" ng-click="generateInvoice(invoiceForm)">Generate</button>
    		</div>
    	</div>
   </form>
+  </div>
+</script>
+
+<script type="text/ng-template" id="invDetail.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Invoice Details</h4>
+  </div>
+  <div class="modal-body">
+    <!--payment recieved -->
+    <table class="table table-bordred">               
+      <tr>
+
+        <td class="col-sm-3"><b>Invoice No.:</b></td>
+        <td class="col-sm-3">{{invoice.invoiceNo}}</td>
+        <td class="col-sm-3"><b>Type of Request:</b></td>
+        <td class="col-sm-3">{{invoice.requestType}}</td>                  
+      </tr>
+      <tr>
+        <td><b>Enterprise Name:</b></td>
+        <td>{{invoice.enterprise.name}}</td>
+        <td><b>Enterprise Contact No.:</b></td>
+        <td>{{invoice.enterprise.mobile}}</td>
+      </tr>
+      <tr>
+        <td><b>Agency Name:</b></td>
+        <td>{{invoice.agency.name}}</td>
+         <td><b>Agency Contact No.:</b></td>
+        <td>{{invoice.agency.mobile}}</td>
+      </tr>              
+           
+    </table>
+
+    <div class="panel panel-default" ng-if="invoice.paymentReceived && isAdmin()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Payment Received Details</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordred" ng-repeat="pmt in invoice.paymentReceivedDetail.paymentDetails" ng-if="pmt.attached">
+          <tr>
+            <td class="col-sm-3"><b>Bank Name:</b></td>
+            <td class="col-sm-3">{{pmt.bankName}}</td>
+            <td class="col-sm-3"><b>Branch Name:</b></td>
+            <td class="col-sm-3">{{pmt.branchName}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Number:</b></td>
+            <td>{{pmt.chequeNo}}</td>
+            <td><b>Cheque Date:</b></td>
+            <td>{{pmt.chequeDate}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Value:</b></td>
+            <td>{{pmt.chequeValue}}</td>
+            <td><b>Deducted TDS:</b></td>
+            <td>{{pmt.deductedTds}}</td>
+          </tr> 
+        </table>
+      </div>
+    </div>
+    <!-- payment made -->
+    <div class="panel panel-default" ng-if="invoice.paymentMade && isAdmin()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Payment Made Details</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordred" ng-repeat="pmt in invoice.paymentMadeDetail.paymentDetails" ng-if="pmt.attached">
+          <tr>
+            <td class="col-sm-3"><b>Bank Name:</b></td>
+            <td class="col-sm-3">{{pmt.bankName}}</td>
+            <td class="col-sm-3"><b>Branch Name:</b></td>
+            <td class="col-sm-3">{{pmt.branchName}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Number:</b></td>
+            <td>{{pmt.chequeNo}}</td>
+            <td><b>Cheque Date:</b></td>
+            <td>{{pmt.chequeDate}}</td>
+          </tr>
+          <tr>
+            <td><b>Cheque Value:</b></td>
+            <td>{{pmt.chequeValue}}</td>
+            <td><b>Deducted TDS:</b></td>
+            <td>{{pmt.deductedTds}}</td>
+          </tr> 
+        </table>
+      </div>
+    </div>
   </div>
 </script>

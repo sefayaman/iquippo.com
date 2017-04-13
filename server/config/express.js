@@ -64,6 +64,7 @@ module.exports = function(app) {
       res.status(501).end();
   });
   app.all('*', function(req, res, next) {
+    res.setHeader('Last-Modified', (new Date()).toUTCString());
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');

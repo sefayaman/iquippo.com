@@ -13,7 +13,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Shipping controller function
-  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,MarketingSvc) {
+  function ShippingCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc, MarketingSvc, UtilSvc) {
     //NJ start:set current time
     $scope.shippingStartTime = new Date();
     //End
@@ -79,8 +79,18 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     init();
 
     function addShippingQuote(evt) {
-
-      if($scope.form.$invalid){
+      var ret = false;
+      if($scope.shippingQuote.country && $scope.shippingQuote.mobile) { 
+        var value = UtilSvc.validateMobile($scope.shippingQuote.country, $scope.shippingQuote.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
+      if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }
@@ -140,7 +150,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Valuation controller function
-  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc) {
+  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc) {
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
     //End
@@ -301,6 +311,17 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function addValuationQuote(evt) {
+      var ret = false;
+      if($scope.valuationQuote.country && $scope.valuationQuote.mobile) { 
+        var value = UtilSvc.validateMobile($scope.valuationQuote.country, $scope.valuationQuote.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
 
       if($scope.valuationQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.valuationQuote.scheduleDate))
@@ -309,7 +330,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.form.scheduleDate.$invalid = false;
       }
 
-      if($scope.form.$invalid){
+      if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }
@@ -431,7 +452,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Finance Controller function
-  function FinanceCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc) {
+  function FinanceCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc) {
     var facebookConversionSent = false;
     $scope.addFinanceQuote = addFinanceQuote;
     $scope.resetClick = resetClick;
@@ -568,7 +589,19 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     init();
 
     function addFinanceQuote(evt) {
-      if($scope.form.$invalid){
+      var ret = false;
+      if($scope.financeQuote.country && $scope.financeQuote.mobile) { 
+        var value = UtilSvc.validateMobile($scope.financeQuote.country, $scope.financeQuote.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
+
+      if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }
@@ -612,7 +645,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
   }
   //Valuation controller function
-  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc) {
+  function InsuranceCtrl($scope, $rootScope, Auth, $http, Modal, notificationSvc, LocationSvc,categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc) {
    var facebookConversionSent = false;
     $scope.addInsuranceQuote = addInsuranceQuote;
     $scope.resetClick = resetClick;
@@ -748,8 +781,19 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     init();
 
     function addInsuranceQuote(evt) {
+      var ret = false;
+      if($scope.insuranceQuote.country && $scope.insuranceQuote.mobile) { 
+        var value = UtilSvc.validateMobile($scope.insuranceQuote.country, $scope.insuranceQuote.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
 
-      if($scope.form.$invalid){
+      if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }
@@ -791,7 +835,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
   }
 
-  function CetifiedByiQuippoCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc) {
+  function CetifiedByiQuippoCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc, UtilSvc) {
     //NJ Start: set certifiedbyiquippoStartTime
     $scope.certifiedbyiquippoStartTime = new Date();
     //End
@@ -826,6 +870,17 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     init();
 
    function addCetifiedByiQuippoQuote(evt) {
+      var ret = false;
+      if($scope.cetifiedByiQuippoQuote.country && $scope.cetifiedByiQuippoQuote.mobile) { 
+        var value = UtilSvc.validateMobile($scope.cetifiedByiQuippoQuote.country, $scope.cetifiedByiQuippoQuote.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
 
       if($scope.cetifiedByiQuippoQuote.schedule == 'yes') {
         if(angular.isUndefined($scope.cetifiedByiQuippoQuote.scheduleDate))
@@ -834,7 +889,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.form.scheduleDate.$invalid = false;
       }
 
-      if($scope.form.$invalid){
+      if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }

@@ -145,13 +145,11 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var fileNameParts = fileName.split('.');
       var extPart = fileNameParts[fileNameParts.length - 1];
       var namePart = fileNameParts[0];
-      console.log("size",dimension.size);
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
       }, function(err, result) {
         if (err) throw err;
-
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
           console.log("-----image",image);
@@ -183,8 +181,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
                 return resizeImg(req, res, assetDir, dimension, isMultiple);
               }
             }
-          })
-
+          });
         })
     }
     else{

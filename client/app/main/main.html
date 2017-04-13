@@ -269,19 +269,29 @@
           <div class="media">
             <h4 class="media-heading">How iQuippo Works?</h4>
             <div class="media-body media-coverage">
-              <iframe width="250" height="180" src="https://www.youtube.com/embed/6fWE5bmpu9g" frameborder="0" allowfullscreen></iframe>
-            
-                         
-              <p><strong>iQuippo</strong> offers the best of services and expertise to take our customers to the next level ,improving their efficiency and productivity by offering cost effective solution on a Single platform.</p>
+             <!--  <iframe width="250" height="180" src="http://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" allowfullscreen></iframe>
+            --> <iframe ng-if="!toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/6fWE5bmpu9g?autoplay=1" frameborder="0" allowfullscreen>
+               </iframe>
+               <object ng-if="toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" >
+               </object>
+              <a href="#" class="utube-icon" ng-if="toggle1" ng-click="toggling('vid1')"><img src="assets/images/utube.png"></a>
+               <p><strong>iQuippo</strong> offers the best of services and expertise to take our customers to the next level ,improving their efficiency and productivity by offering cost effective solution on a Single platform.</p>
               <p class="text-primary">25 Aug, 2016</p>
-            </div>
+            </div>             
+              
+            
           </div>
         </div>
        <div class="col-sm-3">
          <div class="media">
            <h4 class="media-heading">Media Coverage Videos Links:</h4>
            <div class="media-body">
-             <iframe width="100%" height="180" src="https://www.youtube.com/embed/_KgtJzQAQfw" frameborder="0" allowfullscreen></iframe>
+             <!-- <iframe width="100%" height="180" src="https://www.youtube.com/embed/_KgtJzQAQfw" frameborder="0" allowfullscreen></iframe>-->
+             <iframe ng-if="!toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/_KgtJzQAQfw?autoplay=1" frameborder="0" allowfullscreen>
+               </iframe>
+               <object ng-if="toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/_KgtJzQAQfw/0.jpg"  frameborder="0" allowfullscreen>
+               </object>
+               <a href="#" class="utube-icon" ng-if="toggle2" ng-click="toggling('vid2')" ><img src="assets/images/utube.png"></a>
            </div>
          </div>
         </div>
@@ -409,7 +419,13 @@
         
         <div class="col-sm-3">
           <h4 class="media-heading">iQuippo Launch:</h4>
-          <iframe width="100%" height="180" src="https://www.youtube.com/embed/0cabxI1gy4s" frameborder="0" allowfullscreen></iframe>
+          <!-- <iframe width="100%" height="180" src="https://www.youtube.com/embed/0cabxI1gy4s" frameborder="0" allowfullscreen></iframe>
+          --> <iframe ng-if="!toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/0cabxI1gy4s?autoplay=1" frameborder="0" allowfullscreen>
+               </iframe>
+               <object ng-if="toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/0cabxI1gy4s/0.jpg" ng-click="toggling('vid3')" frameborder="0" allowfullscreen>
+               </object>
+               <a href="#" class="utube-icon" ng-click="toggling('vid3')" ng-if="toggle3"><img src="assets/images/utube.png"></a>
+
         <!-- <iframe width="330" height="140" src="https://www.youtube.com/embed/cT3hcuOkdQc" frameborder="0" allowfullscreen></iframe> -->
         </div>
       </div>

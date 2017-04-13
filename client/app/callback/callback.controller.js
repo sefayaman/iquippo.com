@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
 
-  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal,MarketingSvc) {
+  function CallbackCtrl($scope,$http, $uibModalInstance, notificationSvc, Modal,MarketingSvc, UtilSvc, LocationSvc) {
     //Start > NJ:push callBackOpen object in GTM dataLayer
     dataLayer.push(gaMasterObject.callBackOpen);
     //End
@@ -12,8 +12,26 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
     vm.sendCallback = sendCallback;
     vm.closeDialog = closeDialog;
     var facebookConversionSent = false;
+
+    $scope.onCodeChange = function(code) {
+      vm.callback.country = LocationSvc.getCountryNameByCode(code);
+    } 
+
     function sendCallback(callback) {
       var ret = false;
+      if(!vm.callback.country && vm.callback.countryCode)
+        vm.callback.country = LocationSvc.getCountryNameByCode(vm.callback.countryCode);
+
+      if(vm.callback.country && vm.callback.mobile) { 
+        var value = UtilSvc.validateMobile(vm.callback.country, vm.callback.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
       if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
@@ -23,6 +41,7 @@ angular.module('sreizaoApp').controller('CallbackCtrl',CallbackCtrl);
       dataToSend['fname'] = callback.fname;
       dataToSend['mname'] = callback.mname;
       dataToSend['lname'] = callback.lname;
+      dataToSend['country'] = callback.country;
       dataToSend['phone'] = callback.phone;
       dataToSend['mobile'] = callback.mobile;
       dataToSend['email'] = callback.email;

@@ -10,17 +10,17 @@
               <div class="row">
                 <div class="col-sm-3 form-group">
                   <div class="">
-                    <input type="text" ng-model="spareHomeVm.categorySearchText" placeholder="Select Asset Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    <input type="text" ng-model="spareHomeVm.categorySearchText" placeholder="Enter Asset Category" uib-typeahead="address for address in getCategoryHelp($viewValue)"  class="form-control"  ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                   </div>
                 </div>
                 <div class="col-sm-3 form-group">
                   <div class="">
-                    <input type="text" class="form-control" ng-model="spareHomeVm.locationSearchText" placeholder="Spare Part Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
+                    <input type="text" class="form-control" ng-model="spareHomeVm.locationSearchText" placeholder="Enter Spare Part Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" ng-keypress="spareHomeVm.myFunct($event)" typeahead-focus-first = "false" typeahead-wait-ms="200"/>
                   </div>
                 </div> 
                 <div class="col-sm-3 form-group">
                   <div class="">
-                    <input type="text" class="form-control" placeholder="Spare Part Name" ng-model="spareHomeVm.sparename" class="form-control" ng-keypress="spareHomeVm.myFunct($event)"/>
+                    <input type="text" class="form-control" placeholder="Enter Spare Part Name/Part No." ng-model="spareHomeVm.sparename" class="form-control" ng-keypress="spareHomeVm.myFunct($event)"/>
                   </div>
                 </div>             
                 <div class="col-sm-3 form-group text-center">

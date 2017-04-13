@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 angular.module('spare').controller('SpareDetailCtrl', SpareDetailCtrl)
-function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc) {
+function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc, UtilSvc) {
   var vm = this;
   vm.currentSpare = {};
   vm.buycontact = {};
@@ -104,7 +104,19 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
   }
 
   function sendBuyRequest(form) {
-    if(form.$invalid){
+    var ret = false;
+    if(vm.buycontact.country && vm.buycontact.mobile) { 
+      var value = UtilSvc.validateMobile(vm.buycontact.country, vm.buycontact.mobile);
+      if(!value) {
+        $scope.form.mobile.$invalid = true;
+        ret = true;
+      } else {
+        $scope.form.mobile.$invalid = false;
+        ret = false;
+      }
+    }
+
+    if(form.$invalid || ret){
       $scope.submitted = true;
       return;
     }

@@ -188,7 +188,7 @@ angular.module('sreizaoApp')
       isEnterprise : function(){
          var retVal = false;
         retVal = currentUser.role === 'enterprise' && currentUser.enterprise;
-        if(!currentUser.enterpriseName)
+        if(!currentUser.enterpriseId)
           retVal = false;
         return retVal;
        // return currentUser.role === 'enterprise' && currentUser.enterprise;
@@ -196,7 +196,7 @@ angular.module('sreizaoApp')
       isEnterpriseUser : function(){
         var retVal = false;
         retVal = currentUser.role === 'enterprise' && !currentUser.enterprise;
-        if(!currentUser.enterpriseName)
+        if(!currentUser.enterpriseId)
           retVal = false;
         return retVal;
       },

@@ -1204,7 +1204,7 @@
 				</div>
 				<div class="col-sm-6 text-right">
 					<h4>
-					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+					<!-- <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button> -->
 					</h4>
 				</div>
 			</div>
@@ -1232,18 +1232,21 @@
 					</select>
 					<i class="caret"></i>
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveToDate.$invalid && submitted}">
-					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective to Date" required/>
+				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveFromDate.$invalid && submitted}">
+					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective from Date" required/>
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.effectiveToDate.$invalid && submitted}">
+					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcFeeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective to Date" required/>
+				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.chargeBasis.$invalid && submitted}">
 					<!-- <div class="input-group">
 								<input type="text" class="form-control" name="chargeBasis" ng-model="svcFeeVm.dataModel.chargeBasis" placeholder="Charge Basis" required />
 								<span class="input-group-addon">%</span>
 					</div> -->
 					<select class="form-control" ng-model="svcFeeVm.dataModel.chargeBasis" required>
-						<option value="">*Slect Charge Basis</option>
+						<option value="">*Select Charge Basis</option>
 						<option value="flat">Flat</option>
 						<option value="percent">%</option>
 					</select>
@@ -1252,7 +1255,7 @@
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.feeAmount.$invalid && submitted}">
 					<input type="number" class="form-control" name="feeAmount" ng-model="svcFeeVm.dataModel.amount" placeholder="*Amount" required />
 				</div>
-				<div class="col-sm-offset-4 col-sm-2 text-right">
+				<div class="col-sm-2 pull-right">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcFeeVm.update(feemasterForm)">Update</button>
 					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcFeeVm.save(feemasterForm)">Save</button>
 				</div>
@@ -1274,6 +1277,7 @@
 						<th>Type of Service</th>
 						<th>Enterprise Name</th>
 						<th>Agency Name</th>
+						<th>Effective From Date</th>
 						<th>Effective to Date</th>
 						<th>Charge Basis(%)</th>
 						<th>Amount</th>
@@ -1286,6 +1290,7 @@
 						<td>{{svcFee.serviceType}}</td>
 						<td>{{svcFee.enterpriseName}}({{svcFee.enterpriseId}})</td>
 						<td>{{svcFee.agency.name}}</td>
+						<td>{{svcFee.effectiveFromDate | date:'MM/dd/yyyy' }}</td>
 						<td>{{svcFee.effectiveToDate | date:'MM/dd/yyyy' }}</td>
 						<td>{{svcFee.chargeBasis}}</td>
 						<td>{{svcFee.amount}}</td>
@@ -1308,22 +1313,30 @@
 				</div>
 				<div class="col-sm-6 text-right">
 					<h4>
-					<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+					<!-- <button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button> -->
 					</h4>
 				</div>
 			</div>
 			<legend></legend>
 			<div class="row">
+				<div class="col-sm-3">
+					<select class="form-control" ng-model="svcTaxVm.dataModel.type" required>
+						<option value="">Select Type of Taxe</option>
+						<option value="{{txl}}" ng-repeat="txl in taxList">{{txl}}</option>
+					</select>
+				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveFromDate.$invalid && submitted}">
-					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective From Date" required>
+					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveToDate.$invalid && submitted}">
-					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Effective To Date" required>
+					<input type="text" name="effectiveToDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.taxRate.$invalid && submitted}">
-					<input type="number" class="form-control" name="taxRate" ng-model="svcTaxVm.dataModel.taxRate" value="" placeholder="Service Tax Rate" required>
-				</div>
-				<div class="form-group col-sm-offset-1 col-sm-2 text-right">
+					<input type="number" class="form-control" name="taxRate" ng-model="svcTaxVm.dataModel.taxRate" value="" placeholder="*Service Tax Rate" required>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="form-group col-sm-offset-10 col-sm-2">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="svcTaxVm.update(taxmasterForm)">Update</button>
 					<button type="button" class="btn btn-primary btn-block" ng-if="!edit" ng-click="svcTaxVm.save(taxmasterForm)">Save</button>
 				</div>
@@ -1342,6 +1355,7 @@
 			<table class="table table-bordred table-striped">
 				<thead>
 					<tr>
+						<th>Type of Taxe</th>
 						<th>Effective From Date</th>
 						<th>Effective To Date</th>
 						<th>Service Tax Rate</th>
@@ -1351,6 +1365,7 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="taxRate in svcTaxVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+						<td>{{taxRate.type}}</td>
 						<td>{{taxRate.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{taxRate.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{taxRate.taxRate}}</td>
@@ -1380,7 +1395,7 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error':purposeForm.purpose.$invalid && submitted}">
-					<input type="text" class="form-control" name="purpose"  ng-model="valuationPurposeVm.dataModel.name" placeholder="Valuation Purpose" required>
+					<input type="text" class="form-control" name="purpose"  ng-model="valuationPurposeVm.dataModel.name" placeholder="*Valuation Purpose" required>
 				</div>
 				<div class="form-group col-sm-offset-7 col-sm-2 text-right">
 					<button type="button" class="btn btn-primary btn-block" ng-if="edit" ng-click="valuationPurposeVm.update(purposeForm)">Update</button>
@@ -1439,21 +1454,63 @@
 				</span>
 				</h4>
 			</div> -->
+			<div class="col-sm-offset-2 col-sm-2">
+				<span class="btn btn-default fileinput-button">
+					<input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
+					<span><i class="fa fa-upload"></i> Import Excel</span>
+				</span>
+				<span>{{uploadedExcel}}</span>
+			</div>
+			<div class="col-sm-2">
+				<button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit Excel</button>
+			</div>
+			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="assetGroupForm" name="assetGroupForm" >
 			<div class="row form-group">
-				<div class="col-sm-2">
-					<span class="btn btn-default fileinput-button">
-						<input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
-						<span><i class="fa fa-upload"></i> Import Excel</span>
-					</span>
-					<span>{{uploadedExcel}}</span>
+				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerGroupId.$invalid && submitted}">
+					<input type="text" name="valuerGroupId" ng-model="assetGroupVm.assetGroup.valuerGroupId" class="form-control" placeholder="*Valuation Partner Group ID" required>
 				</div>
-				<div class="col-sm-2">
-					<button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit Excel</button>
+				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerAssetId.$invalid && submitted}">
+					<input type="text" name="valuerAssetId" ng-model="assetGroupVm.assetGroup.valuerAssetId" class="form-control" placeholder="*Valuation Partner Asset ID" required>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.valuerCode.$invalid && submitted}">
+					<select class="form-control" name="valuerCode" ng-model="assetGroupVm.assetGroup.valuerCode" ng-change="assetGroupVm.getValueOnChange(assetGroupVm.assetGroup.valuerCode, 'valuation')" required>
+						<option value="">*Select Valuation Partner</option>
+						<option  ng-repeat="ag in assetGroupVm.valAgencies | orderBy:'name'" value="{{ag.partnerId}}">{{ag.name}} - {{ag.partnerId}}</option>
+					</select>
+					<i class="caret"></i>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.assetCategory.$invalid && submitted}">
+					<input type="text" name="assetCategory" ng-model="assetGroupVm.assetGroup.assetCategory" class="form-control" placeholder="*Asset Group Category" required>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':assetGroupForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="assetGroupVm.assetGroup.enterpriseId" ng-change="assetGroupVm.getValueOnChange(assetGroupVm.assetGroup.enterpriseId, 'enterprise')" required>
+						<option value="">*Select Enterprise</option>
+						<option ng-repeat="enterprise in assetGroupVm.enterprises" value="{{enterprise.enterpriseId}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.enterpriseId}})</option>
+					</select>
+					<i class="caret"></i>
+				</div>
+				<div class="col-sm-offset-7 col-sm-2">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEditAssetGroup" ng-click="assetGroupVm.addOrEditAssetGroup(assetGroupForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEditAssetGroup" ng-click="assetGroupVm.addOrEditAssetGroup(assetGroupForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="assetGroupVm.searchStr" ng-change="assetGroupVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
-		<legend></legend>
-		<divc class="table-responsive">
+		<div class="table-responsive">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -1476,7 +1533,9 @@
 						<td>{{assetGroup.assetCategory}}</td>
 						<td>{{assetGroup.enterpriseName}}</td>
 						<td>{{assetGroup.enterpriseId}}</td>
-						<td><button ng-click="assetGroupVm.deleteAssetGroup(assetGroup._id)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="assetGroupVm.editAssetGroup($index)"><i class="fa fa-pencil"></i></button>
+							<button ng-click="assetGroupVm.deleteAssetGroup(assetGroup._id)" type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>

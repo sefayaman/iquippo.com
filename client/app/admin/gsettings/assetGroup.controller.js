@@ -3,7 +3,7 @@
 
   angular.module('admin').controller('AssetGroupCtrl', AssetGroupCtrl);
 
-  function AssetGroupCtrl($rootScope, $scope, Modal, Auth, $filter, AssetGroupSvc, uploadSvc, notificationSvc) {
+  function AssetGroupCtrl($rootScope, $scope, Modal, Auth, $filter, AssetGroupSvc, uploadSvc, notificationSvc, userSvc, vendorSvc) {
     var vm = this;
     vm.assetGroupList = [];
     vm.assetGroup = {};
@@ -11,16 +11,42 @@
     vm.fireCommand = fireCommand;
     vm.submitUploadTemp = submitUploadTemp;
     vm.deleteAssetGroup = deleteAssetGroup;
+    vm.addOrEditAssetGroup = addOrEditAssetGroup;
+    vm.editAssetGroup = editAssetGroup;
+    vm.getValueOnChange = getValueOnChange;
     vm.uploadTemplate = 'Asset_Group_Master.xlsx';
+    //pagination variables
     var prevPage = 0;
     vm.itemsPerPage = 50;
     vm.currentPage = 1;
     vm.totalItems = 0;
     vm.maxSize = 6;
-    $scope.uploadedExcel = '';
     var first_id = null;
     var last_id = null;
+    $scope.uploadedExcel = '';
 
+    $scope.isEditAssetGroup = false;
+
+    var dataToSend = {};
+    
+    function init(){
+      var userFilter = {};
+      userFilter.role = "enterprise";
+      userFilter.enterprise = true;
+      userSvc.getUsers(userFilter).then(function(data){
+        vm.enterprises = data;
+      });
+      
+      vendorSvc.getAllVendors()
+        .then(function(){
+          vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
+        });
+
+      dataToSend.pagination = true;
+      dataToSend.itemsPerPage = vm.itemsPerPage;
+      getAssetGroup(dataToSend);
+    }
+    init();
 
     $scope.$on("fileSelected", function(event, args) {
       if (args.files.length == 0)
@@ -48,6 +74,70 @@
           console.log(err);
           Modal.alert("error in file upload", true);
         });
+    }
+
+    function getValueOnChange(val, type) {
+      switch (type) {
+        case 'valuation':
+            vm.valAgencies.forEach(function(item) {
+              if (item.partnerId == val) {
+                vm.assetGroup.valuerName = item.name;
+              }
+            });
+            break;
+        case 'enterprise':
+            vm.enterprises.forEach(function(item) {
+              if (item.enterpriseId == val) {
+                vm.assetGroup.enterpriseName = item.fname + " " + item.lname;
+              }
+            });
+            break;
+      }
+    }
+
+    function editAssetGroup(index) {
+      angular.copy(vm.assetGroupList[index], vm.assetGroup);
+      $scope.isEditAssetGroup = true;
+      $scope.isAssetGroupCollapsed = false;
+    }
+
+    function addOrEditAssetGroup(form){
+      if (form.$invalid) {
+          $scope.submitted = true;
+          return;
+      }
+      $scope.submitted = false;
+      setUser();
+      if(!$scope.isEditAssetGroup)
+        saveAssetGroup();
+      else
+        updateAssetGroup();
+    }
+    function saveAssetGroup(form) {
+      AssetGroupSvc.save(vm.assetGroup)
+        .then(function(res) {
+          if (res.errorCode == 0) {
+            vm.assetGroup = {};
+            $scope.submitted = false;
+            Modal.alert(res.message);
+            fireCommand(true);
+          } else 
+            Modal.alert(res.message);
+      })
+    }
+
+    function updateAssetGroup() {
+      AssetGroupSvc.update(vm.assetGroup)
+        .then(function(res) {
+          if (res.errorCode == 0) {
+              vm.assetGroup = {};
+              $scope.submitted = false;
+              $scope.isEditAssetGroup = false;
+              Modal.alert("Record successfully updated.");
+              fireCommand(true);
+          } else
+              Modal.alert(res.message);
+      })
     }
 
     function setUser() {
@@ -156,16 +246,15 @@
           prevPage = vm.currentPage;
           first_id = vm.assetGroupList[0].id;
           last_id = vm.assetGroupList[vm.assetGroupList.length - 1].id;
+        }else{
+          vm.assetGroupList = [];
         }
       }).catch(function(err) {
         Modal.alert('Error while fetching');
       });
     }
 
-    fireCommand();
-
     function fireCommand(reset, filterObj) {
-      var dataToSend = {};
       if (reset) {
         resetPagination();
       }

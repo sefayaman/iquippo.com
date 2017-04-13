@@ -5,7 +5,7 @@ angular.module('classifiedAd').controller('ClassifiedAdCtrl', ClassifiedAdCtrl);
 
 //Controller function
 
-function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc) {
+function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibModalInstance,$uibModal,Modal, notificationSvc, LocationSvc, UtilSvc) {
     //Start NJ : classifiedAdClick object push in GTM dataLayer
     dataLayer.push(gaMasterObject.classifiedAdClick);
     //NJ :set Start Time of classifiedAd Start Time
@@ -28,6 +28,7 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
     vm.resetImages = resetImages;
     vm.previewImg = previewImg;
     vm.closeDialog = closeDialog;
+    vm.onCodeChange = onCodeChange;
 
     function init(){
 
@@ -37,10 +38,10 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
           vm.classified.mname = Auth.getCurrentUser().mname;
           vm.classified.lname = Auth.getCurrentUser().lname;
           vm.classified.phone = Auth.getCurrentUser().phone;
-
+          vm.classified.country = Auth.getCurrentUser().country;
           vm.classified.mobile = Auth.getCurrentUser().mobile;
           vm.classified.email = Auth.getCurrentUser().email;
-
+          vm.classified.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
         } else {
           vm.classified = {}
         }
@@ -48,11 +49,15 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
       }else{
         vm.classified = $scope.classified;
         $scope.checked = $scope.classified.position;
+        vm.classified.countryCode = LocationSvc.getCountryCode(vm.classified.country);
         //vm.classified.image = $scope.classified.image;
       }
     }
     init();
 
+    function onCodeChange(code) {
+      vm.classified.country = LocationSvc.getCountryNameByCode(code);
+    }
 
     //listen for the file selected event
     $scope.$on("fileSelected", function (event, args) {
@@ -135,11 +140,26 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
      }
 
     function addOrUpdate(){
-       if(!vm.classified.image){
+      var ret = false; 
+      if(!vm.classified.image){
         Modal.alert("Please upload image",true);
         return;
       }
-      if($scope.form.$invalid){
+
+      if(!vm.classified.country && vm.classified.countryCode)
+          vm.classified.country = LocationSvc.getCountryNameByCode(vm.classified.countryCode);
+
+      if(vm.classified.country && vm.classified.mobile) { 
+        var value = UtilSvc.validateMobile(vm.classified.country, vm.classified.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
+      if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
         return;
       }

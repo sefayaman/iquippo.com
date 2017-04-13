@@ -88,7 +88,7 @@
               </div> 
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.mobile.$invalid && form.submitted }"> 
-                 <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="insuranceQuote.mobile" uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                 <input type="text" name="mobile" class="form-control" placeholder="* Mobile No." ng-model="insuranceQuote.mobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                 </div>
               </div>
             </div>            
@@ -138,7 +138,7 @@
               </div>
               <div class="col-xs-6">
                 <div class="form-group" ng-class="{'has-error': form.prdDesc.$invalid && form.submitted }">                          
-                  <input type="text" name="prdDesc" class="form-control" placeholder="* Asset Description " ng-model="insuranceQuote.product.description" required>
+                  <input type="text" name="prdDesc" class="form-control" placeholder="*Asset Description " ng-model="insuranceQuote.product.description" required>
                 </div>
               </div>            
             </div>  
@@ -161,7 +161,7 @@
               </div>  
               <div class="col-xs-4" ng-class="{'has-error': form.prdlocation.$invalid && form.submitted }">
                 <select class="form-control" name="prdlocation" ng-model="insuranceQuote.product.city" required>
-                  <option value="">* Select Location </option>
+                  <option value="">*Select Location </option>
                     <option ng-repeat="location in prdLocationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                 </select>
                 <i class="caret"></i>
@@ -170,12 +170,12 @@
             <div class="row form-group">      
               <div class="col-xs-6">
                 <div class="" ng-class="{'has-error': form.prdMfgYear.$invalid && form.submitted }">                          
-                  <input type="number" name="prdMfgYear" class="form-control" placeholder="Manufacturing Year" ng-model="insuranceQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+                  <input type="number" name="prdMfgYear" class="form-control" placeholder="*Manufacturing Year" ng-model="insuranceQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
                 </div>
               </div>        
               <div class="col-xs-6">
                 <div class="" ng-class="{'has-error': form.invoiceVal.$invalid && form.submitted }"> 
-                 <input type="number" name="invoiceVal" class="form-control" placeholder="* Invoice Value" ng-model="insuranceQuote.invoiceVal" required>
+                 <input type="number" name="invoiceVal" class="form-control" placeholder="*Invoice Value" ng-model="insuranceQuote.invoiceVal" required>
                 </div>
               </div>            
             </div>  

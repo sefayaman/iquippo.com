@@ -12,6 +12,18 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.noWrapSlides = false;
     vm.slides = [];//HOME_BANNER;
     vm.featuredslides = [];
+    $scope.toggle1=true;
+    $scope.toggle2=true;
+    $scope.toggle3=true;
+
+    $scope.toggling=function(val){
+      if(val=="vid1")
+      $scope.toggle1=false;
+    if(val=="vid2")
+      $scope.toggle2=false;
+    if(val=="vid3")
+      $scope.toggle3=false;
+    }
     
     /*vm.imgLeftTop = "";
     vm.imgLeftBottom = "";

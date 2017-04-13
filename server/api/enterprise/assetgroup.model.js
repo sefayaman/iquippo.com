@@ -4,8 +4,8 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var AssetGroupSchema = new Schema({
-  valuerGroupId: Number,
-  valuerAssetId: Number,
+  valuerGroupId: String,
+  valuerAssetId: String,
   valuerName: String,
   valuerCode: String,
   assetCategory: String,

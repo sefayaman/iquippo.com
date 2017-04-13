@@ -20,6 +20,8 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       
       lServices.getAllCountry = getAllCountry;
       lServices.getCountryCode = getCountryCode;
+
+      lServices.getCountryNameByCode = getCountryNameByCode;
       lServices.deleteCountry = deleteCountry;
       lServices.updateCountry = updateCountry;
       lServices.saveCountry = saveCountry;
@@ -117,6 +119,18 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         })
 
         return code;
+      }
+
+      function getCountryNameByCode(code){
+        var name = '';
+        $rootScope.allCountries.some(function(x){
+          if(x.countryCode == code){
+            name =  x.name;
+            return true;
+          }
+        })
+
+        return name;
       }
 
       function getAllCountry(){

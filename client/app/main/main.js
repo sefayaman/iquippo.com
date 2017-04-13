@@ -52,7 +52,19 @@ angular.module('sreizaoApp')
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
-        layout:'client'
+        layout:'client',
+        onEnter:function ($rootScope,$stateParams,$http){
+          $http.post('/api/getseo/',{categoryId:$stateParams.id})
+          .then(function(res){
+            if(res && res.data.length > 0) {
+              $rootScope.choosenTitle=res.data[res.data.length-1].title;
+              $rootScope.metaDescription=res.data[res.data.length-1].meta;
+            }
+          })
+          .catch(function(err){
+           
+          })
+        }
       })
       .state('productdetail', {
         url: '/productdetail/:id',

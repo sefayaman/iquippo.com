@@ -149,12 +149,31 @@ assetGroup.create = function(req, res, next) {
 	if (!data)
 		return next(new APIError(412, 'No data sent to create'));
 
-	_create(data, function(err, resp) {
-		if (err)
-			return res.status(err.status || 500).send(err);
+	var filter = {};
+	if(!data.valuerCode || !data.enterpriseId || !data.assetCategory)
+	  return res.status(401).send('Insufficient data');
 
-		return res.status(201).send(resp);
-	})
+	if(data.valuerCode)
+	  filter['valuerCode'] = data.valuerCode;
+	if(data.enterpriseId)
+	  filter['enterpriseId'] = data.enterpriseId;
+	if(data.assetCategory)
+	  filter['assetCategory'] = data.assetCategory;
+  	Model.find(filter, function(err, assetGroupData) {
+	    if (err) {
+	      return handleError(res, err);
+	    }
+	    if (assetGroupData.length > 0) 
+	      return res.status(201).json({errorCode: 1, message: "Asset group already exist."});
+	    
+		_create(data, function(err, resp) {
+			if (err)
+				return res.status(err.status || 500).send(err);
+
+			//return res.status(201).send(resp);
+			return res.status(200).json({errorCode:0, message: resp});
+		});
+	});
 
 };
 
@@ -232,8 +251,7 @@ assetGroup.fetch = function(req, res, next) {
 	filters.deleted = 0;
 	if (options.status)
 		filters.status = options.status;
-
-	console.log("query@@@@@@",filters);
+	console.log("####",filters);
 	query = Model.find(filters);
 
 	query = query.sort(sort);
@@ -272,9 +290,50 @@ assetGroup.renderJson = function(req, res, next) {
 	res.status(200).json(req.assetGroupData);
 };
 
-// assetGroup.update = function(req, res, next) {
+// Updates an existing asset group in the DB.
+assetGroup.update = function(req, res) {
+  var filter = {};
+  var _id = req.body._id;
+  if (req.body._id) 
+    delete req.body._id;
+  if(!req.body.valuerCode || !req.body.enterpriseId || !req.body.assetCategory)
+    return res.status(401).send('Insufficient data');
+	
+  if(_id)
+     filter['_id'] = {$ne:_id};
+  if(req.body.valuerCode)
+  	filter['valuerCode'] = req.body.valuerCode;
+  if(req.body.enterpriseId)
+  	filter['enterpriseId'] = req.body.enterpriseId;
+  if(req.body.assetCategory)
+  	filter['assetCategory'] = req.body.assetCategory;
+  
+  req.body.updatedAt = new Date();
+  req.body.updatedBy = {
+		name: req.body.user.userName,
+		_id: req.body.user._id,
+		role: req.body.user.role
+	};
+  Model.find(filter, function(err, assetGroupData) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (assetGroupData.length > 0) {
+      return res.status(201).json({errorCode: 1, message: "Asset group already exist."});
+    }
+    Model.update({
+      _id: req.params.id
+    }, {
+      $set: req.body
+    }, function(err) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json({errorCode:0,message:""});
+    });
+  });
+};
 
-// }
 assetGroup.delete = function(req, res, next) {
 	var id = req.params.id;
 	if (!id || !validator.isMongoId(id))
@@ -299,19 +358,23 @@ assetGroup.delete = function(req, res, next) {
 	});
 }
 
-assetGroup.uploadExcel = function(req, res) {
+assetGroup.uploadExcel = function(req, res,next) {
 	var body = req.body;
-	['fileName', 'user'].forEach(function(x) {
-		if (!body[x])
-			return res.status(412).json({
-				Err: 'Missing madnatory parameter' + x
-			});
+	var err;
+	['fileName', 'user'].some(function(x) {
+		if (!body[x]) {
+			err = new APIError(412, 'Missing Madnatory Params :  ' + x);
+			return true;
+		}
 	});
 
+	if (err)
+		return next(err);
+	
 	var fileName = req.body.fileName;
 	var user = req.body.user;
 	var madnatoryParams = ['valuerGroupId', 'valuerAssetId', 'valuerName', 'valuerCode', 'assetCategory', 'enterpriseName', 'enterpriseId'];
-	var numericCols = ['valuerGroupId', 'valuerAssetId'];
+	var numericCols = [];
 
 	var options = {
 		fileName: fileName,
@@ -361,6 +424,8 @@ assetGroup.uploadExcel = function(req, res) {
 	}
 }
 
-
+function handleError(res, err) {
+  return res.status(500).send(err);
+}
 
 module.exports = assetGroup;

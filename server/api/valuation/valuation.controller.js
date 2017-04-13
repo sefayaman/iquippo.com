@@ -330,7 +330,7 @@ function excel_from_data(data, isAdmin) {
       cell = {v: "Request Date"};
     else{
       if(valuation)
-        cell =  {v: valuation.createdAt};
+        cell =  {v: Utility.toIST(_.get(valuation, 'createdAt', ''))};
     }
     setCell(ws,cell,R,C++);
 

@@ -68,6 +68,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
           uploadPath += "&";
         else
           uploadPath += "?";
+        
         uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height + "&size=" + resizeParam.size;
       }
       var fd = new FormData();
@@ -137,6 +138,7 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.getLocations = getLocations;
   utilSvc.buildQueryParam = buildQueryParam;
   utilSvc.compileTemplate = compileTemplate;
+  utilSvc.validateMobile = validateMobile;
   
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -224,6 +226,18 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       }
       queryStr = queryStr.substr(0,queryStr.length - 1);
       return queryStr;
+    }
+
+    function validateMobile(country, mobileNo) {
+      var validFlag = true;
+      if(!mobileNo)
+        return false;
+      if(country == "India")
+        validFlag = /^\d{10}$/.test(mobileNo)   
+      if(country != "India")
+        validFlag = /^\d+$/.test(mobileNo) 
+
+      return validFlag;
     }
 
   return utilSvc;

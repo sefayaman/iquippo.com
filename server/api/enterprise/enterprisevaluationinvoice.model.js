@@ -8,13 +8,21 @@ var mongoose = require('mongoose'),
 var EnterpriseValuationInvoiceSchema = new Schema({
   requestType:String,
   invoiceNo:String,
-  serviceFee:Number,
-  taxRate:Number,
+  referenceNo:String,
+  uniqueControlNos:[],
+  serviceFee:{type:Number,default:0},
+  serviceTax:{type:Number,default:0},
+  serviceTaxValue:{type:Number,default:0},
+  krishikalyanCess:{type:Number,default:0},
+  swatchBharatCess:{type:Number,default:0},
+  krishikalyanValue:{type:Number,default:0},
+  swatchBharatValue:{type:Number,default:0},
   chargeBasis:String,
   requestCount:Number,
   enterprise:{},
   agency:{},
-  invoiceAmount:Number,
+  invoiceAmount:{type:Number,default:0},
+  totalAmount:{type:Number,default:0},
   paymentReceivedDetail:{
     remainingAmount:Number,
     paymentDetails :[]
@@ -35,9 +43,11 @@ var EnterpriseValuationInvoiceSchema = new Schema({
 EnterpriseValuationInvoiceSchema.pre('save',function(next){
   var self = this;
   var prefix = 'EVRINV';
+  var prefixRef = "QVA-";
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
     self.invoiceNo = prefix+seqnum;
+    self.referenceNo = prefixRef + seqnum;
     return next();
   },'EnterpriseValuationInvoice',100002);
 

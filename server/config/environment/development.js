@@ -9,7 +9,7 @@ module.exports = {
   },
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
-  serverPath: "http://192.168.14.120:8100",
+  serverPath: "http://192.168.14.120",
   contactNumber: "011 66025672",
 
   seedDB: true,

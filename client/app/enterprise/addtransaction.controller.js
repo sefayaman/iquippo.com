@@ -6,6 +6,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
   vm.enterpriseValuation = {};
+  $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
   $scope.showEnterpriseSection = showEnterpriseSection;
@@ -34,15 +35,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     userFilter.enterprise = true;
     var isEnterprise = false;
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
-      userFilter.enterpriseName = Auth.getCurrentUser().enterpriseName;
+      userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
     }
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
         vm.enterpriseValuation.enterprise = {};
-        vm.enterpriseValuation.enterprise.name = data[0].enterpriseName;
-        setCustomerData(data[0].enterpriseName);
+        vm.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
+        setCustomerData(data[0].enterpriseId);
       }
     });
     if(!editMode){
@@ -63,14 +64,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       .then(function(result) {
           vm.brandList = result;
       })
-      //loadAllCategory();
       if($stateParams.id) {
         $scope.isEdit = true;
         EnterpriseSvc.getRequestOnId($stateParams.id)
           .then(function(result){
             if(result) {
               vm.enterpriseValuation = result;
-              //onCategoryChange(vm.enterpriseValuation.category, true);
               onBrandChange(vm.enterpriseValuation.brand, true);
               onCountryChange(vm.enterpriseValuation.country, true);
               onStateChange(vm.enterpriseValuation.state, true);
@@ -128,10 +127,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   }
 
     function getAssetGroup(val) {
-     /* if( !vm.enterpriseValuation.agency || !vm.enterpriseValuation.agency.partnerId || vm.enterpriseValuation.enterprise || vm.enterpriseValuation.enterprise.enterpriseId){
-        Modal.alert("Please select valuation agency");
-        return [];
-      }*/
+
       var serData = {};
       serData['assetCategory'] = val;
       if(vm.enterpriseValuation.agency && vm.enterpriseValuation.agency.partnerId)
@@ -149,11 +145,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     function onBrandChange(brandName, noChange) {
         if (!noChange)
             vm.enterpriseValuation.model = "";
-        
+        vm.modelList = [];
         if (!brandName)
             return;
-
-        vm.modelList = [];
         modelSvc.getModelOnFilter({
                 brandName: brandName
             })
@@ -172,6 +166,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       $scope.locationList = [];
       var filter = {};
       filter.country = country;
+      if(!country)
+        return;
       LocationSvc.getStateHelp(filter).then(function(result){
           $scope.stateList = result;
       });
@@ -184,6 +180,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       $scope.locationList = [];
       var filter = {};
       filter.stateName = state;
+      if(!state)
+        return;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
           $scope.locationList = result;
       });
@@ -254,6 +252,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
           vm.enterpriseValuation.enterprise._id = item._id;
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
+          vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
           vm.enterpriseValuation.enterprise.email = item.email;
         }
 

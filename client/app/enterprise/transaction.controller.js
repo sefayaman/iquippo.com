@@ -1,17 +1,17 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseTransactionCtrl',EnterpriseTransactionCtrl);
-function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
+function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc,Auth, $state, notificationSvc, vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,PagerSvc) {
   
   var vm = this;
+  $scope.$parent.tabValue = 'transaction';
+  $scope.refresh = true;
   var selectedItems = [];
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
   vm.enterpriseValuation = {};
   vm.enterpriseValuationListing = [];
   vm.enterpriseValuation.user = {};
-  $scope.enterpriseSubmitted = false;
-  $scope.enterpriseValSubmitted = false;
   
   var filter = {};
   $scope.docObj = {};
@@ -19,6 +19,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   var dataToSend = {};
   $scope.uploadedExcel = '';
   $scope.modifiedExcel = '';
+  $scope.reportUploadedExcel = '';
   $scope.uploadType = '';
   
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
@@ -31,7 +32,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
-  vm.uploadTemplate = 'Valuation_Template.xlsx';
+  vm.enterpriseTemplate = 'Valuation_Template.xlsx';
+  vm.agencyTemplate = 'Valuation_Report.xlsx';
+  vm.showDetail = showDetail;
+  vm.exportExcel = exportExcel;
+  vm.selectAll = selectAll;
 
   function init(){
 
@@ -62,7 +67,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
   }
 
  function getEnterpriseData(filter){
+      
       $scope.pager.copy(filter);
+      if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+          filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
+      if(Auth.isPartner()){
+        filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+        filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
+      }
+
       EnterpriseSvc.get(filter)
       .then(function(result){
         vm.enterpriseValuationListing = result.items;
@@ -70,8 +83,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
          $scope.pager.update(result.items,result.totalItems);
       });
     }
-
-  init();
 
   function fireCommand(reset,filterObj){
       if(reset)
@@ -106,20 +117,30 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
         Modal.alert('Please upload a valid file');
         return;
       }
-
+      $rootScope.loading = true;
+      $scope.refresh = !$scope.refresh;
       uploadSvc.upload(file, importDir)
         .then(function(result) {
-          setUserData();
           if($scope.uploadType === 'upload'){
             $scope.uploadedExcel = result.data.filename;
             $scope.modifiedExcel = '';
+            $scope.reportUploadedExcel = "";
           }
           if($scope.uploadType === 'modify'){
             $scope.modifiedExcel = result.data.filename;
             $scope.uploadedExcel = '';
+            $scope.reportUploadedExcel = "";
+          }
+          if($scope.uploadType === 'reportupload'){
+            $scope.modifiedExcel = "";
+            $scope.uploadedExcel = '';
+            $scope.reportUploadedExcel =  result.data.filename;
           }
           $rootScope.loading = false;
+          $scope.refresh = !$scope.refresh;
         }).catch(function(res) {
+          $rootScope.loading = false;
+          $scope.refresh = !$scope.refresh;
           Modal.alert("error in file upload", true);
         });
     }
@@ -130,12 +151,16 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
       if($scope.uploadType === 'upload'){
         uploadData = {
           fileName : $scope.uploadedExcel,
-          user : vm.enterpriseValuation.user
+          user : Auth.getCurrentUser()
         };
-
+        if(!uploadData.fileName){
+          Modal.alert("Please upload template first.");
+          return;
+        }
         EnterpriseSvc.uploadExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
           $scope.uploadedExcel = '';
+          $scope.uploadType = "";
           var message = res.msg;
           if (res.errObj.length > 0) {
             var data = {};
@@ -155,15 +180,29 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
         }).catch(function(err){
           Modal.alert('Error while uploading');
         });
-      }else if($scope.uploadType === 'modify'){
+      }else if(['modify','reportupload'].indexOf($scope.uploadType) != -1){
         uploadData = {
-          fileName : $scope.modifiedExcel,
-          user : vm.enterpriseValuation.user
+          user : Auth.getCurrentUser()
         };
+        if($scope.uploadType == 'modify'){
+          uploadData['updateType'] = "enterprise";
+          uploadData['fileName'] = $scope.modifiedExcel;
+        }
+        else{
+          uploadData['updateType'] = "agency";
+          uploadData['fileName'] = $scope.reportUploadedExcel;
+        }
 
+        if(!uploadData.fileName){
+          Modal.alert("Please upload template first.");
+          return;
+        }
         EnterpriseSvc.modifyExcel(uploadData).then(function(res){
           vm.enterpriseValuation = {};
-          $scope.modifiedExcel = '';
+          $scope.modifiedExcel = "";
+          $scope.reportUploadedExcel = "";
+          $scope.uploadType = "";
+
           var message = res.msg;
           if (res.errObj.length > 0) {
             var data = {};
@@ -194,15 +233,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
     }
 
 
-    function setUserData(){
-      vm.enterpriseValuation.user = {};
-      vm.enterpriseValuation.user._id = Auth.getCurrentUser()._id;
-      vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      vm.enterpriseValuation.user.mobile = Auth.getCurrentUser().mobile;
-      vm.enterpriseValuation.user.email = Auth.getCurrentUser().email;
-      vm.enterpriseValuation.user.role = Auth.getCurrentUser().role;
-    }
-
     function setData() {
       if(Auth.getCurrentUser()._id) {
         vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
@@ -211,10 +241,16 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
     }
 
     function deleteEnterprise(enterpriseValuation){
-      enterpriseValuation.deleted = true;
-      EnterpriseSvc.update(enterpriseValuation).then(function(result){
-        Modal.alert("Request deleted succesfully", true);
-      });
+      Modal.confirm("Would you like to delete this record?",function(ret){
+        if(ret != 'yes')
+          return;
+        enterpriseValuation.deleted = true;
+        EnterpriseSvc.update(enterpriseValuation).then(function(result){
+          fireCommand(true);
+          Modal.alert("Request deleted succesfully", true);
+        });
+      })
+      
     }
 
     function updateSelection(event,item){
@@ -229,7 +265,23 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
           selectedItems.push(item)
         if(action == 'remove' && index != -1)
           selectedItems.splice(index,1);
-        console.log(selectedItems.length);
+     }
+
+     function selectAll(event){
+
+        var checkbox = event.target;
+        var action = checkbox.checked?'add':'remove';
+        if(action == 'add'){
+          selectedItems = [];
+          vm.enterpriseValuationListing.forEach(function(item){
+            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1)
+                selectedItems.push(item);
+          })
+          
+        }
+        if(action == 'remove'){
+          selectedItems = [];
+        }
      }
 
      function submitToAgency(){
@@ -245,7 +297,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
             if(resList && resList.length > 0){
               resList.forEach(function(item){
                 var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
-                if(item.success){
+                if(item.success == "true"){
                    valReq.jobId = item.jobId;
                    EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[2]);
                 }else{
@@ -277,10 +329,54 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal, uploadSvc,Auth, $s
     function bulkUpdate(){
       EnterpriseSvc.bulkUpdate(selectedItems)
         .then(function(res){
+          vm.selectAllReq = "";
           selectedItems = [];
           fireCommand(true);
       })
     }
+
+    function showDetail(valReq){
+      var scope = $rootScope.$new()
+      scope.valuation = valReq;
+      scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
+      scope.isAdmin = $scope.isAdmin;
+       var formModal = $uibModal.open({
+          animation: true,
+            templateUrl: "app/enterprise/valuation-details-popup.html",
+            scope: scope,
+            windowTopClass: 'product-preview',
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          formModal.dismiss('cancel');
+        };
+    }
+
+    function exportExcel(){
+      var filter = {};
+       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+          filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
+      if(Auth.isPartner())
+          filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
+      if(selectedItems && selectedItems.length > 0){
+        var ids = [];
+        selectedItems.forEach(function(item){
+          ids[ids.length] = item._id;
+        });
+          filter.ids = ids;
+      }
+      EnterpriseSvc.exportExcel("transaction",filter);
+    }
+
+    //init();
+    //starting point
+    Auth.isLoggedInAsync(function(loggedIn){
+      if(loggedIn){
+          init();
+        }else
+          $state.go("main")
+      })
 
 }
 

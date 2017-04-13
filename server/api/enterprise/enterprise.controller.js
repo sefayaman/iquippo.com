@@ -17,11 +17,12 @@ var async = require('async');
 var APIError = require('../../components/_error');
 var debug = require('debug')('api.enterprise');
 var moment = require('moment');
-var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD',moment.ISO_8601];
+var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
 var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
-var EnterpriseValuationStatuses = ['Request Initiated','Request Submitted','Request Failed','Valuation Report Submitted','Valuation Report Failed','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
-var validRequestType = ['Valuation','Insepection'];
+var AssetGroupModel = require('./assetgroup.model');
+var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
+var validRequestType = ['Valuation','Inspection'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
 var Handlebars = require('handlebars');
@@ -47,62 +48,12 @@ function getValuationRequest(req,res){
   var queryParam = req.query;
   var filter = {};
   filter['deleted'] = false;
-  var orFilter = [];
 
   if (queryParam.searchStr) {
-
-    var term = new RegExp(queryParam.searchStr, 'i');
-    orFilter[orFilter.length] = {
-      requestType: {
-        $regex: term
+       filter['$text'] = {
+        '$search': queryParam.searchStr
       }
-    };
-    orFilter[orFilter.length] = {
-      purpose: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      agencyName: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      enterpriseName: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      category: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      brand: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      model: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      assetId: {
-        $regex: term
-      }
-    };
-    orFilter[orFilter.length] = {
-      uniqueControlNo: {
-        $regex: term
-      }
-    };
   }
-
-  if (orFilter.length > 0) {
-    filter['$or'] = orFilter;
-  }
-
   if (queryParam._id)
     filter["_id"] = queryParam._id;
   if (queryParam.status){
@@ -144,6 +95,11 @@ function getInvoice(req,res){
   var queryParam = req.query;
   var filter = {};
   //filter['deleted'] = false;
+  if (queryParam.searchStr) {
+       filter['$text'] = {
+        '$search': queryParam.searchStr
+      }
+  }
   if (queryParam._id)
     filter["_id"] = queryParam._id;
   
@@ -160,8 +116,8 @@ function getInvoice(req,res){
   }
   if (queryParam.enterpriseId)
     filter["enterprise.enterpriseId"] = queryParam.enterpriseId;
-  if (queryParam.partnerId)
-    filter["agency.partnerId"] = queryParam.partnerId;
+  if (queryParam.agencyId)
+    filter["agency._id"] = queryParam.agencyId;
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
@@ -192,21 +148,93 @@ exports.getOnId = function(req, res) {
 };
 
 // Creates a new valuation in the DB.
-exports.create = function(req, res, next) {
-EnterpriseValuation.create(req.body, function(err, enterpriseData) {
-    if(err) { return handleError(res, err); }
-    return res.status(201).json(enterpriseData);
-  });
+exports.create = function(req, res, next){
+  var bodyData = req.body;
+  _getAssetGroupCategory(bodyData.assetCategory,bodyData.agency.partnerId,bodyData.enterprise.enterpriseId,function(acErr,result){
+     if(acErr) { return handleError(res, err); }
+     if(result && result.data){
+      bodyData.valuerGroupId = result.data.valuerGroupId || "";
+      bodyData.valuerAssetId = result.data.valuerAssetId || "";
+     }
+     if(result && !result.found)
+      _createAssetGroupCategory(bodyData);
+     EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
+        if(err) { return handleError(res, err); }
+        return res.status(201).json(enterpriseData);
+      });
+  });  
+ 
 }
 
-function validateData(options,obj){
-  var madnatoryParams = options.madnatoryParams || [];
+function _getAssetGroupCategory(assetCategory,partnerId,enterpriseId,cb){
+  var exTerm = "";
+  var lkTerm = "";
+  try{
+    exTerm = {$regex: new RegExp( "^"+ assetCategory + "$", 'i')}
+    lkTerm = {$regex: new RegExp( "^"+ assetCategory, 'i')}
+  }catch(err){
+    cb(err);
+  }
+
+    var filter = {};
+    //filter.status = true;
+    filter['enterpriseId'] = enterpriseId;
+    filter['valuerCode'] = partnerId;
+  async.parallel([equalMatch,likeMatch],onComplete);
+
+  function likeMatch(callback){
+    filter['assetCategory'] = lkTerm;
+    AssetGroupModel.find(filter,function(err,likeRes){
+      if(err){return callback(err)};
+      callback(null,likeRes);
+    });
+  }
+
+  function equalMatch(callback){
+    filter['assetCategory'] = exTerm;
+    AssetGroupModel.find(filter,function(err,eqRes){
+      if(err){return callback(err)};
+      callback(null,eqRes);
+    });
+  }
+
+  function onComplete(err,results){
+    if(err){return cb(err)}
+    if(results.length > 0 && results[0].length > 0)
+      cb(null,{data:results[0][0],found:true});
+    else if(results.length > 1 && results[1].length > 0)
+      cb(null,{data:results[1][0],found:false});
+    else
+      cb(null,{data:null,found:false});
+  }
+}
+
+function _createAssetGroupCategory(bodyData){
+  var assetGroup = {};
+  assetGroup.status = false;
+  assetGroup.deleted = false;
+  assetGroup.createdBy = bodyData.createdBy;
+  assetGroup.updatedBy = bodyData.createdBy;
+  assetGroup.enterpriseId = bodyData.enterprise.enterpriseId;
+  assetGroup.enterpriseName = bodyData.enterprise.name;
+  assetGroup.assetCategory = bodyData.assetCategory;
+  assetGroup.valuerName = bodyData.agency.name;
+  assetGroup.valuerCode = bodyData.agency.partnerId;
+  AssetGroupModel.create(assetGroup,function(err,result){
+    if(err)
+      console.log("err in asset group creation",err);
+  })
+
+}
+
+function validateData(madnatoryParams,obj){
+  var madnatoryParams = madnatoryParams || [];
   //var madnatoryParams = ['category','brand','model','country','state','city'];
   var err;
   madnatoryParams.some(function(x){
     if(!obj[x]){
       err = 'Missing Parameter:  ' + x;
-      return true;
+      return false;
     }
   });
   return err;
@@ -285,7 +313,7 @@ function parseExcel(options){
         uploadData.push(validData);
       }
   });
-
+  
   return {
     errObj : errObj,
     totalCount : totalCount,
@@ -297,21 +325,25 @@ exports.bulkUpload = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
     if(!body[x])
-      return res.send(412).json({Err:'Missing madnatory parameter' + x });
+      return res.status(412).json({Err:'Missing madnatory parameter' + x });
   });
 
   var fileName = req.body.fileName;
   var user = req.body.user;
+  //numericCols : ['customerTransactionId','customerValuationNo','customerPartyNo','engineNo','chassisNo','registrationNo','contactPersonTelNo']
+  var ENTERPRISE_FIELD = 'enterpriseId';
   var options = {
     fileName : fileName,
     user : user,
     partnerType : 'ENTERPRISE',
     uploadType : 'UPLOAD',
-    numericCols : ['customerTransactionId','customerValuationNo','customerPartyNo','engineNo','chassisNo','registrationNo','contactPersonTelNo'],
-    dateParams : ['requestDate','invoiceDate','repoDate'],
-    madnatoryParams : ['agencyName','purpose','requestType','enterpriseName','category','brand','model','country','state','city']
+    numericCols : [],
+    dateParams : ['requestDate','repoDate'],
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory','country','state','city','contactPerson','contactPersonTelNo']
   };
   
+  if(user.role == 'admin')
+    options.madnatoryParams.push(ENTERPRISE_FIELD);
   var parsedResult = parseExcel(options);
   var errObj = [];
   if(parsedResult.errObj && parsedResult.errObj.length)
@@ -321,7 +353,8 @@ exports.bulkUpload = function(req, res) {
 
   if(!uploadData.length){
     var result = {
-      errObj : errObj
+      errObj : errObj,
+      msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' uploaded sucessfully'
     };
 
     return res.json(result);
@@ -339,10 +372,13 @@ exports.bulkUpload = function(req, res) {
     * validateCategory is for validating category,brand,model
     * validateCountry is for validating country,state,city
     */
-    async.parallel([validateEnterprise,validateRequestType,validatePurpose,validateAgency,validateCategory,validateCountry],middleManProcessing);
+    async.parallel([validateEnterprise,validateRequestType,validatePurpose,validateYearOfManufacturing,validateAgency,validateMasterData,validateCountry],middleManProcessing);
 
     function validateEnterprise(callback){
-      UserModel.find({enterpriseName : row.enterpriseName,"enterprise" : true}).exec(function(err,result){
+      if(user.role== 'enterprise')
+        row.enterpriseId = user.enterpriseId;
+      console.log("",user);
+      UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
 
@@ -352,8 +388,9 @@ exports.bulkUpload = function(req, res) {
         row.enterprise = {
           email : result[0].email,
           mobile : result[0].mobile,
-          _id : result[0]._id,
-          name : result[0].enterpriseName
+          _id : result[0]._id + "",
+          enterpriseId : result[0].enterpriseId,
+          name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
 
         return callback();
@@ -365,6 +402,21 @@ exports.bulkUpload = function(req, res) {
         return callback('Invalid Request Type');
 
       return callback();
+    }
+
+    function validateYearOfManufacturing(callback){
+      if(!row.yearOfManufacturing)
+        return callback();
+      var currentYear = new Date().getFullYear();
+      var isInvalid = isNaN(row.yearOfManufacturing);
+      if(isInvalid || row.yearOfManufacturing.length != 4)
+        return callback("Invalid manufacturing year.");
+       var mfgYear = parseInt(row.yearOfManufacturing);
+       if(mfgYear > 1900 && mfgYear <= currentYear)
+        return callback();
+       else
+        return callback("Invalid manufacturing year.");
+
     }
 
     function validatePurpose(callback){
@@ -380,26 +432,62 @@ exports.bulkUpload = function(req, res) {
     }
 
     function validateAgency(callback){
-      vendorModel.find({entityName : row.agencyName},function(err,result){
+      vendorModel.find({partnerId : row.partnerId},function(err,result){
         if(err || !result)
           return callback('Error while validating Agency');
 
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
+        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
+          partnerId : row.partnerId,
           name : result[0].entityName
         };
 
         return callback();
       })
     }
+
+    function validateMasterData(callback){
+       commonFunc.fetchBrand({name:row.brand},function(err,brands){
+          if(err || !brands)
+            return callback('Error while validating brand');
+
+          if(!brands.length){
+              row.otherBrand = row.brand;
+              row.brand = "Other";
+              row.otherModel = row.model;
+              row.model = "Other";
+              return callback();
+          } 
+
+          var modelParams = {
+            brand : row.brand,
+            name : row.model
+          };          
+
+          commonFunc.fetchModel(modelParams,function(err,model){
+              if(err || !model)
+                return callback('Error while validating model');
+
+              if(!model.length){
+                //return callback('Invalid Model'); 
+                  row.otherModel = row.model;
+                 row.model = "Other";           
+              }
+              return callback();
+          });
+
+            //return callback();
+        })
+    }
+
 
     function validateCategory(callback){
       commonFunc.fetchCategory(row.category,function(err,category){
@@ -495,8 +583,11 @@ exports.bulkUpload = function(req, res) {
         return cb();
       }
 
+      row.customerPartyName = row.enterprise.name;
+      row.customerPartyNo = row.enterprise.mobile;
+      row.userName = user.fname + " " + user.lname;
       row.createdBy = {
-        name : user.userName,
+        name : user.fname + " " + user.lname,
         _id : user._id,
         role : user.role
       };
@@ -507,16 +598,26 @@ exports.bulkUpload = function(req, res) {
         userId : user._id
       }]
 
-      EnterpriseValuation.create(row, function(err, enterpriseData) {
-        console.log(err);
-        if(err || !enterpriseData) { 
-          errObj.push({
-            Error: 'Error while inserting data',
-            rowCount: row.rowCount
-          });
-        }
-        return cb();
-      });
+      _getAssetGroupCategory(row.assetCategory,row.agency.partnerId,row.enterprise.enterpriseId,function(acErr,result){
+           if(acErr) { return handleError(res, err); }
+             if(result && result.data){
+              row.valuerGroupId = result.data.valuerGroupId || "";
+              row.valuerAssetId = result.data.valuerAssetId || "";
+             }
+             if(result && !result.found)
+              _createAssetGroupCategory(row);
+
+          EnterpriseValuation.create(row, function(err, enterpriseData) {
+          console.log(err);
+          if(err || !enterpriseData) { 
+            errObj.push({
+              Error: 'Error while inserting data',
+              rowCount: row.rowCount
+            });
+          }
+          return cb();
+        });
+      })
     }
   }
 
@@ -541,23 +642,23 @@ exports.bulkModify = function(req, res) {
 
   var fileName = req.body.fileName;
   var user = req.body.user;
-  
+  var updateType = req.body.updateType; 
 
   var options = {
     fileName : fileName,
     user : user,
     partnerType : 'ENTERPRISE',
     uploadType : 'MODIFY',
-    numericCols : ['customerTransactionId','customerValuationNo','customerPartyNo','engineNo','chassisNo','registrationNo','contactPersonTelNo'],
-    dateParams : ['requestDate','invoiceDate','repoDate'],
-    madnatoryParams : ['uniqueControlNo','agencyName','purpose','enterpriseName','requestType','category','brand','model','country','state','city']
+    numericCols : [],
+    dateParams : ['requestDate','repoDate'],
+    madnatoryParams : ['uniqueControlNo']
   };
   var enterpriseRoles = ['admin','enterprise'];
-  if(enterpriseRoles.indexOf(user.role) < 0){
+  if(updateType == 'agency'){
     options.partnerType = 'VALUATION_PARTNER';
-    options.numericCols = [];
+    options.numericCols = ['assessedValue'];
     options.dateParams = ['reportDate'];
-    options.madnatoryParams = ['uniqueControlNo'];
+    options.madnatoryParams = ['uniqueControlNo','reportNo','reportDate','agencyYearOfManufacturing','hmr_kmr','assessedValue','inspectionBy','physicalCondition','reportUrl'];
   }
   
   var parsedResult = parseExcel(options);
@@ -569,7 +670,8 @@ exports.bulkModify = function(req, res) {
 
   if(!uploadData.length){
     var result = {
-      errObj : errObj
+      errObj : errObj,
+       msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' updated sucessfully'
     };
 
     return res.json(result);
@@ -588,15 +690,21 @@ exports.bulkModify = function(req, res) {
     * validateCountry is for validating country,state,city
     */
 
-    if(enterpriseRoles.indexOf(user.role) < 0){
+    if(updateType == 'agency'){
       async.parallel([validateValuation],middleManProcessing)
     }else{
-      async.parallel([validateEnterprise,validateValuation,validateRequestType,validatePurpose,validateAgency,validateCategory,validateCountry],middleManProcessing);  
+      async.parallel([validateEnterprise,validateValuation,validateRequestType,validateYearOfManufacturing,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
     }
 
     
     function validateEnterprise(callback){
-      UserModel.find({enterpriseName : row.enterpriseName,"enterprise" : true}).exec(function(err,result){
+      
+      if(!row.enterpriseId)
+        return callback();
+      if(user.role== 'enterprise')
+        row.enterpriseId = row.user.enterpriseId;
+
+      UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
 
@@ -606,8 +714,9 @@ exports.bulkModify = function(req, res) {
         row.enterprise = {
           email : result[0].email,
           mobile : result[0].mobile,
-          _id : result[0]._id,
-          name : result[0].enterpriseName
+          _id : result[0]._id + "",
+          enterpriseId:result[0].enterpriseId,
+          name : (result[0].fname || "") + " "+ (result[0].lname || "") 
         };
 
         return callback();
@@ -615,6 +724,7 @@ exports.bulkModify = function(req, res) {
     }
 
     function validateValuation(callback){
+
       EnterpriseValuation.find({uniqueControlNo : row.uniqueControlNo}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating valuation request');
@@ -622,16 +732,48 @@ exports.bulkModify = function(req, res) {
         if(!result.length)
           return callback('Invalid Valuation request');
 
+        
         var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
-
-        if(enterpriseValidStatus.indexOf(result[0].status) < 0 && user.role !== 'admin')
-          return callback('User does not have privilege to update record');
-
-        return callback();
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
+        
+        row.valData = result[0];
+        if(updateType == 'agency'){
+          if(user.role == 'admin')
+            return callback();
+          if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id && agencyValidStatus.indexOf(result[0].status) != -1)
+              return callback();
+          else
+            return callback('User does not have privilege to update record');
+        }else{
+          var isValidForUpdate = enterpriseValidStatus.indexOf(result[0].status) != -1;
+          if(isValidForUpdate && user.role == 'admin')
+            return callback();
+          else if(isValidForUpdate && user.enterpriseId == result[0].enterprise.enterpriseId)
+            return callback();
+          else
+             return callback('User does not have privilege to update record');
+        }
       })
     }
 
+     function validateYearOfManufacturing(callback){
+      if(!row.yearOfManufacturing)
+        return callback();
+      var currentYear = new Date().getFullYear();
+      var isInvalid = isNaN(row.yearOfManufacturing);
+      if(isInvalid || row.yearOfManufacturing.length != 4)
+        return callback("Invalid manufacturing year.");
+       var mfgYear = parseInt(row.yearOfManufacturing);
+       if(mfgYear > 1900 && mfgYear <= currentYear)
+        return callback();
+       else
+        return callback("Invalid manufacturing year.");
+
+    }
+
     function validateRequestType(callback){
+      if(!row.requestType)
+        return callback();        
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
 
@@ -639,6 +781,9 @@ exports.bulkModify = function(req, res) {
     }
 
     function validatePurpose(callback){
+      if(!row.purpose)
+        return callback();
+
       purposeModel.find({name : row.purpose}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating purpose');
@@ -651,6 +796,9 @@ exports.bulkModify = function(req, res) {
     }
 
     function validateAgency(callback){
+      if(!row.agencyName)
+        return callback();
+
       vendorModel.find({entityName : row.agencyName},function(err,result){
         if(err || !result)
           return callback('Error while validating Agency');
@@ -658,18 +806,54 @@ exports.bulkModify = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
+        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
-          _id : result[0]._id,
+          _id : result[0]._id + "",
           name : result[0].entityName
         };
 
         return callback();
       })
+    }
+
+     function validateMasterData(callback){
+      if(!row.brand)
+        return callback();
+       commonFunc.fetchBrand({name:row.brand},function(err,brands){
+          if(err || !brands)
+            return callback('Error while validating brand');
+
+          if(!brands.length){
+              row.otherBrand = row.brand;
+              row.brand = "Other";
+              row.otherModel = row.model;
+              row.model = "Other";
+              return callback();
+          } 
+
+          var modelParams = {
+            brand : row.brand,
+            name : row.model
+          };          
+
+          commonFunc.fetchModel(modelParams,function(err,model){
+              if(err || !model)
+                return callback('Error while validating model');
+
+              if(!model.length){
+                //return callback('Invalid Model'); 
+                  row.otherModel = row.model;
+                 row.model = "Other";           
+              }
+              return callback();
+          });
+
+            //return callback();
+        })
     }
 
     function validateCategory(callback){
@@ -717,6 +901,8 @@ exports.bulkModify = function(req, res) {
       var countryParams = {
         name : row.country
       };
+      if(!row.country)
+        return callback();
 
       commonFunc.fetchCountry(countryParams,function(err,country){
         if(err || !country)
@@ -768,6 +954,26 @@ exports.bulkModify = function(req, res) {
 
       var uniqueControlNo = row.uniqueControlNo;
       delete row.uniqueControlNo;
+      
+      var valReq = row.valData;
+      delete row.valData;
+      if(updateType == 'agency'){
+
+        row.status = EnterpriseValuationStatuses[4];
+        row.statuses = valReq.statuses;
+        row.statuses.push({
+            createdAt : new Date(),
+            status : EnterpriseValuationStatuses[4],
+            userId : user._id
+        });
+
+        if(row.reportUrl){
+          row['valuationReport'] = {
+            external:true,
+            filename:row.reportUrl
+          }
+        }
+      }
 
       if(row.gpsInstalled){
         if(row.gpsInstalled.toLowerCase() === 'yes')
@@ -794,7 +1000,7 @@ exports.bulkModify = function(req, res) {
     debug(err);
 
     return res.json({
-      msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' uploaded sucessfully',
+      msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' updated sucessfully',
       errObj : errObj 
     });
   }
@@ -814,16 +1020,6 @@ exports.update = function(req, res) {
     });
   });
 };
-
-/*//update on invoce number
-exports.updateOnInvoice = function(req, res) {
-  if(req.body.invoiceNo) { delete req.body.invoiceNo; }
-  req.body.updatedAt = new Date();
-    EnterpriseValuation.update({_id:req.params.id},{$set:req.body}{multi:true},function(err){
-        if (err) { return handleError(res, err); }
-        return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
-    });
-};*/
 
 exports.bulkUpdate = function(req,res){
   var dataArr = req.body;
@@ -861,7 +1057,10 @@ exports.generateInvoice = function(req,res){
     
   EnterpriseValuationInvoice.find({invoiceNo: invoiceNo},function(err,invoiceData){
     if(err || !invoiceData)
-      return res.send(err || new APIError(400,'Error while fetching invoice'));    
+      return res.send(err || new APIError(400,'Error while fetching invoice'));
+    
+    if(invoiceData.length == 0)
+      res.status(412).json({Err:'Invalid invoice Number'});
 
     fs.readFile(__dirname + '/../../views/emailTemplates/EValuation_Invoice.html', 'utf8', function(err, source) {
      if (err) {
@@ -873,14 +1072,20 @@ exports.generateInvoice = function(req,res){
       var template = Handlebars.compile(source);
 
       var data = {
-        invoiceNo : invoiceNo,
-        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData.createdAt,'MM/DD/YYYY')
+        invoiceData : invoiceData[0],
+        invoiceDate : Utility.dateUtil.validateAndFormatDate(invoiceData[0].createdAt,'MM/DD/YYYY'),
+        serverPath:config.serverPath
       };
 
       var result = template(data);
       var pdfInput = minify(result, {
         removeAttributeQuotes: true
       });
+      var ret = true;
+      if(ret){
+        res.status(200).send(result);
+        return;
+      }
 
       var options = {
         height: "15.5in",        // allowed units: mm, cm, in, px 
@@ -895,7 +1100,7 @@ exports.generateInvoice = function(req,res){
 
       pdf.create(pdfInput, options).toStream(function (err, pdfOutput) {
         if (!err){
-          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf"' + '"');
+          res.setHeader('Content-disposition', 'inline; filename=invoice.pdf');
           res.setHeader('Content-type', 'application/pdf');
           pdfOutput.pipe(res);
         } else {
@@ -923,137 +1128,138 @@ exports.updateInvoice = function(req, res) {
 };
 
 var parameters = {
-  jobID:"jobId",
-  unique_controll_no:"uniqueControlNo",
-  reportNo:"reportNo",
-  assetNo:"assetNo",
-  imeiNo:"gpsIMEINo",
-  hmr_Kmr:"hmr_kmr",
-  assessed_Value:"assessedValue",
-  inspection_By:"inspectionBy",
-  physical_Condition:"physicalCondition",
-  gps_Installed:"gpsInstalled",
-  gps_Device_No:"gpsDeviceNo"
+  jobID:{key:"jobId",required:true},
+  unique_controll_no:{key:"uniqueControlNo",required:true},
+  reportNo:{key:"reportNo",required:true},
+  assetNo:{key:"assetNo"},
+  imeiNo:{key:"gpsIMEINo"},
+  hmr_Kmr:{key:"hmr_kmr"},
+  assessed_Value:{key:"assessedValue",type:'numeric'},
+  inspection_By:{key:"inspectionBy"},
+  physical_Condition:{key:"physicalCondition"},
+  gps_Installed:{key:"gpsInstalled",type:"boolean"},
+  gps_Device_No:{key:"gpsDeviceNo"},
+  yearOfManufacturing:{key:"agencyYearOfManufacturing"},
+  engineNo:{key:"agencyEngineNo"},
+  serialNo:{key:"agencySerialNo"},
+  chasisNo:{key:"agencyChassisNo"},
+  registrationNo:{key:"agencyRegistrationNo"},
+  report_url:{key:"valuationReport",type:"file",required:true}
 }
-
- /* reportDate:"reportDate",
-  reportNo:"reportNo",
-  agencyYearOfManufacturing:"agencyYearOfManufacturing",
-  agencyEngineNo:"agencyEngineNo",
-  agencyChasisNo:"agencyChasisNo",
-  agencyRegistrationNo:"agencyRegistrationNo",
-  agencySerialNo:"agencySerialNo",
-  hmr_kmr:"hmr_kmr",
-  assessedValue:"assessedValue",
-  inspectionBy:"inspectionBy",
-  physicalCondition:"physicalCondition",
-  gpsInstalled:"gpsInstalled",
-  gpsDeviceNo:"gpsDeviceNo",
-  gpsIMEINo:"gpsIMEINo",*/
 
 exports.updateFromAgency = function(req,res){
   
   var bodyData = req.body;
   console.log("request body  data",bodyData);
-  if(bodyData.length == 0){
-    return res.status(200).send("No Data submitted");
-  }
-  var retList = validateRequest(bodyData);
-  var keys = Object.keys(parameters);
 
-  try{
-    async.eachLimit(bodyData,5,update,onComplete);  
-  }catch(e){
-    res.status(500).send(e);
+  var result = {};
+  result['success'] = true;
+  result['jobID'] = bodyData.jobID;
+  result['unique_controll_no']= bodyData.unique_controll_no;
+  var msg = validateRequest(bodyData);
+  if(msg){
+    result['msg'] = msg;
+    result['success'] = false;
+    return sendResponse();
   }
-  
-  function update(dt,callback){
-    getEnterpriseVal(dt.unique_controll_no,function(err,valArr){
-          
-          var obj = {};
-          obj['jobID'] = dt.jobID;
-          obj['unique_controll_no']= dt.unique_controll_no;
-          obj['success'] = false;
-          retList[retList.length] = obj;
 
+  checkRecordInDB(bodyData.unique_controll_no,function(msg,valReq){
+    if(msg){
+       result['msg'] = msg;
+       result['status'] = false;
+       return sendResponse();
+    }else
+        update(valReq);      
+
+  })
+
+  function update(valReq){
+
+      var keys = Object.keys(parameters);
+      var updateObj = {};
+      keys.forEach(function(key){
+        var val = bodyData[key];
+        if(!parameters[key].type == 'boolean')
+          val = val == 'YES' || val == 'yes'?true:false;
+        if(parameters[key].type == 'file'){
+          var valObj = {external:true};
+          valObj.filename = val;
+          val = valObj;
+         }
+        updateObj[parameters[key].key] = val;
+       
+      });
+
+      updateObj.status = EnterpriseValuationStatuses[4];
+      updateObj.statuses = valReq.statuses;
+      var stsObj = {};
+      stsObj.createdAt = new Date();
+      stsObj.userId = "IQVL";
+      stsObj.status = EnterpriseValuationStatuses[4];
+      if(updateObj.statuses)
+        updateObj.statuses[updateObj.statuses.length] = stsObj;
+       console.log("QV data upadted",updateObj);
+
+       //return sendResponse();
+      EnterpriseValuation.update({_id:valReq._id},{$set:updateObj},function(err){
+          if(err){
+             result['success'] = false;
+             result['msg'] = "System error at iQuippo";
+          }
+          return sendResponse();
+      });
+  }
+
+  function sendResponse(){
+    res.status(200).json(result);
+  }
+
+  function checkRecordInDB(unCtlNo,cb){
+    EnterpriseValuation.find({uniqueControlNo:unCtlNo},function(err,valArr){
+      var msg = "";
       if(err){
-          obj['msg'] = "System error at iQuippo";
-          return callback();
+         msg = "System error at iQuippo";
       }else if(valArr.length == 0){
-          obj['msg'] = "Record not found at iQuippo";
-          return callback();
-      }else{
-         var updateObj = {};
-          keys.forEach(function(key){
-            updateObj[parameters[key]] = dt[key];
-          });
-          updateObj.status = EnterpriseValuationStatuses[3];
-          updateObj.statuses = valArr[0].statuses;
-          var stsObj = {};
-          stsObj.createdAt = new Date();
-          stsObj.userId = "IQVL";
-          stsObj.status = EnterpriseValuationStatuses[3];
-          if(updateObj.statuses)
-            updateObj.statuses[updateObj.statuses.length] = stsObj;
-           console.log("QV data upadted",updateObj);
-
-          EnterpriseValuation.update({_id:valArr[0]._id},{$set:updateObj},function(err){
-            if(err){
-              console.log("err",err);
-               obj['msg'] = "System error at iQuippo";
-            }else{
-               obj['success'] = true;
-            }
-            return callback();
-          });
+          msg = "Record not found at iQuippo";
       }
-    })
-  }
-  
-  function onComplete(){
-    res.status(200).json(retList);
-  }
-
-  function getEnterpriseVal(unCtlNo,cb){
-    EnterpriseValuation.find({uniqueControlNo:unCtlNo},function(err,retArr){
-      cb(err,retArr);
+      if(msg)
+        return cb(msg);
+      else  
+        return cb(null,valArr[0]);
     })
   }
 
-}
+  function validateRequest(reqData){
+    
+    var msg = "";
+    var keys = Object.keys(parameters);
+    for(var i=0;i < keys.length;i++){
 
-function validateRequest(dataArr){
+      var key = keys[i];
+      var keyObj = parameters[key];
 
-  var requiredParams = [{key:"jobID"},{key:"unique_controll_no"},{key:"reportNo"},{key:"assessed_Value",type : "numeric"},{key:"reportFileToUpload"}];
-  var errorList = [];
-  var totalItems = dataArr.length;
-  for(var i=0; i < totalItems;i++){
-    var item = dataArr[i];
-    requiredParams.some(function(paramObj){
-        var obj = {};
-        obj['success'] = false;
-        obj['jobID'] = item.jobID;
-        obj['unique_controll_no']= item.unique_controll_no;
-      if(!item[paramObj.key]){
-        obj['msg'] = paramObj.key + " is missing";
-        errorList[errorList.length] = obj;
-        dataArr.splice(i,1);
-        return true;
-      }else{
-        if(paramObj.type){
-            if(!valiadeDataType(item[paramObj.key],paramObj.type)){
-              obj['msg'] = paramObj.key + " must be of " + paramObj.type + " type";
-              errorList[errorList.length] = obj;
-              dataArr.splice(i,1);
-              return true;
+      //console.log("key obj",keyObj);
 
-            }
+      var value = reqData[key];
+      if(keyObj.required && !value){
+        msg = key + " is missing";
+        break;
+      }
+
+      if(keyObj.type){
+        var retVal = valiadeDataType(value,keyObj.type);
+          if(!retVal){
+            msg = key + " must be of " + keyObj.type + " type";
         }
       }
-    });
+
+    }
+    return msg;
   }
-  return errorList;
+
 }
+
+
 
 function valiadeDataType(val,type){
   var ret = true; 
@@ -1061,8 +1267,142 @@ function valiadeDataType(val,type){
     case"numeric":
       ret = !isNaN(val);
     break;
+    case "file":
+      ret = true;
+    break;
   }
   return ret;
+}
+
+exports.exportExcel = function(req,res){
+  var queryParam = req.query;
+  var filter = {};
+  if(queryParam.enterpriseId)
+    filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
+  if(queryParam.agencyId)
+    filter['agency._id'] = queryParam.agencyId;
+  if(queryParam.ids){
+    var ids = queryParam.ids.split(',');
+    filter['_id'] = {$in:ids};
+  }
+
+  switch(queryParam.type){
+    case "transaction":
+      var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
+      var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
+      query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          exportExcel(req,res,fieldMap,dataArr);
+      })
+      break;
+    case 'invoice':
+      var fieldMap = fieldsConfig["INVOICE_EXPORT"];
+      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          exportExcel(req,res,fieldMap,dataArr);
+      })
+       break;
+    case 'paymentmade':
+       var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
+       filter['paymentMade'] = true;
+      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          var jsonArr = [];
+          dataArr.forEach(function(item,index){
+             if(item.paymentMadeDetail && item.paymentMadeDetail.paymentDetails){
+              item.paymentMadeDetail.paymentDetails.forEach(function(innerItem){
+                _formatPayments(item,innerItem,jsonArr);
+              })
+            }
+          })
+          console.log("payment made",jsonArr);
+          exportExcel(req,res,fieldMap,jsonArr);
+      })
+      break;
+    case "paymentreceived":
+      var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
+      filter['paymentReceived'] = true;
+      var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
+       query.exec(function(err,dataArr){
+          if(err) { return handleError(res, err); }
+          var jsonArr = [];
+          dataArr.forEach(function(item,index){
+            if(item.paymentReceivedDetail && item.paymentReceivedDetail.paymentDetails){
+              item.paymentReceivedDetail.paymentDetails.forEach(function(innerItem){
+                _formatPayments(item,innerItem,jsonArr);
+              })
+            }
+            
+          })
+          exportExcel(req,res,fieldMap,jsonArr);
+      })
+      break;
+      default:
+        //exportTransaction(req,res);
+  }
+
+  function _formatPayments(item,innerItem,jsonArr){
+    var obj = {};
+    obj['invoiceNo'] = item.invoiceNo || "";
+    obj['requestType'] = item.requestType || "";
+    obj['enterpriseId'] = item.enterprise.enterpriseId || "";
+    obj['enterpriseName'] = item.enterprise.name || "";
+    obj['enterpriseContactNo'] = item.enterprise.mobile|| "" ;
+    obj['valuationPartnerName'] = item.agency.name || "" ;
+    obj['valuationPartnerContactNo'] = item.agency.mobile || "";
+    obj['bankName'] = innerItem.bankName || "";
+    obj['branchName'] = innerItem.branchName || "";
+    obj['chequeNo'] = innerItem.chequeNo || "";
+    obj['chequeValue'] = innerItem.chequeValue || "";
+    obj['chequeDate'] = innerItem.chequeDate || ""
+    obj['deductedTds'] = innerItem.deductedTds || "";
+    jsonArr.push(obj);
+  }
+  
+}
+
+function exportExcel(req,res,fieldMap,jsonArr){
+
+  var queryParam = req.query;
+  var role = queryParam.role;
+  var dataArr = [];
+  var headers = Object.keys(fieldMap);
+  var allowedHeaders = [];
+  for(var i=0;i < headers.length;i++){
+      var hd = headers[i];
+      var obj = fieldMap[hd];
+      if(obj.allowedRoles && obj.allowedRoles.indexOf(role) == -1){
+        continue;
+      }
+      allowedHeaders.push(hd);
+  }
+
+  dataArr.push(allowedHeaders);
+  jsonArr.forEach(function(item,idx){
+    dataArr[idx + 1] = [];
+    allowedHeaders.forEach(function(header){
+      var keyObj = fieldMap[header];
+      var val = _.get(item,keyObj.key,'');
+      if(keyObj.type && keyObj.type == 'boolean')
+          val = val?'YES':'NO';
+      if(keyObj.type && keyObj.type == 'date' && val)
+        val = moment(val).format('MM/DD/YYYY')
+       dataArr[idx + 1].push(val);
+    });
+
+  });
+ /* var ret = true;
+  if(ret)
+    return res.status(200).send(dataArr);*/
+  var ws = Utility.excel_from_data(dataArr,allowedHeaders);
+  var ws_name = "entvaluation_" + new Date().getTime();
+  var wb = Utility.getWorkbook();
+  wb.SheetNames.push(ws_name);
+  wb.Sheets[ws_name] = ws;
+  var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+  res.end(wbout);
 }
 
 function handleError(res, err) {

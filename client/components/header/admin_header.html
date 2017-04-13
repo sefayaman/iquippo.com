@@ -54,7 +54,7 @@
                      <li ng-if="isAdmin()">
                         <a href="/masterdata"><i class="fa fa-database"></i> Master Data</a>
                         </li>
-                    <li ng-if="isAdmin() || isChannelPartner()">
+                    <li ng-if="isAdmin() || isChannelPartner() || isEnterprise()">
                         <a href="/usermanagement"><i class="fa fa-user"></i>
                         User Management</a>
                          
@@ -62,8 +62,8 @@
                     <li ng-if="isAdmin()">
                         <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
                     </li>                    
-                    <li ng-if="isLoggedIn()">
-                        <a href="/enterprisevaluation/dashboard"><i class="fa fa-user-plus"></i> Enterprises Valuation</a>
+                    <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
+                        <a href="/enterprisevaluation/dashboard"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
                     </li>
                     <!--<li ng-if="isAdmin()">
                         <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>

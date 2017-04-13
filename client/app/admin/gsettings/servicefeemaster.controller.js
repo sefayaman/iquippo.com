@@ -81,7 +81,7 @@
 
             vm.enterprises.forEach(function(item){
                 if(item.enterpriseId == vm.dataModel.enterpriseId){
-                    vm.dataModel.enterpriseName = item.fname  + " " + (item.mname || "") + " " + item.lname;
+                    vm.dataModel.enterpriseName = item.fname  + " " + item.lname;
                 }
             });
 
@@ -100,9 +100,11 @@
 
         function editClicked(rowData){
             vm.dataModel = angular.copy(rowData);
-              if (vm.dataModel.effectiveToDate)
+            if (vm.dataModel.effectiveFromDate)
+                vm.dataModel.effectiveFromDate = moment(vm.dataModel.effectiveFromDate).format('MM/DD/YYYY');
+
+            if (vm.dataModel.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(vm.dataModel.effectiveToDate).format('MM/DD/YYYY');
-            //getPartners(vm.dataModel.serviceType);
             $scope.edit = true;
         }
 

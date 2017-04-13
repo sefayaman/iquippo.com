@@ -89,11 +89,23 @@ function fetchCategory(category, cb) {
 }
 
 function fetchBrand(brand, cb) {
-	var filter = {
+	/*var filter = {
 		name: brand.name,
 		'group.name': brand.group,
 		'category.name': brand.category
-	};
+	};*/
+	var filter = {};
+	if (Object.keys(brand).length) {
+		if(brand.name)
+			filter['name'] = brand.name;
+		if(brand.group)
+			filter['group.name'] = brand.group;
+		if(brand.category)
+			filter['category.name'] = brand.category;
+	}
+
+	console.log("fetch brand",filter);
+
 	BrandModel.find(filter).exec(function(err, brandData) {
 		if (err) {
 			return cb(err);
