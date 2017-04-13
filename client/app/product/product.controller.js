@@ -364,11 +364,11 @@
             resizeParam.size=args.files[0].size;
           }
           $rootScope.loading = true;
-          if(args.files[0].size < 50000){
+          /*if(args.files[0].size < 50000){
             $rootScope.loading = false;
             Modal.alert("Error in file upload.the size of the file should be more than 50KB", true);
             return;
-          }
+          }*/
           uploadSvc.upload(args.files[0], $scope.assetDir, resizeParam).then(function(result) {
             $rootScope.loading = false;
             $scope.assetDir = result.data.assetDir;
