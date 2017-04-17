@@ -15,7 +15,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   $scope.selectedTax = [];
   $scope.currentTax = null;
 
-  $scope.pager = PagerSvc.getPager();
+  $scope.pager = PagerSvc.getPager(null,null,100);
   //$scope.getServiceFee  = getServiceFee;
   $scope.generateInvoice = generateInvoice;
   $scope.addTaxToken = addTaxToken;
@@ -282,7 +282,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           updateValuationRequest();
         })
         .catch(function(err){
-          Modal.alert("There is some issue in invoice generation.Please try again.")
+          Modal.alert("There is some issue in invoice generation.Please refresh your page and try again.")
         })
       }
 

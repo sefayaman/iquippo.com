@@ -428,7 +428,8 @@
         <div class="row form-group">
           <div class="col-sm-offset-6 col-sm-6 text-right">
             <button type="button" class="btn btn-default" ng-click="addTransactionVm.reset()"  ng-disabled="!editEnterpriseField()">Reset</button>
-            <button type="button" class="btn btn-danger" ng-click="addTransactionVm.addOrUpdateRequest(enterpriseValForm)">Submit</button>
+            <button type="button" class="btn btn-danger" ng-click="addTransactionVm.addOrUpdateRequest(enterpriseValForm)" ng-if="!isEdit">Save</button>
+            <button type="button" class="btn btn-danger" ng-click="addTransactionVm.addOrUpdateRequest(enterpriseValForm)" ng-if="isEdit">Update</button>
           </div>
         </div>
       

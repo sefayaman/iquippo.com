@@ -599,7 +599,13 @@ exports.bulkUpload = function(req, res) {
       }]
 
       _getAssetGroupCategory(row.assetCategory,row.agency.partnerId,row.enterprise.enterpriseId,function(acErr,result){
-           if(acErr) { return handleError(res, err); }
+           if(acErr) { 
+                    errObj.push({
+                      Error: 'Error while inserting data',
+                      rowCount: row.rowCount
+                    });
+                  return cb();
+             }
              if(result && result.data){
               row.valuerGroupId = result.data.valuerGroupId || "";
               row.valuerAssetId = result.data.valuerAssetId || "";
@@ -1009,16 +1015,35 @@ exports.bulkModify = function(req, res) {
 
 // Updates an existing enterprise valuation in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
-  req.body.updatedAt = new Date();
+  
+  var bodyData = req.body.data;
+  var user = req.body.user;
+
+  if(bodyData._id) { delete bodyData._id; }
+  bodyData.updatedAt = new Date();
   EnterpriseValuation.findById(req.params.id, function (err, enterprise) {
     if (err) { return handleError(res, err); }
     if(!enterprise) { return res.status(404).send('Not Found'); }
-    EnterpriseValuation.update({_id:req.params.id},{$set:req.body},function(err){
+
+    var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
+    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
+
+    if(user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId)
+      update();
+    else if(user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)
+      update();
+    else if(user.role == 'admin')
+      update();
+    else
+      return res.status(401).send('User does not have privilege to update record');
+  });
+  
+  function update(){
+     EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
     });
-  });
+  }
 };
 
 exports.bulkUpdate = function(req,res){
@@ -1031,21 +1056,46 @@ exports.bulkUpdate = function(req,res){
 
 function bulkUpdate(dataArr,cb){
     async.eachLimit(dataArr,5,update,cb);
+
     function update(dt,callback){
       var _id = dt._id;
       delete dt._id;
-       EnterpriseValuation.update({_id:_id},{$set:dt},function(err){
-        callback(err)
+      EnterpriseValuation.findById(_id,function(err,retRow){
+        if(err){return callback(err)}
+        if(!retRow)
+          return callback("Enterprise valuations request is not found");
+        if(retRow.jobId && dt.jobId)
+            delete dt.jobId;
+        EnterpriseValuation.update({_id:_id},{$set:dt},function(err){
+          callback(err)
+        });
+
       });
     }
 }
 
 //Invoice functions
 exports.createInvoice = function(req,res){
-  EnterpriseValuationInvoice.create(req.body, function(err, enterpriseData) {
+
+  if(!req.body.uniqueControlNos || req.body.uniqueControlNos.length == 0)
+    return res.status(400).send("Invalid Request");
+
+  EnterpriseValuationInvoice.find({uniqueControlNos:{$elemMatch:{$in:req.body.uniqueControlNos}}},function(err,result){
     if(err) { return handleError(res, err); }
-    return res.status(201).json(enterpriseData);
+    console.log("err",result.length);
+    if(result.length > 0)
+      return res.status(409).send("Invoice is already generated for one or more transaction.");
+    _create();    
   });
+
+  function _create(){
+    EnterpriseValuationInvoice.create(req.body, function(err, enterpriseData) {
+        if(err) { return handleError(res, err); }
+        return res.status(201).json(enterpriseData);
+
+      });
+  }
+  
 
 }
 
@@ -1081,11 +1131,6 @@ exports.generateInvoice = function(req,res){
       var pdfInput = minify(result, {
         removeAttributeQuotes: true
       });
-      var ret = true;
-      if(ret){
-        res.status(200).send(result);
-        return;
-      }
 
       var options = {
         height: "15.5in",        // allowed units: mm, cm, in, px 
@@ -1113,18 +1158,78 @@ exports.generateInvoice = function(req,res){
 
 // Updates an existing enterprise valuation in the DB.
 exports.updateInvoice = function(req, res) {
-  //if(req.body._id) { delete req.body._id; }
+
+  var updateType = req.body.updateType;
   var _id = req.body._id;
-  if(req.body._id) { delete req.body._id; }
-  req.body.updatedAt = new Date();
+  var chequeDetail = req.body.chequeDetail;
+  var checkVal = chequeDetail.chequeValue + chequeDetail.deductedTds;
+  var checkdetailObj = {
+      bankName:"",
+      branchName:"",
+      chequeNo:"",
+      chequeDate:"",
+      chequeValue:"",
+      deductedTds:"",
+      attached:false
+    };
+
   EnterpriseValuationInvoice.findById(_id, function (err, invoice) {
     if (err) { return handleError(res, err); }
     if(!invoice) { return res.status(404).send('Not Found'); }
-    EnterpriseValuationInvoice.update({_id:_id},{$set:req.body},function(err){
-        if (err) { return handleError(res, err); }
-        return res.status(200).send("Invoice updated sucessfully");
-    });
+    invoice.updatedAt = new Date();
+    if(updateType == "paymentmade"){
+      var remVal = invoice.paymentMadeDetail.remainingAmount - checkVal;
+      if(remVal < 0)
+        return res.status(412).send("Invalid update");
+
+      var idx = getBlankChequeObj(invoice.paymentMadeDetail.paymentDetails);
+      invoice.paymentMadeDetail.paymentDetails[idx] = chequeDetail;
+
+      if(remVal == 0){
+        invoice.paymentMadeDetail.remainingAmount = 0;
+        invoice.paymentMade = true;
+      }else{
+        invoice.paymentMadeDetail.remainingAmount = remVal;
+        invoice.paymentMadeDetail.paymentDetails.push(checkdetailObj);
+      }
+      update(invoice);  
+    }else if(updateType == "paymentreceived"){
+        var remVal = invoice.paymentReceivedDetail.remainingAmount - checkVal;
+        if(remVal < 0)
+          return res.status(412).send("Invalid update");
+        var idx = getBlankChequeObj(invoice.paymentReceivedDetail.paymentDetails);
+        invoice.paymentReceivedDetail.paymentDetails[idx] = chequeDetail;
+        if(remVal == 0){
+          invoice.paymentReceivedDetail.remainingAmount = 0;
+          invoice.paymentReceived = true;
+        }else{
+          invoice.paymentReceivedDetail.remainingAmount = remVal;
+          invoice.paymentReceivedDetail.paymentDetails.push(checkdetailObj);
+        }
+        update(invoice);
+      }else
+        return res.status(412).send("Invalid update");
   });
+
+  function update(inovice){
+    EnterpriseValuationInvoice.update({_id:_id},{$set:inovice},function(err,retVal){
+        console.log("ret val",retVal)
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(inovice);
+    });
+  }
+
+  function getBlankChequeObj(chequeArr){
+    var idx = chequeArr.length;
+    for(var i=0;i<chequeArr.length;i++){
+      if(!chequeArr[i].attached){
+          idx = i;
+          break;
+
+      }
+    }
+    return idx;
+  }
 };
 
 var parameters = {
@@ -1340,7 +1445,6 @@ exports.exportExcel = function(req,res){
       })
       break;
       default:
-        //exportTransaction(req,res);
   }
 
   function _formatPayments(item,innerItem,jsonArr){
@@ -1388,14 +1492,11 @@ function exportExcel(req,res,fieldMap,jsonArr){
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
-        val = moment(val).format('MM/DD/YYYY')
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
        dataArr[idx + 1].push(val);
     });
 
   });
- /* var ret = true;
-  if(ret)
-    return res.status(200).send(dataArr);*/
   var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
   var wb = Utility.getWorkbook();
