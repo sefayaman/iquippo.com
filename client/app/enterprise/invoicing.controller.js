@@ -15,7 +15,9 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   $scope.selectedTax = [];
   $scope.currentTax = null;
 
+  $scope.selPageSize = "100";
   $scope.pager = PagerSvc.getPager(null,null,100);
+  $scope.changePageSize = changePageSize;
   //$scope.getServiceFee  = getServiceFee;
   $scope.generateInvoice = generateInvoice;
   $scope.addTaxToken = addTaxToken;
@@ -78,6 +80,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
     vm.agencyId = "";
      vm.agencies = vendorSvc.getVendorsOnCode(sercType);
   }*/
+
+  function changePageSize(pageSize){
+    $scope.pager.reset();
+    $scope.pager = PagerSvc.getPager(null,null,parseInt(pageSize) || 100);
+    fireCommand();
+  }
 
   function onTypeChange(){
     vm.enterpriseId = "";
