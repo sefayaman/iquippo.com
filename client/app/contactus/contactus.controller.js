@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('ContactUsCtrl', function ($scope, $location, $window, $rootScope, $http,notificationSvc,Modal,MarketingSvc, LocationSvc, UtilSvc) {
+  .controller('ContactUsCtrl', function ($scope, $location, $window, $rootScope, $http, Auth, notificationSvc,Modal,MarketingSvc, LocationSvc, UtilSvc) {
     $scope.contact = {};
     $rootScope.searchFilter = {};
     $rootScope.equipmentSearchFilter = {};
@@ -10,6 +10,23 @@ angular.module('sreizaoApp')
     $scope.onCodeChange = function(code) {
         $scope.contact.country = LocationSvc.getCountryNameByCode(code);
     }    
+
+    function init(){
+        if(Auth.getCurrentUser()._id){
+            var currUser = Auth.getCurrentUser();
+            $scope.contact.name = currUser.fname + " " + currUser.lname;
+            $scope.contact.mobile = currUser.mobile;
+            if(currUser.email)
+                $scope.contact.email = currUser.email;
+            if(currUser.country)
+                $scope.contact.countryCode = LocationSvc.getCountryCode(currUser.country);
+        } else {
+            $scope.contact = {};
+        }
+    }
+
+    init();
+
     $scope.sendContact = function(contact) {
     var ret = false; 
     if(!$scope.contact.country && $scope.contact.countryCode)
