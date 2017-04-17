@@ -56,6 +56,22 @@
       Search: <input type="text" placeholder="Search..." ng-model="enterpriseInvoiceVm.searchStr" ng-change="enterpriseInvoiceVm.fireCommand(true)" ng-model-options="{debounce:500}">
     </div>
   </div>
+  <div class="row form-group featured"> 
+    <div class=" col-sm-2">
+    show                   
+     <select ng-model="selPageSize" ng-change="changePageSize(selPageSize)">
+       <option value="100">100</option>
+       <option value="200">200</option>
+       <option value="300">300</option>
+       <option value="400">400</option>
+       <option value="500">500</option>
+       <option value="500">1000</option>
+     </select>
+     entries                   
+    </div>      
+    <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+    </div>
+  </div>
   <div class="table-responsive">
     <table class="table table-bordered">
       <thead>
