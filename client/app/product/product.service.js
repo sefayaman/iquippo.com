@@ -234,8 +234,8 @@
 
 
       //Bulk product update via excel
-      function bulkEditProduct(dataToSend){
-        return $http.post(path + "/bulkeditproduct",dataToSend)
+      function bulkEditProduct(fileName){
+        return $http.post(path + "/bulkeditproduct",{filename:fileName})
               .then(function(res){
                 featuredProductCache = [];
                 return res.data;
@@ -258,7 +258,7 @@
         user.email = Auth.getCurrentUser().email;
         user.country = Auth.getCurrentUser().country;
         user.company = Auth.getCurrentUser().company;
-          return $http.post(path + "/v1/import",{filename:fileName,user:user})
+          return $http.post(path + "/import",{filename:fileName,user:user})
                 .then(function(res){
                   return res.data;
                 })

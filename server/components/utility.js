@@ -200,18 +200,15 @@ function toJSON(options) {
     return new Error('No workbook found');
 
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-  
-  if(!options.notValidateHeaders){
-    var ret = validateExcelHeader(worksheet,headers);
+  var ret = validateExcelHeader(worksheet,headers);
 
-    if(!ret)
-      return new Error('Invalid Excel file');
-  }
-  
+  if(!ret)
+    return new Error('Invalid Excel file');
 
   var data = xlsx.utils.sheet_to_json(worksheet);
   
   var fieldMapping = options.mapping;
+
   if(!fieldMapping || !Object.keys(fieldMapping).length){
     return new Error('Invalid or Missing mapping');
   }
@@ -226,9 +223,9 @@ function toJSON(options) {
       }
       delete x[key];
     })
-    x.rowCount = x.__rowNum__;
     return x;
   });
+
   return data;
        
 }

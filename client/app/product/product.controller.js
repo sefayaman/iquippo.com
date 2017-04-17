@@ -686,16 +686,9 @@
       }
       uploadSvc.upload(files[0], importDir)
         .then(function(result) {
-          var dataToSend = {};
-          dataToSend.fileName = result.data.filename;
-          dataToSend.user = {
-            _id  : Auth.getCurrentUser()._id,
-            email : Auth.getCurrentUser().email,
-            mobile : Auth.getCurrentUser().mobile,
-            role : Auth.getCurrentUser().role
-          };
+          var fileName = result.data.filename;
           $rootScope.loading = true;
-          productSvc.bulkEditProduct(dataToSend)
+          productSvc.bulkEditProduct(fileName)
             .then(function(res) {
               $rootScope.loading = false;
               var totalRecord = res.successCount + res.errorList.length;
