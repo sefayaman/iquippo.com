@@ -227,7 +227,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function update() {
       setData();
-      EnterpriseSvc.update(vm.enterpriseValuation)
+      var serData = {
+        data:vm.enterpriseValuation,
+        user:Auth.getCurrentUser()
+      };
+      
+      EnterpriseSvc.update(serData)
           .then(function(res) {
             $state.go('enterprisevaluation.transaction');
         })

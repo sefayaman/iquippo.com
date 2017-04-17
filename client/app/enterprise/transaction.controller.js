@@ -244,8 +244,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       Modal.confirm("Would you like to delete this record?",function(ret){
         if(ret != 'yes')
           return;
+        
         enterpriseValuation.deleted = true;
-        EnterpriseSvc.update(enterpriseValuation).then(function(result){
+         var serData = {
+          data:enterpriseValuation,
+          user:Auth.getCurrentUser()
+        };
+
+        EnterpriseSvc.update(serData).then(function(result){
           fireCommand(true);
           Modal.alert("Request deleted succesfully", true);
         });

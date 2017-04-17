@@ -159,7 +159,7 @@
         Service Fee:
       </div>
       <div class="col-md-6 form-group" ng-class="{'has-error':invoiceForm.serviceFee.$invalid && submitted}">        
-        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Enter Service Fee" required/>
+        <input type="number" class="form-control" name="serviceFee" ng-model="invoice.serviceFee" placeholder="Enter Service Fee" readonly required/>
       </div>
     </div>
     <legend></legend>
@@ -176,7 +176,7 @@
    	<div class="row"> 	
       <div class="col-sm-5 form-group">
         <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType">
-          <option value="">Select Type of Taxes</option>
+          <option value="">Select Type of Tax</option>
           <option ng-repeat="tx in taxList" value="{{tx}}">{{tx}}</option>
         </select>
       </div>
