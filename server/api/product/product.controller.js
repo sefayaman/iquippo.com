@@ -1176,7 +1176,9 @@ exports.validateExcelData = function(req, res, next) {
           validateServiceInfo: validateServiceInfo,
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
-          validateOnlyAdminCols: validateOnlyAdminCols
+          validateOnlyAdminCols: validateOnlyAdminCols,
+          validateAuction : validateAuction,
+          validateValuation : validateValuation
         }, buildData);
       });      
     } else if(reqType === 'Upload'){
@@ -1191,7 +1193,9 @@ exports.validateExcelData = function(req, res, next) {
           validateServiceInfo: validateServiceInfo,
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
-          validateOnlyAdminCols: validateOnlyAdminCols
+          validateOnlyAdminCols: validateOnlyAdminCols,
+          validateAuction : validateAuction,
+          validateValuation : validateValuation
         }, buildData);
       }else{
         errorList.push({
