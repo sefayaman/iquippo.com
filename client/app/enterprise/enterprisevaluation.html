@@ -4,7 +4,8 @@
       <div class="row">
         <div class="col-sm-12">
           <h3>
-          Enterprise Valuation
+          <span ng-if="isAdmin()">Enterprise Valuation</span> <span ng-if="!isAdmin()">{{getCurrentUser().fname}} {{getCurrentUser().lname}}</span> <small ng-if="isEnterprise() || isEnterpriseUser()">({{getCurrentUser().enterpriseId}})</small>
+          <small ng-if="isPartner()">({{getCurrentUser().partnerInfo.partnerId}})</small>
           
           </h3>
           <hr>
