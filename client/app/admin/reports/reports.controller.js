@@ -34,6 +34,7 @@
     vm.easyFinanceListing = [];
     vm.inspectionListing =[];
     vm.valuationListing =[];
+    vm.contactUsListing =[];
     $scope.valuationStatuses = valuationStatuses;
 
     var dataToSend = {};
@@ -171,6 +172,9 @@
           break;
         case 'valuationReport':
           getReportData(filter, 'valuationReport');
+          break;
+        case 'contactUs':
+          getReportData(filter, 'contactUs');
           break;
       }
     }
@@ -500,6 +504,19 @@
               }
             });
           break;
+          case 'contactUs':
+          resetCount();
+          ReportsSvc.getContactUsOnFilter(filter)
+            .then(function(result) {
+              vm.contactUsListing = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.contactUsListing.length > 0) {
+                first_id = vm.contactUsListing[0]._id;
+                last_id = vm.contactUsListing[vm.contactUsListing.length - 1]._id;
+              }
+            });
+          break;
       }
     }
 
@@ -523,6 +540,8 @@
       
       if (vm.tabValue == "callback")
         fileName = "Callback_";
+      else if (vm.tabValue == "contactUs")
+        fileName = "ContactUs_";
       else if (vm.tabValue == "instantQuote")
         fileName = "InstantQuote_";
       else if (vm.tabValue == "buyOrRentOrBoth")

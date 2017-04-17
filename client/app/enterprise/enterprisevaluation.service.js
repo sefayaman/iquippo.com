@@ -91,7 +91,7 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
 
 
     function update(data){
-       return $http.put(path + "/" + data._id, data)
+       return $http.put(path + "/" + data.data._id, data)
         .then(function(res){
             return res.data;
         })

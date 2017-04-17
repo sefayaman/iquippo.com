@@ -285,9 +285,11 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
 
      function exportExcel(){
         var dataToSend ={};
-        dataToSend["userid"] = Auth.getCurrentUser()._id;
-        dataToSend["role"] = Auth.getCurrentUser().role;
-        
+        if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin'){
+           dataToSend["userid"] = Auth.getCurrentUser()._id;
+           dataToSend["role"] = Auth.getCurrentUser().role;
+         } 
+       
         productSvc.exportProduct(dataToSend)
         .then(function(buffData){
           saveAs(new Blob([s2ab(buffData)],{type:"application/octet-stream"}), "productlist_"+ new Date().getTime() +".xlsx")
