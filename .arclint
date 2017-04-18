@@ -1,0 +1,13 @@
+{
+  "linters": {
+    "jshint": {
+      "type": "jshint",
+      "jshint.jshintrc":".jshintrc",
+      "include": "(\\.js$)"
+    },
+    "json":{
+      "type": "json",
+      "include": "(\\.json$)"
+    }
+  }
+}
