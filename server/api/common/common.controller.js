@@ -15,7 +15,7 @@ var Banner = require('./banner.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
-var fs = require('fs');
+var fs = require('fs')
 var gm = require("gm");
 var lwip = require("lwip");
 var fsExtra = require('fs.extra');
@@ -1211,6 +1211,19 @@ exports.rotate = function(req, res) {
     lwip.open(imgPath,function(err,image){
      	if(err)
      		throw err;
+
+     	image.batch()
+	    .rotate(-90,"white")
+		.writeFile(imgPath, function(e) {
+			if (e) {
+				throw e;
+			} else
+				res.send("done");
+		}); 	
+    })
+	// image.batch()
+	/*gm(config.uploadPath + imgPath)
+=======
      	image.batch().rotate(-90,"white")
 			.writeFile(imgPath, function(e) {
 				if (e) {
@@ -1222,6 +1235,7 @@ exports.rotate = function(req, res) {
     })
 	/*var imgPath = req.body.imgPath;
 	gm(config.uploadPath + imgPath)
+>>>>>>> d3c20c5957f1b55aa6716bb4391562ba723bc84b
 		.rotate("white", -90)
 		.write(config.uploadPath + imgPath, function(e) {
 			if (e) {

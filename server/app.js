@@ -23,9 +23,8 @@ var checkQuickQueryNotificationService = require('./components/checkQuickQueryNo
 var checkSearchMatchingNotificationService = require('./components/checkSearchMatchingNotification.js');
 var http = require('http');
 var fsExtra = require('fs.extra');
-
- //var gm = require('gm');
-var lwip=require('lwip');
+//var gm = require('gm');
+var lwip = require('lwip');
 var task = require('./components/task.js');
 var taskRunner = require('./components/taskRunner.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
@@ -153,6 +152,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
         if (err) throw err;
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
+          console.log("-----image",image);
           //var wRatio = 700 / image.width();
           //var hRatio= 450 / image.height();
           image.scale(0.75, function(err, rzdImage) {
