@@ -1211,7 +1211,6 @@ exports.rotate = function(req, res) {
     lwip.open(imgPath,function(err,image){
      	if(err)
      		throw err;
-<<<<<<< HEAD
 
      	image.batch()
 	    .rotate(-90,"white")
