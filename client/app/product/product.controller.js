@@ -677,7 +677,7 @@
       product.seller.company = seller.company;
     }
 
-    function updateAssetTemp(files) {
+    function updateAssetTemp(files,args) {
       if (!files[0])
         return;
       if (files[0].name.indexOf('.xlsx') == -1) {
@@ -694,6 +694,8 @@
             mobile : Auth.getCurrentUser().mobile,
             role : Auth.getCurrentUser().role
           };
+
+          dataToSend.type = args.name || 'template_update';          
           $rootScope.loading = true;
           productSvc.bulkEditProduct(dataToSend)
             .then(function(res) {

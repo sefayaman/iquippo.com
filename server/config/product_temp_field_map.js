@@ -2,6 +2,7 @@
 
 module.exports = {
 	'Asset_ID*': 'assetId',
+	'Group' : 'group',
 	'Category*': 'category',
 	'Other_Category*': 'other_category', //if present then populate otherName and make name to Other
 	'Brand*': 'brand',
@@ -75,4 +76,10 @@ module.exports = {
 	'Alternate_Contact_Number_To_be_displayed_in_front_end(Yes/No)': 'dispSellerAlternateContact',
 	'Featured(Yes/No)':'featured',
 	'Active(Yes/No)': 'status',
+	//Auction Related Cols
+	'List_for_Auctions' : 'auctionListing',
+	'Auction_ID' : 'auctionId',
+	'EMD_Amount' : 'emdAmount',
+	'Request_for_Valuation' : 'valuationReq',
+	'Name_of_Agency' : 'agencyName'
 }

@@ -1086,7 +1086,7 @@ exports.parseExcel = function(req,res,next){
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
-  ['filename', 'user'].forEach(function(x) {
+  ['filename', 'user','type'].forEach(function(x) {
     if (!body[x]) {
       return res.status(412).send("Missing mandatory parameter : " + x);
     }
@@ -1108,7 +1108,8 @@ exports.parseImportExcel = function(req,res,next){
 exports.validateExcelData = function(req, res, next) {
   var excelData = req.excelData;
   var user = req.body.user;
-  var reqType = req.reqType;  
+  var reqType = req.reqType;
+  var type = req.body.type;
 
   if(!reqType)
     return res.sendStatus(400).send("Invalid request");
@@ -1120,8 +1121,6 @@ exports.validateExcelData = function(req, res, next) {
   if (!excelData || !excelData.length) {
     return res.sendStatus(404).send("No Data to update");
   }
-
-  
 
   var updateData = [];
   var errorList = [];
@@ -1171,20 +1170,30 @@ exports.validateExcelData = function(req, res, next) {
           return cb();
         }
 
-        async.parallel({
-          validateCategory: validateCategory, //{}
-          validateSeller: validateSeller,
-          validateTechnicalInfo: validateTechnicalInfo,
-          validateServiceInfo: validateServiceInfo,
-          validateRentInfo: validateRentInfo,
-          validateAdditionalInfo: validateAdditionalInfo,
-          validateOnlyAdminCols: validateOnlyAdminCols
-        }, buildData);
+        if(type === 'template_update') {
+          async.parallel({
+            validateGroup : validateGroup,
+            validateCategory: validateCategory, //{}
+            validateSeller: validateSeller,
+            validateTechnicalInfo: validateTechnicalInfo,
+            validateServiceInfo: validateServiceInfo,
+            validateRentInfo: validateRentInfo,
+            validateAdditionalInfo: validateAdditionalInfo,
+            validateOnlyAdminCols: validateOnlyAdminCols
+          }, buildData);          
+        }else if(type === 'auction_update'){
+          async.parallel({
+            validateAuction : validateAuction
+          },buildData);
+        }else
+          return cb();
+
       });      
     } else if(reqType === 'Upload'){
       if(!assetIdObj[row.assetId]){
         assetIdObj[row.assetId] = true;
         async.parallel({
+          validateMadnatoryCols : validateMadnatoryCols,
           validateDupProd : validateDupProd,
           validateDupIncomingProd : validateDupIncomingProd,
           validateCategory: validateCategory, //{}
@@ -1203,6 +1212,93 @@ exports.validateExcelData = function(req, res, next) {
           return cb();
       }
     }
+
+    function validateMadnatoryCols(callback){
+      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].forEach(function(x){
+        if(!row[x]){
+          errorList.push({
+            Error : 'Missing mandatory parameter : ' + x,
+            rowCount :row.rowCount
+          });
+
+          return callback('Error');
+        }
+      });
+
+      if(row.category.toLowerCase() === 'other' && !other_category){
+        errorList.push({
+          Error : 'Other category is mandatory field when category is other',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+      if(row.brand.toLowerCase() === 'other' && !other_brand){
+        errorList.push({
+          Error : 'Other category is mandatory field when category is other',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+      if(row.model.toLowerCase() === 'other' && !other_model){
+        errorList.push({
+          Error : 'Other category is mandatory field when category is other',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+      if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice ){
+        errorList.push({
+          Error : 'Selling price is mandatory when Price on request not selected',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+    }
+
+    function validateGroup(callback){
+      if(!row.group)
+        return callback();
+
+      
+    }
+
+    function validateAuction(callback){
+      if(row.auctionListing.toLowerCase() === 'yes'){
+        if(!row.auctionId){
+          errorList.push({
+            Error : 'Auction ID Missing',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        if(row.valuationReq !== 'yes' || !row.agencyName){
+          errorList.push({
+            Error : 'Valuation Request is required while updating auction data',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        //validateauction
+        //validateagency
+        //validatetransaction
+        //paymenttransaction
+        //list that product in auction
+      } else {
+        return callback();
+      }
+    }
+
+    
 
     function validateDupProd(callback){
       Product.find({assetId:row.assetId},function(err,products){
