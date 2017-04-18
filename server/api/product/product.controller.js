@@ -1050,6 +1050,8 @@ exports.createProductReq = function(req,res,next){
   }
 
   function intialize(data,cb){
+    data.images = [{}]
+    data.user = req.body.user;
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1106,7 +1108,7 @@ exports.parseImportExcel = function(req,res,next){
 exports.validateExcelData = function(req, res, next) {
   var excelData = req.excelData;
   var user = req.body.user;
-  var reqType = req.reqType;
+  var reqType = req.reqType;  
 
   if(!reqType)
     return res.sendStatus(400).send("Invalid request");
@@ -1209,6 +1211,7 @@ exports.validateExcelData = function(req, res, next) {
             Error : 'Error while validating product',
             rowCount : row.rowCount
           });
+          return callback('Error');
         }
 
         if(products.length){
@@ -1216,6 +1219,7 @@ exports.validateExcelData = function(req, res, next) {
             Error : 'Duplicate Asset Id',
             rowCount : row.rowCount
           });
+          return callback('Error');
         }
         return callback();
       });
@@ -1228,13 +1232,15 @@ exports.validateExcelData = function(req, res, next) {
             Error : 'Error while validating product',
             rowCount : row.rowCount
           });
+          return callback('Error');
         }
-
+        
         if(products.length){
           errorList.push({
             Error : 'Duplicate Asset Id present in quene',
             rowCount : row.rowCount
           });
+          return callback('Error');
         }
         return callback();
       });

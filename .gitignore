@@ -18,5 +18,6 @@ dist
 dist/public/app
 dist/public/bower_components
 dist/server
+client/index.html
 
 npm-debug.log
