@@ -5,6 +5,8 @@ var mongoose = require('mongoose'),
 var sequence = require('./../../components/seqgenerator').sequence();
 var PaymentTransactionSchema = new Schema({
   product: {},
+  auctionId:String,
+  entityName : String,
   user:{},
   transactionId:String,
   payments:[{}],

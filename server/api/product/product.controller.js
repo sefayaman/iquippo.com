@@ -3,9 +3,9 @@
 var _ = require('lodash');
 var Seq = require('seq');
 var trim = require('trim');
- var fs = require('fs');
- var gm = require('gm').subClass({imageMagick: true});;
- var fsExtra = require('fs.extra');
+var fs = require('fs');
+var gm = require('gm').subClass({imageMagick: true});;
+var fsExtra = require('fs.extra');
 var lwip = require('lwip');
 var Product = require('./product.model');
 var ProductHistory = require('./producthistory.model');
@@ -18,9 +18,11 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
+var PaymentMaster = require('../common/paymentmaster.model');
 var ValuationReq = require('./../valuation/valuation.model');
 var AuctionReq = require('./../auction/auction.model');
-
+var AuctionMaster = require('./../auction/auctionmaster.model');
+var VendorModel = require('../vendor/vendor.model');
 var appNotificationCtrl = require('./../appnotification/appnotification.controller');
 
 var config = require('./../../config/environment');
@@ -1639,6 +1641,7 @@ exports.validateExcelData = function(req, res, next) {
   var user = req.body.user;
   var reqType = req.reqType;
   var type = req.body.type;
+  var existingProduct;
 
   //console.log('-------------------------',excelData);
 
@@ -1700,9 +1703,10 @@ exports.validateExcelData = function(req, res, next) {
           return cb();
         }
 
+        existingProduct = doc[0]._doc;
+
         if(type === 'template_update') {
           async.parallel({
-            validateGroup : validateGroup,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
@@ -1793,12 +1797,6 @@ exports.validateExcelData = function(req, res, next) {
 
     }
 
-    function validateGroup(callback){
-      if(!row.group)
-        return callback();
-
-      
-    }
 
     function validateAuction(callback){
       if(row.auctionListing.toLowerCase() === 'yes'){
@@ -1818,11 +1816,220 @@ exports.validateExcelData = function(req, res, next) {
           return callback('Error');
         }
 
-        //validateauction
-        //validateagency
-        //validatetransaction
-        //paymenttransaction
-        //list that product in auction
+        var reqOpts = {
+          auctionId : row.auctionId,
+          startDate : {
+            $gt : new Date()
+          }
+        }
+        AuctionMaster.find(reqOpts,function(err,auction){
+          if(err || !auction){
+            errorList.push({
+              Error : 'Error while validating auction id',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+
+          if(!auction.length){
+            errorList.push({
+              Error : 'Invalid Auction id',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+
+          reqOpts = {
+            entityName : row.agencyName
+          };
+
+          VendorModel.find(reqOpts,function(err,agency){
+            if(err || !agency){
+              errorList.push({
+                Error : 'Error while validating agency',
+                rowCount : row.rowCount
+              });
+              return callback('Error');
+            }
+
+            if(!agency.length || !agency.services || !agency.services.length || (agency.services[0].indexOf('Valuation') < 0)){
+              errorList.push({
+                Error : 'Invalid agency or Agency not authorized',
+                rowCount : row.rowCount
+              });
+              return callback('Error');
+            }
+
+            reqOpts = {
+              auctionId : row.auctionId,
+              entityName : row.agencyName,
+              'product.assetId' : row.assetId
+            };
+
+            PaymentTransaction.find(reqOpts,function(err,payment){
+              if(err || !agency){
+                errorList.push({
+                  Error : 'Error while validating payment transaction',
+                  rowCount : row.rowCount
+                });
+                return callback('Error');
+              }
+
+              if(payment.length){
+                errorList.push({
+                  Error : 'Payment already been made for this asset for this auctionId and agency',
+                  rowCount : row.rowCount
+                });
+                return callback('Error');
+              }
+
+              PaymentMaster.find({serviceCode : {$in:['Auction','Valuation']}},function(err,masterData){
+                if(err || !masterData){
+                  errorList.push({
+                    Error : 'Error while fetching payment master data',
+                    rowCount : row.rowCount
+                  });
+                  return callback('Error');
+                }
+
+                if(!masterData.length){
+                  errorList.push({
+                    Error : 'Payment details not found',
+                    rowCount : row.rowCount
+                  });
+                  return callback('Error');
+                }
+                var auctionFee,
+                    valuationFee;
+                masterData.forEach(function(x){
+                  if(x.serviceCode === 'Auction')
+                    auctionFee = x.fees
+                  else if(x.serviceCode === "Valuation")
+                    valuationFee = x.fees;
+                });
+
+                if(!auctionFee || !valuationFee){
+                  errorList.push({
+                    Error : 'Auction Fee/Valuation Fee master not present',
+                    rowCount : row.rowCount
+                  });
+                  return callback('Error');
+                }
+
+                var paymentData = {
+                  paymets :[{ type: 'auctionreq', charge: auctionFee},
+                      { type: 'valuationreq', charge: valuationFee }],
+                  totalAmount : Number(auctionFee) + Number(valuationFee),
+                  requestType : 'Auction Listing',
+                  product:{ type: 'equipment',
+                    _id: existingProduct._id,
+                    assetId: existingProduct.assetId,
+                    city: existingProduct.city,
+                    name: existingProduct.name,
+                    status: existingProduct.status,
+                    category: existingProduct.category },
+                  user: user,
+                  status: existingProduct.status,
+                  statuses: existingProduct.statuses,
+                  paymentMode: 'offline'
+                };
+
+                PaymentTransaction.create(paymentData,function(err,paymentInfo){
+                  if(err || !paymentInfo){
+                    errorList.push({
+                      Error : 'Error while creating payment request',
+                      rowCount : row.rowCount
+                    });
+                    return callback('Error');
+                  }
+
+                  var valauationData = { 
+                    valuationAgency: { _id: agency[0]._id,
+                      name:  agency[0].entityName,
+                      email: agency[0].user.email,
+                      mobile: agency[0].user.mobile,
+                      countryCode: '91' },
+                    valuate: true,
+                    user: user,
+                    seller: existingProduct.seller,
+                    initiatedBy: 'Admin',
+                    purpose: 'Listing in auction',
+                    product:{ 
+                      _id: existingProduct._id,
+                      assetId: existingProduct.assetId,
+                      city: existingProduct.city,
+                      name: existingProduct.name,
+                      status: existingProduct.status,
+                      category: existingProduct.category,
+                      mfgYear : existingProduct.mfgYear
+                    },
+                    status: 'payment_pending',
+                    statuses: 
+                     [ { createdAt: new Date(),
+                         status: 'payment_pending',
+                         userId: user._id }],
+                    isAuction: true } ;
+                  ValuationReq.create(valauationData,function(err,valuationInfo){
+                    if(err || !paymentInfo){
+                      errorList.push({
+                        Error : 'Error while creating payment request',
+                        rowCount : row.rowCount
+                      });
+                      return callback('Error');
+                    }
+
+                    var auctionData = { 
+                      valuationReport: '',
+                      dbAuctionId: auction._id,
+                      emdAmount: row.emdAmount,
+                      user: user,
+                      seller: existingProduct.seller,
+                      status: 'payment_pending',
+                      statuses: [ { createdAt: new Date(),
+                           status: 'payment_pending',
+                           userId: user._id } ],
+                      product:{ 
+                        _id: existingProduct._id,
+                        assetId: existingProduct.assetId,
+                        city: existingProduct.city,
+                        name: existingProduct.name,
+                        status: existingProduct.status,
+                        category: existingProduct.category,
+                        mfgYear : existingProduct.mfgYear
+                      },
+                      startDate: auction[0].startDate,
+                      endDate: auction[0].endDate,
+                      auctionId: row.auctionId,
+                      transactionId: paymentInfo._id,
+                      valuation: { 
+                        _id: valuationInfo._id, 
+                        status: 'payment_pending'
+                      } 
+                    };
+
+                    AuctionReq.create(auctionData,function(err,auctionInfo){
+                      if(err || !auctionInfo){
+                        errorList.push({
+                          Error : 'Error while creating Auction request',
+                          rowCount : row.rowCount
+                        });
+                        return callback('Error');
+                      }
+                      var obj = {
+                        auction:{
+                            id : auctionInfo._id,
+                            valuationId : valuationInfo._id
+                          }
+                        };
+
+                      return callback(null,obj)
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
       } else {
         return callback();
       }
@@ -2357,6 +2564,11 @@ exports.validateExcelData = function(req, res, next) {
                 _id : model[0]._doc._id,
                 name : model[0]._doc.name
               };
+
+              obj.group = {
+                _id : category[0]._doc.group._id,
+                name : category[0]._doc.group.name
+              }
 
               obj.name = row.category + ' ' + row.brand + ' ' + row.model;
 
@@ -3304,6 +3516,7 @@ exports.createOrUpdateAuction = function(req,res){
       if(!req.body.payment)
         self();
       else{
+        
         PaymentTransaction.create(req.body.payment,function(err,paytm){
           if(err){return handleError(res,err)}
           else{
@@ -3318,6 +3531,7 @@ exports.createOrUpdateAuction = function(req,res){
       if(!req.body.valuation)
         self();
       else{
+        
         if(req.payTransId)
         req.body.valuation.transactionId = req.payTransId + "";
         ValuationReq.create(req.body.valuation,function(err,vals){
@@ -3363,6 +3577,7 @@ exports.createOrUpdateAuction = function(req,res){
       auctionUpdate._id = req.auctionId + "";
       if(req.valuationId)
         auctionUpdate.valuationId = req.valuationId + "";
+      
       Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){
          if(err){return handleError(res,err)}
           else{

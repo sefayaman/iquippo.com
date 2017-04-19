@@ -976,6 +976,10 @@
         serverObj['valuation'] = $scope.valuationReq;
       if (paymentTransaction)
         serverObj['payment'] = paymentTransaction;
+
+      serverObj.payment.auctionId = productObj.auctionId;
+      serverObj.payment.entityName = $scope.valAgencies[i].name;
+
       productSvc.createOrUpdateAuction(serverObj)
         .then(function(res) {
           //goto payment if payment are necessary
