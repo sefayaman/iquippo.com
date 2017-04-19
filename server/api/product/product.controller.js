@@ -1556,8 +1556,89 @@ exports.updateExcelData = function (req,res,next){
     
 }
 
-exports.validateExcelData = function(req,res,next){
+
+exports.createProductReq = function(req,res,next){
+  if(!req.updateData.length && !req.errorList.length)
+    return res.status(500).send('Error while updating');
+
+  var successCount = 0;
+  if(!req.updateData.length && req.errorList.length)
+    return res.json({successCount : successCount,errorList : req.errorList});
+
+  var dataToUpdate = req.updateData;
+
+  async.eachLimit(dataToUpdate,5,intialize,finalize);
+
+  function finalize(err){
+    if(err){
+      console.log(err);
+      res.status(500).send('Error while updating');
+    }
+
+    return res.json({successCount:successCount , errorList : req.errorList});
+  }
+
+  function intialize(data,cb){
+    data.images = [{}]
+    data.user = req.body.user;
+    IncomingProduct.create(data,function(err,doc){
+      if(err || !doc){
+        req.errorList.push({
+          Error:'Error while updating information',
+          rowCount : data.rowCount
+        })
+        return cb();
+      }
+      successCount++;
+      return cb();
+    })
+  }
+}
+
+exports.parseExcel = function(req,res,next){
+  var body = req.body;
+  ['fileName', 'user'].forEach(function(x) {
+    if (!body[x]) {
+      return res.status(412).send("Missing mandatory parameter : " + x);
+    }
+  })
+  var options = {
+    file: body.fileName,
+    headers: Object.keys(productFieldsMap),
+    mapping: productFieldsMap,
+    notValidateHeaders: true
+  };
+  req.excelData = Utillity.toJSON(options);
+  req.reqType = 'Update';
+  next();
+}
+
+exports.parseImportExcel = function(req,res,next){
+  var body = req.body;
+  ['filename', 'user','type'].forEach(function(x) {
+    if (!body[x]) {
+      return res.status(412).send("Missing mandatory parameter : " + x);
+    }
+  });
+
+  var options = {
+    file: body.filename,
+    headers: Object.keys(productFieldsMap),
+    mapping: productFieldsMap,
+    notValidateHeaders: true
+  };
+
+  req.excelData = Utillity.toJSON(options);
+  req.reqType = 'Upload';
+  next();
+}
+
+
+exports.validateExcelData = function(req, res, next) {
   var excelData = req.excelData;
+  var user = req.body.user;
+  var reqType = req.reqType;
+  var type = req.body.type;
 
   //console.log('-------------------------',excelData);
 
@@ -1606,25 +1687,191 @@ exports.validateExcelData = function(req,res,next){
     validateRentInfo : only update of tradeType is RENT or BOTH
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
     */
-  
-    Product.find({assetId : row.assetId},function(err,doc){
-      if(err || !doc.length){
+
+    if(reqType === 'Update'){
+      Product.find({
+        assetId: row.assetId
+      }, function(err, doc) {
+        if (err || !doc.length) {
+          errorList.push({
+            Error: 'No asset id found',
+            rowCount: row.rowCount
+          })
+          return cb();
+        }
+
+        if(type === 'template_update') {
+          async.parallel({
+            validateGroup : validateGroup,
+            validateCategory: validateCategory, //{}
+            validateSeller: validateSeller,
+            validateTechnicalInfo: validateTechnicalInfo,
+            validateServiceInfo: validateServiceInfo,
+            validateRentInfo: validateRentInfo,
+            validateAdditionalInfo: validateAdditionalInfo,
+            validateOnlyAdminCols: validateOnlyAdminCols
+          }, buildData);          
+        }else if(type === 'auction_update'){
+          async.parallel({
+            validateAuction : validateAuction
+          },buildData);
+        }else
+          return cb();
+
+      });      
+    } else if(reqType === 'Upload'){
+      if(!assetIdObj[row.assetId]){
+        assetIdObj[row.assetId] = true;
+        async.parallel({
+          validateMadnatoryCols : validateMadnatoryCols,
+          validateDupProd : validateDupProd,
+          validateDupIncomingProd : validateDupIncomingProd,
+          validateCategory: validateCategory, //{}
+          validateSeller: validateSeller,
+          validateTechnicalInfo: validateTechnicalInfo,
+          validateServiceInfo: validateServiceInfo,
+          validateRentInfo: validateRentInfo,
+          validateAdditionalInfo: validateAdditionalInfo,
+          validateOnlyAdminCols: validateOnlyAdminCols
+        }, buildData);
+      }else{
         errorList.push({
           Error : 'No asset id found',
           rowCount : row.rowCount
         })
         return cb();
       }
+    }
+
+    function validateMadnatoryCols(callback){
+      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].forEach(function(x){
+        if(!row[x]){
+          errorList.push({
+            Error : 'Missing mandatory parameter : ' + x,
+            rowCount :row.rowCount
+          });
+
+          return callback('Error');
+        }
+      });
+
+      if(row.category.toLowerCase() === 'other' && !other_category){
+        errorList.push({
+          Error : 'Other category is mandatory field when category is other',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+      if(row.brand.toLowerCase() === 'other' && !other_brand){
+        errorList.push({
+          Error : 'Other category is mandatory field when category is other',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+      if(row.model.toLowerCase() === 'other' && !other_model){
+        errorList.push({
+          Error : 'Other category is mandatory field when category is other',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+      if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice ){
+        errorList.push({
+          Error : 'Selling price is mandatory when Price on request not selected',
+          rowCount :row.rowCount
+        });
+
+        return callback('Error');
+      }
+
+    }
+
+    function validateGroup(callback){
+      if(!row.group)
+        return callback();
+
       
-      async.parallel({
-        validateCategory : validateCategory, //{}
-        validateSeller: validateSeller,
-        validateTechnicalInfo: validateTechnicalInfo,
-        validateServiceInfo : validateServiceInfo,
-        validateRentInfo : validateRentInfo,
-        validateAdditionalInfo : validateAdditionalInfo
-      },buildData);
-    });
+    }
+
+    function validateAuction(callback){
+      if(row.auctionListing.toLowerCase() === 'yes'){
+        if(!row.auctionId){
+          errorList.push({
+            Error : 'Auction ID Missing',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        if(row.valuationReq !== 'yes' || !row.agencyName){
+          errorList.push({
+            Error : 'Valuation Request is required while updating auction data',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        //validateauction
+        //validateagency
+        //validatetransaction
+        //paymenttransaction
+        //list that product in auction
+      } else {
+        return callback();
+      }
+    }
+
+    
+
+    function validateDupProd(callback){
+      Product.find({assetId:row.assetId},function(err,products){
+        if(err || !products){
+          errorList.push({
+            Error : 'Error while validating product',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        if(products.length){
+          errorList.push({
+            Error : 'Duplicate Asset Id',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        return callback();
+      });
+    }
+
+    function validateDupIncomingProd(callback){
+      IncomingProduct.find({assetId:row.assetId},function(err,products){
+        if(err || !products){
+          errorList.push({
+            Error : 'Error while validating product',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        
+        if(products.length){
+          errorList.push({
+            Error : 'Duplicate Asset Id present in quene',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        return callback();
+      });
+    }
+
 
     function buildData(err,parseData){
       if(err)
