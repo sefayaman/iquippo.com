@@ -2,7 +2,6 @@
 
 module.exports = {
 	'Asset_ID*': 'assetId',
-	'Group': 'group',
 	'Category*': 'category',
 	'Other_Category*': 'other_category', //if present then populate otherName and make name to Other
 	'Brand*': 'brand',
