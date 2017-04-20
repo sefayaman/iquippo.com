@@ -1379,6 +1379,7 @@ function valiadeDataType(val,type){
   return ret;
 }
 
+var Invoice_Properties = ["invoiceNo","requestType","enterprise","agency","totalAmount","createdAt"]
 exports.exportExcel = function(req,res){
   var queryParam = req.query;
   var filter = {};
@@ -1405,7 +1406,8 @@ exports.exportExcel = function(req,res){
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
-          exportExcel(req,res,fieldMap,dataArr);
+          var flatArr = _getformatedInvoice(dataArr);
+          exportExcel(req,res,fieldMap,flatArr);
       })
        break;
     case 'paymentmade':
@@ -1447,6 +1449,42 @@ exports.exportExcel = function(req,res){
       default:
   }
 
+  function _getformatedInvoice(dataArr){
+    
+    var retArr = [];
+    dataArr.forEach(function(mainItem,idx){
+      mainItem.paymentReceivedDetail.paymentDetails.forEach(function(item){
+        var obj = _getInvoiceObj(mainItem);
+        obj.paymentType = "Payment Made";
+        _.forEach(item,function(value,key){
+             obj[key] = value || "";
+        })
+        retArr.push(obj);
+      });
+      mainItem.paymentReceivedDetail.paymentDetails.forEach(function(item){
+        var obj = _getInvoiceObj(mainItem);
+        obj.paymentType = "Payment Received";
+        _.forEach(item,function(value,key){
+             obj[key] = value || "";
+        })
+        retArr.push(obj);
+      });
+
+    });
+
+    function _getInvoiceObj(mainItem){
+      var obj = {};
+      Invoice_Properties.forEach(function(key){
+        obj[key] = mainItem[key] || "";
+      })
+      obj["paymentMade"] = (mainItem.totalAmount - (mainItem.paymentMadeDetail.remainingAmount || 0)) || 0; 
+      obj["paymentReceived"] = (mainItem.totalAmount - (mainItem.paymentReceivedDetail.remainingAmount || 0)) || 0;
+      return obj;
+    }
+
+    return retArr;
+  }
+
   function _formatPayments(item,innerItem,jsonArr){
     var obj = {};
     obj['invoiceNo'] = item.invoiceNo || "";
@@ -1482,13 +1520,12 @@ function exportExcel(req,res,fieldMap,jsonArr){
       }
       allowedHeaders.push(hd);
   }
-
   dataArr.push(allowedHeaders);
   jsonArr.forEach(function(item,idx){
     dataArr[idx + 1] = [];
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
-      var val = _.get(item,keyObj.key,'');
+      var val = _.get(item,keyObj.key,"");
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
