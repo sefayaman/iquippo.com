@@ -103,7 +103,11 @@ else{
 
     NegotiationSvc.negotiation(dataNegotiate,flag)
     .then(function(res){
-      $scope.negotiateAmt="";
+      if(res && res.data && res.data.errorCode != 0) {
+          $state.go('main');
+          return;
+        }
+      vm.negotiateAmt="";
       if(res && res.data && res.data.message)
         Modal.alert(res.data.message, true);
     })
