@@ -1127,11 +1127,16 @@ exports.createProductReq = function(req,res,next){
 
 exports.parseExcel = function(req,res,next){
   var body = req.body;
-  ['fileName', 'user'].forEach(function(x) {
+  var ret;
+  ['fileName', 'user','type'].some(function(x) {
     if (!body[x]) {
-      return next(new APIError(412,'Missing mandatory parameter: ' + x));
+      ret = x;
     }
-  })
+  });
+
+  if(ret)
+    return next(new APIError(412,'Missing mandatory parameter: ' + ret));
+  
   var options = {
     file: body.fileName,
     headers: Object.keys(productFieldsMap),
@@ -1145,11 +1150,15 @@ exports.parseExcel = function(req,res,next){
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
-  ['filename', 'user','type'].forEach(function(x) {
+  var ret;
+  ['filename', 'user'].forEach(function(x) {
     if (!body[x]) {
-      return  next(new APIError(412,'Missing mandatory parameter: ' + x));
+      ret = x;
     }
   });
+
+  if(ret)
+    return  next(new APIError(412,'Missing mandatory parameter: ' + ret));
 
   var options = {
     file: body.filename,
@@ -1276,16 +1285,19 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateMadnatoryCols(callback){
-      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].forEach(function(x){
+      var error;
+      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].some(function(x){
         if(!row[x]){
+          error = true;
           errorList.push({
             Error : 'Missing mandatory parameter : ' + x,
             rowCount :row.rowCount
           });
-
-          return callback('Error');
         }
       });
+
+      if(error)
+        return callback('Error');
 
       if(row.category.toLowerCase() === 'other' && !other_category){
         errorList.push({
