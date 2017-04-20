@@ -30,6 +30,7 @@ var config = require('./../../config/environment');
 var IncomingProduct = require('./../../components/incomingproduct.model');
 var  xlsx = require('xlsx');
 var Utillity = require('./../../components/utility');
+var APIError = require('../../components/_error');
 var importPath = config.uploadPath + config.importDir +"/";
 var async = require('async');
 var debug = require('debug')('api.product.controller');
@@ -1047,7 +1048,7 @@ function fetchModel(model, cb) {
 
 exports.updateExcelData = function (req,res,next){
   if(!req.updateData.length && !req.errorList.length)
-    return res.status(500).send('Error while updating');
+    return next(new APIError(500,'Error while updation'));
 
   var successCount = 0;
   if(!req.updateData.length && req.errorList.length)
@@ -1060,7 +1061,7 @@ exports.updateExcelData = function (req,res,next){
   function finalize(err){
     if(err){
       console.log(err);
-      res.status(500).send('Error while updating');
+      return next(new APIError(500,'Error while updation'));
     }
 
     return res.json({successCount:successCount , errorList : req.errorList});
@@ -1088,7 +1089,7 @@ exports.updateExcelData = function (req,res,next){
 
 exports.createProductReq = function(req,res,next){
   if(!req.updateData.length && !req.errorList.length)
-    return res.status(500).send('Error while updating');
+    return next(new APIError(500,'Error while updation'));
 
   var successCount = 0;
   if(!req.updateData.length && req.errorList.length)
@@ -1101,7 +1102,7 @@ exports.createProductReq = function(req,res,next){
   function finalize(err){
     if(err){
       console.log(err);
-      res.status(500).send('Error while updating');
+      return next(new APIError(500,'Error while updation'));
     }
 
     return res.json({successCount:successCount , errorList : req.errorList});
@@ -1128,7 +1129,7 @@ exports.parseExcel = function(req,res,next){
   var body = req.body;
   ['fileName', 'user'].forEach(function(x) {
     if (!body[x]) {
-      return res.status(412).send("Missing mandatory parameter : " + x);
+      return next(new APIError(412,'Missing mandatory parameter: ' + x));
     }
   })
   var options = {
@@ -1139,14 +1140,14 @@ exports.parseExcel = function(req,res,next){
   };
   req.excelData = Utillity.toJSON(options);
   req.reqType = 'Update';
-  next();
+  return next();
 }
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
   ['filename', 'user','type'].forEach(function(x) {
     if (!body[x]) {
-      return res.status(412).send("Missing mandatory parameter : " + x);
+      return  next(new APIError(412,'Missing mandatory parameter: ' + x);
     }
   });
 
@@ -1159,7 +1160,7 @@ exports.parseImportExcel = function(req,res,next){
 
   req.excelData = Utillity.toJSON(options);
   req.reqType = 'Upload';
-  next();
+  return next();
 }
 
 
@@ -1171,14 +1172,14 @@ exports.validateExcelData = function(req, res, next) {
   var existingProduct;
 
   if(!reqType)
-    return res.sendStatus(400).send("Invalid request");
+    return next(new APIError(400,'Invalid request type'));
 
   if (excelData instanceof Error) {
-    return res.sendStatus(412).send("Invalid Excel File");
+    return  next(new APIError(412,'Invalid Excel File'));
   }
 
   if (!excelData || !excelData.length) {
-    return res.sendStatus(404).send("No Data to update");
+    return next(new APIError(404,'No Data to update'));
   }
 
   
@@ -1192,7 +1193,7 @@ exports.validateExcelData = function(req, res, next) {
   function finalize(err) {
     if (err) {
       console.log(err);
-      res.status(500).send('Error while updating');
+      return next(new APIError(500,'Error while updating'));
     }
 
     req.errorList = errorList;
@@ -2319,7 +2320,7 @@ function bulkProductStatusUpdate(req,res,data){
 
       })
   }else{
-    res.status(200).json({successCount:req.successProductArr.length,errorList:req.errors});
+    return res.json({successCount:req.successProductArr.length,errorList:req.errors});
   }
 }
 
