@@ -90,7 +90,7 @@ module.exports = {
 		}
 	},
 	'ASSETGROUP' : {
-		'Valuer_Group_ID' : 'valuerGroupId' ,
+		'Valuer_Group_ID' : 'valuerGroupId',
 		'Valuer_Asset_ID' : 'valuerAssetId' ,
 		'Valuer_Name' : 'valuerName',
 		'Valuer_Code'  : 'valuerCode',
@@ -152,6 +152,7 @@ module.exports = {
 	},
 	'INVOICE_EXPORT':{
 		"Unique Invoice Number":{key:"invoiceNo"},
+		"Payment Type":{key:"paymentType",allowedRoles:['admin']},
 		"Request Type":{key:"requestType"},
 		"Enterprise Id":{key : "enterprise.enterpriseId"},
 		"Enterprise Name":{key : "enterprise.name"},
@@ -159,9 +160,16 @@ module.exports = {
 		"Valuation Partner Name":{key:"agency.name"},
 		"Valuation Partner Contact No":{key:"agency.mobile"},
 		"Invoice Amount":{key:"totalAmount"},
+		"Payment Received":{key:"paymentReceived",allowedRoles:['admin']},
+		"Payment Made":{key:"paymentMade",allowedRoles:['admin']},
 		"Invoice Date":{key:"createdAt",type:'date'},
-		"Payment Received":{key:"paymentReceived",type:'boolean',allowedRoles:['admin']},
-		"Payment Made":{key:"paymentMade",type:'boolean',allowedRoles:['admin']},
+		"Bank Name":{key:"bankName",allowedRoles:['admin']},
+		"Branch Name":{key:"branchName",allowedRoles:['admin']},
+		"Cheque No":{key:"chequeNo",allowedRoles:['admin']},
+		"Cheque Date":{key:"chequeDate",allowedRoles:['admin']},
+		"Cheque Value":{key:"chequeValue",allowedRoles:['admin']},
+		"Deducted TDS":{key:"deductedTds",allowedRoles:['admin']}
+		
 	},
 	'EXPORT_PAYMENT':{
 		"Unique Invoice Number":{key:"invoiceNo"},

@@ -10,7 +10,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   vm.serviceList = [{name:"Valuation"},{name:"Inspection"}];
   var statuses = [EnterpriseValuationStatuses[4]]
  	
-  $scope.taxList = TaxList;
+  //$scope.taxList = TaxList;
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.selectedTax = [];
   $scope.currentTax = null;
@@ -53,10 +53,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
  			$scope.serviceFees = res;
  		})
 
- 		ServiceTaxSvc.get()
+ 		/*ServiceTaxSvc.get()
  		.then(function(res){
  			$scope.serviceTaxes = res;
- 		});
+ 		});*/
 
     if(Auth.isAdmin()){
       var userFilter = {};
@@ -225,6 +225,11 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         Modal.alert("Unknown error occured during fetching service fee.Please try again.");
       })
 
+       ServiceTaxSvc.get({current:'y'})
+      .then(function(res){
+        $scope.serviceTaxes = res;
+      });
+
 
      }
 
@@ -279,7 +284,10 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         $scope.invoice.uniqueControlNos = [];
         selectedItems.forEach(function(item){
           $scope.invoice.uniqueControlNos.push(item.uniqueControlNo);
-        });        
+        });
+        
+        $scope.invoice.selectedTaxes = $scope.selectedTax;
+
         EnterpriseSvc.generateInvoice($scope.invoice)
         .then(function(genInvoice){
            selectedItems.forEach(function(item){
@@ -318,9 +326,9 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         }
         var totalTax = 0;
         $scope.selectedTax.forEach(function(item){
-          var calAmt = ($scope.invoice.invoiceAmount *item.taxRate)/100;
-          
-          if(item.type == TaxList[0]){
+          var calAmt = ($scope.invoice.invoiceAmount *item.rate)/100;
+          item.calculatedTax = calAmt || 0;
+         /* if(item.type == TaxList[0]){
             $scope.invoice['serviceTax'] = item.taxRate;
             $scope.invoice['serviceTaxValue'] = calAmt;
           }
@@ -333,7 +341,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           if(item.type == TaxList[2]){
             $scope.invoice['krishikalyanCess'] = item.taxRate;
             $scope.invoice['krishikalyanValue'] = calAmt;
-          }
+          }*/
 
           totalTax = totalTax + (calAmt || 0);
         });
@@ -342,15 +350,16 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         updateInvoice();
       }
 
-      function getTax(type){
+      function getTax(_id){
         $scope.currentTax = null;
-        if(!type)
-          return;
-        ServiceTaxSvc.get({type:type,current:'y'})
-        .then(function(result){
-          if(result.length > 0)
-              $scope.currentTax = result[0];
-        })
+         if(!_id)
+            return;
+        for(var i = 0; i < $scope.serviceTaxes.length; i++){
+          if($scope.serviceTaxes[i]._id == _id){
+             $scope.currentTax = $scope.serviceTaxes[i];
+             break;
+          }
+        }
       }
 
       function addTaxToken(srvcTax){
@@ -366,7 +375,14 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           Modal.alert(srvcTax.type + " is already selected");
           return;
         }
-        $scope.selectedTax.push(srvcTax);
+
+        var taxObj = {
+          _id:srvcTax['_id'],
+          type : srvcTax['type'],
+          rate : srvcTax['taxRate']
+        }
+
+        $scope.selectedTax.push(taxObj);
       }
 
        function deleteTaxToken(idx){
