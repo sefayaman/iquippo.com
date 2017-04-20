@@ -46,8 +46,8 @@
 			vm.valuationReq.product.mfgYear = $scope.currentProduct.mfgYear;
 			vm.valuationReq.product.status = $scope.currentProduct.assetStatus;
 			vm.valuationReq.product.city = $scope.currentProduct.city;
-			var countryinfo = LocationSvc.getCountryStateByCity($scope.currentProduct.city);
-			vm.valuationReq.product.countryCode=LocationSvc.getCountryCode(countryinfo.country);
+			if($scope.currentProduct.country)
+				vm.valuationReq.product.countryCode=LocationSvc.getCountryCode($scope.currentProduct.country);
 			vm.valuationReq.product.serialNumber = $scope.currentProduct.serialNo;
 			
 			vm.valuationReq.user._id = Auth.getCurrentUser()._id;
@@ -156,6 +156,11 @@
 							payment: paymentTransaction
 						})
 						.then(function(result) {
+							if(result && result.errorCode != 0) {
+					          //Modal.alert(result.message, true);  
+					          $state.go('main');
+					          return;
+					        }
 							vm.valuationReq = {};
 							if (result.transactionId)
 								$state.go('payment', {

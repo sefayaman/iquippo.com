@@ -30,10 +30,11 @@
       function getCart(){
         var deferred = $q.defer();
         if(Auth.getCurrentUser()._id && cart){
-          deferred.resolve(cart);
-        }else if(Auth.getCurrentUser()._id){
-          getFromServer(Auth.getCurrentUser()._id,deferred);
-        }else{
+          //deferred.resolve(cart);
+          getFromServer(Auth.getCurrentUser()._id, deferred);
+        //}else if(Auth.getCurrentUser()._id){
+          //getFromServer(Auth.getCurrentUser()._id,deferred);
+        } else {
            Auth.isLoggedInAsync(function(loggedIn){
              if(loggedIn){
                 getFromServer(Auth.getCurrentUser()._id,deferred);

@@ -55,6 +55,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
    $scope.dynamicPopover = {
     templateUrl: 'myPopoverTemplate.html'
   };
+  var filter = {};
 
   function init(){
       categorySvc.getAllCategory()
@@ -451,7 +452,21 @@ $scope.today = function() {
     prdObj.name = product.name;
     prdObj.primaryImg = product.primaryImg
     prdObj.condition = product.productCondition;
-    CartSvc.addProductToCart(prdObj);
+    filter = {};
+    filter._id = prdObj._id;
+    filter.status = true;
+    productSvc.getProductOnFilter(filter)
+      .then(function(result){
+          if(result && result.length < 1) {
+            $state.go('main');
+            return;
+          }
+          CartSvc.addProductToCart(prdObj);
+      })
+      .catch(function(){
+        //error handling
+      })
+    //CartSvc.addProductToCart(prdObj);
   }
 
   function compare(){

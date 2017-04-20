@@ -6,6 +6,7 @@ var PaymentTransaction = require('./../payment/payment.model');
 var Seq = require('seq');
 var  xlsx = require('xlsx');
 var Utility = require('./../../components/utility.js');
+var Product = require('./../product/product.model');
 
 // Get list of Valuation
 exports.getAll = function(req, res) {
@@ -30,38 +31,50 @@ exports.create = function(req, res) {
   if(!req.body.valuation.user){
     return handleError(res,new Error("No User found in request"));
   }
+  if(req.body.valuation.product._id)
+    var productId = req.body.valuation.product._id;
 
-  Seq()
-  .seq(function(){
-    var self = this;
-    if(!req.body.payment){
-      self()
-      return;
-    }
-    req.body.payment.createdAt = new Date();
-    req.body.payment.updatedAt = new Date();
-     PaymentTransaction.create(req.body.payment, function(err, payment) {
-        if(err){return handleError(err,res)}
-          else{
-            req.transactionId = payment._id;
-            self();
-          }
-        });
-    })
+  Product.findOne({_id: productId}, function(err, data) {
+    if (err) { return handleError(res, err);}
+    
+    if (!data) 
+      return res.status(200).json({errorCode: 1, message: "Not Exist!!!"});
+    if(!data.status || data.deleted)
+      return res.status(200).json({errorCode:2, message:"Product Not available for now. Please contact iQuippo team."});
+
+    Seq()
     .seq(function(){
       var self = this;
-      req.body.valuation.createdAt = new Date();
-      req.body.valuation.updatedAt = new Date();
-      req.body.valuation.transactionId = req.transactionId;
-      ValuationReq.create(req.body.valuation, function(err, valuation) {
-        if(err){return handleError(err,res)}
-          else{
-            var resObj = {}
-            resObj.transactionId = valuation.transactionId;
-            return res.status(200).json(resObj);
-          }
-        });
-    })
+      if(!req.body.payment){
+        self()
+        return;
+      }
+      req.body.payment.createdAt = new Date();
+      req.body.payment.updatedAt = new Date();
+       PaymentTransaction.create(req.body.payment, function(err, payment) {
+          if(err){return handleError(err,res)}
+            else{
+              req.transactionId = payment._id;
+              self();
+            }
+          });
+      })
+      .seq(function(){
+        var self = this;
+        req.body.valuation.createdAt = new Date();
+        req.body.valuation.updatedAt = new Date();
+        req.body.valuation.transactionId = req.transactionId;
+        ValuationReq.create(req.body.valuation, function(err, valuation) {
+          if(err){return handleError(err,res)}
+            else{
+              var resObj = {}
+              resObj.transactionId = valuation.transactionId;
+              resObj.errorCode = 0;
+              return res.status(200).json(resObj);
+            }
+          });
+      })
+  });
 };
 
 //search based on filter

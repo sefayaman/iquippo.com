@@ -1,13 +1,14 @@
 (function(){
   'use strict';
 angular.module('spare').controller('SpareDetailCtrl', SpareDetailCtrl)
-function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc, UtilSvc) {
+function SpareDetailCtrl($scope, $state, $stateParams, $rootScope, $uibModal, $http, Auth, spareSvc, vendorSvc, notificationSvc, Modal, CartSvc,BuyContactSvc, UtilSvc) {
   var vm = this;
   vm.currentSpare = {};
   vm.buycontact = {};
   vm.buycontact.contact = "mobile";
   vm.buycontact.interestedIn = "buyORrent";
   $scope.show = false;
+  var filter = {};
   vm.sendBuyRequest = sendBuyRequest;
   vm.previewProduct = previewProduct;
   vm.addSpareToCart = addSpareToCart;
@@ -45,19 +46,26 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
   }
 
   function init(){
-     Auth.isLoggedInAsync(function(loggedIn){
-        if(!loggedIn){
-            Modal.openDialog('login');
-            Auth.doNotRedirect = true;
-            Auth.postLoginCallback = loadUserDetail;
-        }
-     });
-
     if($stateParams.id) {
-      spareSvc.getSpareOnId($stateParams.id).then(function(result){
-        $scope.spare = result;
-        vm.currentSpare = result;
-        console.log(result);
+      filter = {};
+      filter._id = $stateParams.id;
+      filter.status = "active";
+      spareSvc.getSpareOnFilter(filter).then(function(result){
+        if(result && result.length < 1) {
+          $state.go('sparehome');
+          return;
+        }
+
+        Auth.isLoggedInAsync(function(loggedIn){
+          if(!loggedIn){
+              Modal.openDialog('login');
+              Auth.doNotRedirect = true;
+              Auth.postLoginCallback = loadUserDetail;
+          }
+        });
+        $scope.spare = result[0];
+        vm.currentSpare = result[0];
+        
         $rootScope.currentSpare = vm.currentSpare;
         
         if(vm.currentSpare.images.length > 0){
@@ -100,7 +108,8 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
     prdObj.assetDir = spare.assetDir;
     prdObj.primaryImg = spare.primaryImg
     prdObj.condition = spare.productCondition;
-    CartSvc.addProductToCart(prdObj);
+    saveRequest(prdObj, "cartReq");
+    //CartSvc.addProductToCart(prdObj);
   }
 
   function sendBuyRequest(form) {
@@ -137,17 +146,46 @@ function SpareDetailCtrl($scope, $stateParams, $rootScope, $uibModal, $http, Aut
 
     if(vm.buycontact.interestedIn != "finance")
       delete vm.buycontact.financeInfo;
-    BuyContactSvc.submitRequest(vm.buycontact)
-    .then(function(result){
-      vm.buycontact = {};
-      vm.buycontact.contact = "email";
-      vm.buycontact.interestedIn = "buyORrent";
-      $scope.submitted = false;
-    });
-  };
+
+    saveRequest(vm.buycontact, "buyReq");
+  }
+
+  function saveRequest(data, reqType, paymentMode) {
+    filter = {};
+    if(vm.currentSpare._id)
+      filter._id = vm.currentSpare._id;
+    filter.status = "active";
+    spareSvc.getSpareOnFilter(filter).then(function(result){
+      if(result && result.length < 1) {
+        $state.go('sparehome');
+        return;
+      }
+      switch (reqType) {
+        case 'cartReq':
+          CartSvc.addProductToCart(data);
+          break;
+        case 'buyReq':
+          BuyContactSvc.submitRequest(data)
+          .then(function(result){
+            vm.buycontact = {};
+            vm.buycontact.contact = "email";
+            vm.buycontact.interestedIn = "buyORrent";
+            $scope.submitted = false;
+          });
+          break;
+        case 'buyNow':
+          spareSvc.buyNow(data, paymentMode);
+          break;
+      }
+    })
+    .catch(function(){
+      //error handling
+    })
+  }
 
   function buyNow(spare,paymentMode){
-    spareSvc.buyNow(spare,paymentMode);
+    saveRequest(spare, "buyNow", paymentMode);
+    //spareSvc.buyNow(spare,paymentMode);
   }
 }
 })();

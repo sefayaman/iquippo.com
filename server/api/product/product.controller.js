@@ -98,6 +98,8 @@ exports.search = function(req, res) {
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
+  if(req.body._id)
+    filter["_id"] = req.body._id;
 
   if(req.body.statusText == "active")
     filter["status"] = true;

@@ -22,7 +22,8 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
     vm.tabObj = {};
     vm.tabObj.step1 = true;
     vm.tabObj.step2 = false;
-
+    var filter = {};
+    
     vm.onRoleChange = onRoleChange;
     vm.onUserChange = onUserChange;
     vm.resetClick = resetClick;
@@ -136,10 +137,22 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
       // product edit case
       if($stateParams.id) {
         vm.isEdit = true;
+        filter = {};
+        filter._id = $stateParams.id;
+        if(Auth.getCurrentUser()._id && !Auth.isAdmin()) {
+          if(Auth.getCurrentUser().role == 'channelpartner')
+            filter.role = Auth.getCurrentUser().role;
+          filter.userid = Auth.getCurrentUser()._id;
+        }
 
-      spareSvc.getSpareOnId($stateParams.id, true).then(function(response){
-          $scope.spare = response;
-          vm.spare = response;
+        spareSvc.getSpareOnFilter(filter).then(function(response){
+          if(response && response.length < 1) {
+            $state.go('sparehome');
+            return;
+          }
+
+          $scope.spare = response[0];
+          vm.spare = response[0];
           angular.copy(vm.spare.images, vm.images);
           vm.images.forEach(function(item,index){
             if(item.isPrimary)

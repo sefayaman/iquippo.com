@@ -16,7 +16,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   $scope.hstep = 1;
   $scope.mstep = 1;
   $scope.ismeridian = true;
-  
+  var filter = {};
   //certification request
   $scope.productQuote = {};
   if(Auth.getCurrentUser()._id){
@@ -104,7 +104,8 @@ else{
     NegotiationSvc.negotiation(dataNegotiate,flag)
     .then(function(res){
       $scope.negotiateAmt="";
-       Modal.alert("Your request has been submitted successfully",true);
+      if(res && res.data && res.data.message)
+        Modal.alert(res.data.message, true);
     })
   }
 
@@ -207,12 +208,12 @@ function addProductQuote(form){
     //$http.post('/api/productquote',$scope.productQuote).then(function(res){
       productSvc.serviceRequest($scope.productQuote)
       .then(function(res){
-
-       
-
+        if(res && res.data && res.data.errorCode != 0) {
+          //Modal.alert(res.data.message, true);  
+          $state.go('main');
+          return;
+        }
         var data = {};
-
-        //console.log($scope.productQuote.certifiedByIQuippoQuote.scheduleDate.getDate());
         
         data['to'] = supportMail;
         data['subject'] = 'Request for buy a product';
@@ -224,7 +225,7 @@ function addProductQuote(form){
         data['subject'] = 'No reply: Product Enquiry request received';
         notificationSvc.sendNotification('productEnquiriesQuotForAdServicesEmailToCustomer', data, {productName:$scope.productQuote.product.name, productId:$scope.productQuote.product.productId, serverPath:$scope.productQuote.serverPath},'email');
       //Start NJ : getaQuoteforAdditionalServicesSubmit object push in GTM dataLayer
-        Modal.alert("Your request has been submitted successfully",true);
+        Modal.alert(res.data.message,true);
 
         $scope.productQuote.certifiedByIQuippoQuote={};
 
@@ -340,23 +341,14 @@ function addProductQuote(form){
     }
     return ret;
   }
+
   function init(){
+    vendorSvc.getAllVendors()
+      .then(function(){
+        $scope.valDetailsAgencies  = vendorSvc.getVendorsOnCode('Finance');
+    });
 
-     Auth.isLoggedInAsync(function(loggedIn){
-        if(!loggedIn){
-            Modal.openDialog('login');
-            Auth.doNotRedirect = true;
-            Auth.postLoginCallback = loadUserDetail;
-
-        }
-     });
-
-      vendorSvc.getAllVendors()
-        .then(function(){
-           $scope.valDetailsAgencies  = vendorSvc.getVendorsOnCode('Finance');
-        });
-
-     if($rootScope.getCurrentUser().role != 'admin'){
+     /*if($rootScope.getCurrentUser().role != 'admin'){
       var filter = {};
       filter.status = true;
       filter.role = 'admin';
@@ -375,109 +367,125 @@ function addProductQuote(form){
         $scope.adminEmail = $rootScope.getCurrentUser().email;
         //$scope.adminMobile = $rootScope.getCurrentUser().mobile;
         $scope.adminPhone = $rootScope.getCurrentUser().phone;
-     }
+     }*/
 
     if($stateParams.id) {
-      productSvc.getProductOnId($stateParams.id).then(function(result){
-      //Start NJ : call productDetails function.
-      $scope.location = (window.location.href).split('?');
-      if ($scope.location[1] == 'FeatureProduct') {
-        productDetails($scope.location[1],result);
-      }
-      else if ($scope.location[1] == 'viewproduct') {
-        productDetails($scope.location[1],result);
-      }
-      else {
-        productDetails($scope.location[1],result);
-      }
-      //End
-        $scope.currentProduct = result;
-        if($scope.currentProduct.specialOffers){
-          $scope.status.basicInformation = false;
-          $scope.status.specialOffers = true;
+      filter = {};
+      filter._id = $stateParams.id;
+      filter.status = true;
+      productSvc.getProductOnFilter(filter).then(function(result){
+        if(result && result.length < 1) {
+          $state.go('main');
+          return;
         }
 
-        $scope.$broadcast('productloaded');
-        $rootScope.currentProduct = $scope.currentProduct;
-
-        if($scope.currentProduct.tradeType == "SELL" || $scope.currentProduct.tradeType == "NOT_AVAILABLE"){
-          $scope.trade="To Buy"
-        }
-        else if($scope.currentProduct.tradeType == "RENT"){
-         $scope.trade="For Rent"; 
-        }
-        else{
-          $scope.trade="Buy/Rent";
-        }
-        
-        if(isEmpty($scope.currentProduct.technicalInfo)){
-          var techFilter = {
-        category : $scope.currentProduct.category.name,
-        brand : $scope.currentProduct.brand.name,
-        model : $scope.currentProduct.model.name
-      };
-
-        ProductTechInfoSvc.fetchInfo(techFilter)
-        .then(function(techInfo){
-          console.log(techInfo);
-          if(techInfo.length){
-            $scope.currentProduct.technicalInfo = {
-              grossWeight : techInfo[0].information.grossWeight,
-              operatingWeight : techInfo[0].information.operatingWeight, 
-              bucketCapacity : techInfo[0].information.bucketCapacity,
-              enginePower : techInfo[0].information.enginePower, 
-              liftingCapacity : techInfo[0].information.liftingCapacity 
-            }
+        Auth.isLoggedInAsync(function(loggedIn){
+          if(!loggedIn){
+              Modal.openDialog('login');
+              Auth.doNotRedirect = true;
+              Auth.postLoginCallback = loadUserDetail;
           }
         });
-        }
 
-        getPriceTrendData();
-        if($scope.currentProduct.tradeType == "SELL")
-          vm.showText = "To Buy"
-        else if($scope.currentProduct.tradeType == "RENT")
-          vm.showText = "For Rent"
-        else
-          vm.showText = "To Buy / For Rent"
-        if($rootScope.currentProduct.serviceInfo.length > 0){
-          for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
-            if($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)
-              $rootScope.currentProduct.serviceInfo[i].servicedate = moment($rootScope.currentProduct.serviceInfo[i].servicedate).format('DD/MM/YYYY');
-          }
+        //Start NJ : call productDetails function.
+        $scope.location = (window.location.href).split('?');
+        if ($scope.location[1] == 'FeatureProduct') {
+          productDetails($scope.location[1],result[0]);
         }
-        if($scope.currentProduct.images.length > 0){
-          $scope.currentProduct.images.forEach(function(img,index,arr){
-            img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir+"/" +img.src;
+        else if ($scope.location[1] == 'viewproduct') {
+          productDetails($scope.location[1],result[0]);
+        }
+        else {
+          productDetails($scope.location[1],result[0]);
+        }
+        //End
+          $scope.currentProduct = result[0];
+          if($scope.currentProduct.specialOffers){
+            $scope.status.basicInformation = false;
+            $scope.status.specialOffers = true;
+          }
+
+          $scope.$broadcast('productloaded');
+          $rootScope.currentProduct = $scope.currentProduct;
+
+          if($scope.currentProduct.tradeType == "SELL" || $scope.currentProduct.tradeType == "NOT_AVAILABLE"){
+            $scope.trade="To Buy"
+          }
+          else if($scope.currentProduct.tradeType == "RENT"){
+           $scope.trade="For Rent"; 
+          }
+          else{
+            $scope.trade="Buy/Rent";
+          }
+          
+          if(isEmpty($scope.currentProduct.technicalInfo)){
+            var techFilter = {
+                              category : $scope.currentProduct.category.name,
+                              brand : $scope.currentProduct.brand.name,
+                              model : $scope.currentProduct.model.name
+                              };
+
+            ProductTechInfoSvc.fetchInfo(techFilter)
+            .then(function(techInfo){
+              console.log(techInfo);
+              if(techInfo.length){
+                $scope.currentProduct.technicalInfo = {
+                  grossWeight : techInfo[0].information.grossWeight,
+                  operatingWeight : techInfo[0].information.operatingWeight, 
+                  bucketCapacity : techInfo[0].information.bucketCapacity,
+                  enginePower : techInfo[0].information.enginePower, 
+                  liftingCapacity : techInfo[0].information.liftingCapacity 
+                }
+              }
+            });
+          }
+
+          getPriceTrendData();
+          if($scope.currentProduct.tradeType == "SELL")
+            vm.showText = "To Buy"
+          else if($scope.currentProduct.tradeType == "RENT")
+            vm.showText = "For Rent"
+          else
+            vm.showText = "To Buy / For Rent"
+          if($rootScope.currentProduct.serviceInfo.length > 0){
+            for(var i =0; i < $rootScope.currentProduct.serviceInfo.length; i++){
+              if($rootScope.currentProduct.serviceInfo[i] && $rootScope.currentProduct.serviceInfo[i].servicedate)
+                $rootScope.currentProduct.serviceInfo[i].servicedate = moment($rootScope.currentProduct.serviceInfo[i].servicedate).format('DD/MM/YYYY');
+            }
+          }
+          if($scope.currentProduct.images.length > 0){
+            $scope.currentProduct.images.forEach(function(img,index,arr){
+              img.displaySrc = $rootScope.uploadImagePrefix + $scope.currentProduct.assetDir+"/" +img.src;
+            });
+
+            $scope.currentProduct.gAImages = [];
+            $scope.currentProduct.engineImages = [];
+            $scope.currentProduct.hydraulicImages = [];
+            $scope.currentProduct.cabinImages = [];
+            $scope.currentProduct.underCarrageImages = [];
+            $scope.currentProduct.otherImages = [];
+            $scope.currentProduct.images.forEach(function(item,index){
+            if(item.catImgType){
+              switch(item.catImgType){
+               case 'eP' :
+                  $scope.currentProduct.engineImages.push(item);
+               break;
+               case 'hP':
+                  $scope.currentProduct.hydraulicImages.push(item);
+               break;
+               case 'cP':
+                  $scope.currentProduct.cabinImages.push(item);
+               break;
+               case 'uC':
+                  $scope.currentProduct.underCarrageImages.push(item);
+               break;
+               case 'oP':
+                  $scope.currentProduct.otherImages.push(item);
+               break;
+              }
+            } else
+                $scope.currentProduct.gAImages.push(item);
           });
-
-        $scope.currentProduct.gAImages = [];
-        $scope.currentProduct.engineImages = [];
-        $scope.currentProduct.hydraulicImages = [];
-        $scope.currentProduct.cabinImages = [];
-        $scope.currentProduct.underCarrageImages = [];
-        $scope.currentProduct.otherImages = [];
-        $scope.currentProduct.images.forEach(function(item,index){
-          if(item.catImgType){
-            switch(item.catImgType){
-             case 'eP' :
-                $scope.currentProduct.engineImages.push(item);
-             break;
-             case 'hP':
-                $scope.currentProduct.hydraulicImages.push(item);
-             break;
-             case 'cP':
-                $scope.currentProduct.cabinImages.push(item);
-             break;
-             case 'uC':
-                $scope.currentProduct.underCarrageImages.push(item);
-             break;
-             case 'oP':
-                $scope.currentProduct.otherImages.push(item);
-             break;
-            }
-          }else
-              $scope.currentProduct.gAImages.push(item);
-        });
         }
       });
     }
@@ -516,6 +524,12 @@ function addProductQuote(form){
       //console.log(data);
       productSvc.serviceRequest(dataFinance)
       .then(function(res){
+        if(res && res.data && res.data.errorCode != 0) {
+          //Modal.alert(res.data.message, true);  
+          $state.go('main');
+          return;
+        }
+        
         if(res){
         Modal.alert("Your request has been submitted successfully",true);
         $scope.reqFinance={};     
@@ -561,7 +575,7 @@ function addProductQuote(form){
     if($scope.currentProduct.tradeType == 'RENT')
       return;
     
-    var filter = {};
+    filter = {};
     filter['categoryId'] = $scope.currentProduct.category._id;
     filter['brandId'] = $scope.currentProduct.brand._id;
     filter['modelId'] = $scope.currentProduct.model._id;
@@ -582,7 +596,7 @@ function addProductQuote(form){
 
   function getPriceTrendSurveyCount(){
 
-    var filter = {};
+    filter = {};
     filter['productId'] = $scope.currentProduct._id;
     filter['priceTrendId'] = $scope.priceTrendData._id;
     filter['saleYear'] = new Date().getFullYear();
@@ -642,7 +656,21 @@ function addProductQuote(form){
     prdObj.name = product.name;
     prdObj.primaryImg = product.primaryImg
     prdObj.condition = product.productCondition;
-    CartSvc.addProductToCart(prdObj);
+    filter = {};
+    filter._id = prdObj._id;
+    filter.status = true;
+    productSvc.getProductOnFilter(filter)
+      .then(function(result){
+          if(result && result.length < 1) {
+            $state.go('main');
+            return;
+          }
+          CartSvc.addProductToCart(prdObj);
+      })
+      .catch(function(){
+        //error handling
+      })
+    // CartSvc.addProductToCart(prdObj);
   }
 
   function sendBuyRequest(form) {
@@ -795,7 +823,7 @@ function addProductQuote(form){
 
     function openPriceTrendSurveyDetailModal(agree){
       
-      var filter = {};
+      filter = {};
       filter['productId'] = $scope.currentProduct._id;
       filter['priceTrendId'] = $scope.priceTrendData._id;
       filter['agree'] = agree;
