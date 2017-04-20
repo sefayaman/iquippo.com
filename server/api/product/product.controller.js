@@ -162,6 +162,12 @@ exports.search = function(req, res) {
     arr[arr.length] = {country:{$regex:locRegEx}};
   }
 
+  if(req.body.productDescription){
+    var pdRegEx=new RegExp(req.body.productDescription,'i');
+    arr[arr.length]={name:{$regex:pdRegEx}};
+    arr[arr.length]={assetId:{$regex:pdRegEx}};
+  }
+
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
     filter['city'] = {$regex:cityRegex};
@@ -174,7 +180,8 @@ exports.search = function(req, res) {
   
    if(req.body.productName){
     var pdNameRegex = new RegExp(req.body.productName, 'i');
-    filter['name'] = {$regex:pdNameRegex};
+    arr[arr.length] = {name:{$regex:pdNameRegex}};
+    arr[arr.length] = {assetId:{$regex:pdNameRegex}};
   }
   if(req.body.tradeType){
     if(req.body.tradeType != "NOT_AVAILABLE" )
@@ -548,6 +555,60 @@ function updateProduct(req,res){
   Product.findById(req.params.id, function (err, product) {
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
+    if(req.body.featured){
+    var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
+    var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
+    console.log("featureFilePath----",featureFilePath);
+    var fileParts=req.body.primaryImg.split('.');
+    var extPart=fileParts[1];
+    var fileBeforeCompression=1;
+    var fileAfterCompression=0;
+    var counter=0;
+  fsExtra.copy(imgPath, featureFilePath, {
+        replace: false
+      },function(err,result){
+        if(err)throw err;
+        lwip.open(featureFilePath,function(err,image){
+         var stats=fs.statSync(featureFilePath);
+         fileBeforeCompression=stats.size;
+         debug("SIZE before compression",fileBeforeCompression);
+          image.resize(130,100,function(err, rzdImage) {
+            if (extPart === 'jpg' || extPart === 'jpeg') {
+              rzdImage.toBuffer(extPart, {
+                quality: 75
+              }, function(err, buffer) {
+                fs.writeFile(featureFilePath, buffer, function(err) {
+                  if (err) throw err;
+                  var stats=fs.statSync(featureFilePath);
+                   fileAfterCompression=stats.size;
+                   debug("SIZE After compression",fileAfterCompression);        
+                  counter++;
+                })
+              })
+            } else {
+              if (extPart == 'png') {
+                rzdImage.toBuffer(extPart, {
+                  compression: "high",
+                  interlaced: false,
+                  transparency: 'auto'
+                }, function(err, buffer) {
+                  fs.writeFile(featureFilePath,buffer, function(err) {
+                    if (err) throw err;
+                    var stats=fs.statSync(featureFilePath);
+                    fileAfterCompression=stats.size; 
+                    console.log("SIZE After compression",fileAfterCompression);
+                    counter++;
+                  })
+                })
+              }
+            }
+          })
+    
+      })
+           
+  })
+}
+
     Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json(req.body);
