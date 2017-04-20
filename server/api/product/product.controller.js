@@ -1147,7 +1147,7 @@ exports.parseImportExcel = function(req,res,next){
   var body = req.body;
   ['filename', 'user','type'].forEach(function(x) {
     if (!body[x]) {
-      return  next(new APIError(412,'Missing mandatory parameter: ' + x);
+      return  next(new APIError(412,'Missing mandatory parameter: ' + x));
     }
   });
 
