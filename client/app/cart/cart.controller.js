@@ -14,6 +14,8 @@ function ViewCartCtrl($scope,$rootScope,CartSvc,Auth,Modal,$uibModal,notificatio
     vm.compare = compare;
     vm.sendBuyRequest = sendBuyRequest;
 
+    var filter = {};
+
     function init(){
      CartSvc.getCart(Auth.getCurrentUser()._id)
           .then(function(result){
@@ -228,11 +230,18 @@ function ViewCartCtrl($scope,$rootScope,CartSvc,Auth,Modal,$uibModal,notificatio
         if(action == 'add' && index == -1){
           $rootScope.loading = true;
           if(prd.type == "equipment"){
-
-            productSvc.getProductOnId(prd._id)
+            filter = {};
+            filter._id = prd._id;
+            filter.status = true;
+            productSvc.getProductOnFilter(filter)
             .then(function(result){
-              result.type = "equipment";
-              vm.selectedProducts.push(result);
+              if(result && result.length < 1) {
+                $rootScope.loading = false;
+                $state.go('main');
+                return;
+              }
+              result[0].type = "equipment";
+              vm.selectedProducts.push(result[0]);
               $rootScope.loading = false;
             })
             .catch(function(err){
@@ -240,10 +249,18 @@ function ViewCartCtrl($scope,$rootScope,CartSvc,Auth,Modal,$uibModal,notificatio
             })
 
           }else{
-            spareSvc.getSpareOnId(prd._id)
+            filter = {};
+            filter._id = prd._id;
+            filter.status = "active";
+            spareSvc.getSpareOnFilter(filter)
             .then(function(result){
-              result.type = "spare";
-              vm.selectedProducts.push(result);
+              if(result && result.length < 1) {
+                $rootScope.loading = false;
+                $state.go('main');
+                return;
+              }
+              result[0].type = "spare";
+              vm.selectedProducts.push(result[0]);
               $rootScope.loading = false;
             })
             .catch(function(err){

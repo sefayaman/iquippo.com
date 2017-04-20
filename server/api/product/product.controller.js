@@ -3,12 +3,13 @@
 var _ = require('lodash');
 var Seq = require('seq');
 var trim = require('trim');
- var fs = require('fs');
- var gm = require('gm').subClass({imageMagick: true});;
- var fsExtra = require('fs.extra');
+var fs = require('fs');
+var gm = require('gm').subClass({imageMagick: true});;
+var fsExtra = require('fs.extra');
 var lwip = require('lwip');
 var Product = require('./product.model');
 var ProductHistory = require('./producthistory.model');
+var json2xls = require('json2xls');
 
 var User = require('./../user/user.model');
 var Group = require('./../group/group.model');
@@ -18,22 +19,23 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
+var PaymentMaster = require('../common/paymentmaster.model');
 var ValuationReq = require('./../valuation/valuation.model');
 var AuctionReq = require('./../auction/auction.model');
-
+var AuctionMaster = require('./../auction/auctionmaster.model');
+var VendorModel = require('../vendor/vendor.model');
 var appNotificationCtrl = require('./../appnotification/appnotification.controller');
 
 var config = require('./../../config/environment');
 var IncomingProduct = require('./../../components/incomingproduct.model');
 var  xlsx = require('xlsx');
+var Utillity = require('./../../components/utility');
+var APIError = require('../../components/_error');
 var importPath = config.uploadPath + config.importDir +"/";
 var async = require('async');
 var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
-var async = require('async');
-
-
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -96,6 +98,8 @@ exports.search = function(req, res) {
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
+  if(req.body._id)
+    filter["_id"] = req.body._id;
 
   if(req.body.statusText == "active")
     filter["status"] = true;
@@ -855,578 +859,6 @@ function Workbook() {
   this.Sheets = {};
 }
 
-
-
-function datenum(v, date1904) {
-  if(date1904) v+=1462;
-  var epoch = Date.parse(v);
-  return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
-}
- 
-function setType(cell){
-  if(typeof cell.v === 'number')
-    cell.t = 'n';
-  else if(typeof cell.v === 'boolean')
-      cell.t = 'b';
-  else if(cell.v instanceof Date)
-   {
-        cell.t = 'n'; cell.z = xlsx.SSF._table[14];
-        cell.v = datenum(cell.v);
-    }
-    else cell.t = 's';
-}
-
-function excel_from_data(data, isAdmin) {
-  var ws = {};
-  var range;
-  if(isAdmin)
-    range = {s: {c:0, r:0}, e: {c:41, r:data.length }};
-  else
-    range = {s: {c:0, r:0}, e: {c:26, r:data.length }};
-
-  for(var R = 0; R != data.length + 1 ; ++R){
-    var C = 0;
-    var product = null;
-    if(R != 0)
-      product = data[R-1];
-    var cell = null;
-    if(R == 0)
-      cell = {v: "Product Id"};
-    else{
-      if(product)
-        cell =  {v: product.productId};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R != 0)
-      product = data[R-1];
-    var cell = null;
-    if(R == 0)
-      cell = {v: "Asset Id"};
-    else{
-      if(product)
-        cell =  {v: product.assetId};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R != 0)
-      product = data[R-1];
-    var cell = null;
-    if(R == 0)
-      cell = {v: "Trading Type"};
-    else{
-      if(product)
-        cell =  {v: product.tradeType};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Listing date"};
-    else {
-      if(product)
-        cell = {v: product.createdAt};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-///////////
-    var createdBy = "";
-    var userRole = "";
-    if(product && product.user && product.user.fname) {
-      if(product.user.role == 'admin')
-        userRole = "Admin";
-      else if(product.user.role == 'channelpartner')
-        userRole = "Channel Partner";
-      else if(product.user.role == 'customer')
-        userRole = "Self";
-      createdBy = product.user.fname + '('+ userRole +')' ;
-    }
-    else
-      createdBy = "";
-    if(R == 0)
-      cell = {v: "Uploaded By"};
-    else
-      cell = {v: createdBy};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    var sellerName = "";
-    if(product && product.seller && product.seller.fname) 
-      sellerName = product.seller.fname + " " + product.seller.lname;
-    else
-      sellerName = "";
-    if(R == 0)
-      cell = {v: "Seller name"};
-    else
-      cell = {v: sellerName};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    var sellerPhone = "";
-    if(product && product.seller && product.seller.phone) 
-      sellerPhone = product.seller.phone;
-    else
-      sellerPhone = "";
-    if(R == 0)
-      cell = {v: "Seller contact"};
-    else
-      cell = {v: sellerPhone};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Seller Country"};
-    else {
-      if(product && product.seller)
-        cell = {v: product.seller.country};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Seller number"};
-    else {
-      if(product && product.seller)
-        cell = {v: product.seller.mobile};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    var sellerEmail = "";
-      if(product && product.seller && product.seller.email)
-        sellerEmail = product.seller.email;
-      else
-        sellerEmail = "";
-    if(R == 0)
-      cell = {v: "Seller email"};
-    else 
-      cell = {v: sellerEmail};
-    
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    var productName = "";
-    if(product && product.name) 
-      productName = product.name;
-    else
-      productName = "";
-    if(R == 0)
-      cell = {v: "Product Name"};
-    else
-      cell = {v: productName};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    var state = "";
-    if(product && product.state) 
-      state = product.state;
-    else
-      state = "";
-    if(R == 0)
-      cell = {v: "State"};
-    else
-      cell = {v: state};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    var location = "";
-    if(product && product.city) 
-      location = product.city;
-    else
-      location = "";
-    if(R == 0)
-      cell = {v: "Location"};
-    else
-      cell = {v: location};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-
-    var productGroup = "";
-    if(product && product.group && product.group.name) 
-      productGroup = product.group.name;
-    else
-      productGroup = "";
-    if(R == 0)
-      cell = {v: "Group"};
-    else
-      cell = {v: productGroup};
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Category"};
-    else {
-      if(product && product.category)
-        cell = {v: product.category.name};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Brand"};
-    else {
-      if(product && product.brand)
-        cell = {v: product.brand.name};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-
-    if(R == 0)
-      cell = {v: "Model"};
-    else {
-      if(product && product.model)
-        cell = {v: product.model.name};
-    }
-    setType(cell);
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Manufacturing Year"};
-    else {
-      if(product)
-        cell = {v: product.mfgYear};
-    }
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    var operatingHour = "";
-    if(product && product.operatingHour) 
-      operatingHour = product.operatingHour;
-    else
-      operatingHour = "";
-    if(R == 0)
-      cell = {v: "Motor Hrs"};
-    else
-      cell = {v: operatingHour};
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    var mileage = "";
-    if(product && product.mileage) 
-      mileage = product.mileage;
-    else
-      mileage = "";
-    if(R == 0)
-      cell = {v: "Mileage"};
-    else
-      cell = {v: mileage};
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    var grossPrice = "";
-    if(product && product.grossPrice) 
-      grossPrice = product.grossPrice;
-    else
-      grossPrice = "";
-    if(R == 0)
-      cell = {v: "Listed Price"};
-    else
-      cell = {v: grossPrice};
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    var serialNo = "";
-    if(product && product.grossPrice) 
-      serialNo = product.serialNo;
-    else
-      serialNo = "";
-    if(R == 0)
-      cell = {v: "Machine Sr no"};
-    else
-      cell = {v: serialNo};
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Expired (Y/N)"};
-    else {
-      if(product)
-        cell = {v: isYorN(product.expired)};
-    }
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Relisting date"};
-    else {
-      if(product)
-        cell = {v: product.relistingDate};
-    }
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-    if(R == 0)
-      cell = {v: "Asset Status"};
-    else {
-      if(product)
-        cell = {v: product.assetStatus};
-    }
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-     if(R == 0)
-      cell = {v: "Status"};
-    else {
-      if(product){
-        if(product.status)
-          cell = {v: "Active"};
-        else
-          cell = {v: "Inactive"};
-      }
-    }
-    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-    setType(cell);
-    ws[cell_ref] = cell;
-
-  if(isAdmin) {
-      var saleDate;
-      if(product && product.sellInfo && product.sellInfo.saleDate)
-        saleDate = product.sellInfo.saleDate;
-      else
-        saleDate = '';
-      if(R == 0)
-        cell = {v: "Sale date"};
-      else
-        cell = {v: saleDate};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var alternateMobile;
-      if(product && product.alternateMobile)
-        alternateMobile = product.alternateMobile;
-      else
-        alternateMobile = '';
-      if(R == 0)
-        cell = {v: "Alternate Mobile"};
-      else
-        cell = {v: alternateMobile};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var salePrice = '';
-      if(product && product.sellInfo && product.sellInfo.salePrice)
-        salePrice = product.sellInfo.salePrice;
-      else
-        salePrice = '';
-      if(R == 0)
-        cell = {v: "Sale price"};
-      else
-        cell  = {v: salePrice};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var saleCommission = '';
-      if(product && product.sellInfo && product.sellInfo.saleCommission)
-        saleCommission = product.sellInfo.saleCommission;
-      else
-        saleCommission = '';
-      if(R == 0)
-        cell = {v: "Sale comission"};
-      else
-        cell = {v: saleCommission};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var buyerName = "";
-      if(product && product.sellInfo && product.sellInfo.buyerName)
-        buyerName = product.sellInfo.buyerName;
-      else
-        buyerName = "";
-      if(R == 0)
-        cell = {v: "Buyer name"};
-      else
-        cell = {v: buyerName};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var country = "";
-      if(product && product.sellInfo && product.sellInfo.country)
-        country = product.sellInfo.country;
-      else
-        country = "";
-      if(R == 0)
-        cell = {v: "Buyer Country"};
-      else
-        cell = {v: country};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var buyerCity = "";
-      if(product && product.sellInfo && product.sellInfo.buyerCity)
-        buyerCity = product.sellInfo.buyerCity;
-      else
-        buyerCity = "";
-      if(R == 0)
-        cell = {v: "Buyer City"};
-      else
-        cell = {v: buyerCity};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var buyerMobile = "";
-      if(product && product.sellInfo && product.sellInfo.buyerMobile)
-        buyerMobile = product.sellInfo.buyerMobile;
-      else
-        buyerMobile = "";
-      if(R == 0)
-        cell = {v: "Buyer number"};
-      else
-        cell = {v: buyerMobile};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var buyerEmail = "";
-      if(product && product.sellInfo && product.sellInfo.buyerEmail)
-        buyerEmail = product.sellInfo.buyerEmail;
-      else
-        buyerEmail = "";
-      if(R == 0)
-        cell = {v: "Buyer email"};
-      else
-        cell = {v: buyerEmail};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var isPastShipping = "";
-      if(product && product.sellInfo 
-        && product.sellInfo.shippingQuote 
-        && product.sellInfo.shippingQuote.isPastShipping == "yes")
-        isPastShipping = "Y, " + product.sellInfo.shippingQuote.detail;
-      else
-        isPastShipping = "N";
-      if(R == 0)
-        cell = {v: "Shipping availed (Y/N)"};
-      else
-        cell = {v: isPastShipping};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var shippingServiceDate;
-      if(product && product.sellInfo 
-        && product.sellInfo.shippingQuote 
-        && product.sellInfo.shippingQuote.serviceDate)
-        shippingServiceDate = product.sellInfo.shippingQuote.serviceDate;
-      else
-        shippingServiceDate = '';
-      if(R == 0)
-        cell = {v: "Shipping Date"};
-      else
-        cell = {v: shippingServiceDate};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var isPastValuation = "";
-      if(product && product.sellInfo 
-        && product.sellInfo.valuationQuote 
-        && product.sellInfo.valuationQuote.isPastValuation == "yes")
-        isPastValuation = "Y, " + product.sellInfo.valuationQuote.detail;
-      else
-        isPastValuation = "N";
-      if(R == 0)
-        cell = {v: "Valuation Aviled (Y/N)"};
-      else
-        cell = {v: isPastValuation};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var valuationServiceDate;
-      if(product && product.sellInfo 
-        && product.sellInfo.valuationQuote 
-        && product.sellInfo.valuationQuote.serviceDate)
-        valuationServiceDate = product.sellInfo.valuationQuote.serviceDate;
-      else
-        valuationServiceDate = '';
-      if(R == 0)
-        cell = {v: "Valuation Date"};
-      else
-        cell = {v: valuationServiceDate};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var isCertifiedByIQuippo = "";
-      if(product && product.sellInfo 
-        && product.sellInfo.certifiedByIQuippoQuote 
-        && product.sellInfo.certifiedByIQuippoQuote.isCertifiedByIQuippo == "yes")
-        isCertifiedByIQuippo = "Y, " + product.sellInfo.certifiedByIQuippoQuote.detail;
-      else
-        isCertifiedByIQuippo = "N";
-      if(R == 0)
-        cell = {v: "Certified by iQuippo availed (Y/N)"};
-      else
-        cell = {v: isCertifiedByIQuippo};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-
-      var certifiedServiceDate;
-      if(product && product.sellInfo 
-        && product.sellInfo.certifiedByIQuippoQuote 
-        && product.sellInfo.certifiedByIQuippoQuote.serviceDate)
-        certifiedServiceDate = product.sellInfo.certifiedByIQuippoQuote.serviceDate;
-      else
-        certifiedServiceDate = '';
-      if(R == 0)
-        cell = {v: "Certified by iQuippo Date"};
-      else
-        cell = {v: certifiedServiceDate};
-      var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
-      setType(cell);
-      ws[cell_ref] = cell;
-    }
-  }
-  ws['!ref'] = xlsx.utils.encode_range(range);
-  return ws;
-}
-
-function isYorN(status) {
-if(status)
-  return "Y";
-else
-  return "N";
-}
-
 function fetchUsers(id,cb){
   User.find({'createdBy._id' : id},function(err,results){
     if(err){
@@ -1438,52 +870,172 @@ function fetchUsers(id,cb){
 }
 
 //export data into excel
-exports.exportProducts = function(req,res){
+exports.exportProducts = function(req, res) {
   var filter = {};
   //filter["status"] = true;
   filter["deleted"] = false;
-  var isAdmin = true;
-  if(req.body.userid){
-    if(req.body.role == "channelpartner"){
+  if (req.body.userid && req.body.role !== 'admin') {
+    if (req.body.role == "channelpartner") {
       var usersArr = [req.body.userid];
-      fetchUsers(req.body.userid,function(data){
-        if(data && data.length){
-          data.forEach(function(x){
+      fetchUsers(req.body.userid, function(data) {
+        if (data && data.length) {
+          data.forEach(function(x) {
             usersArr.push(x._id.toString());
           })
-        } 
+        }
         filter["seller._id"] = {
-          "$in" : usersArr
+          "$in": usersArr
         }
         fetchResults();
-      }) 
-    }
-    else{
+      })
+    } else {
       filter["seller._id"] = req.body.userid;
       fetchResults();
     }
-    isAdmin = false;
   } else {
     fetchResults();
   }
 
+  function fetchResults() {
 
-  
-  function fetchResults(){
-    var query = Product.find(filter).sort({productId:1});
-    query.exec(
-      function (err, products) {
-        if(err) { return handleError(res, err); }
-        var ws_name = "products"
-        var wb = new Workbook();
-        var ws = excel_from_data(products,isAdmin);
-        wb.SheetNames.push(ws_name);
-        wb.Sheets[ws_name] = ws;
-        var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-        res.end(wbout);
+    var query = Product.find(filter).sort({
+      productId: 1
     });
+    query.exec(
+      function(err, products) {
+        if (err) {
+          return handleError(res, err);
+        }
+        var responseData = [];
+        var mapedFields = {};
+        Object.keys(productFieldsMap).forEach(function(x) {
+          mapedFields[productFieldsMap[x]] = x;
+        });
+        products.forEach(function(x) {
+          var colData = x._doc;
+          var obj = {};
+          if (colData) {
+            Object.keys(colData).forEach(function(y) {
+              if (mapedFields[y]) {
+                obj[mapedFields[y]] = x[y];
+                ['category', 'brand', 'model'].forEach(function(u) {
+                  if (x[u])
+                    obj[mapedFields[u]] = x[u].name;
+                });
+              }
+            });
+
+            //Other Category,Other Brand,Other Model Information Cols
+            if (colData.category && colData.category.otherName)
+              obj[mapedFields.other_category] = colData.category.otherName;
+            if (colData.brand && colData.brand.otherName)
+              obj[mapedFields.other_brand] = colData.brand.otherName;
+            if (colData.model && colData.model.otherName)
+              obj[mapedFields.other_model] = colData.model.otherName;
+
+            //Seller Information Cols
+            if (colData.seller) {
+              obj[mapedFields.seller_name] = _.get(colData, 'seller.fname', '') + _.get(colData, 'seller.lname', '');
+              obj[mapedFields.seller_email] = _.get(colData, 'seller.email', '');
+              obj[mapedFields.seller_mobile] = _.get(colData, 'seller.mobile', '');
+            }
+
+            //Technical Information Cols
+            if (colData.technicalInfo) {
+              ['grossWeight', 'operatingWeight', 'bucketCapacity', 'enginePower', 'liftingCapacity'].forEach(function(x) {
+                if (colData.technicalInfo[x]) {
+                  obj[mapedFields[x]] = colData.technicalInfo[x];
+                }
+              })
+            }
+
+            //Service Information Cols
+            if (colData.serviceInfo && colData.serviceInfo.length) {
+              ['authServiceStation', 'serviceAt'].forEach(function(x) {
+                if (colData.serviceInfo[0][x]) {
+                  obj[mapedFields[x]] = colData.serviceInfo[0][x];
+                }
+              })
+
+              if (colData.serviceInfo[0].servicedate)
+                obj[mapedFields.servicedate] = Utillity.toIST(colData.serviceInfo[0].servicedate)
+
+
+              if (colData.serviceInfo[0].operatingHour) {
+                obj[mapedFields.serviceOperatingHour] = colData.serviceInfo[0].operatingHour;
+              }
+            }
+
+            //Rent Information Cols
+            if (colData.rent) {
+              if (colData.rent.rateHours) {
+                obj[mapedFields.rateHours] = 'Yes';
+                ['minPeriodH', 'maxPeriodH', 'rentAmountH', 'seqDepositH'].forEach(function(x) {
+                  if (colData.rent.rateHours[x]) {
+                    obj[mapedFields[x]] = colData.rent.rateHours[x];
+                  }
+                })
+              }
+
+              if (colData.rent.rateDays) {
+                obj[mapedFields.rateDays] = 'Yes';
+                ['minPeriodD', 'maxPeriodD', 'rentAmountD', 'seqDepositD'].forEach(function(x) {
+                  if (colData.rent.rateDays[x]) {
+                    obj[mapedFields[x]] = colData.rent.rateDays[x];
+                  }
+                })
+              }
+
+              if (colData.rent.rateMonths) {
+                obj[mapedFields.rentMonths] = 'Yes';
+                ['minPeriodM', 'maxPeriodM', 'rentAmountM', 'seqDepositM'].forEach(function(x) {
+                  if (colData.rent.rateHours[x]) {
+                    obj[mapedFields[x]] = colData.rent.rateMonths[x];
+                  }
+                })
+              }
+
+              if (colData.rent.negotiable)
+                obj[mapedFields.negotiable] = 'Yes';
+              else
+                obj[mapedFields.negotiable] = 'No';
+
+              ['priceOnRequest', 'isEngineRepaired', 'dispSellerContact', 'dispSellerAlternateContact', 'featured', 'status'].forEach(function(x) {
+                if (colData[x]) {
+                  obj[mapedFields[x]] = 'Yes';
+                } else
+                  obj[mapedFields[x]] = 'No';
+              });
+
+
+              ['fromDate', 'toDate'].forEach(function(x) {
+                if (colData.rent[x]) {
+                  obj[mapedFields[x]] = Utillity.toIST(colData.rent[x]);
+                }
+              })
+            }
+
+            //Admin Cols only visible to admin
+            var adminCols = ['assetStatus', 'dispSellerInfo', 'dispSellerContact', 'alternateMobile', 'dispSellerAlternateContact', 'featured', 'status'];
+
+            if(req.body.role !== 'admin'){
+              adminCols.forEach(function(x) {
+                if (obj[mapedFields[x]])
+                  delete obj[x]
+              });
+            }
+            
+            responseData.push(obj);
+          }
+        });
+        var xls = json2xls(responseData, {
+          fields: Object.keys(productFieldsMap)
+        });
+
+        res.end(xls);
+      });
+    }
   }
-}
 //Bulk product status update
 exports.bulkProductStatusUpdate = function(req,res){
   var fileName = req.body.filename;
@@ -1506,26 +1058,6 @@ exports.bulkProductStatusUpdate = function(req,res){
   req.successProductArr = [];
   req.assetIdCache = {};
   bulkProductStatusUpdate(req,res,data);
-}
-
-exports.parseExcel = function(req,res,next){
-  var fileName = req.body.filename;
-  //var user = req.body.user;
-  var workbook = null;
-  try{
-    workbook = xlsx.readFile(importPath + fileName);
-  }catch(e){
-    console.log(e);
-    return  handleError(res,new Error("Error in file upload"))
-  }
-  if(!workbook)
-    return res.status(404).send("Error in file upload");
-  var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-  var data = xlsx.utils.sheet_to_json(worksheet);
-  req.excelData = data;
-
-  next();
 }
 
 function fetchCategory(category, cb) {
@@ -1575,10 +1107,9 @@ function fetchModel(model, cb) {
   });
 }
 
-
 exports.updateExcelData = function (req,res,next){
   if(!req.updateData.length && !req.errorList.length)
-    return res.status(500).send('Error while updating');
+    return next(new APIError(500,'Error while updation'));
 
   var successCount = 0;
   if(!req.updateData.length && req.errorList.length)
@@ -1591,7 +1122,7 @@ exports.updateExcelData = function (req,res,next){
   function finalize(err){
     if(err){
       console.log(err);
-      res.status(500).send('Error while updating');
+      return next(new APIError(500,'Error while updation'));
     }
 
     return res.json({successCount:successCount , errorList : req.errorList});
@@ -1617,10 +1148,9 @@ exports.updateExcelData = function (req,res,next){
     
 }
 
-
 exports.createProductReq = function(req,res,next){
   if(!req.updateData.length && !req.errorList.length)
-    return res.status(500).send('Error while updating');
+    return next(new APIError(500,'Error while updation'));
 
   var successCount = 0;
   if(!req.updateData.length && req.errorList.length)
@@ -1633,7 +1163,7 @@ exports.createProductReq = function(req,res,next){
   function finalize(err){
     if(err){
       console.log(err);
-      res.status(500).send('Error while updating');
+      return next(new APIError(500,'Error while updation'));
     }
 
     return res.json({successCount:successCount , errorList : req.errorList});
@@ -1658,11 +1188,16 @@ exports.createProductReq = function(req,res,next){
 
 exports.parseExcel = function(req,res,next){
   var body = req.body;
-  ['fileName', 'user'].forEach(function(x) {
+  var ret;
+  ['fileName', 'user','type'].some(function(x) {
     if (!body[x]) {
-      return res.status(412).send("Missing mandatory parameter : " + x);
+      ret = x;
     }
-  })
+  });
+
+  if(ret)
+    return next(new APIError(412,'Missing mandatory parameter: ' + ret));
+  
   var options = {
     file: body.fileName,
     headers: Object.keys(productFieldsMap),
@@ -1671,16 +1206,20 @@ exports.parseExcel = function(req,res,next){
   };
   req.excelData = Utillity.toJSON(options);
   req.reqType = 'Update';
-  next();
+  return next();
 }
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
-  ['filename', 'user','type'].forEach(function(x) {
+  var ret;
+  ['filename', 'user'].forEach(function(x) {
     if (!body[x]) {
-      return res.status(412).send("Missing mandatory parameter : " + x);
+      ret = x;
     }
   });
+
+  if(ret)
+    return  next(new APIError(412,'Missing mandatory parameter: ' + ret));
 
   var options = {
     file: body.filename,
@@ -1691,7 +1230,7 @@ exports.parseImportExcel = function(req,res,next){
 
   req.excelData = Utillity.toJSON(options);
   req.reqType = 'Upload';
-  next();
+  return next();
 }
 
 
@@ -1700,53 +1239,55 @@ exports.validateExcelData = function(req, res, next) {
   var user = req.body.user;
   var reqType = req.reqType;
   var type = req.body.type;
+  var existingProduct;
 
-  //console.log('-------------------------',excelData);
+  if(!reqType)
+    return next(new APIError(400,'Invalid request type'));
 
-  if(!excelData || !excelData.length){
-    return res.status(404).send("No Data to update");
+  if (excelData instanceof Error) {
+    return  next(new APIError(412,'Invalid Excel File'));
   }
 
-  //console.log(excelData);
+  if (!excelData || !excelData.length) {
+    return next(new APIError(404,'No Data to update'));
+  }
+
+  
+
   var updateData = [];
   var errorList = [];
+  var assetIdObj = {};
 
-  async.eachLimit(excelData,10,intialize,finalize);
+  async.eachLimit(excelData, 10, intialize, finalize);
 
-  function finalize(err){
-    if(err){
+  function finalize(err) {
+    if (err) {
       console.log(err);
-      res.status(500).send('Error while updating');
+      return next(new APIError(500,'Error while updating'));
     }
+
     req.errorList = errorList;
     req.updateData = updateData;
     next();
   }
 
-  function intialize(info,cb){
-    var row = {};
-    Object.keys(info).forEach(function(x){
-      if(productFieldsMap[x] && info[x]){
-        row[productFieldsMap[x]] = info[x];
-      }
-    })
-    row.rowCount = info.__rowNum__;
-
-    if(!row.assetId){
+  function intialize(row, cb) {
+    if (!row.assetId) {
       errorList.push({
-        Error:'Asset Id missing',
-        rowCount : row.rowCount
+        Error: 'Asset Id missing',
+        rowCount: row.rowCount
       });
       return cb();
     }
 
-    /*AA:Process of bulk update
+    /*AA:Process of bulk update/insert
     validateCategory : validate the category if and only if category related columns present in uploaded sheets
     validateSeller : validate seller if and only if seller mobile and email exists
     validateSeller : will take the info from sheet if not exists then check whether the combination of category,brand,model
     exits in db if found then update
     validateRentInfo : only update of tradeType is RENT or BOTH
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
+    validateOnlyAdminCols : This function validates the cols which only admin can update
     */
 
     if(reqType === 'Update'){
@@ -1761,9 +1302,10 @@ exports.validateExcelData = function(req, res, next) {
           return cb();
         }
 
+        existingProduct = doc[0]._doc;
+
         if(type === 'template_update') {
           async.parallel({
-            validateGroup : validateGroup,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
@@ -1778,7 +1320,6 @@ exports.validateExcelData = function(req, res, next) {
           },buildData);
         }else
           return cb();
-
       });      
     } else if(reqType === 'Upload'){
       if(!assetIdObj[row.assetId]){
@@ -1797,24 +1338,27 @@ exports.validateExcelData = function(req, res, next) {
         }, buildData);
       }else{
         errorList.push({
-          Error : 'No asset id found',
-          rowCount : row.rowCount
-        })
-        return cb();
+            Error: 'Duplicate Records in excel sheet',
+            rowCount: row.rowCount
+          })
+          return cb();
       }
     }
 
     function validateMadnatoryCols(callback){
-      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].forEach(function(x){
+      var error;
+      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].some(function(x){
         if(!row[x]){
+          error = true;
           errorList.push({
             Error : 'Missing mandatory parameter : ' + x,
             rowCount :row.rowCount
           });
-
-          return callback('Error');
         }
       });
+
+      if(error)
+        return callback('Error');
 
       if(row.category.toLowerCase() === 'other' && !other_category){
         errorList.push({
@@ -1854,12 +1398,6 @@ exports.validateExcelData = function(req, res, next) {
 
     }
 
-    function validateGroup(callback){
-      if(!row.group)
-        return callback();
-
-      
-    }
 
     function validateAuction(callback){
       if(row.auctionListing.toLowerCase() === 'yes'){
@@ -1879,11 +1417,220 @@ exports.validateExcelData = function(req, res, next) {
           return callback('Error');
         }
 
-        //validateauction
-        //validateagency
-        //validatetransaction
-        //paymenttransaction
-        //list that product in auction
+        var reqOpts = {
+          auctionId : row.auctionId,
+          startDate : {
+            $gt : new Date()
+          }
+        }
+        AuctionMaster.find(reqOpts,function(err,auction){
+          if(err || !auction){
+            errorList.push({
+              Error : 'Error while validating auction id',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+
+          if(!auction.length){
+            errorList.push({
+              Error : 'Invalid Auction id',
+              rowCount : row.rowCount
+            });
+            return callback('Error');
+          }
+
+          reqOpts = {
+            entityName : row.agencyName
+          };
+
+          VendorModel.find(reqOpts,function(err,agency){
+            if(err || !agency){
+              errorList.push({
+                Error : 'Error while validating agency',
+                rowCount : row.rowCount
+              });
+              return callback('Error');
+            }
+
+            if(!agency.length || !agency.services || !agency.services.length || (agency.services[0].indexOf('Valuation') < 0)){
+              errorList.push({
+                Error : 'Invalid agency or Agency not authorized',
+                rowCount : row.rowCount
+              });
+              return callback('Error');
+            }
+
+            reqOpts = {
+              auctionId : row.auctionId,
+              entityName : row.agencyName,
+              'product.assetId' : row.assetId
+            };
+
+            PaymentTransaction.find(reqOpts,function(err,payment){
+              if(err || !agency){
+                errorList.push({
+                  Error : 'Error while validating payment transaction',
+                  rowCount : row.rowCount
+                });
+                return callback('Error');
+              }
+
+              if(payment.length){
+                errorList.push({
+                  Error : 'Payment already been made for this asset for this auctionId and agency',
+                  rowCount : row.rowCount
+                });
+                return callback('Error');
+              }
+
+              PaymentMaster.find({serviceCode : {$in:['Auction','Valuation']}},function(err,masterData){
+                if(err || !masterData){
+                  errorList.push({
+                    Error : 'Error while fetching payment master data',
+                    rowCount : row.rowCount
+                  });
+                  return callback('Error');
+                }
+
+                if(!masterData.length){
+                  errorList.push({
+                    Error : 'Payment details not found',
+                    rowCount : row.rowCount
+                  });
+                  return callback('Error');
+                }
+                var auctionFee,
+                    valuationFee;
+                masterData.forEach(function(x){
+                  if(x.serviceCode === 'Auction')
+                    auctionFee = x.fees
+                  else if(x.serviceCode === "Valuation")
+                    valuationFee = x.fees;
+                });
+
+                if(!auctionFee || !valuationFee){
+                  errorList.push({
+                    Error : 'Auction Fee/Valuation Fee master not present',
+                    rowCount : row.rowCount
+                  });
+                  return callback('Error');
+                }
+
+                var paymentData = {
+                  paymets :[{ type: 'auctionreq', charge: auctionFee},
+                      { type: 'valuationreq', charge: valuationFee }],
+                  totalAmount : Number(auctionFee) + Number(valuationFee),
+                  requestType : 'Auction Listing',
+                  product:{ type: 'equipment',
+                    _id: existingProduct._id,
+                    assetId: existingProduct.assetId,
+                    city: existingProduct.city,
+                    name: existingProduct.name,
+                    status: existingProduct.status,
+                    category: existingProduct.category },
+                  user: user,
+                  status: existingProduct.status,
+                  statuses: existingProduct.statuses,
+                  paymentMode: 'offline'
+                };
+
+                PaymentTransaction.create(paymentData,function(err,paymentInfo){
+                  if(err || !paymentInfo){
+                    errorList.push({
+                      Error : 'Error while creating payment request',
+                      rowCount : row.rowCount
+                    });
+                    return callback('Error');
+                  }
+
+                  var valauationData = { 
+                    valuationAgency: { _id: agency[0]._id,
+                      name:  agency[0].entityName,
+                      email: agency[0].user.email,
+                      mobile: agency[0].user.mobile,
+                      countryCode: '91' },
+                    valuate: true,
+                    user: user,
+                    seller: existingProduct.seller,
+                    initiatedBy: 'Admin',
+                    purpose: 'Listing in auction',
+                    product:{ 
+                      _id: existingProduct._id,
+                      assetId: existingProduct.assetId,
+                      city: existingProduct.city,
+                      name: existingProduct.name,
+                      status: existingProduct.status,
+                      category: existingProduct.category,
+                      mfgYear : existingProduct.mfgYear
+                    },
+                    status: 'payment_pending',
+                    statuses: 
+                     [ { createdAt: new Date(),
+                         status: 'payment_pending',
+                         userId: user._id }],
+                    isAuction: true } ;
+                  ValuationReq.create(valauationData,function(err,valuationInfo){
+                    if(err || !paymentInfo){
+                      errorList.push({
+                        Error : 'Error while creating payment request',
+                        rowCount : row.rowCount
+                      });
+                      return callback('Error');
+                    }
+
+                    var auctionData = { 
+                      valuationReport: '',
+                      dbAuctionId: auction._id,
+                      emdAmount: row.emdAmount,
+                      user: user,
+                      seller: existingProduct.seller,
+                      status: 'payment_pending',
+                      statuses: [ { createdAt: new Date(),
+                           status: 'payment_pending',
+                           userId: user._id } ],
+                      product:{ 
+                        _id: existingProduct._id,
+                        assetId: existingProduct.assetId,
+                        city: existingProduct.city,
+                        name: existingProduct.name,
+                        status: existingProduct.status,
+                        category: existingProduct.category,
+                        mfgYear : existingProduct.mfgYear
+                      },
+                      startDate: auction[0].startDate,
+                      endDate: auction[0].endDate,
+                      auctionId: row.auctionId,
+                      transactionId: paymentInfo._id,
+                      valuation: { 
+                        _id: valuationInfo._id, 
+                        status: 'payment_pending'
+                      } 
+                    };
+
+                    AuctionReq.create(auctionData,function(err,auctionInfo){
+                      if(err || !auctionInfo){
+                        errorList.push({
+                          Error : 'Error while creating Auction request',
+                          rowCount : row.rowCount
+                        });
+                        return callback('Error');
+                      }
+                      var obj = {
+                        auction:{
+                            id : auctionInfo._id,
+                            valuationId : valuationInfo._id
+                          }
+                        };
+
+                      return callback(null,obj)
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
       } else {
         return callback();
       }
@@ -1933,19 +1680,57 @@ exports.validateExcelData = function(req, res, next) {
       });
     }
 
+    function validateDupProd(callback){
+      Product.find({assetId:row.assetId},function(err,products){
+        if(err || !products){
+          errorList.push({
+            Error : 'Error while validating product',
+            rowCount : row.rowCount
+          });
+        }
 
-    function buildData(err,parseData){
-      if(err)
+        if(products.length){
+          errorList.push({
+            Error : 'Duplicate Asset Id',
+            rowCount : row.rowCount
+          });
+        }
+        return callback();
+      });
+    }
+
+    function validateDupIncomingProd(callback){
+      IncomingProduct.find({assetId:row.assetId},function(err,products){
+        if(err || !products){
+          errorList.push({
+            Error : 'Error while validating product',
+            rowCount : row.rowCount
+          });
+        }
+
+        if(products.length){
+          errorList.push({
+            Error : 'Duplicate Asset Id present in quene',
+            rowCount : row.rowCount
+          });
+        }
+        return callback();
+      });
+    }
+
+
+    function buildData(err, parseData) {
+      if (err)
         return cb();
 
       var obj = {};
-      for(var v in parseData){
-        if(Object.keys(parseData[v]).length){
-          _.extend(obj,parseData[v]);
+      for (var v in parseData) {
+        if (parseData[v] && Object.keys(parseData[v]).length) {
+          _.extend(obj, parseData[v]);
         }
       }
 
-      if(Object.keys(obj).length){
+      if (Object.keys(obj).length) {
         obj.assetId = row.assetId;
         obj.rowCount = row.rowCount;
         updateData.push(obj);
@@ -1955,68 +1740,111 @@ exports.validateExcelData = function(req, res, next) {
 
     }
 
-    function validateAdditionalInfo(callback){
-      var obj = {};
 
-      if(row.isEngineRepaired){
-        var engRepOver = trim(row.isEngineRepaired || "").toLowerCase();
-        obj.isEngineRepaired = engRepOver == 'yes' || engRepOver == 'y'?true:false;
+    function validateOnlyAdminCols(callback) {
+      var obj = {};
+      var adminCols = ['assetStatus', 'dispSellerInfo', 'dispSellerContact', 'alternateMobile', 'dispSellerAlternateContact', 'featured', 'status'];
+
+      if (user.role !== 'admin') {
+        adminCols.forEach(function(x) {
+          if (row[x])
+            delete row[x];
+        });
+        return callback();
       }
 
-      var assetStatus = row["Asset_Status*"];
-      if(assetStatus && row.tradeType){
+      var assetStatus = row.assetStatus;
+      if (assetStatus && row.tradeType) {
         assetStatus = trim(assetStatus).toLowerCase();
-        if(['listed','sold','rented'].indexOf(assetStatus) == -1){
-           errorList.push({
-            Error : 'Not valid status',
-            rowCount : row.rowCount
+        if (['listed', 'sold', 'rented', 'not_available'].indexOf(assetStatus) == -1) {
+          errorList.push({
+            Error: 'Not valid status',
+            rowCount: row.rowCount
           });
-          return callback('Error'); 
+          return callback('Error');
         }
-      var ret = checkValidTransition(row.tradeType,assetStatus);
+        var ret = checkValidTransition(row.tradeType, assetStatus);
 
-      if(!ret){
-         errorList.push({
-            Error : 'Invalid status transition',
-            rowCount : row.rowCount
+        if (!ret) {
+          errorList.push({
+            Error: 'Invalid status transition',
+            rowCount: row.rowCount
           });
-          return callback('Error'); 
-      }else{
+          return callback('Error');
+        } else {
           obj.updatedAt = new Date();
           obj.assetStatus = assetStatus;
-          if(assetStatus != 'listed') {
+          if (assetStatus != 'listed') {
             //obj.featured = false;
             obj.isSold = true;
           }
         }
       }
 
-      if(row.productCondition)
+      if (row.featured) {
+        var featured = trim(row.featured || "").toLowerCase();
+        obj["featured"] = featured == 'yes' || featured == 'y' ? true : false;
+      }
+
+      if (row.status) {
+        if (row.status.toLowerCase() === 'yes')
+          obj.status = true;
+        else if (row.status.toLowerCase() === 'no')
+          obj.status = false;
+        else {
+          errorList.push({
+            Error: 'Invalid status',
+            rowCount: row.rowCount
+          });
+          return callback('Error');
+        }
+      }
+
+      ['dispSellerInfo', 'dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
+        if (row[x]) {
+          if (row[x].toLowerCase() === 'yes')
+            obj[x] = true
+          else if (row[x].toLowerCase() === 'no')
+            obj[x] = false;
+          else 
+            delete row[x];
+        }
+      });
+
+      if (row.alternateMobile)
+        obj.alternateMobile = row.alternateMobile;
+
+      return callback(null, obj);
+
+
+    }
+
+    function validateAdditionalInfo(callback) {
+      var obj = {};
+
+      if (row.isEngineRepaired) {
+        var engRepOver = trim(row.isEngineRepaired || "").toLowerCase();
+        obj.isEngineRepaired = engRepOver == 'yes' || engRepOver == 'y' ? true : false;
+      }
+
+      if (row.productCondition)
         obj["productCondition"] = trim(row.productCondition || "").toLowerCase();
 
-      if(row.featured){
-        var featured = trim(row.featured || "").toLowerCase();
-        obj["featured"] =  featured == 'yes' || featured == 'y'?true:false;
-      }
-        
-      ['country','state','city'].forEach(function(x){
-        if(row[x])
+      ['country', 'state', 'city'].forEach(function(x) {
+        if (row[x])
           obj[x] = trim(row[x]);
       })
 
-      if(row.motorOperatingHour)
-        obj.operatingHour = row.motorOperatingHour;
-
-      var additionalCols = ['comment','rateMyEquipment','mileage','serialNo','mfgYear','variant','tradeType'];
-      additionalCols.forEach(function(x){
-        if(row[x]){
+      var additionalCols = ['comment', 'operatingHour', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant', 'tradeType'];
+      additionalCols.forEach(function(x) {
+        if (row[x]) {
           obj[x] = row[x];
         }
       });
-      return callback(null,obj);
+      return callback(null, obj);
     }
 
-    function validateRentInfo(callback){
+    function validateRentInfo(callback) {
       var product = {};
       if (row.tradeType && row.tradeType != "SELL") {
         product["rent"] = {};
@@ -2042,8 +1870,8 @@ exports.validateExcelData = function(req, res, next) {
         var validDate = isValid(fromDate);
         if (!fromDate || !validDate) {
           errorList.push({
-            Error : 'Mandatory field Availability_of_Asset_From is invalid or not present',
-            rowCount : row.rowCount
+            Error: 'Mandatory field Availability_of_Asset_From is invalid or not present',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
@@ -2052,14 +1880,14 @@ exports.validateExcelData = function(req, res, next) {
         var toDate = new Date(row["toDate"]);
         validDate = isValid(fromDate);
         if (!toDate || !validDate) {
-         errorList.push({
-            Error : 'Mandatory field Availability_of_Asset_To is invalid or not present',
-            rowCount : row.rowCount
+          errorList.push({
+            Error: 'Mandatory field Availability_of_Asset_To is invalid or not present',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
         product["rent"].toDate = toDate;
-        
+
         //rent hours
         var negotiableFlag = true;
         if (rateTypeH == "yes" || rateTypeH == 'y') {
@@ -2067,8 +1895,8 @@ exports.validateExcelData = function(req, res, next) {
           var minPeriodH = row["minPeriodH"];
           if (!minPeriodH) {
             errorList.push({
-              Error : 'Mandatory field Min_Rental_Period_Hours is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Min_Rental_Period_Hours is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2077,8 +1905,8 @@ exports.validateExcelData = function(req, res, next) {
           var maxPeriodH = row["maxPeriodH"];
           if (!maxPeriodH) {
             errorList.push({
-              Error : 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2087,8 +1915,8 @@ exports.validateExcelData = function(req, res, next) {
           var rentAmountH = row["rentAmountH"];
           if (!rentAmountH) {
             errorList.push({
-              Error : 'Mandatory field Rent_Amount_Hours is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Rent_Amount_Hours is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2097,8 +1925,8 @@ exports.validateExcelData = function(req, res, next) {
           var seqDepositH = row["seqDepositH"];
           if (!seqDepositH) {
             errorList.push({
-              Error : 'Mandatory field Security_Deposit_Hours is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Security_Deposit_Hours is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2110,8 +1938,8 @@ exports.validateExcelData = function(req, res, next) {
           var minPeriodD = row["minPeriodD"];
           if (!minPeriodD) {
             errorList.push({
-              Error : 'Mandatory field Min_Rental_Period_Days is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Min_Rental_Period_Days is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2120,8 +1948,8 @@ exports.validateExcelData = function(req, res, next) {
           var maxPeriodD = row["maxPeriodD"];
           if (!maxPeriodD) {
             errorList.push({
-              Error : 'Mandatory field Max_Rental_Period_Days is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Max_Rental_Period_Days is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2130,8 +1958,8 @@ exports.validateExcelData = function(req, res, next) {
           var rentAmountD = row["rentAmountD"];
           if (!rentAmountD) {
             errorList.push({
-              Error : 'Mandatory field Rent_Amount_Days is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Rent_Amount_Days is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2140,8 +1968,8 @@ exports.validateExcelData = function(req, res, next) {
           var seqDepositD = row["seqDepositD"];
           if (!seqDepositD) {
             errorList.push({
-              Error : 'Mandatory field Security_Deposit_Days is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Security_Deposit_Days is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2153,8 +1981,8 @@ exports.validateExcelData = function(req, res, next) {
           var minPeriodM = row["minPeriodM"];
           if (!minPeriodM) {
             errorList.push({
-              Error : 'Mandatory field Min_Rental_Period_Months is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Min_Rental_Period_Months is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2163,8 +1991,8 @@ exports.validateExcelData = function(req, res, next) {
           var maxPeriodM = row["maxPeriodM"];
           if (!maxPeriodM) {
             errorList.push({
-              Error : 'Mandatory field Max_Rental_Period_Months is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Max_Rental_Period_Months is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2173,8 +2001,8 @@ exports.validateExcelData = function(req, res, next) {
           var rentAmountM = row["rentAmountM"];
           if (!rentAmountM) {
             errorList.push({
-              Error : 'Mandatory field Rent_Amount_Months is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Rent_Amount_Months is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
@@ -2183,121 +2011,125 @@ exports.validateExcelData = function(req, res, next) {
           var seqDepositM = row["seqDepositM"];
           if (!seqDepositM) {
             errorList.push({
-              Error : 'Mandatory field Security_Deposit_Months is invalid or not present',
-              rowCount : row.rowCount
+              Error: 'Mandatory field Security_Deposit_Months is invalid or not present',
+              rowCount: row.rowCount
             });
             return callback('Error');
           }
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if(row.tradeType === 'SELL'){
+      } else if (row.tradeType === 'SELL') {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
-        if(gp && cr){
-            product["grossPrice"] = Number(trim(gp));
-            product["currencyType"] = trim(cr);
+        if (gp && cr) {
+          product["grossPrice"] = Number(trim(gp));
+          product["currencyType"] = trim(cr);
+        } else {
+          errorList.push({
+            Error: 'Mandatory field Gross_Price and Currency is invalid or not present',
+            rowCount: row.rowCount
+          });
+          return callback('Error');
+        }
+        if (!prOnReq) {
+          product["priceOnRequest"] = false;
+        } else {
+          prOnReq = trim(prOnReq).toLowerCase();
+          if (prOnReq == 'yes' || prOnReq == 'y') {
+            product["priceOnRequest"] = true;
           } else {
-            errorList.push({
-              Error : 'Mandatory field Gross_Price and Currency is invalid or not present',
-              rowCount : row.rowCount
-            });
-            return callback('Error');
-          }
-          if(!prOnReq){
             product["priceOnRequest"] = false;
-          }else{
-            prOnReq = trim(prOnReq).toLowerCase();
-            if(prOnReq == 'yes' || prOnReq == 'y') {
-              product["priceOnRequest"] = true; 
-            }else {
-              product["priceOnRequest"] = false;
-            }
           }
         }
-      return callback(null,product);
+      }
+      return callback(null, product);
     }
 
     //validate service related information
-    function validateServiceInfo(callback){
+    function validateServiceInfo(callback) {
       var obj = {};
-       ['authServiceStation','serviceAt','operatingHour'].forEach(function(x){
-        if(row[x]){
-          if(!obj.serviceInfo){
+      ['authServiceStation', 'serviceAt'].forEach(function(x) {
+        if (row[x]) {
+          if (!obj.serviceInfo) {
             obj.serviceInfo = [{}]
           }
           obj.serviceInfo[0][x] = row[x];
         }
       })
 
-      if(row.servicedate){
+      if (row.serviceOperatingHour) {
+        obj.serviceInfo[0].operatingHour = row.serviceOperatingHour;
+      }
+
+      if (row.servicedate) {
         var servicedate = new Date(row["servicedate"]);
         var validDate = isValid(servicedate);
-        if(servicedate && validDate) {
-          obj["serviceInfo"][0].servicedate =  servicedate; 
+        if (servicedate && validDate) {
+          obj["serviceInfo"][0].servicedate = servicedate;
         }
 
       }
-      return callback(null,obj);
+      return callback(null, obj);
     }
 
     //validate Technical information
-    function validateTechnicalInfo(callback){
+    function validateTechnicalInfo(callback) {
       var obj = {};
-      var techCols = ['grossWeight','operatingWeight','bucketCapacity','enginePower','liftingCapacity'];
-      techCols.forEach(function(x){
-        if(row[x] && !isNaN(row[x])){
-          if(!obj.technicalInfo){
+      var techCols = ['grossWeight', 'operatingWeight', 'bucketCapacity', 'enginePower', 'liftingCapacity'];
+      techCols.forEach(function(x) {
+        if (row[x] && !isNaN(row[x])) {
+          if (!obj.technicalInfo) {
             obj.technicalInfo = {};
           }
           obj.technicalInfo[x] = Number(row[x]);
         }
       })
 
-      if(!obj.technicalInfo && row.category && row.brand && row.model){
+      if (!obj.technicalInfo && row.category && row.brand && row.model) {
         productInfoModel.find({
-          type : 'technical',
-          'information.category' : row.category,
-          'information.brand' : row.brand,
-          'information.model' : row.model
-        }).exec(function(err,data){
-          if(!err && data.length){
+          type: 'technical',
+          'information.category': row.category,
+          'information.brand': row.brand,
+          'information.model': row.model
+        }).exec(function(err, data) {
+          if (!err && data.length) {
             obj.technicalInfo = {};
             obj.technicalInfo.grossWeight = data[0]._doc.information.grossWeight;
             obj.technicalInfo.operatingWeight = data[0]._doc.information.operatingWeight;
             obj.technicalInfo.bucketCapacity = data[0]._doc.information.bucketCapacity;
             obj.technicalInfo.enginePower = data[0]._doc.information.enginePower;
-            obj.technicalInfo.liftingCapacity = data[0]._doc.information.liftingCapacity;  
+            obj.technicalInfo.liftingCapacity = data[0]._doc.information.liftingCapacity;
           }
-          return callback(null,obj);
+          return callback(null, obj);
         })
       } else {
-        return callback(null,obj);
+        return callback(null, obj);
       }
     }
 
 
     //validate seller information if exists
-    function validateSeller(callback){
+    function validateSeller(callback) {
       var obj = {};
-      if(row.seller_mobile && row.seller_email){
+      if (row.seller_mobile && row.seller_email) {
         User.find({
-          mobile : row.seller_mobile,
-          email : row.seller_email
-        },function(err,seller){
-          if(err || !seller){
+          mobile: row.seller_mobile,
+          email: row.seller_email
+        }, function(err, seller) {
+          if (err || !seller) {
             errorList.push({
-              Error : 'Error while fetching seller',
-              rowCount : row.rowCount
+              Error: 'Error while fetching seller',
+              rowCount: row.rowCount
             })
             return callback('Error');
           }
 
-          if(!seller.length){
+          if (!seller.length) {
             errorList.push({
-              Error : 'Seller not exist',
-              rowCount : row.rowCount
+              Error: 'Seller not exist',
+              rowCount: row.rowCount
             })
             return callback('Error');
           }
@@ -2313,46 +2145,46 @@ exports.validateExcelData = function(req, res, next) {
           obj.seller["lname"] = seller[0]['lname'];
           obj.seller["fname"] = seller[0]['fname'];
           obj.seller["_id"] = seller[0]['_id'] + "";
-          return callback(null,obj);
+          return callback(null, obj);
         })
-      }else
-        return callback(null,obj);
-    } 
+      } else
+        return callback(null, obj);
+    }
 
 
     //validate Category if exists
-    function validateCategory(callback){
+    function validateCategory(callback) {
       var obj = {};
-      var e ;
-      if(row.category && row.brand && row.model ){
-        if(row.category === 'Other' && row.brand === 'Other' && row.model === 'Other'){
-          e = ['other_category','other_brand','other_model'].some(function(x){
-            if(!row[x]){
+      var e;
+      if (row.category && row.brand && row.model) {
+        if (row.category === 'Other' && row.brand === 'Other' && row.model === 'Other') {
+          e = ['other_category', 'other_brand', 'other_model'].some(function(x) {
+            if (!row[x]) {
               errorList.push({
-                Error:'Missing mandatory parameter: ' + x,
-                rowCount : row.rowCount
+                Error: 'Missing mandatory parameter: ' + x,
+                rowCount: row.rowCount
               });
               return true;
             }
           })
 
-          if(e)
+          if (e)
             return callback('Error');
-        } 
+        }
 
-        fetchCategory(row.category,function(err,category){
-          if(err || !category){
+        fetchCategory(row.category, function(err, category) {
+          if (err || !category) {
             errorList.push({
-              Error : 'Error while fetching category',
-              rowCount : row.rowCount
+              Error: 'Error while fetching category',
+              rowCount: row.rowCount
             })
             return callback('Error');
           }
 
-          if(!category.length){
+          if (!category.length) {
             errorList.push({
-              Error : 'Category not exist',
-              rowCount : row.rowCount
+              Error: 'Category not exist',
+              rowCount: row.rowCount
             })
             return callback('Error');
           }
@@ -2363,19 +2195,19 @@ exports.validateExcelData = function(req, res, next) {
             group: category[0]._doc.group.name
           };
 
-          fetchBrand(brandFilter,function(err,brand){
-            if(err || !brand){
+          fetchBrand(brandFilter, function(err, brand) {
+            if (err || !brand) {
               errorList.push({
-                Error : 'Error while fetching brand',
-                rowCount : row.rowCount
+                Error: 'Error while fetching brand',
+                rowCount: row.rowCount
               })
               return callback('Error');
             }
 
-            if(!brand.length){
+            if (!brand.length) {
               errorList.push({
-                Error : 'Brand not exist',
-                rowCount : row.rowCount
+                Error: 'Brand not exist',
+                rowCount: row.rowCount
               })
               return callback('Error');
             }
@@ -2387,60 +2219,65 @@ exports.validateExcelData = function(req, res, next) {
               brand: row.brand
             }
 
-            fetchModel(modelFilter,function(err,model){
-              if(err || !model){
+            fetchModel(modelFilter, function(err, model) {
+              if (err || !model) {
                 errorList.push({
-                  Error : 'Error while fetching model',
-                  rowCount : row.rowCount
+                  Error: 'Error while fetching model',
+                  rowCount: row.rowCount
                 })
                 return callback('Error');
               }
 
-              if(!model.length){
+              if (!model.length) {
                 errorList.push({
-                  Error : 'model not exist',
-                  rowCount : row.rowCount
+                  Error: 'model not exist',
+                  rowCount: row.rowCount
                 })
                 return callback('Error');
               }
 
               obj.category = {
-                _id : category[0]._doc._id,
-                name : category[0]._doc.name
+                _id: category[0]._doc._id,
+                name: category[0]._doc.name
               };
 
               obj.brand = {
-                _id : brand[0]._doc._id,
-                name : brand[0]._doc.name
+                _id: brand[0]._doc._id,
+                name: brand[0]._doc.name
               };
 
               obj.model = {
-                _id : model[0]._doc._id,
-                name : model[0]._doc.name
+                _id: model[0]._doc._id,
+                name: model[0]._doc.name
               };
+
+              obj.group = {
+                _id : category[0]._doc.group._id,
+                name : category[0]._doc.group.name
+              }
 
               obj.name = row.category + ' ' + row.brand + ' ' + row.model;
 
-              if(row.category === 'Other' && row.brand === 'Other' && row.model === 'Other'){
-                obj.category.otherName =  row.other_category;
-                obj.brand.otherName =  row.other_brand;
-                obj.model.otherName =  row.other_model;
+              if (row.category === 'Other' && row.brand === 'Other' && row.model === 'Other') {
+                obj.category.otherName = row.other_category;
+                obj.brand.otherName = row.other_brand;
+                obj.model.otherName = row.other_model;
                 obj.name = row.other_category + ' ' + row.other_brand + ' ' + row.other_model;
               }
 
-              if(row.variant)
+              if (row.variant)
                 obj.name += ' ' + row.variant;
-              return callback(null,obj);
+              return callback(null, obj);
             })
           })
         })
-      }
-      else {
-        return callback(null,obj);
+      } else {
+        return callback(null, obj);
       }
     }
   }
 }
+
 
 function bulkProductStatusUpdate(req,res,data){
   if(req.counter < req.numberOfCount){
@@ -2556,7 +2393,7 @@ function bulkProductStatusUpdate(req,res,data){
 
       })
   }else{
-    res.status(200).json({successCount:req.successProductArr.length,errorList:req.errors});
+    return res.json({successCount:req.successProductArr.length,errorList:req.errors});
   }
 }
 
@@ -3365,6 +3202,7 @@ exports.createOrUpdateAuction = function(req,res){
       if(!req.body.payment)
         self();
       else{
+        
         PaymentTransaction.create(req.body.payment,function(err,paytm){
           if(err){return handleError(res,err)}
           else{
@@ -3379,6 +3217,7 @@ exports.createOrUpdateAuction = function(req,res){
       if(!req.body.valuation)
         self();
       else{
+        
         if(req.payTransId)
         req.body.valuation.transactionId = req.payTransId + "";
         ValuationReq.create(req.body.valuation,function(err,vals){
@@ -3424,6 +3263,7 @@ exports.createOrUpdateAuction = function(req,res){
       auctionUpdate._id = req.auctionId + "";
       if(req.valuationId)
         auctionUpdate.valuationId = req.valuationId + "";
+      
       Product.update({_id:req.body.auction.product._id},{$set:{auction:auctionUpdate}},function(err,prds){
          if(err){return handleError(res,err)}
           else{

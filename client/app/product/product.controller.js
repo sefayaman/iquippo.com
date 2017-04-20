@@ -14,6 +14,7 @@
     //End
 
     $scope.container = {};
+    var filter = {};
 
     var imgDim = {
       width: 700,
@@ -182,12 +183,20 @@
       // product edit case
       if ($stateParams.id) {
         $scope.isEdit = true;
+        filter = {};
+        filter._id = $stateParams.id;
+        if(Auth.getCurrentUser()._id && !Auth.isAdmin()) {
+          if(Auth.getCurrentUser().role == 'channelpartner')
+            filter.role = Auth.getCurrentUser().role;
+          filter.userid = Auth.getCurrentUser()._id;
+        }
+        productSvc.getProductOnFilter(filter).then(function(response) {
+          if(response && response.length < 1) {
+            $state.go('main');
+            return;
+          }
 
-        productSvc.getProductOnId($stateParams.id, true).then(function(response) {
-
-          console.log(response);
-
-          product = $scope.product = response;
+          product = $scope.product = response[0];
           $scope.imagesEngine = [];
           $scope.imagesHydraulic = [];
           $scope.imagesCabin = [];
@@ -195,10 +204,10 @@
           $scope.imagesOther = [];
           $scope.images = [];
 
-          if (response.serviceInfo.length > 0) {
-            for (var i = 0; i < response.serviceInfo.length; i++) {
-              if (response.serviceInfo[i] && response.serviceInfo[i].servicedate)
-                response.serviceInfo[i].servicedate = moment(response.serviceInfo[i].servicedate).toDate();
+          if (response[0].serviceInfo.length > 0) {
+            for (var i = 0; i < response[0].serviceInfo.length; i++) {
+              if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
+                response[0].serviceInfo[i].servicedate = moment(response[0].serviceInfo[i].servicedate).toDate();
             }
           } else {
             $scope.product.serviceInfo = [{}];
@@ -275,7 +284,6 @@
             getProductInfo(techFilter);
           }
 
-          console.log(response);
           //$scope.container.selectedSubCategory = $scope.product.subcategory;
           //$scope.product.dispSellerInfo=response.dispSellerInfo;
           console.log($scope.product.alternateMobile);
@@ -349,7 +357,6 @@
 
       //listen for the file selected event
       $scope.$on("fileSelected", function(event, args) {
-        // console.log("hell yeah");
         if (args.files.length == 0){
           return;
         }
@@ -540,7 +547,7 @@
       if (!categoryId)
         return;
       var otherBrand = null;
-      var filter = {};
+      filter = {};
       filter['categoryId'] = categoryId;
       brandSvc.getBrandOnFilter(filter)
         .then(function(result) {
@@ -577,7 +584,7 @@
       if (!brandId)
         return;
       var otherModel = null;
-      var filter = {};
+      filter = {};
       filter['brandId'] = brandId;
       modelSvc.getModelOnFilter(filter)
         .then(function(result) {
@@ -697,7 +704,7 @@
 
           dataToSend.type = args.name || 'template_update';          
           $rootScope.loading = true;
-          productSvc.bulkEditProduct(fileName)
+          productSvc.bulkEditProduct(dataToSend)
             .then(function(res) {
               $rootScope.loading = false;
               var totalRecord = res.successCount + res.errorList.length;
@@ -868,7 +875,7 @@
 
       $scope.tabObj.step1 = false;
       $scope.tabObj.step2 = true;
-      var filter = {};
+      filter = {};
       filter['yetToStartDate'] = new Date();
       AuctionMasterSvc.get(filter)
         .then(function(aucts) {
@@ -976,6 +983,10 @@
         serverObj['valuation'] = $scope.valuationReq;
       if (paymentTransaction)
         serverObj['payment'] = paymentTransaction;
+
+      serverObj.payment.auctionId = productObj.auctionId;
+      serverObj.payment.entityName = $scope.valAgencies[i].name;
+
       productSvc.createOrUpdateAuction(serverObj)
         .then(function(res) {
           //goto payment if payment are necessary

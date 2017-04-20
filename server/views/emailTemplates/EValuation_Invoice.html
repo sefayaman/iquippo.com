@@ -84,43 +84,7 @@
       <tr>
         <td>
           <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;width:90%;">
-            
-            <!-- <tr>
-              <td style="text-align:left;">
-                <table cellpadding="3" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:10px;">
-                  
-                    <tr>
-                      <td>QV/16-17/468</td>
-                    </tr>
-                    <tr>
-                      <td>QV/16-17/469</td>
-                    </tr>
-                    <tr>
-                      <td>QV/16-17/470</td>
-                    </tr>
-                    <tr>
-                      <td>QV/16-17/471</td>
-                    </tr>
-                </table>
-              </td>
-              <td>
-                <table cellpadding="3" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:10px;">
-                  
-                    <tr>
-                      <td>QV/16-17/468</td>
-                    </tr>
-                    <tr>
-                      <td>QV/16-17/469</td>
-                    </tr>
-                    <tr>
-                      <td>QV/16-17/470</td>
-                    </tr>
-                    <tr>
-                      <td>QV/16-17/471</td>
-                    </tr>
-                </table>
-              </td>
-            </tr> -->
+          
             <tr>
               <td style="border-right: 1px solid #ccc;font-size:10px;">
                 <h4>Valuation Report No.</h4>
@@ -144,21 +108,13 @@
             <tr>
               <td style="border-right: 1px solid #ccc;">
                 <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;font-weight:bold;float: right;padding: 25px;">
+                  {{#each invoiceData.selectedTaxes}}
                   <tr>
                     <td align="right">
-                     <strong>{{invoiceData.serviceTax}}% SERVICE TAX</strong>
+                     <strong>{{type}} @{{rate}} %</strong>
                     </td>
                   </tr>
-                  <tr>
-                    <td align="right">
-                     <strong>{{invoiceData.swatchBharatCess}}% Swatch Bharat Cess</strong>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="right">
-                     <strong>Krishi Kalyan Cess @{{invoiceData.krishikalyanCess}}%</strong>
-                    </td>
-                  </tr>
+                  {{/each}}
                    <tr>
                     <td height="20">
                      
@@ -175,20 +131,13 @@
                 <table cellpadding="2" cellspacing="0" style="font-family:Verdana, Geneva, sans-serif;font-size:12px;font-weight:bold;">
                   <tr>
                       <td>
+                        {{#each invoiceData.selectedTaxes}}
                         <tr>
                           <td>
-                           {{invoiceData.serviceTaxValue}}
+                           {{calculatedTax}}
                           </td>
                         </tr>
-                        <tr>
-                          <td>{{invoiceData.swatchBharatValue}}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                           {{invoiceData.krishikalyanValue}}
-                          </td>
-                        </tr>
+                        {{/each}}
                           <tr>
                             <td height="20">
                              

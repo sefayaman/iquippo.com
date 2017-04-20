@@ -5,6 +5,7 @@ var ServiceRequest = require('./servicerequest.model');
 var Utility = require('./../../components/utility.js');
 var  xlsx = require('xlsx');
 var moment = require('moment');
+var Product = require('./../product/product.model');
 //search based on service type
 exports.getService = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchstr, 'i');
@@ -60,10 +61,21 @@ exports.getService = function(req, res) {
 
 // Creates a new service in the DB.
 exports.create = function(req, res) {
-  req.body.createdAt = new Date();
-  ServiceRequest.create(req.body, function(err, request) {
-    if(err) { return handleError(res, err); }
-    return res.status(200).json(request);
+  if(req.body.product._id)
+    var productId = req.body.product._id;
+  Product.findOne({_id: productId}, function(err, data) {
+    if (err) { return handleError(res, err);}
+    
+    if (!data) 
+      return res.status(200).json({errorCode: 1, message: "Not Exist!!!"});
+    if(!data.status || data.deleted)
+      return res.status(200).json({errorCode:2, message:"Product Not available for now. Please contact iQuippo team."});
+    
+    req.body.createdAt = new Date();
+    ServiceRequest.create(req.body, function(err, service) {
+      if(err) { return handleError(res, err); }
+      return res.status(200).json({errorCode:0, message:"Your request has been submitted successfully"});
+    });
   });
 };
 

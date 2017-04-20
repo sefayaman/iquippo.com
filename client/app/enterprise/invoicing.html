@@ -128,6 +128,8 @@
           <th>Enterprise Contact No.</th>
           <th>Valuation Partner Name</th>
           <th>Valuation Partner Contact No.</th>
+          <th ng-if="isAdmin()">Payment Received</th>
+          <th ng-if="isAdmin()">Payment Made</th>
           <th>Amount</th>
           <th>Status</th>
           <th>Remark</th>
@@ -143,7 +145,9 @@
           <td>{{entVal.enterprise.name}}</td>
           <td>{{entVal.enterprise.mobile}}</td>
           <td>{{entVal.agency.name}}</td>
-           <td>{{entVal.agency.mobile}}</td>
+          <td>{{entVal.agency.mobile}}</td>
+          <td ng-if="isAdmin()">{{entVal.totalAmount - entVal.paymentReceivedDetail.remainingAmount}}</td>
+          <td ng-if="isAdmin()">{{entVal.totalAmount - entVal.paymentMadeDetail.remainingAmount}}</td>
            <td>{{entVal.totalAmount}}</td>
           <td>{{entVal.status}}</td>
           <td></td>
@@ -182,7 +186,7 @@
     <div class="row form-group">
       <div class="col-sm-12">
         <span class="badge" ng-repeat="token in selectedTax">
-          {{token.type}} : {{token.taxRate}} 
+          {{token.type}} : {{token.rate}} 
           <a href="javascript:void(0);" uib-tooltip="Remove" tooltip-placement="top" tooltip-trigger="mouseenter" ng-click="deleteTaxToken($index)">
             <i class="fa fa-times" ></i>
           </a>
@@ -193,7 +197,7 @@
       <div class="col-sm-5 form-group">
         <select class="form-control" ng-change="getTax(selectedType)" ng-model="selectedType">
           <option value="">Select Type of Tax</option>
-          <option ng-repeat="tx in taxList" value="{{tx}}">{{tx}}</option>
+          <option ng-repeat="tx in serviceTaxes" value="{{tx._id}}">{{tx.type}}</option>
         </select>
       </div>
    		<div class="col-md-5 form-group" ng-class="{'has-error':invoiceForm.servicetax.$invalid && submitted}">

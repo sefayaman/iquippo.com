@@ -96,7 +96,6 @@ function updateCartProduct(cart,res){
 
 // Creates a new cart in the DB.
 exports.create = function(req, res) {
-  console.log("cart created");
   Cart.create(req.body, function(err, buyer) {
     if(err) { return handleError(res, err); }
     addNoCacheHeader(res);

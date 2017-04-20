@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Negotiation = require('./negotiation.model');
 var Utility = require('./../../components/utility.js');
 var  xlsx = require('xlsx');
-
+var Product = require('./../product/product.model');
 // Get list of services
 
 
@@ -12,11 +12,21 @@ var  xlsx = require('xlsx');
 //var ADMIN_EMAIL = "bharat.hinduja@bharatconnect.com";
 
 exports.create = function(req, res) {
-  // var prQuote = validateProductQuote(req.body);
-  req.body.createdAt = new Date();
-  Negotiation.create(req.body, function(err, service) {
-    if(err) { return handleError(res, err); }
-    return res.status(200).json(service);
+  if(req.body.product._id)
+    var productId = req.body.product._id;
+  Product.findOne({_id: productId}, function(err, data) {
+    if (err) { return handleError(res, err);}
+    
+    if (!data) 
+      return res.status(200).json({errorCode: 1, message: "Not Exist!!!"});
+    if(!data.status || data.deleted)
+      return res.status(200).json({errorCode:2, message:"Product Not available for now. Please contact iQuippo team."});
+    
+    req.body.createdAt = new Date();
+    Negotiation.create(req.body, function(err, service) {
+      if(err) { return handleError(res, err); }
+      return res.status(200).json({errorCode:0, message:"Your request has been submitted successfully"});
+    });
   });
 };
 

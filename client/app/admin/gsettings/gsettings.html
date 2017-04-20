@@ -1319,11 +1319,12 @@
 			</div>
 			<legend></legend>
 			<div class="row">
-				<div class="col-sm-3">
-					<select class="form-control" ng-model="svcTaxVm.dataModel.type" required>
+				<div class="col-sm-3" ng-class="{'has-error':taxmasterForm.taxLabel.$invalid && submitted}">
+					<input type="text" class="form-control" name="taxLabel" ng-model="svcTaxVm.dataModel.type" placeholder="*Enter Type Of Tax" required>
+					<!-- <select class="form-control" ng-model="svcTaxVm.dataModel.type" required>
 						<option value="">Select Type of Taxe</option>
 						<option value="{{txl}}" ng-repeat="txl in taxList">{{txl}}</option>
-					</select>
+					</select> -->
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error':taxmasterForm.effectiveFromDate.$invalid && submitted}">
 					<input type="text" name="effectiveFromDate" class="form-control" ng-model="svcTaxVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>

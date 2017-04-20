@@ -34,6 +34,7 @@ function ViewSpareCtrl($scope,$state, $stateParams, $rootScope, $uibModal, Auth,
   vm.addSpareToCart = addSpareToCart;
   vm.buyNow = buyNow;
   vm.sortedSpares = [];
+  var filter = {};
 
   function myFunct(keyEvent) {
       if(keyEvent)
@@ -159,11 +160,36 @@ function init(){
     prdObj._id = spare._id;
     prdObj.primaryImg = spare.primaryImg
     prdObj.condition = spare.productCondition;
-    CartSvc.addProductToCart(prdObj);
+    saveRequest(prdObj, "cartReq");
+    //CartSvc.addProductToCart(prdObj);
   }
 
-  function buyNow(spare,paymnetMode){
-    spareSvc.buyNow(spare,paymnetMode);
+  function buyNow(spare,paymentMode){
+    saveRequest(spare, "buyNow", paymentMode);
+    //spareSvc.buyNow(spare,paymentMode);
+  }
+
+  function saveRequest(data, reqType, paymentMode) {
+    filter = {};
+    filter._id = data._id;
+    filter.status = "active";
+    spareSvc.getSpareOnFilter(filter).then(function(result){
+      if(result && result.length < 1) {
+        $state.go('sparehome');
+        return;
+      }
+      switch (reqType) {
+        case 'cartReq':
+          CartSvc.addProductToCart(data);
+          break;
+        case 'buyNow':
+          spareSvc.buyNow(data, paymentMode);
+          break;
+      }
+    })
+    .catch(function(){
+      //error handling
+    })
   }
 
 function getAllSpares(){
