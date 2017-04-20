@@ -17,7 +17,7 @@
             </div>
           </div>
 
-          <hr>
+          <legend></legend>
           <p class="text-right">Showing : {{userManagementVm.totalItems}} Records</p>
           <div class="row">
             <div class="col-sm-9 form-group">
@@ -91,9 +91,9 @@
                   <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="userManagementVm.editUserClick(user)" ><i class="fa fa-pencil"></i> </a></td>                
                 </tr>
               </tbody>
-            </table>
-            <uib-pagination total-items="userManagementVm.totalItems" ng-model="userManagementVm.currentPage" items-per-page="userManagementVm.itemsPerPage" max-size="userManagementVm.maxSize" ng-change="userManagementVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+            </table>            
           </div>
+          <uib-pagination total-items="userManagementVm.totalItems" ng-model="userManagementVm.currentPage" items-per-page="userManagementVm.itemsPerPage" max-size="userManagementVm.maxSize" ng-change="userManagementVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
         </div>
       </div>
     </div>

@@ -83,7 +83,7 @@
 				
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Valuation Quote</h3>
+						<h3 class="panel-title">Valuation / Asset Inspection</h3>
 					</div>
 					<div class="panel-body">
 						     
@@ -167,6 +167,26 @@
 									</div>
 								</div>
 							</div>
+							
+							<div class="row">
+								<div class="col-xs-12">
+									<label>Request Type:</label>
+								</div>								
+							</div>
+							<div class="row">
+								<div class="col-xs-6 col-sm-6">
+					              	<div class="radio radio-info">
+			                            <input type="radio" id="requestY" name="schedule" value="yes">
+			                            <label for="requestY"> Yes </label>
+			                        </div>		               
+					              </div>
+					              <div class="col-xs-6 col-sm-6">
+					              	<div class="radio radio-info">
+			                            <input type="radio" id="requestN" name="schedule" value="no">
+			                            <label for="requestN"> No </label>
+			                        </div>
+			                       </div>
+							</div>
 							<hr>
 							<div class="row">
 								<div class="col-xs-12">
@@ -206,6 +226,49 @@
 								</div>
 								
 							</div>
+							<div class="row">
+								<div class="col-sm-6 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="Engine Number">
+								</div>
+								<div class="col-sm-6 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="Chassis Number">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="Registration Number">
+								</div>
+								<div class="col-sm-6 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="Serial Number">
+								</div>
+							</div>							
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
+										<input type="number" name="prdMfg" class="form-control" placeholder="*Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="form-group" ng-class="{'has-error': form.prddescription.$invalid && form.submitted }">
+										<input type="text" name="prddescription" class="form-control" placeholder="*Asset Description" ng-model="valuationQuote.product.description" required>
+									</div>
+								</div>								
+							</div>
+							<div class="row">
+								<div class="col-sm-6 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="*Reference / FI Number">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<label>Location of Asset:</label>
+								</div>
+							</div>
+							<div class="row form-group">
+								<div class="col-sm-12">
+									<input type="text" class="form-control" name="" value="" placeholder="Yard Information / Asset Adrress">
+								</div>
+							</div>
 							<div class="row">								
 								<div class="col-xs-4">
 									<div class="form-group" ng-class="{'has-error': form.prdCountry.$invalid && form.submitted }">
@@ -234,50 +297,37 @@
 								</div>
 								
 							</div>
+
 							<div class="row">
 								<div class="col-xs-6">
-									<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
-										<input type="number" name="prdMfg" class="form-control" placeholder="*Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
-									</div>
+									<div class="form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted }">
+										<input type="text" name="contactPerson" class="form-control" placeholder="*Contact Person"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
+									</div>							
 								</div>
 								<div class="col-xs-6">
-									<div class="form-group" ng-class="{'has-error': form.prddescription.$invalid && form.submitted }">
-										<input type="text" name="prddescription" class="form-control" placeholder="*Asset Description" ng-model="valuationQuote.product.description" required>
-									</div>
-								</div>
-								
+									<div class="checkbox checkbox-info checkbox-circle">
+				                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
+				                        <label for="checkbox1">
+				                            same as above
+				                        </label>
+				                    </div>							
+								</div>						
 							</div>
-
-					<div class="row">
-						<div class="col-xs-6">
-							<div class="form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted }">
-								<input type="text" name="contactPerson" class="form-control" placeholder="*Contact Person"  ng-model="valuationQuote.product.contactPerson"ng-required="!valuationQuote.product.contactPersonAsAbove">
-							</div>							
-						</div>
-						<div class="col-xs-6">
-							<div class="checkbox checkbox-info checkbox-circle">
-		                        <input id="checkbox1" type="checkbox" ng-model="valuationQuote.product.contactPersonAsAbove" name="" ng-change="onChange('contactPerson')">
-		                        <label for="checkbox1">
-		                            same as above
-		                        </label>
-		                    </div>							
-						</div>						
-					</div>
-					<div class="row">
-						<div class="col-xs-6">
-							<div class="form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted }">
-								<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="*Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
-							</div>							
-						</div>
-						<div class="col-xs-6">
-							<div class="checkbox checkbox-info checkbox-circle">
-		                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
-		                        <label for="checkbox2">
-		                            same as above
-		                        </label>
-		                    </div>							
-						</div>						
-					</div>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted }">
+										<input type="text" name="contactNumber" class="form-control" ng-model="valuationQuote.product.contactNumber" placeholder="*Contact Number" ng-required="!valuationQuote.product.contactNumberAsAbove">
+									</div>							
+								</div>
+								<div class="col-xs-6">
+									<div class="checkbox checkbox-info checkbox-circle">
+				                        <input id="checkbox2" type="checkbox"  ng-model="valuationQuote.product.contactNumberAsAbove" name="" ng-change="onChange('contactNumber')">
+				                        <label for="checkbox2">
+				                            same as above
+				                        </label>
+				                    </div>							
+								</div>						
+							</div>
 							<hr>
 							<div class="row text-left">
 								<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
@@ -289,6 +339,9 @@
 								</div>
 								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.otherName.$invalid && form.submitted }">
 									<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
+								</div>
+								<div class="col-sm-offset-4 col-sm-8 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="Name of Customer seeking Finance">
 								</div>
 							</div>
 							<div class="row text-left">
