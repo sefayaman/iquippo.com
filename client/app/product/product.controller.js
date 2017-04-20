@@ -704,7 +704,7 @@
 
           dataToSend.type = args.name || 'template_update';          
           $rootScope.loading = true;
-          productSvc.bulkEditProduct(fileName)
+          productSvc.bulkEditProduct(dataToSend)
             .then(function(res) {
               $rootScope.loading = false;
               var totalRecord = res.successCount + res.errorList.length;
