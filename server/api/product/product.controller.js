@@ -1194,12 +1194,20 @@ function fetchModel(model, cb) {
 }
 
 exports.updateExcelData = function (req,res,next){
-  if(!req.updateData.length && !req.errorList.length)
-    return next(new APIError(500,'Error while updation'));
-
   var successCount = 0;
+
+  if(!req.updateData.length && !req.errorList.length){
+    req.errorList = [];
+    for(var j = 0 ; j < req.totalCount ; j++){
+      req.errorList.push({
+        Error : 'Nothing to update',
+        rowCount : j+1
+      });
+    }
+  }
+
   if(!req.updateData.length && req.errorList.length)
-    return res.json({successCount : successCount,errorList : req.errorList});
+    return res.json({successCount : successCount,errorList : req.errorList,totalCount : req.totalCount});
 
   var dataToUpdate = req.updateData;
 
@@ -1210,6 +1218,7 @@ exports.updateExcelData = function (req,res,next){
       console.log(err);
       return next(new APIError(500,'Error while updation'));
     }
+   
     return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
   }
 
@@ -1323,7 +1332,6 @@ exports.validateExcelData = function(req, res, next) {
   var user = req.body.user;
   var reqType = req.reqType;
   var type = req.body.type;
-  var existingProduct;
 
   if(!reqType)
     return next(new APIError(400,'Invalid request type'));
@@ -1351,7 +1359,6 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     if(!updateData.length && !errorList.length){
-      debugger;
       return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
     }
     req.errorList = errorList;
@@ -1388,8 +1395,6 @@ exports.validateExcelData = function(req, res, next) {
           })
           return cb();
         }
-
-        existingProduct = doc[0]._doc;
 
         if(type === 'template_update') {
           async.parallel({
@@ -1552,26 +1557,259 @@ exports.validateExcelData = function(req, res, next) {
             $gt : new Date()
           }
         }
-        AuctionMaster.find(reqOpts,function(err,auction){
-          if(err || !auction){
-            errorList.push({
-              Error : 'Error while validating auction id',
-              rowCount : row.rowCount
-            });
-            return callback('Error');
+
+        var auctionMaster,vendorData,
+            paymentMaster,paymentTransData,
+            valuationData,auctionReqData,existingProduct;
+
+
+        async.series({
+          validateAuctionMaster : validateAuctionMaster,
+          validateVendor : validateVendor,
+          validatePaymentTrans : validatePaymentTrans,
+          fetchPaymentMaster : fetchPaymentMaster,
+          fetchProduct : fetchProduct,
+          createPaymetTrans : createPaymetTrans,
+          createValauationReq : createValauationReq,
+          createAuctionRequest : createAuctionRequest
+        },middleManProcessing);
+
+        function fetchProduct(innerCb){
+          Product.find({
+            assetId: row.assetId
+          }, function(err, doc) {
+            if (err || !doc.length) {
+              errorList.push({
+                Error: 'No asset id found',
+                rowCount: row.rowCount
+              })
+              return innerCb('Error');
+            }
+            existingProduct = doc[0];
+            return innerCb();
+          });
+        }
+
+
+        function middleManProcessing(err){
+          if(err){
+            return callback(err);
           }
 
-          if(!auction.length){
-            errorList.push({
-              Error : 'Invalid Auction id',
-              rowCount : row.rowCount
-            });
-            return callback('Error');
+          var obj = {
+            auction:{
+                id : auctionReqData._id,
+                valuationId : valuationData._id
+              },
+            auctionListing : true
+          };
+
+          return callback(null,obj)
+        }
+
+        function createAuctionRequest(innerCb){
+          var auctionData = { 
+            valuationReport: '',
+            dbAuctionId: auctionMaster[0]._id,
+            emdAmount: row.emdAmount,
+            user: user,
+            seller: existingProduct.seller,
+            status: 'payment_pending',
+            statuses: [ { createdAt: new Date(),
+                 status: 'payment_pending',
+                 userId: user._id } ],
+            product:{ 
+              _id: existingProduct._id,
+              assetId: existingProduct.assetId,
+              city: existingProduct.city,
+              name: existingProduct.name,
+              status: existingProduct.status,
+              category: existingProduct.category,
+              mfgYear : existingProduct.mfgYear
+            },
+            startDate: auctionMaster[0].startDate,
+            endDate: auctionMaster[0].endDate,
+            auctionId: row.auctionId,
+            transactionId: paymentTransData._id,
+            valuation: { 
+              _id: valuationData._id, 
+              status: 'payment_pending'
+            } 
+          };
+
+
+          AuctionReq.create(auctionData,function(err,auctionInfo){
+            if(err || !auctionInfo){
+              errorList.push({
+                Error : 'Error while creating Auction request',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            auctionReqData = auctionInfo;
+            return innerCb();
+          });
+        }
+
+        function createValauationReq(innerCb){
+          var valauationData = { 
+            valuationAgency: { _id: vendorData[0]._id,
+              name:  vendorData[0].entityName,
+              email: vendorData[0].user.email,
+              mobile: vendorData[0].user.mobile,
+              countryCode: '91' },
+            valuate: true,
+            user: user,
+            seller: existingProduct.seller,
+            initiatedBy: 'Admin',
+            purpose: 'Listing in auction',
+            product:{ 
+              _id: existingProduct._id,
+              assetId: existingProduct.assetId,
+              city: existingProduct.city,
+              name: existingProduct.name,
+              status: existingProduct.status,
+              category: existingProduct.category,
+              mfgYear : existingProduct.mfgYear
+            },
+            status: 'payment_pending',
+            statuses: 
+             [ { createdAt: new Date(),
+                 status: 'payment_pending',
+                 userId: user._id }],
+            isAuction: true 
+          };
+
+          ValuationReq.create(valauationData,function(err,valuationInfo){
+            if(err || !valuationInfo){
+              errorList.push({
+                Error : 'Error while creating valuation request',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            valuationData = valuationInfo;
+            return innerCb();
+          });
+        }
+
+        function createPaymetTrans(innerCb){
+          var auctionFee,valuationFee;
+          var ret;
+          ['auctionMaster','vendorData','paymentmaster'].some(function(x){
+            if(!x){
+              errorList.push({
+                Error : 'Error while fetching payment master/auction master/vendor data',
+                rowCount : row.rowCount
+              });
+
+              ret = true;
+              return true;
+            }
+          })
+
+          if(ret){
+            return innerCb('Error');
           }
 
+          paymentMaster.forEach(function(x){
+            if(x.serviceCode === 'Auction')
+              auctionFee = x.fees
+            else if(x.serviceCode === "Valuation")
+              valuationFee = x.fees;
+          });
+
+          if(!auctionFee || !valuationFee){
+            errorList.push({
+              Error : 'Auction Fee/Valuation Fee master not present',
+              rowCount : row.rowCount
+            });
+            return innerCb('Error');
+          }
+
+          var paymentData = {
+            paymets :[{ type: 'auctionreq', charge: auctionFee},
+                { type: 'valuationreq', charge: valuationFee }],
+            totalAmount : Number(auctionFee) + Number(valuationFee),
+            requestType : 'Auction Listing',
+            product:{ type: 'equipment',
+              _id: existingProduct._id,
+              assetId: existingProduct.assetId,
+              city: existingProduct.city,
+              name: existingProduct.name,
+              status: existingProduct.status,
+              category: existingProduct.category },
+            user: user,
+            status: existingProduct.status,
+            statuses: existingProduct.statuses,
+            paymentMode: 'offline',
+            auctionId : row.auctionId,
+            entityName : row.agencyName
+          };
+
+          PaymentTransaction.create(paymentData,function(err,paymentInfo){
+            if(err || !paymentInfo){
+              errorList.push({
+                Error : 'Error while creating payment request',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+            paymentTransData = paymentInfo;
+            return innerCb();
+          });
+
+        }
+
+        function fetchPaymentMaster(innerCb){
+          PaymentMaster.find({serviceCode : {$in:['Auction','Valuation']}},function(err,masterData){
+            if(err || !masterData){
+              errorList.push({
+                Error : 'Error while fetching payment master data',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            if(!masterData.length){
+              errorList.push({
+                Error : 'Payment details not found',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+            paymentMaster = masterData;
+            return innerCb();
+          })
+        }
+
+        function validateAuctionMaster(innerCb){
+          AuctionMaster.find(reqOpts,function(err,auction){ 
+            if(err || !auction){
+              errorList.push({
+                Error : 'Error while validating auction id',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            if(!auction.length){
+              errorList.push({
+                Error : 'Invalid Auction id',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+            auctionMaster = auction;
+            return innerCb();
+          })
+        }
+
+        function validateVendor(innerCb){
           reqOpts = {
             entityName : row.agencyName,
-            services : 'Valuation'
           };
 
           VendorModel.find(reqOpts,function(err,agency){
@@ -1580,7 +1818,7 @@ exports.validateExcelData = function(req, res, next) {
                 Error : 'Error while validating agency',
                 rowCount : row.rowCount
               });
-              return callback('Error');
+              return innerCb('Error');
             }
 
             if(!agency.length){
@@ -1588,183 +1826,43 @@ exports.validateExcelData = function(req, res, next) {
                 Error : 'Invalid agency or Agency not authorized',
                 rowCount : row.rowCount
               });
-              return callback('Error');
+              return innerCb('Error');
             }
 
-            reqOpts = {
-              auctionId : row.auctionId,
-              entityName : row.agencyName,
-              'product.assetId' : row.assetId
-            };
-
-            PaymentTransaction.find(reqOpts,function(err,payment){
-              if(err || !agency){
-                errorList.push({
-                  Error : 'Error while validating payment transaction',
-                  rowCount : row.rowCount
-                });
-                return callback('Error');
-              }
-
-              if(payment.length){
-                errorList.push({
-                  Error : 'Payment already been made for this asset for this auctionId and agency',
-                  rowCount : row.rowCount
-                });
-                return callback('Error');
-              }
-
-              PaymentMaster.find({serviceCode : {$in:['Auction','Valuation']}},function(err,masterData){
-                if(err || !masterData){
-                  errorList.push({
-                    Error : 'Error while fetching payment master data',
-                    rowCount : row.rowCount
-                  });
-                  return callback('Error');
-                }
-
-                if(!masterData.length){
-                  errorList.push({
-                    Error : 'Payment details not found',
-                    rowCount : row.rowCount
-                  });
-                  return callback('Error');
-                }
-                var auctionFee,
-                    valuationFee;
-                masterData.forEach(function(x){
-                  if(x.serviceCode === 'Auction')
-                    auctionFee = x.fees
-                  else if(x.serviceCode === "Valuation")
-                    valuationFee = x.fees;
-                });
-
-                if(!auctionFee || !valuationFee){
-                  errorList.push({
-                    Error : 'Auction Fee/Valuation Fee master not present',
-                    rowCount : row.rowCount
-                  });
-                  return callback('Error');
-                }
-
-                var paymentData = {
-                  paymets :[{ type: 'auctionreq', charge: auctionFee},
-                      { type: 'valuationreq', charge: valuationFee }],
-                  totalAmount : Number(auctionFee) + Number(valuationFee),
-                  requestType : 'Auction Listing',
-                  product:{ type: 'equipment',
-                    _id: existingProduct._id,
-                    assetId: existingProduct.assetId,
-                    city: existingProduct.city,
-                    name: existingProduct.name,
-                    status: existingProduct.status,
-                    category: existingProduct.category },
-                  user: user,
-                  status: existingProduct.status,
-                  statuses: existingProduct.statuses,
-                  paymentMode: 'offline',
-                  auctionId : row.auctionId,
-                  entityName : row.agencyName
-
-                };
-
-                PaymentTransaction.create(paymentData,function(err,paymentInfo){
-                  if(err || !paymentInfo){
-                    errorList.push({
-                      Error : 'Error while creating payment request',
-                      rowCount : row.rowCount
-                    });
-                    return callback('Error');
-                  }
-
-                  var valauationData = { 
-                    valuationAgency: { _id: agency[0]._id,
-                      name:  agency[0].entityName,
-                      email: agency[0].user.email,
-                      mobile: agency[0].user.mobile,
-                      countryCode: '91' },
-                    valuate: true,
-                    user: user,
-                    seller: existingProduct.seller,
-                    initiatedBy: 'Admin',
-                    purpose: 'Listing in auction',
-                    product:{ 
-                      _id: existingProduct._id,
-                      assetId: existingProduct.assetId,
-                      city: existingProduct.city,
-                      name: existingProduct.name,
-                      status: existingProduct.status,
-                      category: existingProduct.category,
-                      mfgYear : existingProduct.mfgYear
-                    },
-                    status: 'payment_pending',
-                    statuses: 
-                     [ { createdAt: new Date(),
-                         status: 'payment_pending',
-                         userId: user._id }],
-                    isAuction: true } ;
-                  ValuationReq.create(valauationData,function(err,valuationInfo){
-                    if(err || !paymentInfo){
-                      errorList.push({
-                        Error : 'Error while creating payment request',
-                        rowCount : row.rowCount
-                      });
-                      return callback('Error');
-                    }
-
-                    var auctionData = { 
-                      valuationReport: '',
-                      dbAuctionId: auction._id,
-                      emdAmount: row.emdAmount,
-                      user: user,
-                      seller: existingProduct.seller,
-                      status: 'payment_pending',
-                      statuses: [ { createdAt: new Date(),
-                           status: 'payment_pending',
-                           userId: user._id } ],
-                      product:{ 
-                        _id: existingProduct._id,
-                        assetId: existingProduct.assetId,
-                        city: existingProduct.city,
-                        name: existingProduct.name,
-                        status: existingProduct.status,
-                        category: existingProduct.category,
-                        mfgYear : existingProduct.mfgYear
-                      },
-                      startDate: auction[0].startDate,
-                      endDate: auction[0].endDate,
-                      auctionId: row.auctionId,
-                      transactionId: paymentInfo._id,
-                      valuation: { 
-                        _id: valuationInfo._id, 
-                        status: 'payment_pending'
-                      } 
-                    };
-
-                    AuctionReq.create(auctionData,function(err,auctionInfo){
-                      if(err || !auctionInfo){
-                        errorList.push({
-                          Error : 'Error while creating Auction request',
-                          rowCount : row.rowCount
-                        });
-                        return callback('Error');
-                      }
-                      var obj = {
-                        auction:{
-                            id : auctionInfo._id,
-                            valuationId : valuationInfo._id
-                          },
-                          auctionListing : true
-                        };
-
-                      return callback(null,obj)
-                    });
-                  });
-                });
-              });
-            });
+            vendorData = agency;
+            return innerCb();
           });
-        });
+        }
+
+        function validatePaymentTrans(innerCb){
+          reqOpts = {
+            auctionId : row.auctionId,
+            entityName : row.agencyName,
+            'product.assetId' : row.assetId
+          };
+
+          PaymentTransaction.find(reqOpts,function(err,payment){
+            if(err || !payment){
+              errorList.push({
+                Error : 'Error while validating payment transaction',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            if(payment.length){
+              errorList.push({
+                Error : 'Payment already been made for this asset for this auctionId and agency',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            return innerCb();
+          });
+        }
+
+
       } else if(row.auctionListing && row.auctionListing.toLowerCase() === 'no'){
         var obj = {
           auction : {},
