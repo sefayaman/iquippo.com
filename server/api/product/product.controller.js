@@ -352,7 +352,6 @@ exports.search = function(req, res) {
           });
 
           var outputProds = [].concat(saleFeaturedProd,rentFeaturedProd,saleProd,bothProd,rentProd,notAvailProd,soldProd,rentedProd);
-          debugger;
           result.products = outputProds;
           self();
          }
@@ -1011,16 +1010,16 @@ exports.exportProducts = function(req, res) {
             //Service Information Cols
             if (colData.serviceInfo && colData.serviceInfo.length) {
               ['authServiceStation', 'serviceAt'].forEach(function(x) {
-                if (colData.serviceInfo[0][x]) {
+                if (colData.serviceInfo && colData.serviceInfo.length && colData.serviceInfo[0] && colData.serviceInfo[0][x]) {
                   obj[mapedFields[x]] = colData.serviceInfo[0][x];
                 }
               })
 
-              if (colData.serviceInfo[0].servicedate)
+              if (colData.serviceInfo && colData.serviceInfo.length && colData.serviceInfo[0] &&  colData.serviceInfo[0].servicedate)
                 obj[mapedFields.servicedate] = Utillity.toIST(colData.serviceInfo[0].servicedate)
 
 
-              if (colData.serviceInfo[0].operatingHour) {
+              if (colData.serviceInfo && colData.serviceInfo.length && colData.serviceInfo[0] && colData.serviceInfo[0].operatingHour) {
                 obj[mapedFields.serviceOperatingHour] = colData.serviceInfo[0].operatingHour;
               }
             }
@@ -1048,7 +1047,7 @@ exports.exportProducts = function(req, res) {
               if (colData.rent.rateMonths) {
                 obj[mapedFields.rentMonths] = 'Yes';
                 ['minPeriodM', 'maxPeriodM', 'rentAmountM', 'seqDepositM'].forEach(function(x) {
-                  if (colData.rent.rateHours[x]) {
+                  if (colData.rent && colData.rent.rateHours && colData.rent.rateHours[x]) {
                     obj[mapedFields[x]] = colData.rent.rateMonths[x];
                   }
                 })
@@ -1060,7 +1059,7 @@ exports.exportProducts = function(req, res) {
                 obj[mapedFields.negotiable] = 'No';
 
               ['priceOnRequest', 'isEngineRepaired', 'dispSellerContact', 'dispSellerAlternateContact', 'featured', 'status'].forEach(function(x) {
-                if (colData[x]) {
+                if (colData[x] ) {
                   obj[mapedFields[x]] = 'Yes';
                 } else
                   obj[mapedFields[x]] = 'No';
@@ -1083,6 +1082,8 @@ exports.exportProducts = function(req, res) {
                   delete obj[x]
               });
             }
+
+            delete obj.__rowNum__;
             
             responseData.push(obj);
           }
@@ -1937,12 +1938,18 @@ exports.validateExcelData = function(req, res, next) {
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment', 'operatingHour', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant', 'tradeType'];
+      var additionalCols = ['comment', 'operatingHour', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
           obj[x] = row[x];
         }
       });
+
+      var validTradeType = ['sell','rent','both'];
+      if(row.tradeType && (validTradeType.indexOf(row.tradeType.toLowerCase()) > -1)){
+        obj.tradeType = row.tradeType.toUpperCase();
+      }
+
       return callback(null, obj);
     }
 
