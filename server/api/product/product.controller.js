@@ -569,6 +569,9 @@ function updateProduct(req,res){
     var fileBeforeCompression=1;
     var fileAfterCompression=0;
     var counter=0;
+   if (fs.existsSync(featureFilePath)) {
+        return;
+      }
   fsExtra.copy(imgPath, featureFilePath, {
         replace: false
       },function(err,result){
@@ -635,6 +638,9 @@ function addProduct(req,res){
     var fileBeforeCompression=1;
     var fileAfterCompression=0;
     var counter=0;
+    if (fs.existsSync(featureFilePath)) {
+        return;
+      }
   fsExtra.copy(imgPath, featureFilePath, {
         replace: false
       },function(err,result){
