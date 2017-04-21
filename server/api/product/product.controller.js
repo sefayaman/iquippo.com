@@ -623,59 +623,59 @@ function updateProduct(req,res){
       var fileBeforeCompression=1;
       var fileAfterCompression=0;
       if (fs.existsSync(featureFilePath)) {
-        return updateProduct();
+        return updateProductData();
       } 
 
       fsExtra.copy(imgPath, featureFilePath, {
           replace: false
         },function(err,result){
           if(err){
-            return updateProduct();
+            return updateProductData();
           }
           lwip.open(featureFilePath,function(err,image){
            if(err){
-            return updateProduct();
+            return updateProductData();
           }
           var stats=fs.statSync(featureFilePath);
           fileBeforeCompression=stats.size;
           image.resize(130,100,function(err, rzdImage) {
             if(err){
-              return updateProduct();
+              return updateProductData();
             }
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
                 quality: 75
               }, function(err, buffer) {
                   if(err){
-                    return updateProduct();
+                    return updateProductData();
                   }
                 fs.writeFile(featureFilePath, buffer, function(err) {
                   if(err){
-                    return updateProduct();
+                    return updateProductData();
                   }
                   var stats=fs.statSync(featureFilePath);
                   fileAfterCompression=stats.size;
                   debug("SIZE After compression",fileAfterCompression);    
-                  return updateProduct();
+                  return updateProductData();
                 })
               })
               } else {
-                if (extPart == 'png') {
+                if (extPart === 'png') {
                   rzdImage.toBuffer(extPart, {
                     compression: "high",
                     interlaced: false,
                     transparency: 'auto'
                   }, function(err, buffer) {
                     if(err){
-                      return updateProduct();
+                      return updateProductData();
                     }
                     fs.writeFile(featureFilePath,buffer, function(err) {
                       if(err){
-                        return updateProduct();
+                        return updateProductData();
                       }
                       var stats=fs.statSync(featureFilePath);
                       fileAfterCompression=stats.size; 
-                      return updateProduct();
+                      return updateProductData();
                     })
                   })
                 }
@@ -683,9 +683,11 @@ function updateProduct(req,res){
             })
           })   
         })
+      } else {
+        updateProductData();      
       }
 
-    function updateProduct(){
+    function updateProductData(){
       Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
           return res.status(200).json(req.body);
