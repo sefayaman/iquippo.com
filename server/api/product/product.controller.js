@@ -315,34 +315,42 @@ exports.search = function(req, res) {
               assetIdCache[item.assetId] = true;
               if(item.featured && item.tradeType === 'SELL'){
                 saleFeaturedProd.push(item);
+                return;
               }
 
               if(item.featured && item.tradeType === 'RENT'){
                 rentFeaturedProd.push(item);
+                return;
               }
 
               if(item.tradeType === 'SELL'){
                 saleProd.push(item);
+                return;
               }
 
               if(item.tradeType === 'BOTH'){
                 bothProd.push(item);
+                return;
               }
 
               if(item.tradeType === 'RENT'){
                 rentProd.push(item);
+                return;
               }
 
               if(item.tradeType === 'NOT_AVAILABLE'){
                 notAvailProd.push(item);
+                return;
               }
 
               if(item.assetStatus === 'SOLD'){
                 soldProd.push(item);
+                return;
               }
 
               if(item.assetStatus === 'RENTED'){
                 rentedProd.push(item);
+                return;
               }
             }
           });
