@@ -2,22 +2,22 @@
   <div class="overlay"></div>
   <div id="slides_control">
     <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
-      <uib-slide ng-repeat="slide in mainVm.slides">
-        <img  ng-src="assets/images/{{slide.webImg}}" ng-if="slide.default">
-         <img  ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" ng-if="!slide.default">
-        <!-- <div class="carousel-caption" ng-if="!slide.default">
+      <uib-slide data-ng-repeat="slide in mainVm.slides">
+        <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">
+         <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+        <!-- <div class="carousel-caption" data-ng-if="!slide.default">
           <h1>{{slide.name}}</h1>          
           <h2>Promocode: {{slide.code}}</h2>
           <button type="button" class="btn btn-md btn-primary">Bid Now</button>          
         </div> -->
-        <a href="javascript:void(0);" ng-if="slide.hyperlink == 'Yes'" ng-click="mainVm.openBidModal(slide)" class="bid-gif"><img src="assets/images/bid-now.gif"></a>
+        <a href="javascript:void(0);" data-ng-if="slide.hyperlink == 'Yes'" data-ng-click="mainVm.openBidModal(slide)" class="bid-gif"><img src="assets/images/bid-now.gif"></a>
       </uib-slide>
-      <div class="tricker" ng-if="mainVm.getBids != 0">
-        <marquee><span ng-repeat="bids in mainVm.getBids">{{bids.name}}: {{bids.bidValuesStr}}  </span></marquee>
+      <div class="tricker" data-ng-if="mainVm.getBids != 0">
+        <marquee><span data-ng-repeat="bids in mainVm.getBids">{{bids.name}}: {{bids.bidValuesStr}}  </span></marquee>
       </div>
     </uib-carousel>
   </div>
-  <!-- <a href="javascript:void(0);" ng-click="openDialog('classifiedad')" class="btn btn-primary ad-btn">
+  <!-- <a href="javascript:void(0);" data-ng-click="openDialog('classifiedad')" class="btn btn-primary ad-btn">
     Place Classified Ad
   </a> -->
   <div class="col-xs-12 col-sm-offset-1 col-sm-10 search-banner">    
@@ -49,7 +49,7 @@
                 </div>
               </div>             
               <div class="col-sm-3 text-center">
-                <a href="javascript:;"  class="btn btn-lg btn-warning btn-block" ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search Assets</a>
+                <a href="javascript:;"  class="btn btn-lg btn-warning btn-block" data-ng-click="mainVm.doSearch()"><i class="fa fa-search"></i> Search Assets</a>
               </div>
             </div>
         </form>
@@ -65,20 +65,20 @@
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
             
-       <a ng-href="{{mainVm.classifiedAd.imgLeftTop.websiteUrl}}" target="_blank" ng-if="mainVm.classifiedAd.imgLeftTop.src">
+       <a ng-href="{{mainVm.classifiedAd.imgLeftTop.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgLeftTop.src">
       <!--  <a href="/financing" target="_blank"> -->
-          <img ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftTop.src}}" class="img-responsive add1">
+          <img data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftTop.src}}" class="img-responsive add1">
        </a>
         <!-- <img src="assets/images/Ad_Banner_1.jpg" class="img-responsive add1"> -->
         <div class="form-group"></div>
         <!-- <img src="assets/images/Ad_Banner_2.jpg" class="img-responsive add1"> -->
-        <a ng-href="{{mainVm.classifiedAd.imgLeftCenter.websiteUrl}}" target="_blank" ng-if="mainVm.classifiedAd.imgLeftCenter.src">
+        <a ng-href="{{mainVm.classifiedAd.imgLeftCenter.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgLeftCenter.src">
        <!--  <a href="/insurance" target="_blank"> -->
-          <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftCenter.src}}" class="img-responsive add1">
+          <img  data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftCenter.src}}" class="img-responsive add1">
         </a>
         <div class="form-group"></div>
-        <a ng-href="{{mainVm.classifiedAd.imgLeftBottom.websiteUrl}}" target="_blank" ng-if="mainVm.classifiedAd.imgLeftBottom.src">
-          <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftBottom.src}}" class="img-responsive add1">
+        <a ng-href="{{mainVm.classifiedAd.imgLeftBottom.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgLeftBottom.src">
+          <img  data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftBottom.src}}" class="img-responsive add1">
         </a>
       </div>
       <div class="col-sm-10 col-md-7 padd-left">
@@ -94,16 +94,16 @@
         </div>
         <div class="cat cat-product text-center">
           <ul class="cat-list">
-            <li ng-repeat="category in categoryList">
+            <li data-ng-repeat="category in categoryList">
               <a href="/viewproducts/{{category._id}}">
-                 <img ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">
+                 <img data-ng-src="{{uploadImagePrefix}}{{categoryDir}}/{{category.imgSrc}}" class="img-responsive">
                   <span class="overlayer"></span><span>{{category.name}} <b>({{category.count}})</b></span>
               </a>
 
             </li>
           </ul>
           <div class="show-more">
-            <button type="button" class="btn btn-default" ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
+            <button type="button" class="btn btn-default" data-ng-click="mainVm.toggleCategory()"><i class="fa " ng-class="{'fa-chevron-down' : mainVm.isCollapsed,'fa-chevron-up' : !mainVm.isCollapsed}"></i> </button>
           </div>
         </div>
 
@@ -202,12 +202,12 @@
           </div>
           <div id="slides_control_feature">
             <uib-carousel no-wrap="noWrapSlides">
-              <uib-slide ng-repeat="gpSlide in mainVm.sortedFeaturedProduct">
+              <uib-slide data-ng-repeat="gpSlide in mainVm.sortedFeaturedProduct">
                 <div class="row">
-                  <div class="col-sm-2" ng-repeat="slide in gpSlide">
+                  <div class="col-sm-2" data-ng-repeat="slide in gpSlide">
                     <div class="panel panel-default">
                       <a ng-href="/productdetail/{{slide._id}}?FeatureProduct">
-                        <img ng-src="{{uploadImagePrefix}}featured/{{slide.primaryImg}}" class="img-responsive">
+                        <img data-ng-src="{{uploadImagePrefix}}featured/{{slide.primaryImg}}" class="img-responsive">
                       </a>
                       <div class="panel-heading" uib-popover="{{slide.name}}" popover-trigger="mouseenter">
                         <h3 class="panel-title">{{slide.name}}</h3>
@@ -221,8 +221,8 @@
                           <div class="col-xs-7 text-ellips"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
                           <div class="col-xs-5 padd-left text-ellips">
                             <i class="fa fa-ticket"></i>
-                            <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                            <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
+                            <span data-ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
+                            <span data-ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
                           </div>
                         </div>
                       </div>
@@ -233,10 +233,10 @@
             </uib-carousel>
           </div>
           <!-- <ul class="verContainer" drctv>
-            <li ng-repeat="slide in mainVm.featuredslides">
+            <li data-ng-repeat="slide in mainVm.featuredslides">
               <div class="panel panel-default">
                     <a ng-href="/productdetail/{{slide._id}}">
-                      <img ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
+                      <img data-ng-src="{{uploadImagePrefix}}{{slide.assetDir}}/{{slide.primaryImg}}" class="img-responsive">
                     </a>
                     <div class="panel-heading">
                       <h3 class="panel-title">{{slide.name}}</h3>
@@ -250,8 +250,8 @@
                         <div class="col-xs-6 form-group"> <i class="fa fa-map-marker"></i> {{slide.city}}</div>
                         <div class="col-xs-6 form-group">
                           <i class="fa fa-ticket"></i>
-                          <span ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
-                          <span ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
+                          <span data-ng-if="slide.tradeType=='SELL' || slide.tradeType=='BOTH'">SELL</span>
+                          <span data-ng-if="slide.tradeType=='RENT' || slide.tradeType=='BOTH'">RENT</span>
                         </div>
                       </div>
                     </div>
@@ -270,11 +270,11 @@
             <h4 class="media-heading">How iQuippo Works?</h4>
             <div class="media-body media-coverage">
              <!--  <iframe width="250" height="180" src="http://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" allowfullscreen></iframe>
-            --> <iframe ng-if="!toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/6fWE5bmpu9g?autoplay=1" frameborder="0" allowfullscreen>
+            --> <iframe data-ng-if="!toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/6fWE5bmpu9g?autoplay=1" frameborder="0" allowfullscreen>
                </iframe>
-               <object ng-if="toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" >
+               <object data-ng-if="toggle1" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/6fWE5bmpu9g/0.jpg" frameborder="0" >
                </object>
-              <a href="#" class="utube-icon" ng-if="toggle1" ng-click="toggling('vid1')"><img src="assets/images/utube.png"></a>
+              <a href="#" class="utube-icon" data-ng-if="toggle1" data-ng-click="toggling('vid1')"><img src="assets/images/utube.png"></a>
                <p><strong>iQuippo</strong> offers the best of services and expertise to take our customers to the next level ,improving their efficiency and productivity by offering cost effective solution on a Single platform.</p>
               <p class="text-primary">25 Aug, 2016</p>
             </div>             
@@ -287,11 +287,11 @@
            <h4 class="media-heading">Media Coverage Videos Links:</h4>
            <div class="media-body">
              <!-- <iframe width="100%" height="180" src="https://www.youtube.com/embed/_KgtJzQAQfw" frameborder="0" allowfullscreen></iframe>-->
-             <iframe ng-if="!toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/_KgtJzQAQfw?autoplay=1" frameborder="0" allowfullscreen>
+             <iframe data-ng-if="!toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/_KgtJzQAQfw?autoplay=1" frameborder="0" allowfullscreen>
                </iframe>
-               <object ng-if="toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/_KgtJzQAQfw/0.jpg"  frameborder="0" allowfullscreen>
+               <object data-ng-if="toggle2" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/_KgtJzQAQfw/0.jpg"  frameborder="0" allowfullscreen>
                </object>
-               <a href="#" class="utube-icon" ng-if="toggle2" ng-click="toggling('vid2')" ><img src="assets/images/utube.png"></a>
+               <a href="#" class="utube-icon" data-ng-if="toggle2" data-ng-click="toggling('vid2')" ><img src="assets/images/utube.png"></a>
            </div>
          </div>
         </div>
@@ -420,11 +420,11 @@
         <div class="col-sm-3">
           <h4 class="media-heading">iQuippo Launch:</h4>
           <!-- <iframe width="100%" height="180" src="https://www.youtube.com/embed/0cabxI1gy4s" frameborder="0" allowfullscreen></iframe>
-          --> <iframe ng-if="!toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/0cabxI1gy4s?autoplay=1" frameborder="0" allowfullscreen>
+          --> <iframe data-ng-if="!toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" src="https://www.youtube.com/embed/0cabxI1gy4s?autoplay=1" frameborder="0" allowfullscreen>
                </iframe>
-               <object ng-if="toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/0cabxI1gy4s/0.jpg" ng-click="toggling('vid3')" frameborder="0" allowfullscreen>
+               <object data-ng-if="toggle3" style="width:100%;height:100%;height: 180px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/0cabxI1gy4s/0.jpg" data-ng-click="toggling('vid3')" frameborder="0" allowfullscreen>
                </object>
-               <a href="#" class="utube-icon" ng-click="toggling('vid3')" ng-if="toggle3"><img src="assets/images/utube.png"></a>
+               <a href="#" class="utube-icon" data-ng-click="toggling('vid3')" data-ng-if="toggle3"><img src="assets/images/utube.png"></a>
 
         <!-- <iframe width="330" height="140" src="https://www.youtube.com/embed/cT3hcuOkdQc" frameborder="0" allowfullscreen></iframe> -->
         </div>
@@ -434,7 +434,7 @@
           <h4 class="media-heading">Print Media:</h4>
            <div class="media-body medianame well">
            <ul>
-              <li ng-repeat="nwEvt in mainVm.newsEvents"><a href="javascript:void(0);" class="" ng-click="mainVm.openPrintMedia(nwEvt.image)"> {{nwEvt.name}}</a></li>
+              <li data-ng-repeat="nwEvt in mainVm.newsEvents"><a href="javascript:void(0);" class="" data-ng-click="mainVm.openPrintMedia(nwEvt.image)"> {{nwEvt.name}}</a></li>
             </ul>
            </div>
         </div>
@@ -447,13 +447,13 @@
 <div class="container text-center form-group">
   <div class="row">
     <div class="col-sm-6">
-      <a ng-href="{{mainVm.classifiedAd.imgBottomLeft.websiteUrl}}" target="_blank" ng-if="mainVm.classifiedAd.imgBottomLeft.src">
-        <img ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgBottomLeft.src}}" class="add2 img-responsive">
+      <a ng-href="{{mainVm.classifiedAd.imgBottomLeft.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgBottomLeft.src">
+        <img data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgBottomLeft.src}}" class="add2 img-responsive">
       </a>
     </div>
     <div class="col-sm-6">
-      <a ng-href="{{mainVm.classifiedAd.imgBottomRight.websiteUrl}}" target="_blank" ng-if="mainVm.classifiedAd.imgBottomRight.src">
-        <img  ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgBottomRight.src}}" class="add2 img-responsive">
+      <a ng-href="{{mainVm.classifiedAd.imgBottomRight.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgBottomRight.src">
+        <img  data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgBottomRight.src}}" class="add2 img-responsive">
       </a>
     </div>
   </div>
@@ -462,13 +462,13 @@
 <script type="text/ng-template" id="primtmedia.html">
   <div>
     <div class="modal-header">
-    <button type="button" class="close"  ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
+    <button type="button" class="close"  data-ng-click="close()" aria-hidden="true"><i class="fa fa-times"></i></button>
     </div>
     <div class="modal-body text-center">
-       <img ng-src="{{url}}" width="100%">
+       <img data-ng-src="{{url}}" width="100%">
     </div>
      <div class="modal-footer">
-            <button type="button" class="btn btn-danger" ng-click="close()">Close</button>
+            <button type="button" class="btn btn-danger" data-ng-click="close()">Close</button>
       </div>
   </div>
 </script>
