@@ -1903,7 +1903,7 @@ exports.validateExcelData = function(req, res, next) {
         }
       }
 
-      ['dispSellerInfo', 'dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
+      ['dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
         if (row[x]) {
           if (row[x].toLowerCase() === 'yes')
             obj[x] = true
@@ -1913,6 +1913,13 @@ exports.validateExcelData = function(req, res, next) {
             delete row[x];
         }
       });
+
+      if(row.dispSellerInfo.toLowerCase() === 'yes'){
+        obj.dispSellerInfo = 'yes';
+      } else {
+        obj.dispSellerInfo = 'no';
+      }
+
 
       if (row.alternateMobile)
         obj.alternateMobile = row.alternateMobile;
@@ -1938,12 +1945,22 @@ exports.validateExcelData = function(req, res, next) {
           obj[x] = trim(row[x]);
       })
 
-      var additionalCols = ['comment', 'operatingHour', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant'];
+      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
           obj[x] = row[x];
         }
       });
+
+      if(row.videoLinks){
+        obj.videoLinks = [{
+          uri : row.videoLinks
+        }];
+      }
+
+      if(row.motorOperatingHour){
+        obj.operatingHour = row.motorOperatingHour;
+      }
 
       var validTradeType = ['sell','rent','both'];
       if(row.tradeType && (validTradeType.indexOf(row.tradeType.toLowerCase()) > -1)){
