@@ -1783,45 +1783,6 @@ exports.validateExcelData = function(req, res, next) {
       });
     }
 
-    function validateDupProd(callback){
-      Product.find({assetId:row.assetId},function(err,products){
-        if(err || !products){
-          errorList.push({
-            Error : 'Error while validating product',
-            rowCount : row.rowCount
-          });
-        }
-
-        if(products.length){
-          errorList.push({
-            Error : 'Duplicate Asset Id',
-            rowCount : row.rowCount
-          });
-        }
-        return callback();
-      });
-    }
-
-    function validateDupIncomingProd(callback){
-      IncomingProduct.find({assetId:row.assetId},function(err,products){
-        if(err || !products){
-          errorList.push({
-            Error : 'Error while validating product',
-            rowCount : row.rowCount
-          });
-        }
-
-        if(products.length){
-          errorList.push({
-            Error : 'Duplicate Asset Id present in quene',
-            rowCount : row.rowCount
-          });
-        }
-        return callback();
-      });
-    }
-
-
     function buildData(err, parseData) {
       if (err)
         return cb();
