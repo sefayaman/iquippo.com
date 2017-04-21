@@ -1092,6 +1092,11 @@ exports.exportProducts = function(req, res) {
                   obj[mapedFields[x]] = Utillity.toIST(colData.rent[x]);
                 }
               })
+
+              if(colData.auctionListing){
+                obj[mapedFields.auctionListing] = 'Yes'; 
+              }else
+                obj[mapedFields.auctionListing] = 'No';
             }
 
             //Admin Cols only visible to admin
@@ -1212,7 +1217,6 @@ exports.updateExcelData = function (req,res,next){
   function intialize(data,cb){
     var assetId = data.assetId;
     delete data.assetId;
-    data.auctionListing = true;
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1347,6 +1351,8 @@ exports.validateExcelData = function(req, res, next) {
       return next(new APIError(500,'Error while updating'));
     }
 
+    if(!updateData.length && !errorList.length)
+      return res.json({successCount:0 , errorList : 0})
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1656,7 +1662,10 @@ exports.validateExcelData = function(req, res, next) {
                   user: user,
                   status: existingProduct.status,
                   statuses: existingProduct.statuses,
-                  paymentMode: 'offline'
+                  paymentMode: 'offline',
+                  auctionId : row.auctionId,
+                  entityName : row.agencyName
+
                 };
 
                 PaymentTransaction.create(paymentData,function(err,paymentInfo){
@@ -1744,7 +1753,8 @@ exports.validateExcelData = function(req, res, next) {
                         auction:{
                             id : auctionInfo._id,
                             valuationId : valuationInfo._id
-                          }
+                          },
+                          auctionListing : true
                         };
 
                       return callback(null,obj)
@@ -1755,6 +1765,12 @@ exports.validateExcelData = function(req, res, next) {
             });
           });
         });
+      } else if(row.auctionListing && row.auctionListing.toLowerCase() === 'no'){
+        var obj = {
+          auction : {},
+          auctionListing :false
+        }
+        return callback();
       } else {
         return callback();
       }
