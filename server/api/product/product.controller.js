@@ -1885,6 +1885,7 @@ exports.validateExcelData = function(req, res, next) {
         }
       }
 
+      
       ['dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
         if (row[x]) {
           if (row[x].toLowerCase() === 'yes')
@@ -1895,6 +1896,8 @@ exports.validateExcelData = function(req, res, next) {
             delete row[x];
         }
       });
+
+
 
       if(row.dispSellerInfo && row.dispSellerInfo.toLowerCase() === 'yes'){
         obj.dispSellerInfo = 'yes';
@@ -1926,7 +1929,7 @@ exports.validateExcelData = function(req, res, next) {
         if (row[x])
           obj[x] = trim(row[x]);
       })
-
+    
       var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {

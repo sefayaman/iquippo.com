@@ -71,7 +71,11 @@ var IncomingProductSchema = new Schema({
   inquiryCounter : {type:Number,default:0},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now},
-  lock:{type:Boolean,default:false}
+  lock:{type:Boolean,default:false},
+  specialOffers : String,
+  dispSellerInfo:String,
+  dispSellerContact:String,
+  dispSellerAlternateContact:String,
 });
 
 module.exports = mongoose.model('IncomingProduct', IncomingProductSchema);
