@@ -616,66 +616,81 @@ function updateProduct(req,res){
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
     if(req.body.featured){
-    var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
-    var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
-    console.log("featureFilePath----",featureFilePath);
-    var fileParts=req.body.primaryImg.split('.');
-    var extPart=fileParts[1];
-    var fileBeforeCompression=1;
-    var fileAfterCompression=0;
-    var counter=0;
-   if (fs.existsSync(featureFilePath)) {
-        return;
-      }
-  fsExtra.copy(imgPath, featureFilePath, {
-        replace: false
-      },function(err,result){
-        if(err)throw err;
-        lwip.open(featureFilePath,function(err,image){
-         var stats=fs.statSync(featureFilePath);
-         fileBeforeCompression=stats.size;
-         debug("SIZE before compression",fileBeforeCompression);
+      var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
+      var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
+      var fileParts=req.body.primaryImg.split('.');
+      var extPart=fileParts[1];
+      var fileBeforeCompression=1;
+      var fileAfterCompression=0;
+      if (fs.existsSync(featureFilePath)) {
+        return updateProduct();
+      } 
+
+      fsExtra.copy(imgPath, featureFilePath, {
+          replace: false
+        },function(err,result){
+          if(err){
+            return updateProduct();
+          }
+          lwip.open(featureFilePath,function(err,image){
+           if(err){
+            return updateProduct();
+          }
+          var stats=fs.statSync(featureFilePath);
+          fileBeforeCompression=stats.size;
           image.resize(130,100,function(err, rzdImage) {
+            if(err){
+              return updateProduct();
+            }
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
                 quality: 75
               }, function(err, buffer) {
+                  if(err){
+                    return updateProduct();
+                  }
                 fs.writeFile(featureFilePath, buffer, function(err) {
-                  if (err) throw err;
+                  if(err){
+                    return updateProduct();
+                  }
                   var stats=fs.statSync(featureFilePath);
-                   fileAfterCompression=stats.size;
-                   debug("SIZE After compression",fileAfterCompression);        
-                  counter++;
+                  fileAfterCompression=stats.size;
+                  debug("SIZE After compression",fileAfterCompression);    
+                  return updateProduct();
                 })
               })
-            } else {
-              if (extPart == 'png') {
-                rzdImage.toBuffer(extPart, {
-                  compression: "high",
-                  interlaced: false,
-                  transparency: 'auto'
-                }, function(err, buffer) {
-                  fs.writeFile(featureFilePath,buffer, function(err) {
-                    if (err) throw err;
-                    var stats=fs.statSync(featureFilePath);
-                    fileAfterCompression=stats.size; 
-                    console.log("SIZE After compression",fileAfterCompression);
-                    counter++;
+              } else {
+                if (extPart == 'png') {
+                  rzdImage.toBuffer(extPart, {
+                    compression: "high",
+                    interlaced: false,
+                    transparency: 'auto'
+                  }, function(err, buffer) {
+                    if(err){
+                      return updateProduct();
+                    }
+                    fs.writeFile(featureFilePath,buffer, function(err) {
+                      if(err){
+                        return updateProduct();
+                      }
+                      var stats=fs.statSync(featureFilePath);
+                      fileAfterCompression=stats.size; 
+                      return updateProduct();
+                    })
                   })
-                })
+                }
               }
-            }
-          })
-    
-      })
-           
-  })
-}
+            })
+          })   
+        })
+      }
 
-    Product.update({_id:req.params.id},{$set:req.body},function(err){
+    function updateProduct(){
+      Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(req.body);
-    });
+          return res.status(200).json(req.body);
+      });
+    }
   });
 }
 

@@ -249,10 +249,10 @@ angular.module('sreizaoApp')
             templateUrl: 'app/admin/gsettings/gsettings.html',
             controller: 'GSettingCtrl as gsettingVm',
           },
-          'yardassettype@gSettings' : {
-            templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
-            controller: 'AssetTypeCtrl as AssetTypeVm', 
-          },
+          // 'yardassettype@gSettings' : {
+          //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+          //   controller: 'AssetTypeCtrl as AssetTypeVm', 
+          // },
           // 'yardasservices@gSettings' : {
           //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
           //   controller: 'AssetTypeCtrl as AssetTypeVm', 
@@ -400,84 +400,84 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-       .state('yardlisting', {
-        url: '/yardlisting',
-        templateUrl: 'app/yard/yardlisting.html',
-        controller: 'YardListingCtrl as yardlistingVm',
-        authenticate:true,
-        layout:'admin'
-      })
-       .state('yardupload', {
-        url: '/yardupload',
-        templateUrl: 'app/yard/yardupload.html',
-        controller: 'YardListingCtrl as YardListingVm',
-        authenticate:true,
-        layout:'admin'
-      })
-      .state('yard', {
-        url: '/yard',
-        templateUrl: 'app/yard/yard.html',
-        controller: 'YardListingCtrl as YardListingVm',
-        layout:'client'
-      })
-      .state('enterprisevaluation', {
-        url: '/enterprisevaluation',
-        abstract:true,
-        templateUrl: 'app/enterprise/enterprisevaluation.html',
-        controller: 'EnterpriseValuationCtrl as enterpriseVm'
-      })
-      .state('enterprisevaluation.dashborad', {
-        url: '/dashboard',
-        templateUrl: 'app/enterprise/dashborad.html',
-        controller: 'EnterpriseDashboradCtrl as enterpriseDashboradVm',
-        layout:'admin',
-        authenticate:true
-      })
-      .state('enterprisevaluation.transaction', {
-        url: '/transaction',
-        templateUrl: 'app/enterprise/transaction.html',
-        controller: 'EnterpriseTransactionCtrl as enterpriseTransactionVm',
-        layout:'admin',
-        authenticate:true
-      })
-      .state('enterprisevaluation.invoicing', {
-        url: '/invoicing',
-        templateUrl: 'app/enterprise/invoicing.html',
-        controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
-        layout:'admin',
-        authenticate:true
+      //  .state('yardlisting', {
+      //   url: '/yardlisting',
+      //   templateUrl: 'app/yard/yardlisting.html',
+      //   controller: 'YardListingCtrl as yardlistingVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
+      //  .state('yardupload', {
+      //   url: '/yardupload',
+      //   templateUrl: 'app/yard/yardupload.html',
+      //   controller: 'YardListingCtrl as YardListingVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
+      // .state('yard', {
+      //   url: '/yard',
+      //   templateUrl: 'app/yard/yard.html',
+      //   controller: 'YardListingCtrl as YardListingVm',
+      //   layout:'client'
+      // })
+      // .state('enterprisevaluation', {
+      //   url: '/enterprisevaluation',
+      //   abstract:true,
+      //   templateUrl: 'app/enterprise/enterprisevaluation.html',
+      //   controller: 'EnterpriseValuationCtrl as enterpriseVm'
+      // })
+      // .state('enterprisevaluation.dashborad', {
+      //   url: '/dashboard',
+      //   templateUrl: 'app/enterprise/dashborad.html',
+      //   controller: 'EnterpriseDashboradCtrl as enterpriseDashboradVm',
+      //   layout:'admin',
+      //   authenticate:true
+      // })
+      // .state('enterprisevaluation.transaction', {
+      //   url: '/transaction',
+      //   templateUrl: 'app/enterprise/transaction.html',
+      //   controller: 'EnterpriseTransactionCtrl as enterpriseTransactionVm',
+      //   layout:'admin',
+      //   authenticate:true
+      // })
+      // .state('enterprisevaluation.invoicing', {
+      //   url: '/invoicing',
+      //   templateUrl: 'app/enterprise/invoicing.html',
+      //   controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
+      //   layout:'admin',
+      //   authenticate:true
 
-      })
-       .state('enterprisevaluation.paymentmade', {
-        url: '/paymentmade',
-        templateUrl: 'app/enterprise/paymentmade.html',
-        controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
-        layout:'admin',
-        authenticate:true,
-        restrict:true
-      })
-        .state('enterprisevaluation.paymentreceived', {
-        url: '/paymentreceived',
-        templateUrl: 'app/enterprise/paymentreceived.html',
-        controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
-        layout:'admin',
-        authenticate:true,
-        restrict:true
-      })
-      .state('enterprisevaluation.addtransaction', {
-        url: '/addtransaction',
-        templateUrl: 'app/enterprise/addtransaction.html',
-        controller: 'AddTransactionCtrl as addTransactionVm',
-        authenticate:true,
-        layout:'admin'
-      })
-      .state('enterprisevaluation.edittransaction', {
-        url: '/addtransaction/:id',
-        templateUrl: 'app/enterprise/addtransaction.html',
-        controller: 'AddTransactionCtrl as addTransactionVm',
-        authenticate:true,
-        layout:'admin'
-      })
+      // })
+      //  .state('enterprisevaluation.paymentmade', {
+      //   url: '/paymentmade',
+      //   templateUrl: 'app/enterprise/paymentmade.html',
+      //   controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
+      //   layout:'admin',
+      //   authenticate:true,
+      //   restrict:true
+      // })
+      //   .state('enterprisevaluation.paymentreceived', {
+      //   url: '/paymentreceived',
+      //   templateUrl: 'app/enterprise/paymentreceived.html',
+      //   controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
+      //   layout:'admin',
+      //   authenticate:true,
+      //   restrict:true
+      // })
+      // .state('enterprisevaluation.addtransaction', {
+      //   url: '/addtransaction',
+      //   templateUrl: 'app/enterprise/addtransaction.html',
+      //   controller: 'AddTransactionCtrl as addTransactionVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
+      // .state('enterprisevaluation.edittransaction', {
+      //   url: '/addtransaction/:id',
+      //   templateUrl: 'app/enterprise/addtransaction.html',
+      //   controller: 'AddTransactionCtrl as addTransactionVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
