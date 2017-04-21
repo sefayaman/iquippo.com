@@ -91,7 +91,7 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
         if(cat){
           $scope.equipmentSearchFilter.category = cat.name;
           //$scope.selectedCategory = cat;
-          $scope.equipmentSearchFilter.group = cat.group.name;
+          $scope.equipmentSearchFilter.group = "";
           onCategoryChange(cat.name,true);
         }
         $scope.searching = true;
