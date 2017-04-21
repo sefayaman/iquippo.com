@@ -299,6 +299,7 @@ exports.search = function(req, res) {
     })
     .par(function(){
       var self = this;
+      var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
           var saleFeaturedProd = [],
@@ -309,45 +310,40 @@ exports.search = function(req, res) {
               notAvailProd = [],
               soldProd = [],  //status of product
               rentedProd = []; //status
-          products.forEach(function(item,idx){
-            if(item.featured && item.tradeType === 'SELL'){
-              saleFeaturedProd.push(item);
-              products.splice(idx,1);
-            }
+          products.forEach(function(item){
+            if(!assetIdCache[item.assetId]){
+              assetIdCache[item.assetId] = true;
+              if(item.featured && item.tradeType === 'SELL'){
+                saleFeaturedProd.push(item);
+              }
 
-            if(item.featured && item.tradeType === 'RENT'){
-              rentFeaturedProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.featured && item.tradeType === 'RENT'){
+                rentFeaturedProd.push(item);
+              }
 
-            if(item.tradeType === 'SELL'){
-              saleProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'SELL'){
+                saleProd.push(item);
+              }
 
-            if(item.tradeType === 'BOTH'){
-              bothProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'BOTH'){
+                bothProd.push(item);
+              }
 
-            if(item.tradeType === 'RENT'){
-              rentProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'RENT'){
+                rentProd.push(item);
+              }
 
-            if(item.tradeType === 'NOT_AVAILABLE'){
-              notAvailProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'NOT_AVAILABLE'){
+                notAvailProd.push(item);
+              }
 
-            if(item.assetStatus === 'SOLD'){
-              soldProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.assetStatus === 'SOLD'){
+                soldProd.push(item);
+              }
 
-            if(item.assetStatus === 'RENTED'){
-              rentedProd.push(item);
-              products.splice(idx,1);
+              if(item.assetStatus === 'RENTED'){
+                rentedProd.push(item);
+              }
             }
           });
 
