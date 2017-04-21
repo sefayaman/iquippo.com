@@ -1914,7 +1914,7 @@ exports.validateExcelData = function(req, res, next) {
         }
       });
 
-      if(row.dispSellerInfo.toLowerCase() === 'yes'){
+      if(row.dispSellerInfo && row.dispSellerInfo.toLowerCase() === 'yes'){
         obj.dispSellerInfo = 'yes';
       } else {
         obj.dispSellerInfo = 'no';
