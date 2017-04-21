@@ -1229,8 +1229,9 @@ exports.createProductReq = function(req,res,next){
   }
 
   function intialize(data,cb){
-    data.images = [{}]
+    data.images = [{}];
     data.user = req.body.user;
+    
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1407,7 +1408,7 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateCity(callback){
-      CityModel.find({name : row.city},function(err,cityInfo){
+      CityModel.City.find({name : row.city},function(err,cityInfo){
         if(err || !cityInfo){
           errorList.push({
             Error : 'Error while validating city',
@@ -1424,7 +1425,7 @@ exports.validateExcelData = function(req, res, next) {
             return callback('Error');
           }
 
-          if(cityInfo.state.name !== row.state || cityInfo.state.country !== row.country){
+          if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
             errorList.push({
               Error : 'Invalid State or country',
               rowCount :row.rowCount
@@ -1487,10 +1488,20 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
+      return callback();
+
     }
 
 
     function validateAuction(callback){
+      if (user.role !== 'admin') {
+        errorList.push({
+          Error : 'User not authorized',
+          rowCount : row.rowCount
+        });
+        return callback('Error');
+      }
+
       if(row.auctionListing.toLowerCase() === 'yes'){
         if(!row.auctionId){
           errorList.push({
@@ -1937,7 +1948,7 @@ exports.validateExcelData = function(req, res, next) {
 
     function validateRentInfo(callback) {
       var product = {};
-      if (row.tradeType && row.tradeType != "SELL") {
+      if (row.tradeType && row.tradeType.toLowerCase() !== "sell") {
         product["rent"] = {};
 
         var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
@@ -2110,7 +2121,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType === 'SELL') {
+      } else if (row.tradeType.toLowerCase() === 'sell') {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
