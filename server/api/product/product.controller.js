@@ -1210,10 +1210,9 @@ exports.updateExcelData = function (req,res,next){
   }
 
   function intialize(data,cb){
-
     var assetId = data.assetId;
     delete data.assetId;
-
+    data.auctionListing = true;
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1523,8 +1522,8 @@ exports.validateExcelData = function(req, res, next) {
         });
         return callback('Error');
       }
-
-      if(row.auctionListing.toLowerCase() === 'yes'){
+       
+      if(row.auctionListing && row.auctionListing.toLowerCase() === 'yes'){
         if(!row.auctionId){
           errorList.push({
             Error : 'Auction ID Missing',
@@ -1533,7 +1532,7 @@ exports.validateExcelData = function(req, res, next) {
           return callback('Error');
         }
 
-        if(row.valuationReq !== 'yes' || !row.agencyName){
+        if(row.valuationReq.toLowerCase() !== 'yes' || !row.agencyName){
           errorList.push({
             Error : 'Valuation Request is required while updating auction data',
             rowCount : row.rowCount
@@ -1565,7 +1564,8 @@ exports.validateExcelData = function(req, res, next) {
           }
 
           reqOpts = {
-            entityName : row.agencyName
+            entityName : row.agencyName,
+            services : 'Valuation'
           };
 
           VendorModel.find(reqOpts,function(err,agency){
@@ -1577,7 +1577,7 @@ exports.validateExcelData = function(req, res, next) {
               return callback('Error');
             }
 
-            if(!agency.length || !agency.services || !agency.services.length || (agency.services[0].indexOf('Valuation') < 0)){
+            if(!agency.length){
               errorList.push({
                 Error : 'Invalid agency or Agency not authorized',
                 rowCount : row.rowCount
