@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./product.controller');
+var scriptController=require('./scripts');
 
 var router = express.Router();
 
@@ -32,7 +33,7 @@ router.post('/unlockincomingproduct', controller.unIncomingProduct);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.post('/createauction', controller.createOrUpdateAuction);
 router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelData,controller.updateExcelData);
-
+router.get('/script/featured',scriptController.script);
 
 
 

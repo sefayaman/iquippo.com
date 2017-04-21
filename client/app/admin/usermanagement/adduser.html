@@ -1,17 +1,18 @@
 <div id="adduser-modal">
         <div class="modal-header">
             <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">Add User</h4>
+            <h4 class="modal-title">{{headerName}}</h4>
         </div>
           <div class="modal-body">            
-            <form name="form" novalidate>
+            <form class="form-signin" name="form" novalidate>
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
-                    <select class="form-control" name="role" ng-model="newUser.role" required>
+                    <select class="form-control" name="role" ng-model="newUser.role" ng-disabled="isEdit" required>
                       <option value="" disabled>*Role</option>
-                      <option value="customer">Customer</option>
-                      <option value="channelpartner" ng-if="!isChannelPartner()">Channel Partner</option>
+                      <option value="customer" ng-if="isChannelPartner() || isAdmin()">Customer</option>
+                      <option value="channelpartner" ng-if="isAdmin()">Channel Partner</option>
+                      <option value="enterprise" ng-if="isEnterprise() || isAdmin()">Enterprise</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -33,8 +34,8 @@
                     <select class="form-control" name="userType" ng-model="newUser.userType" required>
                       <option value="" disabled>*Type</option>
                       <option value="individual">Individual</option>
-                      <option value="private">Private Entrepreneur</option>
-                      <option value="legalentity">Legal Entity</option>
+                      <option value="private" ng-if="newUser.role != 'enterprise'">Private Entrepreneur</option>
+                      <option value="legalentity" ng-if="newUser.role != 'enterprise'">Legal Entity</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -54,27 +55,41 @@
                   </p>
                   </div>
                 </div>
-
+                <div class="row" ng-if="newUser.role == 'enterprise'">
+                  <div class="col-sm-4 form-group" ng-if="isAdmin()">
+                    <input type="checkbox" name="isnew" ng-model="newUser.enterprise" ng-disabled="newUser.enterpriseId"> New
+                  </div>
+                  <div class="col-sm-8 form-group" ng-class="{'has-error': form.enterprise_name.$invalid && submitted }">
+                    <select class="form-control" name="enterprise_name"  ng-required="!newUser.enterprise" ng-disabled="newUser.enterprise" ng-model="newUser.enterpriseId">
+                      <option value="">Select Enterprise</option>
+                      <option value="{{ent.enterpriseId}}" ng-repeat="ent in enterprises">{{ent.fname}} {{ent.mname}} {{ent.lname}}({{ent.enterpriseId}})</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>
+                 <!--  <div class="col-sm-4 form-group">
+                    <input type="text" name="" value="" class="form-control" placeholder="Full Name" disabled>
+                  </div> -->
+                </div>
                 <div class="row">                  
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
-                  <input type="password" name="password" class="form-control" ng-model="newUser.password"
+                  <input type="password" name="password" class="form-control" ng-model="newUser.password" ng-disabled="isEdit"
                   placeholder="*Password" 
                      ng-minlength="4"
-                     required
+                     ng-required= "!isEdit"
                      mongoose-error/>
                     <p class="help-block"
                        ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
-                      Password must be at least 4 characters.
+                      <small>Password must be at least 4 characters.</small>
                     </p>
                     <p class="help-block" ng-show="form.password.$error.mongoose">
                       {{ errors.password }}
                     </p>
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.passwordCompare.$invalid && submitted }">
-                  <input type="password" name="passwordCompare" class="form-control" ng-model="newUser.passwordConfirm" valid-password-c="newUser.password"
+                  <input type="password" name="passwordCompare" class="form-control" ng-model="newUser.passwordConfirm" valid-password-c="newUser.password" ng-disabled="isEdit"
                   placeholder="*Confirm Password" 
                      ng-minlength="4"
-                     required
+                     ng-required= "!isEdit"
                      mongoose-error/>
                     <p class="help-block" ng-show="form.passwordCompare.$error.noMatch && submitted">
                       Passwords do not match.
@@ -92,11 +107,6 @@
                   </div>                  
                 </div> 
                 <div class="row">
-                  <!-- <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
-                    <div class="input-group">
-                    <input type="text" class="form-control" name="mobile" ng-model="newUser.alternateMobile" value="" placeholder="* Alternate Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
-                    </div>
-                  </div> -->
                   <div class="form-group col-sm-4" ng-class="{'has-error': form.country.$invalid && submitted }">
                     <select class="form-control" name="country" ng-model="newUser.country" ng-change="getCountryWiseState(newUser.country)" required>
                       <option value="" disabled>*Select Country</option>
@@ -144,8 +154,9 @@
 
                    <div class="form-group col-sm-6" ng-class="{'has-error': form.mobile.$invalid && submitted }">
                     <div class="input-group">
+
                       <span class="input-group-addon" ng-show="newUser.country">+{{code}}</span>
-                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" pattern="^[7-9][0-9]{9}$" tooltip-placement="top" required>
+                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                     </div>
                   </div>
               </div>

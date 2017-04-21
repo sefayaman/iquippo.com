@@ -62,6 +62,7 @@ exports.search = function(req, res) {
   query.exec(
                function (err, classifiedad) {
                       if(err) { return handleError(res, err); }
+                      res.setHeader('Cache-Control', 'private, max-age=2592000');
                       return res.status(200).json(classifiedad);
                }
   );

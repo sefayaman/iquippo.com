@@ -5,11 +5,11 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://iquippo_user:1quipp0123@localhost/sreiglobaldb'
+    uri: 'mongodb://iquippo_user:1quipp0123@127.0.0.1/sreiglobaldb'
   },
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
-  serverPath: "http://192.168.14.120:8100",
+  serverPath: "http://192.168.14.120",
   contactNumber: "011 66025672",
 
   seedDB: true,

@@ -36,23 +36,34 @@
                     <li >
                         <a href="/sparelisting"><i class="fa fa-list"></i>    
                             Spare Listing</a>
-                    </li>                    
+                    </li>           
+                    <!-- <li >
+                        <a href="/yardlisting" ng-show="isLoggedIn()"><i class="fa fa-list"></i>    
+                            Yard Listing</a>
+                    </li>  -->        
                     <li>
                         <a href="/product" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Product Upload</a>
                     </li>
                     <li>
                         <a href="/spareupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>  Spare Upload</a>
                     </li>
+                    <!-- <li >
+                        <a href="/yardupload" ng-show="isLoggedIn()"><i class="fa fa-upload"></i>    
+                            Yard &amp; Workshop Upload</a>
+                    </li> -->
                      <li ng-if="isAdmin()">
                         <a href="/masterdata"><i class="fa fa-database"></i> Master Data</a>
                         </li>
-                    <li ng-if="isAdmin() || isChannelPartner()">
+                    <li ng-if="isAdmin() || isChannelPartner() || isEnterprise()">
                         <a href="/usermanagement"><i class="fa fa-user"></i>
                         User Management</a>
                          
                     </li>
                     <li ng-if="isAdmin()">
                         <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
+                    </li>                    
+                    <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
+                        <a href="/enterprisevaluation/dashboard"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
                     </li>
                     <!--<li ng-if="isAdmin()">
                         <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>
@@ -73,11 +84,6 @@
                     <li ng-if="isAdmin()">
                         <a href="/emailer"><i class="fa fa-envelope-o"></i>
                             Emailer</a>
-                         
-                    </li>
-                    <li ng-if="isAdmin()">
-                        <a href="/policies"><i class="fa fa-pencil-square-o"></i>
-                            General Editor</a>
                          
                     </li>
                     <li ng-if="isAdmin()">

@@ -4,31 +4,43 @@ var  xlsx = require('xlsx');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug');
+var moment = require('moment');
 
-
+exports.toIST = toIST;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 
+function toIST(value){
+  if(!value)
+    return '';
+
+  return  moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
+}
+
 function paginatedResult(req,res,modelRef,filter,result){
 
-  var pageSize = req.body.itemsPerPage;
-  var first_id = req.body.first_id;
-  var last_id = req.body.last_id;
-  var currentPage = req.body.currentPage;
-  var prevPage = req.body.prevPage;
+  var bodyData = req.Body || req.query;
+
+  console.log(bodyData);
+
+  var pageSize = bodyData.itemsPerPage || 50;
+  var first_id = bodyData.first_id;
+  var last_id = bodyData.last_id;
+  var currentPage = bodyData.currentPage || 1;
+  var prevPage = bodyData.prevPage || 0;
   var isNext = currentPage - prevPage >= 0?true:false;
   Seq()
-  .par(function(){
+  .seq(function(){
     var self = this;
     modelRef.count(filter,function(err,counts){
       result.totalItems = counts;
       self(err);
     })
   })
-  .par(function(){
+  .seq(function(){
 
       var self = this;
       var sortFilter = {_id : -1};
@@ -44,7 +56,7 @@ function paginatedResult(req,res,modelRef,filter,result){
       var skipNumber = currentPage - prevPage;
       if(skipNumber < 0)
         skipNumber = -1*skipNumber;
-      //console.log("1111111111filter",filter);
+
       query = modelRef.find(filter).sort(sortFilter).limit(pageSize*skipNumber);
       query.exec(function(err,items){
           if(!err && items.length > pageSize*(skipNumber - 1)){
@@ -61,12 +73,15 @@ function paginatedResult(req,res,modelRef,filter,result){
       return res.status(200).json(result);
   })
   .catch(function(err){
-    console.log("######",err);
+    console.log("######rrrr",err);
     handleError(res,err);
   })
  
 }
 
+function handleError(res, err) {
+  return res.status(500).send(err);
+}
 function getWorkbook(){
   return new Workbook();
 }
@@ -146,6 +161,8 @@ function excel_from_data(data,headers) {
     var C = 0;
     var rowItems = data[R];
     rowItems.forEach(function(item){
+      if(!item)
+          item = "";
        var cell = {v :item};
       setCell(ws, cell, R, C++);
     })
@@ -212,3 +229,21 @@ function toJSON(options) {
   return data;
        
 }
+
+var dateUtil = {
+  validateAndFormatDate: function(dateString, format) {
+    var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
+    var formattedDate = moment(dateString,format).format(dateFormat);
+    if (formattedDate === 'Invalid date') {
+      formattedDate = null;
+    }
+    return formattedDate;
+  },
+  isValidDateTime: function(dateTimeString, format) {
+    if(!dateTimeString)
+      return function isValid(){return false;}
+    return moment(dateTimeString.toString(),format);
+  }
+}
+
+exports.dateUtil = dateUtil;

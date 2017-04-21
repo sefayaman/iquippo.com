@@ -269,6 +269,11 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/public',
           '<%= yeoman.dist %>/public/assets/images'
         ],
+        blockReplacements: {
+  js: function(block) {
+    return '<script defer src="' + block.dest + '"></script>';
+  }
+},
         // This is so we update image references in our ng-templates
         patterns: {
           js: [
@@ -519,7 +524,7 @@ module.exports = function (grunt) {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
             filePath = filePath.replace('/.tmp/', '');
-            return '<script src="' + filePath + '"></script>';
+              return '<script src="' + filePath + '"></script>';
           },
           starttag: '<!-- injector:js -->',
           endtag: '<!-- endinjector -->'

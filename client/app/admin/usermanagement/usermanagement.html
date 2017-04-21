@@ -10,7 +10,7 @@
               <h3>User Management</h3>
             </div>
             <div class="col-xs-6 col-sm-2">
-              <h3><button class="btn btn-success btn-md btn-block" ng-click="openDialog('adduser')"><i class="fa fa-plus"></i> Add User</button></h3>
+              <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.openAddUserDialog()"><i class="fa fa-plus"></i> Add User</button></h3>
             </div>
             <div class="col-xs-6 col-sm-2">
               <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
@@ -43,6 +43,7 @@
                   <th>Email</th>
                   <th>PAN Number</th>
                   <th>AADHAAR Number</th>
+                  <th>Enterprise unique id</th>
                   <th>Role</th>
                   <th>User Type</th>
                   <th>Company Name</th>
@@ -62,10 +63,12 @@
                   <td>{{user.email}}</td>
                   <td>{{user.panNumber}}</td>
                   <td>{{user.aadhaarNumber}}</td>
+                  <td>{{user.enterpriseId}}</td>
                   <td>
                     <span ng-if="user.role == 'customer'">Customer</span>
                     <!-- <span ng-if="user.role == 'admin'">Admin</span> -->
                     <span ng-if="user.role == 'channelpartner'">Channel Partner</span>
+                     <span ng-if="user.role == 'enterprise'">Enterprise Valuation</span>
                   </td>
                   <td>
                     <span ng-if="user.userType == 'individual'">Individual</span>
@@ -84,7 +87,8 @@
                   </td>
                   <td ng-show="getCurrentUser().role == 'admin'">
                     <label  class="btn btn-warning active-btn" ng-model="user.status" uib-btn-checkbox ng-click="userManagementVm.updateUser(user)"><span ng-if="!user.status">Activate</span> <span ng-if="user.status">Deactivate</span></label>
-                  <button class="btn btn-sm btn-danger" ng-click="userManagementVm.deleteUser(user)"><i class="fa fa-trash"></i></button></td>                
+                  <button class="btn btn-sm btn-danger" ng-click="userManagementVm.deleteUser(user)"><i class="fa fa-trash"></i></button>
+                  <a class="btn btn-primary btn-sm" href="javascript:void(0);" ng-click="userManagementVm.editUserClick(user)" ><i class="fa fa-pencil"></i> </a></td>                
                 </tr>
               </tbody>
             </table>

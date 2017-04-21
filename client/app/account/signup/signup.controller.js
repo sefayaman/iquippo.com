@@ -4,7 +4,7 @@
   angular.module('account').controller('SignupCtrl', SignupCtrl);
 
   //controller function
-  function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, $window, $uibModalInstance, InvitationSvc, Modal, LocationSvc, notificationSvc, MarketingSvc) {
+  function SignupCtrl($scope, commonSvc, $rootScope, Auth, $location, UtilSvc, $window, $uibModalInstance, InvitationSvc, Modal, LocationSvc, notificationSvc, MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
     vm.user = {};
@@ -36,6 +36,7 @@
         $scope.stateList = result;
         $scope.locationList = "";
       });
+
       $scope.code=LocationSvc.getCountryCode(country);
       if (country == "Other") {
         vm.user.activationOTP = "email";
@@ -68,9 +69,19 @@
     init();
 
     function register() {
-      //$scope.form.mobile.$invalid = false;
+      var ret = false;
+      if(vm.user.country && vm.user.mobile) { 
+        var value = UtilSvc.validateMobile(vm.user.country, vm.user.mobile);
+        if(!value) {
+          $scope.form.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.form.mobile.$invalid = false;
+          ret = false;
+        }
+      }
 
-      if ($scope.form.$invalid) {
+      if ($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;
       }
@@ -105,7 +116,7 @@
           vm.user.emailVerified = true;
         if (vm.user.activationOTP == 'mobile')
           vm.user.mobileVerified = true;
-        
+
         if (vm.user.country == "Other") {
           vm.user.isOtherCountry = true;
           vm.user.country = vm.user.otherCountry;
@@ -147,12 +158,8 @@
             var data = {};
             if (vm.user.mobile)
               data['to'] = vm.user.mobile;
-            $rootScope.allCountries.some(function(x) {
-            if (x.name == Auth.getCurrentUser().country) {
-              data['countryCode']=x.countryCode;
-              return true;
-            }
-          })
+
+            data['countryCode']=LocationSvc.getCountryCode(Auth.getCurrentUser().country);
             data['subject'] = 'New User Registration: Success';
             var dataToSend = {};
             dataToSend['fname'] = vm.user.fname;

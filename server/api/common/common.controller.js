@@ -15,8 +15,9 @@ var Banner = require('./banner.model');
 var email = require('./../../components/sendEmail.js');
 var sms = require('./../../components/sms.js');
 var handlebars = require('handlebars');
-var fs = require('fs');
+var fs = require('fs')
 var gm = require("gm");
+var lwip = require("lwip");
 var fsExtra = require('fs.extra');
 var _ = require('lodash');
 var User = require('./../user/user.model');
@@ -226,6 +227,7 @@ exports.getSettingByKey = function(req, res) {
 		if (err) {
 			return handleError(res, err)
 		} else {
+			res.setHeader('Cache-Control', 'private, max-age=2592000');
 			res.status(200).json(dt)
 		}
 
@@ -1205,15 +1207,42 @@ function buildSuggestion(req, res, suggestions) {
 }
 
 exports.rotate = function(req, res) {
-	var imgPath = req.body.imgPath;
+	var imgPath = config.uploadPath + req.body.imgPath;
+    lwip.open(imgPath,function(err,image){
+     	if(err)
+     		throw err;
+
+     	image.batch()
+	    .rotate(-90,"white")
+		.writeFile(imgPath, function(e) {
+			if (e) {
+				throw e;
+			} else
+				res.send("done");
+		}); 	
+    })
+	// image.batch()
+	/*gm(config.uploadPath + imgPath)
+=======
+     	image.batch().rotate(-90,"white")
+			.writeFile(imgPath, function(e) {
+				if (e) {
+					throw e;
+				} else{
+					res.send("done");
+				}
+			}); 	
+    })
+	/*var imgPath = req.body.imgPath;
 	gm(config.uploadPath + imgPath)
+>>>>>>> d3c20c5957f1b55aa6716bb4391562ba723bc84b
 		.rotate("white", -90)
 		.write(config.uploadPath + imgPath, function(e) {
 			if (e) {
 				return handleError(res, e);
 			} else
 				res.send("done");
-		});
+		});*/
 }
 
 exports.saveAsImage = function(req, res) {
@@ -1313,12 +1342,13 @@ exports.createSubscribe = function(req, res) {
 
 // Get list of Country
 exports.getAllCountry = function(req, res) {
-	Country.find().sort({
+	Country.find({}).sort({
 		name: 1
 	}).exec(function(err, country) {
 		if (err) {
 			return handleError(res, err);
 		}
+		res.setHeader('Cache-Control', 'private, max-age=2592000');
 		return res.status(200).json(country);
 	});
 };
@@ -1640,6 +1670,9 @@ exports.searchCity = function(req, res) {
 			$regex: term
 		};
 	}
+
+	if (req.body.cityName)
+		filter['name'] = req.body.cityName;
 
 	if (req.body.country)
 		filter['state.country'] = req.body.country;
@@ -2393,6 +2426,7 @@ exports.getBannerOnFilter = function(req, res) {
 			if (err) {
 				return handleError(res, err);
 			}
+			res.setHeader('Cache-Control', 'private, max-age=2592000');
 			return res.status(200).json(banners);
 		});
 }

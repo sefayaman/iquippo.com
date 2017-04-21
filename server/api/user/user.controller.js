@@ -141,38 +141,35 @@ exports.getUser = function(req, res) {
   
   if(req.body.userId)
     filter["createdBy._id"] = req.body.userId;
+   if(req.body.enterpriseId)
+    filter["enterpriseId"] = req.body.enterpriseId;
+   if(req.body.enterprise)
+    filter["enterprise"] = req.body.enterprise;
   
   if(req.body.userType)
     filter["userType"] = req.body.userType;
 
-  /*if(req.body._id)
-    filter["_id"] = req.body._id;
-  else {*/
     if(req.body.role)
       filter["role"] = req.body.role;
     else {
-    var typeFilter = {};
-    typeFilter['$ne'] = "admin";
-    //typeFilter['$nin'] = ['admin','manpower'];
-    filter["role"] = typeFilter;    
+      var typeFilter = {};
+      typeFilter['$ne'] = "admin";
+      filter["role"] = typeFilter;    
     }
-  //}
-  if(arr.length > 0)
-    filter['$or'] = arr;
+    if(arr.length > 0)
+      filter['$or'] = arr;
+    var result = {};
+    if(req.body.pagination){
+      paginatedUser(req,res,filter,result);
+      return;    
+    }
 
-console.log("Filter User", filter);
-  var result = {};
-  if(req.body.pagination){
-    paginatedUser(req,res,filter,result);
-    return;    
-  }
+    var sortObj = {}; 
+    if(req.body.sort)
+      sortObj = req.body.sort;
+    sortObj['createdAt'] = -1;
 
-  var sortObj = {}; 
-  if(req.body.sort)
-    sortObj = req.body.sort;
-  sortObj['createdAt'] = -1;
-
-var query = User.find(filter).sort(sortObj);
+  var query = User.find(filter).sort(sortObj);
     Seq()
     .par(function(){
       var self = this;
@@ -319,32 +316,34 @@ exports.update = function(req, res) {
           dataObj['user.state'] = req.body.state;
         if(req.body.imgsrc)
           dataObj['user.imgsrc'] = req.body.imgsrc;
-        if(req.body.isPartner) {
-          updateVendor(dataObj, req.params.id);
-        }
-        if(req.body.isManpower) {
-          updateManpower(dataObj, req.params.id);
-        }
+        //if(req.body.isPartner) {
+          updateVendor(dataObj, req, res);
+        //}
+        //if(req.body.isManpower) {
+          updateManpower(dataObj, req, res);
+        //}
         return res.status(200).json(req.body);
     });
   });
 };
 
 //update partner
-  function updateVendor(userData, userId){
+  function updateVendor(userData, req, res){
+    var userId = req.params.id;
     userData.updatedAt = new Date();
     
     Vendor.update({'user.userId':userId},{$set:userData},function(err,userObj){
-      if(err){return handleError(res, err);}
+      if(err){console.log('error in partner updation',err);}
     });
   };
 
   //update manpower
-  function updateManpower(userData, userId){
+  function updateManpower(userData, req, res){
+    var userId = req.params.id;
     userData.updatedAt = new Date();
     
     ManpowerUser.update({'user.userId':userId},{$set:userData},function(err,userObj){
-      if(err){return handleError(res, err);}
+      if(err){console.log('error in manpower updation',err);}
     });
   };
 
@@ -396,16 +395,12 @@ exports.me = function(req, res, next) {
     if (err) return next(err);
     if (!user) return res.status(401).send('Unauthorized');
     user = user.toObject();
-    if(user.isPartner){
-        getPartenerDetail(req,res,user);
-    } else {
-      if(user.isManpower) {
-        getManpowerDetail(req,res,user);
-      } else {
-        addNoCacheHeader(res)
-        res.json(user);
-      }
-    }
+    if(user.isPartner)
+      return getPartenerDetail(req,res,user);
+    if(user.isManpower)
+      return getManpowerDetail(req,res,user);
+    addNoCacheHeader(res)
+    return res.json(user);
   });
 };
 

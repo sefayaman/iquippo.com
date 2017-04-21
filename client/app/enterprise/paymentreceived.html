@@ -1,0 +1,112 @@
+
+<div class="row form-group">
+<div class="col-sm-6">
+  <h4>Payment Received</h4>                    
+  
+</div>
+<div class="col-sm-6 text-right">
+  <h4>
+  <button class="btn btn-success" ng-click="enterprisePaymentReceivedVm.exportExcel()"> <i class="fa fa-file-excel-o"></i> Export Excel</button>
+  </h4>
+</div>
+</div>
+<legend></legend>
+	
+    <div class="row form-group">
+        <div class=" col-sm-2">                   
+        <!-- <button class="btn btn-primary btn-block" ng-click="enterprisePaymentReceivedVm.openModal()">Update Payment Details</button -->                 
+      </div>                   
+      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+        Search:  <input type="text" placeholder="Invoice No." ng-model="enterprisePaymentReceivedVm.searchStr" ng-change="enterprisePaymentReceivedVm.fireCommand(true)" ng-model-options="{debounce:500}">
+      </div>
+  </div>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <!-- <th><input type="checkbox" name="" value=""> All</th> -->
+            <th>Invoice No.</th>
+            <th>Type of Request</th>
+            <th>Enterprise Name</th>
+            <th>Enterprise Contact No.</th>
+            <th>Agency Name</th>
+            <th>Agency Contact No.</th>            
+            <th>Bank Name</th>
+            <th>Branch Name</th>
+            <th>Cheque Number</th>
+            <th>Cheque Date</th>
+            <th>Cheque Value</th>
+            <th>Deducted TDS</th>
+            <th>Status</th>            
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody ng-repeat="entVal in enterprisePaymentReceivedVm.dataList">
+          <tr ng-repeat="dtl in entVal.paymentReceivedDetail.paymentDetails">
+            <!-- <td><input type="checkbox" ng-click="enterprisePaymentReceivedVm.updateSelection($event,entVal)"></td> -->
+            <td>{{entVal.invoiceNo}}</td>
+            <td>{{entVal.requestType}}</td>
+            <td>{{entVal.enterprise.name}}</td>
+            <td>{{entVal.enterprise.mobile}}</td>
+            <td>{{entVal.agency.name}}</td> 
+            <td>{{entVal.agency.mobile}}</td> 
+            <td>{{dtl.bankName}}</td>
+            <td>{{dtl.branchName}}</td>
+            <td>{{dtl.chequeNo}}</td>
+            <td>{{dtl.chequeDate}}</td>
+            <td>{{dtl.chequeValue}}</td>
+            <td><span ng-if="dtl.deductedTds">Rs.{{dtl.deductedTds}}</span></td>
+            <td>
+              <span ng-if="entVal.totalAmount == entVal.paymentReceivedDetail.remainingAmount">Invoice Generated</span>
+              <span ng-if="entVal.paymentReceivedDetail.remainingAmount > 0 && entVal.paymentReceivedDetail.remainingAmount < entVal.totalAmount">Part Payment Received</span>
+              <span ng-if="entVal.paymentReceivedDetail.remainingAmount == 0">Full Payment Received</span>
+            </td>
+            <td> <a class="btn btn-primary btn-block btn-xs" href="javascript:void(0);" ng-click="enterprisePaymentReceivedVm.openModal(entVal._id)" ng-if="!dtl.attached"></i>Update Payment Details</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>              
+    </div>
+    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterprisePaymentReceivedVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+
+<!-- popup -->
+<script type="text/ng-template" id="formModal.html">
+<div class="modal-header"> <button  type="button"  class="close" ng-click="close()">&times;</button>
+<h4 class="modal-title">Payment Received</h4>
+</div>
+<div class="modal-body">
+  <form class="form" name="form" novalidate>
+        <div class="alert alert-danger">          
+          Remaining Invoice Amount: <strong><i class="fa fa-inr"></i> {{remainingAmount}}</strong>
+        </div>
+        <div class="row form-group " ng-class="{'has-error':form.bankName.$invalid && submitted}">
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="bankName" ng-model="paymentDetail.bankName"  placeholder="Bank Name" required/>
+          </div>
+          <div class="col-sm-4" ng-class="{'has-error':form.branchName.$invalid && submitted}">
+            <input type="text" class="form-control" name="branchName" ng-model="paymentDetail.branchName" placeholder="Branch Name" required/>
+          </div>
+          <div class="col-sm-4" ng-class="{'has-error':form.chequeNo.$invalid && submitted}">
+             <input type="text" class="form-control" name="chequeNo" ng-model="paymentDetail.chequeNo" placeholder="Cheque Number" required/>
+          </div>
+          
+        </div>
+        <div class="row form-group " ng-class="{'has-error':form.chequeDate.$invalid && submitted}">
+          <div class="col-sm-4">
+             <input type="text" class="form-control" name="chequeDate" ng-model="paymentDetail.chequeDate" placeholder="Cheque Date" required/>
+          </div>
+          <div class="col-sm-4" ng-class="{'has-error':form.chequeValue.$invalid && submitted}">
+            <input type="number" class="form-control" name="chequeValue" ng-model="paymentDetail.chequeValue" placeholder="Cheque Value" required/>
+          </div>
+          <div class="col-sm-4" ng-class="{'has-error':form.deductedValue.$invalid && submitted}">
+            <input type="number" class="form-control" name="deductedValue" ng-model="paymentDetail.deductedTds" placeholder="Deducted TDS" required/>
+          </div>
+          
+        </div>       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+          <input class="btn btn-primary btn-md" ng-click="updatePaymentDetail(form)" type="button" value="Submit">
+        </div>             
+    </form>
+</div>
+</script>

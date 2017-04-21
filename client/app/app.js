@@ -176,6 +176,8 @@ angular.module('sreizaoApp',[
     $rootScope.isAdmin = Auth.isAdmin;
     $rootScope.isBulkUpload = Auth.isBulkUpload;
     $rootScope.isChannelPartner = Auth.isChannelPartner;
+    $rootScope.isEnterprise = Auth.isEnterprise;
+    $rootScope.isEnterpriseUser = Auth.isEnterpriseUser;
     $rootScope.getCurrentUser = Auth.getCurrentUser;
     $rootScope.openDialog = Modal.openDialog;
     $rootScope.logout = Auth.logout;

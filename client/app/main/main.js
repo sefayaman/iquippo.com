@@ -7,11 +7,7 @@ angular.module('sreizaoApp')
         url: '/',
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl as mainVm',
-        layout:'client',
-        onEnter: function ($rootScope) {
-         $rootScope.choosenTitle=pagesTitles.index.title;
-         $rootScope.metaDescription=pagesTitles.index.meta;
-       }
+        layout:'client'
       })
       .state('contactus', {
         url: '/contactus',
@@ -56,42 +52,14 @@ angular.module('sreizaoApp')
         url: '/viewproducts/:id?currentPage',
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
-        
-
-
-          /*switch($stateParams.id){
-          case "570e04e0213d8d7c368252e2"
-            $rootScope.choosenTitle=pagesTitles.viewproducts.backhoeloadersmachine.title;
-            $rootScope.metaDescription=pagesTitles.viewproducts.backhoeloadersmachine.meta;
-          break;
-          case "570e04e0213d8d7c368252df"
-          $rootScope.choosenTitle=pagesTitles.viewproducts.excavators.title;
-            $rootScope.metaDescription=pagesTitles.viewproducts.excavators.meta;
-          break;
-          case "570e04e0213d8d7c368252e9"
-          $rootScope.choosenTitle=pagesTitles.viewproducts.tractors.title;
-            $rootScope.metaDescription=pagesTitles.viewproducts.tractors.meta;
-          break;
-          case "570e04e0213d8d7c368252dc"
-          $rootScope.choosenTitle=pagesTitles.viewproducts.tippers.title;
-            $rootScope.metaDescription=pagesTitles.viewproducts.tippers.meta;
-          break;
-          case "570f5c79d74e41dc2f99bc12"
-          $rootScope.choosenTitle=pagesTitles.viewproducts.cranes.title;
-            $rootScope.metaDescription=pagesTitles.viewproducts.cranes.meta;
-          break;
-          case "5732f7ea58ef5de755086622"
-          $rootScope.choosenTitle=pagesTitles.viewproducts.transitmixers.title;
-            $rootScope.metaDescription=pagesTitles.viewproducts.transitmixers.meta;
-          break;*/
-         
         layout:'client',
         onEnter:function ($rootScope,$stateParams,$http){
           $http.post('/api/getseo/',{categoryId:$stateParams.id})
           .then(function(res){
-            console.log(res);
-           $rootScope.choosenTitle=res.data[res.data.length-1].title;
-           $rootScope.metaDescription=res.data[res.data.length-1].meta;
+            if(res && res.data.length > 0) {
+              $rootScope.choosenTitle=res.data[res.data.length-1].title;
+              $rootScope.metaDescription=res.data[res.data.length-1].meta;
+            }
           })
           .catch(function(err){
            
@@ -102,10 +70,7 @@ angular.module('sreizaoApp')
         url: '/productdetail/:id',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
-        layout:'client',
-        onEnter:function($rootScope){
-          //console.log(url);
-        }
+        layout:'client'
       })
       .state('getquote', {
         url: '/getquote',
@@ -174,12 +139,7 @@ angular.module('sreizaoApp')
         url:"/aboutus",
         templateUrl: 'app/staticpages/aboutus.html',
          controller:"StaticCtrl",
-         layout:'client',
-         onEnter: function ($rootScope) {
-           console.log("aboutus");
-           $rootScope.choosenTitle = pagesTitles.aboutus.title;
-           $rootScope.metaDescription=pagesTitles.aboutus.meta;
-       }
+         layout:'client'
       })
       .state('manpower', {
         url:"/manpower",
@@ -211,31 +171,19 @@ angular.module('sreizaoApp')
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
         controller:"ValuationCtrl",
-        layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.valuation.title;
-          $rootScope.metaDescription=pagesTitles.valuation.meta;
-        }
+        layout:'client'
       })
       .state('financing', {
         url:"/financing",
         templateUrl: 'app/staticpages/financing.html',
         controller:"FinanceCtrl",
-        layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.financing.title;
-          $rootScope.metaDescription=pagesTitles.financing.meta;
-        }
+        layout:'client'
       })
       .state('insurance', {
         url:"/insurance",
         templateUrl: 'app/staticpages/insurance.html',
         controller:"InsuranceCtrl",
-    	  layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.insurance.title;
-          $rootScope.metaDescription=pagesTitles.insurance.meta;
-        }
+    	  layout:'client'
       })
       .state('privacy', {
         url:"/privacy",
@@ -294,26 +242,26 @@ angular.module('sreizaoApp')
         layout:'admin',
         restrict:true
       })
-       .state('policies', {
-        url: '/policies',
-        templateUrl: 'app/admin/policies/policies.html',
-        controller: 'policyCtrl as policiesVm',
-        authenticate:true,
-        layout:'admin',
-        restrict:true
-      })
-       .state('metaData', {
-        url: '/metaData',
-        templateUrl: 'app/admin/meta/meta.html',
-        controller: 'metaCtrl as metaVm',
-        authenticate:true,
-        layout:'admin',
-        restrict:true
-      })
       .state('gSettings', {
         url: '/gsettings',
-        templateUrl: 'app/admin/gsettings/gsettings.html',
-         controller: 'GSettingCtrl as gsettingVm',
+        views : {
+          '' : {
+            templateUrl: 'app/admin/gsettings/gsettings.html',
+            controller: 'GSettingCtrl as gsettingVm',
+          },
+          'yardassettype@gSettings' : {
+            templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+            controller: 'AssetTypeCtrl as AssetTypeVm', 
+          },
+          // 'yardasservices@gSettings' : {
+          //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+          //   controller: 'AssetTypeCtrl as AssetTypeVm', 
+          // },
+          // 'yardasmanagement@gSettings' : {
+          //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+          //   controller: 'AssetTypeCtrl as AssetTypeVm', 
+          // }
+        },
         authenticate:true,
         layout:'admin',
         restrict:true
@@ -357,11 +305,7 @@ angular.module('sreizaoApp')
         url: '/viewauctions?type',
         templateUrl: 'app/auction/auction.html',
         controller: 'ViewAuctionCtrl as auctionDateVm',
-        layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.viewauctions.title;
-          $rootScope.metaDescription=pagesTitles.viewauctions.meta;
-        }
+        layout:'client'
       })
       .state('assetinacuction', {
         url: '/assetinauction',
@@ -456,6 +400,84 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+       .state('yardlisting', {
+        url: '/yardlisting',
+        templateUrl: 'app/yard/yardlisting.html',
+        controller: 'YardListingCtrl as yardlistingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+       .state('yardupload', {
+        url: '/yardupload',
+        templateUrl: 'app/yard/yardupload.html',
+        controller: 'YardListingCtrl as YardListingVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('yard', {
+        url: '/yard',
+        templateUrl: 'app/yard/yard.html',
+        controller: 'YardListingCtrl as YardListingVm',
+        layout:'client'
+      })
+      .state('enterprisevaluation', {
+        url: '/enterprisevaluation',
+        abstract:true,
+        templateUrl: 'app/enterprise/enterprisevaluation.html',
+        controller: 'EnterpriseValuationCtrl as enterpriseVm'
+      })
+      .state('enterprisevaluation.dashborad', {
+        url: '/dashboard',
+        templateUrl: 'app/enterprise/dashborad.html',
+        controller: 'EnterpriseDashboradCtrl as enterpriseDashboradVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('enterprisevaluation.transaction', {
+        url: '/transaction',
+        templateUrl: 'app/enterprise/transaction.html',
+        controller: 'EnterpriseTransactionCtrl as enterpriseTransactionVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('enterprisevaluation.invoicing', {
+        url: '/invoicing',
+        templateUrl: 'app/enterprise/invoicing.html',
+        controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
+        layout:'admin',
+        authenticate:true
 
-       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+      })
+       .state('enterprisevaluation.paymentmade', {
+        url: '/paymentmade',
+        templateUrl: 'app/enterprise/paymentmade.html',
+        controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
+        layout:'admin',
+        authenticate:true,
+        restrict:true
+      })
+        .state('enterprisevaluation.paymentreceived', {
+        url: '/paymentreceived',
+        templateUrl: 'app/enterprise/paymentreceived.html',
+        controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
+        layout:'admin',
+        authenticate:true,
+        restrict:true
+      })
+      .state('enterprisevaluation.addtransaction', {
+        url: '/addtransaction',
+        templateUrl: 'app/enterprise/addtransaction.html',
+        controller: 'AddTransactionCtrl as addTransactionVm',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('enterprisevaluation.edittransaction', {
+        url: '/addtransaction/:id',
+        templateUrl: 'app/enterprise/addtransaction.html',
+        controller: 'AddTransactionCtrl as addTransactionVm',
+        authenticate:true,
+        layout:'admin'
+      })
+
+      $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

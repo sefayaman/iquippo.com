@@ -817,15 +817,16 @@ function addProductQuote(form){
     }
   }
 
-  function  PriceTrendSurveyCtrl($scope,Auth,$uibModalInstance,PriceTrendSvc){
+  function  PriceTrendSurveyCtrl($scope,Auth,$uibModalInstance,PriceTrendSvc, LocationSvc, UtilSvc){
     var vm  = this;
     vm.priceTrendSurvey = {};
     vm.priceTrendSurvey.user = {};
     vm.priceTrendSurvey.product = {};
     vm.priceTrendSurvey.priceTrend = {};
-
+    
     vm.save = save;
     vm.close = close;
+    vm.onCodeChange = onCodeChange;
 
     function init(){
 
@@ -836,6 +837,9 @@ function addProductQuote(form){
         vm.priceTrendSurvey.user.lname = Auth.getCurrentUser().lname;
         vm.priceTrendSurvey.user.email = Auth.getCurrentUser().email;
         vm.priceTrendSurvey.user.mobile = Auth.getCurrentUser().mobile;
+        vm.priceTrendSurvey.user.country = Auth.getCurrentUser().country;
+        if(Auth.getCurrentUser().country)
+          vm.priceTrendSurvey.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
       }
       
       vm.priceTrendSurvey.product._id = $scope.currentProduct._id;
@@ -861,10 +865,22 @@ function addProductQuote(form){
       vm.priceTrendSurvey.priceTrend.saleYear = $scope.priceTrend.saleYear;
 
     }
-
+    function onCodeChange(code) {
+      vm.priceTrendSurvey.user.country = LocationSvc.getCountryNameByCode(code);
+    }
     function save(form){
-
-      if(form.$invalid){
+      var ret = false;
+      if(vm.priceTrendSurvey.user.country && vm.priceTrendSurvey.user.mobile) { 
+        var value = UtilSvc.validateMobile(vm.priceTrendSurvey.user.country, vm.priceTrendSurvey.user.mobile);
+        if(!value) {
+          $scope.surveyForm.mobile.$invalid = true;
+          ret = true;
+        } else {
+          $scope.surveyForm.mobile.$invalid = false;
+          ret = false;
+        }
+      }
+      if(form.$invalid || ret){
         $scope.submitted = true;
         return;
       }

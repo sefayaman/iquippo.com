@@ -68,7 +68,8 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
           uploadPath += "&";
         else
           uploadPath += "?";
-        uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height;
+        
+        uploadPath += "resize=y&width=" + resizeParam.width + "&height=" + resizeParam.height + "&size=" + resizeParam.size;
       }
       var fd = new FormData();
       fd.append("file", file);
@@ -136,6 +137,8 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.getLocationHelp = getLocationHelp;
   utilSvc.getLocations = getLocations;
   utilSvc.buildQueryParam = buildQueryParam;
+  utilSvc.compileTemplate = compileTemplate;
+  utilSvc.validateMobile = validateMobile;
   
   function getStatusOnCode(list,code){
       var statusObj = {};
@@ -193,17 +196,106 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
       return locationArr.join(", ");
     }
 
+    function compileTemplate(templateName,data){
+      var tempData = {};
+      tempData['templateName'] = templateName;
+      tempData['data'] = data;
+      return $http.post('/api/common/notificationTemplate',tempData)
+             .then(function(res){
+                return res.data;
+             })
+             .catch(function(err){
+                throw err;
+             })
+    }
     function buildQueryParam(filterObj){
       var queryStr = "";
       if(!filterObj)
         return queryStr;
       for( var prop in filterObj){
-        queryStr += prop + "=" + filterObj[prop];
-        queryStr += "&";
+        var valStr = "";
+        if(angular.isArray(filterObj[prop])){
+          valStr = filterObj[prop].join(',')
+        }else
+          valStr = filterObj[prop];
+        if(valStr){
+          queryStr += prop + "=" + valStr;
+          queryStr += "&";
+        }
+
       }
       queryStr = queryStr.substr(0,queryStr.length - 1);
       return queryStr;
     }
 
+    function validateMobile(country, mobileNo) {
+      var validFlag = true;
+      if(!mobileNo)
+        return false;
+      if(country == "India")
+        validFlag = /^\d{10}$/.test(mobileNo)   
+      if(country != "India")
+        validFlag = /^\d+$/.test(mobileNo) 
+
+      return validFlag;
+    }
+
   return utilSvc;
 });
+
+//Pagination service
+angular.module('sreizaoApp').factory('PagerSvc',PagerService);
+
+    function PagerService() {
+
+      var service = {};
+   
+      service.getPager = getPager;
+   
+      return service;
+  
+      function getPager(totalItems, currentPage, itemsPerPage) {
+
+          var pager = {};
+          pager.itemsPerPage = itemsPerPage || 50;
+          pager.currentPage = currentPage || 1;
+          pager.totalItems = totalItems || 0;
+          pager.prevPage = 0 ;
+          pager.first_id = null;
+          pager.last_id = null;
+
+          pager.reset = reset;
+          pager.copy = copy;
+          pager.update = update;
+
+          function reset(){
+              this.prevPage = 0;
+              this.currentPage = 1;
+              this.first_id = null;
+              this.last_id = null;
+          }
+
+          function copy(filter){
+            filter["currentPage"] = this.currentPage;
+            filter["prevPage"] = this.prevPage;
+            filter['itemsPerPage'] = this.itemsPerPage;
+            filter['first_id'] = this.first_id;
+            filter['last_id'] = this.last_id;
+          }
+
+          function update(items,totalItems,currentPage){
+            if(items && items.length > 0){
+              this.first_id = items[0]._id;
+              this.last_id = items[items.length -1 ]._id;
+            }
+            if(currentPage)
+              this.currentPage = currentPage;
+            else
+              this.prevPage = this.currentPage;
+            this.totalItems = totalItems;
+          }
+
+          return pager;
+      }
+  }
+

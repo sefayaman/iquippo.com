@@ -208,28 +208,6 @@
                   <uib-accordion-heading>
                     Price Trend<i class="pull-right fa" ng-class="{'fa-minus': status.pricetrend, 'fa-plus': !status.pricetrend}"></i>
                   </uib-accordion-heading>
-                  <!-- <table class="table table-striped">
-                    <tr>
-                      <td>Category</td>
-                      <td>Excavator</td>
-                    </tr>
-                    <tr>
-                      <td>Brand</td>
-                      <td>Tata</td>
-                    </tr>
-                    <tr>
-                      <td>Model</td>
-                      <td>Tipper</td>
-                    </tr>
-                    <tr>
-                      <td>Manufacturing Year</td>
-                      <td>2016</td>
-                    </tr>
-                    <tr>
-                      <td>Sale Year</td>
-                      <td>2016</td>
-                    </tr>
-                   </table> -->
 
                   <table class="table">
                       <thead>
@@ -242,7 +220,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
+                        <tr ng-if="priceTrendData.trendValue.oemPrice.excellentCondition || priceTrendData.trendValue.oemPrice.goodCondition || priceTrendData.trendValue.oemPrice.averageCondition">
                           <td><b>OEM / Dealer Estimation</b></td>
                           <td>
                          Rs.{{priceTrendData.trendValue.oemPrice.excellentCondition}}
@@ -256,7 +234,7 @@
                           </td>
                          
                         </tr>
-                        <tr>
+                        <tr ng-if="priceTrendData.trendValue.averagePrice.excellentCondition || priceTrendData.trendValue.averagePrice.goodCondition || priceTrendData.trendValue.averagePrice.averageCondition">
                           <td><b>Average Price</b></td>
                           <td>
                          Rs.{{priceTrendData.trendValue.averagePrice.excellentCondition}}
@@ -270,7 +248,7 @@
                           </td>
                          
                         </tr>
-                        <tr>
+                        <tr ng-if="priceTrendData.trendValue.highestRealisedPrice.excellentCondition || priceTrendData.trendValue.highestRealisedPrice.goodCondition || priceTrendData.trendValue.highestRealisedPrice.averageCondition">
                           <td><b>Highest Realised Price</b></td>
                           <td>
                          Rs.{{priceTrendData.trendValue.highestRealisedPrice.excellentCondition}}
@@ -340,15 +318,15 @@
                       <td>Manufacturing Year</td>
                       <td>{{currentProduct.mfgYear}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.operatingHour">
                       <td>Operating Hours/HMR</td>
                       <td>{{currentProduct.operatingHour}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.mileage">
                       <td>Mileage/KMR</td>
                       <td>{{currentProduct.mileage}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.serialNo">
                     <td>Machine Serial No.</td>
                     <td>{{currentProduct.serialNo}}</td>
                   </tr>
@@ -360,11 +338,11 @@
                       <td>Location</td>
                       <td>{{currentProduct.city}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.tradeType != 'RENT'">
                       <td>Price (Excl. Tax).</td>
                       <td>
-                      <span ng-if="currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">Price On Request</span>
-                      <span ng-if="!currentProduct.priceOnRequest && currentProduct.tradeType != 'RENT'">
+                      <span ng-if="currentProduct.priceOnRequest">Price On Request</span>
+                      <span ng-if="!currentProduct.priceOnRequest">
                       <!-- <b ng-if="currentProduct.currencyType == 'AED'" class="pull-left">&#1583;.&#1573; &nbsp;</b> -->
                       <i class="fa fa-inr" ng-if="currentProduct.currencyType == 'INR'"></i>
                       <!-- <i class="fa fa-eur" ng-if="currentProduct.currencyType == 'EUR'"></i>
@@ -373,11 +351,11 @@
                        {{currentProduct.grossPrice |number:0}} </span>
                       </td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.productCondition">
                       <td>Product Condition</td>
                       <td>{{currentProduct.productCondition}}</td>
                     </tr>
-                    <tr>
+                    <tr ng-if="currentProduct.documentName">
                       <td>Documents</td>
                       <td>                        
                         <span ng-repeat="miscDoc in currentProduct.miscDocuments" class="document-space"> 
@@ -969,9 +947,18 @@
                 
                 <div class="row">
                    <div class="form-group col-sm-6" ng-class="{'has-error': surveyForm.mobile.$invalid && submitted}">
-                   <div class="input-group">
-                  <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" pattern="^[7-9][0-9]{9}$" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
-                  </div>
+                    <div class="row">
+                      <div class="col-sm-4 padd-right search-field">
+                        <select class="form-control" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.countryCode" ng-change="priceTrendSurveyVm.onCodeChange(priceTrendSurveyVm.priceTrendSurvey.user.countryCode)" required>
+                          <option value="" disabled>*Code</option>
+                          <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+                        </select>
+                        <i class="caret"></i>
+                      </div>                      
+                      <div class="col-sm-8 padd-left">
+                        <input type="text" class="form-control" name="mobile" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.mobile"  required>
+                      </div>                      
+                    </div>                   
                 </div>
                  <div class="col-sm-6 form-group">
                     <input type="email" class="form-control" name="email" placeholder="Email Address" ng-model="priceTrendSurveyVm.priceTrendSurvey.user.email" >

@@ -1,0 +1,437 @@
+
+<div class="row">
+  <div class="col-sm-6">
+    <h4>Add New Request </h4>
+  </div>
+<div class="col-sm-6 text-right">
+<h3><a href="/enterprisevaluation/transaction" class="btn btn-primary btn-md">Back</a></h3>
+</div>
+</div>
+<!-- <p>Download the <a href="javascript:void(0);">template</a> and fill all fields. (*) mark fields are mandatory. System will accept multiple records in a single file.</p> -->
+<legend></legend>
+<div >
+  <form class="enterpriseValForm" name="enterpriseValForm" novalidate>
+    <!-- Enterprise block -->
+    <div class="panel panel-default" ng-if="showEnterpriseSection()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Enterprise Information</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row form-group ">                            
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.requestType.$invalid && submitted}">
+            <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField()" required>
+              <option value="">*Request Type</option>
+              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}">{{req.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.purpose.$invalid && submitted}">
+            <select class="form-control" name="purpose" ng-model="addTransactionVm.enterpriseValuation.purpose" ng-disabled="!editEnterpriseField()" required>
+              <option value="">*Select Purpose</option>
+              <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.agencyName.$invalid && submitted}">
+            <select class="form-control" name="agencyName" ng-model="addTransactionVm.enterpriseValuation.agency.partnerId" ng-disabled="!editEnterpriseField()" required>
+              <option value="">*Select Agency</option>
+              <option  ng-repeat="ag in addTransactionVm.valAgencies | orderBy:'name'" value="{{ag.partnerId}}">{{ag.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.enterpriseId.$invalid && submitted}">
+            <select class="form-control" name="enterpriseId" ng-model="addTransactionVm.enterpriseValuation.enterprise.enterpriseId" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.setCustomerData(addTransactionVm.enterpriseValuation.enterprise.enterpriseId)" required>
+              <option value="">*Select Enterprise</option>
+              <option ng-repeat="enterprise in addTransactionVm.enterprises" value="{{enterprise.enterpriseId}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.mobile}})</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+        </div>
+        <div class="row form-group">                            
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="Customer Transaction ID"/>
+          </div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="customerValuationNo" ng-model="addTransactionVm.enterpriseValuation.customerValuationNo" ng-disabled="!editEnterpriseField()" placeholder="Customer Valuation/Inspection No."/>
+          </div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="customerPartyNo" ng-model="addTransactionVm.enterpriseValuation.customerPartyNo" disabled placeholder="Customer Party No."/>
+          </div>
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="customerPartyName" ng-model="addTransactionVm.enterpriseValuation.customerPartyName" disabled placeholder="Customer Party Name"/>
+          </div>
+        </div>
+        <div class="row form-group ">
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="userName" ng-model="addTransactionVm.enterpriseValuation.userName" disabled placeholder="User Name" disabled/>
+          </div>
+          <div class="col-sm-3"> 
+            <div class="input-group">
+              <input class="form-control" name="requestDate" id="requestdate" ng-model="addTransactionVm.enterpriseValuation.requestDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Request Date"/>
+              <label for="requestdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
+            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="*Asset No." required/>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <input class="form-control" name="repoDate" id="repodate" ng-model="addTransactionVm.enterpriseValuation.repoDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo. Date" />
+              <label for="repodate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.assetCategory.$invalid && submitted}">
+            <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
+            <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
+              <option value="">*Select Brand</option>
+              <option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
+            </select>
+            <i class="caret"></i>
+            <input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control" name="otherBrand" placeholder="Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.model.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
+            <select class="form-control form-group" name="model" ng-model="addTransactionVm.enterpriseValuation.model" ng-disabled="!editEnterpriseField()">
+              <option value="">*Select Model</option>
+              <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
+            </select>
+            <i class="caret"></i>
+            <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control" name="otherModel" placeholder="Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
+          </div>
+          <div class="col-sm-3">
+            <textarea name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="Asset Description" class="form-control"></textarea>
+          </div>
+          
+        </div>
+        <div class="row form-group">
+          
+          <div class="col-sm-3">
+            <input type="text" class="form-control" name="engineNo" ng-model="addTransactionVm.enterpriseValuation.engineNo" ng-disabled="!editEnterpriseField()" placeholder="Engine No."/>
+          </div>
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="chassisNo" ng-model="addTransactionVm.enterpriseValuation.chassisNo" ng-disabled="!editEnterpriseField()" placeholder="Chassis No."/>
+          </div>
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="registrationNo" ng-model="addTransactionVm.enterpriseValuation.registrationNo" ng-disabled="!editEnterpriseField()" placeholder="Registration No."/>
+          </div>
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No." ng-disabled="!editEnterpriseField()"/>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.yearOfManufacturing.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
+            <input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" ng-min="1900" string-to-number/>
+          </div>
+          <div class="col-sm-3">          
+            <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
+              <option value="">Yard Parked</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.country.$invalid && submitted}">
+            <select class="form-control" ng-model="addTransactionVm.enterpriseValuation.country" name="country" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onCountryChange(addTransactionVm.enterpriseValuation.country)" required>
+              <option value="">*Select Country</option>
+              <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.state.$invalid && submitted}">
+            <select class="form-control" name="state" ng-model="addTransactionVm.enterpriseValuation.state" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onStateChange(addTransactionVm.enterpriseValuation.state)" required>
+              <option value="">*Select State</option>
+                <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>        
+        </div>
+        <div class="row form-group">
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.location.$invalid && submitted}">
+            <select class="form-control" name="location" ng-model="addTransactionVm.enterpriseValuation.city" ng-disabled="!editEnterpriseField()" required>
+              <option value="">*Select Location</option>
+                <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+            </select>
+            <i class="caret"></i>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPerson.$invalid && submitted}">
+            <input type="text" class="form-control" name="contactPerson" ng-model="addTransactionVm.enterpriseValuation.contactPerson" ng-disabled="!editEnterpriseField()" placeholder="*Contact Person" required/>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPerson.$invalid && submitted}">
+             <input type="text" class="form-control" name="contactPersonTelNo" ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" ng-disabled="!editEnterpriseField()" placeholder="*Contact Person Tel No" required/>
+          </div>
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="disFromCustomerOffice" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice" ng-disabled="!editEnterpriseField()" placeholder="Distance From Customer Office"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Agency block -->
+    <!-- <div class="panel panel-default" ng-if="showAgencySection()"> -->
+    <div class="panel panel-default" ng-if="showAgencySection()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Agency Information</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row form-group">                              
+            <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.reportNo.$invalid && submitted}">
+              <input type="text" class="form-control" name="reportNo" ng-model="addTransactionVm.enterpriseValuation.reportNo" placeholder="Report No.*" ng-disabled="!editAgencyField()" required/>
+            </div>
+            <div class="col-sm-3">
+               <div class="input-group" ng-class="{'has-error':enterpriseValForm.reportDate.$invalid && submitted}">
+                 <input class="form-control" name="reportDate" id="reportdate" ng-model="addTransactionVm.enterpriseValuation.reportDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Report Date*" ng-disabled="!editAgencyField()" required/>
+                 <label for="reportdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+               </div>
+            </div>
+            <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.agencYom.$invalid && submitted}">
+              <input type="text" class="form-control" name="agencYom" ng-model="addTransactionVm.enterpriseValuation.agencyYearOfManufacturing" placeholder="Year of Manufacture" ng-disabled="!editAgencyField()" required/>
+            </div>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" name="agencyEngineNo" ng-model="addTransactionVm.enterpriseValuation.agencyEngineNo" ng-disabled="!editAgencyField()" placeholder="Engine No."/>
+            </div>
+        </div>
+        <div class="row form-group">        
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="agencyChassisNo" ng-model="addTransactionVm.enterpriseValuation.agencyChassisNo" ng-disabled="!editAgencyField()" placeholder="Chassis No."/>
+          </div>
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="agencyRegistrationNo" ng-model="addTransactionVm.enterpriseValuation.agencyRegistrationNo"  ng-disabled="!editAgencyField()" placeholder="Registration No."/>
+          </div>
+          <div class="col-sm-3">
+             <input type="text" class="form-control" name="agencySerialNo" ng-model="addTransactionVm.enterpriseValuation.agencySerialNo" ng-disabled="!editAgencyField()" placeholder="Serial No." />
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.hmr_kmr.$invalid && submitted}">
+              <input type="text" class="form-control" name="hmr_kmr" ng-model="addTransactionVm.enterpriseValuation.hmr_kmr" placeholder="HMR / KMR" ng-disabled="!editAgencyField()" required/>
+            </div>
+        </div>
+        <div class="row form-group ">                            
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assessedValue.$invalid && submitted}">
+            <input type="number" class="form-control" name="assessedValue" ng-model="addTransactionVm.enterpriseValuation.assessedValue" ng-disabled="!editAgencyField()" placeholder="Assessed Value" required/>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.inspectionBy.$invalid && submitted}">
+             <input type="text" class="form-control" name="inspectionBy" ng-model="addTransactionVm.enterpriseValuation.inspectionBy" ng-disabled="!editAgencyField()" placeholder="Inspection By" required/>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.physicalCondition.$invalid && submitted}">
+            <input type="text" class="form-control" name="physicalCondition" ng-model="addTransactionVm.enterpriseValuation.physicalCondition" ng-disabled="!editAgencyField()" placeholder="Physical Condition" required/>            
+          </div>
+          <div class="col-sm-3">
+             GPS Installed
+              <div class="row">
+                <div class="col-xs-6">
+                  <input type="radio" name="gps" ng-model="addTransactionVm.enterpriseValuation.gpsInstalled" ng-value="true"  ng-disabled="!editAgencyField()"> Yes
+                </div>
+                <div class="col-xs-6">
+                  <input type="radio" name="gps" ng-model="addTransactionVm.enterpriseValuation.gpsInstalled" ng-value="false" ng-disabled="!editAgencyField()"> No
+                </div>
+              </div>
+          </div>
+        </div>
+
+          <div class="row form-group " ng-if="addTransactionVm.enterpriseValuation.gpsInstalled">        
+            <div class="col-sm-3">
+             <input type="text" class="form-control" name="gpsDeviceNo" ng-model="addTransactionVm.enterpriseValuation.gpsDeviceNo" ng-disabled="!editAgencyField()" placeholder="GPS Device No." required/>
+            </div>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" name="gpsIMEINo"  ng-model="addTransactionVm.enterpriseValuation.gpsIMEINo" ng-disabled="!editAgencyField()" value="" placeholder="IMIE No." required/>
+            </div>
+            
+          </div>
+          <h5 class="form-group"><strong>Upload Asset Images</strong></h5>
+          <div class="row form-group">
+              <div class="col-sm-2  text-center">                
+                 <div class="br5">
+                    <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.generalImage.filename">
+                        <span><i class="fa fa-plus-circle"></i></span>
+                          <input type="file" name="general" onchange="angular.element(this).scope().upload(this.files,'generalImage')" ng-disabled="!editAgencyField()" accept="image/*">
+                     </span> 
+                      <div ng-if="addTransactionVm.enterpriseValuation.generalImage.filename">
+                        <div class="icn2">
+                          <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('generalImage')"><i class="fa fa-times"></i></a>
+                       </div>
+                        <span class="fileinput-button">
+                          <a href="javascript:void(0);">
+                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.generalImage.external">
+                            <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.generalImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.generalImage.external">
+                          </a>
+                        </span> 
+                      </div>                      
+                  </div>
+                  General
+              </div>
+              <div class="col-sm-2  text-center">
+                <div class="br5">
+                  <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.engineImage.filename">
+                      <span><i class="fa fa-plus-circle"></i></span>
+                        <input type="file" name="engine" onchange="angular.element(this).scope().upload(this.files,'engineImage')" ng-disabled="!editAgencyField()" accept="image/*">
+                   </span>
+                   <div ng-if="addTransactionVm.enterpriseValuation.engineImage.filename">
+                      <div class="icn2">
+                        <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('engineImage')"><i class="fa fa-times"></i></a>
+                     </div>
+                      <span class="fileinput-button">
+                        <a href="javascript:void(0);">
+                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.engineImage.external">
+                          <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.engineImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.engineImage.external">
+                        </a>
+                      </span> 
+                    </div>                        
+                </div>  
+                Engine  
+              </div>
+              <div class="col-sm-2  text-center">
+                <div class="br5">
+                  <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.hydraulicImage.filename">
+                      <span><i class="fa fa-plus-circle"></i></span>
+                        <input type="file" name="hydraulic" onchange="angular.element(this).scope().upload(this.files,'hydraulicImage')" ng-disabled="!editAgencyField()" accept="image/*">
+                   </span> 
+                   <div ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.filename">
+                      <div class="icn2">
+                        <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('hydraulicImage')"><i class="fa fa-times"></i></a>
+                     </div>
+                      <span class="fileinput-button">
+                        <a href="javascript:void(0);">
+                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.external">
+                          <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.hydraulicImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.hydraulicImage.external">
+                        </a>
+                      </span> 
+                    </div>                       
+                </div>
+                Hydraulic
+              </div>
+              <div class="col-sm-2  text-center">
+                <div class="br5">
+                  <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.cabinImage.filename">
+                      <span><i class="fa fa-plus-circle"></i></span>
+                        <input type="file" name="cabin" onchange="angular.element(this).scope().upload(this.files,'cabinImage')" ng-disabled="!editAgencyField()" accept="image/*">
+                   </span> 
+                   <div ng-if="addTransactionVm.enterpriseValuation.cabinImage.filename">
+                      <div class="icn2">
+                        <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('cabinImage')"><i class="fa fa-times"></i></a>
+                     </div>
+                      <span class="fileinput-button">
+                       <a href="javascript:void(0);">
+                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.cabinImage.external">
+                          <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.cabinImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.cabinImage.external">
+                        </a>
+                      </span> 
+                    </div>                       
+                </div>
+                Cabin
+              </div>
+              <div class="col-sm-2  text-center">
+                <div class="br5">
+                  <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.underCarriageImage.filename">
+                      <span><i class="fa fa-plus-circle"></i></span>
+                        <input type="file" name="undercarriage" onchange="angular.element(this).scope().upload(this.files,'underCarriageImage')" ng-disabled="!editAgencyField()" accept="image/*">
+                   </span>    
+                   <div ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.filename">
+                      <div class="icn2">
+                        <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('underCarriageImage')"><i class="fa fa-times"></i></a>
+                     </div>
+                      <span class="fileinput-button">
+                        <a href="javascript:void(0);">
+                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.external">
+                          <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.underCarriageImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.underCarriageImage.external">
+                        </a>
+                      </span> 
+                    </div>                    
+                </div> 
+                Under-Carriage / Tyre 
+              </div>
+              <div class="col-sm-2  text-center">
+                <div class="br5">
+                  <span class="fileinput-button browse-icon" ng-if="!addTransactionVm.enterpriseValuation.otherImage.filename">
+                      <span><i class="fa fa-plus-circle"></i></span>
+                        <input type="file" name="other" onchange="angular.element(this).scope().upload(this.files,'otherImage')" ng-disabled="!editAgencyField()" accept="image/*">
+                   </span> 
+                   <div ng-if="addTransactionVm.enterpriseValuation.otherImage.filename">
+                      <div class="icn2">
+                        <a href="javascript:void(0);" ng-click="addTransactionVm.deleteImg('otherImage')"><i class="fa fa-times"></i></a>
+                     </div>
+                      <span class="fileinput-button">
+                        <a href="javascript:void(0);">
+                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.otherImage.external">
+                          <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.otherImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.otherImage.external">
+                        </a>
+                      </span> 
+                    </div>                       
+                </div> 
+                Other
+              </div>
+              
+          </div>
+          <div class="row form-group ">
+            <div class="col-sm-2">Valuation Report</div>
+            <div class="col-sm-2">
+              <span class="btn btn-warning fileinput-button">
+               <input type="file" name="report" onchange="angular.element(this).scope().upload(this.files,'valuationReport')" ng-disabled="!editAgencyField()">
+                <span><i class="fa fa-upload"></i> Upload</span>
+              </span>
+            </div>
+            <div class="col-sm-4">{{addTransactionVm.enterpriseValuation.valuationReport.filename}}</div>
+          </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- for admin -->
+    <div class="panel panel-default" ng-if="showPaymentSection()">
+      <div class="panel-heading">
+        <h3 class="panel-title">Payment Details</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row form-group">
+          <div class="col-sm-3" ng-init="invoicedToCustomer = addTransactionVm.enterpriseValuation.invoiceNo?true:false">
+             Invoiced to Customer{{invoicedToCustomer}}
+              <div class="row">
+                <div class="col-xs-6">
+                  <input type="radio" name="inv" ng-model="invoicedToCustomer" ng-value="true" disabled> Yes
+                </div>
+                <div class="col-xs-6">
+                  <input type="radio" name="inv" ng-mode="invoicedToCustomer" ng-value="false" disabled> No
+                </div>
+              </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+               <input type="text" class="form-control" disabled name="invoiceDate" ng-model="addTransactionVm.enterpriseValuation.invoiceDate" placeholder="Invoice Date"/>
+               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+             </div>
+          </div>
+          <div class="col-sm-3">
+              Payment Received
+              <div class="row">
+                <div class="col-xs-6">
+                  <input type="radio" name="rec" ng-model="addTransactionVm.enterpriseValuation.paymentReceived" ng-value="true" disabled> Yes
+                </div>
+                <div class="col-xs-6">
+                  <input type="radio" name="rec" ng-model="addTransactionVm.enterpriseValuation.paymentReceived" ng-value="false" disabled> No
+                </div>
+              </div>
+          </div>
+          <div class="col-sm-3">
+             Payment Made to Agency
+              <div class="row">
+                <div class="col-xs-6">
+                  <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="true" disabled> Yes
+                </div>
+                <div class="col-xs-6">
+                  <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="fale"disabled> No
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+        <div class="row form-group">
+          <div class="col-sm-offset-6 col-sm-6 text-right">
+            <button type="button" class="btn btn-default" ng-click="addTransactionVm.reset()"  ng-disabled="!editEnterpriseField()">Reset</button>
+            <button type="button" class="btn btn-danger" ng-click="addTransactionVm.addOrUpdateRequest(enterpriseValForm)" ng-if="!isEdit">Save</button>
+            <button type="button" class="btn btn-danger" ng-click="addTransactionVm.addOrUpdateRequest(enterpriseValForm)" ng-if="isEdit">Update</button>
+          </div>
+        </div>
+      
+  </form>
+</div> 

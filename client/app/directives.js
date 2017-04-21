@@ -11,6 +11,19 @@ angular.module('sreizaoApp')
   };
   
 }])
+.directive('stringToNumber', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(value) {
+        return '' + value;
+      });
+      ngModel.$formatters.push(function(value) {
+        return parseFloat(value, 10);
+      });
+    }
+  };
+})
 .directive('validPasswordC', function() {
   return {
     require: 'ngModel',
@@ -87,6 +100,7 @@ angular.module('sreizaoApp')
         link: function (scope, el, attrs) {
             el.bind('change', function (event) {
                 var files = event.target.files;
+                console.log(attrs);
                 var fr = new FileReader;
                 fr.onload = function(ev) {
                     var img = new Image;
@@ -128,6 +142,9 @@ angular.module('sreizaoApp')
                      emitObj.type = attrs.filetype;
                  if(files.length == 0)
                    return;
+                 if(event.currentTarget && event.currentTarget.id)
+                  emitObj.id = event.currentTarget.id;
+
                   if(attrs.index)
                       emitObj.index = attrs.index;
                 scope.$emit("fileSelected", emitObj);                                   

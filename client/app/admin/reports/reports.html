@@ -29,6 +29,7 @@
                 <option value="easyfinance">Easy Financing</option>
                 <option value="inspection">Inspection Request</option>
                 <option value="valuationReport">Valuation Report</option>
+                <option value="contactUs">Contact Us</option>
               </select>
             </div>
           </div>                  
@@ -60,7 +61,7 @@
                 <td>{{callback.mobile}}</td>
                 <td>{{callback.phone}}</td>
                 <td>{{callback.email}}</td>
-                <td>{{callback.createdAt | date:'MM/dd/yyyy'}}</td>                    
+                <td>{{callback.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                    
                </tr>
               </tbody>
             </table>
@@ -95,7 +96,7 @@
                 <td>{{query.mobile}}</td>
                 <td>{{query.phone}}</td>
                 <td>{{query.email}}</td>
-                <td>{{query.createdAt | date:'MM/dd/yyyy'}}</td>                     
+                <td>{{query.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                     
                 <td>{{query.category}}</td>                    
                 <td>{{query.brand}}</td>                    
                 <td>{{query.model}}</td>                    
@@ -220,7 +221,7 @@
                 <td>{{proQuery.financeInfo.periodInMonths}}</td>                    
                 <td>{{proQuery.financeInfo.finAgency}}</td>
                 <td>{{proQuery.message}}</td>     
-                <td>{{proQuery.createdAt | date:'MM/dd/yyyy'}}</td>                     
+                <td>{{proQuery.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                     
                 <td>{{reportsVm.getRequestedProducts(proQuery.product)}}</td>
                 <td>
                   <a href="javascript:void(0);" ng-click="reportsVm.viewProductsDetail(proQuery.product)" class="btn btn-primary btn-sm">
@@ -270,7 +271,7 @@
                 <td>{{addSvc.quote.allowed}}</td>                    
                 <td>{{addSvc.quote.packaging}}</td>                                        
                 <td>{{addSvc.quote.comment}}</td>   
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>
                </tr>
               </tbody>
             </table>
@@ -333,7 +334,7 @@
                 </td>                    
                 <td>{{addSvc.quote.schedule}}</td>                    
                 <td>{{addSvc.quote.comment}}</td>                                       
-                <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>
                </tr>
               </tbody>
             </table>
@@ -393,7 +394,7 @@
                   <td>{{addSvc.quote.periodInMonths}}</td>
                   <td>{{addSvc.quote.contactMethod}}</td>               
                   <td>{{addSvc.quote.comment}}</td>
-                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>
                  </tr>
                 </tbody>
               </table>
@@ -449,7 +450,7 @@
                   <td>{{addSvc.quote.invoiceVal}}</td>
                   <td>{{addSvc.quote.contactMethod}}</td>               
                   <td>{{addSvc.quote.comment}}</td>    
-                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>
                  </tr>
                 </tbody>
               </table>
@@ -500,7 +501,7 @@
                   <td>{{addSvc.product.mfgYear}}</td>
                   <td>{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
                   <td>{{addSvc.product.seller.mobile}}</td>
-                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>                  
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                  
                  </tr>
                 </tbody>
               </table>
@@ -558,7 +559,7 @@
                   <td>{{addSvc.product.rent.rateHours.seqDepositH}}</td>
                   <td>{{addSvc.product.rent.rateDays.seqDepositD}}</td>
                   <td>{{addSvc.product.rent.rateMonths.seqDepositM}}</td>
-                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy'}}</td>                  
+                  <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                  
                  </tr>
                 </tbody>
               </table>
@@ -610,7 +611,7 @@
                   <td>{{eFinance.request.financeInfo.periodInMonths}}</td>
                   <td>{{eFinance.request.financeInfo.finAgency}}</td>                    
                   <td>{{eFinance.request.message}}</td>      
-                  <td>{{eFinance.createdAt | date:'MM/dd/yyyy'}}</td>                          
+                  <td>{{eFinance.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                          
                  </tr>
                 </tbody>
               </table>
@@ -660,7 +661,7 @@
                   <td>{{insReq.request.scheduleC}}</td>
                   <td>{{insReq.request.scheduleDate | date:'MM/dd/yyyy'}} {{insReq.request.scheduledTime}}</td>
                   <td>{{insReq.request.comment}}</td>  
-                  <td>{{insReq.createdAt | date:'MM/dd/yyyy'}}</td>          
+                  <td>{{insReq.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>          
                  </tr>
                 </tbody>
               </table>
@@ -718,7 +719,7 @@
                   <td>{{valReq.product.mfgYear}}</td>       
                   <td>{{valReq.product.serialNumber}}</td>        
                   <td>{{valReq.valuationAgency.name}}</td>        
-                  <td>{{valReq.createdAt | date:'MM/dd/yyyy'}}</td>        
+                  <td>{{valReq.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>        
                   <td>{{valReq.purpose}}</td>
                   <td>{{getStatusOnCode(valuationStatuses,valReq.status).name}}</td>        
                  </tr>
@@ -728,6 +729,37 @@
             <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
           </div>
 
+          <div ng-if="reportsVm.tabValue == 'contactUs'">
+          <div class="table-responsive">
+            <table class="table table-bordred table-striped">
+              <thead>
+               <tr>
+                  <th>Sr. No</th>
+                  <th>Ticket Id</th> 
+                  <th>Full Name</th> 
+                  <th>Country</th>                               
+                  <th>Mobile No.</th>                                
+                  <th>Email Address</th>                                
+                  <th>Comments</th>                                
+                  <th>Date of Request</th>  
+               </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="contact in reportsVm.contactUsListing">
+                <td>{{$index + 1 + count}}</td>
+                <td>{{contact.ticketId}}</td>
+                <td>{{contact.name}}</td>              
+                <td>{{contact.country}}</td>              
+                <td>{{contact.mobile}}</td>
+                <td>{{contact.email}}</td>
+                <td>{{contact.message}}</td>
+                <td>{{contact.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                    
+               </tr>
+              </tbody>
+            </table>
+          </div>
+          <uib-pagination total-items="reportsVm.totalItems" ng-model="reportsVm.currentPage" items-per-page="reportsVm.itemsPerPage" max-size="reportsVm.maxSize" ng-change="reportsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+        </div>
 
     </div>
   </div>

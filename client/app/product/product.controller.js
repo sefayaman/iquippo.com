@@ -350,9 +350,10 @@
       //listen for the file selected event
       $scope.$on("fileSelected", function(event, args) {
         // console.log("hell yeah");
-
-        if (args.files.length == 0)
+        if (args.files.length == 0){
           return;
+        }
+
 
         $scope.$apply(function() {
           if (args.type == "image") {
@@ -360,8 +361,14 @@
             resizeParam.resize = true;
             resizeParam.width = imgDim.width;
             resizeParam.height = imgDim.height;
+            resizeParam.size=args.files[0].size;
           }
           $rootScope.loading = true;
+          if(args.files[0].size < 50000){
+            $rootScope.loading = false;
+            Modal.alert("Error in file upload.the size of the file should be more than 50KB", true);
+            return;
+          }
           uploadSvc.upload(args.files[0], $scope.assetDir, resizeParam).then(function(result) {
             $rootScope.loading = false;
             $scope.assetDir = result.data.assetDir;
@@ -596,6 +603,7 @@
           break;
         }
       }
+      
       if (md) {
         product.model._id = md._id;
         product.model.name = md.name;
@@ -669,7 +677,7 @@
       product.seller.company = seller.company;
     }
 
-    function updateAssetTemp(files) {
+    function updateAssetTemp(files,args) {
       if (!files[0])
         return;
       if (files[0].name.indexOf('.xlsx') == -1) {
@@ -678,7 +686,16 @@
       }
       uploadSvc.upload(files[0], importDir)
         .then(function(result) {
-          var fileName = result.data.filename;
+          var dataToSend = {};
+          dataToSend.fileName = result.data.filename;
+          dataToSend.user = {
+            _id  : Auth.getCurrentUser()._id,
+            email : Auth.getCurrentUser().email,
+            mobile : Auth.getCurrentUser().mobile,
+            role : Auth.getCurrentUser().role
+          };
+
+          dataToSend.type = args.name || 'template_update';          
           $rootScope.loading = true;
           productSvc.bulkEditProduct(fileName)
             .then(function(res) {
@@ -726,6 +743,7 @@
         form.mfgyear.$invalid = true;
         ret = true;
       }
+
 
       if($scope.product.tradeType != "SELL" && $scope.product.tradeType != 'NOT_AVAILABLE'){
         if($scope.product.rent && !$scope.product.rent.negotiable && angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
@@ -836,6 +854,7 @@
             imgObj.catImgType = item.catImgType;
           tempArr[tempArr.length] = imgObj;
         }
+
 
       });
 

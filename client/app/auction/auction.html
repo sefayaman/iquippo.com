@@ -38,7 +38,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="product in auctionDateVm.auctionListing">
+              <tr ng-repeat="product in auctionDateVm.auctionListing | orderBy:'startDate'">
                 <td>
                   <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
                     <i class="fa fa-eye"></i>
@@ -48,13 +48,13 @@
                 <td>{{product.auctionType | titleCase}}</td>
                 <td>{{product.name}}</td>
                 <td>{{product.auctionOwner}}</td>
-                <td>{{product.startDate | date:'MM/dd/yyyy hh:mm a'}}</td>
-                <td>{{product.endDate | date:'MM/dd/yyyy hh:mm a'}}</td>
-                <td>{{product.insStartDate | date:'MM/dd/yyyy hh:mm a'}}</td>
-                <td>{{product.insEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.startDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
+                <td>{{product.endDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
+                <td>{{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
+                <td>{{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
                 <!-- <td>{{product.regCharges}}</td> -->
                 <td>{{product.emdAmount}}</td>
-                <td>{{product.regEndDate | date:'MM/dd/yyyy hh:mm a'}}</td>
+                <td>{{product.regEndDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
                 <!-- <td>
                     <a href="javascript:void(0);" uib-popover="Seller Information" popover-trigger="mouseenter"></a>
                 </td> -->
