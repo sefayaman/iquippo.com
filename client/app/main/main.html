@@ -207,7 +207,7 @@
                   <div class="col-sm-2" ng-repeat="slide in gpSlide">
                     <div class="panel panel-default">
                       <a ng-href="/productdetail/{{slide._id}}?FeatureProduct">
-                        <img ng-src="{{uploadImagePrefix}}/{{slide.primaryImg}}" class="img-responsive">
+                        <img ng-src="{{uploadImagePrefix}}featured/{{slide.primaryImg}}" class="img-responsive">
                       </a>
                       <div class="panel-heading" uib-popover="{{slide.name}}" popover-trigger="mouseenter">
                         <h3 class="panel-title">{{slide.name}}</h3>
