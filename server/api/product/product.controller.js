@@ -1210,8 +1210,7 @@ exports.updateExcelData = function (req,res,next){
       console.log(err);
       return next(new APIError(500,'Error while updation'));
     }
-
-    return res.json({successCount:successCount , errorList : req.errorList});
+    return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
   }
 
   function intialize(data,cb){
@@ -1342,7 +1341,7 @@ exports.validateExcelData = function(req, res, next) {
   var updateData = [];
   var errorList = [];
   var assetIdObj = {};
-
+  req.totalCount = excelData.length;
   async.eachLimit(excelData, 10, intialize, finalize);
 
   function finalize(err) {
@@ -1351,8 +1350,10 @@ exports.validateExcelData = function(req, res, next) {
       return next(new APIError(500,'Error while updating'));
     }
 
-    if(!updateData.length && !errorList.length)
-      return res.json({successCount:0 , errorList : excelData.length});
+    if(!updateData.length && !errorList.length){
+      debugger;
+      return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
+    }
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1376,7 +1377,6 @@ exports.validateExcelData = function(req, res, next) {
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
-
     if(reqType === 'Update'){
       Product.find({
         assetId: row.assetId
