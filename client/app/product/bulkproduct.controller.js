@@ -5,7 +5,7 @@ angular.module('sreizaoApp')
 
 /* Controller function */
 
-function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingSvc,Modal,Auth,notificationSvc,$uibModal,suggestionSvc,commonSvc){
+function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,settingSvc,Modal,Auth,notificationSvc,$uibModal,suggestionSvc,commonSvc){
   var vm = this;
   var imageCounter = 0;
   
@@ -38,13 +38,24 @@ function BulkProductCtrl($scope,$rootScope,$window,uploadSvc,productSvc,settingS
   });
 
   function loadIncomingProduct(){
-    productSvc.loadIncomingProduct()
+    var obj = {
+      userId:Auth.getCurrentUser()._id
+    }; 
+    productSvc.loadIncomingProduct(obj)
     .then(function(result){
       vm.products = result;
     });
   }
 
-  loadIncomingProduct();
+
+  //starting point
+  Auth.isLoggedInAsync(function(loggedIn){
+    if(loggedIn){
+      loadIncomingProduct();
+    }else
+    $state.go("main")
+  });
+
   function goToImageUpload(productId){
     productSvc.getIncomingProduct(productId)
     .then(function(prd){

@@ -299,6 +299,7 @@ exports.search = function(req, res) {
     })
     .par(function(){
       var self = this;
+      var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
           var saleFeaturedProd = [],
@@ -309,45 +310,48 @@ exports.search = function(req, res) {
               notAvailProd = [],
               soldProd = [],  //status of product
               rentedProd = []; //status
-          products.forEach(function(item,idx){
-            if(item.featured && item.tradeType === 'SELL'){
-              saleFeaturedProd.push(item);
-              products.splice(idx,1);
-            }
+          products.forEach(function(item){
+            if(!assetIdCache[item.assetId]){
+              assetIdCache[item.assetId] = true;
+              if(item.featured && item.tradeType === 'SELL'){
+                saleFeaturedProd.push(item);
+                return;
+              }
 
-            if(item.featured && item.tradeType === 'RENT'){
-              rentFeaturedProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.featured && item.tradeType === 'RENT'){
+                rentFeaturedProd.push(item);
+                return;
+              }
 
-            if(item.tradeType === 'SELL'){
-              saleProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'SELL'){
+                saleProd.push(item);
+                return;
+              }
 
-            if(item.tradeType === 'BOTH'){
-              bothProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'BOTH'){
+                bothProd.push(item);
+                return;
+              }
 
-            if(item.tradeType === 'RENT'){
-              rentProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'RENT'){
+                rentProd.push(item);
+                return;
+              }
 
-            if(item.tradeType === 'NOT_AVAILABLE'){
-              notAvailProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.tradeType === 'NOT_AVAILABLE'){
+                notAvailProd.push(item);
+                return;
+              }
 
-            if(item.assetStatus === 'SOLD'){
-              soldProd.push(item);
-              products.splice(idx,1);
-            }
+              if(item.assetStatus === 'SOLD'){
+                soldProd.push(item);
+                return;
+              }
 
-            if(item.assetStatus === 'RENTED'){
-              rentedProd.push(item);
-              products.splice(idx,1);
+              if(item.assetStatus === 'RENTED'){
+                rentedProd.push(item);
+                return;
+              }
             }
           });
 
@@ -612,66 +616,83 @@ function updateProduct(req,res){
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
     if(req.body.featured){
-    var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
-    var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
-    console.log("featureFilePath----",featureFilePath);
-    var fileParts=req.body.primaryImg.split('.');
-    var extPart=fileParts[1];
-    var fileBeforeCompression=1;
-    var fileAfterCompression=0;
-    var counter=0;
-   if (fs.existsSync(featureFilePath)) {
-        return;
-      }
-  fsExtra.copy(imgPath, featureFilePath, {
-        replace: false
-      },function(err,result){
-        if(err)throw err;
-        lwip.open(featureFilePath,function(err,image){
-         var stats=fs.statSync(featureFilePath);
-         fileBeforeCompression=stats.size;
-         debug("SIZE before compression",fileBeforeCompression);
+      var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
+      var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
+      var fileParts=req.body.primaryImg.split('.');
+      var extPart=fileParts[1];
+      var fileBeforeCompression=1;
+      var fileAfterCompression=0;
+      if (fs.existsSync(featureFilePath)) {
+        return updateProductData();
+      } 
+
+      fsExtra.copy(imgPath, featureFilePath, {
+          replace: false
+        },function(err,result){
+          if(err){
+            return updateProductData();
+          }
+          lwip.open(featureFilePath,function(err,image){
+           if(err){
+            return updateProductData();
+          }
+          var stats=fs.statSync(featureFilePath);
+          fileBeforeCompression=stats.size;
           image.resize(130,100,function(err, rzdImage) {
+            if(err){
+              return updateProductData();
+            }
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
                 quality: 75
               }, function(err, buffer) {
+                  if(err){
+                    return updateProductData();
+                  }
                 fs.writeFile(featureFilePath, buffer, function(err) {
-                  if (err) throw err;
+                  if(err){
+                    return updateProductData();
+                  }
                   var stats=fs.statSync(featureFilePath);
-                   fileAfterCompression=stats.size;
-                   debug("SIZE After compression",fileAfterCompression);        
-                  counter++;
+                  fileAfterCompression=stats.size;
+                  debug("SIZE After compression",fileAfterCompression);    
+                  return updateProductData();
                 })
               })
-            } else {
-              if (extPart == 'png') {
-                rzdImage.toBuffer(extPart, {
-                  compression: "high",
-                  interlaced: false,
-                  transparency: 'auto'
-                }, function(err, buffer) {
-                  fs.writeFile(featureFilePath,buffer, function(err) {
-                    if (err) throw err;
-                    var stats=fs.statSync(featureFilePath);
-                    fileAfterCompression=stats.size; 
-                    console.log("SIZE After compression",fileAfterCompression);
-                    counter++;
+              } else {
+                if (extPart === 'png') {
+                  rzdImage.toBuffer(extPart, {
+                    compression: "high",
+                    interlaced: false,
+                    transparency: 'auto'
+                  }, function(err, buffer) {
+                    if(err){
+                      return updateProductData();
+                    }
+                    fs.writeFile(featureFilePath,buffer, function(err) {
+                      if(err){
+                        return updateProductData();
+                      }
+                      var stats=fs.statSync(featureFilePath);
+                      fileAfterCompression=stats.size; 
+                      return updateProductData();
+                    })
                   })
-                })
+                }
               }
-            }
-          })
-    
-      })
-           
-  })
-}
+            })
+          })   
+        })
+      } else {
+        updateProductData();      
+      }
 
-    Product.update({_id:req.params.id},{$set:req.body},function(err){
+    function updateProductData(){
+      Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(req.body);
-    });
+          return res.status(200).json(req.body);
+      });
+    }
   });
 }
 
@@ -1783,45 +1804,6 @@ exports.validateExcelData = function(req, res, next) {
       });
     }
 
-    function validateDupProd(callback){
-      Product.find({assetId:row.assetId},function(err,products){
-        if(err || !products){
-          errorList.push({
-            Error : 'Error while validating product',
-            rowCount : row.rowCount
-          });
-        }
-
-        if(products.length){
-          errorList.push({
-            Error : 'Duplicate Asset Id',
-            rowCount : row.rowCount
-          });
-        }
-        return callback();
-      });
-    }
-
-    function validateDupIncomingProd(callback){
-      IncomingProduct.find({assetId:row.assetId},function(err,products){
-        if(err || !products){
-          errorList.push({
-            Error : 'Error while validating product',
-            rowCount : row.rowCount
-          });
-        }
-
-        if(products.length){
-          errorList.push({
-            Error : 'Duplicate Asset Id present in quene',
-            rowCount : row.rowCount
-          });
-        }
-        return callback();
-      });
-    }
-
-
     function buildData(err, parseData) {
       if (err)
         return cb();
@@ -1903,7 +1885,8 @@ exports.validateExcelData = function(req, res, next) {
         }
       }
 
-      ['dispSellerInfo', 'dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
+      
+      ['dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
         if (row[x]) {
           if (row[x].toLowerCase() === 'yes')
             obj[x] = true
@@ -1913,6 +1896,15 @@ exports.validateExcelData = function(req, res, next) {
             delete row[x];
         }
       });
+
+
+
+      if(row.dispSellerInfo && row.dispSellerInfo.toLowerCase() === 'yes'){
+        obj.dispSellerInfo = 'yes';
+      } else {
+        obj.dispSellerInfo = 'no';
+      }
+
 
       if (row.alternateMobile)
         obj.alternateMobile = row.alternateMobile;
@@ -1937,13 +1929,23 @@ exports.validateExcelData = function(req, res, next) {
         if (row[x])
           obj[x] = trim(row[x]);
       })
-
-      var additionalCols = ['comment', 'operatingHour', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant'];
+    
+      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
           obj[x] = row[x];
         }
       });
+
+      if(row.videoLinks){
+        obj.videoLinks = [{
+          uri : row.videoLinks
+        }];
+      }
+
+      if(row.motorOperatingHour){
+        obj.operatingHour = row.motorOperatingHour;
+      }
 
       var validTradeType = ['sell','rent','both'];
       if(row.tradeType && (validTradeType.indexOf(row.tradeType.toLowerCase()) > -1)){
