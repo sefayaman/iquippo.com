@@ -1349,7 +1349,7 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateCity(callback){
-      CityModel.find({name : row.city},function(err,cityInfo){
+      CityModel.City.find({name : row.city},function(err,cityInfo){
         if(err || !cityInfo){
           errorList.push({
             Error : 'Error while validating city',
@@ -1366,7 +1366,7 @@ exports.validateExcelData = function(req, res, next) {
             return callback('Error');
           }
 
-          if(cityInfo.state.name !== row.state || cityInfo.state.country !== row.country){
+          if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
             errorList.push({
               Error : 'Invalid State or country',
               rowCount :row.rowCount
