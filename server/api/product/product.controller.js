@@ -1352,7 +1352,7 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     if(!updateData.length && !errorList.length)
-      return res.json({successCount:0 , errorList : 0})
+      return res.json({successCount:0 , errorList : excelData.length});
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1772,7 +1772,11 @@ exports.validateExcelData = function(req, res, next) {
         }
         return callback();
       } else {
-        return callback();
+        errorList.push({
+          Error : 'Nothing to update',
+          rowCount : row.rowCount
+        })
+        return callback('Error');
       }
     }
 
