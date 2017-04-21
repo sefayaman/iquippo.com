@@ -17,6 +17,7 @@ var Category = require('./../category/category.model');
 var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
+var CityModel = require('../common/location.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
@@ -1310,6 +1311,7 @@ exports.validateExcelData = function(req, res, next) {
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
             validateServiceInfo: validateServiceInfo,
+            validateCity : validateCity,
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols
@@ -1332,6 +1334,7 @@ exports.validateExcelData = function(req, res, next) {
           validateSeller: validateSeller,
           validateTechnicalInfo: validateTechnicalInfo,
           validateServiceInfo: validateServiceInfo,
+          validateCity : validateCity,
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
           validateOnlyAdminCols: validateOnlyAdminCols
@@ -1345,9 +1348,39 @@ exports.validateExcelData = function(req, res, next) {
       }
     }
 
+    function validateCity(callback){
+      CityModel.find({name : row.city},function(err,cityInfo){
+        if(err || !cityInfo){
+          errorList.push({
+            Error : 'Error while validating city',
+            rowCount :row.rowCount
+          });
+            return callback('Error');
+          }
+
+          if(!cityInfo.length){
+            errorList.push({
+              Error : 'Invalid City',
+              rowCount :row.rowCount
+            });
+            return callback('Error');
+          }
+
+          if(cityInfo.state.name !== row.state || cityInfo.state.country !== row.country){
+            errorList.push({
+              Error : 'Invalid State or country',
+              rowCount :row.rowCount
+            });
+            return callback('Error');
+          }
+
+          return callback();
+        });
+    }
+
     function validateMadnatoryCols(callback){
       var error;
-      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].some(function(x){
+      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','city','seller_mobile'].some(function(x){
         if(!row[x]){
           error = true;
           errorList.push({
