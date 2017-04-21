@@ -31,6 +31,7 @@ angular.module('sreizaoApp',[
    'uiGmapgoogle-maps',
    'yard',
    'viewhead',
+   'nvd3'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider
