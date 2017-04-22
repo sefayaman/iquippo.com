@@ -1588,21 +1588,21 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
-              function fetchProduct(innerCb){
-          Product.find({
-            assetId: row.assetId
-          }, function(err, doc) {
-            if (err || !doc.length) {
-              errorList.push({
-                Error: 'No asset id found',
-                rowCount: row.rowCount
-              })
-              return innerCb('Error');
-            }
-            existingProduct = doc[0];
-            return innerCb();
-          });
-        }
+      function fetchProduct(innerCb){
+        Product.find({
+          assetId: row.assetId
+        }, function(err, doc) {
+          if (err || !doc.length) {
+            errorList.push({
+              Error: 'No asset id found',
+              rowCount: row.rowCount
+            })
+            return innerCb('Error');
+          }
+          existingProduct = doc[0];
+          return innerCb();
+        });
+      }
 
 
         function middleManProcessing(err){
@@ -3473,8 +3473,6 @@ exports.createOrUpdateAuction = function(req,res){
         req.body.auction.valuation._id = req.valuationId + "";
         req.body.auction.valuation.status = req.body.valuation.status;
       }
-
-      console.log(req.body.auction);
 
       if(req.body.auction._id){
         AuctionReq.update({_id:req.body.auction._id},{$set:req.body.auction},function(err,acts){
