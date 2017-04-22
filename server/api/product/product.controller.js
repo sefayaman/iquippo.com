@@ -1574,7 +1574,21 @@ exports.validateExcelData = function(req, res, next) {
           createAuctionRequest : createAuctionRequest
         },middleManProcessing);
 
-        function fetchProduct(innerCb){
+      } else if(row.auctionListing && row.auctionListing.toLowerCase() === 'no'){
+        var obj = {
+          auction : {},
+          auctionListing :false
+        }
+        return callback();
+      } else {
+        errorList.push({
+          Error : 'Nothing to update',
+          rowCount : row.rowCount
+        })
+        return callback('Error');
+      }
+
+              function fetchProduct(innerCb){
           Product.find({
             assetId: row.assetId
           }, function(err, doc) {
@@ -1613,7 +1627,13 @@ exports.validateExcelData = function(req, res, next) {
             dbAuctionId: auctionMaster[0]._id,
             emdAmount: row.emdAmount,
             user: user,
-            seller: existingProduct.seller,
+            seller: {
+              "mobile" : existingProduct.seller.mobile,
+              "email"  : existingProduct.seller.email,
+              "name"   : (existingProduct.seller.fname || '') + (existingProduct.seller.lname || '') ,
+              "_id"    : existingProduct.seller._id
+            },
+            seller: ,
             status: 'payment_pending',
             statuses: [ { createdAt: new Date(),
                  status: 'payment_pending',
@@ -1625,7 +1645,8 @@ exports.validateExcelData = function(req, res, next) {
               name: existingProduct.name,
               status: existingProduct.status,
               category: existingProduct.category,
-              mfgYear : existingProduct.mfgYear
+              mfgYear : existingProduct.mfgYear,
+              productId : existingProduct.productId
             },
             startDate: auctionMaster[0].startDate,
             endDate: auctionMaster[0].endDate,
@@ -1861,21 +1882,6 @@ exports.validateExcelData = function(req, res, next) {
             return innerCb();
           });
         }
-
-
-      } else if(row.auctionListing && row.auctionListing.toLowerCase() === 'no'){
-        var obj = {
-          auction : {},
-          auctionListing :false
-        }
-        return callback();
-      } else {
-        errorList.push({
-          Error : 'Nothing to update',
-          rowCount : row.rowCount
-        })
-        return callback('Error');
-      }
     }
 
     
@@ -2288,8 +2294,8 @@ exports.validateExcelData = function(req, res, next) {
         }
       })
 
-      if (row.serviceOperatingHour) {
-        obj.serviceInfo[0].operatingHour = row.serviceOperatingHour;
+      if (row.operatingHour) {
+        obj.serviceInfo[0].operatingHour = row.operatingHour;
       }
 
       if (row.servicedate) {
@@ -3467,6 +3473,8 @@ exports.createOrUpdateAuction = function(req,res){
         req.body.auction.valuation._id = req.valuationId + "";
         req.body.auction.valuation.status = req.body.valuation.status;
       }
+
+      console.log(req.body.auction);
 
       if(req.body.auction._id){
         AuctionReq.update({_id:req.body.auction._id},{$set:req.body.auction},function(err,acts){
