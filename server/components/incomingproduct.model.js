@@ -76,6 +76,8 @@ var IncomingProductSchema = new Schema({
   dispSellerInfo:String,
   dispSellerContact:String,
   dispSellerAlternateContact:String,
+  alternateMobile  : String,
+  
 });
 
 module.exports = mongoose.model('IncomingProduct', IncomingProductSchema);
