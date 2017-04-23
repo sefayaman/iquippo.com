@@ -49,7 +49,7 @@
         </div>
         <div class="row form-group">                            
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="*Reference / FI Number"/>
+            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="Customer Transaction ID"/>
           </div>
           <div class="col-sm-3">
             <input type="text" class="form-control" name="customerValuationNo" ng-model="addTransactionVm.enterpriseValuation.customerValuationNo" ng-disabled="!editEnterpriseField()" placeholder="Customer Valuation/Inspection No."/>
@@ -128,8 +128,8 @@
           <div class="col-sm-3">          
             <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
               <option value="">Yard Parked</option>
-              <option value="Yes">Yard Information</option>
-              <option value="No">Asset Address</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
             <i class="caret"></i>
           </div>
