@@ -987,6 +987,7 @@ exports.exportProducts = function(req, res) {
         }
         var responseData = [];
         var mapedFields = {};
+        var extraCols = ['priceOnRequest','auctionListing', 'isEngineRepaired', 'dispSellerContact', 'dispSellerAlternateContact', 'featured', 'status'];
         Object.keys(productFieldsMap).forEach(function(x) {
           mapedFields[productFieldsMap[x]] = x;
         });
@@ -995,7 +996,7 @@ exports.exportProducts = function(req, res) {
           var obj = {};
           if (colData) {
             Object.keys(colData).forEach(function(y) {
-              if (mapedFields[y]) {
+              if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
                 obj[mapedFields[y]] = x[y];
                 ['category', 'brand', 'model'].forEach(function(u) {
                   if (x[u])
@@ -1079,12 +1080,7 @@ exports.exportProducts = function(req, res) {
               else
                 obj[mapedFields.negotiable] = 'No';
 
-              ['priceOnRequest', 'isEngineRepaired', 'dispSellerContact', 'dispSellerAlternateContact', 'featured', 'status'].forEach(function(x) {
-                if (colData[x] ) {
-                  obj[mapedFields[x]] = 'Yes';
-                } else
-                  obj[mapedFields[x]] = 'No';
-              });
+              
 
 
               ['fromDate', 'toDate'].forEach(function(x) {
@@ -1092,12 +1088,14 @@ exports.exportProducts = function(req, res) {
                   obj[mapedFields[x]] = Utillity.toIST(colData.rent[x]);
                 }
               })
-
-              if(colData.auctionListing){
-                obj[mapedFields.auctionListing] = 'Yes'; 
-              }else
-                obj[mapedFields.auctionListing] = 'No';
             }
+
+            extraCols.forEach(function(x) {
+              if (colData[x]) {
+                obj[mapedFields[x]] = 'Yes';
+              } else
+                obj[mapedFields[x]] = 'No';
+            });
 
             //Admin Cols only visible to admin
             var adminCols = ['assetStatus', 'dispSellerInfo', 'dispSellerContact', 'alternateMobile', 'dispSellerAlternateContact', 'featured', 'status'];
@@ -1633,7 +1631,6 @@ exports.validateExcelData = function(req, res, next) {
               "name"   : (existingProduct.seller.fname || '') + (existingProduct.seller.lname || '') ,
               "_id"    : existingProduct.seller._id
             },
-            seller: ,
             status: 'payment_pending',
             statuses: [ { createdAt: new Date(),
                  status: 'payment_pending',

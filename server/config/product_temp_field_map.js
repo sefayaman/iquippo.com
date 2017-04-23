@@ -74,9 +74,9 @@ module.exports = {
 	'Featured(Yes/No)': 'featured',
 	'Active(Yes/No)': 'status',
 	//Auction Related Cols
-	'List_for_Auctions': 'auctionListing',
+	'List_for_Auctions(Yes/No)': 'auctionListing',
 	'Auction_ID': 'auctionId',
 	'EMD_Amount': 'emdAmount',
-	'Request_for_Valuation': 'valuationReq',
+	'Request_for_Valuation(Yes/No)': 'valuationReq',
 	'Name_of_Agency': 'agencyName'
 }
