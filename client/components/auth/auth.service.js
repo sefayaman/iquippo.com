@@ -200,6 +200,18 @@ angular.module('sreizaoApp')
           retVal = false;
         return retVal;
       },
+      isValuationApprover:function(){
+        return true;
+      },
+      isValuationRequester:function(){
+        return true;
+      },
+      isAssetInspectionApprover:function(){
+        return true;
+      },
+      isisAssetInspectionRequester:function(){
+        return true;
+      },
       isPartner: function() {
         return currentUser.isPartner;
       },
