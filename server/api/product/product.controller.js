@@ -2078,7 +2078,7 @@ exports.validateExcelData = function(req, res, next) {
 
     function validateRentInfo(callback) {
       var product = {};
-      if (row.tradeType && row.tradeType.toLowerCase() !== "sell") {
+      if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
         product["rent"] = {};
 
         var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
@@ -2251,7 +2251,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType.toLowerCase() === 'sell') {
+      } else if (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available") {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
@@ -2299,7 +2299,7 @@ exports.validateExcelData = function(req, res, next) {
         var servicedate = new Date(row["servicedate"]);
         var validDate = isValid(servicedate);
         if (servicedate && validDate) {
-          obj["serviceInfo"][0].servicedate = servicedate;
+          obj.serviceInfo[0].servicedate = servicedate;
         }
 
       }
