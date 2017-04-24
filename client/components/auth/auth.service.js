@@ -200,16 +200,13 @@ angular.module('sreizaoApp')
           retVal = false;
         return retVal;
       },
-      isValuationApprover:function(){
+      isServiceApprover:function(service){
         return true;
       },
-      isValuationRequester:function(){
+      isServiceRequester:function(service){
         return true;
       },
-      isAssetInspectionApprover:function(){
-        return true;
-      },
-      isisAssetInspectionRequester:function(){
+      isApprovalRequired:function(){
         return true;
       },
       isPartner: function() {
