@@ -200,6 +200,15 @@ angular.module('sreizaoApp')
           retVal = false;
         return retVal;
       },
+      isServiceApprover:function(service){
+        return true;
+      },
+      isServiceRequester:function(service){
+        return true;
+      },
+      isApprovalRequired:function(){
+        return true;
+      },
       isPartner: function() {
         return currentUser.isPartner;
       },
