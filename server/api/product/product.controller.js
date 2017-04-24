@@ -1438,33 +1438,35 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateCity(callback){
-      CityModel.City.find({name : row.city},function(err,cityInfo){
-        if(err || !cityInfo){
-          errorList.push({
-            Error : 'Error while validating city',
-            rowCount :row.rowCount
-          });
-            return callback('Error');
-          }
-
-          if(!cityInfo.length){
+      if(row.city){
+        CityModel.City.find({name : row.city},function(err,cityInfo){
+          if(err || !cityInfo){
             errorList.push({
-              Error : 'Invalid City',
+              Error : 'Error while validating city',
               rowCount :row.rowCount
             });
-            return callback('Error');
-          }
+              return callback('Error');
+            }
 
-          if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
-            errorList.push({
-              Error : 'Invalid State or country',
-              rowCount :row.rowCount
-            });
-            return callback('Error');
-          }
+            if(!cityInfo.length){
+              errorList.push({
+                Error : 'Invalid City',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
 
-          return callback();
+            if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
+              errorList.push({
+                Error : 'Invalid State or country',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
+
+            return callback();
         });
+      }
     }
 
     function validateMadnatoryCols(callback){
