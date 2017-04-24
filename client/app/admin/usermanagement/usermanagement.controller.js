@@ -253,6 +253,12 @@ angular.module('sreizaoApp')
     $scope.newUser.isOtherState=false;
     $scope.newUser.isOtherCity=false;
     $scope.errors = {};
+
+      var services = [{name:"Valuation",code:"Valuation",sequence:1},
+                      {name:"Asset Inspection",code:"Inspection",sequence:2},
+                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3},
+                      {name:"Financing",code:"Finance",sequence:4}
+                    ]
     //$scope.editImage = false;
     //$scope.users = [];
     $rootScope.userList = [];
@@ -261,6 +267,7 @@ angular.module('sreizaoApp')
     $scope.onLocationChange = onLocationChange;
     $scope.getCountryWiseState=getCountryWiseState;
     $scope.getStateWiseLocation=getStateWiseLocation;
+    $scope.getServices = getServices;
     
     function init(){
       if($scope.isEdit) {
@@ -294,7 +301,61 @@ angular.module('sreizaoApp')
       getEnterprises();
     }
 
+
     init();
+
+    function getServices(isNew){
+
+      $scope.availedServices = [];
+      if($scope.newUser.role != 'enterprise')
+        return;
+
+      if(isNew){
+         $scope.availedServices = angular.copy(services);  
+         return;
+      }
+      var enterpriseSvcList = [];
+      for(var i = 0; i < $scope.enterprises.length;i++){
+        if($scope.newUser.enterpriseId == $scope.enterprises[i].enterpriseId){
+            enterpriseSvcList = angular.copy($scope.enterprises[i].availedServices);
+          break;
+        }
+      }
+      if(!$scope.isEdit){
+        //$scope.availedServices = angular.copy(enterpriseSvcList);
+        enterpriseSvcList.forEach(function(item){
+          var obj = {};
+          obj['name'] = item.name;
+          obj['code'] = item.code;
+          obj['sequence'] = item.sequence;
+          $scope.availedServices.push(obj);
+        })
+        return;
+      }
+
+      if($scope.isEdit)
+        $scope.availedServices = angular.copy($scope.newUser.availedServices) || [];
+      
+      if(Auth.isAdmin() && $scope.newUser.enterprise)
+        checkAndCopy(services,$scope.availedServices);
+      else
+        checkAndCopy(enterpriseSvcList,$scope.availedServices);
+
+    }
+
+    function checkAndCopy(globalList,localList){
+      globalList.forEach(function(item){
+          var found = false;
+          for(var i= 0; i < localList.length;i++){
+            if(item.code == localList[i].code){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            localList.push({name:item.name,code:item.code,sequence:item.sequence});
+        })
+    }
 
     function getEnterprises(){
       if(!Auth.isAdmin() && !Auth.isEnterprise())
@@ -307,6 +368,8 @@ angular.module('sreizaoApp')
         serData['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(serData).then(function(data){
             $scope.enterprises = data;
+            if($scope.isEdit)
+                getServices(false);
       });
 
     }
@@ -328,6 +391,7 @@ angular.module('sreizaoApp')
       }
 
   }
+
   function getStateWiseLocation(state,noChange){
     if(!noChange) {
       $scope.newUser.city="";
@@ -392,8 +456,11 @@ angular.module('sreizaoApp')
     };
 
     function updateUser(){
+
       $rootScope.loading = true;
       setLocationData();
+      if($scope.newUser.role == 'enterprise')
+          updateServices();
       userSvc.updateUser($scope.newUser).then(function(result){
         $rootScope.loading = false;
         $scope.closeDialog();
@@ -423,6 +490,15 @@ angular.module('sreizaoApp')
       $scope.newUser.city=$scope.newUser.otherCity;
     }
     }
+
+    function updateServices(){
+      $scope.newUser.availedServices = [];
+      $scope.availedServices.forEach(function(item){
+        if(item.checked)
+          $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
+      })
+    }
+
   function saveNewUser(){
      $scope.newUser.createdBy = {};
     if(Auth.getCurrentUser()._id) {
@@ -447,6 +523,9 @@ angular.module('sreizaoApp')
     if($scope.newUser.role == 'enterprise' && $scope.newUser.enterprise){
       $scope.newUser.enterpriseId = "E" + $scope.newUser.mobile + "" + Math.floor(Math.random() *10);
     }
+
+    if($scope.newUser.role == 'enterprise')
+      updateServices();
 
     $http.post('/api/users/register',$scope.newUser).success(function(result) {
       if(result && result.errorCode == 1){

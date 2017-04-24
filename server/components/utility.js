@@ -161,7 +161,7 @@ function excel_from_data(data,headers) {
     var C = 0;
     var rowItems = data[R];
     rowItems.forEach(function(item){
-      if(!item)
+      if(!item && item != 0)
           item = "";
        var cell = {v :item};
       setCell(ws, cell, R, C++);
