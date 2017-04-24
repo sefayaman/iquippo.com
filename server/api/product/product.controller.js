@@ -1466,6 +1466,8 @@ exports.validateExcelData = function(req, res, next) {
 
             return callback();
         });
+      } else {
+        return callback();
       }
     }
 
@@ -2253,7 +2255,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available") {
+      } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
