@@ -406,6 +406,7 @@ exports.bulkUpload = function(req, res) {
           mobile : result[0].mobile,
           _id : result[0]._id + "",
           enterpriseId : result[0].enterpriseId,
+          employeeCode : result[0].employeeCode,
           name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
 
@@ -455,7 +456,7 @@ exports.bulkUpload = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
+        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
@@ -737,6 +738,7 @@ exports.bulkModify = function(req, res) {
           mobile : result[0].mobile,
           _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
+          employeeCode : result[0].employeeCode,
           name : (result[0].fname || "") + " "+ (result[0].lname || "") 
         };
 
@@ -827,7 +829,7 @@ exports.bulkModify = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
+        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {

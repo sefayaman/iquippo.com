@@ -175,7 +175,6 @@ angular.module('sreizaoApp')
        * @return {Boolean}
        */
       isAdmin: function() {
-       
         return currentUser.role === 'admin';
       },
       isBulkUpload:function(){
@@ -191,7 +190,6 @@ angular.module('sreizaoApp')
         if(!currentUser.enterpriseId)
           retVal = false;
         return retVal;
-       // return currentUser.role === 'enterprise' && currentUser.enterprise;
       },
       isEnterpriseUser : function(){
         var retVal = false;
@@ -201,29 +199,32 @@ angular.module('sreizaoApp')
         return retVal;
       },
       isServiceApprover:function(service){
-        for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code === service && currentUser.services[i].approver === true)
+        for(var i=0;i<currentUser.availedServices.length;i++){
+         if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].approver === true)
           return true;
         }
         return false;
       },
       isServiceRequester:function(service){
-        for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code === service && currentUser.services[i].requester === true)
+        for(var i=0;i<currentUser.availedServices.length;i++){
+         if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].requester === true)
           return true;
         }
         return false;
       },
       isApprovalRequired:function(service){
-        for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code === service && currentUser.services[i].approvalRequired === true)
+        for(var i=0;i<currentUser.availedServices.length;i++){
+         if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].approvalRequired === 'Yes')
           return true;
         }
         return false;
       },
       isServiceAvailed:function(service){
-        for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code === service)
+        if(currentUser.role === 'admin')
+          return true;
+
+        for(var i=0;i<currentUser.availedServices.length;i++){
+         if(currentUser.availedServices[i].code === service)
           return true;
         }
         return false;

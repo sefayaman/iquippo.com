@@ -1211,7 +1211,7 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.typeOfservice.$invalid && submitted}">
-					<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" required>
+					<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" ng-change="svcFeeVm.getPartners(svcFeeVm.dataModel.serviceType)" required>
 						<option value="">*Request Type</option>
 						<option ng-repeat="req in svcFeeVm.serviceList" value="{{req.name}}">{{req.name}}</option>
 					</select>

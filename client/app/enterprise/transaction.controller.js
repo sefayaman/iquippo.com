@@ -38,6 +38,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
   vm.selectAll = selectAll;
+  vm.isSubmitAllowed = isSubmitAllowed;
 
   function init(){
 
@@ -306,6 +307,17 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         if(action == 'remove'){
           selectedItems = [];
         }
+     }
+
+     function isSubmitAllowed(){
+      if(Auth.isAdmin())
+        return true;
+        var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
+        if(validRole && (Auth.isServiceApprover('Valuation') || Auth.isServiceApprover('Inspection')))
+          return true;
+        else
+          return false;
+
      }
 
      function submitToAgency(){
