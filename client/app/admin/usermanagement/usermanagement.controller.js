@@ -302,9 +302,8 @@ angular.module('sreizaoApp')
       }
       getEnterprises();
     }
-    
-    loadVendors();
 
+    loadVendors();
     init();
     
     function loadVendors(){
@@ -338,6 +337,7 @@ angular.module('sreizaoApp')
           break;
         }
       }
+      
       if(!$scope.isEdit){
         //$scope.availedServices = angular.copy(enterpriseSvcList);
         enterpriseSvcList.forEach(function(item){
@@ -385,7 +385,7 @@ angular.module('sreizaoApp')
         serData['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(serData).then(function(data){
             $scope.enterprises = data;
-            if($scope.isEdit)
+            if($scope.isEdit || Auth.isEnterprise())
                 getServices(false);
       });
 

@@ -72,7 +72,7 @@
                     <input type="text" class="form-control" name="" value="" placeholder="*Address" required/>
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.employeeCode.$invalid && submitted }" ng-if="newUser.role == 'enterprise'">
-                    <input type="number" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-required="!newUser.enterprise"/>
+                    <input type="number" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="!newUser.enterprise" ng-disabled="isEdit">
                   </div>
                 </div>
                 <div class="row">                  
@@ -108,7 +108,7 @@
                         <th width="20%">Services</th>
                         <th>Approval Required</th>
                         <th>Role </th>
-                        <th width="28%">Default Partner</th>
+                        <th  ng-if="!newUser.enterpriseId" width="28%">Default Partner</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -132,7 +132,7 @@
                               </div>
                             </div>
                         </td>
-                        <td>
+                        <td ng-if="!newUser.enterpriseId">
                           <select class="form-control" ng-model="svc.partnerId">
                             <option value="">*Select Partner</option>
                             <option ng-repeat="vendor in getVendors(svc.code)" value="{{vendor.partnerId}}">{{vendor.name}}</option>
