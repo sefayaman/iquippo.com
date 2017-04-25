@@ -20,14 +20,12 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="input-group">
-              <input class="form-control" name="requestDate" id="from" ng-model="date1" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="From"/>
-              <label for="from" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+              <custom-datepicker placeholder="From Date" ng-model="enterprisePaymentReceivedVm.fromDate" myid="fromdate"  on-change="enterprisePaymentReceivedVm.fireCommand(true)"></custom-datepicker>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="input-group">
-              <input class="form-control" name="requestDate" id="to" ng-model="date2" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="To"/>
-              <label for="to" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+              <custom-datepicker placeholder="To Date" ng-model="enterprisePaymentReceivedVm.toDate" myid="todate"  on-change="enterprisePaymentReceivedVm.fireCommand(true)"></custom-datepicker>
             </div>
           </div>
         </div>

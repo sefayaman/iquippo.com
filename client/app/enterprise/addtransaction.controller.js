@@ -52,7 +52,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     
     vendorSvc.getAllVendors()
       .then(function(){
-        vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
+        vm.valAgencies = vendorSvc.getVendorsOnCode('Inspection');
       });
 
       ValuationPurposeSvc.get(null)

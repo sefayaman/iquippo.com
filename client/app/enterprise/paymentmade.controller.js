@@ -48,6 +48,11 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
 
       if(vm.searchStr)
         filter['searchStr'] = vm.searchStr;
+
+      if(vm.fromDate)
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+      if(vm.toDate)
+        filter['toDate'] = encodeURIComponent(vm.toDate);
       
       getInvoiceData(filter);
     }
@@ -152,7 +157,13 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
      }
 
      function exportExcel(){
-          EnterpriseSvc.exportExcel("paymentmade",{});
+          var filter = {};
+
+          if(vm.fromDate)
+            filter['fromDate'] = encodeURIComponent(vm.fromDate);
+          if(vm.toDate)
+            filter['toDate'] = encodeURIComponent(vm.toDate);
+          EnterpriseSvc.exportExcel("paymentmade",filter);
      }
 
      init();

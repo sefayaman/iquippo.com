@@ -69,9 +69,17 @@ function getValuationRequest(req,res){
   if (queryParam.requestType)
     filter["requestType"] = queryParam.requestType;
   if (queryParam.userId)
-    filter["user._id"] = queryParam.userId;
+    filter["createdBy._id"] = queryParam.userId;
   if (queryParam.invoiceNo)
     filter["invoiceNo"] = queryParam.invoiceNo;
+
+    var dateFilter = {};
+    if(queryParam.fromDate)
+      dateFilter['$gte'] = new Date(queryParam.fromDate);
+    if(queryParam.toDate)
+      dateFilter['$lt']= new Date(queryParam.toDate);
+    if(queryParam.fromDate || queryParam.toDate)
+      filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
@@ -118,6 +126,15 @@ function getInvoice(req,res){
     filter["enterprise.enterpriseId"] = queryParam.enterpriseId;
   if (queryParam.agencyId)
     filter["agency._id"] = queryParam.agencyId;
+  
+  var dateFilter = {};
+  if(queryParam.fromDate)
+    dateFilter['$gte'] = new Date(queryParam.fromDate);
+  if(queryParam.toDate)
+    dateFilter['$lt']= new Date(queryParam.toDate);
+  if(queryParam.fromDate || queryParam.toDate)
+    filter['createdAt'] = dateFilter;
+
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
@@ -377,7 +394,6 @@ exports.bulkUpload = function(req, res) {
     function validateEnterprise(callback){
       if(user.role== 'enterprise')
         row.enterpriseId = user.enterpriseId;
-      console.log("",user);
       UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
@@ -614,7 +630,6 @@ exports.bulkUpload = function(req, res) {
               _createAssetGroupCategory(row);
 
           EnterpriseValuation.create(row, function(err, enterpriseData) {
-          console.log(err);
           if(err || !enterpriseData) { 
             errObj.push({
               Error: 'Error while inserting data',
@@ -989,7 +1004,6 @@ exports.bulkModify = function(req, res) {
       }
 
       EnterpriseValuation.update({uniqueControlNo : uniqueControlNo},{$set:row}, function(err, enterpriseData) {
-        console.log(err);
         if(err || !enterpriseData) { 
           errObj.push({
             Error: 'Error while updating data',
@@ -1082,7 +1096,6 @@ exports.createInvoice = function(req,res){
 
   EnterpriseValuationInvoice.find({uniqueControlNos:{$elemMatch:{$in:req.body.uniqueControlNos}}},function(err,result){
     if(err) { return handleError(res, err); }
-    console.log("err",result.length);
     if(result.length > 0)
       return res.status(409).send("Invoice is already generated for one or more transaction.");
     _create();    
@@ -1188,6 +1201,7 @@ exports.updateInvoice = function(req, res) {
       if(remVal == 0){
         invoice.paymentMadeDetail.remainingAmount = 0;
         invoice.paymentMade = true;
+        invoice.paymentMadeDate = new Date();
       }else{
         invoice.paymentMadeDetail.remainingAmount = remVal;
         invoice.paymentMadeDetail.paymentDetails.push(checkdetailObj);
@@ -1202,6 +1216,7 @@ exports.updateInvoice = function(req, res) {
         if(remVal == 0){
           invoice.paymentReceivedDetail.remainingAmount = 0;
           invoice.paymentReceived = true;
+          invoice.paymentReceivedDate = new Date();
         }else{
           invoice.paymentReceivedDetail.remainingAmount = remVal;
           invoice.paymentReceivedDetail.paymentDetails.push(checkdetailObj);
@@ -1213,7 +1228,6 @@ exports.updateInvoice = function(req, res) {
 
   function update(inovice){
     EnterpriseValuationInvoice.update({_id:_id},{$set:inovice},function(err,retVal){
-        console.log("ret val",retVal)
         if (err) { return handleError(res, err); }
         return res.status(200).json(inovice);
     });
@@ -1255,7 +1269,6 @@ var parameters = {
 exports.updateFromAgency = function(req,res){
   
   var bodyData = req.body;
-  console.log("request body  data",bodyData);
 
   var result = {};
   result['success'] = true;
@@ -1303,7 +1316,6 @@ exports.updateFromAgency = function(req,res){
       stsObj.status = EnterpriseValuationStatuses[4];
       if(updateObj.statuses)
         updateObj.statuses[updateObj.statuses.length] = stsObj;
-       console.log("QV data upadted",updateObj);
 
        //return sendResponse();
       EnterpriseValuation.update({_id:valReq._id},{$set:updateObj},function(err){
@@ -1342,8 +1354,6 @@ exports.updateFromAgency = function(req,res){
 
       var key = keys[i];
       var keyObj = parameters[key];
-
-      //console.log("key obj",keyObj);
 
       var value = reqData[key];
       if(keyObj.required && !value){
@@ -1392,8 +1402,17 @@ exports.exportExcel = function(req,res){
     filter['_id'] = {$in:ids};
   }
 
+  var dateFilter = {};
+  if(queryParam.fromDate)
+    dateFilter['$gte'] = new Date(queryParam.fromDate);
+  if(queryParam.toDate)
+    dateFilter['$lt']= new Date(queryParam.toDate);
+
   switch(queryParam.type){
     case "transaction":
+     if(queryParam.fromDate || queryParam.toDate)
+        filter['createdAt'] = dateFilter;
+
       var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
       var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
       query.exec(function(err,dataArr){
@@ -1402,6 +1421,9 @@ exports.exportExcel = function(req,res){
       })
       break;
     case 'invoice':
+
+      if(queryParam.fromDate || queryParam.toDate)
+        filter['createdAt'] = dateFilter;
       var fieldMap = fieldsConfig["INVOICE_EXPORT"];
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
@@ -1413,6 +1435,8 @@ exports.exportExcel = function(req,res){
     case 'paymentmade':
        var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
        filter['paymentMade'] = true;
+      if(queryParam.fromDate || queryParam.toDate)
+        filter['paymentMadeDate'] = dateFilter;
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
@@ -1424,13 +1448,15 @@ exports.exportExcel = function(req,res){
               })
             }
           })
-          console.log("payment made",jsonArr);
           exportExcel(req,res,fieldMap,jsonArr);
       })
       break;
     case "paymentreceived":
       var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
       filter['paymentReceived'] = true;
+      if(queryParam.fromDate || queryParam.toDate)
+        filter['paymentReceivedDate'] = dateFilter;
+      
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
