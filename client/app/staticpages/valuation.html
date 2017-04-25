@@ -176,16 +176,16 @@
 							<div class="row" ng-if="isEnterprise">
 								<div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation">
+			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-click="getAgent('Valuation')" ng-disabled="!isServiceAvailed('Valuation')">
 			                            <label for="requestValuation"> Valuation </label>
 			                        </div>		               
-					              </div>
-					              <div class="col-xs-6 col-sm-6">
+					            </div>
+					            <div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection">
+			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection" ng-click="getAgent('Inspection')" ng-disabled="!isServiceAvailed('Inspection')">
 			                            <label for="requestInspection"> Inspection </label>
 			                        </div>
-			                       </div>
+			                    </div>
 							</div>
 							<hr>
 							<div class="row">
@@ -367,7 +367,7 @@
 									<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
 								</div>
 								<div class="col-sm-offset-4 col-sm-8 form-group" ng-if="isEnterprise">
-									<input type="text" class="form-control" name="" value="" placeholder="Name of Customer seeking Finance">
+									<input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="enterpriseValuation.nameOfCustomerSeeking" placeholder="Name of Customer seeking Finance">
 								</div>
 							</div>
 							<div class="row text-left" ng-if="!isEnterprise">
