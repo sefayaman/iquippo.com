@@ -202,21 +202,28 @@ angular.module('sreizaoApp')
       },
       isServiceApprover:function(service){
         for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code===service && currentUser.services[i].approver===true)
+         if(currentUser.services[i].code === service && currentUser.services[i].approver === true)
           return true;
         }
         return false;
       },
       isServiceRequester:function(service){
         for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code===service && currentUser.services[i].requester===true)
+         if(currentUser.services[i].code === service && currentUser.services[i].requester === true)
           return true;
         }
         return false;
       },
       isApprovalRequired:function(service){
         for(var i=0;i<currentUser.services.length;i++){
-         if(currentUser.services[i].code===service && currentUser.services[i].approvalRequired===true)
+         if(currentUser.services[i].code === service && currentUser.services[i].approvalRequired === true)
+          return true;
+        }
+        return false;
+      },
+      isServiceAvailed:function(service){
+        for(var i=0;i<currentUser.services.length;i++){
+         if(currentUser.services[i].code === service)
           return true;
         }
         return false;
