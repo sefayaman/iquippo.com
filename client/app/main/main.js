@@ -8,10 +8,6 @@ angular.module('sreizaoApp')
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl as mainVm',
         layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.index.title;
-          $rootScope.choosenTitle=pagesTitles.index.meta;
-        }
       })
       .state('contactus', {
         url: '/contactus',
@@ -144,10 +140,6 @@ angular.module('sreizaoApp')
         templateUrl: 'app/staticpages/aboutus.html',
          controller:"StaticCtrl",
          layout:'client',
-         onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.aboutus.title;
-          $rootScope.choosenTitle=pagesTitles.aboutus.meta;
-        }
       })
       .state('manpower', {
         url:"/manpower",
@@ -174,40 +166,24 @@ angular.module('sreizaoApp')
         templateUrl: 'app/staticpages/shipping.html',
         controller:"ShippingCtrl",
     	  layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.index.title;
-          $rootScope.choosenTitle=pagesTitles.index.meta;
-        }
       })
       .state('valuation', {
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
         controller:"ValuationCtrl",
         layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.valuation.title;
-          $rootScope.choosenTitle=pagesTitles.valuation.meta;
-        }
       })
       .state('financing', {
         url:"/financing",
         templateUrl: 'app/staticpages/financing.html',
         controller:"FinanceCtrl",
         layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.financing.title;
-          $rootScope.choosenTitle=pagesTitles.financing.meta;
-        }
       })
       .state('insurance', {
         url:"/insurance",
         templateUrl: 'app/staticpages/insurance.html',
         controller:"InsuranceCtrl",
     	  layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.insurance.title;
-          $rootScope.choosenTitle=pagesTitles.insurance.meta;
-        }
       })
       .state('privacy', {
         url:"/privacy",
@@ -330,10 +306,6 @@ angular.module('sreizaoApp')
         templateUrl: 'app/auction/auction.html',
         controller: 'ViewAuctionCtrl as auctionDateVm',
         layout:'client',
-        onEnter:function($rootScope){
-          $rootScope.choosenTitle=pagesTitles.viewauctions.title;
-          $rootScope.choosenTitle=pagesTitles.viewauctions.meta;
-        }
       })
       .state('assetinacuction', {
         url: '/assetinauction',
