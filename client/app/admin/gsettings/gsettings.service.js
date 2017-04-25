@@ -555,7 +555,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         })
     };
 
-    function getAuctionRegCharges(filter){
+    /*function getAuctionRegCharges(filter){
       return $http.post("/api/vendor/getfilteruser", filter)
         .then(function(res){
           return res.data;
@@ -563,7 +563,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         .catch(function(res){
           throw res;
         })
-    };
+    };*/
 
     function parseExcel(fileName){
       return $http.post(path,{fileName:fileName})

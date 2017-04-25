@@ -25,7 +25,18 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
       vendorService.createPartner = createPartner;
       vendorService.getVendorsOnCode = getVendorsOnCode;
       vendorService.validate = validate;
+      vendorService.getFilter = getFilter;
       //vendorService.validateVendor = validateVendor;
+
+      function getFilter(filter){
+        return $http.post(path + "/getfilteruser", filter)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(res){
+            throw res;
+          })
+      };
 
       function getAllVendors(){
         var deferred = $q.defer();
