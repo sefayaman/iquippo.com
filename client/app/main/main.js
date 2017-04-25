@@ -312,6 +312,14 @@ angular.module('sreizaoApp')
         layout:'admin',
         restrict:true
       })
+      .state('policies', {
+        url: '/policies',
+        templateUrl: 'app/admin/policies/policies.html',
+        controller: 'policyCtrl as policiesVm',
+        authenticate:true,
+        layout:'admin',
+        restrict:true
+      })
       .state('accept', {
         url: '/accept',
         templateUrl: 'app/invitationaccept/invitationaccept.html',
