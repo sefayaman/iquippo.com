@@ -30,7 +30,9 @@ var EnterpriseValuationInvoiceSchema = new Schema({
   statuses:[],
   createdBy:{},
   paymentReceived:{type:Boolean,default:false},
+  paymentReceivedDate:Date,
   paymentMade:{type:Boolean,default:false},
+  paymentMadeDate:Date,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

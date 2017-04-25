@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
+function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
   var entSvc = {};
   var path = "/api/enterprise";
   entSvc.get = get;
@@ -79,13 +79,23 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
 
 
     function save(data){
-      return $http.post(path, data)
+      
+      var deferred = $q.defer();
+      $rootScope.loading = true;
+      $http.post(path, data)
         .then(function(res){
-          return res.data;
+          if(res.data.uniqueControlNo && !Auth.isApprovalRequired(res.data.requestType))
+            submitToAgency([res.data],deferred);
+          else{
+            $rootScope.loading = false;
+            deferred.resolve(res.data);
+          }
         })
         .catch(function(err){
-          throw err
+          $rootScope.loading = false;
+          deferred.reject(err);
         })
+      return deferred.promise;
     }
 
 
@@ -221,13 +231,19 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
     contactPersonTelNo:"contactPersonTelNo",
     disFromCustomerOffice:"disFromCustomerOffice"
   }
+  
   var submmitted = false;
-   function submitToAgency(items){
+   function submitToAgency(items,deferred){
+    
     if(submmitted)
-        return;
+      return;
     if(!items || items.length == 0)
-        return;
+      return;
+
+    if(!deferred)
+      deferred = $q.defer();
     submmitted = true;
+
     var dataArr = [];
     var keys = Object.keys(Field_MAP);
     items.forEach(function(item){
@@ -237,19 +253,67 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       })
       dataArr[dataArr.length] = obj; 
     });
-    //console.log("",dataArr);
-      var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
-      return $http.post(apiUrl,dataArr)
-      .then(function(res){
-        console.log("success res",JSON.stringify(res.data))
-        submmitted = false;
-        return res.data;  
+
+    var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
+
+    $rootScope.loading = true;
+    $http.post(apiUrl,dataArr)
+    .then(function(res){
+      submmitted = false;
+      if(res.data && res.data.length > 0)
+        updateValReqs(res.data,items,deferred);
+      else{
+        $rootScope.loading = false;
+        deferred.resolve(res.data);  
+      }
+
+    })
+    .catch(function(err){
+      submmitted = false;
+      $rootScope.loading = false;
+      deferred.reject(err)
+    })
+    return deferred.promise;
+   }
+
+   function getValReqByUniqueCtrlNo(list,unCtrlNo){
+      var retVal = null;
+      list.some(function(item){
+        if(item.uniqueControlNo == unCtrlNo){
+          retVal = item;
+          return false;
+        }
+      })
+      return retVal;
+    }
+
+    function updateValReqs(resList,selectedItems,deferred){
+      
+      resList.forEach(function(item){
+        var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
+        if(item.success == "true"){
+           valReq.jobId = item.jobId;
+           setStatus(valReq,EnterpriseValuationStatuses[2]);
+        }else{
+          valReq.remarks = item.msg;
+          setStatus(valReq,EnterpriseValuationStatuses[1]);
+        }
+
+      })
+      $rootScope.loading = true;     
+      bulkUpdate(selectedItems)
+        .then(function(res){
+          if(deferred)
+            deferred.resolve(res.data);
+          $rootScope.loading = false;
       })
       .catch(function(err){
-        submmitted = false;
-        throw err;
+        if(deferred)
+            deferred.reject(err);
+         $rootScope.loading = false;
       })
-   }
+    }
+
    return entSvc;
 }
 })();

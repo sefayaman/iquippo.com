@@ -24,6 +24,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.onBrandChange = onBrandChange;
   vm.reset = reset;
   vm.deleteImg = deleteImg;
+  vm.getPartners = getPartners;
   vm.setCustomerData = setCustomerData;
 
   vm.addOrUpdateRequest = addOrUpdateRequest;
@@ -50,10 +51,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
     }
     
-    vendorSvc.getAllVendors()
-      .then(function(){
+    vendorSvc.getAllVendors();
+     /* .then(function(){
         vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-      });
+      });*/
 
       ValuationPurposeSvc.get(null)
       .then(function(result){
@@ -141,6 +142,13 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         });
       });
     };
+
+     function getPartners(code){
+            vm.valAgencies = [];
+            if(!code)
+                return;
+            vm.valAgencies = vendorSvc.getVendorsOnCode(code);
+      }
 
     function onBrandChange(brandName, noChange) {
         if (!noChange)
@@ -259,6 +267,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
           vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
           vm.enterpriseValuation.enterprise.email = item.email;
+          vm.enterpriseValuation.enterprise.employeeCode = item.employeeCode;
         }
 
       });

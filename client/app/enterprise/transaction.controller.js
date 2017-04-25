@@ -16,6 +16,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   var filter = {};
   $scope.docObj = {};
   $scope.isEdit = false;
+
   var dataToSend = {};
   $scope.uploadedExcel = '';
   $scope.modifiedExcel = '';
@@ -37,6 +38,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
   vm.selectAll = selectAll;
+  vm.isSubmitAllowed = isSubmitAllowed;
 
   function init(){
 
@@ -44,8 +46,9 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         if(loggedIn){
             
             dataToSend.pagination = true;
-            if(Auth.isEnterprise() || Auth.isEnterpriseUser())
+            if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
                 dataToSend.enterpriseName =  Auth.getCurrentUser().enterpriseName;
+            }
             else if(Auth.isPartner())
               dataToSend["partnerId"] = Auth.getCurrentUser()._id;
               getEnterpriseData(dataToSend);
@@ -76,6 +79,12 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
       }
 
+      if(Auth.isEnterpriseUser() && filter.isSearch){
+        filter['userId'] = Auth.getCurrentUser()._id;
+      }
+
+      delete filter.isSearch;
+
       EnterpriseSvc.get(filter)
       .then(function(result){
         vm.enterpriseValuationListing = result.items;
@@ -92,8 +101,18 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           angular.copy(dataToSend, filter);
       else
         filter = filterObj;
-      if(vm.searchStr)
-        filter['searchStr'] = vm.searchStr;
+      if(vm.searchStr){
+        filter.isSearch = true;
+        filter['searchStr'] = encodeURIComponent(vm.searchStr);
+      }
+      if(vm.fromDate){
+        filter.isSearch = true;
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+      }
+      if(vm.toDate){
+        filter.isSearch = true;
+        filter['toDate'] = encodeURIComponent(vm.toDate);
+      }
       
       getEnterpriseData(filter);
     }
@@ -290,6 +309,17 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         }
      }
 
+     function isSubmitAllowed(){
+      if(Auth.isAdmin())
+        return true;
+        var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
+        if(validRole && (Auth.isServiceApprover('Valuation') || Auth.isServiceApprover('Inspection')))
+          return true;
+        else
+          return false;
+
+     }
+
      function submitToAgency(){
         //api integration
         if(selectedItems.length == 0){
@@ -299,7 +329,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
         EnterpriseSvc.submitToAgency(selectedItems)
         .then(function(resList){
-          //console.log("res",res);
+          vm.selectAllReq = "";
+          selectedItems = [];
+          fireCommand(true);
+          /*//console.log("res",res);
             if(resList && resList.length > 0){
               resList.forEach(function(item){
                 var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
@@ -313,7 +346,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
               })
               bulkUpdate(selectedItems);
-            }          
+            }     */     
         })
         .catch(function(err){
           Modal.alert("error occured in integration");
@@ -321,7 +354,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       
     }
 
-    function getValReqByUniqueCtrlNo(list,unCtrlNo){
+    /*function getValReqByUniqueCtrlNo(list,unCtrlNo){
       var retVal = null;
       list.some(function(item){
         if(item.uniqueControlNo == unCtrlNo){
@@ -339,7 +372,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           selectedItems = [];
           fireCommand(true);
       })
-    }
+    }*/
 
     function showDetail(valReq){
       var scope = $rootScope.$new()
@@ -372,6 +405,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         });
           filter.ids = ids;
       }
+
+      if(vm.fromDate){
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+      }
+      if(vm.toDate){
+        filter['toDate'] = encodeURIComponent(vm.toDate);
+      }
+
       EnterpriseSvc.exportExcel("transaction",filter);
     }
 

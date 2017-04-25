@@ -31,6 +31,7 @@ angular.module('sreizaoApp',[
    'uiGmapgoogle-maps',
    'yard',
    'viewhead',
+   'nvd3'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider
@@ -190,6 +191,10 @@ angular.module('sreizaoApp',[
     $rootScope.getCategoryHelp = UtilSvc.getCategoryHelp;
     $rootScope.getLocationHelp = UtilSvc.getLocationHelp;
     $rootScope.getLocations = UtilSvc.getLocations;
+    $rootScope.isServiceAvailed = Auth.isServiceAvailed;
+    $rootScope.isApprovalRequired = Auth.isApprovalRequired;
+    $rootScope.isServiceRequester = Auth.isServiceRequester;
+    $rootScope.isServiceApprover = Auth.isServiceApprover;
 
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

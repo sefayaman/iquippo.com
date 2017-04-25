@@ -26,7 +26,7 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        //vm.getPartners = getPartners;//
+        vm.getPartners = getPartners;
 
         function init(){
             var filter = {};
@@ -35,11 +35,7 @@
             userSvc.getUsers(filter).then(function(data){
                 vm.enterprises = data;
             });
-             vendorSvc.getAllVendors()
-             .then(function(){
-                getPartners();
-             });
-
+             vendorSvc.getAllVendors();
         }
 
         function loadViewData(){
@@ -58,8 +54,11 @@
             $scope.pager.update(null,vm.filteredList.length,1);
         }
 
-        function getPartners(){
-            vm.agencies = vendorSvc.getVendorsOnCode("Valuation");
+        function getPartners(code){
+            vm.agencies = [];
+            if(!code)
+                return;
+            vm.agencies = vendorSvc.getVendorsOnCode(code);
         }
 
         function save(form){

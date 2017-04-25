@@ -19,9 +19,9 @@
       <div class="panel-body">
         <div class="row form-group ">                            
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.requestType.$invalid && submitted}">
-            <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField()" required>
+            <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.getPartners(addTransactionVm.enterpriseValuation.requestType)" required>
               <option value="">*Request Type</option>
-              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}">{{req.name}}</option>
+              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}" ng-if="isServiceAvailed(req.name)">{{req.name}}</option>
             </select>
             <i class="caret"></i>
           </div>
@@ -72,7 +72,7 @@
             </div>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
-            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="*Asset No." required/>
+            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="*Asset No."/>
           </div>
           <div class="col-sm-3">
             <div class="input-group">
@@ -87,19 +87,19 @@
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && submitted}">
             <select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
-              <option value="">*Select Brand</option>
+              <option value="">Select Brand</option>
               <option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
             </select>
             <i class="caret"></i>
-            <input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control" name="otherBrand" placeholder="Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
+            <input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.model.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
             <select class="form-control form-group" name="model" ng-model="addTransactionVm.enterpriseValuation.model" ng-disabled="!editEnterpriseField()">
-              <option value="">*Select Model</option>
+              <option value="">Select Model</option>
               <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
             </select>
             <i class="caret"></i>
-            <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control" name="otherModel" placeholder="Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
+            <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
           </div>
           <div class="col-sm-3">
             <textarea name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="Asset Description" class="form-control"></textarea>
@@ -125,13 +125,14 @@
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.yearOfManufacturing.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
             <input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" ng-min="1900" string-to-number/>
           </div>
-          <div class="col-sm-3">          
-            <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
+          <div class="col-sm-3">
+           <input type="text" class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" placeholder="Yard Information/Asset Address" ng-disabled="!editEnterpriseField()"/>          
+           <!--  <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
               <option value="">Yard Parked</option>
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
-            <i class="caret"></i>
+            <i class="caret"></i> -->
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.country.$invalid && submitted}">
             <select class="form-control" ng-model="addTransactionVm.enterpriseValuation.country" name="country" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onCountryChange(addTransactionVm.enterpriseValuation.country)" required>

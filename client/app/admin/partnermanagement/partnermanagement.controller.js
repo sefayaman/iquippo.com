@@ -158,6 +158,11 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
       $scope.services.push($scope.Auction);
     if($scope.Dealer)
       $scope.services.push($scope.Dealer);
+    if($scope.Inspection)
+      $scope.services.push($scope.Inspection);
+    if($scope.Sale_Fulfilment)
+      $scope.services.push($scope.Sale_Fulfilment);
+
     vm.vendorReg.services = $scope.services;
     if(!vm.vendorReg.user.state)
       vm.vendorReg.user.state = LocationSvc.getCountryStateByCity(vm.vendorReg.user.city).state; 
@@ -321,6 +326,10 @@ function PartnerManagementCtrl($scope, DTOptionsBuilder, $rootScope, $http, Auth
          serviceArr.push('Auction');
        else if(tempArr[i] == 'Dealer')
          serviceArr.push('Dealer');
+       else if(tempArr[i] == 'Inspection')
+       serviceArr.push('Inspection');
+       else if(tempArr[i] == 'Sale Fulfilment')
+       serviceArr.push('Sale Fulfilment');
     }
     return serviceArr.join();
   }
@@ -387,6 +396,10 @@ function updateVendor(vendor) {
         $scope.Auction = vendor.services[i];
       else if(vendor.services[i] == 'Dealer')
         $scope.Dealer = vendor.services[i];
+       else if(vendor.services[i] == 'Inspection')
+        $scope.Inspection = vendor.services[i];
+       else if(vendor.services[i] == 'Sale Fulfilment')
+        $scope.Sale_Fulfilment = vendor.services[i];
     }
     $scope.isEdit = true;
     vm.existFlag = true;
