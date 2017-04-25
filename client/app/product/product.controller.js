@@ -707,7 +707,7 @@
           productSvc.bulkEditProduct(dataToSend)
             .then(function(res) {
               $rootScope.loading = false;
-              var totalRecord = res.successCount + res.errorList.length;
+              var totalRecord = res.totalCount;
               var message = res.successCount + " out of " + totalRecord + " records are updated successfully.";
               if (res.errorList.length > 0) {
                 var data = {};

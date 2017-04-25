@@ -62,9 +62,9 @@
                     <li ng-if="isAdmin()">
                         <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
                     </li>                    
-                    <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
+<!--                     <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
                         <a href="/enterprisevaluation/dashboard"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
-                    </li>
+                    </li> -->
                     <!--<li ng-if="isAdmin()">
                         <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>
                     </li>
@@ -86,6 +86,13 @@
                             Emailer</a>
                          
                     </li>
+                     
+                    <li ng-if="isAdmin()">
+                        <a href="/policies"><i class="fa fa-pencil-square-o"></i>
+                            General Editor</a>
+                         
+                    </li>
+
                     <li ng-if="isAdmin()">
                         <a href="/gsettings"><i class="fa fa-cogs"></i>
                             General Settings</a>

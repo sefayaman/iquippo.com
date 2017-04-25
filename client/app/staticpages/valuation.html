@@ -83,7 +83,7 @@
 				
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Valuation / Asset Inspection</h3>
+						<h3 class="panel-title">Valuation</h3>
 					</div>
 					<div class="panel-body">
 						     
@@ -168,25 +168,25 @@
 								</div>
 							</div>
 							
-							<div class="row" ng-if="isEnterprise">
+							<!-- <div class="row">
 								<div class="col-xs-12">
 									<label>Request Type:</label>
 								</div>								
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<div class="row">
 								<div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-click="getAgent('Valuation')" ng-disabled="!isServiceAvailed('Valuation')">
-			                            <label for="requestValuation"> Valuation </label>
+			                            <input type="radio" id="requestY" name="schedule" value="yes">
+			                            <label for="requestY"> Valuation </label>
 			                        </div>		               
-					            </div>
-					            <div class="col-xs-6 col-sm-6">
+					              </div>
+					              <div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection" ng-click="getAgent('Inspection')" ng-disabled="!isServiceAvailed('Inspection')">
-			                            <label for="requestInspection"> Inspection </label>
+			                            <input type="radio" id="requestN" name="schedule" value="no">
+			                            <label for="requestN"> Inspection </label>
 			                        </div>
-			                    </div>
-							</div>
+			                       </div>
+							</div> -->
 							<hr>
 							<div class="row">
 								<div class="col-xs-12">
@@ -196,33 +196,7 @@
 								</div>
 								
 							</div>
-							<div class="row" ng-if="isEnterprise">
-								<div class="col-xs-4">
-									<div class="form-group">
-										<input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" required>
-									</div>
-								</div>
-								<div class="col-xs-4">
-									<div class="form-group">
-										<select class="form-control" ng-model="enterpriseValuation.brand" ng-change="onBrandChange(enterpriseValuation.brand)">
-											<option value="">Select Brand</option>
-											<option value="{{br.name}}" ng-repeat="br in allBrandList | orderBy:'name'">{{br.name}}</option>
-										</select>
-										<i class="caret"></i>
-									</div>
-								</div>
-								<div class="col-xs-4">
-									<div class="form-group">
-										<select class="form-control" ng-model="enterpriseValuation.model">
-											<option value="">Select Model</option>
-											<option value="{{md.name}}" ng-repeat="md in modelList | orderBy:'name'">{{md.name}}</option>
-										</select>
-										<i class="caret"></i>
-									</div>
-								</div>
-								
-							</div>
-							<div class="row" ng-if="!isEnterprise">
+							<div class="row">
 								<div class="col-xs-4">
 									<div class="form-group">
 										<select class="form-control" ng-model="valuationQuote.product.category" ng-change="onCategoryChange(valuationQuote.product.category)">
@@ -252,22 +226,22 @@
 								</div>
 								
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<!-- <div class="row">
 								<div class="col-sm-6 form-group">
-									<input type="text" class="form-control" name="engineNo" ng-model="enterpriseValuation.engineNo" placeholder="Engine Number">
+									<input type="text" class="form-control" name="" value="" placeholder="Engine Number">
 								</div>
 								<div class="col-sm-6 form-group">
-									<input type="text" class="form-control" name="chassisNo" ng-model="enterpriseValuation.chassisNo" placeholder="Chassis Number">
+									<input type="text" class="form-control" name="" value="" placeholder="Chassis Number">
 								</div>
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<div class="row">
 								<div class="col-sm-6 form-group">
-									<input type="text" class="form-control" name="registrationNo" ng-model="enterpriseValuation.registrationNo" placeholder="Registration Number">
+									<input type="text" class="form-control" name="" value="" placeholder="Registration Number">
 								</div>
 								<div class="col-sm-6 form-group">
-									<input type="text" class="form-control" name="serialNo" ng-model="enterpriseValuation.serialNo" placeholder="Serial Number">
+									<input type="text" class="form-control" name="" value="" placeholder="Serial Number">
 								</div>
-							</div>							
+							</div>		 -->					
 							<div class="row">
 								<div class="col-xs-6">
 									<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
@@ -280,21 +254,21 @@
 									</div>
 								</div>								
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<div class="row">
 								<div class="col-sm-6 form-group">
-									<input type="text" class="form-control" name="customerTransactionId" ng-model="enterpriseValuation.customerTransactionId" placeholder="*Reference / FI Number">
+									<input type="text" class="form-control" name="" value="" placeholder="*Reference / FI Number">
 								</div>
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<!-- <div class="row">
 								<div class="col-sm-12">
 									<label>Location of Asset:</label>
 								</div>
 							</div>
-							<div class="row form-group" ng-if="isEnterprise">
+							<div class="row form-group">
 								<div class="col-sm-12">
-									<input type="text" class="form-control" name="yardParked" ng-model="enterpriseValuation.yardParked" placeholder="Yard Information / Asset Adrress">
+									<input type="text" class="form-control" name="" value="" placeholder="Yard Information / Asset Adrress">
 								</div>
-							</div>
+							</div> -->
 							<div class="row">								
 								<div class="col-xs-4">
 									<div class="form-group" ng-class="{'has-error': form.prdCountry.$invalid && form.submitted }">
@@ -363,14 +337,14 @@
 				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
 				                    </select>
 								</div>
-								<div class="col-xs-6 col-sm-4 form-group" ng-if="!isEnterprise" ng-class="{'has-error': form.otherName.$invalid && form.submitted }">
+								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.otherName.$invalid && form.submitted }">
 									<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
 								</div>
-								<div class="col-sm-offset-4 col-sm-8 form-group" ng-if="isEnterprise">
-									<input type="text" class="form-control" name="nameOfCustomerSeeking" ng-model="enterpriseValuation.nameOfCustomerSeeking" placeholder="Name of Customer seeking Finance">
-								</div>
+								<!-- <div class="col-sm-offset-4 col-sm-8 form-group">
+									<input type="text" class="form-control" name="" value="" placeholder="Name of Customer seeking Finance">
+								</div> -->
 							</div>
-							<div class="row text-left" ng-if="!isEnterprise">
+							<div class="row text-left">
 				              <div class="col-xs-12 col-sm-4 form-group">Schedule a call</div>
 				              <div class="col-xs-6 col-sm-4 form-group">
 				              	<div class="radio radio-info">
@@ -408,7 +382,7 @@
 								<!-- <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre> -->
 								</div>
 				            </div>
-							<div class="form-group" ng-if="!isEnterprise">
+							<div class="form-group">
 								<textarea class="form-control" name="comment" ng-model="valuationQuote.comment" placeholder="Comments if any"></textarea>
 							</div>
 							

@@ -8,6 +8,10 @@ angular.module('sreizaoApp')
         templateUrl: 'app/main/main.html',
         controller: 'MainCtrl as mainVm',
         layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.index.title;
+          $rootScope.metaDescription=pagesTitles.index.meta;
+        }
       })
       .state('contactus', {
         url: '/contactus',
@@ -140,6 +144,10 @@ angular.module('sreizaoApp')
         templateUrl: 'app/staticpages/aboutus.html',
          controller:"StaticCtrl",
          layout:'client',
+         onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.aboutus.title;
+          $rootScope.metaDescription=pagesTitles.aboutus.meta;
+        }
       })
       .state('manpower', {
         url:"/manpower",
@@ -166,24 +174,40 @@ angular.module('sreizaoApp')
         templateUrl: 'app/staticpages/shipping.html',
         controller:"ShippingCtrl",
     	  layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.index.title;
+          $rootScope.metaDescription=pagesTitles.index.meta;
+        }
       })
       .state('valuation', {
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
         controller:"ValuationCtrl",
         layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.valuation.title;
+          $rootScope.metaDescription=pagesTitles.valuation.meta;
+        }
       })
       .state('financing', {
         url:"/financing",
         templateUrl: 'app/staticpages/financing.html',
         controller:"FinanceCtrl",
         layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.financing.title;
+          $rootScope.metaDescription=pagesTitles.financing.meta;
+        }
       })
       .state('insurance', {
         url:"/insurance",
         templateUrl: 'app/staticpages/insurance.html',
         controller:"InsuranceCtrl",
     	  layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.insurance.title;
+          $rootScope.metaDescription=pagesTitles.insurance.meta;
+        }
       })
       .state('privacy', {
         url:"/privacy",
@@ -249,10 +273,10 @@ angular.module('sreizaoApp')
             templateUrl: 'app/admin/gsettings/gsettings.html',
             controller: 'GSettingCtrl as gsettingVm',
           },
-          'yardassettype@gSettings' : {
-            templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
-            controller: 'AssetTypeCtrl as AssetTypeVm', 
-          },
+          // 'yardassettype@gSettings' : {
+          //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
+          //   controller: 'AssetTypeCtrl as AssetTypeVm', 
+          // },
           // 'yardasservices@gSettings' : {
           //   templateUrl: 'app/admin/gsettings/yards/assetType/assetType.html',
           //   controller: 'AssetTypeCtrl as AssetTypeVm', 
@@ -288,6 +312,14 @@ angular.module('sreizaoApp')
         layout:'admin',
         restrict:true
       })
+      .state('policies', {
+        url: '/policies',
+        templateUrl: 'app/admin/policies/policies.html',
+        controller: 'policyCtrl as policiesVm',
+        authenticate:true,
+        layout:'admin',
+        restrict:true
+      })
       .state('accept', {
         url: '/accept',
         templateUrl: 'app/invitationaccept/invitationaccept.html',
@@ -306,6 +338,10 @@ angular.module('sreizaoApp')
         templateUrl: 'app/auction/auction.html',
         controller: 'ViewAuctionCtrl as auctionDateVm',
         layout:'client',
+        onEnter:function($rootScope){
+          $rootScope.choosenTitle=pagesTitles.viewauctions.title;
+          $rootScope.metaDescription=pagesTitles.viewauctions.meta;
+        }
       })
       .state('assetinacuction', {
         url: '/assetinauction',
@@ -400,84 +436,84 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-       .state('yardlisting', {
-        url: '/yardlisting',
-        templateUrl: 'app/yard/yardlisting.html',
-        controller: 'YardListingCtrl as yardlistingVm',
-        authenticate:true,
-        layout:'admin'
-      })
-       .state('yardupload', {
-        url: '/yardupload',
-        templateUrl: 'app/yard/yardupload.html',
-        controller: 'YardListingCtrl as YardListingVm',
-        authenticate:true,
-        layout:'admin'
-      })
-      .state('yard', {
-        url: '/yard',
-        templateUrl: 'app/yard/yard.html',
-        controller: 'YardListingCtrl as YardListingVm',
-        layout:'client'
-      })
-      .state('enterprisevaluation', {
-        url: '/enterprisevaluation',
-        abstract:true,
-        templateUrl: 'app/enterprise/enterprisevaluation.html',
-        controller: 'EnterpriseValuationCtrl as enterpriseVm'
-      })
-      .state('enterprisevaluation.dashborad', {
-        url: '/dashboard',
-        templateUrl: 'app/enterprise/dashborad.html',
-        controller: 'EnterpriseDashboradCtrl as enterpriseDashboradVm',
-        layout:'admin',
-        authenticate:true
-      })
-      .state('enterprisevaluation.transaction', {
-        url: '/transaction',
-        templateUrl: 'app/enterprise/transaction.html',
-        controller: 'EnterpriseTransactionCtrl as enterpriseTransactionVm',
-        layout:'admin',
-        authenticate:true
-      })
-      .state('enterprisevaluation.invoicing', {
-        url: '/invoicing',
-        templateUrl: 'app/enterprise/invoicing.html',
-        controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
-        layout:'admin',
-        authenticate:true
+      //  .state('yardlisting', {
+      //   url: '/yardlisting',
+      //   templateUrl: 'app/yard/yardlisting.html',
+      //   controller: 'YardListingCtrl as yardlistingVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
+      //  .state('yardupload', {
+      //   url: '/yardupload',
+      //   templateUrl: 'app/yard/yardupload.html',
+      //   controller: 'YardListingCtrl as YardListingVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
+      // .state('yard', {
+      //   url: '/yard',
+      //   templateUrl: 'app/yard/yard.html',
+      //   controller: 'YardListingCtrl as YardListingVm',
+      //   layout:'client'
+      // })
+      // .state('enterprisevaluation', {
+      //   url: '/enterprisevaluation',
+      //   abstract:true,
+      //   templateUrl: 'app/enterprise/enterprisevaluation.html',
+      //   controller: 'EnterpriseValuationCtrl as enterpriseVm'
+      // })
+      // .state('enterprisevaluation.dashborad', {
+      //   url: '/dashboard',
+      //   templateUrl: 'app/enterprise/dashborad.html',
+      //   controller: 'EnterpriseDashboradCtrl as enterpriseDashboradVm',
+      //   layout:'admin',
+      //   authenticate:true
+      // })
+      // .state('enterprisevaluation.transaction', {
+      //   url: '/transaction',
+      //   templateUrl: 'app/enterprise/transaction.html',
+      //   controller: 'EnterpriseTransactionCtrl as enterpriseTransactionVm',
+      //   layout:'admin',
+      //   authenticate:true
+      // })
+      // .state('enterprisevaluation.invoicing', {
+      //   url: '/invoicing',
+      //   templateUrl: 'app/enterprise/invoicing.html',
+      //   controller: 'EnterpriseInvoiceCtrl as enterpriseInvoiceVm',
+      //   layout:'admin',
+      //   authenticate:true
 
-      })
-       .state('enterprisevaluation.paymentmade', {
-        url: '/paymentmade',
-        templateUrl: 'app/enterprise/paymentmade.html',
-        controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
-        layout:'admin',
-        authenticate:true,
-        restrict:true
-      })
-        .state('enterprisevaluation.paymentreceived', {
-        url: '/paymentreceived',
-        templateUrl: 'app/enterprise/paymentreceived.html',
-        controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
-        layout:'admin',
-        authenticate:true,
-        restrict:true
-      })
-      .state('enterprisevaluation.addtransaction', {
-        url: '/addtransaction',
-        templateUrl: 'app/enterprise/addtransaction.html',
-        controller: 'AddTransactionCtrl as addTransactionVm',
-        authenticate:true,
-        layout:'admin'
-      })
-      .state('enterprisevaluation.edittransaction', {
-        url: '/addtransaction/:id',
-        templateUrl: 'app/enterprise/addtransaction.html',
-        controller: 'AddTransactionCtrl as addTransactionVm',
-        authenticate:true,
-        layout:'admin'
-      })
+      // })
+      //  .state('enterprisevaluation.paymentmade', {
+      //   url: '/paymentmade',
+      //   templateUrl: 'app/enterprise/paymentmade.html',
+      //   controller: 'EnterprisePaymentMadeCtrl as enterprisePaymentMadeVm',
+      //   layout:'admin',
+      //   authenticate:true,
+      //   restrict:true
+      // })
+      //   .state('enterprisevaluation.paymentreceived', {
+      //   url: '/paymentreceived',
+      //   templateUrl: 'app/enterprise/paymentreceived.html',
+      //   controller: 'EnterprisePaymentReceivedCtrl as enterprisePaymentReceivedVm',
+      //   layout:'admin',
+      //   authenticate:true,
+      //   restrict:true
+      // })
+      // .state('enterprisevaluation.addtransaction', {
+      //   url: '/addtransaction',
+      //   templateUrl: 'app/enterprise/addtransaction.html',
+      //   controller: 'AddTransactionCtrl as addTransactionVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
+      // .state('enterprisevaluation.edittransaction', {
+      //   url: '/addtransaction/:id',
+      //   templateUrl: 'app/enterprise/addtransaction.html',
+      //   controller: 'AddTransactionCtrl as addTransactionVm',
+      //   authenticate:true,
+      //   layout:'admin'
+      // })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

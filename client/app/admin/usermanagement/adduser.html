@@ -4,7 +4,7 @@
             <h4 class="modal-title">{{headerName}}</h4>
         </div>
           <div class="modal-body">            
-            <form class="" name="form" novalidate>
+            <form class="form-signin" name="form" novalidate>
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
@@ -34,8 +34,8 @@
                     <select class="form-control" name="userType" ng-model="newUser.userType" required>
                       <option value="" disabled>*Type</option>
                       <option value="individual">Individual</option>
-                      <option value="private">Private Entrepreneur</option>
-                      <option value="legalentity">Legal Entity</option>
+                      <option value="private" ng-if="newUser.role != 'enterprise'">Private Entrepreneur</option>
+                      <option value="legalentity" ng-if="newUser.role != 'enterprise'">Legal Entity</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -56,24 +56,19 @@
                   </div>
                 </div>
                 <div class="row" ng-if="newUser.role == 'enterprise'">
-                  <div class="col-sm-4 form-group" ng-if="isAdmin() && !isEdit">
-                    <input type="checkbox" name="isnew" ng-model="newUser.enterprise" ng-disabled="newUser.enterpriseId" ng-click="getServices(true)"> New
+                  <div class="col-sm-4 form-group" ng-if="isAdmin()">
+                    <input type="checkbox" name="isnew" ng-model="newUser.enterprise" ng-disabled="newUser.enterpriseId"> New
                   </div>
                   <div class="col-sm-8 form-group" ng-class="{'has-error': form.enterprise_name.$invalid && submitted }">
-                    <select class="form-control" name="enterprise_name"  ng-required="!newUser.enterprise" ng-disabled="newUser.enterprise || isEdit" ng-model="newUser.enterpriseId" ng-change="getServices(false)">
+                    <select class="form-control" name="enterprise_name"  ng-required="!newUser.enterprise" ng-disabled="newUser.enterprise" ng-model="newUser.enterpriseId">
                       <option value="">Select Enterprise</option>
                       <option value="{{ent.enterpriseId}}" ng-repeat="ent in enterprises">{{ent.fname}} {{ent.mname}} {{ent.lname}}({{ent.enterpriseId}})</option>
                     </select>
                     <i class="caret"></i>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-sm-6" >
-                    <input type="text" class="form-control" name="" value="" placeholder="*Address" required/>
-                  </div>
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.employeeCode.$invalid && submitted }" ng-if="newUser.role == 'enterprise'">
-                    <input type="number" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="!newUser.enterprise" ng-disabled="isEdit">
-                  </div>
+                 <!--  <div class="col-sm-4 form-group">
+                    <input type="text" name="" value="" class="form-control" placeholder="Full Name" disabled>
+                  </div> -->
                 </div>
                 <div class="row">                  
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.password.$invalid && submitted }">
@@ -101,48 +96,7 @@
                     </p>
                   </div>
                 </div>
-                <div class="table-responsive" ng-if="newUser.role == 'enterprise'">
-                  <table class="table table-bordred table-striped">
-                    <thead>
-                      <tr>
-                        <th width="20%">Services</th>
-                        <th>Approval Required</th>
-                        <th>Role </th>
-                        <th  ng-if="!newUser.enterpriseId" width="28%">Default Partner</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="svc in availedServices | orderBy:'sequence'">
-                        <td><input type="checkbox" name="valservice" ng-model="svc.checked"> {{svc.name}}</td>
-                        <td><div class="row">
-                              <div class="col-xs-6">
-                                <input type="radio"  name="appreq_{{$index}}" ng-model="svc.approvalRequired" value="Yes" id="yes"> <label for="yes">Yes</label>
-                              </div>
-                              <div class="col-xs-6">
-                                 <input type="radio" name="appreq_{{$index}}" ng-model="svc.approvalRequired" value="No" id="no"> <label for="no"> No</label>
-                              </div>
-                            </div>
-                        </td>
-                        <td><div class="row">
-                              <div class="col-xs-6">
-                                <input type="checkbox"  ng-model="svc.approver"> Approver
-                              </div>
-                              <div class="col-xs-6">
-                                <input type="checkbox"  ng-model="svc.requester"> Requester
-                              </div>
-                            </div>
-                        </td>
-                        <td ng-if="!newUser.enterpriseId">
-                          <select class="form-control" ng-model="svc.partnerId">
-                            <option value="">*Select Partner</option>
-                            <option ng-repeat="vendor in getVendors(svc.code)" value="{{vendor.partnerId}}">{{vendor.name}}</option>
-                          </select>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
+                
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.address.$invalid && submitted }">
                     <input type="text" class="form-control" name="address" value="" placeholder="Address" ng-model="newUser.address" ng-maxlength="150" >
