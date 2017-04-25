@@ -15,8 +15,22 @@
     <div class="row form-group">
         <div class=" col-sm-2">                   
         <!-- <button class="btn btn-primary btn-block" ng-click="enterprisePaymentMadeVm.openModal()">Update Payment Details</button -->                 
-      </div>                   
-      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+      </div>    
+      <div class="col-sm-offset-2 col-sm-5">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="From Date" ng-model="enterprisePaymentMadeVm.fromDate" myid="fromdate" on-change="enterprisePaymentMadeVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="To Date" ng-model="enterprisePaymentMadeVm.toDate" myid="todate" on-change="enterprisePaymentMadeVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+        </div>
+      </div>               
+      <div class="col-sm-3 tablesearch text-right">
         Search:  <input type="text" placeholder="Invoice No." ng-model="enterprisePaymentMadeVm.searchStr" ng-change="enterprisePaymentMadeVm.fireCommand(true)" ng-model-options="{debounce:500}">
       </div>
   </div>

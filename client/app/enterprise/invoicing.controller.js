@@ -53,11 +53,6 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
  			$scope.serviceFees = res;
  		})
 
- 		/*ServiceTaxSvc.get()
- 		.then(function(res){
- 			$scope.serviceTaxes = res;
- 		});*/
-
     if(Auth.isAdmin()){
       var userFilter = {};
       userFilter.role = "enterprise";
@@ -143,6 +138,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
 
       if(vm.searchStr)
         filter['searchStr'] = vm.searchStr;
+      if(vm.fromDate)
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+
+      if(vm.toDate)
+        filter['toDate'] = encodeURIComponent(vm.toDate);
+      
        if(vm.type == 'generated')
         getInvoiceData(filter);
       else{
@@ -328,21 +329,6 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         $scope.selectedTax.forEach(function(item){
           var calAmt = ($scope.invoice.invoiceAmount *item.rate)/100;
           item.calculatedTax = calAmt || 0;
-         /* if(item.type == TaxList[0]){
-            $scope.invoice['serviceTax'] = item.taxRate;
-            $scope.invoice['serviceTaxValue'] = calAmt;
-          }
-
-          if(item.type == TaxList[1]){
-            $scope.invoice['swatchBharatCess'] = item.taxRate;
-            $scope.invoice['swatchBharatValue'] = calAmt;
-          }
-
-          if(item.type == TaxList[2]){
-            $scope.invoice['krishikalyanCess'] = item.taxRate;
-            $scope.invoice['krishikalyanValue'] = calAmt;
-          }*/
-
           totalTax = totalTax + (calAmt || 0);
         });
         
@@ -432,6 +418,12 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         })
         filter['ids'] = ids;
       }
+
+      if(vm.fromDate)
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+      if(vm.toDate)
+        filter['toDate'] = encodeURIComponent(vm.toDate);
+
       EnterpriseSvc.exportExcel("invoice",filter);
     }
       //starting point

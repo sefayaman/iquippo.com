@@ -52,7 +52,21 @@
     <div class=" col-sm-2">                   
       <button class="btn btn-primary btn-block" ng-click="enterpriseInvoiceVm.openInvoiceModal()">Generate Invoice</button>                   
     </div>      
-    <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+    <div class="col-sm-offset-2 col-sm-5">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="From Date" ng-model="enterpriseTransactionVm.fromDate" myid="fromdate" on-change="enterpriseInvoiceVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="To Date" ng-model="enterpriseInvoiceVm.toDate" myid="todate"  on-change="enterpriseInvoiceVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-sm-3 tablesearch text-right">
       Search: <input type="text" placeholder="Search..." ng-model="enterpriseInvoiceVm.searchStr" ng-change="enterpriseInvoiceVm.fireCommand(true)" ng-model-options="{debounce:500}">
     </div>
   </div>
@@ -113,8 +127,22 @@
 </div>
 <!-- invoice genrated -->
 <div ng-if="enterpriseInvoiceVm.type == 'generated'">
-  <div class="row form-group featured">        
-    <div class="col-sm-offset-9 col-sm-3 tablesearch text-right">
+  <div class="row form-group featured"> 
+    <div class="col-sm-offset-4 col-sm-5">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="input-group">
+                <custom-datepicker placeholder="From Date" ng-model="enterpriseInvoiceVm.fromDate" myid="fromdate"  on-change="enterpriseInvoiceVm.fireCommand(true)"></custom-datepicker>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="input-group">
+                 <custom-datepicker placeholder="To Date" ng-model="enterpriseInvoiceVm.toDate" myid="todate"  on-change="enterpriseInvoiceVm.fireCommand(true)"></custom-datepicker>
+              </div>
+            </div>
+          </div>
+        </div>       
+    <div class="col-sm-3 tablesearch text-right">
       Search: <input type="text" placeholder="Search..." ng-model="enterpriseInvoiceVm.searchStr" ng-change="enterpriseInvoiceVm.fireCommand(true)" ng-model-options="{debounce:500}">
     </div>
   </div>

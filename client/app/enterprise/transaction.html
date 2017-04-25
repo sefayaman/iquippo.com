@@ -47,11 +47,26 @@
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Request</button>
       </div>
     </div>
+    <legend></legend>
     <div class="row form-group">
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">Submit to Agency</button>
       </div>
-      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+      <div class="col-sm-offset-2 col-sm-5">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="From Date" ng-model="enterpriseTransactionVm.fromDate" myid="fromdate" on-change="enterpriseTransactionVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="To Date" ng-model="enterpriseTransactionVm.toDate" myid="todate"  on-change="enterpriseTransactionVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
       </div>
     </div>

@@ -24,8 +24,6 @@ function paginatedResult(req,res,modelRef,filter,result){
 
   var bodyData = req.Body || req.query;
 
-  console.log(bodyData);
-
   var pageSize = bodyData.itemsPerPage || 50;
   var first_id = bodyData.first_id;
   var last_id = bodyData.last_id;
