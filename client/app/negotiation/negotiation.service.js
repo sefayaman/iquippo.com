@@ -18,15 +18,15 @@
           console.log(dataNegotiate);
 
      if(flag == "true"){
-      var data = {};
+      /*var data = {};
         data['to'] = dataNegotiate.product.seller.email;
         data['subject'] = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
-        notificationSvc.sendNotification('Make-offer-seller-email', data,dataNegotiate,'email');
+        notificationSvc.sendNotification('Make-offer-seller-email', data,dataNegotiate,'email');*/
 
-      var data = {};
+     /* var data = {};
         data['to'] = Auth.getCurrentUser().email;
         data['subject'] = ' Bid Received for your' +' '+ dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:'+ dataNegotiate.product.assetId;
-        notificationSvc.sendNotification('Make-offer-buyer-email', data,dataNegotiate,'email');
+        notificationSvc.sendNotification('Make-offer-buyer-email', data,dataNegotiate,'email');*/
         
       var data = {};  
         data['to'] = supportMail;
