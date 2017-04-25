@@ -464,6 +464,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.valuationQuote = {};
           $scope.valuationQuote.product = {};
           $scope.enterpriseValuation = {};
+          $scope.valuationQuote.product.country = "India";
           getEnterpriseData();
           setUser();
           $scope.form.submitted = false;
