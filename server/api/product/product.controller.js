@@ -1075,6 +1075,10 @@ exports.exportProducts = function(req, res) {
                 })
               }
 
+              if(colData.operatingHour){
+                obj[mapedFields.motorOperatingHour] = colData.operatingHour;
+              }
+
               if (colData.rent.negotiable)
                 obj[mapedFields.negotiable] = 'Yes';
               else
@@ -1438,33 +1442,37 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateCity(callback){
-      CityModel.City.find({name : row.city},function(err,cityInfo){
-        if(err || !cityInfo){
-          errorList.push({
-            Error : 'Error while validating city',
-            rowCount :row.rowCount
-          });
-            return callback('Error');
-          }
-
-          if(!cityInfo.length){
+      if(row.city){
+        CityModel.City.find({name : row.city},function(err,cityInfo){
+          if(err || !cityInfo){
             errorList.push({
-              Error : 'Invalid City',
+              Error : 'Error while validating city',
               rowCount :row.rowCount
             });
-            return callback('Error');
-          }
+              return callback('Error');
+            }
 
-          if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
-            errorList.push({
-              Error : 'Invalid State or country',
-              rowCount :row.rowCount
-            });
-            return callback('Error');
-          }
+            if(!cityInfo.length){
+              errorList.push({
+                Error : 'Invalid City',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
 
-          return callback();
+            if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
+              errorList.push({
+                Error : 'Invalid State or country',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
+
+            return callback();
         });
+      } else {
+        return callback();
+      }
     }
 
     function validateMadnatoryCols(callback){
@@ -2078,7 +2086,7 @@ exports.validateExcelData = function(req, res, next) {
 
     function validateRentInfo(callback) {
       var product = {};
-      if (row.tradeType && row.tradeType.toLowerCase() !== "sell") {
+      if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
         product["rent"] = {};
 
         var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
@@ -2251,7 +2259,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType.toLowerCase() === 'sell') {
+      } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
@@ -2299,7 +2307,7 @@ exports.validateExcelData = function(req, res, next) {
         var servicedate = new Date(row["servicedate"]);
         var validDate = isValid(servicedate);
         if (servicedate && validDate) {
-          obj["serviceInfo"][0].servicedate = servicedate;
+          obj.serviceInfo[0].servicedate = servicedate;
         }
 
       }
