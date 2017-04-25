@@ -1075,6 +1075,10 @@ exports.exportProducts = function(req, res) {
                 })
               }
 
+              if(colData.operatingHour){
+                obj[mapedFields.motorOperatingHour] = colData.operatingHour;
+              }
+
               if (colData.rent.negotiable)
                 obj[mapedFields.negotiable] = 'Yes';
               else
