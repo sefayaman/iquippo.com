@@ -41,7 +41,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
         }
        
           return deferred.promise; 
-      };
+      }
 
       function validate(data){
           return $http.post(path + '/validate', data)

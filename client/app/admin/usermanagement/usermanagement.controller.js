@@ -246,16 +246,17 @@ angular.module('sreizaoApp')
 
 }])
 
-  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc', 'userSvc', '$uibModalInstance', 'UtilSvc',
-   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc, userSvc, $uibModalInstance, UtilSvc) {
+  .controller('AddUserCtrl', ['$scope', '$rootScope','LocationSvc', '$http', 'Auth', 'Modal', 'uploadSvc', 'notificationSvc','vendorSvc', 'userSvc', '$uibModalInstance', 'UtilSvc',
+   function ($scope, $rootScope,LocationSvc, $http, Auth, Modal, uploadSvc ,notificationSvc,vendorSvc, userSvc, $uibModalInstance, UtilSvc) {
     $scope.newUser ={};
     $scope.newUser.isOtherCountry=false;
     $scope.newUser.isOtherState=false;
     $scope.newUser.isOtherCity=false;
     $scope.errors = {};
 
-      var services = [{name:"Valuation",code:"Valuation",sequence:1},
-                      {name:"Asset Inspection",code:"Inspection",sequence:2},
+      var services = [
+                      {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"Yes"},
+                      {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"Yes"},
                       {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3},
                       {name:"Financing",code:"Finance",sequence:4}
                     ]
@@ -268,6 +269,7 @@ angular.module('sreizaoApp')
     $scope.getCountryWiseState=getCountryWiseState;
     $scope.getStateWiseLocation=getStateWiseLocation;
     $scope.getServices = getServices;
+    $scope.getVendors=getVendors;
     
     function init(){
       if($scope.isEdit) {
@@ -300,10 +302,25 @@ angular.module('sreizaoApp')
       }
       getEnterprises();
     }
-
+    
+    loadVendors();
 
     init();
+    
+    function loadVendors(){
+      vendorSvc.getAllVendors()
+         .then(function(res){
+          console.log("list",res);
+         })
+    }
 
+    function getVendors(code){
+      return vendorSvc.getVendorsOnCode(code);
+      //$scope.vendorList=[];
+     // $scope.vendorList=vendorSvc.getVendorsOnCode(code);
+      //console.log("ListVendor",$scope.vendorList);
+    }
+    
     function getServices(isNew){
 
       $scope.availedServices = [];
@@ -311,7 +328,7 @@ angular.module('sreizaoApp')
         return;
 
       if(isNew){
-         $scope.availedServices = angular.copy(services);  
+         $scope.availedServices = angular.copy(services); 
          return;
       }
       var enterpriseSvcList = [];

@@ -135,7 +135,7 @@
                         <td>
                           <select class="form-control" ng-model="svc.partnerId">
                             <option value="">*Select Partner</option>
-                            <option value="{{prt.parnerId}}" ng-model="svc.partnerId" ng-repeat="prt in getPartners(svc.code)">Select Partner</option>
+                            <option ng-repeat="vendor in getVendors(svc.code)" value="{{vendor.partnerId}}">{{vendor.name}}</option>
                           </select>
                         </td>
                       </tr>
