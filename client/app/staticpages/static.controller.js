@@ -175,6 +175,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.enterpriseValuation = {};
     $scope.valuationQuote.product.country = "India";
     $scope.getAgent = getAgent;
+    $scope.valuationQuote.valuation = "Financing";
     
     function getAssetGroup(val) {
 
@@ -250,21 +251,21 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function getEnterpriseData() {
-      $scope.enterpriseValuation.enterprise = {};
-      $scope.enterpriseValuation.enterprise._id = Auth.getCurrentUser()._id;
-      $scope.enterpriseValuation.enterprise.mobile = Auth.getCurrentUser().mobile;
-      $scope.enterpriseValuation.enterprise.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      $scope.enterpriseValuation.enterprise.email = Auth.getCurrentUser().email;
-      $scope.enterpriseValuation.enterprise.enterpriseId = Auth.getCurrentUser().enterpriseId;
-      if(Auth.getCurrentUser().employeeCode)
-        $scope.enterpriseValuation.enterprise.employeeCode = Auth.getCurrentUser().employeeCode;
-
       var userFilter = {};
       userFilter.role = "enterprise";
       userFilter.enterprise = true;
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(userFilter).then(function(data){
         if(data.length > 0){
+          $scope.enterpriseValuation.enterprise = {};
+          $scope.enterpriseValuation.enterprise._id = data[0]._id;
+          $scope.enterpriseValuation.enterprise.mobile = data[0].mobile;
+          $scope.enterpriseValuation.enterprise.name = data[0].fname + " " + data[0].lname;
+          $scope.enterpriseValuation.enterprise.email = data[0].email;
+          $scope.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
+          if(Auth.getCurrentUser().employeeCode)
+            $scope.enterpriseValuation.enterprise.employeeCode = data[0].employeeCode;
+
           $scope.enterpriseValuation.customerPartyNo = data[0].mobile;
           $scope.enterpriseValuation.customerPartyName = (data[0].fname || "") + " " + (data[0].mname || "") + " "+ (data[0].lname || "");
         }
@@ -436,6 +437,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
       $scope.enterpriseValuation.createdBy = {};
       $scope.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
+      $scope.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
+      $scope.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
       $scope.enterpriseValuation.userName = $scope.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
       
       if($scope.valuationQuote.product) {
@@ -460,7 +463,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       EnterpriseSvc.setStatus($scope.enterpriseValuation,EnterpriseValuationStatuses[0]);
 
       EnterpriseSvc.save($scope.enterpriseValuation).then(function(res) {
-          //$state.go('enterprisevaluation.transaction');
           $scope.valuationQuote = {};
           $scope.valuationQuote.product = {};
           $scope.enterpriseValuation = {};
