@@ -309,14 +309,21 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         }
      }
 
-     function isSubmitAllowed(){
+     function isSubmitAllowed(requestType){
       if(Auth.isAdmin())
         return true;
         var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
+      if(requestType){
+        if(validRole && Auth.isServiceApprover(requestType))
+          return true;
+        else
+          return false;
+      }else{
         if(validRole && (Auth.isServiceApprover('Valuation') || Auth.isServiceApprover('Inspection')))
           return true;
         else
           return false;
+      }
 
      }
 
