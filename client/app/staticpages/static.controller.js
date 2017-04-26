@@ -206,22 +206,27 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
               $scope.allBrandList = result;
             }) 
           } else {
-            $scope.isEnterprise = false;
-            $scope.mytime = new Date();
-            $scope.hstep = 1;
-            $scope.mstep = 1;
-            $scope.ismeridian = true;
-
-            categorySvc.getAllCategory()
-            .then(function(result){
-              $scope.allCategory = result;
-            });
+            loadCategory();
           }
           setUser();
           if($scope.valuationQuote.product && $scope.valuationQuote.product.country)
             onPrdCountryChange($scope.valuationQuote.product.country)
+        } else {
+          loadCategory();
         }
       })   
+    }
+
+    function loadCategory() {
+      categorySvc.getAllCategory()
+      .then(function(result){
+        $scope.allCategory = result;
+      });
+      $scope.isEnterprise = false;
+      $scope.mytime = new Date();
+      $scope.hstep = 1;
+      $scope.mstep = 1;
+      $scope.ismeridian = true;
     }
 
     function getAgent(serviceCode) {
