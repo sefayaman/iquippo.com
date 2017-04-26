@@ -52,9 +52,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
     
     vendorSvc.getAllVendors();
-     /* .then(function(){
-        vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-      });*/
 
       ValuationPurposeSvc.get(null)
       .then(function(result){
@@ -82,7 +79,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
                 vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
               if (vm.enterpriseValuation.reportDate)
                 vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
-              
+               vendorSvc.getAllVendors()
+               .then(function(){
+                  vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
+                });
               
             }
         });
