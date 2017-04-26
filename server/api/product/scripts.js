@@ -1,4 +1,4 @@
-//var lwip = require('lwip');
+var lwip = require('lwip');
 var Product = require('./product.model');
 var config = require('./../../config/environment');
 var fsExtra = require('fs.extra');
