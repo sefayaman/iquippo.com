@@ -255,10 +255,10 @@ angular.module('sreizaoApp')
     $scope.errors = {};
 
       var services = [
-                      {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"Yes"},
-                      {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"Yes"},
-                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3},
-                      {name:"Financing",code:"Finance",sequence:4}
+                      {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
+                      {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"No"},
+                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
+                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"}
                     ]
     //$scope.editImage = false;
     //$scope.users = [];

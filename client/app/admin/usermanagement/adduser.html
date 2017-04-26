@@ -72,7 +72,7 @@
                     <input type="text" class="form-control" name="" value="" placeholder="*Address" required/>
                   </div>
                   <div class="form-group col-sm-6" ng-class="{'has-error': form.employeeCode.$invalid && submitted }" ng-if="newUser.role == 'enterprise'">
-                    <input type="number" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="!newUser.enterprise" ng-disabled="isEdit">
+                    <input type="number" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="newUser.role == 'enterprise'" ng-disabled="isEdit">
                   </div>
                 </div>
                 <div class="row">                  

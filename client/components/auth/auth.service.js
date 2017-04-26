@@ -213,6 +213,10 @@ angular.module('sreizaoApp')
         return false;
       },
       isApprovalRequired:function(service){
+        
+        if(currentUser.role === 'admin')
+          return true;
+
         for(var i=0;i<currentUser.availedServices.length;i++){
          if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].approvalRequired === 'Yes')
           return true;
