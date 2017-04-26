@@ -43,7 +43,7 @@ angular.module('sreizaoApp')
 
     function openAddUserDialog() {
       $scope.isEdit = false;
-      Modal.openDialog('adduser');
+      Modal.openDialog('adduser',null,"enterpriseClass");
     } 
 
     function init(){

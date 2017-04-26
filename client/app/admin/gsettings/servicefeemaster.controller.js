@@ -105,6 +105,10 @@
             if (vm.dataModel.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(vm.dataModel.effectiveToDate).format('MM/DD/YYYY');
             $scope.edit = true;
+            vendorSvc.getAllVendors()
+            .then(function(){
+                  vm.agencies = vendorSvc.getVendorsOnCode(rowData.serviceType);
+            })
         }
 
           function update(form){
