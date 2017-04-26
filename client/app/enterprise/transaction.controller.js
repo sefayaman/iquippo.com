@@ -79,7 +79,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
       }
 
-      if(Auth.isEnterpriseUser() && filter.isSearch){
+      if(Auth.isEnterpriseUser() && !filter.isSearch){
         filter['userId'] = Auth.getCurrentUser()._id;
       }
 
@@ -338,48 +338,13 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         .then(function(resList){
           vm.selectAllReq = "";
           selectedItems = [];
-          fireCommand(true);
-          /*//console.log("res",res);
-            if(resList && resList.length > 0){
-              resList.forEach(function(item){
-                var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
-                if(item.success == "true"){
-                   valReq.jobId = item.jobId;
-                   EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[2]);
-                }else{
-                  valReq.remarks = item.msg;
-                   EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[1]);
-                }
-
-              })
-              bulkUpdate(selectedItems);
-            }     */     
+          fireCommand(true);    
         })
         .catch(function(err){
           Modal.alert("error occured in integration");
         })
       
     }
-
-    /*function getValReqByUniqueCtrlNo(list,unCtrlNo){
-      var retVal = null;
-      list.some(function(item){
-        if(item.uniqueControlNo == unCtrlNo){
-          retVal = item;
-          return false;
-        }
-      })
-      return retVal;
-    }
-
-    function bulkUpdate(){
-      EnterpriseSvc.bulkUpdate(selectedItems)
-        .then(function(res){
-          vm.selectAllReq = "";
-          selectedItems = [];
-          fireCommand(true);
-      })
-    }*/
 
     function showDetail(valReq){
       var scope = $rootScope.$new()
