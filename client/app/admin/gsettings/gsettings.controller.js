@@ -1190,11 +1190,11 @@
                 $scope.submitted = true;
                 return;
             }
-            var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
+            /*var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
             if (!imgFound) {
                 Modal.alert("Please upload both images.");
                 return;
-            }
+            }*/
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {
                     vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
@@ -1235,11 +1235,11 @@
                 $scope.submitted = true;
                 return;
             }
-            var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
+           /* var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
             if (!imgFound) {
                 Modal.alert("Please upload both images.");
                 return;
-            }
+            }*/
 
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {
