@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore,userSvc,$q) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -212,16 +212,38 @@ angular.module('sreizaoApp')
         }
         return false;
       },
-      isApprovalRequired:function(service){
-        
+      isApprovalRequired:function(service,cb){
         if(currentUser.role === 'admin')
-          return true;
+          return cb(true);
 
-        for(var i=0;i<currentUser.availedServices.length;i++){
-         if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].approvalRequired === 'Yes')
-          return true;
-        }
-        return false;
+        if(this.isEnterprise()){
+          for(var i=0;i< currentUser.availedServices.length;i++){
+           if(currentUser.availedServices[i].code === service &&  currentUser.availedServices[i].approvalRequired === 'Yes')
+            return cb(true);
+          }
+          return cb(false);
+        }else if(this.isEnterpriseUser()){
+          var userFilter = {};
+          userFilter.role = "enterprise";
+          userFilter.enterprise = true;
+          userFilter.enterpriseId = currentUser.enterpriseId;
+          userFilter.status = true;
+          userSvc.getUsers(userFilter)
+          .then(function(resData){
+            if(resData.length > 0){
+              for(var i=0; i< resData[0].availedServices.length;i++){
+                 if(resData[0].availedServices[i].code === service &&  resData[0].availedServices[i].approvalRequired === 'Yes')
+                  return cb(true);
+              }
+              return cb(false);
+            }else
+              return cb(true);
+          })
+          .catch(function(err){
+            return cb(true)
+          })
+        }else
+          return cb(true);
       },
       isServiceAvailed:function(service){
         if(currentUser.role === 'admin')

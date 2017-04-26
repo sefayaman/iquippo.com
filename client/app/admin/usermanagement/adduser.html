@@ -106,7 +106,7 @@
                     <thead>
                       <tr>
                         <th width="20%">Services</th>
-                        <th>Approval Required</th>
+                        <th ng-if="newUser.enterprise">Approval Required</th>
                         <th>Role </th>
                         <th  ng-if="newUser.enterprise" width="28%">Default Partner</th>
                       </tr>
@@ -114,7 +114,7 @@
                     <tbody>
                       <tr ng-repeat="svc in availedServices | orderBy:'sequence'">
                         <td><input type="checkbox" name="valservice" ng-model="svc.checked"> {{svc.name}}</td>
-                        <td><div class="row">
+                        <td ng-if="newUser.enterprise"><div class="row">
                               <div class="col-xs-6">
                                 <input type="radio"  name="appreq_{{$index}}" ng-model="svc.approvalRequired" value="Yes" id="yes"> <label for="yes">Yes</label>
                               </div>

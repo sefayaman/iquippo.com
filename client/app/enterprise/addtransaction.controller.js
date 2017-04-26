@@ -35,6 +35,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
     var isEnterprise = false;
+    userFilter.status = true;
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
