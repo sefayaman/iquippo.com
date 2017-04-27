@@ -417,6 +417,17 @@ exports.bulkUpload = function(req, res) {
     function validateRequestType(callback){
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
+        if(user.role == 'enterprise'){
+          var found = false;
+          for(var i=0 ; i < user.availedServices.length;i++){
+            if(user.availedServices[i].code == row.requestType){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            return callback('Invalid Request Type');
+        }
 
       return callback();
     }
@@ -799,6 +810,17 @@ exports.bulkModify = function(req, res) {
         return callback();        
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
+       if(user.role == 'enterprise'){
+          var found = false;
+          for(var i = 0 ; i < user.availedServices.length; i++){
+            if(user.availedServices[i].code == row.requestType){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            return callback('Invalid Request Type');
+        }
 
       return callback();
     }
@@ -1228,10 +1250,11 @@ exports.updateInvoice = function(req, res) {
         return res.status(412).send("Invalid update");
   });
 
-  function update(inovice){
-    EnterpriseValuationInvoice.update({_id:_id},{$set:inovice},function(err,retVal){
+  function update(invoice){
+    EnterpriseValuationInvoice.update({_id:_id},{$set:invoice},function(err,retVal){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(inovice);
+        console.log("invoice",invoice);
+        return res.status(200).json(invoice);
     });
   }
 
