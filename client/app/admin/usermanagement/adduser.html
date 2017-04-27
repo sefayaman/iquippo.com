@@ -202,7 +202,7 @@
                     <div class="input-group">
 
                       <span class="input-group-addon" ng-show="newUser.country">+{{code}}</span>
-                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-disabled="isEdit" required>
                     </div>
                   </div>
               </div>

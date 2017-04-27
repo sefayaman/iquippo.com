@@ -445,12 +445,12 @@ angular.module('sreizaoApp')
     }
 
     if($scope.newUser.agree) {
+      var dataToSend = {};
+      if($scope.newUser.email) 
+        dataToSend['email'] = $scope.newUser.email;
+      if($scope.newUser.mobile) 
+        dataToSend['mobile'] = $scope.newUser.mobile;
       if(!$scope.isEdit) {
-        var dataToSend = {};
-        if($scope.newUser.email) 
-          dataToSend['email'] = $scope.newUser.email;
-        if($scope.newUser.mobile) 
-          dataToSend['mobile'] = $scope.newUser.mobile;
         if($scope.newUser.alternateMobile) 
           dataToSend['alternateMobile']=$scope.newUser.alternateMobile;
         Auth.validateSignup(dataToSend).then(function(data){
@@ -465,7 +465,16 @@ angular.module('sreizaoApp')
           }
         });
       } else {
-        updateUser();
+        if($scope.newUser._id) 
+          dataToSend['userid'] = $scope.newUser._id;
+        Auth.validateSignup(dataToSend).then(function(data){
+          if(data.errorCode != 0){
+            Modal.alert(data.message, true);
+            return;
+          } else {
+            updateUser();
+          }
+        });
       }
     } else {
            Modal.alert("Please Agree to the Terms & Conditions",true);
