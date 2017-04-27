@@ -1747,7 +1747,7 @@ exports.validateExcelData = function(req, res, next) {
               valuationFee = x.fees;
           });
 
-          if(!auctionFee || !valuationFee){
+          if(!+auctionFee || !+valuationFee){
             errorList.push({
               Error : 'Auction Fee/Valuation Fee master not present',
               rowCount : row.rowCount
