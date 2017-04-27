@@ -39,6 +39,7 @@ exports.getOnFilter = function(req, res) {
   var filter = {};
   if(req.body._id)
     filter["_id"] = req.body._id;
+  console.log("filters",filter);
 
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
@@ -227,9 +228,9 @@ exports.exportPayment = function(req,res){
 }
 
 //ccavenue payment keys
-//var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // localhost account test
+var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // localhost account test
 //var ccAvenueWorkingKey = "780039A27217D66E066A031F52D772D7"; // localhost live account account
-var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com live account account
+//var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com live account account
 
 exports.encrypt = function(req,res){
     var m = crypto.createHash('md5');

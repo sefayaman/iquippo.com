@@ -7,6 +7,7 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
   var path = "/api/valuation";
   svc.getAll = getAll;
   svc.save = save;
+  svc.saveService=saveService;
   svc.update = update;
   svc.delAuction = delValuation;
   svc.getOnFilter = getOnFilter;
@@ -46,6 +47,16 @@ function ValuationSvc($http,$q,notificationSvc,Auth,LocationSvc){
 
     function save(data){
       return $http.post(path,data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function saveService(data){
+      return $http.post("/api/services",data)
         .then(function(res){
           return res.data;
         })

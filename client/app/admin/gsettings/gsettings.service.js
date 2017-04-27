@@ -469,6 +469,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     function getPaymentMasterOnSvcCode(svcCode,parnerId){
       var pyt = null;
       for(var i = 0;i < paymentMasterCache.length;i++){
+        console.log("paymnetCache",paymentMasterCache[i].partnerId);
         if(parnerId){
           if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId == parnerId){
             pyt = paymentMasterCache[i];

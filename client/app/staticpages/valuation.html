@@ -356,7 +356,12 @@
 							</div>
 							<hr>
 							<div class="row text-left">
-								<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
+								<div class="col-xs-12 col-sm-4 form-group">
+							<select class="form-control" ng-model="valuationquote.partnerId">
+                            <option value="">*Select Partner</option>
+                            <option ng-repeat="vendor in getValuationVendors()" value="{{vendor.partnerId}}">{{vendor.name}}</option>
+                            </select>
+								</div>
 								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
 									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
 				                      <option value="">*Select Purpose</option>

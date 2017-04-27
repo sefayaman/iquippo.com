@@ -75,6 +75,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.locationList = result;
       });
     }
+
     
     init();
 
@@ -150,7 +151,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Valuation controller function
-  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc, userSvc, categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
+  function ValuationCtrl($scope, $rootScope,PaymentMasterSvc, Auth, $http, $log, Modal, notificationSvc, LocationSvc,ValuationSvc, userSvc, categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc,$state, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
     //End
@@ -165,7 +166,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.onPrdCountryChange = onPrdCountryChange;
     $scope.onPrdStateChange = onPrdStateChange;
     $scope.getAssetGroup = getAssetGroup;
-    
+    $scope.getValuationVendors=getValuationVendors;
+
     $scope.valuationQuote = {};
     $scope.valuationQuote.product = {};
     $scope.valuationService = {};
@@ -241,6 +243,24 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
             onPrdCountryChange($scope.valuationQuote.product.country)
         }
       })   
+
+      PaymentMasterSvc.getAll()
+        .then(function(result) {
+          $scope.payments = result;
+          vendorSvc.getAllVendors()
+            .then(function() {
+              var agency = vendorSvc.getVendorsOnCode('Valuation');
+              $scope.valAgencies = [];
+              agency.forEach(function(item) {
+                var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", item._id);
+                if (pyMst && pyMst.fees)
+                  $scope.valAgencies[$scope.valAgencies.length] = item;
+                else if (pyMst && pyMst.fees === 0)
+                  $scope.valAgencies[$scope.valAgencies.length] = item;
+              })
+            });
+
+        })
     }
 
     function getEnterpriseOwner() {
@@ -359,6 +379,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     })
   }
 
+    loadVendors();
+
     init();
 
     function onChange(val){
@@ -374,6 +396,17 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         else
           $scope.valuationQuote.product.contactNumber = "";
       }
+    }
+
+    function loadVendors(){
+      vendorSvc.getAllVendors()
+         .then(function(res){
+          console.log("list",res);
+         })
+    }
+
+    function getValuationVendors(){
+      return vendorSvc.getVendorsOnCode("Valuation");
     }
 
     function addValuationQuote(evt) {
@@ -410,7 +443,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       if($scope.isEnterprise) 
         enterpriseValuationSave();
       else
-        valuationQuoteSave();
+        {valuationQuoteSave();}
+
     }
 
     function enterpriseValuationSave() {
@@ -451,12 +485,72 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function valuationQuoteSave() {
-      if(!$scope.valuationQuote.scheduledTime
+
+      var paymentTransaction = {};
+          paymentTransaction.payments = [];
+          paymentTransaction.totalAmount = 0;
+          paymentTransaction.requestType = "Valuation Request";
+
+          var payObj = {};
+            console.log("PartnerId",$scope.valuationQuote.partnerId);
+          var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", $scope.valuationQuote.partnerId);
+          payObj.type = "valuationreq";
+          payObj.charge = pyMaster.fees || 5000;
+          paymentTransaction.totalAmount += payObj.charge;
+          paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+          paymentTransaction.product=$scope.valuationQuote.product;
+          paymentTransaction.user = {};
+          paymentTransaction.user._id = Auth.getCurrentUser()._id;
+          paymentTransaction.user.fname = Auth.getCurrentUser().fname;
+          paymentTransaction.user.lname = Auth.getCurrentUser().lname;
+          paymentTransaction.user.country = Auth.getCurrentUser().country;
+          paymentTransaction.user.city = Auth.getCurrentUser().city;
+          paymentTransaction.user.phone = Auth.getCurrentUser().phone;
+          paymentTransaction.user.mobile = Auth.getCurrentUser().mobile;
+          paymentTransaction.user.email = Auth.getCurrentUser().email;
+
+          paymentTransaction.status = transactionStatuses[0].code;
+          paymentTransaction.statuses = [];
+          var sObj = {};
+          sObj.createdAt = new Date();
+          sObj.status = transactionStatuses[0].code;
+          sObj.userId = Auth.getCurrentUser()._id;
+          paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
+          paymentTransaction.paymentMode = "online";
+
+          if(!$scope.valuationQuote.scheduledTime
         && $scope.valuationQuote.schedule == "yes")
         $scope.changed($scope.mytime);
       $scope.valuationService.type = "valuation";
       $scope.valuationService.quote = $scope.valuationQuote;
-      $http.post('/api/services', $scope.valuationService).then(function(res){
+
+          ValuationSvc.saveService({
+              valuation: $scope.valuationService,
+              payment: paymentTransaction
+            })
+            .then(function(result) {
+              console.log("ValuationSvc",result);
+              if(result && result.errorCode != 0) {
+                    //Modal.alert(result.message, true);  
+                    $state.go('main');
+                    return;
+                  }
+              if (result.transactionId)
+                MarketingSvc.googleConversion();
+          if(!facebookConversionSent){
+              MarketingSvc.facebookConversion();
+              facebookConversionSent = true;
+               }
+                $state.go('payment', {
+                  tid: result.transactionId
+                });
+
+            })
+            .catch(function() {
+              //error handling
+            });
+
+      /*$http.post('/api/services', $scope.valuationService).then(function(res){
       //Start NJ : push valuationSubmit object in GTM dataLayer
       dataLayer.push(gaMasterObject.valuationSubmit);
       //NJ : set valuationSubmit time
@@ -489,7 +583,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       //Google and Facbook conversion end
       },function(res){
           Modal.alert(res,true);
-      });
+      });*/
     }
 
     function resetClick() {
