@@ -175,7 +175,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.enterpriseValuation = {};
     $scope.valuationQuote.product.country = "India";
     $scope.getAgent = getAgent;
-    $scope.valuationQuote.valuation = "Financing";
+    $scope.enterpriseOwnerData = {};
     
     function getAssetGroup(val) {
 
@@ -192,6 +192,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         });
       });
     };
+
+    $scope.$on('callValuationRequest', function() {
+      init();
+    })
 
     function init(){
       Auth.isLoggedInAsync(function(loggedIn){
@@ -237,35 +241,44 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       if(Auth.getCurrentUser().availedServices.length < 1)
         return;
 
-      for(var i=0; i<Auth.getCurrentUser().availedServices.length; i++){
-        if(Auth.getCurrentUser().availedServices[i].code === serviceCode){
-          filter = {};
-          filter.partnerId = Auth.getCurrentUser().availedServices[i].partnerId;
-          vendorSvc.getFilter(filter).then(function(result) {
-            $scope.enterpriseValuation.agency = {};
-            if(result) {
-              $scope.enterpriseValuation.agency.partnerId = result[0].partnerId;
-              $scope.enterpriseValuation.agency._id = result[0]._id;
-              $scope.enterpriseValuation.agency.name = result[0].entityName;
-              $scope.enterpriseValuation.agency.email = result[0].user.email;
-              $scope.enterpriseValuation.agency.mobile = result[0].user.mobile;
-            }
-          })
-          .catch(function() {
-              //error handling
-          });
-         return true;
+      if(Auth.isEnterprise()) 
+        getAgentBasedOnUser(Auth.getCurrentUser(), serviceCode);
+      if(Auth.isEnterpriseUser()) 
+        getAgentBasedOnUser($scope.enterpriseOwnerData, serviceCode);
+    }
+
+    function getAgentBasedOnUser(data, serviceCode) {
+      for(var i=0; i<data.availedServices.length; i++){
+          if(data.availedServices[i].code === serviceCode){
+            filter = {};
+            filter.partnerId = data.availedServices[i].partnerId;
+            vendorSvc.getFilter(filter).then(function(result) {
+              $scope.enterpriseValuation.agency = {};
+              if(result) {
+                $scope.enterpriseValuation.agency.partnerId = result[0].partnerId;
+                $scope.enterpriseValuation.agency._id = result[0]._id;
+                $scope.enterpriseValuation.agency.name = result[0].entityName;
+                $scope.enterpriseValuation.agency.email = result[0].user.email;
+                $scope.enterpriseValuation.agency.mobile = result[0].user.mobile;
+              }
+            })
+            .catch(function() {
+                //error handling
+            });
+           return true;
+          }
         }
-      }
     }
 
     function getEnterpriseData() {
       var userFilter = {};
+      userFilter.status = true;
       userFilter.role = "enterprise";
       userFilter.enterprise = true;
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(userFilter).then(function(data){
         if(data.length > 0){
+          $scope.enterpriseOwnerData = data[0];
           $scope.enterpriseValuation.enterprise = {};
           $scope.enterpriseValuation.enterprise._id = data[0]._id;
           $scope.enterpriseValuation.enterprise.mobile = data[0].mobile;
@@ -449,7 +462,9 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       $scope.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
       $scope.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
       $scope.enterpriseValuation.userName = $scope.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      
+      if($scope.valuationQuote.valuation)
+          $scope.enterpriseValuation.purpose = $scope.valuationQuote.valuation;
+        
       if($scope.valuationQuote.product) {
         if($scope.valuationQuote.product.mfgYear)
           $scope.enterpriseValuation.yearOfManufacturing = $scope.valuationQuote.product.mfgYear;
@@ -465,8 +480,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.enterpriseValuation.contactPerson = $scope.valuationQuote.product.contactPerson;
         if($scope.valuationQuote.product.contactNumber)
           $scope.enterpriseValuation.contactPersonTelNo = $scope.valuationQuote.product.contactNumber;
-        if($scope.valuationQuote.product.valuation)
-          $scope.enterpriseValuation.purpose = $scope.valuationQuote.product.valuation;
       }
 
       EnterpriseSvc.setStatus($scope.enterpriseValuation,EnterpriseValuationStatuses[0]);
