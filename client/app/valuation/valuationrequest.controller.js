@@ -2,15 +2,19 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('ValuationRequestCtrl', ValuationRequestCtrl);
 
-	function ValuationRequestCtrl($scope, Modal, Auth, ValuationSvc, LocationSvc, PaymentMasterSvc, vendorSvc, $state, notificationSvc) {
+	function ValuationRequestCtrl($scope, Modal, Auth,ValuationPurposeSvc,ValuationSvc, LocationSvc, PaymentMasterSvc, vendorSvc, $state, notificationSvc) {
 		var vm = this;
 		//vm.close = close;
 		vm.submitValuationReq = submitValuationReq;
 		vm.resetValuationReq = resetValuationReq;
-		vm.valuationReq = {};
+		vm.valuationReq = {purpose:"Financing"};
 
 		function init() {
 
+		 ValuationPurposeSvc.get(null)
+	      .then(function(result){
+	        $scope.valuationList = result;
+	      }); 
 
 			PaymentMasterSvc.getAll()
 				.then(function(result) {
@@ -161,7 +165,7 @@
 					          $state.go('main');
 					          return;
 					        }
-							vm.valuationReq = {};
+							vm.valuationReq = {purpose:"Financing"};
 							if (result.transactionId)
 								$state.go('payment', {
 									tid: result.transactionId

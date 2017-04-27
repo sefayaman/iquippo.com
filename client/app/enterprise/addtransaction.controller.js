@@ -5,7 +5,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
-  vm.enterpriseValuation = {};
+  vm.enterpriseValuation = {purpose:"Financing"};
   $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
@@ -35,6 +35,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
     var isEnterprise = false;
+    userFilter.status = true;
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
@@ -52,9 +53,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
     
     vendorSvc.getAllVendors();
-     /* .then(function(){
-        vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-      });*/
 
       ValuationPurposeSvc.get(null)
       .then(function(result){
@@ -82,7 +80,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
                 vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
               if (vm.enterpriseValuation.reportDate)
                 vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
-              
+               vendorSvc.getAllVendors()
+               .then(function(){
+                  vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
+                });
               
             }
         });
@@ -296,7 +297,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     function reset() {
-      vm.enterpriseValuation = {};
+      vm.enterpriseValuation = {purpose:"Financing"};
       $scope.submitted = false;
     }
 

@@ -2,8 +2,10 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
+function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSvc){
   var entSvc = {};
+  var enterprise = null;
+
   var path = "/api/enterprise";
   entSvc.get = get;
   entSvc.getInvoice = getInvoice;
@@ -79,13 +81,12 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
 
 
     function save(data){
-      
       var deferred = $q.defer();
       $rootScope.loading = true;
       $http.post(path, data)
         .then(function(res){
-          if(res.data.uniqueControlNo && !Auth.isApprovalRequired(res.data.requestType))
-            submitToAgency([res.data],deferred);
+          if(res.data.uniqueControlNo)
+            postSave(res.data,deferred);
           else{
             $rootScope.loading = false;
             deferred.resolve(res.data);
@@ -98,7 +99,16 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
       return deferred.promise;
     }
 
-
+    function postSave(resData,deferred){
+      Auth.isApprovalRequired(resData.requestType,function(isRequired){
+            if(isRequired){
+              $rootScope.loading = false;
+              deferred.resolve(resData);
+              return;
+            }
+            submitToAgency([resData],deferred);
+      })
+    }
 
     function update(data){
        return $http.put(path + "/" + data.data._id, data)

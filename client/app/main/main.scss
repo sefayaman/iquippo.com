@@ -464,6 +464,7 @@ ul.alert-dropdown{width:200px;}
 table.table thead .sorting_desc::before,table.table thead .sorting_asc::before{content:none;}
 table.dataTable thead .sorting:first-child,table.dataTable thead .sorting_asc:first-child,table.dataTable thead .sorting_desc:first-child,table.dataTable thead .sorting:last-child,table.dataTable thead .sorting_asc:last-child,table.dataTable thead .sorting_desc:last-child{background:none;}
 .product-preview .modal-dialog.modal-lg{width:95%;}
+.enterpriseClass .modal-dialog.modal-lg{width:50%;}
 .product-preview table{table-layout: fixed;}
 .img-magnifier{padding:0;}
 .img-magnifier li{display:inline-block;margin:0 10px;}

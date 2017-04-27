@@ -42,7 +42,7 @@ var UserSchema = new Schema({
     partnerId:String,
     approver:Boolean,
     requester:Boolean,
-    approvalRequired:{type:String,default:'No'},
+    approvalRequired:{type:String},
     sequence:Number
   }],
   enterprise:Boolean,
