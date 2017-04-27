@@ -150,7 +150,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   }
 
   //Valuation controller function
-  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, notificationSvc, LocationSvc, userSvc, categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
+  function ValuationCtrl($scope, $rootScope, Auth, $http, $log, Modal, ValuationPurposeSvc,notificationSvc, LocationSvc, userSvc, categorySvc,brandSvc,modelSvc,MarketingSvc, UtilSvc, AssetGroupSvc, vendorSvc, EnterpriseSvc) {
     //NJ Start: set valuationStartTime
     $scope.valuationStartTime = new Date();
     //End
@@ -198,7 +198,6 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         if(loggedIn){
           if(Auth.isEnterprise() || Auth.isEnterpriseUser()) {
             $scope.isEnterprise = true;
-            $scope.valuationList = [{"name" : "Financing", "code" : "Financing"}];
             
             getEnterpriseData();
             brandSvc.getBrandOnFilter({})
@@ -214,7 +213,12 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         } else {
           loadCategory();
         }
-      })   
+      }) 
+
+      ValuationPurposeSvc.get(null)
+      .then(function(result){
+        $scope.valuationList = result;
+      });  
     }
 
     function loadCategory() {

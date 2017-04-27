@@ -5,7 +5,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
-  vm.enterpriseValuation = {};
+  vm.enterpriseValuation = {purpose:"Financing"};
   $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
@@ -297,7 +297,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     function reset() {
-      vm.enterpriseValuation = {};
+      vm.enterpriseValuation = {purpose:"Financing"};
       $scope.submitted = false;
     }
 
