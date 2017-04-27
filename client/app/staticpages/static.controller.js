@@ -176,7 +176,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.valuationQuote.product.country = "India";
     $scope.getAgent = getAgent;
     $scope.enterpriseOwnerData = {};
-    
+    $scope.valuationQuote.valuation = "Financing";
+
     function getAssetGroup(val) {
 
       var serData = {};
@@ -415,6 +416,12 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     }
 
     function addValuationQuote(evt) {
+      if(!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for submitting your request!", true);
+        $scope.form.submitted = false;
+        return;
+      }
+
       var ret = false;
       if($scope.valuationQuote.country && $scope.valuationQuote.mobile) { 
         var value = UtilSvc.validateMobile($scope.valuationQuote.country, $scope.valuationQuote.mobile);
@@ -485,13 +492,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       EnterpriseSvc.setStatus($scope.enterpriseValuation,EnterpriseValuationStatuses[0]);
 
       EnterpriseSvc.save($scope.enterpriseValuation).then(function(res) {
-          $scope.valuationQuote = {};
-          $scope.valuationQuote.product = {};
-          $scope.enterpriseValuation = {};
-          $scope.valuationQuote.product.country = "India";
-          getEnterpriseData();
-          setUser();
-          $scope.form.submitted = false;
+          resetData();
           Modal.alert(informationMessage.productQuoteSuccess,true);
         })
     }
@@ -521,10 +522,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       data['to'] = $scope.valuationService.quote.email;
       data['subject'] = 'No reply: Request a Quote';
       notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.valuationService.serverPath},'email');
-      $scope.valuationQuote = {};
-      $scope.valuationQuote.product = {};
-      setUser();
-      $scope.form.submitted = false;
+      resetData();
       Modal.alert(informationMessage.productQuoteSuccess,true);
       //Google and Facbook conversion start
           MarketingSvc.googleConversion();
@@ -547,10 +545,21 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
       gaMasterObject.valuationResetTime.timingValue = timeDiff;
       ga('send', gaMasterObject.valuationResetTime);
       //End
-       $scope.valuationQuote = {};
-        $scope.valuationQuote.product = {};
-         setUser();
+      resetData();
     };
+
+    function resetData() {
+      $scope.valuationQuote = {};
+      $scope.valuationQuote.product = {};
+      $scope.valuationQuote.valuation = "Financing";
+      $scope.valuationQuote.product.country = "India";
+      $scope.form.submitted = false;
+      if(Auth.isEnterprise() || Auth.isEnterpriseUser()) {
+        $scope.enterpriseValuation = {};
+        getEnterpriseData();
+      }
+      setUser();
+    }
 
     $scope.changed = function (mytime) {
       if(mytime) {
