@@ -199,6 +199,8 @@ angular.module('sreizaoApp')
         return retVal;
       },
       isServiceApprover:function(service){
+        if(!currentUser.availedServices)
+          return false;
         for(var i=0;i<currentUser.availedServices.length;i++){
          if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].approver === true)
           return true;
@@ -206,6 +208,8 @@ angular.module('sreizaoApp')
         return false;
       },
       isServiceRequester:function(service){
+        if(!currentUser.availedServices)
+          return false;
         for(var i=0;i<currentUser.availedServices.length;i++){
          if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].requester === true)
           return true;
@@ -216,13 +220,13 @@ angular.module('sreizaoApp')
         if(currentUser.role === 'admin')
           return cb(true);
 
-        if(this.isEnterprise()){
+        if(this.isEnterprise() && currentUser.availedServices){
           for(var i=0;i< currentUser.availedServices.length;i++){
            if(currentUser.availedServices[i].code === service &&  currentUser.availedServices[i].approvalRequired === 'Yes')
             return cb(true);
           }
           return cb(false);
-        }else if(this.isEnterpriseUser()){
+        }else if(this.isEnterpriseUser() && currentUser.availedServices){
           var userFilter = {};
           userFilter.role = "enterprise";
           userFilter.enterprise = true;
@@ -252,10 +256,13 @@ angular.module('sreizaoApp')
           return true;
         if(currentUser.isPartner)
           return true;
-        for(var i=0;i<currentUser.availedServices.length;i++){
-         if(currentUser.availedServices[i].code === service)
-          return true;
+        if(currentUser.availedServices && currentUser.availedServices.length > 0){
+          for(var i=0;i<currentUser.availedServices.length;i++){
+           if(currentUser.availedServices[i].code === service)
+            return true;
+          }
         }
+        
         return false;
       },
       isPartner: function() {
