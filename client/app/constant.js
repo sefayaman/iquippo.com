@@ -360,6 +360,11 @@ var payableServices = [
   name:"Valuation Service",
   code:"Valuation",
   multiple:true
+},
+{
+  name:"Asset Inspection",
+  code:"Inspection",
+  multiple:true
 }
 ];
 var HOME_BANNER =  [{

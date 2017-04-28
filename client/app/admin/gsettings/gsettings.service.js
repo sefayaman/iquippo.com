@@ -46,7 +46,6 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }else{
         	$http.get(path + "/city").then(function(res){
 	            locationCache = res.data;
-              console.log(locationCache);
 	            deferred.resolve(res.data);
           },function(errors){
             console.log("Errors in location list :"+ JSON.stringify(errors));
@@ -414,6 +413,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     svc.update = update;
     svc.delPaymentMaster = delPaymentMaster;
     svc.getPaymentMasterOnSvcCode = getPaymentMasterOnSvcCode;
+    svc.clearCache = clearCache;
 
 
     function getAll(){
@@ -469,7 +469,6 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     function getPaymentMasterOnSvcCode(svcCode,parnerId){
       var pyt = null;
       for(var i = 0;i < paymentMasterCache.length;i++){
-        console.log("paymnetCache",paymentMasterCache[i].partnerId);
         if(parnerId){
           if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId == parnerId){
             pyt = paymentMasterCache[i];
@@ -483,6 +482,10 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }
       }
       return pyt;
+    }
+
+    function clearCache(){
+      paymentMasterCache = [];
     }
 
     return svc;
