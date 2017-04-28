@@ -359,7 +359,7 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : [],
     dateParams : ['requestDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory','country','state','city','contactPerson','contactPersonTelNo']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo']
   };
   
   if(user.role == 'admin')

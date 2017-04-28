@@ -24,7 +24,7 @@ module.exports = {
 			'Serial_No': 'serialNo',
 			"Year_of_Manufacture":"yearOfManufacturing",
 			'Registration_No': 'registrationNo',
-			'Yard Information/Asset Address': 'yardParked',
+			'Yard Information/Asset Address*': 'yardParked',
 			'Country*': 'country',
 			'State*': 'state',
 			'Location*': 'city',

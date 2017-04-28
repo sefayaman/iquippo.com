@@ -61,7 +61,14 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       brandSvc.getBrandOnFilter({})
       .then(function(result) {
-          vm.brandList = result;
+         var chache = {};
+         vm.brandList = [];
+         result.forEach(function(item){
+            if(!chache[item.name]){
+              vm.brandList.push(item);
+              chache[item.name] = item._id;
+            }
+         });
       })
       if($stateParams.id) {
         $scope.isEdit = true;
