@@ -273,7 +273,7 @@
         if (Auth.isEnterpriseUser())
           getAgentBasedOnUser($scope.enterpriseOwnerData, serviceCode);
       }
-      if (Auth.getCurrentUser().role === "customer" || Auth.getCurrentUser().role === "admin" ) {
+      if (Auth.getCurrentUser().role === "customer" || Auth.getCurrentUser().role === "admin" || Auth.getCurrentUser().role === "channelpartner" ) {
          getVendors(serviceCode);
       }
     }
@@ -559,11 +559,11 @@
       var paymentTransaction = {};
       paymentTransaction.payments = [];
       paymentTransaction.totalAmount = 0;
-      paymentTransaction.requestType = "Valuation Request";
+      paymentTransaction.requestType = $scope.enterpriseValuation.requestType;
 
       var payObj = {};
       console.log("PartnerId", $scope.valuationQuote.partnerId);
-      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", $scope.valuationQuote.partnerId);
+      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.enterpriseValuation.requestType, $scope.valuationQuote.partnerId);
       payObj.type = "valuationreq";
       payObj.charge = pyMaster.fees || 5000;
       paymentTransaction.totalAmount += payObj.charge;
@@ -610,7 +610,7 @@
             facebookConversionSent = true;
           }
       var data = {};
-      data['to'] = Auth;
+      data['to'] = supportMail;
       data['subject'] = 'Valuation';
       var dataToSend={};
       dataToSend.serverPath=serverPath;
