@@ -213,7 +213,14 @@
             getEnterpriseData();
             brandSvc.getBrandOnFilter({})
               .then(function(result) {
-                $scope.allBrandList = result;
+                var chache = {};
+                $scope.allBrandList = [];
+                result.forEach(function(item){
+                  if(!chache[item.name]){
+                    $scope.allBrandList.push(item);
+                    chache[item.name] = item._id;
+                  }
+                });
               })
           } else {
             loadCategory();

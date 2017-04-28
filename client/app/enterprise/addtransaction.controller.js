@@ -61,7 +61,14 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       brandSvc.getBrandOnFilter({})
       .then(function(result) {
-          vm.brandList = result;
+         var chache = {};
+         vm.brandList = [];
+         result.forEach(function(item){
+            if(!chache[item.name]){
+              vm.brandList.push(item);
+              chache[item.name] = item._id;
+            }
+         });
       })
       if($stateParams.id) {
         $scope.isEdit = true;
@@ -225,6 +232,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation.createdBy = {};
       vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+      if(Auth.getCurrentUser().email)
+        vm.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
+      vm.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
 
       EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[0]);
 
