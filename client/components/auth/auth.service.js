@@ -254,6 +254,8 @@ angular.module('sreizaoApp')
           return true;
         if(currentUser.role === 'customer')
           return true;
+        if(currentUser.role === 'channelpartner')
+          return true;
         if(currentUser.isPartner)
           return true;
         if(currentUser.availedServices && currentUser.availedServices.length > 0){
