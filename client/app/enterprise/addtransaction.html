@@ -27,7 +27,7 @@
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.purpose.$invalid && submitted}">
             <select class="form-control" name="purpose" ng-model="addTransactionVm.enterpriseValuation.purpose" ng-disabled="!editEnterpriseField()" required>
-              <option value="">*Select Purpose</option>
+              <option value="Financing">Financing</option>
               <option ng-repeat="valuation in valuationList" value="{{valuation.name}}">{{valuation.name}}</option>
             </select>
             <i class="caret"></i>
@@ -72,7 +72,7 @@
             </div>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
-            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="*Asset No."/>
+            <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="Asset No."/>
           </div>
           <div class="col-sm-3">
             <div class="input-group">
@@ -419,7 +419,7 @@
                   <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="true" disabled> Yes
                 </div>
                 <div class="col-xs-6">
-                  <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="fale"disabled> No
+                  <input type="radio" name="mad" ng-model="addTransactionVm.enterpriseValuation.paymentMade" ng-value="false"disabled> No
                 </div>
               </div>
           </div>

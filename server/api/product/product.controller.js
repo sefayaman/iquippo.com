@@ -2076,7 +2076,7 @@ exports.validateExcelData = function(req, res, next) {
         obj.operatingHour = row.motorOperatingHour;
       }
 
-      var validTradeType = ['sell','rent','both'];
+      var validTradeType = ['sell','rent','both','not_available'];
       if(row.tradeType && (validTradeType.indexOf(row.tradeType.toLowerCase()) > -1)){
         obj.tradeType = row.tradeType.toUpperCase();
       }

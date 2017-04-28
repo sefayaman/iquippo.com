@@ -32,6 +32,7 @@
             var filter = {};
             filter.role = "enterprise";
             filter.enterprise = true;
+            filter.status = true;
             userSvc.getUsers(filter).then(function(data){
                 vm.enterprises = data;
             });
@@ -105,6 +106,10 @@
             if (vm.dataModel.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(vm.dataModel.effectiveToDate).format('MM/DD/YYYY');
             $scope.edit = true;
+            vendorSvc.getAllVendors()
+            .then(function(){
+                  vm.agencies = vendorSvc.getVendorsOnCode(rowData.serviceType);
+            })
         }
 
           function update(form){

@@ -43,7 +43,7 @@ angular.module('sreizaoApp')
 
     function openAddUserDialog() {
       $scope.isEdit = false;
-      Modal.openDialog('adduser');
+      Modal.openDialog('adduser',null,"enterpriseClass");
     } 
 
     function init(){
@@ -61,6 +61,7 @@ angular.module('sreizaoApp')
 
             filter.role = "enterprise";
             filter.enterprise = true;
+            filter.status = true;
             userSvc.getUsers(filter).then(function(data){
               vm.enterprises = data;
             })
@@ -255,10 +256,10 @@ angular.module('sreizaoApp')
     $scope.errors = {};
 
       var services = [
-                      {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"Yes"},
-                      {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"Yes"},
-                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3},
-                      {name:"Financing",code:"Finance",sequence:4}
+                      {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
+                      {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"No"},
+                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
+                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"}
                     ]
     //$scope.editImage = false;
     //$scope.users = [];
@@ -444,12 +445,12 @@ angular.module('sreizaoApp')
     }
 
     if($scope.newUser.agree) {
+      var dataToSend = {};
+      if($scope.newUser.email) 
+        dataToSend['email'] = $scope.newUser.email;
+      if($scope.newUser.mobile) 
+        dataToSend['mobile'] = $scope.newUser.mobile;
       if(!$scope.isEdit) {
-        var dataToSend = {};
-        if($scope.newUser.email) 
-          dataToSend['email'] = $scope.newUser.email;
-        if($scope.newUser.mobile) 
-          dataToSend['mobile'] = $scope.newUser.mobile;
         if($scope.newUser.alternateMobile) 
           dataToSend['alternateMobile']=$scope.newUser.alternateMobile;
         Auth.validateSignup(dataToSend).then(function(data){
@@ -464,7 +465,16 @@ angular.module('sreizaoApp')
           }
         });
       } else {
-        updateUser();
+        if($scope.newUser._id) 
+          dataToSend['userid'] = $scope.newUser._id;
+        Auth.validateSignup(dataToSend).then(function(data){
+          if(data.errorCode != 0){
+            Modal.alert(data.message, true);
+            return;
+          } else {
+            updateUser();
+          }
+        });
       }
     } else {
            Modal.alert("Please Agree to the Terms & Conditions",true);

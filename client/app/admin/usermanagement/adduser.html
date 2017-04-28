@@ -4,7 +4,7 @@
             <h4 class="modal-title">{{headerName}}</h4>
         </div>
           <div class="modal-body">            
-            <form class="form-signin" name="form" novalidate>
+            <form name="form" novalidate>
               <div class="">
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.role.$invalid && submitted }">
@@ -68,11 +68,11 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="form-group col-sm-6" >
+                  <!-- <div class="form-group col-sm-6" >
                     <input type="text" class="form-control" name="" value="" placeholder="*Address" required/>
-                  </div>
-                  <div class="form-group col-sm-6" ng-class="{'has-error': form.employeeCode.$invalid && submitted }" ng-if="newUser.role == 'enterprise'">
-                    <input type="number" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="!newUser.enterprise" ng-disabled="isEdit">
+                  </div> -->
+                  <div class="form-group col-sm-12" ng-class="{'has-error': form.employeeCode.$invalid && submitted }" ng-if="newUser.role == 'enterprise'">
+                    <input type="text" class="form-control" name="employeeCode"  placeholder="*Employee Code" ng-model="newUser.employeeCode" ng-required="newUser.role == 'enterprise'" ng-disabled="isEdit">
                   </div>
                 </div>
                 <div class="row">                  
@@ -106,15 +106,15 @@
                     <thead>
                       <tr>
                         <th width="20%">Services</th>
-                        <th>Approval Required</th>
+                        <th ng-if="newUser.enterprise">Approval Required</th>
                         <th>Role </th>
-                        <th  ng-if="!newUser.enterpriseId" width="28%">Default Partner</th>
+                        <th  ng-if="newUser.enterprise" width="28%">Default Partner</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr ng-repeat="svc in availedServices | orderBy:'sequence'">
                         <td><input type="checkbox" name="valservice" ng-model="svc.checked"> {{svc.name}}</td>
-                        <td><div class="row">
+                        <td ng-if="newUser.enterprise"><div class="row">
                               <div class="col-xs-6">
                                 <input type="radio"  name="appreq_{{$index}}" ng-model="svc.approvalRequired" value="Yes" id="yes"> <label for="yes">Yes</label>
                               </div>
@@ -132,7 +132,7 @@
                               </div>
                             </div>
                         </td>
-                        <td ng-if="!newUser.enterpriseId">
+                        <td ng-if="newUser.enterprise">
                           <select class="form-control" ng-model="svc.partnerId">
                             <option value="">*Select Partner</option>
                             <option ng-repeat="vendor in getVendors(svc.code)" value="{{vendor.partnerId}}">{{vendor.name}}</option>
@@ -202,7 +202,7 @@
                     <div class="input-group">
 
                       <span class="input-group-addon" ng-show="newUser.country">+{{code}}</span>
-                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                      <input type="text" class="form-control" name="mobile" ng-model="newUser.mobile" value="" placeholder="* Mobile No." uib-tooltip="{{code}}-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" ng-disabled="isEdit" required>
                     </div>
                   </div>
               </div>

@@ -70,13 +70,15 @@ angular.module('sreizaoApp')
         });
 
       },
-      openDialog: function(modalType, scope) {
+      openDialog: function(modalType, scope,modalClass) {
         if (!scope)
           scope = $rootScope.$new();
+         modalClass = modalClass || 'modal-default';
         var modalInstance = $uibModal.open({
           animation: true,
           templateUrl: Modals[modalType].tplUrl,
           controller: Modals[modalType].Ctrl,
+          windowClass: modalClass,
           scope: scope,
           size: 'lg'
         });

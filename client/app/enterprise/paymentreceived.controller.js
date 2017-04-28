@@ -116,7 +116,7 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
           .then(function(result){
               if($scope.close)
                   $scope.close();
-              if(result && result.length > 0){
+              if(result){
                  var isCompleted =  result.paymentReceived && result.paymentMade;
                  if(result.paymentReceived)
                     updateValuationRequest(result.invoiceNo,isCompleted);

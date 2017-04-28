@@ -91,7 +91,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1"></td>            
+            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1 ||  !enterpriseTransactionVm.isSubmitAllowed(enterpriseValuation.requestType)"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>

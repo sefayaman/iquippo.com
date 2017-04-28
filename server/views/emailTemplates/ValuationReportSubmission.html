@@ -1,0 +1,53 @@
+<head>
+  <meta charset="utf-8" content="width=divice-width, initial-screen=1"/>
+</head>
+<body>
+  <table style="width:60%; margin:0 auto; padding:15px;font-family:Verdana, Geneva, sans-serif; border: 5px solid rgba(128, 128, 128, 0.28);">
+    <tr>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
+    </tr>
+    <tr>
+      <td style="font-size:18px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear {{name}}, </td>
+    </tr>
+   
+    <tr>
+      <td style="color:#000;font-size:13px;font-weight:bold;">
+           Valuation Report for Unique Control No. - <strong>{{uniqueControlNo}}</strong> has been added below
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px;font-weight:bold;padding-bottom:20px;">
+         Please check the same.
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#000;font-size:13px; padding-bottom:40px;">
+        Please find the required Valuation Report for the raised Unique Control No. as an attachment.
+      </td>
+    </tr>
+    {{#if external}}
+    <tr>
+      <td style="color:#000;font-size:13px; padding-bottom:40px;">
+        <a href="{{reportUrl}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif; padding:6px 20px; background:#ccc; text-align: center; margin: 5px 15px 5px 0;" target="_blank">
+          {{reportUrl}}
+        </a>
+      </td>
+    </tr>
+    {{else}}
+    <tr>
+      <td style="color:#000;font-size:13px; padding-bottom:40px;">
+        <a href="{{serverPath}}/assets/uploads/{{assetDir}}/{{filename}}" style="font-size:14px;line-height:22px;color:#104295;font-weight:bold;font-family:Verdana, Geneva, sans-serif; padding:6px 20px; background:#ccc; text-align: center; margin: 5px 15px 5px 0;" target="_blank">
+          {{serverPath}}/assets/uploads/{{assetDir}}/{{filename}}
+        </a>
+      </td>
+    </tr>
+    {{/if}}
+    <tr>
+      <td style="color:#01395c;font-size:13px; padding-bottom:10px;">
+           Regards, 
+           iQuippo Support Team
+      </td>
+    </tr>
+    
+  </table>
+</body>

@@ -2,8 +2,10 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
+function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSvc){
   var entSvc = {};
+  var enterprise = null;
+
   var path = "/api/enterprise";
   entSvc.get = get;
   entSvc.getInvoice = getInvoice;
@@ -79,17 +81,17 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
 
 
     function save(data){
-      
       var deferred = $q.defer();
       $rootScope.loading = true;
       $http.post(path, data)
         .then(function(res){
-          if(res.data.uniqueControlNo && !Auth.isApprovalRequired(res.data.requestType))
-            submitToAgency([res.data],deferred);
+          if(res.data.uniqueControlNo)
+            postSave(res.data,deferred);
           else{
             $rootScope.loading = false;
             deferred.resolve(res.data);
           }
+          sendNotification(res.data);
         })
         .catch(function(err){
           $rootScope.loading = false;
@@ -98,12 +100,73 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
       return deferred.promise;
     }
 
+    function postSave(resData,deferred){
+      Auth.isApprovalRequired(resData.requestType,function(isRequired){
+            if(isRequired){
+              $rootScope.loading = false;
+              deferred.resolve(resData);
+              return;
+            }
+            submitToAgency([resData],deferred);
+      })
+    }
+    
+    function sendNotification(reqData) {
+      var data = {};
+      var dataToSend = {};
+      data.to = reqData.createdBy.email;
+      if(reqData.status === EnterpriseValuationStatuses[0]) {
+        data.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.status = "initiated";
+      }
+      if(reqData.status === EnterpriseValuationStatuses[2]) {
+        data.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.status = "submitted";
+      }
+      if(reqData.status === EnterpriseValuationStatuses[4]) {
+        data.cc = reqData.enterprise.email;
+        data.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.assetDir = reqData.assetDir;
+        if(reqData.valuationReport && reqData.valuationReport.filename) {
+          dataToSend.extrenal = reqData.valuationReport.extrenal;
+          dataToSend.filename = reqData.valuationReport.filename;
+        }
+      }
 
-
+      dataToSend.uniqueControlNo = reqData.uniqueControlNo;
+      dataToSend.name = reqData.createdBy.name;
+      dataToSend.requestType = reqData.requestType;
+      dataToSend.serverPath = serverPath;
+      if(reqData.status === EnterpriseValuationStatuses[4])
+        notificationSvc.sendNotification('ValuationReportSubmission', data, dataToSend,'email');
+      else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]) {
+        var approverUsers = [];
+        var userFilter = {};
+        userFilter.role = "enterprise";
+        userFilter.enterpriseId = reqData.enterprise.enterpriseId;
+        userFilter.status = true;
+        userSvc.getUsers(userFilter).then(function(approverUsersData){
+          if(approverUsersData.length > 0){
+            approverUsersData.forEach(function(item){
+              for(var i=0;i<item.availedServices.length;i++){
+                if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                  approverUsers[approverUsers.length] = item.email;
+                }
+              }
+            });
+            data.cc = approverUsers.join(',');
+            notificationSvc.sendNotification('ValuationRequest', data, dataToSend,'email');
+          }
+        }); 
+      } 
+    }
+    
     function update(data){
        return $http.put(path + "/" + data.data._id, data)
         .then(function(res){
-            return res.data;
+          if(data.data.valuationReport && data.data.valuationReport.filename)
+            sendNotification(data.data);
+          return res.data;
         })
         .catch(function(err){
           throw err;
@@ -292,13 +355,13 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc){
       resList.forEach(function(item){
         var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
         if(item.success == "true"){
-           valReq.jobId = item.jobId;
-           setStatus(valReq,EnterpriseValuationStatuses[2]);
+          valReq.jobId = item.jobId;
+          setStatus(valReq,EnterpriseValuationStatuses[2]);
+          sendNotification(valReq);
         }else{
           valReq.remarks = item.msg;
           setStatus(valReq,EnterpriseValuationStatuses[1]);
         }
-
       })
       $rootScope.loading = true;     
       bulkUpdate(selectedItems)
