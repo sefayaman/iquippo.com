@@ -4,6 +4,8 @@ var _ = require('lodash');
 var ServiceEnquiry = require('./services.model');
 var email = require('./../../components/sendEmail.js');
 var  xlsx = require('xlsx');
+var Seq = require('seq');
+var PaymentTransaction = require('./../payment/payment.model');
 
 // Get list of services
 exports.getAll = function(req, res) {
@@ -52,12 +54,48 @@ exports.getService = function(req, res) {
 //var ADMIN_EMAIL = "bharat.hinduja@bharatconnect.com";
 
 exports.create = function(req, res) {
-  // var prQuote = validateProductQuote(req.body);
+  // var prQuote = validateProductQuote(req.body);  
+  if(req.body.valuation.type==="valuation"){
+    console.log("get me valuationQuote",req.body.valuation);
+  Seq()
+    .seq(function(){
+      var self = this;
+      if(!req.body.payment){
+        self()
+        return;
+      }
+      req.body.payment.createdAt = new Date();
+      req.body.payment.updatedAt = new Date();
+       PaymentTransaction.create(req.body.payment, function(err, payment) {
+          if(err){return handleError(err,res)}
+            else{
+              req.transactionId = payment._id;
+              self();
+            }
+          });
+      })
+      .seq(function(){
+        var self = this;
+        req.body.createdAt = new Date();
+        req.body.valuation.transactionId = req.transactionId;
+        ServiceEnquiry.create(req.body.valuation, function(err, valuation) {
+          if(err){return handleError(err,res)}
+            else{
+              var resObj = {}
+              resObj.transactionId = valuation.transactionId;
+              resObj.errorCode = 0;
+              return res.status(200).json(resObj);
+            }
+          });
+      }) 
+}
+else{
   req.body.createdAt = new Date();
   ServiceEnquiry.create(req.body, function(err, service) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(service);
   });
+}
 };
 
 //export data into excel

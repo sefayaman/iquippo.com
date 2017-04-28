@@ -108,7 +108,11 @@
                         <th width="20%">Services</th>
                         <th ng-if="newUser.enterprise">Approval Required</th>
                         <th>Role </th>
+<<<<<<< HEAD
+                        <th  ng-if="!newUser.enterpriseId || isEdit" width="28%">Default Partner</th>
+=======
                         <th  ng-if="newUser.enterprise" width="28%">Default Partner</th>
+>>>>>>> bd9911d4040bbaa733274c875add7e095cda21d8
                       </tr>
                     </thead>
                     <tbody>
@@ -132,6 +136,7 @@
                               </div>
                             </div>
                         </td>
+
                         <td ng-if="newUser.enterprise">
                           <select class="form-control" ng-model="svc.partnerId">
                             <option value="">*Select Partner</option>

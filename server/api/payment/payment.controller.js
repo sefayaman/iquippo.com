@@ -39,6 +39,7 @@ exports.getOnFilter = function(req, res) {
   var filter = {};
   if(req.body._id)
     filter["_id"] = req.body._id;
+  console.log("filters",filter);
 
   if(req.body.userId)
     filter["user._id"] = req.body.userId;
