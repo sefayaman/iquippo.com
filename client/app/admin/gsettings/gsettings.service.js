@@ -468,20 +468,20 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     function getPaymentMasterOnSvcCode(svcCode,parnerId){
       var pyt = null;
+      var pytCopy=null;
       for(var i = 0;i < paymentMasterCache.length;i++){
         if(parnerId){
-          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId == parnerId){
+          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId === parnerId)
             pyt = paymentMasterCache[i];
-            break;
-          }
-        }else{
-          if(paymentMasterCache[i].serviceCode == svcCode){
-              pyt = paymentMasterCache[i];
-              break;
+            if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].default===true)
+              pytCopy=paymentMasterCache[i];
           }
         }
-      }
+        if(pyt==null)
+      return pytCopy;
+    else{
       return pyt;
+    }
     }
 
     function clearCache(){

@@ -471,7 +471,7 @@
 
     function addValuationQuote(evt) {
       if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your request!", true);
+        Modal.alert("Please Login/Register for submitting your Valuation Request.", true);
         $scope.form.submitted = false;
         return;
       }
@@ -598,7 +598,6 @@
           payment: paymentTransaction
         })
         .then(function(result) {
-          console.log("ValuationSvc", result);
           if (result && result.errorCode != 0) {
             //Modal.alert(result.message, true);  
             $state.go('main');
@@ -610,13 +609,25 @@
             MarketingSvc.facebookConversion();
             facebookConversionSent = true;
           }
-          $state.go('payment', {
+      var data = {};
+      data['to'] = Auth;
+      data['subject'] = 'Valuation';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, dataToSend,'email');
+      
+      data={};
+      data['to'] = $scope.valuationService.quote.email;
+      data['subject'] = 'Your request has been initiated successfully';
+      dataToSend={};
+      dataToSend.serverPath=serverPath;
+      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data,dataToSend,'email');
+        $state.go('payment', {
             tid: result.transactionId
           });
-
         })
-        .catch(function() {
-          //error handling
+        .catch(function(err) {
+          Modal.alert('Error while sending email');
         });
 
       /*$http.post('/api/services', $scope.valuationService).then(function(res){
@@ -627,17 +638,21 @@
       var timeDiff = Math.floor(((valuationSubmitTime - $scope.valuationStartTime)/1000)*1000);
       gaMasterObject.valuationSubmitTime.timingValue = timeDiff;
       ga('send', gaMasterObject.valuationSubmitTime);
-      //End
-      var data = {};
-      data['to'] = supportMail;
-      data['subject'] = 'Request for a Quote: Valuation';
-      $scope.valuationService.serverPath = serverPath;
-      $scope.valuationService.quote.date = moment($scope.valuationService.quote.scheduleDate).format('DD/MM/YYYY');
-      notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, $scope.valuationService.quote,'email');
+      //End*/
+      /*var data = {};
+      data['to'] = Auth;
+      data['subject'] = 'Valuation';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      //$scope.valuationService.serverPath = serverPath;
+      //$scope.valuationService.quote.date = moment($scope.valuationService.quote.scheduleDate).format('DD/MM/YYYY');
+      notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, dataToSend,'email');
 
       data['to'] = $scope.valuationService.quote.email;
-      data['subject'] = 'No reply: Request a Quote';
-      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data, {serverPath:$scope.valuationService.serverPath},'email');
+      data['subject'] = 'Your request has been initiated successfully';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data,dataToSend,'email');
       resetData();
       Modal.alert(informationMessage.productQuoteSuccess,true);
       //Google and Facbook conversion start

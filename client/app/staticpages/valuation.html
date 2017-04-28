@@ -357,9 +357,9 @@
 							<hr>
 							<div class="row text-left">
 							<div class="col-xs-12 col-sm-4 form-group">
-							<select class="form-control" ng-model="valuationquote.partnerId">
+							<select class="form-control" ng-model="valuationQuote.partnerId">
                             <option value="">*Select Partner</option>
-                            <option ng-repeat="vendor in vendorList" value="{{vendor.partnerId}}">{{vendor.name}}</option>
+                            <option ng-repeat="vendor in vendorList" value="{{vendor._id}}">{{vendor.name}}</option>
                             </select>
 							</div>
 								<div class="col-xs-12 col-sm-4 form-group" ng-if="isEnterprise">Purpose of valuation</div>
