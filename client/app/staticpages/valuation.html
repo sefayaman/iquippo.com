@@ -363,20 +363,20 @@
                             </select>
 							</div>
 								<div class="col-xs-12 col-sm-4 form-group" ng-if="isEnterprise">Purpose of valuation</div>
-								<div class="col-xs-6 col-sm-4 form-group" ng-if="isEnterprise" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
+								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
 									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
 				                      <option value="Financing">Financing</option>
 				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
 				                    </select>
 								</div>
 								
-								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
+								<!-- <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
 									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
 				                      <option value="">Select purpose</option>
 				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
 				                    </select>
-								</div>
-								--
+								</div> -->
+								
 								<div class="col-xs-6 col-sm-4 form-group" ng-if="!isEnterprise" ng-class="{'has-error': form.otherName.$invalid && form.submitted }">
 									<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
 								</div>

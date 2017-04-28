@@ -248,6 +248,8 @@ angular.module('sreizaoApp')
       isServiceAvailed:function(service){
         if(currentUser.role === 'admin')
           return true;
+        if(currentUser.role === 'customer')
+          return true;
         if(currentUser.isPartner)
           return true;
         for(var i=0;i<currentUser.availedServices.length;i++){
