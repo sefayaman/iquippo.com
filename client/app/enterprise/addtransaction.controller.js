@@ -232,6 +232,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation.createdBy = {};
       vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+      if(Auth.getCurrentUser().email)
+        vm.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
+      vm.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
 
       EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[0]);
 
