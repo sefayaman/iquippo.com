@@ -507,10 +507,10 @@
         return;
       }
 
-      /*if (Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection') && Auth.getCurrentUser().role === "enterprise") {
+      if (!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection') && Auth.getCurrentUser().role === "enterprise") {
         Modal.alert("User does not have any request type.", true);
         return;
-      } */
+      } 
       if(!$scope.enterpriseValuation.requestType) {
         Modal.alert("Please select request type.", true);
         return;
