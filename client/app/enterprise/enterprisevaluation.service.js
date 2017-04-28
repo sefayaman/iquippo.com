@@ -91,6 +91,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
             $rootScope.loading = false;
             deferred.resolve(res.data);
           }
+          sendNotification(res.data);
         })
         .catch(function(err){
           $rootScope.loading = false;
@@ -109,11 +110,63 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
             submitToAgency([resData],deferred);
       })
     }
+    
+    function sendNotification(reqData) {
+      var data = {};
+      var dataToSend = {};
+      data.to = reqData.createdBy.email;
+      if(reqData.status === EnterpriseValuationStatuses[0]) {
+        data.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.status = "initiated";
+      }
+      if(reqData.status === EnterpriseValuationStatuses[2]) {
+        data.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.status = "submitted";
+      }
+      if(reqData.status === EnterpriseValuationStatuses[4]) {
+        data.cc = reqData.enterprise.email;
+        data.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.assetDir = reqData.assetDir;
+        if(reqData.valuationReport && reqData.valuationReport.filename) {
+          dataToSend.extrenal = reqData.valuationReport.extrenal;
+          dataToSend.filename = reqData.valuationReport.filename;
+        }
+      }
 
+      dataToSend.uniqueControlNo = reqData.uniqueControlNo;
+      dataToSend.name = reqData.createdBy.name;
+      dataToSend.requestType = reqData.requestType;
+      dataToSend.serverPath = serverPath;
+      if(reqData.status === EnterpriseValuationStatuses[4])
+        notificationSvc.sendNotification('ValuationReportSubmission', data, dataToSend,'email');
+      else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]) {
+        var approverUsers = [];
+        var userFilter = {};
+        userFilter.role = "enterprise";
+        userFilter.enterpriseId = reqData.enterprise.enterpriseId;
+        userFilter.status = true;
+        userSvc.getUsers(userFilter).then(function(approverUsersData){
+          if(approverUsersData.length > 0){
+            approverUsersData.forEach(function(item){
+              for(var i=0;i<item.availedServices.length;i++){
+                if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                  approverUsers[approverUsers.length] = item.email;
+                }
+              }
+            });
+            data.cc = approverUsers.join(',');
+            notificationSvc.sendNotification('ValuationRequest', data, dataToSend,'email');
+          }
+        }); 
+      } 
+    }
+    
     function update(data){
        return $http.put(path + "/" + data.data._id, data)
         .then(function(res){
-            return res.data;
+          if(data.data.valuationReport && data.data.valuationReport.filename)
+            sendNotification(data.data);
+          return res.data;
         })
         .catch(function(err){
           throw err;
@@ -302,13 +355,13 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       resList.forEach(function(item){
         var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
         if(item.success == "true"){
-           valReq.jobId = item.jobId;
-           setStatus(valReq,EnterpriseValuationStatuses[2]);
+          valReq.jobId = item.jobId;
+          setStatus(valReq,EnterpriseValuationStatuses[2]);
+          sendNotification(valReq);
         }else{
           valReq.remarks = item.msg;
           setStatus(valReq,EnterpriseValuationStatuses[1]);
         }
-
       })
       $rootScope.loading = true;     
       bulkUpdate(selectedItems)

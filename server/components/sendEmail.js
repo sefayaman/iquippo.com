@@ -21,10 +21,20 @@ var transport = nodemailer.createTransport({
 
 
 email.sendMail = function(data,req,res,cb) {
-	var mailOptions={
+	var mailOptions = {};
+	if(data.cc) {
+		mailOptions={
+		to : data.to, //req.body.email,
+		cc : data.cc,
+		subject : data.subject,
+		html : data.content
+		}
+	} else {
+		mailOptions={
 		to : data.to, //req.body.email,
 		subject : data.subject,
 		html : data.content
+		}
 	}
 
 	if(data.from)
@@ -51,10 +61,20 @@ email.sendMail = function(data,req,res,cb) {
 }
 
 email.autoMail = function(data,cb) {
-	var mailOptions={
-		to : data.to,
+	var mailOptions = {};
+	if(data.cc) {
+		mailOptions={
+		to : data.to, //req.body.email,
+		cc : data.cc,
 		subject : data.subject,
 		html : data.content
+		}
+	} else {
+		mailOptions={
+		to : data.to, //req.body.email,
+		subject : data.subject,
+		html : data.content
+		}
 	}
 	if(data.from)
 		mailOptions['from'] = data.from;

@@ -213,13 +213,12 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
             loadCategory();
           }
           setUser();
-          if($scope.valuationQuote.product && $scope.valuationQuote.product.country)
-            onPrdCountryChange($scope.valuationQuote.product.country)
         } else {
           loadCategory();
         }
       }) 
-
+      if($scope.valuationQuote.product && $scope.valuationQuote.product.country)
+        onPrdCountryChange($scope.valuationQuote.product.country)
       ValuationPurposeSvc.get(null)
       .then(function(result){
         $scope.valuationList = result;
@@ -259,7 +258,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
                 $scope.enterpriseValuation.agency.partnerId = result[0].partnerId;
                 $scope.enterpriseValuation.agency._id = result[0]._id;
                 $scope.enterpriseValuation.agency.name = result[0].entityName;
-                $scope.enterpriseValuation.agency.email = result[0].user.email;
+                if(result[0].user.email)
+                  $scope.enterpriseValuation.agency.email = result[0].user.email;
                 $scope.enterpriseValuation.agency.mobile = result[0].user.mobile;
               }
             })
@@ -284,9 +284,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
           $scope.enterpriseValuation.enterprise._id = data[0]._id;
           $scope.enterpriseValuation.enterprise.mobile = data[0].mobile;
           $scope.enterpriseValuation.enterprise.name = data[0].fname + " " + data[0].lname;
-          $scope.enterpriseValuation.enterprise.email = data[0].email;
+          if(data[0].email)
+            $scope.enterpriseValuation.enterprise.email = data[0].email;
           $scope.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
-          if(Auth.getCurrentUser().employeeCode)
+          if(data[0].employeeCode)
             $scope.enterpriseValuation.enterprise.employeeCode = data[0].employeeCode;
 
           $scope.enterpriseValuation.customerPartyNo = data[0].mobile;
@@ -300,9 +301,11 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         $scope.valuationQuote.state = "";
         $scope.valuationQuote.city = "";
       }
-      
       $scope.stateList = [];
       $scope.locationList = [];
+      if(!country)
+        return;
+      
       filter = {};
       filter.country = country;
       LocationSvc.getStateHelp(filter).then(function(result){
@@ -313,8 +316,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     function onStateChange(state,noChange){
       if(!noChange)
         $scope.valuationQuote.city = "";
-      
       $scope.locationList = [];
+      if(!state)
+        return;
+
       filter = {};
       filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
@@ -325,9 +330,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     function onPrdCountryChange(country){
       $scope.valuationQuote.product.state = "";
       $scope.valuationQuote.product.city = "";
-      
       $scope.prdStateList = [];
       $scope.prdLocationList = [];
+      if(!country)
+        return;
       filter = {};
       filter.country = country;
       LocationSvc.getStateHelp(filter).then(function(result){
@@ -337,8 +343,9 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
     function onPrdStateChange(state){
       $scope.valuationQuote.product.city = "";
-      
       $scope.prdLocationList = [];
+      if(!state)
+        return;
       filter = {};
       filter.stateName = state;
       LocationSvc.getLocationOnFilter(filter).then(function(result){
@@ -352,9 +359,9 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
         $scope.valuationQuote.fname = currUser.fname;
         $scope.valuationQuote.mname = currUser.mname;
         $scope.valuationQuote.lname = currUser.lname;
-
         $scope.valuationQuote.mobile = currUser.mobile;
-        $scope.valuationQuote.email = currUser.email;
+        if(currUser.email)
+          $scope.valuationQuote.email = currUser.email;
         $scope.valuationQuote.phone = currUser.phone;
         $scope.valuationQuote.country = currUser.country;
         $scope.valuationQuote.state = currUser.state;
@@ -385,6 +392,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
   function onBrandChange(brandName){
     $scope.modelList = [];
     $scope.valuationQuote.product.model = "";
+    $scope.enterpriseValuation.model = "";
     if(!brandName)
       return;
     var filter = {};
@@ -466,7 +474,8 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
 
       $scope.enterpriseValuation.createdBy = {};
       $scope.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
-      $scope.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
+      if(Auth.getCurrentUser().email)
+        $scope.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
       $scope.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
       $scope.enterpriseValuation.userName = $scope.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
       if($scope.valuationQuote.valuation)
