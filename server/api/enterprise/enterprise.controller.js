@@ -1120,7 +1120,7 @@ exports.bulkModify = function(req, res) {
           if(err){
             console.log(err);
           }
-          if(results)
+          if(results && updateType == 'agency')
             pushNotification(results[0]);
         })
         return cb();

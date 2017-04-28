@@ -125,8 +125,8 @@
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.yearOfManufacturing.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
             <input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" ng-min="1900" string-to-number/>
           </div>
-          <div class="col-sm-3">
-           <input type="text" class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" placeholder="Yard Information/Asset Address" ng-disabled="!editEnterpriseField()" required/>          
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.yardParked.$invalid && submitted}">
+           <input type="text" class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" placeholder="*Yard Information/Asset Address" ng-disabled="!editEnterpriseField()" required/>          
            <!--  <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
               <option value="">Yard Parked</option>
               <option value="Yes">Yes</option>

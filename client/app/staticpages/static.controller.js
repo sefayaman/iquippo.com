@@ -200,9 +200,9 @@
         });
     };
 
-   /* $scope.$on('callValuationRequest', function() {
+    $scope.$on('callValuationRequest', function() {
       init();
-    })*/
+    })
 
     function init() {
       Auth.isLoggedInAsync(function(loggedIn) {
@@ -507,6 +507,15 @@
         return;
       }
 
+      /*if (Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection') && Auth.getCurrentUser().role === "enterprise") {
+        Modal.alert("User does not have any request type.", true);
+        return;
+      } */
+      if(!$scope.enterpriseValuation.requestType) {
+        Modal.alert("Please select request type.", true);
+        return;
+      }
+
       if ($scope.valuationQuote.product.contactPersonAsAbove)
         $scope.valuationQuote.product.contactPerson = $scope.valuationQuote.fname + " " + $scope.valuationQuote.lname;
 
@@ -522,11 +531,6 @@
     }
 
     function enterpriseValuationSave() {
-      if (!$scope.enterpriseValuation.requestType) {
-        Modal.alert("User does not have any request type.", true);
-        return;
-      }
-
       $scope.enterpriseValuation.createdBy = {};
       $scope.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       if (Auth.getCurrentUser().email)
