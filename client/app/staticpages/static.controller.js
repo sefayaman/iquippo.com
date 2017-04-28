@@ -575,7 +575,7 @@
       var payObj = {};
       console.log("PartnerId", $scope.valuationQuote.partnerId);
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.enterpriseValuation.requestType, $scope.valuationQuote.partnerId);
-      payObj.type = "valuationreq";
+      payObj.type = "valuationEnquiries";
       payObj.charge = pyMaster.fees || 5000;
       paymentTransaction.totalAmount += payObj.charge;
       paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
