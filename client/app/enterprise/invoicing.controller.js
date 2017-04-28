@@ -32,7 +32,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
  	vm.updateSelection = updateSelection;
  	vm.openInvoiceModal = openInvoiceModal;
   vm.exportExcel = exportExcel;
-  //vm.getPartners = getPartners;
+  vm.getPartners = getPartners;
   vm.print = printInvoice;
   vm.downloadInvoice = downloadInvoice;
   vm.selectAll = selectAll;
@@ -60,21 +60,16 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       userSvc.getUsers(userFilter).then(function(data){
         vm.enterprises = data;
       })
-      vendorSvc.getAllVendors()
-      .then(function(){
+      vendorSvc.getAllVendors();
+      /*.then(function(){
          vm.agencies = vendorSvc.getVendorsOnCode("Valuation");
-      });
+      });*/
     }
     if(Auth.isAdmin())
       getEnterpriseData({});
     else
       getInvoiceData({});
  	}
-
-  /*function getPartners(sercType){
-    vm.agencyId = "";
-     vm.agencies = vendorSvc.getVendorsOnCode(sercType);
-  }*/
 
   function changePageSize(pageSize){
     $scope.pager.reset();
@@ -97,6 +92,13 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       getEnterpriseData({});
 
   }
+
+  function getPartners(code){
+          vm.agencies = [];
+          if(!code)
+              return;
+          vm.agencies = vendorSvc.getVendorsOnCode(code);
+    }
 
   function getInvoiceData(filter){
       $scope.pager.copy(filter);

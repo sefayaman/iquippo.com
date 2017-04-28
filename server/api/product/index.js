@@ -36,7 +36,7 @@ router.post('/createauction', controller.createOrUpdateAuction);
 
 router.post('/bulkeditproduct',controller.parseExcel,controller.validateExcelData,controller.updateExcelData);
 router.get('/script/featured',scriptController.script);
-//vi version of bulk create product
+//v1 version of bulk create product
 router.post('/v1/import',controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
 
 

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="" ng-app="sreizaoApp">
+<html lang="" data-ng-app="sreizaoApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msvalidate.01" content="8895FA2B3689834A976D5D572C3E731C" />
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title ng-bind-template={{choosenTitle}}></title>
+    <title data-ng-bind-template={{choosenTitle}}>IQuippo - New &amp; Used Construction Equipment Online</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
         
-    <meta view-head name=”description” content={{metaDescription}}>
+    <meta name="description" content={{metaDescription}}>
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
@@ -18,7 +18,8 @@
       <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <link rel="stylesheet" href="bower_components/DataTables/media/css/jquery.dataTables.css" />
       <link rel="stylesheet" href="bower_components/Hover/css/hover.css" />
-      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
+      <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
+      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -63,33 +64,33 @@
     ga('send', 'pageview');
 
   </script>
-  <!-- Facebook Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '751605608235189'); // Insert your pixel ID here.
-    fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=751605608235189&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- DO NOT MODIFY -->
-  <!-- End Facebook Pixel Code -->
-    <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion_async.js" charset="utf-8"></script>
+
   </head>
   <body>
-
+      <!-- Facebook Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '751605608235189'); // Insert your pixel ID here.
+      fbq('track', 'PageView');
+      </script>
+      <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=751605608235189&ev=PageView&noscript=1" alt="" 
+      /></noscript>
+      <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code -->
+      <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion_async.js" charset="utf-8"></script>
 
  <!--    <header class="">
       <ng-include src="'components/header/header.html'"></ng-include>
     </header> -->
-<div ng-show="!isAdminLayout" ng-include="'components/header/header.html'" class="full-header"></div>
-<div ng-if="isAdminLayout" ng-include="'components/header/admin_header.html'"></div>
+<div data-ng-show="!isAdminLayout" data-ng-include="'components/header/header.html'" class="full-header"></div>
+<div data-ng-if="isAdminLayout" data-ng-include="'components/header/admin_header.html'"></div>
 
-    <div id="view-container" ui-view="">
+    <div id="view-container" data-ui-view="">
     </div>
         <!--
         Developer Name: Nishnat
@@ -116,7 +117,7 @@
 <!-- Hotjar Tracking Code for http://iq.com -->
 
 
-    <footer ng-if="!isAdminLayout">
+    <footer data-ng-if="!isAdminLayout">
       <ng-include src="'components/footer/footer.html'"></ng-include>
     </footer>
 
@@ -125,7 +126,7 @@
       </div> -->
 
 
-     <div class="loading"  ng-show="loading" style="position:fixed;width:100%;height:100%;background-color: rgba(0,0,0,0.8);color:#fff; white-space: nowrap; top:0;left:0;z-index:10000; padding:25% 50%;"><i class="fa fa-spinner fa-spin fa-4x"></i></div>
+     <div class="loading"  data-ng-show="loading" style="position:fixed;width:100%;height:100%;background-color: rgba(0,0,0,0.8);color:#fff; white-space: nowrap; top:0;left:0;z-index:10000; padding:25% 50%;"><i class="fa fa-spinner fa-spin fa-4x"></i></div>
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.min.js"></script>
@@ -144,7 +145,7 @@
       <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
       <script src="bower_components/DataTables/media/js/jquery.dataTables.js"></script>
       <script src="bower_components/moment/moment.js"></script>
-      <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
+      <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
       <script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
       <script src="bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.js"></script>
       <script src="bower_components/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.js"></script>
@@ -158,7 +159,7 @@
       <script src="bower_components/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
       <script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script>
       <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
-      <script src="bower_components/tinymce/tinymce.js"></script>
+      <script src="bower_components/tinymce-dist/tinymce.js"></script>
       <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
       <script src="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>
@@ -267,7 +268,11 @@
           <script src="app/valuation/valuation.service.js"></script>
           <script src="app/valuation/valuationlisting.controller.js"></script>
           <script src="app/valuation/valuationrequest.controller.js"></script>
+<<<<<<< HEAD
+          <script src="app/yard/bookingCalendar.controller.js"></script>
+=======
           <script src="app/yard/yardlisting.controller.js"></script>
+>>>>>>> fb15202064210e183d75b875950bf02701f9f338
           <script src="components/auth/auth.service.js"></script>
           <script src="components/auth/user.service.js"></script>
           <script src="components/footer/footer.controller.js"></script>

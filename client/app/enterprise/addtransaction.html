@@ -19,9 +19,9 @@
       <div class="panel-body">
         <div class="row form-group ">                            
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.requestType.$invalid && submitted}">
-            <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField()" required>
+            <select class="form-control" name="requestType" ng-model="addTransactionVm.enterpriseValuation.requestType"  ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.getPartners(addTransactionVm.enterpriseValuation.requestType)" required>
               <option value="">*Request Type</option>
-              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}">{{req.name}}</option>
+              <option ng-repeat="req in addTransactionVm.requestTypeList" value="{{req.name}}" ng-if="isServiceAvailed(req.name)">{{req.name}}</option>
             </select>
             <i class="caret"></i>
           </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="row form-group">                            
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="*Reference / FI Number"/>
+            <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="Customer Transaction ID"/>
           </div>
           <div class="col-sm-3">
             <input type="text" class="form-control" name="customerValuationNo" ng-model="addTransactionVm.enterpriseValuation.customerValuationNo" ng-disabled="!editEnterpriseField()" placeholder="Customer Valuation/Inspection No."/>
@@ -129,8 +129,8 @@
            <input type="text" class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" placeholder="Yard Information/Asset Address" ng-disabled="!editEnterpriseField()"/>          
            <!--  <select  class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" ng-disabled="!editEnterpriseField()">
               <option value="">Yard Parked</option>
-              <option value="Yes">Yard Information</option>
-              <option value="No">Asset Address</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
             <i class="caret"></i> -->
           </div>

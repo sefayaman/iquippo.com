@@ -191,6 +191,10 @@ angular.module('sreizaoApp',[
     $rootScope.getCategoryHelp = UtilSvc.getCategoryHelp;
     $rootScope.getLocationHelp = UtilSvc.getLocationHelp;
     $rootScope.getLocations = UtilSvc.getLocations;
+    $rootScope.isServiceAvailed = Auth.isServiceAvailed;
+    $rootScope.isApprovalRequired = Auth.isApprovalRequired;
+    $rootScope.isServiceRequester = Auth.isServiceRequester;
+    $rootScope.isServiceApprover = Auth.isServiceApprover;
 
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

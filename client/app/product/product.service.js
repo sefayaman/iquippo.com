@@ -266,9 +266,9 @@
                   throw res;
                 })
       }
-    function loadIncomingProduct(){
+    function loadIncomingProduct(data){
 
-        return $http.post(path + '/incomingproducts',{userId:Auth.getCurrentUser()._id})
+        return $http.post(path + '/incomingproducts',data)
           .then(function(res){
             return res.data;
           })

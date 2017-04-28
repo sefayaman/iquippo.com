@@ -17,7 +17,8 @@
                 <label for="" class="text-muted">Trading Type </label>
                 <div class="form-group">
                   <select class="form-control col-md-2" name="type" ng-model="type" ng-change="viewproductVm.onTypeChange(type,true)">
-                    <option value="">Both</option>
+                  <option value="">Select Trade Type</option>
+                    <option value="BOTH">Both</option>
                     <option value="SELL">Buy</option>
                     <option value="RENT">Rent</option>
                     <option value="rented">Rented</option>
@@ -202,8 +203,8 @@
                      <img src="assets/images/campare-icon.png" width="20">
                    </a>
                 </div>
-                <div class="col-xs-4 visible-xs">
-                  <button class="btn-block" ng-click="filterbutton.value1 = !filterbutton.value1">
+                <div class="col-xs-4 visible-xs filter-btn">
+                  <button class="btn-block btn-danger " ng-click="filterbutton.value1 = !filterbutton.value1">
                     <i class="fa fa-filter"></i> Filter
                   </button>
                 </div>
@@ -228,16 +229,16 @@
 
              <div ng-if="!searching && !noResult">
                  <div class="row no-list ">
-                   <div class="col-sm-8 text-left padd-left">
+                   <div class="col-sm-8 text-left hidden-xs">
                       <uib-pagination total-items="viewproductVm.totalItems" ng-click="viewproductVm.onPageChange()" ng-model="viewproductVm.currentPage" items-per-page="viewproductVm.itemsPerPage" max-size="viewproductVm.maxSize" boundary-links="true" rotate="false"></uib-pagination>
                    </div>
-                   <div class="col-sm-4 text-right padd-right">
+                   <div class="col-sm-4">
                      <span class="text-right">Showing <b>{{((viewproductVm.currentPage - 1)*viewproductVm.itemsPerPage) + 1}}-<span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage < viewproductVm.totalItems">{{viewproductVm.currentPage*viewproductVm.itemsPerPage}}</span><span ng-if="viewproductVm.currentPage*viewproductVm.itemsPerPage >= viewproductVm.totalItems">{{viewproductVm.totalItems}}</span></b> of <b> {{viewproductVm.totalItems}}</b></span>
                    </div>
                  </div>
                  
                 <div id="search-result_wrapper" class="search-result">
-                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
+                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage | orderBy:'assetStatus'" class="sorts">
                       <div class="media">
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}?{{filterType}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right" >

@@ -22,14 +22,14 @@
                     </div>
                     <div class="col-md-12 " ng-class="{'has-error': form.mobile.$invalid && form.submitted }">
                       <div class="row">
-                        <div class="col-sm-3 padd-right search-field">
+                        <div class="col-xs-3 col-sm-3 padd-right search-field">
                           <select class="form-control" ng-model="contact.countryCode" ng-change="onCodeChange(contact.countryCode)" required>
                             <option value="" disabled>*Code</option>
                             <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
                           </select>
                           <i class="caret"></i>
                         </div>                      
-                        <div class="col-sm-9 padd-left">
+                        <div class="col-xs-9 col-sm-9 padd-left">
                           <input type="text" name="mobile" ng-model="contact.mobile" value="" class="form-control" placeholder="Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                         </div>                      
                       </div>

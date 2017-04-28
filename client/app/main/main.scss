@@ -383,7 +383,7 @@ footer .subscribe{height: 40px;}
   #wrapper{padding-left:225px;}
   #page-wrapper{padding:10px;}
 }
-.input-group-addon .btn-default{padding: 8px 15px; font-size: 16px;}
+.input-group-addon .btn-default{border: 0;background: #eee;outline: none; width: 100%; height: 100%;}
 
 /* Top Navigation */
 .top-nav{padding:0 20px;}

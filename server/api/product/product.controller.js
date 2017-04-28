@@ -17,6 +17,7 @@ var Category = require('./../category/category.model');
 var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
+var CityModel = require('../common/location.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
@@ -166,6 +167,12 @@ exports.search = function(req, res) {
     arr[arr.length] = {country:{$regex:locRegEx}};
   }
 
+  if(req.body.productDescription){
+    var pdRegEx=new RegExp(req.body.productDescription,'i');
+    arr[arr.length]={name:{$regex:pdRegEx}};
+    arr[arr.length]={assetId:{$regex:pdRegEx}};
+  }
+
   if(req.body.cityName){
     var cityRegex = new RegExp(req.body.cityName, 'i');
     filter['city'] = {$regex:cityRegex};
@@ -178,7 +185,8 @@ exports.search = function(req, res) {
   
    if(req.body.productName){
     var pdNameRegex = new RegExp(req.body.productName, 'i');
-    filter['name'] = {$regex:pdNameRegex};
+    arr[arr.length] = {name:{$regex:pdNameRegex}};
+    arr[arr.length] = {assetId:{$regex:pdNameRegex}};
   }
   if(req.body.tradeType){
     if(req.body.tradeType != "NOT_AVAILABLE" )
@@ -291,9 +299,64 @@ exports.search = function(req, res) {
     })
     .par(function(){
       var self = this;
+      var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
-          result.products = products;
+          var saleFeaturedProd = [],
+              rentFeaturedProd = [],
+              saleProd = [],
+              bothProd = [],
+              rentProd = [],
+              notAvailProd = [],
+              soldProd = [],  //status of product
+              rentedProd = []; //status
+          products.forEach(function(item){
+            if(!assetIdCache[item.assetId]){
+              assetIdCache[item.assetId] = true;
+              if(item.featured && item.tradeType === 'SELL'){
+                saleFeaturedProd.push(item);
+                return;
+              }
+
+              if(item.featured && item.tradeType === 'RENT'){
+                rentFeaturedProd.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'SELL'){
+                saleProd.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'BOTH'){
+                bothProd.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'RENT'){
+                rentProd.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'NOT_AVAILABLE'){
+                notAvailProd.push(item);
+                return;
+              }
+
+              if(item.assetStatus === 'SOLD'){
+                soldProd.push(item);
+                return;
+              }
+
+              if(item.assetStatus === 'RENTED'){
+                rentedProd.push(item);
+                return;
+              }
+            }
+          });
+
+          var outputProds = [].concat(saleFeaturedProd,rentFeaturedProd,saleProd,bothProd,rentProd,notAvailProd,soldProd,rentedProd);
+          result.products = outputProds;
           self();
          }
       );
@@ -552,10 +615,84 @@ function updateProduct(req,res){
   Product.findById(req.params.id, function (err, product) {
     if (err) { return handleError(res, err); }
     if(!product) { return res.status(404).send('Not Found'); }
-    Product.update({_id:req.params.id},{$set:req.body},function(err){
+    if(req.body.featured){
+      var imgPath = config.uploadPath + req.body.assetDir + "/" + req.body.primaryImg;
+      var featureFilePath=config.uploadPath+"featured/"+req.body.primaryImg;
+      var fileParts=req.body.primaryImg.split('.');
+      var extPart=fileParts[1];
+      var fileBeforeCompression=1;
+      var fileAfterCompression=0;
+      if (fs.existsSync(featureFilePath)) {
+        return updateProductData();
+      } 
+
+      fsExtra.copy(imgPath, featureFilePath, {
+          replace: false
+        },function(err,result){
+          if(err){
+            return updateProductData();
+          }
+          lwip.open(featureFilePath,function(err,image){
+           if(err){
+            return updateProductData();
+          }
+          var stats=fs.statSync(featureFilePath);
+          fileBeforeCompression=stats.size;
+          image.resize(130,100,function(err, rzdImage) {
+            if(err){
+              return updateProductData();
+            }
+            if (extPart === 'jpg' || extPart === 'jpeg') {
+              rzdImage.toBuffer(extPart, {
+                quality: 75
+              }, function(err, buffer) {
+                  if(err){
+                    return updateProductData();
+                  }
+                fs.writeFile(featureFilePath, buffer, function(err) {
+                  if(err){
+                    return updateProductData();
+                  }
+                  var stats=fs.statSync(featureFilePath);
+                  fileAfterCompression=stats.size;
+                  debug("SIZE After compression",fileAfterCompression);    
+                  return updateProductData();
+                })
+              })
+              } else {
+                if (extPart === 'png') {
+                  rzdImage.toBuffer(extPart, {
+                    compression: "high",
+                    interlaced: false,
+                    transparency: 'auto'
+                  }, function(err, buffer) {
+                    if(err){
+                      return updateProductData();
+                    }
+                    fs.writeFile(featureFilePath,buffer, function(err) {
+                      if(err){
+                        return updateProductData();
+                      }
+                      var stats=fs.statSync(featureFilePath);
+                      fileAfterCompression=stats.size; 
+                      return updateProductData();
+                    })
+                  })
+                }
+              }
+            })
+          })   
+        })
+      } else {
+        updateProductData();      
+      }
+
+    function updateProductData(){
+      Product.update({_id:req.params.id},{$set:req.body},function(err){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(req.body);
-    });
+          return res.status(200).json(req.body);
+      });
+    }
   });
 }
 
@@ -573,6 +710,9 @@ function addProduct(req,res){
     var fileBeforeCompression=1;
     var fileAfterCompression=0;
     var counter=0;
+    if (fs.existsSync(featureFilePath)) {
+        return;
+      }
   fsExtra.copy(imgPath, featureFilePath, {
         replace: false
       },function(err,result){
@@ -847,6 +987,7 @@ exports.exportProducts = function(req, res) {
         }
         var responseData = [];
         var mapedFields = {};
+        var extraCols = ['priceOnRequest','auctionListing', 'isEngineRepaired', 'dispSellerContact', 'dispSellerAlternateContact', 'featured', 'status'];
         Object.keys(productFieldsMap).forEach(function(x) {
           mapedFields[productFieldsMap[x]] = x;
         });
@@ -855,7 +996,7 @@ exports.exportProducts = function(req, res) {
           var obj = {};
           if (colData) {
             Object.keys(colData).forEach(function(y) {
-              if (mapedFields[y]) {
+              if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
                 obj[mapedFields[y]] = x[y];
                 ['category', 'brand', 'model'].forEach(function(u) {
                   if (x[u])
@@ -891,16 +1032,16 @@ exports.exportProducts = function(req, res) {
             //Service Information Cols
             if (colData.serviceInfo && colData.serviceInfo.length) {
               ['authServiceStation', 'serviceAt'].forEach(function(x) {
-                if (colData.serviceInfo[0][x]) {
+                if (colData.serviceInfo && colData.serviceInfo.length && colData.serviceInfo[0] && colData.serviceInfo[0][x]) {
                   obj[mapedFields[x]] = colData.serviceInfo[0][x];
                 }
               })
 
-              if (colData.serviceInfo[0].servicedate)
+              if (colData.serviceInfo && colData.serviceInfo.length && colData.serviceInfo[0] &&  colData.serviceInfo[0].servicedate)
                 obj[mapedFields.servicedate] = Utillity.toIST(colData.serviceInfo[0].servicedate)
 
 
-              if (colData.serviceInfo[0].operatingHour) {
+              if (colData.serviceInfo && colData.serviceInfo.length && colData.serviceInfo[0] && colData.serviceInfo[0].operatingHour) {
                 obj[mapedFields.serviceOperatingHour] = colData.serviceInfo[0].operatingHour;
               }
             }
@@ -928,10 +1069,14 @@ exports.exportProducts = function(req, res) {
               if (colData.rent.rateMonths) {
                 obj[mapedFields.rentMonths] = 'Yes';
                 ['minPeriodM', 'maxPeriodM', 'rentAmountM', 'seqDepositM'].forEach(function(x) {
-                  if (colData.rent.rateHours[x]) {
+                  if (colData.rent && colData.rent.rateHours && colData.rent.rateHours[x]) {
                     obj[mapedFields[x]] = colData.rent.rateMonths[x];
                   }
                 })
+              }
+
+              if(colData.operatingHour){
+                obj[mapedFields.motorOperatingHour] = colData.operatingHour;
               }
 
               if (colData.rent.negotiable)
@@ -939,12 +1084,7 @@ exports.exportProducts = function(req, res) {
               else
                 obj[mapedFields.negotiable] = 'No';
 
-              ['priceOnRequest', 'isEngineRepaired', 'dispSellerContact', 'dispSellerAlternateContact', 'featured', 'status'].forEach(function(x) {
-                if (colData[x]) {
-                  obj[mapedFields[x]] = 'Yes';
-                } else
-                  obj[mapedFields[x]] = 'No';
-              });
+              
 
 
               ['fromDate', 'toDate'].forEach(function(x) {
@@ -953,6 +1093,13 @@ exports.exportProducts = function(req, res) {
                 }
               })
             }
+
+            extraCols.forEach(function(x) {
+              if (colData[x]) {
+                obj[mapedFields[x]] = 'Yes';
+              } else
+                obj[mapedFields[x]] = 'No';
+            });
 
             //Admin Cols only visible to admin
             var adminCols = ['assetStatus', 'dispSellerInfo', 'dispSellerContact', 'alternateMobile', 'dispSellerAlternateContact', 'featured', 'status'];
@@ -963,6 +1110,8 @@ exports.exportProducts = function(req, res) {
                   delete obj[x]
               });
             }
+
+            delete obj.__rowNum__;
             
             responseData.push(obj);
           }
@@ -1047,12 +1196,20 @@ function fetchModel(model, cb) {
 }
 
 exports.updateExcelData = function (req,res,next){
-  if(!req.updateData.length && !req.errorList.length)
-    return next(new APIError(500,'Error while updation'));
-
   var successCount = 0;
+
+  if(!req.updateData.length && !req.errorList.length){
+    req.errorList = [];
+    for(var j = 0 ; j < req.totalCount ; j++){
+      req.errorList.push({
+        Error : 'Nothing to update',
+        rowCount : j+1
+      });
+    }
+  }
+
   if(!req.updateData.length && req.errorList.length)
-    return res.json({successCount : successCount,errorList : req.errorList});
+    return res.json({successCount : successCount,errorList : req.errorList,totalCount : req.totalCount});
 
   var dataToUpdate = req.updateData;
 
@@ -1063,15 +1220,13 @@ exports.updateExcelData = function (req,res,next){
       console.log(err);
       return next(new APIError(500,'Error while updation'));
     }
-
-    return res.json({successCount:successCount , errorList : req.errorList});
+   
+    return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
   }
 
   function intialize(data,cb){
-
     var assetId = data.assetId;
     delete data.assetId;
-
     Product.findOneAndUpdate({assetId:assetId},{'$set':data},function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1109,8 +1264,9 @@ exports.createProductReq = function(req,res,next){
   }
 
   function intialize(data,cb){
-    data.images = [{}]
+    data.images = [{}];
     data.user = req.body.user;
+    
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1127,11 +1283,16 @@ exports.createProductReq = function(req,res,next){
 
 exports.parseExcel = function(req,res,next){
   var body = req.body;
-  ['fileName', 'user'].forEach(function(x) {
+  var ret;
+  ['fileName', 'user','type'].some(function(x) {
     if (!body[x]) {
-      return next(new APIError(412,'Missing mandatory parameter: ' + x));
+      ret = x;
     }
-  })
+  });
+
+  if(ret)
+    return next(new APIError(412,'Missing mandatory parameter: ' + ret));
+  
   var options = {
     file: body.fileName,
     headers: Object.keys(productFieldsMap),
@@ -1145,11 +1306,15 @@ exports.parseExcel = function(req,res,next){
 
 exports.parseImportExcel = function(req,res,next){
   var body = req.body;
-  ['filename', 'user','type'].forEach(function(x) {
+  var ret;
+  ['filename', 'user'].forEach(function(x) {
     if (!body[x]) {
-      return  next(new APIError(412,'Missing mandatory parameter: ' + x));
+      ret = x;
     }
   });
+
+  if(ret)
+    return  next(new APIError(412,'Missing mandatory parameter: ' + ret));
 
   var options = {
     file: body.filename,
@@ -1169,7 +1334,6 @@ exports.validateExcelData = function(req, res, next) {
   var user = req.body.user;
   var reqType = req.reqType;
   var type = req.body.type;
-  var existingProduct;
 
   if(!reqType)
     return next(new APIError(400,'Invalid request type'));
@@ -1187,7 +1351,7 @@ exports.validateExcelData = function(req, res, next) {
   var updateData = [];
   var errorList = [];
   var assetIdObj = {};
-
+  req.totalCount = excelData.length;
   async.eachLimit(excelData, 10, intialize, finalize);
 
   function finalize(err) {
@@ -1196,6 +1360,9 @@ exports.validateExcelData = function(req, res, next) {
       return next(new APIError(500,'Error while updating'));
     }
 
+    if(!updateData.length && !errorList.length){
+      return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
+    }
     req.errorList = errorList;
     req.updateData = updateData;
     next();
@@ -1219,7 +1386,6 @@ exports.validateExcelData = function(req, res, next) {
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
-
     if(reqType === 'Update'){
       Product.find({
         assetId: row.assetId
@@ -1232,14 +1398,13 @@ exports.validateExcelData = function(req, res, next) {
           return cb();
         }
 
-        existingProduct = doc[0]._doc;
-
         if(type === 'template_update') {
           async.parallel({
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
             validateServiceInfo: validateServiceInfo,
+            validateCity : validateCity,
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols
@@ -1262,6 +1427,7 @@ exports.validateExcelData = function(req, res, next) {
           validateSeller: validateSeller,
           validateTechnicalInfo: validateTechnicalInfo,
           validateServiceInfo: validateServiceInfo,
+          validateCity : validateCity,
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
           validateOnlyAdminCols: validateOnlyAdminCols
@@ -1275,17 +1441,54 @@ exports.validateExcelData = function(req, res, next) {
       }
     }
 
+    function validateCity(callback){
+      if(row.city){
+        CityModel.City.find({name : row.city},function(err,cityInfo){
+          if(err || !cityInfo){
+            errorList.push({
+              Error : 'Error while validating city',
+              rowCount :row.rowCount
+            });
+              return callback('Error');
+            }
+
+            if(!cityInfo.length){
+              errorList.push({
+                Error : 'Invalid City',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
+
+            if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
+              errorList.push({
+                Error : 'Invalid State or country',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
+
+            return callback();
+        });
+      } else {
+        return callback();
+      }
+    }
+
     function validateMadnatoryCols(callback){
-      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','location','seller_mobile'].forEach(function(x){
+      var error;
+      ['assetId','category','brand','model','tradeType','mfgYear','currencyType','country','state','city','seller_mobile'].some(function(x){
         if(!row[x]){
+          error = true;
           errorList.push({
             Error : 'Missing mandatory parameter : ' + x,
             rowCount :row.rowCount
           });
-
-          return callback('Error');
         }
       });
+
+      if(error)
+        return callback('Error');
 
       if(row.category.toLowerCase() === 'other' && !other_category){
         errorList.push({
@@ -1323,11 +1526,21 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
+      return callback();
+
     }
 
 
     function validateAuction(callback){
-      if(row.auctionListing.toLowerCase() === 'yes'){
+      if (user.role !== 'admin') {
+        errorList.push({
+          Error : 'User not authorized',
+          rowCount : row.rowCount
+        });
+        return callback('Error');
+      }
+       
+      if(row.auctionListing && row.auctionListing.toLowerCase() === 'yes'){
         if(!row.auctionId){
           errorList.push({
             Error : 'Auction ID Missing',
@@ -1336,7 +1549,7 @@ exports.validateExcelData = function(req, res, next) {
           return callback('Error');
         }
 
-        if(row.valuationReq !== 'yes' || !row.agencyName){
+        if(row.valuationReq.toLowerCase() !== 'yes' || !row.agencyName){
           errorList.push({
             Error : 'Valuation Request is required while updating auction data',
             rowCount : row.rowCount
@@ -1350,25 +1563,279 @@ exports.validateExcelData = function(req, res, next) {
             $gt : new Date()
           }
         }
-        AuctionMaster.find(reqOpts,function(err,auction){
-          if(err || !auction){
+
+        var auctionMaster,vendorData,
+            paymentMaster,paymentTransData,
+            valuationData,auctionReqData,existingProduct;
+
+
+        async.series({
+          validateAuctionMaster : validateAuctionMaster,
+          validateVendor : validateVendor,
+          validatePaymentTrans : validatePaymentTrans,
+          fetchPaymentMaster : fetchPaymentMaster,
+          fetchProduct : fetchProduct,
+          createPaymetTrans : createPaymetTrans,
+          createValauationReq : createValauationReq,
+          createAuctionRequest : createAuctionRequest
+        },middleManProcessing);
+
+      } else if(row.auctionListing && row.auctionListing.toLowerCase() === 'no'){
+        var obj = {
+          auction : {},
+          auctionListing :false
+        }
+        return callback();
+      } else {
+        errorList.push({
+          Error : 'Nothing to update',
+          rowCount : row.rowCount
+        })
+        return callback('Error');
+      }
+
+      function fetchProduct(innerCb){
+        Product.find({
+          assetId: row.assetId
+        }, function(err, doc) {
+          if (err || !doc.length) {
             errorList.push({
-              Error : 'Error while validating auction id',
-              rowCount : row.rowCount
-            });
-            return callback('Error');
+              Error: 'No asset id found',
+              rowCount: row.rowCount
+            })
+            return innerCb('Error');
+          }
+          existingProduct = doc[0];
+          return innerCb();
+        });
+      }
+
+
+        function middleManProcessing(err){
+          if(err){
+            return callback(err);
           }
 
-          if(!auction.length){
-            errorList.push({
-              Error : 'Invalid Auction id',
-              rowCount : row.rowCount
-            });
-            return callback('Error');
+          var obj = {
+            auction:{
+                id : auctionReqData._id,
+                valuationId : valuationData._id
+              },
+            auctionListing : true
+          };
+
+          return callback(null,obj)
+        }
+
+        function createAuctionRequest(innerCb){
+          var auctionData = { 
+            valuationReport: '',
+            dbAuctionId: auctionMaster[0]._id,
+            emdAmount: row.emdAmount,
+            user: user,
+            seller: {
+              "mobile" : existingProduct.seller.mobile,
+              "email"  : existingProduct.seller.email,
+              "name"   : (existingProduct.seller.fname || '') + (existingProduct.seller.lname || '') ,
+              "_id"    : existingProduct.seller._id
+            },
+            status: 'payment_pending',
+            statuses: [ { createdAt: new Date(),
+                 status: 'payment_pending',
+                 userId: user._id } ],
+            product:{ 
+              _id: existingProduct._id,
+              assetId: existingProduct.assetId,
+              city: existingProduct.city,
+              name: existingProduct.name,
+              status: existingProduct.status,
+              category: existingProduct.category,
+              mfgYear : existingProduct.mfgYear,
+              productId : existingProduct.productId
+            },
+            startDate: auctionMaster[0].startDate,
+            endDate: auctionMaster[0].endDate,
+            auctionId: row.auctionId,
+            transactionId: paymentTransData._id,
+            valuation: { 
+              _id: valuationData._id, 
+              status: 'payment_pending'
+            } 
+          };
+
+
+          AuctionReq.create(auctionData,function(err,auctionInfo){
+            if(err || !auctionInfo){
+              errorList.push({
+                Error : 'Error while creating Auction request',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            auctionReqData = auctionInfo;
+            return innerCb();
+          });
+        }
+
+        function createValauationReq(innerCb){
+          var valauationData = { 
+            valuationAgency: { _id: vendorData[0]._id,
+              name:  vendorData[0].entityName,
+              email: vendorData[0].user.email,
+              mobile: vendorData[0].user.mobile,
+              countryCode: '91' },
+            valuate: true,
+            user: user,
+            seller: existingProduct.seller,
+            initiatedBy: 'Admin',
+            purpose: 'Listing in auction',
+            product:{ 
+              _id: existingProduct._id,
+              assetId: existingProduct.assetId,
+              city: existingProduct.city,
+              name: existingProduct.name,
+              status: existingProduct.status,
+              category: existingProduct.category,
+              mfgYear : existingProduct.mfgYear
+            },
+            status: 'payment_pending',
+            statuses: 
+             [ { createdAt: new Date(),
+                 status: 'payment_pending',
+                 userId: user._id }],
+            isAuction: true 
+          };
+
+          ValuationReq.create(valauationData,function(err,valuationInfo){
+            if(err || !valuationInfo){
+              errorList.push({
+                Error : 'Error while creating valuation request',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            valuationData = valuationInfo;
+            return innerCb();
+          });
+        }
+
+        function createPaymetTrans(innerCb){
+          var auctionFee,valuationFee;
+          var ret;
+          ['auctionMaster','vendorData','paymentmaster'].some(function(x){
+            if(!x){
+              errorList.push({
+                Error : 'Error while fetching payment master/auction master/vendor data',
+                rowCount : row.rowCount
+              });
+
+              ret = true;
+              return true;
+            }
+          })
+
+          if(ret){
+            return innerCb('Error');
           }
 
-          reqOpts = {
+          paymentMaster.forEach(function(x){
+            if(x.serviceCode === 'Auction')
+              auctionFee = x.fees
+            else if(x.serviceCode === "Valuation")
+              valuationFee = x.fees;
+          });
+
+          if(!auctionFee || !valuationFee){
+            errorList.push({
+              Error : 'Auction Fee/Valuation Fee master not present',
+              rowCount : row.rowCount
+            });
+            return innerCb('Error');
+          }
+
+          var paymentData = {
+            paymets :[{ type: 'auctionreq', charge: auctionFee},
+                { type: 'valuationreq', charge: valuationFee }],
+            totalAmount : Number(auctionFee) + Number(valuationFee),
+            requestType : 'Auction Listing',
+            product:{ type: 'equipment',
+              _id: existingProduct._id,
+              assetId: existingProduct.assetId,
+              city: existingProduct.city,
+              name: existingProduct.name,
+              status: existingProduct.status,
+              category: existingProduct.category },
+            user: user,
+            status: existingProduct.status,
+            statuses: existingProduct.statuses,
+            paymentMode: 'offline',
+            auctionId : row.auctionId,
             entityName : row.agencyName
+          };
+
+          PaymentTransaction.create(paymentData,function(err,paymentInfo){
+            if(err || !paymentInfo){
+              errorList.push({
+                Error : 'Error while creating payment request',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+            paymentTransData = paymentInfo;
+            return innerCb();
+          });
+
+        }
+
+        function fetchPaymentMaster(innerCb){
+          PaymentMaster.find({serviceCode : {$in:['Auction','Valuation']}},function(err,masterData){
+            if(err || !masterData){
+              errorList.push({
+                Error : 'Error while fetching payment master data',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            if(!masterData.length){
+              errorList.push({
+                Error : 'Payment details not found',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+            paymentMaster = masterData;
+            return innerCb();
+          })
+        }
+
+        function validateAuctionMaster(innerCb){
+          AuctionMaster.find(reqOpts,function(err,auction){ 
+            if(err || !auction){
+              errorList.push({
+                Error : 'Error while validating auction id',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            if(!auction.length){
+              errorList.push({
+                Error : 'Invalid Auction id',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+            auctionMaster = auction;
+            return innerCb();
+          })
+        }
+
+        function validateVendor(innerCb){
+          reqOpts = {
+            entityName : row.agencyName,
           };
 
           VendorModel.find(reqOpts,function(err,agency){
@@ -1377,190 +1844,49 @@ exports.validateExcelData = function(req, res, next) {
                 Error : 'Error while validating agency',
                 rowCount : row.rowCount
               });
-              return callback('Error');
+              return innerCb('Error');
             }
 
-            if(!agency.length || !agency.services || !agency.services.length || (agency.services[0].indexOf('Valuation') < 0)){
+            if(!agency.length){
               errorList.push({
                 Error : 'Invalid agency or Agency not authorized',
                 rowCount : row.rowCount
               });
-              return callback('Error');
+              return innerCb('Error');
             }
 
-            reqOpts = {
-              auctionId : row.auctionId,
-              entityName : row.agencyName,
-              'product.assetId' : row.assetId
-            };
-
-            PaymentTransaction.find(reqOpts,function(err,payment){
-              if(err || !agency){
-                errorList.push({
-                  Error : 'Error while validating payment transaction',
-                  rowCount : row.rowCount
-                });
-                return callback('Error');
-              }
-
-              if(payment.length){
-                errorList.push({
-                  Error : 'Payment already been made for this asset for this auctionId and agency',
-                  rowCount : row.rowCount
-                });
-                return callback('Error');
-              }
-
-              PaymentMaster.find({serviceCode : {$in:['Auction','Valuation']}},function(err,masterData){
-                if(err || !masterData){
-                  errorList.push({
-                    Error : 'Error while fetching payment master data',
-                    rowCount : row.rowCount
-                  });
-                  return callback('Error');
-                }
-
-                if(!masterData.length){
-                  errorList.push({
-                    Error : 'Payment details not found',
-                    rowCount : row.rowCount
-                  });
-                  return callback('Error');
-                }
-                var auctionFee,
-                    valuationFee;
-                masterData.forEach(function(x){
-                  if(x.serviceCode === 'Auction')
-                    auctionFee = x.fees
-                  else if(x.serviceCode === "Valuation")
-                    valuationFee = x.fees;
-                });
-
-                if(!auctionFee || !valuationFee){
-                  errorList.push({
-                    Error : 'Auction Fee/Valuation Fee master not present',
-                    rowCount : row.rowCount
-                  });
-                  return callback('Error');
-                }
-
-                var paymentData = {
-                  paymets :[{ type: 'auctionreq', charge: auctionFee},
-                      { type: 'valuationreq', charge: valuationFee }],
-                  totalAmount : Number(auctionFee) + Number(valuationFee),
-                  requestType : 'Auction Listing',
-                  product:{ type: 'equipment',
-                    _id: existingProduct._id,
-                    assetId: existingProduct.assetId,
-                    city: existingProduct.city,
-                    name: existingProduct.name,
-                    status: existingProduct.status,
-                    category: existingProduct.category },
-                  user: user,
-                  status: existingProduct.status,
-                  statuses: existingProduct.statuses,
-                  paymentMode: 'offline'
-                };
-
-                PaymentTransaction.create(paymentData,function(err,paymentInfo){
-                  if(err || !paymentInfo){
-                    errorList.push({
-                      Error : 'Error while creating payment request',
-                      rowCount : row.rowCount
-                    });
-                    return callback('Error');
-                  }
-
-                  var valauationData = { 
-                    valuationAgency: { _id: agency[0]._id,
-                      name:  agency[0].entityName,
-                      email: agency[0].user.email,
-                      mobile: agency[0].user.mobile,
-                      countryCode: '91' },
-                    valuate: true,
-                    user: user,
-                    seller: existingProduct.seller,
-                    initiatedBy: 'Admin',
-                    purpose: 'Listing in auction',
-                    product:{ 
-                      _id: existingProduct._id,
-                      assetId: existingProduct.assetId,
-                      city: existingProduct.city,
-                      name: existingProduct.name,
-                      status: existingProduct.status,
-                      category: existingProduct.category,
-                      mfgYear : existingProduct.mfgYear
-                    },
-                    status: 'payment_pending',
-                    statuses: 
-                     [ { createdAt: new Date(),
-                         status: 'payment_pending',
-                         userId: user._id }],
-                    isAuction: true } ;
-                  ValuationReq.create(valauationData,function(err,valuationInfo){
-                    if(err || !paymentInfo){
-                      errorList.push({
-                        Error : 'Error while creating payment request',
-                        rowCount : row.rowCount
-                      });
-                      return callback('Error');
-                    }
-
-                    var auctionData = { 
-                      valuationReport: '',
-                      dbAuctionId: auction._id,
-                      emdAmount: row.emdAmount,
-                      user: user,
-                      seller: existingProduct.seller,
-                      status: 'payment_pending',
-                      statuses: [ { createdAt: new Date(),
-                           status: 'payment_pending',
-                           userId: user._id } ],
-                      product:{ 
-                        _id: existingProduct._id,
-                        assetId: existingProduct.assetId,
-                        city: existingProduct.city,
-                        name: existingProduct.name,
-                        status: existingProduct.status,
-                        category: existingProduct.category,
-                        mfgYear : existingProduct.mfgYear
-                      },
-                      startDate: auction[0].startDate,
-                      endDate: auction[0].endDate,
-                      auctionId: row.auctionId,
-                      transactionId: paymentInfo._id,
-                      valuation: { 
-                        _id: valuationInfo._id, 
-                        status: 'payment_pending'
-                      } 
-                    };
-
-                    AuctionReq.create(auctionData,function(err,auctionInfo){
-                      if(err || !auctionInfo){
-                        errorList.push({
-                          Error : 'Error while creating Auction request',
-                          rowCount : row.rowCount
-                        });
-                        return callback('Error');
-                      }
-                      var obj = {
-                        auction:{
-                            id : auctionInfo._id,
-                            valuationId : valuationInfo._id
-                          }
-                        };
-
-                      return callback(null,obj)
-                    });
-                  });
-                });
-              });
-            });
+            vendorData = agency;
+            return innerCb();
           });
-        });
-      } else {
-        return callback();
-      }
+        }
+
+        function validatePaymentTrans(innerCb){
+          reqOpts = {
+            auctionId : row.auctionId,
+            entityName : row.agencyName,
+            'product.assetId' : row.assetId
+          };
+
+          PaymentTransaction.find(reqOpts,function(err,payment){
+            if(err || !payment){
+              errorList.push({
+                Error : 'Error while validating payment transaction',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            if(payment.length){
+              errorList.push({
+                Error : 'Payment already been made for this asset for this auctionId and agency',
+                rowCount : row.rowCount
+              });
+              return innerCb('Error');
+            }
+
+            return innerCb();
+          });
+        }
     }
 
     
@@ -1606,45 +1932,6 @@ exports.validateExcelData = function(req, res, next) {
         return callback();
       });
     }
-
-    function validateDupProd(callback){
-      Product.find({assetId:row.assetId},function(err,products){
-        if(err || !products){
-          errorList.push({
-            Error : 'Error while validating product',
-            rowCount : row.rowCount
-          });
-        }
-
-        if(products.length){
-          errorList.push({
-            Error : 'Duplicate Asset Id',
-            rowCount : row.rowCount
-          });
-        }
-        return callback();
-      });
-    }
-
-    function validateDupIncomingProd(callback){
-      IncomingProduct.find({assetId:row.assetId},function(err,products){
-        if(err || !products){
-          errorList.push({
-            Error : 'Error while validating product',
-            rowCount : row.rowCount
-          });
-        }
-
-        if(products.length){
-          errorList.push({
-            Error : 'Duplicate Asset Id present in quene',
-            rowCount : row.rowCount
-          });
-        }
-        return callback();
-      });
-    }
-
 
     function buildData(err, parseData) {
       if (err)
@@ -1727,7 +2014,8 @@ exports.validateExcelData = function(req, res, next) {
         }
       }
 
-      ['dispSellerInfo', 'dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
+      
+      ['dispSellerContact', 'dispSellerAlternateContact'].forEach(function(x) {
         if (row[x]) {
           if (row[x].toLowerCase() === 'yes')
             obj[x] = true
@@ -1737,6 +2025,15 @@ exports.validateExcelData = function(req, res, next) {
             delete row[x];
         }
       });
+
+
+
+      if(row.dispSellerInfo && row.dispSellerInfo.toLowerCase() === 'yes'){
+        obj.dispSellerInfo = 'yes';
+      } else {
+        obj.dispSellerInfo = 'no';
+      }
+
 
       if (row.alternateMobile)
         obj.alternateMobile = row.alternateMobile;
@@ -1761,19 +2058,35 @@ exports.validateExcelData = function(req, res, next) {
         if (row[x])
           obj[x] = trim(row[x]);
       })
-
-      var additionalCols = ['comment', 'operatingHour', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant', 'tradeType'];
+    
+      var additionalCols = ['comment', 'rateMyEquipment', 'mileage', 'serialNo', 'mfgYear', 'variant','specialOffers'];
       additionalCols.forEach(function(x) {
         if (row[x]) {
           obj[x] = row[x];
         }
       });
+
+      if(row.videoLinks){
+        obj.videoLinks = [{
+          uri : row.videoLinks
+        }];
+      }
+
+      if(row.motorOperatingHour){
+        obj.operatingHour = row.motorOperatingHour;
+      }
+
+      var validTradeType = ['sell','rent','both'];
+      if(row.tradeType && (validTradeType.indexOf(row.tradeType.toLowerCase()) > -1)){
+        obj.tradeType = row.tradeType.toUpperCase();
+      }
+
       return callback(null, obj);
     }
 
     function validateRentInfo(callback) {
       var product = {};
-      if (row.tradeType && row.tradeType != "SELL") {
+      if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
         product["rent"] = {};
 
         var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
@@ -1946,7 +2259,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType === 'SELL') {
+      } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
@@ -1986,15 +2299,15 @@ exports.validateExcelData = function(req, res, next) {
         }
       })
 
-      if (row.serviceOperatingHour) {
-        obj.serviceInfo[0].operatingHour = row.serviceOperatingHour;
+      if (row.operatingHour) {
+        obj.serviceInfo[0].operatingHour = row.operatingHour;
       }
 
       if (row.servicedate) {
         var servicedate = new Date(row["servicedate"]);
         var validDate = isValid(servicedate);
         if (servicedate && validDate) {
-          obj["serviceInfo"][0].servicedate = servicedate;
+          obj.serviceInfo[0].servicedate = servicedate;
         }
 
       }

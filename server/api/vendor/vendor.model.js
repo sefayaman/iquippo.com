@@ -7,7 +7,7 @@ var VendorSchema = new Schema({
   user:{},
   entityName: String,
   partnerId:String,
-  services: [String],
+  services: [],
   url: String,
   status:{
     type: Boolean,
