@@ -385,6 +385,8 @@
         if(!data.to)
           return;
         dataTosend['to'] = data.to;
+        if(data.cc)
+          dataTosend['cc'] = data.cc;
         if(data.subject)
           dataTosend['subject'] = data.subject;
         var tempData = {};

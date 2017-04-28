@@ -29,7 +29,10 @@ var Handlebars = require('handlebars');
 var pdf = require('html-pdf');
 var validator = require('validator');
 var minify = require('html-minifier').minify;
-
+var commonController = require('./../common/common.controller');
+var notification = require('./../../components/notification.js');
+var VALUATION_REQUEST = "ValuationRequest";
+var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
 
 exports.get = function(req, res) {
   
@@ -417,6 +420,17 @@ exports.bulkUpload = function(req, res) {
     function validateRequestType(callback){
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
+        if(user.role == 'enterprise'){
+          var found = false;
+          for(var i=0 ; i < user.availedServices.length;i++){
+            if(user.availedServices[i].code == row.requestType){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            return callback('Invalid Request Type');
+        }
 
       return callback();
     }
@@ -606,6 +620,8 @@ exports.bulkUpload = function(req, res) {
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
+        email : user.email,
+        mobile : user.mobile,
         role : user.role
       };
 
@@ -637,6 +653,8 @@ exports.bulkUpload = function(req, res) {
               rowCount: row.rowCount
             });
           }
+          if(enterpriseData)
+            pushNotification(enterpriseData);
           return cb();
         });
       })
@@ -654,7 +672,80 @@ exports.bulkUpload = function(req, res) {
   }
 };
 
+  function pushNotification(reqData){
+   try{
+        if(reqData.createdBy.email) {
+          var emailData = {};
+          var tplData = {};
+          emailData.to = reqData.createdBy.email;
+          var tmplName = VALUATION_REQUEST;
+          emailData.notificationType = "email";
+          if(reqData.status === EnterpriseValuationStatuses[0]) {
+            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+            tplData.status = "initiated";
+          }
+          if(reqData.status === EnterpriseValuationStatuses[2]) {
+            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+            tplData.status = "submitted";
+          }
+          if(reqData.status === EnterpriseValuationStatuses[4]) {
+            tmplName = VALUATION_REPORT_SUBMISSION;
+            emailData.cc = reqData.enterprise.email;
+            emailData.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+            //tplData.assetDir = reqData.assetDir;
+            if(reqData.valuationReport && reqData.valuationReport.filename) {
+              tplData.external = reqData.valuationReport.external;
+              tplData.reportUrl = reqData.valuationReport.filename;
+            }
+          }
+          tplData.uniqueControlNo = reqData.uniqueControlNo;
+          tplData.name = reqData.createdBy.name;
+          tplData.requestType = reqData.requestType;
+          if(reqData.status === EnterpriseValuationStatuses[4]) {
+            sendMail(tplData, emailData, tmplName);
+          } else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]){
+            var approverUsers = [];
+            var userFilter = {};
+            userFilter.role = "enterprise";
+            userFilter.enterpriseId = reqData.enterprise.enterpriseId;
+            userFilter.status = true;
+            UserModel.find(userFilter,function(err,results){
+              if(err){
+                console.log(err);
+              }
+              if(results.length > 0){
+                results.forEach(function(item){
+                  for(var i=0;i<item.availedServices.length;i++){
+                    if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                      approverUsers[approverUsers.length] = item.email;
+                    }
+                  }
+                });
+                emailData.cc = approverUsers.join(',');
+                sendMail(tplData, emailData, tmplName);
+              }
+            })
+          }
+        }
+    }
+    catch (ex) {
+      console.log(ex);
+    }
+}
 
+  function sendMail(tplData, emailData, tmplName) {
+    commonController.compileTemplate(tplData, config.serverPath, tmplName, function(ret,retData){
+      if(!ret){
+          console.log(ret);
+      }else{
+          emailData.content =  retData;
+          notification.pushNotification(emailData,function(pushed){
+          console.log("Email send.");
+        });
+      }
+    });
+  }
+  
 exports.bulkModify = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
@@ -799,6 +890,17 @@ exports.bulkModify = function(req, res) {
         return callback();        
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
+       if(user.role == 'enterprise'){
+          var found = false;
+          for(var i = 0 ; i < user.availedServices.length; i++){
+            if(user.availedServices[i].code == row.requestType){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            return callback('Invalid Request Type');
+        }
 
       return callback();
     }
@@ -1012,6 +1114,15 @@ exports.bulkModify = function(req, res) {
             rowCount: row.rowCount
           });
         }
+        var entValFilter = {};
+        entValFilter.uniqueControlNo = uniqueControlNo;
+        EnterpriseValuation.find(entValFilter,function(err,results){
+          if(err){
+            console.log(err);
+          }
+          if(results)
+            pushNotification(results[0]);
+        })
         return cb();
       });
     }
@@ -1228,10 +1339,11 @@ exports.updateInvoice = function(req, res) {
         return res.status(412).send("Invalid update");
   });
 
-  function update(inovice){
-    EnterpriseValuationInvoice.update({_id:_id},{$set:inovice},function(err,retVal){
+  function update(invoice){
+    EnterpriseValuationInvoice.update({_id:_id},{$set:invoice},function(err,retVal){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(inovice);
+        console.log("invoice",invoice);
+        return res.status(200).json(invoice);
     });
   }
 
@@ -1325,6 +1437,7 @@ exports.updateFromAgency = function(req,res){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
           }
+          pushNotification(valReq);
           return sendResponse();
       });
   }
