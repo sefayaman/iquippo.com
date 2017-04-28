@@ -7,14 +7,14 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
  	var vm = this;
    
     //ccavenue test  url
-   var ccavenueURL = "https://test.ccavenue.com";
+   //var ccavenueURL = "https://test.ccavenue.com";
 
    //ccavenue live  url
-   //var ccavenueURL = " https://secure.ccavenue.com";
+   var ccavenueURL = " https://secure.ccavenue.com";
 
    //localhost ccavennue test account crediential
-   var currentURL = "http://localhost";
-   var accessCode = 'AVSW00DJ54AN50WSNA';
+   //var currentURL = "http://localhost";
+   //var accessCode = 'AVSW00DJ54AN50WSNA';
 
    //localhost ccavennue live account crediential
    /*var currentURL = "http://localhost";
@@ -23,8 +23,8 @@ function PaymentCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,$location,
   
 
    //iquippo.com ccavenue detail 
-  /* var currentURL = " http://iquippo.com";
-   var accessCode = 'AVSY67DJ29AL34YSLA';*/
+  var currentURL = " http://iquippo.com";
+   var accessCode = 'AVSY67DJ29AL34YSLA';
 
  	//Default parameter value
 

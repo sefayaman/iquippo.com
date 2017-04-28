@@ -166,7 +166,7 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
     $scope.onPrdCountryChange = onPrdCountryChange;
     $scope.onPrdStateChange = onPrdStateChange;
     $scope.getAssetGroup = getAssetGroup;
-    $scope.getValuationVendors=getValuationVendors;
+    $scope.getVendors=getVendors;
 
     $scope.valuationQuote = {};
     $scope.valuationQuote.product = {};
@@ -405,8 +405,10 @@ angular.module('sreizaoApp').controller('CetifiedByiQuippoCtrl',CetifiedByiQuipp
          })
     }
 
-    function getValuationVendors(){
-      return vendorSvc.getVendorsOnCode("Valuation");
+    function getVendors(requestType){
+      $scope.vendorList=[];
+      $scope.vendorList=vendorSvc.getVendorsOnCode(requestType);
+      return $scope.vendorList;
     }
 
     function addValuationQuote(evt) {

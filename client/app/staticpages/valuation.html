@@ -173,16 +173,16 @@
 									<label>Request Type:</label>
 								</div>								
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<div class="row">
 								<div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation">
+			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-change="getVendors(enterpriseValuation.requestType)">
 			                            <label for="requestValuation"> Valuation </label>
 			                        </div>		               
 					              </div>
 					              <div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection">
+			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection" ng-change="getVendors(enterpriseValuation.requestType)">
 			                            <label for="requestInspection"> Inspection </label>
 			                        </div>
 			                       </div>
@@ -359,7 +359,7 @@
 								<div class="col-xs-12 col-sm-4 form-group">
 							<select class="form-control" ng-model="valuationquote.partnerId">
                             <option value="">*Select Partner</option>
-                            <option ng-repeat="vendor in getValuationVendors()" value="{{vendor.partnerId}}">{{vendor.name}}</option>
+                            <option ng-repeat="vendor in vendorList" value="{{vendor.partnerId}}">{{vendor.name}}</option>
                             </select>
 								</div>
 								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
