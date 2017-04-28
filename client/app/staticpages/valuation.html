@@ -176,16 +176,13 @@
 							<div class="row">
 								<div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-
-			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-change="getVendors(enterpriseValuation.requestType)">
+			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-click="getAgent('Valuation')" ng-disabled="!isServiceAvailed('Valuation')">
 			                            <label for="requestValuation"> Valuation </label>
 			                        </div>		               
 					            </div>
 					            <div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-
-			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection" ng-change="getVendors(enterpriseValuation.requestType)">
-
+			                            <input type="radio" id="requestInspection" ng-model="enterpriseValuation.requestType" name="requestType" value="Inspection" ng-click="getAgent('Inspection')" ng-disabled="!isServiceAvailed('Inspection')">
 			                            <label for="requestInspection"> Inspection </label>
 			                        </div>
 			                    </div>
@@ -359,18 +356,27 @@
 							</div>
 							<hr>
 							<div class="row text-left">
-								<div class="col-xs-12 col-sm-4 form-group">
+							<div class="col-xs-12 col-sm-4 form-group">
 							<select class="form-control" ng-model="valuationquote.partnerId">
                             <option value="">*Select Partner</option>
                             <option ng-repeat="vendor in vendorList" value="{{vendor.partnerId}}">{{vendor.name}}</option>
                             </select>
-								</div>
-								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
+							</div>
+								<div class="col-xs-12 col-sm-4 form-group" ng-if="isEnterprise">Purpose of valuation</div>
+								<div class="col-xs-6 col-sm-4 form-group" ng-if="isEnterprise" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
 									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
 				                      <option value="Financing">Financing</option>
 				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
 				                    </select>
 								</div>
+								
+								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
+									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
+				                      <option value="">Select purpose</option>
+				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
+				                    </select>
+								</div>
+								--
 								<div class="col-xs-6 col-sm-4 form-group" ng-if="!isEnterprise" ng-class="{'has-error': form.otherName.$invalid && form.submitted }">
 									<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
 								</div>
