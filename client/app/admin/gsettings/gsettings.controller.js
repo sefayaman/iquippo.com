@@ -58,6 +58,7 @@
         vm.deletePaymentMaster = deletePaymentMaster;
         vm.onServiceChange = onServiceChange;
         vm.getParnerName = getParnerName;
+        vm.markeDefaultPartner  = markeDefaultPartner;
 
         vm.manufacturer = {};
         vm.manufacturerEdit = false;
@@ -645,6 +646,46 @@
                     } else
                         Modal.alert(res.message);
                 })
+        }
+
+        function markeDefaultPartner(payment){
+            $rootScope.loading = true;
+            if(payment.default === true){
+                PaymentMasterSvc.clearCache();
+               PaymentMasterSvc.getAll()
+                .then(function(result) {
+                    var found = false;
+                    for(var i = 0; i < result.length; i++){
+                        if(result[i].serviceCode == payment.serviceCode && result[i].default === true){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found)
+                        update();
+                    else{
+                        $rootScope.loading = false;
+                        payment.default = false;
+                        Modal.alert("Default partner is already set for service " + payment.serviceCode.toLowerCase() || "" + ".");
+                    }
+                });
+            }else
+                update();
+           
+           function update(){
+            PaymentMasterSvc.update(payment)
+            .then(function(res) {
+                $rootScope.loading = false;
+                if (res.errorCode == 0)
+                    getPaymnetMaster();
+                else
+                    Modal.alert(res.message);
+            })
+            .catch(function(err){
+                $rootScope.loading = false;
+            })
+           }
+            //console.log("default",payment.default);
         }
 
         function editPaymentMaster(index) {

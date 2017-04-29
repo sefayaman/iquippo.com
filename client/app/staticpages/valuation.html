@@ -173,7 +173,7 @@
 									<label>Request Type:</label>
 								</div>								
 							</div>
-							<div class="row" ng-if="isEnterprise">
+							<div class="row">
 								<div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
 			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-click="getAgent('Valuation')" ng-disabled="!isServiceAvailed('Valuation')">
@@ -198,7 +198,7 @@
 							</div>
 							<div class="row" ng-if="isEnterprise">
 								<div class="col-xs-4">
-									<div class="form-group">
+									<div class="form-group" ng-class="{'has-error': form.assetCategory.$invalid && form.submitted }">
 										<input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" required>
 									</div>
 								</div>
@@ -270,13 +270,13 @@
 							</div>							
 							<div class="row">
 								<div class="col-xs-6">
-									<div class="form-group" ng-class="{'has-error': form.prdMfg.$invalid && form.submitted }">
-										<input type="number" name="prdMfg" class="form-control" placeholder="*Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" ng-max="currentYear" required>
+									<div class="form-group" ng-class="{'has-error': form.mfgYear.$invalid && form.submitted}">
+										<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" ng-min="1900" ng-max="currentYear" string-to-number>
 									</div>
 								</div>
 								<div class="col-xs-6">
-									<div class="form-group" ng-class="{'has-error': form.prddescription.$invalid && form.submitted }">
-										<input type="text" name="prddescription" class="form-control" placeholder="*Asset Description" ng-model="valuationQuote.product.description" required>
+									<div class="form-group">
+										<input type="text" name="prddescription" class="form-control" placeholder="Asset Description" ng-model="valuationQuote.product.description">
 									</div>
 								</div>								
 							</div>
@@ -292,7 +292,9 @@
 							</div>
 							<div class="row form-group" ng-if="isEnterprise">
 								<div class="col-sm-12">
-									<input type="text" class="form-control" name="yardParked" ng-model="enterpriseValuation.yardParked" placeholder="Yard Information / Asset Adrress">
+									<div class="form-group" ng-class="{'has-error': form.yardParked.$invalid && form.submitted }">
+										<input type="text" class="form-control" name="yardParked" ng-model="enterpriseValuation.yardParked" placeholder="*Yard Information / Asset Adrress" required> 
+									</div>
 								</div>
 							</div>
 							<div class="row">								
@@ -356,13 +358,27 @@
 							</div>
 							<hr>
 							<div class="row text-left">
-								<div class="col-xs-12 col-sm-4 form-group">Purpose of valuation</div>
+							<div class="col-xs-12 col-sm-4 form-group" ng-if="!isEnterprise">
+							<select class="form-control" ng-model="valuationQuote.partnerId">
+                            <option value="">Select Partner</option>
+                            <option ng-repeat="vendor in vendorList" value="{{vendor._id}}">{{vendor.name}}</option>
+                            </select>
+							</div>
+								<div class="col-xs-12 col-sm-4 form-group" ng-if="isEnterprise">Purpose of valuation</div>
 								<div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
 									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
 				                      <option value="Financing">Financing</option>
 				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
 				                    </select>
 								</div>
+								
+								<!-- <div class="col-xs-6 col-sm-4 form-group" ng-class="{'has-error': form.valuation.$invalid && form.submitted }">
+									<select class="form-control" ng-model="valuationQuote.valuation" name="valuation" required>
+				                      <option value="">Select purpose</option>
+				                      <option ng-repeat="valuation in valuationList | orderBy:'name'" value="{{valuation.name}}">{{valuation.name}}</option>
+				                    </select>
+								</div> -->
+								
 								<div class="col-xs-6 col-sm-4 form-group" ng-if="!isEnterprise" ng-class="{'has-error': form.otherName.$invalid && form.submitted }">
 									<input class="form-control" type="text" name="otherName" ng-model="valuationQuote.otherName" ng-disabled ="valuationQuote.valuation != 'Other'" placeholder="*Other" ng-required= "valuationQuote.valuation == 'Other'">
 								</div>
