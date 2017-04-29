@@ -614,7 +614,7 @@
             $state.go('main');
             return;
           }
-          if (result.transactionId)
+          if (result.transactionId){
             MarketingSvc.googleConversion();
           if (!facebookConversionSent) {
             MarketingSvc.facebookConversion();
@@ -624,7 +624,9 @@
       data['to'] = supportMail;
       data['subject'] = 'Valuation';
       var dataToSend={};
+      dataToSend=$scope.valuationService.quote;
       dataToSend.serverPath=serverPath;
+      dataToSend.transactionId=result.transactionId;
       notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, dataToSend,'email');
       
       data={};
@@ -636,6 +638,7 @@
         $state.go('payment', {
             tid: result.transactionId
           });
+      }
         })
         .catch(function(err) {
           Modal.alert('Error while sending email');
