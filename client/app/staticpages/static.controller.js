@@ -444,8 +444,6 @@
         })
     }
 
-    //loadVendors();
-
     init();
 
     function onChange(val) {
@@ -462,13 +460,6 @@
           $scope.valuationQuote.product.contactNumber = "";
       }
     }
-
-    /*function loadVendors() {
-      vendorSvc.getAllVendors()
-        .then(function(res) {
-          console.log("list", res);
-        })
-    }*/
 
     function getVendors(requestType) {
       $scope.vendorList = [];
@@ -507,10 +498,10 @@
         return;
       }
 
-      /*if (Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection') && Auth.getCurrentUser().role === "enterprise") {
+      if (!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection') && Auth.getCurrentUser().role === "enterprise") {
         Modal.alert("User does not have any request type.", true);
         return;
-      } */
+      } 
       if(!$scope.enterpriseValuation.requestType) {
         Modal.alert("Please select request type.", true);
         return;
@@ -573,7 +564,6 @@
       paymentTransaction.requestType = $scope.enterpriseValuation.requestType;
 
       var payObj = {};
-      console.log("PartnerId", $scope.valuationQuote.partnerId);
       var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.enterpriseValuation.requestType, $scope.valuationQuote.partnerId);
       payObj.type = "valuationEnquiries";
       payObj.charge = pyMaster.fees || 5000;
