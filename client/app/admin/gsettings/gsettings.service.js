@@ -476,6 +476,8 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
             if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].default===true)
               pytCopy=paymentMasterCache[i];
           }
+          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].default===true)
+              pytCopy=paymentMasterCache[i];
         }
         if(pyt==null)
       return pytCopy;

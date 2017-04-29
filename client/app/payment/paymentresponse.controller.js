@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
+function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
  	var vm = this;
  	vm.payTransaction = null;
  	vm.enablePayment = false;
@@ -43,6 +43,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  					getAuctionReqDetail(vm.payTransaction._id);
  				else if(vm.payTransaction.payments[i].type == "valuationreq")
  					getValuatonReqDetail(vm.payTransaction._id);
+ 				else if(vm.payTransaction.payments[i].type == "valuationEnquiries")
+ 					getValuatonEnquiryDetail(vm.payTransaction._id);
  				else if(vm.payTransaction.payments[i].type == "sparebuy")
  					getBuyReqDetail(vm.payTransaction._id);
  			}
@@ -52,6 +54,46 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,PaymentSvc,Auth,Va
  			$state.go("main");
  			Modal.alert("Unknown error occured");
  		})
+ 	}
+
+ 	function getValuatonEnquiryDetail(transactionId){
+     if(!transactionId)
+     	return;
+     if(vm.payTransaction.status=="completed"){
+     	var data={};
+      data['to'] = vm.payTransaction.user.email;
+      data['subject'] = 'Your payment has been completed successfully';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      dataToSend.transactionId=vm.payTransaction.transactionId;
+      notificationSvc.sendNotification('paymentSuccessValuationEnquiry', data,dataToSend,'email');
+
+      data['to'] = supportMail;
+      data['subject'] = 'Your payment  completed successfully';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      dataToSend.transactionId=vm.payTransaction.transactionId;
+      notificationSvc.sendNotification('paymentSuccessValuationEnquiry', data,dataToSend,'email');
+     }
+     if(vm.payTransaction.status=="pending"){
+     	var data={};
+      data['to'] = vm.payTransaction.user.email;
+      data['subject'] = 'Your payment is pending';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      dataToSend.transactionId=vm.payTransaction.transactionId;
+      notificationSvc.sendNotification('paymentPendingValuationEnquiry', data,dataToSend,'email');
+     }
+     if(vm.payTransaction.status=="failed"){
+     	var data={};
+      data['to'] = vm.payTransaction.user.email;
+      data['subject'] = 'Your payment was not successful';
+      var dataToSend={};
+      dataToSend.serverPath=serverPath;
+      dataToSend.transactionId=vm.payTransaction.transactionId;
+      notificationSvc.sendNotification('paymentUnsuccessfullValuationEnquiry', data,dataToSend,'email');
+     }
+
  	}
 
  	function getAuctionReqDetail(transactionId){
