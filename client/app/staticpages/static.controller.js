@@ -223,6 +223,11 @@
                 });
               })
           } else {
+            if(Auth.isCustomer() || Auth.isAdmin() || Auth.isChannelPartner()){
+             $scope.enterpriseValuation.requestType="Valuation";
+             $scope.getAgent('Valuation');
+            }
+            /*console.log(Auth.getCurrentUser());*/
             loadCategory();
           }
           setUser();
@@ -237,6 +242,10 @@
         .then(function(result) {
           $scope.valuationList = result;
         });
+    
+   
+
+
     }
 
     function loadCategory() {
