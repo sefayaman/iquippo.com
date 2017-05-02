@@ -36,7 +36,7 @@
     vm.valuationListing =[];
     vm.contactUsListing =[];
     $scope.valuationStatuses = valuationStatuses;
-
+    $scope.isAdmin=false;
     var dataToSend = {};
     var userMobileNos = [];
 
@@ -82,6 +82,7 @@
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
           if(Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
+              $scope.isAdmin=false;
               if(Auth.getCurrentUser().role == 'channelpartner') {
                 var userFilter = {};
                 userFilter.userId =  Auth.getCurrentUser()._id;
@@ -102,8 +103,9 @@
                 dataToSend["userMobileNos"] = userMobileNos;
                 getReportData(dataToSend, vm.tabValue);
               }
-            } else
-              getReportData(dataToSend, vm.tabValue);
+            } else{
+               $scope.isAdmin=true;
+              getReportData(dataToSend, vm.tabValue);}
         }
       })
 

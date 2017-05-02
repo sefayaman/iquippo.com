@@ -4,6 +4,7 @@ var _ = require('lodash');
 var crypto = require('crypto');
 var Payment = require('./payment.model');
 var  xlsx = require('xlsx');
+var config = require('./../../config/environment');
 
 var trasactionStatuses = ['failed','pending','completed'];
 
@@ -227,14 +228,14 @@ exports.exportPayment = function(req,res){
      });
 }
 
-//ccavenue payment keys
+/*//ccavenue payment keys
 //var ccAvenueWorkingKey = "BCCD36E2D20659D5F76B99973880340D"; // localhost account test
 //var ccAvenueWorkingKey = "780039A27217D66E066A031F52D772D7"; // localhost live account account
-var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com live account account
+var ccAvenueWorkingKey = "4B309EB35A3F3C9F903427AB11E062EE"; // iquippo.com live account account*/
 
 exports.encrypt = function(req,res){
     var m = crypto.createHash('md5');
-    m.update(ccAvenueWorkingKey);
+    m.update(config.ccAvenueWorkingKey);
     var key = m.digest('binary');
     var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';
     var cipher = crypto.createCipheriv('aes-128-cbc', key, iv);
@@ -258,7 +259,7 @@ exports.paymentResponse = function(req,res){
     //console.log("#########",json);
 
     var m = crypto.createHash('md5');
-    m.update(ccAvenueWorkingKey)
+    m.update(config.ccAvenueWorkingKey)
     var key = m.digest('binary');
     var iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f';
     var decipher = crypto.createDecipheriv('aes-128-cbc', key, iv);
