@@ -176,7 +176,7 @@
 							<div class="row">
 								<div class="col-xs-6 col-sm-6">
 					              	<div class="radio radio-info">
-			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-click="getAgent('Valuation')" ng-disabled="!isServiceAvailed('Valuation')">
+			                            <input type="radio" id="requestValuation" ng-model="enterpriseValuation.requestType" name="requestType" value="Valuation" ng-change="getAgent('Valuation')" ng-disabled="!isServiceAvailed('Valuation')">
 			                            <label for="requestValuation"> Valuation </label>
 			                        </div>		               
 					            </div>
