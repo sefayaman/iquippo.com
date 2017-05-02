@@ -478,8 +478,8 @@
                   <th>Product Name</th>                                
                   <th>Location of Asset</th>
                   <th>Manufacturing Year</th>
-                  <th>Seller Name</th>
-                  <th>Seller Contact Number</th>  
+                  <th ng-if="isAdmin">Seller Name</th>
+                  <th ng-if="isAdmin">Seller Contact Number</th>  
                   <th>Date of Request</th>                
                  </tr> 
                 </thead>
@@ -499,8 +499,8 @@
                   <td>{{addSvc.product.name}}</td>
                   <td>{{addSvc.product.city}}</td>                  
                   <td>{{addSvc.product.mfgYear}}</td>
-                  <td>{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
-                  <td>{{addSvc.product.seller.mobile}}</td>
+                  <td ng-if="isAdmin">{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
+                  <td ng-if="isAdmin">{{addSvc.product.seller.mobile}}</td>
                   <td>{{addSvc.createdAt | date:'MM/dd/yyyy hh:mm a'}}</td>                  
                  </tr>
                 </tbody>
@@ -526,8 +526,8 @@
                   <th>Product Name</th>                                
                   <th>Location of Asset</th>
                   <th>Manufacturing Year</th>
-                  <th>Seller Name</th>
-                  <th>Seller Contact Number</th>                 
+                  <th ng-if="isAdmin">Seller Name</th>
+                  <th ng-if="isAdmin">Seller Contact Number</th>                 
                   <th>Rent Information – Hours</th>                  
                   <th>Rent Information – Days</th>                  
                   <th>Rent Information – Months</th>                  
@@ -551,8 +551,8 @@
                   <td>{{addSvc.product.name}}</td>
                   <td>{{addSvc.product.city}}</td>                  
                   <td>{{addSvc.product.mfgYear}}</td>
-                  <td>{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
-                  <td>{{addSvc.product.seller.mobile}}</td>
+                  <td ng-if="isAdmin">{{addSvc.product.seller.fname}} {{addSvc.product.seller.lname}}</td>
+                  <td ng-if="isAdmin">{{addSvc.product.seller.mobile}}</td>
                   <td>{{addSvc.product.rent.rateHours.rentAmountH}}</td>
                   <td>{{addSvc.product.rent.rateDays.rentAmountD}}</td>
                   <td>{{addSvc.product.rent.rateMonths.rentAmountM}}</td>

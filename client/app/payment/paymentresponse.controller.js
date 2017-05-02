@@ -69,7 +69,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
       notificationSvc.sendNotification('paymentSuccessValuationEnquiry', data,dataToSend,'email');
 
       data['to'] = supportMail;
-      data['subject'] = 'Your payment  completed successfully';
+      data['subject'] = 'Your payment completed successfully';
       var dataToSend={};
       dataToSend.serverPath=serverPath;
       dataToSend.transactionId=vm.payTransaction.transactionId;
