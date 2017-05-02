@@ -1490,7 +1490,7 @@ exports.validateExcelData = function(req, res, next) {
       if(error)
         return callback('Error');
 
-      if(row.category.toLowerCase() === 'other' && !other_category){
+      if(row.category.toLowerCase() === 'other' && !row.other_category){
         errorList.push({
           Error : 'Other category is mandatory field when category is other',
           rowCount :row.rowCount
@@ -1499,7 +1499,7 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
-      if(row.brand.toLowerCase() === 'other' && !other_brand){
+      if(row.brand.toLowerCase() === 'other' && !row.other_brand){
         errorList.push({
           Error : 'Other category is mandatory field when category is other',
           rowCount :row.rowCount
@@ -1508,7 +1508,7 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
-      if(row.model.toLowerCase() === 'other' && !other_model){
+      if(row.model.toLowerCase() === 'other' && !row.other_model){
         errorList.push({
           Error : 'Other category is mandatory field when category is other',
           rowCount :row.rowCount
@@ -1747,7 +1747,7 @@ exports.validateExcelData = function(req, res, next) {
               valuationFee = x.fees;
           });
 
-          if(!auctionFee || !valuationFee){
+          if(!+auctionFee || !+valuationFee){
             errorList.push({
               Error : 'Auction Fee/Valuation Fee master not present',
               rowCount : row.rowCount
