@@ -203,25 +203,29 @@
 									</div>
 								</div>
 								<div class="col-xs-4">
-									<div class="form-group">
-										<select class="form-control" ng-model="enterpriseValuation.brand" ng-change="onBrandChange(enterpriseValuation.brand)">
+									<div class="form-group" ng-class="{'has-error': (form.brand.$invalid || form.otherBrand.$invalid) && form.submitted}">
+										<select class="form-control form-group" ng-model="enterpriseValuation.brand" ng-change="onBrandChange(enterpriseValuation.brand)">
 											<option value="">Select Brand</option>
 											<option value="{{br.name}}" ng-repeat="br in allBrandList | orderBy:'name'">{{br.name}}</option>
 										</select>
 										<i class="caret"></i>
+
+										 <input type="text" ng-if="enterpriseValuation.brand == 'Other'" ng-model="enterpriseValuation.otherBrand" class="form-control" name="otherBrand" placeholder="*Other Brand Name" ng-required = "enterpriseValuation.brand == 'Other'">
 									</div>
 								</div>
 								<div class="col-xs-4">
-									<div class="form-group">
-										<select class="form-control" ng-model="enterpriseValuation.model">
+									<div class="form-group" ng-class="{'has-error': (form.model.$invalid || form.otherModel.$invalid) && form.submitted}">
+										<select class="form-control form-group" ng-model="enterpriseValuation.model">
 											<option value="">Select Model</option>
 											<option value="{{md.name}}" ng-repeat="md in modelList | orderBy:'name'">{{md.name}}</option>
 										</select>
 										<i class="caret"></i>
+										 <input type="text"ng-if="enterpriseValuation.model == 'Other'" ng-model="enterpriseValuation.otherModel" class="form-control" name="otherModel" placeholder="*Other Model Name" ng-required = "enterpriseValuation.model == 'Other'">
 									</div>
 								</div>
 								
 							</div>
+
 							<div class="row" ng-if="!isEnterprise">
 								<div class="col-xs-4">
 									<div class="form-group">

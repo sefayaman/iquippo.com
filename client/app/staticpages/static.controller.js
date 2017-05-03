@@ -205,10 +205,22 @@
     })
 
     function init() {
+      
+      $scope.enterpriseValuation.requestType = "Valuation";
+      //$scope.getAgent('Valuation');
+
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
           if (Auth.isEnterprise() || Auth.isEnterpriseUser()) {
             $scope.isEnterprise = true;
+
+            if(!Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection'))
+               $scope.enterpriseValuation.requestType = "Inspection";
+
+            if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
+               $scope.enterpriseValuation.requestType = "";
+             
+             $scope.getAgent($scope.enterpriseValuation.requestType);
 
             getEnterpriseData();
             brandSvc.getBrandOnFilter({})
@@ -224,8 +236,7 @@
               })
           } else {
             if(Auth.isCustomer() || Auth.isAdmin() || Auth.isChannelPartner()){
-             $scope.enterpriseValuation.requestType="Valuation";
-             $scope.getAgent('Valuation');
+              $scope.getAgent($scope.enterpriseValuation.requestType);
             }
             /*console.log(Auth.getCurrentUser());*/
             loadCategory();
@@ -280,7 +291,9 @@
       })
 
     function getAgent(serviceCode) {
-      
+      if(!serviceCode)
+          return;
+
       if (Auth.getCurrentUser().role === "enterprise") {
         if (Auth.getCurrentUser().availedServices && Auth.getCurrentUser().availedServices.length < 1)
         return;

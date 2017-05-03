@@ -18,6 +18,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   $scope.getAssetGroup = getAssetGroup;
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
+  vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
 
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
@@ -39,7 +40,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
+      if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
+          vm.enterpriseValuation.requestType = vm.requestTypeList[1].name;
+      if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
+          vm.enterpriseValuation.requestType = "";
     }
+
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
@@ -51,8 +57,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     if(!editMode){
       vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
     }
-    
-    vendorSvc.getAllVendors();
 
       ValuationPurposeSvc.get(null)
       .then(function(result){
@@ -70,6 +74,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             }
          });
       })
+      
       if($stateParams.id) {
         $scope.isEdit = true;
         EnterpriseSvc.getRequestOnId($stateParams.id)
@@ -93,6 +98,11 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
                 });
               
             }
+        });
+      }else{
+        vendorSvc.getAllVendors()
+        .then(function(){
+          vm.valAgencies = vendorSvc.getVendorsOnCode(vm.enterpriseValuation.requestType);
         });
       }
   }
