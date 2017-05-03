@@ -2290,7 +2290,7 @@ exports.validateExcelData = function(req, res, next) {
     //validate service related information
     function validateServiceInfo(callback) {
       var obj = {};
-      ['authServiceStation', 'serviceAt'].forEach(function(x) {
+      ['authServiceStation', 'serviceAt','operatingHour'].forEach(function(x) {
         if (row[x]) {
           if (!obj.serviceInfo) {
             obj.serviceInfo = [{}]
@@ -2299,13 +2299,12 @@ exports.validateExcelData = function(req, res, next) {
         }
       })
 
-      if (row.operatingHour) {
-        obj.serviceInfo[0].operatingHour = row.operatingHour;
-      }
-
       if (row.servicedate) {
         var servicedate = new Date(row["servicedate"]);
         var validDate = isValid(servicedate);
+        if (!obj.serviceInfo) {
+          obj.serviceInfo = [{}]
+        }
         if (servicedate && validDate) {
           obj.serviceInfo[0].servicedate = servicedate;
         }
