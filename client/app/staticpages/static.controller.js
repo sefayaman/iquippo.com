@@ -219,10 +219,10 @@
 
             if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
                $scope.enterpriseValuation.requestType = "";
-             
-             $scope.getAgent($scope.enterpriseValuation.requestType);
 
-            getEnterpriseData();
+            getEnterpriseData(function(){
+               $scope.getAgent($scope.enterpriseValuation.requestType);
+            });
             brandSvc.getBrandOnFilter({})
               .then(function(result) {
                 var chache = {};
@@ -331,13 +331,14 @@
       }
     }
 
-    function getEnterpriseData() {
+    function getEnterpriseData(callback) {
       var userFilter = {};
       userFilter.status = true;
       userFilter.role = "enterprise";
       userFilter.enterprise = true;
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(userFilter).then(function(data) {
+        var found = false;
         if (data.length > 0) {
           $scope.enterpriseOwnerData = data[0];
           $scope.enterpriseValuation.enterprise = {};
@@ -352,7 +353,14 @@
 
           $scope.enterpriseValuation.customerPartyNo = data[0].mobile;
           $scope.enterpriseValuation.customerPartyName = (data[0].fname || "") + " " + (data[0].mname || "") + " " + (data[0].lname || "");
+          found = true;
         }
+        if(callback)
+          callback(found);
+      })
+      .catch(function(err){
+        if(callback)
+          callback(false);
       });
     }
 
@@ -713,7 +721,17 @@
       $scope.form.submitted = false;
       if (Auth.isEnterprise() || Auth.isEnterpriseUser()) {
         $scope.enterpriseValuation = {};
-        getEnterpriseData();
+        $scope.enterpriseValuation.requestType = "Valuation";
+        $scope.isEnterprise = true;
+        if(!Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection'))
+           $scope.enterpriseValuation.requestType = "Inspection";
+
+        if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
+           $scope.enterpriseValuation.requestType = "";
+
+        getEnterpriseData(function(){
+           $scope.getAgent($scope.enterpriseValuation.requestType);
+        });
       }
       setUser();
     }
