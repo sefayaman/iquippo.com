@@ -36,6 +36,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.exportExcel = exportExcel;
   vm.selectAll = selectAll;
   vm.isSubmitAllowed = isSubmitAllowed;
+  vm.isEditAllowed = isEditAllowed;
 
   function init(){
 
@@ -291,6 +292,16 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           return false;
       }
 
+     }
+
+      function isEditAllowed(requestType){
+        if(Auth.isAdmin() || Auth.isPartner())
+          return true;
+          var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
+          if(validRole && Auth.isServiceAvailed(requestType))
+            return true;
+          else
+            return false;
      }
 
      function submitToAgency(){

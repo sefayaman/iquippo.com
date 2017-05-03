@@ -205,12 +205,24 @@
     })
 
     function init() {
+      
+      $scope.enterpriseValuation.requestType = "Valuation";
+      //$scope.getAgent('Valuation');
+
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
           if (Auth.isEnterprise() || Auth.isEnterpriseUser()) {
             $scope.isEnterprise = true;
 
-            getEnterpriseData();
+            if(!Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection'))
+               $scope.enterpriseValuation.requestType = "Inspection";
+
+            if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
+               $scope.enterpriseValuation.requestType = "";
+
+            getEnterpriseData(function(){
+               $scope.getAgent($scope.enterpriseValuation.requestType);
+            });
             brandSvc.getBrandOnFilter({})
               .then(function(result) {
                 var chache = {};
@@ -224,8 +236,7 @@
               })
           } else {
             if(Auth.isCustomer() || Auth.isAdmin() || Auth.isChannelPartner()){
-             $scope.enterpriseValuation.requestType="Valuation";
-             $scope.getAgent('Valuation');
+              $scope.getAgent($scope.enterpriseValuation.requestType);
             }
             /*console.log(Auth.getCurrentUser());*/
             loadCategory();
@@ -280,7 +291,9 @@
       })
 
     function getAgent(serviceCode) {
-      
+      if(!serviceCode)
+          return;
+
       if (Auth.getCurrentUser().role === "enterprise") {
         if (Auth.getCurrentUser().availedServices && Auth.getCurrentUser().availedServices.length < 1)
         return;
@@ -318,13 +331,14 @@
       }
     }
 
-    function getEnterpriseData() {
+    function getEnterpriseData(callback) {
       var userFilter = {};
       userFilter.status = true;
       userFilter.role = "enterprise";
       userFilter.enterprise = true;
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       userSvc.getUsers(userFilter).then(function(data) {
+        var found = false;
         if (data.length > 0) {
           $scope.enterpriseOwnerData = data[0];
           $scope.enterpriseValuation.enterprise = {};
@@ -339,7 +353,14 @@
 
           $scope.enterpriseValuation.customerPartyNo = data[0].mobile;
           $scope.enterpriseValuation.customerPartyName = (data[0].fname || "") + " " + (data[0].mname || "") + " " + (data[0].lname || "");
+          found = true;
         }
+        if(callback)
+          callback(found);
+      })
+      .catch(function(err){
+        if(callback)
+          callback(false);
       });
     }
 
@@ -700,7 +721,17 @@
       $scope.form.submitted = false;
       if (Auth.isEnterprise() || Auth.isEnterpriseUser()) {
         $scope.enterpriseValuation = {};
-        getEnterpriseData();
+        $scope.enterpriseValuation.requestType = "Valuation";
+        $scope.isEnterprise = true;
+        if(!Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection'))
+           $scope.enterpriseValuation.requestType = "Inspection";
+
+        if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
+           $scope.enterpriseValuation.requestType = "";
+
+        getEnterpriseData(function(){
+           $scope.getAgent($scope.enterpriseValuation.requestType);
+        });
       }
       setUser();
     }

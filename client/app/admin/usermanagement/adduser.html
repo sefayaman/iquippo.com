@@ -133,8 +133,8 @@
                             </div>
                         </td>
 
-                        <td ng-if="newUser.enterprise">
-                          <select class="form-control" ng-model="svc.partnerId">
+                        <td ng-if="newUser.enterprise" ng-class="{'has-error': form.partnerId_{{$index}}.$invalid && submitted }">
+                          <select class="form-control" name="partnerId_{{$index}}" ng-model="svc.partnerId" ng-required="svc.checked">
                             <option value="">*Select Partner</option>
                             <option ng-repeat="vendor in getVendors(svc.code)" value="{{vendor.partnerId}}">{{vendor.name}}</option>
                           </select>

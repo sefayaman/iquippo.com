@@ -314,6 +314,13 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       keys.forEach(function(key){
         obj[key] = _.get(item,Field_MAP[key]);
       })
+
+      if(obj.brand && obj.brand == "Other")
+        obj.brand = item.otherBrand;
+
+      if(obj.model && obj.model == "Other")
+        obj.model = item.otherModel;
+      
       dataArr[dataArr.length] = obj; 
     });
 
