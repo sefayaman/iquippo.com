@@ -40,6 +40,10 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
 
       if(vm.searchStr)
         filter['searchStr'] = vm.searchStr;
+       if(vm.fromDate)
+          filter['fromDate'] = encodeURIComponent(vm.fromDate);
+        if(vm.toDate)
+          filter['toDate'] = encodeURIComponent(vm.toDate);
       
       getInvoiceData(filter);
     }
@@ -112,7 +116,7 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
           .then(function(result){
               if($scope.close)
                   $scope.close();
-              if(result && result.length > 0){
+              if(result){
                  var isCompleted =  result.paymentReceived && result.paymentMade;
                  if(result.paymentReceived)
                     updateValuationRequest(result.invoiceNo,isCompleted);
@@ -144,7 +148,14 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
      }
 
       function exportExcel(){
-          EnterpriseSvc.exportExcel("paymentreceived",{});
+          var filter = {};
+
+          if(vm.fromDate)
+            filter['fromDate'] = encodeURIComponent(vm.fromDate);
+          if(vm.toDate)
+            filter['toDate'] = encodeURIComponent(vm.toDate);
+
+          EnterpriseSvc.exportExcel("paymentreceived",filter);
       }
 
 

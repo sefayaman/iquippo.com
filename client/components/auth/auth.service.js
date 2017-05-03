@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore,userSvc,$q) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -175,7 +175,6 @@ angular.module('sreizaoApp')
        * @return {Boolean}
        */
       isAdmin: function() {
-       
         return currentUser.role === 'admin';
       },
       isBulkUpload:function(){
@@ -191,7 +190,6 @@ angular.module('sreizaoApp')
         if(!currentUser.enterpriseId)
           retVal = false;
         return retVal;
-       // return currentUser.role === 'enterprise' && currentUser.enterprise;
       },
       isEnterpriseUser : function(){
         var retVal = false;
@@ -199,6 +197,75 @@ angular.module('sreizaoApp')
         if(!currentUser.enterpriseId)
           retVal = false;
         return retVal;
+      },
+      isServiceApprover:function(service){
+        if(!currentUser.availedServices)
+          return false;
+        for(var i=0;i<currentUser.availedServices.length;i++){
+         if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].approver === true)
+          return true;
+        }
+        return false;
+      },
+      isServiceRequester:function(service){
+        if(!currentUser.availedServices)
+          return false;
+        for(var i=0;i<currentUser.availedServices.length;i++){
+         if(currentUser.availedServices[i].code === service && currentUser.availedServices[i].requester === true)
+          return true;
+        }
+        return false;
+      },
+      isApprovalRequired:function(service,cb){
+        if(currentUser.role === 'admin')
+          return cb(true);
+
+        if(this.isEnterprise() && currentUser.availedServices){
+          for(var i=0;i< currentUser.availedServices.length;i++){
+           if(currentUser.availedServices[i].code === service &&  currentUser.availedServices[i].approvalRequired === 'Yes')
+            return cb(true);
+          }
+          return cb(false);
+        }else if(this.isEnterpriseUser() && currentUser.availedServices){
+          var userFilter = {};
+          userFilter.role = "enterprise";
+          userFilter.enterprise = true;
+          userFilter.enterpriseId = currentUser.enterpriseId;
+          userFilter.status = true;
+          userSvc.getUsers(userFilter)
+          .then(function(resData){
+            if(resData.length > 0){
+              for(var i=0; i< resData[0].availedServices.length;i++){
+                 if(resData[0].availedServices[i].code === service &&  resData[0].availedServices[i].approvalRequired === 'Yes')
+                  return cb(true);
+              }
+              return cb(false);
+            }else
+              return cb(true);
+          })
+          .catch(function(err){
+            return cb(true)
+          })
+        }else
+          return cb(true);
+      },
+      isServiceAvailed:function(service){
+        if(currentUser.role === 'admin')
+          return true;
+        if(currentUser.role === 'customer')
+          return true;
+        if(currentUser.role === 'channelpartner')
+          return true;
+        if(currentUser.isPartner)
+          return true;
+        if(currentUser.availedServices && currentUser.availedServices.length > 0){
+          for(var i=0;i<currentUser.availedServices.length;i++){
+           if(currentUser.availedServices[i].code === service)
+            return true;
+          }
+        }
+        
+        return false;
       },
       isPartner: function() {
         return currentUser.isPartner;

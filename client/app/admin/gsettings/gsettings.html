@@ -18,10 +18,10 @@
 						<option value="manu">Manufacturer</option>
 						<option value="banner">Banner Setting</option>
 						<option value="technical">Technical Information</option>
-						<!-- <option value="svcfeemaster">Service Fee Master</option>
-						<option value="svctaxmaster">Service Tax Master</option> -->
-						<!-- <option value="vpurpose">Valuation Purpose Master</option>
-						<option value="assetgroup">Asset Group Master</option> -->
+						<option value="svcfeemaster">Service Fee Master</option>
+						<option value="svctaxmaster">Service Tax Master</option>
+						<option value="vpurpose">Valuation Purpose Master</option>
+						<option value="assetgroup">Asset Group Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -741,6 +741,7 @@
 				<thead>
 					<th>Service Name</th>
 					<th>Fee</th>
+					<th>Make Default</th>
 					<th>Action</th>
 					
 				</thead>
@@ -748,6 +749,7 @@
 					<tr ng-repeat="payment in gsettingVm.paymentMasterList">
 						<td>{{payment.serviceName}}<span ng-if="payment.partnerId">({{gsettingVm.getParnerName(payment.partnerId)}})</span></td>
 						<td>{{payment.fees}}</td>
+						<td><input type="checkbox" ng-model="payment.default" ng-change="gsettingVm.markeDefaultPartner(payment)"></td>
 						<td>
 							<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editPaymentMaster($index)"><i class="fa fa-pencil"></i> </a>
 							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deletePaymentMaster($index)"><i class="fa fa-trash"></i> </a>
@@ -1211,7 +1213,7 @@
 			<legend></legend>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error':feemasterForm.typeOfservice.$invalid && submitted}">
-					<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" required>
+					<select class="form-control" name="typeOfservice"  ng-model="svcFeeVm.dataModel.serviceType" ng-change="svcFeeVm.getPartners(svcFeeVm.dataModel.serviceType)" required>
 						<option value="">*Request Type</option>
 						<option ng-repeat="req in svcFeeVm.serviceList" value="{{req.name}}">{{req.name}}</option>
 					</select>

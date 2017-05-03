@@ -47,11 +47,26 @@
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitUploadTemp()">Submit Request</button>
       </div>
     </div>
+    <legend></legend>
     <div class="row form-group">
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()">Submit to Agency</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="enterpriseTransactionVm.isSubmitAllowed()">Submit to Agency</button>
       </div>
-      <div class="col-sm-offset-7 col-sm-3 tablesearch text-right">
+      <div class="col-sm-offset-2 col-sm-5">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="From Date" ng-model="enterpriseTransactionVm.fromDate" myid="fromdate" on-change="enterpriseTransactionVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <custom-datepicker placeholder="To Date" ng-model="enterpriseTransactionVm.toDate" myid="todate"  on-change="enterpriseTransactionVm.fireCommand(true)"></custom-datepicker>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 tablesearch text-right">
         Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
       </div>
     </div>
@@ -76,7 +91,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1"></td>            
+            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1 ||  !enterpriseTransactionVm.isSubmitAllowed(enterpriseValuation.requestType)"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>
@@ -89,10 +104,10 @@
             <td>{{enterpriseValuation.remarks}}</td>
             <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>
             <td>
-              <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)"><i class="fa fa-pencil"></i> </a>
+              <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)" ng-if="enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType)"><i class="fa fa-pencil"></i> </a>
               <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
               <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2"><i class="fa fa-trash"></i> </a>
+              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType)"><i class="fa fa-trash"></i> </a>
 
             </td>
             

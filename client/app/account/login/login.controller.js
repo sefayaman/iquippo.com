@@ -51,7 +51,8 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
               }
               if(Auth.postLoginCallback)
                   Auth.postLoginCallback();
-
+              if($state.current.name === "valuation")
+                $rootScope.$broadcast('callValuationRequest');
            }
          });
 

@@ -34,6 +34,17 @@ var UserSchema = new Schema({
   imgsrc: String,
   city:String,
   state: String,
+  employeeCode:String,
+  availedServices:[{
+    name:String,
+    code:String,
+    checked:Boolean,
+    partnerId:String,
+    approver:Boolean,
+    requester:Boolean,
+    approvalRequired:{type:String},
+    sequence:Number
+  }],
   enterprise:Boolean,
   enterpriseId:String,
   status:{

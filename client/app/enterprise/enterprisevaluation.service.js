@@ -2,8 +2,10 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
+function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSvc){
   var entSvc = {};
+  var enterprise = null;
+
   var path = "/api/enterprise";
   entSvc.get = get;
   entSvc.getInvoice = getInvoice;
@@ -79,21 +81,92 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
 
 
     function save(data){
-      return $http.post(path, data)
+      var deferred = $q.defer();
+      $rootScope.loading = true;
+      $http.post(path, data)
         .then(function(res){
-          return res.data;
+          if(res.data.uniqueControlNo)
+            postSave(res.data,deferred);
+          else{
+            $rootScope.loading = false;
+            deferred.resolve(res.data);
+          }
+          sendNotification(res.data);
         })
         .catch(function(err){
-          throw err
+          $rootScope.loading = false;
+          deferred.reject(err);
         })
+      return deferred.promise;
     }
 
+    function postSave(resData,deferred){
+      Auth.isApprovalRequired(resData.requestType,function(isRequired){
+            if(isRequired){
+              $rootScope.loading = false;
+              deferred.resolve(resData);
+              return;
+            }
+            submitToAgency([resData],deferred);
+      })
+    }
+    
+    function sendNotification(reqData) {
+      var data = {};
+      var dataToSend = {};
+      data.to = reqData.createdBy.email;
+      if(reqData.status === EnterpriseValuationStatuses[0]) {
+        data.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.status = "initiated";
+      }
+      if(reqData.status === EnterpriseValuationStatuses[2]) {
+        data.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.status = "submitted";
+      }
+      if(reqData.status === EnterpriseValuationStatuses[4]) {
+        data.cc = reqData.enterprise.email;
+        data.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+        dataToSend.assetDir = reqData.assetDir;
+        if(reqData.valuationReport && reqData.valuationReport.filename) {
+          dataToSend.extrenal = reqData.valuationReport.extrenal;
+          dataToSend.filename = reqData.valuationReport.filename;
+        }
+      }
 
-
+      dataToSend.uniqueControlNo = reqData.uniqueControlNo;
+      dataToSend.name = reqData.createdBy.name;
+      dataToSend.requestType = reqData.requestType;
+      dataToSend.serverPath = serverPath;
+      if(reqData.status === EnterpriseValuationStatuses[4])
+        notificationSvc.sendNotification('ValuationReportSubmission', data, dataToSend,'email');
+      else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]) {
+        var approverUsers = [];
+        var userFilter = {};
+        userFilter.role = "enterprise";
+        userFilter.enterpriseId = reqData.enterprise.enterpriseId;
+        userFilter.status = true;
+        userSvc.getUsers(userFilter).then(function(approverUsersData){
+          if(approverUsersData.length > 0){
+            approverUsersData.forEach(function(item){
+              for(var i=0;i<item.availedServices.length;i++){
+                if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                  approverUsers[approverUsers.length] = item.email;
+                }
+              }
+            });
+            data.cc = approverUsers.join(',');
+            notificationSvc.sendNotification('ValuationRequest', data, dataToSend,'email');
+          }
+        }); 
+      } 
+    }
+    
     function update(data){
        return $http.put(path + "/" + data.data._id, data)
         .then(function(res){
-            return res.data;
+          if(data.data.valuationReport && data.data.valuationReport.filename)
+            sendNotification(data.data);
+          return res.data;
         })
         .catch(function(err){
           throw err;
@@ -221,13 +294,19 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
     contactPersonTelNo:"contactPersonTelNo",
     disFromCustomerOffice:"disFromCustomerOffice"
   }
+  
   var submmitted = false;
-   function submitToAgency(items){
+   function submitToAgency(items,deferred){
+    
     if(submmitted)
-        return;
+      return;
     if(!items || items.length == 0)
-        return;
+      return;
+
+    if(!deferred)
+      deferred = $q.defer();
     submmitted = true;
+
     var dataArr = [];
     var keys = Object.keys(Field_MAP);
     items.forEach(function(item){
@@ -235,21 +314,76 @@ function EnterpriseSvc($http, $q, notificationSvc, Auth,UtilSvc){
       keys.forEach(function(key){
         obj[key] = _.get(item,Field_MAP[key]);
       })
+
+      if(obj.brand && obj.brand == "Other")
+        obj.brand = item.otherBrand;
+
+      if(obj.model && obj.model == "Other")
+        obj.model = item.otherModel;
+      
       dataArr[dataArr.length] = obj; 
     });
-    //console.log("",dataArr);
-      var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
-      return $http.post(apiUrl,dataArr)
-      .then(function(res){
-        console.log("success res",JSON.stringify(res.data))
-        submmitted = false;
-        return res.data;  
+
+    var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
+
+    $rootScope.loading = true;
+    $http.post(apiUrl,dataArr)
+    .then(function(res){
+      submmitted = false;
+      if(res.data && res.data.length > 0)
+        updateValReqs(res.data,items,deferred);
+      else{
+        $rootScope.loading = false;
+        deferred.resolve(res.data);  
+      }
+
+    })
+    .catch(function(err){
+      submmitted = false;
+      $rootScope.loading = false;
+      deferred.reject(err)
+    })
+    return deferred.promise;
+   }
+
+   function getValReqByUniqueCtrlNo(list,unCtrlNo){
+      var retVal = null;
+      list.some(function(item){
+        if(item.uniqueControlNo == unCtrlNo){
+          retVal = item;
+          return false;
+        }
+      })
+      return retVal;
+    }
+
+    function updateValReqs(resList,selectedItems,deferred){
+      
+      resList.forEach(function(item){
+        var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
+        if(item.success == "true"){
+          valReq.jobId = item.jobId;
+          setStatus(valReq,EnterpriseValuationStatuses[2]);
+          sendNotification(valReq);
+        }else{
+          valReq.remarks = item.msg;
+          setStatus(valReq,EnterpriseValuationStatuses[1]);
+        }
+      })
+      $rootScope.loading = true;     
+      bulkUpdate(selectedItems)
+        .then(function(res){
+          if(deferred)
+            deferred.resolve(res.data);
+          $rootScope.loading = false;
       })
       .catch(function(err){
-        submmitted = false;
-        throw err;
+        if(deferred)
+            deferred.reject(err);
+         $rootScope.loading = false;
       })
-   }
+    }
+
    return entSvc;
 }
 })();

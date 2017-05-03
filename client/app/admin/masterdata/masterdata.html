@@ -58,9 +58,9 @@
 		  									</td>
 										</tr>
 									</tbody>
-								</table>
-								<uib-pagination total-items="masterDataVm.gTotalItems" ng-model="masterDataVm.gCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
-							</div>					
+								</table>								
+							</div>
+							<uib-pagination total-items="masterDataVm.gTotalItems" ng-model="masterDataVm.gCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>					
 						</div>
 				    </uib-tab>
 
@@ -108,8 +108,8 @@
 				              </div>
 				            </div>
 				         </div>				     	
-						<table class="table table-bordred table-striped">
-							
+						<div class="table-responsive">
+							<table class="table table-bordred table-striped">
 							<thead>	
 								<tr>
 									<th>Image</th>
@@ -138,6 +138,7 @@
 								</tr>
 								</tbody>						
 							</table>
+						</div>
 							<uib-pagination total-items="masterDataVm.cTotalItems" ng-model="masterDataVm.cCurrentPage" items-per-page="masterDataVm.itemsPerPage" max-size="masterDataVm.maxSize" class="pagination-sm" rotate="false">  </uib-pagination>
 					    </uib-tab>
 					    <uib-tab heading="Brand" select="masterDataVm.reset()">	

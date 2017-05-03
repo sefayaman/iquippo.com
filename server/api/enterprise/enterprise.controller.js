@@ -29,7 +29,10 @@ var Handlebars = require('handlebars');
 var pdf = require('html-pdf');
 var validator = require('validator');
 var minify = require('html-minifier').minify;
-
+var commonController = require('./../common/common.controller');
+var notification = require('./../../components/notification.js');
+var VALUATION_REQUEST = "ValuationRequest";
+var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
 
 exports.get = function(req, res) {
   
@@ -69,9 +72,17 @@ function getValuationRequest(req,res){
   if (queryParam.requestType)
     filter["requestType"] = queryParam.requestType;
   if (queryParam.userId)
-    filter["user._id"] = queryParam.userId;
+    filter["createdBy._id"] = queryParam.userId;
   if (queryParam.invoiceNo)
     filter["invoiceNo"] = queryParam.invoiceNo;
+
+    var dateFilter = {};
+    if(queryParam.fromDate)
+      dateFilter['$gte'] = new Date(queryParam.fromDate);
+    if(queryParam.toDate)
+      dateFilter['$lt']= new Date(queryParam.toDate);
+    if(queryParam.fromDate || queryParam.toDate)
+      filter['createdAt'] = dateFilter;
 
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuation, filter, {});
@@ -118,6 +129,15 @@ function getInvoice(req,res){
     filter["enterprise.enterpriseId"] = queryParam.enterpriseId;
   if (queryParam.agencyId)
     filter["agency._id"] = queryParam.agencyId;
+  
+  var dateFilter = {};
+  if(queryParam.fromDate)
+    dateFilter['$gte'] = new Date(queryParam.fromDate);
+  if(queryParam.toDate)
+    dateFilter['$lt']= new Date(queryParam.toDate);
+  if(queryParam.fromDate || queryParam.toDate)
+    filter['createdAt'] = dateFilter;
+
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, EnterpriseValuationInvoice, filter, {});
     return;
@@ -339,7 +359,7 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : [],
     dateParams : ['requestDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory','country','state','city','contactPerson','contactPersonTelNo']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo']
   };
   
   if(user.role == 'admin')
@@ -377,7 +397,6 @@ exports.bulkUpload = function(req, res) {
     function validateEnterprise(callback){
       if(user.role== 'enterprise')
         row.enterpriseId = user.enterpriseId;
-      console.log("",user);
       UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
@@ -390,6 +409,7 @@ exports.bulkUpload = function(req, res) {
           mobile : result[0].mobile,
           _id : result[0]._id + "",
           enterpriseId : result[0].enterpriseId,
+          employeeCode : result[0].employeeCode,
           name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
 
@@ -400,6 +420,17 @@ exports.bulkUpload = function(req, res) {
     function validateRequestType(callback){
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
+        if(user.role == 'enterprise'){
+          var found = false;
+          for(var i=0 ; i < user.availedServices.length;i++){
+            if(user.availedServices[i].code == row.requestType){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            return callback('Invalid Request Type');
+        }
 
       return callback();
     }
@@ -439,7 +470,7 @@ exports.bulkUpload = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
+        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
@@ -589,6 +620,8 @@ exports.bulkUpload = function(req, res) {
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
+        email : user.email,
+        mobile : user.mobile,
         role : user.role
       };
 
@@ -614,13 +647,14 @@ exports.bulkUpload = function(req, res) {
               _createAssetGroupCategory(row);
 
           EnterpriseValuation.create(row, function(err, enterpriseData) {
-          console.log(err);
           if(err || !enterpriseData) { 
             errObj.push({
               Error: 'Error while inserting data',
               rowCount: row.rowCount
             });
           }
+          if(enterpriseData)
+            pushNotification(enterpriseData);
           return cb();
         });
       })
@@ -638,7 +672,80 @@ exports.bulkUpload = function(req, res) {
   }
 };
 
+  function pushNotification(reqData){
+   try{
+        if(reqData.createdBy.email) {
+          var emailData = {};
+          var tplData = {};
+          emailData.to = reqData.createdBy.email;
+          var tmplName = VALUATION_REQUEST;
+          emailData.notificationType = "email";
+          if(reqData.status === EnterpriseValuationStatuses[0]) {
+            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+            tplData.status = "initiated";
+          }
+          if(reqData.status === EnterpriseValuationStatuses[2]) {
+            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+            tplData.status = "submitted";
+          }
+          if(reqData.status === EnterpriseValuationStatuses[4]) {
+            tmplName = VALUATION_REPORT_SUBMISSION;
+            emailData.cc = reqData.enterprise.email;
+            emailData.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+            //tplData.assetDir = reqData.assetDir;
+            if(reqData.valuationReport && reqData.valuationReport.filename) {
+              tplData.external = reqData.valuationReport.external;
+              tplData.reportUrl = reqData.valuationReport.filename;
+            }
+          }
+          tplData.uniqueControlNo = reqData.uniqueControlNo;
+          tplData.name = reqData.createdBy.name;
+          tplData.requestType = reqData.requestType;
+          if(reqData.status === EnterpriseValuationStatuses[4]) {
+            sendMail(tplData, emailData, tmplName);
+          } else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]){
+            var approverUsers = [];
+            var userFilter = {};
+            userFilter.role = "enterprise";
+            userFilter.enterpriseId = reqData.enterprise.enterpriseId;
+            userFilter.status = true;
+            UserModel.find(userFilter,function(err,results){
+              if(err){
+                console.log(err);
+              }
+              if(results.length > 0){
+                results.forEach(function(item){
+                  for(var i=0;i<item.availedServices.length;i++){
+                    if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                      approverUsers[approverUsers.length] = item.email;
+                    }
+                  }
+                });
+                emailData.cc = approverUsers.join(',');
+                sendMail(tplData, emailData, tmplName);
+              }
+            })
+          }
+        }
+    }
+    catch (ex) {
+      console.log(ex);
+    }
+}
 
+  function sendMail(tplData, emailData, tmplName) {
+    commonController.compileTemplate(tplData, config.serverPath, tmplName, function(ret,retData){
+      if(!ret){
+          console.log(ret);
+      }else{
+          emailData.content =  retData;
+          notification.pushNotification(emailData,function(pushed){
+          console.log("Email send.");
+        });
+      }
+    });
+  }
+  
 exports.bulkModify = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
@@ -722,6 +829,7 @@ exports.bulkModify = function(req, res) {
           mobile : result[0].mobile,
           _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
+          employeeCode : result[0].employeeCode,
           name : (result[0].fname || "") + " "+ (result[0].lname || "") 
         };
 
@@ -782,6 +890,17 @@ exports.bulkModify = function(req, res) {
         return callback();        
       if(validRequestType.indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
+       if(user.role == 'enterprise'){
+          var found = false;
+          for(var i = 0 ; i < user.availedServices.length; i++){
+            if(user.availedServices[i].code == row.requestType){
+              found = true;
+              break;
+            }
+          }
+          if(!found)
+            return callback('Invalid Request Type');
+        }
 
       return callback();
     }
@@ -812,7 +931,7 @@ exports.bulkModify = function(req, res) {
         if(!result.length)
           return callback('Invalid Agency');
 
-        if(!result[0].services ||  result[0].services.indexOf("Valuation") < 0)
+        if(!result[0].services ||  result[0].services.indexOf(row.requestType) < 0)
           return callback('Agency not authorized for Request Type');
 
         row.agency = {
@@ -989,13 +1108,21 @@ exports.bulkModify = function(req, res) {
       }
 
       EnterpriseValuation.update({uniqueControlNo : uniqueControlNo},{$set:row}, function(err, enterpriseData) {
-        console.log(err);
         if(err || !enterpriseData) { 
           errObj.push({
             Error: 'Error while updating data',
             rowCount: row.rowCount
           });
         }
+        var entValFilter = {};
+        entValFilter.uniqueControlNo = uniqueControlNo;
+        EnterpriseValuation.find(entValFilter,function(err,results){
+          if(err){
+            console.log(err);
+          }
+          if(results && updateType == 'agency')
+            pushNotification(results[0]);
+        })
         return cb();
       });
     }
@@ -1082,7 +1209,6 @@ exports.createInvoice = function(req,res){
 
   EnterpriseValuationInvoice.find({uniqueControlNos:{$elemMatch:{$in:req.body.uniqueControlNos}}},function(err,result){
     if(err) { return handleError(res, err); }
-    console.log("err",result.length);
     if(result.length > 0)
       return res.status(409).send("Invoice is already generated for one or more transaction.");
     _create();    
@@ -1188,6 +1314,7 @@ exports.updateInvoice = function(req, res) {
       if(remVal == 0){
         invoice.paymentMadeDetail.remainingAmount = 0;
         invoice.paymentMade = true;
+        invoice.paymentMadeDate = new Date();
       }else{
         invoice.paymentMadeDetail.remainingAmount = remVal;
         invoice.paymentMadeDetail.paymentDetails.push(checkdetailObj);
@@ -1202,6 +1329,7 @@ exports.updateInvoice = function(req, res) {
         if(remVal == 0){
           invoice.paymentReceivedDetail.remainingAmount = 0;
           invoice.paymentReceived = true;
+          invoice.paymentReceivedDate = new Date();
         }else{
           invoice.paymentReceivedDetail.remainingAmount = remVal;
           invoice.paymentReceivedDetail.paymentDetails.push(checkdetailObj);
@@ -1211,11 +1339,11 @@ exports.updateInvoice = function(req, res) {
         return res.status(412).send("Invalid update");
   });
 
-  function update(inovice){
-    EnterpriseValuationInvoice.update({_id:_id},{$set:inovice},function(err,retVal){
-        console.log("ret val",retVal)
+  function update(invoice){
+    EnterpriseValuationInvoice.update({_id:_id},{$set:invoice},function(err,retVal){
         if (err) { return handleError(res, err); }
-        return res.status(200).json(inovice);
+        console.log("invoice",invoice);
+        return res.status(200).json(invoice);
     });
   }
 
@@ -1255,7 +1383,6 @@ var parameters = {
 exports.updateFromAgency = function(req,res){
   
   var bodyData = req.body;
-  console.log("request body  data",bodyData);
 
   var result = {};
   result['success'] = true;
@@ -1303,7 +1430,6 @@ exports.updateFromAgency = function(req,res){
       stsObj.status = EnterpriseValuationStatuses[4];
       if(updateObj.statuses)
         updateObj.statuses[updateObj.statuses.length] = stsObj;
-       console.log("QV data upadted",updateObj);
 
        //return sendResponse();
       EnterpriseValuation.update({_id:valReq._id},{$set:updateObj},function(err){
@@ -1311,6 +1437,7 @@ exports.updateFromAgency = function(req,res){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
           }
+          pushNotification(valReq);
           return sendResponse();
       });
   }
@@ -1342,8 +1469,6 @@ exports.updateFromAgency = function(req,res){
 
       var key = keys[i];
       var keyObj = parameters[key];
-
-      //console.log("key obj",keyObj);
 
       var value = reqData[key];
       if(keyObj.required && !value){
@@ -1392,8 +1517,17 @@ exports.exportExcel = function(req,res){
     filter['_id'] = {$in:ids};
   }
 
+  var dateFilter = {};
+  if(queryParam.fromDate)
+    dateFilter['$gte'] = new Date(queryParam.fromDate);
+  if(queryParam.toDate)
+    dateFilter['$lt']= new Date(queryParam.toDate);
+
   switch(queryParam.type){
     case "transaction":
+     if(queryParam.fromDate || queryParam.toDate)
+        filter['createdAt'] = dateFilter;
+
       var fieldMap = fieldsConfig["TRANSACTION_EXPORT"];
       var query = EnterpriseValuation.find(filter).sort({createdAt:-1});
       query.exec(function(err,dataArr){
@@ -1402,6 +1536,9 @@ exports.exportExcel = function(req,res){
       })
       break;
     case 'invoice':
+
+      if(queryParam.fromDate || queryParam.toDate)
+        filter['createdAt'] = dateFilter;
       var fieldMap = fieldsConfig["INVOICE_EXPORT"];
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
@@ -1413,6 +1550,8 @@ exports.exportExcel = function(req,res){
     case 'paymentmade':
        var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
        filter['paymentMade'] = true;
+      if(queryParam.fromDate || queryParam.toDate)
+        filter['paymentMadeDate'] = dateFilter;
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }
@@ -1424,13 +1563,15 @@ exports.exportExcel = function(req,res){
               })
             }
           })
-          console.log("payment made",jsonArr);
           exportExcel(req,res,fieldMap,jsonArr);
       })
       break;
     case "paymentreceived":
       var fieldMap = fieldsConfig["EXPORT_PAYMENT"];
       filter['paymentReceived'] = true;
+      if(queryParam.fromDate || queryParam.toDate)
+        filter['paymentReceivedDate'] = dateFilter;
+      
       var query = EnterpriseValuationInvoice.find(filter).sort({createdAt:-1});
        query.exec(function(err,dataArr){
           if(err) { return handleError(res, err); }

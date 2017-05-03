@@ -9,13 +9,12 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   var selectedItems = [];
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
   $scope.pager = PagerSvc.getPager();
-  vm.enterpriseValuation = {};
   vm.enterpriseValuationListing = [];
-  vm.enterpriseValuation.user = {};
   
   var filter = {};
   $scope.docObj = {};
   $scope.isEdit = false;
+
   var dataToSend = {};
   $scope.uploadedExcel = '';
   $scope.modifiedExcel = '';
@@ -23,7 +22,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   $scope.uploadType = '';
   
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
-  vm.enterpriseNameList = [];
 
   vm.submitUploadTemp = submitUploadTemp;
 
@@ -37,33 +35,13 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
   vm.selectAll = selectAll;
+  vm.isSubmitAllowed = isSubmitAllowed;
+  vm.isEditAllowed = isEditAllowed;
 
   function init(){
 
-      Auth.isLoggedInAsync(function(loggedIn){
-        if(loggedIn){
-            
-            dataToSend.pagination = true;
-            if(Auth.isEnterprise() || Auth.isEnterpriseUser())
-                dataToSend.enterpriseName =  Auth.getCurrentUser().enterpriseName;
-            else if(Auth.isPartner())
-              dataToSend["partnerId"] = Auth.getCurrentUser()._id;
-              getEnterpriseData(dataToSend);
-            }
-        })
-    setData();
-    var userFilter = {};
-    userFilter.role = "enterprise";
-    userFilter.enterprise = true;
-    userSvc.getUsers(userFilter).then(function(data){
-      vm.enterpriseNameList = data;
-    })
-    .catch(function(err){
-    })
-    vendorSvc.getAllVendors()
-      .then(function(){
-        vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-      });
+    dataToSend.pagination = true;
+    getEnterpriseData(angular.copy(dataToSend));
   }
 
  function getEnterpriseData(filter){
@@ -75,6 +53,12 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
         filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
       }
+
+      if(Auth.isEnterpriseUser() && !filter.isSearch){
+        filter['userId'] = Auth.getCurrentUser()._id;
+      }
+
+      delete filter.isSearch;
 
       EnterpriseSvc.get(filter)
       .then(function(result){
@@ -92,8 +76,18 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           angular.copy(dataToSend, filter);
       else
         filter = filterObj;
-      if(vm.searchStr)
-        filter['searchStr'] = vm.searchStr;
+      if(vm.searchStr){
+        filter.isSearch = true;
+        filter['searchStr'] = encodeURIComponent(vm.searchStr);
+      }
+      if(vm.fromDate){
+        filter.isSearch = true;
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+      }
+      if(vm.toDate){
+        filter.isSearch = true;
+        filter['toDate'] = encodeURIComponent(vm.toDate);
+      }
       
       getEnterpriseData(filter);
     }
@@ -158,7 +152,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           return;
         }
         EnterpriseSvc.uploadExcel(uploadData).then(function(res){
-          vm.enterpriseValuation = {};
+          //vm.enterpriseValuation = {};
           $scope.uploadedExcel = '';
           $scope.uploadType = "";
           var message = res.msg;
@@ -198,7 +192,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           return;
         }
         EnterpriseSvc.modifyExcel(uploadData).then(function(res){
-          vm.enterpriseValuation = {};
+          //vm.enterpriseValuation = {};
           $scope.modifiedExcel = "";
           $scope.reportUploadedExcel = "";
           $scope.uploadType = "";
@@ -230,14 +224,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
     function editEnterpriseRequest(enterpriseData) {
       $state.go('enterprisevaluation.edittransaction', {id:enterpriseData._id});
-    }
-
-
-    function setData() {
-      if(Auth.getCurrentUser()._id) {
-        vm.enterpriseValuation.user.userName = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      }
-      vm.enterpriseValuation.requestDate = moment(new Date()).format('MM/DD/YYYY');
     }
 
     function deleteEnterprise(enterpriseValuation){
@@ -290,6 +276,34 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         }
      }
 
+     function isSubmitAllowed(requestType){
+      if(Auth.isAdmin())
+        return true;
+        var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
+      if(requestType){
+        if(validRole && Auth.isServiceApprover(requestType))
+          return true;
+        else
+          return false;
+      }else{
+        if(validRole && (Auth.isServiceApprover('Valuation') || Auth.isServiceApprover('Inspection')))
+          return true;
+        else
+          return false;
+      }
+
+     }
+
+      function isEditAllowed(requestType){
+        if(Auth.isAdmin() || Auth.isPartner())
+          return true;
+          var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
+          if(validRole && Auth.isServiceAvailed(requestType))
+            return true;
+          else
+            return false;
+     }
+
      function submitToAgency(){
         //api integration
         if(selectedItems.length == 0){
@@ -299,46 +313,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
         EnterpriseSvc.submitToAgency(selectedItems)
         .then(function(resList){
-          //console.log("res",res);
-            if(resList && resList.length > 0){
-              resList.forEach(function(item){
-                var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
-                if(item.success == "true"){
-                   valReq.jobId = item.jobId;
-                   EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[2]);
-                }else{
-                  valReq.remarks = item.msg;
-                   EnterpriseSvc.setStatus(valReq,EnterpriseValuationStatuses[1]);
-                }
-
-              })
-              bulkUpdate(selectedItems);
-            }          
+          vm.selectAllReq = "";
+          selectedItems = [];
+          fireCommand(true);    
         })
         .catch(function(err){
           Modal.alert("error occured in integration");
         })
       
-    }
-
-    function getValReqByUniqueCtrlNo(list,unCtrlNo){
-      var retVal = null;
-      list.some(function(item){
-        if(item.uniqueControlNo == unCtrlNo){
-          retVal = item;
-          return false;
-        }
-      })
-      return retVal;
-    }
-
-    function bulkUpdate(){
-      EnterpriseSvc.bulkUpdate(selectedItems)
-        .then(function(res){
-          vm.selectAllReq = "";
-          selectedItems = [];
-          fireCommand(true);
-      })
     }
 
     function showDetail(valReq){
@@ -372,6 +354,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         });
           filter.ids = ids;
       }
+
+      if(vm.fromDate){
+        filter['fromDate'] = encodeURIComponent(vm.fromDate);
+      }
+      if(vm.toDate){
+        filter['toDate'] = encodeURIComponent(vm.toDate);
+      }
+
       EnterpriseSvc.exportExcel("transaction",filter);
     }
 

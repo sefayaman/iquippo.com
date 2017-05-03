@@ -190,6 +190,10 @@ exports.getFilteredUser = function(req, res) {
     filter['services'] = { $regex: term };
   }
 
+  if(req.body.partnerId){
+    filter["partnerId"] = req.body.partnerId;
+  }
+
   var sortObj = {}; 
   if(req.body.sort)
     sortObj = req.body.sort;

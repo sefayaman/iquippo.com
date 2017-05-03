@@ -76,6 +76,7 @@ var EnterpriseValuationSchema = new Schema({
   status:{type:String,default:"Request Initiated"},
   statuses:[],
   createdBy:{},
+  nameOfCustomerSeeking : String,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

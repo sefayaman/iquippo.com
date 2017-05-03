@@ -5,7 +5,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
-  vm.enterpriseValuation = {};
+  vm.enterpriseValuation = {purpose:"Financing"};
   $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
@@ -18,12 +18,14 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   $scope.getAssetGroup = getAssetGroup;
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
+  vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
 
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
   vm.onBrandChange = onBrandChange;
   vm.reset = reset;
   vm.deleteImg = deleteImg;
+  vm.getPartners = getPartners;
   vm.setCustomerData = setCustomerData;
 
   vm.addOrUpdateRequest = addOrUpdateRequest;
@@ -34,10 +36,16 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
     var isEnterprise = false;
+    userFilter.status = true;
     if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
       userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
       isEnterprise = true;
+      if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
+          vm.enterpriseValuation.requestType = vm.requestTypeList[1].name;
+      if(!Auth.isServiceAvailed(vm.enterpriseValuation.requestType))
+          vm.enterpriseValuation.requestType = "";
     }
+
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
@@ -49,11 +57,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     if(!editMode){
       vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
     }
-    
-    vendorSvc.getAllVendors()
-      .then(function(){
-        vm.valAgencies = vendorSvc.getVendorsOnCode('Valuation');
-      });
 
       ValuationPurposeSvc.get(null)
       .then(function(result){
@@ -62,8 +65,16 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       brandSvc.getBrandOnFilter({})
       .then(function(result) {
-          vm.brandList = result;
+         var chache = {};
+         vm.brandList = [];
+         result.forEach(function(item){
+            if(!chache[item.name]){
+              vm.brandList.push(item);
+              chache[item.name] = item._id;
+            }
+         });
       })
+      
       if($stateParams.id) {
         $scope.isEdit = true;
         EnterpriseSvc.getRequestOnId($stateParams.id)
@@ -81,9 +92,17 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
                 vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
               if (vm.enterpriseValuation.reportDate)
                 vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
-              
+               vendorSvc.getAllVendors()
+               .then(function(){
+                  vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
+                });
               
             }
+        });
+      }else{
+        vendorSvc.getAllVendors()
+        .then(function(){
+          vm.valAgencies = vendorSvc.getVendorsOnCode(vm.enterpriseValuation.requestType);
         });
       }
   }
@@ -141,6 +160,13 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         });
       });
     };
+
+     function getPartners(code){
+            vm.valAgencies = [];
+            if(!code)
+                return;
+            vm.valAgencies = vendorSvc.getVendorsOnCode(code);
+      }
 
     function onBrandChange(brandName, noChange) {
         if (!noChange)
@@ -216,6 +242,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation.createdBy = {};
       vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+      if(Auth.getCurrentUser().email)
+        vm.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
+      vm.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
 
       EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[0]);
 
@@ -259,6 +288,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
           vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
           vm.enterpriseValuation.enterprise.email = item.email;
+          vm.enterpriseValuation.enterprise.employeeCode = item.employeeCode;
         }
 
       });
@@ -287,7 +317,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     function reset() {
-      vm.enterpriseValuation = {};
+      vm.enterpriseValuation = {purpose:"Financing"};
       $scope.submitted = false;
     }
 

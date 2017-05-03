@@ -33,6 +33,8 @@
       var userFilter = {};
       userFilter.role = "enterprise";
       userFilter.enterprise = true;
+      userFilter.status = true;
+      
       userSvc.getUsers(userFilter).then(function(data){
         vm.enterprises = data;
       });

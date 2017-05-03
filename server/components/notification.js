@@ -11,6 +11,7 @@ var notificationSchema = new Schema({
   notificationType: String,
   from: String,
   to: String,
+  cc:String,
   subject:String,
   content: String,
   countryCode:String,
