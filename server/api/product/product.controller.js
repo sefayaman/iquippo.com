@@ -2263,7 +2263,7 @@ exports.validateExcelData = function(req, res, next) {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
-        if (gp && cr) {
+        if (+gp && cr) {
           product["grossPrice"] = Number(trim(gp));
           product["currencyType"] = trim(cr);
         } else {
