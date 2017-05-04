@@ -21,6 +21,7 @@ module.exports = {
 	//seller information start  need to check from user
 	'Seller_Mobile*': 'seller_mobile',
 	'Seller_Email_Address*': 'seller_email',
+	'Seller_Name' : 'seller_name',
 	//seller information start  end
 	'Motor_Operating_Hours': 'motorOperatingHour',
 	'Mileage': 'mileage',
@@ -80,6 +81,7 @@ module.exports = {
 	'Request_for_Valuation(Yes/No)': 'valuationReq',
 	'Name_of_Agency': 'agencyName',
 	//Extra Columns Added in next request by Venkat
-	'Seller_Name' : 'seller_name'
+	'Uploaded_By' : 'uploaded_by',
+	'Listing_Date' : 'listing_date'
 
 }
