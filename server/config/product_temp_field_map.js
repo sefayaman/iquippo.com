@@ -78,5 +78,8 @@ module.exports = {
 	'Auction_ID': 'auctionId',
 	'EMD_Amount': 'emdAmount',
 	'Request_for_Valuation(Yes/No)': 'valuationReq',
-	'Name_of_Agency': 'agencyName'
+	'Name_of_Agency': 'agencyName',
+	//Extra Columns Added in next request by Venkat
+	'Seller_Name' : 'seller_name'
+
 }
