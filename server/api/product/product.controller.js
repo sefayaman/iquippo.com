@@ -1084,7 +1084,7 @@ exports.exportProducts = function(req, res) {
               else
                 obj[mapedFields.negotiable] = 'No';
 
-              
+
 
 
               ['fromDate', 'toDate'].forEach(function(x) {
@@ -1092,6 +1092,14 @@ exports.exportProducts = function(req, res) {
                   obj[mapedFields[x]] = Utillity.toIST(colData.rent[x]);
                 }
               })
+            }
+
+            if(colData.user){
+              obj.Uploaded_By = colData.user.fname + ' ' + colData.user.lname;
+            }
+
+            if(colData.assetStatuses && colData.assetStatuses.length){
+              obj.Listing_Date = Utillity.toIST(colData.assetStatuses[0].createdAt) || '';
             }
 
             extraCols.forEach(function(x) {
@@ -2133,7 +2141,7 @@ exports.validateExcelData = function(req, res, next) {
         if (rateTypeH == "yes" || rateTypeH == 'y') {
           negotiableFlag = false;
           var minPeriodH = row["minPeriodH"];
-          if (!minPeriodH) {
+          if (!+minPeriodH) {
             errorList.push({
               Error: 'Mandatory field Min_Rental_Period_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2143,7 +2151,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.minPeriodH = Number(trim(minPeriodH));
 
           var maxPeriodH = row["maxPeriodH"];
-          if (!maxPeriodH) {
+          if (!+maxPeriodH) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2153,7 +2161,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.maxPeriodH = Number(trim(maxPeriodH));
 
           var rentAmountH = row["rentAmountH"];
-          if (!rentAmountH) {
+          if (!+rentAmountH) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2163,7 +2171,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.rentAmountH = Number(trim(rentAmountH));
 
           var seqDepositH = row["seqDepositH"];
-          if (!seqDepositH) {
+          if (!+seqDepositH) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2186,7 +2194,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.minPeriodD = Number(trim(minPeriodD));
 
           var maxPeriodD = row["maxPeriodD"];
-          if (!maxPeriodD) {
+          if (!+maxPeriodD) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2196,7 +2204,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.maxPeriodD = Number(trim(maxPeriodD));
 
           var rentAmountD = row["rentAmountD"];
-          if (!rentAmountD) {
+          if (!+rentAmountD) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2206,7 +2214,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.rentAmountD = Number(trim(rentAmountD));
 
           var seqDepositD = row["seqDepositD"];
-          if (!seqDepositD) {
+          if (!+seqDepositD) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2229,7 +2237,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.minPeriodM = Number(trim(minPeriodM));
 
           var maxPeriodM = row["maxPeriodM"];
-          if (!maxPeriodM) {
+          if (!+maxPeriodM) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2239,7 +2247,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.maxPeriodM = Number(trim(maxPeriodM));
 
           var rentAmountM = row["rentAmountM"];
-          if (!rentAmountM) {
+          if (!+rentAmountM) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2249,7 +2257,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.rentAmountM = Number(trim(rentAmountM));
 
           var seqDepositM = row["seqDepositM"];
-          if (!seqDepositM) {
+          if (!+seqDepositM) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Months is invalid or not present',
               rowCount: row.rowCount
