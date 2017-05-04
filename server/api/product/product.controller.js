@@ -2151,7 +2151,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.minPeriodH = Number(trim(minPeriodH));
 
           var maxPeriodH = row["maxPeriodH"];
-          if (!+maxPeriodH) {
+          if (!isNaN(maxPeriodH)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2161,7 +2161,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.maxPeriodH = Number(trim(maxPeriodH));
 
           var rentAmountH = row["rentAmountH"];
-          if (!+rentAmountH) {
+          if (!isNaN(rentAmountH)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2171,7 +2171,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.rentAmountH = Number(trim(rentAmountH));
 
           var seqDepositH = row["seqDepositH"];
-          if (!+seqDepositH) {
+          if (!isNaN(seqDepositH)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2194,7 +2194,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.minPeriodD = Number(trim(minPeriodD));
 
           var maxPeriodD = row["maxPeriodD"];
-          if (!+maxPeriodD) {
+          if (!isNaN(maxPeriodD)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2204,7 +2204,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.maxPeriodD = Number(trim(maxPeriodD));
 
           var rentAmountD = row["rentAmountD"];
-          if (!+rentAmountD) {
+          if (!isNaN(rentAmountD)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2214,7 +2214,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.rentAmountD = Number(trim(rentAmountD));
 
           var seqDepositD = row["seqDepositD"];
-          if (!+seqDepositD) {
+          if (!isNaN(seqDepositD)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2237,7 +2237,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.minPeriodM = Number(trim(minPeriodM));
 
           var maxPeriodM = row["maxPeriodM"];
-          if (!+maxPeriodM) {
+          if (!isNaN(maxPeriodM)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2247,7 +2247,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.maxPeriodM = Number(trim(maxPeriodM));
 
           var rentAmountM = row["rentAmountM"];
-          if (!+rentAmountM) {
+          if (!isNaN(rentAmountM)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2257,7 +2257,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.rentAmountM = Number(trim(rentAmountM));
 
           var seqDepositM = row["seqDepositM"];
-          if (!+seqDepositM) {
+          if (!isNaN(seqDepositM)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2271,7 +2271,7 @@ exports.validateExcelData = function(req, res, next) {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
         var cr = row["currencyType"];
-        if (+gp && cr) {
+        if (!isNaN(gp) && cr) {
           product["grossPrice"] = Number(trim(gp));
           product["currencyType"] = trim(cr);
         } else {
