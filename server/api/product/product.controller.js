@@ -1256,7 +1256,7 @@ exports.createProductReq = function(req,res,next){
 
   var successCount = 0;
   if(!req.updateData.length && req.errorList.length)
-    return res.json({successCount : successCount,errorList : req.errorList});
+    return res.json({successCount : successCount,errorList : req.errorList,totalCount : req.totalCount});
 
   var dataToUpdate = req.updateData;
 
