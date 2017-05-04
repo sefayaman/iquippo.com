@@ -1274,6 +1274,11 @@ exports.createProductReq = function(req,res,next){
   function intialize(data,cb){
     data.images = [{}];
     data.user = req.body.user;
+    data.assetStatuses = [{
+      userId : data.user._id,
+      status : 'listed',
+      createdAt : new Date()
+    }];
     
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
