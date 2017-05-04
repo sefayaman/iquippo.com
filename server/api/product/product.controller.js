@@ -1268,7 +1268,7 @@ exports.createProductReq = function(req,res,next){
       return next(new APIError(500,'Error while updation'));
     }
 
-    return res.json({successCount:successCount , errorList : req.errorList});
+    return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
   }
 
   function intialize(data,cb){
