@@ -55,8 +55,7 @@ exports.getService = function(req, res) {
 
 exports.create = function(req, res) {
   // var prQuote = validateProductQuote(req.body);  
-  if(req.body.valuation.type==="valuation"){
-    console.log("get me valuationQuote",req.body.valuation);
+  if(req.body.valuation && req.body.valuation.type === "valuation"){
   Seq()
     .seq(function(){
       var self = this;
