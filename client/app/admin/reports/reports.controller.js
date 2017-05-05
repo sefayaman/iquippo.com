@@ -566,6 +566,7 @@
         fileName = "ValuationReport_";
        //else
         //fileName = "AdditionalServices_";
+      filter.role=Auth.getCurrentUser().role;
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
 

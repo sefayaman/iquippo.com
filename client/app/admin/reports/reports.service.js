@@ -163,6 +163,7 @@
     }
 
     function exportData(data, refName) {
+      console.log("data",data);
       var url = "";
       if (refName == "callback")
         url = path + "/callback/export";
@@ -186,7 +187,7 @@
         url = path + "/valuation/export";
       } //else
         //url = path + "/productquote/export";
-
+       console.log("ready Data",data);
       return $http.post(url, data)
         .then(function(res) {
           return res.data
