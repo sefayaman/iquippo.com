@@ -104,6 +104,7 @@
       $scope.product.rent.rateDays = {};
       $scope.product.rent.rateMonths = {};
       $scope.product.rent.rateHours.rateType = 'hours';
+      $scope.product.productCondition = "used";
       $scope.product.rent.negotiable = false;
       product.group = {};
       product.category = {};

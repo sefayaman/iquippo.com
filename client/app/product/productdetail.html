@@ -362,7 +362,11 @@
                           <a href="{{uploadImagePrefix}}{{currentProduct.assetDir}}/{{currentProduct.documentName}}" class="" target="_blank" uib-popover="{{miscDoc.type}}" popover-trigger="mouseenter" ><span><i class="fa fa-file-pdf-o"></i></span></a>  
                         </span>
                       </td>
-                    </tr>                    
+                    </tr> 
+                    <tr ng-if="currentProduct.productCondition">
+                      <td>Comments</td>
+                      <td>{{currentProduct.comment}}</td>
+                    </tr>                 
                     <!-- <tr ng-repeat="link in currentProduct.videoLinks">
                       <td>Video Link</td>
                       <td><a ng-href="{{link.uri}}" target="_blank">{{link.uri}}</a></td>
