@@ -986,7 +986,6 @@
         serverObj['payment'] = paymentTransaction;
 
       serverObj.payment.auctionId = productObj.auctionId;
-      console.log($scope.valAgencies);
       serverObj.payment.entityName = ($scope.valAgencies && $scope.valAgencies.length && $scope.valAgencies[0].name) || '';
 
       productSvc.createOrUpdateAuction(serverObj)
