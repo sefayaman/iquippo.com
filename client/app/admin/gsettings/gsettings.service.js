@@ -468,22 +468,13 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     function getPaymentMasterOnSvcCode(svcCode,parnerId){
       var pyt = null;
-      var pytCopy=null;
       for(var i = 0;i < paymentMasterCache.length;i++){
-        if(parnerId){
-          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].partnerId === parnerId)
-            pyt = paymentMasterCache[i];
-            if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].default===true)
-              pytCopy=paymentMasterCache[i];
-          }
-          if(paymentMasterCache[i].serviceCode == svcCode && paymentMasterCache[i].default===true)
-              pytCopy=paymentMasterCache[i];
-        }
-        if(pyt==null)
-      return pytCopy;
-    else{
+        if(parnerId && paymentMasterCache[i].serviceCode === svcCode && paymentMasterCache[i].partnerId === parnerId){
+          pyt = paymentMasterCache[i];
+        }else if(paymentMasterCache[i].serviceCode === svcCode && paymentMasterCache[i].default === true)
+          pyt = paymentMasterCache[i];
+      }
       return pyt;
-    }
     }
 
     function clearCache(){

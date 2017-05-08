@@ -174,10 +174,9 @@
                   $scope.valAgencies[$scope.valAgencies.length] = item;
                 else if (pyMst && pyMst.fees === 0)
                   $scope.valAgencies[$scope.valAgencies.length] = item;
-              })
+              });
             });
-
-        })
+        });
 
       //LocationSvc.getAllLocation()
 
@@ -975,6 +974,7 @@
       if ($scope.valuationReq.valuate) {
         createValuationRequest(productObj, "Listing in auction");
       }
+
       $scope.valuationReq.isAuction = true;
       var paymentTransaction = createPaymentObj(productObj, "Auction Listing");
 
@@ -986,7 +986,8 @@
         serverObj['payment'] = paymentTransaction;
 
       serverObj.payment.auctionId = productObj.auctionId;
-      serverObj.payment.entityName = $scope.valAgencies[i].name;
+      console.log($scope.valAgencies);
+      serverObj.payment.entityName = ($scope.valAgencies && $scope.valAgencies.length && $scope.valAgencies[0].name) || '';
 
       productSvc.createOrUpdateAuction(serverObj)
         .then(function(res) {
@@ -1086,7 +1087,7 @@
         payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreq";
-        payObj.charge = pyMaster.fees;
+        payObj.charge = pyMaster.fees || 0;
         paymentTransaction.totalAmount += payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
