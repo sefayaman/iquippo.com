@@ -13,6 +13,7 @@ $(window).bind('scroll', function() {
 
 $(document).ready(function () {
 
+    
     $('.btn-vertical-slider').on('click', function () {
         setInterval(function(){ slide(dir); }, 5000);
         if ($(this).attr('data-slide') == 'next') {
