@@ -138,7 +138,7 @@ exports.compileTemplate = function(dataObj, serverPath, tplName, cb) {
 		return cb(false, "");
 	fs.readFile(__dirname + '/../../views/emailTemplates/' + tplName + ".html", 'utf8', function(err, data) {
 		if (err) {
-			console.log(err);
+			//console.log(err);
 			return cb(false, "");
 		}
 		var tempFun = handlebars.compile(data);
@@ -156,7 +156,7 @@ exports.getHelp = function(req, res) {
 			$regex: term
 		}
 	});
-	console.log(req.body.txt);
+	//console.log(req.body.txt);
 	query.exec(
 		function(err, searchs) {
 			if (err) {
@@ -191,7 +191,7 @@ exports.upsertSetting = function(req, res) {
 				if (err) {
 					return handleError(res, err)
 				} else {
-					console.log("created");
+	//				console.log("created");
 					res.status(200).send("done");
 				}
 			});
@@ -212,7 +212,7 @@ exports.upsertSetting = function(req, res) {
 				if (err) {
 					return handleError(res, err)
 				} else {
-					console.log("updated", dt);
+	//				console.log("updated", dt);
 					res.status(200).send("done");
 				}
 			})
@@ -390,7 +390,7 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						console.log(ct);
+	//					console.log(ct);
 						self();
 					});
 				})
@@ -457,7 +457,7 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						console.log(updt);
+	//					console.log(updt);
 					})
 				})
 
@@ -529,7 +529,7 @@ exports.updateMasterData = function(req, res) {
 				if (err) {
 					return handleError(res, err);
 				}
-				console.log(res);
+	//			console.log(res);
 				res.forEach(function(x) {
 
 					x.brand = {
@@ -548,7 +548,7 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						console.log(updt);
+	//					console.log(updt);
 					})
 				})
 
@@ -620,7 +620,7 @@ exports.updateMasterData = function(req, res) {
 						if (err) {
 							return handleError(res, err);
 						}
-						console.log(updt);
+	//					console.log(updt);
 					})
 				})
 
@@ -903,7 +903,7 @@ exports.importMasterData = function(req, res) {
 	try {
 		workbook = xslx.readFile(importPath + fileName);
 	} catch (e) {
-		console.log(e);
+	//	console.log(e);
 		return handleError(res, "Error in file upload")
 	}
 	if (!workbook)
@@ -959,7 +959,7 @@ function getHeaders(worksheet) {
 			headers[headers.length] = value;
 		}
 	}
-	console.log("gggg", headers);
+	//console.log("gggg", headers);
 	return headers;
 }
 
@@ -1184,19 +1184,19 @@ function buildSuggestion(req, res, suggestions) {
 			text: data.text
 		}, function(err, result) {
 			if (err) {
-				console.log("error in checking suggestion", err);
+	//			console.log("error in checking suggestion", err);
 				req.counter++;
 				buildSuggestion(req, res, suggestions);
 			}
 			if (result && result.length > 0) {
-				console.log("recalled called ", result.length);
+	//			console.log("recalled called ", result.length);
 				req.counter++;
 				buildSuggestion(req, res, suggestions);
 
 			} else {
-				console.log("called create", result.length);
+	//			console.log("called create", result.length);
 				SearchSuggestion.create(data, function(error, dt) {
-					if (error) console.log("error in building suggestion", error);
+					if (error) //console.log("error in building suggestion", error);
 					req.counter++;
 					buildSuggestion(req, res, suggestions);
 				});
@@ -1259,7 +1259,7 @@ exports.saveAsImage = function(req, res) {
 	} else {
 
 		fsExtra.copy(filePath, originalFilePath, function(err, result) {
-			console.log("-----------", err);
+			//console.log("-----------", err);
 			saveImage(req, res, filePath, extPart);
 		})
 
@@ -1280,7 +1280,7 @@ function saveImage(req, res, filePath, ext) {
 	var base64Data = fileData.replace(regEx, "");
 	fs.writeFile(filePath, base64Data, "base64", function(err) {
 		if (err) {
-			console.log("-----------", err);
+			//console.log("-----------", err);
 			res.status(500).send(err);
 		} else {
 			res.status(200).send(err);
@@ -2003,7 +2003,7 @@ exports.searchAssetId = function(req, res) {
 
 // Get a single user save search
 exports.getOnId = function(req, res) {
-	console.log("getOnId search", req.params.id);
+	//console.log("getOnId search", req.params.id);
 	SavedSearch.find({
 		'user._id': req.params.id
 	}, function(err, searchData) {
@@ -2024,7 +2024,7 @@ exports.createSearch = function(req, res) {
 	var filter = {};
 	filter["user._id"] = req.body.user._id;
 	filter["filter.category"] = req.body.filter.category;
-	console.log("filterSearch", filter);
+	//console.log("filterSearch", filter);
 
 	SavedSearch.find(filter, function(err, searchData) {
 		if (err) {
@@ -2126,7 +2126,7 @@ exports.createPaymentMaster = function(req, res) {
 		if (err) {
 			return handleError(res, err);
 		} else {
-			console.log(pyms);
+	//		console.log(pyms);
 			if (pyms.length > 0) {
 				return res.status(201).json({
 					errorCode: 1,
@@ -2159,7 +2159,7 @@ exports.updatePaymentMaster = function(req, res) {
 	filter['serviceCode'] = req.body.serviceCode;
 	if (req.body.multiple == 'y')
 		filter["partnerId"] = req.body.partnerId;
-	console.log("dgdhd", filter);
+	//console.log("dgdhd", filter);
 	PaymentMaster.find({
 		_id: req.params.id
 	}, function(err, pyms) {
@@ -2493,6 +2493,6 @@ function isValid(d) {
 }
 
 function handleError(res, err) {
-	console.log(err);
+	//console.log(err);
 	return res.status(500).send(err);
 }

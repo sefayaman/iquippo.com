@@ -87,7 +87,7 @@ exports.checkProductInCart = checkProductInCart;
 
     AppNotification.create(dataToSend, function(err, data) {
       if(err) { 
-        console.log("Error", err);
+        //console.log("Error", err);
       }
     });
   }
@@ -135,6 +135,6 @@ exports.updateAppNotification = function(req,res){
 }
 
 function handleError(res, err) {
-  console.log(err);
+  //console.log(err);
   return res.status(500).send(err);
 }
