@@ -271,6 +271,7 @@ angular.module('sreizaoApp')
     $scope.getStateWiseLocation=getStateWiseLocation;
     $scope.getServices = getServices;
     $scope.getVendors=getVendors;
+    $scope.validateAadhaar = validateAadhaar;
     
     function init(){
       if($scope.isEdit) {
@@ -310,7 +311,6 @@ angular.module('sreizaoApp')
     function loadVendors(){
       vendorSvc.getAllVendors()
          .then(function(res){
-          console.log("list",res);
          })
     }
 
@@ -425,6 +425,12 @@ angular.module('sreizaoApp')
       $scope.newUser.state = LocationSvc.getStateByCity(city);  
     }
 
+    function validateAadhaar(aadhaarNumber) {
+      if(!aadhaarNumber)
+        return;
+
+      $scope.newUser.aadhaarNumber = UtilSvc.validateAadhaar(aadhaarNumber, false);
+    }
 
     $scope.register = function(evt){
     var ret = false;
@@ -438,7 +444,12 @@ angular.module('sreizaoApp')
         ret = false;
       }
     }
-
+    
+    if($scope.newUser.aadhaarNumber) {
+      var validFlag = UtilSvc.validateAadhaar($scope.newUser.aadhaarNumber, true);  
+      $scope.form.aadhaarNumber.$invalid = validFlag;
+      ret = validFlag;
+    }
     if($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;

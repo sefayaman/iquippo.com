@@ -140,7 +140,8 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
   utilSvc.buildQueryParam = buildQueryParam;
   utilSvc.compileTemplate = compileTemplate;
   utilSvc.validateMobile = validateMobile;
-  
+  utilSvc.validateAadhaar = validateAadhaar;
+
   function getStatusOnCode(list,code){
       var statusObj = {};
       for(var i = 0; i < list.length;i++){
@@ -239,6 +240,21 @@ factory("uploadSvc",['$http','$rootScope',function($http,$rootScope){
         validFlag = /^\d+$/.test(mobileNo) 
 
       return validFlag;
+    }
+
+    function validateAadhaar(aadhaarNumber, flag) {
+      if(!flag) {
+        var aadhaarNo = aadhaarNumber.split(" ").join(""); 
+        if (aadhaarNo.length > 0) 
+          aadhaarNo = aadhaarNo.match(new RegExp('.{1,4}', 'g')).join(" ");
+
+        return aadhaarNo;
+      } else {
+        if(/^\d{4}\s\d{4}\s\d{4}$/.test(aadhaarNumber))
+          return false;
+        else
+          return true;
+      }
     }
 
   return utilSvc;

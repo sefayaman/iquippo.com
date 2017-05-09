@@ -25,6 +25,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
     vm.editSocialInfo = false;
     vm.editManpowerInfo = false;
     vm.getDateFormat = getDateFormat;
+    vm.validateAadhaar = validateAadhaar;
     var path = '/api/products';
     $scope.docDir = "";
     var filter = {};
@@ -68,10 +69,17 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         
     }
     inti();
-   
+    
+    function validateAadhaar(aadhaarNumber) {
+      if(!aadhaarNumber)
+        return;
+
+      vm.userInfo.aadhaarNumber = UtilSvc.validateAadhaar(aadhaarNumber, false);
+    }
+
     function save(form,isBasic){
       var ret = false;
-      if(vm.userInfo.country && vm.userInfo.mobile) { 
+      if(isBasic && vm.userInfo.country && vm.userInfo.mobile) { 
         var value = UtilSvc.validateMobile(vm.userInfo.country, vm.userInfo.mobile);
         if(!value) {
           form.mobile.$invalid = true;
@@ -80,6 +88,12 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
           form.mobile.$invalid = false;
           ret = false;
         }
+      }
+      
+      if(vm.userInfo.aadhaarNumber) {
+        var validFlag = UtilSvc.validateAadhaar(vm.userInfo.aadhaarNumber, true);  
+        form.aadhaarNumber.$invalid = validFlag;
+        ret = validFlag;
       }
 
       if(form && form.$invalid || ret){
