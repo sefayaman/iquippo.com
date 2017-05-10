@@ -68,7 +68,7 @@ function EnterpriseValuationCtrl($scope, $rootScope, $state,$window) {
       if(fileObj.external)
         url = fileObj.filename;
       else if(assetDir)
-        url = "/download/" + assetDir + "/" + fileObj.filename;
+        url = "/download/" + assetDir + "/" + fileObj.filename + "/imageFile";
       else
         url = "";
       if(url)

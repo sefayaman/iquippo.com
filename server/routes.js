@@ -59,6 +59,14 @@ module.exports = function(app) {
       res.download(file); // Set disposition and send it.
    })
 
+   app.route("/download/:assetDir/:filename/imageFile")
+   .get(function(req,res){
+      var fileName = req.params.filename;
+      var assetDir = req.params.assetDir;
+      var file = config.uploadPath+ assetDir + "/" + fileName;
+      res.download(file); // Set disposition and send it.
+   })
+
   // All other routes should redirect to the index.html
   app.route('/*')
     .get(function(req, res) {
