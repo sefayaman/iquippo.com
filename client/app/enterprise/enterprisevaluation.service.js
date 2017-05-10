@@ -128,7 +128,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         data.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
         dataToSend.assetDir = reqData.assetDir;
         if(reqData.valuationReport && reqData.valuationReport.filename) {
-          dataToSend.extrenal = reqData.valuationReport.extrenal;
+          dataToSend.external = reqData.valuationReport.external;
           dataToSend.filename = reqData.valuationReport.filename;
         }
       }

@@ -5,6 +5,7 @@ var Negotiation = require('./negotiation.model');
 var Utility = require('./../../components/utility.js');
 var  xlsx = require('xlsx');
 var Product = require('./../product/product.model');
+var extend = require('util')._extend;
 // Get list of services
 
 
@@ -127,18 +128,25 @@ var RENT_REQUEST_FIELD_MAP = {
                               'Date of Request' : 'createdAt'
                             };
 exports.exportData = function(req,res){
-
   var filter = {};
+  var FIELD_MAP = {};
   if(req.body.userMobileNos)
     filter['user.mobile'] = {$in:req.body.userMobileNos.split(',')};
-  var FIELD_MAP = {};
   if(req.body.reqType == "buyRequest") {
-    FIELD_MAP = BUY_REQUEST_FIELD_MAP;
+    FIELD_MAP = extend({},BUY_REQUEST_FIELD_MAP);
+    if(req.body && req.body.role !== "admin"){
+      delete FIELD_MAP['Seller Name'];
+      delete FIELD_MAP['Seller Contact Number'];
+    }
     var typeFilter = {};
     typeFilter['$ne'] = "FOR_RENT";
     filter["type"] = typeFilter;
   } else if(req.body.reqType == "rentRequest") {
-    FIELD_MAP = RENT_REQUEST_FIELD_MAP;
+    FIELD_MAP = extend({},RENT_REQUEST_FIELD_MAP);
+    if(req.body && req.body.role!=="admin"){
+      delete FIELD_MAP['Seller Name'];
+      delete FIELD_MAP['Seller Contact Number'];
+    }
     filter["type"] = "FOR_RENT";
   }
   var query = Negotiation.find(filter).sort({createdAt:-1});
@@ -156,7 +164,7 @@ exports.exportData = function(req,res){
             else if(FIELD_MAP[header] == 'sellerFullName')
               dataArr[idx + 1].push(_.get(item, 'product.seller.fname', '') + ' ' + _.get(item, 'product.seller.lname', ''));
             else if(FIELD_MAP[header] == 'buyNowPrice') {
-              if(item.product.grossPrice)
+              if(item && item.product && item.product.grossPrice)
                 dataArr[idx + 1].push(_.get(item, 'product.grossPrice', ''));
               else
                 dataArr[idx + 1].push('');

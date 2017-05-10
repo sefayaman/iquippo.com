@@ -1,10 +1,12 @@
 'use strict';
 
 var express = require('express');
+var auth = require('../../auth/auth.service');
 var controller = require('./common.controller');
 var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
+var vattaxCtrl = require('./vattax.controller');
 
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
@@ -84,6 +86,11 @@ router.get('/servicetax', servicetaxCtrl.get);
 router.post('/servicetax', servicetaxCtrl.create);
 router.put('/servicetax/:id', servicetaxCtrl.update);
 router.delete('/servicetax/:id', servicetaxCtrl.destroy);
+
+router.get('/vattax',auth.hasRole('admin'), vattaxCtrl.get);
+router.post('/vattax', auth.hasRole('admin'),vattaxCtrl.create);
+router.put('/vattax/:id', auth.hasRole('admin'),vattaxCtrl.update);
+router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 
 
 //render excel

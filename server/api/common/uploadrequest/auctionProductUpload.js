@@ -91,67 +91,67 @@ function _insertAuctionData(uploadData, cb) {
 
 						commonFunc.fetchCategory(collec.category, function(err, categoryData) {
 							if (err) {
-								errObj.push({
+								/*errObj.push({
 									Error: 'Unable to fetch Category: ' + collec.category,
 									rowCount: collec.rowCount
-								})
+								})*/
 								return next();
 							}
 
-							if (categoryData && !categoryData.length) {
+							/*if (categoryData && !categoryData.length) {
 								errObj.push({
 									Error: 'Category not exists :' + collec.category,
 									rowCount: collec.rowCount
 								})
 								return next();
-							}
+							}*/
 
 							var brandFilter = {
-								name: collec.brand,
-								category: categoryData[0]._doc.name,
-								group: categoryData[0]._doc.group.name
+								name: collec.brand
+								//category: categoryData[0]._doc.name,
+								//group: categoryData[0]._doc.group.name
 							};
 
 							commonFunc.fetchBrand(brandFilter, function(err, brandData) {
 								if (err) {
-									errObj.push({
+									/*errObj.push({
 										Error: 'Unable to fetch Brand: ' + collec.brand,
 										rowCount: collec.rowCount
-									})
+									})*/
 									return next();
 								}
 
-								if (brandData && !brandData.length) {
+								/*if (brandData && !brandData.length) {
 									errObj.push({
 										Error: 'Brand not exists' + collec.brand,
 										rowCount: collec.rowCount
 									})
 									return next();
-								}
+								}*/
 
 								var modelFilter = {
-									name: collec.model,
-									category: categoryData[0]._doc.name,
-									group: categoryData[0]._doc.group.name,
-									brand: brandData[0]._doc.name
+									name: collec.model
+									//category: categoryData[0]._doc.name,
+									//group: categoryData[0]._doc.group.name,
+									//brand: brandData[0]._doc.name
 								}
 
 								commonFunc.fetchModel(modelFilter, function(err, modelData) {
 									if (err) {
-										errObj.push({
+										/*errObj.push({
 											Error: 'Unable to fetch Model: ' + collec.model,
 											rowCount: collec.rowCount
-										})
+										})*/
 										return next();
 									}
 
-									if (modelData && !modelData.length) {
+									/*if (modelData && !modelData.length) {
 										errObj.push({
 											Error: 'Model not exists :' + collec.model,
 											rowCount: collec.rowCount
 										})
 										return next();
-									}
+									}*/
 
 									if (!auctionMap[collec.auctionId]) {
 										auctionMap[collec.auctionId] = [];

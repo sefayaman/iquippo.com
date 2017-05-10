@@ -126,6 +126,45 @@ bulkUpload.init = function(taskData, next) {
 								product.otherImages.push(imagesObj[product.assetId][j].name)
 							}
 						}
+						/*product.isSold = product.isSold ? true : false;
+						if (product.isSold) {
+							product.saleVal = Number(product.saleVal);
+						}
+						product.originalInvoice = product.originalInvoice ? "Yes" : "No";
+
+						if (product.originalInvoice === "Yes") {
+							product.invoiceDate = (moment(product.invioceDate, validDateFormat).format('MM/DD/YYYY'))
+						} else {
+							delete product.invoiceDate;
+						}
+
+						if (product.contactNumber) {
+							product.contactNumber = Number(product.contactNumber);
+						}
+
+						if (product.vatPercentage) {
+							product.vatPercentage = Number(product.vatPercentage);
+						}
+
+						obj.product = product;
+						obj.user = x.user;
+						obj.dbAuctionId = x.auction.dbAuctionId;
+						obj.lotNo = x.lotNo;
+						obj.auctionId = x.auction.auctionId;
+						obj.startDate = x.auction.startDate;
+						obj.endDate = x.auction.endDate;
+						obj.external = true;
+						obj.statuses = [{
+							createdAt: new Date(),
+							status: x.status,
+							userId: x.user._id
+						}];
+						obj.status = 'request_approved';
+						obj.external = true;
+						uploadedProducts.push(product.assetId);
+						approvedObj.push(obj);
+						approvedIds.push(x._id.toString());*/
+					}
 						product.isSold = product.isSold ? true : false;
 						if (product.isSold) {
 							product.saleVal = Number(product.saleVal);
@@ -164,7 +203,6 @@ bulkUpload.init = function(taskData, next) {
 						uploadedProducts.push(product.assetId);
 						approvedObj.push(obj);
 						approvedIds.push(x._id.toString());
-					}
 				})
 
 				var rejectIds = [];

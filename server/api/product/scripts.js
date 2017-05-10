@@ -27,7 +27,7 @@ exports.script = function(req, res) {
 					console.log("featurepath",featureFilePath);
 					if(err|| !image) throw err|| new Error("image doesnt exist");
 					image.resize(130, 100, function(err, rzdImage) {
-						if (extPart === 'jpg' || extPart === 'jpeg') {
+						if (extPart.toLowerCase() === 'jpg' || extPart.toLowerCase() === 'jpeg') {
 							rzdImage.toBuffer(extPart, {
 								quality: 75
 							}, function(err, buffer) {

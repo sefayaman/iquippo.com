@@ -219,7 +219,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       uploadSvc.upload(files[0],vm.enterpriseValuation.assetDir)
       .then(function(res){
         vm.enterpriseValuation.assetDir = res.data.assetDir;
-        vm.enterpriseValuation[fieldName] = {extrenal:false,filename:res.data.filename};
+        vm.enterpriseValuation[fieldName] = {external:false,filename:res.data.filename};
       });
     }
 

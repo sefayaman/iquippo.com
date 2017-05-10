@@ -17,6 +17,7 @@
     vm.loginOauth = loginOauth;
     vm.sendOTP = sendOTP;
     $scope.isDisabled = false;
+    vm.validateAadhaar = validateAadhaar;
 
     //$scope.phoneErrorMessage = "";
     $scope.errors = {};
@@ -68,6 +69,13 @@
     }
     init();
 
+    function validateAadhaar(aadhaarNumber) {
+      if(!aadhaarNumber)
+        return;
+
+      vm.user.aadhaarNumber = UtilSvc.validateAadhaar(aadhaarNumber, false);
+    }
+
     function register() {
       var ret = false;
       if(vm.user.country && vm.user.mobile) { 
@@ -81,11 +89,16 @@
         }
       }
 
+      if(vm.user.aadhaarNumber) {
+        var validFlag = UtilSvc.validateAadhaar(vm.user.aadhaarNumber, true);  
+        $scope.form.aadhaarNumber.$invalid = validFlag;
+        ret = validFlag;
+      }
+      
       if ($scope.form.$invalid || ret) {
         $scope.submitted = true;
         return;
       }
-
 
       if (vm.user.agree) {
         var dataToSend = {};

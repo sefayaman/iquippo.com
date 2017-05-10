@@ -38,7 +38,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="product in auctionDateVm.auctionListing | orderBy:'startDate'">
+              <tr ng-repeat="product in auctionDateVm.auctionListing | orderBy:'-endDate'">
                 <td>
                   <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-primary btn-sm" >
                     <i class="fa fa-eye"></i>
