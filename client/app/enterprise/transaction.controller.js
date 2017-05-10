@@ -324,7 +324,8 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
     }
 
     function showDetail(valReq){
-      var scope = $rootScope.$new()
+      var scope = $rootScope.$new();
+      scope.downloadFile = $scope.downloadFile;
       scope.valuation = valReq;
       scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
       scope.isAdmin = $scope.isAdmin;
