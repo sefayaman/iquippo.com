@@ -751,6 +751,10 @@
         ret = true;
       }
 
+      if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
+        Modal.alert("Auction is not allowed for rent assets.");
+        return;
+      }
 
       if($scope.product.tradeType != "SELL" && $scope.product.tradeType != 'NOT_AVAILABLE'){
         if($scope.product.rent && !$scope.product.rent.negotiable && angular.isUndefined($scope.product.rent.rateHours) && angular.isUndefined($scope.product.rent.rateDays) && angular.isUndefined($scope.product.rent.rateMonths)) {
@@ -907,11 +911,11 @@
         return;
       }
 
-      var auctionAvailed = product.auction && product.auction._id ? true : false;
+      /*var auctionAvailed = product.auction && product.auction._id ? true : false;
       if (product.auctionListing && !$scope.auctionReq.valuationReport && !$scope.valuationReq.valuate && !auctionAvailed) {
         Modal.alert("Valuation report is mandatory for aution listing");
         return;
-      }
+      }*/
       addOrUpdate(postAuction);
     }
 
@@ -920,7 +924,6 @@
     function postAuction(productObj) {
 
       var stsObj = {};
-      console.log("Product Object", productObj);
       if (!productObj.auction)
         productObj.auction = {};
       if (!productObj.auction._id) {
@@ -982,11 +985,13 @@
       serverObj['auction'] = $scope.auctionReq;
       if ($scope.valuationReq.valuate)
         serverObj['valuation'] = $scope.valuationReq;
-      if (paymentTransaction)
+      if (paymentTransaction){
         serverObj['payment'] = paymentTransaction;
+        serverObj.payment.auctionId = productObj.auctionId || "";
+        serverObj.payment.entityName = ($scope.valAgencies && $scope.valAgencies.length && $scope.valAgencies[0].name) || '';
+      }
 
-      serverObj.payment.auctionId = productObj.auctionId;
-      serverObj.payment.entityName = ($scope.valAgencies && $scope.valAgencies.length && $scope.valAgencies[0].name) || '';
+      
 
       productSvc.createOrUpdateAuction(serverObj)
         .then(function(res) {

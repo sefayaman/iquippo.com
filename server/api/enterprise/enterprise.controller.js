@@ -1647,7 +1647,7 @@ exports.exportExcel = function(req,res){
 }
 
 function exportExcel(req,res,fieldMap,jsonArr){
-
+  console.log( req.protocol + "://"+ req.headers.host );
   var queryParam = req.query;
   var role = queryParam.role;
   var dataArr = [];
@@ -1671,6 +1671,13 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
         val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+      if(keyObj.type && keyObj.type == 'url' && val && val.filename){
+        if(val.external === true)
+          val = val.filename;
+        else
+          val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+      }
+
        dataArr[idx + 1].push(val);
     });
 

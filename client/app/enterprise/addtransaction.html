@@ -260,7 +260,8 @@
                         </span> 
                       </div>                      
                   </div>
-                  General
+                  <span ng-if="!addTransactionVm.enterpriseValuation.generalImage.filename">General</span>
+                  <a href="javascript:void(0);" ng-if="addTransactionVm.enterpriseValuation.generalImage.filename" ng-click="downloadFile(addTransactionVm.enterpriseValuation.generalImage,addTransactionVm.enterpriseValuation.assetDir)">General</a>
               </div>
               <div class="col-sm-2  text-center">
                 <div class="br5">
@@ -280,7 +281,8 @@
                       </span> 
                     </div>                        
                 </div>  
-                Engine  
+                <span ng-if="!addTransactionVm.enterpriseValuation.engineImage.filename">Engine</span>  
+                <a href="javascript:void(0);" ng-if="addTransactionVm.enterpriseValuation.engineImage.filename" ng-click="downloadFile(addTransactionVm.enterpriseValuation.engineImage,addTransactionVm.enterpriseValuation.assetDir)">Engine</a>
               </div>
               <div class="col-sm-2  text-center">
                 <div class="br5">
@@ -300,7 +302,8 @@
                       </span> 
                     </div>                       
                 </div>
-                Hydraulic
+                <span ng-if="!addTransactionVm.enterpriseValuation.hydraulicImage.filename">Hydraulic</span>
+                <a href="javascript:void(0);" ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.filename" ng-click="downloadFile(addTransactionVm.enterpriseValuation.hydraulicImage,addTransactionVm.enterpriseValuation.assetDir)">Hydraulic</a>
               </div>
               <div class="col-sm-2  text-center">
                 <div class="br5">
@@ -320,7 +323,8 @@
                       </span> 
                     </div>                       
                 </div>
-                Cabin
+                <span ng-if="!addTransactionVm.enterpriseValuation.cabinImage.filename">Cabin</span>
+                <a href="javascript:void(0);" ng-if="addTransactionVm.enterpriseValuation.cabinImage.filename" ng-click="downloadFile(addTransactionVm.enterpriseValuation.cabinImage,addTransactionVm.enterpriseValuation.assetDir)">Cabin</a>
               </div>
               <div class="col-sm-2  text-center">
                 <div class="br5">
@@ -340,7 +344,8 @@
                       </span> 
                     </div>                    
                 </div> 
-                Under-Carriage / Tyre 
+                <span ng-if="!addTransactionVm.enterpriseValuation.underCarriageImage.filename">Under-Carriage / Tyre </span>
+                <a href="javascript:void(0);" ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.filename" ng-click="downloadFile(addTransactionVm.enterpriseValuation.underCarriageImage,addTransactionVm.enterpriseValuation.assetDir)">Under-Carriage / Tyre </a>
               </div>
               <div class="col-sm-2  text-center">
                 <div class="br5">
@@ -360,7 +365,8 @@
                       </span> 
                     </div>                       
                 </div> 
-                Other
+                <span ng-if="!addTransactionVm.enterpriseValuation.otherImage.filename">Other</span>
+                <a href="javascript:void(0);" ng-if="addTransactionVm.enterpriseValuation.otherImage.filename" ng-click="downloadFile(addTransactionVm.enterpriseValuation.otherImage,addTransactionVm.enterpriseValuation.assetDir)">Other</a>
               </div>
               
           </div>
@@ -372,7 +378,7 @@
                 <span><i class="fa fa-upload"></i> Upload</span>
               </span>
             </div>
-            <div class="col-sm-4">{{addTransactionVm.enterpriseValuation.valuationReport.filename}}</div>
+            <div class="col-sm-4"><a href="javascript:void(0);" ng-click="downloadFile(addTransactionVm.enterpriseValuation.valuationReport,addTransactionVm.enterpriseValuation.assetDir)" ng-if="addTransactionVm.enterpriseValuation.valuationReport.filename">{{addTransactionVm.enterpriseValuation.valuationReport.filename}}</a></div>
           </div>
       </div>
       </div>

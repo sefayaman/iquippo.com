@@ -212,7 +212,7 @@
                     <input type="text" class="form-control" name="panNumber"  placeholder="PAN Number" uib-tooltip="XXXXX9999X" tooltip-trigger="focus" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" tooltip-placement="top" ng-model="newUser.panNumber">
                   </div>   
                   <div class="form-group col-sm-6" ng-class="{'has-error':form.aadhaarNumber.$invalid && submitted}">
-                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$" tooltip-placement="top" ng-model="newUser.aadhaarNumber">
+                    <input type="text" class="form-control" name="aadhaarNumber"  placeholder="AADHAAR Number" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="validateAadhaar(newUser.aadhaarNumber)" tooltip-placement="top" ng-model="newUser.aadhaarNumber">
                   </div>                  
                 </div>   
                 <!-- <div class="row">

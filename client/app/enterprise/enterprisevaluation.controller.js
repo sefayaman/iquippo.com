@@ -1,11 +1,12 @@
 (function(){
 'use strict';
 angular.module('sreizaoApp').controller('EnterpriseValuationCtrl',EnterpriseValuationCtrl);
-function EnterpriseValuationCtrl($scope, $rootScope, $state) {
+function EnterpriseValuationCtrl($scope, $rootScope, $state,$window) {
     var vm = this;
     $scope.onTabChange = onTabChange;
     $scope.tabValue = 'dashboard';
     var viewSvc = null;
+    $scope.downloadFile = downloadFile;
     function init() {
       switch($state.current.name){
             case 'enterprisevaluation.dashborad':
@@ -60,6 +61,18 @@ function EnterpriseValuationCtrl($scope, $rootScope, $state) {
         break;
 
       } 
+    }
+
+    function downloadFile(fileObj,assetDir){
+      var url = "";
+      if(fileObj.external)
+        url = fileObj.filename;
+      else if(assetDir)
+        url = "/download/" + assetDir + "/" + fileObj.filename + "/imageFile";
+      else
+        url = "";
+      if(url)
+        $window.open(url,'_blank');
     }
 
 }

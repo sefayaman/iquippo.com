@@ -246,7 +246,7 @@
                   <div class="col-sm-3">
                     <label>AADHAAR Number</label><br>
                     <div class="form-group" ng-class="{'has-error':personalInfoForm.aadhaarNumber.$invalid && submitted}">
-                      <input type="text" class="basic-detail" placeholder="AADHAAR Number" name="aadhaarNumber" ng-disabled="aadhaarNumber" ng-model="myAccountVm.userInfo.aadhaarNumber" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" pattern="^\d{4}\s\d{4}\s\d{4}$"
+                      <input type="text" class="basic-detail" placeholder="AADHAAR Number" name="aadhaarNumber" ng-disabled="aadhaarNumber" ng-model="myAccountVm.userInfo.aadhaarNumber" uib-tooltip="9999 9999 9999" tooltip-trigger="focus" ng-keyup="myAccountVm.validateAadhaar(myAccountVm.userInfo.aadhaarNumber)"
                       tooltip-placement="top">
                     </div>
                   </div>
