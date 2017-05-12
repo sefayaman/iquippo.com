@@ -359,7 +359,7 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : [],
     dateParams : ['requestDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription']
   };
   
   if(user.role == 'admin')
@@ -681,17 +681,17 @@ exports.bulkUpload = function(req, res) {
           var tmplName = VALUATION_REQUEST;
           emailData.notificationType = "email";
           if(reqData.status === EnterpriseValuationStatuses[0]) {
-            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. ï¿½ ' + reqData.uniqueControlNo;
             tplData.status = "initiated";
           }
           if(reqData.status === EnterpriseValuationStatuses[2]) {
-            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. ï¿½ ' + reqData.uniqueControlNo;
             tplData.status = "submitted";
           }
           if(reqData.status === EnterpriseValuationStatuses[4]) {
             tmplName = VALUATION_REPORT_SUBMISSION;
             emailData.cc = reqData.enterprise.email;
-            emailData.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+            emailData.subject = 'Valuation Report as an attachment for Unique Control No. ï¿½ ' + reqData.uniqueControlNo;
             //tplData.assetDir = reqData.assetDir;
             if(reqData.valuationReport && reqData.valuationReport.filename) {
               tplData.external = reqData.valuationReport.external;
@@ -847,8 +847,8 @@ exports.bulkModify = function(req, res) {
           return callback('Invalid Valuation request');
 
         
-        var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
-        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
+        var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
         
         row.valData = result[0];
         if(updateType == 'agency'){
@@ -1152,9 +1152,8 @@ exports.update = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!enterprise) { return res.status(404).send('Not Found'); }
 
-    var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
-    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
-
+    var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
+    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
     if(user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId)
       update();
     else if(user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)

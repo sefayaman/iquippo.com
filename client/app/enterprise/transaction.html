@@ -1,6 +1,6 @@
 <div>
   <div  ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
-    Download the <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplate}}" target="_blank">template</a> for Upload/Update Request which is visible to Enterprise only.
+    Download the <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplate}}" target="_blank">template</a> for Upload/Update Request which is visible to Enterprise only. Maximum 99 rows
   </div>
   <div  ng-if="isPartner() || isAdmin()">
     Download the <a href="/download/templates/{{enterpriseTransactionVm.agencyTemplate}}" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
@@ -107,7 +107,7 @@
               <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)" ng-if="enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType)"><i class="fa fa-pencil"></i> </a>
               <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
               <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType)"><i class="fa fa-trash"></i> </a>
+              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType) && isAdmin()"><i class="fa fa-trash"></i> </a>
 
             </td>
             
