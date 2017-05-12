@@ -113,13 +113,13 @@
             <input type="text" class="form-control" name="engineNo" ng-model="addTransactionVm.enterpriseValuation.engineNo" ng-disabled="!editEnterpriseField()" placeholder="Engine No." ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )"/>
           </div>
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="chassisNo" ng-model="addTransactionVm.enterpriseValuation.chassisNo" ng-disabled="!editEnterpriseField()" placeholder="Chassis No."/>
+             <input type="text" class="form-control" name="chassisNo" ng-model="addTransactionVm.enterpriseValuation.chassisNo" ng-disabled="!editEnterpriseField()" placeholder="Chassis No." ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )"/>
           </div>
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="registrationNo" ng-model="addTransactionVm.enterpriseValuation.registrationNo" ng-disabled="!editEnterpriseField()" placeholder="Registration No."/>
+             <input type="text" class="form-control" name="registrationNo" ng-model="addTransactionVm.enterpriseValuation.registrationNo" ng-disabled="!editEnterpriseField()" placeholder="Registration No." ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )"/>
           </div>
           <div class="col-sm-3">
-             <input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No." ng-disabled="!editEnterpriseField()"/>
+             <input type="text" class="form-control" name="serialNo" ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No." ng-disabled="!editEnterpriseField()" ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )"/>
           </div>
         </div>
         <div class="row form-group">
