@@ -847,8 +847,8 @@ exports.bulkModify = function(req, res) {
           return callback('Invalid Valuation request');
 
         
-        var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
-        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
+        var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
         
         row.valData = result[0];
         if(updateType == 'agency'){
@@ -1152,9 +1152,8 @@ exports.update = function(req, res) {
     if (err) { return handleError(res, err); }
     if(!enterprise) { return res.status(404).send('Not Found'); }
 
-    var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuation[1]];
-    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuation[3]];
-
+    var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
+    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
     if(user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId)
       update();
     else if(user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)
