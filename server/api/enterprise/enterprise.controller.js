@@ -54,7 +54,7 @@ function getValuationRequest(req,res){
 
   if (queryParam.searchStr) {
        filter['$text'] = {
-        '$search': queryParam.searchStr
+        '$search': "\""+queryParam.searchStr+"\""
       }
   }
   if (queryParam._id)
