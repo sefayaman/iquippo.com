@@ -19,7 +19,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
   vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
-
+  vm.enterpriseValuation.requestDate = moment(new Date()).format('DD/MM/YYYY');
+  vm.enterpriseValuation.agency = {};
+          
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
   vm.onBrandChange = onBrandChange;
@@ -31,7 +33,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.addOrUpdateRequest = addOrUpdateRequest;
   
   function init(){
-
     var userFilter = {};
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
@@ -46,70 +47,79 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           vm.enterpriseValuation.requestType = "";
     }
 
+    if(!editMode){
+      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
+    }
+
+    ValuationPurposeSvc.get(null)
+    .then(function(result){
+      $scope.valuationList = result;
+    });
+
+    brandSvc.getBrandOnFilter({})
+    .then(function(result) {
+       var chache = {};
+       vm.brandList = [];
+       result.forEach(function(item){
+          if(!chache[item.name]){
+            vm.brandList.push(item);
+            chache[item.name] = item._id;
+          }
+       });
+    });
+    
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
         vm.enterpriseValuation.enterprise = {};
         vm.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
+        setAgency(data[0].availedServices);
         setCustomerData(data[0].enterpriseId);
       }
     });
-    if(!editMode){
-      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
-    }
-
-      ValuationPurposeSvc.get(null)
-      .then(function(result){
-        $scope.valuationList = result;
+    if($stateParams.id) {
+      $scope.isEdit = true;
+      EnterpriseSvc.getRequestOnId($stateParams.id)
+        .then(function(result){
+          if(result) {
+            vm.enterpriseValuation = result;
+            onBrandChange(vm.enterpriseValuation.brand, true);
+            onCountryChange(vm.enterpriseValuation.country, true);
+            onStateChange(vm.enterpriseValuation.state, true);
+            if (vm.enterpriseValuation.requestDate)
+              vm.enterpriseValuation.requestDate = moment(vm.enterpriseValuation.requestDate).format('MM/DD/YYYY');
+            if (vm.enterpriseValuation.repoDate)
+              vm.enterpriseValuation.repoDate = moment(vm.enterpriseValuation.repoDate).format('MM/DD/YYYY');
+            if (vm.enterpriseValuation.invoiceDate)
+              vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
+            if (vm.enterpriseValuation.reportDate)
+              vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
+            vendorSvc.getAllVendors().then(function(){
+              vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
+            });
+          }
       });
-
-      brandSvc.getBrandOnFilter({})
-      .then(function(result) {
-         var chache = {};
-         vm.brandList = [];
-         result.forEach(function(item){
-            if(!chache[item.name]){
-              vm.brandList.push(item);
-              chache[item.name] = item._id;
-            }
-         });
-      })
-      
-      if($stateParams.id) {
-        $scope.isEdit = true;
-        EnterpriseSvc.getRequestOnId($stateParams.id)
-          .then(function(result){
-            if(result) {
-              vm.enterpriseValuation = result;
-              onBrandChange(vm.enterpriseValuation.brand, true);
-              onCountryChange(vm.enterpriseValuation.country, true);
-              onStateChange(vm.enterpriseValuation.state, true);
-              if (vm.enterpriseValuation.requestDate)
-                vm.enterpriseValuation.requestDate = moment(vm.enterpriseValuation.requestDate).format('MM/DD/YYYY');
-              if (vm.enterpriseValuation.repoDate)
-                vm.enterpriseValuation.repoDate = moment(vm.enterpriseValuation.repoDate).format('MM/DD/YYYY');
-              if (vm.enterpriseValuation.invoiceDate)
-                vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
-              if (vm.enterpriseValuation.reportDate)
-                vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
-               vendorSvc.getAllVendors()
-               .then(function(){
-                  vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
-                });
-              
-            }
-        });
-      }else{
-        vendorSvc.getAllVendors()
-        .then(function(){
-          vm.valAgencies = vendorSvc.getVendorsOnCode(vm.enterpriseValuation.requestType);
-        });
-      }
+    }else{
+      vendorSvc.getAllVendors().then(function(){
+        vm.valAgencies = vendorSvc.getVendorsOnCode(vm.enterpriseValuation.requestType);
+      });
+    }
+  }
+  
+  function setAgency(data) {
+    if(data.length > 0) {
+      data.forEach(function(item) {
+        if(item.code === vm.enterpriseValuation.requestType) {
+          vendorSvc.getAllVendors().then(function(){
+            vm.enterpriseValuation.agency.partnerId = item.partnerId;
+          });  
+        }
+      });
+    }
   }
 
   function showEnterpriseSection(){
      return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser() || Auth.isPartner();
-
   }
 
   function showPaymentSection(){
@@ -161,12 +171,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       });
     };
 
-     function getPartners(code){
-            vm.valAgencies = [];
-            if(!code)
-                return;
-            vm.valAgencies = vendorSvc.getVendorsOnCode(code);
-      }
+    function getPartners(code){
+      vm.valAgencies = [];
+      vm.enterpriseValuation.agency.partnerId = "";
+      if(!code)
+        return;
+      vm.valAgencies = vendorSvc.getVendorsOnCode(code);
+      if(vm.enterprises && (Auth.isEnterprise() || Auth.isEnterpriseUser()))
+        setAgency(vm.enterprises[0].availedServices);
+    }
 
     function onBrandChange(brandName, noChange) {
         if (!noChange)
