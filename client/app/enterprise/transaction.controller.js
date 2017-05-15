@@ -294,11 +294,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
      }
 
-      function isEditAllowed(requestType){
+      function isEditAllowed(requestType, status){
         if(Auth.isAdmin() || Auth.isPartner())
           return true;
           var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
-          if(validRole && Auth.isServiceAvailed(requestType))
+          if(validRole && Auth.isServiceAvailed(requestType) && EnterpriseValuationStatuses.indexOf(status) < 2)
             return true;
           else
             return false;
