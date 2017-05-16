@@ -171,12 +171,12 @@
         <div class="row form-group">
            <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceDate.$invalid && submitted}">
           <div class="input-group">
-            <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="*Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+            <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
             <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
           </div>
         </div>
         <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceValue.$invalid && submitted}">
-          <input type="number" class="form-control" name="customerInvoiceValue" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" min="0" placeholder="*Invoice Value">
+          <input type="number" class="form-control" name="customerInvoiceValue" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" min="0" placeholder="Invoice Value">
         </div>
         </div>
       </div>
