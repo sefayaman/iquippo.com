@@ -417,20 +417,15 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
 
     function getAll(){
-      var deferred = $q.defer();
-      if(paymentMasterCache.length > 0){
-        deferred.resolve(paymentMasterCache);
-      }else{
-        $http.get(path)
+
+        return $http.get(path)
         .then(function(res){
           paymentMasterCache = res.data;
-          deferred.resolve(res.data);
+          return res.data;
         })
         .catch(function(err){
-          deferred.reject(err);
+          throw err;
         })
-      }
-      return deferred.promise;
     }
 
     function save(data){

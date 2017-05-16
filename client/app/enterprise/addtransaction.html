@@ -168,6 +168,15 @@
              <input type="text" class="form-control" name="disFromCustomerOffice" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice" ng-disabled="!editEnterpriseField()" placeholder="Distance From Customer Office"/>
           </div>
         </div>
+        <div class="row form-group">
+           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceDate.$invalid && submitted}">
+          <input  class="form-control" name="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="*Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only required>
+          <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+        </div>
+        <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceValue.$invalid && submitted}">
+          <input type="number" class="form-control" name="customerInvoiceValue" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" min="0" placeholder="*Invoice Value" required>
+        </div>
+        </div>
       </div>
     </div>
     <!-- Agency block -->

@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 var seqGenerator = require('../../components/seqgenerator');
 
@@ -17,7 +17,7 @@ var EnterpriseValuationSchema = new Schema({
   customerPartyNo:String,
   customerPartyName:String,
   userName: String,
-  requestDate:Date,
+  requestDate:{type:Date,default:Date.now},
   assetId:String,
   repoDate:Date,
   brand:String,
@@ -33,7 +33,6 @@ var EnterpriseValuationSchema = new Schema({
   registrationNo:String,
   serialNo:String,
   yearOfManufacturing:String,
-  invoiceDate:{type:Date},
   yardParked:String,
   country:String,
   state:String,
@@ -41,6 +40,8 @@ var EnterpriseValuationSchema = new Schema({
   contactPerson:String,
   contactPersonTelNo:String,
   disFromCustomerOffice:String,
+  customerInvoiceDate:Date,
+  customerInvoiceValue:Number,
   /* Valuation agency  field */
   jobId:String,
   reportDate:Date,
@@ -92,7 +93,7 @@ EnterpriseValuationSchema.pre('save',function(next){
     return next();
   },'EnterpriseValuation',002);
 
-})
+});
 
 module.exports = mongoose.model('EnterpriseValuation', EnterpriseValuationSchema);
 

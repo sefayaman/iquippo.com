@@ -179,7 +179,10 @@ exports.create = function(req, res, next){
      if(result && !result.found)
       _createAssetGroupCategory(bodyData);
      EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
-        if(err) { return handleError(res, err); }
+        if(err) { 
+          console.log("hh",err);
+          return handleError(res, err); 
+        }
         return res.status(201).json(enterpriseData);
       });
   });  
@@ -247,16 +250,36 @@ function _createAssetGroupCategory(bodyData){
 
 }
 
-function validateData(madnatoryParams,obj){
-  var madnatoryParams = madnatoryParams || [];
-  //var madnatoryParams = ['category','brand','model','country','state','city'];
+function validateData(options,obj){
+
+  var madnatoryParams = options.madnatoryParams || [];
+  var numericCols = options.numericCols || [];
+  var dateParams = options.dateParams || [];
   var err;
+  numericCols.forEach(function(x){
+    if(obj[x] && isNaN(obj[x])){
+      delete obj[x];
+    }
+  });
+
+  dateParams.forEach(function(x){
+    if(obj[x]){
+      var d = Utility.dateUtil.isValidDateTime(obj[x],validDateFormat);
+      if(d.isValid()){
+        obj[x] = new Date(Utility.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
+      } else {
+        delete obj[x];
+      }
+    }
+  });
+
   madnatoryParams.some(function(x){
     if(!obj[x]){
       err = 'Missing Parameter:  ' + x;
       return false;
     }
   });
+
   return err;
 }
 
@@ -295,7 +318,7 @@ function parseExcel(options){
       obj[field_map[key]] = x[key];
     })
     obj.rowCount = x.__rowNum__;
-    err = validateData(options.madnatoryParams,obj);
+    err = validateData(options,obj);
     if (err) {
       errObj.push({
         Error: err,
@@ -303,17 +326,15 @@ function parseExcel(options){
       });
     } else {
         obj.user = options.user;
-        var numericCols = options.numericCols || [];
-        var dateParams = options.dateParams || [];
-        //var numericCols = ['customerTransactionId','customerValuationNo','customerPartyNo','engineNo','chassisNo','registrationNo','contactPersonTelNo'];
-
-        numericCols.forEach(function(x){
+        //var numericCols = options.numericCols || [];
+        //var dateParams = options.dateParams || [];
+        
+       /* numericCols.forEach(function(x){
           if(obj[x] && isNaN(obj[x])){
             delete obj[x];
           }
         });
 
-        //var dateParams = ['requestDate','invoiceDate','repoDate'];
         dateParams.forEach(function(x){
           if(obj[x]){
             var d = Utility.dateUtil.isValidDateTime(obj[x],validDateFormat);
@@ -323,7 +344,7 @@ function parseExcel(options){
               delete obj[x];
             }
           }
-        });
+        });*/
 
         var validData = {};
         Object.keys(obj).forEach(function(x){
@@ -357,9 +378,9 @@ exports.bulkUpload = function(req, res) {
     user : user,
     partnerType : 'ENTERPRISE',
     uploadType : 'UPLOAD',
-    numericCols : [],
-    dateParams : ['requestDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription']
+    numericCols : ['customerInvoiceValue'],
+    dateParams : ['customerInvoiceDate','repoDate'],
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription','customerInvoiceDate','customerInvoiceValue']
   };
   
   if(user.role == 'admin')
@@ -762,8 +783,8 @@ exports.bulkModify = function(req, res) {
     user : user,
     partnerType : 'ENTERPRISE',
     uploadType : 'MODIFY',
-    numericCols : [],
-    dateParams : ['requestDate','repoDate'],
+    numericCols : ['customerInvoiceValue'],
+    dateParams : ['customerInvoiceDate','repoDate'],
     madnatoryParams : ['uniqueControlNo']
   };
   var enterpriseRoles = ['admin','enterprise'];
@@ -1665,6 +1686,8 @@ function exportExcel(req,res,fieldMap,jsonArr){
     dataArr[idx + 1] = [];
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
+      if(keyObj.key == 'status' && item.deleted)
+          item.status = "Deleted";
       var val = _.get(item,keyObj.key,"");
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';

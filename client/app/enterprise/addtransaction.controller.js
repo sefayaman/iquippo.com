@@ -2,10 +2,11 @@
 'use strict';
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
 function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc,AssetGroupSvc) {
+  
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
-  vm.enterpriseValuation = {purpose:"Financing"};
+  //vm.enterpriseValuation = {purpose:"Financing"};
   $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
@@ -18,9 +19,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   $scope.getAssetGroup = getAssetGroup;
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
-  vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
+  /*vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
   vm.enterpriseValuation.requestDate = moment(new Date()).format('DD/MM/YYYY');
-  vm.enterpriseValuation.agency = {};
+  vm.enterpriseValuation.agency = {};*/
           
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
@@ -33,6 +34,12 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.addOrUpdateRequest = addOrUpdateRequest;
   
   function init(){
+
+    vm.enterpriseValuation = {purpose:"Financing"};
+    vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
+    vm.enterpriseValuation.requestDate = moment(new Date()).format('MM/DD/YYYY');
+    vm.enterpriseValuation.agency = {};
+
     var userFilter = {};
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
@@ -73,7 +80,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       if(!editMode && isEnterprise && data.length > 0){
         vm.enterpriseValuation.enterprise = {};
         vm.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
-        setAgency(data[0].availedServices);
+        setAgency(data[0].availedServices,vm.enterpriseValuation.requestType);
         setCustomerData(data[0].enterpriseId);
       }
     });
@@ -94,6 +101,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
               vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
             if (vm.enterpriseValuation.reportDate)
               vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
+             if (vm.enterpriseValuation.customerInvoiceDate)
+              vm.enterpriseValuation.customerInvoiceDate = moment(vm.enterpriseValuation.customerInvoiceDate).format('MM/DD/YYYY');
             vendorSvc.getAllVendors().then(function(){
               vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
             });
@@ -106,10 +115,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
   }
   
-  function setAgency(data) {
+  function setAgency(data,code) {
     if(data.length > 0) {
       data.forEach(function(item) {
-        if(item.code === vm.enterpriseValuation.requestType) {
+        if(item.code === code) {
           vendorSvc.getAllVendors().then(function(){
             vm.enterpriseValuation.agency.partnerId = item.partnerId;
           });  
@@ -178,7 +187,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         return;
       vm.valAgencies = vendorSvc.getVendorsOnCode(code);
       if(vm.enterprises && (Auth.isEnterprise() || Auth.isEnterpriseUser()))
-        setAgency(vm.enterprises[0].availedServices);
+        setAgency(vm.enterprises[0].availedServices,code);
     }
 
     function onBrandChange(brandName, noChange) {
@@ -332,6 +341,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     function reset() {
       vm.enterpriseValuation = {purpose:"Financing"};
       $scope.submitted = false;
+      init();
     }
 
      //starting point
