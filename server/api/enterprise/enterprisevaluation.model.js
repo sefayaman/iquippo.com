@@ -91,7 +91,7 @@ EnterpriseValuationSchema.pre('save',function(next){
     var dateStr = date.getDate()+ "" + (date.getMonth() + 1)+ "" + date.getFullYear();
     self.uniqueControlNo = cprefix + dateStr + seqnum;
     return next();
-  },'EnterpriseValuation',002);
+  },'EnterpriseValuation',"002");
 
 });
 
