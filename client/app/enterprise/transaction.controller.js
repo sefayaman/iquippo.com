@@ -80,6 +80,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         filter.isSearch = true;
         filter['searchStr'] = encodeURIComponent(vm.searchStr);
       }
+      if(vm.statusType){
+        filter.isSearch = true;
+        filter['statusType'] = encodeURIComponent(vm.statusType);
+      }
       if(vm.fromDate){
         filter.isSearch = true;
         filter['fromDate'] = encodeURIComponent(vm.fromDate);

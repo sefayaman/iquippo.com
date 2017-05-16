@@ -63,6 +63,8 @@ function getValuationRequest(req,res){
     var stsArr = queryParam.status.split(',');
     filter["status"] = {$in:stsArr};
   }
+   if (queryParam.statusType)
+    filter["status"] = queryParam.statusType;
   if (queryParam.mobile)
     filter["mobile"] = queryParam.mobile;
   if (queryParam.enterpriseId)
