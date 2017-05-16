@@ -31,8 +31,8 @@ module.exports = {
 			'Contact_Person*': 'contactPerson',
 			'Contact_Person_Tel_No*': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
-			'Invoice Date*':'customerInvoiceDate',
-			'Invoice Value*':'customerInvoiceValue'
+			'Invoice Date':'customerInvoiceDate',
+			'Invoice Value':'customerInvoiceValue'
 		},
 		'MODIFY': {
 			'Unique_Control_No*': 'uniqueControlNo',
@@ -64,8 +64,8 @@ module.exports = {
 			'Contact_Person*': 'contactPerson',
 			'Contact_Person_Tel_No*': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
-			'Invoice Date*':'customerInvoiceDate',
-			'Invoice Value*':'customerInvoiceValue'
+			'Invoice Date':'customerInvoiceDate',
+			'Invoice Value':'customerInvoiceValue'
 		},
 		'EXPORT': {
 			'TRANSACTION': {},

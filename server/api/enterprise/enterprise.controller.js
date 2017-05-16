@@ -380,7 +380,7 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : ['customerInvoiceValue'],
     dateParams : ['customerInvoiceDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription','customerInvoiceDate','customerInvoiceValue']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription']
   };
   
   if(user.role == 'admin')

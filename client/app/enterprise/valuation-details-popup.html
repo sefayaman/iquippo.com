@@ -120,6 +120,12 @@
                   <td><b>Distance From Customer Office:</b></td>
                   <td>{{valuation.disFromCustomerOffice}}</td>  
                 </tr>
+                <tr>
+                  <td><b>Customer Invoice date:</b></td>
+                  <td>{{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}</td>
+                  <td><b>Customer Invoice Value:</b></td>
+                  <td>{{valuation.customerInvoiceValue}}</td>  
+                </tr>
 
                
               </table>
@@ -134,7 +140,7 @@
                   <td class="col-sm-3"><b>Report No.:</b></td>
                   <td class="col-sm-3">{{valuation.reportNo}}</td>
                   <td class="col-sm-3"><b>Report Date:</b></td>
-                  <td class="col-sm-3">{{valuation.reportDate}}</td>
+                  <td class="col-sm-3">{{valuation.reportDate | date:'MM/dd/yyyy'}}</td>
                 </tr>
                 <tr>
                   <td><b>Year of Manufacture:</b></td>
