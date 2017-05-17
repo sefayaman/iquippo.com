@@ -11,6 +11,7 @@
     negotiateSrv.negotiation = negotiation;
 
     function mailtemplates(reciever, subject, mailTemplate, dataToSend) {
+      var data={};
       data['to'] = reciever;
       data['subject'] = subject;
       notificationSvc.sendNotification(mailTemplate, data, dataToSend,
