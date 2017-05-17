@@ -82,7 +82,6 @@ function negotiateConfirm(form,flag){
           offer:vm.negotiateAmt,
           negotiation:true}
 
-          console.log(dataNegotiate)
         }else if(flag == "false")
         {
     var dataNegotiate={};
