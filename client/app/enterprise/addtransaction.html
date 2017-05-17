@@ -4,7 +4,7 @@
     <h4>Add New Request </h4>
   </div>
 <div class="col-sm-6 text-right">
-<h3><a href="/enterprisevaluation/transaction" class="btn btn-primary btn-md">Back</a></h3>
+  <a href="/enterprisevaluation/transaction" class="btn btn-primary btn-md">Back</a>
 </div>
 </div>
 <!-- <p>Download the <a href="javascript:void(0);">template</a> and fill all fields. (*) mark fields are mandatory. System will accept multiple records in a single file.</p> -->
@@ -124,7 +124,7 @@
         </div>
         <div class="row form-group">
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.yearOfManufacturing.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
-            <input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" ng-min="1900" string-to-number/>
+            <input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" min="1900" string-to-number/>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.yardParked.$invalid && submitted}">
            <input type="text" class="form-control" name="yardParked" ng-model="addTransactionVm.enterpriseValuation.yardParked" placeholder="*Yard Information/Asset Address" ng-disabled="!editEnterpriseField()" required/>          
@@ -221,7 +221,7 @@
         </div>
         <div class="row form-group ">                            
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assessedValue.$invalid && submitted}">
-            <input type="number" class="form-control" name="assessedValue" ng-model="addTransactionVm.enterpriseValuation.assessedValue" ng-disabled="!editAgencyField()" placeholder="Assessed Value" required/>
+            <input type="number" class="form-control" min="0" name="assessedValue" ng-model="addTransactionVm.enterpriseValuation.assessedValue" ng-disabled="!editAgencyField()" placeholder="Assessed Value" required/>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.inspectionBy.$invalid && submitted}">
              <input type="text" class="form-control" name="inspectionBy" ng-model="addTransactionVm.enterpriseValuation.inspectionBy" ng-disabled="!editAgencyField()" placeholder="Inspection By" required/>

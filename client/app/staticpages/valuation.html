@@ -230,7 +230,7 @@
 							<div class="row">
 								<div class="col-xs-6">
 									<div class="form-group" ng-class="{'has-error': form.mfgYear.$invalid && submitted}">
-										<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" ng-min="1900" ng-max="currentYear" string-to-number>
+										<input type="number" name="prdMfg" class="form-control" placeholder="Manufacturing Year" ng-model="valuationQuote.product.mfgYear" ng-minlength="4" ng-maxlength="4" min="1900" max="currentYear" string-to-number>
 									</div>
 								</div>
 								<div class="col-xs-6">
@@ -387,13 +387,13 @@
 				</div>								
 			</div>
 			<div class="row form-group">
-				<div class="col-xs-6 col-sm-6">
+				<div class="col-xs-6 col-sm-3">
 	              	<div class="radio radio-info" ng-if="isServiceAvailed('Valuation')">
                         <input type="radio" name="requestType" id="requestValuationEnterprise" value="Valuation" ng-model="addTransactionVm.enterpriseValuation.requestType" ng-click="addTransactionVm.getPartners('Valuation')" >
                         <label for="requestValuationEnterprise"> Valuation </label>
                     </div>		               
 	            </div>
-	            <div class="col-xs-6 col-sm-6">
+	            <div class="col-xs-6 col-sm-3">
 	              	<div class="radio radio-info" ng-if="isServiceAvailed('Inspection')">
                         <input type="radio" id="requestInspectionEnterprise" name="requestType" value="Inspection" ng-click="addTransactionVm.getPartners('Inspection')" ng-model="addTransactionVm.enterpriseValuation.requestType">
                         <label for="requestInspectionEnterprise"> Inspection </label>
@@ -411,15 +411,6 @@
 					<input type="text" class="form-control" ng-model="addTransactionVm.enterpriseValuation.nameOfCustomerSeeking" placeholder="Name of the Customer seeking Finance">
 
 					<!-- <input type="text" class="form-control" name="" value="" placeholder="Other" disabled> -->
-				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceDate.$invalid && submitted}">
-					<div class="input-group">
-						<input  class="form-control" name="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
-						<label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
-					</div>
-				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceValue.$invalid && submitted}">
-					<input type="number" class="form-control" name="customerInvoiceValue" min="0" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" placeholder="Invoice Value">
 				</div>
 			</div>
 			<div class="row">
@@ -467,16 +458,27 @@
 					<input type="text" class="form-control" name="" value="" placeholder="Asset No." ng-model="addTransactionVm.enterpriseValuation.assetId">
 				</div>
 				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="" value="" placeholder="Reference / FI Number" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId">
+					<input type="text" class="form-control" name="" value="" min="0" placeholder="Reference / FI Number" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId">
 				</div>
 				<div class="col-sm-3 form-group"  ng-class="{'has-error': form.yearOfManufacturing.$invalid && submitted}">
-					<input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" ng-min="1900" string-to-number/>
+					<input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" max="currentYear" min="1900" string-to-number/>
 				</div>
 				<div class="col-sm-3 form-group">
 					<div class="input-group">
 						<input class="form-control" name="requestDate" id="requestDate" ng-model="addTransactionVm.enterpriseValuation.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo Date"/>
 	             		 <label for="requestDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceDate.$invalid && submitted}">
+					<div class="input-group">
+						<input  class="form-control" id="customerInvoiceDate" name="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+						<label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+					</div>
+				</div>
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceValue.$invalid && submitted}">
+					<input type="number" class="form-control" name="customerInvoiceValue" min="0" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" placeholder="Invoice Value">
 				</div>
 			</div>
 			<div class="row">

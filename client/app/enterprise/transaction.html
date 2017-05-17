@@ -9,14 +9,14 @@
       <h4>Add New Request  </h4>
     </div>    
     <div class="col-sm-offset-2 col-sm-2 text-right">
-      <h4>
+      
         <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-block" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
-      </h4>
+      
     </div>
     <div class="col-sm-2 text-right">
-      <h4>
+      
         <button class="btn btn-success btn-block" ng-click="enterpriseTransactionVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
-      </h4>
+     
     </div>
   </div>
     <legend></legend>
@@ -48,7 +48,7 @@
       </div>
     </div>
     <legend></legend>
-    <div class="row form-group">
+    <div class="row">
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="enterpriseTransactionVm.isSubmitAllowed()">Submit to Agency</button>
       </div>
@@ -93,6 +93,7 @@
             <th>Customer Transaction ID</th>
             <th>Job ID</th>
             <th>Asset No.</th>
+            <th>Request Date</th>
             <th>Status</th>
             <th>Remark</th>
             <th></th>
@@ -110,6 +111,7 @@
             <td>{{enterpriseValuation.customerTransactionId}}</td>
             <td>{{enterpriseValuation.jobId}}</td>
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
+            <td>{{enterpriseValuation.requestDate | date:'MM/dd/yyyy'}}</td>
             <td>{{enterpriseValuation.status}}</td>
             <td>{{enterpriseValuation.remarks}}</td>
             <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>

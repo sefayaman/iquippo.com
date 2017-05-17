@@ -378,6 +378,7 @@ footer .subscribe{height: 40px;}
 /* admin css*/
 #wrapper{padding-left:0;}
 #page-wrapper{width:100%;padding:0;background-color:#fff;margin-top:0px;}
+#page-wrapper .form-control{height: 34px;}
 .huge{font-size:50px;line-height:normal;}
 @media(min-width:768px){
   #wrapper{padding-left:225px;}
@@ -415,7 +416,7 @@ ul.alert-dropdown{width:200px;}
 #wrapper .nav-tabs > li,#wrapper .nav-tabs > li.active{width:25%;display:inline-table;float:left;border-radius:0;border:0;border-right:1px solid #666;}
 #wrapper .nav-tabs > li a,#wrapper .nav-tabs > li.active a{outline:none;}
 #wrapper .nav-tabs > li:last-child{border:0;}
-.table{width:100%;max-width:100%;margin-bottom:0px;border:1px solid rgba(128,128,128,0.26);}
+.table{width:100%;max-width:100%;border:1px solid rgba(128,128,128,0.26);}
 .table>thead>tr>th{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;}
 .table>tbody>tr>td{border-right:1px solid rgba(128,128,128,0.26);font-size:13px;vertical-align:middle;text-align:left;}
 #add{margin-top:20px;float:right;font-size:12px;}
