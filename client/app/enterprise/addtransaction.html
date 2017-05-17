@@ -66,10 +66,7 @@
             <input type="text" class="form-control" name="userName" ng-model="addTransactionVm.enterpriseValuation.userName" disabled placeholder="User Name" disabled/>
           </div>
           <div class="col-sm-3"> 
-            <div class="input-group">
-              <input class="form-control" name="requestDate" id="requestdate" ng-model="addTransactionVm.enterpriseValuation.requestDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Request Date"/>
-              <label for="requestdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
-            </div>
+              <input class="form-control" name="requestDate" id="requestdate" ng-model="addTransactionVm.enterpriseValuation.requestDate" ng-disabled="true" placeholder="Request Date" />
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
             <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="Asset No."/>

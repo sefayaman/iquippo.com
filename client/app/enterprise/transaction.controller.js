@@ -30,7 +30,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
-  vm.enterpriseTemplate = 'Valuation_Template.xlsx';
+  vm.enterpriseTemplateUpload = 'Enterprise_Valuation_Template.xlsx';
+  vm.enterpriseTemplateUpdate = 'Enterprise_Valuation_Update_Template.xlsx';
+  vm.adminTemplateUpload = 'Admin_Valuation_Template.xlsx';
+  vm.adminTemplateUpdate = 'Admin_Valuation_Update_Template.xlsx';
+  
   vm.agencyTemplate = 'Valuation_Report.xlsx';
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
