@@ -13,10 +13,9 @@
     function mailtemplates(reciever, subject, mailTemplate, dataToSend) {
       data['to'] = reciever;
       data['subject'] = subject;
-      notificationSvc.sendNotification(mailTemplate, data, dataToSend.
+      notificationSvc.sendNotification(mailTemplate, data, dataToSend,
         'email');
     }
-
 
     function negotiation(dataNegotiate, flag) {
       return $http.post('api/negotiate/', dataNegotiate)
