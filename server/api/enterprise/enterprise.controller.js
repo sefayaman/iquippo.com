@@ -278,7 +278,7 @@ function validateData(options,obj){
 
   madnatoryParams.some(function(x){
     if(!obj[x]){
-      err = 'Missing Parameter:  ' + x;
+      err = 'Missing Parameter:  ' + fieldsConfig.REVERS_MAPPING[x];
       return false;
     }
   });
