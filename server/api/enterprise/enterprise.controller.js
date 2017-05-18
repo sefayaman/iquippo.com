@@ -33,6 +33,7 @@ var commonController = require('./../common/common.controller');
 var notification = require('./../../components/notification.js');
 var VALUATION_REQUEST = "ValuationRequest";
 var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
+var DEFAULT_PURPOSE = "Financing";
 
 exports.get = function(req, res) {
   
@@ -474,6 +475,9 @@ exports.bulkUpload = function(req, res) {
     }
 
     function validatePurpose(callback){
+      if(row.purpose == DEFAULT_PURPOSE)
+        return callback();
+
       purposeModel.find({name : row.purpose}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating purpose');
@@ -929,7 +933,7 @@ exports.bulkModify = function(req, res) {
     }
 
     function validatePurpose(callback){
-      if(!row.purpose)
+      if(!row.purpose || row.purpose == DEFAULT_PURPOSE)
         return callback();
 
       purposeModel.find({name : row.purpose}).exec(function(err,result){
