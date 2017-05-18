@@ -5,6 +5,10 @@
       "jshint.jshintrc":".jshintrc",
       "include": "(\\.js$)"
     },
+    "jslint": {
+      "type": "jslint",
+      "include": "(\\.js$)"
+    },
     "json":{
       "type": "json",
       "include": "(\\.json$)"
