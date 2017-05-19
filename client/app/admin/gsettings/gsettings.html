@@ -292,7 +292,7 @@
 		<!--Select Auction  -->
 		<div ng-if="gsettingVm.tabValue == 'date'">
 			<uib-tabset justified="true" class="asset-auction">
-			<uib-tab heading="Auction" select="gsettingVm.onActionTabClick()">
+			<uib-tab heading="Auction" select="gsettingVm.onActionTabClick('auctionmaster')">
 			<!-- <form name="invMasterForm" novalidate class="invMasterForm"> -->
 			<p>Download the <a href="/download/templates/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
 			
@@ -483,7 +483,7 @@
 		</div>
 		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'auctionmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
 		</uib-tab>
-		<uib-tab heading="Assets in Auction" select="gsettingVm.onActionTabClick()">
+		<uib-tab heading="Assets in Auction" select="gsettingVm.onActionTabClick('auctionrequest')">
 		<div class="row">
 			<div class="col-sm-8">
 				<h4>Assets in Auction</h4>

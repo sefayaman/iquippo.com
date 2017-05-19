@@ -9,7 +9,6 @@
         var vm = this;
         vm.tabValue = 'loc';
         vm.onTabChange = onTabChange;
-        $scope.pager = PagerSvc.getPager();
         // vm.subCategory = {};
         // vm.subCategory.category = {};
         // vm.subCatEdit = false;
@@ -106,7 +105,7 @@
 
         //pagination variables
         var prevPage = 0;
-        vm.itemsPerPage = 1;
+        vm.itemsPerPage = 50;
         vm.currentPage = 1;
         vm.totalItems = 0;
         vm.totalMItems = 0;
@@ -191,7 +190,7 @@
                     getAuctionMaster(dataToSend);
                     loadAuctionData();
                     loadAllCategory();
-                    getApprovedAuctionAsset(dataToSend);
+                    //getApprovedAuctionAsset(dataToSend);
                     break;
                 case 'inv':
                     getInvitationMasterData();
@@ -763,9 +762,18 @@
             vm.auctionData = {};
         }
 
-        function onActionTabClick() {
+        function onActionTabClick(param) {
             $scope.isAssetCollapsed = true;
             $scope.isCollapsed = true;
+            resetPagination();
+            switch (param) {
+                case "auctionmaster":
+                    getAuctionMaster(dataToSend);
+                    break;
+                case "auctionrequest":
+                    getApprovedAuctionAsset(dataToSend);
+                    break;
+            }
         }
 
         function saveAuctionMaster(form) {
@@ -847,16 +855,25 @@
             vm.auctionEdit = true;
             $scope.isCollapsed = false;
         }
-
+          
         function getAuctionMaster(filter) {
-            $scope.pager.copy(filter);
+          
+            filter = filter || {};
+            filter.prevPage = prevPage;
+            filter.currentPage = vm.currentPage;
+            filter.first_id = first_id;
+            filter.last_id = last_id;
 
             AuctionMasterSvc.getFilterOnAuctionMaster(filter)
                 .then(function(result) {
                     getAuctionWiseProductData(result);
                     vm.auctions = result.items;
                     vm.totalItems = result.totalItems;
-                    $scope.pager.update(result.items,result.totalItems);
+                    prevPage = vm.currentPage;
+                    if (vm.auctions && vm.auctions.length > 0) {
+                        first_id = vm.auctions[0]._id;
+                        last_id = vm.auctions[vm.auctions.length - 1]._id;
+                    }
                 });
         }
 
