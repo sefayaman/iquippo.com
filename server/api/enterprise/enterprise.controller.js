@@ -258,6 +258,7 @@ function validateData(options,obj){
   var madnatoryParams = options.madnatoryParams || [];
   var numericCols = options.numericCols || [];
   var dateParams = options.dateParams || [];
+  var madnatorySpecialParams = options.madnatorySpecialParams || [];
   var err;
   numericCols.forEach(function(x){
     if(obj[x] && isNaN(obj[x])){
@@ -283,6 +284,20 @@ function validateData(options,obj){
     }
   });
 
+  var found = false;
+  var msgStr = "";
+
+  madnatorySpecialParams.some(function(x){
+  if(obj[x]){
+    found = true;
+    return false;
+  }
+  msgStr += fieldsConfig.REVERS_MAPPING[x] + ", ";
+  });
+
+  if(!found){
+    err = "Atleast one of these four Parameter required " + msgStr;
+  }
   return err;
 }
 
@@ -383,7 +398,8 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : ['customerInvoiceValue'],
     dateParams : ['customerInvoiceDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'],
+    madnatorySpecialParams : ['engineNo','chassisNo','registrationNo','serialNo']
   };
   
   if(user.role == 'admin')
