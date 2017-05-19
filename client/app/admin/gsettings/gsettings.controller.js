@@ -4,11 +4,12 @@
     angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
     //Controller function
-    function GSettingCtrl($scope, $rootScope, Auth, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, $window) {
+    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, $window) {
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
         var vm = this;
         vm.tabValue = 'loc';
         vm.onTabChange = onTabChange;
+        $scope.pager = PagerSvc.getPager();
         // vm.subCategory = {};
         // vm.subCategory.category = {};
         // vm.subCatEdit = false;
@@ -105,7 +106,7 @@
 
         //pagination variables
         var prevPage = 0;
-        vm.itemsPerPage = 50;
+        vm.itemsPerPage = 1;
         vm.currentPage = 1;
         vm.totalItems = 0;
         vm.totalMItems = 0;
@@ -848,21 +849,14 @@
         }
 
         function getAuctionMaster(filter) {
-            filter = filter || {};
-            filter.prevPage = prevPage;
-            filter.currentPage = vm.currentPage;
-            filter.first_id = first_id;
-            filter.last_id = last_id;
+            $scope.pager.copy(filter);
+
             AuctionMasterSvc.getFilterOnAuctionMaster(filter)
                 .then(function(result) {
                     getAuctionWiseProductData(result);
                     vm.auctions = result.items;
-                    vm.totalMItems = result.totalItems;
-                    prevPage = vm.currentPage;
-                    if (vm.auctions && vm.auctions.length > 0) {
-                        first_id = vm.auctions[0]._id;
-                        last_id = vm.auctions[vm.auctions.length - 1]._id;
-                    }
+                    vm.totalItems = result.totalItems;
+                    $scope.pager.update(result.items,result.totalItems);
                 });
         }
 
@@ -1549,7 +1543,7 @@
 
         function fireCommand(reset, filterObj, requestFor) {
             if (reset)
-                resetPagination();
+                $scope.pager.reset();
             var filter = {};
             if (!filterObj)
                 angular.copy(dataToSend, filter);
