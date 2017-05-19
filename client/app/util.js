@@ -274,7 +274,7 @@ angular.module('sreizaoApp').factory('PagerSvc',PagerService);
       function getPager(totalItems, currentPage, itemsPerPage) {
 
           var pager = {};
-          pager.itemsPerPage = itemsPerPage || 1;
+          pager.itemsPerPage = itemsPerPage || 50;
           pager.currentPage = currentPage || 1;
           pager.totalItems = totalItems || 0;
           pager.prevPage = 0 ;
