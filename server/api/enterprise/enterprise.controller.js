@@ -1715,19 +1715,25 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
         val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-      if(keyObj.type && keyObj.type == 'url' && val && val.filename){
-        if(val.external === true)
+      if(keyObj.type && keyObj.type == 'url' && val){
+        if(val.filename){
+          if(val.external === true)
           val = val.filename;
-        else
-          val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+          else
+            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+        }else
+          val = "";
+        
       }
 
        dataArr[idx + 1].push(val);
     });
 
   });
+
   var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
+
   var wb = Utility.getWorkbook();
   wb.SheetNames.push(ws_name);
   wb.Sheets[ws_name] = ws;
