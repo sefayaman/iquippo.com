@@ -290,15 +290,15 @@ function validateData(options,obj){
   madnatorySpecialParams.some(function(x){
   if(obj[x]){
     found = true;
-    return false;
+    return true;
   }
-  msgStr += fieldsConfig.REVERS_MAPPING[x] + ", ";
+  msgStr += fieldsConfig.REVERS_MAPPING[x] + ",";
   });
 
   if(!found){
-    err = "Atleast one of these four Parameter required " + msgStr;
+    err = "Atleast one of these four Parameter required : " + msgStr;
   }
-  return err;
+  return false;
 }
 
 function parseExcel(options){  
