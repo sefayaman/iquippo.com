@@ -169,7 +169,7 @@ module.exports = {
 		"Engine No":{key:"engineNo"},
 		"Chassis No":{key:"chassisNo"},
 		"Regn No":{key:"registrationNo"},
-		"Invoice Date":{key:"customerInvoiceDate"},
+		"Invoice Date":{key:"customerInvoiceDate",type:'date'},
 		"Invoice Value":{key:"customerInvoiceValue"},
 		"Yard Information/Asset Address":{key:"yardParked"},
 		"Location":{key:"city"},
