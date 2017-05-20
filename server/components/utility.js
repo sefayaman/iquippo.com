@@ -22,9 +22,7 @@ function toIST(value){
 
 function paginatedResult(req,res,modelRef,filter,result){
 
-   console.log("filter data",filter);
-  var bodyData = req.body || req.query;
-  console.log("PaginatedBody",bodyData);
+  var bodyData = req.method === 'GET' ? req.query : req.body ;
   var pageSize = bodyData.itemsPerPage || 50;
   var first_id = bodyData.first_id;
   var last_id = bodyData.last_id;
