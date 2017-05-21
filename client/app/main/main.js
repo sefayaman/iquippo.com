@@ -182,7 +182,7 @@ angular.module('sreizaoApp')
       .state('valuation', {
         url:"/valuation",
         templateUrl: 'app/staticpages/valuation.html',
-        controller:"ValuationCtrl",
+        /*controller:"ValuationCtrl",*/
         layout:'client',
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.valuation.title;

@@ -1,6 +1,15 @@
 <div>
   <div  ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
-    Download the <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplate}}" target="_blank">template</a> for Upload/Update Request which is visible to Enterprise only.
+    Download the 
+    <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplateUpload}}" target="_blank" ng-if="isEnterprise()||isEnterpriseUser()">template</a>
+    <a href="/download/templates/{{enterpriseTransactionVm.adminTemplateUpload}}" target="_blank" ng-if ="isAdmin()">template</a>
+     for Upload Request which is visible to Enterprise only. Maximum 99 rows
+  </div>
+  <div  ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
+    Download the 
+    <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplateUpdate}}" target="_blank" ng-if="isEnterprise()||isEnterpriseUser()">template</a>
+    <a href="/download/templates/{{enterpriseTransactionVm.adminTemplateUpdate}}" target="_blank" ng-if="isAdmin()">template</a>
+     for Update Request which is visible to Enterprise only. Maximum 99 rows
   </div>
   <div  ng-if="isPartner() || isAdmin()">
     Download the <a href="/download/templates/{{enterpriseTransactionVm.agencyTemplate}}" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
@@ -9,14 +18,14 @@
       <h4>Add New Request  </h4>
     </div>    
     <div class="col-sm-offset-2 col-sm-2 text-right">
-      <h4>
+      
         <a href="javascript:void(0)" ng-click="onTabChange('addtransaction')" class="btn btn-success btn-block" ng-if="isAdmin() || isEnterprise() || isEnterpriseUser()"><i class="fa fa-plus"></i> Add New Request</a>
-      </h4>
+      
     </div>
     <div class="col-sm-2 text-right">
-      <h4>
+      
         <button class="btn btn-success btn-block" ng-click="enterpriseTransactionVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
-      </h4>
+     
     </div>
   </div>
     <legend></legend>
@@ -48,11 +57,21 @@
       </div>
     </div>
     <legend></legend>
-    <div class="row form-group">
+    <div class="row">
       <div class="col-sm-2">
         <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="enterpriseTransactionVm.isSubmitAllowed()">Submit to Agency</button>
       </div>
-      <div class="col-sm-offset-2 col-sm-5">
+       <div class="form-group col-sm-2">
+                    <select class="form-control" name="statusType" ng-model="enterpriseTransactionVm.statusType" ng-change="enterpriseTransactionVm.fireCommand(true)">
+                      <option value="">Select Status Type</option>
+                      <option value="Request Initiated">Request Initiated</option>
+                      <option value="Request Submitted">Request Submitted</option>
+                      <option value="Invoice Generated">Invoice Generated</option>
+                      <option value="Valuation Report Submitted">Valuation Report Submitted</option>
+                    </select>
+                    <i class="caret"></i>
+                  </div>
+      <div class="col-sm-5">
         <div class="row">
           <div class="col-sm-6">
             <div class="input-group">
@@ -83,6 +102,7 @@
             <th>Customer Transaction ID</th>
             <th>Job ID</th>
             <th>Asset No.</th>
+            <th>Request Date</th>
             <th>Status</th>
             <th>Remark</th>
             <th></th>
@@ -100,14 +120,15 @@
             <td>{{enterpriseValuation.customerTransactionId}}</td>
             <td>{{enterpriseValuation.jobId}}</td>
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
+            <td>{{enterpriseValuation.requestDate | date:'MM/dd/yyyy'}}</td>
             <td>{{enterpriseValuation.status}}</td>
             <td>{{enterpriseValuation.remarks}}</td>
             <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>
             <td>
-              <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)" ng-if="enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType)"><i class="fa fa-pencil"></i> </a>
+              <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)" ng-if="enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType, enterpriseValuation.status)"><i class="fa fa-pencil"></i> </a>
               <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
               <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType)"><i class="fa fa-trash"></i> </a>
+              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && isAdmin()"><i class="fa fa-trash"></i> </a>
 
             </td>
             

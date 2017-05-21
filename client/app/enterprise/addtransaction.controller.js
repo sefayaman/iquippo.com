@@ -2,10 +2,11 @@
 'use strict';
 angular.module('sreizaoApp').controller('AddTransactionCtrl',AddTransactionCtrl);
 function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $state, notificationSvc,uploadSvc ,vendorSvc, EnterpriseSvc, userSvc, LocationSvc, categorySvc, brandSvc, modelSvc,ValuationPurposeSvc,AssetGroupSvc) {
+  
   var vm = this;
   var editMode = $state.current.name == "enterprisevaluation.edittransaction"?true:false;
 
-  vm.enterpriseValuation = {purpose:"Financing"};
+  //vm.enterpriseValuation = {purpose:"Financing"};
   $scope.currentYear = new Date().getFullYear();
 
   $scope.isEdit = false;
@@ -18,8 +19,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   $scope.getAssetGroup = getAssetGroup;
 
   vm.requestTypeList = [{name:"Valuation"},{name:"Inspection"}];
-  vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
-
+  /*vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
+  vm.enterpriseValuation.requestDate = moment(new Date()).format('DD/MM/YYYY');
+  vm.enterpriseValuation.agency = {};*/
+          
   vm.onCountryChange = onCountryChange;
   vm.onStateChange = onStateChange;
   vm.onBrandChange = onBrandChange;
@@ -31,6 +34,11 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   vm.addOrUpdateRequest = addOrUpdateRequest;
   
   function init(){
+
+    vm.enterpriseValuation = {purpose:"Financing"};
+    vm.enterpriseValuation.requestType = vm.requestTypeList[0].name;
+    vm.enterpriseValuation.requestDate = moment(new Date()).format('MM/DD/YYYY');
+    vm.enterpriseValuation.agency = {};
 
     var userFilter = {};
     userFilter.role = "enterprise";
@@ -46,70 +54,81 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           vm.enterpriseValuation.requestType = "";
     }
 
+    if(!editMode){
+      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
+    }
+
+    ValuationPurposeSvc.get(null)
+    .then(function(result){
+      $scope.valuationList = result;
+    });
+
+    brandSvc.getBrandOnFilter({})
+    .then(function(result) {
+       var chache = {};
+       vm.brandList = [];
+       result.forEach(function(item){
+          if(!chache[item.name]){
+            vm.brandList.push(item);
+            chache[item.name] = item._id;
+          }
+       });
+    });
+    
     userSvc.getUsers(userFilter).then(function(data){
       vm.enterprises = data;
       if(!editMode && isEnterprise && data.length > 0){
         vm.enterpriseValuation.enterprise = {};
         vm.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
+        setAgency(data[0].availedServices,vm.enterpriseValuation.requestType);
         setCustomerData(data[0].enterpriseId);
       }
     });
-    if(!editMode){
-      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
-    }
-
-      ValuationPurposeSvc.get(null)
-      .then(function(result){
-        $scope.valuationList = result;
+    if($stateParams.id) {
+      $scope.isEdit = true;
+      EnterpriseSvc.getRequestOnId($stateParams.id)
+        .then(function(result){
+          if(result) {
+            vm.enterpriseValuation = result;
+            onBrandChange(vm.enterpriseValuation.brand, true);
+            onCountryChange(vm.enterpriseValuation.country, true);
+            onStateChange(vm.enterpriseValuation.state, true);
+            if (vm.enterpriseValuation.requestDate)
+              vm.enterpriseValuation.requestDate = moment(vm.enterpriseValuation.requestDate).format('MM/DD/YYYY');
+            if (vm.enterpriseValuation.repoDate)
+              vm.enterpriseValuation.repoDate = moment(vm.enterpriseValuation.repoDate).format('MM/DD/YYYY');
+            if (vm.enterpriseValuation.invoiceDate)
+              vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
+            if (vm.enterpriseValuation.reportDate)
+              vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
+             if (vm.enterpriseValuation.customerInvoiceDate)
+              vm.enterpriseValuation.customerInvoiceDate = moment(vm.enterpriseValuation.customerInvoiceDate).format('MM/DD/YYYY');
+            vendorSvc.getAllVendors().then(function(){
+              vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
+            });
+          }
       });
-
-      brandSvc.getBrandOnFilter({})
-      .then(function(result) {
-         var chache = {};
-         vm.brandList = [];
-         result.forEach(function(item){
-            if(!chache[item.name]){
-              vm.brandList.push(item);
-              chache[item.name] = item._id;
-            }
-         });
-      })
-      
-      if($stateParams.id) {
-        $scope.isEdit = true;
-        EnterpriseSvc.getRequestOnId($stateParams.id)
-          .then(function(result){
-            if(result) {
-              vm.enterpriseValuation = result;
-              onBrandChange(vm.enterpriseValuation.brand, true);
-              onCountryChange(vm.enterpriseValuation.country, true);
-              onStateChange(vm.enterpriseValuation.state, true);
-              if (vm.enterpriseValuation.requestDate)
-                vm.enterpriseValuation.requestDate = moment(vm.enterpriseValuation.requestDate).format('MM/DD/YYYY');
-              if (vm.enterpriseValuation.repoDate)
-                vm.enterpriseValuation.repoDate = moment(vm.enterpriseValuation.repoDate).format('MM/DD/YYYY');
-              if (vm.enterpriseValuation.invoiceDate)
-                vm.enterpriseValuation.invoiceDate = moment(vm.enterpriseValuation.invoiceDate).format('MM/DD/YYYY');
-              if (vm.enterpriseValuation.reportDate)
-                vm.enterpriseValuation.reportDate = moment(vm.enterpriseValuation.reportDate).format('MM/DD/YYYY');
-               vendorSvc.getAllVendors()
-               .then(function(){
-                  vm.valAgencies = vendorSvc.getVendorsOnCode(result.requestType);
-                });
-              
-            }
-        });
-      }else{
-        vendorSvc.getAllVendors()
-        .then(function(){
-          vm.valAgencies = vendorSvc.getVendorsOnCode(vm.enterpriseValuation.requestType);
-        });
-      }
+    }else{
+      vendorSvc.getAllVendors().then(function(){
+        vm.valAgencies = vendorSvc.getVendorsOnCode(vm.enterpriseValuation.requestType);
+      });
+    }
+  }
+  
+  function setAgency(data,code) {
+    if(data.length > 0) {
+      data.forEach(function(item) {
+        if(item.code === code) {
+          vendorSvc.getAllVendors().then(function(){
+            vm.enterpriseValuation.agency.partnerId = item.partnerId;
+          });  
+        }
+      });
+    }
   }
 
   function showEnterpriseSection(){
      return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser() || Auth.isPartner();
-
   }
 
   function showPaymentSection(){
@@ -161,12 +180,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       });
     };
 
-     function getPartners(code){
-            vm.valAgencies = [];
-            if(!code)
-                return;
-            vm.valAgencies = vendorSvc.getVendorsOnCode(code);
-      }
+    function getPartners(code){
+      vm.valAgencies = [];
+      vm.enterpriseValuation.agency.partnerId = "";
+      if(!code)
+        return;
+      vm.valAgencies = vendorSvc.getVendorsOnCode(code);
+      if(vm.enterprises && (Auth.isEnterprise() || Auth.isEnterpriseUser()))
+        setAgency(vm.enterprises[0].availedServices,code);
+    }
 
     function onBrandChange(brandName, noChange) {
         if (!noChange)
@@ -319,6 +341,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     function reset() {
       vm.enterpriseValuation = {purpose:"Financing"};
       $scope.submitted = false;
+      init();
     }
 
      //starting point

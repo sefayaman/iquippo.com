@@ -161,7 +161,7 @@
     //End
     var facebookConversionSent = false;
     $scope.addValuationQuote = addValuationQuote;
-    $scope.resetClick = resetClick;
+    $scope.resetClick = resetData;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.onChange = onChange;
@@ -169,94 +169,36 @@
     $scope.onStateChange = onStateChange;
     $scope.onPrdCountryChange = onPrdCountryChange;
     $scope.onPrdStateChange = onPrdStateChange;
-    $scope.getAssetGroup = getAssetGroup;
     $scope.getVendors = getVendors;
 
     $scope.valuationQuote = {};
+    $scope.valuationQuote.requestType = "Valuation";
     $scope.valuationQuote.product = {};
     $scope.valuationService = {};
     $scope.currentYear = new Date().getFullYear();
     var filter = {};
-    $scope.isEnterprise = false;
-    $scope.enterpriseValuation = {};
     $scope.valuationQuote.product.country = "India";
-    $scope.getAgent = getAgent;
-    $scope.enterpriseOwnerData = {};
     $scope.valuationQuote.valuation = "Financing";
 
-    function getAssetGroup(val) {
-
-      var serData = {};
-      serData['assetCategory'] = val;
-      if ($scope.enterpriseValuation.agency && $scope.enterpriseValuation.agency.partnerId)
-        serData['partnerId'] = $scope.enterpriseValuation.agency.partnerId;
-      if ($scope.enterpriseValuation.enterprise && $scope.enterpriseValuation.enterprise.enterpriseId)
-        serData['enterpriseId'] = $scope.enterpriseValuation.enterprise.enterpriseId;
-      return AssetGroupSvc.get(serData)
-        .then(function(result) {
-          return result.map(function(item) {
-            return item.assetCategory;
-          });
-        });
-    };
-
-    $scope.$on('callValuationRequest', function() {
-      init();
-    })
-
     function init() {
-      
-      $scope.enterpriseValuation.requestType = "Valuation";
-      //$scope.getAgent('Valuation');
-
-      Auth.isLoggedInAsync(function(loggedIn) {
-        if (loggedIn) {
-          if (Auth.isEnterprise() || Auth.isEnterpriseUser()) {
-            $scope.isEnterprise = true;
-
-            if(!Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection'))
-               $scope.enterpriseValuation.requestType = "Inspection";
-
-            if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
-               $scope.enterpriseValuation.requestType = "";
-
-            getEnterpriseData(function(){
-               $scope.getAgent($scope.enterpriseValuation.requestType);
-            });
-            brandSvc.getBrandOnFilter({})
-              .then(function(result) {
-                var chache = {};
-                $scope.allBrandList = [];
-                result.forEach(function(item){
-                  if(!chache[item.name]){
-                    $scope.allBrandList.push(item);
-                    chache[item.name] = item._id;
-                  }
-                });
-              })
-          } else {
-            if(Auth.isCustomer() || Auth.isAdmin() || Auth.isChannelPartner()){
-              $scope.getAgent($scope.enterpriseValuation.requestType);
-            }
-            /*console.log(Auth.getCurrentUser());*/
-            loadCategory();
-          }
-          setUser();
-        } else {
-          loadCategory();
-        }
-
-      })
+      loadCategory();
       if ($scope.valuationQuote.product && $scope.valuationQuote.product.country)
         onPrdCountryChange($scope.valuationQuote.product.country)
       ValuationPurposeSvc.get(null)
-        .then(function(result) {
-          $scope.valuationList = result;
-        });
-    
-   
+      .then(function(result) {
+        $scope.valuationList = result;
+      });
+      vendorSvc.getAllVendors()
+       .then(function(){
+         $scope.vendorList = vendorSvc.getVendorsOnCode($scope.valuationQuote.requestType);
+       });
 
+       PaymentMasterSvc.getAll();
 
+      Auth.isLoggedInAsync(function(loggedIn){
+      if(loggedIn)
+         setUser();
+      });
     }
 
     function loadCategory() {
@@ -269,99 +211,6 @@
       $scope.hstep = 1;
       $scope.mstep = 1;
       $scope.ismeridian = true;
-
-    }
-
-    PaymentMasterSvc.getAll()
-      .then(function(result) {
-        $scope.payments = result;
-        vendorSvc.getAllVendors()
-          .then(function() {
-            var agency = vendorSvc.getVendorsOnCode('Valuation');
-            $scope.valAgencies = [];
-            agency.forEach(function(item) {
-              var pyMst = PaymentMasterSvc.getPaymentMasterOnSvcCode("Valuation", item._id);
-              if (pyMst && pyMst.fees)
-                $scope.valAgencies[$scope.valAgencies.length] = item;
-              else if (pyMst && pyMst.fees === 0)
-                $scope.valAgencies[$scope.valAgencies.length] = item;
-            })
-          });
-
-      })
-
-    function getAgent(serviceCode) {
-      if(!serviceCode)
-          return;
-
-      if (Auth.getCurrentUser().role === "enterprise") {
-        if (Auth.getCurrentUser().availedServices && Auth.getCurrentUser().availedServices.length < 1)
-        return;
-        if (Auth.isEnterprise())
-          getAgentBasedOnUser(Auth.getCurrentUser(), serviceCode);
-        if (Auth.isEnterpriseUser())
-          getAgentBasedOnUser($scope.enterpriseOwnerData, serviceCode);
-      }
-      if (Auth.getCurrentUser().role === "customer" || Auth.getCurrentUser().role === "admin" || Auth.getCurrentUser().role === "channelpartner" ) {
-         getVendors(serviceCode);
-      }
-    }
-
-    function getAgentBasedOnUser(data, serviceCode) {
-      for (var i = 0; i < data.availedServices.length; i++) {
-        if (data.availedServices[i].code === serviceCode) {
-          filter = {};
-          filter.partnerId = data.availedServices[i].partnerId;
-          vendorSvc.getFilter(filter).then(function(result) {
-              $scope.enterpriseValuation.agency = {};
-              if (result) {
-                $scope.enterpriseValuation.agency.partnerId = result[0].partnerId;
-                $scope.enterpriseValuation.agency._id = result[0]._id;
-                $scope.enterpriseValuation.agency.name = result[0].entityName;
-                if (result[0].user.email)
-                  $scope.enterpriseValuation.agency.email = result[0].user.email;
-                $scope.enterpriseValuation.agency.mobile = result[0].user.mobile;
-              }
-            })
-            .catch(function() {
-              //error handling
-            });
-          return true;
-        }
-      }
-    }
-
-    function getEnterpriseData(callback) {
-      var userFilter = {};
-      userFilter.status = true;
-      userFilter.role = "enterprise";
-      userFilter.enterprise = true;
-      userFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
-      userSvc.getUsers(userFilter).then(function(data) {
-        var found = false;
-        if (data.length > 0) {
-          $scope.enterpriseOwnerData = data[0];
-          $scope.enterpriseValuation.enterprise = {};
-          $scope.enterpriseValuation.enterprise._id = data[0]._id;
-          $scope.enterpriseValuation.enterprise.mobile = data[0].mobile;
-          $scope.enterpriseValuation.enterprise.name = data[0].fname + " " + data[0].lname;
-          if (data[0].email)
-            $scope.enterpriseValuation.enterprise.email = data[0].email;
-          $scope.enterpriseValuation.enterprise.enterpriseId = data[0].enterpriseId;
-          if (data[0].employeeCode)
-            $scope.enterpriseValuation.enterprise.employeeCode = data[0].employeeCode;
-
-          $scope.enterpriseValuation.customerPartyNo = data[0].mobile;
-          $scope.enterpriseValuation.customerPartyName = (data[0].fname || "") + " " + (data[0].mname || "") + " " + (data[0].lname || "");
-          found = true;
-        }
-        if(callback)
-          callback(found);
-      })
-      .catch(function(err){
-        if(callback)
-          callback(false);
-      });
     }
 
     function onCountryChange(country, noChange) {
@@ -458,13 +307,14 @@
     }
 
     function onBrandChange(brandName) {
+      
       $scope.modelList = [];
       $scope.valuationQuote.product.model = "";
-      $scope.enterpriseValuation.model = "";
       if (!brandName)
         return;
       var filter = {};
       filter['brandName'] = brandName;
+      filter.categoryName= $scope.valuationQuote.product.category;
       modelSvc.getModelOnFilter(filter)
         .then(function(result) {
           $scope.modelList = result;
@@ -493,14 +343,16 @@
 
     function getVendors(requestType) {
       $scope.vendorList = [];
-      $scope.vendorList = vendorSvc.getVendorsOnCode(requestType);
+      if(requestType) 
+        $scope.vendorList = vendorSvc.getVendorsOnCode(requestType);
       return $scope.vendorList;
     }
 
-    function addValuationQuote(evt) {
+    function addValuationQuote(form) {
+      
       if (!Auth.getCurrentUser()._id) {
         Modal.alert("Please Login/Register for submitting your Valuation Request.", true);
-        $scope.form.submitted = false;
+        $scope.submitted = false;
         return;
       }
 
@@ -508,32 +360,23 @@
       if ($scope.valuationQuote.country && $scope.valuationQuote.mobile) {
         var value = UtilSvc.validateMobile($scope.valuationQuote.country, $scope.valuationQuote.mobile);
         if (!value) {
-          $scope.form.mobile.$invalid = true;
+          form.mobile.$invalid = true;
           ret = true;
         } else {
-          $scope.form.mobile.$invalid = false;
+          form.mobile.$invalid = false;
           ret = false;
         }
       }
 
       if ($scope.valuationQuote.schedule == 'yes') {
         if (angular.isUndefined($scope.valuationQuote.scheduleDate))
-          $scope.form.scheduleDate.$invalid = true;
+          form.scheduleDate.$invalid = true;
         else
-          $scope.form.scheduleDate.$invalid = false;
+          form.scheduleDate.$invalid = false;
       }
 
-      if ($scope.form.$invalid || ret) {
-        $scope.form.submitted = true;
-        return;
-      }
-
-      if (!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection') && Auth.getCurrentUser().role === "enterprise") {
-        Modal.alert("User does not have any request type.", true);
-        return;
-      } 
-      if(!$scope.enterpriseValuation.requestType) {
-        Modal.alert("Please select request type.", true);
+      if (form.$invalid || ret) {
+        $scope.submitted = true;
         return;
       }
 
@@ -542,59 +385,23 @@
 
       if ($scope.valuationQuote.product.contactNumberAsAbove)
         $scope.valuationQuote.product.contactNumber = $scope.valuationQuote.mobile;
-
-      if ($scope.isEnterprise)
-        enterpriseValuationSave();
-      else {
         valuationQuoteSave();
-      }
 
     }
 
-    function enterpriseValuationSave() {
-      $scope.enterpriseValuation.createdBy = {};
-      $scope.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
-      if (Auth.getCurrentUser().email)
-        $scope.enterpriseValuation.createdBy.email = Auth.getCurrentUser().email;
-      $scope.enterpriseValuation.createdBy.mobile = Auth.getCurrentUser().mobile;
-      $scope.enterpriseValuation.userName = $scope.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-      if ($scope.valuationQuote.valuation)
-        $scope.enterpriseValuation.purpose = $scope.valuationQuote.valuation;
-
-      if ($scope.valuationQuote.product) {
-        if ($scope.valuationQuote.product.mfgYear)
-          $scope.enterpriseValuation.yearOfManufacturing = $scope.valuationQuote.product.mfgYear;
-        if ($scope.valuationQuote.product.description)
-          $scope.enterpriseValuation.assetDescription = $scope.valuationQuote.product.description;
-        if ($scope.valuationQuote.product.country)
-          $scope.enterpriseValuation.country = $scope.valuationQuote.product.country;
-        if ($scope.valuationQuote.product.state)
-          $scope.enterpriseValuation.state = $scope.valuationQuote.product.state;
-        if ($scope.valuationQuote.product.city)
-          $scope.enterpriseValuation.city = $scope.valuationQuote.product.city;
-        if ($scope.valuationQuote.product.contactPerson)
-          $scope.enterpriseValuation.contactPerson = $scope.valuationQuote.product.contactPerson;
-        if ($scope.valuationQuote.product.contactNumber)
-          $scope.enterpriseValuation.contactPersonTelNo = $scope.valuationQuote.product.contactNumber;
-      }
-
-      EnterpriseSvc.setStatus($scope.enterpriseValuation, EnterpriseValuationStatuses[0]);
-
-      EnterpriseSvc.save($scope.enterpriseValuation).then(function(res) {
-        resetData();
-        Modal.alert(informationMessage.productQuoteSuccess, true);
-      })
-    }
 
     function valuationQuoteSave() {
 
       var paymentTransaction = {};
       paymentTransaction.payments = [];
       paymentTransaction.totalAmount = 0;
-      paymentTransaction.requestType = $scope.enterpriseValuation.requestType;
+      paymentTransaction.requestType = $scope.valuationQuote.requestType;
 
       var payObj = {};
-      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.enterpriseValuation.requestType, $scope.valuationQuote.partnerId);
+      var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.valuationQuote.requestType, $scope.valuationQuote.partnerId);
+      if(!pyMaster)
+        pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode($scope.enterpriseValuation.requestType);
+
       payObj.type = "valuationEnquiries";
       payObj.charge = pyMaster.fees || 5000;
       paymentTransaction.totalAmount += payObj.charge;
@@ -663,76 +470,15 @@
         .catch(function(err) {
           Modal.alert('Error while sending email');
         });
-
-      /*$http.post('/api/services', $scope.valuationService).then(function(res){
-      //Start NJ : push valuationSubmit object in GTM dataLayer
-      dataLayer.push(gaMasterObject.valuationSubmit);
-      //NJ : set valuationSubmit time
-      var valuationSubmitTime = new Date();
-      var timeDiff = Math.floor(((valuationSubmitTime - $scope.valuationStartTime)/1000)*1000);
-      gaMasterObject.valuationSubmitTime.timingValue = timeDiff;
-      ga('send', gaMasterObject.valuationSubmitTime);
-      //End*/
-      /*var data = {};
-      data['to'] = Auth;
-      data['subject'] = 'Valuation';
-      var dataToSend={};
-      dataToSend.serverPath=serverPath;
-      //$scope.valuationService.serverPath = serverPath;
-      //$scope.valuationService.quote.date = moment($scope.valuationService.quote.scheduleDate).format('DD/MM/YYYY');
-      notificationSvc.sendNotification('enquiriesQuoteValuationEmailToAdmin', data, dataToSend,'email');
-
-      data['to'] = $scope.valuationService.quote.email;
-      data['subject'] = 'Your request has been initiated successfully';
-      var dataToSend={};
-      dataToSend.serverPath=serverPath;
-      notificationSvc.sendNotification('enquiriesQuoteServicesEmailToCustomer', data,dataToSend,'email');
-      resetData();
-      Modal.alert(informationMessage.productQuoteSuccess,true);
-      //Google and Facbook conversion start
-          MarketingSvc.googleConversion();
-          if(!facebookConversionSent){
-              MarketingSvc.facebookConversion();
-              facebookConversionSent = true;
-          }
-      //Google and Facbook conversion end
-      },function(res){
-          Modal.alert(res,true);
-      });*/
     }
-
-    function resetClick() {
-      //Start NJ : push valuationReset object in GTM dataLayer
-      dataLayer.push(gaMasterObject.valuationReset);
-      //NJ : set valuationResetTime
-      var valuationResetTime = new Date();
-      var timeDiff = Math.floor(((valuationResetTime - $scope.valuationStartTime) / 1000) * 1000);
-      gaMasterObject.valuationResetTime.timingValue = timeDiff;
-      ga('send', gaMasterObject.valuationResetTime);
-      //End
-      resetData();
-    };
 
     function resetData() {
       $scope.valuationQuote = {};
+      $scope.valuationQuote.requestType = "Valuation";
       $scope.valuationQuote.product = {};
       $scope.valuationQuote.valuation = "Financing";
       $scope.valuationQuote.product.country = "India";
-      $scope.form.submitted = false;
-      if (Auth.isEnterprise() || Auth.isEnterpriseUser()) {
-        $scope.enterpriseValuation = {};
-        $scope.enterpriseValuation.requestType = "Valuation";
-        $scope.isEnterprise = true;
-        if(!Auth.isServiceAvailed('Valuation') && Auth.isServiceAvailed('Inspection'))
-           $scope.enterpriseValuation.requestType = "Inspection";
-
-        if(!Auth.isServiceAvailed('Valuation') && !Auth.isServiceAvailed('Inspection'))
-           $scope.enterpriseValuation.requestType = "";
-
-        getEnterpriseData(function(){
-           $scope.getAgent($scope.enterpriseValuation.requestType);
-        });
-      }
+      $scope.submitted = false;
       setUser();
     }
 

@@ -246,7 +246,7 @@
                             </select>
                             <!-- <i class="caret"></i> -->
                           </span>
-                          <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
+                          <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" min="0" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
                         </div>
                       </div>
                       <div class="form-group col-sm-3 check">
@@ -949,7 +949,7 @@
         <div class="row">
           <div class="form-group col-sm-5">EMD Amount </div>
           <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.emdAmount.$invalid && auctSubmitted}">
-            <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" placeholder="EMD Ammount" required>
+            <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" min="0" placeholder="EMD Ammount" required>
           </div>
         </div>
         <div class="row">

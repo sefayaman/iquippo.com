@@ -940,6 +940,7 @@ function updateAuctionRequest(data, id) {
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
 
+   console.log("request Pagination",req.body);
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
 
   var filter = {};

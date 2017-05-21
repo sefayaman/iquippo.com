@@ -175,7 +175,7 @@
               </div>        
               <div class="col-xs-12 col-sm-6">
                 <div class="" ng-class="{'has-error': form.invoiceVal.$invalid && form.submitted }"> 
-                 <input type="number" name="invoiceVal" class="form-control" placeholder="*Invoice Value" ng-model="insuranceQuote.invoiceVal" required>
+                 <input type="number" name="invoiceVal" class="form-control" min="0" placeholder="*Invoice Value" ng-model="insuranceQuote.invoiceVal" required>
                 </div>
               </div>            
             </div>  

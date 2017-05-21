@@ -90,7 +90,7 @@ function MyAccountCtrl($scope,Auth,$state,Modal,LocationSvc,userSvc,User,uploadS
         }
       }
       
-      if(vm.userInfo.aadhaarNumber) {
+      if(vm.editPersonalInfo && vm.userInfo.aadhaarNumber) {
         var validFlag = UtilSvc.validateAadhaar(vm.userInfo.aadhaarNumber, true);  
         form.aadhaarNumber.$invalid = validFlag;
         ret = validFlag;

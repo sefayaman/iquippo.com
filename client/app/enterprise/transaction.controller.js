@@ -30,7 +30,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
-  vm.enterpriseTemplate = 'Valuation_Template.xlsx';
+  vm.enterpriseTemplateUpload = 'Enterprise_Valuation_Template.xlsx';
+  vm.enterpriseTemplateUpdate = 'Enterprise_Valuation_Update_Template.xlsx';
+  vm.adminTemplateUpload = 'Admin_Valuation_Template.xlsx';
+  vm.adminTemplateUpdate = 'Admin_Valuation_Update_Template.xlsx';
+  
   vm.agencyTemplate = 'Valuation_Report.xlsx';
   vm.showDetail = showDetail;
   vm.exportExcel = exportExcel;
@@ -79,6 +83,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       if(vm.searchStr){
         filter.isSearch = true;
         filter['searchStr'] = encodeURIComponent(vm.searchStr);
+      }
+      if(vm.statusType){
+        filter.isSearch = true;
+        filter['statusType'] = encodeURIComponent(vm.statusType);
       }
       if(vm.fromDate){
         filter.isSearch = true;
@@ -294,11 +302,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
      }
 
-      function isEditAllowed(requestType){
+      function isEditAllowed(requestType, status){
         if(Auth.isAdmin() || Auth.isPartner())
           return true;
           var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
-          if(validRole && Auth.isServiceAvailed(requestType))
+          if(validRole && Auth.isServiceAvailed(requestType) && EnterpriseValuationStatuses.indexOf(status) < 2)
             return true;
           else
             return false;

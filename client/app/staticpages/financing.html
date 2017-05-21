@@ -179,7 +179,7 @@
             
                 <div class="col-xs-12 col-sm-6">
                   <div class="form-group" ng-class="{'has-error': form.amountToBeFinanced.$invalid && form.submitted }">
-                    <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" ng-value="financeQuote.amountToBeFinanced" placeholder="*Amount to be Financed" required>
+                    <input type="number" class="form-control" name="amountToBeFinanced" ng-model="financeQuote.amountToBeFinanced" min="0" ng-value="financeQuote.amountToBeFinanced" placeholder="*Amount to be Financed" required>
                   </div>
                 </div>
               </div>
