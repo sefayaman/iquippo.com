@@ -298,7 +298,7 @@ function validateData(options,obj){
   if(!found){
     err = "Atleast one of these four Parameter required : " + msgStr;
   }
-  return false;
+  return err;
 }
 
 function parseExcel(options){  
