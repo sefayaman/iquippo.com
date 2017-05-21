@@ -4,7 +4,7 @@
     angular.module('admin').controller('GSettingCtrl', GSettingCtrl);
 
     //Controller function
-    function GSettingCtrl($scope, $rootScope, Auth, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, $window) {
+    function GSettingCtrl($scope, $rootScope, Auth, PagerSvc, DTOptionsBuilder, LocationSvc, notificationSvc, SubCategorySvc, Modal, settingSvc, PaymentMasterSvc, vendorSvc, uploadSvc, AuctionMasterSvc, categorySvc, brandSvc, modelSvc, ManufacturerSvc, BannerSvc, AuctionSvc, ProductTechInfoSvc, $window) {
         $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', []);
         var vm = this;
         vm.tabValue = 'loc';
@@ -190,7 +190,7 @@
                     getAuctionMaster(dataToSend);
                     loadAuctionData();
                     loadAllCategory();
-                    getApprovedAuctionAsset(dataToSend);
+                    //getApprovedAuctionAsset(dataToSend);
                     break;
                 case 'inv':
                     getInvitationMasterData();
@@ -762,9 +762,18 @@
             vm.auctionData = {};
         }
 
-        function onActionTabClick() {
+        function onActionTabClick(param) {
             $scope.isAssetCollapsed = true;
             $scope.isCollapsed = true;
+            resetPagination();
+            switch (param) {
+                case "auctionmaster":
+                    getAuctionMaster(dataToSend);
+                    break;
+                case "auctionrequest":
+                    getApprovedAuctionAsset(dataToSend);
+                    break;
+            }
         }
 
         function saveAuctionMaster(form) {
@@ -846,18 +855,20 @@
             vm.auctionEdit = true;
             $scope.isCollapsed = false;
         }
-
+          
         function getAuctionMaster(filter) {
+          
             filter = filter || {};
             filter.prevPage = prevPage;
             filter.currentPage = vm.currentPage;
             filter.first_id = first_id;
             filter.last_id = last_id;
+
             AuctionMasterSvc.getFilterOnAuctionMaster(filter)
                 .then(function(result) {
                     getAuctionWiseProductData(result);
                     vm.auctions = result.items;
-                    vm.totalMItems = result.totalItems;
+                    vm.totalItems = result.totalItems;
                     prevPage = vm.currentPage;
                     if (vm.auctions && vm.auctions.length > 0) {
                         first_id = vm.auctions[0]._id;
@@ -1549,7 +1560,7 @@
 
         function fireCommand(reset, filterObj, requestFor) {
             if (reset)
-                resetPagination();
+                $scope.pager.reset();
             var filter = {};
             if (!filterObj)
                 angular.copy(dataToSend, filter);

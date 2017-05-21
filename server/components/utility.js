@@ -22,8 +22,7 @@ function toIST(value){
 
 function paginatedResult(req,res,modelRef,filter,result){
 
-  var bodyData = req.Body || req.query;
-
+  var bodyData = req.method === 'GET' ? req.query : req.body ;
   var pageSize = bodyData.itemsPerPage || 50;
   var first_id = bodyData.first_id;
   var last_id = bodyData.last_id;
@@ -161,7 +160,7 @@ function excel_from_data(data,headers) {
     rowItems.forEach(function(item){
       if(!item && item != 0)
           item = "";
-       var cell = {v :item};
+       var cell = {v :item + ""};
       setCell(ws, cell, R, C++);
     })
    

@@ -720,6 +720,9 @@ exports.exportUsers = function(req,res){
   if(req.body.userId) {
     filter["createdBy._id"] = req.body.userId;
   }
+  if(req.body.enterpriseId) {
+    filter["enterpriseId"] = req.body.enterpriseId;
+  }
   if(req.body.filter)
     filter = req.body.filter;
   var query = User.find(filter).sort({fname:1});

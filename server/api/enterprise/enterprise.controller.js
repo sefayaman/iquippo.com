@@ -33,6 +33,7 @@ var commonController = require('./../common/common.controller');
 var notification = require('./../../components/notification.js');
 var VALUATION_REQUEST = "ValuationRequest";
 var VALUATION_REPORT_SUBMISSION= "ValuationReportSubmission";
+var DEFAULT_PURPOSE = "Financing";
 
 exports.get = function(req, res) {
   
@@ -257,6 +258,7 @@ function validateData(options,obj){
   var madnatoryParams = options.madnatoryParams || [];
   var numericCols = options.numericCols || [];
   var dateParams = options.dateParams || [];
+  var madnatorySpecialParams = options.madnatorySpecialParams || [];
   var err;
   numericCols.forEach(function(x){
     if(obj[x] && isNaN(obj[x])){
@@ -277,11 +279,25 @@ function validateData(options,obj){
 
   madnatoryParams.some(function(x){
     if(!obj[x]){
-      err = 'Missing Parameter:  ' + x;
+      err = 'Missing Parameter:  ' + fieldsConfig.REVERS_MAPPING[x];
       return false;
     }
   });
 
+  var found = false;
+  var msgStr = "";
+
+  madnatorySpecialParams.some(function(x){
+  if(obj[x]){
+    found = true;
+    return false;
+  }
+  msgStr += fieldsConfig.REVERS_MAPPING[x] + ", ";
+  });
+
+  if(!found && madnatorySpecialParams.length > 0){
+    err = "Atleast one of these four Parameter required " + msgStr;
+  }
   return err;
 }
 
@@ -382,7 +398,8 @@ exports.bulkUpload = function(req, res) {
     uploadType : 'UPLOAD',
     numericCols : ['customerInvoiceValue'],
     dateParams : ['customerInvoiceDate','repoDate'],
-    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription']
+    madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'],
+    madnatorySpecialParams : ['engineNo','chassisNo','registrationNo','serialNo']
   };
   
   if(user.role == 'admin')
@@ -474,6 +491,9 @@ exports.bulkUpload = function(req, res) {
     }
 
     function validatePurpose(callback){
+      if(row.purpose == DEFAULT_PURPOSE)
+        return callback();
+
       purposeModel.find({name : row.purpose}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating purpose');
@@ -929,7 +949,7 @@ exports.bulkModify = function(req, res) {
     }
 
     function validatePurpose(callback){
-      if(!row.purpose)
+      if(!row.purpose || row.purpose == DEFAULT_PURPOSE)
         return callback();
 
       purposeModel.find({name : row.purpose}).exec(function(err,result){
@@ -1695,19 +1715,25 @@ function exportExcel(req,res,fieldMap,jsonArr){
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
         val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-      if(keyObj.type && keyObj.type == 'url' && val && val.filename){
-        if(val.external === true)
+      if(keyObj.type && keyObj.type == 'url' && val){
+        if(val.filename){
+          if(val.external === true)
           val = val.filename;
-        else
-          val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+          else
+            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+        }else
+          val = "";
+        
       }
 
        dataArr[idx + 1].push(val);
     });
 
   });
+
   var ws = Utility.excel_from_data(dataArr,allowedHeaders);
   var ws_name = "entvaluation_" + new Date().getTime();
+
   var wb = Utility.getWorkbook();
   wb.SheetNames.push(ws_name);
   wb.Sheets[ws_name] = ws;
