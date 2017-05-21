@@ -201,6 +201,11 @@ angular.module('sreizaoApp')
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
         dataToSend["userId"] = Auth.getCurrentUser()._id;
       }
+
+      if(Auth.isEnterprise()){
+        dataToSend["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
+      }
+
       $http.post('/api/users/export', dataToSend)
       .then(function(res){
         var data = res.data;
