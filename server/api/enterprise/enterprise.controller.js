@@ -295,7 +295,7 @@ function validateData(options,obj){
   msgStr += fieldsConfig.REVERS_MAPPING[x] + ", ";
   });
 
-  if(!found){
+  if(!found && madnatorySpecialParams.length > 0){
     err = "Atleast one of these four Parameter required " + msgStr;
   }
   return err;

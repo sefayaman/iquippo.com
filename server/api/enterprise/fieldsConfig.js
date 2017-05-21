@@ -82,7 +82,7 @@ module.exports = {
 		'MODIFY': {
 			'Unique_Control_No*': 'uniqueControlNo',
 			'Request_Type': 'requestType',
-			'Purpose*': 'purpose',
+			'Purpose': 'purpose',
 			'Agency_Unique_Id': 'partnerId',
 			'Enterprise_Unique_Id': 'enterpriseId',
 			'Referance_FI_Number': 'customerTransactionId',
@@ -106,7 +106,7 @@ module.exports = {
 			'Country': 'country',
 			'State': 'state',
 			'Location': 'city',
-			'Contact_Person*': 'contactPerson',
+			'Contact_Person': 'contactPerson',
 			'Contact_Person_Tel_No': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
