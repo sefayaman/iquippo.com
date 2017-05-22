@@ -15,119 +15,116 @@
                 <tr>
                   <td><b>Purpose:</b></td>
                   <td>{{valuation.purpose}}</td>
-                  <td><b>Agency Name:</b></td>
-                  <td>{{valuation.agency.name}}</td>
+                  <td><b>Name of the Customer seeking Finance:</b></td>
+                  <td></td>                  
                 </tr>
                 <tr>
+                  <td><b>Agency Name:</b></td>
+                  <td>{{valuation.agency.name}}</td>
                   <td><b>Enterprise:</b></td>
                   <td>{{valuation.enterprise.name}}({{valuation.enterprise.enterpriseId}})</td>
-                   <td><b>Customer Transaction ID:</b></td>
-                  <td>{{valuation.customerTransactionId}}</td>
                 </tr>                 
                 <tr>
+                  <td><b>Customer Transaction ID:</b></td>
+                  <td>{{valuation.customerTransactionId}}</td>
                   <td><b>Job ID:</b></td>
                   <td>{{valuation.jobId}}</td>
-                  <td><b>Asset No:</b></td>
-                  <td>{{valuation.assetId}}</td>
                 </tr>
 
                  <tr>
+                  <td><b>Asset No:</b></td>
+                  <td>{{valuation.assetId}}</td>
                   <td><b>Status:</b></td>
                   <td>{{valuation.status}}</td>
+                </tr>
+
+                <tr>
                   <td><b>Remark:</b></td>
                   <td>{{valuation.remark}}</td>
-                </tr>
-
-                <tr>
                   <td><b>Customer Valuation/Inspection No:</b></td>
                   <td>{{valuation.customerValuationNo}}</td>
-                   <td><b>Customer No:</b></td>
-                  <td>{{valuation.customerPartyNo}}</td>
                 </tr>
 
                 <tr>
+                  <td><b>Customer No:</b></td>
+                  <td>{{valuation.customerPartyNo}}</td>
                   <td><b>Customer Name:</b></td>
-                  <td>{{valuation.customerPartyName}}</td>
+                  <td>{{valuation.customerPartyName}}</td>                  
+                </tr>
+
+                <tr>
                   <td><b>User:</b></td>
                   <td>{{valuation.userName}}</td>
-                </tr>
-
-                <tr>
                   <td><b>Request Date:</b></td>
                   <td>{{valuation.requestDate | date:'MM/dd/yyyy'}}</td>
                   <!-- <td><b>Asset No:</b></td>
-                  <td>{{valuation.assetId}}</td> -->
-                   <td><b>Repo. Date:</b></td>
-                  <td>{{valuation.repoDate | date:'MM/dd/yyyy'}}</td>
+                  <td>{{valuation.assetId}}</td> -->                  
                 </tr>
                 <tr>
+                  <td><b>Repo. Date:</b></td>
+                  <td>{{valuation.repoDate | date:'MM/dd/yyyy'}}</td>
+                  <td><b>Customer Invoice date:</b></td>
+                  <td>{{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}</td>                    
+                </tr>
+                <tr>
+                  <td><b>Customer Invoice Value:</b></td>
+                  <td>{{valuation.customerInvoiceValue}}</td>
                   <td><b>Asset Category:</b></td>
-                  <td>{{valuation.assetCategory}}</td>
+                  <td>{{valuation.assetCategory}}</td>                  
+                </tr>
+
+                <tr>
                   <td><b>Brand/Make:</b></td>
                   <td>{{valuation.brand}}</td>
+                  <td><b>Model:</b></td>
+                  <td>{{valuation.model}}</td>                  
                 </tr>
 
                 <tr>
-                  <td><b>Model:</b></td>
-                  <td>{{valuation.model}}</td>
                   <td><b>Asset Description:</b></td>
                   <td>{{valuation.assetDescription}}</td>
+                  <td><b>Engine No.:</b></td>
+                  <td>{{valuation.engineNo}}</td>                  
                 </tr>
 
                 <tr>
-                  
-                  <td><b>Engine No.:</b></td>
-                  <td>{{valuation.engineNo}}</td>
                   <td><b>Chassis No.:</b></td>
                   <td>{{valuation.chassisNo}}</td>
-                </tr>
-
-                <tr>
                   <td><b>Regn. No.:</b></td>
-                  <td>{{valuation.registrationNo}}</td>
+                  <td>{{valuation.registrationNo}}</td>                  
+                </tr>
+                
+                <tr>
                   <td><b>Serial No.</b></td>
                   <td>{{valuation.serialNo}}</td>
-                </tr>
-                
-                <tr>
                   <td><b>Year of Manufacture:</b></td>
-                  <td>{{valuation.yearOfManufacturing}}</td>
-                  <td><b>Yard Information/Asset Address:</b></td>
-                  <td>{{valuation.yardParked}}</td>
+                  <td>{{valuation.yearOfManufacturing}}</td>                  
                 </tr>
 
                 <tr>
-                  
-                  <!-- <td><b>Invoice Date:</b></td>
-                  <td>{{valuation.invoiceDate}}</td> -->
-                  
+                  <td><b>Yard Information/Asset Address:</b></td>
+                  <td>{{valuation.yardParked}}</td>                  
                   <td><b>Country:</b></td>
-                  <td>{{valuation.country}}</td>
+                  <td>{{valuation.country}}</td>                  
+                </tr>
+
+                <tr>
                   <td><b>State:</b></td>
                   <td>{{valuation.state}}</td>
-                </tr>
-
-                <tr>
                   <td><b>Location:</b></td>
-                  <td>{{valuation.city}}</td>
-                  <td><b>Contact Person:</b></td>
-                  <td>{{valuation.contactPerson}}</td>
+                  <td>{{valuation.city}}</td>                  
                 </tr>
                 
                 <tr>
+                  <td><b>Contact Person:</b></td>
+                  <td>{{valuation.contactPerson}}</td>
                   <td><b>Contact Person TelNo:</b></td>
-                  <td>{{valuation.contactPersonTelNo}}</td>
-                  <td><b>Distance From Customer Office:</b></td>
-                  <td>{{valuation.disFromCustomerOffice}}</td>  
+                  <td>{{valuation.contactPersonTelNo}}</td>                  
                 </tr>
                 <tr>
-                  <td><b>Customer Invoice date:</b></td>
-                  <td>{{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}</td>
-                  <td><b>Customer Invoice Value:</b></td>
-                  <td>{{valuation.customerInvoiceValue}}</td>  
+                  <td><b>Distance From Customer Office:</b></td>
+                  <td colspan="3">{{valuation.disFromCustomerOffice}}</td>  
                 </tr>
-
-               
               </table>
                 <!-- <tr>
                   
