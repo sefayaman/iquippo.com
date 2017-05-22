@@ -530,7 +530,7 @@
                         </div>
                         <div class="col-sm-4">
                           <div ng-class="{'has-error': negotiations.amount.$invalid && negotiationSubmitted}">
-                            <input type="number" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
+                            <input type="number" min="0" name="amount" class="form-control" placeholder="Enter Offer" ng-model="productDetailVm.negotiateAmt" required>
                           </div>
                         </div>
                         <div class="col-sm-4 text-right">
@@ -731,7 +731,7 @@
                       <div class="row">
                         <div class="col-xs-6">
                           <div class="form-group">
-                            <input type="number"  class="form-control" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
+                            <input type="number"  class="form-control" min="0" name="assetCost" ng-model="reqFinance.financeInfo.assetCost" ng-value="currentProduct.grossPrice" placeholder="Amount to be Financed">
                           </div>
                         </div>
                         <div class="col-xs-6">
