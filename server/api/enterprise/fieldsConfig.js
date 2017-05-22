@@ -45,6 +45,7 @@ module.exports = {
 		'gpsDeviceNo' : 'GPS_Device_No',
 		'gpsIMEINo' : 'IMIE_No',
 		'reportUrl' : 'Report_URL'
+
 	},
 	'ENTERPRISE': {
 		'UPLOAD': {
@@ -77,7 +78,8 @@ module.exports = {
 			'Contact_Person_Tel_No*': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
-			'Invoice Value':'customerInvoiceValue'
+			'Invoice Value':'customerInvoiceValue',
+			'Customer_Seeking_Finance':'nameOfCustomerSeeking'
 		},
 		'MODIFY': {
 			'Unique_Control_No*': 'uniqueControlNo',
@@ -110,7 +112,8 @@ module.exports = {
 			'Contact_Person_Tel_No': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
-			'Invoice Value':'customerInvoiceValue'
+			'Invoice Value':'customerInvoiceValue',
+			'Customer_Seeking_Finance':'nameOfCustomerSeeking'
 		},
 		'EXPORT': {
 			'TRANSACTION': {},
@@ -152,6 +155,7 @@ module.exports = {
 		"Status":{key:"status"},
 		"Request Type":{key:"requestType"},
 		"Purpose":{key:"purpose"},
+		"Customer Seeking Finance":{key:"nameOfCustomerSeeking"},
 		"Agency Name":{key:"agency.name"},
 		"Enterprise":{key:"enterprise.enterpriseId"},
 		"Referance/FI Number":{key:"customerTransactionId"},

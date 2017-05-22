@@ -344,25 +344,6 @@ function parseExcel(options){
       });
     } else {
         obj.user = options.user;
-        //var numericCols = options.numericCols || [];
-        //var dateParams = options.dateParams || [];
-        
-       /* numericCols.forEach(function(x){
-          if(obj[x] && isNaN(obj[x])){
-            delete obj[x];
-          }
-        });
-
-        dateParams.forEach(function(x){
-          if(obj[x]){
-            var d = Utility.dateUtil.isValidDateTime(obj[x],validDateFormat);
-            if(d.isValid()){
-              obj[x] = new Date(Utility.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
-            } else {
-              delete obj[x];
-            }
-          }
-        });*/
 
         var validData = {};
         Object.keys(obj).forEach(function(x){
@@ -410,6 +391,14 @@ exports.bulkUpload = function(req, res) {
     errObj = errObj.concat(parsedResult.errObj);
   var uploadData = parsedResult.uploadData;
   var totalCount = parsedResult.totalCount;
+
+  if(totalCount > 99){
+    var result = {
+      errObj : [],
+      msg : 'You can upload 99 record only at a time.'
+    };
+    return res.json(result);
+  }
 
   if(!uploadData.length){
     var result = {
@@ -823,6 +812,14 @@ exports.bulkModify = function(req, res) {
     errObj = errObj.concat(parsedResult.errObj);
   var uploadData = parsedResult.uploadData;
   var totalCount = parsedResult.totalCount;
+
+  if(totalCount > 99){
+    var result = {
+      errObj : [],
+      msg : 'You can update 99 record only at a time.'
+    };
+    return res.json(result);
+  }
 
   if(!uploadData.length){
     var result = {
