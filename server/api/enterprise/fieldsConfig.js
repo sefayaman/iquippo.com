@@ -95,7 +95,7 @@ module.exports = {
 			'Request_Date': 'requestDate',
 			'Asset_No': 'assetId',
 			'Repo_Date': 'repoDate',
-			'Asset_Group_Category*': 'assetCategory',
+			'Asset_Group_Category': 'assetCategory',
 			'Make/Brand': 'brand',
 			'Model': 'model',
 			'Asset_Name': 'assetDescription',
