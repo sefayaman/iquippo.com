@@ -780,17 +780,17 @@ exports.bulkUpload = function(req, res) {
           var tmplName = VALUATION_REQUEST;
           emailData.notificationType = "email";
           if(reqData.status === EnterpriseValuationStatuses[0]) {
-            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. � ' + reqData.uniqueControlNo;
+            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. - ' + reqData.uniqueControlNo;
             tplData.status = "initiated";
           }
           if(reqData.status === EnterpriseValuationStatuses[2]) {
-            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. � ' + reqData.uniqueControlNo;
+            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. - ' + reqData.uniqueControlNo;
             tplData.status = "submitted";
           }
           if(reqData.status === EnterpriseValuationStatuses[4]) {
             tmplName = VALUATION_REPORT_SUBMISSION;
             emailData.cc = reqData.enterprise.email;
-            emailData.subject = 'Valuation Report as an attachment for Unique Control No. � ' + reqData.uniqueControlNo;
+            emailData.subject = 'Valuation Report as an attachment for Unique Control No. - ' + reqData.uniqueControlNo;
             //tplData.assetDir = reqData.assetDir;
             if(reqData.valuationReport && reqData.valuationReport.filename) {
               tplData.external = reqData.valuationReport.external;
@@ -809,13 +809,10 @@ exports.bulkUpload = function(req, res) {
             userFilter.enterpriseId = reqData.enterprise.enterpriseId;
             userFilter.status = true;
             UserModel.find(userFilter,function(err,results){
-              if(err){
-                console.log(err);
-              }
               if(results.length > 0){
                 results.forEach(function(item){
                   for(var i=0;i<item.availedServices.length;i++){
-                    if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                    if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true && item.email !== reqData.createdBy.email) {
                       approverUsers[approverUsers.length] = item.email;
                     }
                   }
