@@ -278,6 +278,19 @@ app.post('/api/updateproductmaster', function(req, res) {
   BulkProductUpload.updateProductMaster(req, res);
 });
 
+app.post('/api/quippovaluaion', function(req, res) {
+  var bodyData = req.body;
+
+  var resList = [];
+  bodyData.forEach(function(item){
+    var obj = {success : "true"};
+    obj.uniqueControlNo = item.uniqueControlNo;
+    obj.jobId = "JOB" + new Date().getTime();
+    resList.push(obj);
+  })
+  return res.status(200).json(resList);
+});
+
 app.post('/api/currency', function(req, response) {
   var url = "http://api.fixer.io/latest?base=RUB";
   http.get(url, function(res) {

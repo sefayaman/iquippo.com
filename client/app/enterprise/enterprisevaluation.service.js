@@ -322,6 +322,9 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
 
     var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
 
+    if(DevEnvironment)
+        apiUrl = "/api/quippovaluaion";      
+
     $rootScope.loading = true;
     $http.post(apiUrl,dataArr)
     .then(function(res){
