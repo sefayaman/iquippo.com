@@ -1,6 +1,17 @@
   <div class="container" ng-if="!auctionOnMap">
     <div class="col-sm-12 text-justify">
-		<h3>Auctions</h3>
+		<div class="row">
+      <div class="col-sm-8"><h3>Auctions</h3></div>
+      <div class="col-sm-4 Asset-filter text-right">
+          Filter
+          <select>
+            <option>Live</option>
+            <option>Online</option>
+            <option>Asset Category</option>
+            <option>Location</option>
+          </select>
+      </div>      
+    </div>
 		<legend></legend>
 
 	  <div class="auction-tab">
@@ -9,9 +20,7 @@
       <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">Closed Auctions</button>
     </div>          
 
-		<div class="row">
-			<div class="col-sm-12 form-group">                
-        <div class="table-responsive auctions-table">
+     <!-- <div class="table-responsive auctions-table">
           <table class="table table-bordered table-striped">
             <thead>
               <tr class="info-back">
@@ -24,7 +33,6 @@
                 <th>Auction End Date &amp; Time</th>
                 <th>Inspection Start Date &amp; Time</th>
                 <th>Inspection End Date &amp; Time</th>
-                <!-- <th>Registration Charges</th> -->
                 <th>EMD Amount</th>
                 <th>Registration End Date</th>
                 <th>Location</th>
@@ -52,13 +60,8 @@
                 <td>{{product.endDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
                 <td>{{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
                 <td>{{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
-                <!-- <td>{{product.regCharges}}</td> -->
                 <td>{{product.emdAmount}}</td>
                 <td>{{product.regEndDate | date:'dd-MMM-yyyy hh:mm a'}}</td>
-                <!-- <td>
-                    <a href="javascript:void(0);" uib-popover="Seller Information" popover-trigger="mouseenter"></a>
-                </td> -->
-
                 <td>{{product.city}}</td>
                 <td>{{product.auctionAddr}}</td>
                 <td><a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)" ng-if="product.auctionAddr">{{product.auctionAddr}}</a></td>
@@ -73,9 +76,37 @@
             
           </table>
         </div>
-        <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>        
-      </div>
-		</div>
+        <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->
+    		<div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing | orderBy:'-endDate'">  
+          <div class="media">
+            <a class="pull-left" href="#">
+              <img class="media-object" src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" alt="Image" >
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading text-primary">{{product.auctionType | titleCase}} {{product.name}} - {{product.city}}</h4>
+              <div class="row">
+                <div class="col-sm-7">
+                  <p><strong>Auction Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
+                </div>
+                <div class="col-sm-5">
+                  <p><strong><i class="fa fa-phone"></i></strong> {{product.contactNumber}}</p>
+                </div>
+              </div>
+              <p><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
+              
+              <div class="row">
+                <div class="col-sm-7">
+                  <p><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)" ng-if="product.auctionAddr">{{product.auctionAddr}}</a> </p>
+                </div>
+                <div class="col-sm-5">
+                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
+                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
+                  <a href="/assetinauction?auctionId={{product.auctionId}}" class="btn btn-sm btn-danger">View Assets</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 		
 	</div>
   </div>

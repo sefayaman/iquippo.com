@@ -1,10 +1,23 @@
   <div class="container">
-    <div class="col-sm-12 text-justify">
-		<h3>Auctions Details</h3>
+    <div class="row">
+      <div class="col-sm-9"><h3>Auctions Name</h3></div>
+      <div class="col-sm-2 Asset-filter">
+          Filter 
+          <select>
+            <option>Asset Category</option>
+            <option>Asset Brand</option>
+            <option>Location Of Asset</option>
+            <option>Manufacturing Year</option>
+          </select>
+      </div>
+      <div class="col-sm-1 text-right">        
+        <h3><a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm pull-right">Back</a></h3>
+      </div>
+    </div>
 		<legend></legend>
 
 	
-		<div class="row">
+	<!-- 	<div class="row">
 			<div class="col-sm-12 form-group">
                 
                 <div class="table-responsive table-striped">
@@ -62,14 +75,49 @@
                     </tbody>
                     
                   </table>
-                  <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-danger btn-md pull-right">Back</a>
-                 <!--  <uib-pagination total-items="auctionDetailsVm.totalItems" ng-model="auctionDetailsVm.currentPage" items-per-page="auctionDetailsVm.itemsPerPage" max-size="auctionDetailsVm.maxSize" ng-change="auctionDetailsVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->
+                  
                 </div>
                 
               </div>
-		</div>
-		
-	</div>
+		</div> -->
+		<div class="row">
+      <div class="col-sm-6" ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+        <div class="auction-list auction-details">
+          <div class="media">
+            <a class="pull-left" ng-if="auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
+              <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
+            </a>
+            <a class="pull-left" ng-if="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
+              <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading">
+                {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}
+              </h4>
+              <p class="form-group">{{auctionProduct.product.description}}</p>
+              <div class="row">
+                <div class="col-sm-8">
+                  <p><i class="fa fa-clock-o"></i> Upcoming</p>
+                </div>
+                <div class="col-sm-4 text-right">
+                  <p uib-tooltip="Manufacturing Year" data-placement="top" title="Manufacturing Year"><i class="fa fa-calendar"></i> 2010 </p> <!-- Manufacturing Year -->
+                </div>
+              </div>
+              <p><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
+              <div class="row">
+                <div class="col-sm-4">                  
+                  <p><i class="fa fa-user"></i> {{auctionProduct.product.contactName}}</p>
+                </div>
+                <div class="col-sm-8 text-right">
+                  <button class="btn btn-sm btn-default"><i class="fa fa-phone"></i> {{auctionProduct.product.contactNumber}}</button>
+                  <a href="javascript:void(0);" class="btn btn-sm btn-danger">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>  
+    </div>
   </div>
 
 <!-- Onclick google map location popup -->

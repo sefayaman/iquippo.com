@@ -75,6 +75,7 @@
       AuctionSvc.getAuctionDateData(filter).then(function(result){
         getAuctionWiseProductData(result);
         vm.auctionListing  = result.items;
+        console.log("Auctions",vm.auctionListing);
         vm.totalItems = result.totalItems;
         prevPage = vm.currentPage;
         if(vm.auctionListing.length > 0){

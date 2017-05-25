@@ -402,15 +402,21 @@
 							</select>
 							<i class="caret"></i>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-3">
 							
-							<span class="btn btn-warning fileinput-button">
+							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Browse Document</span>
 								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
 							</span>
-						</div>
-						<div class="col-sm-3 form-group">
 							<span>{{gsettingVm.auctionData.docName}}</span>
+						</div>
+						
+						<div class="col-sm-3">							
+							<span class="btn btn-warning btn-block fileinput-button">
+								<span>Browse Image</span>
+								<input type="file" name="file">
+							</span>
+							<span></span>
 						</div>
 					</div>
 					<div class="row form-group">
