@@ -1059,6 +1059,9 @@ exports.bulkModify = function(req, res) {
 
       if(!row.partnerId)
         return callback();
+      if(row.partnerId && !row.requestType)
+          return callback('For agency update Request_Type is required.');
+
        vendorModel.find({partnerId : row.partnerId},function(err,result){
         if(err || !result)
           return callback('Error while validating Agency');
@@ -1073,6 +1076,7 @@ exports.bulkModify = function(req, res) {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
           _id : result[0]._id + "",
+          partnerId : row.partnerId,
           name : result[0].entityName
         };
 
