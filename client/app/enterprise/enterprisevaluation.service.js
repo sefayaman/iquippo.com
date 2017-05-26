@@ -31,7 +31,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       })
       .catch(function(res){
         deferred.reject(res);
-      })
+      });
     return deferred.promise;
   }
 
@@ -44,11 +44,11 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           serPath = serPath + "&" + queryParam;
         return $http.get(serPath)
         .then(function(res){
-          return res.data
+          return res.data;
         })
         .catch(function(err){
-          throw err
-        })
+          throw err;
+        });
     }
 
     function getInvoiceOnId(id) {
@@ -59,7 +59,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       })
       .catch(function(res){
         deferred.reject(res);
-      })
+      });
     return deferred.promise;
   }
 
@@ -72,11 +72,11 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           serPath = serPath + "&" + queryParam;
         return $http.get(serPath)
         .then(function(res){
-          return res.data
+          return res.data;
         })
         .catch(function(err){
-          throw err
-        })
+          throw err;
+        });
     }
 
 
@@ -96,7 +96,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         .catch(function(err){
           $rootScope.loading = false;
           deferred.reject(err);
-        })
+        });
       return deferred.promise;
     }
 
@@ -110,29 +110,30 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
             submitToAgency([resData],deferred);
       })
     }
-    
+
     function sendNotification(reqData) {
       var data = {};
       var dataToSend = {};
+      if(!reqData.createdBy.email)
+        return;
       data.to = reqData.createdBy.email;
       if(reqData.status === EnterpriseValuationStatuses[0]) {
-        data.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. – ' + reqData.uniqueControlNo;
+        data.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. - ' + reqData.uniqueControlNo;
         dataToSend.status = "initiated";
       }
       if(reqData.status === EnterpriseValuationStatuses[2]) {
-        data.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. – ' + reqData.uniqueControlNo;
+        data.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. - ' + reqData.uniqueControlNo;
         dataToSend.status = "submitted";
       }
       if(reqData.status === EnterpriseValuationStatuses[4]) {
         data.cc = reqData.enterprise.email;
-        data.subject = 'Valuation Report as an attachment for Unique Control No. – ' + reqData.uniqueControlNo;
+        data.subject = 'Valuation Report as an attachment for Unique Control No. - ' + reqData.uniqueControlNo;
         dataToSend.assetDir = reqData.assetDir;
         if(reqData.valuationReport && reqData.valuationReport.filename) {
           dataToSend.external = reqData.valuationReport.external;
           dataToSend.filename = reqData.valuationReport.filename;
         }
       }
-
       dataToSend.uniqueControlNo = reqData.uniqueControlNo;
       dataToSend.name = reqData.createdBy.name;
       dataToSend.requestType = reqData.requestType;
@@ -149,7 +150,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           if(approverUsersData.length > 0){
             approverUsersData.forEach(function(item){
               for(var i=0;i<item.availedServices.length;i++){
-                if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true && item.email !== reqData.createdBy.email) {
                   approverUsers[approverUsers.length] = item.email;
                 }
               }
@@ -157,10 +158,10 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
             data.cc = approverUsers.join(',');
             notificationSvc.sendNotification('ValuationRequest', data, dataToSend,'email');
           }
-        }); 
-      } 
+        });
+      }
     }
-    
+
     function update(data){
        return $http.put(path + "/" + data.data._id, data)
         .then(function(res){
@@ -183,7 +184,6 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         });
     }
 
-
     function uploadExcel(data){
       return $http.post(path+"/upload/excel",data)
       .then(function(res){
@@ -201,9 +201,9 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       })
       .catch(function(err){
         throw err;
-      }); 
+      });
     }
-    
+
     function exportExcel(reportType,filter){
       var serPath = path + "/export" + "?type=" + reportType + "&role=" + Auth.getCurrentUser().role;
         var queryParam = "";
@@ -217,7 +217,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           //return res.data
         })
         .catch(function(err){
-          throw err
+          throw err;
         })
     }
 
@@ -233,7 +233,6 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       entValuation.statuses.push(stObj);
     };
 
-   
    function generateInvoice(invoice){
     return $http.post(path + "/createinvoice",invoice)
           .then(function(res){
@@ -242,7 +241,6 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           .catch(function(err){
             throw err;
           });
-
    }
 
    function updateInvoice(invoice){
@@ -253,11 +251,10 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           .catch(function(err){
             throw err;
           });
-
    }
 
    function generateinvoice(invoiceNo){
-    return path + "/generateinvoice/" + invoiceNo;    
+    return path + "/generateinvoice/" + invoiceNo;
    }
 
    var Field_MAP = {
@@ -294,10 +291,9 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     contactPersonTelNo:"contactPersonTelNo",
     disFromCustomerOffice:"disFromCustomerOffice"
   }
-  
+
   var submmitted = false;
    function submitToAgency(items,deferred){
-    
     if(submmitted)
       return;
     if(!items || items.length == 0)
@@ -321,10 +317,13 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       if(obj.model && obj.model == "Other")
         obj.model = item.otherModel;
       
-      dataArr[dataArr.length] = obj; 
+      dataArr[dataArr.length] = obj;
     });
 
     var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
+
+    if(DevEnvironment)
+        apiUrl = "/api/quippovaluaion";      
 
     $rootScope.loading = true;
     $http.post(apiUrl,dataArr)
@@ -334,15 +333,14 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         updateValReqs(res.data,items,deferred);
       else{
         $rootScope.loading = false;
-        deferred.resolve(res.data);  
+        deferred.resolve(res.data);
       }
-
     })
     .catch(function(err){
       submmitted = false;
       $rootScope.loading = false;
       deferred.reject(err)
-    })
+    });
     return deferred.promise;
    }
 
@@ -358,7 +356,6 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     }
 
     function updateValReqs(resList,selectedItems,deferred){
-      
       resList.forEach(function(item){
         var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
         if(item.success == "true"){
@@ -369,8 +366,8 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
           valReq.remarks = item.msg;
           setStatus(valReq,EnterpriseValuationStatuses[1]);
         }
-      })
-      $rootScope.loading = true;     
+      });
+      $rootScope.loading = true;
       bulkUpdate(selectedItems)
         .then(function(res){
           if(deferred)
@@ -381,7 +378,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         if(deferred)
             deferred.reject(err);
          $rootScope.loading = false;
-      })
+      });
     }
 
    return entSvc;
