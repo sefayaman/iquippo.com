@@ -1,22 +1,20 @@
-<table style="width:80%;font-size:12px; margin:0 auto;padding:20px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
+<table cellpadding="5" style="width:80%;font-size:12px; margin:0 auto; padding: 20px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
 	<tr>
-		<td valign="top"><img src="{{serverPath}}/assets/images/{{product.primaryImg}}"></td>
+		<td valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
 	</tr>
     <tr>
-		<td style="color:#FF4342;font-size:16px;"><h3>Dear Buyer,</h3></td>	
+		<td style="font-size:16px;"><h3>Dear {{user.fname}}  {{user.mname}} {{user.lname}},</h3></td>	
 	</tr>
   <tr>
-    <td style="color:#01395c; padding-bottom:10px;" align="center">
-        <p><strong>Thank you for your interest in </strong></p>
-
-      <table style="border:3px solid #ccc;" border="0" cellspacing="0" cellpadding="0" width="80%" bgcolor="#ffffff">
-        <tr>
-            <td>
-                <img width="200" height="165" src="{{serverPath}}/assets/uploads/{{product.assetDir}}/{{product.primaryImg}}">
-            </td>
+    <td style="color:#01395c; padding-bottom:10px;">       
+        <table border="0" cellspacing="0" cellpadding="0" width="80%" bgcolor="#ffffff">
+        <tr>            
             <td>
                 <table border="0" cellspacing="1" cellpadding="1" style="font-size:13px;line-height:20px;color:#333333; text-align: left; margin: 5px 0;">
                     <tr>
+                        <td>Thank you for showing your interest in:</td>
+                    </tr>
+                     <tr>
                         <td><strong>{{product.name}}</strong></td>
                     </tr>
                     <tr>
@@ -31,9 +29,12 @@
                     <tr>
                         <td><b>Asset ID :</b>{{product.assetId}}</td>
                     </tr>
-                </table>
-                <p style="padding:8px; font-weight: bold; background:#ccc; text-align: center; margin: 5px 15px 5px 0;">
-                    <a href="{{serverPath}}/productdetail/{{product._id}}" style="font-size:14px; color: #004394" > Click to View </a>
+                </table>                
+            </td>
+            <td align="center">
+                <img width="200" height="165" src="{{serverPath}}/assets/uploads/{{product.assetDir}}/{{product.primaryImg}}" style="border: 3px solid #ccc;">
+                <p style="font-weight: bold; margin: 15px 15px 5px 0;">
+                    <a href="{{serverPath}}/productdetail/{{product._id}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
                 </p>
             </td>
         </tr>
@@ -42,29 +43,24 @@
   </tr>
     <tr>
         <td style="color:#01395c; padding-bottom:10px;">
-         We have received your offer of <strong>INR {{offer}}</strong>.  
+        We have received your Buy Now request of <strong>INR {{offer}}</strong>.  
 	
         </td>
     </tr>
     <tr>
-        <td style="color:#01395c;padding-bottom:10px;">
-         Our fulfillment team will soon be in touch with you to assist and guide you through the transaction. 
+        <td style="color:#01395c;">
+         In case of any queries, kindly contact us at:
+         <p style="margin: 0;">Phone: +913366022059 / 66245500</p>  
+         <p style="margin: 0;">Email: customercare@iquippo.com</p>  
         </td>
     </tr>
     <tr>
-        <td style="color:#01395c;padding-bottom:10px;">
-        Our Customer Care Team is reachable at <a href="javascript:void(0);">+91-33-66022059 / 66245500</a> in case of any queries. 
+        <td style="color:#01395c;font-weight:bold;">
+          	<p style="margin: 0;">Thank You.</p>
+            <p style="margin: 0;">Team iQuippo</p>
         </td>
     </tr>
     <tr>
-        <td style="color:#01395c;font-weight:bold;padding-bottom:10px;">
-      	Thank You.
-        </td>
+        <td style="font-size: 11px;">This is an auto generated mail, kindly do not reply to this email.</td>
     </tr>
-    <tr>
-        <td style="color:#01395c;font-weight:bold; padding-bottom:10px;">
-		Team iQuippo
-        </td>
-    </tr>
-
 </table>

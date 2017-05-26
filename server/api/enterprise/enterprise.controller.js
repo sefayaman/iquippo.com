@@ -172,23 +172,58 @@ exports.getOnId = function(req, res) {
 
 // Creates a new valuation in the DB.
 exports.create = function(req, res, next){
-  var bodyData = req.body;
-  _getAssetGroupCategory(bodyData.assetCategory,bodyData.agency.partnerId,bodyData.enterprise.enterpriseId,function(acErr,result){
-     if(acErr) { return handleError(res, err); }
-     if(result && result.data){
-      bodyData.valuerGroupId = result.data.valuerGroupId || "";
-      bodyData.valuerAssetId = result.data.valuerAssetId || "";
-     }
-     if(result && !result.found)
-      _createAssetGroupCategory(bodyData);
-     EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
-        if(err) { 
-          console.log("hh",err);
-          return handleError(res, err); 
-        }
-        return res.status(201).json(enterpriseData);
+
+    var mandatoryParams =  ['agency.partnerId','agency.partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'];
+    var vehicleParamsArr = ['engineNo','chassisNo','registrationNo','serialNo'];
+
+    var returnVal = mandatoryParams.every(function(key){  
+        var val = _.get(req.body,key,"");
+        if(val)
+          return true;
+    });
+
+    if(!returnVal)
+      return res.status(422).send("Missing some required parameter.");
+
+    returnVal = vehicleParamsArr.some(function(key){
+      var val = _.get(req.body,key,"");
+        if(val)
+          return true;
+    });
+
+    if(!returnVal)
+      return res.status(422).send("Missing some required parameter.");
+    
+    var bodyData = req.body;
+
+    async.series({one:upsertAssetGroupCategory,two:_create},onComplete);
+
+    function upsertAssetGroupCategory(cb){
+
+      _getAssetGroupCategory(bodyData.assetCategory,bodyData.agency.partnerId,bodyData.enterprise.enterpriseId,function(err,result){
+          if(err) { return cb(err); }
+         if(result && result.data){
+            bodyData.valuerGroupId = result.data.valuerGroupId || "";
+            bodyData.valuerAssetId = result.data.valuerAssetId || "";
+          }
+         if(result && !result.found)
+            _createAssetGroupCategory(bodyData.createdBy,bodyData.assetCategory,bodyData.enterprise.enterpriseId,bodyData.agency.partnerId);
+          return cb();
+      }); 
+
+    }
+
+    function _create(cb){
+      EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
+        return cb(err,enterpriseData);
       });
-  });  
+    }
+
+    function onComplete(err,result){
+      if(err)
+        return handleError(res, err);
+      return res.status(201).json(result.two);
+    }
  
 }
 
@@ -231,26 +266,54 @@ function _getAssetGroupCategory(assetCategory,partnerId,enterpriseId,cb){
     else if(results.length > 1 && results[1].length > 0)
       cb(null,{data:results[1][0],found:false});
     else
-      cb(null,{data:null,found:false});
+      cb(null,{data:{},found:false});
   }
 }
 
-function _createAssetGroupCategory(bodyData){
+function _createAssetGroupCategory(userData,assetCategory,enterpriseId,partnerId){
+  
   var assetGroup = {};
   assetGroup.status = false;
   assetGroup.deleted = false;
-  assetGroup.createdBy = bodyData.createdBy;
-  assetGroup.updatedBy = bodyData.createdBy;
-  assetGroup.enterpriseId = bodyData.enterprise.enterpriseId;
-  assetGroup.enterpriseName = bodyData.enterprise.name;
-  assetGroup.assetCategory = bodyData.assetCategory;
-  assetGroup.valuerName = bodyData.agency.name;
-  assetGroup.valuerCode = bodyData.agency.partnerId;
-  AssetGroupModel.create(assetGroup,function(err,result){
-    if(err)
-      console.log("err in asset group creation",err);
-  })
 
+ assetGroup.createdBy = userData;
+  assetGroup.updatedBy = userData;
+  assetGroup.assetCategory = assetCategory;
+
+  async.parallel([getEnterprise,getAgency],finalize);
+
+  function getEnterprise(callback){
+    if(!enterpriseId)
+      return callback("There is no enterpriseId");
+
+    UserModel.find({enterpriseId : enterpriseId,"enterprise" : true}).exec(function(err,result){
+      if(err){return callback(err);}
+      assetGroup.enterpriseId = enterpriseId;
+      if(result && result.length > 0)
+      assetGroup.enterpriseName = result[0].fname + " " + result[0].mname;
+      return callback();
+    });
+  }
+
+  function getAgency(callback){
+    if(!enterpriseId)
+       return callback("There is no partnerId");
+
+    vendorModel.find({partnerId :partnerId},function(err,result){
+      if(err){return callback(err);}
+      if(result && result.length > 0)
+          assetGroup.valuerName = result[0].entityName;
+      assetGroup.valuerCode = partnerId;
+      return callback();
+    });
+  }
+
+  function finalize(){
+    AssetGroupModel.create(assetGroup,function(err,result){
+      if(err)
+        console.log("err in asset group creation",err);
+    });
+  }
 }
 
 function validateData(options,obj){
@@ -344,25 +407,6 @@ function parseExcel(options){
       });
     } else {
         obj.user = options.user;
-        //var numericCols = options.numericCols || [];
-        //var dateParams = options.dateParams || [];
-        
-       /* numericCols.forEach(function(x){
-          if(obj[x] && isNaN(obj[x])){
-            delete obj[x];
-          }
-        });
-
-        dateParams.forEach(function(x){
-          if(obj[x]){
-            var d = Utility.dateUtil.isValidDateTime(obj[x],validDateFormat);
-            if(d.isValid()){
-              obj[x] = new Date(Utility.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
-            } else {
-              delete obj[x];
-            }
-          }
-        });*/
 
         var validData = {};
         Object.keys(obj).forEach(function(x){
@@ -389,6 +433,7 @@ exports.bulkUpload = function(req, res) {
 
   var fileName = req.body.fileName;
   var user = req.body.user;
+  var uploadedData = [];
   //numericCols : ['customerTransactionId','customerValuationNo','customerPartyNo','engineNo','chassisNo','registrationNo','contactPersonTelNo']
   var ENTERPRISE_FIELD = 'enterpriseId';
   var options = {
@@ -410,6 +455,14 @@ exports.bulkUpload = function(req, res) {
     errObj = errObj.concat(parsedResult.errObj);
   var uploadData = parsedResult.uploadData;
   var totalCount = parsedResult.totalCount;
+
+  if(totalCount > 99){
+    var result = {
+      errObj : [],
+      msg : 'You can upload 99 record only at a time.'
+    };
+    return res.json(result);
+  }
 
   if(!uploadData.length){
     var result = {
@@ -437,7 +490,7 @@ exports.bulkUpload = function(req, res) {
     function validateEnterprise(callback){
       if(user.role== 'enterprise')
         row.enterpriseId = user.enterpriseId;
-      UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
+      UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true,status:true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
 
@@ -687,7 +740,7 @@ exports.bulkUpload = function(req, res) {
               row.valuerAssetId = result.data.valuerAssetId || "";
              }
              if(result && !result.found)
-              _createAssetGroupCategory(row);
+              _createAssetGroupCategory(row.createdBy,row.assetCategory,row.enterprise.enterpriseId,row.agency.partnerId);
 
           EnterpriseValuation.create(row, function(err, enterpriseData) {
           if(err || !enterpriseData) { 
@@ -698,6 +751,8 @@ exports.bulkUpload = function(req, res) {
           }
           if(enterpriseData)
             pushNotification(enterpriseData);
+          if(!err && enterpriseData)
+            uploadedData.push(enterpriseData);
           return cb();
         });
       })
@@ -709,6 +764,7 @@ exports.bulkUpload = function(req, res) {
     debug(err);
 
     return res.json({
+      uploadedData : uploadedData,
       msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' uploaded sucessfully',
       errObj : errObj 
     });
@@ -724,17 +780,17 @@ exports.bulkUpload = function(req, res) {
           var tmplName = VALUATION_REQUEST;
           emailData.notificationType = "email";
           if(reqData.status === EnterpriseValuationStatuses[0]) {
-            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. � ' + reqData.uniqueControlNo;
+            emailData.subject = reqData.requestType + " " + 'Request Initiated with Unique Control No. - ' + reqData.uniqueControlNo;
             tplData.status = "initiated";
           }
           if(reqData.status === EnterpriseValuationStatuses[2]) {
-            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. � ' + reqData.uniqueControlNo;
+            emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. - ' + reqData.uniqueControlNo;
             tplData.status = "submitted";
           }
           if(reqData.status === EnterpriseValuationStatuses[4]) {
             tmplName = VALUATION_REPORT_SUBMISSION;
             emailData.cc = reqData.enterprise.email;
-            emailData.subject = 'Valuation Report as an attachment for Unique Control No. � ' + reqData.uniqueControlNo;
+            emailData.subject = 'Valuation Report as an attachment for Unique Control No. - ' + reqData.uniqueControlNo;
             //tplData.assetDir = reqData.assetDir;
             if(reqData.valuationReport && reqData.valuationReport.filename) {
               tplData.external = reqData.valuationReport.external;
@@ -753,13 +809,10 @@ exports.bulkUpload = function(req, res) {
             userFilter.enterpriseId = reqData.enterprise.enterpriseId;
             userFilter.status = true;
             UserModel.find(userFilter,function(err,results){
-              if(err){
-                console.log(err);
-              }
               if(results.length > 0){
                 results.forEach(function(item){
                   for(var i=0;i<item.availedServices.length;i++){
-                    if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true) {
+                    if(item.availedServices[i].code === reqData.requestType && item.availedServices[i].approver === true && item.email !== reqData.createdBy.email) {
                       approverUsers[approverUsers.length] = item.email;
                     }
                   }
@@ -824,6 +877,14 @@ exports.bulkModify = function(req, res) {
   var uploadData = parsedResult.uploadData;
   var totalCount = parsedResult.totalCount;
 
+  if(totalCount > 99){
+    var result = {
+      errObj : [],
+      msg : 'You can update 99 record only at a time.'
+    };
+    return res.json(result);
+  }
+
   if(!uploadData.length){
     var result = {
       errObj : errObj,
@@ -849,9 +910,40 @@ exports.bulkModify = function(req, res) {
     if(updateType == 'agency'){
       async.parallel([validateValuation],middleManProcessing)
     }else{
-      async.parallel([validateEnterprise,validateValuation,validateRequestType,validateYearOfManufacturing,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
+      async.parallel([validateEnterprise,validateValuation,updateAssetGroupCategory,validateRequestType,validateYearOfManufacturing,validatePurpose,validateAgency,validateMasterData,validateCountry],middleManProcessing);  
     }
 
+    function updateAssetGroupCategory(callback){
+      if(!row.assetCategory)
+        return callback();
+       EnterpriseValuation.find({uniqueControlNo : row.uniqueControlNo},function(err,retData){
+         if(err) { 
+            return callback('Error while updateting asset group category data');
+          }
+          if(!retData || retData.length == 0)
+            return callback();
+
+          var prtId = row.partnerId || retData[0].agency.partnerId;
+          var entId = row.enterpriseId || retData[0].enterprise.enterpriseId;
+
+          _getAssetGroupCategory(row.assetCategory,prtId,entId,function(err,result){
+               if(err) { 
+                  return callback('Error while updateting asset group category data');
+                }
+
+               if(result && result.data){
+                row.valuerGroupId = result.data.valuerGroupId || "";
+                row.valuerAssetId = result.data.valuerAssetId || "";
+               }
+
+               if(result && !result.found)
+                _createAssetGroupCategory(retData[0].createdBy,row.assetCategory,entId,prtId);
+              return callback();
+          })
+
+       });
+
+    }
     
     function validateEnterprise(callback){
       
@@ -860,7 +952,7 @@ exports.bulkModify = function(req, res) {
       if(user.role== 'enterprise')
         row.enterpriseId = row.user.enterpriseId;
 
-      UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true}).exec(function(err,result){
+      UserModel.find({enterpriseId : row.enterpriseId,"enterprise" : true,status:true}).exec(function(err,result){
         if(err || !result)
           return callback('Error while validating enterprise');
 
@@ -964,10 +1056,13 @@ exports.bulkModify = function(req, res) {
     }
 
     function validateAgency(callback){
-      if(!row.agencyName)
-        return callback();
 
-      vendorModel.find({entityName : row.agencyName},function(err,result){
+      if(!row.partnerId)
+        return callback();
+      if(row.partnerId && !row.requestType)
+          return callback('For agency update Request_Type is required.');
+
+       vendorModel.find({partnerId : row.partnerId},function(err,result){
         if(err || !result)
           return callback('Error while validating Agency');
 
@@ -981,6 +1076,7 @@ exports.bulkModify = function(req, res) {
           email : result[0].user.email,
           mobile : result[0].user.mobile,
           _id : result[0]._id + "",
+          partnerId : row.partnerId,
           name : result[0].entityName
         };
 
@@ -1198,15 +1294,34 @@ exports.update = function(req, res) {
     var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
     var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
     if(user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId)
-      update();
+      updateAssetGroupCategory(enterprise);
     else if(user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)
       update();
     else if(user.role == 'admin')
-      update();
+      updateAssetGroupCategory(enterprise);
     else
       return res.status(401).send('User does not have privilege to update record');
   });
   
+  function updateAssetGroupCategory(enterpriseData){
+
+    if(!bodyData.assetCategory)
+      return update();
+    var isChanged = (bodyData.assetCategory != enterpriseData.assetCategory) || (bodyData.agency.partnerId != enterpriseData.agency.partnerId) || (bodyData.enterprise.enterpriseId != enterpriseData.enterprise.enterpriseId);
+     if(!isChanged)
+        return update();
+     _getAssetGroupCategory(bodyData.assetCategory,bodyData.agency.partnerId,bodyData.enterprise.enterpriseId,function(err,result){
+          if(err) { return update();}
+         if(result && result.data){
+            bodyData.valuerGroupId = result.data.valuerGroupId || "";
+            bodyData.valuerAssetId = result.data.valuerAssetId || "";
+          }
+         if(result && !result.found)
+            _createAssetGroupCategory(bodyData.createdBy,bodyData.assetCategory,bodyData.enterprise.enterpriseId,bodyData.agency.partnerId);
+          return update();
+      }); 
+  }
+
   function update(){
      EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
         if (err) { return handleError(res, err); }
@@ -1224,6 +1339,7 @@ exports.bulkUpdate = function(req,res){
 }
 
 function bulkUpdate(dataArr,cb){
+    
     async.eachLimit(dataArr,5,update,cb);
 
     function update(dt,callback){

@@ -6,8 +6,7 @@ module.exports = {
 		'purpose' : 'Purpose',
 		'partnerId' : 'Agency_Unique_Id',
 		'enterpriseId' : 'Enterprise_Unique_Id',
-		'customerTransactionId' : 'Referance_FI_Number',
-		'customerValuationNo' : 'Customer_Valuation_No',
+		'customerTransactionId' : 'Reference_FI_Number',
 		'requestDate' : 'Request_Date',
 		'assetId' : 'Asset_No',
 		'repoDate' : 'Repo_Date',
@@ -45,6 +44,7 @@ module.exports = {
 		'gpsDeviceNo' : 'GPS_Device_No',
 		'gpsIMEINo' : 'IMIE_No',
 		'reportUrl' : 'Report_URL'
+
 	},
 	'ENTERPRISE': {
 		'UPLOAD': {
@@ -52,11 +52,7 @@ module.exports = {
 			'Purpose*': 'purpose',
 			'Agency_Unique_Id*': 'partnerId',
 			'Enterprise_Unique_Id*': 'enterpriseId',
-			'Referance_FI_Number': 'customerTransactionId',
-			'Customer_Valuation_No': 'customerValuationNo',
-			/*'Customer_Party_No': 'customerPartyNo',
-			'Customer_Party_Name': 'customerPartyName',
-			'User': 'user',*/
+			'Reference_FI_Number': 'customerTransactionId',
 			'Request_Date': 'requestDate',
 			'Asset_No': 'assetId',
 			'Repo_Date': 'repoDate',
@@ -77,7 +73,8 @@ module.exports = {
 			'Contact_Person_Tel_No*': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
-			'Invoice Value':'customerInvoiceValue'
+			'Invoice Value':'customerInvoiceValue',
+			'Customer_Seeking_Finance':'nameOfCustomerSeeking'
 		},
 		'MODIFY': {
 			'Unique_Control_No*': 'uniqueControlNo',
@@ -85,15 +82,11 @@ module.exports = {
 			'Purpose': 'purpose',
 			'Agency_Unique_Id': 'partnerId',
 			'Enterprise_Unique_Id': 'enterpriseId',
-			'Referance_FI_Number': 'customerTransactionId',
-			'Customer_Valuation_No': 'customerValuationNo',
-			/*'Customer_Party_No': 'customerPartyNo',
-			'Customer_Party_Name': 'customerPartyName',
-			'User': 'user',*/
+			'Reference_FI_Number': 'customerTransactionId',
 			'Request_Date': 'requestDate',
 			'Asset_No': 'assetId',
 			'Repo_Date': 'repoDate',
-			'Asset_Group_Category*': 'assetCategory',
+			'Asset_Group_Category': 'assetCategory',
 			'Make/Brand': 'brand',
 			'Model': 'model',
 			'Asset_Name': 'assetDescription',
@@ -110,7 +103,8 @@ module.exports = {
 			'Contact_Person_Tel_No': 'contactPersonTelNo',
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
-			'Invoice Value':'customerInvoiceValue'
+			'Invoice Value':'customerInvoiceValue',
+			'Customer_Seeking_Finance':'nameOfCustomerSeeking'
 		},
 		'EXPORT': {
 			'TRANSACTION': {},
@@ -152,10 +146,10 @@ module.exports = {
 		"Status":{key:"status"},
 		"Request Type":{key:"requestType"},
 		"Purpose":{key:"purpose"},
+		"Customer Seeking Finance":{key:"nameOfCustomerSeeking"},
 		"Agency Name":{key:"agency.name"},
 		"Enterprise":{key:"enterprise.enterpriseId"},
-		"Referance/FI Number":{key:"customerTransactionId"},
-		"Customer Valuation No":{key:"customerValuationNo"},
+		"Reference/FI Number":{key:"customerTransactionId"},
 		"Customer Party No":{key:"customerPartyNo"},
 		"Customer Party Name":{key:"customerPartyName"},
 		"User":{key:"userName"},

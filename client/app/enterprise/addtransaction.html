@@ -32,6 +32,9 @@
             </select>
             <i class="caret"></i>
           </div>
+           <div class="col-sm-3">
+            <input type="text" name="" class="form-control" placeholder="Name of the Customer seeking Finance"  ng-model="addTransactionVm.enterpriseValuation.nameOfCustomerSeeking">
+          </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.agencyName.$invalid && submitted}">
             <select class="form-control" name="agencyName" ng-model="addTransactionVm.enterpriseValuation.agency.partnerId" ng-disabled="!editEnterpriseField()" required>
               <option value="">*Select Agency</option>
@@ -39,29 +42,28 @@
             </select>
             <i class="caret"></i>
           </div>
+        </div>
+        <div class="row form-group"> 
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.enterpriseId.$invalid && submitted}">
             <select class="form-control" name="enterpriseId" ng-model="addTransactionVm.enterpriseValuation.enterprise.enterpriseId" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.setCustomerData(addTransactionVm.enterpriseValuation.enterprise.enterpriseId)" required>
               <option value="">*Select Enterprise</option>
               <option ng-repeat="enterprise in addTransactionVm.enterprises" value="{{enterprise.enterpriseId}}">{{enterprise.fname}} {{enterprise.lname}} ({{enterprise.mobile}})</option>
             </select>
             <i class="caret"></i>
-          </div>
-        </div>
-        <div class="row form-group">                            
+          </div>                           
           <div class="col-sm-3">
             <input type="text" class="form-control" name="customerTransactionId" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId" ng-disabled="!editEnterpriseField()" placeholder="Reference/FI Number"/>
           </div>
           <div class="col-sm-3">
-            <input type="text" class="form-control" name="customerValuationNo" ng-model="addTransactionVm.enterpriseValuation.customerValuationNo" ng-disabled="!editEnterpriseField()" placeholder="Customer Valuation/Inspection No."/>
           </div>
           <div class="col-sm-3">
             <input type="text" class="form-control" name="customerPartyNo" ng-model="addTransactionVm.enterpriseValuation.customerPartyNo" disabled placeholder="Customer Party No."/>
-          </div>
+          </div>          
+        </div>
+        <div class="row form-group ">
           <div class="col-sm-3">
             <input type="text" class="form-control" name="customerPartyName" ng-model="addTransactionVm.enterpriseValuation.customerPartyName" disabled placeholder="Customer Party Name"/>
           </div>
-        </div>
-        <div class="row form-group ">
           <div class="col-sm-3">
             <input type="text" class="form-control" name="userName" ng-model="addTransactionVm.enterpriseValuation.userName" disabled placeholder="User Name" disabled/>
           </div>
@@ -70,15 +72,27 @@
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetId.$invalid && submitted}">
             <input type="text" class="form-control" name="assetId" ng-model="addTransactionVm.enterpriseValuation.assetId" ng-disabled="!editEnterpriseField()" placeholder="Asset No."/>
-          </div>
+          </div>          
+        </div>
+        <div class="row form-group">
           <div class="col-sm-3">
             <div class="input-group">
               <input class="form-control" name="repoDate" id="repodate" ng-model="addTransactionVm.enterpriseValuation.repoDate" ng-disabled="!editEnterpriseField()" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Repo. Date" />
               <label for="repodate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
+           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceDate.$invalid && submitted}">
+            <div class="input-group">
+              <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
+              <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+          </div>
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceValue.$invalid && submitted}">
+            <input type="number" class="form-control" name="customerInvoiceValue" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" min="0" placeholder="Invoice Value">
+          </div>
+         
         </div>
-        <div class="row form-group">
+        <div class="row">
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.assetCategory.$invalid && submitted}">
             <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId) || !editEnterpriseField()" required>
           </div>
@@ -165,17 +179,7 @@
              <input type="text" class="form-control" name="disFromCustomerOffice" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice" ng-disabled="!editEnterpriseField()" placeholder="Distance From Customer Office"/>
           </div>
         </div>
-        <div class="row form-group">
-           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceDate.$invalid && submitted}">
-          <div class="input-group">
-            <input  class="form-control" name="customerInvoiceDate" id="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
-            <label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
-          </div>
-        </div>
-        <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.customerInvoiceValue.$invalid && submitted}">
-          <input type="number" class="form-control" name="customerInvoiceValue" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" min="0" placeholder="Invoice Value">
-        </div>
-        </div>
+        
       </div>
     </div>
     <!-- Agency block -->

@@ -11,7 +11,7 @@
     negotiateSrv.negotiation = negotiation;
 
     function mailtemplates(reciever, subject, mailTemplate, dataToSend) {
-      var data={};
+      var data = {};
       data['to'] = reciever;
       data['subject'] = subject;
       notificationSvc.sendNotification(mailTemplate, data, dataToSend,
@@ -22,21 +22,19 @@
       return $http.post('api/negotiate/', dataNegotiate)
         .then(function(res) {
           dataNegotiate.serverPath = serverPath;
-
-          console.log(dataNegotiate);
-
+          var subject = "";
           if (flag == "true") {
-            var subject = ' Bid Received for your' + ' ' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:' + dataNegotiate.product.assetId;
-            mailtemplates(dataNegotiate.product.seller.email, subject, 'Make-offer-seller-email', dataNegotiate);
+            subject = 'Offer Received for AssetId -' + ' ' + '"' + dataNegotiate.product.assetId + '"' + ':' + dataNegotiate.product.category.name + ' ' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name;
+            //mailtemplates(dataNegotiate.product.seller.email, subject, 'Make-offer-seller-email', dataNegotiate);
             mailtemplates(Auth.getCurrentUser().email, subject, 'Make-offer-buyer-email', dataNegotiate);
-            mailtemplates(supportMail, subject, 'Make-offer-admin-email', dataNegotiate);
+            //mailtemplates(supportMail, subject, 'Make-offer-admin-email', dataNegotiate);
           } else if (flag == "false") {
-            var subject = ' Bid Received for your' + ' ' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name + ' ' + dataNegotiate.product.category.name + ' ' + '  Asset ID:' + dataNegotiate.product.assetId;
-            mailtemplates(dataNegotiate.product.seller.email, subject, 'Buy-now-seller-email', dataNegotiate);
+            subject = 'Buy Now Request Received for AssetId -' + ' ' + '"' + dataNegotiate.product.assetId + '"' + ':' + dataNegotiate.product.category.name + ' ' + dataNegotiate.product.brand.name + ' ' + dataNegotiate.product.model.name;
+            //mailtemplates(dataNegotiate.product.seller.email, subject, 'Buy-now-seller-email', dataNegotiate);
             mailtemplates(Auth.getCurrentUser().email, subject, 'Buy-now-buyer-email', dataNegotiate);
-            mailtemplates(supportMail, subject, 'Buy-now-admin-email', dataNegotiate);
-              } else {
-            var subject = "";
+            //mailtemplates(supportMail, subject, 'Buy-now-admin-email', dataNegotiate);
+          } else {
+            subject = "";
             if ((dataNegotiate.product.tradeType == "RENT") || (dataNegotiate.product.tradeType == "BOTH")) {
               subject = "For Rent";
             }
