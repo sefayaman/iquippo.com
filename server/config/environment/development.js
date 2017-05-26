@@ -14,5 +14,5 @@ module.exports = {
   ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
 
   seedDB: true,
-  mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "no-reply@iquippo.com", Mailpassword: "welcome@123",from:"info@iquippo.com"}
+  mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"info@iquippo.com"}
 };
