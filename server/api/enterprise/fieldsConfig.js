@@ -149,7 +149,7 @@ module.exports = {
 		"Customer Seeking Finance":{key:"nameOfCustomerSeeking"},
 		"Agency Name":{key:"agency.name"},
 		"Enterprise":{key:"enterprise.enterpriseId"},
-		"Referance/FI Number":{key:"customerTransactionId"},
+		"Reference/FI Number":{key:"customerTransactionId"},
 		"Customer Party No":{key:"customerPartyNo"},
 		"Customer Party Name":{key:"customerPartyName"},
 		"User":{key:"userName"},
