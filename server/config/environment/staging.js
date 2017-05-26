@@ -26,6 +26,6 @@ module.exports = {
   //serverPath: "http://54.255.186.7:9010"
   serverPath: "http://iquippo.com",
   ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
-  mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "no-reply@iquippo.com", Mailpassword: "welcome@123",from:"info@iquippo.com"}
+  mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"info@iquippo.com"}
 
 };
