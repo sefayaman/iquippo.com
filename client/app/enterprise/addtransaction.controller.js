@@ -40,6 +40,11 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     vm.enterpriseValuation.requestDate = moment(new Date()).format('MM/DD/YYYY');
     vm.enterpriseValuation.agency = {};
 
+
+    if($scope.isEdit==false){
+      vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;
+    }
+
     var userFilter = {};
     userFilter.role = "enterprise";
     userFilter.enterprise = true;
@@ -290,11 +295,11 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     function setCustomerData(entId){
-      vm.enterpriseValuation.customerPartyNo = "";
+      vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;
       vm.enterpriseValuation.customerPartyName = "";
       vm.enterprises.forEach(function(item){
         if(item.enterpriseId == entId){
-           vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;
+           //vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;
            vm.enterpriseValuation.customerPartyName = (item.fname || "") + " " + (item.mname || "") + " "+ (item.lname || "");
            return true;
         }
@@ -304,7 +309,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function setData(){
 
-       vm.enterprises.forEach(function(item){
+       vm.enterprisevaluationerprises.forEach(function(item){
         if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
           vm.enterpriseValuation.enterprise._id = item._id;
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
@@ -339,6 +344,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     function reset() {
+      vm.enterpriseValuation.customerPartyNo = "";
       vm.enterpriseValuation = {purpose:"Financing"};
       $scope.submitted = false;
       init();
