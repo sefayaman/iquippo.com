@@ -1618,7 +1618,7 @@
 					</select>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.amount.$invalid && submitted}">
-					<input type="text" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="Enter Rate" required>
+					<input type="number" min="0" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="Enter Rate" required>
 				</div>
 				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="vatVm.update(vatForm)">Update</button>
