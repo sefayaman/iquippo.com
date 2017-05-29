@@ -294,7 +294,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterpriseValuation.customerPartyName = "";
       vm.enterprises.forEach(function(item){
         if(item.enterpriseId == entId){
-           vm.enterpriseValuation.customerPartyNo = item.mobile;
+           vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;
            vm.enterpriseValuation.customerPartyName = (item.fname || "") + " " + (item.mname || "") + " "+ (item.lname || "");
            return true;
         }
