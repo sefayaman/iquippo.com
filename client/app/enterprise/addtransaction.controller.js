@@ -309,7 +309,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function setData(){
 
-       vm.enterprisevaluationerprises.forEach(function(item){
+       vm.enterprises.forEach(function(item){
         if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
           vm.enterpriseValuation.enterprise._id = item._id;
           vm.enterpriseValuation.enterprise.mobile = item.mobile;
