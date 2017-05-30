@@ -1399,7 +1399,7 @@ exports.validateExcelData = function(req, res, next) {
     validateAdditionalInfo : Any othe column would be added here which does not require any processing
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
-    if(reqType === 'Update'){
+    if(reqType == 'Update'){
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
