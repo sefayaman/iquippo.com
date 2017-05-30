@@ -24,6 +24,7 @@
 						<option value="assetgroup">Asset Group Master</option>
 						<option value="vatmaster">VAT Tax Master</option>
 						<option value="kyc">KYC Document Master</option>
+						<option value="charge">Asset Sale Charge Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -1734,6 +1735,109 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="vat in vatVm.filteredList">
+						<td></td>
+						<td></td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="vatVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="vatVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Asset sale charge master -->
+	<div ng-if="gsettingVm.tabValue == 'charge'" ng-controller="VatTaxMasterCtrl as vatVm">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Add New Asset Sale Charge</h4>
+			</div>
+			<div class="col-sm-offset-2 col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div>			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="" name="" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="">
+					<select class="form-control">
+						<option>Enterprise Name</option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group">
+		              <custom-datepicker placeholder="Effective From Date" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+		            </div>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group">
+		              <custom-datepicker placeholder="Effective To Date" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+		            </div>
+				</div>
+				<div class="col-sm-3" ng-class="">
+					<select class="form-control">
+						<option>Asset Category</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<input type="number" name="" value="" placeholder="Enter Rate (%)">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" name="" value="" placeholder="Flat per Transaction">
+				</div>
+				<div class="col-sm-offset-4 col-sm-2">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				Showing : 2 Records
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="vatVm.searchStr" ng-change="vatVm.searchFn()" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Enterprise Name</th>						
+						<th>Effective From Date</th>			
+						<th>Effective To Date</th>			
+						<th>Asset Category</th>			
+						<th>Rate (%)</th>			
+						<th>Flat per Transaction</th>			
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="vat in vatVm.filteredList">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td>
