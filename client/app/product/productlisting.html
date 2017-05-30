@@ -82,7 +82,7 @@
                     <tbody>
                       
                       <tr ng-repeat="product in products" ng-class="{'info':product.featured}">
-                    <td><input type="checkbox" ng-click="productListingVm.updateSelection($event,product._id)" ng-disabled="product.isSold"/></td>
+                    <td><input type="checkbox" ng-click="productListingVm.updateSelection($event,product._id)" ng-disabled="(product.isSold || product.status) && !isAdmin()"/></td>
                     <td><img ng-src="{{uploadImagePrefix}}{{product.assetDir}}/{{product.primaryImg}}" width="50" height="50"></td>
                     <!-- <td>{{product.productId}}</td> -->
                     <td>{{product.assetId}}</td>
