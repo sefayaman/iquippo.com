@@ -1030,7 +1030,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   var sortObj = {};
   if (req.body.sort)
     sortObj = req.body.sort;
-  sortObj['createdAt'] = -1;
+  sortObj['startDate'] = -1;
+  console.log("sdjfjs",sortObj);
 
   var query = AuctionMaster.find(filter).sort(sortObj);
   query.exec(

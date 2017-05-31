@@ -66,6 +66,7 @@ angular.module('sreizaoApp',[
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;
+    $rootScope.auctionmasterDir = auctionmasterDir;
     $rootScope.choosenTitle=choosenTitle;
     $rootScope.metaDescription=metaDescription;
     $rootScope.classifiedAdDir = classifiedAdDir;

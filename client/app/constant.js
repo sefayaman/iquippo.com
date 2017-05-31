@@ -90,6 +90,7 @@ var avatarDir = "avatar";
 var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
+var auctionmasterDir="auctionmaster";
 var choosenTitle="";
 var metaDescription="";
 
