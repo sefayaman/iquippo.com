@@ -34,7 +34,6 @@ body{top:0 !important;}
 .tricker{position: absolute;top: 0; width: 100%; background: rgba(0,0,0,0.6); padding: 10px 100px 5px; z-index: 8; color: #fff;}
 .bid-gif{position: absolute; left: 50px; top: 50px; z-index: 99;}
 .bid-gif img{width: 150px !important; height: 40px !important;}
-@import url(http://fonts.googleapis.com/css?family=Roboto+Condensed);
 body{font-family:'Roboto Condensed',sans-serif;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
@@ -223,6 +222,8 @@ header{background:#fff;}
 .result-products{position: relative;padding-top: 10px;}
 .sell-featured{position: relative; top: -4px;}
 .result-products img{width:150px;height:130px;}
+.input-group{width: 100%;}
+p.input-group{margin-bottom: 0;}
 .input-group .input-group-addon{padding:0; border-radius:0; width:40px;}
 .input-group .input-group-addon.currency-width{width:100px; border:0;}
 .calctr-info .input-group .input-group-addon{padding:0; border:none; border-radius:0; width:80px;}
