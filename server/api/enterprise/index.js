@@ -4,6 +4,7 @@ var express = require('express');
 var auth = require('../../auth/auth.service');
 var controller = require('./enterprise.controller');
 var assetGroupCtrl = require('./assetgroup.controller');
+var scriptController=require('./scripts');
 
 var router = express.Router();
 
@@ -31,6 +32,7 @@ router.get('/asset/group',auth.hasRole('admin'),assetGroupCtrl.fetch,assetGroupC
 router.get('/asset/group/count',auth.hasRole('admin'),assetGroupCtrl.count);
 router.post('/asset/group/upload/excel',auth.hasRole('admin'),assetGroupCtrl.uploadExcel);
 router.delete('/asset/group/:id',auth.hasRole('admin'),assetGroupCtrl.delete);
+router.get('/script/phChange',scriptController.script);
 
 //router.put('/asset/group/upload/excel',auth.hasRole('admin'),assetGroupCtrl.modifyExcel);
 

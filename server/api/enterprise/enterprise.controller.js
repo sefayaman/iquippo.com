@@ -711,7 +711,7 @@ exports.bulkUpload = function(req, res) {
       }
 
       row.customerPartyName = row.enterprise.name;
-      row.customerPartyNo = row.enterprise.mobile;
+      row.customerPartyNo = user.mobile;
       row.userName = user.fname + " " + user.lname;
       row.createdBy = {
         name : user.fname + " " + user.lname,
