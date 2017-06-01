@@ -1022,24 +1022,27 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter['$or'] = arr;
 
   var result = {};
-  if (req.body.pagination) {
+  /*if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
     return;
-  }
+  }*/
 
   var sortObj = {};
   if (req.body.sort)
     sortObj = req.body.sort;
-  sortObj['startDate'] = -1;
+  sortObj['startDate'] = 1;
   console.log("sdjfjs",sortObj);
 
   var query = AuctionMaster.find(filter).sort(sortObj);
   query.exec(
-    function(err, users) {
+    function(err, items) {
       if (err) {
         return handleError(res, err);
       }
-      return res.status(200).json(users);
+      var result={};
+      console.log("users----",items);
+      result.items=items;
+      return res.status(200).json(result);
     }
   );
 };

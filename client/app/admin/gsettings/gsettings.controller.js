@@ -784,10 +784,10 @@
                 return;
             }
 
-            if (!vm.auctionData.primaryImg) {
+            /*if (!vm.auctionData.primaryImg) {
                 Modal.alert("Please upload image for auctionmaster.", true);
                 return;
-            }
+            }*/
 
             $scope.submitted = false;
             getChangeAuctionMasterData();
