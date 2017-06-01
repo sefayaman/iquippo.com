@@ -31,7 +31,8 @@ angular.module('sreizaoApp',[
    'uiGmapgoogle-maps',
    'yard',
    'viewhead',
-   'nvd3'
+   'nvd3',
+   'timer'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
     $urlRouterProvider
@@ -66,6 +67,7 @@ angular.module('sreizaoApp',[
     $rootScope.manufacturerDir = manufacturerDir;
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;
+    $rootScope.auctionmasterDir = auctionmasterDir;
     $rootScope.choosenTitle=choosenTitle;
     $rootScope.metaDescription=metaDescription;
     $rootScope.classifiedAdDir = classifiedAdDir;

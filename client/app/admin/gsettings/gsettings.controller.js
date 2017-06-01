@@ -58,7 +58,7 @@
         vm.deletePaymentMaster = deletePaymentMaster;
         vm.onServiceChange = onServiceChange;
         vm.getParnerName = getParnerName;
-        vm.markeDefaultPartner  = markeDefaultPartner;
+        vm.markeDefaultPartner = markeDefaultPartner;
 
         vm.manufacturer = {};
         vm.manufacturerEdit = false;
@@ -75,6 +75,7 @@
         vm.editBanner = editBanner;
         vm.deleteBanner = deleteBanner;
         $scope.updateBannerImage = updateBannerImage;
+        $scope.updateAuctionMasterImage = updateAuctionMasterImage
         $scope.updateMobBannerImage = updateMobBannerImage;
 
         vm.auctionData = {};
@@ -648,43 +649,43 @@
                 })
         }
 
-        function markeDefaultPartner(payment){
+        function markeDefaultPartner(payment) {
             $rootScope.loading = true;
-            if(payment.default === true){
+            if (payment.default === true) {
                 PaymentMasterSvc.clearCache();
-               PaymentMasterSvc.getAll()
-                .then(function(result) {
-                    var found = false;
-                    for(var i = 0; i < result.length; i++){
-                        if(result[i].serviceCode == payment.serviceCode && result[i].default === true){
-                            found = true;
-                            break;
+                PaymentMasterSvc.getAll()
+                    .then(function(result) {
+                        var found = false;
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i].serviceCode == payment.serviceCode && result[i].default === true) {
+                                found = true;
+                                break;
+                            }
                         }
-                    }
-                    if(!found)
-                        update();
-                    else{
-                        $rootScope.loading = false;
-                        payment.default = false;
-                        Modal.alert("Default partner is already set for service " + payment.serviceCode.toLowerCase() || "" + ".");
-                    }
-                });
-            }else
+                        if (!found)
+                            update();
+                        else {
+                            $rootScope.loading = false;
+                            payment.default = false;
+                            Modal.alert("Default partner is already set for service " + payment.serviceCode.toLowerCase() || "" + ".");
+                        }
+                    });
+            } else
                 update();
-           
-           function update(){
-            PaymentMasterSvc.update(payment)
-            .then(function(res) {
-                $rootScope.loading = false;
-                if (res.errorCode == 0)
-                    getPaymnetMaster();
-                else
-                    Modal.alert(res.message);
-            })
-            .catch(function(err){
-                $rootScope.loading = false;
-            })
-           }
+
+            function update() {
+                PaymentMasterSvc.update(payment)
+                    .then(function(res) {
+                        $rootScope.loading = false;
+                        if (res.errorCode == 0)
+                            getPaymnetMaster();
+                        else
+                            Modal.alert(res.message);
+                    })
+                    .catch(function(err) {
+                        $rootScope.loading = false;
+                    })
+            }
             //console.log("default",payment.default);
         }
 
@@ -723,7 +724,7 @@
             vendorSvc.getAllVendors()
                 .then(function(res) {
                     vm.partners = vendorSvc.getVendorsOnCode(code);
-            })
+                })
 
         }
 
@@ -782,6 +783,12 @@
                 $scope.submitted = true;
                 return;
             }
+
+            /*if (!vm.auctionData.primaryImg) {
+                Modal.alert("Please upload image for auctionmaster.", true);
+                return;
+            }*/
+
             $scope.submitted = false;
             getChangeAuctionMasterData();
             AuctionMasterSvc.saveAuctionMaster(vm.auctionData)
@@ -855,9 +862,9 @@
             vm.auctionEdit = true;
             $scope.isCollapsed = false;
         }
-          
+
         function getAuctionMaster(filter) {
-          
+
             filter = filter || {};
             filter.prevPage = prevPage;
             filter.currentPage = vm.currentPage;
@@ -1075,6 +1082,14 @@
             });
         }
 
+        function updateAuctionMasterImage(files) {
+            if (files.length == 0)
+                return;
+            uploadSvc.upload(files[0], auctionmasterDir).then(function(result) {
+                vm.auctionData.primaryImg = result.data.filename;
+            });
+        }
+
         function updateMobBannerImage(files) {
             if (files.length == 0)
                 return;
@@ -1187,7 +1202,7 @@
                 vm.auctionProduct.user._id = Auth.getCurrentUser()._id;
                 vm.auctionProduct.user.email = Auth.getCurrentUser().email;
                 vm.auctionProduct.user.mobile = Auth.getCurrentUser().mobile;
-                vm.auctionProduct.user.country=Auth.getCurrentUser().country;
+                vm.auctionProduct.user.country = Auth.getCurrentUser().country;
                 vm.auctionProduct.status = auctionStatuses[2].code;
                 vm.auctionProduct.statuses = [];
                 var stObj = {};
@@ -1287,11 +1302,11 @@
                 $scope.submitted = true;
                 return;
             }
-           /* var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
-            if (!imgFound) {
-                Modal.alert("Please upload both images.");
-                return;
-            }*/
+            /* var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
+             if (!imgFound) {
+                 Modal.alert("Please upload both images.");
+                 return;
+             }*/
 
             for (var i = 0; i < vm.upcomingAuctions.length; i++) {
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId) {

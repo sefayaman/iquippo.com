@@ -16,6 +16,7 @@ var AuctionRequestSchema = new Schema({
   lotNo:String,
   status:{type:String,default:"Request Submitted"},
   transactionId:String,
+  primaryImg: String,
   valuation:{},
   statuses:[{}],
   valuationReport:String,
