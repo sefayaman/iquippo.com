@@ -402,18 +402,30 @@
 							</select>
 							<i class="caret"></i>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-3">
 							
-							<span class="btn btn-warning fileinput-button">
+							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Browse Document</span>
 								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
 							</span>
-						</div>
-						<div class="col-sm-3 form-group">
 							<span>{{gsettingVm.auctionData.docName}}</span>
+						</div>
+						
+						<div class="col-sm-3">							
+							<span class="btn btn-warning btn-block fileinput-button">
+								<span>Browse Image</span>
+								<input type="file" name="file" onchange="angular.element(this).scope().updateAuctionMasterImage(this.files,this)" accept="image/*" class="ng-scope">
+							</span>
+							<span>{{gsettingVm.auctionData.primaryImg}}</span>
+						</div>
+						<div class="col-sm-3">	
+							<input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
 						</div>
 					</div>
 					<div class="row form-group">
+						<div class="col-sm-3">	
+							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
+						</div>
 						<div class="col-sm-2 pull-right">
 							<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
 							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
@@ -446,6 +458,8 @@
 						<th>Registration end date</th>
 						<th>Location</th>
 						<th>Address of auction</th>
+						<th>Contact Person Name</th>
+						<th>Contact Person Number</th>
 						<th>Auction type</th>
 						<th>EMD Amount</th>
 						<th>Document attachment type</th>
@@ -466,6 +480,8 @@
 						<td>{{auc.regEndDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{auc.city}}</td>
 						<td>{{auc.auctionAddr}}</td>
+						<td>{{auc.contactName}}</td>
+						<td>{{auc.contactNumber}}</td>
 						<td>{{auc.auctionType | titleCase}}</td>
 						<td>{{auc.emdAmount}}</td>
 						<td>
