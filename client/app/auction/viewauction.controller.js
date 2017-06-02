@@ -76,6 +76,8 @@
       else
         filter['auctionType'] = "upcoming";
 
+      console.log("filter",filter);
+
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
           getAuctionWiseProductData(result);
           if (filter.auctionType == "upcoming") {
@@ -206,6 +208,9 @@
         angular.copy(dataToSend, filter);
       else
         filter = filterObj;
+      if(vm.statusType){
+        filter.statusType=vm.statusType;
+      }
       getAuctions(filter);
     }
 

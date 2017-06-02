@@ -948,6 +948,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["_id"] = req.body._id;
   if (req.body.userId)
     filter["user._id"] = req.body.userId;
+  if(req.body.statusType)
+    filter["auctionType"]=req.body.statusType;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
   if (req.body.auctionType == 'closed'){
