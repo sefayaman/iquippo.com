@@ -1024,10 +1024,10 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter['$or'] = arr;
 
   var result = {};
-  /*if (req.body.pagination) {
+  if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
     return;
-  }*/
+  }
 
   var sortObj = {};
   if (req.body.sort)
