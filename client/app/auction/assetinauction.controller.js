@@ -11,6 +11,8 @@
 
     vm.auctionDetailListing = [];
     vm.backButton = backButton;
+    vm.auctionName=$location.search().auctionName;
+    $scope.auctionValue=$location.search().auctionType;
     $scope.openUrl = openUrl;
 
     function openUrl(_id) {
@@ -47,7 +49,7 @@
             } else {
               assetIds = [];
               vm.auctionDetailListing = result;
-              $scope.auctionValue=$location.search().auctionType;;              
+
             }
           }
         });
