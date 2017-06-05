@@ -360,6 +360,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
         if(item.success == "true"){
           valReq.jobId = item.jobId;
+          valReq.submittedToAgencyDate = new Date();
           setStatus(valReq,EnterpriseValuationStatuses[2]);
           sendNotification(valReq);
         }else{
