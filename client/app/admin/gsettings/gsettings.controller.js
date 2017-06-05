@@ -1575,7 +1575,7 @@
 
         function fireCommand(reset, filterObj, requestFor) {
             if (reset)
-                $scope.pager.reset();
+                resetPagination();
             var filter = {};
             if (!filterObj)
                 angular.copy(dataToSend, filter);
