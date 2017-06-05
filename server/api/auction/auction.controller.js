@@ -540,9 +540,9 @@ exports.update = function(req, res) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
-
   AuctionRequest.find({
-    "product.assetId": req.body.product.assetId
+    "product.assetId": req.body.product.assetId,
+    "status" : "request_approved"
   }, function(err, auctions) {
     if (err) {
       return handleError(res, err);

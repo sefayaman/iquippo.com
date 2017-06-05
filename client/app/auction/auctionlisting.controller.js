@@ -120,8 +120,15 @@
     function updateStatus(auctionReq, status) {
       if (!status)
         return;
+      var prevStatus = auctionReq.status;
       AuctionSvc.updateStatus(auctionReq, status)
         .then(function(result) {
+          if(result.errorCode === 1) {
+            auctionReq.status = prevStatus;
+            Modal.alert("This Assset id is already approved and listed in an Auction.");
+            return;
+          }
+
           AuctionSvc.sendNotification(auctionReq, UtilSvc.getStatusOnCode(auctionStatuses, status).notificationText, 2);
         });
     }
