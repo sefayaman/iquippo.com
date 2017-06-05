@@ -43,6 +43,7 @@ var EnterpriseValuationSchema = new Schema({
   customerInvoiceDate:Date,
   customerInvoiceValue:Number,
   /* Valuation agency  field */
+  submittedToAgencyDate:Date,
   jobId:String,
   reportDate:Date,
   reportNo:String,
