@@ -214,7 +214,7 @@
                       </div>
                       <div class="form-group col-xs-3 col-sm-1 text-center padd">
                         <a href class="form-control" ng-click="open($event, 'mfgYear')">
-                          <i class="fa fa-calendar-o fa-2x"></i>
+                          <i class="fa fa-calendar-o fa-1x"></i>
                         </a>
                       </div>
                     </div>
@@ -255,6 +255,30 @@
                       </div>
                     </div>
                     <div class="row">
+                      <div class="form-group col-sm-5">Date of Repo</div>
+                      <div class="form-group col-sm-7">
+                        <custom-datepicker placeholder="Date of Repo" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Valuation Amount</div>
+                      <div class="form-group col-sm-7">
+                        <input type="number" class="form-control"  min="0" name="" placeholder="Valuation Amount">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Address of Asset</div>
+                      <div class="form-group col-sm-7">
+                        <input type="text" class="form-control" name="" placeholder="Address of Asset">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Reserve Price</div>
+                      <div class="form-group col-sm-7">
+                        <input type="number" class="form-control" min="0" name="" placeholder="Reserve Price">
+                      </div>
+                    </div>                    
+                    <div class="row">
                       <div class="form-group col-sm-5">Country<span class="text-warning">*</span></div>
                       <div class="form-group col-sm-7" ng-class="{'has-error': form.country.$invalid && submitted}">
                         <select class="form-control" name="country" ng-model="product.country" ng-change="onCountryChange()" required>
@@ -288,6 +312,12 @@
                           <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                         </select>
                         <i class="caret"></i>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Tax Rate</div>
+                      <div class="form-group col-sm-7">
+                        <input type="number" class="form-control" name="" value="" placeholder="Tax Rate">
                       </div>
                     </div>
                     <div class="row">
