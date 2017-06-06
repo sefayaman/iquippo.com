@@ -110,7 +110,8 @@
                </div>
              </div>
                 <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
-                <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct.product._id">View Details</a>
+                <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
+             <!-- auctionProduct.product._id -->
             </div>
           </div>
         </div>
