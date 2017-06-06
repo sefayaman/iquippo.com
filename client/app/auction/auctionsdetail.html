@@ -112,7 +112,7 @@
                 </div>
                 <div class="col-xs-8 col-sm-8 text-right">
                   <button ng-if="auctionProduct.product.contactNumber" class="btn btn-sm btn-default"><i class="fa fa-phone"></i> {{auctionProduct.product.contactNumber}}</button>
-                  <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
+                  <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-if="auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
                 </div>
               </div>
             </div>

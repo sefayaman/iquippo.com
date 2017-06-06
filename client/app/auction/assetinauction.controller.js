@@ -14,6 +14,9 @@
     $scope.openUrl = openUrl;
 
     function openUrl(_id) {
+      if(!_id)
+        return;
+      
       $window.open('/productdetail/' + _id, '_blank');
     }
 
