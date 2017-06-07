@@ -3,8 +3,7 @@
     <div class="row form-group">
       <div class="col-sm-8"><h3>{{auctionDetailsVm.auctionName}}</h3></div>
       <div class="col-xs-8 col-sm-3 text-center Asset-filter">
-
-          Filter 
+          Filter : 
           <select>
             <option>Asset Category</option>
             <option>Asset Brand</option>
@@ -95,28 +94,25 @@
             <div class="media-body">
               <h4 class="media-heading">
                 {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}
+
+                <small class="pull-right text-warning">
+                  <strong ng-if="auctionValue =='upcomingAuctions'"><i class="fa fa-clock-o"></i> Upcoming</strong>
+                  <strong ng-if="auctionValue =='ongoingAuctions'"><i class="fa fa-clock-o"></i> Ongoing</strong>
+                  <strong ng-if="auctionValue =='closedAuctions'"><i class="fa fa-clock-o"></i> Closed</strong>
+                </small>
               </h4>
-              <p class="form-group">{{auctionProduct.product.description}}</p>
-              <div class="row">
-                <div class="col-xs-7 col-sm-8">
-                  <p ng-if="auctionValue =='upcomingAuctions'"><i class="fa fa-clock-o"></i> Upcoming</p>
-                  <p ng-if="auctionValue =='ongoingAuctions'"><i class="fa fa-clock-o"></i> Ongoing</p>
-                  <p ng-if="auctionValue =='closedAuctions'"><i class="fa fa-clock-o"></i> Closed</p>
-                </div>
-                <div class="col-xs-5 col-sm-4 text-right">
-                  <p uib-tooltip="Manufacturing Year" data-placement="top" title="Manufacturing Year"><i class="fa fa-calendar"></i> 2010 </p> <!-- Manufacturing Year -->
-                </div>
-              </div>
-              <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
-              <div class="row">
-                <div class="col-xs-4 col-sm-4">                  
-                  <p ng-if="auctionProduct.product.contactName"><i class="fa fa-user"></i> {{auctionProduct.product.contactName}}</p>
-                </div>
-                <div class="col-xs-8 col-sm-8 text-right">
-                  <button ng-if="auctionProduct.product.contactNumber" class="btn btn-sm btn-default"><i class="fa fa-phone"></i> {{auctionProduct.product.contactNumber}}</button>
-                  <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
-                </div>
-              </div>
+              <p class="form-group">{{auctionProduct.product.assetId}}</p>
+             <div class="row">
+               <div class="col-sm-6">
+                 <p ng-if="auctionProduct.product.mfgYear"><i class="fa fa-calendar-o"></i> {{auctionProduct.product.mfgYear}} </p> <!-- Manufacturing Year -->
+               </div>
+               <div class="col-sm-6 text-right">
+                 <p ng-if="auctionProduct.product.contactName"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span></p>
+               </div>
+             </div>
+                <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
+                <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
+             <!-- auctionProduct.product._id -->
             </div>
           </div>
         </div>
