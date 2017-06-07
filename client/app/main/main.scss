@@ -927,10 +927,14 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .videos-icon{text-align: center;display: block;}
 .videos-icon img{position: relative;bottom:70px;margin:auto;width: 35px;height: 35px;}
 .auction-list{padding: 10px; border: 1px solid #ccc; margin: 10px 0;}
+.auction-list .media-heading{margin-top: 3px; margin-bottom: 12px;}
+.auction-list .media p{margin-bottom: 6px;}
 .Asset-filter{padding-top:  25px;}
 .Asset-filter select, .Asset-filter .btn{padding:  5px; border: 1px solid #999;}
-.auction-list img{width: 200px; height: 120px;}
-.auction-list.auction-details img{width: 150px; height: 150px;}
+.auction-list img{width: 200px; height: 120px; border: 1px solid #ccc;}
+.auction-list.auction-details img{width: 130px; height: 130px;}
+.auction-details{position: relative;}
+.auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
 
 /* responsive */
 @media (max-width:1199px){
@@ -1161,6 +1165,8 @@ footer p{font-size:12px;}
 .banner .carousel-inner{height: 160px; margin-bottom: 10px;}
 .auction-list .media a.pull-left{width: 100%; margin-bottom: 10px;}
 .auction-list .media a.pull-left img{width: 100%; height:150px;}
+.Asset-filter{padding: 0;}
+.auction-details .media-heading{font-size: 15px;}
 }
 
 @media (max-width:480px){
