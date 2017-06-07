@@ -1,15 +1,6 @@
   <div class="container" ng-if="!auctionOnMap">
 		<div class="row form-group">
-      <div class="col-xs-5 col-sm-8"><h3>Auctions</h3></div>
-      <div class="col-xs-7 col-sm-4 Asset-filter text-right">
-          Filter : 
-          <select>
-            <option>Live</option>
-            <option>Online</option>
-            <option>Asset Category</option>
-            <option>Location</option>
-          </select>
-      </div>      
+      <div class="col-xs-5 col-sm-8"><h3>Auctions</h3></div>   
     </div>
 		<legend></legend>
 
@@ -87,31 +78,34 @@
             <div class="media-body">
               <h4 class="media-heading text-primary">{{product.auctionType | titleCase}} {{product.name}} - {{product.city}}</h4>
               <div class="row">
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                   <p ng-if="product.auctionValue =='upcomingAuctions'"><strong>Auction Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}}</p>
                   <p ng-if="product.auctionValue =='ongoingAuctions'" class="text-success"><strong>Ongoing Auction Time : <timer end-time="product.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
                   <p ng-if="product.auctionValue =='closedAuctions'"><strong>Auction Closed</strong></p>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-4 text-right">
                   <p><strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span></p>
                 </div>
               </div>
               <p><strong>Inspection Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
               
               <div class="row">
-                <div class="col-sm-7">
-                  <p><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)" ng-if="product.auctionAddr">{{product.auctionAddr}}</a> </p>
+                <div class="col-sm-8">
+                  <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>
-                <div class="col-sm-5">
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}" class="btn btn-sm btn-danger">View Assets</a>
+                <div class="col-xs-6 col-sm-2">
+                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
+                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                  <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}" class="btn btn-sm btn-block btn-danger">View Assets</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
   </div>
+ <!--  <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false"></uib-pagination> -->
 <div class="container" ng-if="auctionOnMap">
   <div class="row">
     <div class="col-sm-12" id="map_canvas">

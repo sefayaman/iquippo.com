@@ -1,10 +1,10 @@
 (function() {
     'use strict';
 
-    angular.module('admin').controller('VatTaxMasterCtrl', VatTaxMasterCtrl);
+    angular.module('admin').controller('KYCMasterCtrl', KYCMasterCtrl);
 
-    function VatTaxMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,VatTaxSvc,categorySvc,groupSvc,modelSvc,brandSvc,LocationSvc){
-    	 var vm  = this;
+    function KYCMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,KYCSvc){
+    	var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
         vm.filteredList = [];
@@ -16,36 +16,13 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.getCategory = getCategory;
-
+        
         function init(){
-        groupSvc.getAllGroup()
-        .then(function(result) {
-          $scope.allGroup = result;
-        });
-
-        LocationSvc.getAllState()
-          .then(function(result){
-            $scope.stateList = result;
-          });
           loadViewData();
         } 
 
-        function getCategory(groupId) {
-            vm.categoryList = [];
-            
-            if (!groupId) {
-                vm.dataModel.category = "";
-                return;
-            }
-            categorySvc.getCategoryOnFilter({groupId: groupId})
-                .then(function(result) {
-                    vm.categoryList = result;
-                })
-        }
-
         function loadViewData(){
-            VatTaxSvc.get()
+            KYCSvc.get()
             .then(function(result){
                 vm.dataList = result;
                 vm.filteredList = result;
@@ -66,7 +43,7 @@
             vm.dataModel.createdBy = {};
             vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
             vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-            VatTaxSvc.save(vm.dataModel)
+            KYCSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
                 loadViewData();
@@ -81,19 +58,8 @@
         function editClicked(rowData){
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.group = rowData.group._id;
-            vm.dataModel.vatType = rowData.vatType;
-            if (vm.dataModel.effectiveToDate)
-                vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
-            if (vm.dataModel.effectiveFromDate)
-                vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
-            vm.dataModel.state = rowData.state._id;
-            vm.dataModel.amount = rowData.amount;
-            categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
-                .then(function(result) {
-                    vm.categoryList = result;
-                    vm.dataModel.category = rowData.category._id;
-                })
+            vm.dataModel.kycType = rowData.kycType;
+            vm.dataModel.docName = rowData.docName;
             $scope.isEdit = true;
         }
 
@@ -102,7 +68,7 @@
                 $scope.submitted = true;
                 return;
             }
-            VatTaxSvc.update(vm.dataModel)
+            KYCSvc.update(vm.dataModel)
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
@@ -123,7 +89,7 @@
         }
 
         function confirmDestory(id){
-            VatTaxSvc.destroy(id)
+            KYCSvc.destroy(id)
             .then(function(){
                 loadViewData();
             })
