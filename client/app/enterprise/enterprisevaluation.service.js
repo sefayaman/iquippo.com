@@ -289,7 +289,8 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     city:"city",
     contactPerson:"contactPerson",
     contactPersonTelNo:"contactPersonTelNo",
-    disFromCustomerOffice:"disFromCustomerOffice"
+    disFromCustomerOffice:"disFromCustomerOffice",
+    customerSeekingFinance:"nameOfCustomerSeeking"
   }
 
   var submmitted = false;
@@ -323,7 +324,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
 
     if(DevEnvironment)
-        apiUrl = "/api/quippovaluaion";      
+        apiUrl = "http://13.126.19.255/valuation/api.php?type=Mjobcreation";
 
     $rootScope.loading = true;
     $http.post(apiUrl,dataArr)
