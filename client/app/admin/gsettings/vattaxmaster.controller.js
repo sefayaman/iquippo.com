@@ -83,9 +83,9 @@
             vm.dataModel._id  = rowData._id;
             vm.dataModel.group = rowData.group._id;
             vm.dataModel.vatType = rowData.vatType;
-            if (vm.dataModel.effectiveToDate)
+            if (rowData.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
-            if (vm.dataModel.effectiveFromDate)
+            if (rowData.effectiveFromDate)
                 vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
             vm.dataModel.state = rowData.state._id;
             vm.dataModel.amount = rowData.amount;

@@ -1691,12 +1691,12 @@
 	</div>
 
 	<!-- KYC Document master -->
-	<div ng-if="gsettingVm.tabValue == 'kyc'" ng-controller="VatTaxMasterCtrl as vatVm">
+	<div ng-if="gsettingVm.tabValue == 'kyc'" ng-controller="KYCMasterCtrl as kycVm">
 		<div class="row">
 			<div class="col-sm-6">
 				<h4>Add New KYC Document</h4>
 			</div>
-			<div class="col-sm-offset-2 col-sm-2">				
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
 				<span class="btn btn-success btn-block fileinput-button">
 					<input type="file" name="template_update">
 					<span>
@@ -1711,23 +1711,21 @@
 						<i class="fa fa-file-excel-o"></i> Export Excel
 					</span>
 				</span>				
-			</div>			
+			</div> -->			
 		</div>
 		<legend></legend>
 		<div>
-		<form class="" name="" >			
+		<form class="" name="kycForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
-					<select class="form-control" name="" ng-model=""  ng-change="" required>
-						<option value="">KYC Type</option>
-					</select>
+				<div class="col-sm-3" ng-class="{'has-error':kycForm.kycType.$invalid && submitted}">
+					<input type="text" class="form-control" name="kycType" ng-model="kycVm.dataModel.kycType" placeholder="*KYC Type" required>
 				</div>
-				<div class="col-sm-3" ng-class="">
-					<input type="text" class="form-control" name="amount" ng-model="" placeholder="Document Name" required>
+				<div class="col-sm-3" ng-class="{'has-error':kycForm.docName.$invalid && submitted}">
+					<input type="text" class="form-control" name="docName" ng-model="kycVm.dataModel.docName" placeholder="*Document Name" required>
 				</div>
 				<div class="col-sm-offset-4 col-sm-2">
-					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="">Update</button>
-					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="">Save</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="kycVm.update(kycForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="kycVm.save(kycForm)">Save</button>
 				</div>
 			</div>
 		</form>
