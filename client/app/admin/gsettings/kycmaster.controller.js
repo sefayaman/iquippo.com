@@ -40,9 +40,6 @@
                 $scope.submitted = true;
                 return;
             }
-            vm.dataModel.createdBy = {};
-            vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
-            vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
             KYCSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
