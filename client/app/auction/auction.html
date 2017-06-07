@@ -112,22 +112,12 @@
                 <div class="col-sm-8">
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>
-<<<<<<< HEAD
                 <div class="col-xs-6 col-sm-2 padd-right">
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                 </div>
                 <div class="col-xs-6 col-sm-2">
                   <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}" class="btn btn-sm btn-danger">View Assets</a>
-=======
-                <div class="col-xs-6 col-sm-2">
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                </div>
-                <div class="col-xs-6 col-sm-2">
-                  <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}" class="btn btn-sm btn-block btn-danger">View Assets</a>
->>>>>>> master
-                </div>
               </div>
             </div>
           </div>
