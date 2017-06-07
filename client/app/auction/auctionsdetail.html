@@ -110,7 +110,7 @@
                  <p ng-if="auctionProduct.product.contactName"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span></p>
                </div>
              </div>
-                <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
+                <p ng-if="auctionProduct.product.city"><strong><i class="fa fa-map-marker"></i></strong><a href="javascript:void(0);" ng-click="auctionDetailsVm.showAddress(auctionProduct.product.auctionAddr,auctionProduct.product.city,auctionProduct.product.state)">{{auctionProduct.product.city}}</a></p>
                 <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
              <!-- auctionProduct.product._id -->
             </div>
