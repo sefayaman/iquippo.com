@@ -8,7 +8,7 @@ exports.get = function(req, res) {
   var queryParam = req.query;
   var filter = {};
 
-  var query = Model.find(filter).populate({path:'category brand model state',match:filter});
+  var query = Model.find(filter).populate({path:'category group state',match:filter});
   query.exec(function (err, result) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(result);
@@ -37,8 +37,9 @@ exports.create = function(req, res,next) {
 function _getRecord(data,cb){
   var filter = {};
   filter.category = data.category;
-  filter.brand = data.brand;
-  filter.model = data.model;
+  filter.group = data.group;
+  //filter.brand = data.brand;
+  //filter.model = data.model;
   filter.state = data.state;
   Model.find(filter,function(err,result){
     cb(err,result);

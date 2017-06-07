@@ -1566,7 +1566,7 @@
 			<div class="col-sm-6">
 				<h4>Add New VAT Tax</h4>
 			</div>	
-			<div class="col-sm-offset-2 col-sm-2">				
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
 				<span class="btn btn-success btn-block fileinput-button">
 					<input type="file" name="template_update">
 					<span>
@@ -1581,31 +1581,34 @@
 						<i class="fa fa-file-excel-o"></i> Export Excel
 					</span>
 				</span>				
-			</div>	
+			</div>	 -->
 		</div>
 		<legend></legend>
 		<div>
 		<form class="assetGroupForm" name="vatForm" >
 			<div class="row form-group">
-				<div class="col-sm-3">
-					<select class="form-control" name="type">
-						<option value="">*Text Type</option>
-					</select>
+				<div class="col-sm-3" ng-class="{'has-error':vatForm.vatType.$invalid && submitted}">
+					<input type="text" class="form-control" name="vatType" ng-model="vatVm.dataModel.vatType" placeholder="*Tax Type" required>
 				</div>
 				<div class="col-sm-3">
-					<div class="input-group">
-		              <custom-datepicker placeholder="Effective From Date" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+					<div class="input-group" ng-class="{'has-error':vatForm.effectiveFromDate.$invalid && submitted}">
+					
+					<input type="text" name="effectiveFromDate" class="form-control" ng-model="vatVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+
+		              <!-- <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="vatVm.dataModel.effectiveFromDate" myid="fromdate" required></custom-datepicker> -->
 		            </div>
 				</div>
 				<div class="col-sm-3">
-					<div class="input-group">
-		              <custom-datepicker placeholder="Effective To Date" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+					<div class="input-group" ng-class="{'has-error':vatForm.effectiveToDate.$invalid && submitted}">
+		              <input type="text" name="effectiveFromDate" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+		              
+		              <!-- <custom-datepicker placeholder="*Effective To Date" name="effectiveToDate" ng-model="vatVm.dataModel.effectiveToDate" myid="fromdate" required></custom-datepicker> -->
 		            </div>
 				</div>
-				<div class="col-sm-3">
-					<select class="form-control" name="group" ng-model="vatVm.dataModel.group"  ng-change="" required>
+				<div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}">
+					<select class="form-control" name="group" ng-model="vatVm.dataModel.group" ng-change="vatVm.getCategory(vatVm.dataModel.group)" required>
 						<option value="">*Asset Group</option>
-						
+						<option value="{{group._id}}" ng-repeat="group in allGroup">{{group.name}}</option>
 					</select>
 				</div>				
 				<!-- <div class="col-sm-3" ng-class="{'has-error':vatForm.brand.$invalid && submitted}">
@@ -1625,7 +1628,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
 					<select class="form-control" name="category" ng-model="vatVm.dataModel.category"  ng-change="vatVm.getBrand(vatVm.dataModel.category)" required>
 						<option value="">*Asset Category</option>
-						<option value="{{ct._id}}" ng-repeat="ct in categoryList">{{ct.name}}</option>
+						<option value="{{ct._id}}" ng-repeat="ct in vatVm.categoryList">{{ct.name}}</option>
 					</select>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.state.$invalid && submitted}">
@@ -1635,7 +1638,7 @@
 					</select>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.amount.$invalid && submitted}">
-					<input type="number" min="0" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="Enter Rate" required>
+					<input type="number" min="0" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="*Enter Rate" required>
 				</div>
 				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="vatVm.update(vatForm)">Update</button>
@@ -1671,10 +1674,10 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="vat in vatVm.filteredList">
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+						<td>{{vat.vatType}}</td>
+						<td>{{vat.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
+						<td>{{vat.effectiveToDate | date:'MM/dd/yyyy'}}</td>
+						<td>{{vat.group.name}}</td>
 						<td>{{vat.category.name}}</td>
 						<td>{{vat.state.name}}</td>
 						<td>{{vat.amount}}</td>
@@ -1796,12 +1799,12 @@
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group">
-		              <custom-datepicker placeholder="Effective From Date" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+		              <custom-datepicker placeholder="Effective From Date" myid="fromdate" on-change=""></custom-datepicker>
 		            </div>
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group">
-		              <custom-datepicker placeholder="Effective To Date" ng-model="" myid="fromdate" on-change=""></custom-datepicker>
+		              <custom-datepicker placeholder="Effective To Date" myid="fromdate" on-change=""></custom-datepicker>
 		            </div>
 				</div>
 				<div class="col-sm-3" ng-class="">
