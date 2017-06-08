@@ -1,6 +1,15 @@
   <div class="container" ng-if="!auctionOnMap">
-		<div class="row form-group">
-      <div class="col-xs-5 col-sm-8"><h3>Auctions</h3></div>   
+    <div class="form-group"></div>
+		 <div class="row">
+      <div class="col-xs-4 col-sm-9"><h4>Auctions</h4></div>
+      <div class="col-xs-8 col-sm-3 text-right">
+        Filter :         
+        <select class="auction-filter">
+          <option>Auction Type</option>
+          <option>Live</option>
+          <option>Online</option>
+        </select>
+      </div>
     </div>
 		<legend></legend>
 
@@ -69,14 +78,18 @@
         <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->
     		<div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing">  
           <div class="media">
-            <a class="pull-left" href="#">
+            <a class="pull-left" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="{{uploadImagePrefix}}{{auctionmasterDir}}/closed.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="{{uploadImagePrefix}}{{auctionmasterDir}}/upcoming.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='ongoingAuctions'" src="{{uploadImagePrefix}}{{auctionmasterDir}}/ongoing.jpg" alt="Image">
             </a>
             <div class="media-body">
-              <h4 class="media-heading text-primary">{{product.auctionType | titleCase}} {{product.name}} - {{product.city}}</h4>
+              <h4 class="media-heading text-primary">
+                <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}">
+                  {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
+                </a>
+              </h4>
               <div class="row">
                 <div class="col-sm-8">
                   <p ng-if="product.auctionValue =='upcomingAuctions'"><strong>Auction Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}}</p>
@@ -93,7 +106,7 @@
                 <div class="col-sm-8">
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>
-                <div class="col-xs-6 col-sm-2">
+                <div class="col-xs-6 col-sm-2 padd-right">
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                 </div>
