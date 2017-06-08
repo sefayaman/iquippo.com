@@ -1,44 +1,61 @@
   <div class="container">
   <div class="form-group"></div>
   <div class="row">
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <div class="well">
         <form role="form"> 
           <label for="" class="text-muted">Asset Id</label>
           <input type="text" class="form-control form-group" name="" value="" placeholder="Asset Id"> 
 
           <label for="" class="text-muted">Asset Category</label>
-          <select class="form-control form-group" name="category">
+          <select class="form-control form-group" name="category" ng-model="equipmentSearchFilter.category" ng-change="auctionDetailsVm.onCategoryChange(equipmentSearchFilter.category)">
             <option value="">Select Category</option>
             <option value="{{cat.name}}" ng-repeat="cat in allCategory">{{cat.name}}</option>
           </select>
 
           <label for="" class="text-muted">Brand</label>
-          <select class="form-control form-group" name="brand">
+          <select class="form-control form-group" name="brand" ng-model="equipmentSearchFilter.brand" ng-change="auctionDetailsVm.onBrandChange(equipmentSearchFilter.brand)">
             <option value="" >Select Brand</option>
             <option value="{{br.name}}" ng-repeat="br in brandList">{{br.name}}</option>
           </select>
 
           <label for="" class="text-muted">Model</label>
-          <select class="form-control form-group" name="model">
+          <select class="form-control form-group" name="model" ng-model="equipmentSearchFilter.model" ng-change="auctionDetailsVm.fireCommand()">
             <option value="" >Select Model</option>
             <option value="{{md.name}}" ng-repeat="md in modelList">{{md.name}}</option>
           </select>
 
           <label for="" class="text-muted">Location</label>
-          <input type="text" class="form-control form-group" placeholder="Enter Country/State/Location"/>
+          <input type="text" class="form-control form-group" placeholder="Enter Location"/>
 
           <label for="" class="text-muted">Manufacturing Year</label>
-          <custom-datepicker placeholder="Manufacturing Year" ng-model="dt" myid="fromyear" on-change="enterpriseTransactionVm.fireCommand(true)"></custom-datepicker>
+          <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="viewproductVm.productSearchOnMfg()"/>
+                    <a href class="input-group-addon" ng-click="open($event,'min')">
+                      <i class="fa fa-calendar-o"></i>
+                    </a>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="viewproductVm.productSearchOnMfg()"/>
+                        <a href class="input-group-addon" ng-click="open($event,'max')">
+                          <i class="fa fa-calendar-o"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
         </form>
       </div>
-    </div>
+    </div> -->
     <div class="col-sm-9">
       <div class="row">
-        <div class="col-sm-7"><h4>Auctions Name</h4></div>
+        <div class="col-sm-7"><h4>{{auctionName}}</h4></div>
         <div class="col-xs-6 col-sm-3 text-right padd-right">
           <a href="" class="btn btn-sm btn-primary" ng-if="false" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-          <a href="" class="btn btn-sm btn-default" ng-if="true" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
         </div>
         <div class="col-xs-6 col-sm-2 text-right">        
           <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm btn-block">Back</a>

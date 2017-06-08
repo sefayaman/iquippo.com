@@ -4,10 +4,10 @@
       <div class="col-xs-4 col-sm-9"><h4>Auctions</h4></div>
       <div class="col-xs-8 col-sm-3 text-right">
         Filter :         
-        <select class="auction-filter">
-          <option>Auction Type</option>
-          <option>Live</option>
-          <option>Online</option>
+        <select class="auction-filter" ng-model="auctionDateVm.statusType" ng-change="auctionDateVm.fireCommand()">
+          <option value="">Select Auction Type</option>
+          <option value="live">Live</option>
+          <option value="online">Online</option>
         </select>
       </div>
     </div>
@@ -100,7 +100,7 @@
                   <p><strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span></p>
                 </div>
               </div>
-              <p><strong>Inspection Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
+              <p ng-if="product.insStartDate && product.insEndDate"><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
               
               <div class="row">
                 <div class="col-sm-8">
@@ -111,7 +111,7 @@
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                 </div>
                 <div class="col-xs-6 col-sm-2">
-                  <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}" class="btn btn-sm btn-block btn-danger">View Assets</a>
+                  <a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}" class="btn btn-sm btn-block btn-danger">View Assets</a>
                 </div>
               </div>
             </div>

@@ -53,6 +53,7 @@
 
     function init() {
       //dataToSend.auctionType = $scope.auctionType;
+
       dataToSend.pagination = true;
       dataToSend.itemsPerPage = vm.itemsPerPage;
       if ($stateParams.type)
@@ -206,6 +207,10 @@
         angular.copy(dataToSend, filter);
       else
         filter = filterObj;
+
+      if(vm.statusType){
+        filter.statusType=vm.statusType;
+      }
       getAuctions(filter);
     }
 
