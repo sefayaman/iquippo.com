@@ -950,6 +950,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user._id"] = req.body.userId;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
+  if(req.body.statusType){
+    filter["auctionType"]=req.body.statusType;
+  }
   if (req.body.auctionType == 'closed'){
     var currentDate = new Date();
     filter.endDate={

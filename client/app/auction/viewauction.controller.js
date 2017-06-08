@@ -233,6 +233,7 @@
       vm.totalItems = 0;
       first_id = null;
       last_id = null;
+      vm.auctionListing=[];
     }
 
     $scope.marker = {};
