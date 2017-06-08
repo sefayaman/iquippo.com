@@ -964,6 +964,8 @@
       $scope.auctionReq.product.grossPrice = productObj.grossPrice;
       $scope.auctionReq.product.assetDir = productObj.assetDir;
       $scope.auctionReq.product.primaryImg = productObj.primaryImg;
+      $scope.auctionReq.product.city = productObj.city;
+
 
       for (var i = 0; i < $scope.auctions.length; i++) {
         if ($scope.auctions[i]._id == $scope.auctionReq.dbAuctionId) {

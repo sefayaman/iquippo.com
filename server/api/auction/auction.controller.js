@@ -540,9 +540,9 @@ exports.update = function(req, res) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
-
   AuctionRequest.find({
-    "product.assetId": req.body.product.assetId
+    "product.assetId": req.body.product.assetId,
+    "status" : "request_approved"
   }, function(err, auctions) {
     if (err) {
       return handleError(res, err);
@@ -948,8 +948,13 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["_id"] = req.body._id;
   if (req.body.userId)
     filter["user._id"] = req.body.userId;
+  if(req.body.statusType)
+    filter["auctionType"]=req.body.statusType;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
+  if(req.body.statusType){
+    filter["auctionType"]=req.body.statusType;
+  }
   if (req.body.auctionType == 'closed'){
     var currentDate = new Date();
     filter.endDate={
@@ -1022,7 +1027,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter['$or'] = arr;
 
   var result = {};
-  if (req.body.pagination) {
+  if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
     return;
   }
@@ -1030,15 +1035,19 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   var sortObj = {};
   if (req.body.sort)
     sortObj = req.body.sort;
-  sortObj['createdAt'] = -1;
+  sortObj['startDate'] = 1;
+  console.log("sdjfjs",sortObj);
 
   var query = AuctionMaster.find(filter).sort(sortObj);
   query.exec(
-    function(err, users) {
+    function(err, items) {
       if (err) {
         return handleError(res, err);
       }
-      return res.status(200).json(users);
+      var result={};
+      console.log("users----",items);
+      result.items=items;
+      return res.status(200).json(result);
     }
   );
 };
