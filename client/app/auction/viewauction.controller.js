@@ -53,6 +53,7 @@
 
     function init() {
       //dataToSend.auctionType = $scope.auctionType;
+
       dataToSend.pagination = true;
       dataToSend.itemsPerPage = vm.itemsPerPage;
       if ($stateParams.type)
