@@ -145,6 +145,13 @@ exports.getUser = function(req, res) {
     filter["enterpriseId"] = req.body.enterpriseId;
    if(req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
+
+  if(req.body.mobileno){
+    var contactRegex = new RegExp(req.body.mobileno, 'i');
+    filter['mobile'] = {$regex:contactRegex};
+  }
+  if(req.body.contact)
+    filter['mobile']=req.body.contact;
   
   if(req.body.userType)
     filter["userType"] = req.body.userType;

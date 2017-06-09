@@ -85,7 +85,7 @@
                 <label for="" class="text-muted">Location</label>
                 <div class="form-group">
                   <input type="text" class="form-control" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Country/State/Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"
-                   ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()" ng-model-options="{debounce:1000}"/>
+                   ng-change="viewproductVm.fireCommand()" typeahead-on-select="viewproductVm.fireCommand()"  ng-model-options="{debounce:1000}" autocomplete="off"/>
                 </div>
 
                 <!-- <div class="form-group">

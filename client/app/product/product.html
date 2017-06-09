@@ -76,7 +76,7 @@
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                      <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
+                      <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-required="isActive() || isChannelPartner()">
                         <option value="">* Customer Type</option>
                         <option value="individual">Individual</option>
                         <option value="private">Private Entrepreneur</option>
@@ -93,7 +93,7 @@
                       
                     </div> -->
                      <div class="col-sm-3 ">
-                      <input type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile">
+                      <input type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-typeahead="mobile for mobile in userSearch($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="productVm.fireCommand()" typeahead-on-select="productVm.fireCommand()" ng-model-options="{debounce:1000}" autocomplete="off">
                     </div>
                     <!-- <div class="col-sm-3 " ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
                       <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
@@ -103,7 +103,7 @@
                       <i class="caret"></i>
                     </div> -->
                     <div class="col-sm-3 ">
-                      <input type="text" ng-disabled="true" class="form-control" placeholder="Name">
+                      <input type="text" ng-disabled="true" class="form-control" placeholder="Name" ng-value="product.seller.name" ng-model="product.seller.name">
                     </div>
                     
                     <div class="col-sm-3 ">

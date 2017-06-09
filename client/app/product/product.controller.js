@@ -12,7 +12,7 @@
     //NJ: set upload product Start Time
     $scope.productUploadStartTime = new Date();
     //End
-
+    vm.fireCommand=fireCommand;
     $scope.container = {};
     var filter = {};
 
@@ -66,6 +66,7 @@
     $scope.onStateChange = onStateChange;
     $scope.onCountryChange = onCountryChange;
     $scope.onRoleChange = onRoleChange;
+    $rootScope.userSearch=userSearch;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.onModelChange = onModelChange;
@@ -521,6 +522,44 @@
         $scope.getUsersOnUserType = result;
       });
     }
+
+    function userSearch(userSearchText){
+      if (!$scope.product.seller.userType) {
+        $scope.getUsersOnUserType = "";
+        return;
+      }
+      if(userSearchText && userSearchText.length < 4)
+        return;
+      var dataToSend = {};
+      dataToSend["status"] = true;
+      dataToSend["userType"] = $scope.product.seller.userType;
+      dataToSend["mobileno"] = $scope.product.seller.mobile;
+     return userSvc.getUsers(dataToSend).then(function(result) {
+      console.log("data",result);
+      return result.map(function(item){
+        console.log("item",item);
+        return item.mobile;
+      });
+      });
+     }
+
+   function fireCommand(){
+    var filter={};
+    if(!$scope.product.seller.mobile)
+      return;
+    filter["status"]=true;
+    filter["userType"]=$scope.product.seller.userType;
+    filter["contact"]=$scope.product.seller.mobile;
+    return userSvc.getUsers(filter).then(function(result){
+      console.log("users",result);
+      if(result[0] && result[0].email)
+      $scope.product.seller.email=result[0].email;
+      if(result[0] && result[0].fname)
+        $scope.product.seller.name=result[0].fname + " " + (result[0].mname || " ") + " " + (result[0].lname || " ");
+    })
+
+   }
+  
 
     function onCategoryChange(categoryId, noChange) {
       if (!noChange) {
