@@ -1,11 +1,12 @@
   <div class="container">
   <div class="form-group"></div>
   <div class="row">
-    <!-- <div class="col-sm-3">
+    <div class="col-sm-3">
       <div class="well">
         <form role="form"> 
           <label for="" class="text-muted">Asset Id</label>
-          <input type="text" class="form-control form-group" name="" value="" placeholder="Asset Id"> 
+          <input type="text" class="form-control form-group" name="" value="" placeholder="Asset Id" ng-model="equipmentSearchFilter.assetId
+          " ng-change="auctionDetailsVm.fireCommand()"> 
 
           <label for="" class="text-muted">Asset Category</label>
           <select class="form-control form-group" name="category" ng-model="equipmentSearchFilter.category" ng-change="auctionDetailsVm.onCategoryChange(equipmentSearchFilter.category)">
@@ -26,13 +27,17 @@
           </select>
 
           <label for="" class="text-muted">Location</label>
-          <input type="text" class="form-control form-group" placeholder="Enter Location"/>
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"
+                   ng-change="auctionDetailsVm.fireCommand()" typeahead-on-select="auctionDetailsVm.fireCommand()" ng-model-options="{debounce:1000}"/>
+                </div>
 
-          <label for="" class="text-muted">Manufacturing Year</label>
-          <div class="row">
+          <div class="form-group">
+                  <label for="" class="text-muted">Manufacturing Year</label>
+                  <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                       <div class="input-group">
-                        <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="viewproductVm.productSearchOnMfg()"/>
+                        <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="auctionDetailsVm.productSearchOnMfg()"/>
                     <a href class="input-group-addon" ng-click="open($event,'min')">
                       <i class="fa fa-calendar-o"></i>
                     </a>
@@ -40,17 +45,18 @@
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
                       <div class="input-group">
-                        <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="viewproductVm.productSearchOnMfg()"/>
+                        <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max"uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="auctionDetailsVm.productSearchOnMfg()"/>
                         <a href class="input-group-addon" ng-click="open($event,'max')">
                           <i class="fa fa-calendar-o"></i>
                         </a>
                       </div>
                     </div>
                   </div>
+                </div>
         </form>
       </div>
-    </div> -->
-    <div class="col-sm-12">
+    </div> 
+    <div class="col-sm-9">
       <div class="row">
         <div class="col-sm-8"><h4>{{auctionName}}</h4></div>
         <div class="col-xs-6 col-sm-2 text-right padd-right">
