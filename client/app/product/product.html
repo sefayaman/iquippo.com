@@ -75,7 +75,7 @@
                 </div>
                 <div class="panel-body">
                   <div class="row">
-                    <div class= col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                    <div class="col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
                       <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
                         <option value="">* Customer Type</option>
                         <option value="individual">Individual</option>
@@ -84,7 +84,7 @@
                       </select>
                       <i class="caret"></i>
                     </div>
-                    <!-- <div class="col-sm-3" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                    <!-- <div class="col-sm-3 " ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
                       <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
                         <option value="">* Select User</option>
                         <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'fname'">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
@@ -92,21 +92,21 @@
                       <i class="caret"></i>
                       
                     </div> -->
-                     <div class="col-sm-3">
+                     <div class="col-sm-3 ">
                       <input type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile">
                     </div>
-                    <!-- <div class="col-sm-3" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                    <!-- <div class="col-sm-3 " ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
                       <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
                         <option value="">* Select Company</option>
                         <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'company'" >{{user.company}}</option>
                       </select>
                       <i class="caret"></i>
                     </div> -->
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 ">
                       <input type="text" ng-disabled="true" class="form-control" placeholder="Name">
                     </div>
                     
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 ">
                       <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
                     </div>                 
                   </div>
