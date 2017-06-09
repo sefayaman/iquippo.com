@@ -15,6 +15,7 @@
     $scope.equipmentSearchFilter={};
     $scope.mfgyr = {};
     vm.fireCommand = fireCommand;
+    vm.productSearchOnMfg=productSearchOnMfg;
     vm.auctionDetailListing = [];
     vm.backButton = backButton;
     vm.auctionName = $location.search().auctionName;
@@ -65,7 +66,7 @@
         return;
       }
      var filter = {};
-     filter['category'] = category;
+     filter['categoryName'] = category;
       brandSvc.getBrandOnFilter(filter)
       .then(function(result){
         $scope.brandList = result;
@@ -82,7 +83,7 @@
       return;
     }
    var filter = {};
-   filter['brand'] = brand;
+   filter['brandName'] = brand;
     modelSvc.getModelOnFilter(filter)
     .then(function(result){
       $scope.modelList = result;
@@ -130,8 +131,7 @@
               if (item.external === false && item.product.assetId)
                 assetIds[assetIds.length] = item.product.assetId;
             });
-            delete filter.auctionId;
-            delete filter.status;
+            var filter={};
             if (assetIds.length > 0) {
               filter.assetIds = assetIds;
               console.log("init",filter);
@@ -156,6 +156,78 @@
           }
         });
   }
+
+  $scope.today = function() {
+    $scope.mfgyr = new Date();
+  };
+  $scope.today();
+  $scope.datepickers = {
+    min: false,
+    max: false
+  };
+  $scope.clear = function () {
+    $scope.mfgyr = null;
+  };
+
+  // Disable weekend selection
+  /*$scope.disabled = function(date, mode) {
+    return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+  };*/
+
+  $scope.toggleMin = function() {
+    $scope.minDate = $scope.minDate ? null : new Date();
+  };
+  $scope.toggleMin();
+  $scope.maxDate = new Date(2020, 5, 22);
+
+  $scope.open = function($event, which) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.datepickers[which]= true;
+  };
+
+  $scope.setDate = function(year, month, day,key) {
+    $scope.mfgyr[key] = new Date(year, month, day);
+  };
+
+  $scope.datepickerOptions = {
+    datepickerMode:"'year'",
+    minMode:"'year'",
+    minDate:"minDate",
+    showWeeks:"false",
+  };
+
+  $scope.formats = ['yyyy', 'dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+  $scope.format = $scope.formats[0];
+
+  $scope.status = {
+    opened: false
+  };
+
+  //date picker end
+
+  function productSearchOnMfg(){
+
+    if(!$scope.mfgyr.min && !$scope.mfgyr.max){
+      delete $scope.equipmentSearchFilter.mfgYear;
+      fireCommand();
+      return;
+    }
+
+    $scope.equipmentSearchFilter.mfgYear = {};
+    if($scope.mfgyr.min)
+      $scope.equipmentSearchFilter.mfgYear.min = $scope.mfgyr.min.getFullYear();
+    else
+      delete $scope.equipmentSearchFilter.mfgYear.min;
+
+    if($scope.mfgyr.max)
+      $scope.equipmentSearchFilter.mfgYear.max = $scope.mfgyr.max.getFullYear();
+    else
+      delete $scope.equipmentSearchFilter.mfgYear.max;
+      fireCommand();
+  }
+
 
 
 

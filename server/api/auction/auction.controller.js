@@ -502,6 +502,11 @@ exports.getOnFilter = function(req, res) {
     filter['$or'] = orFilter;
   }
 
+  if(req.body.location){
+    var cityRegex = new RegExp(req.body.location, 'i');
+    filter['product.city'] = {$regex:cityRegex};
+  }
+
   if (req.body._id)
     filter["_id"] = req.body._id;
   if (req.body.userId)
@@ -512,10 +517,35 @@ exports.getOnFilter = function(req, res) {
     filter["valuation._id"] = req.body.valuationId;
   if (req.body.tid)
     filter["transactionId"] = req.body.tid;
+  if (req.body.assetId)
+    filter["product.assetId"] = req.body.assetId;
+  if(req.body.category)
+    filter["product.category"]=req.body.category;
+  if(req.body.brand)
+    filter["product.brand"]=req.body.brand;
+  if(req.body.model)
+    filter["product.model"]=req.body.model;
+  if(req.body.mfgYear){
+    var mfgYear = false;
+    var mfgFilter = {};
+    if(req.body.mfgYear.min){
+      mfgFilter['$gte'] = req.body.mfgYear.min;
+      mfgYear = true;
+    }
+    if(req.body.mfgYear.max){
+      mfgFilter['$lte'] = req.body.mfgYear.max;
+      mfgYear = true;
+    }
+    if(mfgYear)
+      filter["product.mfgYear"] = mfgFilter;
+ }
+
   if (req.body.status)
     filter["status"] = req.body.status;
   if (req.body.external)
     filter["external"] = req.body.external == 'y' ? true : false;
+
+    console.log("I am server filter",filter);
 
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
