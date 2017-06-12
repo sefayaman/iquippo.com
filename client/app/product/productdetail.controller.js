@@ -47,8 +47,21 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   vm.openValuationModal = openValuationModal;
   vm.openPriceTrendSurveyModal = openPriceTrendSurveyModal;
   vm.openPriceTrendSurveyDetailModal = openPriceTrendSurveyDetailModal;
+  vm.openBidModal = openBidModal;
   vm.isEmpty = isEmpty;
   vm.checkServiceInfo = checkServiceInfo;
+
+  // bid summary
+  function openBidModal(){
+    var bidSummaryScope = $rootScope.$new();
+    var bidSummaryModal = $uibModal.open({
+        templateUrl: "bidSummary.html",
+        scope: bidSummaryScope,
+        size: 'xs'
+    });
+
+    bidSummaryScope.close = function(){bidSummaryModal.close()};
+  }
   
   //Submit Valuation Request
 
@@ -847,6 +860,7 @@ function addProductQuote(form){
       })
     }
   }
+
 
   function  PriceTrendSurveyCtrl($scope,Auth,$uibModalInstance,PriceTrendSvc, LocationSvc, UtilSvc){
     var vm  = this;
