@@ -921,14 +921,14 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .sale-price strong{padding: 5px 0 0; display: block; font-size: 18px; color: #444; font-weight: normal;}
 .bank-detail{list-style: none; margin-top: 15px;}
 .btn-warning.disabled, .btn-warning.disabled.active, .btn-warning.disabled:active, .btn-warning.disabled:focus, .btn-warning.disabled:hover, .btn-warning[disabled], .btn-warning[disabled].active, .btn-warning[disabled]:active, .btn-warning[disabled]:focus, .btn-warning[disabled]:hover, fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning.active, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:hover{background: #e5525b; border-color: #e5525c;}
-.enterprise-value{width: 100%;}
-.enterprise-value .btn{width: 20%; padding: 10px 0;}
+.enterprise-value{width: 100%; background: #ddd;}
+.enterprise-value .btn{width: 20%; padding: 10px 0; border-right: 1px solid #ccc; margin: 0 1px;}
 .utube-icon{text-align: center;display: block;}
 .utube-icon img{position: relative;bottom: 115px;margin:auto;width: 44px;height: 40px;}
 .videos-icon{text-align: center;display: block;}
 .videos-icon img{position: relative;bottom:70px;margin:auto;width: 35px;height: 35px;}
 .auction-list{padding: 0 0 10px 0; border-bottom: 1px solid #ccc; margin: 10px 0;}
-.auction-filter{border:1px solid #ccc; padding: 5px;}
+.auction-filter{border:1px solid #ccc; padding: 5px; margin-left: 5px;}
 .auction-list .media-heading{margin-top: 3px; margin-bottom: 12px; font-size: 18px;}
 .auction-list .media-heading a{text-decoration: none;}
 .auction-list .media p{margin-bottom: 3px;}

@@ -76,7 +76,7 @@
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                      <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-required="isActive() || isChannelPartner()">
+                      <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="reset()" ng-required="isActive() || isChannelPartner()">
                         <option value="">* Customer Type</option>
                         <option value="individual">Individual</option>
                         <option value="private">Private Entrepreneur</option>

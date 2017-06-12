@@ -71,6 +71,8 @@
       .then(function(result){
         $scope.brandList = result;
       });
+      if(!noAction)
+        fireCommand();
      
   }
 
@@ -87,7 +89,9 @@
     modelSvc.getModelOnFilter(filter)
     .then(function(result){
       $scope.modelList = result;
-    })
+    });
+    if(!noAction)
+        fireCommand();
 
   }
 
