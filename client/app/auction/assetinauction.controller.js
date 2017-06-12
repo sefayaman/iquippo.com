@@ -89,7 +89,9 @@
     modelSvc.getModelOnFilter(filter)
     .then(function(result){
       $scope.modelList = result;
-    })
+    });
+    if(!noAction)
+        fireCommand();
 
   }
 
