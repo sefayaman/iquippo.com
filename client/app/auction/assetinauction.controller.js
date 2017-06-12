@@ -71,6 +71,8 @@
       .then(function(result){
         $scope.brandList = result;
       });
+      if(!noAction)
+        fireCommand();
      
   }
 
