@@ -74,6 +74,7 @@
     $scope.clickHandler = clickHandler;
     //$scope.addOrUpdateProduct = addOrUpdateProduct;
     $scope.onUserChange = onUserChange;
+    $scope.reset = reset;
     $scope.resetClick = resetClick;
     $scope.makePrimary = makePrimary;
     $scope.deleteImg = deleteImg;
@@ -487,6 +488,12 @@
           return item.state.name == $scope.product.state;
         });
       });
+    }
+
+    function reset(){
+      $scope.product.seller.mobile="";
+      $scope.product.seller.name="";
+      $scope.product.seller.email="";
     }
 
     function onCountryChange(noReset) {
