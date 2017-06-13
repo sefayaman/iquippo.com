@@ -131,6 +131,9 @@
         .then(function(result) {
           if (result) {
             console.log("data recieved",result);
+            if(result.length <= 0){
+                  vm.show=true;  
+                  }
             result.forEach(function(item) {
               if (item.external === false && item.product.assetId)
                 assetIds[assetIds.length] = item.product.assetId;
@@ -188,8 +191,23 @@
     $event.preventDefault();
     $event.stopPropagation();
 
+    if($scope.datepickers[which]== false && which=='min'){
     $scope.datepickers[which]= true;
-  };
+    $scope.datepickers.max=false;
+}
+  else if($scope.datepickers[which]==false && which=='max'){
+      $scope.datepickers[which]= true;
+      $scope.datepickers.min=false;
+    }
+    else
+      $scope.datepickers[which]= false;
+  
+  }
+
+  $scope.close=function($event,which){
+    $scope.datepickers[which]=false;
+  }
+
 
   $scope.setDate = function(year, month, day,key) {
     $scope.mfgyr[key] = new Date(year, month, day);
