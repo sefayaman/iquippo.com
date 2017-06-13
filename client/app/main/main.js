@@ -455,7 +455,7 @@ angular.module('sreizaoApp')
       //   templateUrl: 'app/yard/yard.html',
       //   controller: 'YardListingCtrl as YardListingVm',
       //   layout:'client'
-      // })
+      // })      
       .state('enterprisevaluation', {
         url: '/enterprisevaluation',
         abstract:true,
@@ -513,6 +513,30 @@ angular.module('sreizaoApp')
         controller: 'AddTransactionCtrl as addTransactionVm',
         authenticate:true,
         layout:'admin'
+      })
+      .state('assetsale', {
+        url: '/assetsale',
+        abstract:true,
+        templateUrl: 'app/assetsale/assetsale.html',
+        controller: 'AssetSaleCtrl as assetsaleVm'
+      })
+      .state('assetsale.administrator', {
+        url: '/administrator',
+        templateUrl: 'app/assetsale/administrator.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.seller', {
+        url: '/seller',
+        templateUrl: 'app/assetsale/seller.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.buyer', {
+        url: '/buyer',
+        templateUrl: 'app/assetsale/buyer.html',
+        layout:'admin',
+        authenticate:true
       })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
