@@ -1099,7 +1099,7 @@ exports.exportProducts = function(req, res) {
             }
 
             if(colData.assetStatuses && colData.assetStatuses.length){
-              obj.Listing_Date = Utillity.toIST(colData.assetStatuses[0].createdAt) || '';
+              obj.Listing_Date = Utillity.toIST(colData.createdAt) || '';
             }
 
             extraCols.forEach(function(x) {
