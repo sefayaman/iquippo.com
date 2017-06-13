@@ -132,7 +132,10 @@
                   
                 </div>
       </div> -->
-      <div class="row">
+      <div class="row" ng-if="auctionDetailsVm.show">
+      <strong> No records Exist </strong>
+      </div>
+      <div class="row" ng-if="auctionDetailsVm.auctionDetailListing">
         <div class="col-sm-6" ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
           <div class="auction-list auction-details">
             <div class="media">
