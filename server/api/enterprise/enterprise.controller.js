@@ -81,12 +81,12 @@ function getValuationRequest(req,res){
 
     var dateFilter = {};
     if(queryParam.fromDate)
-      dateFilter['$gte'] = new Date(queryParam.fromDate);
+      dateFilter.$gte = new Date(queryParam.fromDate);
     if(queryParam.toDate){
       var toDate = new Date(queryParam.toDate);
       var nextDay = toDate.getDate() + 1;
       toDate.setDate(nextDay);
-      dateFilter['$lt'] = toDate;
+      dateFilter.$lt = toDate;
     }
     if(queryParam.fromDate || queryParam.toDate)
       filter['createdAt'] = dateFilter;

@@ -552,8 +552,11 @@
 
    function fireCommand(){
     var filter={};
-    if(!$scope.product.seller.mobile)
+    if(!$scope.product.seller.mobile){
+      $scope.product.seller.name="";
+      $scope.product.seller.email="";
       return;
+    }
     filter["status"]=true;
     filter["userType"]=$scope.product.seller.userType;
     filter["contact"]=$scope.product.seller.mobile;
@@ -785,6 +788,7 @@
       else if (type == "months" && !val)
         delete $scope.product.rent.rateMonths;
     }
+ 
 
     function firstStep(form, product) {
 
