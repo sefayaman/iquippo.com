@@ -55,7 +55,7 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   function openBidModal(){
     var bidSummaryScope = $rootScope.$new();
     var bidSummaryModal = $uibModal.open({
-        templateUrl: "bidSummary.html",
+        templateUrl: "/app/assetsale/assetbid-popup.html",
         scope: bidSummaryScope,
         size: 'xs'
     });

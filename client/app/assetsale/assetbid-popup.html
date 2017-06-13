@@ -1,0 +1,43 @@
+<div>
+       <div class="modal-header">
+          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Place Bid</h4>
+        </div>
+        <div class="modal-body asset-sale">
+            <h5 class="text-center">Reserve Price : <strong><i class="fa fa-inr"></i> 1,23,999</strong></h5>
+            <div class="row">
+              <div class="col-sm-offset-2 col-sm-5 padd-right">
+                <input type="text" class="form-control" name="" value="" placeholder="Bid Amount">
+              </div>
+              <div class="col-sm-3 padd-left">
+                <button type="button" class="btn btn-primary btn-block">Bid</button>
+              </div>
+            </div>
+            <div class="asset-taxes">
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">VAT : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> 449</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">TDS : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> 559</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">Parking Charges : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> 299 </div>
+              </div>
+            </div>
+            <div class="asset-total">
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">Total : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> 1,29,999 </div>
+              </div>
+            </div>
+
+        </div>        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Change Bid</button>
+          <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
+          <button type="button" class="btn btn-danger">Submit Bid</button>
+        </div>
+    </div>
