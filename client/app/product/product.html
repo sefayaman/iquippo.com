@@ -67,48 +67,52 @@
             <uib-tabset justified="true">
             <uib-tab heading="Step1" index="0" active="tabObj.step1">
             <form name="form" novalidate>
-              <div class="seller_info form-group" ng-if="isActive() || isChannelPartner()">
-                <h3>Seller Information</h3>
-                <div class="row">
-                  <div class="form-group col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
-                    <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="onRoleChange(product.seller.userType)" ng-required="isActive() || isChannelPartner()">
-                      <option value="">* Customer Type</option>
-                      <option value="individual">Individual</option>
-                      <option value="private">Private Entrepreneur</option>
-                      <option value="legalentity">Legal Entity</option>
-                    </select>
-                    <i class="caret"></i>
-                  </div>
-                  <div class="col-sm-3 form-group" ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
-                    <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
-                      <option value="">* Select User</option>
-                      <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'fname'">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
-                    </select>
-                    <i class="caret"></i>
+              <div class="panel panel-default seller_info" ng-if="isActive() || isChannelPartner()">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Seller Information
+                  <a href="javascript:void(0)" ng-click="goToUsermanagement()" class="pull-right text-primary">Create User</a>
+                  </h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-sm-3" ng-class="{'has-error': form.userType.$invalid && submitted }">
+                      <select  class="form-control" name="userType" ng-model="product.seller.userType" ng-change="reset()" ng-required="isActive() || isChannelPartner()">
+                        <option value="">* Customer Type</option>
+                        <option value="individual">Individual</option>
+                        <option value="private">Private Entrepreneur</option>
+                        <option value="legalentity">Legal Entity</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div>
+                    <!-- <div class="col-sm-3 " ng-if="container.userType != 'legalentity'" ng-class="{'has-error': form.userName.$invalid && submitted}">
+                      <select  class="form-control" name="userName"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
+                        <option value="">* Select User</option>
+                        <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'fname'">{{user.fname}} {{user.lname}} ({{user.mobile}})</option>
+                      </select>
+                      <i class="caret"></i>
+                      
+                    </div> -->
+                     <div class="col-sm-3 ">
+                      <input type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-typeahead="mobile for mobile in userSearch($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="productVm.fireCommand()" typeahead-on-select="productVm.fireCommand()" ng-model-options="{debounce:1000}" autocomplete="off">
+                    </div>
+                    <!-- <div class="col-sm-3 " ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
+                      <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
+                        <option value="">* Select Company</option>
+                        <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'company'" >{{user.company}}</option>
+                      </select>
+                      <i class="caret"></i>
+                    </div> -->
+                    <div class="col-sm-3 ">
+                      <input type="text" ng-disabled="true" class="form-control" placeholder="Name" ng-value="product.seller.name" ng-model="product.seller.name">
+                    </div>
                     
+                    <div class="col-sm-3 ">
+                      <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
+                    </div>                 
                   </div>
-                  <div class="col-sm-3 form-group" ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
-                    <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
-                      <option value="">* Select Company</option>
-                      <option value="{{user._id}}" ng-repeat="user in getUsersOnUserType| orderBy:'company'" >{{user.company}}</option>
-                    </select>
-                    <i class="caret"></i>
-                  </div>
-                  
-                  <div class="col-sm-3 form-group">
-                    <input ng-disabled="true" type="email" class="form-control" placeholder="Email Address" ng-value="product.seller.email" ng-model="product.seller.email" name="sellerEmail">
-                  </div>
-                  <div class="col-sm-3 form-group">
-                    <input ng-disabled="true" type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top">
-                  </div>
-                </div>
-                <div class="text-right">
-                  <a href="javascript:void(0)" ng-click="goToUsermanagement()" class="btn btn-default">Create User</a>
-                </div>
-                <div class="row col-sm-12 form-group">
                   <p class="help-block cart_item" ng-show="(form.userName.$error.required || form.company.$error.required || form.userType.$invalid) && submitted">
-                    Selection of Customer type and User/Company is must to upload your product.
-                  </p>
+                      Selection of Customer type and User/Company is must to upload your product.
+                    </p>
                 </div>
               </div>
               <div class="clearfix"></div>

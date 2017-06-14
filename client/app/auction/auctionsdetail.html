@@ -1,123 +1,172 @@
   <div class="container">
-    <div class="row form-group">
-      <div class="col-sm-8"><h3>Auctions Name</h3></div>
-      <div class="col-xs-8 col-sm-3 text-center Asset-filter">
-          <!-- Filter : 
-          <select>
-            <option>Asset Category</option>
-            <option>Asset Brand</option>
-            <option>Location Of Asset</option>
-            <option>Manufacturing Year</option>
-          </select> -->
-      </div>
-      <div class="col-xs-4 col-sm-1 text-right Asset-filter">        
-        <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-block pull-right">Back</a>
-      </div>
-    </div>
-		<legend></legend>
+  <div class="form-group"></div>
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="well">
+        <form role="form"> 
+          <label for="" class="text-muted">Asset Id</label>
+          <input type="text" class="form-control form-group" name="" value="" placeholder="Asset Id" ng-model="equipmentSearchFilter.assetId
+          " ng-change="auctionDetailsVm.fireCommand()"> 
 
-	
-	<!-- 	<div class="row">
-			<div class="col-sm-12 form-group">
-                
-                <div class="table-responsive table-striped">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>Lot No.</th>
-                        <th>Asset Image 1</th>
-                        <th>Asset Image 2</th>
-                        <th>Asset No.</th>
-                        <th>Asset Category</th>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Asset Desc</th>
-                        <th>Invoice Date</th>
-                        <th>Asset Registration No.</th>
-                        <th>Engine No.</th>
-                        <th>Asset Location</th>
-                        <th>Original Invoice</th>
-                        <th>VAT%</th>
-                        <th>Contact Person</th>
-                        <th>Contact No.</th>
-                       
-                      </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
-                    <td>{{auctionProduct.lotNo}}</td>
-                    
-                    <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></a></td>
-                    
-                    <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></td>
-                    
-                    <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></a></td>
+          <label for="" class="text-muted">Asset Category</label>
+          <select class="form-control form-group" name="category" ng-model="equipmentSearchFilter.category" ng-change="auctionDetailsVm.onCategoryChange(equipmentSearchFilter.category)">
+            <option value="">Select Category</option>
+            <option value="{{cat.name}}" ng-repeat="cat in allCategory">{{cat.name}}</option>
+          </select>
 
-                    <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></td>
-                    
-                    <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)">{{auctionProduct.product.assetId}}</a></td>
-                    
-                    <td ng-if="!auctionProduct.product._id">{{auctionProduct.product.assetId}}</td>
-                    <td>{{auctionProduct.product.category}}</td>
-                    <td>{{auctionProduct.product.brand}}</td>
-                    <td>{{auctionProduct.product.model}}</td>
-                    <td>{{auctionProduct.product.description}}</td>
-                    <td>{{auctionProduct.product.invoiceDate}}</td>
-                    <td>{{auctionProduct.product.registrationNo}}</td>
-                    <td>{{auctionProduct.product.engineNo}}</td>
-                    <td>{{auctionProduct.product.city}}</td>
-                    <td>{{auctionProduct.product.originalInvoice}}</td>
-                    <td>{{auctionProduct.product.vatPercentage}}</td>
-                    <td>{{auctionProduct.product.contactName}}</td>
-                    <td>{{auctionProduct.product.contactNumber}}</td>
-                  </tr>
+          <label for="" class="text-muted">Brand</label>
+          <select class="form-control form-group" name="brand" ng-model="equipmentSearchFilter.brand" ng-change="auctionDetailsVm.onBrandChange(equipmentSearchFilter.brand)">
+            <option value="" >Select Brand</option>
+            <option value="{{br.name}}" ng-repeat="br in brandList">{{br.name}}</option>
+          </select>
+
+          <label for="" class="text-muted">Model</label>
+          <select class="form-control form-group" name="model" ng-model="equipmentSearchFilter.model" ng-change="auctionDetailsVm.fireCommand()">
+            <option value="" >Select Model</option>
+            <option value="{{md.name}}" ng-repeat="md in modelList">{{md.name}}</option>
+          </select>
+
+          <label for="" class="text-muted">Location</label>
+                <div class="form-group">
+                  <input type="text" class="form-control" ng-model="equipmentSearchFilter.locationName" placeholder="Enter Location" uib-typeahead="address for address in getLocationHelp($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200"
+                   ng-change="auctionDetailsVm.fireCommand()" typeahead-on-select="auctionDetailsVm.fireCommand()" ng-model-options="{debounce:1000}"/>
+                </div>
+
+          <div class="form-group">
+                  <label for="" class="text-muted">Manufacturing Year</label>
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-value="mfgyr.min" ng-model="mfgyr.min" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.min" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Min" ng-keypress="$event.preventDefault()" disabled ng-change="auctionDetailsVm.productSearchOnMfg()"/>
+                    <a href class="input-group-addon" ng-click="open($event,'min')">
+                      <i class="fa fa-calendar-o"></i>
+                    </a>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                      <div class="input-group">
+                        <input type="text" class="form-control" ng-value="mfgyr.max" ng-model="mfgyr.max" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="datepickers.max" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" placeholder="Max" ng-keypress="$event.preventDefault()" disabled  ng-change="auctionDetailsVm.productSearchOnMfg()"/>
+                        <a href class="input-group-addon" ng-click="open($event,'max')">
+                          <i class="fa fa-calendar-o"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+        </form>
+      </div>
+    </div> 
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-sm-8"><h4>{{auctionName}}</h4></div>
+        <div class="col-xs-6 col-sm-2 text-right padd-right">
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
+        </div>
+        <div class="col-xs-6 col-sm-2 text-right">        
+          <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm btn-block">Back</a>
+        </div>
+      </div>
+      <legend></legend>
+
+        <!--  <div class="row">
+        <div class="col-sm-12 form-group">
+                  
+                  <div class="table-responsive table-striped">
+                    <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>Lot No.</th>
+                          <th>Asset Image 1</th>
+                          <th>Asset Image 2</th>
+                          <th>Asset No.</th>
+                          <th>Asset Category</th>
+                          <th>Brand</th>
+                          <th>Model</th>
+                          <th>Asset Desc</th>
+                          <th>Invoice Date</th>
+                          <th>Asset Registration No.</th>
+                          <th>Engine No.</th>
+                          <th>Asset Location</th>
+                          <th>Original Invoice</th>
+                          <th>VAT%</th>
+                          <th>Contact Person</th>
+                          <th>Contact No.</th>
+                         
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+                      <td>{{auctionProduct.lotNo}}</td>
                       
-                    </tbody>
+                      <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></a></td>
+                      
+                      <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}"></td>
+                      
+                      <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></a></td>
+
+                      <td ng-if="!auctionProduct.product._id"><img width="50" height="50" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.otherImages[0]}}"></td>
+                      
+                      <td ng-if="auctionProduct.product._id"><a href ng-click="openUrl(auctionProduct.product._id)">{{auctionProduct.product.assetId}}</a></td>
+                      
+                      <td ng-if="!auctionProduct.product._id">{{auctionProduct.product.assetId}}</td>
+                      <td>{{auctionProduct.product.category}}</td>
+                      <td>{{auctionProduct.product.brand}}</td>
+                      <td>{{auctionProduct.product.model}}</td>
+                      <td>{{auctionProduct.product.description}}</td>
+                      <td>{{auctionProduct.product.invoiceDate}}</td>
+                      <td>{{auctionProduct.product.registrationNo}}</td>
+                      <td>{{auctionProduct.product.engineNo}}</td>
+                      <td>{{auctionProduct.product.city}}</td>
+                      <td>{{auctionProduct.product.originalInvoice}}</td>
+                      <td>{{auctionProduct.product.vatPercentage}}</td>
+                      <td>{{auctionProduct.product.contactName}}</td>
+                      <td>{{auctionProduct.product.contactNumber}}</td>
+                    </tr>
+                        
+                      </tbody>
+                      
+                    </table>
                     
-                  </table>
+                  </div>
                   
                 </div>
-                
+      </div> -->
+      <div class="no-result" ng-if="auctionDetailsVm.show">No records found</div>
+      <div class="row" ng-if="auctionDetailsVm.auctionDetailListing">
+        <div class="col-sm-6" ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+          <div class="auction-list auction-details">
+            <div class="media">
+              <a href="javascript:void(0);" class="pull-left" ng-if="auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
+                <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
+              </a>
+              <a href="javascript:void(0);" class="pull-left" ng-if="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
+                <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
+              </a>
+              <div class="media-body">
+                <h4 class="media-heading text-ellips">
+                  {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}</h4>
+                <p ng-class="{'text-warning': auctionValue =='upcomingAuctions' }">
+                  <span ng-if="auctionValue =='upcomingAuctions'"><i class="fa fa-clock-o"></i> Upcoming</span>
+                  <span ng-if="auctionValue =='ongoingAuctions'"><i class="fa fa-clock-o"></i> Ongoing</span>
+                  <span ng-if="auctionValue =='closedAuctions'"><i class="fa fa-clock-o"></i> Closed</span>
+                </p>
+                <p ng-if="auctionProduct.product.assetId">Asset Id : {{auctionProduct.product.assetId}}</p>
+                <p ng-if="auctionProduct.product.mfgYear"><i class="fa fa-calendar-o"></i> {{auctionProduct.product.mfgYear}} </p>
+                <p ng-if="auctionProduct.product.contactName"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span></p>
+               
+                  <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
               </div>
-		</div> -->
-		<div class="row">
-      <div class="col-sm-6" ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
-        <div class="auction-list auction-details">
-          <div class="media">
-            <a class="pull-left" ng-if="auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
-              <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
-            </a>
-            <a class="pull-left" ng-if="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
-              <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
-            </a>
-            <div class="media-body">
-              <h4 class="media-heading">
-                {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}
-
-                <small class="pull-right text-warning">
-                  <strong ng-if="auctionValue =='upcomingAuctions'"><i class="fa fa-clock-o"></i> Upcoming</strong>
-                  <strong ng-if="auctionValue =='ongoingAuctions'"><i class="fa fa-clock-o"></i> Ongoing</strong>
-                  <strong ng-if="auctionValue =='closedAuctions'"><i class="fa fa-clock-o"></i> Closed</strong>
-                </small>
-              </h4>
-              <p class="form-group">{{auctionProduct.product.assetId}}</p>
-             <div class="row">
-               <div class="col-sm-6">
-                 <p ng-if="auctionProduct.product.mfgYear"><i class="fa fa-calendar-o"></i> {{auctionProduct.product.mfgYear}} </p> <!-- Manufacturing Year -->
-               </div>
-               <div class="col-sm-6 text-right">
-                 <p ng-if="auctionProduct.product.contactName"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span></p>
-               </div>
-             </div>
-                <p ng-if="auctionProduct.product.city"><strong><i class="fa fa-map-marker"></i></strong><a href="javascript:void(0);" ng-click="auctionDetailsVm.showAddress(auctionProduct.product.auctionAddr,auctionProduct.product.city,auctionProduct.product.state)">{{auctionProduct.product.city}}</a></p>
+              <div class="media-footer">
                 <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
-             <!-- auctionProduct.product._id -->
+              </div>
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </div>
-  </div>
+  </div>	
+</div>
 
 <!-- Onclick google map location popup -->
 <script type="text/ng-template" id="">
