@@ -76,7 +76,8 @@
           </table>
         </div>
         <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->
-    		<div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing">  
+    		<div class="no-result" ng-if="auctionDateVm.show">No records found</div>
+        <div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing">  
           <div class="media">
             <a class="pull-left" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
