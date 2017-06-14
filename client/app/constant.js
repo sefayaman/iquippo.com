@@ -136,6 +136,21 @@ var spareStatus = [
 }
 ];
 
+var KYCType = [
+{
+  name:"Address Proof",
+  code:"address_proof"
+},
+{
+  name:"Identity Proof",
+  code:"identity_proof"
+},
+{
+  name:"Other Document",
+  code:"other_document"
+}
+];
+
 var auctionStatuses = [
   {
     name:"Payment Pending",

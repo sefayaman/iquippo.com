@@ -100,6 +100,7 @@ angular.module('sreizaoApp',[
     $rootScope.spareStatus = spareStatus;
     $rootScope.paymentOptions = paymentOptions;
     $rootScope.allMadeInCountries = allMadeInCountries;
+    $rootScope.KYCType = KYCType;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 

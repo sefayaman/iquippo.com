@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var VatTaxSchema = new Schema({
-  vatType:String,
+  taxType:String,
   category:{type:Schema.Types.ObjectId,ref:'Category'},
   group:{type:Schema.Types.ObjectId,ref:'Group'},
   state:{type:Schema.Types.ObjectId,ref:'State'},
