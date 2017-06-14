@@ -205,7 +205,10 @@
           $scope.imagesUnderCarrage = [];
           $scope.imagesOther = [];
           $scope.images = [];
-
+          if($scope.product.seller.fname){
+          console.log("$scope.product",$scope.product);
+          $scope.product.seller.name=$scope.product.seller.fname + " " + $scope.product.seller.lname;
+          }
           if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
               if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
@@ -799,6 +802,15 @@
       } else {
         form.mfgyear.$invalid = true;
         ret = true;
+      }
+      if($scope.product.seller && $scope.product.seller.name){
+        var name=['fname','lname'];
+        var arr=$scope.product.seller.name.split(" ");
+        console.log("Array name",arr);
+        name.forEach(function(value,index){
+          $scope.product.seller[value]=arr[index];
+          });
+        delete $scope.product.seller.name;
       }
 
       if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
