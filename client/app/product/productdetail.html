@@ -488,7 +488,27 @@
               
           </div>
           <div class="col-sm-5 col-md-7 panel-group">
-           
+            <div class="panel panel-default asset-sale">
+               <div class="panel-heading">
+                 <h3 class="panel-title"><strong>Asset Id :</strong>  <span>123456</span>  <a href="javascript:void(0);" class="text-danger">[3 Bids]</a></h3>
+               </div>
+               <div class="panel-footer">
+                 <h4>Sale Price : <i class="fa fa-inr"></i> 1,54,000</h4>
+                 <div class="row">
+                   <div class="col-xs-offset-3 col-xs-4">
+                     <input type="text" class="form-control" name="" value="" placeholder="Enter Bid Amount">
+                   </div>
+                   <div class="col-xs-2 padd-left">
+                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Place Bid</button>
+                   </div>
+                 </div>
+                <hr>
+                <div class="text-right">
+                  <button type="button" class="btn btn-danger">Buy Now</button>
+                  <button type="button" class="btn btn-danger">Add to Cart</button>
+                </div>
+              </div>
+            </div>           
             <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>
@@ -1007,5 +1027,4 @@
 
     </div>
 </script>
-
 <!-- end -->
