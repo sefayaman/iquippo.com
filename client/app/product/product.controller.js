@@ -12,7 +12,7 @@
     //NJ: set upload product Start Time
     $scope.productUploadStartTime = new Date();
     //End
-
+    vm.fireCommand=fireCommand;
     $scope.container = {};
     var filter = {};
 
@@ -66,6 +66,7 @@
     $scope.onStateChange = onStateChange;
     $scope.onCountryChange = onCountryChange;
     $scope.onRoleChange = onRoleChange;
+    $rootScope.userSearch=userSearch;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.onModelChange = onModelChange;
@@ -73,6 +74,7 @@
     $scope.clickHandler = clickHandler;
     //$scope.addOrUpdateProduct = addOrUpdateProduct;
     $scope.onUserChange = onUserChange;
+    $scope.reset = reset;
     $scope.resetClick = resetClick;
     $scope.makePrimary = makePrimary;
     $scope.deleteImg = deleteImg;
@@ -203,7 +205,10 @@
           $scope.imagesUnderCarrage = [];
           $scope.imagesOther = [];
           $scope.images = [];
-
+          if($scope.product.seller.fname){
+          console.log("$scope.product",$scope.product);
+          $scope.product.seller.name=$scope.product.seller.fname + " " + $scope.product.seller.lname;
+          }
           if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
               if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
@@ -488,6 +493,12 @@
       });
     }
 
+    function reset(){
+      $scope.product.seller.mobile="";
+      $scope.product.seller.name="";
+      $scope.product.seller.email="";
+    }
+
     function onCountryChange(noReset) {
 
       $scope.stateList = [];
@@ -521,6 +532,47 @@
         $scope.getUsersOnUserType = result;
       });
     }
+
+    function userSearch(userSearchText){
+      if (!$scope.product.seller.userType) {
+        $scope.getUsersOnUserType = "";
+        return;
+      }
+      if(userSearchText && userSearchText.length < 4)
+        return;
+      var dataToSend = {};
+      dataToSend["status"] = true;
+      dataToSend["userType"] = $scope.product.seller.userType;
+      dataToSend["mobileno"] = $scope.product.seller.mobile;
+     return userSvc.getUsers(dataToSend).then(function(result) {
+      console.log("data",result);
+      return result.map(function(item){
+        console.log("item",item);
+        return item.mobile;
+      });
+      });
+     }
+
+   function fireCommand(){
+    var filter={};
+    if(!$scope.product.seller.mobile){
+      $scope.product.seller.name="";
+      $scope.product.seller.email="";
+      return;
+    }
+    filter["status"]=true;
+    filter["userType"]=$scope.product.seller.userType;
+    filter["contact"]=$scope.product.seller.mobile;
+    return userSvc.getUsers(filter).then(function(result){
+      console.log("users",result);
+      if(result[0] && result[0].email)
+      $scope.product.seller.email=result[0].email;
+      if(result[0] && result[0].fname)
+        $scope.product.seller.name=result[0].fname + " " + (result[0].mname || " ") + " " + (result[0].lname || " ");
+    })
+
+   }
+  
 
     function onCategoryChange(categoryId, noChange) {
       if (!noChange) {
@@ -739,6 +791,7 @@
       else if (type == "months" && !val)
         delete $scope.product.rent.rateMonths;
     }
+ 
 
     function firstStep(form, product) {
 
@@ -749,6 +802,15 @@
       } else {
         form.mfgyear.$invalid = true;
         ret = true;
+      }
+      if($scope.product.seller && $scope.product.seller.name){
+        var name=['fname','lname'];
+        var arr=$scope.product.seller.name.split(" ");
+        console.log("Array name",arr);
+        name.forEach(function(value,index){
+          $scope.product.seller[value]=arr[index];
+          });
+        delete $scope.product.seller.name;
       }
 
       if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){

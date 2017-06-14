@@ -21,6 +21,7 @@
     vm.totalItemsInAuction = 0
     vm.totalItemsSold = 0;
     vm.totalSaleValue = 0;
+    vm.show=false;
     /* vm.timediff=timediff;*/
 
     vm.auctionListing = [];
@@ -80,11 +81,19 @@
       console.log("filter",filter);
 
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
+        console.log("result",result);
           getAuctionWiseProductData(result);
           if (filter.auctionType == "upcoming") {
             upcomingAuctions = result.items;
           } else {
             vm.auctionListing = result.items;
+            if(vm.auctionListing.length < 1){
+            vm.show=true;
+            }
+            else{
+              vm.show=false;
+            }
+
             vm.auctionListing.forEach(function(x) {
               var currentDate = moment(new Date());
               var startDate = moment(x.startDate);
@@ -122,6 +131,12 @@
           console.log("ongoingAuctions",ongoingAuctions);
           console.log("upcomingAuctions",upcomingAuctions);
           vm.auctionListing = ongoingAuctions.concat(upcomingAuctions);
+          if(vm.auctionListing.length < 1){
+            vm.show=true;
+          }
+          else{
+            vm.show=false;
+          }
           console.log("typeof", vm.auctionListing);
           vm.auctionListing.forEach(function(x) {
             var currentDate = moment(new Date());
@@ -219,6 +234,10 @@
       resetPagination();
       var filter = {};
       angular.copy(dataToSend, filter);
+
+      if(vm.statusType){
+        filter.statusType=vm.statusType;
+      }
       $scope.auctionType = auctionType;
       $state.go("viewauctions", {
         type: auctionType
