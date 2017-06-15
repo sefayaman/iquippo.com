@@ -60,7 +60,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
 
     if(!editMode){
-      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " +( Auth.getCurrentUser().mname || "")+ " " + (Auth.getCurrentUser().lname || "");
+      vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " + ( Auth.getCurrentUser().mname || "")+ (Auth.getCurrentUser().mname ? " " : "") + (Auth.getCurrentUser().lname || "");
     }
 
     ValuationPurposeSvc.get(null)
@@ -300,7 +300,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       vm.enterprises.forEach(function(item){
         if(item.enterpriseId == entId){
            //vm.enterpriseValuation.customerPartyNo = Auth.getCurrentUser().mobile;
-           vm.enterpriseValuation.customerPartyName = (item.fname || "") + " " + (item.mname || "") + " "+ (item.lname || "");
+           vm.enterpriseValuation.customerPartyName = (item.fname || "") + " " + (item.lname || "");
            return true;
         }
       })

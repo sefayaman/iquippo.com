@@ -101,7 +101,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     }
 
     function postSave(resData,deferred){
-      Auth.isApprovalRequired(resData.requestType,function(isRequired){
+      Auth.isApprovalRequired(resData.requestType,resData.enterprise.enterpriseId,function(isRequired){
             if(isRequired){
               $rootScope.loading = false;
               deferred.resolve(resData);

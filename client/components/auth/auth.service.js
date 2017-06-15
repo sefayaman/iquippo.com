@@ -216,21 +216,19 @@ angular.module('sreizaoApp')
         }
         return false;
       },
-      isApprovalRequired:function(service,cb){
-        if(currentUser.role === 'admin')
-          return cb(true);
-
+      isApprovalRequired:function(service,enterpriseId,cb){
+        
         if(this.isEnterprise() && currentUser.availedServices){
           for(var i=0;i< currentUser.availedServices.length;i++){
            if(currentUser.availedServices[i].code === service &&  currentUser.availedServices[i].approvalRequired === 'Yes')
             return cb(true);
           }
           return cb(false);
-        }else if(this.isEnterpriseUser() && currentUser.availedServices){
+        }else if((this.isEnterpriseUser() || this.isAdmin()) && currentUser.availedServices){
           var userFilter = {};
           userFilter.role = "enterprise";
           userFilter.enterprise = true;
-          userFilter.enterpriseId = currentUser.enterpriseId;
+          userFilter.enterpriseId = enterpriseId;
           userFilter.status = true;
           userSvc.getUsers(userFilter)
           .then(function(resData){
