@@ -16,12 +16,25 @@ exports.get = function(req, res) {
 };
 
 exports.search = function(req, res) {
+  console.log("req.body",req.body);
   var body  = req.body;
   var filter = {};
-  if(body.date){
+  /*if(body.date){
     filter.effectiveFromDate={'$gte':date};
     filter.effectiveToDate={'$lte':date};
-  }
+  }*/
+  if(body.groupId)
+    filter.group=body.groupId;
+  if(body.categoryId)
+    filter.category=body.categoryId;
+  if(body.taxType)
+    filter.taxType=body.taxType;
+  if(body.state)
+    filter.state=body.state;
+  if(body.status)
+    filter.status=body.status;
+
+   console.log("filter",filter);
 
   var query = Model.find(filter).populate({path:'category group state',match:filter});
   query.exec(function (err, result) {
