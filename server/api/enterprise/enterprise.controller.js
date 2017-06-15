@@ -502,6 +502,7 @@ exports.bulkUpload = function(req, res) {
           return callback('Invalid enterprise');
 
         row.enterprise = {
+
           email : result[0].email,
           mobile : result[0].mobile,
           _id : result[0]._id + "",
@@ -509,6 +510,15 @@ exports.bulkUpload = function(req, res) {
           employeeCode : result[0].employeeCode,
           name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
+
+        row.autoSubmit = false;
+        
+        if(result[0].availedServices && result[0].availedServices.length){
+          result[0].availedServices.forEach(function(srvc){
+            if(srvc.code === row.requestType &&  srvc.approvalRequired !== 'Yes')
+              row.autoSubmit = true;
+          });
+        }
 
         return callback();
       });
@@ -716,7 +726,7 @@ exports.bulkUpload = function(req, res) {
 
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = user.mobile;
-      row.userName = user.fname + " " + user.lname;
+      row.userName = (user.fname || "") + " " + (user.mname || "") +(user.mname ? " " : "") + (user.lname || "");
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
@@ -755,6 +765,8 @@ exports.bulkUpload = function(req, res) {
           }
           if(enterpriseData)
             pushNotification(enterpriseData);
+          enterpriseData = enterpriseData.toObject();
+          enterpriseData.autoSubmit = row.autoSubmit;
           if(!err && enterpriseData)
             uploadedData.push(enterpriseData);
           return cb();
