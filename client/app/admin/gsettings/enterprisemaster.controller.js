@@ -1,10 +1,10 @@
 (function() {
     'use strict';
 
-    angular.module('admin').controller('KYCMasterCtrl', KYCMasterCtrl);
+    angular.module('admin').controller('EnterpriseMasterCtrl', EnterpriseMasterCtrl);
 
-    function KYCMasterCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,KYCSvc){
-    	var vm  = this;
+    function EnterpriseMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, EnterpriseSvc){
+    	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
         vm.filteredList = [];
@@ -16,14 +16,23 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        
+        vm.fireCommand = fireCommand;
+        vm.dataModel.functionality = "assetsale";
+
         function init(){
+          var userFilter = {};
+          userFilter.role = "enterprise";
+          userFilter.enterprise = true;
+          userFilter.status = true;
+          userSvc.getUsers(userFilter).then(function(data){
+            vm.enterprises = data;
+          })
+
           loadViewData();
-          console.log("allCountries", $rootScope.KYCType);
         } 
 
         function loadViewData(){
-            KYCSvc.get()
+            EnterpriseSvc.get()
             .then(function(result){
                 vm.dataList = result;
                 vm.filteredList = result;
@@ -41,7 +50,10 @@
                 $scope.submitted = true;
                 return;
             }
-            KYCSvc.save(vm.dataModel)
+            vm.dataModel.createdBy = {};
+            vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
+            vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+            EnterpriseSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
                 loadViewData();
@@ -56,8 +68,15 @@
         function editClicked(rowData){
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.kycType = rowData.kycType;
-            vm.dataModel.docName = rowData.docName;
+            vm.dataModel.group = rowData.group._id;
+            vm.dataModel.vatType = rowData.vatType;
+            if (rowData.effectiveToDate)
+                vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
+            if (rowData.effectiveFromDate)
+                vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
+            vm.dataModel.state = rowData.state._id;
+            vm.dataModel.amount = rowData.amount;
+            
             $scope.isEdit = true;
         }
 
@@ -66,7 +85,7 @@
                 $scope.submitted = true;
                 return;
             }
-            KYCSvc.update(vm.dataModel)
+            EnterpriseSvc.update(vm.dataModel)
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
@@ -87,7 +106,7 @@
         }
 
         function confirmDestory(id){
-            KYCSvc.destroy(id)
+            EnterpriseSvc.destroy(id)
             .then(function(){
                 loadViewData();
             })
