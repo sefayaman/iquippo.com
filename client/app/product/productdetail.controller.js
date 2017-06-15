@@ -52,11 +52,13 @@ function ProductDetailCtrl($scope,vendorSvc,NegotiationSvc,$stateParams, $rootSc
   vm.checkServiceInfo = checkServiceInfo;
 
   // bid summary
-  function openBidModal(){
+  function openBidModal(bidAmounts){
     var bidSummaryScope = $rootScope.$new();
+        bidSummaryScope.params={bidAmount:bidAmounts}
     var bidSummaryModal = $uibModal.open({
         templateUrl: "/app/assetsale/assetbidpopup.html",
         scope: bidSummaryScope,
+        controller:'AssetBidPopUpCtrl as AssetBidPopUpVm',
         windowTopClass: 'bidmodal',
         size: 'xs'
     });

@@ -15,6 +15,21 @@ exports.get = function(req, res) {
   });
 };
 
+exports.search = function(req, res) {
+  var body  = req.body;
+  var filter = {};
+  if(body.date){
+    filter.effectiveFromDate={'$gte':date};
+    filter.effectiveToDate={'$lte':date};
+  }
+
+  var query = Model.find(filter).populate({path:'category group state',match:filter});
+  query.exec(function (err, result) {
+    if(err) { return handleError(res, err); }
+    return res.status(200).json(result);
+  });
+};
+
 exports.create = function(req, res,next) {
 
    _getRecord(req.body,function(err,result){

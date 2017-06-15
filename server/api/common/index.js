@@ -91,7 +91,7 @@ router.get('/vattax',auth.hasRole('admin'), vattaxCtrl.get);
 router.post('/vattax', auth.hasRole('admin'),vattaxCtrl.create);
 router.put('/vattax/:id', auth.hasRole('admin'),vattaxCtrl.update);
 router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
-
+router.post('/vattax/search',vattaxCtrl.search);
 
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);

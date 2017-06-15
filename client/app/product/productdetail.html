@@ -503,16 +503,21 @@
                 </div>
                </div>
                <div class="panel-footer">
-                 <h4>Sale Price : <i class="fa fa-inr"></i> 1,54,000</h4>
+                 <h4>Sale Price : <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
                  <div class="row">
                    <div class="col-xs-offset-3 col-xs-4">
-                     <input type="text" class="form-control" name="" value="" placeholder="Enter Bid Amount">
+                     <input type="text" class="form-control" name="" value=""
+                     ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount">
                    </div>
                    <div class="col-xs-2 padd-left">
+<<<<<<< Updated upstream
                      <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">
                        <span ng-if="true">Place Bid</span>
                        <span ng-if="false">Change Bid</span>
                      </button>
+
+                     <!-- <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount)">Place Bid</button> -->
+
                      <button type="button" ng-if="false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Proxy Bid</button>
                    </div>
                  </div>
