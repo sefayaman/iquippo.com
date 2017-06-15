@@ -509,7 +509,10 @@
                      <input type="text" class="form-control" name="" value="" placeholder="Enter Bid Amount">
                    </div>
                    <div class="col-xs-2 padd-left">
-                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Place Bid</button>
+                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">
+                       <span ng-if="true">Place Bid</span>
+                       <span ng-if="false">Change Bid</span>
+                     </button>
                      <button type="button" ng-if="false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Proxy Bid</button>
                    </div>
                  </div>
