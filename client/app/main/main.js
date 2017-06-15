@@ -538,6 +538,12 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
+      .state('assetsale.sellerdetails', {
+        url: '/sellerdetails',
+        templateUrl: 'app/assetsale/sellerdetails.html',
+        layout:'admin',
+        authenticate:true
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
