@@ -76,7 +76,8 @@
           </table>
         </div>
         <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->
-    		<div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing">  
+    		<div class="no-result" ng-if="auctionDateVm.show">No records found</div>
+        <div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing">  
           <div class="media">
             <a class="pull-left" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
@@ -96,13 +97,17 @@
                   <p ng-if="product.auctionValue =='ongoingAuctions'" class="text-success"><strong>Ongoing Auction Time : <timer end-time="product.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
                   <p ng-if="product.auctionValue =='closedAuctions'"><strong>Auction Closed</strong></p>
                 </div>
-                <div class="col-sm-4 text-right">
-                  <p><strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span></p>
+                <div class="col-sm-4 text-right calltoContact">
+                  <p>
+                    <a href="tel:{{product.contactNumber}}">
+                      <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
+                    </a>
+                  </p>
                 </div>
               </div>
               <p ng-if="product.insStartDate && product.insEndDate"><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
               
-              <div class="row">
+              <div class="row callLocation">
                 <div class="col-sm-8">
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>

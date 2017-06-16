@@ -1177,10 +1177,16 @@ footer p{font-size:12px;}
 .filter-display{position: relative; left: 0px; z-index: 5;}
 .hidefilter{display: none;}
 .banner .carousel-inner{height: 160px; margin-bottom: 10px;}
+.auction-list .media p{font-size: 13px;}
 .auction-list .media a.pull-left{width: 100%; margin-bottom: 10px;}
-.auction-list .media a.pull-left img{width: 100%; height:150px;}
+.auction-list .media a.pull-left img{width: 100%; height:180px;}
+.auction-list .media .media-body{clear: both;}
+.auction-list .calltoContact{position: absolute; margin:20px 0;}
+.auction-list .calltoContact a{text-decoration: none; color: #333;}
+.auction-list .callLocation{position: relative; top: 20px;}
 .Asset-filter{padding: 0;}
 .auction-details .media-heading{font-size: 15px;}
+.auction-details .media p a{text-decoration: none; color: #333;}
 }
 
 @media (max-width:480px){
