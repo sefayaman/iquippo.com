@@ -512,6 +512,10 @@
       
       if(userSearchText && userSearchText.length < 4) 
         return;
+
+      $scope.container.sellerName="";
+      $scope.product.seller.email="";
+      
       var dataToSend = {};
       dataToSend["status"] = true;
       dataToSend["userType"] = $scope.product.seller.userType;
@@ -756,6 +760,7 @@
     function firstStep(form, product) {
 
       var ret = false;
+
       if ($scope.container.mfgYear) {
         if ($scope.container.mfgYear.getFullYear)
           $scope.product.mfgYear = $scope.container.mfgYear.getFullYear();
@@ -785,7 +790,10 @@
         }, 20);
         return;
       }
-
+      if(!$scope.container.sellerName) {
+        Modal.alert("Seller doesn't exist!");
+        return;
+      }
       /*if($scope.container.selectedSubCategory){
          product.subcategory = {};
          product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
