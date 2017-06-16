@@ -96,7 +96,8 @@
   }
 
   function fireCommand(noReset,doNotSaveState){
-
+      if(vm.show == true)
+         vm.show=false;
     if(!$scope.mfgyr.min && !$scope.mfgyr.max)
        delete $scope.equipmentSearchFilter.mfgYear;
 
@@ -131,6 +132,7 @@
         .then(function(result) {
           if (result) {
             console.log("data recieved",result);
+            vm.show=false;
             if(result.length <= 0){
                   vm.show=true;  
                   }
