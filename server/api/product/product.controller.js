@@ -1098,7 +1098,7 @@ exports.exportProducts = function(req, res) {
               obj.Uploaded_By = colData.user.fname + ' ' + colData.user.lname;
             }
 
-            if(colData.assetStatuses && colData.assetStatuses.length){
+            if(colData.createdAt){
               obj.Listing_Date = Utillity.toIST(colData.createdAt) || '';
             }
 
