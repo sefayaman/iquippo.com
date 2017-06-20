@@ -1719,7 +1719,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':kycForm.kycType.$invalid && submitted}">
 					<select class="form-control" name="kycType" ng-model="kycVm.dataModel.kycType" required>
 		              <option value="">*KYC Type</option>
-		              <option ng-repeat="kyc in kycType" value="{{kyc.code}}">{{kyc.name}}</option>
+		              <option ng-repeat="kyc in KYCType" value="{{kyc.code}}">{{kyc.name}}</option>
 		            </select>
 		            <i class="caret"></i>
 				</div>
@@ -1791,25 +1791,25 @@
 		</div>
 		<legend></legend>
 		<div>
-		<form class="" name="" >			
+		<form class="" name="assetSaleForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="">
-					<select class="form-control" ng-model="assetSaleChargeVm.dataModel.enterpriseId">
-						<option value="">Enterprise Name</option>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="assetSaleChargeVm.dataModel.enterpriseId">
+						<option value="">*Enterprise Name</option>
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in assetSaleChargeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div>
 				<div class="col-sm-3">
-					<div class="input-group">
+					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveFromDate.$invalid && submitted}">
 		              <input type="text" name="effectiveFromDate" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
 		            </div>
 				</div>
 				<div class="col-sm-3">
-					<div class="input-group">
+					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveToDate.$invalid && submitted}">
 		              <input type="text" name="effectiveToDate" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
 		            </div>
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleChargeForm.category.$invalid && submitted}">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.category.$invalid && submitted}">
 					<select class="form-control" name="category" ng-model="assetSaleChargeVm.dataModel.category" required>
 						<option value="">*Asset Category</option>
 						<option value="{{ct._id}}" ng-repeat="ct in assetSaleChargeVm.categoryList">{{ct.name}}</option>
@@ -1817,15 +1817,15 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleChargeForm.rateOfInterest.$invalid && submitted}">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.rateOfInterest.$invalid && submitted}">
 					<input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateofinterest" placeholder="*Enter Rate (%)" required>
 				</div>
 				<div class="col-sm-3">
 					<input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatpertrx" placeholder="Flat per Transaction">
 				</div>
 				<div class="col-sm-offset-4 col-sm-2">
-					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleChargeForm)">Update</button>
-					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="assetSaleChargeVm.save(assetSaleChargeForm)">Save</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="assetSaleChargeVm.save(assetSaleForm)">Save</button>
 				</div>
 			</div>
 		</form>
@@ -1871,10 +1871,10 @@
 		</div>
 	</div>
 	<!-- Enterprise Master -->
-	<div ng-if="gsettingVm.tabValue == 'enterpriseMaster'" ng-controller="AssetSaleChargeMasterCtrl as assetSaleChargeVm">
+	<div ng-if="gsettingVm.tabValue == 'enterpriseMaster'" ng-controller="EnterpriseMasterCtrl as enterpriseVm">
 		<div class="row">
 			<div class="col-sm-6">
-				<h4>Add New Asset Sale Charge</h4>
+				<h4>Enterprise Master</h4>
 			</div>
 			<!-- <div class="col-sm-offset-2 col-sm-2">				
 				<span class="btn btn-success btn-block fileinput-button">
@@ -1895,48 +1895,49 @@
 		</div>
 		<legend></legend>
 		<div>
-		<form class="" name="assetSaleChargeForm" >			
+		<form class="" name="enterpriseMasterForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3">
-					<select class="form-control" ng-model="assetSaleChargeVm.dataModel.enterpriseId">
-						<option value="">Enterprise Name</option>
-						<option value="{{ent.enterpriseId}}" ng-repeat="ent in assetSaleChargeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="enterpriseVm.dataModel.enterpriseId">
+						<option value="">*Enterprise Name</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div>
 				<div class="col-sm-3">
-					<select class="form-control">
-						<option>Asset Sale</option>
+					<select class="form-control" name="functionality" ng-model="enterpriseVm.dataModel.functionality">
+						<option value="">Functionality</option>
+						<option value="assetsale">Asset Sale</option>
 					</select>
 				</div>
 				<div class="col-sm-3">
-					<select class="form-control">
-						<option>Buy Now Price Approval</option>
-						<option>Yes</option>
-						<option>No</option>
+					<select class="form-control" name="buyNowPriceApproval" ng-model="enterpriseVm.dataModel.buynowpriceapproval">
+						<option value="">Buy Now Price Approval Required</option>
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
 					</select>					
 				</div>
 				<div class="col-sm-3">
-					<select class="form-control">
-						<option>Negotiated Sale Approval</option>
-						<option>Yes</option>
-						<option>No</option>
+					<select class="form-control" name="negotiatedSaleApproval" ng-model="enterpriseVm.dataModel.negotiatedsalespproval">
+						<option value="">Negotiated Sale Approval Required</option>
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
 					</select>
 					
 				</div>
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3" >
-					<input type="number" class="form-control" name="" placeholder="Cooling Period">
+					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingperiod" placeholder="Cooling Period">
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control" name=""  placeholder="EMB Period">
+					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdperiod"  placeholder="EMD Period">
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control" name=""  placeholder="Full Payment Period">
+					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingperiod"  placeholder="Full Payment Period">
 				</div>
 				<div class="col-sm-offset-1 col-sm-2">
-					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleChargeForm)">Update</button>
-					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="assetSaleChargeVm.save(assetSaleChargeForm)">Save</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="enterpriseVm.update(enterpriseMasterForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="enterpriseVm.save(enterpriseMasterForm)">Save</button>
 				</div>
 			</div>
 		</form>
@@ -1948,7 +1949,7 @@
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
-					Search: <input type="text" placeholder="Search..." ng-model="assetSaleChargeVm.searchStr" ng-change="assetSaleChargeVm.searchFn()" ng-model-options="{debounce:500}">
+					Search: <input type="text" placeholder="Search..." ng-model="enterpriseVm.searchStr" ng-change="enterpriseVm.searchFn()" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
@@ -1967,7 +1968,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="vat in assetSaleChargeVm.filteredList">
+					<tr ng-repeat="vat in enterpriseVm.filteredList">
 						<td></td>
 						<td></td>
 						<td></td>
@@ -1976,8 +1977,8 @@
 						<td></td>
 						<td></td>
 						<td>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="assetSaleChargeVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
-							<button type="button" class="btn btn-sm btn-danger" ng-click="assetSaleChargeVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="enterpriseVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="enterpriseVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>

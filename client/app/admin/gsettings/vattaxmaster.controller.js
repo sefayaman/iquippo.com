@@ -18,7 +18,7 @@
         vm.searchFn = searchFn;
         vm.getCategory = getCategory;
         vm.taxType = [{name:"VAT"}];
-        vm.dataList.taxType = vm.taxType[0].name;;
+        vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
         groupSvc.getAllGroup()
         .then(function(result) {

@@ -92,8 +92,8 @@
                       <i class="caret"></i>
                       
                     </div> -->
-                     <div class="col-sm-3 ">
-                      <input type="text" class="form-control" placeholder="Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-typeahead="mobile for mobile in userSearch($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="productVm.fireCommand()" typeahead-on-select="productVm.fireCommand()" ng-model-options="{debounce:1000}" autocomplete="off">
+                     <div class="col-sm-3 " ng-class="{'has-error': form.sellerMobile.$invalid && submitted}">
+                      <input type="text" class="form-control" placeholder="*Mobile No." ng-value="product.seller.mobile" ng-model="product.seller.mobile" name="sellerMobile" uib-typeahead="mobile for mobile in userSearch($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="fireCommand()" typeahead-on-select="fireCommand()" ng-model-options="{debounce:1000}" autocomplete="off" required>
                     </div>
                     <!-- <div class="col-sm-3 " ng-if="container.userType == 'legalentity'" ng-class="{'has-error': form.company.$invalid && submitted}">
                       <select class="form-control" name="company"  ng-model="container.selectedUserId" ng-change="onUserChange(container.selectedUserId)" required>
@@ -103,7 +103,7 @@
                       <i class="caret"></i>
                     </div> -->
                     <div class="col-sm-3 ">
-                      <input type="text" ng-disabled="true" class="form-control" placeholder="Name" ng-value="product.seller.name" ng-model="product.seller.name">
+                      <input type="text" ng-disabled="true" class="form-control" placeholder="Name" ng-value="container.sellerName" ng-model="container.sellerName">
                     </div>
                     
                     <div class="col-sm-3 ">
