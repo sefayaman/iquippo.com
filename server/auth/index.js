@@ -27,6 +27,9 @@ router.get("/gettoken",auth.isAuthenticated(),function(req,res){
 });
 
 router.get("/validate",auth.isAuthenticated(),function(req,res){
+	var mobile = req.query.mobile;
+	if(!mobile || req.user.mobile !== mobile)
+		return res.status(200).send("Unauthorized");
 	return res.status(200).send("Valid");
 });
 
