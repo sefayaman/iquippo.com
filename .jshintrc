@@ -6,6 +6,7 @@
 	    "it"         : false,
 	    "before"     : false,
 	    "beforeEach" : false,
-		"module": true
+		"module": true,
+		"angular"   : false
 	}
 }

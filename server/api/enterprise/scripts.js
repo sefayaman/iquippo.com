@@ -37,7 +37,7 @@ exports.userRemapping = function(req,res){
 		async.parallel({user:validateUser,enterprise:validateEnterprise},middleManProcessing);
 
 	 	function validateUser(cb){
-	 		User.find({mobile:item.mobile},function(err,users){
+	 		User.find({mobile:item.mobile,deleted:false},function(err,users){
 	 			if(err || !users.length)return cb("Error in finding user");
 	 			return cb(null,users[0]);
 	 		});
@@ -61,7 +61,7 @@ exports.userRemapping = function(req,res){
 	   		async.parallel([updateUser,updateTransaction],onProcessingDone);
 
 	   		function updateUser(processingCallback){
-	   			User.update({_id:result.user._id},{$set:{enterpriseId:result.enterprise.enterpriseId}},function(err,retData){
+	   			User.update({_id:result.user._id},{$set:{enterpriseId:result.enterprise.enterpriseId,enterprise:false}},function(err,retData){
 	   				if(err){return processingCallback("Error in user update");}
 	   				return processingCallback();
 	   			});
@@ -76,8 +76,8 @@ exports.userRemapping = function(req,res){
 		          employeeCode : result.enterprise.employeeCode,
 		          name : (result.enterprise.fname || "") + " "+ (result.enterprise.lname || "")
 		        };
-
-		        enterprisevaluation.update({'createdBy._id':result.user._id + ""},{$set:{enterprise:updateData,customerPartyName:updateData.name}},{multi:true},function(err,retData){
+		        var custName = (result.enterprise.fname || "") + " " + (result.enterprise.mname || "") + " "+ (result.enterprise.lname || "");
+		        enterprisevaluation.update({'createdBy._id':result.user._id + ""},{$set:{enterprise:updateData,customerPartyName:custName}},{multi:true},function(err,retData){
 		        	if(err){return processingCallback("Error in updating transaction");}
 		        	console.log(retData);
 	   				return processingCallback();
