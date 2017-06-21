@@ -7,6 +7,7 @@ var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
+var financeIntegrationCtrl = require('./financeintegration.controller');
 
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
@@ -95,6 +96,8 @@ router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
+
+router.get('/redirecttorapid',financeIntegrationCtrl.setCustomerData);
 
 
 //Bulk Upload Routes
