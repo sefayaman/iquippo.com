@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var User = require('./../user/user.model');
-var auth = require('./../../auth/auth.service.js');
+var auth = require('./../../auth/externalauth.service.js');
 
 var REDIRECT_URL = "http://finance.iquippo.com/customer-portal-iquippo/sso";
 
