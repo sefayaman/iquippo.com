@@ -1713,11 +1713,11 @@ exports.validateExcelData = function(req, res, next) {
               brand: existingProduct.brand.name,
               model: existingProduct.model.name,
               mfgYear : existingProduct.mfgYear,
-              productId : existingProduct.productId
-              serialNo = existingProduct.serialNo;
-              grossPrice = existingProduct.grossPrice;
-              assetDir = existingProduct.assetDir;
-              primaryImg = existingProduct.primaryImg;
+              productId : existingProduct.productId,
+              serialNo : existingProduct.serialNo,
+              grossPrice : existingProduct.grossPrice,
+              assetDir : existingProduct.assetDir,
+              primaryImg : existingProduct.primaryImg
             },
             startDate: auctionMaster[0].startDate,
             endDate: auctionMaster[0].endDate,
