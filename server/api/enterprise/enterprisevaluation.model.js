@@ -17,6 +17,7 @@ var EnterpriseValuationSchema = new Schema({
   customerPartyNo:String,
   customerPartyName:String,
   userName: String,
+  legalEntityName: String,
   requestDate:{type:Date,default:Date.now},
   assetId:String,
   repoDate:Date,

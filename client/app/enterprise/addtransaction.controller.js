@@ -61,6 +61,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     if(!editMode){
       vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " + ( Auth.getCurrentUser().mname || "")+ (Auth.getCurrentUser().mname ? " " : "") + (Auth.getCurrentUser().lname || "");
+      vm.enterpriseValuation.legalEntityName = (Auth.getCurrentUser().company || "");
     }
 
     ValuationPurposeSvc.get(null)

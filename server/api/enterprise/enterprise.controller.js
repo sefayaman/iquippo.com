@@ -727,6 +727,7 @@ exports.bulkUpload = function(req, res) {
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = user.mobile;
       row.userName = (user.fname || "") + " " + (user.mname || "") +(user.mname ? " " : "") + (user.lname || "");
+      row.legalEntityName = (user.company || "");
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
@@ -1694,8 +1695,13 @@ exports.exportExcel = function(req,res){
   var dateFilter = {};
   if(queryParam.fromDate)
     dateFilter['$gte'] = new Date(queryParam.fromDate);
-  if(queryParam.toDate)
-    dateFilter['$lt']= new Date(queryParam.toDate);
+  if(queryParam.toDate) {
+      var toDate = new Date(queryParam.toDate);
+      var nextDay = toDate.getDate() + 1;
+      toDate.setDate(nextDay);
+      dateFilter.$lt = toDate;
+    }
+    //dateFilter['$lt']= new Date(queryParam.toDate);
 
   switch(queryParam.type){
     case "transaction":
