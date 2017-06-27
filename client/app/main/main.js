@@ -514,6 +514,45 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+<<<<<<< HEAD
+=======
+      .state('assetsale', {
+        url: '/assetsale',
+        abstract:true,
+        templateUrl: 'app/assetsale/assetsale.html',
+        controller: 'AssetSaleCtrl as assetsaleVm'
+      })
+      .state('assetsale.administrator', {
+        url: '/administrator',
+        templateUrl: 'app/assetsale/administrator.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.seller', {
+        url: '/seller',
+        templateUrl: 'app/assetsale/seller.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.buyer', {
+        url: '/buyer',
+        templateUrl: 'app/assetsale/buyer.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.sellerdetails', {
+        url: '/sellerdetails',
+        templateUrl: 'app/assetsale/sellerdetails.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetbidhistory', {
+        url: '/bidhistory',
+        templateUrl: 'app/assetsale/bidhistory.html',
+        layout:'client',
+        authenticate:true
+      })
+>>>>>>> 7ebab22... auction register and history page done
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
