@@ -57,14 +57,11 @@ function signToken(id,role,expireTime) {
 }
 
 function getToken(req,res){
-  var token = extAuth.signToken(req.user._id,req.user.role,1);
+  var token = signToken(req.user._id,req.user.role,1);
   return res.status(200).send(token);
 }
 
 function validate(req,res){
-  //var mobile = req.query.mobile;
-  //if(!mobile || req.user.mobile !== mobile)
-   // return res.status(200).send("Unauthorized");
   return res.status(200).send("Valid");
 }
 

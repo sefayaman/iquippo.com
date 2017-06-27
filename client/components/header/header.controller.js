@@ -91,6 +91,6 @@ angular.module('sreizaoApp')
       .then(function(res){
         $window.location.href = res.data;
       });
-    }
+    };
     
   })

@@ -16,7 +16,7 @@ exports.setCustomerData = function(req,res){
    res.cookie("access_token","",{ domain: '.iquippo.com' });
    if(req.query._id){
     User.findById(req.query._id,function(err,user){
-      if(err){return handleError(res,err)}
+      if(err){return handleError(res,err);}
       if(!user)return res.status(404).send("User Not Found");
       if(user.role === 'enterprise' && isServiceAvailed(user,'Finance'))
         res.cookie("sourcing_user_type",'EU',{ domain: '.iquippo.com' });
@@ -35,8 +35,8 @@ exports.setCustomerData = function(req,res){
     res.cookie("dealership_name",user.entityName || "",{ domain: '.iquippo.com' });
     var token = auth.signToken(user._id,user.role,1);
     res.cookie("access_token",token,{ domain: '.iquippo.com' });
-      res.status(200).send(REDIRECT_URL)
-    })
+      res.status(200).send(REDIRECT_URL);
+    });
    }else
     return res.status(200).send(REDIRECT_URL);
 
@@ -49,7 +49,7 @@ exports.setCustomerData = function(req,res){
         }
         return false;
   }
-}
+};
 
 function handleError(res, err) {
   return res.status(500).send(err);

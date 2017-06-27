@@ -302,39 +302,31 @@ exports.search = function(req, res) {
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
-          var saleFeaturedProd = [],
+          var saleFeaturedProdWithPrice = [],
+              saleFeaturedProdWithoutPrice = [],
+              bothFeaturedProdWithPrice = [],
+              bothFeaturedProdWithoutPrice = [],
               rentFeaturedProd = [],
-              saleProd = [],
-              bothProd = [],
-              rentProd = [],
+              saleProdWithPrice = [],
+              bothProdWithPrice = [],
+              saleProdWithoutPrice = [],
+              bothProdWithoutPrice = [],
+              rentProdWithPrice = [],
+              rentProdWithoutPrice = [],
               notAvailProd = [],
               soldProd = [],  //status of product
               rentedProd = []; //status
           products.forEach(function(item){
             if(!assetIdCache[item.assetId]){
               assetIdCache[item.assetId] = true;
-              if(item.featured && item.tradeType === 'SELL'){
-                saleFeaturedProd.push(item);
+
+              if(item.assetStatus === 'sold'){
+                soldProd.push(item);
                 return;
               }
 
-              if(item.featured && item.tradeType === 'RENT'){
-                rentFeaturedProd.push(item);
-                return;
-              }
-
-              if(item.tradeType === 'SELL'){
-                saleProd.push(item);
-                return;
-              }
-
-              if(item.tradeType === 'BOTH'){
-                bothProd.push(item);
-                return;
-              }
-
-              if(item.tradeType === 'RENT'){
-                rentProd.push(item);
+              if(item.assetStatus === 'rented'){
+                rentedProd.push(item);
                 return;
               }
 
@@ -343,24 +335,79 @@ exports.search = function(req, res) {
                 return;
               }
 
-              if(item.assetStatus === 'SOLD'){
-                soldProd.push(item);
+              if(item.featured && item.tradeType === 'SELL' && !item.priceOnRequest){
+                saleFeaturedProdWithPrice.push(item);
                 return;
               }
 
-              if(item.assetStatus === 'RENTED'){
-                rentedProd.push(item);
+
+              if(item.featured && item.tradeType === 'SELL'){
+                saleFeaturedProdWithoutPrice.push(item);
+                return;
+              }
+
+              if(item.featured && item.tradeType === 'BOTH' && !item.priceOnRequest){
+                bothFeaturedProdWithPrice.push(item);
+                return;
+              }
+
+              if(item.featured && item.tradeType === 'BOTH'){
+                bothFeaturedProdWithoutPrice.push(item);
+                return;
+              }
+
+              if(item.featured && item.tradeType === 'RENT'){
+                rentFeaturedProd.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'SELL' && !item.priceOnRequest){
+                saleProdWithPrice.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'BOTH' && !item.priceOnRequest){
+                bothProdWithPrice.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'RENT' && isRentWithPrice(item)){
+                rentProdWithPrice.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'SELL'){
+                saleProdWithoutPrice.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'BOTH'){
+                bothProdWithoutPrice.push(item);
+                return;
+              }
+
+              if(item.tradeType === 'RENT'){
+                rentProdWithoutPrice.push(item);
                 return;
               }
             }
           });
 
-          var outputProds = [].concat(saleFeaturedProd,rentFeaturedProd,saleProd,bothProd,rentProd,notAvailProd,soldProd,rentedProd);
+          var outputProds = [].concat(saleFeaturedProdWithPrice,saleFeaturedProdWithoutPrice,bothFeaturedProdWithPrice,bothFeaturedProdWithoutPrice,rentFeaturedProd,saleProdWithPrice,bothProdWithPrice,rentProdWithPrice,saleProdWithoutPrice,bothProdWithoutPrice,rentProdWithoutPrice,notAvailProd,soldProd,rentedProd);
           result.products = outputProds;
           self();
          }
+
       );
 
+      function isRentWithPrice(item){
+        if(!item.rent)
+          return false;
+        else if((item.rent.rateHours && item.rent.rateHours.rentAmountH) || (item.rent.rateMonths  && item.rent.rateMonths.rentAmountM) || (item.rent.rateDays && item.rent.rateDays.rentAmountD))
+          return true;
+        else
+          return false;
+      }
     })
     .seq(function(){
          res.setHeader('Cache-Control','private,max-age=2592000');
@@ -1662,9 +1709,15 @@ exports.validateExcelData = function(req, res, next) {
               city: existingProduct.city,
               name: existingProduct.name,
               status: existingProduct.status,
-              category: existingProduct.category,
+              category: existingProduct.category.name,
+              brand: existingProduct.brand.name,
+              model: existingProduct.model.name,
               mfgYear : existingProduct.mfgYear,
-              productId : existingProduct.productId
+              productId : existingProduct.productId,
+              serialNo : existingProduct.serialNo,
+              grossPrice : existingProduct.grossPrice,
+              assetDir : existingProduct.assetDir,
+              primaryImg : existingProduct.primaryImg
             },
             startDate: auctionMaster[0].startDate,
             endDate: auctionMaster[0].endDate,
@@ -1709,7 +1762,7 @@ exports.validateExcelData = function(req, res, next) {
               city: existingProduct.city,
               name: existingProduct.name,
               status: existingProduct.status,
-              category: existingProduct.category,
+              category: existingProduct.category.name,
               mfgYear : existingProduct.mfgYear
             },
             status: 'payment_pending',
@@ -1779,7 +1832,7 @@ exports.validateExcelData = function(req, res, next) {
               city: existingProduct.city,
               name: existingProduct.name,
               status: existingProduct.status,
-              category: existingProduct.category },
+              category: existingProduct.category.name },
             user: user,
             status: existingProduct.status,
             statuses: existingProduct.statuses,

@@ -238,7 +238,7 @@
                  </div>
                  
                 <div id="search-result_wrapper" class="search-result">
-                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage | orderBy:'assetStatus'" class="sorts">
+                  <div ng-repeat="product in productList | startFrom:(viewproductVm.currentPage -1 )*viewproductVm.itemsPerPage | limitTo:viewproductVm.itemsPerPage" class="sorts">
                       <div class="media">
                         <div  class="pull-left result-products">
                           <a ng-href="/productdetail/{{product._id}}?{{filterType}}" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" popover-placement="right" >
