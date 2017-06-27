@@ -544,6 +544,12 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
+      .state('assetbidhistory', {
+        url: '/bidhistory',
+        templateUrl: 'app/assetsale/bidhistory.html',
+        layout:'client',
+        authenticate:true
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });
