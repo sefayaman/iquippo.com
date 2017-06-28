@@ -134,7 +134,7 @@
           </div>
         </div>
         <div class="row form-group">
-          <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.yearOfManufacturing.$invalid || enterpriseValForm.otherModel.$invalid) && submitted}">
+          <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.yearOfManufacturing.$invalid && submitted}">
             <input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" ng-disabled="!editEnterpriseField()" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" ng-max="currentYear" min="1900" string-to-number/>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': enterpriseValForm.yardParked.$invalid && submitted}">
@@ -172,7 +172,7 @@
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPerson.$invalid && submitted}">
             <input type="text" class="form-control" name="contactPerson" ng-model="addTransactionVm.enterpriseValuation.contactPerson" ng-disabled="!editEnterpriseField()" placeholder="*Contact Person" required/>
           </div>
-          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPerson.$invalid && submitted}">
+          <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.contactPersonTelNo.$invalid && submitted}">
              <input type="text" class="form-control" name="contactPersonTelNo" ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" ng-disabled="!editEnterpriseField()" placeholder="*Contact Person Tel No" required/>
           </div>
           <div class="col-sm-3">
