@@ -1016,6 +1016,8 @@ exports.bulkModify = function(req, res) {
         
         row.valData = result[0];
         if(updateType == 'agency'){
+          if(!result[0].reportDate)
+              row.reportDate = new Date();
           if(user.role == 'admin')
             return callback();
           if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id && agencyValidStatus.indexOf(result[0].status) != -1)
@@ -1359,8 +1361,10 @@ exports.update = function(req, res) {
   }
 
   function update(){
-    if(bodyData.status === EnterpriseValuationStatuses[4])
-        bodyData.reportSubmissionDate = new Date();
+    if(bodyData.status === EnterpriseValuationStatuses[4]){
+      bodyData.reportDate = new Date()
+      bodyData.reportSubmissionDate = new Date();
+    }
      EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
@@ -1620,6 +1624,7 @@ exports.updateFromAgency = function(req,res){
 
       updateObj.status = EnterpriseValuationStatuses[4];
       updateObj.statuses = valReq.statuses;
+      updateObj.reportDate = new Date();
       updateObj.reportSubmissionDate = new Date();
       var stsObj = {};
       stsObj.createdAt = new Date();
