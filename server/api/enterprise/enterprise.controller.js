@@ -508,8 +508,7 @@ exports.bulkUpload = function(req, res) {
           _id : result[0]._id + "",
           enterpriseId : result[0].enterpriseId,
           employeeCode : result[0].employeeCode,
-          name : (result[0].fname || "") + " "+ (result[0].lname || ""),
-          legalEntityName : (result[0].company || "")
+          name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
 
         row.autoSubmit = false;
@@ -739,6 +738,7 @@ exports.bulkUpload = function(req, res) {
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = user.mobile;
       row.userName = (user.fname || "") + " " + (user.mname || "") +(user.mname ? " " : "") + (user.lname || "");
+      row.legalEntityName = (user.company || "");
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
@@ -993,8 +993,7 @@ exports.bulkModify = function(req, res) {
           _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
           employeeCode : result[0].employeeCode,
-          name : (result[0].fname || "") + " "+ (result[0].lname || ""),
-          legalEntityName : (result[0].company || "")
+          name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
 
         row.customerPartyName = row.enterprise.name;

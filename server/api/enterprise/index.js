@@ -25,6 +25,7 @@ router.post('/iqvl/update',controller.updateFromAgency);
 */
 
 router.post('/userremapping',scriptController.userRemapping);
+router.post('/updaterequest',scriptController.updateLegalEntityInRequest);
 
 
 /*

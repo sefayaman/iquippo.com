@@ -102,3 +102,73 @@ exports.userRemapping = function(req,res){
 		res.status(200).json({errorList:errorArr,success:successArr});
 	}
 };
+
+exports.updateLegalEntityInRequest = function(req,res){
+	var errorArr = [];
+	var successArr = [];
+
+	if(req.body.data) {
+		enterprisevaluation.find({},function(err,enterpriseData){
+		    if (err) { 
+		    	return res.status(200).send("No Data");
+		    }
+		    else {
+		    	async.eachLimit(enterpriseData,5,initialize,onComplete);
+			}
+		});
+	}
+	
+	function initialize(item,callback){
+		if(!item.enterprise.enterpriseId){
+			item.msg = "enterpriseId is missing";
+			errorArr.push(item);
+			return callback();
+		}
+		async.parallel({enterprise:validateEnterprise}, middleManProcessing);
+
+	 	function validateEnterprise(cb){
+	 		User.find({_id: item.createdBy._id, deleted:false},function(err,enterprises){
+	 			if(err || !enterprises.length) {
+	 				return cb("Error in finding enterprise");
+	 			}
+	 			return cb(null, enterprises[0]);
+	 		});
+	 	}
+
+	   function middleManProcessing(err,result){
+	   	   	if(err){
+		   		item.msg = err;
+		   		errorArr.push(item);
+		   		return callback();
+		   	}
+
+	   		async.parallel([updateTransaction],onProcessingDone);
+
+	   		function updateTransaction(processingCallback){
+		        var entityName = result.enterprise.company || "";
+		        enterprisevaluation.update({uniqueControlNo:item.uniqueControlNo + ""},{$set: {"legalEntityName" : entityName} },function(err,retData){
+		        	if(err){return processingCallback("Error in updating transaction");}
+		        	console.log(retData);
+	   				return processingCallback();
+		        });
+	   		}
+
+	   		function onProcessingDone(err){
+	   			if(err){
+			   		item.msg = err;
+			   		errorArr.push(item);
+			   		return callback();
+			   	}
+			   item.msg = "Updated successfully";
+			   successArr.push(item);
+			   return callback();
+	   		}
+
+	   }
+	}
+
+	function onComplete(){
+		res.status(200).json({errorList:errorArr,success:successArr});
+	}
+	
+};
