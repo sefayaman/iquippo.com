@@ -422,19 +422,19 @@
 				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetCategory.$invalid && form.submitted}">
 				 <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId)" required>
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': (form.brand.$invalid || form.otherBrand.$invalid) && form.submitted}">
-					<select class="form-control" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
+				<div class="col-sm-3" ng-class="{'has-error': (form.brand.$invalid || form.otherBrand.$invalid) && form.submitted}">
+					<select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
 						<option value="">Select Brand</option>
               			<option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
 					</select>
-					<input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
+					<input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control form-group" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': (form.model.$invalid || form.otherModel.$invalid) && form.submitted}">
-					<select class="form-control" ng-model="addTransactionVm.enterpriseValuation.model">
+				<div class="col-sm-3" ng-class="{'has-error': (form.model.$invalid || form.otherModel.$invalid) && form.submitted}">
+					<select class="form-control form-group" ng-model="addTransactionVm.enterpriseValuation.model">
 						 <option value="">Select Model</option>
               			 <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
 					</select>
-					  <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
+					  <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control form-group" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
 				</div>
 				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetDescription.$invalid && form.submitted}">
 					<!-- <textarea class="form-control" placeholder="Asset Description" ng-model="addTransactionVm.enterpriseValuation.assetDescription"></textarea> -->

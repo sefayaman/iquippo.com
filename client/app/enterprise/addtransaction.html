@@ -102,7 +102,7 @@
               <option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
             </select>
             <i class="caret"></i>
-            <input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'" ng-disabled="!editEnterpriseField()">
+            <input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control form-group" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'" ng-disabled="!editEnterpriseField()">
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.model.$invalid || enterpriseValForm.otherModel.$invalid) && enterpriseValForm.submitted}">
             <select class="form-control form-group" name="model" ng-model="addTransactionVm.enterpriseValuation.model" ng-disabled="!editEnterpriseField()">
@@ -110,7 +110,7 @@
               <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
             </select>
             <i class="caret"></i>
-            <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'" ng-disabled="!editEnterpriseField()">
+            <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control form-group" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'" ng-disabled="!editEnterpriseField()">
           </div>
           <div class="col-sm-3" ng-class="{'has-error':enterpriseValForm.assetDescription.$invalid && enterpriseValForm.submitted}">
             <input type="text" name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="*Asset Name" class="form-control" required/>
