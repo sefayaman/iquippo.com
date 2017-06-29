@@ -508,7 +508,8 @@ exports.bulkUpload = function(req, res) {
           _id : result[0]._id + "",
           enterpriseId : result[0].enterpriseId,
           employeeCode : result[0].employeeCode,
-          name : (result[0].fname || "") + " "+ (result[0].lname || "")
+          name : (result[0].fname || "") + " "+ (result[0].lname || ""),
+          legalEntityName : (result[0].company || "")
         };
 
         row.autoSubmit = false;
@@ -596,6 +597,10 @@ exports.bulkUpload = function(req, res) {
     }
 
     function validateMasterData(callback){
+        if(!row.brand){
+          delete row.model;
+          return callback();
+        }
        commonFunc.fetchBrand({name:row.brand},function(err,brands){
           if(err || !brands)
             return callback('Error while validating brand');
@@ -603,10 +608,17 @@ exports.bulkUpload = function(req, res) {
           if(!brands.length){
               row.otherBrand = row.brand;
               row.brand = "Other";
-              row.otherModel = row.model;
-              row.model = "Other";
+
+              if(row.model){
+                 row.otherModel = row.model;
+                 row.model = "Other";
+              }
+             
               return callback();
           } 
+
+          if(!row.model)
+            return callback();
 
           var modelParams = {
             brand : row.brand,
@@ -727,7 +739,6 @@ exports.bulkUpload = function(req, res) {
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = user.mobile;
       row.userName = (user.fname || "") + " " + (user.mname || "") +(user.mname ? " " : "") + (user.lname || "");
-      row.legalEntityName = (user.company || "");
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
@@ -982,9 +993,11 @@ exports.bulkModify = function(req, res) {
           _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
           employeeCode : result[0].employeeCode,
-          name : (result[0].fname || "") + " "+ (result[0].lname || "") 
+          name : (result[0].fname || "") + " "+ (result[0].lname || ""),
+          legalEntityName : (result[0].company || "")
         };
 
+        row.customerPartyName = row.enterprise.name;
         return callback();
       });
     }
@@ -1102,8 +1115,10 @@ exports.bulkModify = function(req, res) {
     }
 
      function validateMasterData(callback){
-      if(!row.brand)
-        return callback();
+      if(!row.brand){
+          delete row.model;
+          return callback();
+      }
        commonFunc.fetchBrand({name:row.brand},function(err,brands){
           if(err || !brands)
             return callback('Error while validating brand');
@@ -1111,10 +1126,15 @@ exports.bulkModify = function(req, res) {
           if(!brands.length){
               row.otherBrand = row.brand;
               row.brand = "Other";
-              row.otherModel = row.model;
-              row.model = "Other";
+              if(row.model){
+                row.otherModel = row.model;
+                row.model = "Other";
+                
+              }
               return callback();
           } 
+          if(!row.model)
+            return callback();
 
           var modelParams = {
             brand : row.brand,
@@ -1239,7 +1259,7 @@ exports.bulkModify = function(req, res) {
       var valReq = row.valData;
       delete row.valData;
       if(updateType == 'agency'){
-
+        row.reportSubmissionDate = new Date();
         row.status = EnterpriseValuationStatuses[4];
         row.statuses = valReq.statuses;
         row.statuses.push({
@@ -1340,6 +1360,8 @@ exports.update = function(req, res) {
   }
 
   function update(){
+    if(bodyData.status === EnterpriseValuationStatuses[4])
+        bodyData.reportSubmissionDate = new Date();
      EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
@@ -1599,6 +1621,7 @@ exports.updateFromAgency = function(req,res){
 
       updateObj.status = EnterpriseValuationStatuses[4];
       updateObj.statuses = valReq.statuses;
+      updateObj.reportSubmissionDate = new Date();
       var stsObj = {};
       stsObj.createdAt = new Date();
       stsObj.userId = "IQVL";
@@ -1687,6 +1710,9 @@ exports.exportExcel = function(req,res){
     filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
   if(queryParam.agencyId)
     filter['agency._id'] = queryParam.agencyId;
+  if (queryParam.userId)
+    filter["createdBy._id"] = queryParam.userId;
+
   if(queryParam.ids){
     var ids = queryParam.ids.split(',');
     filter['_id'] = {$in:ids};

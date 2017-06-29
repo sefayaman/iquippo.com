@@ -152,7 +152,7 @@ module.exports = {
 		"Enterprise Owner":{key:"customerPartyName"},
 		"User":{key:"userName"},
 		"User Mobile":{key:"customerPartyNo"},
-		"User Legal Entity":{key:"legalEntityName"},
+		"User Legal Entity":{key:"enterprise.legalEntityName"},
 		"Request Date":{key:"requestDate",type:'date'},
 		"Referance/FI Number":{key:"customerTransactionId"},
 		"Asset No":{key:"assetId"},
