@@ -927,14 +927,14 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .utube-icon img{position: relative;bottom: 115px;margin:auto;width: 44px;height: 40px;}
 .videos-icon{text-align: center;display: block;}
 .videos-icon img{position: relative;bottom:70px;margin:auto;width: 35px;height: 35px;}
-.auction-list{padding: 0 0 10px 0; border-bottom: 1px solid #ccc; margin: 10px 0;}
+.auction-list{padding: 0 0 10px 0; border-bottom: 1px solid #ccc; margin: 10px 0; position: relative;}
 .auction-filter{border:1px solid #ccc; padding: 5px; margin-left: 5px;}
 .auction-list .media-heading{margin-top: 3px; margin-bottom: 12px; font-size: 18px;}
 .auction-list .media-heading a{text-decoration: none;}
 .auction-list .media p{margin-bottom: 3px;}
 .Asset-filter{padding-top:  25px;}
 .Asset-filter select, .Asset-filter .btn{padding:  5px; border: 1px solid #999;}
-.auction-list img{width: 200px; height: 120px; border: 1px solid #ccc;}
+.auction-list img{width: 200px; height: 130px; border: 1px solid #ccc;}
 .auction-list.auction-details img{width: 130px; height: 130px;}
 .auction-details{position: relative; padding: 10px;border: 1px solid #ccc;}
 .auction-details .media-heading{font-size: 16px;}
@@ -1171,7 +1171,7 @@ footer p{font-size:12px;}
 .auction-list .media a.pull-left{width: 100%; margin-bottom: 10px;}
 .auction-list .media a.pull-left img{width: 100%; height:180px;}
 .auction-list .media .media-body{clear: both;}
-.auction-list .calltoContact{position: absolute; margin:20px 0;}
+.auction-list .calltoContact{position: absolute; top: auto; right: auto;}
 .auction-list .calltoContact a{text-decoration: none; color: #333;}
 .auction-list .callLocation{position: relative; top: 20px;}
 .Asset-filter{padding: 0;}

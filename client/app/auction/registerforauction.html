@@ -1,0 +1,100 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Register for Auction</h4>
+  </div>
+  <div class="modal-body">
+    <div ng-if="true">
+      <p>Are you rigistered user on iQuippo?</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="radio radio-info">
+            <input type="radio"  placeholder="" id="register" name="register" ng-model="content" value="yes">
+            <label for="register"> Yes </label>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="radio radio-info">
+            <input type="radio"  placeholder="" id="notregister" name="register" ng-model="content" value="no">
+            <label for="notregister"> No </label>
+          </div>
+        </div>
+      </div>
+      <div ng-if="content == 'yes'">
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8 form-group">
+            <input type="text" class="form-control form-group" name="" value="" placeholder="Enter Mobile/Email Id">
+            <div class="text-right">
+              <button type="button" class="btn btn-primary">Pay Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-offset-2 col-sm-8">
+            <div class="form-group text-center">
+              <label>Verification Code</label>
+              <input type="text" class="form-control" name="otp" placeholder="OTP">
+            </div>
+            <div class="form-group text-right">
+              <button type="button" class="btn btn-primary">Resend Code</button>
+              <input type="submit" class="btn btn-primary" name="" value="Verify">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form" ng-if="content == 'no'">
+      <form action="" method="get" accept-charset="utf-8">
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <input type="text" class="form-control" name="" value="" placeholder="*First Name">
+          </div>
+          <div class="col-sm-6 form-group">
+            <input type="text" class="form-control" name="" value="" placeholder="*Last Name">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <input type="email" class="form-control" name="" value="" placeholder="Email">
+          </div>
+          <div class="col-sm-6 form-group">
+            <input type="number" class="form-control" min="0" name="" value="" placeholder="*Mobile No.">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <select class="form-control">
+              <option>*Select Country</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group">
+            <select class="form-control">
+              <option>*Select State</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <select class="form-control">
+              <option>*Select Location</option>
+            </select>
+          </div>
+          <div class="col-sm-6 form-group">
+            <input type="text" class="form-control" name="" value="" placeholder="Address">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <input type="text" class="form-control" name="" value="" placeholder="PAN Number">
+          </div>
+          <div class="col-sm-6 form-group">
+            <input type="text" class="form-control" name="" value="" placeholder="TIN Number">
+          </div>
+        </div>
+        <div class="text-right">
+          <button type="button" class="btn btn-danger">Submit</button>
+        </div>
+      </form>
+    </div>
+    </div>    
+  </div>  
+</div>
