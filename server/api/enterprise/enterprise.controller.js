@@ -1577,7 +1577,13 @@ var parameters = {
   serialNo:{key:"agencySerialNo"},
   chasisNo:{key:"agencyChassisNo"},
   registrationNo:{key:"agencyRegistrationNo"},
-  report_url:{key:"valuationReport",type:"file",required:true}
+  report_url:{key:"valuationReport",type:"file",required:true},
+  general_image_url:{key:"generalImage",type:"file"},
+  engine_image_url:{key:"engineImage",type:"file"},
+  hydraulic_image_url:{key:"hydraulicImage",type:"file"},
+  cabin_image_url:{key:"cabinImage",type:"file"},
+  under_carriage_tyre_image_url:{key:"underCarriageImage",type:"file"},
+  other_image_url:{key:"otherImage",type:"file"}
 }
 
 exports.updateFromAgency = function(req,res){
