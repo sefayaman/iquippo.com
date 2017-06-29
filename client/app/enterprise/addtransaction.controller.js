@@ -252,10 +252,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function addOrUpdateRequest(form) {
       if(form.$invalid){
-          $scope.submitted = true;
+          form.submitted = true;
           return;
       }
-      $scope.submitted = false;
+      form.submitted = false;
 
       if(!$scope.isEdit)
         save();
@@ -344,10 +344,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         delete vm.enterpriseValuation[fieldName].filename;
     }
 
-    function reset() {
+    function reset(form) {
       vm.enterpriseValuation.customerPartyNo = "";
       vm.enterpriseValuation = {purpose:"Financing"};
-      $scope.submitted = false;
+      form.submitted = false;
       init();
     }
 
