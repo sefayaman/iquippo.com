@@ -95,19 +95,19 @@
               <p ng-if="product.auctionValue =='ongoingAuctions'" class="text-success"><strong>Ongoing Auction Time : <timer end-time="product.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
               <p ng-if="product.auctionValue =='closedAuctions'"><strong>Auction Closed</strong></p>
               <p ng-if="product.insStartDate && product.insEndDate"><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
-              <p><strong>Earnest Money Deposit : </strong> <i class="fa fa-inr"></i> 1500</p>
+              <!-- <p><strong>Earnest Money Deposit : </strong> <i class="fa fa-inr"></i> 1500</p> -->
               <p class="calltoContact">
                 <a href="tel:{{product.contactNumber}}">
                   <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
                 </a>
               </p>
               <div class="row callLocation">
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>
-                <div class="col-xs-4 col-sm-2 padd-right">
+                <!-- <div class="col-xs-4 col-sm-2 padd-right">
                   <button type="button" class="btn btn-default btn-sm btn-block active" ng-click="auctionDateVm.openBidModal()">Register Now</button>
-                </div>
+                </div> -->
                 <div class="col-xs-4 col-sm-2 padd-right">
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-block active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
