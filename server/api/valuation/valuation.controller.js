@@ -269,8 +269,10 @@ function excel_from_data(data, isAdmin) {
     if(R == 0)
       cell = {v: "Category"};
     else{
-      if(valuation)
-        cell =  {v: valuation.product.category};
+      if(valuation && typeof valuation.product.category === 'string')
+        cell =  {v: valuation.product.category || ""};
+      else
+        cell =  {v: valuation.product.category.name || ""};
     }
     setCell(ws,cell,R,C++);
 

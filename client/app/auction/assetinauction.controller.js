@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('AssetInAuctionCtrl', AssetInAuctionCtrl);
 
-  function AssetInAuctionCtrl($scope, $state, $window,categorySvc,brandSvc,modelSvc,productSvc, AuctionSvc, $location) {
+  function AssetInAuctionCtrl($scope, $state, $rootScope, $window,categorySvc, Modal, brandSvc,modelSvc,productSvc, AuctionSvc, $location, $uibModal) {
     var vm = this;
 
     var query = $location.search();
@@ -25,7 +25,21 @@
     //registering category brand functions
     vm.onCategoryChange=onCategoryChange;
     vm.onBrandChange=onBrandChange;
+    vm.openBidModal = openBidModal;
 
+
+    // bid summary
+    function openBidModal(){
+      var bidSummaryScope = $rootScope.$new();
+      var bidSummaryModal = $uibModal.open({
+          templateUrl: "/app/auction/registerforauction.html",
+          scope: bidSummaryScope,
+          windowTopClass: 'bidmodal',
+          size: 'xs'
+      });
+
+      bidSummaryScope.close = function(){bidSummaryModal.close()};
+    }
 
     function openUrl(_id) {
       if (!_id)

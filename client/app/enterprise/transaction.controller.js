@@ -58,11 +58,9 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
       }
 
-      if(Auth.isEnterpriseUser() && !filter.isSearch){
+      if(Auth.isEnterpriseUser()){
         filter['userId'] = Auth.getCurrentUser()._id;
       }
-
-      delete filter.isSearch;
 
       EnterpriseSvc.get(filter)
       .then(function(result){
@@ -83,19 +81,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       else
         filter = filterObj;
       if(vm.searchStr){
-        filter.isSearch = true;
         filter['searchStr'] = encodeURIComponent(vm.searchStr);
       }
       if(vm.statusType){
-        filter.isSearch = true;
         filter['statusType'] = encodeURIComponent(vm.statusType);
       }
       if(vm.fromDate){
-        filter.isSearch = true;
         filter['fromDate'] = encodeURIComponent(vm.fromDate);
       }
       if(vm.toDate){
-        filter.isSearch = true;
         filter['toDate'] = encodeURIComponent(vm.toDate);
       }
       
@@ -387,6 +381,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           ids[ids.length] = item._id;
         });
           filter.ids = ids;
+      }
+
+      if(Auth.isEnterpriseUser()){
+        filter.userId = Auth.getCurrentUser()._id;
       }
 
       if(vm.fromDate){

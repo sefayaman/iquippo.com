@@ -33,6 +33,15 @@ angular.module('sreizaoApp')
 
         return deferred.promise;
       },
+      getNewToken:function(){
+        return $http.get("/auth/gettoken")
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+            throw err;
+        });
+      },
 
       /**
        * Delete access token and user info
