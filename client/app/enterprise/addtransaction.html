@@ -197,7 +197,7 @@
             </div>
             <div class="col-sm-3">
                <div class="input-group" ng-class="{'has-error':agencyForm.reportDate.$invalid && agencyForm.submitted}">
-                 <input class="form-control" name="reportDate" id="reportdate" ng-model="addTransactionVm.enterpriseValuation.reportDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Report Date*" ng-disabled="!editAgencyField()" required/>
+                 <input class="form-control" name="reportDate" id="reportdate" ng-model="addTransactionVm.enterpriseValuation.reportDate" datetime-picker readonly date-format="MM/dd/yyyy"  date-only placeholder="Report Date*" disabled/>
                  <label for="reportdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
                </div>
             </div>
@@ -268,7 +268,7 @@
                        </div>
                         <span class="fileinput-button">
                           <a href="javascript:void(0);">
-                            <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.generalImage.external">
+                            <img ng-src="{{addTransactionVm.enterpriseValuation.generalImage.filename}}" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.generalImage.external">
                             <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.generalImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.generalImage.external">
                           </a>
                         </span> 
@@ -289,7 +289,7 @@
                      </div>
                       <span class="fileinput-button">
                         <a href="javascript:void(0);">
-                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.engineImage.external">
+                          <img ng-src="{{addTransactionVm.enterpriseValuation.engineImage.filename}}" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.engineImage.external">
                           <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.engineImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.engineImage.external">
                         </a>
                       </span> 
@@ -310,7 +310,7 @@
                      </div>
                       <span class="fileinput-button">
                         <a href="javascript:void(0);">
-                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.external">
+                          <img ng-src="{{addTransactionVm.enterpriseValuation.hydraulicImage.filename}}" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.hydraulicImage.external">
                           <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.hydraulicImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.hydraulicImage.external">
                         </a>
                       </span> 
@@ -331,7 +331,7 @@
                      </div>
                       <span class="fileinput-button">
                        <a href="javascript:void(0);">
-                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.cabinImage.external">
+                          <img ng-src="{{addTransactionVm.enterpriseValuation.cabinImage.filename}}" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.cabinImage.external">
                           <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.cabinImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.cabinImage.external">
                         </a>
                       </span> 
@@ -352,7 +352,7 @@
                      </div>
                       <span class="fileinput-button">
                         <a href="javascript:void(0);">
-                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.external">
+                          <img ng-src="{{addTransactionVm.enterpriseValuation.underCarriageImage.filename}}" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.underCarriageImage.external">
                           <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.underCarriageImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.underCarriageImage.external">
                         </a>
                       </span> 
@@ -373,7 +373,7 @@
                      </div>
                       <span class="fileinput-button">
                         <a href="javascript:void(0);">
-                          <img ng-src="" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.otherImage.external">
+                          <img ng-src="{{addTransactionVm.enterpriseValuation.otherImage.filename}}" class="img-responsive" ng-if="addTransactionVm.enterpriseValuation.otherImage.external">
                           <img ng-src="{{uploadImagePrefix}}{{addTransactionVm.enterpriseValuation.assetDir}}/{{addTransactionVm.enterpriseValuation.otherImage.filename}}" class="img-responsive" ng-if="!addTransactionVm.enterpriseValuation.otherImage.external">
                         </a>
                       </span> 

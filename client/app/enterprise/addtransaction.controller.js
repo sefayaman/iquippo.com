@@ -99,6 +99,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             onBrandChange(vm.enterpriseValuation.brand, true);
             onCountryChange(vm.enterpriseValuation.country, true);
             onStateChange(vm.enterpriseValuation.state, true);
+            var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
+            if(!vm.enterpriseValuation.reportDate && statusIndex > 1 && statusIndex < 4)
+                vm.enterpriseValuation.reportDate = new Date();
+
             if (vm.enterpriseValuation.requestDate)
               vm.enterpriseValuation.requestDate = moment(vm.enterpriseValuation.requestDate).format('MM/DD/YYYY');
             if (vm.enterpriseValuation.repoDate)

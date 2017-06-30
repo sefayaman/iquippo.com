@@ -18,7 +18,6 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
 
   vm.deleteSpare = deleteSpare;
   vm.spareEditHandler = spareEditHandler;
-  vm.getDateFormat = getDateFormat;
     
   vm.previewSellerDetail = previewSellerDetail;
   vm.searchType = "";
@@ -176,12 +175,6 @@ function SpareListingCtrl($scope, $location, $rootScope, $http, spareSvc, classi
      first_id = null;
      last_id = null;
   }
-
-	function getDateFormat(date) {
-      if(!date)
-        return;
-      return moment(date).format('DD/MM/YYYY');
-    }
 
 	// preview uploaded images
 	function previewSellerDetail(selectedSpare){ 
