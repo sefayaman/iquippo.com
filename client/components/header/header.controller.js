@@ -89,7 +89,8 @@ angular.module('sreizaoApp')
         userId = Auth.getCurrentUser()._id;
       $http.get("/api/common/redirecttorapid?_id=" + userId)
       .then(function(res){
-        $window.location.href = res.data;
+        //$window.location.href = res.data;
+        $window.open(res.data,"_blank");
       });
     };
     
