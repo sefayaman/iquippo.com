@@ -9,7 +9,7 @@ var config = require('./../config/environment');
 var request = require('request');
 
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
-var TimeInterval =  15*60*10000;
+var TimeInterval =  15*60*1000;
 
 var Field_MAP = {
     uniqueControlNo : "uniqueControlNo",
