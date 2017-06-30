@@ -1,16 +1,12 @@
 'use strict';
 
-
+var async = require('async');
 var path = require('path');
 var fs = require('fs');
 var multer = require('multer');
 var config = require('../../config/environment');
-//var upload = multer({ dest: config.uploadPath});
-//var nodemailer = require('nodemailer'); 
-var http = require('http');
-var fsExtra = require('fs.extra');
-var gm = require('gm');
-var lwip = require('lwip');
+var AdmZip = require('adm-zip');
+var EnterpriseValuation = require('../enterprise/enterprisevaluation.model');
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -43,130 +39,118 @@ function checkDirectorySync(directory) {
 }
 
 
-exports.uploadZip=function(req, res) {
- var assetDir = 'tempZip';
-  var childDir = 'y';
-  var resize = req.query.resize;
-  if (childDir == 'y' && assetDir) {
-    var dirs = assetDir.split("/");
-    if (dirs.length == 1)
-      assetDir = assetDir + "/" + new Date().getTime();
-  }
-
-  if (!assetDir)
-    assetDir = new Date().getTime();
-  var relativePath = config.uploadPath + assetDir + "/";
-  checkDirectorySync(relativePath);
-  req.uplPath = relativePath;
-  upload(req, res, function(err, data) {
+exports.uploadZip = function(req, res, next) {
+  var data = req.query;
+  var dataToSave = {};
+  dataToSave.uniqueControlNo = data.uniqueControlNo;
+  /*if (!data.uniqueControlNo)
+    return res.status(404).send("Unique control number is required");*/
+  var assetDir = "";
+  var zipfilePath = "";
+  EnterpriseValuation.find({
+    uniqueControlNo: data.uniqueControlNo,
+    deleted: false
+  }, function(err, results) {
     if (err) {
-      return res.end("Error uploading file.");
+      return handleError(res, err);
     }
-    if (resize == 'y') {
-      var dimension = {};
-      dimension.width = req.query.width;
-      dimension.height = req.query.height;
-      dimension.size=req.query.size;
-      req.counter = 0;
-      req.total = 1;
-      resizeImg(req, res, assetDir, dimension, false);
+    if (!results.length)
+      return res.status(404).send("Unique control number is not found");
+    if (results && results[0].assetDir) {
+      assetDir = results[0].assetDir;
     } else {
-      try {
-        res.status(200).json({
-          assetDir: assetDir,
-          filename: req.files[0].filename
-        });
-      } catch (err) {
-        return res.end("Error uploading file.");
-      }
+      assetDir = new Date().getTime();
     }
 
-  });
+    var relativePath = config.uploadPath + "temp/";
+    checkDirectorySync(relativePath);
+    req.uplPath = relativePath;
+    upload(req, res, function(err, data) {
+      if (err) {
+        return handleError(res, err);
+      }
+      console.log("Saved in Directory", assetDir);
+      var images = [];
 
-};
-
-
-
-
-function resizeImg(req, res, assetDir, dimension, isMultiple) {
-  try {
-    if (req.counter < req.total) {
-      var fileName = req.files[req.counter].filename;
-      var imgPath = config.uploadPath + assetDir + "/" + fileName;
-      var fileNameParts = fileName.split('.');
-      var extPart = fileNameParts[fileNameParts.length - 1];
-      var namePart = fileNameParts[0];
-      var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
-      fsExtra.copy(imgPath, originalFilePath, {
-        replace: true
-      }, function(err, result) {
-        if (err) throw err;
-        if(dimension.size > 50000){
-        lwip.open(imgPath, function(err, image) {
-          console.log("-----image",image);
-          //var wRatio = 700 / image.width();
-          //var hRatio= 450 / image.height();
-          image.scale(0.75, function(err, rzdImage) {
-            if (extPart === 'jpg' || extPart === 'jpeg') {
-              rzdImage.toBuffer(extPart, {
-                quality: 85
-              }, function(err, buffer) {
-                fs.writeFile(imgPath, buffer, function(err) {
-                  if (err) throw err;
-                  req.counter++;
-                });
-              });
-              resizeImg(req, res, assetDir, dimension, isMultiple);
-            } else {
-              if (extPart == 'png') {
-                rzdImage.toBuffer(extPart, {
-                  compression: "high",
-                  interlaced: false,
-                  transparency: 'auto'
-                }, function(err, buffer) {
-                  fs.writeFile(imgPath, buffer, function(err) {
-                    if (err) throw err;
-                    req.counter++;
-                  });
-                });
-                return resizeImg(req, res, assetDir, dimension, isMultiple);
+      function extractZipFile(callback) {
+        fs.readdir(relativePath, function(err, files) {
+          if (err) {
+            return handleError(res, err);
+          }
+          var zip = new AdmZip(relativePath + files[0]);
+          zipfilePath = config.uploadPath + "temp" + '/' + files[0];
+          var zipEntries = zip.getEntries();
+          zipEntries.forEach(function(zipFile) {
+            var img = {};
+            var path = zipFile.entryName.split('/');
+            if (zipFile.entryName.match(/\.(jpg|jpeg|png)$/i)) {
+              zip.extractEntryTo(zipFile.entryName, config.uploadPath + assetDir + '/', false,true);
+              switch (path[1]) {
+                case 'engine':
+                  img.catImgType = "eP";
+                  img.src = path[path.length - 1];
+                  break;
+                case 'hydraulic':
+                  img.catImgType = "hP";
+                  img.src = path[path.length - 1];
+                  break;
+                case 'cabin':
+                  img.catImgType = "cP";
+                  img.src = path[path.length - 1];
+                  break;
+                case 'underCarriage':
+                  img.catImgType = "uC";
+                  img.src = path[path.length - 1];
+                  break;
+                case 'other':
+                  img.catImgType = "oP";
+                  img.src = path[path.length - 1];
+                  break;
+                case 'general':
+                  img.catImgType = "gP";
+                  img.src = path[path.length - 1];
+                  break;
               }
+              images.push(img);
             }
           });
-        });
-    }
-    else{
-      req.counter++;
-      resizeImg(req, res, assetDir, dimension, isMultiple);
-    }
-      });
-
-    } else {
-      if (isMultiple) {
-        res.status(200).json({
-          assetDir: assetDir,
-          files: req.files
-        });
-      } else {
-        res.status(200).json({
-          assetDir: assetDir,
-          filename: req.files[0].filename
+          dataToSave.images = images;
+          try {
+            console.log("zipfile",zipfilePath);
+            fs.unlink(zipfilePath);
+          } catch (e) {
+            console.log('error in deleting file', e);
+          }
+          return callback();
         });
       }
-    }
-  } catch (err) {
-    handleError(res, err);
-  }
-}
+
+      function saveToDatabase(callback) {
+        EnterpriseValuation.update({
+          uniqueControlNo: dataToSave.uniqueControlNo
+        }, {
+          $set: {
+            images: dataToSave.images,
+            assetDir: assetDir
+          }
+        }, function(err, data) {
+          if (err) {
+            return handleError(res, err);
+          }
+        });
+        return callback();
+      }
+
+      async.series([extractZipFile, saveToDatabase], function(err, results) {
+        if (err) throw err;
+
+        return res.status(200).send("succesfully Updated");
+      });
+
+    });
+  });
+};
 
 function handleError(res, err) {
   return res.status(500).send(err);
 }
-
-
-
-
-
-
-
-
