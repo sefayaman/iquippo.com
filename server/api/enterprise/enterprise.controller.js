@@ -870,6 +870,7 @@ exports.bulkUpload = function(req, res) {
     });
   }
   
+exports.pushNotification = pushNotification;
 exports.bulkModify = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
