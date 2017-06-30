@@ -61,7 +61,6 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     if(!editMode){
       vm.enterpriseValuation.userName = (Auth.getCurrentUser().fname || "") + " " + ( Auth.getCurrentUser().mname || "")+ (Auth.getCurrentUser().mname ? " " : "") + (Auth.getCurrentUser().lname || "");
-      vm.enterpriseValuation.legalEntityName = (Auth.getCurrentUser().company || "");
     }
 
     ValuationPurposeSvc.get(null)
@@ -253,10 +252,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function addOrUpdateRequest(form) {
       if(form.$invalid){
-          $scope.submitted = true;
+          form.submitted = true;
           return;
       }
-      $scope.submitted = false;
+      form.submitted = false;
 
       if(!$scope.isEdit)
         save();
@@ -317,6 +316,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
           vm.enterpriseValuation.enterprise.email = item.email;
           vm.enterpriseValuation.enterprise.employeeCode = item.employeeCode;
+          vm.enterpriseValuation.enterprise.legalEntityName = (item.company || "");
         }
 
       });
@@ -344,10 +344,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         delete vm.enterpriseValuation[fieldName].filename;
     }
 
-    function reset() {
+    function reset(form) {
       vm.enterpriseValuation.customerPartyNo = "";
       vm.enterpriseValuation = {purpose:"Financing"};
-      $scope.submitted = false;
+      form.submitted = false;
       init();
     }
 
