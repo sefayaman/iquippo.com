@@ -249,7 +249,8 @@ angular.module('sreizaoApp',[
         } 
      }
    });
-
+   
+   Auth.removeCookies();
     //global logout
     $rootScope.logout = function() {
       Auth.logout();

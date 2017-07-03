@@ -283,5 +283,8 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
             }
         })
     }
+    
+    //Clearing Finance integration cookie
+    Auth.removeCookies();
   }
 })();
