@@ -65,10 +65,13 @@
             <i class="fa fa-filter"></i> Filter
           </button>
         </div>
+        <div class="col-xs-3 col-sm-2 text-right padd-right">        
+          <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm btn-block">Register Now</a>
+        </div> 
         <div class="col-xs-6 col-sm-2 text-right padd-right">
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-        </div>        
+        </div>  
         <div class="col-xs-3 col-sm-2 text-right">        
           <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm btn-block">Back</a>
         </div>

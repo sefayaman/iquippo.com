@@ -1,0 +1,69 @@
+<div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="auctionRegVm.closeDialog()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Register for Auction</h4>
+  </div>
+  <div class="modal-body">
+    <div ng-if="true">
+      <p>Are you rigistered user on iQuippo?</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="radio radio-info">
+            <input type="radio" id="register" name="register" ng-model="option.select" value="yes">
+            <label for="register"> Yes </label>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="radio radio-info">
+            <input type="radio"  placeholder="" id="notregister" name="register" ng-model="option.select" value="no">
+            <label for="notregister"> No </label>
+          </div>
+        </div>
+      </div>
+      <div ng-if="option.select == 'yes'">
+        <form class="form" name="form" novalidate>
+          <div class="row">
+            <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
+              <input type="text" class="form-control form-group" name="userId" placeholder="Enter Mobile/Email Id" ng-model="auctionRegVm.userId" required>
+              <div class="text-right">
+                <button type="button" class="btn btn-danger" ng-click="auctionRegVm.submit(form)">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div ng-if="option.select == 'no'">
+      <form class="reqForm" name="reqForm" novalidate>
+        <div class="row">
+          <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.fname.$invalid && reqForm.submitted }">
+            <input type="text" class="form-control" name="fname" ng-model="auctionRegVm.user.fname" placeholder="*First Name" required>
+          </div>
+          <div class="col-sm-6 form-group" ng-class="{'has-error': reqForm.lname.$invalid && reqForm.submitted }">
+            <input type="text" class="form-control" name="lname" ng-model="auctionRegVm.user.lname" placeholder="*Last Name" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <input type="email" class="form-control" name="email" ng-model="auctionRegVm.user.email" placeholder="Email">
+            <p class="help-block" ng-show="(reqForm.email.$error.email || reqForm.email.$error.pattern) && submitted">
+            Please enter a valid email.
+            </p>
+          </div>
+          <div class="col-sm-2 padd-right search-field" ng-class="{'has-error': reqForm.mobile.$invalid && reqForm.submitted }">
+            <select class="form-control" ng-model="auctionRegVm.user.countryCode" ng-change="auctionRegVm.onCodeChange(auctionRegVm.user.countryCode)" required>
+              <option value="" disabled>*Code</option>
+              <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+            </select>
+          </div> 
+          <div class="col-sm-4 form-group padd-left" ng-class="{'has-error': reqForm.mobile.$invalid && reqForm.submitted }">
+            <input type="text" class="form-control" name="mobile" ng-model="auctionRegVm.user.mobile" placeholder="*Mobile No." required>
+          </div>
+        </div>
+        <div class="text-right">
+          <button type="button" class="btn btn-danger" ng-click="auctionRegVm.submit(reqForm)">Submit</button>
+        </div>
+      </form>
+    </div>
+    </div>    
+  </div>  
+</div>
