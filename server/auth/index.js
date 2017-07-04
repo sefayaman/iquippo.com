@@ -5,6 +5,7 @@ var passport = require('passport');
 var config = require('../config/environment');
 var User = require('../api/user/user.model');
 var auth = require("./auth.service");
+var extAuth = require("./externalauth.service");
 // Passport Configuration
 require('./local/passport').setup(User, config);
 require('./google/passport').setup(User, config);
@@ -21,17 +22,8 @@ router.use('/twitter', require('./twitter'));
 router.use('/linkedin', require('./linkedin'));
 
 //Authentication for external client
-router.get("/gettoken",auth.isAuthenticated(),function(req,res){
-	var token = auth.signToken(req.user._id,req.user.role,1);
-	return res.status(200).send(token);
-});
-
-router.get("/validate",auth.isAuthenticated(),function(req,res){
-	var mobile = req.query.mobile;
-	if(!mobile || req.user.mobile !== mobile)
-		return res.status(200).send("Unauthorized");
-	return res.status(200).send("Valid");
-});
+router.get("/gettoken",extAuth.isAuthenticated(),extAuth.getToken);
+router.get("/validate",extAuth.isAuthenticated(),extAuth.validate);
 
 
 module.exports = router;

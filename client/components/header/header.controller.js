@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc) {
+  .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc,$window) {
 
     $scope.isCollapsed = true;
     var dataToSend = {};
@@ -82,5 +82,16 @@ angular.module('sreizaoApp')
         $scope.openDialog('callback');
       }
     }
+
+    $scope.submitToRapid = function(){
+      var userId = "";
+      if(Auth.getCurrentUser()._id)
+        userId = Auth.getCurrentUser()._id;
+      $http.get("/api/common/redirecttorapid?_id=" + userId)
+      .then(function(res){
+        //$window.location.href = res.data;
+        $window.open(res.data,"_blank");
+      });
+    };
     
   })
