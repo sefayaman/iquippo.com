@@ -65,6 +65,26 @@ exports.getOnId = function(req, res) {
   });
 };
 
+exports.getAuctionInfoForProduct = function(req, res) {
+  AuctionRequest.findById(req.body._id, function(err, auction) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!auction) {
+      return res.status(404).send('Not Found');
+    }
+    var filter = {};
+    filter._id = auction.dbAuctionId;
+    var query = AuctionMaster.find(filter);
+    query.exec(function(err, result) {
+      if (err) {
+        return handleError(res, err);
+      }
+      return res.status(200).json(result);
+    });
+  });
+};
+
 function _create(data,cb){
 
   var assetIdExist = false;
@@ -545,8 +565,6 @@ exports.getOnFilter = function(req, res) {
   if (req.body.external)
     filter["external"] = req.body.external == 'y' ? true : false;
 
-    console.log("I am server filter",filter);
-
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;
@@ -594,10 +612,31 @@ exports.update = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
+      if(!req.body.external && req.body.product.isSold)
+        updateProduct(req.body);
       return res.status(200).json(req.body)
     });
   });
 };
+
+function updateProduct(data) {
+  Product.find({assetId: data.product.assetId}, function(err, product) {
+    var proData = {};
+    proData.isSold = true;
+    proData.assetStatus = "sold";
+    var stObj = {};
+    stObj.userId = data.user._id;
+    stObj.status = "sold";
+    stObj.createdAt = new Date();
+    if(!proData.assetStatuses)
+      proData.assetStatuses = [];
+    proData.assetStatuses[proData.assetStatuses.length] = stObj;
+    Product.update({assetId:data.product.assetId},{$set:proData},function(err){
+      if (err) { console.log("err", err); }
+      console.log("Product Updated");
+    });
+  });
+}
 
 // Deletes a auction from the DB.
 exports.destroy = function(req, res) {
@@ -891,7 +930,6 @@ exports.createAuctionMaster = function(req, res) {
         message: "Auction Id already exist."
       });
     } else {
-      console.log("--auction requests--",req.body);
       AuctionMaster.create(req.body, function(err, auctionData) {
         if (err) {
           return handleError(res, err);
@@ -969,8 +1007,6 @@ function updateAuctionRequest(data, id) {
 }
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
-
-   console.log("request Pagination",req.body);
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
 
   var filter = {};
@@ -980,6 +1016,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user._id"] = req.body.userId;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
+  if(req.body.auctionId)
+    filter.auctionId = req.body.auctionId;
   if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
   }
@@ -1064,8 +1102,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (req.body.sort)
     sortObj = req.body.sort;
   sortObj['startDate'] = 1;
-  console.log("sdjfjs",sortObj);
-
+  
   var query = AuctionMaster.find(filter).sort(sortObj);
   query.exec(
     function(err, items) {
@@ -1073,7 +1110,6 @@ exports.getFilterOnAuctionMaster = function(req, res) {
         return handleError(res, err);
       }
       var result={};
-      console.log("users----",items);
       result.items=items;
       return res.status(200).json(result);
     }
@@ -1159,6 +1195,9 @@ exports.getAuctionWiseProductData = function(req, res) {
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
+  if (req.body._id)
+    filter._id = req.body._id;
+
   if (queryObj.yetToStartDate)
     filter['startDate'] = {
       '$gt': new Date()
@@ -1171,7 +1210,6 @@ exports.getAuctionMaster = function(req, res) {
       console.log("err", err);
       return handleError(res, err);
     }
-    console.log("+++++++",auctions);
     return res.status(200).json(auctions);
   });
 }
@@ -1202,7 +1240,6 @@ exports.importAuctionMaster = function(req, res) {
   if (!workbook)
     return res.status(404).send("Error in file upload");
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-  //console.log("data",worksheet);
   var data = xlsx.utils.sheet_to_json(worksheet);
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
@@ -1260,7 +1297,6 @@ exports.importAuctionMaster = function(req, res) {
     });
   }
 
-  //console.log("data",data);
   req.counter = 0;
   req.numberOfCount = data.length;
   req.successCount = 0;

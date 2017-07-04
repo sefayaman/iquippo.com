@@ -1,18 +1,19 @@
 (function(){
   'use strict';
-angular.module('admin').factory("EnterpriseSvc",EnterpriseSvc);
- function EnterpriseSvc($http, $q, $httpParamSerializer){
-    var assetSaleHost = "http://localhost:7000";
+angular.module('admin').factory("EnterpriseMasterSvc",EnterpriseMasterSvc);
+ function EnterpriseMasterSvc($http, $q, $httpParamSerializer){
+    //var assetSaleHost = "http://localhost:7000";
     var svc = {};
-    var svcPath = '/assetsale/enterprise';
+    var svcPath = 'api/common/enterprise';
 
     svc.get = get;
     svc.save = save;
     svc.update = update;
     svc.destroy = destroy;
-     
+    svc.search = search;
+    
    function get(filter){
-      var path = assetSaleHost + svcPath; 
+      var path = svcPath; 
       var queryParam = "";
         if(filter)
           queryParam = $httpParamSerializer(filter);
@@ -27,8 +28,18 @@ angular.module('admin').factory("EnterpriseSvc",EnterpriseSvc);
           });
      }
 
+     function search(filter){
+       return $http.post(svcPath+'/search',filter)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+     }
+
      function save(data){
-        return $http.post(assetSaleHost + svcPath, data)
+        return $http.post(svcPath, data)
         .then(function(res){
           return res.data;
         })
@@ -38,7 +49,7 @@ angular.module('admin').factory("EnterpriseSvc",EnterpriseSvc);
      }
 
      function update(data){
-        return $http.put(assetSaleHost + svcPath + "/" + data._id,data)
+        return $http.put(svcPath + "/" + data._id,data)
         .then(function(res){
           return res.data;
         })
@@ -48,7 +59,7 @@ angular.module('admin').factory("EnterpriseSvc",EnterpriseSvc);
      }
 
      function destroy(id){
-        return $http.delete(assetSaleHost + svcPath + "/" + id)
+        return $http.delete(svcPath + "/" + id)
         .then(function(res){
           return res.data;
         })

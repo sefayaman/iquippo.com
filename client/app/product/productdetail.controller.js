@@ -3,7 +3,7 @@
   angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
-  function ProductDetailCtrl($scope, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function ProductDetailCtrl($scope, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, AuctionSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
     var vm = this;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
@@ -51,7 +51,7 @@
     vm.openBidModal = openBidModal;
     vm.isEmpty = isEmpty;
     vm.checkServiceInfo = checkServiceInfo;
-
+    $scope.redirectToAuction = redirectToAuction;
     // bid summary
     function openBidModal(bidAmounts) {
       var bidSummaryScope = $rootScope.$new();
@@ -360,9 +360,10 @@
     }
 
     function checkServiceInfo(serviceInfo) {
-      if (!serviceInfo)
-        if (serviceInfo.length === 0)
-      return true;
+      if (!serviceInfo || serviceInfo.length < 1)
+        return true;
+      
+      //if (serviceInfo.length === 0)
       var ret = true;
       for (var i = 0; i < serviceInfo.length; i++) {
         var item = serviceInfo[i];
@@ -432,6 +433,14 @@
             }
             //End
             $scope.currentProduct = result[0];
+            if($scope.currentProduct.auction && $scope.currentProduct.auction._id) {
+              var auctionFilter = {};
+              auctionFilter._id = $scope.currentProduct.auction._id;
+              AuctionSvc.getAuctionInfoForProduct(auctionFilter)
+                .then(function(aucts) {
+                  $scope.auctionsData = aucts[0];
+                });
+            }
             if ($scope.currentProduct.specialOffers) {
               $scope.status.basicInformation = false;
               $scope.status.specialOffers = true;
@@ -519,6 +528,18 @@
           }
         });
     }
+  }
+
+  function redirectToAuction(){
+    var routeTo = "upcoming";
+    AuctionSvc.getAuctionDateData({auctionType:"ongoing"}).then(function(result){
+      if(result.length > 0)
+          routeTo = "ongoing";
+          $state.go("viewauctions",{type:routeTo});
+    })
+    .catch(function(err){
+      $state.go("viewauctions",{type:routeTo});
+    })
   }
 
   //easy financing and Certification

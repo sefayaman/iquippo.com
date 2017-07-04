@@ -23,6 +23,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
 
   svc.getAuctionDateData=getAuctionDateData;  
   svc.getAuctionWiseProductData = getAuctionWiseProductData;
+  svc.getAuctionInfoForProduct = getAuctionInfoForProduct;
 
   function getAll(){
         return $http.get(path)
@@ -190,6 +191,16 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
 
     function getAuctionDateData(filter){
       return $http.post(path + "/auctionmaster/onauctionmasterfilter", filter)
+        .then(function(res) {
+          return res.data
+        })
+        .catch(function(err) {
+          throw err
+        })
+    }
+
+    function getAuctionInfoForProduct(filter) {
+      return $http.post(path + "/getauctiondata", filter)
         .then(function(res) {
           return res.data
         })

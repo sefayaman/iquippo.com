@@ -26,6 +26,7 @@
 						<option value="kyc">KYC Document Master</option>
 						<option value="charge">Asset Sale Charge Master</option>
 						<option value="enterpriseMaster">Enterprise Master</option>
+						<option value="markup">Markup Price Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -430,10 +431,10 @@
 							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
 						</div>
 						<div class="col-sm-3">	
-							<select class="form-control">
-								<option>Allow Bid</option>
-								<option>Yes</option>
-								<option>No</option>
+							<select class="form-control" name="allowBid" ng-model="gsettingVm.auctionData.allowBid">
+								<option value="">Allow Bid</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
 							</select>
 						</div>
 						<div class="col-sm-2 pull-right">
@@ -1794,7 +1795,7 @@
 		<form class="" name="assetSaleForm" >			
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.enterpriseId.$invalid && submitted}">
-					<select class="form-control" name="enterpriseId" ng-model="assetSaleChargeVm.dataModel.enterpriseId">
+					<select class="form-control" name="enterpriseId" ng-model="assetSaleChargeVm.dataModel.enterpriseId" required>
 						<option value="">*Enterprise Name</option>
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in assetSaleChargeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
@@ -1818,10 +1819,10 @@
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.rateOfInterest.$invalid && submitted}">
-					<input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateofinterest" placeholder="*Enter Rate (%)" required>
+					<input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateOfInterest" placeholder="*Enter Rate (%)" required>
 				</div>
 				<div class="col-sm-3">
-					<input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatpertrx" placeholder="Flat per Transaction">
+					<input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatPerTrx" placeholder="Flat per Transaction">
 				</div>
 				<div class="col-sm-offset-4 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleForm)">Update</button>
@@ -1898,7 +1899,7 @@
 		<form class="" name="enterpriseMasterForm" >			
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.enterpriseId.$invalid && submitted}">
-					<select class="form-control" name="enterpriseId" ng-model="enterpriseVm.dataModel.enterpriseId">
+					<select class="form-control" name="enterpriseId" ng-model="enterpriseVm.dataModel.enterpriseId" required>
 						<option value="">*Enterprise Name</option>
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
@@ -1910,14 +1911,14 @@
 					</select>
 				</div>
 				<div class="col-sm-3">
-					<select class="form-control" name="buyNowPriceApproval" ng-model="enterpriseVm.dataModel.buynowpriceapproval">
+					<select class="form-control" name="buyNowPriceApproval" ng-model="enterpriseVm.dataModel.buyNowPriceApproval">
 						<option value="">Buy Now Price Approval Required</option>
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>					
 				</div>
 				<div class="col-sm-3">
-					<select class="form-control" name="negotiatedSaleApproval" ng-model="enterpriseVm.dataModel.negotiatedsalespproval">
+					<select class="form-control" name="negotiatedSaleApproval" ng-model="enterpriseVm.dataModel.negotiatedSaleApproval">
 						<option value="">Negotiated Sale Approval Required</option>
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
@@ -1927,13 +1928,13 @@
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3" >
-					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingperiod" placeholder="Cooling Period">
+					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" placeholder="Cooling Period">
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdperiod"  placeholder="EMD Period">
+					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod"  placeholder="EMD Period">
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingperiod"  placeholder="Full Payment Period">
+					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod"  placeholder="Full Payment Period">
 				</div>
 				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="enterpriseVm.update(enterpriseMasterForm)">Update</button>
@@ -1945,7 +1946,7 @@
 		<legend></legend>
 		<div class="row">
 			<div class="col-sm-6">
-				Showing : 2 Records
+				<!-- Showing : 2 Records -->
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
@@ -1968,17 +1969,92 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="vat in enterpriseVm.filteredList">
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+					<tr ng-repeat="ent in enterpriseVm.filteredList">
+						<td>{{ent.enterpriseId}}</td>
+						<td>{{ent.functionality}}</td>
+						<td>{{ent.buynowpriceapproval}}</td>
+						<td>{{ent.negotiatedsalespproval}}</td>
+						<td>{{ent.coolingperiod}}</td>
+						<td>{{ent.emdperiod}}</td>
+						<td>{{ent.fullpaymentperiod}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="enterpriseVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
 							<button type="button" class="btn btn-sm btn-danger" ng-click="enterpriseVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- Markup price master -->
+	<div ng-if="gsettingVm.tabValue == 'markup'" ng-controller="MarkupPriceMasterCtrl as markupVm">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Add New Markup Price</h4>
+			</div>
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div> -->			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="" name="markupForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="markupVm.dataModel.enterpriseId" required>
+						<option value="">*Enterprise Name</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in markupVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.price.$invalid && submitted}">
+					<input type="text" class="form-control" name="price" ng-model="markupVm.dataModel.price" placeholder="*Price in %" required>
+				</div>
+				<div class="col-sm-offset-4 col-sm-2">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="markupVm.update(markupForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="markupVm.save(markupForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="markupVm.searchStr" ng-change="markupVm.searchFn()" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Enterprise User </th>					
+						<th>price in %</th>			
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="kyc in markupVm.filteredList">
+						<td>{{markupVm.enterpriseId}}</td>
+						<td>{{markupVm.price}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markupVm)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="markupVm.destroy(markupVm._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>

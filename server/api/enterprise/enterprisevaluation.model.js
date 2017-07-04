@@ -80,6 +80,7 @@ var EnterpriseValuationSchema = new Schema({
   statuses:[],
   createdBy:{},
   nameOfCustomerSeeking : String,
+  reportSubmissionDate:Date,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('EnterpriseMasterCtrl', EnterpriseMasterCtrl);
 
-    function EnterpriseMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, EnterpriseSvc){
+    function EnterpriseMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, EnterpriseMasterSvc){
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
@@ -16,10 +16,13 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.fireCommand = fireCommand;
+        //vm.fireCommand = fireCommand;
         vm.dataModel.functionality = "assetsale";
+        vm.dataModel.buyNowPriceApproval = "Yes";
+        vm.dataModel.negotiatedSaleApproval = "Yes";
 
         function init(){
+          initializeValue();
           var userFilter = {};
           userFilter.role = "enterprise";
           userFilter.enterprise = true;
@@ -32,7 +35,8 @@
         } 
 
         function loadViewData(){
-            EnterpriseSvc.get()
+            var filter = {};
+            EnterpriseMasterSvc.get(filter)
             .then(function(result){
                 vm.dataList = result;
                 vm.filteredList = result;
@@ -50,12 +54,10 @@
                 $scope.submitted = true;
                 return;
             }
-            vm.dataModel.createdBy = {};
-            vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
-            vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-            EnterpriseSvc.save(vm.dataModel)
+
+            EnterpriseMasterSvc.save(vm.dataModel)
             .then(function(){
-                vm.dataModel = {};
+                initializeValue();
                 loadViewData();
                 Modal.alert('Data saved successfully!');
             })
@@ -65,18 +67,23 @@
             });
         }
 
+        function initializeValue() {
+            vm.dataModel = {};
+            vm.dataModel.functionality = "assetsale";
+            vm.dataModel.buyNowPriceApproval = "Yes";
+            vm.dataModel.negotiatedSaleApproval = "Yes";
+        }
+
         function editClicked(rowData){
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.group = rowData.group._id;
-            vm.dataModel.vatType = rowData.vatType;
-            if (rowData.effectiveToDate)
-                vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
-            if (rowData.effectiveFromDate)
-                vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
-            vm.dataModel.state = rowData.state._id;
-            vm.dataModel.amount = rowData.amount;
-            
+            vm.dataModel.enterpriseId = rowData.enterpriseId;
+            vm.dataModel.functionality = rowData.functionality;
+            vm.dataModel.buyNowPriceApproval = rowData.buyNowPriceApproval;
+            vm.dataModel.negotiatedSaleApproval = rowData.negotiatedSaleApproval;
+            vm.dataModel.coolingPeriod = rowData.coolingPeriod;
+            vm.dataModel.emdPeriod = rowData.emdPeriod;
+            vm.dataModel.fullPaymentPeriod = rowData.fullPaymentPeriod;
             $scope.isEdit = true;
         }
 
@@ -85,7 +92,7 @@
                 $scope.submitted = true;
                 return;
             }
-            EnterpriseSvc.update(vm.dataModel)
+            EnterpriseMasterSvc.update(vm.dataModel)
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
@@ -106,7 +113,7 @@
         }
 
         function confirmDestory(id){
-            EnterpriseSvc.destroy(id)
+            EnterpriseMasterSvc.destroy(id)
             .then(function(){
                 loadViewData();
             })

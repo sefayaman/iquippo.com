@@ -207,7 +207,6 @@ function onGroupChange(group){
          delete filter.locationName;
         }
        
-       console.log("I am here",filter);
       productSvc.getProductOnFilter(filter)
       .then(function(result){
           $scope.searching = false;

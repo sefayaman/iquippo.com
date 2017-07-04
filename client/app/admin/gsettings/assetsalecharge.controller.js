@@ -17,8 +17,6 @@
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
         vm.getCategory = getCategory;
-        $scope.userSearch = userSearch;
-        vm.fireCommand = fireCommand;
 
         function init(){
           var userFilter = {};
@@ -36,42 +34,6 @@
           loadViewData();
         } 
 
-        function userSearch(userSearchText){
-          if (!$scope.product.seller.userType) {
-            $scope.getUsersOnUserType = "";
-            return;
-          }
-          if(userSearchText && userSearchText.length < 4)
-            return;
-          var dataToSend = {};
-          dataToSend["status"] = true;
-          dataToSend["userType"] = $scope.product.seller.userType;
-          dataToSend["mobileno"] = $scope.product.seller.mobile;
-         return userSvc.getUsers(dataToSend).then(function(result) {
-          console.log("data",result);
-          return result.map(function(item){
-            console.log("item",item);
-            return item.mobile;
-          });
-          });
-        }
-
-        function fireCommand(){
-            var filter={};
-            if(!$scope.product.seller.mobile)
-              return;
-            filter["status"]=true;
-            filter["userType"]=$scope.product.seller.userType;
-            filter["contact"]=$scope.product.seller.mobile;
-            return userSvc.getUsers(filter).then(function(result){
-              console.log("users",result);
-              if(result[0] && result[0].email)
-              $scope.product.seller.email=result[0].email;
-              if(result[0] && result[0].fname)
-                $scope.product.seller.name=result[0].fname + " " + (result[0].mname || " ") + " " + (result[0].lname || " ");
-            })
-        }
-    
         function getCategory(groupId) {
             vm.categoryList = [];
             
@@ -86,7 +48,8 @@
         }
 
         function loadViewData(){
-            AssetSaleChargeSvc.get()
+            var filter = {};
+            AssetSaleChargeSvc.get(filter)
             .then(function(result){
                 vm.dataList = result;
                 vm.filteredList = result;
@@ -104,9 +67,9 @@
                 $scope.submitted = true;
                 return;
             }
-            vm.dataModel.createdBy = {};
-            vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
-            vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
+            // vm.dataModel.createdBy = {};
+            // vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
+            // vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
             AssetSaleChargeSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};

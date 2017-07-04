@@ -493,11 +493,11 @@
                 <div class="row">
                   <div class="col-sm-9">
                     <h3 class="panel-title">
-                      <strong>Auction Name</strong> <span>(123456)</span>  
+                      <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}}</strong></a> <span>({{currentProduct.assetId}})</span>  
                       <a href="javascript:void(0);" class="text-danger">[3 Bids]</a>                  
                     </h3>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3" ng-if="auctionsData.name">
                     <small class="pull-right">Asset Listed in Auction</small>
                   </div>
                 </div>

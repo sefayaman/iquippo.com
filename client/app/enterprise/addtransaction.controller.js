@@ -99,6 +99,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             onBrandChange(vm.enterpriseValuation.brand, true);
             onCountryChange(vm.enterpriseValuation.country, true);
             onStateChange(vm.enterpriseValuation.state, true);
+            var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
+            if(!vm.enterpriseValuation.reportDate && statusIndex > 1 && statusIndex < 4)
+                vm.enterpriseValuation.reportDate = new Date();
+
             if (vm.enterpriseValuation.requestDate)
               vm.enterpriseValuation.requestDate = moment(vm.enterpriseValuation.requestDate).format('MM/DD/YYYY');
             if (vm.enterpriseValuation.repoDate)
@@ -253,10 +257,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
     function addOrUpdateRequest(form) {
       if(form.$invalid){
-          $scope.submitted = true;
+          form.submitted = true;
           return;
       }
-      $scope.submitted = false;
+      form.submitted = false;
 
       if(!$scope.isEdit)
         save();
@@ -317,6 +321,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
           vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
           vm.enterpriseValuation.enterprise.email = item.email;
           vm.enterpriseValuation.enterprise.employeeCode = item.employeeCode;
+          //vm.enterpriseValuation.enterprise.legalEntityName = (item.company || "");
         }
 
       });
@@ -344,10 +349,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         delete vm.enterpriseValuation[fieldName].filename;
     }
 
-    function reset() {
+    function reset(form) {
       vm.enterpriseValuation.customerPartyNo = "";
       vm.enterpriseValuation = {purpose:"Financing"};
-      $scope.submitted = false;
+      form.submitted = false;
       init();
     }
 

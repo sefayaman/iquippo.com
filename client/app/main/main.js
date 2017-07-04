@@ -333,6 +333,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('auctionregreport', {
+        url: '/auctionregreport',
+        templateUrl: 'app/auction/auctionregreport.html',
+        controller: 'AuctionRegReportCtrl as auctionRegVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('viewauctions', {
         url: '/viewauctions?type',
         templateUrl: 'app/auction/auction.html',

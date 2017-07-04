@@ -23,7 +23,8 @@
         } 
 
         function loadViewData(){
-            KYCSvc.get()
+            var filter = {};
+            KYCSvc.get(filter)
             .then(function(result){
                 vm.dataList = result;
                 vm.filteredList = result;
@@ -41,7 +42,15 @@
                 $scope.submitted = true;
                 return;
             }
-            KYCSvc.save(vm.dataModel)
+
+            // vm.dataModel.user = {}
+            // vm.dataModel.user._id =  Auth.getCurrentUser()._id;
+
+            var createData = {};
+            Object.keys(vm.dataModel).forEach(function(x) {
+                createData[x] = vm.dataModel[x];
+            });
+            KYCSvc.save(createData)
             .then(function(){
                 vm.dataModel = {};
                 loadViewData();
