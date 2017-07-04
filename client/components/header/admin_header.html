@@ -119,6 +119,9 @@
                     <li>
                         <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
                     </li>
+                    <li ng-if="isAuctionPartner() || isAdmin()">
+                        <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
+                    </li>
                     <li ng-if="isPartner()">
                         <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
                     </li>
