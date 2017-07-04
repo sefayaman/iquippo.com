@@ -52,6 +52,8 @@ exports.getFilterOnRegisterUser = function(req, res) {
   if (orFilter.length > 0) {
     filter.$or = orFilter;
   }
+  if(req.body.auctionOwnerMobile)
+    filter['auction.auctionOwnerMobile'] = req.body.auctionOwnerMobile;
 
   filter.status = true;
 
@@ -142,8 +144,8 @@ var USER_REQUEST_FOR_AUCTION_FIELD_MAP = {
                             };
 exports.exportData = function(req,res){
   var filter = {};
-  // if(req.body.userMobileNos)
-  //   filter['user.mobile'] = {$in:req.body.userMobileNos.split(',')};
+  if(req.body.auctionOwnerMobile)
+    filter['auction.auctionOwnerMobile'] = req.body.auctionOwnerMobile;
 
   var query = Model.find(filter).sort({createdAt:-1});
   query.exec(

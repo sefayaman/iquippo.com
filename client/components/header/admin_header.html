@@ -119,7 +119,7 @@
                     <li>
                         <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
                     </li>
-                    <li ng-if="isAdmin()">
+                    <li ng-if="isAuctionPartner() || isAdmin()">
                         <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
                     </li>
                     <li ng-if="isPartner()">

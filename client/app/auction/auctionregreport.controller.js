@@ -7,7 +7,7 @@
     var vm = this;
     vm.auctions = [];
     vm.master = false;
-
+    var filter = {};
     $scope.pager = PagerSvc.getPager();
     vm.searchStr = "";
     
@@ -20,8 +20,10 @@
     function init() {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
-          var filter = {};
+          filter = {};
           initFilter.pagination = true;
+          if(Auth.getCurrentUser().mobile && Auth.isAuctionPartner())
+            initFilter.auctionOwnerMobile = Auth.getCurrentUser().mobile;
           angular.copy(initFilter, filter);
 
           getRegisterUserForAuction(filter);
@@ -44,7 +46,7 @@
     function fireCommand(reset) {
       if (reset)
         $scope.pager.reset();
-      var filter = {};
+      filter = {};
       angular.copy(initFilter, filter);
       if (vm.searchStr)
         filter.searchStr = vm.searchStr;
@@ -52,7 +54,10 @@
     }
 
     function exportExcel() {
-      var filter = {};
+      filter = {};
+      if(Auth.getCurrentUser().mobile && Auth.isAuctionPartner())
+        filter.auctionOwnerMobile = Auth.getCurrentUser().mobile;
+          
       var fileName = "User_Request_For_Auction_Report_";
       userRegForAuctionSvc.exportData(filter)
       .then(function(res) {

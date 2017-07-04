@@ -278,6 +278,10 @@ angular.module('sreizaoApp')
       isPartner: function() {
         return currentUser.isPartner;
       },
+      isAuctionPartner: function() {
+        if(currentUser && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+          return currentUser.partnerInfo.services.indexOf("Auction") > -1 ? true : false;
+      },
       isCustomer: function() { 
         return currentUser.role === 'customer';
       },

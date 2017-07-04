@@ -55,6 +55,7 @@
             dataObj.auction.name = auction.name;
             dataObj.auction.auctionId = auction.auctionId;
             dataObj.auction.emdAmount = auction.emdAmount;
+            dataObj.auction.auctionOwnerMobile = auction.auctionOwnerMobile;
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.fname = Auth.getCurrentUser().fname;
             dataObj.user.lname = Auth.getCurrentUser().lname;

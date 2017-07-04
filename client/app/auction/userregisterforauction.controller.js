@@ -77,6 +77,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
   	dataObj.auction.name = auctionData.name;
   	dataObj.auction.auctionId = auctionData.auctionId;
   	dataObj.auction.emdAmount = auctionData.emdAmount;
+    dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile;
   	if(userData._id)
   		dataObj.user._id = userData._id;
   	dataObj.user.fname = userData.fname;
