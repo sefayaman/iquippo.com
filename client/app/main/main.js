@@ -526,6 +526,12 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
+      .state('assetsale.admindetails', {
+        url: '/admindetails',
+        templateUrl: 'app/assetsale/admindetails.html',
+        layout:'admin',
+        authenticate:true
+      })
       .state('assetsale.seller', {
         url: '/seller',
         templateUrl: 'app/assetsale/seller.html',
@@ -538,9 +544,21 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
+      .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency',
+        templateUrl: 'app/assetsale/fulfilmentAgency.html',
+        layout:'admin',
+        authenticate:true
+      })
       .state('assetsale.sellerdetails', {
         url: '/sellerdetails',
         templateUrl: 'app/assetsale/sellerdetails.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.fulfilmentagencydetails', {
+        url: '/fulfilmentagencydetails',
+        templateUrl: 'app/assetsale/fulfilmentAgencydetails.html',
         layout:'admin',
         authenticate:true
       })

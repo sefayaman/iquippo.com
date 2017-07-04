@@ -16,8 +16,8 @@ function AssetSaleCtrl($scope, $rootScope, $state,$window) {
             case 'assetsale.buyer':
                 $scope.tabValue = 'buyer';  
             break;
-           case "assetsale.paymentreceived":
-              $scope.tabValue = 'paymentreceived';
+           case "assetsale.fulfilmentagency":
+              $scope.tabValue = 'fulfilmentagency';
             break;
              case "assetsale.paymentmade":
               $scope.tabValue = 'paymentmade';
@@ -45,15 +45,10 @@ function AssetSaleCtrl($scope, $rootScope, $state,$window) {
           $scope.tabValue = 'buyer';
           $state.go("assetsale.buyer");
         break;
-         case "paymentreceived":
-          $scope.tabValue = 'paymentreceived';
-          $state.go("assetsale.paymentreceived");
+         case "fulfilmentagency":
+          $scope.tabValue = 'fulfilmentagency';
+          $state.go("assetsale.fulfilmentagency");
         break;
-         case "paymentmade":
-          $scope.tabValue = 'paymentmade';
-          $state.go("assetsale.paymentmade");
-        break;
-
       } 
     }
 
