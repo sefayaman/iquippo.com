@@ -85,6 +85,7 @@ angular.module('sreizaoApp')
 
     $scope.submitToRapid = function(){
       var userId = "";
+      Auth.removeCookies();
       if(Auth.getCurrentUser()._id)
         userId = Auth.getCurrentUser()._id;
       $http.get("/api/common/redirecttorapid?_id=" + userId)
