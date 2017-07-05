@@ -98,7 +98,7 @@ router.put('/vattax/:id', auth.hasRole('admin'),vattaxCtrl.update);
 router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 router.post('/vattax/search',vattaxCtrl.search);
 
-//router.get('/kyc',auth.hasRole('admin'), kycCtrl.get);
+router.get('/kyc',auth.hasRole('admin'), kycCtrl.get);
 router.post('/kyc', auth.hasRole('admin'),kycCtrl.create);
 router.put('/kyc/:id', auth.hasRole('admin'),kycCtrl.update);
 router.delete('/kyc/:id',auth.hasRole('admin'), kycCtrl.destroy);
@@ -110,7 +110,7 @@ router.put('/enterprise/:id', auth.hasRole('admin'),enterpriseCtrl.update);
 router.delete('/enterprise/:id',auth.hasRole('admin'), enterpriseCtrl.destroy);
 router.post('/enterprise/search',enterpriseCtrl.search);
 
-//router.get('/markupprice',auth.hasRole('admin'), markupPriceCtrl.get);
+router.get('/markupprice',auth.hasRole('admin'), markupPriceCtrl.get);
 router.post('/markupprice', auth.hasRole('admin'),markupPriceCtrl.create);
 router.put('/markupprice/:id', auth.hasRole('admin'),markupPriceCtrl.update);
 router.delete('/markupprice/:id',auth.hasRole('admin'), markupPriceCtrl.destroy);

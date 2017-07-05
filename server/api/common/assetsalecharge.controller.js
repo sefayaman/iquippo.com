@@ -3,10 +3,27 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 var Model = require('./assetsalecharge.model');
 var ApiError = require('../../components/_error');
+var Utility = require('./../../components/utility.js');
 
 exports.get = function(req, res) {
   var queryParam = req.query;
   var filter = {};
+
+  if (queryParam.searchStr) {
+       filter['$text'] = {
+        '$search': "\""+queryParam.searchStr+"\""
+      }
+  }
+
+  if (queryParam.enterpriseId)
+    filter.enterpriseId = queryParam.enterpriseId;
+  if (queryParam.status)
+    filter.status = queryParam.status;
+
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, Model, filter, {});
+    return;
+  }
 
   var query = Model.find(filter).populate({
     path: 'category',
@@ -26,14 +43,7 @@ exports.search = function(req, res) {
   var filter = {};
   var date=new Date();
 
-  /*filter.effectiveFromDate = {
-    '$gt': date
-  };
-  filter.effectiveToDate = {
-    '$lt': date
-  };*/
   if (body.categoryId) {
-    //var id = mongoose.Types.ObjectId(body.groupId)
     filter.category = body.categoryId;
   }
   if (body.enterpriseId)
@@ -43,7 +53,10 @@ exports.search = function(req, res) {
 
   console.log("filter", filter);
 
-  var query = Model.find(filter);
+  var query = Model.find(filter)populate({
+    path: 'category',
+    match: filter
+  });
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);

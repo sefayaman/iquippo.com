@@ -7,7 +7,6 @@
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
-        vm.filteredList = [];
         $scope.isEdit = false;
         $scope.pager = PagerSvc.getPager();
 
@@ -15,11 +14,18 @@
         vm.update = update;
         vm.destroy = destroy;
         vm.editClicked = editClicked;
-        vm.searchFn = searchFn;
+        vm.fireCommand = fireCommand;
         vm.getCategory = getCategory;
+        var initFilter = {};
+        var filter = {};
+        vm.searchStr = "";
 
         function init(){
           var userFilter = {};
+          filter = {};
+          initFilter.pagination = true;
+          angular.copy(initFilter, filter);
+
           userFilter.role = "enterprise";
           userFilter.enterprise = true;
           userFilter.status = true;
@@ -31,7 +37,7 @@
             .then(function(result) {
                 vm.categoryList = result;
             })
-          loadViewData();
+          loadViewData(filter);
         } 
 
         function getCategory(groupId) {
@@ -47,19 +53,24 @@
                 })
         }
 
-        function loadViewData(){
-            var filter = {};
+        function loadViewData(filter){
+            $scope.pager.copy(filter);
             AssetSaleChargeSvc.get(filter)
             .then(function(result){
-                vm.dataList = result;
-                vm.filteredList = result;
-                $scope.pager.update(null,vm.filteredList.length,1);
+                vm.filteredList = result.items;
+                vm.totalItems = result.totalItems;
+                $scope.pager.update(result.items, result.totalItems);
             });
         }
 
-        function searchFn(type){
-            vm.filteredList = $filter('filter')(vm.dataList,vm.searchStr);
-            $scope.pager.update(null,vm.filteredList.length,1);
+        function fireCommand(reset){
+            if (reset)
+                $scope.pager.reset();
+            filter = {};
+            angular.copy(initFilter, filter);
+            if (vm.searchStr)
+                filter.searchStr = vm.searchStr;
+            loadViewData(filter);
         }
 
         function save(form){
@@ -67,13 +78,10 @@
                 $scope.submitted = true;
                 return;
             }
-            // vm.dataModel.createdBy = {};
-            // vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
-            // vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
             AssetSaleChargeSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data saved successfully!');
             })
             .catch(function(err){
@@ -110,7 +118,7 @@
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data updated successfully!');
             })
             .catch(function(err){
@@ -129,7 +137,7 @@
         function confirmDestory(id){
             AssetSaleChargeSvc.destroy(id)
             .then(function(){
-                loadViewData();
+                fireCommand(true);
             })
              .catch(function(err){
                 console.log("purpose err",err);

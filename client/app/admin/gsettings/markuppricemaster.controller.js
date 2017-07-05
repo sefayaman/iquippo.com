@@ -6,8 +6,6 @@
     function MarkupPriceMasterCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,userSvc, MarkupPriceSvc){
     	var vm  = this;
         vm.dataModel = {};
-        vm.dataList = [];
-        vm.filteredList = [];
         $scope.isEdit = false;
         $scope.pager = PagerSvc.getPager();
 
@@ -15,9 +13,16 @@
         vm.update = update;
         vm.destroy = destroy;
         vm.editClicked = editClicked;
-        vm.searchFn = searchFn;
-        
+        vm.fireCommand = fireCommand;
+        var initFilter = {};
+        var filter = {};
+        vm.searchStr = "";
+
         function init(){
+            filter = {};
+            initFilter.pagination = true;
+            angular.copy(initFilter, filter);
+
             var userFilter = {};
             userFilter.role = "enterprise";
             userFilter.enterprise = true;
@@ -26,22 +31,27 @@
             vm.enterprises = data;
             })
 
-            loadViewData();
+            loadViewData(filter);
         } 
 
-        function loadViewData(){
-            var filter = "";
+        function loadViewData(filter){
+            $scope.pager.copy(filter);
             MarkupPriceSvc.get(filter)
             .then(function(result){
-                vm.dataList = result;
-                vm.filteredList = result;
-                $scope.pager.update(null,vm.filteredList.length,1);
+                vm.filteredList = result.items;
+                vm.totalItems = result.totalItems;
+                $scope.pager.update(result.items, result.totalItems);
             });
         }
 
-        function searchFn(type){
-            vm.filteredList = $filter('filter')(vm.dataList,vm.searchStr);
-            $scope.pager.update(null,vm.filteredList.length,1);
+        function fireCommand(reset){
+            if (reset)
+                $scope.pager.reset();
+            filter = {};
+            angular.copy(initFilter, filter);
+            if (vm.searchStr)
+                filter.searchStr = vm.searchStr;
+            loadViewData(filter);
         }
 
         function save(form){
@@ -50,9 +60,6 @@
                 return;
             }
 
-            // vm.dataModel.user = {}
-            // vm.dataModel.user._id =  Auth.getCurrentUser()._id;
-
             var createData = {};
             Object.keys(vm.dataModel).forEach(function(x) {
                 createData[x] = vm.dataModel[x];
@@ -60,7 +67,7 @@
             MarkupPriceSvc.save(createData)
             .then(function(){
                 vm.dataModel = {};
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data saved successfully!');
             })
             .catch(function(err){
@@ -86,7 +93,7 @@
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data updated successfully!');
             })
             .catch(function(err){
@@ -105,7 +112,7 @@
         function confirmDestory(id){
             MarkupPriceSvc.destroy(id)
             .then(function(){
-                loadViewData();
+                fireCommand(true);
             })
              .catch(function(err){
                 console.log("purpose err",err);

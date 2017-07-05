@@ -3,22 +3,39 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 var Model = require('./markupprice.model');
 var ApiError = require('../../components/_error');
+var Utility = require('./../../components/utility.js');
 
-// exports.get = function(req, res) {
-//   var queryParam = req.query;
-//   var filter = {};
+exports.get = function(req, res) {
+  var queryParam = req.query;
+  var filter = {};
 
-//   var query = Model.find(filter).populate({
-//     path: 'category group state',
-//     match: filter
-//   });
-//   query.exec(function(err, result) {
-//     if (err) {
-//       return handleError(res, err);
-//     }
-//     return res.status(200).json(result);
-//   });
-// };
+  if (queryParam.searchStr) {
+       filter['$text'] = {
+        '$search': "\""+queryParam.searchStr+"\""
+      }
+  }
+
+ if (queryParam.enterpriseId)
+    filter.enterpriseId = queryParam.enterpriseId;
+  if (queryParam.price)
+    filter.price = queryParam.price;
+  if (queryParam.status)
+    filter.status = queryParam.status;
+
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, Model, filter, {});
+    return;
+  }
+
+  var query = Model.find(filter);
+
+  query.exec(function(err, result) {
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(200).json(result);
+  });
+};
 
 exports.search = function(req, res) {
   var body = req.body;

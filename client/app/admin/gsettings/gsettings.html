@@ -1678,7 +1678,7 @@
 						<td>{{vat.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{vat.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{vat.group.name}}</td>
-						<td>{{vat.category.name}}</td>
+						<td>{{vat.category}}</td>
 						<td>{{vat.state.name}}</td>
 						<td>{{vat.amount}}</td>
 						<td>
@@ -1741,7 +1741,7 @@
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
-					Search: <input type="text" placeholder="Search..." ng-model="kycVm.searchStr" ng-change="kycVm.searchFn()" ng-model-options="{debounce:500}">
+					Search: <input type="text" placeholder="Search..." ng-model="kycVm.searchStr" ng-change="kycVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
@@ -1756,14 +1756,15 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="kyc in kycVm.filteredList">
-						<td>{{kycVm.kycType}}</td>
-						<td>{{kycVm.docName}}</td>
+						<td>{{kyc.kycType}}</td>
+						<td>{{kyc.docName}}</td>
 						<td>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="kycVm.editClicked(kycVm)"><i class="fa fa-pencil"></i></button>
-							<button type="button" class="btn btn-sm btn-danger" ng-click="kycVm.destroy(kycVm._id)"><i class="fa fa-trash"></i></button></td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="kycVm.editClicked(kyc)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="kycVm.destroy(kyc._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="kycVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 
@@ -1838,7 +1839,7 @@
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
-					Search: <input type="text" placeholder="Search..." ng-model="assetSaleChargeVm.searchStr" ng-change="assetSaleChargeVm.searchFn()" ng-model-options="{debounce:500}">
+					Search: <input type="text" placeholder="Search..." ng-model="assetSaleChargeVm.searchStr" ng-change="assetSaleChargeVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
@@ -1860,15 +1861,16 @@
 						<td>{{assetSale.enterpriseId}}</td>
 						<td>{{assetSale.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.effectiveToDate | date:'MM/dd/yyyy'}}</td>
-						<td>{{assetSale.category}}</td>
-						<td>{{assetSale.rateofinterest}}</td>
-						<td>{{assetSale.flatpertrx}}</td>
+						<td>{{assetSale.category.name}}</td>
+						<td>{{assetSale.rateOfInterest}}</td>
+						<td>{{assetSale.flatPerTrx}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="assetSaleChargeVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
 							<button type="button" class="btn btn-sm btn-danger" ng-click="assetSaleChargeVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="assetSaleChargeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 	<!-- Enterprise Master -->
@@ -2035,7 +2037,7 @@
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
-					Search: <input type="text" placeholder="Search..." ng-model="markupVm.searchStr" ng-change="markupVm.searchFn()" ng-model-options="{debounce:500}">
+					Search: <input type="text" placeholder="Search..." ng-model="markupVm.searchStr" ng-change="markupVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
@@ -2049,15 +2051,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="kyc in markupVm.filteredList">
-						<td>{{markupVm.enterpriseId}}</td>
-						<td>{{markupVm.price}}</td>
+					<tr ng-repeat="markup in markupVm.filteredList">
+						<td>{{markup.enterpriseId}}</td>
+						<td>{{markup.price}}</td>
 						<td>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markupVm)"><i class="fa fa-pencil"></i></button>
-							<button type="button" class="btn btn-sm btn-danger" ng-click="markupVm.destroy(markupVm._id)"><i class="fa fa-trash"></i></button></td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="markupVm.destroy(markup._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="kycVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 </div>
