@@ -83,8 +83,10 @@ app.post('/api/uploads', function(req, res) {
   req.uplPath = relativePath;
   upload(req, res, function(err, data) {
     if (err) {
+      console.log("I am Vara");
       return res.end("Error uploading file.");
     }
+    console.log("req.files",req.query.name);
     if (resize == 'y') {
       var dimension = {};
       dimension.width = req.query.width;

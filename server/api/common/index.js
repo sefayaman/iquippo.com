@@ -8,6 +8,7 @@ var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
 
+
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
 
@@ -95,7 +96,6 @@ router.post('/vattax/search',vattaxCtrl.search);
 
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
-
 
 //Bulk Upload Routes
 router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.renderJson);

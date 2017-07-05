@@ -493,11 +493,11 @@
                 <div class="row">
                   <div class="col-sm-9">
                     <h3 class="panel-title">
-                      <strong>Auction Name</strong> <span>(123456)</span>  
+                      <strong>{{productDetailVm.auctionName}}</strong> <span>{{productDetailVm.auctionId}}</span>  
                       <a href="javascript:void(0);" class="text-danger">[3 Bids]</a>                  
                     </h3>
                   </div>
-                  <div class="col-sm-3">
+                  <div class="col-sm-3" ng-if="currentProduct.auctionListing">
                     <small class="pull-right">Asset Listed in Auction</small>
                   </div>
                 </div>
@@ -511,7 +511,7 @@
                    </div>
                    <div class="col-xs-2 padd-left">
 
-                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount)">
+                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid')">
                        <span ng-if="true">Place Bid</span>
                        <span ng-if="false">Change Bid</span>
                      </button>
@@ -523,7 +523,7 @@
                  </div>
                 <hr>
                 <div class="text-right">
-                  <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-danger">Buy Now</a>
+                  <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-danger">Buy Now</a>
                   <button type="submit" class="btn btn-danger" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                 </div>
               </div>

@@ -3,7 +3,7 @@
   angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
-  function ProductDetailCtrl($scope, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function ProductDetailCtrl($scope, AuctionSvc,AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
     var vm = this;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
@@ -53,16 +53,30 @@
     vm.checkServiceInfo = checkServiceInfo;
 
     // bid summary
-    function openBidModal(bidAmounts) {
+    function openBidModal(bidAmounts,bid) {
       var bidSummaryScope = $rootScope.$new();
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         group: $scope.currentProduct.group._id,
         category: $scope.currentProduct.category._id,
         state: $scope.currentProduct.state,
-        user: $scope.currentProduct.user,
-        productId: $scope.currentProduct._id
+        seller: $scope.currentProduct.user,
+        productId: $scope.currentProduct._id,
+        bid:"true"
       };
+
+      if (bid == 'buynow'){
+        bidSummaryScope.params={};
+        bidSummaryScope.params.negotiation=false;
+        bidSummaryScope.params.type="BUY";
+        bidSummaryScope.params.offer=$scope.currentProduct.grossPrice;
+        bidSummaryScope.params.user=Auth.getCurrentUser();
+        bidSummaryScope.params.product=$scope.currentProduct;
+        bidSummaryScope.params.bid="false";
+        bidSummaryScope.params.group=$scope.currentProduct.group._id;
+        bidSummaryScope.params.category=$scope.currentProduct.category._id;
+        bidSummaryScope.params.state=$scope.currentProduct.state;
+      }
       var bidSummaryModal = $uibModal.open({
         templateUrl: "/app/assetsale/assetbidpopup.html",
         scope: bidSummaryScope,
@@ -336,7 +350,7 @@
       var params = myObject.params;
       //delete myObject.params;
       var keys = Object.keys(myObject);
-      var i=0;
+      var i = 0;
       if (keys.length > 0) {
         for (i = 0; i < keys.length; i++) {
           if (myObject[keys[i]] !== "" && keys[i] !== 'params') {
@@ -467,6 +481,26 @@
                     liftingCapacity: techInfo[0].information.liftingCapacity
                   };
                 }
+              });
+          }
+          if ($scope.currentProduct.auctionListing) {
+            var filter = {};
+            filter._id = $scope.currentProduct.auction._id;
+            AuctionSvc.getOnFilter(filter)
+              .then(function(result) {
+                if(result.length > 0){
+                  filter={};
+                  filter.dbauctionId=result[0].dbAuctionId;
+                return AuctionMasterSvc.get(filter);
+            }
+              })
+              .then(function(result){
+               console.log(result);
+               vm.auctionName=result[0].name;
+               vm.auctionId=result[0].auctionId;
+              })
+              .catch(function(err){
+
               });
           }
 
@@ -702,7 +736,7 @@
         .catch(function() {
           //error handling
         });
-        // CartSvc.addProductToCart(prdObj);
+      // CartSvc.addProductToCart(prdObj);
     }
 
     function sendBuyRequest(form) {
@@ -797,30 +831,30 @@
     Purpose: To track product Information
     */
     $scope.informationTag = function(tabName) {
-        if (tabName == 'basicInformation') {
-          gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
-          gaMasterObject.basicInformation.eventCategory = "productDetails_BasicInformation";
-          dataLayer.push(gaMasterObject.basicInformation);
-        } else if (tabName == 'technicalInformation') {
-          gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
-          gaMasterObject.basicInformation.eventCategory = "productDetails_TechnicalInformation";
-          dataLayer.push(gaMasterObject.basicInformation);
-        } else if (tabName == 'ServiceInformation') {
-          gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
-          gaMasterObject.basicInformation.eventCategory = "productDetails_ServiceInformation";
-          dataLayer.push(gaMasterObject.basicInformation);
-        } else {
-          gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
-          gaMasterObject.basicInformation.eventCategory = "productDetails_RentInformation";
-          dataLayer.push(gaMasterObject.basicInformation);
-        }
-      };
-      //Start NJ : image click event for GTM
+      if (tabName == 'basicInformation') {
+        gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
+        gaMasterObject.basicInformation.eventCategory = "productDetails_BasicInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      } else if (tabName == 'technicalInformation') {
+        gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
+        gaMasterObject.basicInformation.eventCategory = "productDetails_TechnicalInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      } else if (tabName == 'ServiceInformation') {
+        gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
+        gaMasterObject.basicInformation.eventCategory = "productDetails_ServiceInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      } else {
+        gaMasterObject.basicInformation.eventLabel = this.currentProduct.name;
+        gaMasterObject.basicInformation.eventCategory = "productDetails_RentInformation";
+        dataLayer.push(gaMasterObject.basicInformation);
+      }
+    };
+    //Start NJ : image click event for GTM
     $scope.imageClick = function() {
-        gaMasterObject.imageview.eventLabel = this.currentProduct.name;
-        dataLayer.push(gaMasterObject.imageview);
-      };
-      //End
+      gaMasterObject.imageview.eventLabel = this.currentProduct.name;
+      dataLayer.push(gaMasterObject.imageview);
+    };
+    //End
 
     //valuation request method
 
@@ -957,7 +991,7 @@
         .catch(function(err) {
           //close("success");
         });
-        //console.log("hiiiiiii",vm.priceTrendSurvey);
+      //console.log("hiiiiiii",vm.priceTrendSurvey);
     }
 
     function close(param) {

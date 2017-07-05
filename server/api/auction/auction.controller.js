@@ -545,19 +545,20 @@ exports.getOnFilter = function(req, res) {
   if (req.body.external)
     filter["external"] = req.body.external == 'y' ? true : false;
 
-    console.log("I am server filter",filter);
+    console.log("I am server filter",req.body.pagination);
 
   if (req.body.pagination) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;
   }
-
+  console.log("last filter",filter);
   var query = AuctionRequest.find(filter);
   query.exec(
     function(err, auctions) {
       if (err) {
         return handleError(res, err);
       }
+      console.log("auctions",auctions);
       return res.status(200).json(auctions);
     }
 
@@ -1163,6 +1164,10 @@ exports.getAuctionMaster = function(req, res) {
     filter['startDate'] = {
       '$gt': new Date()
     }
+
+    if(queryObj.dbauctionId){
+      filter._id=queryObj.dbauctionId;
+    }
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1
   })
@@ -1204,6 +1209,7 @@ exports.importAuctionMaster = function(req, res) {
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
   //console.log("data",worksheet);
   var data = xlsx.utils.sheet_to_json(worksheet);
+  console.log("Auction Data",data);
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }

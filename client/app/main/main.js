@@ -535,6 +535,7 @@ angular.module('sreizaoApp')
       .state('assetsale.buyer', {
         url: '/buyer',
         templateUrl: 'app/assetsale/buyer.html',
+        controller:'AssetSaleBuyerDashboardCtrl as assetSaleBuyerDashboardVm',
         layout:'admin',
         authenticate:true
       })
