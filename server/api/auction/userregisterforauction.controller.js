@@ -136,8 +136,8 @@ function _getRecord(data,cb){
 var USER_REQUEST_FOR_AUCTION_FIELD_MAP = {
                               'Auction Id' : 'auction.auctionId',
                               'Auction Name' : 'auction.name',
-                              'Emd Amount' : 'auction.emdAmount',
-                              'Name' : 'fullName',
+                              'EMD Amount' : 'auction.emdAmount',
+                              'User Name' : 'fullName',
                               'Mobile' : 'mobileNo',
                               'Email' : 'user.email',
                               'Date of Request' : 'createdAt'

@@ -145,6 +145,8 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var imgPath = config.uploadPath + assetDir + "/" + fileName;
       var fileNameParts = fileName.split('.');
       var extPart = fileNameParts[fileNameParts.length - 1];
+      if(extPart)
+          extPart = extPart.toLowerCase();
       var namePart = fileNameParts[0];
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
       fsExtra.copy(imgPath, originalFilePath, {
@@ -205,6 +207,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       }
     }
   } catch (err) {
+    console.log("err",err);
     handleError(res, err);
   }
 }
