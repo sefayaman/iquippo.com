@@ -56,7 +56,7 @@
             </select>
           </div> 
           <div class="col-sm-4 form-group padd-left" ng-class="{'has-error': reqForm.mobile.$invalid && reqForm.submitted }">
-            <input type="text" class="form-control" name="mobile" ng-model="auctionRegVm.user.mobile" placeholder="*Mobile No." required>
+            <input type="text" class="form-control" name="mobile" ng-model="auctionRegVm.user.mobile" placeholder="*Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
           </div>
         </div>
         <div class="text-right">
