@@ -7,12 +7,8 @@ var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
-<<<<<<< HEAD
 var financeIntegrationCtrl = require('./financeintegration.controller');
-=======
 var apiCtrl=require('./api.controller');
->>>>>>> T259
-
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
 
