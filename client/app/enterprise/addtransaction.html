@@ -193,7 +193,7 @@
       <div class="panel-body">
         <div class="row form-group">                              
             <div class="col-sm-3" ng-class="{'has-error':agencyForm.reportNo.$invalid && agencyForm.submitted}">
-              <input type="text" class="form-control" name="reportNo" ng-model="addTransactionVm.enterpriseValuation.reportNo" placeholder="Report No.*" ng-disabled="!editAgencyField()" required/>
+              <input type="text" class="form-control" name="reportNo" ng-model="addTransactionVm.enterpriseValuation.reportNo" placeholder="*Report No." ng-disabled="!editAgencyField()" required/>
             </div>
             <div class="col-sm-3">
                <div class="input-group" ng-class="{'has-error':agencyForm.reportDate.$invalid && agencyForm.submitted}">
@@ -202,7 +202,7 @@
                </div>
             </div>
             <div class="col-sm-3" ng-class="{'has-error':agencyForm.agencYom.$invalid && agencyForm.submitted}">
-              <input type="text" class="form-control" name="agencYom" ng-model="addTransactionVm.enterpriseValuation.agencyYearOfManufacturing" placeholder="Year of Manufacture" ng-disabled="!editAgencyField()" required/>
+              <input type="text" class="form-control" name="agencYom" ng-model="addTransactionVm.enterpriseValuation.agencyYearOfManufacturing" placeholder="*Year of Manufacture" ng-disabled="!editAgencyField()" required/>
             </div>
             <div class="col-sm-3">
               <input type="text" class="form-control" name="agencyEngineNo" ng-model="addTransactionVm.enterpriseValuation.agencyEngineNo" ng-disabled="!editAgencyField()" placeholder="Engine No."/>
@@ -219,18 +219,18 @@
              <input type="text" class="form-control" name="agencySerialNo" ng-model="addTransactionVm.enterpriseValuation.agencySerialNo" ng-disabled="!editAgencyField()" placeholder="Serial No." />
           </div>
           <div class="col-sm-3" ng-class="{'has-error':agencyForm.hmr_kmr.$invalid && agencyForm.submitted}">
-              <input type="text" class="form-control" name="hmr_kmr" ng-model="addTransactionVm.enterpriseValuation.hmr_kmr" placeholder="HMR / KMR" ng-disabled="!editAgencyField()" required/>
+              <input type="text" class="form-control" name="hmr_kmr" ng-model="addTransactionVm.enterpriseValuation.hmr_kmr" placeholder="*HMR / KMR" ng-disabled="!editAgencyField()" required/>
             </div>
         </div>
         <div class="row form-group ">                            
           <div class="col-sm-3" ng-class="{'has-error':agencyForm.assessedValue.$invalid && agencyForm.submitted}">
-            <input type="number" class="form-control" min="0" name="assessedValue" ng-model="addTransactionVm.enterpriseValuation.assessedValue" ng-disabled="!editAgencyField()" placeholder="Assessed Value" required/>
+            <input type="number" class="form-control" min="0" name="assessedValue" ng-model="addTransactionVm.enterpriseValuation.assessedValue" ng-disabled="!editAgencyField()" placeholder="*Assessed Value" required/>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':agencyForm.inspectionBy.$invalid && agencyForm.submitted}">
-             <input type="text" class="form-control" name="inspectionBy" ng-model="addTransactionVm.enterpriseValuation.inspectionBy" ng-disabled="!editAgencyField()" placeholder="Inspection By" required/>
+             <input type="text" class="form-control" name="inspectionBy" ng-model="addTransactionVm.enterpriseValuation.inspectionBy" ng-disabled="!editAgencyField()" placeholder="*Inspection By" required/>
           </div>
           <div class="col-sm-3" ng-class="{'has-error':agencyForm.physicalCondition.$invalid && agencyForm.submitted}">
-            <input type="text" class="form-control" name="physicalCondition" ng-model="addTransactionVm.enterpriseValuation.physicalCondition" ng-disabled="!editAgencyField()" placeholder="Physical Condition" required/>            
+            <input type="text" class="form-control" name="physicalCondition" ng-model="addTransactionVm.enterpriseValuation.physicalCondition" ng-disabled="!editAgencyField()" placeholder="*Physical Condition" required/>            
           </div>
           <div class="col-sm-3">
              GPS Installed

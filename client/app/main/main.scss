@@ -509,9 +509,9 @@ table.table{width:100% !important;}
 .primary-upload{height:120px;}
 .upload-picHover:hover{background:#CCD5E5; display:block;}
 .list-instrct{padding-left:15px; margin-bottom:15px;}
-.fileinput-button.bulk-browse{height:40px; line-height:25px;}
+.fileinput-button.bulk-browse{height:32px; line-height:18px;}
 .pic-popover{padding-top:20px;}
-
+.tableFilter{height: 22px; width: 110px; margin-right:5px;}
 /* updated css */
 .label.label-danger{background:#e3000f;}
 .label.label-primary{background:#104095;}
@@ -810,6 +810,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     padding-right: 15px;
 }
 .featured .tablesearch input{width: 160px;} 
+.featured .btn.btn-primary.btn-xs{position: relative; top: -2px;}
 .media-coverage{border: 1px solid #ccc;padding: 7px;height: 180px;overflow-y: scroll;}
 .media-coverage h6{font-size: 11px;}
 .media-coverage hr{margin:7px 0 7px 0;}
