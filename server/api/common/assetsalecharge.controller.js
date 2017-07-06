@@ -17,8 +17,6 @@ exports.get = function(req, res) {
 
   if (queryParam.enterpriseId)
     filter.enterpriseId = queryParam.enterpriseId;
-  if (queryParam.status)
-    filter.status = queryParam.status;
 
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, Model, filter, {});
@@ -38,7 +36,6 @@ exports.get = function(req, res) {
 };
 
 exports.search = function(req, res) {
-  console.log("req.body", req.body);
   var body = req.body;
   var filter = {};
   var date=new Date();
@@ -51,9 +48,7 @@ exports.search = function(req, res) {
   if (body.status)
     filter.status = body.status;
 
-  console.log("filter", filter);
-
-  var query = Model.find(filter)populate({
+  var query = Model.find(filter).populate({
     path: 'category',
     match: filter
   });

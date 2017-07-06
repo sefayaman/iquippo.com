@@ -163,23 +163,20 @@
       //filter['sort'] = {featured:-1};
       $scope.searching = true;
 
-      console.log("filter",filter);
-
       if($scope.equipmentSearchFilter && $scope.equipmentSearchFilter.locationName){
         filter.location=$scope.equipmentSearchFilter.locationName;
          delete filter.locationName;
         }
-       filter['auctionId']=$scope.auctionId;
-       console.log("I am here",filter);
+      filter['auctionId']=$scope.auctionId;
       getAssetsInAuction(filter);
   }
 
   function getAssetsInAuction(filter){
     var assetIds = [];
+    filter.notInSoldPro = "notInSold";
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {
-            console.log("data recieved",result);
             vm.show=false;
             if(result.length <= 0){
                   vm.show=true;  

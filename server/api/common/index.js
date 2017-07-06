@@ -104,7 +104,7 @@ router.put('/kyc/:id', auth.hasRole('admin'),kycCtrl.update);
 router.delete('/kyc/:id',auth.hasRole('admin'), kycCtrl.destroy);
 router.post('/kyc/search',kycCtrl.search);
 
-//router.get('/enterprise',auth.hasRole('admin'), enterpriseCtrl.get);
+router.get('/enterprise',auth.hasRole('admin'), enterpriseCtrl.get);
 router.post('/enterprise', auth.hasRole('admin'),enterpriseCtrl.create);
 router.put('/enterprise/:id', auth.hasRole('admin'),enterpriseCtrl.update);
 router.delete('/enterprise/:id',auth.hasRole('admin'), enterpriseCtrl.destroy);

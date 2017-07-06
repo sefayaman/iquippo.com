@@ -1678,7 +1678,7 @@
 						<td>{{vat.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{vat.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{vat.group.name}}</td>
-						<td>{{vat.category}}</td>
+						<td>{{vat.category.name}}</td>
 						<td>{{vat.state.name}}</td>
 						<td>{{vat.amount}}</td>
 						<td>
@@ -1952,7 +1952,7 @@
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
-					Search: <input type="text" placeholder="Search..." ng-model="enterpriseVm.searchStr" ng-change="enterpriseVm.searchFn()" ng-model-options="{debounce:500}">
+					Search: <input type="text" placeholder="Search..." ng-model="enterpriseVm.searchStr" ng-change="enterpriseVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
@@ -1974,17 +1974,18 @@
 					<tr ng-repeat="ent in enterpriseVm.filteredList">
 						<td>{{ent.enterpriseId}}</td>
 						<td>{{ent.functionality}}</td>
-						<td>{{ent.buynowpriceapproval}}</td>
-						<td>{{ent.negotiatedsalespproval}}</td>
-						<td>{{ent.coolingperiod}}</td>
-						<td>{{ent.emdperiod}}</td>
-						<td>{{ent.fullpaymentperiod}}</td>
+						<td>{{ent.buyNowPriceApproval}}</td>
+						<td>{{ent.negotiatedSaleApproval}}</td>
+						<td>{{ent.coolingPeriod}}</td>
+						<td>{{ent.emdPeriod}}</td>
+						<td>{{ent.fullPaymentPeriod}}</td>
 						<td>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="enterpriseVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
-							<button type="button" class="btn btn-sm btn-danger" ng-click="enterpriseVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="enterpriseVm.editClicked(ent)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="enterpriseVm.destroy(ent._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 	<!-- Markup price master -->
