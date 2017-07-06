@@ -3,22 +3,36 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 var Model = require('./enterprisemaster.model');
 var ApiError = require('../../components/_error');
+var Utility = require('./../../components/utility.js');
 
-// exports.get = function(req, res) {
-//   var queryParam = req.query;
-//   var filter = {};
+exports.get = function(req, res) {
+  var queryParam = req.query;
+  var filter = {};
 
-//   var query = Model.find(filter).populate({
-//     path: 'category group state',
-//     match: filter
-//   });
-//   query.exec(function(err, result) {
-//     if (err) {
-//       return handleError(res, err);
-//     }
-//     return res.status(200).json(result);
-//   });
-// };
+  if (queryParam.searchStr) {
+       filter['$text'] = {
+        '$search': "\""+queryParam.searchStr+"\""
+      }
+  }
+
+  if (queryParam.enterpriseId)
+    filter.enterpriseId = queryParam.enterpriseId;
+  if (queryParam.functionality)
+    filter.functionality = queryParam.functionality;
+
+  if (queryParam.pagination) {
+    Utility.paginatedResult(req, res, Model, filter, {});
+    return;
+  }
+  
+  var query = Model.find(filter);
+  query.exec(function(err, result) {
+    if (err) {
+      return handleError(res, err);
+    }
+    return res.status(200).json(result);
+  });
+};
 
 exports.search = function(req, res) {
   var body = req.body;
@@ -62,7 +76,7 @@ exports.create = function(req, res, next) {
   //       return handleError(res, err);
   //     }
   //     return res.status(200).json({
-  //       message: "Kyc Document saved sucessfully"
+  //       message: "Enterprise record saved sucessfully"
   //     });
   //   });
   // }
@@ -100,7 +114,7 @@ exports.update = function(req, res, next) {
   //   if (result.length === 0 || (result.length === 1 && result[0]._id.toString() === req.params.id))
   //     return update();
   //   else
-  //     return next(new ApiError(409, "Kyc Document already exits!!!"));
+  //     return next(new ApiError(409, "Enterprise record already exits!!!"));
   // });
 
   // function update() {

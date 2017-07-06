@@ -4,9 +4,8 @@
     angular.module('admin').controller('EnterpriseMasterCtrl', EnterpriseMasterCtrl);
 
     function EnterpriseMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, EnterpriseMasterSvc){
-    	 var vm  = this;
+    	var vm  = this;
         vm.dataModel = {};
-        vm.dataList = [];
         vm.filteredList = [];
         $scope.isEdit = false;
         $scope.pager = PagerSvc.getPager();
@@ -15,15 +14,22 @@
         vm.update = update;
         vm.destroy = destroy;
         vm.editClicked = editClicked;
-        vm.searchFn = searchFn;
-        //vm.fireCommand = fireCommand;
+        vm.fireCommand = fireCommand;
         vm.dataModel.functionality = "assetsale";
         vm.dataModel.buyNowPriceApproval = "Yes";
         vm.dataModel.negotiatedSaleApproval = "Yes";
 
+        var initFilter = {};
+        var filter = {};
+        vm.searchStr = "";
+
         function init(){
           initializeValue();
           var userFilter = {};
+          filter = {};
+          initFilter.pagination = true;
+          angular.copy(initFilter, filter);
+
           userFilter.role = "enterprise";
           userFilter.enterprise = true;
           userFilter.status = true;
@@ -31,22 +37,27 @@
             vm.enterprises = data;
           })
 
-          loadViewData();
+          loadViewData(filter);
         } 
 
-        function loadViewData(){
-            var filter = {};
+        function loadViewData(filter){
+            $scope.pager.copy(filter);
             EnterpriseMasterSvc.get(filter)
             .then(function(result){
-                vm.dataList = result;
-                vm.filteredList = result;
-                $scope.pager.update(null,vm.filteredList.length,1);
+                vm.filteredList = result.items;
+                vm.totalItems = result.totalItems;
+                $scope.pager.update(result.items, result.totalItems);
             });
         }
 
-        function searchFn(type){
-            vm.filteredList = $filter('filter')(vm.dataList,vm.searchStr);
-            $scope.pager.update(null,vm.filteredList.length,1);
+        function fireCommand(reset){
+            if (reset)
+                $scope.pager.reset();
+            filter = {};
+            angular.copy(initFilter, filter);
+            if (vm.searchStr)
+                filter.searchStr = vm.searchStr;
+            loadViewData(filter);
         }
 
         function save(form){
@@ -58,7 +69,7 @@
             EnterpriseMasterSvc.save(vm.dataModel)
             .then(function(){
                 initializeValue();
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data saved successfully!');
             })
             .catch(function(err){
@@ -96,7 +107,8 @@
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
-                loadViewData();
+                initializeValue();
+                fireCommand(true);
                 Modal.alert('Data updated successfully!');
             })
             .catch(function(err){
@@ -115,7 +127,7 @@
         function confirmDestory(id){
             EnterpriseMasterSvc.destroy(id)
             .then(function(){
-                loadViewData();
+                fireCommand(true);
             })
              .catch(function(err){
                 console.log("purpose err",err);

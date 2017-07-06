@@ -545,6 +545,9 @@ exports.getOnFilter = function(req, res) {
     filter["product.brand"]=req.body.brand;
   if(req.body.model)
     filter["product.model"]=req.body.model;
+  if(req.body.notInSoldPro)
+    filter["product.isSold"] = { $ne: true};
+  
   if(req.body.mfgYear){
     var mfgYear = false;
     var mfgFilter = {};
@@ -620,12 +623,14 @@ exports.update = function(req, res) {
 };
 
 function updateProduct(data) {
+  console.log("datadata@@@", data);
   Product.find({assetId: data.product.assetId}, function(err, product) {
     var proData = {};
     proData.isSold = true;
     proData.assetStatus = "sold";
     var stObj = {};
-    stObj.userId = data.user._id;
+    if(data.user && data.user._id)
+      stObj.userId = data.user._id;
     stObj.status = "sold";
     stObj.createdAt = new Date();
     if(!proData.assetStatuses)
