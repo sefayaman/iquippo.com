@@ -17,7 +17,8 @@
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
         vm.getCategory = getCategory;
-
+        vm.taxType = [{name:"VAT"}];
+        vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
         groupSvc.getAllGroup()
         .then(function(result) {

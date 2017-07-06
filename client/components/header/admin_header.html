@@ -63,7 +63,10 @@
                         <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
                     </li>                    
                     <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
-                        <a href="/enterprisevaluation/dashboard"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
+                        <a href="/enterprisevaluation/transaction"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
+                    </li>
+                    <li ng-if="isAdmin()">
+                        <a href="/assetsale/administrator"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li>
                     <!--<li ng-if="isAdmin()">
                         <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>
@@ -118,6 +121,9 @@
                     </li>
                     <li>
                         <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
+                    </li>
+                    <li ng-if="isAuctionPartner() || isAdmin()">
+                        <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
                     </li>
                     <li ng-if="isPartner()">
                         <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>

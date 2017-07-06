@@ -81,9 +81,13 @@ function getValuationRequest(req,res){
 
     var dateFilter = {};
     if(queryParam.fromDate)
-      dateFilter['$gte'] = new Date(queryParam.fromDate);
-    if(queryParam.toDate)
-      dateFilter['$lt']= new Date(queryParam.toDate);
+      dateFilter.$gte = new Date(queryParam.fromDate);
+    if(queryParam.toDate){
+      var toDate = new Date(queryParam.toDate);
+      var nextDay = toDate.getDate() + 1;
+      toDate.setDate(nextDay);
+      dateFilter.$lt = toDate;
+    }
     if(queryParam.fromDate || queryParam.toDate)
       filter['createdAt'] = dateFilter;
 
@@ -498,6 +502,7 @@ exports.bulkUpload = function(req, res) {
           return callback('Invalid enterprise');
 
         row.enterprise = {
+
           email : result[0].email,
           mobile : result[0].mobile,
           _id : result[0]._id + "",
@@ -505,6 +510,15 @@ exports.bulkUpload = function(req, res) {
           employeeCode : result[0].employeeCode,
           name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
+
+        row.autoSubmit = false;
+        
+        if(result[0].availedServices && result[0].availedServices.length){
+          result[0].availedServices.forEach(function(srvc){
+            if(srvc.code === row.requestType &&  srvc.approvalRequired !== 'Yes')
+              row.autoSubmit = true;
+          });
+        }
 
         return callback();
       });
@@ -582,6 +596,10 @@ exports.bulkUpload = function(req, res) {
     }
 
     function validateMasterData(callback){
+        if(!row.brand){
+          delete row.model;
+          return callback();
+        }
        commonFunc.fetchBrand({name:row.brand},function(err,brands){
           if(err || !brands)
             return callback('Error while validating brand');
@@ -589,10 +607,17 @@ exports.bulkUpload = function(req, res) {
           if(!brands.length){
               row.otherBrand = row.brand;
               row.brand = "Other";
-              row.otherModel = row.model;
-              row.model = "Other";
+
+              if(row.model){
+                 row.otherModel = row.model;
+                 row.model = "Other";
+              }
+             
               return callback();
           } 
+
+          if(!row.model)
+            return callback();
 
           var modelParams = {
             brand : row.brand,
@@ -712,7 +737,8 @@ exports.bulkUpload = function(req, res) {
 
       row.customerPartyName = row.enterprise.name;
       row.customerPartyNo = user.mobile;
-      row.userName = user.fname + " " + user.lname;
+      row.userName = (user.fname || "") + " " + (user.mname || "") +(user.mname ? " " : "") + (user.lname || "");
+      row.legalEntityName = (user.company || "");
       row.createdBy = {
         name : user.fname + " " + user.lname,
         _id : user._id,
@@ -751,6 +777,8 @@ exports.bulkUpload = function(req, res) {
           }
           if(enterpriseData)
             pushNotification(enterpriseData);
+          enterpriseData = enterpriseData.toObject();
+          enterpriseData.autoSubmit = row.autoSubmit;
           if(!err && enterpriseData)
             uploadedData.push(enterpriseData);
           return cb();
@@ -842,6 +870,7 @@ exports.bulkUpload = function(req, res) {
     });
   }
   
+exports.pushNotification = pushNotification;
 exports.bulkModify = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
@@ -965,9 +994,10 @@ exports.bulkModify = function(req, res) {
           _id : result[0]._id + "",
           enterpriseId:result[0].enterpriseId,
           employeeCode : result[0].employeeCode,
-          name : (result[0].fname || "") + " "+ (result[0].lname || "") 
+          name : (result[0].fname || "") + " "+ (result[0].lname || "")
         };
 
+        row.customerPartyName = row.enterprise.name;
         return callback();
       });
     }
@@ -987,6 +1017,8 @@ exports.bulkModify = function(req, res) {
         
         row.valData = result[0];
         if(updateType == 'agency'){
+          if(!result[0].reportDate)
+              row.reportDate = new Date();
           if(user.role == 'admin')
             return callback();
           if(user.isPartner && user.partnerInfo && user.partnerInfo._id == result[0].agency._id && agencyValidStatus.indexOf(result[0].status) != -1)
@@ -1085,8 +1117,10 @@ exports.bulkModify = function(req, res) {
     }
 
      function validateMasterData(callback){
-      if(!row.brand)
-        return callback();
+      if(!row.brand){
+          delete row.model;
+          return callback();
+      }
        commonFunc.fetchBrand({name:row.brand},function(err,brands){
           if(err || !brands)
             return callback('Error while validating brand');
@@ -1094,10 +1128,15 @@ exports.bulkModify = function(req, res) {
           if(!brands.length){
               row.otherBrand = row.brand;
               row.brand = "Other";
-              row.otherModel = row.model;
-              row.model = "Other";
+              if(row.model){
+                row.otherModel = row.model;
+                row.model = "Other";
+                
+              }
               return callback();
           } 
+          if(!row.model)
+            return callback();
 
           var modelParams = {
             brand : row.brand,
@@ -1222,7 +1261,7 @@ exports.bulkModify = function(req, res) {
       var valReq = row.valData;
       delete row.valData;
       if(updateType == 'agency'){
-
+        row.reportSubmissionDate = new Date();
         row.status = EnterpriseValuationStatuses[4];
         row.statuses = valReq.statuses;
         row.statuses.push({
@@ -1323,6 +1362,10 @@ exports.update = function(req, res) {
   }
 
   function update(){
+    if(bodyData.status === EnterpriseValuationStatuses[4]){
+      bodyData.reportDate = new Date()
+      bodyData.reportSubmissionDate = new Date();
+    }
      EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
@@ -1535,7 +1578,13 @@ var parameters = {
   serialNo:{key:"agencySerialNo"},
   chasisNo:{key:"agencyChassisNo"},
   registrationNo:{key:"agencyRegistrationNo"},
-  report_url:{key:"valuationReport",type:"file",required:true}
+  report_url:{key:"valuationReport",type:"file",required:true},
+  general_image_url:{key:"generalImage",type:"file"},
+  engine_image_url:{key:"engineImage",type:"file"},
+  hydraulic_image_url:{key:"hydraulicImage",type:"file"},
+  cabin_image_url:{key:"cabinImage",type:"file"},
+  under_carriage_tyre_image_url:{key:"underCarriageImage",type:"file"},
+  other_image_url:{key:"otherImage",type:"file"}
 }
 
 exports.updateFromAgency = function(req,res){
@@ -1582,6 +1631,8 @@ exports.updateFromAgency = function(req,res){
 
       updateObj.status = EnterpriseValuationStatuses[4];
       updateObj.statuses = valReq.statuses;
+      updateObj.reportDate = new Date();
+      updateObj.reportSubmissionDate = new Date();
       var stsObj = {};
       stsObj.createdAt = new Date();
       stsObj.userId = "IQVL";
@@ -1670,6 +1721,9 @@ exports.exportExcel = function(req,res){
     filter['enterprise.enterpriseId'] = queryParam.enterpriseId;
   if(queryParam.agencyId)
     filter['agency._id'] = queryParam.agencyId;
+  if (queryParam.userId)
+    filter["createdBy._id"] = queryParam.userId;
+
   if(queryParam.ids){
     var ids = queryParam.ids.split(',');
     filter['_id'] = {$in:ids};
@@ -1678,8 +1732,13 @@ exports.exportExcel = function(req,res){
   var dateFilter = {};
   if(queryParam.fromDate)
     dateFilter['$gte'] = new Date(queryParam.fromDate);
-  if(queryParam.toDate)
-    dateFilter['$lt']= new Date(queryParam.toDate);
+  if(queryParam.toDate) {
+      var toDate = new Date(queryParam.toDate);
+      var nextDay = toDate.getDate() + 1;
+      toDate.setDate(nextDay);
+      dateFilter.$lt = toDate;
+    }
+    //dateFilter['$lt']= new Date(queryParam.toDate);
 
   switch(queryParam.type){
     case "transaction":

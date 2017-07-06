@@ -8,6 +8,7 @@ var scriptController=require('./scripts');
 
 var router = express.Router();
 
+router.get('/script/phChange',scriptController.script);
 router.get('/', controller.get);
 router.get('/export', controller.exportExcel);
 router.get('/:id', controller.getOnId);
@@ -25,6 +26,7 @@ router.post('/iqvl/update',controller.updateFromAgency);
 */
 
 router.post('/userremapping',scriptController.userRemapping);
+router.post('/updaterequest',scriptController.updateLegalEntityInRequest);
 
 
 /*
@@ -37,7 +39,6 @@ router.get('/asset/group',auth.hasRole('admin'),assetGroupCtrl.fetch,assetGroupC
 router.get('/asset/group/count',auth.hasRole('admin'),assetGroupCtrl.count);
 router.post('/asset/group/upload/excel',auth.hasRole('admin'),assetGroupCtrl.uploadExcel);
 router.delete('/asset/group/:id',auth.hasRole('admin'),assetGroupCtrl.delete);
-router.get('/script/phChange',scriptController.script);
 
 //router.put('/asset/group/upload/excel',auth.hasRole('admin'),assetGroupCtrl.modifyExcel);
 

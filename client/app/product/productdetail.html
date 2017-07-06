@@ -488,7 +488,46 @@
               
           </div>
           <div class="col-sm-5 col-md-7 panel-group">
-           
+            <div class="panel panel-default asset-sale">
+               <div class="panel-heading">
+                <div class="row">
+                  <div class="col-sm-9">
+                    <h3 class="panel-title">
+                      <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}}</strong></a> <span>({{currentProduct.assetId}})</span>  
+                      <a href="javascript:void(0);" class="text-danger">[3 Bids]</a>                  
+                    </h3>
+                  </div>
+                  <div class="col-sm-3" ng-if="auctionsData.name">
+                    <small class="pull-right">Asset Listed in Auction</small>
+                  </div>
+                </div>
+               </div>
+               <div class="panel-footer">
+                 <h4>Sale Price : <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
+                 <div class="row">
+                   <div class="col-xs-offset-3 col-xs-4">
+                     <input type="text" class="form-control" name="" value=""
+                     ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount">
+                   </div>
+                   <div class="col-xs-2 padd-left">
+
+                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount)">
+                       <span ng-if="true">Place Bid</span>
+                       <span ng-if="false">Change Bid</span>
+                     </button>
+
+                     <!-- <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount)">Place Bid</button> -->
+
+                     <button type="button" ng-if="false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Proxy Bid</button>
+                   </div>
+                 </div>
+                <hr>
+                <div class="text-right">
+                  <a href="javascript:void(0);" ng-click="negotiate(originalPrice,'false')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-danger">Buy Now</a>
+                  <button type="submit" class="btn btn-danger" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
+                </div>
+              </div>
+            </div>           
             <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>
@@ -1007,5 +1046,4 @@
 
     </div>
 </script>
-
 <!-- end -->

@@ -58,14 +58,14 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
       }
 
-      if(Auth.isEnterpriseUser() && !filter.isSearch){
+      if(Auth.isEnterpriseUser()){
         filter['userId'] = Auth.getCurrentUser()._id;
       }
 
-      delete filter.isSearch;
-
       EnterpriseSvc.get(filter)
       .then(function(result){
+        vm.selectAllReq = "";
+        selectedItems = [];
         vm.enterpriseValuationListing = result.items;
         vm.totalItems = result.totalItems;
          $scope.pager.update(result.items,result.totalItems);
@@ -81,19 +81,15 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       else
         filter = filterObj;
       if(vm.searchStr){
-        filter.isSearch = true;
         filter['searchStr'] = encodeURIComponent(vm.searchStr);
       }
       if(vm.statusType){
-        filter.isSearch = true;
         filter['statusType'] = encodeURIComponent(vm.statusType);
       }
       if(vm.fromDate){
-        filter.isSearch = true;
         filter['fromDate'] = encodeURIComponent(vm.fromDate);
       }
       if(vm.toDate){
-        filter.isSearch = true;
         filter['toDate'] = encodeURIComponent(vm.toDate);
       }
       
@@ -159,7 +155,9 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           Modal.alert("Please upload template first.");
           return;
         }
+        $rootScope.loading = true;
         EnterpriseSvc.uploadExcel(uploadData).then(function(res){
+          $rootScope.loading = false;
           //vm.enterpriseValuation = {};
           $scope.uploadedExcel = '';
           $scope.uploadType = "";
@@ -177,9 +175,23 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             notificationSvc.sendNotification(template, data, serData, 'email');
             message += " Error details have been sent on registered email id.";
           }
+
+          var arrSubmitToAgency = [];
+          if(res.uploadedData && res.uploadedData.length){
+            arrSubmitToAgency = res.uploadedData.filter(function(item){
+                return item.autoSubmit;
+            });
+          }
+
+          if(arrSubmitToAgency.length){
+            submitToAgency(arrSubmitToAgency);
+            return;
+          }
           fireCommand(true);
          return Modal.alert(message);
+
         }).catch(function(err){
+          $rootScope.loading = false;
           Modal.alert('Error while uploading');
         });
       }else if(['modify','reportupload'].indexOf($scope.uploadType) != -1){
@@ -199,7 +211,9 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           Modal.alert("Please upload template first.");
           return;
         }
+        $rootScope.loading = true;
         EnterpriseSvc.modifyExcel(uploadData).then(function(res){
+          $rootScope.loading = false;
           //vm.enterpriseValuation = {};
           $scope.modifiedExcel = "";
           $scope.reportUploadedExcel = "";
@@ -222,9 +236,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           fireCommand(true);
          return Modal.alert(message);
         }).catch(function(err){
+          $rootScope.loading = false;
           Modal.alert('Error while uploading');
         });
       } else {
+        $rootScope.loading = false;
         Modal.alert('Invalid Choice');
         return;
       }
@@ -312,8 +328,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             return false;
      }
 
-     function submitToAgency(){
+     function submitToAgency(selItems){
         //api integration
+        if(selItems)
+          selectedItems = selItems;
+
         if(selectedItems.length == 0){
           Modal.alert('Please select entries to be updated');
           return;
@@ -362,6 +381,10 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           ids[ids.length] = item._id;
         });
           filter.ids = ids;
+      }
+
+      if(Auth.isEnterpriseUser()){
+        filter.userId = Auth.getCurrentUser()._id;
       }
 
       if(vm.fromDate){

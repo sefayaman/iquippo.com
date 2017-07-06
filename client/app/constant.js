@@ -46,6 +46,10 @@ var Modals = {
   locationList : {
     tplUrl : "app/spare/locationList.html",
     Ctrl : 'SpareUploadCtrl as spareVm'
+  },
+  auctionRegistration : {
+    tplUrl : "app/auction/userregisterforauction.html",
+    Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
   }
 };
 
@@ -133,6 +137,21 @@ var spareStatus = [
 {
   name:"Sold",
   code:"sold"
+}
+];
+
+var KYCType = [
+{
+  name:"Address Proof",
+  code:"address_proof"
+},
+{
+  name:"Identity Proof",
+  code:"identity_proof"
+},
+{
+  name:"Other Document",
+  code:"other_document"
 }
 ];
 

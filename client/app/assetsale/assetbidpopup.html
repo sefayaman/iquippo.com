@@ -1,0 +1,51 @@
+<div>
+       <div class="modal-header">
+          <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Submit Bid</h4>
+        </div>
+        <div class="modal-body asset-sale">
+            <div class="row">
+
+              <div class="col-sm-offset-2 col-sm-8">
+                <input type="text" class="form-control" name="" value=""
+
+                ng-model="AssetBidPopUpVm.bidAmount" ng-change="AssetBidPopUpVm.calculateBid()" placeholder="Enter Bid Amount">
+
+              </div>
+
+             <!--  <div class="col-sm-offset-2 col-sm-5 padd-right">
+                <input type="text" class="form-control" name="" value=""
+                ng-model="AssetBidPopUpVm.bidAmount" placeholder="Enter Bid Amount">
+              </div>
+              <div class="col-sm-3 padd-left">
+                <button type="button" class="btn btn-primary btn-block" ng-click="AssetBidPopUpVm.calculateBid()">Bid</button>
+              </div> -->
+            </div>
+            <div class="asset-taxes">
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">VAT : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> {{taxRate}}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">TDS : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i>{{tds}}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">Parking : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i>{{parking}}</div>
+              </div>
+            </div>
+            <div class="asset-total">
+              <div class="row">
+                <div class="col-sm-offset-2 col-sm-5">Total : </div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> {{total}} </div>
+              </div>
+            </div>
+            <div class="asset-action text-right">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="AssetBidPopUpVm.submitBid()">Submit Bid</button>
+              </div>
+            </div>
+        </div>  
+    </div>

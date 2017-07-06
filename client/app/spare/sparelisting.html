@@ -110,7 +110,7 @@
                       {{spare.user.fname}} {{spare.user.lname}} </a>
                     </td>
                     <td>
-                      {{spareListingVm.getDateFormat(spare.createdAt)}}
+                      {{spare.createdAt | date:'MM/dd/yyyy'}}
                     </td>
                     <td>
                       <span ng-if="spare.tradeType != 'RENT'">

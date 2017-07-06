@@ -1736,6 +1736,10 @@ exports.searchState = function(req, res) {
 		};
 	}
 
+	if(req.body.stateName){
+		filter.name=req.body.stateName;
+	}
+
 	if (req.body.country)
 		filter['country'] = req.body.country;
 

@@ -333,6 +333,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('auctionregreport', {
+        url: '/auctionregreport',
+        templateUrl: 'app/auction/auctionregreport.html',
+        controller: 'AuctionRegReportCtrl as auctionRegVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('viewauctions', {
         url: '/viewauctions?type',
         templateUrl: 'app/auction/auction.html',
@@ -455,7 +462,7 @@ angular.module('sreizaoApp')
       //   templateUrl: 'app/yard/yard.html',
       //   controller: 'YardListingCtrl as YardListingVm',
       //   layout:'client'
-      // })
+      // })      
       .state('enterprisevaluation', {
         url: '/enterprisevaluation',
         abstract:true,
@@ -513,6 +520,60 @@ angular.module('sreizaoApp')
         controller: 'AddTransactionCtrl as addTransactionVm',
         authenticate:true,
         layout:'admin'
+      })
+      .state('assetsale', {
+        url: '/assetsale',
+        abstract:true,
+        templateUrl: 'app/assetsale/assetsale.html',
+        controller: 'AssetSaleCtrl as assetsaleVm'
+      })
+      .state('assetsale.administrator', {
+        url: '/administrator',
+        templateUrl: 'app/assetsale/administrator.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.admindetails', {
+        url: '/admindetails',
+        templateUrl: 'app/assetsale/admindetails.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.seller', {
+        url: '/seller',
+        templateUrl: 'app/assetsale/seller.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.buyer', {
+        url: '/buyer',
+        templateUrl: 'app/assetsale/buyer.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency',
+        templateUrl: 'app/assetsale/fulfilmentAgency.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.sellerdetails', {
+        url: '/sellerdetails',
+        templateUrl: 'app/assetsale/sellerdetails.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.fulfilmentagencydetails', {
+        url: '/fulfilmentagencydetails',
+        templateUrl: 'app/assetsale/fulfilmentAgencydetails.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetbidhistory', {
+        url: '/bidhistory',
+        templateUrl: 'app/assetsale/bidhistory.html',
+        layout:'client',
+        authenticate:true
       })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

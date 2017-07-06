@@ -1,0 +1,24 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>
+            Asset Sale Dashboard     
+          </h3>
+          <legend></legend>
+        </div>
+      </div>
+          <!-- success error end -->
+          <div class="btn-group enterprise-value form-group">
+            <button type="button" ng-if="isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'administrator'}" ng-click="onTabChange('administrator')">Administrator</button>
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'seller'}" ng-click="onTabChange('seller')">Seller</button>
+            <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'buyer'}" ng-click="onTabChange('buyer')">Buyer</button>
+            <button type="button" ng-if="isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'fulfilmentagency'}" ng-click="onTabChange('fulfilmentagency')">Fulfilment Agency</button> 
+          </div>
+          <div ui-view></div>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
