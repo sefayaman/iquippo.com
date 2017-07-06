@@ -218,6 +218,7 @@ exports.create = function(req, res, next){
     }
 
     function _create(cb){
+      delete bodyData.requestDate;
       EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
         return cb(err,enterpriseData);
       });
@@ -1388,6 +1389,14 @@ function bulkUpdate(dataArr,cb){
     function update(dt,callback){
       var _id = dt._id;
       delete dt._id;
+      if(dt.assignSubmitDate)
+        dt.submittedToAgencyDate = new Date();
+      if(dt.generateInvoiceDate)
+        dt.invoiceDate = new Date();
+
+      delete dt.generateInvoiceDate;
+      delete dt.assignSubmitDate;
+
       EnterpriseValuation.findById(_id,function(err,retRow){
         if(err){return callback(err)}
         if(!retRow)
