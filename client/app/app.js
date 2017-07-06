@@ -198,7 +198,8 @@ angular.module('sreizaoApp',[
     $rootScope.isApprovalRequired = Auth.isApprovalRequired;
     $rootScope.isServiceRequester = Auth.isServiceRequester;
     $rootScope.isServiceApprover = Auth.isServiceApprover;
-
+    $rootScope.isAuctionPartner = Auth.isAuctionPartner;
+    
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;
       $rootScope.isError = false;
@@ -250,7 +251,8 @@ angular.module('sreizaoApp',[
         } 
      }
    });
-
+   
+   Auth.removeCookies();
     //global logout
     $rootScope.logout = function() {
       Auth.logout();

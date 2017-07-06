@@ -12,7 +12,7 @@
     //NJ: set upload product Start Time
     $scope.productUploadStartTime = new Date();
     //End
-    vm.fireCommand=fireCommand;
+    $scope.fireCommand=fireCommand;
     $scope.container = {};
     var filter = {};
 
@@ -65,8 +65,8 @@
     $scope.updateAssetTemp = updateAssetTemp;
     $scope.onStateChange = onStateChange;
     $scope.onCountryChange = onCountryChange;
-    $scope.onRoleChange = onRoleChange;
-    $rootScope.userSearch=userSearch;
+    //$scope.onRoleChange = onRoleChange;
+    $scope.userSearch=userSearch;
     $scope.onCategoryChange = onCategoryChange;
     $scope.onBrandChange = onBrandChange;
     $scope.onModelChange = onModelChange;
@@ -205,7 +205,7 @@
           $scope.imagesUnderCarrage = [];
           $scope.imagesOther = [];
           $scope.images = [];
-
+          
           if (response[0].serviceInfo.length > 0) {
             for (var i = 0; i < response[0].serviceInfo.length; i++) {
               if (response[0].serviceInfo[i] && response[0].serviceInfo[i].servicedate)
@@ -287,14 +287,8 @@
           }
 
           //$scope.container.selectedSubCategory = $scope.product.subcategory;
-          //$scope.product.dispSellerInfo=response.dispSellerInfo;
-          console.log($scope.product.alternateMobile);
-          $scope.product.dispSellerContact;
-          $scope.product.dispSellerAlternateContact;
 
-          $scope.getUsersOnUserType = [];
-          $scope.onRoleChange($scope.product.seller.userType, true);
-          $scope.container.selectedUserId = $scope.product.seller._id;
+          $scope.container.sellerName = $scope.product.seller.fname + " " + $scope.product.seller.lname;
 
           $scope.onCategoryChange($scope.product.category._id, true);
           $scope.onBrandChange($scope.product.brand._id, true);
@@ -492,7 +486,7 @@
 
     function reset(){
       $scope.product.seller.mobile="";
-      $scope.product.seller.name="";
+      $scope.container.sellerName="";
       $scope.product.seller.email="";
     }
 
@@ -512,39 +506,22 @@
       });
     }
 
-    function onRoleChange(userType, noChange) {
-      if (!userType) {
-        $scope.getUsersOnUserType = "";
-        return;
-      }
-      var dataToSend = {};
-      dataToSend["status"] = true;
-      dataToSend["userType"] = userType;
-      if (!noChange) {
-        product.seller = {};
-        product.seller.userType = userType;
-        $scope.container.selectedUserId = "";
-      }
-      userSvc.getUsers(dataToSend).then(function(result) {
-        $scope.getUsersOnUserType = result;
-      });
-    }
-
     function userSearch(userSearchText){
-      if (!$scope.product.seller.userType) {
-        $scope.getUsersOnUserType = "";
+      if (!$scope.product.seller.userType) 
         return;
-      }
-      if(userSearchText && userSearchText.length < 4)
+      
+      if(userSearchText && userSearchText.length < 4) 
         return;
+
+      $scope.container.sellerName="";
+      $scope.product.seller.email="";
+      
       var dataToSend = {};
       dataToSend["status"] = true;
       dataToSend["userType"] = $scope.product.seller.userType;
       dataToSend["mobileno"] = $scope.product.seller.mobile;
-     return userSvc.getUsers(dataToSend).then(function(result) {
-      console.log("data",result);
+      return userSvc.getUsers(dataToSend).then(function(result) {
       return result.map(function(item){
-        console.log("item",item);
         return item.mobile;
       });
       });
@@ -553,7 +530,7 @@
    function fireCommand(){
     var filter={};
     if(!$scope.product.seller.mobile){
-      $scope.product.seller.name="";
+      $scope.container.sellerName="";
       $scope.product.seller.email="";
       return;
     }
@@ -561,11 +538,8 @@
     filter["userType"]=$scope.product.seller.userType;
     filter["contact"]=$scope.product.seller.mobile;
     return userSvc.getUsers(filter).then(function(result){
-      console.log("users",result);
-      if(result[0] && result[0].email)
-      $scope.product.seller.email=result[0].email;
-      if(result[0] && result[0].fname)
-        $scope.product.seller.name=result[0].fname + " " + (result[0].mname || " ") + " " + (result[0].lname || " ");
+      if(result.length == 1)
+        onUserChange(result[0]);
     })
 
    }
@@ -704,20 +678,12 @@
       }
     }
 
-    function onUserChange(userId) {
-      if (angular.isUndefined(userId) || !userId) {
-        //product.seller = {};
+    function onUserChange(seller) {
+      if (!seller){
+        product.seller = {};
         return;
       }
-      var seller = null;
-      for (var i = 0; i < $scope.getUsersOnUserType.length; i++) {
-        if (userId == $scope.getUsersOnUserType[i]._id) {
-          seller = $scope.getUsersOnUserType[i];
-          break;
-        }
-      }
-      if (!seller)
-        return;
+
       product.seller._id = seller._id;
       product.seller.fname = seller.fname;
       product.seller.mname = seller.mname;
@@ -731,6 +697,7 @@
       product.seller.country = seller.country;
       product.seller.countryCode=LocationSvc.getCountryCode(seller.country);
       product.seller.company = seller.company;
+      $scope.container.sellerName = seller.fname + " " + seller.lname;
     }
 
     function updateAssetTemp(files,args) {
@@ -793,6 +760,7 @@
     function firstStep(form, product) {
 
       var ret = false;
+
       if ($scope.container.mfgYear) {
         if ($scope.container.mfgYear.getFullYear)
           $scope.product.mfgYear = $scope.container.mfgYear.getFullYear();
@@ -800,7 +768,7 @@
         form.mfgyear.$invalid = true;
         ret = true;
       }
-
+      
       if($scope.product.tradeType && $scope.product.tradeType == 'RENT' && $scope.product.auctionListing){
         Modal.alert("Auction is not allowed for rent assets.");
         return;
@@ -822,7 +790,10 @@
         }, 20);
         return;
       }
-
+      if(!$scope.container.sellerName) {
+        Modal.alert("Seller doesn't exist!");
+        return;
+      }
       /*if($scope.container.selectedSubCategory){
          product.subcategory = {};
          product.subcategory['_id'] = $scope.container.selectedSubCategory['_id'];
@@ -1262,9 +1233,6 @@
 
       $rootScope.loading = true;
       productSvc.addProduct(product).then(function(result) {
-
-        console.log(result);
-
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
         dataLayer.push(gaMasterObject.uploadProductSubmit);
         //NJ : set upload product Start time

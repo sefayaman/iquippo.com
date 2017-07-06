@@ -333,6 +333,13 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('auctionregreport', {
+        url: '/auctionregreport',
+        templateUrl: 'app/auction/auctionregreport.html',
+        controller: 'AuctionRegReportCtrl as auctionRegVm',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('viewauctions', {
         url: '/viewauctions?type',
         templateUrl: 'app/auction/auction.html',
@@ -526,6 +533,12 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
+      .state('assetsale.admindetails', {
+        url: '/admindetails',
+        templateUrl: 'app/assetsale/admindetails.html',
+        layout:'admin',
+        authenticate:true
+      })
       .state('assetsale.seller', {
         url: '/seller',
         templateUrl: 'app/assetsale/seller.html',
@@ -539,10 +552,28 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
+      .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency',
+        templateUrl: 'app/assetsale/fulfilmentAgency.html',
+        layout:'admin',
+        authenticate:true
+      })
       .state('assetsale.sellerdetails', {
         url: '/sellerdetails',
         templateUrl: 'app/assetsale/sellerdetails.html',
         layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.fulfilmentagencydetails', {
+        url: '/fulfilmentagencydetails',
+        templateUrl: 'app/assetsale/fulfilmentAgencydetails.html',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetbidhistory', {
+        url: '/bidhistory',
+        templateUrl: 'app/assetsale/bidhistory.html',
+        layout:'client',
         authenticate:true
       })
 

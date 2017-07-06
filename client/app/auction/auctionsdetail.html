@@ -1,7 +1,8 @@
   <div class="container">
   <div class="form-group"></div>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-3" ng-class="{hidefilter: !filterbutton.value1}">
+      <button class="btn btn-danger visible-xs filter-display" ng-click="filterbutton.value1 = !filterbutton.value1">Close</button>
       <div class="well">
         <form role="form"> 
           <label for="" class="text-muted">Asset Id</label>
@@ -58,14 +59,19 @@
     </div> 
     <div class="col-sm-9">
       <div class="row">
-        <div class="col-sm-8"><h4>{{auctionName}}</h4></div>
-        <div class="col-xs-6 col-sm-2 text-right padd-right">
-          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-        </div>
-        <div class="col-xs-6 col-sm-2 text-right">        
-          <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm btn-block">Back</a>
-        </div>
+        <div class="col-sm-6"><h4>{{auctionName}}</h4></div>
+        <div class="col-xs-3 visible-xs filter-btn form-group">        
+          <button class="btn btn-block btn-danger btn-sm" ng-click="filterbutton.value1 = !filterbutton.value1">
+            <i class="fa fa-filter"></i> Filter
+          </button>
+        </div>         
+        <div class="col-xs-9 col-sm-6 text-right padd-left">
+          <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm active">Register Now</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> <span class="hidden-xs">Auction Catalogue</span></a>
+          <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm active"> <i class="fa fa-chevron-left"></i> <span class="hidden-xs">Back</span></a>
+        </div> 
+        
       </div>
       <legend></legend>
 
@@ -153,7 +159,9 @@
                 </p>
                 <p ng-if="auctionProduct.product.assetId">Asset Id : {{auctionProduct.product.assetId}}</p>
                 <p ng-if="auctionProduct.product.mfgYear"><i class="fa fa-calendar-o"></i> {{auctionProduct.product.mfgYear}} </p>
-                <p ng-if="auctionProduct.product.contactName"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span></p>
+                <p ng-if="auctionProduct.product.contactName"><a href="tel:{{auctionProduct.product.contactNumber}}"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span>
+                  </a>
+                </p>
                
                   <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
               </div>

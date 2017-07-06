@@ -7,6 +7,11 @@ var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
+var financeIntegrationCtrl = require('./financeintegration.controller');
+var kycCtrl = require('./kycmaster.controller');
+var enterpriseCtrl = require('./enterprisemaster.controller');
+var markupPriceCtrl = require('./markupprice.controller');
+var assetSaleChargeCtrl = require('./assetsalecharge.controller');
 
 
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
@@ -94,8 +99,35 @@ router.put('/vattax/:id', auth.hasRole('admin'),vattaxCtrl.update);
 router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 router.post('/vattax/search',vattaxCtrl.search);
 
+router.get('/kyc',auth.hasRole('admin'), kycCtrl.get);
+router.post('/kyc', auth.hasRole('admin'),kycCtrl.create);
+router.put('/kyc/:id', auth.hasRole('admin'),kycCtrl.update);
+router.delete('/kyc/:id',auth.hasRole('admin'), kycCtrl.destroy);
+router.post('/kyc/search',kycCtrl.search);
+
+router.get('/enterprise',auth.hasRole('admin'), enterpriseCtrl.get);
+router.post('/enterprise', auth.hasRole('admin'),enterpriseCtrl.create);
+router.put('/enterprise/:id', auth.hasRole('admin'),enterpriseCtrl.update);
+router.delete('/enterprise/:id',auth.hasRole('admin'), enterpriseCtrl.destroy);
+router.post('/enterprise/search',enterpriseCtrl.search);
+
+router.get('/markupprice',auth.hasRole('admin'), markupPriceCtrl.get);
+router.post('/markupprice', auth.hasRole('admin'),markupPriceCtrl.create);
+router.put('/markupprice/:id', auth.hasRole('admin'),markupPriceCtrl.update);
+router.delete('/markupprice/:id',auth.hasRole('admin'), markupPriceCtrl.destroy);
+router.post('/markupprice/search',markupPriceCtrl.search);
+
+router.get('/assetsalecharge',auth.hasRole('admin'), assetSaleChargeCtrl.get);
+router.post('/assetsalecharge', auth.hasRole('admin'),assetSaleChargeCtrl.create);
+router.put('/assetsalecharge/:id', auth.hasRole('admin'),assetSaleChargeCtrl.update);
+router.delete('/assetsalecharge/:id',auth.hasRole('admin'), assetSaleChargeCtrl.destroy);
+router.post('/assetsalecharge/search',assetSaleChargeCtrl.search);
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
+
+router.get('/redirecttorapid',financeIntegrationCtrl.setCustomerData);
+
+//Sreiglobal_Asset_Sale
 
 //Bulk Upload Routes
 router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.renderJson);

@@ -11,6 +11,7 @@ var Product = require('../product/product.model');
 var Vendor = require('../vendor/vendor.model');
 var validator=require('validator');
 var ManpowerUser = require('../manpower/manpower.model');
+var Utility = require('./../../components/utility.js');
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
@@ -542,7 +543,7 @@ function setType(cell){
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:16, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:17, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     
@@ -721,6 +722,16 @@ function excel_from_data(data) {
     setType(cell);
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell; 
+
+    if(R == 0)
+      cell = {v: "Creation Date"};
+    else {
+      if(user)
+        cell = {v: Utility.toIST(_.get(user, 'createdAt', ''))};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
   }
   ws['!ref'] = xlsx.utils.encode_range(range);
   return ws;
@@ -760,7 +771,7 @@ exports.exportUsers = function(req,res){
   }
   if(req.body.filter)
     filter = req.body.filter;
-  var query = User.find(filter).sort({fname:1});
+  var query = User.find(filter).sort({createdAt: -1});
   query.exec(
      function (err, users) {
         if(err) { return handleError(res, err); }

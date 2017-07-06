@@ -7,7 +7,6 @@
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
-        vm.filteredList = [];
         $scope.isEdit = false;
         $scope.pager = PagerSvc.getPager();
 
@@ -15,13 +14,18 @@
         vm.update = update;
         vm.destroy = destroy;
         vm.editClicked = editClicked;
-        vm.searchFn = searchFn;
-        vm.getCategory = getCategory;
-        $scope.userSearch = userSearch;
         vm.fireCommand = fireCommand;
+        vm.getCategory = getCategory;
+        var initFilter = {};
+        var filter = {};
+        vm.searchStr = "";
 
         function init(){
           var userFilter = {};
+          filter = {};
+          initFilter.pagination = true;
+          angular.copy(initFilter, filter);
+
           userFilter.role = "enterprise";
           userFilter.enterprise = true;
           userFilter.status = true;
@@ -33,45 +37,9 @@
             .then(function(result) {
                 vm.categoryList = result;
             })
-          loadViewData();
+          loadViewData(filter);
         } 
 
-        function userSearch(userSearchText){
-          if (!$scope.product.seller.userType) {
-            $scope.getUsersOnUserType = "";
-            return;
-          }
-          if(userSearchText && userSearchText.length < 4)
-            return;
-          var dataToSend = {};
-          dataToSend["status"] = true;
-          dataToSend["userType"] = $scope.product.seller.userType;
-          dataToSend["mobileno"] = $scope.product.seller.mobile;
-         return userSvc.getUsers(dataToSend).then(function(result) {
-          console.log("data",result);
-          return result.map(function(item){
-            console.log("item",item);
-            return item.mobile;
-          });
-          });
-        }
-
-        function fireCommand(){
-            var filter={};
-            if(!$scope.product.seller.mobile)
-              return;
-            filter["status"]=true;
-            filter["userType"]=$scope.product.seller.userType;
-            filter["contact"]=$scope.product.seller.mobile;
-            return userSvc.getUsers(filter).then(function(result){
-              console.log("users",result);
-              if(result[0] && result[0].email)
-              $scope.product.seller.email=result[0].email;
-              if(result[0] && result[0].fname)
-                $scope.product.seller.name=result[0].fname + " " + (result[0].mname || " ") + " " + (result[0].lname || " ");
-            })
-        }
-    
         function getCategory(groupId) {
             vm.categoryList = [];
             
@@ -85,18 +53,24 @@
                 })
         }
 
-        function loadViewData(){
-            AssetSaleChargeSvc.get()
+        function loadViewData(filter){
+            $scope.pager.copy(filter);
+            AssetSaleChargeSvc.get(filter)
             .then(function(result){
-                vm.dataList = result;
-                vm.filteredList = result;
-                $scope.pager.update(null,vm.filteredList.length,1);
+                vm.filteredList = result.items;
+                vm.totalItems = result.totalItems;
+                $scope.pager.update(result.items, result.totalItems);
             });
         }
 
-        function searchFn(type){
-            vm.filteredList = $filter('filter')(vm.dataList,vm.searchStr);
-            $scope.pager.update(null,vm.filteredList.length,1);
+        function fireCommand(reset){
+            if (reset)
+                $scope.pager.reset();
+            filter = {};
+            angular.copy(initFilter, filter);
+            if (vm.searchStr)
+                filter.searchStr = vm.searchStr;
+            loadViewData(filter);
         }
 
         function save(form){
@@ -104,13 +78,10 @@
                 $scope.submitted = true;
                 return;
             }
-            vm.dataModel.createdBy = {};
-            vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
-            vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
             AssetSaleChargeSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data saved successfully!');
             })
             .catch(function(err){
@@ -147,7 +118,7 @@
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
-                loadViewData();
+                fireCommand(true);
                 Modal.alert('Data updated successfully!');
             })
             .catch(function(err){
@@ -166,7 +137,7 @@
         function confirmDestory(id){
             AssetSaleChargeSvc.destroy(id)
             .then(function(){
-                loadViewData();
+                fireCommand(true);
             })
              .catch(function(err){
                 console.log("purpose err",err);

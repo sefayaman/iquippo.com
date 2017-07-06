@@ -419,27 +419,29 @@
 				</div>								
 			</div>
 			<div class="row">
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetCategory.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetCategory.$invalid && form.submitted}">
 				 <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId)" required>
 				</div>
-				<div class="col-sm-3 form-group">
-					<select class="form-control" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
+				<div class="col-sm-3" ng-class="{'has-error': (form.brand.$invalid || form.otherBrand.$invalid) && form.submitted}">
+					<select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
 						<option value="">Select Brand</option>
               			<option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
 					</select>
+					<input type="text" ng-if="addTransactionVm.enterpriseValuation.brand == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherBrand" class="form-control form-group" name="otherBrand" placeholder="*Other Brand Name" ng-required = "addTransactionVm.enterpriseValuation.brand == 'Other'">
 				</div>
-				<div class="col-sm-3 form-group">
-					<select class="form-control" ng-model="addTransactionVm.enterpriseValuation.model">
+				<div class="col-sm-3" ng-class="{'has-error': (form.model.$invalid || form.otherModel.$invalid) && form.submitted}">
+					<select class="form-control form-group" ng-model="addTransactionVm.enterpriseValuation.model">
 						 <option value="">Select Model</option>
               			 <option ng-repeat="md in addTransactionVm.modelList" value="{{md.name}}">{{md.name}}</option>
 					</select>
+					  <input type="text" ng-if="addTransactionVm.enterpriseValuation.model == 'Other'" ng-model="addTransactionVm.enterpriseValuation.otherModel" class="form-control form-group" name="otherModel" placeholder="*Other Model Name" ng-required = "addTransactionVm.enterpriseValuation.model == 'Other'">
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetDescription.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetDescription.$invalid && form.submitted}">
 					<!-- <textarea class="form-control" placeholder="Asset Description" ng-model="addTransactionVm.enterpriseValuation.assetDescription"></textarea> -->
 					<input type="text" name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="*Asset Name" class="form-control" required/>
 				</div>
 			</div>
-			<div class="row" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNo.$invalid ) && submitted}">
+			<div class="row" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNo.$invalid ) && form.submitted}">
 				<div class="col-sm-3 form-group">
 					<input type="text" class="form-control" name="enginNo" ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )" placeholder="Engine No." ng-model="addTransactionVm.enterpriseValuation.engineNo">
 				</div>
@@ -460,7 +462,7 @@
 				<div class="col-sm-3 form-group">
 					<input type="text" class="form-control" name="" value="" min="0" placeholder="Reference / FI Number" ng-model="addTransactionVm.enterpriseValuation.customerTransactionId">
 				</div>
-				<div class="col-sm-3 form-group"  ng-class="{'has-error': form.yearOfManufacturing.$invalid && submitted}">
+				<div class="col-sm-3 form-group"  ng-class="{'has-error': form.yearOfManufacturing.$invalid && form.submitted}">
 					<input type="number" class="form-control" name="yearOfManufacturing" ng-model="addTransactionVm.enterpriseValuation.yearOfManufacturing" placeholder="Year of Manufacture" ng-maxlength="4" ng-minlength="4" max="currentYear" min="1900" string-to-number/>
 				</div>
 				<div class="col-sm-3 form-group">
@@ -471,13 +473,13 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceDate.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceDate.$invalid && form.submitted}">
 					<div class="input-group">
 						<input  class="form-control" id="customerInvoiceDate" name="customerInvoiceDate" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceDate" placeholder="Invoice Date" datetime-picker readonly date-format="MM/dd/yyyy" date-only>
 						<label for="customerInvoiceDate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
 					</div>
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceValue.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceValue.$invalid && form.submitted}">
 					<input type="number" class="form-control" name="customerInvoiceValue" min="0" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" placeholder="Invoice Value">
 				</div>
 			</div>
@@ -487,35 +489,35 @@
 				</div>								
 			</div>
 			<div class="row">
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.yardParked.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.yardParked.$invalid && form.submitted}">
 					<input type="text" class="form-control" name="yardParked"  placeholder="*Yard Information/Asset Address" ng-model="addTransactionVm.enterpriseValuation.yardParked" required>
 				</div>
 				<div class="col-sm-3 form-group">
 					<input type="text" class="form-control" name="disFromCustomerOffice" placeholder="Distance form Customer Office" ng-model="addTransactionVm.enterpriseValuation.disFromCustomerOffice">
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactPerson.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactPerson.$invalid && form.submitted}">
 					<input type="text" class="form-control" name="contactPerson"  placeholder="*Contact Person" ng-model="addTransactionVm.enterpriseValuation.contactPerson" required>
 				</div>
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactNumber.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.contactNumber.$invalid && form.submitted}">
 					<input type="text" class="form-control" name="contactNumber" placeholder="*Contact Person Tel No." ng-model="addTransactionVm.enterpriseValuation.contactPersonTelNo" required>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-3 form-group" ng-class="{'has-error': form.country.$invalid && submitted}">
+				<div class="col-sm-3 form-group" ng-class="{'has-error': form.country.$invalid && form.submitted}">
 		            <select class="form-control" ng-model="addTransactionVm.enterpriseValuation.country" name="country"  ng-change="addTransactionVm.onCountryChange(addTransactionVm.enterpriseValuation.country)" required>
 		              <option value="">*Select Country</option>
 		              <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
 		            </select>
 		            <i class="caret"></i>
 		          </div>
-		          <div class="col-sm-3 form-group" ng-class="{'has-error': form.state.$invalid && submitted}">
+		          <div class="col-sm-3 form-group" ng-class="{'has-error': form.state.$invalid && form.submitted}">
 		            <select class="form-control" name="state" ng-model="addTransactionVm.enterpriseValuation.state" ng-disabled="!editEnterpriseField()" ng-change="addTransactionVm.onStateChange(addTransactionVm.enterpriseValuation.state)" required>
 		              <option value="">*Select State</option>
 		                <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
 		            </select>
 		            <i class="caret"></i>
 		          </div>  
-		          <div class="col-sm-3" ng-class="{'has-error': form.location.$invalid && submitted}">
+		          <div class="col-sm-3" ng-class="{'has-error': form.location.$invalid && form.submitted}">
 		            <select class="form-control" name="location" ng-model="addTransactionVm.enterpriseValuation.city" required>
 		              <option value="">*Select Location</option>
 		                <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>

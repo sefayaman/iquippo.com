@@ -46,6 +46,12 @@ var ProductSchema = new Schema({
   assetStatus:{type:String,default:'listed'},
   assetStatuses:[{}],
   featured: {type:Boolean,default:false},
+  repoDate:Date,
+  valuationAmount:Number,
+  parkingChargePerDay:Number,
+  addressOfAsset:String,
+  reservePrice:Number,
+  taxRate:Number,
   deleted: {
     type: Boolean,
     default: false

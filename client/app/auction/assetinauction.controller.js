@@ -3,11 +3,12 @@
 
   angular.module('sreizaoApp').controller('AssetInAuctionCtrl', AssetInAuctionCtrl);
 
-  function AssetInAuctionCtrl($scope, $state, $window,categorySvc,brandSvc,modelSvc,productSvc, AuctionSvc, $location) {
+  function AssetInAuctionCtrl($scope, $state, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $location, $uibModal) {
     var vm = this;
 
     var query = $location.search();
     $scope.auctionName=$location.search().auctionName;
+    $scope.auctionType=$location.search().auctionType;
     $scope.docName=$location.search().docName;
     $scope.docType=$location.search().docType;
     var filter = {};
@@ -25,7 +26,54 @@
     //registering category brand functions
     vm.onCategoryChange=onCategoryChange;
     vm.onBrandChange=onBrandChange;
+    vm.openBidModal = openBidModal;
 
+    // bid summary
+    function openBidModal(){
+      Auth.isLoggedInAsync(function(loggedIn) {
+        if (loggedIn) {
+          filter = {};
+          filter._id = $location.search().id;
+          AuctionSvc.getAuctionDateData(filter)
+            .then(function(result) {
+              if(!result)
+                return;
+              var dataObj = {};
+              dataObj.auction = {};
+              dataObj.user = {};
+              dataObj.auction.dbAuctionId = result.items[0]._id;
+              dataObj.auction.name = result.items[0].name;
+              dataObj.auction.auctionId = result.items[0].auctionId;
+              dataObj.auction.emdAmount = result.items[0].emdAmount;
+              dataObj.auction.auctionOwnerMobile = result.items[0].auctionOwnerMobile;
+              dataObj.user._id = Auth.getCurrentUser()._id;
+              dataObj.user.fname = Auth.getCurrentUser().fname;
+              dataObj.user.lname = Auth.getCurrentUser().lname;
+              dataObj.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
+              dataObj.user.mobile = Auth.getCurrentUser().mobile;
+              if(Auth.getCurrentUser().email)
+                dataObj.user.email = Auth.getCurrentUser().email;
+              save(dataObj);
+            });
+        } else {
+          var regUserAuctionScope = $rootScope.$new();
+          regUserAuctionScope._id = query.id;
+          //regUserAuctionScope.emdAmount = query.emdAmount;
+          Modal.openDialog('auctionRegistration', regUserAuctionScope);
+        }
+      });
+    }
+
+    function save(dataObj){
+      userRegForAuctionSvc.save(dataObj)
+      .then(function(){
+          Modal.alert('Your request has been successfully submitted!');
+      })
+      .catch(function(err){
+         if(err.data)
+              Modal.alert(err.data); 
+      });
+    }
 
     function openUrl(_id) {
       if(!_id)
@@ -96,7 +144,8 @@
   }
 
   function fireCommand(noReset,doNotSaveState){
-
+      if(vm.show == true)
+         vm.show=false;
     if(!$scope.mfgyr.min && !$scope.mfgyr.max)
        delete $scope.equipmentSearchFilter.mfgYear;
 
@@ -114,23 +163,21 @@
       //filter['sort'] = {featured:-1};
       $scope.searching = true;
 
-      console.log("filter",filter);
-
       if($scope.equipmentSearchFilter && $scope.equipmentSearchFilter.locationName){
         filter.location=$scope.equipmentSearchFilter.locationName;
          delete filter.locationName;
         }
-       filter['auctionId']=$scope.auctionId;
-       console.log("I am here",filter);
+      filter['auctionId']=$scope.auctionId;
       getAssetsInAuction(filter);
   }
 
   function getAssetsInAuction(filter){
     var assetIds = [];
+    filter.notInSoldPro = "notInSold";
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {
-            console.log("data recieved",result);
+            vm.show=false;
             if(result.length <= 0){
                   vm.show=true;  
                   }

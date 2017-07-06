@@ -26,6 +26,7 @@ var fsExtra = require('fs.extra');
 var gm = require('gm');
 var lwip = require('lwip');
 var task = require('./components/task.js');
+var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
 var taskRunner = require('./components/taskRunner.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
 
@@ -146,6 +147,8 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var imgPath = config.uploadPath + assetDir + "/" + fileName;
       var fileNameParts = fileName.split('.');
       var extPart = fileNameParts[fileNameParts.length - 1];
+      if(extPart)
+          extPart = extPart.toLowerCase();
       var namePart = fileNameParts[0];
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
       fsExtra.copy(imgPath, originalFilePath, {
@@ -206,6 +209,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       }
     }
   } catch (err) {
+    console.log("err",err);
     handleError(res, err);
   }
 }
@@ -325,7 +329,7 @@ server.listen(config.port, config.ip, function() {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   notification.startNotification();
   taskRunner.startTaskRunner();
-  //checkExpiryService.start();
+  valReqSubmitter.start();
   checkQuickQueryNotificationService.start();
   checkSearchMatchingNotificationService.start();
 });
