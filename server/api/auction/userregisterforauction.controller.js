@@ -10,8 +10,8 @@ var  xlsx = require('xlsx');
 exports.getFilterOnRegisterUser = function(req, res) {
   var filter = {};
   var orFilter = [];
-  if (req.body.searchStr) {
-    var term = new RegExp(req.body.searchStr, 'i');
+  if (req.body.searchstr) {
+    var term = new RegExp(req.body.searchstr, 'i');
     orFilter[orFilter.length] = {
       "auction.auctionId": {
         $regex: term
