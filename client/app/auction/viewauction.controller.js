@@ -32,7 +32,7 @@
     
     var dataToSend = {};
     var query = $location.search();
-
+    var filter = {};
     vm.openBidModal = openBidModal;
 
 
@@ -89,7 +89,7 @@
     function init() {
       //dataToSend.pagination = true;
       //dataToSend.itemsPerPage = vm.itemsPerPage;
-      var filter = {};
+      filter = {};
       if ($stateParams.type) {
         $scope.auctionType = $stateParams.type;
         filter.auctionType = $stateParams.type;
@@ -146,7 +146,7 @@
 
     function fireCommandType(auctionType) {
       //resetPagination();
-      var filter = {};
+      filter = {};
       //angular.copy(dataToSend, filter);
 
       if(vm.statusType)
