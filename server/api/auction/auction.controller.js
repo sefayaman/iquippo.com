@@ -980,30 +980,17 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
   }
-  if (req.body.auctionType == 'closed'){
+  
+  if (req.body.auctionType === 'closed'){
     var currentDate = new Date();
     filter.endDate={
       '$lt': currentDate
     }
-  } else if(req.body.auctionType == 'upcoming') {
+  } else if(req.body.auctionType === 'upcoming') {
     var currentDate = new Date();
-    filter.startDate={
+    filter.endDate={
     '$gt': currentDate
     };
-  } else if(req.body.auctionType == 'ongoing'){
-    var bwtDate = [];
-    var currentDate = new Date();
-     bwtDate[bwtDate.length] = {
-      startDate: {
-        '$lt': currentDate
-      }
-    };
-     bwtDate[bwtDate.length] = {
-      endDate: {
-        '$gt': currentDate
-      }
-    };
-    filter['$and'] = bwtDate;
   }
 
   var arr = [];
@@ -1069,8 +1056,34 @@ exports.getFilterOnAuctionMaster = function(req, res) {
         return handleError(res, err);
       }
       var result={};
-      result.items=items;
-      return res.status(200).json(result);
+      if(req.body.addAuctionType) {
+        var tempArr = [];
+        if(items) {
+        items.forEach(function(auction) {
+          auction = auction.toObject();
+          var currentDate = new Date();
+          var startDate = auction.startDate;
+          var endDate = auction.endDate;
+          auction.endTimer = endDate.getTime();
+          var d = new Date();
+          auction.startTimer = d.getTime();
+          
+          if (startDate > currentDate) {
+            auction.auctionValue = "upcomingAuctions";
+          } else if (startDate < currentDate && endDate > currentDate) {
+            auction.auctionValue = "ongoingAuctions";
+          } else if (endDate < currentDate) {
+            auction.auctionValue = "closedAuctions";
+          }
+          tempArr[tempArr.length] = auction;
+        })
+      }
+        result.items=tempArr;
+        return res.status(200).json(result);
+      } else {
+        result.items=items;
+        return res.status(200).json(result);
+      }
     }
   );
 };
