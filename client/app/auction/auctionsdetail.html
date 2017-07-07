@@ -60,19 +60,19 @@
     </div> 
     <div class="col-sm-9">
       <div class="row">
-        <div class="col-sm-8"><h4>{{auctionName}}</h4></div>
-        <div class="col-xs-3 visible-xs filter-btn form-group padd-right">        
+        <div class="col-sm-6"><h4>{{auctionName}}</h4></div>
+        <div class="col-xs-3 visible-xs filter-btn form-group">        
           <button class="btn btn-block btn-danger btn-sm" ng-click="filterbutton.value1 = !filterbutton.value1">
             <i class="fa fa-filter"></i> Filter
           </button>
-        </div>
-        <div class="col-xs-6 col-sm-2 text-right padd-right">
-          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-block btn-primary" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-        </div>        
-        <div class="col-xs-3 col-sm-2 text-right">        
-          <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm btn-block">Back</a>
-        </div>
+        </div>         
+        <div class="col-xs-9 col-sm-6 text-right padd-left">
+          <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm active">Register Now</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> <span class="hidden-xs">Auction Catalogue</span></a>
+          <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm active"> <i class="fa fa-chevron-left"></i> <span class="hidden-xs">Back</span></a>
+        </div> 
+        
       </div>
       <legend></legend>
 

@@ -7,11 +7,15 @@ exports.script = function(req, res) {
 		arr.forEach(function(x){
 			var userId=x.createdBy._id;
 			User.find({_id:userId},function(err,User){
-				var mobile=User[0].mobile;
-				enterprisevaluation.findOneAndUpdate({"_id":x._id},{$set:{"customerPartyNo":mobile}},function(err,updateuser){
-					if(err) throw err;
-					console.log("updated---",updateuser);
-				});
+				if(User[0] && User[0].mobile) {
+					var mobile=User[0].mobile;
+					enterprisevaluation.update({"_id":x._id},{$set:{"customerPartyNo":mobile}},function(err,updateuser){
+						if(err) throw err;
+						//console.log("updated---",updateuser);
+					});
+				} else {
+					console.log("uniqueControlNo not updated####", x.uniqueControlNo);
+				}	
 			});
 		});
 	});
@@ -138,7 +142,7 @@ exports.updateLegalEntityInRequest = function(req,res){
 	   function middleManProcessing(err,result){
 	   	   	if(err){
 		   		item.msg = err;
-		   		errorArr.push(item);
+		   		errorArr.push(item.createdBy._id);
 		   		return callback();
 		   	}
 
@@ -156,11 +160,11 @@ exports.updateLegalEntityInRequest = function(req,res){
 	   		function onProcessingDone(err){
 	   			if(err){
 			   		item.msg = err;
-			   		errorArr.push(item);
+			   		errorArr.push(item.uniqueControlNo);
 			   		return callback();
 			   	}
 			   item.msg = "Updated successfully";
-			   successArr.push(item);
+			   successArr.push(item.uniqueControlNo);
 			   return callback();
 	   		}
 

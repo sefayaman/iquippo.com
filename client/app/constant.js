@@ -46,6 +46,10 @@ var Modals = {
   locationList : {
     tplUrl : "app/spare/locationList.html",
     Ctrl : 'SpareUploadCtrl as spareVm'
+  },
+  auctionRegistration : {
+    tplUrl : "app/auction/userregisterforauction.html",
+    Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
   }
 };
 

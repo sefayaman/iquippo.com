@@ -33,7 +33,7 @@
                 <span>
                   <input type="checkbox" id="" name="featured" ng-model="productListingVm.featured" ng-change="productListingVm.fireCommand(true)"> Featured
                 </span>
-                <select ng-model="productListingVm.searchType" ng-change="productListingVm.showFilter(productListingVm.searchType)">
+                <select ng-model="productListingVm.searchType" ng-change="productListingVm.showFilter(productListingVm.searchType)" class="tableFilter">
                   <option value="">Column Filters </option>
                   <option value="assetId">Asset Id</option>
                   <option value="assetStatus">Asset Status</option>
@@ -45,7 +45,7 @@
                   <option value="model">Model</option>
                   <option value="location">Location</option>
                 </select>
-                <input type="text" ng-if="productListingVm.searchType != ''" name="searchTxt" ng-model="productListingVm.coulmnSearchStr" ng-change="productListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..."/>
+                <input type="text" class="tableFilter" ng-if="productListingVm.searchType != ''" name="searchTxt" ng-model="productListingVm.coulmnSearchStr" ng-change="productListingVm.fireCommand(true)" ng-model-options="{debounce:500}" placeholder="Search text..."/>
                 <button class="btn btn-primary btn-xs" ng-click="productListingVm.bulkUpdate('priceonrequest')">Price on request</button>
                 <button class="btn btn-primary btn-xs" ng-click="productListingVm.bulkUpdate('active')" ng-if="isAdmin()">Activate</button>
                 <button class="btn btn-primary btn-xs" ng-click="productListingVm.bulkUpdate('deactive')" ng-if="isAdmin()">Deactivate</button>

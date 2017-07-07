@@ -30,7 +30,8 @@ var all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'mean1-secret@#$sv'
+    session: 'mean1-secret@#$sv',
+    extSession:'iquippo-ext@#$sv'
   },
 
   // List of user roles

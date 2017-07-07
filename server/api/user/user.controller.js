@@ -753,7 +753,7 @@ exports.exportUsers = function(req,res){
   }
   if(req.body.filter)
     filter = req.body.filter;
-  var query = User.find(filter).sort({fname:1});
+  var query = User.find(filter).sort({createdAt: -1});
   query.exec(
      function (err, users) {
         if(err) { return handleError(res, err); }

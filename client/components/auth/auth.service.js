@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore,userSvc,$q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore,$cookies,userSvc,$q) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -52,6 +52,7 @@ angular.module('sreizaoApp')
         $cookieStore.remove('token');
         currentUser = {};
         $rootScope.clearCache();
+        this.removeCookies();
       },
 
       /**
@@ -277,6 +278,10 @@ angular.module('sreizaoApp')
       isPartner: function() {
         return currentUser.isPartner;
       },
+      isAuctionPartner: function() {
+        if(currentUser && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+          return currentUser.partnerInfo.services.indexOf("Auction") > -1 ? true : false;
+      },
       isCustomer: function() { 
         return currentUser.role === 'customer';
       },
@@ -294,6 +299,13 @@ angular.module('sreizaoApp')
         if($cookieStore.get('token')) {
           currentUser = User.get();
         }
+      },
+      removeCookies: function(){
+        var cookieParams = ['sourcing_user_type','sourcing_user_name','sourcing_user_mobile','location','dealership_name','access_token'];
+        cookieParams.forEach(function(param){
+          $cookies.remove(param,{ domain: '.iquippo.com' });
+        });
+       
       },
       doNotRedirect:false,
       postLoginCallback : null

@@ -1,0 +1,50 @@
+<div id="wrapper">
+  <div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-6">
+          <h3>Auction Registration Report</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <h3><button class="btn btn-success btn-md" ng-click="auctionRegVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
+        </div>     
+      </div>
+      <hr>
+     <div class="table-responsive">
+        <div class="row">                    
+          <div class="col-sm-3 pull-right">
+            <div class="tablesearch text-right form-group">
+               Search: <input type="text" placeholder="Search..." ng-model="auctionRegVm.searchStr" ng-change="auctionRegVm.fireCommand(true)" ng-model-options="{debounce:500}">
+            </div>
+          </div>
+      </div>
+          <table class="table table-bordred table-striped">
+            <thead>
+              <tr>
+                <th>Auction ID</th>                                
+                <th>Auction Name</th>                                
+                <th>EMD Amount</th>                                
+                <th>User Name</th>                                
+                <th>Mobile</th>                                
+                <th>Email</th>
+                <th>Date of Request</th>  
+              </tr>           
+            </thead>
+            <tbody>
+              <tr ng-repeat="regUser in auctionRegVm.registerUser">
+                <td>{{regUser.auction.auctionId}}</td>              
+                <td>{{regUser.auction.name}}</td>
+                <td>{{regUser.auction.emdAmount}}</td>
+                <td>{{regUser.user.fname}} {{regUser.user.lname}}</td>
+                <td>+{{regUser.user.countryCode}}-{{regUser.user.mobile}}</td>              
+                <td>{{regUser.user.email}}</td>              
+                <td>{{regUser.createdAt | date:'MM/dd/yyyy'}}</td>                            
+              </tr>
+            </tbody>
+          </table>
+        </div>
+          <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="auctionRegVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+      
+    </div>
+  </div>
+</div>
