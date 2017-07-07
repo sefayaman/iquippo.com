@@ -116,27 +116,27 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+		   			<tr ng-repeat="bid in assetSaleBuyerDashboardVm.bidListing">
+			   			<td>{{bid.productId.assetId}}</td>
+			   			<td>{{bid.productId.category.name}}</td>
+			   			<td>{{bid.productId.brand.name}}</td>
+			   			<td>{{bid.productId.model.name}}</td>
+			   			<td>{{bid.productId.mfgYear}}</td>
+			   			<td>{{bid.productId.country}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.productId.city}}</td>
+			   			<td>{{bid.productId.assetDesc}}</td>
+			   			<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.tradeType}}</td>
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>

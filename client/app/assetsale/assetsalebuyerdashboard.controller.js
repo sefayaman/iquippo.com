@@ -27,10 +27,13 @@
 	  function onTabChange(tabs){
 	  	switch(tabs){
 	  		case 'auctionable':
+	  		filter={};
 	  		vm.activeBid='Auctionable';
             $scope.tabValue='auctionable';
+	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
+	  		filter={};
 	  		vm.activeBid='closed';
 	  		$scope.tabValue='closed';
 	  		filter.assetStatus=encodeURIComponent('closed');

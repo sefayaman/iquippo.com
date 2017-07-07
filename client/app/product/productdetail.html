@@ -489,7 +489,8 @@
           </div>
           <div class="col-sm-5 col-md-7 panel-group">
             <div class="panel panel-default asset-sale">
-               <div class="panel-heading">
+            <form novalidate class="assetSale" name="assetSale">
+              <div class="panel-heading">
                 <div class="row">
                   <div class="col-sm-9">
                     <h3 class="panel-title">
@@ -507,12 +508,12 @@
                  <h4>Sale Price : <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
                  <div class="row">
                    <div class="col-xs-offset-3 col-xs-4">
-                     <input type="text" class="form-control" name="" value=""
-                     ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount">
+                   <div class="form-group" ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
+                     <input type="text" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
+                   </div>
                    </div>
                    <div class="col-xs-2 padd-left">
-
-                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid')">
+                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
                        <span ng-if="true">Place Bid</span>
                        <span ng-if="false">Change Bid</span>
                      </button>
@@ -528,6 +529,7 @@
                   <button type="submit" class="btn btn-danger" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                 </div>
               </div>
+              </form>
             </div>           
             <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
               <div class="panel-heading">

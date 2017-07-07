@@ -93,7 +93,7 @@ exports.submitBid = function(req, res) {
 };
 
 exports.fetchBid=function(req,res){
-	//console.log("I am hit");
+	console.log("I am hit");
 	var filter={};
 	if(req.query.userId){
 		filter.userId=req.query.userId;
@@ -103,6 +103,10 @@ exports.fetchBid=function(req,res){
         '$search': "\""+req.query.searchStr+"\""
       }
   }
+  if(req.query.assetStatus){
+  	filter.assetStatus=req.query.assetStatus;
+  }
+  console.log("filter",filter);
     fetchBid(filter,function(err,results){
     	if(err)
     		return res.status(err.status || 500).send(err);

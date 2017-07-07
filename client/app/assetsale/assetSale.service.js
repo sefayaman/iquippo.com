@@ -3,13 +3,13 @@
 
 	angular.module('sreizaoApp').factory("AssetSaleSvc", AssetSaleSvc);
 
-	function AssetSaleSvc($http) {
+	function AssetSaleSvc($http,UtilSvc) {
 		var svc = {};
 		var path='api/assetSale';
 		var assetSaleQuippoHost = "http://localhost:7000";
 		svc.submitBid = submitBid;
 		svc.searchBid=searchBid;
-        svc.fetchBidOnUserId=fetchBidOnUserId;
+        svc.fetchBid=fetchBid;
         svc.get=get;
 		function submitBid(data) {
 			return $http.post(path + '/submitbid', data)
@@ -28,14 +28,20 @@
 		           });
 		}
 
-		function fetchBidOnUserId(userId){
-		return $http.get(path + '/' + userId)
-		.then(function(res){
-         return res;
-		})
-		.catch(function(err){
-
-		});
+		function fetchBid(data){
+		var serPath = "";
+        var queryParam = "";
+        if(data)
+            queryParam = UtilSvc.buildQueryParam(data);
+        if(queryParam)
+          serPath = path + "?" + queryParam;
+        return $http.get(serPath)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
 	}
 
 	function get(data) {

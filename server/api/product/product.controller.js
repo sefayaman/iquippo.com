@@ -302,6 +302,14 @@ exports.search = function(req, res) {
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
+
+          if(req.body.getDate){
+            if(products.length === 1){
+              products[0].serverDate=new Date();
+             console.log("products with date",products[0].serverDate);
+            }
+
+          }
           var saleFeaturedProdWithPrice = [],
               saleFeaturedProdWithoutPrice = [],
               bothFeaturedProdWithPrice = [],

@@ -48,13 +48,13 @@
               if(vm.salePrice + $scope.taxRate > 1000000){
                 $scope.tcs=Number(vm.salePrice * 0.01);
               }
-              $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs) + Number($scope.parking) + Number(vm.salePrice || 0);
+              $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking) + Number(vm.salePrice || 0);
             }
             if (vm.bidAmount){
               if(vm.bidAmount + $scope.taxRate > 1000000){
-                $scope.tcs=vm.salePrice * 0.01;
+                $scope.tcs=Number(vm.bidAmount * 0.01);
               }
-              $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs) + Number($scope.parking) + Number(vm.bidAmount || 0);
+              $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking) + Number(vm.bidAmount || 0);
             }
           });
 
@@ -76,15 +76,15 @@
     function calculateBid() {
       if (vm.salePrice) {
         if(vm.salePrice + $scope.taxRate > 1000000){
-                $scope.tcs=vm.salePrice * 0.01;
+                $scope.tcs=Number(vm.salePrice * 0.01);
               }
-        $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs) + Number($scope.parking) + Number(vm.salePrice || 0);
+        $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking) + Number(vm.salePrice || 0);
       }
       if (vm.bidAmount){
         if(vm.bidAmount + $scope.taxRate > 1000000){
-                $scope.tcs=Number(vm.salePrice * 0.01);
+                $scope.tcs=Number(vm.bidAmount * 0.01);
               }
-        $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs) + Number($scope.parking) + Number(vm.bidAmount || 0);
+        $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking) + Number(vm.bidAmount || 0);
       }
     }
 
@@ -109,7 +109,7 @@
       dataToSend.status=true;
       dataToSend.tradeType = query.tradeType;
       dataToSend.ticketId = timestamp;
-      dataToSend.userId = query.seller._id;
+      dataToSend.userId = Auth.getCurrentUser()._id;
       dataToSend.productId = query.productId;
       dataToSend.bidAmount = $scope.total;
       AssetSaleSvc.submitBid(dataToSend)
