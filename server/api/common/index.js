@@ -12,7 +12,7 @@ var kycCtrl = require('./kycmaster.controller');
 var enterpriseCtrl = require('./enterprisemaster.controller');
 var markupPriceCtrl = require('./markupprice.controller');
 var assetSaleChargeCtrl = require('./assetsalecharge.controller');
-
+var apiCtrl=require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
 
@@ -123,9 +123,8 @@ router.delete('/assetsalecharge/:id',auth.hasRole('admin'), assetSaleChargeCtrl.
 router.post('/assetsalecharge/search',assetSaleChargeCtrl.search);
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
-
 router.get('/redirecttorapid',financeIntegrationCtrl.setCustomerData);
-
+router.post('/zip/reports',apiCtrl.uploadZip);
 
 //Bulk Upload Routes
 router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.renderJson);

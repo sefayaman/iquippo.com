@@ -18,7 +18,18 @@ exports.setCustomerData = function(req,res){
     User.findById(req.query._id,function(err,user){
       if(err){return handleError(res,err);}
       if(!user)return res.status(404).send("User Not Found");
-      if(user.role === 'enterprise' && isServiceAvailed(user,'Finance'))
+      var userEmail = user.email;
+      var isCpDesk = false;
+      if(userEmail){
+        var emailParts = userEmail.split('@');
+        if(emailParts.length && emailParts.length === 2 && emailParts[0].indexOf('cpdesk') !== -1 && emailParts[1] === 'iquippo.com')
+          isCpDesk = true;
+      }
+      if(isCpDesk)
+        res.cookie("sourcing_user_type",'CD',{ domain: '.iquippo.com' });
+      else if(user.role === 'admin')
+        res.cookie("sourcing_user_type",'AD',{ domain: '.iquippo.com' });
+      else if(user.role === 'enterprise' && isServiceAvailed(user,'Finance'))
         res.cookie("sourcing_user_type",'EU',{ domain: '.iquippo.com' });
       else if(user.role === 'channelpartner')
         res.cookie("sourcing_user_type",'CP',{ domain: '.iquippo.com' });
