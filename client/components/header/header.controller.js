@@ -26,14 +26,15 @@ angular.module('sreizaoApp')
 
     $scope.redirectToAuction = function(){
       var routeTo = "upcoming";
-      AuctionSvc.getAuctionDateData({auctionType:"ongoing"}).then(function(result){
+      $state.go("viewauctions",{type:routeTo});
+      /*AuctionSvc.getAuctionDateData({auctionType:"ongoing"}).then(function(result){
         if(result.length > 0)
             routeTo = "ongoing";
             $state.go("viewauctions",{type:routeTo});
       })
       .catch(function(err){
         $state.go("viewauctions",{type:routeTo});
-      })
+      })*/
     }
 
     $scope.openLogin = function(){
