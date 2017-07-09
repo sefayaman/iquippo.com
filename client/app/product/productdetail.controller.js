@@ -57,10 +57,12 @@
     $scope.redirectToAuction = redirectToAuction;
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
+      if(form){
       if (form.$invalid) {
         $scope.bidSubmitted = true;
         return;
       }
+    }
       var bidSummaryScope = $rootScope.$new();
       if(bid == "placebid"){
       bidSummaryScope.params = {

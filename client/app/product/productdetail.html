@@ -523,13 +523,13 @@
                      <button type="button" ng-if="false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Proxy Bid</button>
                    </div>
                  </div>
+                 </form>
                 <hr>
                 <div class="text-right">
-                  <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-danger">Buy Now</a>
+                  <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'" class="btn btn-danger">Buy Now</a>
                   <button type="submit" class="btn btn-danger" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                 </div>
               </div>
-              </form>
             </div>           
             <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
               <div class="panel-heading">
