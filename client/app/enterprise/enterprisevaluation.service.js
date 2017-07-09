@@ -361,7 +361,8 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         var valReq = getValReqByUniqueCtrlNo(selectedItems,item.uniqueControlNo);
         if(item.success == "true"){
           valReq.jobId = item.jobId;
-          valReq.submittedToAgencyDate = new Date();
+          //valReq.submittedToAgencyDate = new Date();
+          valReq.assignSubmitDate = true;
           setStatus(valReq,EnterpriseValuationStatuses[2]);
           sendNotification(valReq);
         }else{

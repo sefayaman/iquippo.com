@@ -134,7 +134,7 @@ angular.module('sreizaoApp')
         url:"/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
-            "searchstr&operatingHour&mileage&productName&location",
+            "searchstr&operatingHour&mileage&productName&location&locationName",
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
