@@ -102,10 +102,10 @@
 
       Modal.confirm("Do you want to submit?", function(ret) {
       if (ret == "yes") {
-      dataToSend.offerStatus = "Bid Recieved";
-      dataToSend.bidStatus = "In Progress";
-      dataToSend.dealStatus = "Decision Pending";
-      dataToSend.assetStatus = "Listed";
+      dataToSend.offerStatus = offerStatuses[0];
+      dataToSend.bidStatus = bidStatuses[0];
+      dataToSend.dealStatus = dealStatuses[0];
+      dataToSend.assetStatus = assetStatuses[0];
       dataToSend.status=true;
       dataToSend.tradeType = query.tradeType;
       dataToSend.ticketId = timestamp;
