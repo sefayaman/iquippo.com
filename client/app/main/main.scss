@@ -1,4 +1,10 @@
-body{top:0 !important;font-family:'Roboto Condensed',sans-serif;}
+@font-face {
+  font-family: 'RobotoCondensed-Regular';
+  src: url('/assets/fonts/RobotoCondensed-Regular.eot?#iefix') format('embedded-opentype'),  url('/assets/fonts/RobotoCondensed-Regular.woff') format('woff'), url('/assets/fonts/RobotoCondensed-Regular.ttf')  format('truetype'), url('/assets/fonts/RobotoCondensed-Regular.svg#RobotoCondensed-Regular') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+body{top:0 !important;font-family:'RobotoCondensed-Regular',sans-serif;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .clearfix{clear: both;}
