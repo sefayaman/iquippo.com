@@ -1,41 +1,28 @@
 <div>
        <div class="modal-header">
           <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" ng-if="AssetBidPopUpVm.bid == 'true'">Submit Bid</h4>
-          <h4 class="modal-title" ng-if="AssetBidPopUpVm.bid == 'false'">Buy Now</h4>
+          <h4 class="modal-title" ng-if="params.bid == 'placebid'">Submit Bid</h4>
+          <h4 class="modal-title" ng-if="params.bid == 'buynow'">Buy Now</h4>
         </div>
         <div class="modal-body asset-sale">
+        <form novalidate class="bidPopup" name="bidPopup">
             <div class="row">
-
-              <div class="col-sm-offset-2 col-sm-8">
-
-                <input type="text" class="form-control" name="" value=""
-
-                ng-model="AssetBidPopUpVm.bidAmount" ng-change="AssetBidPopUpVm.calculateBid()" placeholder="Enter Bid Amount">
-
-
+              <div class="col-sm-offset-2 col-sm-8" ng-class="{'has-error': bidPopup.bidAmount.$invalid && submitted}">
+                <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-change="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" placeholder="Enter Bid Amount" required>
               </div>
-
-             <!--  <div class="col-sm-offset-2 col-sm-5 padd-right">
-                <input type="text" class="form-control" name="" value=""
-                ng-model="AssetBidPopUpVm.bidAmount" placeholder="Enter Bid Amount">
-              </div>
-              <div class="col-sm-3 padd-left">
-                <button type="button" class="btn btn-primary btn-block" ng-click="AssetBidPopUpVm.calculateBid()">Bid</button>
-              </div> -->
             </div>
             <div class="asset-taxes">
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-5">VAT : </div>
+                <div class="col-sm-offset-2 col-sm-5">GST : </div>
                 <div class="col-sm-3"><i class="fa fa-inr"></i> {{taxRate}}</div>
               </div>
               <div class="row">
                 <div class="col-sm-offset-2 col-sm-5">TCS : </div>
-                <div class="col-sm-3"><i class="fa fa-inr"></i>{{tcs}}</div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> {{tcs}}</div>
               </div>
               <div class="row">
                 <div class="col-sm-offset-2 col-sm-5">Parking : </div>
-                <div class="col-sm-3"><i class="fa fa-inr"></i>{{parking}}</div>
+                <div class="col-sm-3"><i class="fa fa-inr"></i> {{parking}}</div>
               </div>
             </div>
             <div class="asset-total">
@@ -47,8 +34,8 @@
             <div class="asset-action text-right">
               <div class="btn-group">
                 <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
-                <button type="button" ng-if="AssetBidPopUpVm.bid == 'true'" class="btn btn-danger" ng-click="AssetBidPopUpVm.submitBid()">Submit Bid</button>
-                <button type="button" ng-if="AssetBidPopUpVm.bid == 'false'" class="btn btn-danger" ng-click="AssetBidPopUpVm.buyNow()">Buy Now</button>
+                <button type="button" ng-if="params.bid == 'placebid'" class="btn btn-danger" ng-click="assetBidPopUpVm.submitBid(bidPopup)">Submit Bid</button>
+                <button type="button" ng-if="params.bid == 'buynow'" class="btn btn-danger" ng-click="assetBidPopUpVm.buyNow()">Buy Now</button>
               </div>
             </div>
         </div>  

@@ -531,7 +531,7 @@
                 </div>
               </div>
             </div>           
-            <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+            <!-- <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>
               </div>
@@ -550,7 +550,6 @@
                                 <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
                               </div>
                               <div ng-if="!currentProduct.grossPrice" ng-model="valuefor">
-                                <!-- Price On Request  -->
                                 <i class="fa fa-inr"></i> Price On Request
                               </div>
                             </div>
@@ -588,7 +587,7 @@
                       <button type="submit" class="btn btn-warning btn-block" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                     </div>
               </div>
-            </div>
+            </div> -->
             <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'RENT' || currentProduct.tradeType == 'BOTH'">
               <div class="panel-heading">
                 <h3 class="panel-title">For Rent</h3>

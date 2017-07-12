@@ -11,10 +11,7 @@ function create(data,callback){
 	if (!data)
 			return callback(new APIError( 412,'No data for creation'));
 
-		/*if (!data.user)
-			return cb(new APIError('Invalid User', 412));*/
-
-		const allowedCols = ['ticketId', 'userId', 'productId', 'bidAmount','tradeType','status','offerStatus','bidStatus','dealStatus','assetStatus','state','createAt','updatedAt'];
+		/*const allowedCols = ['ticketId', 'userId', 'productId', 'bidAmount','tradeType','status','offerStatus','bidStatus','dealStatus','assetStatus','state','createAt','updatedAt'];
 		//var Model = this.Model;
 		var validData = {};
 
@@ -22,17 +19,13 @@ function create(data,callback){
 			if (data[x])
 				validData[x] = data[x];
 		});
-         //console.log("I hav done it",validData);
-		//validData.type = config.addOns[validData.type];
+        //validData.type = config.addOns[validData.type];
 		console.log("the validDate it",validData);
 
 		if (!Object.keys(validData).length)
-			return callback(new APIError( 422,'No data for create'));
-        //console.log("Model",Model);
-		
-		AssetSaleBid.create(validData,function(err,res){
-			//console.log("I hav done it",res);
-			//console.log(err);
+			return callback(new APIError( 422,'No data for create'));*/
+        
+		AssetSaleBid.create(data,function(err,res){
 			console.log("result",res);
 			if (err && err.original && err.original.code === 'ER_DUP_ENTRY') {
 				var e = new APIError(409,'Duplicate Entry');

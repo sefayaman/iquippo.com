@@ -1720,7 +1720,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':kycForm.kycType.$invalid && submitted}">
 					<select class="form-control" name="kycType" ng-model="kycVm.dataModel.kycType" required>
 		              <option value="">*KYC Type</option>
-		              <option ng-repeat="kyc in KYCType" value="{{kyc.code}}">{{kyc.name}}</option>
+		              <option ng-repeat="kyc in KYCType" value="{{kyc.name}}">{{kyc.name}}</option>
 		            </select>
 		            <i class="caret"></i>
 				</div>
@@ -1819,11 +1819,17 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.rateOfInterest.$invalid && submitted}">
-					<input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateOfInterest" placeholder="*Enter Rate (%)" required>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.chargeBasis.$invalid && submitted}">
+					<!-- <input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateOfInterest" placeholder="*Enter Rate (%)" required> -->
+					<select class="form-control" name="chargeBasis" ng-model="assetSaleChargeVm.dataModel.chargeBasis" required>
+						<option value="">*Select Charge Basis</option>
+						<option value="flat">Flat</option>
+						<option value="percent">%</option>
+					</select>
 				</div>
-				<div class="col-sm-3">
-					<input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatPerTrx" placeholder="Flat per Transaction">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.feeAmount.$invalid && submitted}">
+					<!-- <input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatPerTrx" placeholder="Flat per Transaction"> -->
+					<input type="number" class="form-control" name="feeAmount" ng-model="assetSaleChargeVm.dataModel.amount" placeholder="*Amount" required />
 				</div>
 				<div class="col-sm-offset-4 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleForm)">Update</button>
@@ -1851,8 +1857,8 @@
 						<th>Effective From Date</th>			
 						<th>Effective To Date</th>			
 						<th>Asset Category</th>			
-						<th>Rate (%)</th>			
-						<th>Flat per Transaction</th>			
+						<th>Charge Basis(%)</th>			
+						<th>Amount</th>			
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -1862,8 +1868,8 @@
 						<td>{{assetSale.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.category.name}}</td>
-						<td>{{assetSale.rateOfInterest}}</td>
-						<td>{{assetSale.flatPerTrx}}</td>
+						<td>{{assetSale.chargeBasis}}</td>
+						<td>{{assetSale.amount}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="assetSaleChargeVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
 							<button type="button" class="btn btn-sm btn-danger" ng-click="assetSaleChargeVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
@@ -1965,7 +1971,7 @@
 						<th>Buy Now Price Approval Required</th>			
 						<th>Negotiated Sale Approval Required</th>			
 						<th>Cooling Period </th>			
-						<th>EMB Period </th>			
+						<th>EMD Period </th>			
 						<th>Full Payment Period </th>			
 						<th>Action</th>
 					</tr>
