@@ -338,10 +338,9 @@
 						</div>
 					</div>
 					<div class=" row">
-						<div class="col-sm-3">
-							
-							<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" >
-								<option value="">Select Owner</option>
+						<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.auctionOwner.$invalid && submitted }">
+							<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" required>
+								<option value="">Select Owner*</option>
 								<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.mobile}}">{{svc.entityName}}</option>
 							</select>
 							<i class="caret"></i>
