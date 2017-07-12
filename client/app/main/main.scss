@@ -940,13 +940,13 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .auction-list .media p{margin-bottom: 3px;}
 .Asset-filter{padding-top:  25px;}
 .Asset-filter select, .Asset-filter .btn{padding:  5px; border: 1px solid #999;}
-.auction-list img{width: 200px; height: 150px; border: 1px solid #ccc;}
+.auction-list img{width: 200px; height: 145px; border: 1px solid #ccc;}
 .auction-list.auction-details img{width: 130px; height: 130px;}
 .auction-details{position: relative; padding: 10px;border: 1px solid #ccc;}
 .auction-details .media-heading{font-size: 16px;}
 .auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
 .auction-list .calltoContact{position: absolute; top: 30%; right: 0;}
-.auction-list .AssetNumber{position: absolute; top: 15%; right: 0;}
+.auctionText{background: #f4f4f4; padding:10px;}
 
 /* responsive */
 @media (max-width:1199px){
@@ -1179,7 +1179,7 @@ footer p{font-size:12px;}
 .auction-list .media a.pull-left{width: 100%; margin-bottom: 10px;}
 .auction-list .media a.pull-left img{width: 100%; height:180px;}
 .auction-list .media .media-body{clear: both;}
-.auction-list .calltoContact, .auction-list .AssetNumber{position: relative; top: auto; right: auto;}
+.auction-list .calltoContact{position: relative; top: auto; right: auto;}
 .auction-list .calltoContact a{text-decoration: none; color: #333;}
 .Asset-filter{padding: 0;}
 .auction-details .media-heading{font-size: 15px;}
