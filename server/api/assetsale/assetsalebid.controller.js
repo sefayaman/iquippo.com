@@ -98,6 +98,11 @@ exports.fetchBid=function(req,res){
 	if(req.query.userId){
 		filter.userId=req.query.userId;
 	}
+
+	if(req.query.productId){
+		filter.productId=req.query.productId;
+	}
+	
 	 if (req.query.searchStr) {
        filter['$text'] = {
         '$search': "\""+req.query.searchStr+"\""

@@ -542,6 +542,7 @@ angular.module('sreizaoApp')
       .state('assetsale.seller', {
         url: '/seller',
         templateUrl: 'app/assetsale/seller.html',
+        controller:'AssetSaleSellerDashboardCtrl as assetSaleSellerDashboardVm',
         layout:'admin',
         authenticate:true
       })
@@ -561,6 +562,7 @@ angular.module('sreizaoApp')
       .state('assetsale.sellerdetails', {
         url: '/sellerdetails',
         templateUrl: 'app/assetsale/sellerdetails.html',
+        controller:'SellerDetailsCtrl as sellerDetailsVm',
         layout:'admin',
         authenticate:true
       })

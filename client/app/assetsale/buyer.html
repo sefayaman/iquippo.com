@@ -19,7 +19,7 @@
 	<div ng-if="assetSaleBuyerDashboardVm.activeBid=='Auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{assetSaleBuyerDashboardVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
 		        Search: <input type="text" placeholder="Search..." ng-model="assetSaleBuyerDashboardVm.searchStr" ng-change="assetSaleBuyerDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
@@ -42,6 +42,7 @@
 			   			<th>Offer Type</th>
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
+			   			<th>Deal Status</th>
 			   			<th>Invoice Details</th>
 			   			<th>KYC Documents</th>
 			   			<th>Delivery Order</th>
@@ -66,7 +67,7 @@
 			   			<td>{{bid.tradeType}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
-			   			<td>{{}}</td>
+			   			<td>{{bid.dealStatus}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
@@ -83,7 +84,7 @@
 	<div ng-if="assetSaleBuyerDashboardVm.activeBid=='closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{assetSaleBuyerDashboardVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
 		        Search: <input type="text" placeholder="Search..." ng-model="assetSaleBuyerDashboardVm.searchStr" ng-change="assetSaleBuyerDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
