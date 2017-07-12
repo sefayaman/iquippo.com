@@ -1,5 +1,5 @@
 'use strict';
-
+var seqGenerator = require('../../components/seqgenerator');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
@@ -19,5 +19,16 @@ var AssetSaleBidSchema = new Schema({
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });
+
+AssetSaleBidSchema.pre('save',function(next){
+  var self = this;
+  var prefix = 'TAS';
+  var sequence = seqGenerator.sequence();
+  sequence.next(function(seqnum){
+    self.ticketId = prefix+seqnum;
+    return next();
+  },'assetsale',100002);
+
+})
 
 module.exports = mongoose.model('AssetSaleBid', AssetSaleBidSchema);

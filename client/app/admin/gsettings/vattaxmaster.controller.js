@@ -17,7 +17,7 @@
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
         vm.getCategory = getCategory;
-        vm.taxType = [{name:"VAT"}];
+        vm.taxType = [{name:"GST"}];
         vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
         groupSvc.getAllGroup()
@@ -70,6 +70,7 @@
             VatTaxSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
+                $scope.submitted = false;
                 loadViewData();
                 Modal.alert('Data saved successfully!');
             })
@@ -83,7 +84,7 @@
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
             vm.dataModel.group = rowData.group._id;
-            vm.dataModel.vatType = rowData.vatType;
+            vm.dataModel.taxType = rowData.taxType;
             if (rowData.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
             if (rowData.effectiveFromDate)
@@ -105,7 +106,8 @@
             }
             VatTaxSvc.update(vm.dataModel)
             .then(function(){
-                 vm.dataModel = {};
+                vm.dataModel = {};
+                $scope.submitted = false;
                 $scope.isEdit = false;
                 loadViewData();
                 Modal.alert('Data updated successfully!');

@@ -57,25 +57,25 @@
     $scope.redirectToAuction = redirectToAuction;
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
-      if(form){
-      if (form.$invalid) {
-        $scope.bidSubmitted = true;
-        return;
-      }
-    }
+        if (form && form.$invalid) {
+          $scope.bidSubmitted = true;
+          return;
+        }
+
       var bidSummaryScope = $rootScope.$new();
       if(bid == "placebid"){
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
-        sellingPrice: $scope.currentProduct.grossPrice,
-        group: $scope.currentProduct.group._id,
-        category: $scope.currentProduct.category._id,
-        state: $scope.currentProduct.state,
-        seller: $scope.currentProduct.user,
-        productId: $scope.currentProduct._id,
-        parkingChargePerDay: $scope.currentProduct.parkingChargePerDay,
-        repoDate: $scope.currentProduct.repoDate,
-        bid: "true"
+        product:$scope.currentProduct,
+        // sellingPrice: $scope.currentProduct.grossPrice,
+        // group: $scope.currentProduct.group._id,
+        // category: $scope.currentProduct.category._id,
+        // state: $scope.currentProduct.state,
+        // seller: $scope.currentProduct.seller,
+        // productId: $scope.currentProduct._id,
+        // parkingChargePerDay: $scope.currentProduct.parkingChargePerDay,
+        // repoDate: $scope.currentProduct.repoDate,
+        bid: "placebid"
       };
     }
 
@@ -87,16 +87,16 @@
         bidSummaryScope.params.offer = $scope.currentProduct.grossPrice;
         bidSummaryScope.params.user = Auth.getCurrentUser();
         bidSummaryScope.params.product = $scope.currentProduct;
-        bidSummaryScope.params.bid = "false";
-        bidSummaryScope.params.group = $scope.currentProduct.group._id;
-        bidSummaryScope.params.category = $scope.currentProduct.category._id;
-        bidSummaryScope.params.state = $scope.currentProduct.state;
+        bidSummaryScope.params.bid = "buynow";
+        //bidSummaryScope.params.group = $scope.currentProduct.group._id;
+        //bidSummaryScope.params.category = $scope.currentProduct.category._id;
+        //bidSummaryScope.params.state = $scope.currentProduct.state;
       }
 
       var bidSummaryModal = $uibModal.open({
         templateUrl: "/app/assetsale/assetbidpopup.html",
         scope: bidSummaryScope,
-        controller: 'AssetBidPopUpCtrl as AssetBidPopUpVm',
+        controller: 'AssetBidPopUpCtrl as assetBidPopUpVm',
         windowTopClass: 'bidmodal',
         size: 'xs'
       });
@@ -439,7 +439,6 @@
         filter._id = $stateParams.id;
         filter.status = true;
         productSvc.getProductOnFilter(filter).then(function(result) {
-          console.log("serverDate", result[0]);
           if (result && result.length < 1) {
             $state.go('main');
             return;

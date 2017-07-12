@@ -37,6 +37,7 @@ var async = require('async');
 var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
+var moment = require('moment');
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -303,13 +304,6 @@ exports.search = function(req, res) {
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
 
-          if(req.body.getDate){
-            if(products.length === 1){
-              products[0].serverDate=new Date();
-             console.log("products with date",products[0].serverDate);
-            }
-
-          }
           var saleFeaturedProdWithPrice = [],
               saleFeaturedProdWithoutPrice = [],
               bothFeaturedProdWithPrice = [],
@@ -325,6 +319,15 @@ exports.search = function(req, res) {
               soldProd = [],  //status of product
               rentedProd = []; //status
           products.forEach(function(item){
+            item = item.toObject();
+            //calculate total parking charge
+            var todayDate = moment().daysInMonth();
+            var repoDate = moment(item.repoDate);
+            var a = moment(repoDate, 'DD/MM/YYYY');
+            var b = moment(todayDate, 'DD/MM/YYYY');
+            var days = b.diff(a, 'days') + 1;
+            item.parkingCharges = days * item.parkingChargePerDay;
+            
             if(!assetIdCache[item.assetId]){
               assetIdCache[item.assetId] = true;
 
@@ -418,7 +421,7 @@ exports.search = function(req, res) {
       }
     })
     .seq(function(){
-         res.setHeader('Cache-Control','private,max-age=2592000');
+      res.setHeader('Cache-Control','private,max-age=2592000');
       return res.status(200).json(result.products);
     })
   }

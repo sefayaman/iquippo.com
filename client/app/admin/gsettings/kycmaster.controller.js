@@ -104,7 +104,7 @@
         function confirmDestory(id){
             KYCSvc.destroy(id)
             .then(function(){
-                fireCommand();
+                fireCommand(true);
             })
              .catch(function(err){
                 console.log("purpose err",err);

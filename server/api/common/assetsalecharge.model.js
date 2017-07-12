@@ -8,8 +8,8 @@ var assetSaleChargeSchema = new Schema({
   category:{type:Schema.Types.ObjectId,ref:'Category'},
   effectiveFromDate:Date,
   effectiveToDate:Date,
-  rateOfInterest:{type:Number},
-  flatPerTrx:{type:Number},
+  chargeBasis:String,
+  amount:Number,
   status:{type:String,default:'active'},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
