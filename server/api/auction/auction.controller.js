@@ -1268,7 +1268,7 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*','Auction_Owner_Mobile*'];
   var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
   var time_params = ['Auction_Start_Time*','Auction_End_Time*'];
   var err = false;
@@ -1376,7 +1376,7 @@ function importAuctionMaster(req, res, data) {
       'Auction_ID*' : 'auctionId',
       'Auction_Name*' : 'name',
       'Auction_Owner': 'auctionOwner',
-      'Auction_Owner_Mobile':'auctionOwnerMobile',
+      'Auction_Owner_Mobile*':'auctionOwnerMobile',
       'Auction_Start_Date*' : 'startDate',
       'Auction_Start_Time*' : 'startTime',
       'Auction_End_Date*' : 'endDate',
@@ -1486,7 +1486,7 @@ function importAuctionMaster(req, res, data) {
           if(!vendor.length){
             errorObj.rowCount = req.counter + 2;
             errorObj.AuctionID = auctionData.auctionId;
-            errorObj.message = "Vendor not exist";
+            errorObj.message = "Auction owner is not exist";
             req.errors[req.errors.length] = errorObj;
             req.counter++;
             importAuctionMaster(req, res, data);

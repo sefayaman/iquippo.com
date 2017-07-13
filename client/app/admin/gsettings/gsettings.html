@@ -22,7 +22,7 @@
 						<option value="svctaxmaster">Service Tax Master</option>
 						<option value="vpurpose">Valuation Purpose Master</option>
 						<option value="assetgroup">Asset Group Master</option>
-						<option value="vatmaster">Tax Master</option>
+						<option value="vatmaster">GST Tax Master</option>
 						<option value="kyc">KYC Document Master</option>
 						<option value="charge">Asset Sale Charge Master</option>
 						<option value="enterpriseMaster">Enterprise Master</option>
@@ -342,10 +342,9 @@
 						</div>
 					</div>
 					<div class=" row">
-						<div class="col-sm-3">
-							
-							<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" >
-								<option value="">Select Owner</option>
+						<div class="col-sm-3" ng-class="{'has-error': auctionDateForm.auctionOwner.$invalid && submitted }">
+							<select class="form-control" name="auctionOwner" ng-model="gsettingVm.auctionData.auctionOwnerMobile" required>
+								<option value="">Select Owner*</option>
 								<option ng-repeat="svc in gsettingVm.auctionOwnerLists" value="{{svc.user.mobile}}">{{svc.entityName}}</option>
 							</select>
 							<i class="caret"></i>
@@ -396,20 +395,19 @@
 						</div>
 					</div>
 					<div class="row">
-						
 						<div class="col-sm-3 form-group">
-							
-							<select class="form-control" name="docType" ng-model="gsettingVm.auctionData.docType" >
-								<option value="">Select Type</option>
-								<option value="tc">Terms and Conditions</option>
-								<option value="bidProxy">Bid Proxy Form</option>
-							</select>
-							<i class="caret"></i>
+							<input type="text" class="form-control" name="" value="" placeholder="Terms of Auction">
 						</div>
-						<div class="col-sm-3">
-							
+						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
-								<span>Browse Document</span>
+								<span>Upload Terms &amp; Conditions</span>
+								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
+							</span>
+							<span>{{gsettingVm.auctionData.docName}}</span>
+						</div>
+						<div class="col-sm-3 form-group">
+							<span class="btn btn-warning btn-block fileinput-button">
+								<span>Upload Bid Proxy Form</span>
 								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
 							</span>
 							<span>{{gsettingVm.auctionData.docName}}</span>
@@ -417,16 +415,17 @@
 						
 						<div class="col-sm-3">							
 							<span class="btn btn-warning btn-block fileinput-button">
-								<span>Browse Image</span>
+								<span>Upload Image</span>
 								<input type="file" name="file" onchange="angular.element(this).scope().updateAuctionMasterImage(this.files,this)" accept="image/*" class="ng-scope">
 							</span>
 							<span>{{gsettingVm.auctionData.primaryImg}}</span>
 						</div>
+					</div>
+					<div class="row form-group">
+
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
 						</div>
-					</div>
-					<div class="row form-group">
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
 						</div>
@@ -618,7 +617,7 @@
 						</div>
 					</div>
 					<div class="col-sm-3 form-group">
-						<input type="number" class="form-control" placeholder="VAT %" ng-model="gsettingVm.auctionProduct.product.vatPercentage"/>
+						<input type="number" class="form-control" placeholder="GST %" ng-model="gsettingVm.auctionProduct.product.vatPercentage"/>
 					</div>
 					<div class="col-sm-3 form-group">
 						<input type="text" class="form-control" placeholder="Contact Person" ng-model="gsettingVm.auctionProduct.product.contactName"/>
@@ -689,7 +688,7 @@
 						<th>Engine no</th>
 						<th>Asset location</th>
 						<th>Original invoice</th>
-						<th>VAT %</th>
+						<th>GST %</th>
 						<th>Contact person</th>
 						<th>Contact no</th>
 						<th>Sold</th>
@@ -1569,13 +1568,20 @@
 			</table>
 		</div>
 	</div>
-	<!-- VAT Tax master -->
+	<!-- GST Tax master -->
 	<div ng-if="gsettingVm.tabValue == 'vatmaster'" ng-controller="VatTaxMasterCtrl as vatVm">
 		<div class="row">
 			<div class="col-sm-6">
-				<h4>Add New Tax</h4>
+
+				<h4>Add New GST Tax</h4>
 			</div>	
 			<!-- <div class="col-sm-offset-2 col-sm-2">				
+
+				<h4>Add New GST Tax</h4>
+			</div>
+			<!-- 	    			<div class="col-sm-offset-4 col-sm-2 text-right">
+				<h4>
+
 				<span class="btn btn-success btn-block fileinput-button">
 					<input type="file" name="template_update">
 					<span>

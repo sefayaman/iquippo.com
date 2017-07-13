@@ -49,7 +49,7 @@
       filter = {};
       angular.copy(initFilter, filter);
       if (vm.searchStr)
-        filter.searchStr = vm.searchStr;
+        filter.searchstr = vm.searchStr;
       getRegisterUserForAuction(filter);
     }
 

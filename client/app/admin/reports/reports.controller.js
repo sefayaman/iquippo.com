@@ -3,7 +3,7 @@
   angular.module('report').controller('ReportsCtrl', ReportsCtrl);
 
   //controller function
-  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal, userSvc, ValuationSvc) {
+  function ReportsCtrl($scope, $rootScope, $http, Auth, ReportsSvc, $window, $uibModal, userSvc, ValuationSvc, userRegForAuctionSvc) {
     var vm = this;
     vm.tabValue = "callback";
 
@@ -35,17 +35,18 @@
     vm.inspectionListing =[];
     vm.valuationListing =[];
     vm.contactUsListing =[];
+    vm.registerUser = [];
     $scope.valuationStatuses = valuationStatuses;
     $scope.isAdmin=false;
     var dataToSend = {};
     var userMobileNos = [];
-
 
     $scope.shippingTotalItems = 0;
     $scope.valuationTotalItems = 0;
     $scope.financingTotalItems = 0;
     $scope.insuranceTotalItems = 0;
 
+    $scope.auctionVisibleFlag = false;
     function getRequestedProducts(productsData){
       if(!productsData)
         return "";
@@ -79,6 +80,10 @@
     function init() {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
+          if(Auth.isAuctionPartner() || Auth.isAdmin())
+            $scope.auctionVisibleFlag = true;
+          else
+            $scope.auctionVisibleFlag = false;
           dataToSend.pagination = true;
           dataToSend.itemsPerPage = vm.itemsPerPage;
           if(Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
@@ -177,6 +182,9 @@
           break;
         case 'contactUs':
           getReportData(filter, 'contactUs');
+          break;
+        case 'auctionRegReport':
+          getReportData(filter, 'auctionRegReport');
           break;
       }
     }
@@ -519,6 +527,21 @@
               }
             });
           break;
+          case 'auctionRegReport':
+          resetCount();
+          if(Auth.getCurrentUser().mobile && Auth.isAuctionPartner())
+            filter.auctionOwnerMobile = Auth.getCurrentUser().mobile;
+          userRegForAuctionSvc.getFilterOnRegisterUser(filter)
+            .then(function(result) {
+              vm.registerUser = result.items;
+              vm.totalItems = result.totalItems;
+              prevPage = vm.currentPage;
+              if (vm.registerUser.length > 0) {
+                first_id = vm.registerUser[0]._id;
+                last_id = vm.registerUser[vm.registerUser.length - 1]._id;
+              }
+            });
+          break;
       }
     }
 
@@ -537,6 +560,7 @@
     function exportExcel() {
       var filter = {};
       var fileName = "";
+      filter.role=Auth.getCurrentUser().role;
       if(userMobileNos.length > 0 && !Auth.isAdmin())
         filter.userMobileNos = userMobileNos.join();
       
@@ -562,11 +586,17 @@
       } else if (vm.tabValue == "inspection") {
         filter.type = "INSPECTION_REQUEST";
         fileName = "InspectionReport_";
-      } else 
+      } else if (vm.tabValue == "auctionRegReport"){
+        filter = {};
+        if(Auth.getCurrentUser().mobile && Auth.isAuctionPartner())
+          filter.auctionOwnerMobile = Auth.getCurrentUser().mobile;
+        fileName = "User_Request_For_Auction_Report_";
+      }
+      else 
         fileName = "ValuationReport_";
        //else
         //fileName = "AdditionalServices_";
-      filter.role=Auth.getCurrentUser().role;
+      //filter.role=Auth.getCurrentUser().role;
       ReportsSvc.exportData(filter, vm.tabValue)
         .then(function(res) {
 

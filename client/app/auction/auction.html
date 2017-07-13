@@ -98,11 +98,14 @@
               <p ng-if="product.emdAmount"><strong>Earnest Money Deposit : </strong> <i class="fa fa-inr"></i> {{product.emdAmount}}</p>
               <!--remove -->
               <!-- <p ng-if="product.startDate && product.endDate"><strong>start Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p> -->
+              <p>
+                <strong>Assets listed in an Auction :</strong> {{}}
+              </p>
               <p class="calltoContact">
                 <a href="tel:{{product.contactNumber}}">
                   <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
                 </a>
-              </p>
+              </p>              
               <div class="row callLocation">
                 <div class="col-sm-6">
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
