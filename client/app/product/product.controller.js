@@ -1296,6 +1296,9 @@
           $state.go('productlisting');
         }
 
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
       });
     }
 
@@ -1340,6 +1343,11 @@
           cb(product);
         else
           $state.go('productlisting', AppStateSvc.get('productlisting'));
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
+        if(err && err.data)
+          Modal.alert(err.data);
       });
     }
 

@@ -18,6 +18,7 @@ var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var CityModel = require('../common/location.model');
+var AssetSaleModel = require('./../assetsale/assetsalebid.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
@@ -39,6 +40,7 @@ var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
 var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -558,6 +560,24 @@ function singleProductActive(req,res){
         bulkActive(req,res);
         //return res.status(200).json(req.body);
   });
+}
+
+//Validate update product
+
+exports.validateUpdate = function(req,res,next){
+  if(req.body.tradeType !== 'RENT')
+    return next();
+
+  var _id = req.body._id;
+  var filter = {};
+  filter.product = _id;
+  filter.offerStatus = offerStatuses[0];
+  AssetSaleModel.find(filter,function(err,resultArr){
+    if(err)return next(err);
+    if(resultArr.length) return next(new APIError(409,'There is active bid for this product'));
+    next();
+  });
+
 }
 
 // Updates an existing product in the DB.
@@ -1338,7 +1358,7 @@ exports.createProductReq = function(req,res,next){
       status : 'listed',
       createdAt : new Date()
     }];
-    console.log("data>>>..",data);
+
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1437,7 +1457,6 @@ exports.validateExcelData = function(req, res, next) {
     }
     req.errorList = errorList;
     req.updateData = updateData;
-    console.log('updateData'.updateData);
     next();
   }
 
@@ -1460,6 +1479,7 @@ exports.validateExcelData = function(req, res, next) {
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
     if(reqType == 'Update'){
+      console.log("aset id",row.assetId);
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
@@ -1481,7 +1501,8 @@ exports.validateExcelData = function(req, res, next) {
             validateCity : validateCity,
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
-            validateOnlyAdminCols: validateOnlyAdminCols
+            validateOnlyAdminCols: validateOnlyAdminCols,
+            validateForBid:validateForBid
           }, buildData);          
         }else if(type === 'auction_update'){
           async.parallel({
@@ -1514,6 +1535,42 @@ exports.validateExcelData = function(req, res, next) {
           })
           return cb();
       }
+    }
+
+    function validateForBid(callback){
+
+      if(row.tradeType !== 'RENT' || !row.assetId)
+        return callback();
+
+      Product.find({assetId:row.assetId,deleted:false},function(err,prds){
+        if(err || !prds.length){
+           errorList.push({
+                Error : 'Error in finding product',
+                rowCount :row.rowCount
+            });
+          return callback('Error')
+        };
+        var filter = {};
+        filter.product = prds[0]._id;
+        filter.offerStatus = offerStatuses[0];
+        AssetSaleModel.find(filter,function(err,resultArr){
+          if(err){
+            errorList.push({
+                Error : 'Error in finding active bids',
+                rowCount :row.rowCount
+            }); 
+            return callback('Error')
+          };
+          if(resultArr.length){
+            errorList.push({
+                Error : 'There is active bid for this product',
+                rowCount :row.rowCount
+            });
+            return callback("Error");
+          }
+          return callback();
+        });
+      });
     }
 
     function validateGenericField(callback){

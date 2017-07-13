@@ -5,9 +5,8 @@ var mongoose = require('mongoose'),
 
 var AssetSaleBidSchema = new Schema({
   ticketId:String,
-  userId:{type:Schema.Types.ObjectId,ref:'User'},
-  productId:{type:Schema.Types.ObjectId,ref:'Product'},
-  state:String,
+  user:{type:Schema.Types.ObjectId,ref:'User'},
+  product:{type:Schema.Types.ObjectId,ref:'Product'},
   bidAmount:Number,
   offerStatus:String,
   bidStatus:String,
