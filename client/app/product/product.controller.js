@@ -4,7 +4,7 @@
   angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
   //Product upload controller
-  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc) {
+  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc) {
 
     var vm = this;
     //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -314,6 +314,8 @@
           }
           $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
+          if(!$scope.product.taxRate)
+            getTaxRate();
         })
       } else {
         prepareImgArr();
@@ -355,8 +357,7 @@
       $scope.$on("fileSelected", function(event, args) {
         if (args.files.length == 0){
           return;
-        }
-
+      }
 
         $scope.$apply(function() {
           if (args.type == "image") {
@@ -439,6 +440,24 @@
 
     init();
 
+    function getTaxRate(){
+
+        $scope.product.taxRate = "";
+      if(!$scope.product.category._id || !$scope.product.group._id || !$scope.product.state)
+        return;
+      var serData = {};
+      serData.categoryId = $scope.product.category._id;
+      serData.groupId = $scope.product.group._id;
+      serData.state = $scope.product.state;
+      serData.currentDate = 'y'
+      VatTaxSvc.get(serData)
+      .then(function(taxes){
+        if(taxes.length)
+          $scope.product.taxRate = taxes[0].amount;
+      });
+
+    }
+
     function isEmpty(myObject) {
       if (!myObject)
         return true;
@@ -482,6 +501,7 @@
           return item.state.name == $scope.product.state;
         });
       });
+      getTaxRate();
     }
 
     function reset(){
@@ -504,6 +524,7 @@
           return item.country == $scope.product.country;
         });
       });
+      getTaxRate();
     }
 
     function userSearch(userSearchText){
@@ -580,6 +601,7 @@
         .catch(function(res) {
           console.log("error in fetching brand", res);
         })
+        getTaxRate();
     }
 
     function onBrandChange(brandId, noChange) {
@@ -790,7 +812,7 @@
         }, 20);
         return;
       }
-      if(!$scope.container.sellerName) {
+      if(!$scope.container.sellerName && (Auth.isAdmin() || Auth.isChannelPartner())) {
         Modal.alert("Seller doesn't exist!");
         return;
       }

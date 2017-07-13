@@ -7,15 +7,31 @@ var ApiError = require('../../components/_error');
 exports.get = function(req, res) {
   var queryParam = req.query;
   var filter = {};
+  if(queryParam.categoryId)
+    filter.category = queryParam.categoryId;
+  if(queryParam.groupId)
+    filter.group = queryParam.groupId;
+  
+  if(queryParam.currentDate && queryParam.currentDate === 'y') {
+      filter["effectiveFromDate"] = {$lte:new Date()};
+      filter["effectiveToDate"] = {$gte:new Date()};
+  }
 
   var query = Model.find(filter).populate({
-    path: 'category group state',
-    match: filter
+    path: 'category group state'
   });
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
     }
+    if(result.length && queryParam.state){
+      
+      var resList = result.filter(function(item){
+        return item.state.name === queryParam.state;
+      });
+      return res.status(200).json(resList); 
+    } 
+
     return res.status(200).json(result);
   });
 };

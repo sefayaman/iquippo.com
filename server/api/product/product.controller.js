@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Seq = require('seq');
 var trim = require('trim');
 var fs = require('fs');
-var gm = require('gm').subClass({imageMagick: true});;
+var gm = require('gm').subClass({imageMagick: true});
 var fsExtra = require('fs.extra');
 var lwip = require('lwip');
 var Product = require('./product.model');
@@ -38,6 +38,7 @@ var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
 var moment = require('moment');
+var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -1337,7 +1338,7 @@ exports.createProductReq = function(req,res,next){
       status : 'listed',
       createdAt : new Date()
     }];
-    
+    console.log("data>>>..",data);
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1436,6 +1437,7 @@ exports.validateExcelData = function(req, res, next) {
     }
     req.errorList = errorList;
     req.updateData = updateData;
+    console.log('updateData'.updateData);
     next();
   }
 
@@ -1471,6 +1473,7 @@ exports.validateExcelData = function(req, res, next) {
 
         if(type === 'template_update') {
           async.parallel({
+            validateGenericField:validateGenericField,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
@@ -1491,6 +1494,7 @@ exports.validateExcelData = function(req, res, next) {
       if(!assetIdObj[row.assetId]){
         assetIdObj[row.assetId] = true;
         async.parallel({
+          validateGenericField:validateGenericField,
           validateMadnatoryCols : validateMadnatoryCols,
           validateDupProd : validateDupProd,
           validateDupIncomingProd : validateDupIncomingProd,
@@ -1510,6 +1514,29 @@ exports.validateExcelData = function(req, res, next) {
           })
           return cb();
       }
+    }
+
+    function validateGenericField(callback){
+      var obj = {};
+      var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice'];
+      var dateColumns = ['repoDate'];
+      var fieldsToBeCopied = ['addressOfAsset'];
+      numericColumns.forEach(function(x){
+        if(row[x] && !isNaN(row[x]))
+          obj[x] = row[x];
+      });
+      dateColumns.forEach(function(x){
+        if(row[x]){
+          var d = Utillity.dateUtil.isValidDateTime(row[x],validDateFormat);
+          if(d.isValid())
+            obj[x] = new Date(Utillity.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
+        }
+      });
+
+      fieldsToBeCopied.forEach(function(x){
+        obj[x] = row[x];
+      })
+      return callback(null,obj);
     }
 
     function validateCity(callback){

@@ -82,6 +82,11 @@ module.exports = {
 	'Name_of_Agency': 'agencyName',
 	//Extra Columns Added in next request by Venkat
 	'Uploaded_By' : 'uploaded_by',
-	'Listing_Date' : 'listing_date'
-
+	'Listing_Date' : 'listing_date',
+	//Extra field added for asset sale
+	'Date_Of_Repo' : 'repoDate',
+	'Valuation_Amount' : 'valuationAmount',
+	'Address_Of_Asset' : 'addressOfAsset',
+	'Parking_Charge_Per_Day' : 'parkingChargePerDay',
+	'Reserve_Price' : 'reservePrice'
 }
