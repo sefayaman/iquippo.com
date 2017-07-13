@@ -63,7 +63,8 @@
         }
 
       var bidSummaryScope = $rootScope.$new();
-      if(bid == "placebid"){
+      if(bid == "placebid" || bid == "proxybid"){
+
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
@@ -77,6 +78,8 @@
         // repoDate: $scope.currentProduct.repoDate,
         bid: "placebid"
       };
+      if(bid == "proxybid")
+        bidSummaryScope.params.proxyBid = true;
     }
 
 
