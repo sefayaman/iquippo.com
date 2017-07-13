@@ -24,14 +24,18 @@ exports.search = function(req, res) {
   console.log("req.body", req.body);
   var body = req.body;
   var filter = {};
-  var date=new Date();
-
+  
     /*filter.effectiveFromDate = {
       '$gt': date
     };
     filter.effectiveToDate = {
       '$lt': date
     };*/
+  if(body.date) {
+      filter["effectiveFromDate"] = {$lte:new Date()};
+      filter["effectiveToDate"] = {$gte:new Date()};
+  }
+
   if (body.groupId) {
     //var id = mongoose.Types.ObjectId(body.groupId)
     filter.group = body.groupId;
@@ -46,9 +50,7 @@ exports.search = function(req, res) {
     filter.state = body.stateId;
   if (body.status)
     filter.status = body.status;
-
-  console.log("filter", filter);
-
+  
   var query = Model.find(filter);
   query.exec(function(err, result) {
     if (err) {
@@ -91,6 +93,8 @@ function _getRecord(data, cb) {
   //filter.brand = data.brand;
   //filter.model = data.model;
   filter.state = data.state;
+  filter.effectiveFromDate = data.effectiveFromDate;
+  filter.effectiveToDate = data.effectiveToDate;
   Model.find(filter, function(err, result) {
     cb(err, result);
   });

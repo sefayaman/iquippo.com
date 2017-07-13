@@ -90,7 +90,6 @@
       $scope.auctionId=query.auctionId;
       filter.auctionId = query.auctionId;
       filter.status = "request_approved";
-      console.log("filters",filter);
       getAssetsInAuction(filter);
     }
 
@@ -167,7 +166,7 @@
         filter.location=$scope.equipmentSearchFilter.locationName;
          delete filter.locationName;
         }
-      filter['auctionId']=$scope.auctionId;
+      filter.auctionId=$scope.auctionId;
       getAssetsInAuction(filter);
   }
 
@@ -179,8 +178,8 @@
           if (result) {
             vm.show=false;
             if(result.length <= 0){
-                  vm.show=true;  
-                  }
+              vm.show=true;  
+            }
             result.forEach(function(item) {
               if (item.external === false && item.product.assetId)
                 assetIds[assetIds.length] = item.product.assetId;
@@ -188,7 +187,6 @@
             var filter={};
             if (assetIds.length > 0) {
               filter.assetIds = assetIds;
-              console.log("init",filter);
               productSvc.getProductOnFilter(filter)
                 .then(function(data) {
                   data.forEach(function(item) {

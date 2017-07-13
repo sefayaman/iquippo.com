@@ -572,13 +572,14 @@ exports.getOnFilter = function(req, res) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;
   }
-
+  console.log("last filter",filter);
   var query = AuctionRequest.find(filter);
   query.exec(
     function(err, auctions) {
       if (err) {
         return handleError(res, err);
       }
+      console.log("auctions",auctions);
       return res.status(200).json(auctions);
     }
 
@@ -1026,30 +1027,17 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
   }
-  if (req.body.auctionType == 'closed'){
+  
+  if (req.body.auctionType === 'closed'){
     var currentDate = new Date();
     filter.endDate={
       '$lt': currentDate
     }
-  } else if(req.body.auctionType == 'upcoming') {
+  } else if(req.body.auctionType === 'upcoming') {
     var currentDate = new Date();
-    filter.startDate={
+    filter.endDate={
     '$gt': currentDate
     };
-  } else if(req.body.auctionType == 'ongoing'){
-    var bwtDate = [];
-    var currentDate = new Date();
-     bwtDate[bwtDate.length] = {
-      startDate: {
-        '$lt': currentDate
-      }
-    };
-     bwtDate[bwtDate.length] = {
-      endDate: {
-        '$gt': currentDate
-      }
-    };
-    filter['$and'] = bwtDate;
   }
 
   var arr = [];
@@ -1115,8 +1103,34 @@ exports.getFilterOnAuctionMaster = function(req, res) {
         return handleError(res, err);
       }
       var result={};
-      result.items=items;
-      return res.status(200).json(result);
+      if(req.body.addAuctionType) {
+        var tempArr = [];
+        if(items) {
+        items.forEach(function(auction) {
+          auction = auction.toObject();
+          var currentDate = new Date();
+          var startDate = auction.startDate;
+          var endDate = auction.endDate;
+          auction.endTimer = endDate.getTime();
+          var d = new Date();
+          auction.startTimer = d.getTime();
+          
+          if (startDate > currentDate) {
+            auction.auctionValue = "upcomingAuctions";
+          } else if (startDate < currentDate && endDate > currentDate) {
+            auction.auctionValue = "ongoingAuctions";
+          } else if (endDate < currentDate) {
+            auction.auctionValue = "closedAuctions";
+          }
+          tempArr[tempArr.length] = auction;
+        })
+      }
+        result.items=tempArr;
+        return res.status(200).json(result);
+      } else {
+        result.items=items;
+        return res.status(200).json(result);
+      }
     }
   );
 };
@@ -1207,6 +1221,10 @@ exports.getAuctionMaster = function(req, res) {
     filter['startDate'] = {
       '$gt': new Date()
     }
+
+    if(queryObj.dbauctionId){
+      filter._id=queryObj.dbauctionId;
+    }
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1
   })
@@ -1246,10 +1264,11 @@ exports.importAuctionMaster = function(req, res) {
     return res.status(404).send("Error in file upload");
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
   var data = xlsx.utils.sheet_to_json(worksheet);
+  console.log("Auction Data",data);
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*','Auction_Owner_Mobile*'];
   var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
   var time_params = ['Auction_Start_Time*','Auction_End_Time*'];
   var err = false;
@@ -1357,7 +1376,7 @@ function importAuctionMaster(req, res, data) {
       'Auction_ID*' : 'auctionId',
       'Auction_Name*' : 'name',
       'Auction_Owner': 'auctionOwner',
-      'Auction_Owner_Mobile':'auctionOwnerMobile',
+      'Auction_Owner_Mobile*':'auctionOwnerMobile',
       'Auction_Start_Date*' : 'startDate',
       'Auction_Start_Time*' : 'startTime',
       'Auction_End_Date*' : 'endDate',
@@ -1467,7 +1486,7 @@ function importAuctionMaster(req, res, data) {
           if(!vendor.length){
             errorObj.rowCount = req.counter + 2;
             errorObj.AuctionID = auctionData.auctionId;
-            errorObj.message = "Vendor not exist";
+            errorObj.message = "Auction owner is not exist";
             req.errors[req.errors.length] = errorObj;
             req.counter++;
             importAuctionMaster(req, res, data);

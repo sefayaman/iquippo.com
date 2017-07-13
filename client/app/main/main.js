@@ -134,7 +134,7 @@ angular.module('sreizaoApp')
         url:"/viewproducts?currentPage&group&category&brand&model" + 
             "&type&currencyType&currencyMin&currencyMax&" +
             "&mfgYearMin&mfgYearMax&stateName&cityName&assetId&"+
-            "searchstr&operatingHour&mileage&productName&location",
+            "searchstr&operatingHour&mileage&productName&location&locationName",
         templateUrl: 'app/product/viewproducts.html',
         controller: 'ViewProductsCtrl as viewproductVm',
          layout:'client'
@@ -542,12 +542,14 @@ angular.module('sreizaoApp')
       .state('assetsale.seller', {
         url: '/seller',
         templateUrl: 'app/assetsale/seller.html',
+        controller:'AssetSaleSellerDashboardCtrl as assetSaleSellerDashboardVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.buyer', {
         url: '/buyer',
         templateUrl: 'app/assetsale/buyer.html',
+        controller:'AssetSaleBuyerDashboardCtrl as assetSaleBuyerDashboardVm',
         layout:'admin',
         authenticate:true
       })
@@ -560,6 +562,7 @@ angular.module('sreizaoApp')
       .state('assetsale.sellerdetails', {
         url: '/sellerdetails',
         templateUrl: 'app/assetsale/sellerdetails.html',
+        controller:'SellerDetailsCtrl as sellerDetailsVm',
         layout:'admin',
         authenticate:true
       })

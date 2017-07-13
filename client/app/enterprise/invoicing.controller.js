@@ -297,6 +297,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
            selectedItems.forEach(function(item){
               EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[5]);
               item.invoiceNo =  genInvoice.invoiceNo;
+              item.generateInvoiceDate = true;
               item.invoiceDate =  new Date();
           });
           updateValuationRequest();

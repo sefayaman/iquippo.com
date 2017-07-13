@@ -2,7 +2,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('ViewProductsCtrl', ViewProductsCtrl);
 
-function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout) {
+function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Auth, CartSvc, productSvc,categorySvc,SubCategorySvc,LocationSvc,groupSvc,brandSvc,modelSvc ,DTOptionsBuilder,Modal,$timeout,$window) {
   var vm = this;
   $scope.productList = [];
   $scope.equipmentSearchFilter = {};
@@ -570,6 +570,7 @@ $scope.today = function() {
   }
 
   function onPageChange(){
+    $window.scrollTo(0, 0);
     saveState(true);
   }
 

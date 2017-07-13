@@ -14,16 +14,9 @@
     var first_id = null;
     var last_id = null;
 
-    var ongoingAuctions = [];
-    var upcomingAuctions = [];
-
     var listingCount = {};
-    vm.totalItemsInAuction = 0
-    vm.totalItemsSold = 0;
-    vm.totalSaleValue = 0;
     vm.show=false;
     /* vm.timediff=timediff;*/
-
     vm.auctionListing = [];
     $scope.closeAuctionItems = 0;
     $scope.openAuctionItems = 0;
@@ -33,14 +26,13 @@
 
     vm.fireCommand = fireCommand;
     vm.fireCommandType = fireCommandType;
-    vm.getProductData = getProductData;
+    //vm.getProductData = getProductData;
     $scope.auctionType = 'upcoming';
     $scope.auctionOnMap = false;
     
     var dataToSend = {};
-    $scope.getConcatData = [];
     var query = $location.search();
-
+    var filter = {};
     vm.openBidModal = openBidModal;
 
 
@@ -83,9 +75,6 @@
       });
     }
 
-    function goToPayment() {
-      console.log("code for redirect payment gatway");
-    }
     //Map variables
 
     $scope.map = {
@@ -98,14 +87,14 @@
     };
 
     function init() {
-      //dataToSend.auctionType = $scope.auctionType;
-
-      dataToSend.pagination = true;
-      dataToSend.itemsPerPage = vm.itemsPerPage;
-      if ($stateParams.type)
+      //dataToSend.pagination = true;
+      //dataToSend.itemsPerPage = vm.itemsPerPage;
+      filter = {};
+      if ($stateParams.type) {
         $scope.auctionType = $stateParams.type;
-      var filter = {};
-      angular.copy(dataToSend, filter);
+        filter.auctionType = $stateParams.type;
+      }
+      //angular.copy(dataToSend, filter);
       getAuctions(filter);
 
     }
@@ -113,170 +102,61 @@
     init();
 
     function getAuctions(filter) {
-
-      filter.prevPage = prevPage;
-      filter.currentPage = vm.currentPage;
-      filter.first_id = first_id;
-      filter.last_id = last_id;
-      if ($scope.auctionType && $scope.auctionType !== 'ongoing')
-        filter['auctionType'] = $scope.auctionType;
-      else
-        filter['auctionType'] = "upcoming";
-
+      // filter.prevPage = prevPage;
+      // filter.currentPage = vm.currentPage;
+      // filter.first_id = first_id;
+      // filter.last_id = last_id;
+      vm.auctionListing =[];
+      if(!filter.auctionType)
+        filter.auctionType = $stateParams.type;
+      filter.addAuctionType = true;
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
-          getAuctionWiseProductData(result);
-          if (filter.auctionType == "upcoming") {
-            upcomingAuctions = result.items;
-          } else {
-            vm.auctionListing = result.items;
-            if(vm.auctionListing.length < 1){
-            vm.show=true;
-            }
-            else{
-              vm.show=false;
-            }
-
-            vm.auctionListing.forEach(function(x) {
-              var currentDate = moment(new Date());
-              var startDate = moment(x.startDate);
-              var endDate = moment(x.endDate).valueOf();
-              x.endTimer = endDate;
-              if (startDate > currentDate) {
-                x.auctionValue = "upcomingAuctions";
-              } else if (startDate < currentDate && endDate > currentDate) {
-                x.auctionValue = "ongoingAuctions";
-              } else if (endDate < currentDate) {
-                x.auctionValue = "closedAuctions";
-              }
-            })
-            return true;
-          }
-          filter.auctionType = "ongoing";
-          return AuctionSvc.getAuctionDateData(filter);
-
-          /* console.log("Auctions",vm.auctionListing);
-          vm.totalItems = result.totalItems;
-          prevPage = vm.currentPage;
-          if(vm.auctionListing.length > 0){
-            first_id = vm.auctionListing[0]._id;
-            last_id = vm.auctionListing[vm.auctionListing.length - 1]._id;
-          }*/
-        })
-        .then(function(result) {
-          getAuctionWiseProductData(result);
-          ongoingAuctions = result.items;
-          vm.auctionListing = ongoingAuctions.concat(upcomingAuctions);
-          if(vm.auctionListing.length < 1){
-            vm.show=true;
-          }
-          else{
-            vm.show=false;
-          }
-          vm.auctionListing.forEach(function(x) {
-            var currentDate = moment(new Date());
-            var startDate = moment(x.startDate);
-            var endDate = moment(x.endDate).valueOf();
-            x.endTimer = endDate;
-            if (startDate > currentDate) {
-              x.auctionValue = "upcomingAuctions";
-            } else if (startDate < currentDate && endDate > currentDate) {
-              x.auctionValue = "ongoingAuctions";
-            } else if (endDate < currentDate) {
-              x.auctionValue = "closedAuctions";
-            }
-          })
-        })
-        .catch(function(err) {
-          //Modal.alert("Error in geting auction master data");
-        })
+        vm.auctionListing = result.items;
+        if(vm.auctionListing.length < 1){
+          vm.show=true;
+        }
+        else{
+          vm.show=false;
+        }
+      }).catch(function(err) {
+        //Modal.alert("Error in geting auction master data");
+      });
     }
-
     /*   function timediff(start, end){
   return moment.utc(moment(end).diff(moment(start))).format("mm")
 }
 */
-    function getAuctionWiseProductData(result) {
-      var filter = {};
-      var auctionIds = [];
-      if(result && result.items) {
-        result.items.forEach(function(item) {
-          auctionIds[auctionIds.length] = item._id;
-        });
-        filter.auctionIds = auctionIds;
-        filter.status = "request_approved";
-        filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
-        AuctionSvc.getAuctionWiseProductData(filter)
-          .then(function(data) {
-            $scope.getConcatData = data;
-          })
-          .catch(function() {});
-      }
-    }
-
-    function getProductData(id, type) {
-      if (angular.isUndefined($scope.getConcatData)) {
-        if (type == "total_products")
-          return 0;
-        if (type == "total_amount")
-          return 0;
-        if (type == "total_sold")
-          return 0;
-      } else {
-        var totalItemsInAuction = 0;
-        var totalSaleValue = 0;
-        var totalsold = 0;
-        $scope.getConcatData.forEach(function(data) {
-          if (id == data._id) {
-            totalItemsInAuction = data.total_products;
-            totalSaleValue = data.sumOfInsale;
-            totalsold = data.isSoldCount;
-          }
-        });
-        if (type == "total_products") {
-          if (totalItemsInAuction > 0)
-            return totalItemsInAuction;
-        }
-        if (type == "total_amount") {
-          if (totalSaleValue > 0)
-            return totalSaleValue;
-        }
-        if (type == "total_sold") {
-          if (totalsold > 0)
-            return totalsold;
-        }
-        return 0;
-      }
-    }
 
     function fireCommand(reset, filterObj) {
-      if (reset)
-        resetPagination();
-      var filter = {};
-      if (!filterObj)
-        angular.copy(dataToSend, filter);
-      else
-        filter = filterObj;
+      // if (reset)
+      //   resetPagination();
+      // var filter = {};
+      // if (!filterObj)
+      //   angular.copy(dataToSend, filter);
+      // else
+      //   filter = filterObj;
 
-      if(vm.statusType){
-        filter.statusType=vm.statusType;
-      }
+      if(vm.statusType)
+        filter.statusType = vm.statusType;
+      else 
+        delete filter.statusType;
+
       getAuctions(filter);
     }
 
     function fireCommandType(auctionType) {
-      resetPagination();
-      var filter = {};
-      angular.copy(dataToSend, filter);
+      //resetPagination();
+      filter = {};
+      //angular.copy(dataToSend, filter);
 
-      if(vm.statusType){
+      if(vm.statusType)
         filter.statusType=vm.statusType;
-      }
+      else 
+        delete filter.statusType;
+
       $scope.auctionType = auctionType;
-      $state.go("viewauctions", {
-        type: auctionType
-      }, {
-        notify: false
-      });
+      filter.auctionType = auctionType;
+      $state.go("viewauctions", {type: auctionType}, {notify: false});
       getAuctions(filter);
     }
 
@@ -350,50 +230,6 @@
       geocoder = null;
       $scope.auctionOnMap = false;
     }
-
-    /*$scope.CountDown = {
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    getTimeRemaining: function(endtime) {
-      var t = Date.parse(endtime) - Date.parse(new Date());
-      var seconds = Math.floor((t / 1000) % 60);
-      var minutes = Math.floor((t / 1000 / 60) % 60);
-      var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-      var days = Math.floor(t / (1000 * 60 * 60 * 24));
-      return {
-        'total': t,
-        'days': days,
-        'hours': hours,
-        'minutes': minutes,
-        'seconds': seconds
-      };
-    },
-
-    initializeClock: function(endtime) {
-      function updateClock() {
-        var t = $scope.CountDown.getTimeRemaining(endtime);
-
-        $scope.CountDown.days = t.days < 10 ? '0' + t.days : t.days;
-        $scope.CountDown.hours = ('0' + t.hours).slice(-2);
-        $scope.CountDown.minutes = ('0' + t.minutes).slice(-2);
-        $scope.CountDown.seconds = ('0' + t.seconds).slice(-2);
-
-        if (t.total <= 0) {
-          $interval.cancel(timeinterval);
-        }
-      }
-
-      updateClock();
-      var timeinterval = $interval(updateClock, 1000);
-    }
-  }
-
-  var deadline = new Date(Date.parse(new Date()) + 2 * 12 * 60 * 60 * 1000);
-  $scope.CountDown.initializeClock(deadline);
-
-*/
   }
 
 })();

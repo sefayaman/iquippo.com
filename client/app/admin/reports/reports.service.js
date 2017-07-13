@@ -185,6 +185,8 @@
         url = path + "/servicerequest/export";
       } else if (refName == "valuationReport") {
         url = path + "/valuation/export";
+      } else if(refName == "auctionRegReport") {
+        url = path + "/auction/userregforauction/export";
       } //else
         //url = path + "/productquote/export";
        console.log("ready Data",data);

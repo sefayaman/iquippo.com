@@ -1,12 +1,11 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./assetsale.controller');
-
+var controller = require('./assetsalebid.controller');
 var router = express.Router();
 
-router.post('/create', controller.create);
-router.post('/update', controller.updateAppNotification);
-router.post('/search', controller.search);
-
+router.post('/submitbid',controller.submitBid);
+router.get('/',controller.fetchBid);
+router.get('/count/:productId');
 module.exports = router;
+

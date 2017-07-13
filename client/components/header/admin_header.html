@@ -68,6 +68,9 @@
                     <li ng-if="isAdmin()">
                         <a href="/assetsale/administrator"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li>
+                    <li ng-if="isLoggedIn && !isAdmin()">
+                        <a href="/assetsale/seller"><i class="fa fa-gavel"></i> Asset Sale</a>
+                    </li>
                     <!--<li ng-if="isAdmin()">
                         <a href="javascript:void(0);"><i class="fa fa-history"></i>Product History</a>
                     </li>
@@ -122,9 +125,9 @@
                     <li>
                         <a href="/auctionrequets"><i class="fa fa-gavel"></i>Auction Request</a>
                     </li>
-                    <li ng-if="isAuctionPartner() || isAdmin()">
+                    <!-- <li ng-if="isAuctionPartner() || isAdmin()">
                         <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
-                    </li>
+                    </li> -->
                     <li ng-if="isPartner()">
                         <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
                     </li>

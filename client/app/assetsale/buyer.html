@@ -11,18 +11,18 @@
   </div>
   <legend></legend>
   <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn btn-warning">Auctionable Bid</button>
-    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('auctionable')">Closed Bid</button>
+    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
    <!-- Auctionable Bid -->
-	<div ng-if="true">
+	<div ng-if="assetSaleBuyerDashboardVm.activeBid=='Auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{assetSaleBuyerDashboardVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="assetSaleBuyerDashboardVm.searchStr" ng-change="assetSaleBuyerDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -42,6 +42,7 @@
 			   			<th>Offer Type</th>
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
+			   			<th>Deal Status</th>
 			   			<th>Invoice Details</th>
 			   			<th>KYC Documents</th>
 			   			<th>Delivery Order</th>
@@ -52,41 +53,41 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+		   			<tr ng-repeat="bid in assetSaleBuyerDashboardVm.bidListing">
+			   			<td>{{bid.productId.assetId}}</td>
+			   			<td>{{bid.productId.category.name}}</td>
+			   			<td>{{bid.productId.brand.name}}</td>
+			   			<td>{{bid.productId.model.name}}</td>
+			   			<td>{{bid.productId.mfgYear}}</td>
+			   			<td>{{bid.productId.country}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.productId.city}}</td>
+			   			<td>{{bid.productId.assetDesc}}</td>
+			   			<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.tradeType}}</td>
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="assetSaleBuyerDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
   <!-- Closed Auction -->
-	<div ng-if="false">
+	<div ng-if="assetSaleBuyerDashboardVm.activeBid=='closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{assetSaleBuyerDashboardVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="assetSaleBuyerDashboardVm.searchStr" ng-change="assetSaleBuyerDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -116,31 +117,31 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+		   			<tr ng-repeat="bid in assetSaleBuyerDashboardVm.bidListing">
+			   			<td>{{bid.productId.assetId}}</td>
+			   			<td>{{bid.productId.category.name}}</td>
+			   			<td>{{bid.productId.brand.name}}</td>
+			   			<td>{{bid.productId.model.name}}</td>
+			   			<td>{{bid.productId.mfgYear}}</td>
+			   			<td>{{bid.productId.country}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.productId.city}}</td>
+			   			<td>{{bid.productId.assetDesc}}</td>
+			   			<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.tradeType}}</td>
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="assetSaleBuyerDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 </div>

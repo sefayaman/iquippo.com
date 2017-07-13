@@ -60,6 +60,7 @@ var EnterpriseValuationSchema = new Schema({
   gpsInstalled:{type:Boolean},
   gpsDeviceNo:String,
   gpsIMEINo:String,
+  images:[],
   generalImage:{},
   engineImage:{},
   hydraulicImage:{},

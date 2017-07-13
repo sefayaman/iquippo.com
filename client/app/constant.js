@@ -252,6 +252,11 @@ var transactionStatuses = [
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 var TaxList =  ["Service Tax","Swatch Bharat Cess","Krishi Kalyan Cess"];
 
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
+var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
+var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
+var tradeTypeStatuses = ['Sell','Both','Not Available'];
+
 var tradeType = [
 {
   "name" : "Rent",
