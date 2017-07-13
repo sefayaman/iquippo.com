@@ -51,19 +51,6 @@
             else if($scope.params.bid === "buynow")
               vm.bidAmount = query.product.grossPrice;
             calculateBid(vm.bidAmount);
-            /*$scope.taxRate = (Number(vm.salePrice) * Number(result[0].amount)) / 100;
-            if (vm.salePrice){
-              if(vm.salePrice + $scope.taxRate > 1000000){
-                $scope.tcs=Number(vm.salePrice * 0.01);
-              }
-              $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking) + Number(vm.salePrice || 0);
-            }
-            if (vm.bidAmount){
-              if(vm.bidAmount + $scope.taxRate > 1000000){
-                $scope.tcs=Number(vm.bidAmount * 0.01);
-              }
-              $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking) + Number(vm.bidAmount || 0);
-            }*/
           });
       }
     }
@@ -79,12 +66,6 @@
       }
       if(query.product.parkingCharges)
         $scope.parking = query.product.parkingCharges;
-      /*if($scope.params.product.parkingChargePerDay) {
-        var lastDateOfMonth = getLastDate($scope.params.product.serverDate);
-        var noOfDays = lastDateOfMonth - new Date($scope.params.product.repoDate);
-        console.log("no of days" , noOfDays);
-        $scope.parking = Number($scope.params.product.parkingChargePerDay) * Number(noOfDays);
-      }*/
 
       $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking || 0) + Number(vm.salePrice || 0);
     }
@@ -95,10 +76,6 @@
       return lastDate;
     }
 
-    // function daysInMonth(month,year) {
-    //   console.log("date###", new Date(year, month, 0).getDate());
-    //   console.log("date###", new Date(year, month, 0));
-    // }
     function submitBid(form) {
         if (form && form.$invalid) {
           $scope.submitted = true;
@@ -121,13 +98,13 @@
       dataToSend.offerStatus = offerStatuses[0];
       dataToSend.bidStatus = bidStatuses[0];
       dataToSend.dealStatus = dealStatuses[0];
-      dataToSend.assetStatus = assetStatuses[0];
-      dataToSend.status=true;
-      dataToSend.tradeType = query.tradeType;
-      dataToSend.ticketId = timestamp;
+      dataToSend.assetStatus = assetStatuses[0].name;
+      dataToSend.status = true;
+      dataToSend.tradeType = query.product.tradeType;
       dataToSend.userId = Auth.getCurrentUser()._id;
-      dataToSend.productId = query.productId;
+      dataToSend.productId = query.product._id;
       dataToSend.bidAmount = $scope.total;
+      dataToSend.proxyBid = query.proxyBid;
       AssetSaleSvc.submitBid(dataToSend)
         .then(function(result) {
           Modal.alert("Your bid has been successfully submitted!", true);

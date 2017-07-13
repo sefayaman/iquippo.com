@@ -513,14 +513,13 @@
                    </div>
                    </div>
                    <div class="col-xs-2 padd-left">
-                     <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
-                       <span ng-if="true">Place Bid</span>
-                       <span ng-if="false">Change Bid</span>
+                     <button type="button" ng-if="auctionsData.allowBid != 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
+                      Place Bid
                      </button>
 
-                     <!-- <button type="button" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount)">Place Bid</button> -->
+                     <button type="button" ng-if="false" class="btn btn-primary btn-block">Change Bid</button>
 
-                     <button type="button" ng-if="false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal()">Proxy Bid</button>
+                     <button type="button" ng-if="auctionsData.allowBid == 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                    </div>
                  </div>
                  </form>
