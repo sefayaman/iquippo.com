@@ -505,7 +505,7 @@
                 </div>
                </div>
                <div class="panel-footer">
-                 <h4>Sale Price : <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
+                 <h4 ng-if="currentProduct.priceOnRequest==false">Sale Price : <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
                  <div class="row">
                    <div class="col-xs-offset-3 col-xs-4">
                    <div class="form-group" ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
