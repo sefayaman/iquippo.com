@@ -16,7 +16,7 @@ var AssetSaleBidSchema = new Schema({
             state:String,
             city:String,
             comment:String
-          }
+          },
   bidAmount:Number,
   offerStatus:String,
   bidStatus:String,
