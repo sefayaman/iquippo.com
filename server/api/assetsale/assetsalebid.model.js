@@ -24,7 +24,7 @@ var AssetSaleBidSchema = new Schema({
   assetStatus:String,
   tradeType:String,
   offerStatuses:[{}],
-  dealStatuses:{[}],
+  dealStatuses:[{}],
   bidStatuses:[{}],
   assetStatuses:[{}],
   kyc:{
