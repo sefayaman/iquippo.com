@@ -41,7 +41,7 @@ function fetchBid(filter,callback){
 	}
     console.log("id",filter);
    var query=AssetSaleBid.find(filter);
-   query.populate('userId productId')
+   query.populate('user product._id')
    .exec(function(err,results){
    	if(err)
    		return callback(err);

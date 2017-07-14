@@ -6,13 +6,45 @@ var mongoose = require('mongoose'),
 var AssetSaleBidSchema = new Schema({
   ticketId:String,
   user:{type:Schema.Types.ObjectId,ref:'User'},
-  product:{type:Schema.Types.ObjectId,ref:'Product'},
+  product:{
+            _id : {type:Schema.Types.ObjectId,ref:'Product'},
+            category:String,
+            brand:String,
+            model:String,
+            mfgYear:String,  
+            country:String,
+            state:String,
+            city:String,
+            comment:String
+          }
   bidAmount:Number,
   offerStatus:String,
   bidStatus:String,
   dealStatus:String,
   assetStatus:String,
   tradeType:String,
+  offerStatuses:[{}],
+  dealStatuses:{[}],
+  bidStatuses:[{}],
+  assetStatuses:[{}],
+  kyc:{
+        type:String,
+        name:String,
+        docName:String
+  },
+  emdPayment:{
+    paymentMode:String,
+    emdAmount:Number,
+    remaingPayment:Number,
+    paymentsDetail:[{}]
+  },
+  fullPayment:{
+    paymentMode:String,
+    fullPaymentAmount:Number,
+    remaingPayment:Number,
+    paymentsDetail:[{}]
+  },
+  invoiceDetail:{},
   proxyBid:{type:Boolean,default:false},
   status:{type:Boolean,default:true},
   createdAt: {type:Date,default:Date.now},

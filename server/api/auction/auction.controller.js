@@ -80,6 +80,20 @@ exports.getAuctionInfoForProduct = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
+      
+      var tempArr = [];
+      if(result) {
+        result.forEach(function(auction) {
+          auction = auction.toObject();
+          var currentDate = new Date();
+          result.visibleBuyNow = true;
+          if (auction.startDate < currentDate && auction.endDate > currentDate)
+            auction.visibleBuyNow = false;
+          tempArr[tempArr.length] = auction;
+        })
+        result = tempArr;
+      }
+
       return res.status(200).json(result);
     });
   });
@@ -572,14 +586,12 @@ exports.getOnFilter = function(req, res) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;
   }
-  console.log("last filter",filter);
   var query = AuctionRequest.find(filter);
   query.exec(
     function(err, auctions) {
       if (err) {
         return handleError(res, err);
       }
-      console.log("auctions",auctions);
       return res.status(200).json(auctions);
     }
 
@@ -624,7 +636,6 @@ exports.update = function(req, res) {
 };
 
 function updateProduct(data) {
-  console.log("datadata@@@", data);
   Product.find({assetId: data.product.assetId}, function(err, product) {
     var proData = {};
     proData.isSold = true;
@@ -1264,7 +1275,6 @@ exports.importAuctionMaster = function(req, res) {
     return res.status(404).send("Error in file upload");
   var worksheet = workbook.Sheets[workbook.SheetNames[0]];
   var data = xlsx.utils.sheet_to_json(worksheet);
-  console.log("Auction Data",data);
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
