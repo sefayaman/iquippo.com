@@ -207,7 +207,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
           throw err;
         });
     }
-
+    
   return svc;
 }
 })();
