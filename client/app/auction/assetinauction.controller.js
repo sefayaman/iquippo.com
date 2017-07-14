@@ -11,6 +11,14 @@
     $scope.auctionType=$location.search().auctionType;
     $scope.docName=$location.search().docName;
     $scope.docType=$location.search().docType;
+    $scope.docNameProxy=$location.search().docNameProxy;
+    $scope.auctionOwner=$location.search().auctionOwner;
+    $scope.auctionOwnerMobile=$location.search().auctionOwnerMobile;
+    $scope.auctionCity=$location.search().auctionCity;
+    $scope.auctionTypeValue=$location.search().auctionTypeValue;
+    $scope.termAuction=$location.search().termAuction;
+    $scope.contactName=$location.search().contactName;
+    $scope.contactNumber=$location.search().contactNumber;
     var filter = {};
 
     $scope.equipmentSearchFilter={};
@@ -19,8 +27,17 @@
     vm.productSearchOnMfg=productSearchOnMfg;
     vm.auctionDetailListing = [];
     vm.backButton = backButton;
-    vm.auctionName = $location.search().auctionName;
-    $scope.auctionValue = $location.search().auctionType;
+    vm.auctionName=$location.search().auctionName;
+    vm.auctionOwner=$location.search().auctionOwner;
+    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
+    vm.auctionCity=$location.search().auctionCity;
+    $scope.auctionValue=$location.search().auctionType;
+    vm.auctionOwner=$location.search().auctionOwner;
+    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
+    vm.auctionCity=$location.search().auctionCity;
+    vm.auctionTypeValue=$location.search().auctionTypeValue;
+    vm.termAuction=$location.search().termAuction;
+
     $scope.openUrl = openUrl;
 
     //registering category brand functions

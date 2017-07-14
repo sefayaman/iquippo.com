@@ -61,7 +61,7 @@
     <div class="col-sm-9">
       <div class="row">
         <div class="col-sm-6">
-          <h4>{{auctionName}}</h4>
+        <h4>{{auctionTypeValue | titleCase}} {{auctionName}} - {{auctionCity}}</h4>
         </div>
         <div class="col-xs-3 visible-xs filter-btn form-group">        
           <button class="btn btn-block btn-danger btn-sm" ng-click="filterbutton.value1 = !filterbutton.value1">
@@ -72,20 +72,22 @@
           <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm active">Register Now</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> <span class="hidden-xs">Auction Catalogue</span></a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!docType &&  docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
+          <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm active btn-default" ng-if="!docType && docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
           <a href="javascript:void(0);" ng-click="auctionDetailsVm.backButton()" class="btn btn-default btn-sm active"> <i class="fa fa-chevron-left"></i> <span class="hidden-xs">Back</span></a>
+
         </div>         
       </div>
-      <div class="auctionText">
+      <div class="auctionText" ng-if="termAuction || contactName || contactNumber">
         <div class="row">
           <div class="col-sm-6">
-            Terms of Auction field text
+            {{termAuction}}
           </div>
           <div class="col-sm-6 text-right">
             <a href="tel:{{auctionProduct.product.contactNumber}}">
               <i class="fa fa-phone"></i>
-              <span ng-if="auctionProduct.product.contactNumber">{{auctionProduct.product.contactName}}</span> 
-              <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span>
-              Rajesh Kumar (8800221914)
+              <span ng-if="auctionOwner">{{contactName}}</span> 
+              <span ng-if="auctionOwnerMobile">({{contactNumber}})</span>
             </a>
           </div>
         </div>
