@@ -16,10 +16,10 @@
 	<div ng-if="true">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{adminProDetailDashboardVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="adminProDetailDashboardVm.searchStr" ng-change="adminProDetailDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -44,32 +44,37 @@
 			   			<th>Deal Status</th>
 			   			<th>Trade Type</th>
 			   			<th>Asset Status</th>
+			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+		   			<tr ng-repeat="bid in adminProDetailDashboardVm.bidListing">
+			   			<td>{{bid.ticketId}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.product.proData.seller.fname}} {{bid.product.proData.seller.lname}}</td>
+			   			<td>{{bid.product.proData.seller.mobile}}</td>
+			   			<td>{{bid.bidStatus}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<td>{{bid.tradeType}}</td>
+			   			<td>{{bid.assetStatus}}</td>
+			   			<td>
+			   				<button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
+			   				<button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
+			   			</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="adminProDetailDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 </div>

@@ -530,12 +530,14 @@ angular.module('sreizaoApp')
       .state('assetsale.administrator', {
         url: '/administrator',
         templateUrl: 'app/assetsale/administrator.html',
+        controller:'adminProDashboardCtrl as adminProDashboardVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.admindetails', {
         url: '/admindetails',
         templateUrl: 'app/assetsale/admindetails.html',
+        controller:'adminProDetailDashboardCtrl as adminProDetailDashboardVm',
         layout:'admin',
         authenticate:true
       })
@@ -556,6 +558,7 @@ angular.module('sreizaoApp')
       .state('assetsale.fulfilmentagency', {
         url: '/fulfilmentagency',
         templateUrl: 'app/assetsale/fulfilmentAgency.html',
+        controller:'FAProductDashboardCtrl as faProDashboardVm',
         layout:'admin',
         authenticate:true
       })
@@ -569,6 +572,7 @@ angular.module('sreizaoApp')
       .state('assetsale.fulfilmentagencydetails', {
         url: '/fulfilmentagencydetails',
         templateUrl: 'app/assetsale/fulfilmentAgencydetails.html',
+        controller:'FAProDetailDashboardCtrl as faProDetailDashboardVm',
         layout:'admin',
         authenticate:true
       })

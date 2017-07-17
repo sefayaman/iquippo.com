@@ -46,25 +46,35 @@
 			   			<th>Deal Status</th>
 			   			<th>Asset Status</th>
 			   			<th>DO Upload</th>
+			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
 		   			<tr ng-repeat="bid in sellerDetailsVm.bidListing">
 			   			<td>{{bid.ticketId}}</td>
-			   			<td>test</td>
+			   			<td>{{}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.bidStatus}}</td>
-			   			<td>{{bid.productId.EMDAmount}}</td>
-			   			<td>{{bid.productId.EMDDetails}}</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   			<td>{{bid.dealStatus}}</td>
-			   			<td>{{bid.assetStatus}}</td>
-			   			<td>test</td>
+			   			<td>{{bid.assetStatus}}</td>			   			
+			   			<td>
+			   				<span class="btn btn-danger bts-sm fileinput-button">
+					            <input type="file" name="" file-upload>
+					            <span><i class="fa fa-img"></i> Upload</span>
+					        </span>
+			   			</td>
+			   			<td>
+			   				<button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
+			   				<button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
+			   			</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>

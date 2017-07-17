@@ -9,14 +9,14 @@
 	  		</h4>
 	  	</div>
 	</div>
-	<!-- <legend></legend>
+	<legend></legend>
 	<div class="btn-group enterprise-value form-group">
-		<button type="button" class="btn btn-warning">Auctionable Bid</button>
-		<button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('auctionable')">Closed Bid</button>
-	</div> -->
+    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+   </div>
 
 	<!-- Auctionable Bid -->
-	<div ng-if="true">
+	<div ng-if="assetSaleSellerDashboardVm.activeBid == 'Auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{assetSaleSellerDashboardVm.productListing.length}}
@@ -57,11 +57,11 @@
 			   			<td>{{product.mfgYear}}</td>
 			   			<td>{{product.state}}</td>
 			   			<td>{{product.repoDate}}</td>
-			   			<td>test</td>
+			   			<td>{{}}</td>
 			   			<td>{{product.reservePrice}}</td>
 			   			<td>{{product.parkingCharges}}</td>
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
+			   			<td>{{product.grossPrice}}</td>			   			
+			   			<td>{{product.comment}}</td>			   			
 			   			<td>{{}}</td>			   			
 			   			   			
 			   		</tr>
@@ -72,7 +72,7 @@
 	</div>
 
 	<!-- Closed Bid -->
-	<div ng-if="false">
+	<div ng-if="assetSaleSellerDashboardVm.activeBid == 'closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : 1 Records
@@ -113,32 +113,32 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>			   			   			
-			   			<td>test</td>			   			   			
-			   			<td>test</td>			   			   			
+		   			<tr ng-repeat="product in assetSaleSellerDashboardVm.productListing">
+			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.category.name}}</td>
+			   			<td>{{product.brand.name}}</td>
+			   			<td>{{product.model.name}}</td>
+			   			<td>{{product.mfgYear}}</td>
+			   			<td>{{product.state}}</td>
+			   			<td>{{product.repoDate}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{product.reservePrice}}</td>
+			   			<td>{{product.parkingCharges}}</td>
+			   			<td>{{product.grossPrice}}</td>	
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>			   			   			
+			   			<td>{{}}</td>			   			   			
+			   			<td>{{}}</td>			   			   			
 			   		</tr>
 		   		</tbody>
 		   	</table>

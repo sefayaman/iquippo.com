@@ -15,13 +15,13 @@
 		function init() {
 			Auth.isLoggedInAsync(function(loggedIn) {
 				if (loggedIn) {
-
+					filter = {};
+					filter.productId = query.productId;
 					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
 						$scope.isAdmin = false;
 					}
 					getBidData(filter);
-					fetchCoolingPeriod();
-
+					//fetchCoolingPeriod();
 				}
 			});
 		}
@@ -31,6 +31,7 @@
 			switch (tabs) {
 				case 'auctionable':
 					filter = {};
+					filter.productId = query.productId;
 					vm.activeBid = 'Auctionable';
 					$scope.tabValue = 'auctionable';
 					getBidData(filter);
@@ -39,6 +40,7 @@
 					filter = {};
 					vm.activeBid = 'closed';
 					$scope.tabValue = 'closed';
+					filter.productId = query.productId;
 					filter.assetStatus = encodeURIComponent('closed');
 					getBidData(filter);
 					break;
@@ -75,7 +77,6 @@
 
 
 		function getBidData(filter) {
-			filter.productId = query.productId;
 			AssetSaleSvc.fetchBid(filter)
 				.then(function(res) {
 					console.log("res", res);
@@ -87,7 +88,7 @@
 
 		}
 
-		function fetchCoolingPeriod() {
+		/*function fetchCoolingPeriod() {
 			filter={};
 			EnterpriseMasterSvc.get(filter)
 				.then(function(res) {
@@ -96,7 +97,7 @@
 				.catch(function(err) {
 
 				});
-		}
+		}*/
 
 	}
 })();

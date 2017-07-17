@@ -12,7 +12,25 @@
 		vm.fireCommand=fireCommand;
 
 		function init() {
-			Auth.isLoggedInAsync(function(loggedIn) {
+			switch($state.current.name){
+            case 'assetsale.administrator':
+                $scope.tabValue = 'administrator';
+            break;
+            case 'assetsale.seller':
+                $scope.tabValue = 'seller';
+            break;
+            case 'assetsale.buyer':
+                $scope.tabValue = 'buyer';  
+            break;
+           case "assetsale.fulfilmentagency":
+              $scope.tabValue = 'fulfilmentagency';
+            break;
+            default:
+              $scope.tabValue = '';
+              break;
+        }
+        onTabChange($scope.tabValue);
+			/*Auth.isLoggedInAsync(function(loggedIn) {
 				if (loggedIn) {
 
 					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
@@ -22,58 +40,32 @@
 					}
 					getBidProducts(filter);
 				}
-			});
+			});*/
 		}
 		init();
 	  
-	  function onTabChange(tabs){
-	  	switch(tabs){
-	  		case 'auctionable':
-	  		filter={};
-	  		vm.activeBid='Auctionable';
-            $scope.tabValue='auctionable';
-	  		getBidData(filter);
-	  		break;
-	  		case 'closed':
-	  		filter={};
-	  		vm.activeBid='closed';
-	  		$scope.tabValue='closed';
-	  		filter.assetStatus=encodeURIComponent('closed');
-	  		getBidData(filter);
-	  		break;
-	  	}
-	  }
-
-	  function fireCommand(reset,filterObj){
-      /*if(reset)
-        $scope.pager.reset();*/
-      var filter = {};
-      /*if(!filterObj)
-          angular.copy(dataToSend, filter);
-      else
-        filter = filterObj;*/
-      if(vm.searchStr){
-        filter.isSearch = true;
-        filter.searchStr = encodeURIComponent(vm.searchStr);
-      }
-      /*if(vm.statusType){
-        filter.isSearch = true;
-        filter['statusType'] = encodeURIComponent(vm.statusType);
-      }
-      if(vm.fromDate){
-        filter.isSearch = true;
-        filter['fromDate'] = encodeURIComponent(vm.fromDate);
-      }
-      if(vm.toDate){
-        filter.isSearch = true;
-        filter['toDate'] = encodeURIComponent(vm.toDate);
-      }*/
-      
-      getBidProducts(filter);
+	  function onTabChange(tabValue){
+      switch(tabValue){
+        case "administrator":
+          $scope.tabValue = 'dashboard';
+          $state.go("assetsale.administrator");
+        break;
+        case "seller":
+          $scope.tabValue = 'seller';
+          $state.go("assetsale.seller");
+        break;
+        case "buyer":
+          $scope.tabValue = 'buyer';
+          $state.go("assetsale.buyer");
+        break;
+         case "fulfilmentagency":
+          $scope.tabValue = 'fulfilmentagency';
+          $state.go("assetsale.fulfilmentagency");
+        break;
+      } 
     }
 
-
-    function getBidProducts(filter){
+   /* function getBidProducts(filter){
     	filter.userid=Auth.getCurrentUser()._id;
     	productSvc.getProductOnSellerId(filter)
 						.then(function(res) {
@@ -84,7 +76,7 @@
 
 						});
     
-    }
+    }*/
 
 	}
 })();

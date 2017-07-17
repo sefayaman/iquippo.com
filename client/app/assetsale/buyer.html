@@ -54,20 +54,21 @@
 		   		</thead>
 		   		<tbody>
 		   			<tr ng-repeat="bid in assetSaleBuyerDashboardVm.bidListing">
-			   			<td>{{bid.productId.assetId}}</td>
-			   			<td>{{bid.productId.category.name}}</td>
-			   			<td>{{bid.productId.brand.name}}</td>
-			   			<td>{{bid.productId.model.name}}</td>
-			   			<td>{{bid.productId.mfgYear}}</td>
-			   			<td>{{bid.productId.country}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{bid.productId.city}}</td>
-			   			<td>{{bid.productId.assetDesc}}</td>
+			   			<td>{{bid.product.assetId}}</td>
+			   			<td>{{bid.product.category}}</td>
+			   			<td>{{bid.product.brand}}</td>
+			   			<td>{{bid.product.model}}</td>
+			   			<td>{{bid.product.mfgYear}}</td>
+			   			<td>{{bid.product.country}}</td>
+			   			<td>{{bid.product.state}}</td>
+			   			<td>{{bid.product.city}}</td>
+			   			<td>{{bid.product.assetDesc}}</td>
 			   			<td>{{bid.ticketId}}</td>
 			   			<td>{{bid.tradeType}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.dealStatus}}</td>
+			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
@@ -117,20 +118,20 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="bid in assetSaleBuyerDashboardVm.bidListing">
-			   			<td>{{bid.productId.assetId}}</td>
-			   			<td>{{bid.productId.category.name}}</td>
-			   			<td>{{bid.productId.brand.name}}</td>
-			   			<td>{{bid.productId.model.name}}</td>
-			   			<td>{{bid.productId.mfgYear}}</td>
-			   			<td>{{bid.productId.country}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{bid.productId.city}}</td>
-			   			<td>{{bid.productId.assetDesc}}</td>
-			   			<td>{{bid.ticketId}}</td>
-			   			<td>{{bid.tradeType}}</td>
-			   			<td>{{bid.bidAmount}}</td>
-			   			<td>{{bid.offerStatus}}</td>
+		   			<tr ng-repeat="closedBid in assetSaleBuyerDashboardVm.bidListing">
+			   			<td>{{closedBid.product.assetId}}</td>
+			   			<td>{{closedBid.product.category}}</td>
+			   			<td>{{closedBid.product.brand}}</td>
+			   			<td>{{closedBid.product.model}}</td>
+			   			<td>{{closedBid.product.mfgYear}}</td>
+			   			<td>{{closedBid.product.country}}</td>
+			   			<td>{{closedBid.product.state}}</td>
+			   			<td>{{closedBid.product.city}}</td>
+			   			<td>{{closedBid.product.assetDesc}}</td>
+			   			<td>{{closedBid.ticketId}}</td>
+			   			<td>{{closedBid.tradeType}}</td>
+			   			<td>{{closedBid.bidAmount}}</td>
+			   			<td>{{closedBid.offerStatus}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>

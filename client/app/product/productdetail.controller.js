@@ -68,14 +68,6 @@
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
-        // sellingPrice: $scope.currentProduct.grossPrice,
-        // group: $scope.currentProduct.group._id,
-        // category: $scope.currentProduct.category._id,
-        // state: $scope.currentProduct.state,
-        // seller: $scope.currentProduct.seller,
-        // productId: $scope.currentProduct._id,
-        // parkingChargePerDay: $scope.currentProduct.parkingChargePerDay,
-        // repoDate: $scope.currentProduct.repoDate,
         bid: "placebid"
       };
       if(bid == "proxybid")
@@ -91,9 +83,6 @@
         bidSummaryScope.params.user = Auth.getCurrentUser();
         bidSummaryScope.params.product = $scope.currentProduct;
         bidSummaryScope.params.bid = "buynow";
-        //bidSummaryScope.params.group = $scope.currentProduct.group._id;
-        //bidSummaryScope.params.category = $scope.currentProduct.category._id;
-        //bidSummaryScope.params.state = $scope.currentProduct.state;
       }
 
       var bidSummaryModal = $uibModal.open({
@@ -106,6 +95,7 @@
 
       bidSummaryScope.close = function() {
         bidSummaryModal.close();
+        //vm.bidAmount = "";
       };
     }
 

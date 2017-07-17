@@ -14,16 +14,12 @@
 		function init() {
 			Auth.isLoggedInAsync(function(loggedIn) {
 				if (loggedIn) {
-
+					filter = {};
 					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
 						$scope.isAdmin = false;
 						filter.userid = Auth.getCurrentUser()._id;
-						getBidProducts(filter);
 					}
-					else{
-						getBidProducts(filter);
-					}
-
+					getBidProducts(filter);
 				}
 			});
 		}
@@ -33,16 +29,22 @@
 			switch (tabs) {
 				case 'auctionable':
 					filter = {};
+					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
+						filter.userid = Auth.getCurrentUser()._id;
 					vm.activeBid = 'Auctionable';
 					$scope.tabValue = 'auctionable';
-					getBidData(filter);
+					getBidProducts(filter);
 					break;
 				case 'closed':
 					filter = {};
 					vm.activeBid = 'closed';
 					$scope.tabValue = 'closed';
-					filter.assetStatus = encodeURIComponent('closed');
-					getBidData(filter);
+					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
+						filter.userid = Auth.getCurrentUser()._id;
+					//filter.assetStatus = encodeURIComponent('closed');
+					filter.tradeType = "NOT_AVAILABLE";
+					filter.assetStatus = "sold";
+					getBidProducts(filter);
 					break;
 			}
 		}

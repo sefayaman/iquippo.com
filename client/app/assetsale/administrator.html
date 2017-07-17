@@ -10,19 +10,19 @@
   	</div>
   </div>
   <legend></legend>
-  <div class="btn-group enterprise-value form-group">
+  <!-- <div class="btn-group enterprise-value form-group">
     <button type="button" class="btn btn-warning">Auctionable Bid</button>
     <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('auctionable')">Closed Bid</button>
-   </div>
+   </div> -->
 
    	<!-- Auctionable Auction -->
 	<div ng-if="true">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{adminProDashboardVm.productListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="adminProDashboardVm.searchStr" ng-change="adminProDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -55,37 +55,38 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
+		   			<tr ng-repeat="product in adminProDashboardVm.productListing">
 			   			<td>
-			   			<a href="/assetsale/admindetails" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   			<a href="/assetsale/admindetails?productId={{product._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
 			   			</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.category.name}}</td>
+			   			<td>{{product.brand.name}}</td>
+			   			<td>{{product.model.name}}</td>
+			   			<td>{{product.mfgYear}}</td>
+			   			<td>{{product.country}}</td>
+			   			<td>{{product.state}}</td>
+			   			<td>{{product.city}}</td>
+			   			<td>{{product.comment}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{product.reservePrice}}</td>
+			   			<td>{{product.parkingChargePerDay}}</td>
+			   			<td>{{product.grossPrice}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="adminProDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
    <!-- Closed Bid -->
 	<div ng-if="false">
@@ -94,7 +95,7 @@
 		   		Showing : 1 Records
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="adminProDashboardVm.searchStr" ng-change="adminProDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -102,6 +103,6 @@
 		   		
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="adminProDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>  
 </div>

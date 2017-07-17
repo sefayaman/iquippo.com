@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('AssetBidPopUpCtrl', AssetBidPopUpCtrl);
 
-  function AssetBidPopUpCtrl($scope, Auth, Modal, $cookies, LocationSvc, NegotiationSvc, AssetSaleSvc, VatTaxSvc) {
+  function AssetBidPopUpCtrl($scope, Auth, Modal, $cookies, LocationSvc, notificationSvc, NegotiationSvc, AssetSaleSvc, VatTaxSvc) {
     var vm = this;
     var query = $scope.params;
     var date = new Date();
@@ -26,7 +26,7 @@
 
 
     function init() {
-      var filter = {};
+      /*var filter = {};
       filter.taxType = "GST";
       filter.status = true;
       var date = new Date();
@@ -52,7 +52,26 @@
               vm.bidAmount = query.product.grossPrice;
             calculateBid(vm.bidAmount);
           });
-      }
+      }*/
+      var filter = {};
+      filter.taxType = "GST";
+      filter.status = true;
+      if (query.product.group)
+        filter.groupId = query.product.group._id;
+      if (query.product.category)
+        filter.categoryId = query.product.category._id;
+      filter.state = query.product.state;
+      filter.currentDate = 'y'
+      VatTaxSvc.get(filter)
+      .then(function(taxes){
+        if(taxes.length)
+          $scope.taxPercent = taxes[0].amount;
+        if($scope.params.bid === "placebid")
+          vm.bidAmount = query.bidAmount;
+        else if($scope.params.bid === "buynow")
+          vm.bidAmount = query.product.grossPrice;
+        calculateBid(vm.bidAmount);
+      });
     }
 
 
@@ -90,32 +109,90 @@
       if (Auth.getCurrentUser().profileStatus == "incomplete") {
         return $state.go("myaccount");
       }
-      var timestamp = new Date().getTime();
-      var dataToSend = {};
-
-      Modal.confirm("Do you want to submit?", function(ret) {
-      if (ret == "yes") {
-      dataToSend.offerStatus = offerStatuses[0];
-      dataToSend.bidStatus = bidStatuses[0];
-      dataToSend.dealStatus = dealStatuses[0];
-      dataToSend.assetStatus = assetStatuses[0].name;
-      dataToSend.status = true;
-      dataToSend.tradeType = query.product.tradeType;
-      dataToSend.userId = Auth.getCurrentUser()._id;
-      dataToSend.productId = query.product._id;
-      dataToSend.bidAmount = $scope.total;
-      dataToSend.proxyBid = query.proxyBid;
-      AssetSaleSvc.submitBid(dataToSend)
-        .then(function(result) {
-          Modal.alert("Your bid has been successfully submitted!", true);
-          $scope.close();
-        })
-        .catch(function(err) {
-          throw err;
-          //$scope.close();
-        });
       
-      }
+      // dataToSend = {};
+      // dataToSend.offerStatuses = [];
+      // dataToSend.dealStatuses = [];
+      // dataToSend.bidStatuses = [];
+      // dataToSend.assetStatuses = [];
+      var filter = {};
+      filter.assetId = query.product.assetId;
+      AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
+        var msg = "";
+        if(Number($scope.total) < Number(result.bidAmount))
+          msg = "Higher bid available in the system. "
+        Modal.confirm(msg + "Do you want to submit?", function(ret) {
+          if (ret == "yes") {
+            dataToSend = {};
+            dataToSend.offerStatuses = [];
+            dataToSend.dealStatuses = [];
+            dataToSend.bidStatuses = [];
+            dataToSend.assetStatuses = [];
+            dataToSend.offerStatus = offerStatuses[0];
+            var offerStatusObj = {};
+            offerStatusObj.userId = Auth.getCurrentUser()._id;;
+            offerStatusObj.status = offerStatuses[0];
+            offerStatusObj.createdAt = new Date();
+            dataToSend.offerStatuses[dataToSend.offerStatuses.length] = offerStatusObj;
+
+            dataToSend.bidStatus = bidStatuses[0];
+            var bidStatusObj = {};
+            bidStatusObj.userId = Auth.getCurrentUser()._id;;
+            bidStatusObj.status = bidStatuses[0];
+            bidStatusObj.createdAt = new Date();
+            dataToSend.bidStatuses[dataToSend.bidStatuses.length] = bidStatusObj;
+
+            dataToSend.dealStatus = dealStatuses[0];
+            var dealStatusObj = {};
+            dealStatusObj.userId = Auth.getCurrentUser()._id;;
+            dealStatusObj.status = dealStatuses[0];
+            dealStatusObj.createdAt = new Date();
+            dataToSend.dealStatuses[dataToSend.dealStatuses.length] = dealStatusObj;
+
+            dataToSend.assetStatus = assetStatuses[0].name;
+            var assetStatusObj = {};
+            assetStatusObj.userId = Auth.getCurrentUser()._id;;
+            assetStatusObj.status = assetStatuses[0].name;
+            assetStatusObj.createdAt = new Date();
+            dataToSend.assetStatuses[dataToSend.assetStatuses.length] = assetStatusObj;
+
+            dataToSend.status = true;
+            dataToSend.tradeType = query.product.tradeType;
+            dataToSend.user = Auth.getCurrentUser()._id;
+            dataToSend.product = {};
+            dataToSend.product.proData = query.product._id;
+            dataToSend.product.assetId = query.product.assetId;
+            dataToSend.product.category = query.product.category.name;
+            dataToSend.product.brand = query.product.brand.name;
+            dataToSend.product.model = query.product.model.name;
+            dataToSend.product.mfgYear = query.product.mfgYear;
+            dataToSend.product.country = query.product.country;
+            dataToSend.product.state = query.product.state;
+            dataToSend.product.city = query.product.city;
+            if(query.product.comment)
+              dataToSend.product.comment = query.product.comment;
+
+            dataToSend.bidAmount = $scope.total;
+            dataToSend.proxyBid = query.proxyBid;
+            AssetSaleSvc.submitBid(dataToSend)
+              .then(function(result) {
+                Modal.alert("Your bid has been successfully submitted!", true);
+                if(Auth.getCurrentUser().email) {
+                  var data = {};
+                  data['to'] = Auth.getCurrentUser().email;
+                  data['subject'] = 'No reply: Bid request received';
+                  dataToSend.serverPath = serverPath;
+                  dataToSend.ticketId = result.ticketId;
+                  notificationSvc.sendNotification('bidReceiveEmailToCustomer',data, dataToSend,'email');
+                }
+                $scope.close();
+              })
+              .catch(function(err) {
+                throw err;
+                $scope.close();
+              });        
+            }
+        });
       });
     }
 

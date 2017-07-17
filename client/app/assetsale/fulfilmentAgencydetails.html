@@ -1,7 +1,7 @@
 <div>
 	<div class="row">
 	  	<div class="col-sm-6">
-	  		<h4>fulfilment Agency Details</h4>
+	  		<h4>Fulfilment Agency Details</h4>
 	  	</div>
 	  	<div class="col-sm-6 text-right">
 	  		<h4>	  			
@@ -16,10 +16,10 @@
 	<div ng-if="true">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{faProDetailDashboardVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="enterpriseTransactionVm.searchStr" ng-change="enterpriseTransactionVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="faProDetailDashboardVm.searchStr" ng-change="faProDetailDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -41,31 +41,35 @@
 			   			<th>KYC Documents</th>
 			   			<th>Delivery Order</th>
 			   			<th>Date of Delivery</th>
-			   			<th>Deal Status</th>			   			
+			   			<th>Deal Status</th>
+			   			<th>Action</th>			   			
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
-			   			<td>test</td>
+		   			<tr ng-repeat="bid in faProDetailDashboardVm.bidListing">
+			   			<td>{{bid.ticketId}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.product.proData.seller.fname}} {{bid.product.proData.seller.lname}}</td>
+			   			<td>{{bid.product.proData.seller.mobile}}</td>
+			   			<td>{{bid.bidStatus}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<td>
+			   				<button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
+			   			</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faProDetailDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 </div>

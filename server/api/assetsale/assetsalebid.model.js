@@ -7,7 +7,8 @@ var AssetSaleBidSchema = new Schema({
   ticketId:String,
   user:{type:Schema.Types.ObjectId,ref:'User'},
   product:{
-            _id : {type:Schema.Types.ObjectId,ref:'Product'},
+            proData : {type:Schema.Types.ObjectId,ref:'Product'},
+            assetId:String,
             category:String,
             brand:String,
             model:String,
