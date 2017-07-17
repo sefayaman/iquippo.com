@@ -114,8 +114,13 @@
               <p>
                 <strong>Assets Listed in Auction :</strong> {{auctionDateVm.getProductData(product._id, 'total_products')}}
               </p>
-              <p class="calltoContact">
+              <p ng-if="product.contactNumber" class="calltoContact">
                 <a href="tel:{{product.contactNumber}}">
+                  <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
+                </a>
+              </p>
+              <p ng-if="!product.contactNumber" class="calltoContact">
+                <a>
                   <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
                 </a>
               </p>

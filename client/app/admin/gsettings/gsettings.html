@@ -484,8 +484,9 @@
 						<td>{{auc.auctionType | titleCase}}</td>
 						<td>{{auc.emdAmount}}</td>
 						<td>
-							<span ng-if="auc.docType == 'tc'">Terms and Conditions</span>
-							<span ng-if="auc.docType == 'bidProxy'">Bid Proxy Form</span>
+							<span ng-if="auc.docName">Terms and Conditions</span>
+							<span ng-if="auc.docName && auc.docNameProxy"> | </span>
+							<span ng-if="auc.docNameProxy">Bid Proxy Form</span>
 						</td>
 						<td>{{gsettingVm.getProductData(auc._id, "total_products")}}</td>
 						<td>
