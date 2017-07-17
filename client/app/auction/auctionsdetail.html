@@ -83,10 +83,14 @@
             {{termAuction}}
           </div>
           <div class="col-sm-6 text-right">
-            <a href="tel:{{auctionProduct.product.contactNumber}}">
+            <a ng-if="contactNumber" href="tel:{{contactNumber}}">
               <i class="fa fa-phone"></i>
-              <span ng-if="auctionOwner">{{contactName}}</span> 
-              <span ng-if="auctionOwnerMobile">({{contactNumber}})</span>
+              <span ng-if="contactName">{{contactName}}</span> 
+              <span ng-if="contactNumber">({{contactNumber}})</span>
+            </a>
+            <a ng-if="!contactNumber" >
+              <span ng-if="contactName">{{contactName}}</span> 
+              <span ng-if="contactNumber">({{contactNumber}})</span>
             </a>
           </div>
         </div>
