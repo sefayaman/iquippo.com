@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var Seq=require('seq');
 var async = require('async');
 var trim = require('trim');
 var AssetSaleBid = require('./assetsalebid.model');
@@ -94,7 +95,7 @@ exports.submitBid = function(req, res) {
 
 
 		function updateBid(callback) {
-			
+
 			AssetSaleBid.update(data, {
 				$set: {
 					"offerStatus": "Bid Changed",
@@ -104,7 +105,7 @@ exports.submitBid = function(req, res) {
 			}, {
 				multi: true
 			}, function(err, result) {
-				if(err)
+				if (err)
 					return callback(err);
 				return callback();
 			});
@@ -192,6 +193,11 @@ exports.fetchBid = function(req, res) {
 		filter.assetStatus = req.query.assetStatus;
 	}
 	console.log("filter", filter);
+	if (req.query.pagination) {
+		paginatedResult(req, res, AssetSaleBid, filter, {});
+		return;
+	}
+
 	fetchBid(filter, function(err, results) {
 		if (err)
 			return res.status(err.status || 500).send(err);
@@ -216,11 +222,79 @@ exports.getBidCount = function(req, res) {
 	console.log("req", req.query);
 	if (req.query.productId)
 		filter.productId = req.query.productId;
-	if(req.query.userId)
-		filter.userId=req.query.userId;
+	if (req.query.userId)
+		filter.userId = req.query.userId;
 	getBidCount(filter, function(err, results) {
 		if (err)
 			return res.status(err.status || 500).send(err);
 		return res.json(results);
 	});
 };
+
+function paginatedResult(req, res, modelRef, filter, result) {
+  console.log("I am pagination");
+	var bodyData={};
+	if(req.method === 'GET') 
+	{bodyData=req.query;}
+     else{
+     	bodyData=req.body;
+     }
+	var pageSize = bodyData.itemsPerPage || 50;
+	var first_id = bodyData.first_id;
+	var last_id = bodyData.last_id;
+	var currentPage = bodyData.currentPage || 1;
+	var prevPage = bodyData.prevPage || 0;
+	var isNext = currentPage - prevPage >= 0 ? true : false;
+	Seq()
+		.seq(function() {
+			var self = this;
+			modelRef.count(filter, function(err, counts) {
+				result.totalItems = counts;
+				self(err);
+			})
+		})
+		.seq(function() {
+
+			var self = this;
+			var sortFilter = {
+				_id: -1
+			};
+			if (last_id && isNext) {
+				filter['_id'] = {
+					'$lt': last_id
+				};
+			}
+			if (first_id && !isNext) {
+				filter['_id'] = {
+					'$gt': first_id
+				};
+				sortFilter['_id'] = 1;
+			}
+
+			var query = null;
+			var skipNumber = currentPage - prevPage;
+			if (skipNumber < 0)
+				skipNumber = -1 * skipNumber;
+
+			query = modelRef.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
+			query.populate('userId productId')
+				.exec(function(err, items) {
+					if (!err && items.length > pageSize * (skipNumber - 1)) {
+						result.items = items.slice(pageSize * (skipNumber - 1), items.length);
+					} else
+						result.items = [];
+					if (!isNext && result.items.length > 0)
+						result.items.reverse();
+					self(err);
+				});
+
+		})
+		.seq(function() {
+			return res.status(200).json(result);
+		})
+		.catch(function(err) {
+			console.log("######rrrr", err);
+			handleError(res, err);
+		})
+
+}
