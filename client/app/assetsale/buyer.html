@@ -50,6 +50,7 @@
 			   			<th>Asset Delivery Confirmation</th>
 			   			<th>Rating</th>
 			   			<th>Feedback</th>
+						<th> Action </th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
@@ -74,7 +75,8 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+
+						<td> <button type="button"  class="btn btn-primary btn-block" ng-click="assetSaleBuyerDashboardVm.withdrawBid(bid._id)">Withdraw Bid</button> </td>
 			   		</tr>
 		   		</tbody>
 		   	</table>

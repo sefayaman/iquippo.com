@@ -7,7 +7,9 @@
 		var svc = {};
 		var path='api/assetSale';
 		svc.submitBid = submitBid;
+    svc.countBid=countBid;
 		svc.searchBid=searchBid;
+    svc.withdrawBid=withdrawBid;
     svc.fetchBid=fetchBid;
     svc.get=get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
@@ -19,9 +21,21 @@
           return res.data; 
 				})
 				.catch(function(err) {
-					throw err;
+					if(err)
+          throw err;
 				});
 		}
+
+    function withdrawBid(data){
+      return $http.post(path + '/withdrawBid', data)
+				.then(function(res) {
+          return res.data;                  
+				})
+				.catch(function(err) {
+					if(err)
+          throw err;
+				});
+    }
 
 		function searchBid(){
 			return $http.get(path + '/assetSale')
@@ -58,6 +72,24 @@
           return res.data;
         })
         .catch(function(err){
+          if(err)
+          throw err;
+        });
+    }
+
+    function countBid(data){
+    var serPath = "";
+        var queryParam = "";
+        if(data)
+            queryParam = UtilSvc.buildQueryParam(data);
+        if(queryParam)
+          serPath = path + "/count?" + queryParam;
+        return $http.get(serPath)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          if(err)
           throw err;
         });
   }
