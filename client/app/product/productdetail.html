@@ -496,7 +496,7 @@
                     <h3 class="panel-title">
 
                       <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}}</strong></a> <span>({{currentProduct.assetId}})</span>  
-                      <a href="javascript:void(0);" class="text-danger">[3 Bids]</a>                  
+                      <a href="javascript:void(0);" class="text-danger" ng-if="productDetailVm.bidCount !== 0">[{{productDetailVm.bidCount}} Bids]{{userBids}}</a>                  
                     </h3>
                   </div>
                   <div class="col-sm-3" ng-if="auctionsData.name">
@@ -513,11 +513,11 @@
                    </div>
                    </div>
                    <div class="col-xs-2 padd-left">
-                     <button type="button" ng-if="auctionsData.allowBid != 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
+                     <button type="button" ng-if="userBids == 0" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
                       Place Bid
                      </button>
 
-                     <button type="button" ng-if="false" class="btn btn-primary btn-block">Change Bid</button>
+                     <button type="button" ng-if="userBids >=1" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">Change Bid</button>
 
                      <button type="button" ng-if="auctionsData.allowBid == 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                    </div>

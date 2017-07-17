@@ -93,6 +93,8 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
      })
   }
 
+  
+
   init();
   
   function restoreState(){

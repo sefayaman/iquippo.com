@@ -44,11 +44,11 @@
             return VatTaxSvc.search(filter);
           })
           .then(function(result) {
-            if(result.length > 0)
+            if (result.length > 0)
               $scope.taxPercent = result[0].amount;
-            if($scope.params.bid === "placebid")
+            if ($scope.params.bid === "placebid")
               vm.bidAmount = query.bidAmount;
-            else if($scope.params.bid === "buynow")
+            else if ($scope.params.bid === "buynow")
               vm.bidAmount = query.product.grossPrice;
             calculateBid(vm.bidAmount);
           });
@@ -61,10 +61,10 @@
     function calculateBid(amount) {
       vm.salePrice = amount;
       $scope.taxRate = (Number(vm.salePrice) * Number($scope.taxPercent)) / 100;
-      if(Number(vm.salePrice) + Number($scope.taxRate) > 1000000){
+      if (Number(vm.salePrice) + Number($scope.taxRate) > 1000000) {
         $scope.tcs = Number(vm.salePrice) * 0.01;
       }
-      if(query.product.parkingCharges)
+      if (query.product.parkingCharges)
         $scope.parking = query.product.parkingCharges;
 
       $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking || 0) + Number(vm.salePrice || 0);
@@ -77,12 +77,12 @@
     }
 
     function submitBid(form) {
-        if (form && form.$invalid) {
-          $scope.submitted = true;
-          return;
-        }
+      if (form && form.$invalid) {
+        $scope.submitted = true;
+        return;
+      }
 
-       if (!Auth.getCurrentUser()._id) {
+      if (!Auth.getCurrentUser()._id) {
         Modal.alert("Please Login/Register for submitting your request!", true);
         return;
       }
@@ -93,29 +93,49 @@
       var timestamp = new Date().getTime();
       var dataToSend = {};
 
+
+
       Modal.confirm("Do you want to submit?", function(ret) {
-      if (ret == "yes") {
-      dataToSend.offerStatus = offerStatuses[0];
-      dataToSend.bidStatus = bidStatuses[0];
-      dataToSend.dealStatus = dealStatuses[0];
-      dataToSend.assetStatus = assetStatuses[0].name;
-      dataToSend.status = true;
-      dataToSend.tradeType = query.product.tradeType;
-      dataToSend.userId = Auth.getCurrentUser()._id;
-      dataToSend.productId = query.product._id;
-      dataToSend.bidAmount = $scope.total;
-      dataToSend.proxyBid = query.proxyBid;
-      AssetSaleSvc.submitBid(dataToSend)
-        .then(function(result) {
-          Modal.alert("Your bid has been successfully submitted!", true);
-          $scope.close();
-        })
-        .catch(function(err) {
-          throw err;
-          //$scope.close();
-        });
-      
-      }
+        if (ret == "yes") {
+          if (query.typeOfRequest)
+            dataToSend.typeOfRequest = query.typeOfRequest;
+          dataToSend.offerStatus = offerStatuses[0];
+          dataToSend.bidStatus = bidStatuses[0];
+          dataToSend.dealStatus = dealStatuses[0];
+          dataToSend.assetStatus = assetStatuses[0].name;
+          dataToSend.status = true;
+          dataToSend.tradeType = query.product.tradeType;
+          dataToSend.userId = Auth.getCurrentUser()._id;
+          dataToSend.productId = query.product._id;
+          dataToSend.bidAmount = $scope.total;
+          dataToSend.proxyBid = query.proxyBid;
+
+          AssetSaleSvc.fetchHigherBid(dataToSend)
+            .then(function(res) {
+              if (res.msg == true) {
+                Modal.confirm("Do you want to enhance your bid?", function(ret) {
+                    if (ret =="no") {
+                      enhanceBid();
+                    }
+                  });
+              }
+            })
+            .catch(function(err) {
+              if (err) throw err;
+            });
+
+          function enhanceBid() {
+            AssetSaleSvc.submitBid(dataToSend)
+              .then(function(result) {
+                Modal.alert("Your bid has been successfully submitted!", true);
+                $scope.close();
+              })
+              .catch(function(err) {
+                throw err;
+                //$scope.close();
+              });
+          }
+        }
       });
     }
 

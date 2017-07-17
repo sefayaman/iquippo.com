@@ -9,8 +9,9 @@
 		vm.activeBid="Auctionable";
 		$scope.tabValue='auctionable'
 		$scope.onTabChange=onTabChange;
+		vm.withdrawBid=withdrawBid;
 		vm.fireCommand=fireCommand;
-
+  
 		function init() {
 			Auth.isLoggedInAsync(function(loggedIn) {
 				if (loggedIn) {
@@ -41,6 +42,24 @@
 	  		break;
 	  	}
 	  }
+
+
+		function withdrawBid(bid){
+		if(bid){
+		filter._id=bid;
+		filter.offerStatus=offerStatuses[2];
+		filter.dealStatus=dealStatuses[12];
+		filter.bidStatus=bidStatuses[8];
+	}
+	AssetSaleSvc.withdrawBid(filter)
+	.then(function(res){
+     getBidData(filter);
+	})
+	.catch(function(err){
+
+	});
+
+		}
 
 	  function fireCommand(reset,filterObj){
       /*if(reset)
