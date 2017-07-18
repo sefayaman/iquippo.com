@@ -16,7 +16,7 @@
     svc.fetchFAData = fetchFAData;
     
 		function submitBid(data) {
-			return $http.post(path + '/submitbid', data)
+			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
 				.then(function(res) {
           return res.data; 
 				})

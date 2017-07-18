@@ -34,7 +34,8 @@ function create(data,callback){
 			if (err && err.original && err.original.code === 'ER_DUP_ENTRY') {
 				var e = new APIError(409,'Duplicate Entry');
 			return callback(e);
-			}
+		}
+		console.log("result",res);
 			return callback(null, res);
 		});
 }
@@ -72,6 +73,7 @@ function getBidCount(filter, callback) {
 exports.submitBid = function(req, res) {
 	console.log("I an st here");
 	var data = {};
+	
 	if (req.query.typeOfRequest == "submitBid") {
 		data = req.body;
 		//data.user = req.user;
@@ -175,7 +177,7 @@ exports.getBidCount = function(req, res) {
 	var filter = {};
 	console.log("req", req.query);
 	if (req.query.productId)
-		filter.product.proData = req.query.productId;
+		filter['product.proData'] = req.query.productId;
 	if (req.query.userId)
 		filter.user = req.query.userId;
 	getBidCount(filter, function(err, results) {
@@ -188,7 +190,7 @@ exports.getBidCount = function(req, res) {
 exports.getMaxBidOnProduct = function(req, res) {
 	var filter = {};
 	if(req.query.assetId)
-		filter.product.assetId = req.query.assetId;
+		filter['product.assetId'] = req.query.assetId;
 	filter.offerStatus = offerStatuses[0];
 	console.log("results", filter);
 	var query = AssetSaleBid.find(filter).sort({bidAmount:-1}).limit(1);

@@ -176,6 +176,7 @@
 
             dataToSend.bidAmount = $scope.total;
             dataToSend.proxyBid = query.proxyBid;
+            console.log("data to send",dataToSend);
             AssetSaleSvc.submitBid(dataToSend)
               .then(function(result) {
                 Modal.alert("Your bid has been successfully submitted!", true);
