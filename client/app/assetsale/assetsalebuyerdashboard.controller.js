@@ -32,6 +32,7 @@
 	  	switch(tabs){
 	  		case 'auctionable':
 	  		filter={};
+			  $scope.pager.reset();
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
 	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 	  		vm.activeBid='Auctionable';
@@ -40,6 +41,7 @@
 	  		break;
 	  		case 'closed':
 	  		filter={};
+			  $scope.pager.reset();
 	  		vm.activeBid='closed';
 	  		$scope.tabValue='closed';
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
