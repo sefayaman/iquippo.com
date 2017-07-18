@@ -22,7 +22,7 @@
 				})
 				.catch(function(err) {
 					if(err)
-          throw err;
+            throw err;
 				});
 		}
 
@@ -33,7 +33,7 @@
 				})
 				.catch(function(err) {
 					if(err)
-          throw err;
+            throw err;
 				});
     }
 

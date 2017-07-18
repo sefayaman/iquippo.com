@@ -10,8 +10,8 @@ router.get('/count/:productId');
 router.get('/maxbidonproduct/', controller.getMaxBidOnProduct);
 router.get('/fa', controller.fetchFAData);
 router.get('/count',controller.getBidCount);
-router.get('/fetchhigherbid',controller.fetchHigherBid);
-router.post('/withdrawBid',controller.withdrawBid);
+//router.get('/fetchhigherbid', controller.fetchHigherBid);
+//router.post('/withdrawBid',controller.withdrawBid);
 
 module.exports = router;
 

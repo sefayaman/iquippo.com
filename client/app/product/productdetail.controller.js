@@ -412,24 +412,24 @@
       return ret;
     }
 
-     function countBid(filter){
-       if(!filter){
-         filter={};
-       }
-       filter.productId=$scope.currentProduct._id;
-          	AssetSaleSvc.countBid(filter)
-            .then(function(res){
-              if(filter.userId){
-                $scope.userBids=res;
-              }
-              else{
-              vm.bidCount=res;
-              }
-            })
-            .catch(function(err){
-              if (err) throw err;
-            });
-          }
+    function countBid(filter){
+      if(!filter){
+        filter={};
+      }
+      filter.productId = $scope.currentProduct._id;
+    	AssetSaleSvc.countBid(filter)
+      .then(function(res){
+        if(filter.userId){
+          $scope.userBids=res;
+        }
+        else{
+        vm.bidCount=res;
+        }
+      })
+      .catch(function(err){
+        if (err) throw err;
+      });
+    }
 
     function init() {
       vendorSvc.getAllVendors()
