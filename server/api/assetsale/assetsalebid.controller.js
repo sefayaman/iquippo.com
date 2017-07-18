@@ -153,11 +153,17 @@ exports.fetchBid=function(req,res){
   if(req.query.assetStatus){
   	filter.assetStatus=req.query.assetStatus;
   }
-  console.log("filter",filter);
+  console.log("filter out",filter);
+console.log("req.query",req.query);
+  if (req.query.pagination) {
+		paginatedResult(req, res, AssetSaleBid, filter, {});
+		return;
+	}
+
     fetchBid(filter,function(err,results){
     	if(err)
     		return res.status(err.status || 500).send(err);
-    	console.log("I am result",results)
+    	//console.log("I am result",results)
         return res.json(results);
     });
 };
