@@ -44,6 +44,7 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
         	deferred.resolve(vendorCache);
         }else{
         	$http.get(path).then(function(res){
+              clearCache();
 	            vendorCache = res.data;
 	            sortVendors(res.data);
 	            deferred.resolve(res.data);
@@ -227,35 +228,37 @@ angular.module('sreizaoApp').factory("vendorSvc",vendorSvc)
   }
   
   function getVendorsOnCode(code){
+    var list = [];
     switch(code){
       case 'Valuation':
-        return valuationVendorList;
+       list =  valuationVendorList;
       break;
       case 'Shipping':
-        return shippingVendorList;
+        list = shippingVendorList;
       break;
       case 'CertifiedByIQuippo':
-        return certifiedByIQuippoVendorList;
+         list = certifiedByIQuippoVendorList;
       break;
       case 'ManPower':
-        return manpowerVendorList;
+         list = manpowerVendorList;
       break;
       case 'Finance':
-        return financeVendorList;
-      break
+         list = financeVendorList;
+      break;
       case 'Auction':
-        return auctionVendorList;
+         list = auctionVendorList;
       break;
       case 'Dealer':
-        return dealerVendorList;
-      break
+         list = dealerVendorList;
+      break;
       case 'Inspection':
-        return inspectionVendorList;
+         list = inspectionVendorList;
       break;
        case 'Sale Fulfilment':
-        return saleFulfilmentVendorList
+         list = saleFulfilmentVendorList;
       break;
     }
+    return list;
   }
       return vendorService;
   }
