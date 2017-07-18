@@ -183,12 +183,12 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             });
           }
 
+          Modal.alert(message);
           if(arrSubmitToAgency.length){
             submitToAgency(arrSubmitToAgency);
             return;
           }
           fireCommand(true);
-         return Modal.alert(message);
 
         }).catch(function(err){
           $rootScope.loading = false;
