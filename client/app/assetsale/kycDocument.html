@@ -1,0 +1,42 @@
+<div> 
+      <div class="modal-header">
+          <button type="button" class="close" ng-click="close()">&times;</button>
+          <h4 class="modal-title">Update KYC Document</h4>
+        </div>
+      <div class="modal-body">
+        <form novalidate class="text-left" name="">
+              <div class="row">
+                <div class="col-sm-4 form-group">Address Proof</div>
+                <div class="col-sm-6 form-group">
+                  <select class="form-control">
+                    <option>Select Document</option>
+                  </select>
+                </div>
+                <div class="col-sm-2 form-group">
+                  <span class="btn btn-warning fileinput-button">
+                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                    <span class="fa fa-upload"></span>
+                  </span> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">ID Proof</div>
+               <div class="col-sm-6 form-group">
+                  <select class="form-control">
+                    <option>Select Document</option>
+                  </select>
+                </div>
+                <div class="col-sm-2 form-group">
+                  <span class="btn btn-warning fileinput-button">
+                    <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                    <span class="fa fa-upload"></span>
+                  </span> 
+                </div>                
+              </div>              
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="close()">Close</button>
+          <button type="button" class="btn btn-primary">Upload</button>
+        </div>
+
+    </div>
