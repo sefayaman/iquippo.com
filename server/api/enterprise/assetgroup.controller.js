@@ -149,7 +149,7 @@ assetGroup.create = function(req, res, next) {
 	if (!data)
 		return next(new APIError(412, 'No data sent to create'));
 
-	var filter = {};
+	var filter = {deleted:0};
 	if(!data.valuerCode || !data.enterpriseId || !data.assetCategory)
 	  return res.status(401).send('Insufficient data');
 
@@ -180,7 +180,7 @@ assetGroup.create = function(req, res, next) {
 
 assetGroup.count = function(req, res, next) {
 	var options = req.query;
-	var filters = {};
+	var filters = {deleted:0};
 
 	if (options.searchStr && options.searchStr !== 'undefined') {
 		filters['$text'] = {
@@ -314,6 +314,7 @@ assetGroup.update = function(req, res) {
 		_id: req.body.user._id,
 		role: req.body.user.role
 	};
+	filter.deleted = 0;
   Model.find(filter, function(err, assetGroupData) {
     if (err) {
       return handleError(res, err);

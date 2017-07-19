@@ -46,7 +46,7 @@ exports.setCustomerData = function(req,res){
     res.cookie("email",user.email || "",{ domain: '.iquippo.com' });
     res.cookie("location",user.city || "",{ domain: '.iquippo.com' });
     res.cookie("dealership_name",user.company || "",{ domain: '.iquippo.com' });
-    var token = auth.signToken(user._id,user.role,1);
+    var token = auth.signToken(user._id,user.role,20);
     res.cookie("access_token",token,{ domain: '.iquippo.com' });
       res.status(200).send(REDIRECT_URL);
     });
