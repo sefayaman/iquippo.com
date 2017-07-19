@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('ViewAuctionCtrl', ViewAuctionCtrl);
 
-  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc) {
+  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc) {
     var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -13,6 +13,7 @@
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;
+    $scope.pager=PagerSvc.getPager();
 
     var listingCount = {};
     vm.show=false;
@@ -95,6 +96,7 @@
         filter.auctionType = $stateParams.type;
       }
       //angular.copy(dataToSend, filter);
+      filter.pagination=true;
       getAuctions(filter);
 
     }
@@ -106,6 +108,7 @@
       // filter.currentPage = vm.currentPage;
       // filter.first_id = first_id;
       // filter.last_id = last_id;
+      $scope.pager.copy(filter);
       vm.auctionListing =[];
       if(!filter.auctionType)
         filter.auctionType = $stateParams.type;
@@ -129,19 +132,20 @@
 */
 
     function fireCommand(reset, filterObj) {
-      // if (reset)
-      //   resetPagination();
-      // var filter = {};
-      // if (!filterObj)
-      //   angular.copy(dataToSend, filter);
-      // else
-      //   filter = filterObj;
+     if(reset)
+        $scope.pager.reset();
+      var filter = {};
+      if(!filterObj)
+          angular.copy(dataToSend, filter);
+      else
+        filter = filterObj;
 
       if(vm.statusType)
         filter.statusType = vm.statusType;
       else 
         delete filter.statusType;
 
+       filter.pagination=true;      
       getAuctions(filter);
     }
 
@@ -239,7 +243,9 @@
         AuctionSvc.getAuctionWiseProductData(filter) 
         .then(function(data) { 
         $scope.getConcatData = data; 
-        vm.auctionListing = result.items; 
+        vm.auctionListing = result.items;
+         vm.totalItems = result.totalItems;
+         $scope.pager.update(result.items,result.totalItems); 
         if(vm.auctionListing.length < 1){   
             vm.show = true;            
         }else{ 
@@ -249,7 +255,7 @@
         .catch(function() {});  
           } 
     }
-    function getProductData(id, type) { console.log('hi');
+    function getProductData(id, type) { 
             if (angular.isUndefined($scope.getConcatData)) {  
                 if (type == "total_products") 
                   return 0;        
