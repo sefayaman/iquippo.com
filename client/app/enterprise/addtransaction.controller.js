@@ -99,6 +99,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             onBrandChange(vm.enterpriseValuation.brand, true);
             onCountryChange(vm.enterpriseValuation.country, true);
             onStateChange(vm.enterpriseValuation.state, true);
+            getAssetGroup();
             var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
             if(!vm.enterpriseValuation.reportDate && statusIndex > 1 && statusIndex < 4)
                 vm.enterpriseValuation.reportDate = new Date();
@@ -131,6 +132,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         if(item.code === code) {
           vendorSvc.getAllVendors().then(function(){
             vm.enterpriseValuation.agency.partnerId = item.partnerId;
+            getAssetGroup();
           });  
         }
       });
@@ -174,19 +176,19 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       return false;
   }
 
-    function getAssetGroup(val) {
+    function getAssetGroup() {
 
       var serData = {};
-      serData['assetCategory'] = val;
+      vm.assetCategoryList = [];
       if(vm.enterpriseValuation.agency && vm.enterpriseValuation.agency.partnerId)
-        serData['partnerId'] = vm.enterpriseValuation.agency.partnerId;
+        serData.partnerId = vm.enterpriseValuation.agency.partnerId;
       if(vm.enterpriseValuation.enterprise && vm.enterpriseValuation.enterprise.enterpriseId)
-      serData['enterpriseId'] = vm.enterpriseValuation.enterprise.enterpriseId;
-     return AssetGroupSvc.get(serData)
+      serData.enterpriseId = vm.enterpriseValuation.enterprise.enterpriseId;
+    if(!serData.partnerId || !serData.enterpriseId)
+      return;
+     AssetGroupSvc.get(serData)
       .then(function(result){
-         return result.map(function(item){
-              return item.assetCategory;
-        });
+         vm.assetCategoryList = result;
       });
     };
 
@@ -341,6 +343,13 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         if(statusIndex > 1 && statusIndex < 4 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
           EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[4]);
       }
+
+      vm.assetCategoryList.forEach(function(item){
+        if(item.assetCategory && item.assetCategory === vm.enterpriseValuation.assetCategory){
+          vm.enterpriseValuation.valuerGroupId = item.valuerGroupId || "";
+          vm.enterpriseValuation.valuerAssetId = item.valuerAssetId || ""; 
+        }
+      });
         
     }
 
