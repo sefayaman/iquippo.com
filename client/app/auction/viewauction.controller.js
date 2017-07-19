@@ -144,7 +144,8 @@
         filter.statusType = vm.statusType;
       else 
         delete filter.statusType;
-
+       if($scope.auctionType)
+       filter.auctionType=$scope.auctionType;
        filter.pagination=true;      
       getAuctions(filter);
     }
