@@ -282,6 +282,10 @@ angular.module('sreizaoApp')
         if(currentUser && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
           return currentUser.partnerInfo.services.indexOf("Auction") > -1 ? true : false;
       },
+      isFAgencyPartner: function() {
+        if(currentUser && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+          return currentUser.partnerInfo.services.indexOf("Sale Fulfilment") > -1 ? true : false;
+      },
       isCustomer: function() { 
         return currentUser.role === 'customer';
       },

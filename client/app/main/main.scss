@@ -927,8 +927,9 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .sale-price strong{padding: 5px 0 0; display: block; font-size: 18px; color: #444; font-weight: normal;}
 .bank-detail{list-style: none; margin-top: 15px;}
 .btn-warning.disabled, .btn-warning.disabled.active, .btn-warning.disabled:active, .btn-warning.disabled:focus, .btn-warning.disabled:hover, .btn-warning[disabled], .btn-warning[disabled].active, .btn-warning[disabled]:active, .btn-warning[disabled]:focus, .btn-warning[disabled]:hover, fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning.active, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:hover{background: #e5525b; border-color: #e5525c;}
-.enterprise-value{width: 100%; background: #ddd;}
-.enterprise-value .btn{width: 20%; padding: 10px 0; border-right: 1px solid #ccc; margin: 0 1px;}
+.enterprise-value{width: 100%; border-bottom: 1px solid #ccc;}
+.enterprise-value .btn{width: 20%; padding: 8px 0; border-right: 1px solid #ccc; border-left: 1px solid #ccc;}
+.enterprise-value .btn.active, .enterprise-value .btn.btn-warning{border-left:0;}
 .utube-icon{text-align: center;display: block;}
 .utube-icon img{position: relative;bottom: 115px;margin:auto;width: 44px;height: 40px;}
 .videos-icon{text-align: center;display: block;}
@@ -947,6 +948,21 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
 .auction-list .calltoContact{position: absolute; top: 30%; right: 0;}
 .auctionText{background: #f4f4f4; padding:10px;}
+.calltoContact{position: absolute; right: 0; top: 30px;}
+
+/* asset-sale */
+.asset-sale .panel-heading a.text-danger{text-align: center; font-size: 12px; color: #e3000f;}
+.asset-sale .form-control{height: 34px;}
+.asset-sale .panel-footer .btn.btn-danger{width: 120px;}
+.bidmodal .modal-dialog{width: 450px;}
+.asset-sale.modal-body{padding-left: 0; padding-right: 0; padding-bottom: 0; text-align: left; overflow: hidden;}
+.asset-sale .asset-taxes{background: #e5e5e5; border-top: 1px solid #ddd; padding: 15px 0; margin-top: 15px; border-bottom: 1px solid #d5d5d5;}
+.asset-sale .asset-total{background: #ddd; padding: 10px 0; font-weight: bold; border-top: 1px solid #ddd; border-bottom: 1px solid #d5d5d5;}
+.bidmodal .asset-sale .form-control , .bidmodal .asset-sale .btn{height: 40px;} 
+.bidmodal .asset-sale .btn-group .btn{width: 120px;}
+.bidmodal .asset-action{padding: 20px 15px;}
+.table.bidhistory{border:0;}
+.table.bidhistory tr td, .table.bidhistory tr th{border:0; padding: 4px 5px; border-bottom: 1px solid #eee;}
 
 /* responsive */
 @media (max-width:1199px){

@@ -9,6 +9,7 @@ var jwt = require('jsonwebtoken');
 var  xlsx = require('xlsx');
 var Product = require('../product/product.model');
 var Vendor = require('../vendor/vendor.model');
+var validator=require('validator');
 var ManpowerUser = require('../manpower/manpower.model');
 var Utility = require('./../../components/utility.js');
 
@@ -24,6 +25,23 @@ exports.index = function(req, res) {
   User.find({}, '-salt -hashedPassword', function (err, users) {
     if(err) return res.status(500).send(err);
     res.status(200).json(users);
+  });
+};
+
+exports.fetchSingleUser = function(req,res){
+  var id = req.params.id;
+  if(!validator.isMongoId(id)){
+    return res.send(400).json({err:'Invalid id '});
+  }
+
+  User.findById(id).exec(function(err,user){
+    if(err)
+      return res.send(500);
+
+    if(!user)
+      return res.send(404).json({err:'Invalid user'});
+
+    return res.json(user);
   });
 };
 

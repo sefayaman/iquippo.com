@@ -44,7 +44,6 @@
     vm.onBrandChange=onBrandChange;
     vm.openBidModal = openBidModal;
 
-
     // bid summary
     function openBidModal(){
       Auth.isLoggedInAsync(function(loggedIn) {
@@ -91,6 +90,7 @@
               Modal.alert(err.data); 
       });
     }
+
     function openUrl(_id) {
       if(!_id)
         return;
@@ -188,6 +188,7 @@
 
   function getAssetsInAuction(filter){
     var assetIds = [];
+    filter.notInSoldPro = "notInSold";
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {
