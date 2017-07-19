@@ -58,11 +58,16 @@
     $scope.redirectToAuction = redirectToAuction;
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
-        if (form && form.$invalid) {
-          $scope.bidSubmitted = true;
-          return;
-        }
-
+      if (form && form.$invalid) {
+        $scope.bidSubmitted = true;
+        return;
+      }
+      
+      if (!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for submitting your request!", true);
+        return;
+      }
+        
       var bidSummaryScope = $rootScope.$new();
       if(bid == "placebid" || bid == "proxybid"){
 
@@ -73,10 +78,10 @@
       };
       if(bid == "proxybid")
         bidSummaryScope.params.proxyBid = true;
-        if($scope.userBids >=1)
-        bidSummaryScope.params.typeOfRequest="changeBid";
-        else
-        bidSummaryScope.params.typeOfRequest="submitBid";
+      if($scope.userBids >=1)
+      bidSummaryScope.params.typeOfRequest="changeBid";
+      else
+      bidSummaryScope.params.typeOfRequest="submitBid";
     }
 
 

@@ -11,23 +11,12 @@ var Product = require('../product/product.model');
 var User = require('../user/user.model');
 var Vendor = require('../vendor/vendor.model');
 
+var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
+var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
+
 function create(data,callback){
 	if (!data)
 			return callback(new APIError( 412,'No data for creation'));
-
-		/*const allowedCols = ['ticketId', 'userId', 'productId', 'bidAmount','tradeType','status','offerStatus','bidStatus','dealStatus','assetStatus','state','createAt','updatedAt'];
-		//var Model = this.Model;
-		var validData = {};
-
-		allowedCols.forEach(function(x) {
-			if (data[x])
-				validData[x] = data[x];
-		});
-        //validData.type = config.addOns[validData.type];
-		console.log("the validDate it",validData);
-
-		if (!Object.keys(validData).length)
-			return callback(new APIError( 422,'No data for create'));*/
         
 		AssetSaleBid.create(data,function(err,res){
 			console.log("result",res);
@@ -63,50 +52,39 @@ function getBidCount(filter, callback) {
 	query.exec(function(err, results) {
 		if (err)
 			return callback(err);
-		console.log("results", results);
 		return callback(null, results);
 	});
 }
 
-
-
 exports.submitBid = function(req, res) {
-	console.log("I an st here");
 	var data = {};
-	
 	if (req.query.typeOfRequest == "submitBid") {
 		data = req.body;
-		//data.user = req.user;
-		console.log("data to be created", data);
+		//console.log("data to be created", data);
 		if (!data || Object.keys(data).length < 1)
 			return res.status(412).json({
 				err: 'No data found for create'
 			});
-		//console.log("create", data);
 		create(data, function(err, result) {
 			if (err)
 				return res.status(err.status || 500).send(err);
-			//console.log("result", result.ticketId);
-
-			return res.json({
-				msg: 'Created Succesfully'
-			});
+			return res.status(201).json(result);
 		});
 	} else if (req.query.typeOfRequest == "changeBid") {
-		console.log("I am here");
-		if (req.body.userId)
-			data.user = req.body.userId;
-		if (req.body.productId)
-			data.product.proData = req.body.productId;
-
-
+		var bidResult = {};
 		function updateBid(callback) {
-
+			data = {};
+			if (req.body.user)
+				data.user = req.body.user;
+			if (req.body.product && req.body.product.proData){
+				data['product.proData'] = req.body.product.proData;
+			}
+			
 			AssetSaleBid.update(data, {
 				$set: {
-					"offerStatus": "Bid Changed",
-					"bidStatus": "Cancelled",
-					"dealStatus": "Cancelled"
+					"offerStatus": offerStatuses[1],
+					"bidStatus": bidStatuses[8],
+					"dealStatus": dealStatuses[12]
 				}
 			}, {
 				multi: true
@@ -122,16 +100,14 @@ exports.submitBid = function(req, res) {
 			AssetSaleBid.create(data, function(err, result) {
 				if (err)
 					return callback(err);
+				bidResult = result.toObject();
 				return callback();
 			});
 		}
 
 		async.series([updateBid, newBidData], function(err, results) {
-			console.log("results", results);
+			return res.status(201).json(bidResult);
 		});
-
-
-
 	}
 };
 
@@ -145,6 +121,9 @@ exports.fetchBid=function(req,res){
 		filter['product.proData'] = req.query.productId;
 	}
 	
+	if(req.query.bidStatus){
+		filter['bidStatus'] = req.query.bidStatus;
+	}
 	 if (req.query.searchStr) {
        filter['$text'] = {
         '$search': "\""+req.query.searchStr+"\""
@@ -207,18 +186,12 @@ exports.getMaxBidOnProduct = function(req, res) {
 	});
 };
 
-function fetchData(filter,callback){
-    var finalarray = [];
+function fabyadmin(filter,callback){ 
+	 var finalarray = [];
     var enterpriseuserarray= [];
     var enterprise =[];
-    console.log("user filter", filter);
-	var query = Vendor.find({"user.mobile":filter.mobile},function(err,result){
-	if(err){
-            return callback(err);
-	}else{
-		var partnerid =result[0].partnerId;
-		console.log("partnerId", partnerid);
-	    var query = User.find({ availedServices: { $elemMatch : {"partnerId":partnerid,"code" : "Sale Fulfilment"}}},function(err,result){
+	var bidproducts = [];
+       var query = User.find({ availedServices: { $elemMatch : {"code" : "Sale Fulfilment"}}},function(err,result){
 		if(err){
           return callback(err);
 		}else{
@@ -246,8 +219,104 @@ function fetchData(filter,callback){
             if(err){
 				  res.status(err.status || 500).send(err);
 			  }else{
-				   return callback(null,products)
-			  }  
+				  // return callback(null,products)
+                     async.each(products, function(item, callback){
+
+                          var filter = {};
+
+                         filter['product.proData'] = item._id;
+					     filter.bidStatus = "Accepted";
+
+                           AssetSaleBid.find(filter,function(err,data){
+
+                         if (data.length > 0){
+									
+                         bidproducts.push(item);
+
+		               }
+
+                     callback(null);
+                     });
+                     },
+                       function(err){
+                       console.log("biddata",bidproducts);
+				       return callback(null,bidproducts);
+                        }
+                  );
+                }  
+		    });
+			}
+		   });
+		}
+	});
+}
+
+function fetchData(filter,callback){
+    var finalarray = [];
+    var enterpriseuserarray= [];
+    var enterprise =[];
+	var bidproducts = [];
+   // console.log("user filter", filter);
+
+   var query = Vendor.find(filter,{partnerId:1},function(err,result){
+	if(err){
+            return callback(err);
+	}else{
+		var partnerid =result[0].partnerId;
+		console.log("partnerId", partnerid);
+	    var query = User.find({ availedServices: { $elemMatch : {"partnerId":partnerid,"code" : "Sale Fulfilment"}}},function(err,result){
+		if(err){
+          return callback(err);
+		}else{
+			//console.log("result",result);
+            result.forEach(function(item,index) {
+			   finalarray.push(item._id.toString());
+               if(item.enterpriseId!="" && item.enterprise==true){
+				 var enterpriseid  = item.enterpriseId;
+                 enterprise.push(enterpriseid);
+			   }
+            });
+            var query = User.find({'enterpriseId': { $in : enterprise}},{_id:1},function(err,userrray){
+            if(err){
+				  res.status(err.status || 500).send(err);
+			} else {
+                     userrray.forEach(function(item,index) {
+			         enterpriseuserarray.push(item._id.toString());
+                    });
+					var final = finalarray.concat(enterpriseuserarray);
+					var query = Product.find({ 'seller._id': { $in : final}},function(err,products){
+            if(err){
+				  res.status(err.status || 500).send(err);
+			  }else{
+				  // return callback(null,products)
+				  if(err){
+					  return res.status(err.status || 500).send(err);
+				  }
+                     async.each(products, function(item, callback){
+                          var filter = {};
+                         //filter.productId = item._id;
+						 filter['product.proData'] = item._id;
+					     filter.bidStatus = "Accepted";
+
+						   //console.log("products",item._id);
+
+                           AssetSaleBid.find(filter,function(err,data){
+
+                         if (data.length > 0){
+									
+                         bidproducts.push(item);
+		               }
+                     callback(null);
+                     });
+
+                     },
+  
+                       function(err){
+                      //console.log("bidproductsid",bidproducts);
+				       return callback(null,bidproducts);
+                    }
+                  );
+                }  
 		    });
 			}
 		   });
@@ -257,7 +326,9 @@ function fetchData(filter,callback){
 });
 }
 
-exports.fetchFAData = function(req,res){
+
+
+/*exports.fetchFAData = function(req,res){
 	console.log("I am hit");
       var filter = {};
 	  if(req.query.mobile){
@@ -268,6 +339,32 @@ exports.fetchFAData = function(req,res){
     		return res.status(err.status || 500).send(err);
     	return res.json(results);
     });
+};*/
+
+
+exports.fetchFAData = function(req,res){
+	console.log("I am hit");
+    var filter = {};
+	if(req.query.mobile){
+		filter['user.mobile'] = req.query.mobile;
+		 fetchData(filter,function(err,results){
+    	if(err)
+    		return res.status(err.status || 500).send(err);
+    	return res.json(results);
+        });
+
+     }else{
+
+		 filter['services'] = "Sale Fulfilment";
+		  fabyadmin(filter,function(err,results){
+    	if(err)
+    		return res.status(err.status || 500).send(err);
+    	return res.json(results);
+         });
+
+		 
+	 }
+     
 };
 
 exports.withdrawBid = function(req, res) {

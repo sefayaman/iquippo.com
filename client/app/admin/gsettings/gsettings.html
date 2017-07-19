@@ -1623,12 +1623,12 @@
 		              <input type="text" name="effectiveToDate" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
 		            </div>
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}">
+				<!-- <div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}">
 					<select class="form-control" name="group" ng-model="vatVm.dataModel.group" ng-change="vatVm.getCategory(vatVm.dataModel.group)" required>
 						<option value="">*Asset Group</option>
 						<option value="{{group._id}}" ng-repeat="group in allGroup">{{group.name}}</option>
 					</select>
-				</div>								
+				</div> -->								
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
@@ -1670,8 +1670,7 @@
 					<tr>						
 						<th>Tax Type</th>						
 						<th>Effective From Date</th>						
-						<th>Effective To Date</th>						
-						<th>Asset Group</th>				
+						<th>Effective To Date</th>										
 						<th>Asset Category</th>				
 						<th>State</th>						
 						<th>Rate</th>						
@@ -1683,7 +1682,6 @@
 						<td>{{vat.taxType}}</td>
 						<td>{{vat.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{vat.effectiveToDate | date:'MM/dd/yyyy'}}</td>
-						<td>{{vat.group.name}}</td>
 						<td>{{vat.category.name}}</td>
 						<td>{{vat.state.name}}</td>
 						<td>{{vat.amount}}</td>

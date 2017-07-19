@@ -117,6 +117,13 @@
 					filter.productId = query.productId;
 					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
 						$scope.isAdmin = false;
+					}   
+
+				if (Auth.isAdmin() || Auth.isFAgencyPartner()) {
+						
+					  filter.bidStatus = "Accepted";
+					//	filter.mobile = Auth.getCurrentUser().mobile;
+						getBidData(filter);
 					}
 					getBidData(filter);
 					//fetchCoolingPeriod();

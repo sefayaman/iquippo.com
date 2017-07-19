@@ -1,9 +1,6 @@
 <div>
   <div class="row">
-  	<div class="col-sm-6">
-  		<h4>Buyer</h4>
-  	</div>
-  	<div class="col-sm-6 text-right">
+  	<div class="col-sm-6 col-sm-offset-6 text-right">
   		<h4>
   			<button class="btn btn-success" ng-click=""><i class="fa fa-file-excel-o"></i> Export Excel</button>
   		</h4>
@@ -11,8 +8,8 @@
   </div>
   <legend></legend>
   <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
-    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': tabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': tabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
    <!-- Auctionable Bid -->

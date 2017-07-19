@@ -16,23 +16,29 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.getCategory = getCategory;
+        //vm.getCategory = getCategory;
         vm.taxType = [{name:"GST"}];
         vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
-        groupSvc.getAllGroup()
+        /*groupSvc.getAllGroup()
         .then(function(result) {
           $scope.allGroup = result;
-        });
+        });*/
 
         LocationSvc.getAllState()
           .then(function(result){
             $scope.stateList = result;
           });
-          loadViewData();
+
+        categorySvc.getCategoryOnFilter()
+            .then(function(result) {
+                vm.categoryList = result;
+            })
+
+        loadViewData();
         } 
 
-        function getCategory(groupId) {
+        /*function getCategory(groupId) {
             vm.categoryList = [];
             
             if (!groupId) {
@@ -43,7 +49,7 @@
                 .then(function(result) {
                     vm.categoryList = result;
                 })
-        }
+        }*/
 
         function loadViewData(){
             VatTaxSvc.get()
