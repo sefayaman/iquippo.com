@@ -165,12 +165,6 @@
                   <td><b>GPS Installed:</b></td>
                   <td>{{valuation.gpsInstalled}}</td>
                 </tr>
-                 <tr>
-                  <td><b>Overall General Condition:</b></td>
-                  <td>{{valuation.overallGeneralCondition}}</td>
-                  <td></td>
-                  <td></td>
-                </tr>
                 <tr ng-if="valuation.gpsInstalled">
                   <td><b>IMIE No.:</b></td>
                   <td>{{valuation.gpsIMEINo}}</td>
@@ -203,6 +197,10 @@
                   <td colspan="2"><a href="javascript:void(0);" ng-click="downloadFile(valuation.valuationReport,valuation.assetDir)">{{valuation.valuationReport.filename}}</a></td>                  
                  <!--  <td><b>Invoiced Date:</b></td>
                   <td>{{valuation.invoiceDate}}</td> -->
+                </tr>
+                <tr>
+                  <td><b>Overall General Condition:</b></td>
+                  <td colspan="3">{{valuation.overallGeneralCondition}}</td>
                 </tr>
                <!--  <tr>
                   <td><b>Invoice No:</b></td>
