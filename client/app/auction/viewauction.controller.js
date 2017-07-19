@@ -150,9 +150,9 @@
     }
 
     function fireCommandType(auctionType) {
-      //resetPagination();
+      $scope.pager.reset();
       filter = {};
-      //angular.copy(dataToSend, filter);
+      angular.copy(dataToSend, filter);
 
       if(vm.statusType)
         filter.statusType=vm.statusType;
@@ -162,6 +162,7 @@
       $scope.auctionType = auctionType;
       filter.auctionType = auctionType;
       $state.go("viewauctions", {type: auctionType}, {notify: false});
+      filter.pagination=true;
       getAuctions(filter);
     }
 
