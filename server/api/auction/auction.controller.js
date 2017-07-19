@@ -319,7 +319,7 @@ exports.bulkUpload = function(req, res, next) {
     'Engine_No.': 'engineNo',
     'Asset_Location': 'city',
     'Original_Invoice': 'originalInvoice',
-    'VAT%': 'vatPercentage',
+    'GST%': 'vatPercentage',
     'Contact_Person': 'contactName',
     'Contact_No.': 'contactNumber',
     'Product_ID': 'productId',
@@ -369,7 +369,7 @@ exports.bulkUpload = function(req, res, next) {
         if(!obj.originalInvoice){
           obj.invioceDate = '';
         }
-
+        
         uploadData.push(obj);
       } 
     }
@@ -1040,6 +1040,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
+console.log("server side filter",filter);
+console.log("pagination kahani",req.body);
   var result = {};
   if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
