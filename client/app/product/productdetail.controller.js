@@ -618,20 +618,7 @@
 
     function redirectToAuction() {
       var routeTo = "upcoming";
-      AuctionSvc.getAuctionDateData({
-          auctionType: "ongoing"
-        }).then(function(result) {
-          if (result.length > 0)
-            routeTo = "ongoing";
-          $state.go("viewauctions", {
-            type: routeTo
-          });
-        })
-        .catch(function(err) {
-          $state.go("viewauctions", {
-            type: routeTo
-          });
-        })
+      $state.go("viewauctions",{type:routeTo});
     }
 
     //easy financing and Certification

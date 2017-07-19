@@ -329,6 +329,7 @@ exports.search = function(req, res) {
             var a = moment(repoDate, 'DD/MM/YYYY');
             var b = moment(todayDate, 'DD/MM/YYYY');
             var days = b.diff(a, 'days') + 1;
+            item.ageingOfAsset = days;
             item.parkingCharges = days * item.parkingChargePerDay;
             
             if(!assetIdCache[item.assetId]){

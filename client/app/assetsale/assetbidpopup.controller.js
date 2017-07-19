@@ -15,44 +15,9 @@
     vm.buyNow = buyNow;
     var dataToSend = {};
 
-    //vm.bid = query.bid;
-    /*if (query.product) {
-      vm.salePrice = query.product.grossPrice;
-      console.log(vm.salePrice);
-    }*/
-    //functions on scope
-    //vm.bidAmount = query.bidAmount;
     vm.calculateBid = calculateBid;
 
-
     function init() {
-      /*var filter = {};
-      filter.taxType = "GST";
-      filter.status = true;
-      var date = new Date();
-      filter.date = date;
-      if (query.product.group)
-        filter.groupId = query.product.group._id;
-      if (query.product.category)
-        filter.categoryId = query.product.category._id;
-      if (query.product.state) {
-        LocationSvc.getStateHelp({
-            stateName: query.product.state
-          })
-          .then(function(result) {
-            filter.stateId = result[0]._id;
-            return VatTaxSvc.search(filter);
-          })
-          .then(function(result) {
-            if (result.length > 0)
-              $scope.taxPercent = result[0].amount;
-            if ($scope.params.bid === "placebid")
-              vm.bidAmount = query.bidAmount;
-            else if ($scope.params.bid === "buynow")
-              vm.bidAmount = query.product.grossPrice;
-            calculateBid(vm.bidAmount);
-          });
-      }*/
       var filter = {};
       filter.taxType = "GST";
       filter.status = true;
@@ -73,7 +38,6 @@
         calculateBid(vm.bidAmount);
       });
     }
-
 
     init();
 
@@ -109,17 +73,12 @@
       if (Auth.getCurrentUser().profileStatus == "incomplete") {
         return $state.go("myaccount");
       }
-      
-      // dataToSend = {};
-      // dataToSend.offerStatuses = [];
-      // dataToSend.dealStatuses = [];
-      // dataToSend.bidStatuses = [];
-      // dataToSend.assetStatuses = [];
+
       var filter = {};
       filter.assetId = query.product.assetId;
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
         var msg = "";
-        if(Number($scope.total) < Number(result.bidAmount))
+        if((Number($scope.total) < Number(result.bidAmount)) && query.typeOfRequest != "proxybid")
           msg = "Higher bid available in the system. "
         Modal.confirm(msg + "Do you want to submit?", function(ret) {
           if (ret == "yes") {
@@ -171,12 +130,17 @@
             dataToSend.product.country = query.product.country;
             dataToSend.product.state = query.product.state;
             dataToSend.product.city = query.product.city;
+            if(query.product.repoDate)
+              dataToSend.product.repoDate = query.product.repoDate;
+            if(query.product.reservePrise)
+              dataToSend.product.reservePrise = query.product.reservePrise;
+            
             if(query.product.comment)
               dataToSend.product.comment = query.product.comment;
-
+            dataToSend.ageingOfAsset = query.product.ageingOfAsset;
+            dataToSend.parkingCharge = query.product.parkingCharges;
             dataToSend.bidAmount = $scope.total;
             dataToSend.proxyBid = query.proxyBid;
-            console.log("data to send",dataToSend);
             AssetSaleSvc.submitBid(dataToSend)
               .then(function(result) {
                 Modal.alert("Your bid has been successfully submitted!", true);
