@@ -290,7 +290,9 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     contactPerson:"contactPerson",
     contactPersonTelNo:"contactPersonTelNo",
     disFromCustomerOffice:"disFromCustomerOffice",
-    customerSeekingFinance:"nameOfCustomerSeeking"
+    customerSeekingFinance:"nameOfCustomerSeeking",
+    invoiceDate:"customerInvoiceDate",
+    invoiceValue:"customerInvoiceValue"
   }
 
   var submmitted = false;

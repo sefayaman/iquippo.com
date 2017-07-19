@@ -1,4 +1,10 @@
-body{top:0 !important;font-family:'Roboto Condensed',sans-serif;}
+@font-face {
+  font-family: 'RobotoCondensed-Regular';
+  src: url('/assets/fonts/RobotoCondensed-Regular.eot?#iefix') format('embedded-opentype'),  url('/assets/fonts/RobotoCondensed-Regular.woff') format('woff'), url('/assets/fonts/RobotoCondensed-Regular.ttf')  format('truetype'), url('/assets/fonts/RobotoCondensed-Regular.svg#RobotoCondensed-Regular') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+body{top:0 !important;font-family:'RobotoCondensed-Regular',sans-serif;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .clearfix{clear: both;}
@@ -416,7 +422,7 @@ ul.alert-dropdown{width:200px;}
 .modal-body{position:relative;padding:15px;text-align:center;}
 .modal-footer{padding:15px;border-top:1px solid #e5e5e5;}
 .btn-warning:hover{background-color:#C7100E}
-.btn-default{color:#333;background-color:#fff;border-color:#ccc;margin-right:3px; padding: 6px 12px;}
+.btn-default{color:#333;background-color:#fff;border-color:#ccc;}
 #res{width:33%;height:20px;margin-left:-29px;margin-bottom:-18px;}
 .nav i{border-radius:63%;width:20px;height:18px;text-align:center;padding:1px;  /*color: black;*/}
 #editor{max-height:250px;height:250px;background-color:white;border-collapse:separate;border:1px solid rgb(204,204,204);padding:4px;box-sizing:content-box;-webkit-box-shadow:rgba(0,0,0,0.0745098) 0px 1px 1px 0px inset;box-shadow:rgba(0,0,0,0.0745098) 0px 1px 1px 0px inset;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border-top-left-radius:3px;overflow:scroll;outline:none;}
@@ -929,16 +935,18 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .videos-icon img{position: relative;bottom:70px;margin:auto;width: 35px;height: 35px;}
 .auction-list{padding: 0 0 10px 0; border-bottom: 1px solid #ccc; margin: 10px 0; position: relative;}
 .auction-filter{border:1px solid #ccc; padding: 5px; margin-left: 5px;}
-.auction-list .media-heading{margin-top: 3px; margin-bottom: 12px; font-size: 18px;}
+.auction-list .media-heading{margin-top: 1px; margin-bottom: 8px; font-size: 18px;}
 .auction-list .media-heading a{text-decoration: none;}
 .auction-list .media p{margin-bottom: 3px;}
 .Asset-filter{padding-top:  25px;}
 .Asset-filter select, .Asset-filter .btn{padding:  5px; border: 1px solid #999;}
-.auction-list img{width: 200px; height: 130px; border: 1px solid #ccc;}
+.auction-list img{width: 200px; height: 145px; border: 1px solid #ccc;}
 .auction-list.auction-details img{width: 130px; height: 130px;}
 .auction-details{position: relative; padding: 10px;border: 1px solid #ccc;}
 .auction-details .media-heading{font-size: 16px;}
 .auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
+.auction-list .calltoContact{position: absolute; top: 30%; right: 0;}
+.auctionText{background: #f4f4f4; padding:10px;}
 
 /* responsive */
 @media (max-width:1199px){
@@ -1167,16 +1175,17 @@ footer p{font-size:12px;}
 .filter-display{position: relative; left: 0px; z-index: 5;}
 .hidefilter{display: none;}
 .banner .carousel-inner{height: 160px; margin-bottom: 10px;}
+.auction-list{padding: 0;}
 .auction-list .media p{font-size: 13px;}
 .auction-list .media a.pull-left{width: 100%; margin-bottom: 10px;}
 .auction-list .media a.pull-left img{width: 100%; height:180px;}
 .auction-list .media .media-body{clear: both;}
-.auction-list .calltoContact{position: absolute; top: auto; right: auto;}
+.auction-list .calltoContact{position: relative; top: auto; right: auto;}
 .auction-list .calltoContact a{text-decoration: none; color: #333;}
-.auction-list .callLocation{position: relative; top: 20px;}
 .Asset-filter{padding: 0;}
 .auction-details .media-heading{font-size: 15px;}
 .auction-details .media p a{text-decoration: none; color: #333;}
+.callLocation .text-right .btn{width: 46%; float: left; margin: 5px;}
 }
 
 @media (max-width:480px){

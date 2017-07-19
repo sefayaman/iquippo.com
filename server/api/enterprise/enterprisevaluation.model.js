@@ -68,6 +68,7 @@ var EnterpriseValuationSchema = new Schema({
   underCarriageImage:{},
   otherImage:{},
   valuationReport:{},
+  overallGeneralCondition:String,
   /*Admin update field*/
   invoiceNo:String,
   invoiceDate:Date,

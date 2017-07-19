@@ -44,7 +44,9 @@ var Field_MAP = {
     contactPerson:"contactPerson",
     contactPersonTelNo:"contactPersonTelNo",
     disFromCustomerOffice:"disFromCustomerOffice",
-    customerSeekingFinance:"nameOfCustomerSeeking"
+    customerSeekingFinance:"nameOfCustomerSeeking",
+    invoiceDate:"customerInvoiceDate",
+    invoiceValue:"customerInvoiceValue"
   };
 
   //qpvalURL

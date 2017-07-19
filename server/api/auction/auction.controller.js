@@ -319,7 +319,7 @@ exports.bulkUpload = function(req, res, next) {
     'Engine_No.': 'engineNo',
     'Asset_Location': 'city',
     'Original_Invoice': 'originalInvoice',
-    'VAT%': 'vatPercentage',
+    'GST%': 'vatPercentage',
     'Contact_Person': 'contactName',
     'Contact_No.': 'contactNumber',
     'Product_ID': 'productId',
@@ -369,7 +369,7 @@ exports.bulkUpload = function(req, res, next) {
         if(!obj.originalInvoice){
           obj.invioceDate = '';
         }
-
+        
         uploadData.push(obj);
       } 
     }
@@ -1041,11 +1041,13 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
+console.log("server side filter",filter);
+console.log("pagination kahani",req.body);
   var result = {};
-  if (req.body.pagination && !req.body.statusType) {
+  /*if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
     return;
-  }
+  }*/
 
   var sortObj = {};
   if (req.body.sort)
@@ -1217,9 +1219,10 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*','Auction_Owner_Mobile*'];
   var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
   var time_params = ['Auction_Start_Time*','Auction_End_Time*'];
+   var time_params = ['Emd_Amount','Terms_Of_Auction','Contact_Person_Name','Contact_Person_No.'];
   var err = false;
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
@@ -1325,7 +1328,7 @@ function importAuctionMaster(req, res, data) {
       'Auction_ID*' : 'auctionId',
       'Auction_Name*' : 'name',
       'Auction_Owner': 'auctionOwner',
-      'Auction_Owner_Mobile':'auctionOwnerMobile',
+      'Auction_Owner_Mobile*':'auctionOwnerMobile',
       'Auction_Start_Date*' : 'startDate',
       'Auction_Start_Time*' : 'startTime',
       'Auction_End_Date*' : 'endDate',
@@ -1336,9 +1339,12 @@ function importAuctionMaster(req, res, data) {
       'Inspection_End_Time': 'insEndTime',
       'Registration_End_Date': 'regEndDate',
       'Address_of_Auction': 'auctionAddr',
-      'EMD_Amount': 'emdAmount',
+      'Emd_Amount': 'emdAmount',
       'Auction_Type': 'auctionType',
-      'Location' : 'city'
+      'Location' : 'city',
+      'Terms_Of_Auction' : 'termAuction',
+      'Contact_Person_Name' : 'contactName',
+      'Contact_Person_No.' : 'contactNumber'
     };
 
     var timeMap = {
@@ -1435,7 +1441,7 @@ function importAuctionMaster(req, res, data) {
           if(!vendor.length){
             errorObj.rowCount = req.counter + 2;
             errorObj.AuctionID = auctionData.auctionId;
-            errorObj.message = "Vendor not exist";
+            errorObj.message = "Auction owner is not exist";
             req.errors[req.errors.length] = errorObj;
             req.counter++;
             importAuctionMaster(req, res, data);
@@ -1478,4 +1484,79 @@ function importAuctionMaster(req, res, data) {
 /* end of auctionmaster */
 function handleError(res, err) {
   return res.status(500).send(err);
+}
+exports.getAuctionWiseProductData = function(req, res) {
+  var filter = {};
+  if(req.body.auctionIds)
+    filter['dbAuctionId'] = {$in:req.body.auctionIds};
+  if(req.body.status)
+    filter['status'] = req.body.status;
+  var isClosed = req.body.isClosed;
+  var auctions=[];
+  var isSoldCount=0;
+  var result1 = [];
+  var result2 = [];
+  Seq()
+  .par(function(){
+    var self = this;
+    var query = AuctionRequest.aggregate([{"$match":filter},{
+    "$group": {
+         _id: "$dbAuctionId",
+      total_products: {
+           $sum: 1
+         }
+      }
+    }]);
+    query.exec(
+            function(err, result) {
+                  if (err) {
+                      return next(err);
+                  }
+             result1 = result;
+             self();
+   });
+
+  })
+  .par(function(){
+    var self = this;
+      if(isClosed === 'n')
+       return  self();
+     filter['product.isSold'] = true;
+      var query2 = AuctionRequest.aggregate([{
+            "$match": filter,
+        }, {
+             "$group": {
+                  _id: "$dbAuctionId",
+                  isSoldCount: {
+                      "$sum": 1
+        },
+               sumOfInsale: {
+                      $sum: "$product.saleVal"
+                 }
+           }
+        }]);
+        query2.exec(
+               function(err, isSoldCount) {
+                    result2 = isSoldCount;
+                  self();
+
+      });
+  })
+  .seq(function(){
+
+      result1.forEach(function(x){
+                         result2.some(function(y){
+                    if(x._id === y._id){
+                    x.isSoldCount = y.isSoldCount;
+                     x.sumOfInsale = y.sumOfInsale;
+                     return true;
+                   }
+             })
+        })
+      return res.status(200).json(result1);
+  })
+  .catch(function(err){
+    return handleError(res, err);
+  });
+
 }

@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('ViewAuctionCtrl', ViewAuctionCtrl);
 
-  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc) {
+  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc) {
     var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -13,6 +13,7 @@
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;
+    $scope.pager=PagerSvc.getPager();
 
     var listingCount = {};
     vm.show=false;
@@ -26,7 +27,7 @@
 
     vm.fireCommand = fireCommand;
     vm.fireCommandType = fireCommandType;
-    //vm.getProductData = getProductData;
+    vm.getProductData = getProductData;
     $scope.auctionType = 'upcoming';
     $scope.auctionOnMap = false;
     
@@ -95,6 +96,7 @@
         filter.auctionType = $stateParams.type;
       }
       //angular.copy(dataToSend, filter);
+      filter.pagination=true;
       getAuctions(filter);
 
     }
@@ -106,19 +108,21 @@
       // filter.currentPage = vm.currentPage;
       // filter.first_id = first_id;
       // filter.last_id = last_id;
+      $scope.pager.copy(filter);
       vm.auctionListing =[];
       if(!filter.auctionType)
         filter.auctionType = $stateParams.type;
       filter.addAuctionType = true;
 
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
-        vm.auctionListing = result.items;
+        getAuctionWiseProductData(result); 
+       /*vm.auctionListing = result.items;
         if(vm.auctionListing.length < 1){
           vm.show=true;
         }
         else{
           vm.show=false;
-        }
+        }*/
       }).catch(function(err) {
         //Modal.alert("Error in geting auction master data");
       });
@@ -129,26 +133,28 @@
 */
 
     function fireCommand(reset, filterObj) {
-      // if (reset)
-      //   resetPagination();
-      // var filter = {};
-      // if (!filterObj)
-      //   angular.copy(dataToSend, filter);
-      // else
-      //   filter = filterObj;
+     if(reset)
+        $scope.pager.reset();
+      var filter = {};
+      if(!filterObj)
+          angular.copy(dataToSend, filter);
+      else
+        filter = filterObj;
 
       if(vm.statusType)
         filter.statusType = vm.statusType;
       else 
         delete filter.statusType;
-
+       if($scope.auctionType)
+       filter.auctionType=$scope.auctionType;
+       filter.pagination=true;      
       getAuctions(filter);
     }
 
     function fireCommandType(auctionType) {
-      //resetPagination();
+      $scope.pager.reset();
       filter = {};
-      //angular.copy(dataToSend, filter);
+      angular.copy(dataToSend, filter);
 
       if(vm.statusType)
         filter.statusType=vm.statusType;
@@ -158,6 +164,7 @@
       $scope.auctionType = auctionType;
       filter.auctionType = auctionType;
       $state.go("viewauctions", {type: auctionType}, {notify: false});
+      filter.pagination=true;
       getAuctions(filter);
     }
 
@@ -226,11 +233,67 @@
       });
 
     }
-
+    function getAuctionWiseProductData(result) {  console.log(result);console.log('vinay');
+        var filter = {};      
+        var auctionIds = []; 
+        if(result && result.items) {     
+          result.items.forEach(function(item) { 
+          auctionIds[auctionIds.length] = item._id;
+        });
+        filter.auctionIds = auctionIds; 
+        filter.status = "request_approved";  
+        filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';console.log(filter);
+        AuctionSvc.getAuctionWiseProductData(filter) 
+        .then(function(data) { 
+        $scope.getConcatData = data; 
+        vm.auctionListing = result.items;
+         vm.totalItems = result.totalItems;
+         $scope.pager.update(result.items,result.totalItems); 
+        if(vm.auctionListing.length < 1){   
+            vm.show = true;            
+        }else{ 
+          vm.show = false;
+          }  
+        })  
+        .catch(function() {});  
+          } 
+    }
+    function getProductData(id, type) { 
+            if (angular.isUndefined($scope.getConcatData)) {  
+                if (type == "total_products") 
+                  return 0;        
+                  // if (type == "total_amount")    
+                        //   return 0;        
+                  // if (type == "total_sold")  
+                        //   return 0;    
+            } else {  
+                 
+                     var totalItemsInAuction = 0;
+                       //var totalSaleValue = 0;
+                       //var totalsold = 0;
+                       $scope.getConcatData.forEach(function(data) {
+                         if (id == data._id) {
+                           totalItemsInAuction = data.total_products;
+                           //totalSaleValue = data.sumOfInsale;
+                           //totalsold = data.isSoldCount;
+                          }});
+                           if (type == "total_products") {  
+                             if (totalItemsInAuction > 0)   
+                              return totalItemsInAuction;
+                            }
+                            // if (type == "total_amount") {
+                              // if (totalSaleValue > 0)
+                              //  return totalSaleValue;// }
+                              // if (type == "total_sold") {
+                                //  if (totalsold > 0)
+                                //    return totalsold;
+                                //  } 
+                                return 0;}
+                              }
     function closeMap() {
       geocoder = null;
       $scope.auctionOnMap = false;
     }
   }
-
+  
 })();
