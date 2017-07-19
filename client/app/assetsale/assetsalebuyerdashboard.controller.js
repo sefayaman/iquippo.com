@@ -13,6 +13,7 @@
 		vm.withdrawBid = withdrawBid;
 		vm.fireCommand = fireCommand;
 		vm.invoicedetails = invoicedetails;
+		vm.paymentType = paymentType;
 		vm.kycDocument = kycDocument;
 		$scope.pager = PagerSvc.getPager();
 
@@ -29,6 +30,21 @@
 			});
 		}
 		init();
+		
+		// payment type
+	    function paymentType() {
+	      var paymentTypeScope = $rootScope.$new();
+	      var paymentTypeModal = $uibModal.open({
+	        templateUrl: "/app/assetsale/selectpaymenttype.html",
+	        scope: paymentTypeScope,
+	        windowTopClass: 'bidmodal',
+	        size: 'xs'
+	      });
+
+	      paymentTypeScope.close = function() {
+	        paymentTypeModal.close();
+	      };
+	    }
 	  // invoicedetails
 	    function invoicedetails() {
 	      var invoiceDetailsScope = $rootScope.$new();
