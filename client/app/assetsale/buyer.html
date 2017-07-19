@@ -66,14 +66,25 @@
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.dealStatus}}</td>
+			   			<td>
+			   				<button type="button" class="btn btn-primary btn-xs">Self</button>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="assetSaleBuyerDashboardVm.invoicedetails()">Other</button>
+			   			</td>
+			   			<td>
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="assetSaleBuyerDashboardVm.kycDocument()">
+			   					<span ng-if="true">Upload</span>
+			   					<span ng-if="false">Update</span>
+			   				</button>
+			   			</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-						<td> <button type="button"  class="btn btn-primary btn-block" ng-click="assetSaleBuyerDashboardVm.withdrawBid(bid._id)">Withdraw Bid</button> </td>
+						<td> 
+							<button type="button"  class="btn btn-primary btn-xs">Change</button> 
+							<button type="button"  class="btn btn-danger btn-xs" ng-click="assetSaleBuyerDashboardVm.withdrawBid(bid._id)">Withdraw</button> 
+						</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>

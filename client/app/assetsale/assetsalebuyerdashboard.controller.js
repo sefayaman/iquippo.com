@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('AssetSaleBuyerDashboardCtrl', AssetSaleBuyerDashboardCtrl);
 
-	function AssetSaleBuyerDashboardCtrl($scope, Auth, PagerSvc, AssetSaleSvc) {
+	function AssetSaleBuyerDashboardCtrl($scope, Auth, Modal, PagerSvc, AssetSaleSvc, $rootScope, $uibModal) {
 		var vm = this;
 		var filter = {};
 		var dataToSend={};
@@ -12,6 +12,8 @@
 		$scope.onTabChange = onTabChange;
 		vm.withdrawBid = withdrawBid;
 		vm.fireCommand = fireCommand;
+		vm.invoicedetails = invoicedetails;
+		vm.kycDocument = kycDocument;
 		$scope.pager = PagerSvc.getPager();
 
 		function init() {
@@ -27,7 +29,32 @@
 			});
 		}
 		init();
-	  
+	  // invoicedetails
+	    function invoicedetails() {
+	      var invoiceDetailsScope = $rootScope.$new();
+	      var invoiceDetailsModal = $uibModal.open({
+	        templateUrl: "/app/assetsale/invoicedetails.html",
+	        scope: invoiceDetailsScope,
+	        size: 'xs'
+	      });
+
+	      invoiceDetailsScope.close = function() {
+	        invoiceDetailsModal.close();
+	      };
+	    }
+	    // KYC document
+	    function kycDocument() {
+	      var kycDocumentScope = $rootScope.$new();
+	      var kycDocumentModal = $uibModal.open({
+	        templateUrl: "/app/assetsale/kycDocument.html",
+	        scope: kycDocumentScope,
+	        size: 'xs'
+	      });
+
+	      kycDocumentScope.close = function() {
+	        kycDocumentModal.close();
+	      };
+	    }
 	  function onTabChange(tabs){
 	  	switch(tabs){
 	  		case 'auctionable':

@@ -26,7 +26,7 @@
 		   	<table class="table table-bordered">
 		   		<thead>
 		   			<tr>		   				
-			   			<th>View Bids</th>
+			   			
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
@@ -40,13 +40,11 @@
 			   			<th>Buy Now Price</th>
 			   			<th>Asset Description</th>
 			   			<th>Ageing on the Portal</th>
+			   			<th>View Bids</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="product in assetSaleSellerDashboardVm.productListing">
-			   			<td>
-			   			<a href="/assetsale/sellerdetails?productId={{product._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-			   			</td>
+		   			<tr ng-repeat="product in assetSaleSellerDashboardVm.productListing">			   			
 			   			<td>{{product.assetId}}</td>
 			   			<td>{{product.category.name}}</td>
 			   			<td>{{product.brand.name}}</td>
@@ -59,7 +57,10 @@
 			   			<td>{{product.parkingCharges}}</td>
 			   			<td>{{product.grossPrice}}</td>			   			
 			   			<td>{{product.comment}}</td>			   			
-			   			<td>{{}}</td>			   			
+			   			<td>{{}}</td>		
+			   			<td>
+			   			<a href="/assetsale/sellerdetails?productId={{product._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   			</td>	   			
 			   			   			
 			   		</tr>
 		   		</tbody>

@@ -1,12 +1,14 @@
 <div>
 	<div class="row">
 	  	<div class="col-sm-6">
-	  		<h4>Fulfilment Agency Details</h4>
+	  		<h4>
+	  		<a href="/assetsale/fulfilmentagency" class="btn btn-default active"><i class="fa fa-chevron-left"></i> Back</a>
+	  		</h4>
 	  	</div>
 	  	<div class="col-sm-6 text-right">
 	  		<h4>	  			
 	  			<button class="btn btn-success" ng-click=""><i class="fa fa-file-excel-o"></i> Export Excel</button>
-	  			<a href="/assetsale/fulfilmentagency" class="btn btn-primary">Back</a>
+	  			
 	  		</h4>
 	  	</div>
 	</div>
@@ -14,6 +16,7 @@
 	
 	<!-- Auctionable Bid -->
 	<div ng-if="true">
+		<p><strong>Asset Id:</strong> 1126123</p>
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{faProDetailDashboardVm.bidListing.length}}

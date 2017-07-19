@@ -25,8 +25,7 @@
 		   <div class="table-responsive">
 		   	<table class="table table-bordered">
 		   		<thead>
-		   			<tr>
-			   			<th>View Bids</th>
+		   			<tr>			   			
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
@@ -41,14 +40,12 @@
 			   			<th>Buyer State</th>
 			   			<th>Buyer Location</th>
 			   			<th>Buyer Mobile No.</th>
-			   			<th>Buyer Email Id</th>			   			
+			   			<th>Buyer Email Id</th>	
+			   			<th>View Bids</th>		   			
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="fa in faProDashboardVm.agencyListing">
-			   			<td>
-			   			<a href="/assetsale/fulfilmentagencydetails?productId={{fa._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-			   			</td>
+		   			<tr ng-repeat="fa in faProDashboardVm.agencyListing">			   			
 			   			<td>{{fa.assetId}}</td>
 			   			<td>{{fa.category.name}}</td>
 			   			<td>{{fa.brand.name}}</td>
@@ -63,7 +60,10 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>			   			
+			   			<td>{{}}</td>	
+			   			<td>
+			   			<a href="/assetsale/fulfilmentagencydetails?productId={{fa._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   			</td>		   			
 			   		</tr>
 		   		</tbody>
 		   	</table>
