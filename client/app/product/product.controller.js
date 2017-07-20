@@ -790,7 +790,7 @@
         }, 20);
         return;
       }
-      if(!$scope.container.sellerName) {
+      if(!$scope.container.sellerName && (Auth.isAdmin() || Auth.isChannelPartner())) {
         Modal.alert("Seller doesn't exist!");
         return;
       }
