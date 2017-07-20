@@ -6,7 +6,6 @@ var mongoose = require('mongoose'),
 var VatTaxSchema = new Schema({
   taxType:String,
   category:{type:Schema.Types.ObjectId,ref:'Category'},
-  group:{type:Schema.Types.ObjectId,ref:'Group'},
   state:{type:Schema.Types.ObjectId,ref:'State'},
   effectiveFromDate:Date,
   effectiveToDate:Date,

@@ -191,6 +191,7 @@ module.exports = {
 		"Asset Image Under-Carriage / Tyre":{key:"underCarriageImage",type:"url"},
 		"Asset Image Others":{key:"otherImage",type:"url"},
 		"Valuation Report":{key:"valuationReport",type:"url"},
+		"Overall General Condition":{key:"overallGeneralCondition"},
 		"Invoiced Date":{key:"invoiceDate",allowedRoles:['admin'],type:"date"},
 		"Invoice No":{key:"invoiceNo",allowedRoles:['admin']},
 		"Payment Received":{key:"paymentReceived",type:"boolean",allowedRoles:['admin']},

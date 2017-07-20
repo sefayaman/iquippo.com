@@ -420,7 +420,10 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-3 form-group" ng-class="{'has-error': form.assetCategory.$invalid && form.submitted}">
-				 <input type="text" autocomplete="off" class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" placeholder="*Asset Category" uib-typeahead="astGroup for astGroup in getAssetGroup($viewValue)"  class="form-control" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId)" required>
+				<select class="form-control" name="assetCategory" ng-model="addTransactionVm.enterpriseValuation.assetCategory" ng-disabled="(!addTransactionVm.enterpriseValuation.enterprise.enterpriseId || !addTransactionVm.enterpriseValuation.agency.partnerId)" required>
+	              <option value="">*Select Category</option>
+	              <option value="{{ast.assetCategory}}" ng-repeat="ast in addTransactionVm.assetCategoryList">{{ast.assetCategory}}</option>
+	            </select>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error': (form.brand.$invalid || form.otherBrand.$invalid) && form.submitted}">
 					<select class="form-control form-group" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">

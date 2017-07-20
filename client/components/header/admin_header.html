@@ -65,10 +65,16 @@
                     <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
                         <a href="/enterprisevaluation/transaction"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
                     </li>
+                    <!-- <li>
+                        <a href="javascript:void(0);" ng-click="redirectToUrl()"><i class="fa fa-gavel"></i> Asset Sale</a>
+                    </li> -->
                     <li ng-if="isAdmin()">
                         <a href="/assetsale/administrator"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li>
-                    <li ng-if="isLoggedIn && !isAdmin()">
+                    <li ng-if="isFAgencyPartner()">
+                        <a href="/assetsale/fulfilmentagency"><i class="fa fa-gavel"></i> Asset Sale</a>
+                    </li>
+                    <li ng-if="!isFAgencyPartner() && !isAdmin()">
                         <a href="/assetsale/seller"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li>
                     <!--<li ng-if="isAdmin()">

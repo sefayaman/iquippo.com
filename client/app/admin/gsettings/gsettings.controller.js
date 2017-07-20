@@ -139,17 +139,22 @@
         }
 
 
-        function uploadDoc(files) {
+        function uploadDoc(files,_this,flag) {
             if (files.length == 0)
                 return;
 
             uploadSvc.upload(files[0], auctionDir).then(function(result) {
                 //vm.auctionData.docDir = result.data.assetDir;
-                vm.auctionData.docName = result.data.filename;
+                if(flag==1){
+                    vm.auctionData.docName = result.data.filename;
+                }
+                if(flag==2){
+                    vm.auctionData.docNameProxy = result.data.filename;
+                }
             });
 
         }
-
+        
         function resetData() {
             vm.banner.hyperlink = "No";
             vm.banner.ticker = "No";
@@ -832,6 +837,9 @@
                     vm.auctionData.auctionOwner = item.entityName;
                 //vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
             });
+            if (vm.auctionData.docType)
+                vm.auctionData.docType = '';
+
             if (vm.auctionData.city)
                 vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
 
@@ -849,6 +857,10 @@
 
         function editAuctionMaster(index) {
             angular.copy(vm.auctions[index], vm.auctionData)
+            if (vm.auctionData.docType === 'bidProxy'){
+                vm.auctionData.docNameProxy = vm.auctionData.docName;
+                 vm.auctionData.docName = '';
+            }
             if (vm.auctionData.startDate)
                 vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
             if (vm.auctionData.endDate)

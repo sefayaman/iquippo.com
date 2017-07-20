@@ -396,21 +396,21 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-3 form-group">
-							<input type="text" class="form-control" name="" value="" placeholder="Terms of Auction">
+							<input type="text" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.termAuction" placeholder="Terms of Auction">
 						</div>
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Terms &amp; Conditions</span>
-								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
+								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this,1)"  accept=".doc, .docx, .pdf" class="ng-scope">
 							</span>
 							<span>{{gsettingVm.auctionData.docName}}</span>
 						</div>
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Bid Proxy Form</span>
-								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this)"  accept=".doc, .docx, .pdf" class="ng-scope">
+								<input type="file" name="file" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this,2)"  accept=".doc, .docx, .pdf" class="ng-scope">
 							</span>
-							<span>{{gsettingVm.auctionData.docName}}</span>
+							<span>{{gsettingVm.auctionData.docNameProxy}}</span>
 						</div>
 						
 						<div class="col-sm-3">							
@@ -495,8 +495,9 @@
 						<td>{{auc.auctionType | titleCase}}</td>
 						<td>{{auc.emdAmount}}</td>
 						<td>
-							<span ng-if="auc.docType == 'tc'">Terms and Conditions</span>
-							<span ng-if="auc.docType == 'bidProxy'">Bid Proxy Form</span>
+							<span ng-if="auc.docName">Terms and Conditions</span>
+							<span ng-if="auc.docName && auc.docNameProxy"> | </span>
+							<span ng-if="auc.docNameProxy">Bid Proxy Form</span>
 						</td>
 						<td>{{gsettingVm.getProductData(auc._id, "total_products")}}</td>
 						<td>
@@ -1623,12 +1624,12 @@
 		              <input type="text" name="effectiveToDate" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
 		            </div>
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}">
+				<!-- <div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}">
 					<select class="form-control" name="group" ng-model="vatVm.dataModel.group" ng-change="vatVm.getCategory(vatVm.dataModel.group)" required>
 						<option value="">*Asset Group</option>
 						<option value="{{group._id}}" ng-repeat="group in allGroup">{{group.name}}</option>
 					</select>
-				</div>								
+				</div> -->								
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
@@ -1670,8 +1671,7 @@
 					<tr>						
 						<th>Tax Type</th>						
 						<th>Effective From Date</th>						
-						<th>Effective To Date</th>						
-						<th>Asset Group</th>				
+						<th>Effective To Date</th>										
 						<th>Asset Category</th>				
 						<th>State</th>						
 						<th>Rate</th>						
@@ -1683,7 +1683,6 @@
 						<td>{{vat.taxType}}</td>
 						<td>{{vat.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{vat.effectiveToDate | date:'MM/dd/yyyy'}}</td>
-						<td>{{vat.group.name}}</td>
 						<td>{{vat.category.name}}</td>
 						<td>{{vat.state.name}}</td>
 						<td>{{vat.amount}}</td>

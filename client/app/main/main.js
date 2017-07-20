@@ -529,46 +529,50 @@ angular.module('sreizaoApp')
       })
       .state('assetsale.administrator', {
         url: '/administrator',
-        templateUrl: 'app/assetsale/administrator.html',
+        templateUrl: 'app/assetsale/adminbidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true
       })
-      .state('assetsale.admindetails', {
-        url: '/admindetails',
-        templateUrl: 'app/assetsale/admindetails.html',
+      .state('assetsale.adminproductbidrequest', {
+        url: '/adminproductbidrequest',
+        templateUrl: 'app/assetsale/adminproductbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.seller', {
         url: '/seller',
-        templateUrl: 'app/assetsale/seller.html',
-        controller:'AssetSaleSellerDashboardCtrl as assetSaleSellerDashboardVm',
+        templateUrl: 'app/assetsale/sellerbidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.sellerproductbidrequest', {
+        url: '/sellerproductbidrequest',
+        templateUrl: 'app/assetsale/sellerproductbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.buyer', {
         url: '/buyer',
-        templateUrl: 'app/assetsale/buyer.html',
-        controller:'AssetSaleBuyerDashboardCtrl as assetSaleBuyerDashboardVm',
+        templateUrl: 'app/assetsale/buyerproductbidrequest.html',
+        controller:'BuyerProductBidRequestCtrl as buyerProductBidRequestVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.fulfilmentagency', {
         url: '/fulfilmentagency',
-        templateUrl: 'app/assetsale/fulfilmentAgency.html',
+        templateUrl: 'app/assetsale/fabidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true
       })
-      .state('assetsale.sellerdetails', {
-        url: '/sellerdetails',
-        templateUrl: 'app/assetsale/sellerdetails.html',
-        controller:'SellerDetailsCtrl as sellerDetailsVm',
-        layout:'admin',
-        authenticate:true
-      })
-      .state('assetsale.fulfilmentagencydetails', {
-        url: '/fulfilmentagencydetails',
-        templateUrl: 'app/assetsale/fulfilmentAgencydetails.html',
+      .state('assetsale.faproductbidrequest', {
+        url: '/faproductbidrequest',
+        templateUrl: 'app/assetsale/faproductbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true
       })

@@ -494,32 +494,37 @@
                 <div class="row">
                   <div class="col-sm-9">
                     <h3 class="panel-title">
-
-                      <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}}</strong></a> <span>({{currentProduct.assetId}})</span>  
-                      <a href="javascript:void(0);" class="text-danger">[3 Bids]</a>                  
+                      <strong>To Buy</strong> ( Asset Id: <span>{{currentProduct.assetId}} )</span>
                     </h3>
                   </div>
-                  <div class="col-sm-3" ng-if="auctionsData.name">
+                  <!-- <div class="col-sm-3" ng-if="auctionsData.name">
                     <small class="pull-right">Asset Listed in Auction</small>
+                  </div> -->
+                  <div class="col-sm-3" ng-if="productDetailVm.bidCount !== 0">
+                    <a href="javascript:void(0);" class="text-danger pull-right">[{{productDetailVm.bidCount}} Bids]</a>
                   </div>
                 </div>
                </div>
                <div class="panel-footer">
-                 <h4 ng-if="currentProduct.priceOnRequest==false">Sale Price : <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
+                  <!-- <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}} </strong></a> -->
+                  <p ng-if="auctionsData.name"><strong>Listed in Auction:</strong> <a href="javascript:void(0);">{{auctionsData.name}} ({{auctionsData.auctionId}}) </a> <span class="pull-right">{{auctionsData.startDate | date:'MMM d, y'}} to {{auctionsData.endDate | date:'MMM d, y'}}</span>  
+                  <legend></legend>
+                  </p>
+                 <h4 ng-if="currentProduct.priceOnRequest == false && !auctionsData.name">Sale Price: <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
                  <div class="row">
                    <div class="col-xs-offset-3 col-xs-4">
                    <div class="form-group" ng-class="{'has-error': assetSale.bidAmount.$invalid && bidSubmitted}">
                      <input type="text" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
                    </div>
                    </div>
-                   <div class="col-xs-2 padd-left">
-                     <button type="button" ng-if="auctionsData.allowBid != 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
+                   <div class="col-xs-4 padd-left">
+                     <button type="button" ng-if="userBids == 0 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
                       Place Bid
                      </button>
 
-                     <button type="button" ng-if="false" class="btn btn-primary btn-block">Change Bid</button>
-
-                     <button type="button" ng-if="auctionsData.allowBid == 'No'" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
+                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">Change Bid</button>
+                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.bidWithdrawn(productDetailVm.bidAmount,'proxybid',assetSale)">Withdrawn</button>
+                     <button type="button" ng-if="auctionsData.allowBid == 'No' && auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                    </div>
                  </div>
                  </form>
@@ -536,8 +541,8 @@
               </div>
               <div class="panel-body">
                   <form novalidate class="originalPrice" name="originalPrice">
-                    <div class="sale-price form-group" ng-if="currentProduct.grossPrice">
-                        <div class="row" ng-if="currentProduct.priceOnRequest==false">
+                    <div class="sale-price form-group" ng-if="currentProduct.priceOnRequest==false">
+                        <div class="row" >
                           <div class="col-xs-5 col-sm-4">
                             <strong>
                               Sale Price
@@ -732,7 +737,7 @@
                     </table>
                   </li>
                   <li>
-                    VAT &amp; TCS as applicable and payable by the buyer, over and above the Listed Price.
+                    GST &amp; TCS as applicable and payable by the buyer, over and above the Listed Price.
                   </li>
                   <li>
                    Listed Price inclusive of Parking Charges.
@@ -752,7 +757,7 @@
                     Payment can be made online through iQuippo payment gateway or directly into the bank account through cheque, DD, RTGS or NetBanking.
                   </li>
                   <li>
-                    VAT, TCS and Parking Charges as applicable and payable by the buyer over and above the offer amount
+                    GST, TCS and Parking Charges as applicable and payable by the buyer over and above the offer amount
                   </li>
                 </ul>
 

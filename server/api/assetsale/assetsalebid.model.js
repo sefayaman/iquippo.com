@@ -7,7 +7,8 @@ var AssetSaleBidSchema = new Schema({
   ticketId:String,
   user:{type:Schema.Types.ObjectId,ref:'User'},
   product:{
-            _id : {type:Schema.Types.ObjectId,ref:'Product'},
+            proData : {type:Schema.Types.ObjectId,ref:'Product'},
+            assetId:String,
             category:String,
             brand:String,
             model:String,
@@ -15,8 +16,14 @@ var AssetSaleBidSchema = new Schema({
             country:String,
             state:String,
             city:String,
-            comment:String
-          }
+            comment:String,
+            seller:{},
+            repoDate:Date,
+            reservePrise:Number
+          },
+  offerType:String,
+  ageingOfAsset:Number,
+  parkingCharge:Number,
   bidAmount:Number,
   offerStatus:String,
   bidStatus:String,
@@ -24,14 +31,14 @@ var AssetSaleBidSchema = new Schema({
   assetStatus:String,
   tradeType:String,
   offerStatuses:[{}],
-  dealStatuses:{[}],
+  dealStatuses:[{}],
   bidStatuses:[{}],
   assetStatuses:[{}],
-  kyc:{
+  kyc:[{
         type:String,
         name:String,
         docName:String
-  },
+  }],
   emdPayment:{
     paymentMode:String,
     emdAmount:Number,

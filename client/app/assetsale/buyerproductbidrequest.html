@@ -1,0 +1,158 @@
+<div>
+  <div class="row">
+  	<div class="col-sm-6 col-sm-offset-6 text-right">
+  		<h4>
+  			<button class="btn btn-success" ng-click=""><i class="fa fa-file-excel-o"></i> Export Excel</button>
+  		</h4>
+  	</div>
+  </div>
+  <legend></legend>
+  <div class="btn-group enterprise-value form-group">
+    <button type="button" class="btn active" ng-class="{'btn-primary': subTabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': subTabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+   </div>
+
+   <!-- Auctionable Bid -->
+	<div ng-if="buyerProductBidRequestVm.activeBid=='Auctionable'">
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{buyerProductBidRequestVm.bidListing.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="buyerProductBidRequestVm.searchStr" ng-change="buyerProductBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>
+		   				<th>Ticket Id</th>
+			   			<th>Asset Id</th>
+			   			<th>Category</th>
+			   			<th>Brand</th>
+			   			<th>Modal</th>
+			   			<th>Manufacturing Year</th>
+			   			<th>Asset Country</th>
+			   			<th>Asset State</th>
+			   			<th>Asset Location</th>
+			   			<th>Asset Description</th>
+			   			<th>Offer Type</th>
+			   			<th>Offer Price</th>
+			   			<th>Offer Status</th>
+			   			<th>Deal Status</th>
+			   			<th>Invoice Details</th>
+			   			<th>KYC Documents</th>
+			   			<th>Delivery Order</th>
+			   			<th>Date of Delivery</th>
+			   			<th>Asset Delivery Confirmation</th>
+			   			<th>Rating</th>
+			   			<th>Feedback</th>
+						<th>Action</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="bid in buyerProductBidRequestVm.bidListing">
+		   				<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.product.assetId}}</td>
+			   			<td>{{bid.product.category}}</td>
+			   			<td>{{bid.product.brand}}</td>
+			   			<td>{{bid.product.model}}</td>
+			   			<td>{{bid.product.mfgYear}}</td>
+			   			<td>{{bid.product.country}}</td>
+			   			<td>{{bid.product.state}}</td>
+			   			<td>{{bid.product.city}}</td>
+			   			<td>{{bid.product.assetDesc}}</td>
+			   			<td>{{bid.offerType}}</td>
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<td>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.invoicedetails()">Update</button>
+			   			</td>
+			   			<td>
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.kycDocument()">
+			   					<span ng-if="true">Upload</span>
+			   					<span ng-if="false">Update</span>
+			   				</button>
+			   			</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+						<td> 
+							<button type="button" ng-click="buyerProductBidRequestVm.paymentType()"  class="btn btn-primary btn-xs">Pay</button> 
+							<button type="button"  class="btn btn-primary btn-xs">Change</button> 
+							<button type="button"  class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
+						</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="buyerProductBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+  <!-- Closed Auction -->
+	<div ng-if="buyerProductBidRequestVm.activeBid=='closed'">
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{buyerProductBidRequestVm.bidListing.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="buyerProductBidRequestVm.searchStr" ng-change="buyerProductBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>
+			   			<th>Asset Id</th>
+			   			<th>Category</th>
+			   			<th>Brand</th>
+			   			<th>Modal</th>
+			   			<th>Manufacturing Year</th>
+			   			<th>Asset Country</th>
+			   			<th>Asset State</th>
+			   			<th>Asset Location</th>
+			   			<th>Asset Description</th>
+			   			<th>Ticket Id</th>
+			   			<th>Offer Type</th>
+			   			<th>Offer Price</th>
+			   			<th>Offer Status</th>
+			   			<th>Invoice Details</th>
+			   			<th>KYC Documents</th>
+			   			<th>Delivery Order</th>
+			   			<th>Date of Delivery</th>
+			   			<th>Asset Delivery Confirmation</th>
+			   			<th>Rating</th>
+			   			<th>Feedback</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="closedBid in buyerProductBidRequestVm.bidListing">
+			   			<td>{{closedBid.product.assetId}}</td>
+			   			<td>{{closedBid.product.category}}</td>
+			   			<td>{{closedBid.product.brand}}</td>
+			   			<td>{{closedBid.product.model}}</td>
+			   			<td>{{closedBid.product.mfgYear}}</td>
+			   			<td>{{closedBid.product.country}}</td>
+			   			<td>{{closedBid.product.state}}</td>
+			   			<td>{{closedBid.product.city}}</td>
+			   			<td>{{closedBid.product.assetDesc}}</td>
+			   			<td>{{closedBid.ticketId}}</td>
+			   			<td>{{closedBid.tradeType}}</td>
+			   			<td>{{closedBid.bidAmount}}</td>
+			   			<td>{{closedBid.offerStatus}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="buyerProductBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+</div>
