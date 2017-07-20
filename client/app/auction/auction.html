@@ -2,7 +2,7 @@
     <div class="form-group"></div>
 		 <div class="row">
       <div class="col-xs-4 col-sm-9"><h4>Auctions</h4></div>
-      <div class="col-xs-8 col-sm-3 text-right">
+      <div class="col-xs-8 col-sm-3 text-right padd-left">
         <strong>Filter : </strong>         
         <select class="auction-filter" ng-model="auctionDateVm.statusType" ng-change="auctionDateVm.fireCommand()">
           <option value="">Select Auction Type</option>
@@ -144,7 +144,7 @@
           </div>
         </div>
   </div>
- <!--  <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false"></uib-pagination> -->
+ <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false"></uib-pagination> 
 <div class="container" ng-if="auctionOnMap">
   <div class="row">
     <div class="col-sm-12" id="map_canvas">

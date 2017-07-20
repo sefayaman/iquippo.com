@@ -1096,11 +1096,13 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
+console.log("server side filter",filter);
+console.log("pagination kahani",req.body);
   var result = {};
-  if (req.body.pagination && !req.body.statusType) {
+  /*if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
     return;
-  }
+  }*/
 
   var sortObj = {};
   if (req.body.sort)

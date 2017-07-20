@@ -58,7 +58,7 @@
       </div>
     </div> 
     <div class="col-sm-9">
-      <div class="row">
+      <div class="row callLocation">
         <div class="col-sm-6">
         <h4>{{auctionTypeValue | titleCase}} {{auctionName}} - {{auctionCity}}</h4>
         </div>
@@ -67,7 +67,7 @@
             <i class="fa fa-filter"></i> Filter
           </button>
         </div>         
-        <div class="col-xs-9 col-sm-6 text-right padd-left">
+        <div class="col-xs-12 col-sm-6 text-right padd-left">
           <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm active">Register Now</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> <span class="hidden-xs">Auction Catalogue</span></a>
