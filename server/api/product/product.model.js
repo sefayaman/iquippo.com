@@ -85,6 +85,7 @@ var ProductSchema = new Schema({
   auction:{},
   valuationStamp:String,
   inquiryCounter : {type:Number,default:0},
+  bidReceived:Boolean,
   buyerInfo:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

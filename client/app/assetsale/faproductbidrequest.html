@@ -15,14 +15,14 @@
 	<legend></legend>
 	
 	<!-- Auctionable Bid -->
-	<div ng-if="true">
-		<p><strong>Asset Id:</strong> 1126123</p>
+	<div >
+		<p><strong>Asset Id:</strong> {{assetId}}</p>
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : {{faProDetailDashboardVm.bidListing.length}}
+		   		Showing : {{productBidRequestVm.bidListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="faProDetailDashboardVm.searchStr" ng-change="faProDetailDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="productBidRequestVm.searchStr" ng-change="productBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -49,10 +49,10 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="bid in faProDetailDashboardVm.bidListing">
+		   			<tr ng-repeat="bid in productBidRequestVm.bidListing">
 			   			<td>{{bid.ticketId}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td>{{bid.offerType}}</td>
+			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.product.proData.seller.fname}} {{bid.product.proData.seller.lname}}</td>
 			   			<td>{{bid.product.proData.seller.mobile}}</td>
@@ -73,6 +73,6 @@
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faProDetailDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="productBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 </div>

@@ -507,7 +507,7 @@
                </div>
                <div class="panel-footer">
                   <!-- <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}} </strong></a> -->
-                  <p ng-if="auctionsData.name"><strong>Listed in Auction:</strong> <a href="javascript:void(0);">{{auctionsData.name}} ({{auctionsData.auctionId}}) </a> <span class="pull-right">{{auctionsData.startDate | date:'MM/dd/yyyy'}} to {{auctionsData.endDate | date:'MM/dd/yyyy'}}</span>  
+                  <p ng-if="auctionsData.name"><strong>Listed in Auction:</strong> <a href="javascript:void(0);">{{auctionsData.name}} ({{auctionsData.auctionId}}) </a> <span class="pull-right">{{auctionsData.startDate | date:'MMM d, y'}} to {{auctionsData.endDate | date:'MMM d, y'}}</span>  
                   <legend></legend>
                   </p>
                  <h4 ng-if="currentProduct.priceOnRequest == false && !auctionsData.name">Sale Price: <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>
@@ -517,14 +517,14 @@
                      <input type="text" class="form-control" name="bidAmount" ng-model="productDetailVm.bidAmount" placeholder="Enter Bid Amount" required>
                    </div>
                    </div>
-                   <div class="col-xs-2 padd-left">
-                     <button type="button" ng-if="userBids == 0 && (auctionsData.allowBid != 'No')" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
+                   <div class="col-xs-4 padd-left">
+                     <button type="button" ng-if="userBids == 0 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">
                       Place Bid
                      </button>
 
-                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">Change Bid</button>
-
-                     <button type="button" ng-if="auctionsData.allowBid == 'No' && auctionsData.visibleBuyNow == false" class="btn btn-primary btn-block" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
+                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)">Change Bid</button>
+                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.bidWithdrawn(productDetailVm.bidAmount,'proxybid',assetSale)">Withdrawn</button>
+                     <button type="button" ng-if="auctionsData.allowBid == 'No' && auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                    </div>
                  </div>
                  </form>

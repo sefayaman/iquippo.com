@@ -1,14 +1,14 @@
 (function() {
 	'use strict';
-	angular.module('sreizaoApp').controller('AssetSaleBuyerDashboardCtrl', AssetSaleBuyerDashboardCtrl);
+	angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProductBidRequestCtrl);
 
-	function AssetSaleBuyerDashboardCtrl($scope, Auth, Modal, PagerSvc, AssetSaleSvc, $rootScope, $uibModal) {
+	function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, AssetSaleSvc, $rootScope, $uibModal) {
 		var vm = this;
 		var filter = {};
 		var dataToSend={};
 		vm.bidListing = [];
 		vm.activeBid = "Auctionable";
-		$scope.tabValue = 'auctionable'
+		$scope.subTabValue = 'auctionable'
 		$scope.onTabChange = onTabChange;
 		vm.withdrawBid = withdrawBid;
 		vm.fireCommand = fireCommand;
@@ -79,14 +79,14 @@
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
 	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 	  		vm.activeBid='Auctionable';
-            $scope.tabValue='auctionable';
+            $scope.subTabValue='auctionable';
 	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
 	  		filter={};
 			  $scope.pager.reset();
 	  		vm.activeBid='closed';
-	  		$scope.tabValue='closed';
+	  		$scope.subTabValue='closed';
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
 	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 	  		filter.assetStatus = encodeURIComponent('closed');

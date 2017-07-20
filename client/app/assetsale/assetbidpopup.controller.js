@@ -12,7 +12,7 @@
     $scope.parking = 0;
 
     vm.submitBid = submitBid;
-    vm.buyNow = buyNow;
+    //vm.buyNow = buyNow;
     var dataToSend = {};
 
     vm.calculateBid = calculateBid;
@@ -78,7 +78,8 @@
       filter.assetId = query.product.assetId;
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
         var msg = "";
-        if((Number($scope.total) < Number(result.bidAmount)) && query.typeOfRequest != "proxybid")
+        if((Number($scope.total) < Number(result.bidAmount)) 
+          && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
           msg = "Higher bid available in the system. "
         Modal.confirm(msg + "Do you want to submit?", function(ret) {
           if (ret == "yes") {
@@ -141,15 +142,21 @@
             dataToSend.parkingCharge = query.product.parkingCharges;
             dataToSend.bidAmount = $scope.total;
             dataToSend.proxyBid = query.proxyBid;
+            dataToSend.offerType = query.offerType;
             AssetSaleSvc.submitBid(dataToSend)
               .then(function(result) {
                 Modal.alert("Your bid has been successfully submitted!", true);
                 if(Auth.getCurrentUser().email) {
                   var data = {};
+                  dataToSend = {};
                   data['to'] = Auth.getCurrentUser().email;
-                  data['subject'] = 'No reply: Bid request received';
                   dataToSend.serverPath = serverPath;
                   dataToSend.ticketId = result.ticketId;
+                  if(query.typeOfRequest == "buynow") {
+                    data['subject'] = 'No reply: Buynow request received';
+                  } else {
+                    data['subject'] = 'No reply: Bid request received';
+                  }
                   notificationSvc.sendNotification('bidReceiveEmailToCustomer',data, dataToSend,'email');
                 }
                 $scope.close();
@@ -163,7 +170,7 @@
       });
     }
 
-    function buyNow() {
+    /*function buyNow() {
       if (!Auth.getCurrentUser()._id) {
         Modal.alert("Please Login/Register for submitting your request!", true);
         return;
@@ -197,7 +204,7 @@
             });
         }
       });
-    }
+    }*/
   }
 })();
 

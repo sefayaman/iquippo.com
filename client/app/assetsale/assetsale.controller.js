@@ -2,14 +2,14 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('AssetSaleCtrl', AssetSaleCtrl);
 
-	function AssetSaleCtrl($scope, Auth,productSvc, AssetSaleSvc) {
+	function AssetSaleCtrl($scope, $state, Auth, productSvc, AssetSaleSvc) {
 		var vm = this;
 		var filter={};
 		vm.bidListing=[];
 		vm.activeBid="Auctionable";
 		$scope.tabValue='auctionable';
 		$scope.onTabChange=onTabChange;
-		vm.fireCommand=fireCommand;
+		//vm.fireCommand=fireCommand;
 
 		function init() {
 			switch($state.current.name){
@@ -47,7 +47,7 @@
 	  function onTabChange(tabValue){
       switch(tabValue){
         case "administrator":
-          $scope.tabValue = 'dashboard';
+          $scope.tabValue = 'administrator';
           $state.go("assetsale.administrator");
         break;
         case "seller":

@@ -13,13 +13,13 @@
    </div> -->
 
    	<!-- Auctionable Auction -->
-	<div ng-if="true">
+	<div>
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : {{adminProDashboardVm.productListing.length}}
+		   		Showing : {{bidproductVm.productListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="adminProDashboardVm.searchStr" ng-change="adminProDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -52,7 +52,7 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="product in adminProDashboardVm.productListing">
+		   			<tr ng-repeat="product in bidproductVm.productListing">
 			   			
 			   			<td>{{product.assetId}}</td>
 			   			<td>{{product.category.name}}</td>
@@ -77,22 +77,22 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>
-			   				<a href="/assetsale/admindetails?productId={{product._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   				<a href="/assetsale/adminproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
 			   			</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="adminProDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
    <!-- Closed Bid -->
-	<div ng-if="false">
+	<!-- <div ng-if="false">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : 1 Records
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="adminProDashboardVm.searchStr" ng-change="adminProDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -100,6 +100,6 @@
 		   		
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="adminProDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-	</div>  
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>   -->
 </div>

@@ -8,18 +8,18 @@
   </div>
   <legend></legend>
   <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn active" ng-class="{'btn-primary': tabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
-    <button type="button" class="btn active" ng-class="{'btn-primary': tabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': subTabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': subTabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
    	<!-- Auctionable Auction -->
-	<div ng-if="faProDashboardVm.activeBid == 'Auctionable'">
+	<div ng-if="bidproductVm.activeBid == 'Auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : {{faProDashboardVm.agencyListing.length}}
+		   		Showing : {{bidproductVm.agencyListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="faProDashboardVm.searchStr" ng-change="faProDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -45,7 +45,7 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="fa in faProDashboardVm.agencyListing">			   			
+		   			<tr ng-repeat="fa in bidproductVm.agencyListing">			   			
 			   			<td>{{fa.assetId}}</td>
 			   			<td>{{fa.category.name}}</td>
 			   			<td>{{fa.brand.name}}</td>
@@ -62,24 +62,24 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>	
 			   			<td>
-			   			<a href="/assetsale/fulfilmentagencydetails?productId={{fa._id}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   			<a href="/assetsale/faproductbidrequest?productId={{fa._id}}&assetId={{fa.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
 			   			</td>		   			
 			   		</tr>
 		   		</tbody>
 		   	</table>
 		   </div>	
-        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faProDashboardVm.fireCommand()" class="pagination-sm" rotate="false">
+        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">
 	  </uib-pagination>
 	
 	</div>
    <!-- Closed Bid -->
-	<div ng-if="faProDashboardVm.activeBid == 'closed'">
+	<div ng-if="bidproductVm.activeBid == 'closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : {{faProDashboardVm.agencyListing.length}}
+		   		Showing : {{bidproductVm.agencyListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="faProDashboardVm.searchStr" ng-change="faProDashboardVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
 		      </div>
 		   </div>
 		   <div class="table-responsive">
@@ -140,6 +140,6 @@
 		   		</tbody>
 		   	</table>
 		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faProDashboardVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>  
 </div>

@@ -21,6 +21,7 @@ var AssetSaleBidSchema = new Schema({
             repoDate:Date,
             reservePrise:Number
           },
+  offerType:String,
   ageingOfAsset:Number,
   parkingCharge:Number,
   bidAmount:Number,
@@ -33,11 +34,11 @@ var AssetSaleBidSchema = new Schema({
   dealStatuses:[{}],
   bidStatuses:[{}],
   assetStatuses:[{}],
-  kyc:{
+  kyc:[{
         type:String,
         name:String,
         docName:String
-  },
+  }],
   emdPayment:{
     paymentMode:String,
     emdAmount:Number,

@@ -58,7 +58,7 @@ function getBidCount(filter, callback) {
 
 exports.submitBid = function(req, res) {
 	var data = {};
-	if (req.query.typeOfRequest == "submitBid") {
+	if (req.query.typeOfRequest == "submitBid" || req.query.typeOfRequest == "buynow") {
 		data = req.body;
 		//console.log("data to be created", data);
 		if (!data || Object.keys(data).length < 1)

@@ -56,6 +56,7 @@
     vm.isEmpty = isEmpty;
     vm.checkServiceInfo = checkServiceInfo;
     $scope.redirectToAuction = redirectToAuction;
+    vm.bidWithdrawn = bidWithdrawn;
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
       if (form && form.$invalid) {
@@ -74,7 +75,8 @@
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
-        bid: "placebid"
+        bid: "placebid",
+        offerType: "Bid"
       };
       if(bid == "proxybid")
         bidSummaryScope.params.proxyBid = true;
@@ -84,8 +86,17 @@
       bidSummaryScope.params.typeOfRequest="submitBid";
     }
 
+    if (bid == "buynow") {
+      bidSummaryScope.params = {
+        bidAmount: bidAmounts,
+        product: $scope.currentProduct,
+        bid: "buynow",
+        offerType: "Buynow"
+      };
+      bidSummaryScope.params.typeOfRequest="buynow";
+    }
 
-      if (bid == "buynow") {
+      /*if (bid == "buynow") {
         bidSummaryScope.params = {};
         bidSummaryScope.params.negotiation = false;
         bidSummaryScope.params.type = "BUY";
@@ -93,7 +104,7 @@
         bidSummaryScope.params.user = Auth.getCurrentUser();
         bidSummaryScope.params.product = $scope.currentProduct;
         bidSummaryScope.params.bid = "buynow";
-      }
+      }*/
 
       var bidSummaryModal = $uibModal.open({
         templateUrl: "/app/assetsale/assetbidpopup.html",
@@ -117,6 +128,21 @@
       };
     }
 
+    function bidWithdrawn() {
+      if (bid) {
+      filter._id = bid;
+      filter.offerStatus = offerStatuses[2];
+      filter.dealStatus = dealStatuses[12];
+      filter.bidStatus = bidStatuses[8];
+    }
+    AssetSaleSvc.withdrawBid(filter)
+      .then(function(res) {
+        getBidData(filter);
+      })
+      .catch(function(err) {
+
+      });
+    }
     //Submit Valuation Request
 
     function negotiate(form, flag) {
