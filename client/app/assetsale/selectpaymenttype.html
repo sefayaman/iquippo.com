@@ -1,6 +1,6 @@
 <div> 
       <div class="modal-header">
-          <button type="button" class="close" ng-click="close()">&times;</button>
+          <button type="button" class="close" ng-click="paymentVm.closeDialog()">&times;</button>
           <h4 class="modal-title">Select Payment Type</h4>
         </div>
       <div class="modal-body">
@@ -27,7 +27,7 @@
         </div>  
         <div class="modal-footer asset-sale">
           <div class="btn-group">
-            <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
+            <button type="button" class="btn btn-primary" ng-click="paymentVm.closeDialog()">Cancel</button>
             <button type="button" class="btn btn-danger">Proceed</button>                
           </div>
         </div>

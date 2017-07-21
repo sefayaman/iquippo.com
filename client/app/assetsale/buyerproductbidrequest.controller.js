@@ -15,16 +15,21 @@
 		vm.invoicedetails = invoicedetails;
 		vm.paymentType = paymentType;
 		vm.kycDocument = kycDocument;
+		vm.ratingFeedback = ratingFeedback;
 		$scope.pager = PagerSvc.getPager();
+		var initFilter = {};
 
 		function init() {
 			Auth.isLoggedInAsync(function(loggedIn) {
 				if (loggedIn) {
 					filter = {};
+					initFilter.pagination = true;
+            		angular.copy(initFilter, filter);
 					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
 						$scope.isAdmin = false;
 						filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 					}
+					filter.offerStatus = offerStatuses[0];
 					getBidData(filter);
 				}
 			});
@@ -33,63 +38,68 @@
 		
 		// payment type
 	    function paymentType() {
-	      var paymentTypeScope = $rootScope.$new();
-	      var paymentTypeModal = $uibModal.open({
-	        templateUrl: "/app/assetsale/selectpaymenttype.html",
-	        scope: paymentTypeScope,
-	        windowTopClass: 'bidmodal',
-	        size: 'xs'
-	      });
-
-	      paymentTypeScope.close = function() {
-	        paymentTypeModal.close();
-	      };
+	        var paymentTypeScope = $rootScope.$new();
+	        paymentTypeScope.bidData = bidData;
+            Modal.openDialog('selectPaymentType', paymentTypeScope);
 	    }
 	  // invoicedetails
-	    function invoicedetails() {
-	      var invoiceDetailsScope = $rootScope.$new();
-	      var invoiceDetailsModal = $uibModal.open({
-	        templateUrl: "/app/assetsale/invoicedetails.html",
-	        scope: invoiceDetailsScope,
-	        size: 'xs'
-	      });
-
-	      invoiceDetailsScope.close = function() {
-	        invoiceDetailsModal.close();
-	      };
+	    function invoicedetails(bidData) {
+	      	var invoicedetailScope = $rootScope.$new();
+            invoicedetailScope.bidData = bidData;
+            Modal.openDialog('invoiceDetails', invoicedetailScope);
 	    }
+
 	    // KYC document
-	    function kycDocument() {
-	      var kycDocumentScope = $rootScope.$new();
-	      var kycDocumentModal = $uibModal.open({
-	        templateUrl: "/app/assetsale/kycDocument.html",
-	        scope: kycDocumentScope,
-	        size: 'xs'
-	      });
-
-	      kycDocumentScope.close = function() {
-	        kycDocumentModal.close();
-	      };
+	    function kycDocument(bidData) {
+	      	var kycDocumentScope = $rootScope.$new();
+	      	kycDocumentScope.bidData = bidData;
+            Modal.openDialog('kycDocument', kycDocumentScope);
 	    }
+	    // Rating and Feedback
+	    function ratingFeedback(bidData) {
+		    var ratingFeedbackScope = $rootScope.$new();
+		    ratingFeedbackScope.bidData = bidData;
+            Modal.openDialog('feedbackForm', ratingFeedbackScope);
+	    }
+
+	    // Rating
+		$scope.rate = 1;
+		$scope.max = 5;
+		$scope.isReadonly = false;
+
+		$scope.hoveringOver = function(value) {
+		$scope.overStar = value;
+		$scope.percent = 100 * (value / $scope.max);
+			};
+
+		$scope.ratingStates = [
+		{stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'}
+			];
+		console.log($scope.percent);
+		
 	  function onTabChange(tabs){
 	  	switch(tabs){
 	  		case 'auctionable':
+	  		$scope.pager.reset();
 	  		filter={};
-			  $scope.pager.reset();
+			angular.copy(initFilter, filter);
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
 	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
+	  		filter.offerStatus = offerStatuses[0];
 	  		vm.activeBid='Auctionable';
             $scope.subTabValue='auctionable';
 	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
+	  		$scope.pager.reset();
 	  		filter={};
-			  $scope.pager.reset();
-	  		vm.activeBid='closed';
+	  		angular.copy(initFilter, filter);
+			vm.activeBid='closed';
 	  		$scope.subTabValue='closed';
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
 	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
-	  		filter.assetStatus = encodeURIComponent('closed');
+	  		filter.offerStatus = offerStatuses[2];
+	  		//filter.assetStatus = encodeURIComponent('closed');
 	  		getBidData(filter);
 	  		break;
 	  	}
@@ -124,26 +134,12 @@
 			filter.isSearch = true;
 			filter.searchStr = encodeURIComponent(vm.searchStr);
 		}
-		/*if(vm.statusType){
-		  filter.isSearch = true;
-		  filter['statusType'] = encodeURIComponent(vm.statusType);
-		}
-		if(vm.fromDate){
-		  filter.isSearch = true;
-		  filter['fromDate'] = encodeURIComponent(vm.fromDate);
-		}
-		if(vm.toDate){
-		  filter.isSearch = true;
-		  filter['toDate'] = encodeURIComponent(vm.toDate);
-		}*/
 
 		getBidData(filter);
 	}
 
 	function getBidData(filter) {
 		$scope.pager.copy(filter);
-		filter.pagination = true;
-		filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		AssetSaleSvc.fetchBid(filter)
 			.then(function(res) {
 				console.log("res", res);

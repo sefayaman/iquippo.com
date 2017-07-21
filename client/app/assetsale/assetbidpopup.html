@@ -8,7 +8,8 @@
         <form novalidate class="bidPopup" name="bidPopup">
             <div class="row">
               <div class="col-sm-offset-2 col-sm-8" ng-class="{'has-error': bidPopup.bidAmount.$invalid && submitted}">
-                <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-change="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" placeholder="Enter Bid Amount" required>
+                <!-- <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-change="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" placeholder="Enter Bid Amount" required> -->
+                <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-keyup="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" typeahead-focus-first = "false" typeahead-wait-ms="1000" placeholder="Enter Bid Amount" required>
               </div>
             </div>
             <div class="asset-taxes">

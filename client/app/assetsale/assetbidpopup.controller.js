@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('AssetBidPopUpCtrl', AssetBidPopUpCtrl);
 
-  function AssetBidPopUpCtrl($scope, Auth, Modal, $cookies, LocationSvc, notificationSvc, NegotiationSvc, AssetSaleSvc, VatTaxSvc) {
+  function AssetBidPopUpCtrl($scope, Auth, Modal, $cookies, userSvc, MarkupPriceSvc, LocationSvc, notificationSvc, NegotiationSvc, AssetSaleSvc, VatTaxSvc) {
     var vm = this;
     var query = $scope.params;
     var date = new Date();
@@ -14,49 +14,60 @@
     vm.submitBid = submitBid;
     //vm.buyNow = buyNow;
     var dataToSend = {};
+    var filter = {};
 
     vm.calculateBid = calculateBid;
 
     function init() {
-      var filter = {};
-      filter.taxType = "GST";
-      filter.status = true;
-      if (query.product.group)
-        filter.groupId = query.product.group._id;
+      filter = {};
+      filter.buyNowFlag = false;
       if (query.product.category)
         filter.categoryId = query.product.category._id;
-      filter.state = query.product.state;
+      filter.stateId = query.stateId;
       filter.currentDate = 'y'
-      VatTaxSvc.get(filter)
-      .then(function(taxes){
-        if(taxes.length)
-          $scope.taxPercent = taxes[0].amount;
-        if($scope.params.bid === "placebid")
-          vm.bidAmount = query.bidAmount;
-        else if($scope.params.bid === "buynow")
-          vm.bidAmount = query.product.grossPrice;
-        calculateBid(vm.bidAmount);
-      });
+      if($scope.params.bid === "placebid") {
+        filter.buyNowFlag = true;
+        filter.bidAmount = vm.bidAmount = query.bidAmount;
+      }
+      if($scope.params.bid === "buynow") {
+        if(!query.product.grossPrice) {
+          if(!query.product.reservePrice && !query.product.valuationAmount) {
+            Modal.alert("You can not request on this product!", true);
+            return;
+          }
+          filter.buyNowFlag = false;
+          filter.sellerUserId = query.product.seller._id;
+          if(query.product.reservePrice)
+            filter.bidAmount = vm.bidAmount = query.product.reservePrice;
+          else if(query.product.valuationAmount) 
+            filter.bidAmount = vm.bidAmount = query.product.valuationAmount;
+        } else {
+          filter.buyNowFlag = true;
+          filter.bidAmount = vm.bidAmount = query.product.grossPrice;
+        }
+      }
+      getBidOrBuyCalculation(filter);
     }
 
     init();
 
-    function calculateBid(amount) {
-      vm.salePrice = amount;
-      $scope.taxRate = (Number(vm.salePrice) * Number($scope.taxPercent)) / 100;
-      if (Number(vm.salePrice) + Number($scope.taxRate) > 1000000) {
-        $scope.tcs = Number(vm.salePrice) * 0.01;
-      }
-      if (query.product.parkingCharges)
+    function getBidOrBuyCalculation(filter) {
+      AssetSaleSvc.getBidOrBuyCalculation(filter).then(function(result){
+        console.log(result);
+        if(result.buyNowPrice)
+          vm.bidAmount = result.buyNowPrice;
+        $scope.taxRate = result.taxRate;
+        $scope.tcs = result.tcs;
+        if (query.product.parkingCharges)
         $scope.parking = query.product.parkingCharges;
 
       $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking || 0) + Number(vm.salePrice || 0);
+      });
     }
 
-    function getLastDate(currDate) {
-      var date = new Date(currDate);
-      var lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      return lastDate;
+    function calculateBid(amount) {
+      filter.bidAmount = amount;
+      getBidOrBuyCalculation(filter);
     }
 
     function submitBid(form) {
@@ -74,7 +85,7 @@
         return $state.go("myaccount");
       }
 
-      var filter = {};
+      filter = {};
       filter.assetId = query.product.assetId;
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
         var msg = "";
@@ -89,39 +100,43 @@
             dataToSend.bidStatuses = [];
             dataToSend.assetStatuses = [];
             dataToSend.offerStatus = offerStatuses[0];
-            if (query.typeOfRequest)
-            dataToSend.typeOfRequest = query.typeOfRequest;
             var offerStatusObj = {};
-            offerStatusObj.userId = Auth.getCurrentUser()._id;;
+            offerStatusObj.userId = Auth.getCurrentUser()._id;
             offerStatusObj.status = offerStatuses[0];
             offerStatusObj.createdAt = new Date();
             dataToSend.offerStatuses[dataToSend.offerStatuses.length] = offerStatusObj;
 
             dataToSend.bidStatus = bidStatuses[0];
             var bidStatusObj = {};
-            bidStatusObj.userId = Auth.getCurrentUser()._id;;
+            bidStatusObj.userId = Auth.getCurrentUser()._id;
             bidStatusObj.status = bidStatuses[0];
             bidStatusObj.createdAt = new Date();
             dataToSend.bidStatuses[dataToSend.bidStatuses.length] = bidStatusObj;
 
             dataToSend.dealStatus = dealStatuses[0];
             var dealStatusObj = {};
-            dealStatusObj.userId = Auth.getCurrentUser()._id;;
+            dealStatusObj.userId = Auth.getCurrentUser()._id;
             dealStatusObj.status = dealStatuses[0];
             dealStatusObj.createdAt = new Date();
             dataToSend.dealStatuses[dataToSend.dealStatuses.length] = dealStatusObj;
 
             dataToSend.assetStatus = assetStatuses[0].name;
             var assetStatusObj = {};
-            assetStatusObj.userId = Auth.getCurrentUser()._id;;
+            assetStatusObj.userId = Auth.getCurrentUser()._id;
             assetStatusObj.status = assetStatuses[0].name;
             assetStatusObj.createdAt = new Date();
             dataToSend.assetStatuses[dataToSend.assetStatuses.length] = assetStatusObj;
 
+            if (query.typeOfRequest)
+              dataToSend.typeOfRequest = query.typeOfRequest;
             dataToSend.status = true;
             dataToSend.tradeType = query.product.tradeType;
             dataToSend.user = Auth.getCurrentUser()._id;
             dataToSend.product = {};
+            dataToSend.product.seller = {};
+            dataToSend.product.seller._id = query.product.seller._id;
+            dataToSend.product.seller.name = query.product.seller.fname + " " + query.product.seller.lname;
+            dataToSend.product.seller.mobile = query.product.seller.mobile;
             dataToSend.product.proData = query.product._id;
             dataToSend.product.assetId = query.product.assetId;
             dataToSend.product.category = query.product.category.name;
@@ -143,6 +158,7 @@
             dataToSend.bidAmount = $scope.total;
             dataToSend.proxyBid = query.proxyBid;
             dataToSend.offerType = query.offerType;
+            dataToSend.bidReceived = query.product.bidReceived;
             AssetSaleSvc.submitBid(dataToSend)
               .then(function(result) {
                 Modal.alert("Your bid has been successfully submitted!", true);
@@ -207,9 +223,3 @@
     }*/
   }
 })();
-
-//Data to be sent to submit a bid
-/*
-userId,_id,ticketId,
-
-*/

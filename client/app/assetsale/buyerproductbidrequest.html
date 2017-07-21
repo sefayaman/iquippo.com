@@ -67,10 +67,10 @@
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.dealStatus}}</td>
 			   			<td>
-			   				<button type="button" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.invoicedetails()">Update</button>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.invoicedetails(bid)">Update</button>
 			   			</td>
 			   			<td>
-			   				<button type="button" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.kycDocument()">
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.kycDocument(bid)">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
 			   				</button>
@@ -78,8 +78,13 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td>
+			   				<span uib-rating ng-model="rate" max="max" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
+        					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+			   			</td>
+			   			<td>
+			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.ratingFeedback()">Write Feedback</a>
+			   			</td>
 						<td> 
 							<button type="button" ng-click="buyerProductBidRequestVm.paymentType()"  class="btn btn-primary btn-xs">Pay</button> 
 							<button type="button"  class="btn btn-primary btn-xs">Change</button> 

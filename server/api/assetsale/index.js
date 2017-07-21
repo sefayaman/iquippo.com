@@ -15,6 +15,7 @@ router.get('/fa', controller.fetchFAData);
 router.get('/count',controller.getBidCount);
 //router.get('/fetchhigherbid', controller.fetchHigherBid);
 router.post('/withdrawBid',controller.withdrawBid);
+router.get('/bidorbuycalculation',controller.getBidOrBuyCalculation);
 
 module.exports = router;
 

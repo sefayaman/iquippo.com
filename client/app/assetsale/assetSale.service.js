@@ -15,6 +15,7 @@
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
     svc.fetchFAData = fetchFAData;
     svc.getBidProduct = getBidProduct;
+	svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
     
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
@@ -60,6 +61,22 @@
       throw err;
     });
 	}
+
+  function getBidOrBuyCalculation(data){
+    var serPath = path;
+    var queryParam = "";
+    if(data)
+        queryParam = UtilSvc.buildQueryParam(data);
+    if(queryParam)
+      serPath = serPath + "/bidorbuycalculation" + "?" + queryParam;
+    return $http.get(serPath)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  }
 
     function fetchFAData(data){
         var serPath = path;

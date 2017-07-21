@@ -61,8 +61,15 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.invoicedetails(bid)">Update</button>
+			   			</td>
+			   			<td>
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.kycDocument(bid)">
+			   					<span ng-if="true">Upload</span>
+			   					<span ng-if="false">Update</span>
+			   				</button>
+			   			</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{bid.dealStatus}}</td>

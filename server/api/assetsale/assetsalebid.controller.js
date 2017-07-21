@@ -10,9 +10,110 @@ var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
 var Product = require('../product/product.model');
 var User = require('../user/user.model');
 var Vendor = require('../vendor/vendor.model');
+var VatModel = require('../common/vattax.model');
+var MarkupPrice = require('../common/markupprice.model');
 
 var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
 var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
+
+exports.getBidOrBuyCalculation = function(req, res) {
+	var queryParam = req.query;
+	console.log("queryParam", queryParam);
+  	var filter = {};
+  	var resultObj = {};
+  	resultObj.taxRate = 0;
+  	resultObj.tcs = 0;
+  	if(queryParam.categoryId)
+	  filter.category = queryParam.categoryId;
+	if(queryParam.stateId)
+	  filter.state = queryParam.stateId;
+	if(queryParam.currentDate && queryParam.currentDate === 'y') {
+	  filter["effectiveFromDate"] = {$lte:new Date()};
+	  filter["effectiveToDate"] = {$gte:new Date()};
+	}
+  	
+	getGST(filter,function(err,gstax){
+    	if(err)
+    		return res.status(err.status || 500).send(err);
+    	var taxPercent = 0;
+    	if(gstax && gstax.length)
+    		taxPercent = gstax[0].amount;
+    	if(queryParam.buyNowFlag) {
+	    	resultObj.taxRate = (Number(queryParam.bidAmount) * Number(taxPercent)) / 100;
+	    	if (Number(queryParam.bidAmount) + Number(resultObj.taxRate) > 1000000)
+		       resultObj.tcs = Number(queryParam.bidAmount) * 0.01;
+
+		    return res.status(200).json(resultObj);
+		} else {
+			filter = {};
+			filter.status = true;
+			filter.deleted = false;
+			filter._id = queryParam.sellerUserId;
+			getMarkupPercentOnUser(filter,function(err,result){
+				if(err)
+    				return res.status(err.status || 500).send(err);
+    			var markupPercent = 0;
+		    	if(result && result.length)
+		    		markupPercent = result[0].price;
+    			resultObj.buyNowPrice = Number(queryParam.bidAmount) + (Number(queryParam.bidAmount) * Number(markupPercent) / 100);
+    			resultObj.taxRate = (Number(resultObj.buyNowPrice) * Number(taxPercent)) / 100;
+			    if (Number(queryParam.bidAmount) + Number(resultObj.taxRate) > 1000000) {
+			       resultObj.tcs = Number(resultObj.buyNowPrice) * 0.01;
+			    }
+			    return res.status(200).json(resultObj);
+			});
+		}
+	    
+    });
+}
+
+function getGST(filter, callback) {
+	var query = VatModel.find(filter);
+	query.exec(function(err, result) {
+		if (err)
+			return callback(err);
+		return callback(null, result);
+	});
+}
+
+function getMarkupPrice(filter, callback) {
+	var query = MarkupPrice.find(filter);
+	query.exec(function(err, result) {
+		if (err)
+			return callback(err);
+		return callback(null, result);
+	});
+}
+
+function getMarkupPercentOnUser(filter, callback) {
+	User.findById(filter).exec(function(err, user){
+	    if (err)
+			return callback(err);
+	  	var markupFilter = {};
+	    switch (user.role) {
+	    	case "enterprise" : 
+	    			markupFilter = {};
+	    			markupFilter.enterpriseId = user.enterpriseId;
+	    			break;
+	    	case "channelpartner" : 
+	    			markupFilter = {};
+	    			markupFilter.userId = user._id;
+	    			break;
+	    	case "customer" : 
+	    			markupFilter = {};
+	    			if(user.createdBy && user.createdBy.role === 'channelpartner')
+	    				markupFilter.userId = user.createdBy._id;
+	    			else 
+	    				markupFilter.userId = user._id;
+	    			break;
+	    }
+	    getMarkupPrice(markupFilter,function(err, markupPer){
+			if(err)
+				console.log(err);
+			return callback(null, markupPer);
+		});
+	});
+}
 
 function create(data,callback){
 	if (!data)
@@ -58,80 +159,145 @@ function getBidCount(filter, callback) {
 
 exports.submitBid = function(req, res) {
 	var data = {};
-	if (req.query.typeOfRequest == "submitBid" || req.query.typeOfRequest == "buynow") {
-		data = req.body;
-		//console.log("data to be created", data);
-		if (!data || Object.keys(data).length < 1)
-			return res.status(412).json({
-				err: 'No data found for create'
+	var bidReceived = false;
+	var bidResult = {};
+	var previousBid = {};
+	if(req.body.bidReceived)
+		bidReceived = req.body.bidReceived;
+	delete req.body.bidReceived;
+	Product.findById(req.body.product.proData, function (err, product) {
+    	if(err) { return res.status(err.status || 500).send(err); }
+    	if(product.assetStatus === 'sold' || product.tradeType == 'NOT_AVAILABLE' || !product.status || product.deleted) {
+    		return res.status(412).json({err: 'No data found for create'});
+    	}
+		if (req.query.typeOfRequest == "submitBid" || req.query.typeOfRequest == "buynow") {
+			data = req.body;
+			if (!data || Object.keys(data).length < 1)
+				return res.status(412).json({
+					err: 'No data found for create'
+				});
+			create(data, function(err, result) {
+				if (err)
+					return res.status(err.status || 500).send(err);
+				if(!bidReceived)
+					updateBidReqFlagInProduct(result)
+
+				return res.status(201).json(result);
 			});
-		create(data, function(err, result) {
-			if (err)
-				return res.status(err.status || 500).send(err);
-			return res.status(201).json(result);
-		});
-	} else if (req.query.typeOfRequest == "changeBid") {
-		var bidResult = {};
-		async.series([updateBid, newBidData], function(err, results) {
-			return res.status(201).json(bidResult);
-		});
+		} else if (req.query.typeOfRequest == "changeBid") {
+			async.series([updateBid, newBidData], function(err, results) {
+				if(!bidReceived)
+					updateBidReqFlagInProduct(bidResult);
+				return res.status(201).json(bidResult);
+			});
+		}
+	});
+	function updateBid(callback) {
+		data = {};
+		var statusObj = {};
+		
+		if (req.body.user) {
+			statusObj.user = data.user = req.body.user;
+		}
+		if (req.body.product && req.body.product.proData){
+			data['product.proData'] = req.body.product.proData;
+		}
+		statusObj.offerStatus = offerStatuses[1];
+		statusObj.bidStatus = bidStatuses[8];
+		statusObj.dealStatus = dealStatuses[12];
+		// var filter = {};
+		// filter.user = data.user;
+		// filter['product.proData'] = req.body.product.proData;
+		// AssetSaleBid.find(filter).exec(function(err, bid){
+
+			callStatusUpdates(statusObj,function(err, dataObj){
+				if(err)
+					console.log(err);
+				console.log("dataObj###", dataObj);
+				AssetSaleBid.update(data, {
+					$set: dataObj}, {
+					multi: true
+				}, function(err, result) {
+					if (err)
+						return callback(err);
+					return callback();
+				});
+			});
+		// });
 	}
 
-	function updateBid(callback) {
-			data = {};
-			if (req.body.user)
-				data.user = req.body.user;
-			if (req.body.product && req.body.product.proData){
-				data['product.proData'] = req.body.product.proData;
-			}
-			
-			AssetSaleBid.update(data, {
-				$set: {
-					"offerStatus": offerStatuses[1],
-					"bidStatus": bidStatuses[8],
-					"dealStatus": dealStatuses[12]
-				}
-			}, {
-				multi: true
-			}, function(err, result) {
-				if (err)
-					return callback(err);
-				return callback();
-			});
-		}
-
-		function newBidData(callback) {
-			data = req.body;
-			AssetSaleBid.create(data, function(err, result) {
-				if (err)
-					return callback(err);
-				bidResult = result.toObject();
-				return callback();
-			});
-		}
+	function newBidData(callback) {
+		data = req.body;
+		AssetSaleBid.create(data, function(err, result) {
+			if (err)
+				return callback(err);
+			bidResult = result.toObject();
+			return callback(bidResult);
+		});
+	}
 };
+
+function callStatusUpdates(statusObj, callback) {
+	var dataObj = {}
+	dataObj.offerStatus = statusObj.offerStatus;
+	dataObj.bidStatus = statusObj.bidStatus;
+	dataObj.dealStatus = statusObj.dealStatus;
+	dataObj.offerStatuses = [];
+    dataObj.dealStatuses = [];
+    dataObj.bidStatuses = [];
+    
+    var offerStatusObj = {};
+    offerStatusObj.userId = statusObj.user;
+    offerStatusObj.status = offerStatuses[1];
+    offerStatusObj.createdAt = new Date();
+    dataObj.offerStatuses[dataObj.offerStatuses.length] = offerStatusObj;
+
+    var bidStatusObj = {};
+    bidStatusObj.userId = statusObj.user;
+    bidStatusObj.status = bidStatuses[8];
+    bidStatusObj.createdAt = new Date();
+    dataObj.bidStatuses[dataObj.bidStatuses.length] = bidStatusObj;
+
+    var dealStatusObj = {};
+    dealStatusObj.userId = statusObj.user;
+    dealStatusObj.status = dealStatuses[12];
+    dealStatusObj.createdAt = new Date();
+    dataObj.dealStatuses[dataObj.dealStatuses.length] = dealStatusObj;
+
+    return callback(null, dataObj);
+}
+
+function updateBidReqFlagInProduct(data) {
+	var filter = {};
+	filter.assetId = data.product.assetId;
+	filter.status = true;
+	filter.deleted = false;
+	Product.update(filter, {$set:{"bidReceived":true}},function(err,result){
+        if(err){console.log(err)};
+    });  
+}
 
 exports.fetchBid=function(req,res){
 	var filter={};
-	if(req.query.userId){
+	if(req.query.userId)
 		filter.user = req.query.userId;
-	}
 
-	if(req.query.productId){
+	if(req.query.productId)
 		filter['product.proData'] = req.query.productId;
-	}
 	
-	if(req.query.bidStatus){
-		filter['bidStatus'] = req.query.bidStatus;
-	}
-	 if (req.query.searchStr) {
-       filter['$text'] = {
-        '$search': "\""+req.query.searchStr+"\""
-      }
-  }
-  if(req.query.assetStatus){
-  	filter.assetStatus=req.query.assetStatus;
-  }
+	if(req.query.offerStatus)
+		filter.offerStatus = req.query.offerStatus;
+
+	if(req.query.bidStatus)
+		filter.bidStatus = req.query.bidStatus;
+	
+	if (req.query.searchStr) {
+    	filter['$text'] = {
+        	'$search': "\""+req.query.searchStr+"\""
+     	}
+    }
+  	if(req.query.assetStatus)
+  		filter.assetStatus=req.query.assetStatus;
 
   if (req.query.pagination) {
 		paginatedResult(req, res, AssetSaleBid, filter, {});

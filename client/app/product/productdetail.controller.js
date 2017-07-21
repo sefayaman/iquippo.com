@@ -4,7 +4,7 @@
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
 
-  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
 
     var vm = this;
     $scope.currentProduct = {};
@@ -75,6 +75,7 @@
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
+        stateId:$scope.state._id, 
         bid: "placebid",
         offerType: "Bid"
       };
@@ -90,6 +91,7 @@
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product: $scope.currentProduct,
+        stateId:$scope.state._id,
         bid: "buynow",
         offerType: "Buynow"
       };
@@ -527,6 +529,13 @@
               .then(function(aucts) {
                 $scope.auctionsData = aucts[0];
               });
+          }
+          if($scope.currentProduct.state) {
+            var stateFilter = {};
+            stateFilter.stateName = $scope.currentProduct.state;
+            LocationSvc.getStateHelp(stateFilter).then(function(result){
+              $scope.state = result[0];
+            });
           }
           if ($scope.currentProduct.specialOffers) {
             $scope.status.basicInformation = false;

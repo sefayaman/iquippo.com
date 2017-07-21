@@ -41,6 +41,7 @@
 			   			<th>Full Payment Amount</th>
 			   			<th>Full Payment Details</th>
 			   			<th>Invoicing Details</th>
+			   			<th>Parking Charges</th>
 			   			<th>KYC Documents</th>
 			   			<th>Delivery Order</th>
 			   			<th>Date of Delivery</th>
@@ -56,6 +57,7 @@
 			   			<td>{{bid.offerType}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.bidStatus}}</td>
+			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
@@ -83,7 +85,7 @@
 		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="productBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
 	<!-- Closed Auction -->
-	<div ng-if="productBidRequestVm.activeBid=='closed'">
+	<!-- <div ng-if="productBidRequestVm.activeBid=='closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{productBidRequestVm.bidListing.length}}
@@ -133,8 +135,15 @@
 			   			<td>{{bid.tradeType}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.invoicedetails(bid)">Update</button>
+			   			</td>
+			   			<td>
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.kycDocument(bid)">
+			   					<span ng-if="true">Upload</span>
+			   					<span ng-if="false">Update</span>
+			   				</button>
+			   			</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
@@ -145,5 +154,5 @@
 		   	</table>
 		   </div>	
 		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="productBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-	</div>	
+	</div> -->	
 </div>

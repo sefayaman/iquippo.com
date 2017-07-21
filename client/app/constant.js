@@ -50,6 +50,22 @@ var Modals = {
   auctionRegistration : {
     tplUrl : "app/auction/userregisterforauction.html",
     Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
+  },
+  invoiceDetails : {
+    tplUrl : "app/assetsale/invoicedetails.html",
+    Ctrl : 'invoiceDetailsCtrl as invoiceDetailsVm'
+  },
+  kycDocument : {
+    tplUrl : "app/assetsale/kycDocument.html",
+    Ctrl : 'kycDocumentCtrl as kycDocumentVm'
+  },
+  feedbackForm : {
+    tplUrl : "app/assetsale/feedbackForm.html",
+    Ctrl : 'feedbackCtrl as feedbackVm'
+  },
+  selectPaymentType : {
+    tplUrl : "app/assetsale/selectpaymenttype.html",
+    Ctrl : 'selectPaymentCtrl as paymentVm'
   }
 };
 
