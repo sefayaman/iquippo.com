@@ -18,8 +18,7 @@ var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed
 
 exports.getBidOrBuyCalculation = function(req, res) {
 	var queryParam = req.query;
-	console.log("queryParam", queryParam);
-  	var filter = {};
+	var filter = {};
   	var resultObj = {};
   	resultObj.taxRate = 0;
   	resultObj.tcs = 0;
@@ -120,12 +119,10 @@ function create(data,callback){
 			return callback(new APIError( 412,'No data for creation'));
         
 		AssetSaleBid.create(data,function(err,res){
-			console.log("result",res);
 			if (err && err.original && err.original.code === 'ER_DUP_ENTRY') {
 				var e = new APIError(409,'Duplicate Entry');
 			return callback(e);
 		}
-		console.log("result",res);
 			return callback(null, res);
 		});
 }
@@ -134,13 +131,11 @@ function fetchBid(filter, callback) {
 	if (!filter) {
 		return callback(new APIError(412, 'No  filter found'));
 	}
-	console.log("id", filter);
 	var query = AssetSaleBid.find(filter);
 	query.populate('user product.proData')
 		.exec(function(err, results) {
 			if (err)
 				return callback(err);
-			console.log("results", results);
 			return callback(null, results);
 		});
 }
@@ -193,37 +188,34 @@ exports.submitBid = function(req, res) {
 		}
 	});
 	function updateBid(callback) {
-		data = {};
 		var statusObj = {};
-		
-		if (req.body.user) {
-			statusObj.user = data.user = req.body.user;
-		}
-		if (req.body.product && req.body.product.proData){
-			data['product.proData'] = req.body.product.proData;
-		}
-		statusObj.offerStatus = offerStatuses[1];
-		statusObj.bidStatus = bidStatuses[8];
-		statusObj.dealStatus = dealStatuses[12];
-		// var filter = {};
-		// filter.user = data.user;
-		// filter['product.proData'] = req.body.product.proData;
-		// AssetSaleBid.find(filter).exec(function(err, bid){
-
-			callStatusUpdates(statusObj,function(err, dataObj){
+		var filter = {};
+		if (req.body.user)
+			filter.user = req.body.user;
+		if(req.body.product && req.body.product.proData)
+			filter['product.proData'] = req.body.product.proData;
+		filter.offerStatus = offerStatuses[0];
+		AssetSaleBid.find(filter).exec(function(err, bid){
+			if(err)
+				console.log(err);
+			if (bid.length > 0)
+				previousBid = bid[0].toObject();
+			previousBid.statusObj = {};
+			statusObj.offerStatus = offerStatuses[1];
+			statusObj.bidStatus = bidStatuses[8];
+			statusObj.dealStatus = dealStatuses[12];
+			previousBid.statusObj = statusObj;
+			callStatusUpdates(previousBid,function(err, dataObj){
 				if(err)
 					console.log(err);
-				console.log("dataObj###", dataObj);
-				AssetSaleBid.update(data, {
-					$set: dataObj}, {
-					multi: true
-				}, function(err, result) {
+				AssetSaleBid.update({_id : previousBid._id}, {
+					$set: dataObj}, function(err, result) {
 					if (err)
 						return callback(err);
 					return callback();
 				});
 			});
-		// });
+		});
 	}
 
 	function newBidData(callback) {
@@ -237,29 +229,29 @@ exports.submitBid = function(req, res) {
 	}
 };
 
-function callStatusUpdates(statusObj, callback) {
+function callStatusUpdates(preBidData, callback) {
 	var dataObj = {}
-	dataObj.offerStatus = statusObj.offerStatus;
-	dataObj.bidStatus = statusObj.bidStatus;
-	dataObj.dealStatus = statusObj.dealStatus;
-	dataObj.offerStatuses = [];
-    dataObj.dealStatuses = [];
-    dataObj.bidStatuses = [];
+	dataObj.offerStatus = preBidData.statusObj.offerStatus;
+	dataObj.bidStatus = preBidData.statusObj.bidStatus;
+	dataObj.dealStatus = preBidData.statusObj.dealStatus;
+	dataObj.offerStatuses = preBidData.offerStatuses;
+    dataObj.dealStatuses = preBidData.dealStatuses;
+    dataObj.bidStatuses = preBidData.bidStatuses;
     
     var offerStatusObj = {};
-    offerStatusObj.userId = statusObj.user;
+    offerStatusObj.userId = preBidData.user;
     offerStatusObj.status = offerStatuses[1];
     offerStatusObj.createdAt = new Date();
     dataObj.offerStatuses[dataObj.offerStatuses.length] = offerStatusObj;
 
     var bidStatusObj = {};
-    bidStatusObj.userId = statusObj.user;
+    bidStatusObj.userId = preBidData.user;
     bidStatusObj.status = bidStatuses[8];
     bidStatusObj.createdAt = new Date();
     dataObj.bidStatuses[dataObj.bidStatuses.length] = bidStatusObj;
 
     var dealStatusObj = {};
-    dealStatusObj.userId = statusObj.user;
+    dealStatusObj.userId = preBidData.user;
     dealStatusObj.status = dealStatuses[12];
     dealStatusObj.createdAt = new Date();
     dataObj.dealStatuses[dataObj.dealStatuses.length] = dealStatusObj;
@@ -307,8 +299,7 @@ exports.fetchBid=function(req,res){
     fetchBid(filter,function(err,results){
     	if(err)
     		return res.status(err.status || 500).send(err);
-    	//console.log("I am result",results)
-        return res.json(results);
+    	return res.json(results);
     });
 };
 
@@ -325,7 +316,6 @@ exports.searchBid=function(req,res){
 
 exports.getBidCount = function(req, res) {
 	var filter = {};
-	console.log("req", req.query);
 	if (req.query.productId)
 		filter['product.proData'] = req.query.productId;
 	if (req.query.userId)
@@ -342,194 +332,12 @@ exports.getMaxBidOnProduct = function(req, res) {
 	if(req.query.assetId)
 		filter['product.assetId'] = req.query.assetId;
 	filter.offerStatus = offerStatuses[0];
-	console.log("results", filter);
 	var query = AssetSaleBid.find(filter).sort({bidAmount:-1}).limit(1);
 	query.exec(function(err,results){
 		if(err)
 			return res.status(500).send(err);
 		return res.status(201).json(results[0]);
 	});
-};
-
-function fabyadmin(filter,callback){ 
-	 var finalarray = [];
-    var enterpriseuserarray= [];
-    var enterprise =[];
-	var bidproducts = [];
-       var query = User.find({ availedServices: { $elemMatch : {"code" : "Sale Fulfilment"}}},function(err,result){
-		if(err){
-          return callback(err);
-		}else{
-			//console.log("result",result);
-            result.forEach(function(item,index) {
-			   finalarray.push(item._id.toString());
-
-               if(item.enterpriseId!="" && item.enterprise==true){
-                    
-				 var enterpriseid  = item.enterpriseId;
-                 enterprise.push(enterpriseid);
-		
-			   }
-            });
-
-            var query = User.find({'enterpriseId': { $in : enterprise}},{_id:1},function(err,userrray){
-            if(err){
-				  res.status(err.status || 500).send(err);
-			} else {
-                     userrray.forEach(function(item,index) {
-			         enterpriseuserarray.push(item._id.toString());
-                    });
-					var final = finalarray.concat(enterpriseuserarray);
-					var query = Product.find({ 'seller._id': { $in : final}},function(err,products){
-            if(err){
-				  res.status(err.status || 500).send(err);
-			  }else{
-				  // return callback(null,products)
-                     async.each(products, function(item, callback){
-
-                          var filter = {};
-
-                         filter['product.proData'] = item._id;
-					     filter.bidStatus = "Accepted";
-
-                           AssetSaleBid.find(filter,function(err,data){
-
-                         if (data.length > 0){
-									
-                         bidproducts.push(item);
-
-		               }
-
-                     callback(null);
-                     });
-                     },
-                       function(err){
-                       console.log("biddata",bidproducts);
-				       return callback(null,bidproducts);
-                        }
-                  );
-                }  
-		    });
-			}
-		   });
-		}
-	});
-}
-
-function fetchData(filter,callback){
-    var finalarray = [];
-    var enterpriseuserarray= [];
-    var enterprise =[];
-	var bidproducts = [];
-   // console.log("user filter", filter);
-
-   var query = Vendor.find(filter,{partnerId:1},function(err,result){
-	if(err){
-            return callback(err);
-	}else{
-		var partnerid =result[0].partnerId;
-		console.log("partnerId", partnerid);
-	    var query = User.find({ availedServices: { $elemMatch : {"partnerId":partnerid,"code" : "Sale Fulfilment"}}},function(err,result){
-		if(err){
-          return callback(err);
-		}else{
-			//console.log("result",result);
-            result.forEach(function(item,index) {
-			   finalarray.push(item._id.toString());
-               if(item.enterpriseId!="" && item.enterprise==true){
-				 var enterpriseid  = item.enterpriseId;
-                 enterprise.push(enterpriseid);
-			   }
-            });
-            var query = User.find({'enterpriseId': { $in : enterprise}},{_id:1},function(err,userrray){
-            if(err){
-				  res.status(err.status || 500).send(err);
-			} else {
-                     userrray.forEach(function(item,index) {
-			         enterpriseuserarray.push(item._id.toString());
-                    });
-					var final = finalarray.concat(enterpriseuserarray);
-					var query = Product.find({ 'seller._id': { $in : final}},function(err,products){
-            if(err){
-				  res.status(err.status || 500).send(err);
-			  }else{
-				  // return callback(null,products)
-				  if(err){
-					  return res.status(err.status || 500).send(err);
-				  }
-                     async.each(products, function(item, callback){
-                          var filter = {};
-                         //filter.productId = item._id;
-						 filter['product.proData'] = item._id;
-					     filter.bidStatus = "Accepted";
-
-						   //console.log("products",item._id);
-
-                           AssetSaleBid.find(filter,function(err,data){
-
-                         if (data.length > 0){
-									
-                         bidproducts.push(item);
-		               }
-                     callback(null);
-                     });
-
-                     },
-  
-                       function(err){
-                      //console.log("bidproductsid",bidproducts);
-				       return callback(null,bidproducts);
-                    }
-                  );
-                }  
-		    });
-			}
-		   });
-		}
-	});
-	}
-});
-}
-
-
-
-/*exports.fetchFAData = function(req,res){
-	console.log("I am hit");
-      var filter = {};
-	  if(req.query.mobile){
-		filter.mobile = req.query.mobile;
-	  }
-      fetchData(filter,function(err,results){
-    	if(err)
-    		return res.status(err.status || 500).send(err);
-    	return res.json(results);
-    });
-};*/
-
-
-exports.fetchFAData = function(req,res){
-	console.log("I am hit");
-    var filter = {};
-	if(req.query.mobile){
-		filter['user.mobile'] = req.query.mobile;
-		 fetchData(filter,function(err,results){
-    	if(err)
-    		return res.status(err.status || 500).send(err);
-    	return res.json(results);
-        });
-
-     }else{
-
-		 filter['services'] = "Sale Fulfilment";
-		  fabyadmin(filter,function(err,results){
-    	if(err)
-    		return res.status(err.status || 500).send(err);
-    	return res.json(results);
-         });
-
-		 
-	 }
-     
 };
 
 exports.withdrawBid = function(req, res) {
@@ -554,8 +362,7 @@ exports.withdrawBid = function(req, res) {
 };
 
 function paginatedResult(req, res, modelRef, filter, result) {
-  console.log("I am pagination");
-	var bodyData={};
+  	var bodyData={};
 	if(req.method === 'GET') 
 	{bodyData=req.query;}
      else{
@@ -615,8 +422,8 @@ function paginatedResult(req, res, modelRef, filter, result) {
 			return res.status(200).json(result);
 		})
 		.catch(function(err) {
-			console.log("######rrrr", err);
-			handleError(res, err);
+			console.log("error", err);
+			//handleError(res, err);
 		})
 
 }
@@ -624,20 +431,17 @@ function paginatedResult(req, res, modelRef, filter, result) {
 exports.getBidProduct = function(req,res,next){
   
   var bodyData = req.body;
-  req.body.bidReceived = 'y';
+  req.body.bidReceived = true;
   req.body.pagination = true;
 
-  console.log("I m called");
   if(!bodyData.userType || bodyData.userType !== 'FA')
   	return next();
 
   var users = [];
   async.parallel([getUsersAssociatedToEnterprise,getUsersAssociatedToChannelPartner,getCustomer],function(err,result){
-  	if(err){return handleError(res,err);}
-  	console.log("I m called",users.length);
+  	if(err){console.log("error", err);}
   	if(!users.length)
   		return res.status(200).json({totalItems:0,products:[]});
-  	console.log("gggggggggg");
   	req.sellers = users;
   	return next();
   });
@@ -652,7 +456,6 @@ exports.getBidProduct = function(req,res,next){
       filter.$or[filter.$or.length] = {"availedServices.code" : {$ne:"Sale Fulfilment"}};
     User.find(filter,function(err,enterprises){
       if(err){return callback("Error in getting user")};
-      console.log("######ent",enterprises.length);
       var entIds = [];
       if(!enterprises.length)
         return callback();
@@ -662,7 +465,6 @@ exports.getBidProduct = function(req,res,next){
       });
       User.find({enterpriseId:{$in:entIds},deleted:false,status:true},function(error,finalUsers){
         if(err){return callback("Error in getting user")};
-        console.log("######entU",finalUsers.length);
         finalUsers.forEach(function(user){
           users.push(user._id + "");
         })
@@ -688,13 +490,11 @@ exports.getBidProduct = function(req,res,next){
         chIds.push(item._id);
         users.push(item._id + "");
       });
-      console.log("######entC",chUsers.length);
       User.find({'createdBy._id':{$in:chIds},deleted:false,status:true},function(error,finalUsers){
         if(err){return callback("Error in getting user")};
         finalUsers.forEach(function(user){
           users.push(user._id + "");
         });
-        console.log("######entCU",finalUsers.length);
         return callback();  
       })
     });
@@ -713,10 +513,8 @@ exports.getBidProduct = function(req,res,next){
       finalUsers.forEach(function(item){
         users.push(item._id + "");
       });
-       console.log("######entU",finalUsers.length);
       return callback();
     });
 
   }
-
 }

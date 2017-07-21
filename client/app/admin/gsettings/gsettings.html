@@ -27,6 +27,7 @@
 						<option value="charge">Asset Sale Charge Master</option>
 						<option value="enterpriseMaster">Enterprise Master</option>
 						<option value="markup">Markup Price Master</option>
+						<option value="emdmaster">EMD Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -1576,11 +1577,7 @@
 
 				<h4>Add New GST Tax</h4>
 			</div>	
-			<!-- <div class="col-sm-offset-2 col-sm-2">				
-
-				<h4>Add New GST Tax</h4>
-			</div>
-			<!-- 	    			<div class="col-sm-offset-4 col-sm-2 text-right">
+			<!-- <div class="col-sm-offset-4 col-sm-2 text-right">
 				<h4>
 
 				<span class="btn btn-success btn-block fileinput-button">
@@ -1614,14 +1611,15 @@
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':vatForm.effectiveFromDate.$invalid && submitted}">
 					
-					<input type="text" name="effectiveFromDate" class="form-control" ng-model="vatVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
-
+					<input type="text" name="effectiveFromDate" id="taxfrom" class="form-control" ng-model="vatVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+					<label class="input-group-addon" for="taxfrom"><i class="fa fa-calendar"></i></label>
 		              <!-- <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="vatVm.dataModel.effectiveFromDate" myid="fromdate" required></custom-datepicker> -->
 		            </div>
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':vatForm.effectiveToDate.$invalid && submitted}">
-		              <input type="text" name="effectiveToDate" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
+		              <input type="text" name="effectiveToDate" id="taxto" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
+		            <label class="input-group-addon" for="taxto"><i class="fa fa-calendar"></i></label>
 		            </div>
 				</div>
 				<!-- <div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}">
@@ -1629,15 +1627,15 @@
 						<option value="">*Asset Group</option>
 						<option value="{{group._id}}" ng-repeat="group in allGroup">{{group.name}}</option>
 					</select>
-				</div> -->								
-			</div>
-			<div class="row form-group">
+				</div> -->	
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
 					<select class="form-control" name="category" ng-model="vatVm.dataModel.category" required>
 						<option value="">*Asset Category</option>
 						<option value="{{ct._id}}" ng-repeat="ct in vatVm.categoryList">{{ct.name}}</option>
 					</select>
-				</div>
+				</div>							
+			</div>
+			<div class="row form-group">				
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.state.$invalid && submitted}">
 					<select class="form-control" name="state" ng-model="vatVm.dataModel.state" required>
 						<option value="">*State</option>
@@ -1647,7 +1645,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.amount.$invalid && submitted}">
 					<input type="number" min="0" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="*Enter Rate" required>
 				</div>
-				<div class="col-sm-offset-1 col-sm-2">
+				<div class="col-sm-offset-4 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="vatVm.update(vatForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="vatVm.save(vatForm)">Save</button>
 				</div>
@@ -1800,30 +1798,50 @@
 		<div>
 		<form class="" name="assetSaleForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.enterpriseId.$invalid && submitted}">
+				<div class="col-sm-3">
+					<select class="form-control">
+						<option value="">Select Type</option>
+						<option value="">Enterprise</option>
+						<option value="">Channel Partner</option>
+						<option value="">Customer</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3" ng-class="{'has-error':assetSaleForm.enterpriseId.$invalid && submitted}">
 					<select class="form-control" name="enterpriseId" ng-model="assetSaleChargeVm.dataModel.enterpriseId" required>
 						<option value="">*Enterprise Name</option>
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in assetSaleChargeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
+				</div> -->
+				<div class="col-sm-3">
+					<select class="form-control" ng-if="true">
+						<option>Select Name</option>
+					</select>
+					<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveFromDate.$invalid && submitted}">
-		              <input type="text" name="effectiveFromDate" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+		              <input type="text" name="effectiveFromDate" id="chargefrom" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+		              <label for="chargefrom" class="input-group-addon">
+		              	<i class="fa fa-calendar"></i>
+		              </label>
 		            </div>
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveToDate.$invalid && submitted}">
-		              <input type="text" name="effectiveToDate" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
+		              <input type="text" name="effectiveToDate" id="chargeto" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
+		              <label for="chargeto" class="input-group-addon">
+		              	<i class="fa fa-calendar"></i>
+		              </label>
 		            </div>
-				</div>
+				</div>				
+			</div>
+			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.category.$invalid && submitted}">
 					<select class="form-control" name="category" ng-model="assetSaleChargeVm.dataModel.category" required>
 						<option value="">*Asset Category</option>
 						<option value="{{ct._id}}" ng-repeat="ct in assetSaleChargeVm.categoryList">{{ct.name}}</option>
 					</select>
 				</div>
-			</div>
-			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.chargeBasis.$invalid && submitted}">
 					<!-- <input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateOfInterest" placeholder="*Enter Rate (%)" required> -->
 					<select class="form-control" name="chargeBasis" ng-model="assetSaleChargeVm.dataModel.chargeBasis" required>
@@ -1836,7 +1854,7 @@
 					<!-- <input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatPerTrx" placeholder="Flat per Transaction"> -->
 					<input type="number" class="form-control" name="feeAmount" ng-model="assetSaleChargeVm.dataModel.amount" placeholder="*Amount" required />
 				</div>
-				<div class="col-sm-offset-4 col-sm-2">
+				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="assetSaleChargeVm.save(assetSaleForm)">Save</button>
 				</div>
@@ -1858,7 +1876,8 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>						
-						<th>Enterprise Name</th>						
+						<th>Type</th>						
+						<th>User</th>					
 						<th>Effective From Date</th>			
 						<th>Effective To Date</th>			
 						<th>Asset Category</th>			
@@ -1869,7 +1888,8 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="assetSale in assetSaleChargeVm.filteredList">
-						<td>{{assetSale.enterpriseId}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>
 						<td>{{assetSale.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.category.name}}</td>
@@ -1911,11 +1931,25 @@
 		<div>
 		<form class="" name="enterpriseMasterForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.enterpriseId.$invalid && submitted}">
+				<div class="col-sm-3">
+					<select class="form-control">
+						<option value="">Select Type</option>
+						<option value="">Enterprise</option>
+						<option value="">Channel Partner</option>
+						<option value="">Customer</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.enterpriseId.$invalid && submitted}">
 					<select class="form-control" name="enterpriseId" ng-model="enterpriseVm.dataModel.enterpriseId" required>
 						<option value="">*Enterprise Name</option>
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
+				</div> -->
+				<div class="col-sm-3">
+					<select class="form-control" ng-if="true">
+						<option>Select Name</option>
+					</select>
+					<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
 				</div>
 				<div class="col-sm-3">
 					<select class="form-control" name="functionality" ng-model="enterpriseVm.dataModel.functionality">
@@ -1929,17 +1963,16 @@
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>					
-				</div>
+				</div>				
+			</div>
+			<div class="row form-group">
 				<div class="col-sm-3">
 					<select class="form-control" name="negotiatedSaleApproval" ng-model="enterpriseVm.dataModel.negotiatedSaleApproval">
 						<option value="">Negotiated Sale Approval Required</option>
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
-					</select>
-					
+					</select>					
 				</div>
-			</div>
-			<div class="row form-group">
 				<div class="col-sm-3" >
 					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" placeholder="Cooling Period">
 				</div>
@@ -1948,8 +1981,10 @@
 				</div>
 				<div class="col-sm-3">
 					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod"  placeholder="Full Payment Period">
-				</div>
-				<div class="col-sm-offset-1 col-sm-2">
+				</div>				
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-2 pull-right">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="enterpriseVm.update(enterpriseMasterForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="enterpriseVm.save(enterpriseMasterForm)">Save</button>
 				</div>
@@ -1971,7 +2006,8 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>						
-						<th>Enterprise User </th>						
+						<th>Type</th>						
+						<th>User</th>						
 						<th>Asset Sale</th>			
 						<th>Buy Now Price Approval Required</th>			
 						<th>Negotiated Sale Approval Required</th>			
@@ -1983,7 +2019,9 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="ent in enterpriseVm.filteredList">
-						<td>{{ent.enterpriseId}}</td>
+						<!-- <td>{{ent.enterpriseId}}</td> -->
+						<td>{{}}</td>
+						<td>{{}}</td>
 						<td>{{ent.functionality}}</td>
 						<td>{{ent.buyNowPriceApproval}}</td>
 						<td>{{ent.negotiatedSaleApproval}}</td>
@@ -2026,16 +2064,30 @@
 		<div>
 		<form class="" name="markupForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':markupForm.enterpriseId.$invalid && submitted}">
+				<div class="col-sm-3">
+					<select class="form-control">
+						<option value="">Select Type</option>
+						<option value="">Enterprise</option>
+						<option value="">Channel Partner</option>
+						<option value="">Customer</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3" ng-class="{'has-error':markupForm.enterpriseId.$invalid && submitted}">
 					<select class="form-control" name="enterpriseId" ng-model="markupVm.dataModel.enterpriseId" required>
 						<option value="">*Enterprise Name</option>
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in markupVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
+				</div> -->
+				<div class="col-sm-3">
+					<select class="form-control" ng-if="true">
+						<option>Select Name</option>
+					</select>
+					<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':markupForm.price.$invalid && submitted}">
 					<input type="text" class="form-control" name="price" ng-model="markupVm.dataModel.price" placeholder="*Price in %" required>
 				</div>
-				<div class="col-sm-offset-4 col-sm-2">
+				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="markupVm.update(markupForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="markupVm.save(markupForm)">Save</button>
 				</div>
@@ -2057,18 +2109,97 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>						
-						<th>Enterprise User </th>					
+						<th>Type</th>						
+						<th>User</th>				
 						<th>price in %</th>			
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="markup in markupVm.filteredList">
-						<td>{{markup.enterpriseId}}</td>
+						<!-- <td>{{markup.enterpriseId}}</td> -->
+						<td>{{}}</td>
+						<td>{{}}</td>
 						<td>{{markup.price}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
 							<button type="button" class="btn btn-sm btn-danger" ng-click="markupVm.destroy(markup._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="kycVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		</div>
+	</div>
+	<!-- EMD Amount Master -->
+	<div ng-if="gsettingVm.tabValue == 'emdmaster'">
+		<h4>Add New EMD Amount</h4>
+		<legend></legend>
+		<div>
+			<form class="" name="" >			
+				<div class="row form-group">
+					<div class="col-sm-3">
+						<select class="form-control">
+							<option value="">Select Type</option>
+							<option value="">Enterprise</option>
+							<option value="">Channel Partner</option>
+							<option value="">Customer</option>
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<select class="form-control" ng-if="true">
+							<option>Select Name</option>
+						</select>
+						<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
+					</div>
+					<div class="col-sm-3">
+						<select class="form-control" ng-if="true">
+							<option>Select Category</option>
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" name="" value="" placeholder="Enter EMD Amount">
+					</div>					
+				</div>
+				<div class="row form-group">
+					<div class="col-sm-2 pull-right">
+						<button type="button" class="btn btn-block btn-primary" ng-if="isEdit">Update</button>
+						<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search...">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Type</th>						
+						<th>User</th>				
+						<th>Category</th>			
+						<th>EMD Amount</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<!-- <td>{{markup.enterpriseId}}</td> -->
+						<td>{{}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>

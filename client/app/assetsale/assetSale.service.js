@@ -13,9 +13,8 @@
     svc.fetchBid=fetchBid;
     svc.get=get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
-    svc.fetchFAData = fetchFAData;
     svc.getBidProduct = getBidProduct;
-	svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
+	  svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
     
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
@@ -77,23 +76,6 @@
       throw err;
     });
   }
-
-    function fetchFAData(data){
-        var serPath = path;
-        var queryParam = "";
-        if(data)
-            queryParam = UtilSvc.buildQueryParam(data);
-        if(queryParam)
-          serPath = serPath + "/fa" + "?" + queryParam;
-        return $http.get(serPath)
-        .then(function(res){
-          return res.data;
-        })
-        .catch(function(err){
-          if(err)
-          throw err;
-        });
-    }
 
     function countBid(data){
     var serPath = "";
