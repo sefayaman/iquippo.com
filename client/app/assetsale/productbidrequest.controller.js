@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $location, Auth, AssetSaleSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $location, $uibModal, Modal, Auth, AssetSaleSvc) {
 	var vm = this;
 	var query = $location.search();
 	$scope.assetId = $location.search().assetId;
@@ -13,6 +13,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $location, Auth, AssetSaleSvc
 	vm.fireCommand = fireCommand;
 	vm.invoicedetails = invoicedetails;
 	vm.kycDocument = kycDocument;
+	vm.emdAmount = emdAmount;
 
 	// invoicedetails
     function invoicedetails(bidData) {
@@ -26,6 +27,12 @@ function ProductBidRequestCtrl($scope, $rootScope, $location, Auth, AssetSaleSvc
       	var kycDocumentScope = $rootScope.$new();
       	kycDocumentScope.bidData = bidData;
         Modal.openDialog('kycDocument', kycDocumentScope);
+    }
+   	 // emdamount
+    function emdAmount(bidData) {
+      	var emdAmountScope = $rootScope.$new();
+      	emdAmountScope.bidData = bidData;
+        Modal.openDialog('emdAmount', emdAmountScope);
     }
 
 	function init() {
