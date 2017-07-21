@@ -7,11 +7,11 @@
 		var svc = {};
 		var path='api/assetSale';
 		svc.submitBid = submitBid;
-    svc.countBid=countBid;
-		svc.searchBid=searchBid;
-    svc.withdrawBid=withdrawBid;
-    svc.fetchBid=fetchBid;
-    svc.get=get;
+    svc.countBid = countBid;
+		svc.searchBid = searchBid;
+    svc.withdrawBid = withdrawBid;
+    svc.fetchBid = fetchBid;
+    svc.get = get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
     svc.getBidProduct = getBidProduct;
 	  svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
@@ -28,7 +28,7 @@
 		}
 
     function withdrawBid(data){
-      return $http.post(path + '/withdrawBid', data)
+      return $http.post(path + '/withdrawbid', data)
 				.then(function(res) {
           return res.data;                  
 				})

@@ -56,7 +56,7 @@
     vm.isEmpty = isEmpty;
     vm.checkServiceInfo = checkServiceInfo;
     $scope.redirectToAuction = redirectToAuction;
-    vm.bidWithdrawn = bidWithdrawn;
+    vm.withdrawBid = withdrawBid;
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
       if (form && form.$invalid) {
@@ -130,19 +130,24 @@
       };
     }
 
-    function bidWithdrawn() {
-      if (bid) {
-      filter._id = bid;
-      filter.offerStatus = offerStatuses[2];
-      filter.dealStatus = dealStatuses[12];
-      filter.bidStatus = bidStatuses[8];
-    }
-    AssetSaleSvc.withdrawBid(filter)
-      .then(function(res) {
-        getBidData(filter);
-      })
-      .catch(function(err) {
-
+    function withdrawBid() {
+      if (!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for submitting your request!", true);
+        return;
+      }
+      filter = {};
+      filter.userId = Auth.getCurrentUser()._id;
+      filter.productId = $scope.currentProduct._id;
+      Modal.confirm("Do you want to withdrawn bid?", function(ret) {
+        if (ret == "yes") {
+          AssetSaleSvc.withdrawBid(filter)
+          .then(function(res) {
+            if(res && res.msg)
+              Modal.alert(res.msg, true);
+          })
+          .catch(function(err) {
+          });
+        }
       });
     }
     //Submit Valuation Request

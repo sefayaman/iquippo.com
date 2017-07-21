@@ -12,7 +12,7 @@ router.get('/', controller.fetchBid);
 //router.get('/count/:productId');
 router.get('/maxbidonproduct/', controller.getMaxBidOnProduct);
 router.get('/count',controller.getBidCount);
-router.post('/withdrawBid',controller.withdrawBid);
+router.post('/withdrawbid',controller.withdrawBid);
 router.get('/bidorbuycalculation',controller.getBidOrBuyCalculation);
 
 module.exports = router;

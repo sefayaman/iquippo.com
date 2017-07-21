@@ -15,6 +15,7 @@ var AssetSaleBidSchema = new Schema({
             mfgYear:String,  
             country:String,
             state:String,
+            stateId:String,
             city:String,
             comment:String,
             seller:{},
@@ -34,6 +35,7 @@ var AssetSaleBidSchema = new Schema({
   dealStatuses:[{}],
   bidStatuses:[{}],
   assetStatuses:[{}],
+  tradeTypeStatuses:[{}],
   kyc:[{
         type:String,
         name:String,

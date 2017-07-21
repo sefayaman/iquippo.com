@@ -52,9 +52,9 @@ exports.getBidOrBuyCalculation = function(req, res) {
 				if(err)
     				return res.status(err.status || 500).send(err);
     			var markupPercent = 0;
-		    	if(result && result.length)
+    			if(result && result.length)
 		    		markupPercent = result[0].price;
-    			resultObj.buyNowPrice = Number(queryParam.bidAmount) + (Number(queryParam.bidAmount) * Number(markupPercent) / 100);
+		    	resultObj.buyNowPrice = Number(queryParam.bidAmount) + (Number(queryParam.bidAmount) * Number(markupPercent) / 100);
     			resultObj.taxRate = (Number(resultObj.buyNowPrice) * Number(taxPercent)) / 100;
 			    if (Number(queryParam.bidAmount) + Number(resultObj.taxRate) > 1000000) {
 			       resultObj.tcs = Number(resultObj.buyNowPrice) * 0.01;
@@ -80,7 +80,19 @@ function getMarkupPrice(filter, callback) {
 	query.exec(function(err, result) {
 		if (err)
 			return callback(err);
-		return callback(null, result);
+		if(result.length == 0) {
+			filter = {};
+			//filter.type = "Other";
+			filter.userId = "Other";
+			var query = MarkupPrice.find(filter);
+			query.exec(function(err, markupPrice) {
+				if (err)
+					return callback(err);
+				return callback(null, markupPrice);
+			});
+		} else {
+			return callback(null, result);
+		}
 	});
 }
 
@@ -240,19 +252,19 @@ function callStatusUpdates(preBidData, callback) {
     
     var offerStatusObj = {};
     offerStatusObj.userId = preBidData.user;
-    offerStatusObj.status = offerStatuses[1];
+    offerStatusObj.status = preBidData.statusObj.offerStatus;
     offerStatusObj.createdAt = new Date();
     dataObj.offerStatuses[dataObj.offerStatuses.length] = offerStatusObj;
 
     var bidStatusObj = {};
     bidStatusObj.userId = preBidData.user;
-    bidStatusObj.status = bidStatuses[8];
+    bidStatusObj.status = preBidData.statusObj.bidStatus;
     bidStatusObj.createdAt = new Date();
     dataObj.bidStatuses[dataObj.bidStatuses.length] = bidStatusObj;
 
     var dealStatusObj = {};
     dealStatusObj.userId = preBidData.user;
-    dealStatusObj.status = dealStatuses[12];
+    dealStatusObj.status = preBidData.statusObj.dealStatus;
     dealStatusObj.createdAt = new Date();
     dataObj.dealStatuses[dataObj.dealStatuses.length] = dealStatusObj;
 
@@ -268,6 +280,42 @@ function updateBidReqFlagInProduct(data) {
         if(err){console.log(err)};
     });  
 }
+
+exports.withdrawBid = function(req, res) {
+	var filter={};
+	var statusObj = {};
+	var bidData = {};
+	if(req.body.userId)
+		filter.user = req.body.userId;
+	if(req.body.productId)
+		filter['product.proData'] = req.body.productId;
+	if(req.body._id)
+		filter._id = req.body._id;
+	filter.offerStatus = offerStatuses[0];
+	AssetSaleBid.find(filter).exec(function(err, bid){
+		if(err)
+			console.log(err);
+		if (bid.length > 0)
+			bidData = bid[0].toObject();
+		bidData.statusObj = {};
+		statusObj.offerStatus = offerStatuses[2];
+		statusObj.bidStatus = bidStatuses[8];
+		statusObj.dealStatus = dealStatuses[12];
+		bidData.statusObj = statusObj;
+		callStatusUpdates(bidData,function(err, dataObj){
+			if(err)
+				console.log(err);
+			AssetSaleBid.update({_id : bidData._id}, {
+				$set: dataObj}, function(err, result) {
+				if (err)
+					return res.status(500).send(err);
+				return res.json({
+					msg: "Bid withdrawn Successfully!"
+				});
+			});
+		});
+	});	
+};
 
 exports.fetchBid=function(req,res){
 	var filter={};
@@ -337,27 +385,6 @@ exports.getMaxBidOnProduct = function(req, res) {
 		if(err)
 			return res.status(500).send(err);
 		return res.status(201).json(results[0]);
-	});
-};
-
-exports.withdrawBid = function(req, res) {
-	var data = req.body;
-	if (data._id) {
-		var query = {};
-		query._id = data._id;
-	}
-	AssetSaleBid.update(query, {
-		$set: {
-			offerStatus: data.offerStatus,
-			bidStatus: data.bidStatus,
-			dealStatus: data.dealStatus
-		}
-	}, function(err, results) {
-		if (err)
-			return res.status(500).send(err);
-		return res.json({
-			msg: "bid withDrawn Successfully"
-		});
 	});
 };
 

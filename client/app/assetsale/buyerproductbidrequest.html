@@ -87,8 +87,8 @@
 			   			</td>
 						<td> 
 							<button type="button" ng-click="buyerProductBidRequestVm.paymentType()"  class="btn btn-primary btn-xs">Pay</button> 
-							<button type="button"  class="btn btn-primary btn-xs">Change</button> 
-							<button type="button"  class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
+							<button type="button" ng-if="offerType = 'Bid'" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.openBidModal(bid)">Change</button> 
+							<button type="button" ng-if="offerType = 'Bid'" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
 						</td>
 			   		</tr>
 		   		</tbody>

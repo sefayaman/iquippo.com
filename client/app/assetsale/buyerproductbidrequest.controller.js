@@ -1,83 +1,115 @@
 (function() {
 	'use strict';
-	angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProductBidRequestCtrl);
+angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProductBidRequestCtrl);
+function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
+	var vm = this;
+	var filter = {};
+	var dataToSend={};
+	vm.bidListing = [];
+	vm.activeBid = "Auctionable";
+	$scope.subTabValue = 'auctionable'
+	$scope.onTabChange = onTabChange;
+	vm.withdrawBid = withdrawBid;
+	vm.fireCommand = fireCommand;
+	vm.invoicedetails = invoicedetails;
+	vm.paymentType = paymentType;
+	vm.kycDocument = kycDocument;
+	vm.ratingFeedback = ratingFeedback;
+	vm.openBidModal = openBidModal;
+	$scope.pager = PagerSvc.getPager();
+	var initFilter = {};
 
-	function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, AssetSaleSvc, $rootScope, $uibModal) {
-		var vm = this;
-		var filter = {};
-		var dataToSend={};
-		vm.bidListing = [];
-		vm.activeBid = "Auctionable";
-		$scope.subTabValue = 'auctionable'
-		$scope.onTabChange = onTabChange;
-		vm.withdrawBid = withdrawBid;
-		vm.fireCommand = fireCommand;
-		vm.invoicedetails = invoicedetails;
-		vm.paymentType = paymentType;
-		vm.kycDocument = kycDocument;
-		vm.ratingFeedback = ratingFeedback;
-		$scope.pager = PagerSvc.getPager();
-		var initFilter = {};
-
-		function init() {
-			Auth.isLoggedInAsync(function(loggedIn) {
-				if (loggedIn) {
-					filter = {};
-					initFilter.pagination = true;
-            		angular.copy(initFilter, filter);
-					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
-						$scope.isAdmin = false;
-						filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
-					}
-					filter.offerStatus = offerStatuses[0];
-					getBidData(filter);
-				}
-			});
+	function init() {
+		filter = {};
+		initFilter.pagination = true;
+		angular.copy(initFilter, filter);
+		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
+			$scope.isAdmin = false;
+			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		}
-		init();
-		
-		// payment type
-	    function paymentType() {
-	        var paymentTypeScope = $rootScope.$new();
-	        paymentTypeScope.bidData = bidData;
-            Modal.openDialog('selectPaymentType', paymentTypeScope);
-	    }
-	  // invoicedetails
-	    function invoicedetails(bidData) {
-	      	var invoicedetailScope = $rootScope.$new();
-            invoicedetailScope.bidData = bidData;
-            Modal.openDialog('invoiceDetails', invoicedetailScope);
-	    }
+		filter.offerStatus = offerStatuses[0];
+		getBidData(filter);	
+	}
+	
+	function openBidModal(bid) {
+      	if (!Auth.getCurrentUser()._id) {
+        	Modal.alert("Please Login/Register for submitting your request!", true);
+        	return;
+      	}
+        filter = {};
+        filter._id = bid.product.proData;
+        filter.status = true;
+        productSvc.getProductOnFilter(filter).then(function(result) {
+          	if (result && result.length < 1) {
+	            Modal.alert("Product not available!", true);
+	            return;
+          	}
+          	$scope.currentProduct = result[0];
+			var bidSummaryScope = $rootScope.$new();
+	      	bidSummaryScope.params = {
+		        bidAmount : 0,
+		        product : $scope.currentProduct,
+		        stateId : bid.stateId, 
+		        bid : "placebid",
+		        offerType : "Bid",
+		        typeOfRequest : "changeBid"
+	      	};
 
-	    // KYC document
-	    function kycDocument(bidData) {
-	      	var kycDocumentScope = $rootScope.$new();
-	      	kycDocumentScope.bidData = bidData;
-            Modal.openDialog('kycDocument', kycDocumentScope);
-	    }
-	    // Rating and Feedback
-	    function ratingFeedback(bidData) {
-		    var ratingFeedbackScope = $rootScope.$new();
-		    ratingFeedbackScope.bidData = bidData;
-            Modal.openDialog('feedbackForm', ratingFeedbackScope);
-	    }
+		    var bidSummaryModal = $uibModal.open({
+		        templateUrl: "/app/assetsale/assetbidpopup.html",
+		        scope: bidSummaryScope,
+		        controller: 'AssetBidPopUpCtrl as assetBidPopUpVm',
+		        windowTopClass: 'bidmodal',
+		        size: 'xs'
+		    });
 
-	    // Rating
-		$scope.rate = 1;
-		$scope.max = 5;
-		$scope.isReadonly = false;
+		  	bidSummaryScope.close = function() {
+		        bidSummaryModal.close();
+		  	};
+	  	});
+    }
 
-		$scope.hoveringOver = function(value) {
-		$scope.overStar = value;
-		$scope.percent = 100 * (value / $scope.max);
-			};
+	// payment type
+    function paymentType() {
+        var paymentTypeScope = $rootScope.$new();
+        paymentTypeScope.bidData = bidData;
+        Modal.openDialog('selectPaymentType', paymentTypeScope);
+    }
+    // invoicedetails
+    function invoicedetails(bidData) {
+      	var invoicedetailScope = $rootScope.$new();
+        invoicedetailScope.bidData = bidData;
+        Modal.openDialog('invoiceDetails', invoicedetailScope);
+    }
+    // KYC document
+    function kycDocument(bidData) {
+      	var kycDocumentScope = $rootScope.$new();
+      	kycDocumentScope.bidData = bidData;
+        Modal.openDialog('kycDocument', kycDocumentScope);
+    }
+    // Rating and Feedback
+    function ratingFeedback(bidData) {
+	    var ratingFeedbackScope = $rootScope.$new();
+	    ratingFeedbackScope.bidData = bidData;
+        Modal.openDialog('feedbackForm', ratingFeedbackScope);
+    }
 
-		$scope.ratingStates = [
-		{stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'}
-			];
-		console.log($scope.percent);
-		
-	  function onTabChange(tabs){
+    // Rating
+	$scope.rate = 1;
+	$scope.max = 5;
+	$scope.isReadonly = false;
+
+	$scope.hoveringOver = function(value) {
+	$scope.overStar = value;
+	$scope.percent = 100 * (value / $scope.max);
+		};
+
+	$scope.ratingStates = [
+	{stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'}
+		];
+	console.log($scope.percent);
+	
+    function onTabChange(tabs){
 	  	switch(tabs){
 	  		case 'auctionable':
 	  		$scope.pager.reset();
@@ -87,7 +119,7 @@
 	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 	  		filter.offerStatus = offerStatuses[0];
 	  		vm.activeBid='Auctionable';
-            $scope.subTabValue='auctionable';
+	        $scope.subTabValue='auctionable';
 	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
@@ -103,24 +135,28 @@
 	  		getBidData(filter);
 	  		break;
 	  	}
-	  }
+  	}
 
-	function withdrawBid(bid) {
-		if (bid) {
-			filter._id = bid;
-			filter.offerStatus = offerStatuses[2];
-			filter.dealStatus = dealStatuses[12];
-			filter.bidStatus = bidStatuses[8];
-		}
-		AssetSaleSvc.withdrawBid(filter)
-			.then(function(res) {
-				getBidData(filter);
-			})
-			.catch(function(err) {
-
-			});
-
-	}
+	function withdrawBid(bidId) {
+      if (!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for submitting your request!", true);
+        return;
+      }
+      var data = {};
+      data._id = bidId;
+      Modal.confirm("Do you want to withdrawn bid?", function(ret) {
+        if (ret == "yes") {
+          AssetSaleSvc.withdrawBid(data)
+          .then(function(res) {
+            if(res && res.msg)
+              Modal.alert(res.msg, true);
+          	//getBidData(filter);
+          })
+          .catch(function(err) {
+          });
+        }
+      });
+    }
 
 	function fireCommand(reset, filterObj) {
 		if (reset)
@@ -152,5 +188,13 @@
 			});
 
 	}
+
+	//loading start
+	Auth.isLoggedInAsync(function(loggedIn) {
+		if(loggedIn)
+			init();
+		else
+			$state.go('main');
+	});
 }
 })();

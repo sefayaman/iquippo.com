@@ -30,9 +30,9 @@ function ProductBidRequestCtrl($scope, $rootScope, $location, $uibModal, Modal, 
     }
    	 // emdamount
     function emdAmount(bidData) {
-      	var emdAmountScope = $rootScope.$new();
-      	emdAmountScope.bidData = bidData;
-        Modal.openDialog('emdAmount', emdAmountScope);
+      	var emdFullPaymentScope = $rootScope.$new();
+      	emdFullPaymentScope.bidData = bidData;
+        Modal.openDialog('emdFullPaymentPopup', emdFullPaymentScope);
     }
 
 	function init() {

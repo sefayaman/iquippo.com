@@ -145,6 +145,7 @@
             dataToSend.product.mfgYear = query.product.mfgYear;
             dataToSend.product.country = query.product.country;
             dataToSend.product.state = query.product.state;
+            dataToSend.product.stateId = query.stateId;
             dataToSend.product.city = query.product.city;
             if(query.product.repoDate)
               dataToSend.product.repoDate = query.product.repoDate;
