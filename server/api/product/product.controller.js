@@ -256,7 +256,9 @@ exports.search = function(req, res) {
 
   if(req.body.categoryId)
     filter["category._id"] = req.body.categoryId;
-
+  
+  if(req.sellers && req.sellers.length)
+    filter["seller._id"] = {$in:req.sellers};
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){
@@ -279,6 +281,7 @@ exports.search = function(req, res) {
     if(arr.length > 0)
       filter['$or'] = arr;
     var result = {};
+    console.log("req seller",filter);
     if(req.body.pagination){
       paginatedProducts(req,res,filter,result);
       return;    
@@ -436,11 +439,11 @@ exports.search = function(req, res) {
 
 function paginatedProducts(req,res,filter,result){
 
-  var pageSize = req.body.itemsPerPage;
+  var pageSize = req.body.itemsPerPage || 50;
   var first_id = req.body.first_id;
   var last_id = req.body.last_id;
-  var currentPage = req.body.currentPage;
-  var prevPage = req.body.prevPage;
+  var currentPage = req.body.currentPage || 1;
+  var prevPage = req.body.prevPage || 0;
   var isNext = currentPage - prevPage >= 0?true:false;
   Seq()
   .par(function(){

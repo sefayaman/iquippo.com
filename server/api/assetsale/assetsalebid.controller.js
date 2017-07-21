@@ -72,7 +72,12 @@ exports.submitBid = function(req, res) {
 		});
 	} else if (req.query.typeOfRequest == "changeBid") {
 		var bidResult = {};
-		function updateBid(callback) {
+		async.series([updateBid, newBidData], function(err, results) {
+			return res.status(201).json(bidResult);
+		});
+	}
+
+	function updateBid(callback) {
 			data = {};
 			if (req.body.user)
 				data.user = req.body.user;
@@ -104,11 +109,6 @@ exports.submitBid = function(req, res) {
 				return callback();
 			});
 		}
-
-		async.series([updateBid, newBidData], function(err, results) {
-			return res.status(201).json(bidResult);
-		});
-	}
 };
 
 exports.fetchBid=function(req,res){
@@ -452,5 +452,105 @@ function paginatedResult(req, res, modelRef, filter, result) {
 			console.log("######rrrr", err);
 			handleError(res, err);
 		})
+
+}
+
+exports.getBidProduct = function(req,res,next){
+  
+  var bodyData = req.body;
+  req.body.bidReceived = 'y';
+  req.body.pagination = true;
+
+  console.log("I m called");
+  if(!bodyData.userType || bodyData.userType !== 'FA')
+  	return next();
+
+  var users = [];
+  async.parallel([getUsersAssociatedToEnterprise,getUsersAssociatedToChannelPartner,getCustomer],function(err,result){
+  	if(err){return handleError(res,err);}
+  	console.log("I m called",users.length);
+  	if(!users.length)
+  		return res.status(200).json({totalItems:0,products:[]});
+  	console.log("gggggggggg");
+  	req.sellers = users;
+  	return next();
+  });
+
+  function getUsersAssociatedToEnterprise(callback){
+    var filter = {};
+    filter.deleted = false;
+    filter.status = true;
+    filter.enterprise = true;
+    filter.$or = [{"availedServices.partnerId" : bodyData.partnerId}];
+    if(bodyData.default === 'y')
+      filter.$or[filter.$or.length] = {"availedServices.code" : {$ne:"Sale Fulfilment"}};
+    User.find(filter,function(err,enterprises){
+      if(err){return callback("Error in getting user")};
+      console.log("######ent",enterprises.length);
+      var entIds = [];
+      if(!enterprises.length)
+        return callback();
+
+      enterprises.forEach(function(item){
+        entIds.push(item.enterpriseId);
+      });
+      User.find({enterpriseId:{$in:entIds},deleted:false,status:true},function(error,finalUsers){
+        if(err){return callback("Error in getting user")};
+        console.log("######entU",finalUsers.length);
+        finalUsers.forEach(function(user){
+          users.push(user._id + "");
+        })
+        return callback();  
+      })
+    });
+  }
+
+  function getUsersAssociatedToChannelPartner(callback){
+    var filter = {};
+    filter.deleted = false;
+    filter.status = true;
+    filter.role = "channelpartner";
+    filter.$or = [{FAPartnerId : bodyData.partnerId}];
+    if(bodyData.default === 'y')
+      filter.$or[filter.$or.length] = {FAPartnerId : {$exist:false}};
+    User.find(filter,function(err,chUsers){
+      if(err){return callback("Error in getting user")};
+      var chIds = [];
+      if(!chUsers.length)
+        return callback();
+      chUsers.forEach(function(item){
+        chIds.push(item._id);
+        users.push(item._id + "");
+      });
+      console.log("######entC",chUsers.length);
+      User.find({'createdBy._id':{$in:chIds},deleted:false,status:true},function(error,finalUsers){
+        if(err){return callback("Error in getting user")};
+        finalUsers.forEach(function(user){
+          users.push(user._id + "");
+        });
+        console.log("######entCU",finalUsers.length);
+        return callback();  
+      })
+    });
+  }
+
+  function getCustomer(callback){
+     var filter = {};
+    filter.deleted = false;
+    filter.status = true;
+    filter.$or = [{FAPartnerId : bodyData.partnerId}];
+    filter.role = {$ne:"channelpartner"};
+    if(bodyData.default === 'y')
+      filter.$or[filter.$or.length] = {FAPartnerId : {$exist:false}};
+    User.find(filter,function(err,finalUsers){
+      if(err){return callback("Error in getting user")};
+      finalUsers.forEach(function(item){
+        users.push(item._id + "");
+      });
+       console.log("######entU",finalUsers.length);
+      return callback();
+    });
+
+  }
 
 }

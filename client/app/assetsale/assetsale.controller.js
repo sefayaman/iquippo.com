@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('AssetSaleCtrl', AssetSaleCtrl);
 
-	function AssetSaleCtrl($scope, $state, Auth, productSvc, AssetSaleSvc) {
+	function AssetSaleCtrl($scope, $state, Auth, AssetSaleSvc) {
 		var vm = this;
 		var filter={};
 		vm.bidListing=[];

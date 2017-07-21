@@ -7,13 +7,13 @@
   	</div>
   </div>
   <legend></legend>
-  <!-- <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn btn-warning">Auctionable Bid</button>
-    <button type="button" class="btn" ng-class="{'btn-warning': tabValue == 'closed'}" ng-click="onTabChange('auctionable')">Closed Bid</button>
-   </div> -->
+  <div class="btn-group enterprise-value form-group">
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+   </div>
 
    	<!-- Auctionable Auction -->
-	<div>
+	<div ng-if="bidproductVm.activeBid == 'auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{bidproductVm.productListing.length}}
@@ -86,7 +86,7 @@
 		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
    <!-- Closed Bid -->
-	<!-- <div ng-if="false">
+	<div ng-if="false">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : 1 Records
@@ -97,9 +97,65 @@
 		   </div>
 		   <div class="table-responsive">
 		   	<table class="table table-bordered">
-		   		
+		   		<table class="table table-bordered">
+		   		<thead>
+		   			<tr>			   			
+			   			<th>Asset Id</th>
+			   			<th>Category</th>
+			   			<th>Brand</th>
+			   			<th>Modal</th>
+			   			<th>Manufacturing Year</th>
+			   			<th>Asset Country</th>
+			   			<th>Asset State</th>
+			   			<th>Asset Location</th>
+			   			<th>Asset Description</th>
+			   			<th>Buyer Name</th>
+			   			<th>Buyer Country</th>
+			   			<th>Buyer State</th>
+			   			<th>Buyer Location</th>
+			   			<th>Buyer Mobile No.</th>
+			   			<th>Buyer Email Id</th>
+			   			<th>Repo Date</th>
+			   			<th>Ageing of Asset</th>
+			   			<th>Reserve Price</th>
+			   			<th>Parking Charges</th>
+			   			<th>Buy Now Price</th>
+			   			<th>Trade Type</th>
+			   			<th>Asset Status</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="product in bidproductVm.productListing">
+			   			
+			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.category.name}}</td>
+			   			<td>{{product.brand.name}}</td>
+			   			<td>{{product.model.name}}</td>
+			   			<td>{{product.mfgYear}}</td>
+			   			<td>{{product.country}}</td>
+			   			<td>{{product.state}}</td>
+			   			<td>{{product.city}}</td>
+			   			<td>{{product.comment}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{product.reservePrice}}</td>
+			   			<td>{{product.parkingChargePerDay}}</td>
+			   			<td>{{product.grossPrice}}</td>
+			   			<td>{{}}</td>
+			   			<td>
+			   				<a href="/assetsale/adminproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   			</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
 		   	</table>
 		   </div>	
 		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-	</div>   -->
+	</div>  
 </div>

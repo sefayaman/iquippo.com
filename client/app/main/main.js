@@ -532,14 +532,16 @@ angular.module('sreizaoApp')
         templateUrl: 'app/assetsale/adminbidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
-        authenticate:true
+        authenticate:true,
+        restrict:true
       })
       .state('assetsale.adminproductbidrequest', {
         url: '/adminproductbidrequest',
         templateUrl: 'app/assetsale/adminproductbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
-        authenticate:true
+        authenticate:true,
+        restrict:true
       })
       .state('assetsale.seller', {
         url: '/seller',

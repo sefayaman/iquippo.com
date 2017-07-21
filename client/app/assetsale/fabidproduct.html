@@ -8,15 +8,15 @@
   </div>
   <legend></legend>
   <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn active" ng-class="{'btn-primary': subTabValue == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
-    <button type="button" class="btn active" ng-class="{'btn-primary': subTabValue == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
    	<!-- Auctionable Auction -->
-	<div ng-if="bidproductVm.activeBid == 'Auctionable'">
+	<div ng-if="bidproductVm.activeBid == 'auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : {{bidproductVm.agencyListing.length}}
+		   		Showing : {{bidproductVm.productListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
 		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
@@ -45,7 +45,7 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="fa in bidproductVm.agencyListing">			   			
+		   			<tr ng-repeat="fa in bidproductVm.productListing">			   			
 			   			<td>{{fa.assetId}}</td>
 			   			<td>{{fa.category.name}}</td>
 			   			<td>{{fa.brand.name}}</td>

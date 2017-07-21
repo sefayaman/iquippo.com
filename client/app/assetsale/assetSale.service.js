@@ -14,6 +14,7 @@
     svc.get=get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
     svc.fetchFAData = fetchFAData;
+    svc.getBidProduct = getBidProduct;
     
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
@@ -124,6 +125,16 @@
     .catch(function(err){
       throw err;
     });
+  }
+
+  function getBidProduct(filter){
+    return $http.post(path + "/bidproduct",filter)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err
+    })
   }
 
 		return svc;
