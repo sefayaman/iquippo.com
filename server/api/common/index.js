@@ -12,6 +12,7 @@ var kycCtrl = require('./kycmaster.controller');
 var enterpriseCtrl = require('./enterprisemaster.controller');
 var markupPriceCtrl = require('./markupprice.controller');
 var assetSaleChargeCtrl = require('./assetsalecharge.controller');
+var emdChargeCtrl = require('./emdcharge.controller');
 var apiCtrl=require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
@@ -120,6 +121,12 @@ router.post('/assetsalecharge', auth.hasRole('admin'),assetSaleChargeCtrl.create
 router.put('/assetsalecharge/:id', auth.hasRole('admin'),assetSaleChargeCtrl.update);
 router.delete('/assetsalecharge/:id',auth.hasRole('admin'), assetSaleChargeCtrl.destroy);
 router.post('/assetsalecharge/search',assetSaleChargeCtrl.search);
+
+router.get('/emdcharge',auth.hasRole('admin'), emdChargeCtrl.get);
+router.post('/emdcharge', auth.hasRole('admin'),emdChargeCtrl.create);
+router.put('/emdcharge/:id', auth.hasRole('admin'),emdChargeCtrl.update);
+router.delete('/emdcharge/:id',auth.hasRole('admin'), emdChargeCtrl.destroy);
+router.post('/emdcharge/search',emdChargeCtrl.search);
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
 router.get('/redirecttorapid',financeIntegrationCtrl.setCustomerData);

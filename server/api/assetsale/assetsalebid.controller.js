@@ -82,8 +82,7 @@ function getMarkupPrice(filter, callback) {
 			return callback(err);
 		if(result.length == 0) {
 			filter = {};
-			//filter.type = "Other";
-			filter.userId = "Other";
+			filter.userRole = "Other";
 			var query = MarkupPrice.find(filter);
 			query.exec(function(err, markupPrice) {
 				if (err)
@@ -108,14 +107,14 @@ function getMarkupPercentOnUser(filter, callback) {
 	    			break;
 	    	case "channelpartner" : 
 	    			markupFilter = {};
-	    			markupFilter.userId = user._id;
+	    			markupFilter['user.userId'] = user._id;
 	    			break;
 	    	case "customer" : 
 	    			markupFilter = {};
 	    			if(user.createdBy && user.createdBy.role === 'channelpartner')
-	    				markupFilter.userId = user.createdBy._id;
+	    				markupFilter['user.userId'] = user.createdBy._id;
 	    			else 
-	    				markupFilter.userId = user._id;
+	    				markupFilter['user.userId'] = user._id;
 	    			break;
 	    }
 	    getMarkupPrice(markupFilter,function(err, markupPer){
@@ -137,6 +136,25 @@ function create(data,callback){
 		}
 			return callback(null, res);
 		});
+}
+
+// Updates an existing record in the DB.
+exports.update = function(req, res) {
+  console.log("req.dody####", req.params.id);
+  var bodyData = req.body;
+  //var user = req.body.user;
+
+  if(bodyData._id) { delete bodyData._id; }
+  bodyData.updatedAt = new Date();
+  AssetSaleBid.findById(req.params.id, function (err, bid) {
+    if (err) { return handleError(res, err); }
+    if(!bid) { return res.status(404).send('Not Found'); }
+
+    AssetSaleBid.update({_id:req.params.id},{$set:bodyData},function(err){
+        if (err) { return handleError(res, err); }
+        return res.status(200).json({errorCode:0, message:"Record updated sucessfully"});
+    });
+  });
 }
 
 function fetchBid(filter, callback) {

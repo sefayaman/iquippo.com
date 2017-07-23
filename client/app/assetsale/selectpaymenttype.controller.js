@@ -1,9 +1,9 @@
 (function() {
   'use strict';
 
-angular.module('sreizaoApp').controller('selectPaymentType', selectPaymentType);
+angular.module('sreizaoApp').controller('SelectPaymentCtrl', SelectPaymentCtrl);
 
-function selectPaymentType($scope, $rootScope, Modal, Auth, $uibModal, $uibModalInstance) {
+function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, $uibModalInstance) {
   var vm = this;
   vm.closeDialog = closeDialog;
   vm.submit = submit;

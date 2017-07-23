@@ -1798,12 +1798,13 @@
 		<div>
 		<form class="" name="assetSaleForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3">
-					<select class="form-control">
-						<option value="">Select Type</option>
-						<option value="">Enterprise</option>
-						<option value="">Channel Partner</option>
-						<option value="">Customer</option>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="userRole" ng-model="assetSaleChargeVm.dataModel.userRole" ng-change="assetSaleChargeVm.getUserOnRole(assetSaleChargeVm.dataModel.userRole)" required>
+						<option value="">*Select Type</option>
+						<option value="enterprise">Enterprise</option>
+						<option value="channelpartner">Channel Partner</option>
+						<option value="customer">Customer</option>
+						<option value="Other">Other</option>
 					</select>
 				</div>
 				<!-- <div class="col-sm-3" ng-class="{'has-error':assetSaleForm.enterpriseId.$invalid && submitted}">
@@ -1812,11 +1813,14 @@
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in assetSaleChargeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div> -->
-				<div class="col-sm-3">
-					<select class="form-control" ng-if="true">
-						<option>Select Name</option>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userId.$invalid && submitted}" ng-if="assetSaleChargeVm.dataModel.userRole == 'enterprise' || assetSaleChargeVm.dataModel.userRole == 'channelpartner'">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="assetSaleChargeVm.onUserChange(container.userId, assetSaleChargeVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in assetSaleChargeVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
 					</select>
-					<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.mobile.$invalid && submitted}" ng-if="assetSaleChargeVm.dataModel.userRole == 'customer'">
+					<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in assetSaleChargeVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="assetSaleChargeVm.findSingleUser()" typeahead-on-select="assetSaleChargeVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveFromDate.$invalid && submitted}">
@@ -1836,8 +1840,8 @@
 				</div>				
 			</div>
 			<div class="row form-group">
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.category.$invalid && submitted}">
-					<select class="form-control" name="category" ng-model="assetSaleChargeVm.dataModel.category" required>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.categoryId.$invalid && submitted}">
+					<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="assetSaleChargeVm.onCategoryChange(container.categoryId)"required>
 						<option value="">*Asset Category</option>
 						<option value="{{ct._id}}" ng-repeat="ct in assetSaleChargeVm.categoryList">{{ct.name}}</option>
 					</select>
@@ -1850,9 +1854,9 @@
 						<option value="percent">%</option>
 					</select>
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.feeAmount.$invalid && submitted}">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.amount.$invalid && submitted}">
 					<!-- <input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatPerTrx" placeholder="Flat per Transaction"> -->
-					<input type="number" class="form-control" name="feeAmount" ng-model="assetSaleChargeVm.dataModel.amount" placeholder="*Amount" required />
+					<input type="number" class="form-control" name="amount" ng-model="assetSaleChargeVm.dataModel.amount" placeholder="*Amount" required />
 				</div>
 				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleForm)">Update</button>
@@ -1888,16 +1892,17 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="assetSale in assetSaleChargeVm.filteredList">
-						<td>{{}}</td>
-						<td>{{}}</td>
+						<td>{{assetSale.userRole}}</td>
+						<td ng-if="assetSale.userRole != 'Other'">{{assetSale.user.name}} ({{assetSale.user.mobile}})</td>
+						<td ng-if="assetSale.userRole == 'Other'">Other</td>
 						<td>{{assetSale.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.effectiveToDate | date:'MM/dd/yyyy'}}</td>
 						<td>{{assetSale.category.name}}</td>
 						<td>{{assetSale.chargeBasis}}</td>
 						<td>{{assetSale.amount}}</td>
 						<td>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="assetSaleChargeVm.editClicked(vat)"><i class="fa fa-pencil"></i></button>
-							<button type="button" class="btn btn-sm btn-danger" ng-click="assetSaleChargeVm.destroy(vat._id)"><i class="fa fa-trash"></i></button></td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="assetSaleChargeVm.editClicked(assetSale)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="assetSaleChargeVm.destroy(assetSale._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
@@ -1931,12 +1936,13 @@
 		<div>
 		<form class="" name="enterpriseMasterForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3">
-					<select class="form-control">
-						<option value="">Select Type</option>
-						<option value="">Enterprise</option>
-						<option value="">Channel Partner</option>
-						<option value="">Customer</option>
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="userRole" ng-model="enterpriseVm.dataModel.userRole" ng-change="enterpriseVm.getUserOnRole(enterpriseVm.dataModel.userRole)" required>
+						<option value="">*Select Type</option>
+						<option value="enterprise">Enterprise</option>
+						<option value="channelpartner">Channel Partner</option>
+						<option value="customer">Customer</option>
+						<option value="Other">Other</option>
 					</select>
 				</div>
 				<!-- <div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.enterpriseId.$invalid && submitted}">
@@ -1945,11 +1951,14 @@
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div> -->
-				<div class="col-sm-3">
-					<select class="form-control" ng-if="true">
-						<option>Select Name</option>
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.userId.$invalid && submitted}" ng-if="enterpriseVm.dataModel.userRole == 'enterprise' || enterpriseVm.dataModel.userRole == 'channelpartner'">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="enterpriseVm.onUserChange(container.userId, enterpriseVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in enterpriseVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
 					</select>
-					<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.mobile.$invalid && submitted}" ng-if="enterpriseVm.dataModel.userRole == 'customer'">
+					<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in enterpriseVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="enterpriseVm.findSingleUser()" typeahead-on-select="enterpriseVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
 				</div>
 				<div class="col-sm-3">
 					<select class="form-control" name="functionality" ng-model="enterpriseVm.dataModel.functionality">
@@ -1974,13 +1983,13 @@
 					</select>					
 				</div>
 				<div class="col-sm-3" >
-					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" placeholder="Cooling Period">
+					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" min="0" placeholder="Cooling Period">
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod"  placeholder="EMD Period">
+					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod" min="0" placeholder="EMD Period">
 				</div>
 				<div class="col-sm-3">
-					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod"  placeholder="Full Payment Period">
+					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod" min="0" placeholder="Full Payment Period">
 				</div>				
 			</div>
 			<div class="row form-group">
@@ -2020,8 +2029,9 @@
 				<tbody>
 					<tr ng-repeat="ent in enterpriseVm.filteredList">
 						<!-- <td>{{ent.enterpriseId}}</td> -->
-						<td>{{}}</td>
-						<td>{{}}</td>
+						<td>{{ent.userRole}}</td>
+						<td ng-if="ent.userRole != 'Other'">{{ent.user.name}} ({{ent.user.mobile}})</td>
+						<td ng-if="ent.userRole == 'Other'">Other</td>
 						<td>{{ent.functionality}}</td>
 						<td>{{ent.buyNowPriceApproval}}</td>
 						<td>{{ent.negotiatedSaleApproval}}</td>
@@ -2064,12 +2074,13 @@
 		<div>
 		<form class="" name="markupForm" >			
 			<div class="row form-group">
-				<div class="col-sm-3">
-					<select class="form-control">
-						<option value="">Select Type</option>
-						<option value="">Enterprise</option>
-						<option value="">Channel Partner</option>
-						<option value="">Customer</option>
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="userRole" ng-model="markupVm.dataModel.userRole" ng-change="markupVm.getUserOnRole(markupVm.dataModel.userRole)" required>
+						<option value="">*Select Type</option>
+						<option value="enterprise">Enterprise</option>
+						<option value="channelpartner">Channel Partner</option>
+						<option value="customer">Customer</option>
+						<option value="Other">Other</option>
 					</select>
 				</div>
 				<!-- <div class="col-sm-3" ng-class="{'has-error':markupForm.enterpriseId.$invalid && submitted}">
@@ -2078,11 +2089,14 @@
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in markupVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div> -->
-				<div class="col-sm-3">
-					<select class="form-control" ng-if="true">
-						<option>Select Name</option>
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.userId.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'enterprise' || markupVm.dataModel.userRole == 'channelpartner' || markupVm.dataModel.userRole == ''">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="markupVm.onUserChange(userId, markupVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in markupVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
 					</select>
-					<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.mobile.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'customer'">
+					<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in markupVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="markupVm.findSingleUser()" typeahead-on-select="markupVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':markupForm.price.$invalid && submitted}">
 					<input type="text" class="form-control" name="price" ng-model="markupVm.dataModel.price" placeholder="*Price in %" required>
@@ -2118,8 +2132,9 @@
 				<tbody>
 					<tr ng-repeat="markup in markupVm.filteredList">
 						<!-- <td>{{markup.enterpriseId}}</td> -->
-						<td>{{}}</td>
-						<td>{{}}</td>
+						<td>{{markup.userRole}}</td>
+						<td ng-if="markup.userRole != 'Other'">{{markup.user.name}} ({{markup.user.mobile}})</td>
+						<td ng-if="markup.userRole == 'Other'">Other</td>
 						<td>{{markup.price}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
@@ -2131,39 +2146,44 @@
 		</div>
 	</div>
 	<!-- EMD Amount Master -->
-	<div ng-if="gsettingVm.tabValue == 'emdmaster'">
+	<div ng-if="gsettingVm.tabValue == 'emdmaster'" ng-controller="EmdChargeMasterCtrl as emdChargeVm">
 		<h4>Add New EMD Amount</h4>
 		<legend></legend>
 		<div>
-			<form class="" name="" >			
+			<form class="" name="emdChargeForm" >			
 				<div class="row form-group">
-					<div class="col-sm-3">
-						<select class="form-control">
-							<option value="">Select Type</option>
-							<option value="">Enterprise</option>
-							<option value="">Channel Partner</option>
-							<option value="">Customer</option>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.userRole.$invalid && submitted}">
+						<select class="form-control" name="userRole" ng-model="emdChargeVm.dataModel.userRole" ng-change="emdChargeVm.getUserOnRole(emdChargeVm.dataModel.userRole)" required>
+							<option value="">*Select Type</option>
+							<option value="enterprise">Enterprise</option>
+							<option value="channelpartner">Channel Partner</option>
+							<option value="customer">Customer</option>
+							<option value="Other">Other</option>
 						</select>
 					</div>
-					<div class="col-sm-3">
-						<select class="form-control" ng-if="true">
-							<option>Select Name</option>
-						</select>
-						<input type="text" class="form-control" ng-if="false" name="" value="" placeholder="Mobile no." autocomplete="off">
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.userId.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'enterprise' || emdChargeVm.dataModel.userRole == 'channelpartner'">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="emdChargeVm.onUserChange(container.userId, emdChargeVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in emdChargeVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
+					</select>
 					</div>
-					<div class="col-sm-3">
-						<select class="form-control" ng-if="true">
-							<option>Select Category</option>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.mobile.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'customer'">
+						<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in emdChargeVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="emdChargeVm.findSingleUser()" typeahead-on-select="emdChargeVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
+					</div>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.categoryId.$invalid && submitted}">
+						<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="emdChargeVm.onCategoryChange(container.categoryId)"required>
+							<option value="">*Asset Category</option>
+							<option value="{{ct._id}}" ng-repeat="ct in emdChargeVm.categoryList">{{ct.name}}</option>
 						</select>
 					</div>
-					<div class="col-sm-3">
-						<input type="text" class="form-control" name="" value="" placeholder="Enter EMD Amount">
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.amount.$invalid && submitted}">
+						<input type="number" class="form-control" name="amount" ng-model="emdChargeVm.dataModel.emdCharge" placeholder="*EMD amount" min="0" required />
 					</div>					
 				</div>
 				<div class="row form-group">
 					<div class="col-sm-2 pull-right">
-						<button type="button" class="btn btn-block btn-primary" ng-if="isEdit">Update</button>
-						<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit">Save</button>
+						<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="emdChargeVm.update(emdChargeForm)">Update</button>
+						<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="emdChargeVm.save(emdChargeForm)">Save</button>
 					</div>
 				</div>
 			</form>
@@ -2175,7 +2195,7 @@
 			</div>
 			<div class="col-sm-offset-3 col-sm-3 text-right">
 				<div class="tablesearch form-group">
-					Search: <input type="text" placeholder="Search...">
+					Search: <input type="text" placeholder="Search..." ng-model="emdChargeVm.searchStr" ng-change="emdChargeVm.fireCommand(true)" ng-model-options="{debounce:500}">
 				</div>
 			</div>
 		</div>
@@ -2191,19 +2211,19 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<!-- <td>{{markup.enterpriseId}}</td> -->
-						<td>{{}}</td>
-						<td>{{}}</td>
-						<td>{{}}</td>
-						<td>{{}}</td>
+					<tr ng-repeat="emd in emdChargeVm.filteredList">
+						<td>{{emd.userRole}}</td>
+						<td ng-if="emd.userRole != 'Other'">{{emd.user.name}} ({{emd.user.mobile}})</td>
+						<td ng-if="emd.userRole == 'Other'">Other</td>
+						<td>{{emd.category.name}}</td>
+						<td>{{emd.emdCharge}}</td>
 						<td>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
-							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="emdChargeVm.editClicked(emd)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="emdChargeVm.destroy(emd._id)"><i class="fa fa-trash"></i></button></td>
 					</tr>
 				</tbody>
 			</table>
-			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="kycVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="emdChargeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 </div>

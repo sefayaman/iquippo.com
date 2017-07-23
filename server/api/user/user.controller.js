@@ -169,6 +169,7 @@ exports.getUser = function(req, res) {
     var contactRegex = new RegExp(req.body.mobileno, 'i');
     filter['mobile'] = {$regex:contactRegex};
   }
+
   if(req.body.contact)
     filter['mobile']=req.body.contact;
   
@@ -182,6 +183,11 @@ exports.getUser = function(req, res) {
       typeFilter['$ne'] = "admin";
       filter["role"] = typeFilter;    
     }
+
+    if(req.body.onlyUser) {
+      filter["createdBy.role"] = {$ne:"channelpartner"};
+    }
+
     if(arr.length > 0)
       filter['$or'] = arr;
     var result = {};

@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('admin').controller('AssetSaleChargeMasterCtrl', AssetSaleChargeMasterCtrl);
+    angular.module('admin').controller('EmdChargeMasterCtrl', EmdChargeMasterCtrl);
 
-    function AssetSaleChargeMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc,categorySvc, AssetSaleChargeSvc){
+    function EmdChargeMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc,categorySvc, EmdChargeSvc){
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
@@ -42,7 +42,7 @@
 
         function loadViewData(filter){
             $scope.pager.copy(filter);
-            AssetSaleChargeSvc.get(filter)
+            EmdChargeSvc.get(filter)
             .then(function(result){
                 vm.filteredList = result.items;
                 vm.totalItems = result.totalItems;
@@ -166,7 +166,7 @@
                 $scope.submitted = true;
                 return;
             }
-            AssetSaleChargeSvc.save(vm.dataModel)
+            EmdChargeSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
                 fireCommand(true);
@@ -188,12 +188,8 @@
             if(rowData.user && rowData.user.mobile)
                 $scope.container.mobile = rowData.user.mobile;
             
-            if (rowData.effectiveToDate)
-                vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
-            if (rowData.effectiveFromDate)
-                vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
-            vm.dataModel.chargeBasis = rowData.chargeBasis;
-            vm.dataModel.amount = rowData.amount;
+            vm.dataModel.emdCharge = rowData.emdCharge;
+            //onCategoryChange(rowData.category.categoryId, true);
             $scope.container.categoryId = rowData.category.categoryId;
             $scope.isEdit = true;
         }
@@ -203,7 +199,7 @@
                 $scope.submitted = true;
                 return;
             }
-            AssetSaleChargeSvc.update(vm.dataModel)
+            EmdChargeSvc.update(vm.dataModel)
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
@@ -224,7 +220,7 @@
         }
 
         function confirmDestory(id){
-            AssetSaleChargeSvc.destroy(id)
+            EmdChargeSvc.destroy(id)
             .then(function(){
                 fireCommand(true);
             })

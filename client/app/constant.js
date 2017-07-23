@@ -65,7 +65,7 @@ var Modals = {
   },
   selectPaymentType : {
     tplUrl : "app/assetsale/selectpaymenttype.html",
-    Ctrl : 'selectPaymentCtrl as paymentVm'
+    Ctrl : 'SelectPaymentCtrl as paymentVm'
   },
   emdFullPaymentPopup : {
     tplUrl : "app/assetsale/emdFullPaymentDetail.html",

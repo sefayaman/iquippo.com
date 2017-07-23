@@ -67,7 +67,7 @@
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.dealStatus}}</td>
 			   			<td>
-			   				<button type="button" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.invoicedetails(bid)">Update</button>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-disabled="bid.invoiceDetail" ng-click="buyerProductBidRequestVm.invoicedetails(bid)">Update</button>
 			   			</td>
 			   			<td>
 			   				<button type="button" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.kycDocument(bid)">
@@ -86,9 +86,9 @@
 			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.ratingFeedback()">Write Feedback</a>
 			   			</td>
 						<td> 
-							<button type="button" ng-click="buyerProductBidRequestVm.paymentType()"  class="btn btn-primary btn-xs">Pay</button> 
-							<button type="button" ng-if="offerType = 'Bid'" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.openBidModal(bid)">Change</button> 
-							<button type="button" ng-if="offerType = 'Bid'" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
+							<button type="button" ng-click="buyerProductBidRequestVm.paymentType(bid)"  class="btn btn-primary btn-xs">Pay</button> 
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.openBidModal(bid)">Change</button> 
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
 						</td>
 			   		</tr>
 		   		</tbody>

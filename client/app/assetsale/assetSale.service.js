@@ -7,6 +7,7 @@
 		var svc = {};
 		var path='api/assetSale';
 		svc.submitBid = submitBid;
+    svc.update = update;
     svc.countBid = countBid;
 		svc.searchBid = searchBid;
     svc.withdrawBid = withdrawBid;
@@ -26,6 +27,16 @@
             throw err;
 				});
 		}
+
+    function update(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
 
     function withdrawBid(data){
       return $http.post(path + '/withdrawbid', data)

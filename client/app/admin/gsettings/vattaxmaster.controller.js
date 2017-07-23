@@ -16,40 +16,21 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        //vm.getCategory = getCategory;
         vm.taxType = [{name:"GST"}];
         vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
-        /*groupSvc.getAllGroup()
-        .then(function(result) {
-          $scope.allGroup = result;
-        });*/
+            LocationSvc.getAllState()
+              .then(function(result){
+                $scope.stateList = result;
+              });
 
-        LocationSvc.getAllState()
-          .then(function(result){
-            $scope.stateList = result;
-          });
-
-        categorySvc.getCategoryOnFilter()
-            .then(function(result) {
-                vm.categoryList = result;
-            })
-
-        loadViewData();
-        } 
-
-        /*function getCategory(groupId) {
-            vm.categoryList = [];
-            
-            if (!groupId) {
-                vm.dataModel.category = "";
-                return;
-            }
-            categorySvc.getCategoryOnFilter({groupId: groupId})
+            categorySvc.getCategoryOnFilter()
                 .then(function(result) {
                     vm.categoryList = result;
                 })
-        }*/
+
+            loadViewData();
+        }
 
         function loadViewData(){
             VatTaxSvc.get()
@@ -89,7 +70,6 @@
         function editClicked(rowData){
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.group = rowData.group._id;
             vm.dataModel.taxType = rowData.taxType;
             if (rowData.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
@@ -97,11 +77,12 @@
                 vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
             vm.dataModel.state = rowData.state._id;
             vm.dataModel.amount = rowData.amount;
-            categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
+            vm.dataModel.category = rowData.category._id;
+            /*categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
                 .then(function(result) {
                     vm.categoryList = result;
                     vm.dataModel.category = rowData.category._id;
-                })
+                })*/
             $scope.isEdit = true;
         }
 

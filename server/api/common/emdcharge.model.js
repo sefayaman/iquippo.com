@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var assetSaleChargeSchema = new Schema({
+var emdChargeSchema = new Schema({
   user:{
       userId: {type:Schema.Types.ObjectId,ref:'User'},
       mobile: String,
@@ -15,13 +15,10 @@ var assetSaleChargeSchema = new Schema({
           categoryId:{type:Schema.Types.ObjectId,ref:'Category'},
           name:String
           },
-  effectiveFromDate:Date,
-  effectiveToDate:Date,
-  chargeBasis:String,
-  amount:Number,
+  emdCharge:Number,
   status:{type:String,default:'active'},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });
 
-module.exports = mongoose.model('assetSaleCharge', assetSaleChargeSchema);
+module.exports = mongoose.model('emdCharge', emdChargeSchema);

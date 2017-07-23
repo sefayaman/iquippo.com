@@ -1,7 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var Model = require('./assetsalecharge.model');
+var Model = require('./emdcharge.model');
 var ApiError = require('../../components/_error');
 var Utility = require('./../../components/utility.js');
 
@@ -18,15 +18,22 @@ exports.get = function(req, res) {
   if (queryParam.enterpriseId)
     filter.enterpriseId = queryParam.enterpriseId;
 
+  if(queryParam.userId)
+    filter['user.userId'] = queryParam.userId;
+
+  if(queryParam.categoryId)
+    filter['category.categoryId'] = queryParam.categoryId;
+
   if (queryParam.pagination) {
     Utility.paginatedResult(req, res, Model, filter, {});
     return;
   }
 
-  var query = Model.find(filter).populate({
-    path: 'category.categoryId',
+  /*var query = Model.find(filter).populate({
+    path: 'category',
     match: filter
-  });
+  });*/
+  var query = Model.find(filter);
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
@@ -48,10 +55,7 @@ exports.search = function(req, res) {
   if (body.status)
     filter.status = body.status;
 
-  var query = Model.find(filter).populate({
-    path: 'category',
-    match: filter
-  });
+  var query = Model.find(filter);
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);

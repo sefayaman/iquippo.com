@@ -70,27 +70,28 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
     }
 
 	// payment type
-    function paymentType() {
+    function paymentType(bidRequestData) {
         var paymentTypeScope = $rootScope.$new();
-        paymentTypeScope.bidData = bidData;
+        paymentTypeScope.bidRequestData = bidRequestData;
         Modal.openDialog('selectPaymentType', paymentTypeScope);
     }
     // invoicedetails
-    function invoicedetails(bidData) {
+    function invoicedetails(bidRequestData) {
       	var invoicedetailScope = $rootScope.$new();
-        invoicedetailScope.bidData = bidData;
+        invoicedetailScope.bidRequestData = bidRequestData;
+        invoicedetailScope.formFlag = true;
         Modal.openDialog('invoiceDetails', invoicedetailScope);
     }
     // KYC document
-    function kycDocument(bidData) {
+    function kycDocument(bidRequestData) {
       	var kycDocumentScope = $rootScope.$new();
-      	kycDocumentScope.bidData = bidData;
+      	kycDocumentScope.bidRequestData = bidRequestData;
         Modal.openDialog('kycDocument', kycDocumentScope);
     }
     // Rating and Feedback
-    function ratingFeedback(bidData) {
+    function ratingFeedback(bidRequestData) {
 	    var ratingFeedbackScope = $rootScope.$new();
-	    ratingFeedbackScope.bidData = bidData;
+	    ratingFeedbackScope.bidRequestData = bidRequestData;
         Modal.openDialog('feedbackForm', ratingFeedbackScope);
     }
 
