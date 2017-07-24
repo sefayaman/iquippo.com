@@ -1,103 +1,85 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $location, $uibModal, Modal, Auth, AssetSaleSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $stateParams,$state, Modal, Auth, AssetSaleSvc,PagerSvc) {
 	var vm = this;
-	var query = $location.search();
-	$scope.assetId = $location.search().assetId;
+	$scope.pager = PagerSvc.getPager();
+
+	$scope.assetId = $stateParams.assetId;
+	$scope.bidStatuses = bidStatuses;
+
 	var filter = {};
 	vm.bidListing = [];
-	vm.activeBid = "Auctionable";
-	$scope.subTabValue = 'auctionable'
-	$scope.onTabChange = onTabChange;
+
 	vm.fireCommand = fireCommand;
-	vm.invoicedetails = invoicedetails;
-	vm.kycDocument = kycDocument;
-	vm.emdAmount = emdAmount;
-
-	// invoicedetails
-    function invoicedetails(bidData) {
-      	var invoicedetailScope = $rootScope.$new();
-        invoicedetailScope.bidData = bidData;
-        Modal.openDialog('invoiceDetails', invoicedetailScope);
-    }
-
-    // KYC document
-    function kycDocument(bidData) {
-      	var kycDocumentScope = $rootScope.$new();
-      	kycDocumentScope.bidData = bidData;
-        Modal.openDialog('kycDocument', kycDocumentScope);
-    }
-   	 // emdamount
-    function emdAmount(bidData) {
-      	var emdFullPaymentScope = $rootScope.$new();
-      	emdFullPaymentScope.bidData = bidData;
-        Modal.openDialog('emdFullPaymentPopup', emdFullPaymentScope);
-    }
+	vm.openDialog = openDialog;
+	vm.update = update;
+	vm.validateAction = AssetSaleSvc.validateAction;
 
 	function init() {
 		filter = {};
-		filter.productId = query.productId;
+		filter.productId = $stateParams.productId;
 		getBidData(filter);
 	}
 
-	function onTabChange(tabs) {
-		switch (tabs) {
-			case 'auctionable':
-				filter = {};
-				filter.productId = query.productId;
-				vm.activeBid = 'Auctionable';
-				$scope.subTabValue = 'auctionable';
-				getBidData(filter);
-				break;
-			case 'closed':
-				filter = {};
-				vm.activeBid = 'closed';
-				$scope.subTabValue = 'closed';
-				filter.productId = query.productId;
-				filter.assetStatus = encodeURIComponent('closed');
-				getBidData(filter);
-				break;
-		}
-	}
 
 	function fireCommand(reset, filterObj) {
-		/*if(reset)
-		  $scope.pager.reset();*/
+		if(reset)
+		  $scope.pager.reset();
 		var filter = {};
-		/*if(!filterObj)
+		if(!filterObj)
 		    angular.copy(dataToSend, filter);
 		else
-		  filter = filterObj;*/
+		  filter = filterObj;
 		if (vm.searchStr) {
 			filter.isSearch = true;
 			filter.searchStr = encodeURIComponent(vm.searchStr);
 		}
-		/*if(vm.statusType){
-		  filter.isSearch = true;
-		  filter['statusType'] = encodeURIComponent(vm.statusType);
-		}
-		if(vm.fromDate){
-		  filter.isSearch = true;
-		  filter['fromDate'] = encodeURIComponent(vm.fromDate);
-		}
-		if(vm.toDate){
-		  filter.isSearch = true;
-		  filter['toDate'] = encodeURIComponent(vm.toDate);
-		}*/
-
+		
 		getBidData(filter);
 	}
 
+	function update(bid,action){
+		switch(action){
+			case 'approve':
+				AssetSaleSvc.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses');
+			break;
+			case 'reject':
+				AssetSaleSvc.setStatus(bid,bidStatuses[7],'bidStatus','bidStatuses');
+				AssetSaleSvc.setStatus(bid,bidStatuses[9],'dealStatus','dealStatuses');
+			break;
+			default:
+				return;
+			break
+		}
+		AssetSaleSvc.update(bid,action)
+		.then(function(res){
+			getBidData(filter);
+		})
+		.catch(function(err){
+
+		})
+		
+	}
+
 	function getBidData(filter) {
+		
+		$scope.pager.copy(filter);
+		filter.pagination = true;
 		AssetSaleSvc.fetchBid(filter)
 			.then(function(res) {
-				console.log("res", res);
-				vm.bidListing = res;
+				vm.bidListing = res.items;
+				$scope.pager.update(res.items,res.totalItems);
 			})
 			.catch(function(err) {
-
+				
 			});
+	}
+
+	function openDialog(bidData,popupName){
+		var newScope = $rootScope.$new();
+		newScope.bidData = bidData;
+		Modal.openDialog(popupName,newScope);
 	}
 
 	//loading start

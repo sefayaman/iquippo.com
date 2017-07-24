@@ -88,11 +88,11 @@ function invoiceDetailsCtrl($scope, $rootScope,Modal, Auth, $uibModal, AssetSale
 	    $scope.bidRequestData.invoiceDetail = vm.invoiceInfo;
 	    AssetSaleSvc.update($scope.bidRequestData).
 	      then(function(res) {
-	        if (res && res.errorCode === 0)
-	          Modal.alert(res.message, true);
+	        if(res)
+	        	Modal.alert(res, true);
 	      	closeDialog();
-	      }).
-	      error(function(res) {
+	      })
+	      .catch(function(res) {
 	        console.log(res);
 	      });
     }

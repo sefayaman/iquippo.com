@@ -5,6 +5,7 @@ var Seq=require('seq');
 var async = require('async');
 var trim = require('trim');
 var AssetSaleBid = require('./assetsalebid.model');
+var AssetSaleUtil = require('./assetsaleutil');
 var APIError=require('../../components/_error');
 var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
 var Product = require('../product/product.model');
@@ -13,8 +14,11 @@ var Vendor = require('../vendor/vendor.model');
 var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
 
-var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
-var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
+//var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
+//var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
+
+var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
+var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Accepted','Auto Accepted'];
 
 exports.getBidOrBuyCalculation = function(req, res) {
 	var queryParam = req.query;
@@ -139,22 +143,72 @@ function create(data,callback){
 }
 
 // Updates an existing record in the DB.
-exports.update = function(req, res) {
-  console.log("req.dody####", req.params.id);
+exports.update = function(req, res,next) {
+  
   var bodyData = req.body;
-  //var user = req.body.user;
-
   if(bodyData._id) { delete bodyData._id; }
   bodyData.updatedAt = new Date();
-  AssetSaleBid.findById(req.params.id, function (err, bid) {
-    if (err) { return handleError(res, err); }
-    if(!bid) { return res.status(404).send('Not Found'); }
-
-    AssetSaleBid.update({_id:req.params.id},{$set:bodyData},function(err){
+   AssetSaleBid.update({_id:req.params.id},{$set:bodyData},function(err){
         if (err) { return handleError(res, err); }
-        return res.status(200).json({errorCode:0, message:"Record updated sucessfully"});
-    });
+        return next();
   });
+}
+
+exports.validateUpdate = function(req,res,next){
+
+	async.parallel([validateBid,validateProduct],onComplete);
+	function onComplete(err,data){
+		if(err){return res.status(err.statusCode).send(err.message);}
+		next();
+	}
+
+	function validateBid(callback){
+		AssetSaleBid.findById(req.params.id, function (err, bid) {
+		    if (err || !bid) {return callback({statusCode:404,message:"Bid not found"});}
+		    return callback();
+		  });		
+	}
+
+	function validateProduct(callback){
+		var productId = "";
+		if(req.body.product && req.body.product.proData)
+			productId = req.body.product.proData;
+		if(!productId)
+			return callback({statusCode:404,message:"Bad Request"});
+		Product.find({_id:productId,deleted:false,status:true},function(err,products){
+		 	if (err || !products.length) { 
+		 		return callback({statusCode:404,message:"It seems product is not available."});
+ 			}
+ 			req.product = products[0];
+		    return callback();
+		});
+	}
+}
+
+exports.postUpdate = function(req,res,next){
+
+	var postAction = req.query.action;
+	if(postAction === 'approve' && !req.product.cooling)
+		activateCoolingPeriod();
+	else
+		return res.status(200).send("Bid request updated successfully");
+
+
+	//Activate cooling peroid
+	function activateCoolingPeriod(){
+		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'enterprisemaster',function(err,entepriseData){
+			console.log("cooling",entepriseData);
+			if(err || !entepriseData.coolingPeriod){return res.status(404).send("Cooling period configuration is not found");}
+			var coolingObj = {cooling:true};
+			coolingObj.coolingStartDate = new Date();
+			coolingObj.coolingEndDate = new Date().addDays(entepriseData.coolingPeriod);
+			Product.update({_id:req.product._id + ""},{$set:coolingObj},function(error,retData){
+				if(err) return handleError(res,error);
+				return res.status(200).send("Bid updated successfully.");
+			})
+		});
+	}
+
 }
 
 function fetchBid(filter, callback) {
@@ -235,16 +289,13 @@ exports.submitBid = function(req, res) {
 			statusObj.bidStatus = bidStatuses[8];
 			statusObj.dealStatus = dealStatuses[12];
 			previousBid.statusObj = statusObj;
-			callStatusUpdates(previousBid,function(err, dataObj){
-				if(err)
-					console.log(err);
+			var dataObj =  callStatusUpdates(previousBid);
 				AssetSaleBid.update({_id : previousBid._id}, {
 					$set: dataObj}, function(err, result) {
 					if (err)
 						return callback(err);
 					return callback();
 				});
-			});
 		});
 	}
 
@@ -259,7 +310,7 @@ exports.submitBid = function(req, res) {
 	}
 };
 
-function callStatusUpdates(preBidData, callback) {
+function callStatusUpdates(preBidData) {
 	var dataObj = {}
 	dataObj.offerStatus = preBidData.statusObj.offerStatus;
 	dataObj.bidStatus = preBidData.statusObj.bidStatus;
@@ -286,7 +337,7 @@ function callStatusUpdates(preBidData, callback) {
     dealStatusObj.createdAt = new Date();
     dataObj.dealStatuses[dataObj.dealStatuses.length] = dealStatusObj;
 
-    return callback(null, dataObj);
+    return dataObj;
 }
 
 function updateBidReqFlagInProduct(data) {
@@ -320,22 +371,19 @@ exports.withdrawBid = function(req, res) {
 		statusObj.bidStatus = bidStatuses[8];
 		statusObj.dealStatus = dealStatuses[12];
 		bidData.statusObj = statusObj;
-		callStatusUpdates(bidData,function(err, dataObj){
-			if(err)
-				console.log(err);
-			AssetSaleBid.update({_id : bidData._id}, {
-				$set: dataObj}, function(err, result) {
-				if (err)
-					return res.status(500).send(err);
-				return res.json({
-					msg: "Bid withdrawn Successfully!"
-				});
+		var dataObj =  callStatusUpdates(bidData);
+		AssetSaleBid.update({_id : bidData._id}, {
+			$set: dataObj}, function(err, result) {
+			if (err)
+				return res.status(500).send(err);
+			return res.json({
+				msg: "Bid withdrawn Successfully!"
 			});
 		});
 	});	
 };
 
-exports.fetchBid=function(req,res){
+exports.fetchBid = function(req,res){
 	var filter={};
 	if(req.query.userId)
 		filter.user = req.query.userId;
@@ -369,7 +417,7 @@ exports.fetchBid=function(req,res){
     });
 };
 
-exports.searchBid=function(req,res){
+exports.searchBid = function(req,res){
 	 var filter={};
 	
   var query=AssetSaleBid.find(filter);
@@ -562,4 +610,8 @@ exports.getBidProduct = function(req,res,next){
     });
 
   }
+}
+
+function handleError(res, err) {
+  return res.status(500).send(err);
 }

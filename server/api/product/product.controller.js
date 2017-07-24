@@ -259,6 +259,8 @@ exports.search = function(req, res) {
   
   if(req.sellers && req.sellers.length)
     filter["seller._id"] = {$in:req.sellers};
+  if(req.body.bidReceived)
+    filter.bidReceived = true;
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){

@@ -536,7 +536,7 @@ angular.module('sreizaoApp')
         restrict:true
       })
       .state('assetsale.adminproductbidrequest', {
-        url: '/adminproductbidrequest',
+        url: '/adminproductbidrequest?assetId&productId',
         templateUrl: 'app/assetsale/adminproductbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
@@ -551,7 +551,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
       .state('assetsale.sellerproductbidrequest', {
-        url: '/sellerproductbidrequest',
+        url: '/sellerproductbidrequest?assetId&productId',
         templateUrl: 'app/assetsale/sellerproductbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
@@ -572,7 +572,7 @@ angular.module('sreizaoApp')
         authenticate:true
       })
       .state('assetsale.faproductbidrequest', {
-        url: '/faproductbidrequest',
+        url: '/faproductbidrequest?assetId&productId',
         templateUrl: 'app/assetsale/faproductbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',

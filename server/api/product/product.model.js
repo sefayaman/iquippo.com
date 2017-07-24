@@ -85,8 +85,12 @@ var ProductSchema = new Schema({
   auction:{},
   valuationStamp:String,
   inquiryCounter : {type:Number,default:0},
+  /*Field related to asset sale*/
   bidReceived:Boolean,
   buyerInfo:{},
+  cooling:{type:Boolean,default:false},
+  coolingStartDate:Date,
+  coolingEndDate : Date,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

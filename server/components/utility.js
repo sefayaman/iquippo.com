@@ -13,6 +13,11 @@ exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 
+Date.prototype.addDays = function(days) {
+    this.setDate(this.getDate() + parseInt(days));
+    return this;
+};
+
 function toIST(value){
   if(!value)
     return '';

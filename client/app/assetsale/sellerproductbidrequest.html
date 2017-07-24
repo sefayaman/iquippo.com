@@ -18,7 +18,7 @@
    </div> -->
 	
 	<!-- Auctionable Bid -->
-	<div ng-if="productBidRequestVm.activeBid=='Auctionable'">
+	<div>
 		<p><strong>Asset Id:</strong> {{assetId}}</p>
 		<div class="row form-group">
 		   	<div class="col-sm-9">
@@ -59,18 +59,18 @@
 			   			<td>{{bid.bidStatus}}</td>
 			   			<td>{{}}</td>
 			   			<td>
-			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.emdAmount(bid)">Update Details</a>
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup')">Update Details</a>
 			   			</td>
 			   			<td>{{}}</td>
 			   			<td>
-			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.emdAmount(bid)">Update Details</a>
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup')">Update Details</a>
 			   			</td>
 			   			<td>
-			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.invoicedetails(bid)">Update</button>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')">Update</button>
 			   			</td>
 			   			<td>{{}}</td>
 			   			<td>
-			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.kycDocument(bid)">
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.openDialog(bid,'kycDocument')">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
 			   				</button>
@@ -86,8 +86,8 @@
 					        </span>
 			   			</td>
 			   			<td>
-			   				<button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
-			   				<button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
+			   				<button class="btn btn-sm btn-success" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
+			   				<button class="btn btn-sm btn-danger" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
 			   			</td>
 			   		</tr>
 		   		</tbody>
@@ -95,75 +95,4 @@
 		   </div>	
 		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="productBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 	</div>
-	<!-- Closed Auction -->
-	<!-- <div ng-if="productBidRequestVm.activeBid=='closed'">
-		<div class="row form-group">
-		   	<div class="col-sm-9">
-		   		Showing : {{productBidRequestVm.bidListing.length}}
-		   	</div>
-		   	<div class="col-sm-3 tablesearch text-right">
-		        Search: <input type="text" placeholder="Search..." ng-model="productBidRequestVm.searchStr" ng-change="productBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
-		      </div>
-		   </div>
-		   <div class="table-responsive">
-		   	<table class="table table-bordered">
-		   		<thead>
-		   			<tr>
-			   			<th>Asset Id</th>
-			   			<th>Category</th>
-			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>Asset Country</th>
-			   			<th>Asset State</th>
-			   			<th>Asset Location</th>
-			   			<th>Asset Description</th>
-			   			<th>Ticket Id</th>
-			   			<th>Offer Type</th>
-			   			<th>Offer Price</th>
-			   			<th>Offer Status</th>
-			   			<th>Invoice Details</th>
-			   			<th>KYC Documents</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
-			   			<th>Asset Delivery Confirmation</th>
-			   			<th>Rating</th>
-			   			<th>Feedback</th>
-			   		</tr>
-		   		</thead>
-		   		<tbody>
-		   			<tr ng-repeat="bid in productBidRequestVm.bidListing">
-			   			<td>{{bid.productId.assetId}}</td>
-			   			<td>{{bid.productId.category.name}}</td>
-			   			<td>{{bid.productId.brand.name}}</td>
-			   			<td>{{bid.productId.model.name}}</td>
-			   			<td>{{bid.productId.mfgYear}}</td>
-			   			<td>{{bid.productId.country}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{bid.productId.city}}</td>
-			   			<td>{{bid.productId.assetDesc}}</td>
-			   			<td>{{bid.ticketId}}</td>
-			   			<td>{{bid.tradeType}}</td>
-			   			<td>{{bid.bidAmount}}</td>
-			   			<td>{{bid.offerStatus}}</td>
-			   			<td>
-			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.invoicedetails(bid)">Update</button>
-			   			</td>
-			   			<td>
-			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.kycDocument(bid)">
-			   					<span ng-if="true">Upload</span>
-			   					<span ng-if="false">Update</span>
-			   				</button>
-			   			</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   		</tr>
-		   		</tbody>
-		   	</table>
-		   </div>	
-		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="productBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
-	</div> -->	
 </div>
