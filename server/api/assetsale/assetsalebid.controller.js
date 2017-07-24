@@ -48,11 +48,12 @@ exports.getBidOrBuyCalculation = function(req, res) {
 
 		    return res.status(200).json(resultObj);
 		} else {
-			filter = {};
-			filter.status = true;
-			filter.deleted = false;
-			filter._id = queryParam.sellerUserId;
-			getMarkupPercentOnUser(filter,function(err,result){
+			// filter = {};
+			// filter.status = true;
+			// filter.deleted = false;
+			// filter._id = queryParam.sellerUserId;
+			//getMarkupPercentOnUser(filter,function(err,result){
+				AssetSaleUtil.getMasterBasedOnUser(queryParam.sellerUserId,{},'markup',function(err,result){
 				if(err)
     				return res.status(err.status || 500).send(err);
     			var markupPercent = 0;
@@ -79,7 +80,7 @@ function getGST(filter, callback) {
 	});
 }
 
-function getMarkupPrice(filter, callback) {
+/*function getMarkupPrice(filter, callback) {
 	var query = MarkupPrice.find(filter);
 	query.exec(function(err, result) {
 		if (err)
@@ -127,7 +128,7 @@ function getMarkupPercentOnUser(filter, callback) {
 			return callback(null, markupPer);
 		});
 	});
-}
+}*/
 
 function create(data,callback){
 	if (!data)
@@ -146,6 +147,7 @@ function create(data,callback){
 exports.update = function(req, res,next) {
   
   var bodyData = req.body;
+  console.log("req.body", bodyData);
   if(bodyData._id) { delete bodyData._id; }
   bodyData.updatedAt = new Date();
    AssetSaleBid.update({_id:req.params.id},{$set:bodyData},function(err){
@@ -286,8 +288,8 @@ exports.submitBid = function(req, res) {
 				previousBid = bid[0].toObject();
 			previousBid.statusObj = {};
 			statusObj.offerStatus = offerStatuses[1];
-			statusObj.bidStatus = bidStatuses[8];
-			statusObj.dealStatus = dealStatuses[12];
+			statusObj.bidStatus = bidStatuses[1];
+			statusObj.dealStatus = dealStatuses[2];
 			previousBid.statusObj = statusObj;
 			var dataObj =  callStatusUpdates(previousBid);
 				AssetSaleBid.update({_id : previousBid._id}, {
@@ -368,8 +370,8 @@ exports.withdrawBid = function(req, res) {
 			bidData = bid[0].toObject();
 		bidData.statusObj = {};
 		statusObj.offerStatus = offerStatuses[2];
-		statusObj.bidStatus = bidStatuses[8];
-		statusObj.dealStatus = dealStatuses[12];
+		statusObj.bidStatus = bidStatuses[1];
+		statusObj.dealStatus = dealStatuses[2];
 		bidData.statusObj = statusObj;
 		var dataObj =  callStatusUpdates(bidData);
 		AssetSaleBid.update({_id : bidData._id}, {

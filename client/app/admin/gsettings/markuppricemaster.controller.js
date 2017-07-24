@@ -48,6 +48,7 @@
                 return;
             }
             userFilter = {};
+            $scope.container.userId = "";
             switch (role) {
                 case "enterprise" : 
                     userFilter = {};
@@ -169,11 +170,16 @@
             vm.dataModel._id  = rowData._id;
             vm.dataModel.userRole = rowData.userRole;
             getUserOnRole(rowData.userRole)
-            if(rowData.user && rowData.user.userId)
+            if(rowData.user && rowData.user.userId) {
+                onUserChange(rowData.user.userId, rowData.userRole);
                 $scope.container.userId = rowData.user.userId;
-            if(rowData.user && rowData.user.mobile)
+            }
+            if(rowData.user && rowData.user.mobile) {
                 $scope.container.mobile = rowData.user.mobile;
-            vm.dataModel.enterpriseId = rowData.enterpriseId;
+                findSingleUser();
+            }
+            if(rowData.enterpriseId)
+                vm.dataModel.enterpriseId = rowData.enterpriseId;
             vm.dataModel.price = rowData.price;
             $scope.isEdit = true;
         }

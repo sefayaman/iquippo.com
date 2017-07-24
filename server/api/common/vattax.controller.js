@@ -105,7 +105,7 @@ exports.create = function(req, res, next) {
 function _getRecord(data, cb) {
   var filter = {};
   filter.category = data.category;
-  filter.group = data.group;
+  //filter.group = data.group;
   //filter.brand = data.brand;
   //filter.model = data.model;
   filter.state = data.state;

@@ -9,6 +9,7 @@ var AssetSaleBidSchema = new Schema({
   product:{
             proData : {type:Schema.Types.ObjectId,ref:'Product'},
             assetId:String,
+            assetDir:String,
             category:String,
             brand:String,
             model:String,
@@ -36,11 +37,7 @@ var AssetSaleBidSchema = new Schema({
   bidStatuses:[{}],
   assetStatuses:[{}],
   tradeTypeStatuses:[{}],
-  kyc:[{
-        type:String,
-        name:String,
-        docName:String
-  }],
+  kyc:[{}],
   emdPayment:{
     paymentMode:String,
     emdAmount:Number,

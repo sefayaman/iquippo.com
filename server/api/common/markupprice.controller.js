@@ -48,14 +48,11 @@ exports.search = function(req, res) {
   if (body.status)
     filter.status = body.status;
 
-  console.log("filter", filter);
-
   var query = Model.find(filter);
   query.exec(function(err, result) {
     if (err) {
       return handleError(res, err);
     }
-    console.log("result",result);
     return res.status(200).json(result);
   });
 };
@@ -87,8 +84,12 @@ exports.create = function(req, res, next) {
 
 function _getRecord(data, cb) {
   var filter = {};
-  filter.enterpriseId = data.enterpriseId;
-  filter.price = data.price;
+  if(data.userRole)
+    filter.userRole = data.userRole;
+  if(data.enterpriseId)
+    filter.enterpriseId = data.enterpriseId;
+  if(data.user && data.user.userId)
+    filter['user.userId'] = data.user.userId;
   Model.find(filter, function(err, result) {
     cb(err, result);
   });

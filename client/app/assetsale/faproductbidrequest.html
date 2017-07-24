@@ -59,17 +59,17 @@
 			   			<td>{{bid.bidStatus}}</td>
 			   			<td>{{}}</td>
 			   			<td>
-			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.emdAmount(bid)">Update Details</a>
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')">Update Details</a>
 			   			</td>
 			   			<td>{{}}</td>
 			   			<td>
-			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.emdAmount(bid)">Update Details</a>
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">Update Details</a>
 			   			</td>
 			   			<td>
-			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.invoicedetails(bid)">Update</button>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')">Update</button>
 			   			</td>
 			   			<td>
-			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.kycDocument(bid)">
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.openDialog(bid,'kycDocument')" ng-if="productBidRequestVm.validateAction(bid,'KYC')">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
 			   				</button>

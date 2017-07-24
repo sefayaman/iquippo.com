@@ -11,12 +11,10 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	$scope.onTabChange = onTabChange;
 	vm.withdrawBid = withdrawBid;
 	vm.fireCommand = fireCommand;
-	vm.invoicedetails = invoicedetails;
-	vm.paymentType = paymentType;
-	vm.kycDocument = kycDocument;
-	vm.ratingFeedback = ratingFeedback;
+	vm.openDialog = openDialog;
 	vm.openBidModal = openBidModal;
 	$scope.pager = PagerSvc.getPager();
+	vm.validateAction = AssetSaleSvc.validateAction;
 	var initFilter = {};
 
 	function init() {
@@ -69,31 +67,12 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	  	});
     }
 
-	// payment type
-    function paymentType(bidRequestData) {
-        var paymentTypeScope = $rootScope.$new();
-        paymentTypeScope.bidRequestData = bidRequestData;
-        Modal.openDialog('selectPaymentType', paymentTypeScope);
-    }
-    // invoicedetails
-    function invoicedetails(bidRequestData) {
-      	var invoicedetailScope = $rootScope.$new();
-        invoicedetailScope.bidRequestData = bidRequestData;
-        invoicedetailScope.formFlag = true;
-        Modal.openDialog('invoiceDetails', invoicedetailScope);
-    }
-    // KYC document
-    function kycDocument(bidRequestData) {
-      	var kycDocumentScope = $rootScope.$new();
-      	kycDocumentScope.bidRequestData = bidRequestData;
-        Modal.openDialog('kycDocument', kycDocumentScope);
-    }
-    // Rating and Feedback
-    function ratingFeedback(bidRequestData) {
-	    var ratingFeedbackScope = $rootScope.$new();
-	    ratingFeedbackScope.bidRequestData = bidRequestData;
-        Modal.openDialog('feedbackForm', ratingFeedbackScope);
-    }
+    function openDialog(bidData, popupName){
+		var newScope = $rootScope.$new();
+		newScope.bidData = bidData;
+		newScope.formFlag = true;
+		Modal.openDialog(popupName,newScope);
+	}
 
     // Rating
 	$scope.rate = 1;

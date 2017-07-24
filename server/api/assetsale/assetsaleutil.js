@@ -2,7 +2,7 @@
 
 var EnterpriseMaster= require('../common/enterprisemaster.model');
 var User = require('../user/user.model');
-
+var MarkupPrice = require('../common/markupprice.model');
 /*
 * For enterprise master filter must be like {}
 */

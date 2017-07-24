@@ -14,7 +14,7 @@ function invoiceDetailsCtrl($scope, $rootScope,Modal, Auth, $uibModal, AssetSale
     var filter = {};
     /*$scope.bidData ={};
   	function init(){
-      angular.copy($scope.bidRequestData, $scope.bidData);
+      angular.copy($scope.bidData, $scope.bidData);
     }*/
 
 	function onCountryChange(country, noChange) {
@@ -84,9 +84,9 @@ function invoiceDetailsCtrl($scope, $rootScope,Modal, Auth, $uibModal, AssetSale
 		      return;
 		    }
 		}
-		$scope.bidRequestData.invoiceDetail = {};
-	    $scope.bidRequestData.invoiceDetail = vm.invoiceInfo;
-	    AssetSaleSvc.update($scope.bidRequestData).
+		$scope.bidData.invoiceDetail = {};
+	    $scope.bidData.invoiceDetail = vm.invoiceInfo;
+	    AssetSaleSvc.update($scope.bidData, 'invoice').
 	      then(function(res) {
 	        if(res)
 	        	Modal.alert(res, true);
