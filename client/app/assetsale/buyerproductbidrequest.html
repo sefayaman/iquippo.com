@@ -30,20 +30,20 @@
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>Asset Country</th>
-			   			<th>Asset State</th>
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>Asset Country</th> -->
+			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
-			   			<th>Asset Description</th>
-			   			<th>Offer Type</th>
+			   			<!-- <th>Asset Description</th> -->
+			   			<!-- <th>Offer Type</th> -->
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
 			   			<th>Deal Status</th>
 			   			<th>Invoice Details</th>
 			   			<th>KYC Documents</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Asset Delivery Confirmation</th>
 			   			<th>Rating</th>
 			   			<th>Feedback</th>
@@ -56,13 +56,13 @@
 			   			<td>{{bid.product.assetId}}</td>
 			   			<td>{{bid.product.category}}</td>
 			   			<td>{{bid.product.brand}}</td>
-			   			<td>{{bid.product.model}}</td>
-			   			<td>{{bid.product.mfgYear}}</td>
-			   			<td>{{bid.product.country}}</td>
-			   			<td>{{bid.product.state}}</td>
+			   			<!-- <td>{{bid.product.model}}</td> -->
+			   			<!-- <td>{{bid.product.mfgYear}}</td> -->
+			   			<!-- <td>{{bid.product.country}}</td> -->
+			   			<!-- <td>{{bid.product.state}}</td> -->
 			   			<td>{{bid.product.city}}</td>
-			   			<td>{{bid.product.assetDesc}}</td>
-			   			<td>{{bid.offerType}}</td>
+			   			<!-- <td>{{bid.product.assetDesc}}</td> -->
+			   			<!-- <td>{{bid.offerType}}</td> -->
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.dealStatus}}</td>
@@ -75,20 +75,23 @@
 			   					<span ng-if="false">Update</span>
 			   				</button>
 			   			</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<td>
 			   				<span uib-rating ng-model="rate" max="max" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
         					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
 			   			</td>
 			   			<td>
-			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">Write Feedback</a>
+			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
+			   				<i class="fa fa-comment fa-2x"></i>
+			   				</a>
 			   			</td>
 						<td> 
 							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-primary btn-xs">Pay</button> 
 							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.openBidModal(bid)">Change</button> 
 							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
+							<button type="button" class="btn btn-xs btn-primary" ng-click="buyerProductBidRequestVm.openDialog(product,'buyerRequestDetailPopup')">More</button>
 						</td>
 			   		</tr>
 		   		</tbody>
@@ -110,50 +113,64 @@
 		   	<table class="table table-bordered">
 		   		<thead>
 		   			<tr>
+		   				<th>Ticket Id</th>
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>Asset Country</th>
-			   			<th>Asset State</th>
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>Asset Country</th> -->
+			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
-			   			<th>Asset Description</th>
-			   			<th>Ticket Id</th>
-			   			<th>Offer Type</th>
+			   			<!-- <th>Asset Description</th> -->			   			
+			   			<!-- <th>Offer Type</th> -->
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
-			   			<th>Invoice Details</th>
-			   			<th>KYC Documents</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
+			   			<th>Deal Status</th>
+			   			<!-- <th>Invoice Details</th> -->
+			   			<!-- <th>KYC Documents</th> -->
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Asset Delivery Confirmation</th>
 			   			<th>Rating</th>
 			   			<th>Feedback</th>
+			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
 		   			<tr ng-repeat="closedBid in buyerProductBidRequestVm.bidListing">
+		   				<td>{{closedBid.ticketId}}</td>
 			   			<td>{{closedBid.product.assetId}}</td>
 			   			<td>{{closedBid.product.category}}</td>
 			   			<td>{{closedBid.product.brand}}</td>
-			   			<td>{{closedBid.product.model}}</td>
-			   			<td>{{closedBid.product.mfgYear}}</td>
-			   			<td>{{closedBid.product.country}}</td>
-			   			<td>{{closedBid.product.state}}</td>
+			   			<!-- <td>{{closedBid.product.model}}</td> -->
+			   			<!-- <td>{{closedBid.product.mfgYear}}</td> -->
+			   			<!-- <td>{{closedBid.product.country}}</td> -->
+			   			<!-- <td>{{closedBid.product.state}}</td> -->
 			   			<td>{{closedBid.product.city}}</td>
-			   			<td>{{closedBid.product.assetDesc}}</td>
-			   			<td>{{closedBid.ticketId}}</td>
-			   			<td>{{closedBid.tradeType}}</td>
+			   			<!-- <td>{{closedBid.product.assetDesc}}</td> -->			   			
+			   			<!-- <td>{{closedBid.tradeType}}</td> -->
 			   			<td>{{closedBid.bidAmount}}</td>
 			   			<td>{{closedBid.offerStatus}}</td>
+			   			<td>{{closedBid.dealStatus}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td>
+			   				<span uib-rating ng-model="rate" max="max" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
+        					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+			   			</td>
+			   			<td>
+			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
+			   				<i class="fa fa-comment fa-2x"></i>
+			   				</a>
+			   			</td>
+			   			<td>
+							<button type="button" class="btn btn-xs btn-primary">More</button>
+			   				
+			   			</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>

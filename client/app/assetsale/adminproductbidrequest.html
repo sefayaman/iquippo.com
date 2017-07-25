@@ -36,16 +36,16 @@
 			   			<th>Seller Name</th>
 			   			<th>Seller Contact No.</th>
 			   			<th>Bid Status</th>
-			   			<th>EMD Amount</th>
-			   			<th>EMD Details</th>
-			   			<th>Full Payment Amount</th>
-			   			<th>Full Payment Details</th>
-			   			<th>Invoicing Details</th>
-			   			<th>KYC Documents</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
+			   			<!-- <th>EMD Amount</th> -->
+			   			<!-- <th>EMD Details</th> -->
+			   			<!-- <th>Full Payment Amount</th> -->
+			   			<!-- <th>Full Payment Details</th> -->
+			   			<!-- <th>Invoicing Details</th> -->
+			   			<!-- <th>KYC Documents</th> -->
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Deal Status</th>
-			   			<th>Trade Type</th>
+			   			<!-- <th>Trade Type</th> -->
 			   			<th>Asset Status</th>
 			   			<th>Action</th>
 			   		</tr>
@@ -59,31 +59,32 @@
 			   			<td>{{bid.product.seller.name}}</td>
 			   			<td>{{bid.product.seller.mobile}}</td>
 			   			<td>{{bid.bidStatus}}</td>
-			   			<td>{{}}</td>
-			   			<td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')">Update Details</a>
-			   			</td>
-			   			<td>{{}}</td>
-			   			<td>
+			   			</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">Update Details</a>
-			   			</td>
-			   			<td>
+			   			</td> -->
+			   			<!-- <td>
 			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')" ng-if="productBidRequestVm.validateAction(bid,'INVOICEDETAIL')">Update</button>
-			   			</td>
-			   			<td>
+			   			</td> -->
+			   			<!-- <td>
 			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.openDialog(bid,'kycDocument')" ng-if="productBidRequestVm.validateAction(bid,'KYC')">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
 			   				</button>
-			   			</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{bid.dealStatus}}</td>
-			   			<td>{{bid.tradeType}}</td>
+			   			<!-- <td>{{bid.tradeType}}</td> -->
 			   			<td>{{bid.assetStatus}}</td>
 			   			<td>
 			   				<button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
 			   				<button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.openDialog(product,'adminRequestDetailPopup')">More</button>			   				
 			   			</td>
 			   		</tr>
 		   		</tbody>

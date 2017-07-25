@@ -36,14 +36,14 @@
 			   			<th>Seller Name</th>
 			   			<th>Seller Contact No.</th>
 			   			<th>Bid Status</th>
-			   			<th>EMD Amount</th>
+			   			<!-- <th>EMD Amount</th> -->
 			   			<th>EMD Details</th>
-			   			<th>Full Payment Amount</th>
+			   			<!-- <th>Full Payment Amount</th> -->
 			   			<th>Full Payment Details</th>
 			   			<th>Invoicing Details</th>
 			   			<th>KYC Documents</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Deal Status</th>
 			   			<th>Action</th>			   			
 			   		</tr>
@@ -54,14 +54,14 @@
 			   			<td>{{bid.offerType}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
-			   			<td>{{bid.product.proData.seller.fname}} {{bid.product.proData.seller.lname}}</td>
-			   			<td>{{bid.product.proData.seller.mobile}}</td>
+			   			<td>{{bid.product.seller.fname}} {{bid.product.seller.lname}}</td>
+			   			<td>{{bid.product.seller.mobile}}</td>
 			   			<td>{{bid.bidStatus}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
 			   			<td>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')">Update Details</a>
 			   			</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
 			   			<td>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">Update Details</a>
 			   			</td>
@@ -74,11 +74,12 @@
 			   					<span ng-if="false">Update</span>
 			   				</button>
 			   			</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{bid.dealStatus}}</td>
 			   			<td>
 			   				<button class="btn btn-sm btn-success"><i class="fa fa-check"></i></button>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.openDialog(product,'faRequestDetailPopup')">More</button>	
 			   			</td>
 			   		</tr>
 		   		</tbody>

@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('BidProductCtrl', BidProductCtrl);
-function BidProductCtrl($scope, $state, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc) {
+function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
@@ -10,6 +10,7 @@ function BidProductCtrl($scope, $state, Auth, productSvc, AssetSaleSvc,userSvc,P
 	vm.activeBid = "auctionable";
 	$scope.onTabChange = onTabChange;
 	vm.fireCommand = fireCommand;
+	vm.openDialog = openDialog;
 
 	function init() {
 
@@ -82,6 +83,12 @@ function BidProductCtrl($scope, $state, Auth, productSvc, AssetSaleSvc,userSvc,P
 			vm.closedBids = result.items;
 			$scope.pager.update(result.items,result.totalItems);
 		});
+	}
+
+	function openDialog(bidData, popupName){
+		var newScope = $rootScope.$new();
+		newScope.bidData = bidData;
+		Modal.openDialog(popupName,newScope);
 	}
 
 	//loading start

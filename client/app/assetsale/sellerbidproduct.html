@@ -30,17 +30,17 @@
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>State</th>
-			   			<th>Repo Date</th>
-			   			<th>Ageing of Asset</th>
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>State</th> -->
+			   			<!-- <th>Repo Date</th> -->
+			   			<!-- <th>Ageing of Asset</th> -->
 			   			<th>Reserve Price</th>
 			   			<th>Parking Charges</th>
 			   			<th>Buy Now Price</th>
-			   			<th>Asset Description</th>
+			   			<!-- <th>Asset Description</th> -->
 			   			<th>Ageing on the Portal</th>
-			   			<th>View Bids</th>
+			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
@@ -48,18 +48,19 @@
 			   			<td>{{product.assetId}}</td>
 			   			<td>{{product.category.name}}</td>
 			   			<td>{{product.brand.name}}</td>
-			   			<td>{{product.model.name}}</td>
-			   			<td>{{product.mfgYear}}</td>
-			   			<td>{{product.state}}</td>
-			   			<td>{{product.repoDate}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{product.model.name}}</td> -->
+			   			<!-- <td>{{product.mfgYear}}</td> -->
+			   			<!-- <td>{{product.state}}</td> -->
+			   			<!-- <td>{{product.repoDate}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{product.reservePrice}}</td>
 			   			<td>{{product.parkingCharges}}</td>
 			   			<td>{{product.grossPrice}}</td>			   			
-			   			<td>{{product.comment}}</td>			   			
+			   			<!-- <td>{{product.comment}}</td>			   			 -->
 			   			<td>{{}}</td>		
 			   			<td>
-			   			<a href="/assetsale/sellerproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   				<a href="/assetsale/sellerproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="bidproductVm.openDialog(product,'sellerRequestDetailPopup')">More</button>			   				
 			   			</td>	   			
 			   			   			
 			   		</tr>
@@ -83,60 +84,64 @@
 		   	<table class="table table-bordered">
 		   		<thead>
 		   			<tr>
+			   			<th>Ticket Id</th>
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>State</th>
-			   			<th>Repo Date</th>
-			   			<th>Ageing of Asset</th>
-			   			<th>Reserve Price</th>
-			   			<th>Parking Charges</th>
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>State</th> -->
+			   			<!-- <th>Repo Date</th> -->
+			   			<!-- <th>Ageing of Asset</th> -->
+			   			<!-- <th>Reserve Price</th> -->
+			   			<!-- <th>Parking Charges</th> -->
 			   			<th>Buy Now Price</th>
-			   			<th>Ticket Id</th>
-			   			<th>Offer Type</th>
+			   			<!-- <th>Offer Type</th> -->
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
 			   			<th>Bid Status</th>
-			   			<th>EMD Amount</th>
-			   			<th>EMD Details</th>
-			   			<th>Full Payment Amount</th>
-			   			<th>Full Payment Details</th>
-			   			<th>Invoicing Details</th>
-			   			<th>KYC Document</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
+			   			<!-- <th>EMD Amount</th> -->
+			   			<!-- <th>EMD Details</th> -->
+			   			<!-- <th>Full Payment Amount</th> -->
+			   			<!-- <th>Full Payment Details</th> -->
+			   			<!-- <th>Invoicing Details</th> -->
+			   			<!-- <th>KYC Document</th> -->
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Deal Status</th>
+			   			<th>Auction</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
 		   			<tr ng-repeat="product in bidproductVm.productListing">
+		   				<td>{{product.ticketId}}</td>
 			   			<td>{{product.assetId}}</td>
 			   			<td>{{product.category.name}}</td>
 			   			<td>{{product.brand.name}}</td>
-			   			<td>{{product.model.name}}</td>
-			   			<td>{{product.mfgYear}}</td>
-			   			<td>{{product.state}}</td>
-			   			<td>{{product.repoDate}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{product.reservePrice}}</td>
-			   			<td>{{product.parkingCharges}}</td>
+			   			<!-- <td>{{product.model.name}}</td> -->
+			   			<!-- <td>{{product.mfgYear}}</td> -->
+			   			<!-- <td>{{product.state}}</td> -->
+			   			<!-- <td>{{product.repoDate}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{product.reservePrice}}</td> -->
+			   			<!-- <td>{{product.parkingCharges}}</td> -->
 			   			<td>{{product.grossPrice}}</td>	
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>			   			   			
-			   			<td>{{}}</td>			   			   			
-			   			<td>{{}}</td>			   			   			
+			   			<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="bidproductVm.openDialog(product,'sellerRequestDetailPopup')">More</button>
+			   			</td>			   			   			
 			   		</tr>
 		   		</tbody>
 		   	</table>

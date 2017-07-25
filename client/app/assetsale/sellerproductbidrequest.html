@@ -33,18 +33,19 @@
 		   		<thead>
 		   			<tr>		   				
 			   			<th>Ticket Id</th>
-			   			<th>Offer Type</th>
+			   			<!-- <th>Offer Type</th> -->
 			   			<th>Offer Price (Base + P)</th>
+			   			<th>Offer Status</th>
 			   			<th>Bid Status</th>
-			   			<th>EMD Amount</th>
-			   			<th>EMD Details</th>
-			   			<th>Full Payment Amount</th>
-			   			<th>Full Payment Details</th>
-			   			<th>Invoicing Details</th>
-			   			<th>Parking Charges</th>
-			   			<th>KYC Documents</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
+			   			<!-- <th>EMD Amount</th> -->
+			   			<!-- <th>EMD Details</th> -->
+			   			<!-- <th>Full Payment Amount</th> -->
+			   			<!-- <th>Full Payment Details</th> -->
+			   			<!-- <th>Invoicing Details</th> -->
+			   			<!-- <th>Parking Charges</th> -->
+			   			<!-- <th>KYC Documents</th> -->
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Deal Status</th>
 			   			<th>Asset Status</th>
 			   			<th>DO Upload</th>
@@ -54,29 +55,30 @@
 		   		<tbody>
 		   			<tr ng-repeat="bid in productBidRequestVm.bidListing">
 			   			<td>{{bid.ticketId}}</td>
-			   			<td>{{bid.offerType}}</td>
+			   			<!-- <td>{{bid.offerType}}</td> -->
 			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>			   			
 			   			<td>{{bid.bidStatus}}</td>
-			   			<td>{{}}</td>
-			   			<td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup')">Update Details</a>
-			   			</td>
-			   			<td>{{}}</td>
-			   			<td>
+			   			</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup')">Update Details</a>
-			   			</td>
-			   			<td>
+			   			</td> -->
+			   			<!-- <td>
 			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')">Update</button>
-			   			</td>
-			   			<td>{{}}</td>
-			   			<td>
+			   			</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
 			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.openDialog(bid,'kycDocument')">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
 			   				</button>
-			   			</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{bid.dealStatus}}</td>
 			   			<td>{{bid.assetStatus}}</td>			   			
 			   			<td>
@@ -88,6 +90,8 @@
 			   			<td>
 			   				<button class="btn btn-sm btn-success" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
 			   				<button class="btn btn-sm btn-danger" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.openDialog(product,'sellerRequestDetailPopup')">More</button>							
+
 			   			</td>
 			   		</tr>
 		   		</tbody>

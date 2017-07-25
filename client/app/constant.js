@@ -70,6 +70,22 @@ var Modals = {
   emdFullPaymentPopup : {
     tplUrl : "app/assetsale/emdFullPaymentDetail.html",
     Ctrl : 'EmdFullPaymentCtrl as emdFullPaymentVm'
+  },
+  adminRequestDetailPopup : {
+    tplUrl : "app/assetsale/adminrequestdetail.html",
+    Ctrl : 'AdminRequestDetailCtrl as adminReqDetailVm'
+  },
+  buyerRequestDetailPopup : {
+    tplUrl : "app/assetsale/buyerrequestdetail.html",
+    Ctrl : 'BuyerRequestDetailCtrl as buyerReqDetailVm'
+  },
+  sellerRequestDetailPopup : {
+    tplUrl : "app/assetsale/sellerrequestdetail.html",
+    Ctrl : 'SellerRequestDetailCtrl as sellerReqDetailVm'
+  },
+  faRequestDetailPopup : {
+    tplUrl : "app/assetsale/farequestdetail.html",
+    Ctrl : 'FaRequestDetailCtrl as faReqDetailVm'
   }
 };
 

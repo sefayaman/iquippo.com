@@ -29,19 +29,19 @@
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>Asset Country</th>
-			   			<th>Asset State</th>
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>Asset Country</th> -->
+			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
-			   			<th>Asset Description</th>
+			   			<!-- <th>Asset Description</th> -->
 			   			<th>Buyer Name</th>
-			   			<th>Buyer Country</th>
-			   			<th>Buyer State</th>
+			   			<!-- <th>Buyer Country</th> -->
+			   			<!-- <th>Buyer State</th> -->
 			   			<th>Buyer Location</th>
 			   			<th>Buyer Mobile No.</th>
 			   			<th>Buyer Email Id</th>	
-			   			<th>View Bids</th>		   			
+			   			<th>Action</th>		   			
 			   		</tr>
 		   		</thead>
 		   		<tbody>
@@ -49,20 +49,21 @@
 			   			<td>{{fa.assetId}}</td>
 			   			<td>{{fa.category.name}}</td>
 			   			<td>{{fa.brand.name}}</td>
-			   			<td>{{fa.model.name}}</td>
-			   			<td>{{fa.mfgYear}}</td>
-			   			<td>{{fa.country}}</td>
-			   			<td>{{fa.state}}</td>
+			   			<!-- <td>{{fa.model.name}}</td> -->
+			   			<!-- <td>{{fa.mfgYear}}</td> -->
+			   			<!-- <td>{{fa.country}}</td> -->
+			   			<!-- <td>{{fa.state}}</td> -->
 			   			<td>{{fa.city}}</td>
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>	
 			   			<td>
-			   			<a href="/assetsale/faproductbidrequest?productId={{fa._id}}&assetId={{fa.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   				<a href="/assetsale/faproductbidrequest?productId={{fa._id}}&assetId={{fa.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="bidproductVm.openDialog(product,'faRequestDetailPopup')">More</button>
 			   			</td>		   			
 			   		</tr>
 		   		</tbody>
@@ -86,72 +87,76 @@
 		   	<table class="table table-bordered">
 		   		<thead>
 		   			<tr>
+		   				<th>Ticket Id</th>
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
-			   			<th>Modal</th>
-			   			<th>Manufacturing Year</th>
-			   			<th>Asset Country</th>
-			   			<th>Asset State</th>
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>Asset Country</th> -->
+			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
-			   			<th>Asset Description</th>
+			   			<!-- <th>Asset Description</th> -->
 			   			<th>Buyer Name</th>
-			   			<th>Buyer Country</th>
-			   			<th>Buyer State</th>
+			   			<!-- <th>Buyer Country</th> -->
+			   			<!-- <th>Buyer State</th> -->
 			   			<th>Buyer Location</th>
 			   			<th>Buyer Mobile No.</th>
-			   			<th>Buyer Email Id</th>			   			
-			   			<th>Ticket Id</th>			   			
-			   			<th>Offer Type</th>			   			
-			   			<th>Offer Price</th>			   			
-			   			<th>Offer Status</th>			   			
-			   			<th>Seller Name</th>			   			
-			   			<th>Seller Contact No.</th>			   			
-			   			<th>Bid Status</th>			   			
-			   			<th>EMD Amount</th>
-			   			<th>EMD Details</th>
-			   			<th>Full Payment Amount</th>
-			   			<th>Full Payment Details</th>
-			   			<th>Invoicing Details</th>
-			   			<th>KYC Document</th>
-			   			<th>Delivery Order</th>
-			   			<th>Date of Delivery</th>
-			   			<th>Deal Status</th>
+			   			<th>Buyer Email Id</th>	
+			   			<!-- <th>Offer Type</th>-->
+			   			<!-- <th>Offer Price</th>-->
+			   			<!-- <th>Offer Status</th>-->
+			   			<!-- <th>Seller Name</th>-->
+			   			<!-- <th>Seller Contact No.</th>-->
+			   			<!-- <th>Bid Status</th> -->
+			   			<!-- <th>EMD Amount</th> -->
+			   			<!-- <th>EMD Details</th> -->
+			   			<!-- <th>Full Payment Amount</th> -->
+			   			<!-- <th>Full Payment Details</th> -->
+			   			<!-- <th>Invoicing Details</th> -->
+			   			<!-- <th>KYC Document</th> -->
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
+			   			<!-- <th>Deal Status</th> -->
+			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>			   			
+		   			<tr>		
+		   				<td>{{fa.ticketId}}</td>	   			
 			   			<td>{{fa.assetId}}</td>
 			   			<td>{{fa.category.name}}</td>
 			   			<td>{{fa.brand.name}}</td>
-			   			<td>{{fa.model.name}}</td>
-			   			<td>{{fa.mfgYear}}</td>
-			   			<td>{{fa.country}}</td>
-			   			<td>{{fa.state}}</td>
-			   			<td>{{fa.city}}</td>
+			   			<!-- <td>{{fa.model.name}}</td> -->
+			   			<!-- <td>{{fa.mfgYear}}</td> -->
+			   			<!-- <td>{{fa.country}}</td> -->
+			   			<!-- <td>{{fa.state}}</td> -->
+			   			<td>{{fa.city}}</td>			   			
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>			   			
 			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="bidproductVm.openDialog(product,'faRequestDetailPopup')">More</button>	
+			   			</td>
 			   		</tr>
 		   		</tbody>
 		   	</table>
