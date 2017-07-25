@@ -77,7 +77,7 @@
           </tr>
         </tbody>
         <!-- closed bid -->
-        <!-- <tbody>
+        <tbody>
           <tr>
             <td class="col-sm-3"><b>Ticket Id:</b></td>
             <td class="col-sm-3">{{}}</td>
@@ -91,46 +91,97 @@
             <td>{{}} </td>
           </tr>
           <tr>
-            <td><b>Bid Status:</b></td>
-            <td>{{}}</td>
             <td><b>Seller Name:</b></td>
-            <td>{{}} </td>
-          </tr>
-          <tr>
+            <td>{{}} </td>          
             <td><b>Seller Contact No.:</b></td>
             <td>{{}}</td>
+          </tr>
+          <tr>
             <td><b>Bid Status:</b></td>
             <td>{{}} </td>
-          </tr>
-          <tr>
             <td><b>EMD Amount:</b></td>
             <td>{{}}</td>
-            <td><b>EMD Details:</b></td>
-            <td>{{}} </td>
           </tr>
           <tr>
+            <td><b>EMD Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>            
             <td><b>Full Payment Amount:</b></td>
             <td>{{}}</td>
             <td><b>Full Payment Details:</b></td>
-            <td>{{}} </td>
+            <td>{{}} </td>            
           </tr>
           <tr>
             <td><b>Invoicing Details:</b></td>
-            <td>{{}}</td>
-            <td><b>KYC Document:</b></td>
-            <td>{{}} </td>
-          </tr>
-           <tr>
-            <td><b>Delivery Order:</b></td>
-            <td>{{}}</td>
-            <td><b>Date of Delivery:</b></td>
-            <td>{{}} </td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Country</th>
+                  <th>State</th>
+                  <th>Location</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  <th>Mobile No.</th>
+                </tr>
+                <tr>
+                  <td>Name</td>
+                  <td>Country</td>
+                  <td>State</td>
+                  <td>Location</td>
+                  <td>Address</td>
+                  <td>Email</td>
+                  <td>Mobile No.</td>
+                </tr>
+              </table>
+            </td>
           </tr>
           <tr>
-            <td><b>Deal Status: </b></td>
-            <td colspan="3">{{}}</td>
+            <td><b>KYC Document:</b></td>
+            <td>
+              <table class="table">
+                <tr>
+                  <th>Address Proof</th>
+                  <th>ID Proof</th>
+                </tr>
+                <tr>
+                  <td>Address Proof</td>
+                  <td>ID Proof</td>
+                </tr>
+              </table>
+            </td>
+            <td><b>Delivery Order:</b></td>
+            <td>{{}}</td>
           </tr>
-        </tbody> -->
+          <tr>
+            <td><b>Date of Delivery:</b></td>
+            <td>{{}} </td>
+            <td><b>Deal Status: </b></td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+            <td><b>Trade Type: </b></td>
+            <td>{{}}</td>
+            <td><b>Asset Status:</b></td>
+            <td>{{}} </td>
+          </tr>
+        </tbody>
       </table>
 
       <!-- admin request details  popup-->
@@ -162,19 +213,68 @@
           </tr>
           <tr>
             <td><b>EMD Details:</b></td>
-            <td>{{}}</td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>            
             <td><b>Full Payment Amount:</b></td>
-            <td>{{}} </td> 
-           </tr>
-          <tr>
-            <td><b>Full Payment Details:</b></td>
             <td>{{}}</td>
+            <td><b>Full Payment Details:</b></td>
+            <td>{{}} </td>            
+          </tr>
+          <tr>
             <td><b>Invoicing Details:</b></td>
-            <td>{{}} </td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Country</th>
+                  <th>State</th>
+                  <th>Location</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  <th>Mobile No.</th>
+                </tr>
+                <tr>
+                  <td>Name</td>
+                  <td>Country</td>
+                  <td>State</td>
+                  <td>Location</td>
+                  <td>Address</td>
+                  <td>Email</td>
+                  <td>Mobile No.</td>
+                </tr>
+              </table>
+            </td>
           </tr>
           <tr>
             <td><b>KYC Document:</b></td>
-            <td>{{}}</td>
+            <td>
+              <table class="table">
+                <tr>
+                  <th>Address Proof</th>
+                  <th>ID Proof</th>
+                </tr>
+                <tr>
+                  <td>Address Proof</td>
+                  <td>ID Proof</td>
+                </tr>
+              </table>
+            </td>
             <td><b>Delivery Order:</b></td>
             <td>{{}} </td>
           </tr>

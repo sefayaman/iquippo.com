@@ -84,14 +84,16 @@
 			   			</td>
 			   			<td>
 			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
-			   				<i class="fa fa-comment fa-2x"></i>
+			   				<i class="fa fa-commenting-o fa-2x"></i>
 			   				</a>
 			   			</td>
 						<td> 
-							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-primary btn-xs">Pay</button> 
-							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-xs" ng-click="buyerProductBidRequestVm.openBidModal(bid)">Change</button> 
-							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-xs" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)">Withdraw</button> 
-							<button type="button" class="btn btn-xs btn-primary" ng-click="buyerProductBidRequestVm.openDialog(product,'buyerRequestDetailPopup')">More</button>
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-success btn-sm"><i class="fa fa-money"></i></button> 
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" ng-click="buyerProductBidRequestVm.openBidModal(bid)">
+								<i class="fa fa-retweet"></i>
+							</button> 
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-sm" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)"><i class="fa fa-sign-out"></i></button> 
+							<button type="button" class="btn btn-sm btn-info" ng-click="buyerProductBidRequestVm.openDialog(product,'buyerRequestDetailPopup')"><i class="fa fa-info"></i></button>
 						</td>
 			   		</tr>
 		   		</tbody>
@@ -164,11 +166,11 @@
 			   			</td>
 			   			<td>
 			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
-			   				<i class="fa fa-comment fa-2x"></i>
+			   				<i class="fa fa-commenting-o fa-2x"></i>
 			   				</a>
 			   			</td>
 			   			<td>
-							<button type="button" class="btn btn-xs btn-primary">More</button>
+							<button type="button" class="btn btn-sm btn-info"><i class="fa fa-info"></i></button>
 			   				
 			   			</td>
 			   		</tr>

@@ -78,7 +78,7 @@
 			   			<td>{{}}</td>
 			   			<td>
 			   				<a href="/assetsale/adminproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="bidproductVm.openDialog(product,'adminRequestDetailPopup')">More</button>
+							<button type="button" class="btn btn-sm btn-info" ng-click="bidproductVm.openDialog(product,'adminRequestDetailPopup')"><i class="fa fa-info"></i></button>
 			   			</td>
 			   		</tr>
 		   		</tbody>
@@ -98,9 +98,9 @@
 		   </div>
 		   <div class="table-responsive">
 		   	<table class="table table-bordered">
-		   		<table class="table table-bordered">
 		   		<thead>
 		   			<tr>			   			
+			   			<th>Ticket ID</th>
 			   			<th>Asset Id</th>
 			   			<th>Category</th>
 			   			<th>Brand</th>
@@ -121,7 +121,11 @@
 			   			<th>Reserve Price</th>
 			   			<!-- <th>Parking Charges</th> -->
 			   			<th>Buy Now Price</th>
-			   			<!-- <th>Trade Type</th> -->
+			   			<!-- <th>Offer Type</th> -->
+			   			<!-- <th>Offer Price</th> -->
+			   			<th>Offer Status</th>
+			   			<th>Bid Status</th>
+			   			<th>Deal Status</th>
 			   			<th>Asset Status</th>
 			   			<th>Action</th>
 			   		</tr>
@@ -129,6 +133,7 @@
 		   		<tbody>
 		   			<tr ng-repeat="product in bidproductVm.productListing">
 			   			
+			   			<td>{{product.ticketId}}</td>
 			   			<td>{{product.assetId}}</td>
 			   			<td>{{product.category.name}}</td>
 			   			<td>{{product.brand.name}}</td>
@@ -150,14 +155,17 @@
 			   			<!-- <td>{{product.parkingChargePerDay}}</td> -->
 			   			<td>{{product.grossPrice}}</td>
 			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   			<td>{{}}</td>
 			   			<td>
 			   				<a href="/assetsale/adminproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-							<button type="button" class="btn btn-sm btn-primary" ng-click="bidproductVm.openDialog(product,'adminRequestDetailPopup')">More</button>
+							<button type="button" class="btn btn-sm btn-info" ng-click="bidproductVm.openDialog(product,'adminRequestDetailPopup')"><i class="fa fa-info"></i></button>
 			   			</td>
 			   		</tr>
 		   		</tbody>
-		   	</table>
 		   	</table>
 		   </div>	
 		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
