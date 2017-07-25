@@ -232,7 +232,7 @@
       });
 
     }
-    function getAuctionWiseProductData(result) {  console.log(result);console.log('vinay');
+    function getAuctionWiseProductData(result) {  
         var filter = {};      
         var auctionIds = []; 
         if(result && result.items) {     
@@ -241,7 +241,7 @@
         });
         filter.auctionIds = auctionIds; 
         filter.status = "request_approved";  
-        filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';console.log(filter);
+        filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
         AuctionSvc.getAuctionWiseProductData(filter) 
         .then(function(data) { 
         $scope.getConcatData = data; 
@@ -293,6 +293,7 @@
       geocoder = null;
       $scope.auctionOnMap = false;
     }
+  
   }
   
 })();
