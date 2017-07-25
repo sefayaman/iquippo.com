@@ -214,6 +214,15 @@
          else
           retVal = false;
       break;
+      case 'INVOICEDETAIL':
+        var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus)> 5 ? true:false;
+        if(isValidStatus && bid.user === Auth.getCurrentUser()._id)
+          retVal = true;
+         else if(Auth.isAdmin() || Auth.isFAgencyPartner())
+          retVal = true;
+         else
+          retVal = false;
+      break;
       default:
         retVal = false;
       break;
