@@ -21,12 +21,14 @@ var AssetSaleBidSchema = new Schema({
             comment:String,
             seller:{},
             repoDate:Date,
-            reservePrise:Number
+            reservePrise:Number,
+            prevTradeType:String
           },
   offerType:String,
   ageingOfAsset:Number,
   parkingCharge:Number,
   bidAmount:Number,
+  emdAmount:Number,
   offerStatus:String,
   bidStatus:String,
   dealStatus:String,
@@ -40,17 +42,19 @@ var AssetSaleBidSchema = new Schema({
   kyc:[{}],
   emdPayment:{
     paymentMode:String,
-    emdAmount:Number,
     remaingPayment:Number,
     paymentsDetail:[{}]
   },
   fullPayment:{
     paymentMode:String,
-    fullPaymentAmount:Number,
     remaingPayment:Number,
     paymentsDetail:[{}]
   },
   invoiceDetail:{},
+  emdStartDate:Date,
+  emdEndDate:Date,
+  fullPaymentStartDate:Date,
+  fullPaymentEndDate:Date,
   proxyBid:{type:Boolean,default:false},
   status:{type:Boolean,default:true},
   createdAt: {type:Date,default:Date.now},
