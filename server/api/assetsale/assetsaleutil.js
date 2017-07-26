@@ -3,6 +3,7 @@
 var EnterpriseMaster= require('../common/enterprisemaster.model');
 var User = require('../user/user.model');
 var MarkupPrice = require('../common/markupprice.model');
+var EMDMaster = require('../common/emdcharge.model');
 /*
 * For enterprise master filter must be like {}
 */
@@ -38,6 +39,7 @@ exports.getMasterBasedOnUser = function(userId,filter,type, callback) {
 	    	case 'assetsalecharge':
 	    	break;
 	    	case 'emdmaster':
+	    		getEmdFromMaster(filter,callback);
 	    	break;
 
 
@@ -84,6 +86,69 @@ function getValueFromEnterpirseMaster(filter, callback) {
 		}
 	});
 }
+
+function getEmdFromMaster(filter, callback) {
+	console.log("tempFilter userId", filter);
+	var tempFilter = {};
+	if(filter.enterpriseId)
+		tempFilter.enterpriseId = filter.enterpriseId;
+	if(filter['user.userId'])
+		tempFilter['user.userId'] = filter['user.userId'];
+	var query = EMDMaster.find(tempFilter);
+	query.exec(function(err, result) {
+		if (err)
+			return callback(err);
+		if(result.length > 0) {
+			var query = EMDMaster.find(filter);
+			query.exec(function(err, result) {
+			if (err)
+				return callback(err);
+			if(result.length == 0) {
+				tempFilter['category.name'] = "Other";
+				var query = EMDMaster.find(tempFilter);
+				query.exec(function(err, emdcharge) {
+					if (err || !emdcharge.length)
+						return callback(err);
+					
+					return callback(null, emdcharge[0]);
+				});
+			} else {
+				return callback(null, result[0]);
+			}
+		});
+		} else {
+			var filterObj = {};
+			filterObj.userRole = "Other";
+			var query = EMDMaster.find(filterObj);
+			query.exec(function(err, emdcharge) {
+				if (err || !emdcharge.length)
+					return callback(err);
+				
+				return callback(null, emdcharge[0]);
+			});
+		}
+	});
+}
+/*function getEmdFromMaster(filter, callback) {
+	var query = EMDMaster.find(filter);
+	query.exec(function(err, result) {
+		if (err)
+			return callback(err);
+		if(result.length == 0) {
+			var filterObj = {};
+			filterObj.userRole = "Other";
+			var query = EMDMaster.find(filterObj);
+			query.exec(function(err, emdcharge) {
+				if (err || !emdcharge.length)
+					return callback(err);
+				
+				return callback(null, emdcharge[0]);
+			});
+		} else {
+			return callback(null, result[0]);
+		}
+	});
+}*/
 
 
 

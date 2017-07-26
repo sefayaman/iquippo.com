@@ -15,6 +15,7 @@ router.get('/maxbidonproduct/',controller.getMaxBidOnProduct);
 router.get('/count',controller.getBidCount);
 router.post('/withdrawbid',controller.withdrawBid);
 router.get('/bidorbuycalculation',controller.getBidOrBuyCalculation);
+router.get('/getemd',controller.getEMDBasedOnUser);
 
 module.exports = router;
 

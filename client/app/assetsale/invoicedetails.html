@@ -80,7 +80,7 @@
               </div>
             </div>
           </form>
-            <div class="table-responsive" ng-if="!formFlag">
+            <!-- <div class="table-responsive" >
               <table class="table table-bordered">
                 <thead>
                   <tr>
@@ -95,22 +95,16 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{bidData.invoiceDetail.fname}} {{bidData.invoiceDetail.lname}}</td>
+                    <td>{{bidData.invoiceDetail.country}}</td>
+                    <td>{{bidData.invoiceDetail.state}}</td>
+                    <td>{{bidData.invoiceDetail.city}}</td>
+                    <td>{{bidData.invoiceDetail.address}}</td>
+                    <td>{{bidData.invoiceDetail.email}}</td>
+                    <td>+{{bidData.invoiceDetail.countryCode}} {{bidData.invoiceDetail.mobile}}</td>
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </div> -->
         </div>  
-        <!-- <div class="modal-footer asset-sale">
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary" ng-click="invoiceDetailsVm.closeDialog()">Cancel</button>
-            <button type="button" class="btn btn-danger">Submit</button>                
-          </div>
-        </div> -->
     </div>

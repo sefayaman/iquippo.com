@@ -2090,7 +2090,7 @@
 					</select>
 				</div> -->
 				<div class="col-sm-3" ng-class="{'has-error':markupForm.userId.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'enterprise' || markupVm.dataModel.userRole == 'channelpartner' || markupVm.dataModel.userRole == ''">
-					<select class="form-control" name="userId" ng-model="container.userId" ng-change="markupVm.onUserChange(userId, markupVm.dataModel.userRole)" required>
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="markupVm.onUserChange(container.userId, markupVm.dataModel.userRole)" required>
 						<option value="">*Select User</option>
 						<option value="{{user._id}}" ng-repeat="user in markupVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
 					</select>

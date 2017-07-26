@@ -6,8 +6,7 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	var filter = {};
 	var dataToSend={};
 	vm.bidListing = [];
-	vm.activeBid = "Auctionable";
-	$scope.subTabValue = 'auctionable'
+	vm.activeBid = "auctionable";
 	$scope.onTabChange = onTabChange;
 	vm.withdrawBid = withdrawBid;
 	vm.fireCommand = fireCommand;
@@ -26,6 +25,7 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		}
 		filter.offerStatus = offerStatuses[0];
+		filter.dealStatus = dealStatuses[0];
 		getBidData(filter);	
 	}
 	
@@ -89,29 +89,25 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 		];
 	console.log($scope.percent);
 	
-    function onTabChange(tabs){
-	  	switch(tabs){
+    function onTabChange(tab){
+    	vm.activeBid = tab;
+    	$scope.pager.reset();
+	  	switch(tab){
 	  		case 'auctionable':
-	  		$scope.pager.reset();
 	  		filter={};
 			angular.copy(initFilter, filter);
 	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
-	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
+	  			filter.userId = Auth.getCurrentUser()._id;
 	  		filter.offerStatus = offerStatuses[0];
-	  		vm.activeBid='Auctionable';
-	        $scope.subTabValue='auctionable';
+	  		filter.dealStatus = dealStatuses[0];
 	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
-	  		$scope.pager.reset();
 	  		filter={};
 	  		angular.copy(initFilter, filter);
-			vm.activeBid='closed';
-	  		$scope.subTabValue='closed';
-	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
-	  			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
-	  		filter.offerStatus = offerStatuses[2];
-	  		//filter.assetStatus = encodeURIComponent('closed');
+			if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
+	  			filter.userId = Auth.getCurrentUser()._id;
+	  		filter.buyerClosedFlag = true;
 	  		getBidData(filter);
 	  		break;
 	  	}
@@ -130,7 +126,12 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
           .then(function(res) {
             if(res && res.msg)
               Modal.alert(res.msg, true);
-          	//getBidData(filter);
+          	filter ={};
+          	angular.copy(initFilter, filter);
+          	if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
+          		filter.userId = Auth.getCurrentUser()._id;
+          	filter.offerStatus = offerStatuses[0];
+          	getBidData(filter);
           })
           .catch(function(err) {
           });

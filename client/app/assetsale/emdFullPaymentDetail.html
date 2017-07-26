@@ -1,9 +1,9 @@
 <div> 
-      <div class="modal-header">
-          <button type="button" class="close" ng-click="emdFullPaymentVm.closeDialog()">&times;</button>
-          <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
-        </div>
-      <div class="modal-body">
+    <div class="modal-header">
+      <button type="button" class="close" ng-click="emdFullPaymentVm.closeDialog()">&times;</button>
+      <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
+    </div>
+    <div class="modal-body">
       <form novalidate class="text-left" name="paymentDetailForm">
         <div class="row">
           <div class="col-sm-6">
@@ -22,7 +22,14 @@
           </div>
         </div>
 
-        <div class="table-responsive" ng-if="!formFlag">
+        <div class="modal-footer asset-sale">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" ng-click="emdFullPaymentVm.closeDialog()">Cancel</button>
+            <button type="button" class="btn btn-danger" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Sabmit</button>                
+          </div>
+        </div>
+    </form>
+    <div class="table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -33,21 +40,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                 <td></td>
-                 <td></td>
-                 <td></td>
-                 <td></td>
+              <tr ng-repeat="payment in emdFullPaymentVm.paymentList">
+                 <td>{{payment.bankName}}</td>
+                 <td>{{payment.paymentMode}}</td>
+                 <td>{{payment.instrumentNo}}</td>
+                 <td>{{payment.amount}}</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div> 
-        <div class="modal-footer asset-sale">
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary" ng-click="emdFullPaymentVm.closeDialog()">Cancel</button>
-            <button type="button" class="btn btn-danger" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Sabmit</button>                
-          </div>
-        </div>
-    </form>    
+        
+  </div>    
 </div>

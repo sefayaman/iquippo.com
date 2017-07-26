@@ -58,7 +58,18 @@ exports.search = function(req, res) {
 };
 
 exports.create = function(req, res, next) {
- var model = new Model(req.body);
+  _getRecord(req.body, function(err, result) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (result.length > 0)
+      return next(new ApiError(409, "Enterprise already exits!!!"));
+    else
+      create();
+  });
+
+  function create() {
+    var model = new Model(req.body);
     model.save(function(err, st) {
       if (err) {
         return handleError(res, err);
@@ -67,25 +78,18 @@ exports.create = function(req, res, next) {
         message: "Enterprise record saved sucessfully"
       });
     });
-  // });
-
-  // function create() {
-  //   var model = new Model(req.body);
-  //   model.save(function(err, st) {
-  //     if (err) {
-  //       return handleError(res, err);
-  //     }
-  //     return res.status(200).json({
-  //       message: "Enterprise record saved sucessfully"
-  //     });
-  //   });
-  // }
+  }
 };
 
 function _getRecord(data, cb) {
   var filter = {};
-  filter.kycDoc = data.kycDoc;
-  filter.docName = data.docName;
+  console.log("@@@data", data);
+  if(data.userRole)
+    filter.userRole = data.userRole;
+  if(data.enterpriseId)
+    filter.enterpriseId = data.enterpriseId;
+  if(data.user && data.user.userId)
+    filter['user.userId'] = data.user.userId;
   Model.find(filter, function(err, result) {
     cb(err, result);
   });
@@ -96,39 +100,28 @@ exports.update = function(req, res, next) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
-   Model.update({
-      _id: req.params.id
-    }, {
-      $set: req.body
-    }, function(err) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(200).json(req.body);
-    });
-  //}
-  // _getRecord(req.body, function(err, result) {
-  //   if (err) {
-  //     return handleError(res, err);
-  //   }
-  //   if (result.length === 0 || (result.length === 1 && result[0]._id.toString() === req.params.id))
-  //     return update();
-  //   else
-  //     return next(new ApiError(409, "Enterprise record already exits!!!"));
-  // });
+    _getRecord(req.body, function(err, result) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (result.length === 0 || (result.length === 1 && result[0]._id.toString() === req.params.id))
+      return update();
+    else
+      return next(new ApiError(409, "Enterprise record already exits!!!"));
+  });
 
-  // function update() {
-  //   Model.update({
-  //     _id: req.params.id
-  //   }, {
-  //     $set: req.body
-  //   }, function(err) {
-  //     if (err) {
-  //       return handleError(res, err);
-  //     }
-  //     return res.status(200).json(req.body);
-  //   });
-  // }
+    function update() {
+       Model.update({
+          _id: req.params.id
+        }, {
+          $set: req.body
+        }, function(err) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json(req.body);
+        });
+    }
 };
 
 exports.destroy = function(req, res, next) {

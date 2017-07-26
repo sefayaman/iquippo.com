@@ -18,7 +18,8 @@
     svc.getBidProduct = getBidProduct;
 	  svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
     svc.validateAction = validateAction;
-    
+    svc.getEmdOnProduct = getEmdOnProduct;
+
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
 				.then(function(res) {
@@ -92,6 +93,22 @@
         queryParam = UtilSvc.buildQueryParam(data);
     if(queryParam)
       serPath = serPath + "/bidorbuycalculation" + "?" + queryParam;
+    return $http.get(serPath)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  }
+
+  function getEmdOnProduct(data){
+    var serPath = path;
+    var queryParam = "";
+    if(data)
+        queryParam = UtilSvc.buildQueryParam(data);
+    if(queryParam)
+      serPath = serPath + "/getemd" + "?" + queryParam;
     return $http.get(serPath)
     .then(function(res){
       return res.data;

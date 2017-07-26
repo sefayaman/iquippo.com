@@ -3,19 +3,18 @@
 
 angular.module('sreizaoApp').controller('kycDocumentCtrl', kycDocumentCtrl);
 
-function kycDocumentCtrl($scope, $rootScope, Modal, Auth, $uibModal, $uibModalInstance, KYCSvc, AssetSaleSvc, uploadSvc) {
+function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $uibModalInstance, KYCSvc, AssetSaleSvc, uploadSvc) {
   var vm = this;
   vm.addressProofList = [];
   vm.idProofList = [];
   vm.kycInfo = {};
-  //$scope.bidData ={};
+  vm.kycList = [];
   $scope.type = ['Address Proof', 'Identity Proof'];
   vm.closeDialog = closeDialog;
   vm.submit = submit;
   $scope.uploadDoc = uploadDoc;
   
   	function init(){
-      //angular.copy($scope.bidRequestData, $scope.bidData);
       KYCSvc.get().then(function(result) {
       	if(!result)
       		return;
@@ -27,6 +26,18 @@ function kycDocumentCtrl($scope, $rootScope, Modal, Auth, $uibModal, $uibModalIn
             vm.idProofList[vm.idProofList.length] = item;	
         });
       });
+      if($scope.bidData.kyc) {
+        angular.copy($scope.bidData.kyc, vm.kycList);
+        vm.kycList.forEach(function(item){
+          if(item.type == $scope.type[0]){
+            vm.kycInfo.addressProof = item.name;
+            vm.kycInfo.addressProofDocName = item.docName;
+          } else if(item.type == $scope.type[1]){
+            vm.kycInfo.idProof = item.name;
+            vm.kycInfo.idProofDocName = item.docName;
+          }
+        });
+      }
     }
 
     function uploadDoc(files, _this, type) {
@@ -50,13 +61,12 @@ function kycDocumentCtrl($scope, $rootScope, Modal, Auth, $uibModal, $uibModalIn
     }
 
 	function submit(form) {
-		var ret = false;
-	  	if(form.$invalid || ret){
-	      form.submitted = true;
-	      return;
-	    }
-		//var kycData = [];
-		$scope.bidData.kyc =[];
+		/*var ret = false;
+  	if(form.$invalid || ret){
+      form.submitted = true;
+      return;
+    }*/
+    $scope.bidData.kyc =[];
 		var addProofObj = {};
 		if(vm.kycInfo.addressProof) {
 			addProofObj.type = $scope.type[0];

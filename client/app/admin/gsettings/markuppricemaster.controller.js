@@ -4,7 +4,7 @@
     angular.module('admin').controller('MarkupPriceMasterCtrl', MarkupPriceMasterCtrl);
 
     function MarkupPriceMasterCtrl($scope,$rootScope,$state,Modal,Auth,PagerSvc,$filter,userSvc, MarkupPriceSvc){
-    	var vm  = this;
+        var vm  = this;
         vm.dataModel = {};
         $scope.isEdit = false;
         $scope.pager = PagerSvc.getPager();
@@ -23,12 +23,17 @@
         var userFilter = {};
         vm.searchStr = "";
         $scope.container = {};
+        vm.users = [];
+        vm.channelpartnerUser = [];
+        vm.enterpriseUser = [];
 
         function init(){
             filter = {};
             initFilter.pagination = true;
             angular.copy(initFilter, filter);
 
+            getEnterpriseUser();
+            getChannelpartnerUser();
             loadViewData(filter);
         } 
 
@@ -42,33 +47,51 @@
             });
         }
 
-        function getUserOnRole(role) {
+        function getUserOnRole(role, noChange) {
             if(role == 'Other' || role == 'customer') {
                 $scope.container.mobile = "";
+                $scope.container.userId = "";
                 return;
             }
-            userFilter = {};
-            $scope.container.userId = "";
+            if(!noChange)
+                $scope.container.userId = "";
             switch (role) {
                 case "enterprise" : 
-                    userFilter = {};
-                    userFilter.role = "enterprise";
-                    userFilter.enterprise = true;
+                    if (vm.enterpriseUser.length < 0) {
+                        getEnterpriseUser();
+                    } else {
+                        vm.users = [];
+                        angular.copy(vm.enterpriseUser, vm.users);
+                    }
                     break;
                 case "channelpartner" : 
-                    userFilter = {};
-                    userFilter.role = "channelpartner";
+                    if (vm.channelpartnerUser.length < 0) {
+                        getChannelpartnerUser();
+                    } else {
+                        vm.users = [];
+                        angular.copy(vm.channelpartnerUser, vm.users);
+                    }
                     break;     
             }
-            userFilter.status = true;
-            getUserList(userFilter)
         }
 
-        function getUserList(userFilter) {
-            vm.users = [];
+        function getEnterpriseUser() {
+            userFilter = {};
+            userFilter.role = "enterprise";
+            userFilter.enterprise = true;
+            userFilter.status = true;
             userSvc.getUsers(userFilter).then(function(data){
-                vm.users = data;
-            })
+              vm.enterpriseUser = data;
+            });
+        }
+
+        function getChannelpartnerUser() {
+            userFilter = {};
+            userFilter.role = "channelpartner";
+            userFilter.status = true;
+            userSvc.getUsers(userFilter).then(function(data){
+              vm.channelpartnerUser = data;
+            });
         }
 
         function onUserChange(user, role) {
@@ -148,7 +171,11 @@
                 $scope.submitted = true;
                 return;
             }
-
+            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+                delete vm.dataModel.user;
+                if(vm.dataModel.enterpriseId)
+                    delete vm.dataModel.enterpriseId;
+            }
             var createData = {};
             Object.keys(vm.dataModel).forEach(function(x) {
                 createData[x] = vm.dataModel[x];
@@ -166,21 +193,16 @@
         }
 
         function editClicked(rowData){
-            vm.dataModel = {};
-            vm.dataModel._id  = rowData._id;
-            vm.dataModel.userRole = rowData.userRole;
-            getUserOnRole(rowData.userRole)
-            if(rowData.user && rowData.user.userId) {
-                onUserChange(rowData.user.userId, rowData.userRole);
-                $scope.container.userId = rowData.user.userId;
+            vm.dataModel = angular.copy(rowData);
+            getUserOnRole(rowData.userRole, true);
+            if(vm.dataModel.user && vm.dataModel.user.userId && (vm.dataModel.userRole == 'enterprise' || vm.dataModel.userRole == 'channelpartner')) {
+                onUserChange(vm.dataModel.user.userId, vm.dataModel.userRole);
+                $scope.container.userId = vm.dataModel.user.userId;
             }
-            if(rowData.user && rowData.user.mobile) {
-                $scope.container.mobile = rowData.user.mobile;
+            if(vm.dataModel.user && vm.dataModel.user.mobile && vm.dataModel.userRole == 'customer') {
+                $scope.container.mobile = vm.dataModel.user.mobile;
                 findSingleUser();
             }
-            if(rowData.enterpriseId)
-                vm.dataModel.enterpriseId = rowData.enterpriseId;
-            vm.dataModel.price = rowData.price;
             $scope.isEdit = true;
         }
 
@@ -188,6 +210,11 @@
             if(form.$invalid){
                 $scope.submitted = true;
                 return;
+            }
+            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+                delete vm.dataModel.user;
+                if(vm.dataModel.enterpriseId)
+                    delete vm.dataModel.enterpriseId;
             }
             MarkupPriceSvc.update(vm.dataModel)
             .then(function(){

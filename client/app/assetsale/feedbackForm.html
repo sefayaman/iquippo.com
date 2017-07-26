@@ -1,17 +1,17 @@
 <div> 
-      <div class="modal-header">
-          <button type="button" class="close" ng-click="feedbackVm.closeDialog()">&times;</button>
-          <h4 class="modal-title">Write Your Feedback</h4>
-        </div>
-      <div class="modal-body">
-         
-
-        <textarea class="form-control" placeholder="Enter Your Feedback"></textarea>
-      </div> 
-        <div class="modal-footer asset-sale">
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary" ng-click="feedbackVm.closeDialog()">Cancel</button>
-            <button type="button" class="btn btn-danger">Sabmit</button>                
-          </div>
-        </div>
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="feedbackVm.closeDialog()">&times;</button>
+    <h4 class="modal-title">Write Your Feedback</h4>
+  </div>
+  <form novalidate class="text-left" name="feedbackForm">
+    <div class="modal-body" ng-class="{'has-error': feedbackForm.comment.$invalid && feedbackForm.submitted}">
+      <textarea class="form-control" ng-model="feedbackVm.feedback.comment" name="comment" placeholder="Enter Your Feedback" required></textarea>
+    </div> 
+    <div class="modal-footer asset-sale">
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" ng-click="feedbackVm.closeDialog()">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="feedbackVm.submit(feedbackForm)">Sabmit</button>                
+      </div>
+    </div>
+  </form>  
 </div>

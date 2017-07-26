@@ -46,7 +46,14 @@
           filter.bidAmount = vm.bidAmount = query.product.grossPrice;
         }
       }
-      getBidOrBuyCalculation(filter);
+      var emdFilter = {};
+      emdFilter.sellerUserId = query.product.seller._id;
+      emdFilter.categoryId = query.product.category._id;
+      AssetSaleSvc.getEmdOnProduct(emdFilter).then(function(result){
+        if(result)
+          $scope.emdAmount = result.emdCharge;
+        getBidOrBuyCalculation(filter);
+        });
     }
 
     init();
@@ -157,6 +164,7 @@
             dataToSend.ageingOfAsset = query.product.ageingOfAsset;
             dataToSend.parkingCharge = query.product.parkingCharges;
             dataToSend.bidAmount = $scope.total;
+            dataToSend.emdAmount = $scope.emdAmount;
             dataToSend.proxyBid = query.proxyBid;
             dataToSend.offerType = query.offerType;
             dataToSend.bidReceived = query.product.bidReceived;

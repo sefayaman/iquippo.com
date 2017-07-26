@@ -20,6 +20,20 @@ var MarkupPrice = require('../common/markupprice.model');
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Accepted','Auto Accepted'];
 
+
+exports.getEMDBasedOnUser = function(req, res) {
+	var queryParam = req.query;
+	var filter = {};
+  	if(queryParam.categoryId)
+	  filter['category.categoryId'] = queryParam.categoryId;
+	AssetSaleUtil.getMasterBasedOnUser(queryParam.sellerUserId,filter,'emdmaster',function(err,result){
+		if(err)
+			return res.status(err.status || 500).send(err);
+		
+	    return res.status(200).json(result);
+	});
+}
+
 exports.getBidOrBuyCalculation = function(req, res) {
 	var queryParam = req.query;
 	var filter = {};
@@ -53,7 +67,7 @@ exports.getBidOrBuyCalculation = function(req, res) {
 			// filter.deleted = false;
 			// filter._id = queryParam.sellerUserId;
 			//getMarkupPercentOnUser(filter,function(err,result){
-				AssetSaleUtil.getMasterBasedOnUser(queryParam.sellerUserId,{},'markup',function(err,result){
+			AssetSaleUtil.getMasterBasedOnUser(queryParam.sellerUserId,{},'markup',function(err,result){
 				if(err)
     				return res.status(err.status || 500).send(err);
     			var markupPercent = 0;
@@ -79,56 +93,6 @@ function getGST(filter, callback) {
 		return callback(null, result);
 	});
 }
-
-/*function getMarkupPrice(filter, callback) {
-	var query = MarkupPrice.find(filter);
-	query.exec(function(err, result) {
-		if (err)
-			return callback(err);
-		if(result.length == 0) {
-			filter = {};
-			filter.userRole = "Other";
-			var query = MarkupPrice.find(filter);
-			query.exec(function(err, markupPrice) {
-				if (err)
-					return callback(err);
-				return callback(null, markupPrice);
-			});
-		} else {
-			return callback(null, result);
-		}
-	});
-}
-
-function getMarkupPercentOnUser(filter, callback) {
-	User.findById(filter).exec(function(err, user){
-	    if (err)
-			return callback(err);
-	  	var markupFilter = {};
-	    switch (user.role) {
-	    	case "enterprise" : 
-	    			markupFilter = {};
-	    			markupFilter.enterpriseId = user.enterpriseId;
-	    			break;
-	    	case "channelpartner" : 
-	    			markupFilter = {};
-	    			markupFilter['user.userId'] = user._id;
-	    			break;
-	    	case "customer" : 
-	    			markupFilter = {};
-	    			if(user.createdBy && user.createdBy.role === 'channelpartner')
-	    				markupFilter['user.userId'] = user.createdBy._id;
-	    			else 
-	    				markupFilter['user.userId'] = user._id;
-	    			break;
-	    }
-	    getMarkupPrice(markupFilter,function(err, markupPer){
-			if(err)
-				console.log(err);
-			return callback(null, markupPer);
-		});
-	});
-}*/
 
 function create(data,callback){
 	if (!data)
@@ -214,9 +178,6 @@ exports.postUpdate = function(req,res,next){
 }
 
 function fetchBid(filter, callback) {
-	if (!filter) {
-		return callback(new APIError(412, 'No  filter found'));
-	}
 	var query = AssetSaleBid.find(filter);
 	query.populate('user product.proData')
 		.exec(function(err, results) {
@@ -396,6 +357,12 @@ exports.fetchBid = function(req,res){
 	if(req.query.offerStatus)
 		filter.offerStatus = req.query.offerStatus;
 
+	if(req.query.dealStatus)
+		filter.dealStatus = req.query.dealStatus;
+	
+	if(req.query.buyerClosedFlag)
+		filter.$or = [{bidStatus : bidStatuses[6]},{offerStatus : offerStatuses[2]},{dealStatus : dealStatuses[12]}];
+
 	if(req.query.bidStatus)
 		filter.bidStatus = req.query.bidStatus;
 	
@@ -406,7 +373,7 @@ exports.fetchBid = function(req,res){
     }
   	if(req.query.assetStatus)
   		filter.assetStatus=req.query.assetStatus;
-
+  	console.log("Filter buyer###", filter);
   if (req.query.pagination) {
 		paginatedResult(req, res, AssetSaleBid, filter, {});
 		return;

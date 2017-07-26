@@ -3,7 +3,7 @@
 
 angular.module('sreizaoApp').controller('invoiceDetailsCtrl', invoiceDetailsCtrl);
 
-function invoiceDetailsCtrl($scope, $rootScope,Modal, Auth, $uibModal, AssetSaleSvc, LocationSvc, UtilSvc, $uibModalInstance) {
+function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, AssetSaleSvc, LocationSvc, UtilSvc, $uibModalInstance) {
 	var vm = this;
 	$scope.option = {};
 	vm.invoiceInfo = {};
@@ -12,10 +12,16 @@ function invoiceDetailsCtrl($scope, $rootScope,Modal, Auth, $uibModal, AssetSale
 	$scope.onCountryChange = onCountryChange;
     $scope.onStateChange = onStateChange;
     var filter = {};
-    /*$scope.bidData ={};
+    //$scope.bidData ={};
   	function init(){
-      angular.copy($scope.bidData, $scope.bidData);
-    }*/
+		$scope.option.select = "yes";
+		if($scope.bidData.invoiceDetail && $scope.bidData.invoiceDetail.mobile != Auth.getCurrentUser().mobile) {
+			$scope.option.select = "no";
+			angular.copy($scope.bidData.invoiceDetail, vm.invoiceInfo);
+			onCountryChange(vm.invoiceInfo.country, true);
+			onStateChange(vm.invoiceInfo.state, true);
+		}
+    }
 
 	function onCountryChange(country, noChange) {
       if (!noChange) {
@@ -102,12 +108,12 @@ function invoiceDetailsCtrl($scope, $rootScope,Modal, Auth, $uibModal, AssetSale
 	}
 
 	//loading start
-	/*Auth.isLoggedInAsync(function(loggedIn) {
+	Auth.isLoggedInAsync(function(loggedIn) {
 		if(loggedIn)
 			init();
 		else
 			$state.go('main');
-	});*/
+	});
 }
 
 })();

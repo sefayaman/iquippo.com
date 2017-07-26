@@ -42,12 +42,12 @@ var AssetSaleBidSchema = new Schema({
   kyc:[{}],
   emdPayment:{
     paymentMode:String,
-    remaingPayment:Number,
+    remainingPayment:Number,
     paymentsDetail:[{}]
   },
   fullPayment:{
     paymentMode:String,
-    remaingPayment:Number,
+    remainingPayment:Number,
     paymentsDetail:[{}]
   },
   invoiceDetail:{},

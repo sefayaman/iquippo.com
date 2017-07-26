@@ -26,18 +26,43 @@
         var userFilter = {};
         vm.searchStr = "";
         $scope.container = {};
+        vm.users = [];
+        vm.channelpartnerUser = [];
+        vm.enterpriseUser = [];
 
         function init(){
-          var userFilter = {};
-          filter = {};
-          initFilter.pagination = true;
-          angular.copy(initFilter, filter);
+            var userFilter = {};
+            filter = {};
+            initFilter.pagination = true;
+            angular.copy(initFilter, filter);
 
-          categorySvc.getCategoryOnFilter()
+            categorySvc.getCategoryOnFilter()
             .then(function(result) {
                 vm.categoryList = result;
             })
-          loadViewData(filter);
+
+            loadViewData(filter);
+            getEnterpriseUser();
+            getChannelpartnerUser();
+        }
+
+        function getEnterpriseUser() {
+            userFilter = {};
+            userFilter.role = "enterprise";
+            userFilter.enterprise = true;
+            userFilter.status = true;
+            userSvc.getUsers(userFilter).then(function(data){
+              vm.enterpriseUser = data;
+            });
+        }
+
+        function getChannelpartnerUser() {
+            userFilter = {};
+            userFilter.role = "channelpartner";
+            userFilter.status = true;
+            userSvc.getUsers(userFilter).then(function(data){
+              vm.channelpartnerUser = data;
+            });
         }
 
         function loadViewData(filter){
@@ -61,32 +86,32 @@
           }
         }
 
-        function getUserOnRole(role) {
+        function getUserOnRole(role, noChange) {
             if(role == 'Other' || role == 'customer') {
                 $scope.container.mobile = "";
+                $scope.container.userId = "";
                 return;
             }
-            userFilter = {};
+            if(!noChange)
+                $scope.container.userId = "";
             switch (role) {
                 case "enterprise" : 
-                    userFilter = {};
-                    userFilter.role = "enterprise";
-                    userFilter.enterprise = true;
+                    if (vm.enterpriseUser.length < 0) {
+                        getEnterpriseUser();
+                    } else {
+                        vm.users = [];
+                        angular.copy(vm.enterpriseUser, vm.users);
+                    }
                     break;
                 case "channelpartner" : 
-                    userFilter = {};
-                    userFilter.role = "channelpartner";
+                    if (vm.channelpartnerUser.length < 0) {
+                        getChannelpartnerUser();
+                    } else {
+                        vm.users = [];
+                        angular.copy(vm.channelpartnerUser, vm.users);
+                    }
                     break;     
             }
-            userFilter.status = true;
-            getUserList(userFilter)
-        }
-
-        function getUserList(userFilter) {
-            vm.users = [];
-            userSvc.getUsers(userFilter).then(function(data){
-                vm.users = data;
-            });
         }
 
         function onUserChange(user, role) {
@@ -160,16 +185,24 @@
                 filter.searchStr = vm.searchStr;
             loadViewData(filter);
         }
-
+        
         function save(form){
             if(form.$invalid){
                 $scope.submitted = true;
                 return;
             }
+            if(vm.dataModel.userRole == 'Other' && vm.dataModel.category.name != 'Other') {
+                Modal.alert('Please Select Other category!');
+                return;
+            }
+            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+                delete vm.dataModel.user;
+                if(vm.dataModel.enterpriseId)
+                    delete vm.dataModel.enterpriseId;
+            }
             EmdChargeSvc.save(vm.dataModel)
             .then(function(){
-                vm.dataModel = {};
-                fireCommand(true);
+                reset();
                 Modal.alert('Data saved successfully!');
             })
             .catch(function(err){
@@ -179,18 +212,17 @@
         }
 
         function editClicked(rowData){
-            vm.dataModel = {};
-            vm.dataModel._id  = rowData._id;
-            vm.dataModel.userRole = rowData.userRole;
-            getUserOnRole(rowData.userRole)
-            if(rowData.user && rowData.user.userId)
-                $scope.container.userId = rowData.user.userId;
-            if(rowData.user && rowData.user.mobile)
-                $scope.container.mobile = rowData.user.mobile;
-            
-            vm.dataModel.emdCharge = rowData.emdCharge;
-            //onCategoryChange(rowData.category.categoryId, true);
-            $scope.container.categoryId = rowData.category.categoryId;
+            vm.dataModel = angular.copy(rowData);
+            getUserOnRole(vm.dataModel.userRole, true);
+            if(vm.dataModel.user && vm.dataModel.user.userId && (vm.dataModel.userRole == 'enterprise' || vm.dataModel.userRole == 'channelpartner')) {
+                onUserChange(vm.dataModel.user.userId, vm.dataModel.userRole);
+                $scope.container.userId = vm.dataModel.user.userId;
+            }
+            if(vm.dataModel.user && vm.dataModel.user.mobile && vm.dataModel.userRole == 'customer') {
+                $scope.container.mobile = vm.dataModel.user.mobile;
+                findSingleUser();
+            }
+            $scope.container.categoryId = vm.dataModel.category.categoryId;
             $scope.isEdit = true;
         }
 
@@ -199,17 +231,34 @@
                 $scope.submitted = true;
                 return;
             }
+            if(vm.dataModel.userRole == 'Other' && vm.dataModel.category.name != 'Other') {
+                Modal.alert('Please Select Other category!');
+                return;
+            }
+            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+                delete vm.dataModel.user;
+                if(vm.dataModel.enterpriseId)
+                    delete vm.dataModel.enterpriseId;
+            }
             EmdChargeSvc.update(vm.dataModel)
             .then(function(){
-                 vm.dataModel = {};
+                reset();
                 $scope.isEdit = false;
-                fireCommand(true);
                 Modal.alert('Data updated successfully!');
             })
             .catch(function(err){
                 if(err.data)
                     Modal.alert(err.data); 
             });
+        }
+
+        function reset() {
+            vm.dataModel = {};
+            $scope.container.categoryId = "";
+            $scope.container.userId = "";
+            $scope.container.mobile = "";
+            $scope.isEdit = false;
+            fireCommand(true);
         }
 
         function destroy(id){
