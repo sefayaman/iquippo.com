@@ -964,9 +964,14 @@ function updateAuctionRequest(data, id) {
     console.log("Auction Request Updated");
   });
 }
+
+
+
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
+
+  console.log("i am a hit");
 
   var filter = {};
   if (req.body._id)
@@ -991,7 +996,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter.endDate={
     '$gt': currentDate
     };
-  }
+
+ }
+
 
   var arr = [];
 
@@ -1038,8 +1045,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
-console.log("server side filter",filter);
-console.log("pagination kahani",req.body);
+//console.log("server side filter",filter);
+//console.log("pagination kahani",req.body);
   var result = {};
   /*if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
@@ -1051,7 +1058,10 @@ console.log("pagination kahani",req.body);
     sortObj = req.body.sort;
   sortObj['startDate'] = 1;
   
-  var query = AuctionMaster.find(filter).sort(sortObj);
+  var query = AuctionMaster.find(filter);
+  if(req.body.limit)
+    query = query.limit(req.body.limit);
+    query = query.sort(sortObj);
   query.exec(
     function(err, items) {
       if (err) {
@@ -1083,7 +1093,9 @@ console.log("pagination kahani",req.body);
         result.items=tempArr;
         return res.status(200).json(result);
       } else {
-        result.items=items;
+
+        result.items = items;
+        // console.log("data",result);
         return res.status(200).json(result);
       }
     }

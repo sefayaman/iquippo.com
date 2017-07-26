@@ -112,22 +112,22 @@
                   </ul> 
                   <ul class="nav navbar-nav navbar-right">
                   <li class="submenu dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
-                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>10 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>11 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>12 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>13 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>14 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>15 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>16 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>17 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>18 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);"> <strong>19 Aug </strong> Online Private Treaty Auction</a></li>
-                      <li role="menuitem"><a href="javascript:void(0);" class="text-center"> View All</a></li>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
+                    
+                    
+                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
+                      <li role="menuitem">
+                        <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
+                          <strong>
+                            {{auction.startDate | date:'d-MMM'}}
+                            </strong> {{auction.name}}</a>
+                        </li>
+                      <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
                     </ul>
                   </li>
-                </ul>                 
+                </ul>    
+
+                   
                 </div><!-- /.navbar-collapse -->
                 <!--<script type="text/javascript">
                   setTimeout(function(){convertSelectToUL();},100);
