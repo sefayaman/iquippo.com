@@ -329,6 +329,8 @@ exports.withdrawBid = function(req, res) {
 	AssetSaleBid.find(filter).exec(function(err, bid){
 		if(err)
 			console.log(err);
+		if(bid.length == 0)
+				return res.json({msg: "No active bid for this product for withdrawn!"});
 		if (bid.length > 0)
 			bidData = bid[0].toObject();
 		bidData.statusObj = {};
@@ -341,9 +343,7 @@ exports.withdrawBid = function(req, res) {
 			$set: dataObj}, function(err, result) {
 			if (err)
 				return res.status(500).send(err);
-			return res.json({
-				msg: "Bid withdrawn Successfully!"
-			});
+			return res.json({msg: "Bid withdrawn Successfully!"});
 		});
 	});	
 };
