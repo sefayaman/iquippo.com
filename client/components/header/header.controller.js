@@ -45,9 +45,9 @@ angular.module('sreizaoApp')
     /* forpcoming auctions on new page */
      $scope.fetchAuctions =function(){
         
-      AuctionSvc.getAuctionDateData({auctionType:"upcoming",limit:10}).then(function(result){
+      AuctionSvc.getAuctionDateData({auctionType:"upcoming",pagination : true,itemsPerPage:10}).then(function(result){
         
-           $scope.upcomingAuctions = result.items;
+           $scope.upcomingAuctions = result.items; 
            console.log("upcomingauctions",$scope.upcomingAuctions);
             //return upcomingAuctions;
         
