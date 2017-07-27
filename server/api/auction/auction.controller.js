@@ -1041,17 +1041,18 @@ exports.getFilterOnAuctionMaster = function(req, res) {
 console.log("server side filter",filter);
 console.log("pagination kahani",req.body);
   var result = {};
-  /*if (req.body.pagination && !req.body.statusType) {
+
+if (req.body.pagination && !req.body.statusType) {
     Utility.paginatedResult(req, res, AuctionMaster, filter, {});
     return;
-  }*/
+}
 
-  var sortObj = {};
+  /*var sortObj = {};
   if (req.body.sort)
     sortObj = req.body.sort;
   sortObj['startDate'] = 1;
-  
-  var query = AuctionMaster.find(filter).sort(sortObj);
+  */
+  var query = AuctionMaster.find(filter);
   query.exec(
     function(err, items) {
       if (err) {
