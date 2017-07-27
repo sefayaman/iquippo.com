@@ -9,13 +9,13 @@ function BidRequestDetailCtrl($scope, Auth, productSvc, $uibModalInstance) {
 	var filter = {};
 
 	function init() {
-		if($scope.bidData && $scope.bidData.product && $scope.bidData.product.proData) {
-			filter._id = $scope.bidData.product.proData;
+		if($scope.data) {
+			filter._id = $scope.data._id;
 		
 			productSvc.getProductOnFilter(filter).then(function(result) {
 			 	if(!result)
 			 		return;
-		    $scope.currentProduct = result[0];
+		    vm.product = result[0];
 		  });
 		}	
 	}

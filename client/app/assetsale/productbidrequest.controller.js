@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $uibModal, $stateParams,$state, Modal, Auth, AssetSaleSvc,PagerSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, Modal, Auth, AssetSaleSvc,PagerSvc) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
@@ -16,6 +16,11 @@ function ProductBidRequestCtrl($scope, $rootScope, $uibModal, $stateParams,$stat
 	vm.update = update;
 	vm.validateAction = AssetSaleSvc.validateAction;
 	vm.doupload = doupload;
+	vm.backButton =backButton;
+
+	function backButton() {
+      $window.history.back();
+    }
 	function init() {
 		initFilter.productId = $stateParams.productId;
 		getBidData(angular.copy(initFilter));

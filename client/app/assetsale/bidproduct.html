@@ -35,17 +35,17 @@
 			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
 			   			<!-- <th>Asset Description</th> -->
-			   			<th>Buyer Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Name</th>
 			   			<!-- <th>Buyer Country</th> -->
 			   			<!-- <th>Buyer State</th> -->
-			   			<th>Buyer Location</th>
-			   			<th>Buyer Mobile No.</th>
-			   			<th>Buyer Email Id</th>	
-			   			<th>Ageing of Asset</th>
-			   			<th>Reserve Price</th>
-			   			<th>Parking Charges</th>
-			   			<th>Buy Now Price</th>	
-			   			<th>Asset Status</th>	
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Location</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Mobile No.</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Email Id</th>	
+			   			<th ng-if="!isFAgencyPartner()">Ageing of Asset</th>
+			   			<th ng-if="!isFAgencyPartner()">Reserve Price</th>
+			   			<th ng-if="!isFAgencyPartner()">Parking Charges</th>
+			   			<th ng-if="!isFAgencyPartner()">Buy Now Price</th>	
+			   			<th ng-if="isAdmin()">Asset Status</th>	
 			   			<th ng-if="isFAgencyPartner()">Action</th>		   			
 			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Action</th>		   			
 			   			<th ng-if="isAdmin()">Action</th>		   			
@@ -62,17 +62,17 @@
 			   			<!-- <td>{{product.state}}</td> -->
 			   			<td>{{product.city}}</td>
 			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>	
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{product.reservePrice}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{product.grossPrice}}</td>
+			   			<td ng-if="isAdmin()">{{product.assetStatus}}</td>	
 			   			<td ng-if="isFAgencyPartner()">
 			   				<!-- fa action -->
 			   				<a href="/assetsale/faproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
@@ -100,7 +100,7 @@
 	<div ng-if="bidproductVm.activeBid == 'closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : {{bidproductVm.agencyListing.length}}
+		   		Showing : {{bidproductVm.productListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
 		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
@@ -119,22 +119,22 @@
 			   			<!-- <th>Asset Country</th> -->
 			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
-			   			<th>Ageing of Asset</th>
+			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Ageing of Asset</th>
 			   			<!-- <th>Asset Description</th> -->
-			   			<th>Buyer Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Name</th>
 			   			<!-- <th>Buyer Country</th> -->
 			   			<!-- <th>Buyer State</th> -->
-			   			<th>Buyer Location</th>
-			   			<th>Buyer Mobile No.</th>
-			   			<th>Buyer Email Id</th>	
-			   			<th>Buy Now Price</th>	
-			   			<th>Reserve Price</th>	
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Location</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Mobile No.</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Email Id</th>	
+			   			<th ng-if="!isFAgencyPartner()">Buy Now Price</th>	
+			   			<th ng-if="!isFAgencyPartner()">Reserve Price</th>	
 			   			 <!-- <th>Offer Type</th> -->
-			   			 <th>Offer Price</th>
-			   			 <th>Offer Status</th>
+			   			 <th ng-if="!isFAgencyPartner()">Offer Price</th>
+			   			 <th ng-if="!isFAgencyPartner()">Offer Status</th>
 			   			<!-- <th>Seller Name</th>-->
 			   			<!-- <th>Seller Contact No.</th>-->
-			   			<th>Bid Status</th>
+			   			<th ng-if="!isFAgencyPartner()">Bid Status</th>
 			   			<!-- <th>EMD Amount</th> -->
 			   			<!-- <th>EMD Details</th> -->
 			   			<!-- <th>Full Payment Amount</th> -->
@@ -144,7 +144,7 @@
 			   			<!-- <th>Delivery Order</th> -->
 			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Deal Status</th>
-			   			<th>Asset Status</th>
+			   			<th ng-if="isAdmin()">Asset Status</th>
 			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
@@ -159,31 +159,31 @@
 			   			<!-- <td>{{product.country}}</td> -->
 			   			<!-- <td>{{product.state}}</td> -->
 			   			<td>{{product.city}}</td>			   			
-			   			<td>{{}}</td>			   			
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>			   			
+			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>			   			
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>			   			
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>			   			
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>			   			
+			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<td>{{}}</td>			   			
-			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td ng-if="isAdmin()">{{}}</td>
 			   			<td>
 							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button>	
 			   			</td>

@@ -2,7 +2,7 @@
 	<div class="row">
 	  	<div class="col-sm-6">
 	  		<h4>
-	  		<a href="/assetsale/administrator" class="btn btn-default active"><i class="fa fa-chevron-left"></i>  Back</a>
+	  		<a href="javascript:void(0);" ng-click="productBidRequestVm.backButton()" class="btn btn-default active"><i class="fa fa-chevron-left"></i>  Back</a>
 	  		</h4>
 	  	</div>
 	  	<div class="col-sm-6 text-right">
@@ -33,23 +33,23 @@
 			   			<th>Offer Type</th>
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
-			   			<th>Seller Name</th>
-			   			<th>Seller Contact No.</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Contact No.</th>
 			   			<th>Bid Status</th>
 			   			<!-- <th>EMD Amount</th> -->
-			   			<th>EMD Details</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">EMD Details</th>
 			   			<!-- <th>Full Payment Amount</th> -->
-			   			<th>Full Payment Details</th>
-			   			<th>Parking Charge</th>
-			   			<th>Invoicing Details</th>
-			   			<th>KYC Documents</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Full Payment Details</th>
+			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Parking Charge</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Invoicing Details</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">KYC Documents</th>
 			   			<th>Delivery Order</th>
 			   			<!-- <th>Date of Delivery</th> -->
 			   			<th>Deal Status</th>
 			   			<!-- <th>Trade Type</th> -->
-			   			<th>Asset Status</th>
+			   			<th ng-if="!isFAgencyPartner()">Asset Status</th>
 			   			<th ng-if="isFAgencyPartner()">Action</th>
-			   			<th ng-if="!isFAgencyPartner() || !isAdmin()">Action</th>
+			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Action</th>
 			   			<th ng-if="isAdmin()">Action</th>
 			   		</tr>
 		   		</thead>
@@ -59,22 +59,22 @@
 			   			<td>{{bid.offerType}}</td>
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.offerStatus}}</td>
-			   			<td>{{bid.product.seller.name}}</td>
-			   			<td>{{bid.product.seller.mobile}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.name}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.mobile}}</td>
 			   			<td>{{bid.bidStatus}}</td>
 			   			<!-- <td>{{}}</td> -->
-			   			<td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')">Update Details</a>
 			   			</td>
 			   			<!-- <td>{{}}</td> -->
-			   			<td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">Update Details</a>
 			   			</td>
-			   			<td>{{}}</td>
-			   			<td>
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')" ng-if="productBidRequestVm.validateAction(bid,'INVOICEDETAIL')">Update</button>
 			   			</td>
-			   			<td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.openDialog(bid,'kycDocument')" ng-if="productBidRequestVm.validateAction(bid,'KYC')">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
@@ -84,13 +84,13 @@
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{bid.dealStatus}}</td>
 			   			<!-- <td>{{bid.tradeType}}</td> -->
-			   			<td>{{bid.assetStatus}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
 			   			<td ng-if="isFAgencyPartner()">
 			   				<!-- fa action -->
 			   				<button class="btn btn-sm btn-success" ><i class="fa fa-check"></i></button>
 							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup','product-preview','productBid')"><i class="fa fa-info"></i></button>	
 			   			</td>
-			   			<td ng-if="!isFAgencyPartner() || !isAdmin()">
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">
 			   				<!-- seller action -->
 			   				<button class="btn btn-sm btn-success" uib-popover="Accept Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
 			   				<button class="btn btn-sm btn-danger" uib-popover="Reject Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>

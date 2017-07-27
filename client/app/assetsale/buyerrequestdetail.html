@@ -89,7 +89,7 @@
           			<tr ng-repeat="kyc in bidData.kyc">
           				<td>{{kyc.type}}</td>
           				<td>{{kyc.name}}</td>
-                  <td><a href="javascript:void(0);">{{kyc.docName}}</a></td>
+                  <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
           			</tr>
           		</table>
           	</td>

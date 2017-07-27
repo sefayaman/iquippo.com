@@ -12,9 +12,9 @@
           <!-- success error end -->
           <div class="btn-group enterprise-value">
             <button type="button" ng-if="isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'administrator'}" ng-click="onTabChange('administrator')">Administrator</button>
-            <button type="button" ng-if="!isFAgencyPartner()" class="btn" ng-class="{'btn-warning': tabValue == 'seller'}" ng-click="onTabChange('seller')">Seller</button>
-            <button type="button" ng-if="!isFAgencyPartner()" class="btn" ng-class="{'btn-warning': tabValue == 'buyer'}" ng-click="onTabChange('buyer')">Buyer</button>
-            <button type="button" ng-if="isAdmin() || isFAgencyPartner()" class="btn" ng-class="{'btn-warning': tabValue == 'fulfilmentagency'}" ng-click="onTabChange('fulfilmentagency')">Fulfilment Agency</button> 
+            <button type="button" ng-if="!isFAgencyPartner() && !isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'seller'}" ng-click="onTabChange('seller')">Seller</button>
+            <button type="button" ng-if="!isFAgencyPartner() && !isAdmin()" class="btn" ng-class="{'btn-warning': tabValue == 'buyer'}" ng-click="onTabChange('buyer')">Buyer</button>
+            <button type="button" ng-if="isFAgencyPartner()" class="btn" ng-class="{'btn-warning': tabValue == 'fulfilmentagency'}" ng-click="onTabChange('fulfilmentagency')">Fulfilment Agency</button> 
           </div>
           <div ui-view class="col-sm-12"></div>
         </div> 

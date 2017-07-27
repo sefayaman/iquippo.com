@@ -8,27 +8,27 @@
         <tbody>
           <tr>
             <td class="col-sm-3"><b>Asset Id:</b></td>
-            <td class="col-sm-3">{{}}</td>
+            <td class="col-sm-3">{{bidReqDetailVm.product.assetId}}</td>
             <td class="col-sm-3"><b>Category:</b></td>
-            <td class="col-sm-3">{{}}</td>                  
+            <td class="col-sm-3">{{bidReqDetailVm.product.category.name}}</td>                  
           </tr>
           <tr>
             <td><b>Brand:</b></td>
-            <td>{{}}</td>
-            <td><b>Modal:</b></td>
-            <td>{{}}</td>                  
+            <td>{{bidReqDetailVm.product.brand.name}}</td>
+            <td><b>Model:</b></td>
+            <td>{{bidReqDetailVm.product.model.name}}</td>                  
           </tr>
           <tr>
             <td><b>Manufacturing Year:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.mfgYear}}</td>
             <td><b>Asset Country:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.country}}</td>
           </tr>                 
           <tr>
             <td><b>Asset State:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.state}}</td>
             <td><b>Asset Location:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.city}}</td>
           </tr>
         </tbody>
         <tbody ng-if="isFAgencyPartner() || isAdmin()">
@@ -56,32 +56,32 @@
         <tbody ng-if="!isFAgencyPartner()">
           <tr>
             <td><b>Repo Date:</b></td>
-            <td>{{}}</td>          
+            <td>{{bidReqDetailVm.product.repoDate}}</td>          
             <td><b>Ageing of Asset:</b></td>
             <td>{{}}</td>
           </tr>
           <tr>
             <td><b>Reserve Price:</b></td>
-            <td>{{}}</td>          
+            <td>{{bidReqDetailVm.product.reservePrice}}</td>          
             <td><b>Parking Charges:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.repoDate}}</td>
           </tr>
         </tbody>
           <tr>
             <td ng-if="!isFAgencyPartner()"><b>Buy Now Price:</b></td>
-            <td ng-if="!isFAgencyPartner()">{{}}</td>
+            <td ng-if="!isFAgencyPartner()">{{bidReqDetailVm.product.grossPrice}}</td>
             <td ng-if="!isFAgencyPartner() && !isAdmin()"><b>Ageing of the Portal</b></td>
             <td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>
           </tr>
           <tr ng-if="isAdmin()">
             <td><b>Trade Type:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.tradeType}}</td>
             <td><b>Asset Status:</b></td>
-            <td>{{}}</td>
+            <td>{{bidReqDetailVm.product.assetStatus}}</td>
           </tr>
           <tr>
             <td><b>Asset Description:</b></td>
-            <td colspan="3">{{}}</td>
+            <td colspan="3">{{bidReqDetailVm.product.comment}}</td>
           </tr>      
       </table>
 

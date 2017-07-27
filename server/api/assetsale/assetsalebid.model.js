@@ -55,6 +55,8 @@ var AssetSaleBidSchema = new Schema({
   emdEndDate:Date,
   fullPaymentStartDate:Date,
   fullPaymentEndDate:Date,
+  deliveryOrder:String,
+  dateOfDelivery:Date,
   proxyBid:{type:Boolean,default:false},
   status:{type:Boolean,default:true},
   createdAt: {type:Date,default:Date.now},
