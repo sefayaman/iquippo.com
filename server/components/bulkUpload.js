@@ -170,9 +170,13 @@ bulkUpload.init = function(taskData, next) {
 							product.saleVal = Number(product.saleVal);
 						}
 						product.originalInvoice = product.originalInvoice ? "Yes" : "No";
-
+					
 						if (product.originalInvoice === "Yes") {
-							product.invoiceDate = (moment(product.invioceDate, validDateFormat).format('MM/DD/YYYY'))
+							if(!product.invioceDate){
+								delete product.invoiceDate;
+							}else{
+								product.invoiceDate = (moment(product.invioceDate, validDateFormat).format('MM/DD/YYYY'));
+							}
 						} else {
 							delete product.invoiceDate;
 						}

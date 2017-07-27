@@ -967,7 +967,6 @@ function updateAuctionRequest(data, id) {
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
-
   var filter = {};
   if (req.body._id)
     filter["_id"] = req.body._id;

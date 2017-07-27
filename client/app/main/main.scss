@@ -86,31 +86,42 @@ a.text-muted{position:absolute; top:7px; right:30px; font-size:18px;}
 .video-link ul{padding: 0;}
 .video-link ul li{display: inline-block;padding-right: 15px;}
 .video-link ul li a{text-decoration: none; color: #666;}
+
+.header-top a.logo{float: left;}
+.header-top a.logo img{width: 100px;}
+.header-top .top-menu{float: right; margin-top: 15px;}
+.header-top .top-menu .Instant-quote a, .header-top .top-menu .addProduct a{border-radius: 5px; background: #f2f2f2; padding: 5px 10px; border-bottom: 2px solid #004394;}
+.header-top .top-menu .addProduct a{border-bottom: 2px solid #e3000f;}
+.header-top .top-menu .Instant-quote:hover a{background: #004394;}
+.header-top .top-menu .addProduct:hover a{background: #e3000f;}
+.header-top .top-menu .Instant-quote:hover a, .header-top .top-menu .addProduct:hover a{text-decoration: none; color: #fff;}
 header{background:#fff;}
-.navbar.navbar-inverse{background:none;border-radius:0;border:0;min-height:0;margin:0;}
-.navbar-inverse .navbar-nav li a{color:#000 !important;font-size:14px; background:none !important; padding:8px 10px;}
+.navbar.navbar-inverse{background:none;border-radius:0;border:0;min-height:0;margin:0; clear: both;}
+.navbar-inverse .navbar-nav li a{color:#000 !important;font-size:14px; background:none !important; padding:10px; text-transform: uppercase;}
 
 .navbar{margin-bottom:0px;}
 .navbar-brand{padding:0px 10px; position:relative; top:-25px; margin-right: 20px;}
 .navbar-brand img{width:125px;}
-.navbar-nav li.submenu .uib-dropdown-menu{display: none;position: absolute; z-index:100; padding: 0;}
-.navbar-nav li.submenu:hover .uib-dropdown-menu{display:block!important;background-color:rgba(255,255,255,1);border:0; width: 670px; left: -190%;}
+.navbar-nav li.submenu .uib-dropdown-menu{display: none;position: absolute; right: 0; z-index:100; padding: 0; width: 250px; box-shadow: 1px 1px 5px #ccc}
+.navbar-nav li.submenu:hover .uib-dropdown-menu{display:block!important;background-color:rgba(255,255,255,1);border:0;}
+.navbar-nav li.submenu:hover .uib-dropdown-menu li{display: block;}
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {color: #444;background-color: transparent;}
 
 .navbar-nav li.submenu .uib-dropdown-menu li{display: inline-block;}
 .navbar-inverse .navbar-nav > li.active{border-bottom:2px solid #e3000f;}
 
-.navbar-nav li.submenu:hover .uib-dropdown-menu li a{padding:4px 12px; text-decoration: none;}
+.navbar-nav li.submenu:hover .uib-dropdown-menu li a{padding:5px 12px; text-decoration: none;text-transform: capitalize; display: block;}
 /*.navbar-nav li.dropdown:hover .dropdown-menu li a:hover{}*/
 
 /*.navbar-form .input-group{width:100%;}*/
 
-.navbar .nav.navbar-nav.navbar-right{margin:0;}
-.navbar .nav.navbar-nav.navbar-right a{font-size: 13px; padding:8px 10px;margin-right:5px;margin-top:5px;color: #FFF;background: #e3000f;line-height:15px;}
-.navbar .nav.navbar-nav.navbar-right a:hover,.navbar .nav.navbar-nav.navbar-right a:focus{background: #e3000f;outline: none;color: #FFF;}
-.navbar .nav.navbar-nav.navbar-right li:nth-child(1) a{background: #004394;}
+/* .navbar .nav.navbar-nav.navbar-right{margin:0;} */
+.navbar .nav.navbar-nav.navbar-right a{text-transform: uppercase; color: #333;}
+/* .navbar .nav.navbar-nav.navbar-right a{font-size: 13px; padding:8px 10px;margin-right:5px;margin-top:5px;color: #FFF;background: #e3000f;line-height:15px;} */
+/* .navbar .nav.navbar-nav.navbar-right a:hover,.navbar .nav.navbar-nav.navbar-right a:focus{background: #e3000f;outline: none;color: #FFF;} */
+/* .navbar .nav.navbar-nav.navbar-right li:nth-child(1) a{background: #004394;} */
 
-.navbar .navbar-nav i{border-radius:50%;background:#1C2437;color:#fff;width:30px;height:30px;padding:8px;text-align:center;}
+/* .navbar .navbar-nav i{border-radius:50%;background:#1C2437;color:#fff;width:30px;height:30px;padding:8px;text-align:center;} */
 .select-group{width:100%;float:left;position:relative;}
 .select-group .form-control{width:100%;float:left;background:#382516;border-color:#382515;color:#fff;}
 .select{border:1px solid #999;height:40px;line-height:30px;position:relative;background:#FFF;padding:4px 5px 4px 0px;border-radius: 5px;}
