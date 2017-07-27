@@ -1047,6 +1047,9 @@ if (req.body.pagination && !req.body.statusType) {
       if(req.body.addAuctionType) {
       result= auctionListing(results);
        return res.status(200).json(result);
+      }
+      else{
+        return res.status(200).json(results);
       } 
     });
 }
@@ -1071,7 +1074,6 @@ if (req.body.pagination && !req.body.statusType) {
 };
 
 function auctionListing(results){
-       console.log("res-----",results);
        var tempArr = [];
        var result={};
         if(results) {
