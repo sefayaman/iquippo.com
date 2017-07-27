@@ -24,11 +24,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
 
   svc.getAuctionDateData=getAuctionDateData;  
   svc.getAuctionWiseProductData = getAuctionWiseProductData;
-<<<<<<< HEAD
   svc.getOnId = getOnId;
-=======
-  //svc.getUpcomingAuctions = getUpcomingAuctions;
->>>>>>> T113
 
   function getAll(){
         return $http.get(path)
@@ -212,11 +208,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         })
         .catch(function(err) {
           throw err;
-<<<<<<< HEAD
-        })
-=======
         });
->>>>>>> T113
     }
 
    
