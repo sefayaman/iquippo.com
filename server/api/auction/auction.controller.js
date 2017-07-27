@@ -964,6 +964,9 @@ function updateAuctionRequest(data, id) {
     console.log("Auction Request Updated");
   });
 }
+
+ 
+
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
@@ -1037,6 +1040,11 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
+<<<<<<< HEAD
+=======
+//console.log("server side filter",filter);
+//console.log("pagination kahani",req.body);
+>>>>>>> 57dfb5184461bbee10d13e4d6fb1b6bbf1ca5790
   var result = {};
 
 if (req.body.pagination && !req.body.statusType) {

@@ -5,7 +5,11 @@ angular.module('sreizaoApp')
 
     $scope.isCollapsed = true;
     var dataToSend = {};
+   // var upcomingAuctions = [];
+
     $scope.isAuctionType = "upcoming";
+
+    $scope.upcomingAuctions =[];
 
     $scope.isActive = function(states) {
       return states.indexOf($state.current.name) != -1;//routes === $location.path();
@@ -17,6 +21,8 @@ angular.module('sreizaoApp')
         else
           Modal.alert("Please Login/Register for uploading the products!", true);
     };
+
+
     $scope.redirectToSpare = function(){
       if($rootScope.getCurrentUser()._id) 
           $state.go('spareupload');
@@ -36,6 +42,22 @@ angular.module('sreizaoApp')
         $state.go("viewauctions",{type:routeTo});
       })*/
     }
+    /* forpcoming auctions on new page */
+     $scope.fetchAuctions =function(){
+        
+      AuctionSvc.getAuctionDateData({auctionType:"upcoming",pagination : true,itemsPerPage:10}).then(function(result){
+        
+           $scope.upcomingAuctions = result.items; 
+           console.log("upcomingauctions",$scope.upcomingAuctions);
+            //return upcomingAuctions;
+        
+        
+      });
+ 
+     };
+
+    /*---------------------*/
+
 
     $scope.openLogin = function(){
       Auth.doNotRedirect = false;

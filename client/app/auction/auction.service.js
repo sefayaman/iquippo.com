@@ -201,15 +201,17 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
     }
 
     function getAuctionDateData(filter){
-      console.log("the filter",filter);
+      //console.log("the filter",filter);
       return $http.post(path + "/auctionmaster/onauctionmasterfilter", filter)
         .then(function(res) {
           return res.data;
         })
         .catch(function(err) {
           throw err;
-        })
+        });
     }
+
+   
 
     function getAuctionWiseProductData(filter){
       return $http.post(path + "/auctionmaster/getauctionwiseproductdata", filter)
