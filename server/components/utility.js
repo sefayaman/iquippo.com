@@ -60,7 +60,6 @@ function paginatedResult(req,res,modelRef,filter,result,callback){
         console.log("this is",items);
           if(!err && items.length > pageSize*(skipNumber - 1)){
                 result.items = items.slice(pageSize*(skipNumber - 1),items.length);
-                console.log("result.items.length",result.items.length);
           }else
             result.items = [];
           if(!isNext && result.items.length > 0)
@@ -71,7 +70,6 @@ function paginatedResult(req,res,modelRef,filter,result,callback){
   })
   .seq(function(){
     if(callback){
-    console.log("callback",result);
       return callback(result);
     }
    return res.status(200).json(result);

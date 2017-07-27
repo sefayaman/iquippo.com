@@ -1037,33 +1037,34 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
-console.log("server side filter",filter);
-console.log("pagination kahani",req.body);
   var result = {};
 
 if (req.body.pagination && !req.body.statusType) {
     return Utility.paginatedResult(req, res, AuctionMaster, filter, {},function(results){
       if(req.body.addAuctionType) {
-        console.log("___res___",results)
       result= auctionListing(results);
-      console.log("result after call",result);
        return res.status(200).json(result);
       } 
     });
 }
 
-  /*var sortObj = {};
-  if (req.body.sort)
-    sortObj = req.body.sort;
-  sortObj['startDate'] = 1;
-  */
-  var query=AuctionMaster.find(filter);
-  query.exec(function(err,result){
-   if(err)
-   return handleError(res, err);
-   auctionListing(result);
-   return res.status(200).json(result);
-  });
+ var query = AuctionMaster.find(filter);
+  query.exec(
+    function(err, items) {
+      if (err) {
+        return handleError(res, err);
+      }
+      var result={};
+      if(req.body.addAuctionType) {
+        result.items=items;
+       result=auctionListing(result);
+       return res.status(200).json(result);
+      }
+     else {
+        result.items=items;
+        return res.status(200).json(result);
+      }
+    });
 };
 
 function auctionListing(results){
