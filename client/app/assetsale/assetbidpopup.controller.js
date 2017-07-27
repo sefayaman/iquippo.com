@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('AssetBidPopUpCtrl', AssetBidPopUpCtrl);
 
-  function AssetBidPopUpCtrl($scope, Auth, Modal, $cookies, userSvc, MarkupPriceSvc, LocationSvc, notificationSvc, NegotiationSvc, AssetSaleSvc, VatTaxSvc) {
+  function AssetBidPopUpCtrl($scope, Auth, Modal,MarkupPriceSvc,notificationSvc, AssetSaleSvc, VatTaxSvc) {
     var vm = this;
     var query = $scope.params;
     var date = new Date();
@@ -102,7 +102,18 @@
         Modal.confirm(msg + "Do you want to submit?", function(ret) {
           if (ret == "yes") {
             dataToSend = {};
-            dataToSend.offerStatuses = [];
+
+            AssetSaleSvc.setStatus(dataToSend,offerStatuses[0],'offerStatus','offerStatuses');
+            AssetSaleSvc.setStatus(dataToSend,dealStatuses[0],'dealStatus','dealStatuses');
+            AssetSaleSvc.setStatus(dataToSend,bidStatuses[0],'bidStatus','bidStatuses');
+            AssetSaleSvc.setStatus(dataToSend,assetStatuses[0].name,'assetStatus','assetStatuses');
+
+            if(query.offerType == "Buynow"){
+              AssetSaleSvc.setStatus(dataToSend,dealStatuses[6],'dealStatus','dealStatuses');
+              AssetSaleSvc.setStatus(dataToSend,bidStatuses[7],'bidStatus','bidStatuses');
+            }
+            
+            /*dataToSend.offerStatuses = [];
             dataToSend.dealStatuses = [];
             dataToSend.bidStatuses = [];
             dataToSend.assetStatuses = [];
@@ -132,7 +143,7 @@
             assetStatusObj.userId = Auth.getCurrentUser()._id;
             assetStatusObj.status = assetStatuses[0].name;
             assetStatusObj.createdAt = new Date();
-            dataToSend.assetStatuses[dataToSend.assetStatuses.length] = assetStatusObj;
+            dataToSend.assetStatuses[dataToSend.assetStatuses.length] = assetStatusObj;*/
 
             if (query.typeOfRequest)
               dataToSend.typeOfRequest = query.typeOfRequest;
@@ -195,40 +206,5 @@
       });
     }
 
-    /*function buyNow() {
-      if (!Auth.getCurrentUser()._id) {
-        Modal.alert("Please Login/Register for submitting your request!", true);
-        return;
-      }
-
-      if (Auth.getCurrentUser().profileStatus == "incomplete") {
-        return $state.go("myaccount");
-      }
-
-      Modal.confirm("Do you want to submit?", function(ret) {
-        var dataToSend = {};
-        if (ret == "yes") {
-          dataToSend = {
-            user: query.user,
-            product: query.product,
-            type: "BUY",
-            offer: $scope.total,
-            negotiation: false
-          };
-          var flag = "false";
-          NegotiationSvc.negotiation(dataToSend, flag)
-            .then(function(res) {
-              if (res && res.data && res.data.errorCode !== 0) {
-                $state.go('main');
-                return;
-              }
-              vm.negotiateAmt = "";
-              if (res && res.data && res.data.message)
-                Modal.alert(res.data.message, true);
-              $scope.close();
-            });
-        }
-      });
-    }*/
   }
 })();

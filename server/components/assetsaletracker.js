@@ -75,10 +75,10 @@ var TimeInterval =  15*60*1000;/*Service interval*/
         delete bid._id;
         if(bid.bidStatus === bidStatuses[7]){
           bid.product.prevTradeType = prd.tradeType;
-          setStatus(bid,dealStatuses[6],'dealStatus','dealStatuses');
+          AssetSaleUtil.setStatus(bid,dealStatuses[6],'dealStatus','dealStatuses');
         }
         else
-          setStatus(bid,dealStatuses[5],'bidStatus','bidStatuses');
+          AssetSaleUtil.setStatus(bid,dealStatuses[5],'bidStatus','bidStatuses');
         AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
           if(err) {console.log(err);}
           return innerCallback(err);
@@ -104,8 +104,8 @@ var TimeInterval =  15*60*1000;/*Service interval*/
        if(item.dealStatus == dealStatuses[6]){  
          var isExpired = checkExpiryDate(item.emdEndDate);
          if(isExpired){
-            setStatus(item,bidStatuses[3],'bidStatus','bidStatuses');
-            setStatus(item,dealStatuses[3],'dealStatus','dealStatuses');
+            AssetSaleUtil.setStatus(item,bidStatuses[3],'bidStatus','bidStatuses');
+            AssetSaleUtil.setStatus(item,dealStatuses[3],'dealStatus','dealStatuses');
             updateBid();
 
          }else
@@ -115,8 +115,8 @@ var TimeInterval =  15*60*1000;/*Service interval*/
             var isExpired = checkExpiryDate(item.fullPaymentEndDate);
             console.log("exp",isExpired);
            if(isExpired){
-              setStatus(item,bidStatuses[4],'bidStatus','bidStatuses');
-              setStatus(item,dealStatuses[4],'dealStatus','dealStatuses');
+              AssetSaleUtil.setStatus(item,bidStatuses[4],'bidStatus','bidStatuses');
+              AssetSaleUtil.setStatus(item,dealStatuses[4],'dealStatus','dealStatuses');
               updateBid();
           }else
             return cb();
@@ -145,17 +145,6 @@ var TimeInterval =  15*60*1000;/*Service interval*/
     else
       return false;
   }
-
-  function setStatus(bid,status,statusField,historyField){ 
-        bid[statusField] = status;
-        var stsObj = {};
-        stsObj.status = status;
-        stsObj.userId = "SYSTEM";
-        stsObj.createdAt = new Date();
-        if(!bid[historyField])
-          bid[historyField] = [];
-        bid[historyField].push(stsObj);
-    }
 
 exports.start = function() {
   console.log("Asset sale service started");

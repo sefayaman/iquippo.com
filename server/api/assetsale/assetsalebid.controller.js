@@ -14,9 +14,7 @@ var Vendor = require('../vendor/vendor.model');
 var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
 
-//var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
-//var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
-
+var tradeTypeStatuses = ['SELL','BOTH','Not Available'];
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Accepted','Auto Accepted'];
 
@@ -123,14 +121,55 @@ exports.update = function(req, res,next) {
 exports.validateUpdate = function(req,res,next){
 
 	async.parallel([validateBid,validateProduct],onComplete);
+	
 	function onComplete(err,data){
+
 		if(err){return res.status(err.statusCode).send(err.message);}
-		next();
+
+		if(req.query.action === 'approve'){
+			getEnterprisemaster(function(entData){
+				if(!entData.coolingPeriod){
+					return res.status(404).send("Cooling period configuration is not found");
+				}
+				req.entData = entData;
+				next();
+			});
+
+		}else if(req.query.action === 'emdpayment'){
+			if(req.bid.emdPayment.remainingPayment === 0){
+				getEnterprisemaster(function(entData){
+					if(!entepriseData.fullPaymentPeriod)
+						return res.status(404).send("Full payment period is not found");
+					req.body.fullPaymentStartDate = new Date();
+					req.body.fullPaymentEndDate = new Date().addDays(entepriseData.fullPaymentPeriod);
+					if(req.body.fullPaymentEndDate)
+						req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
+					next();
+				});
+			}
+			else
+				return res.status(412).send("EMD payment remaining");		
+		}else if(req.query.action === 'fullpayment'){
+			if(req.bid.fullPayment.remainingPayment === 0)
+				next();
+			else
+				return res.status(412).send("Full payment remaining");		
+		}else
+			next();
+		
+	}
+
+	function getEnterprisemaster(cb){
+		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'enterprisemaster',function(err,entepriseData){
+			if(err || !entepriseData){return res.status(404).send("Enterprise master is not found");}
+			return cb(entepriseData);
+		});
 	}
 
 	function validateBid(callback){
 		AssetSaleBid.findById(req.params.id, function (err, bid) {
 		    if (err || !bid) {return callback({statusCode:404,message:"Bid not found"});}
+		    req.bid = bid;
 		    return callback();
 		  });		
 	}
@@ -162,17 +201,15 @@ exports.postUpdate = function(req,res,next){
 
 	//Activate cooling peroid
 	function activateCoolingPeriod(){
-		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'enterprisemaster',function(err,entepriseData){
-			console.log("cooling",entepriseData);
-			if(err || !entepriseData.coolingPeriod){return res.status(404).send("Cooling period configuration is not found");}
 			var coolingObj = {cooling:true};
 			coolingObj.coolingStartDate = new Date();
-			coolingObj.coolingEndDate = new Date().addDays(entepriseData.coolingPeriod);
+			coolingObj.coolingEndDate = new Date().addDays(req.entData.coolingPeriod);
+			if(coolingObj.coolingEndDate)
+				coolingObj.coolingEndDate = coolingObj.coolingEndDate.setHours(24,0,0,0);
 			Product.update({_id:req.product._id + ""},{$set:coolingObj},function(error,retData){
 				if(err) return handleError(res,error);
 				return res.status(200).send("Bid updated successfully.");
-			})
-		});
+			});
 	}
 
 }
@@ -199,78 +236,111 @@ function getBidCount(filter, callback) {
 	});
 }
 
-exports.submitBid = function(req, res) {
-	var data = {};
-	var bidReceived = false;
-	var bidResult = {};
-	var previousBid = {};
-	if(req.body.bidReceived)
-		bidReceived = req.body.bidReceived;
-	delete req.body.bidReceived;
-	Product.findById(req.body.product.proData, function (err, product) {
-    	if(err) { return res.status(err.status || 500).send(err); }
-    	if(product.assetStatus === 'sold' || product.tradeType == 'NOT_AVAILABLE' || !product.status || product.deleted) {
-    		return res.status(412).json({err: 'No data found for create'});
-    	}
-		if (req.query.typeOfRequest == "submitBid" || req.query.typeOfRequest == "buynow") {
-			data = req.body;
-			if (!data || Object.keys(data).length < 1)
-				return res.status(412).json({
-					err: 'No data found for create'
-				});
-			create(data, function(err, result) {
-				if (err)
-					return res.status(err.status || 500).send(err);
-				if(!bidReceived)
-					updateBidReqFlagInProduct(result)
+exports.validateSubmitBid = function(req,res,next){
 
-				return res.status(201).json(result);
-			});
-		} else if (req.query.typeOfRequest == "changeBid") {
-			async.series([updateBid, newBidData], function(err, results) {
-				if(!bidReceived)
-					updateBidReqFlagInProduct(bidResult);
-				return res.status(201).json(bidResult);
-			});
-		}
-	});
-	function updateBid(callback) {
-		var statusObj = {};
+	if(!req.body || Object.keys(req.body).length < 1)
+	   return res.status(412).json({err: 'No data found for create'});
+	if(req.query.typeOfRequest === "buynow")
+		async.parallel([validateProduct,validateOtherBids,validateEnterpriseMaster],onComplete);
+	else
+		async.parallel([validateProduct,validateOtherBids],onComplete);
+
+	function onComplete(err){
+		if(err) return res.status(err.status).send(err.msg);
+		
+		if(req.query.typeOfRequest === "buynow")
+			req.body.product.prevTradeType = req.product.tradeType;
+		next();
+	}
+
+	function validateProduct(callback){
+		Product.findById(req.body.product.proData, function (err, product) {
+			if(err) { return callback({status:500,msg:err}) }
+			if(product.assetStatus === 'sold' || product.tradeType == 'NOT_AVAILABLE' || !product.status || product.deleted) {
+				return callback({status:412,msg:"Product is not available for bid"});
+			}
+			req.product = product;
+			return callback();
+  		});
+	}
+
+	function validateOtherBids(callback){
+
 		var filter = {};
-		if (req.body.user)
+		if (req.body.user && req.query.typeOfRequest !== "buynow")
 			filter.user = req.body.user;
 		if(req.body.product && req.body.product.proData)
 			filter['product.proData'] = req.body.product.proData;
 		filter.offerStatus = offerStatuses[0];
-		AssetSaleBid.find(filter).exec(function(err, bid){
+		filter.bidStatus = {$in : [bidStatuses[0]]};
+		if(req.query.typeOfRequest === "buynow")
+			filter.bidStatus.$in.push(bidStatuses[7]);
+		filter.dealStatus = dealStatuses[0];
+		AssetSaleBid.find(filter).exec(function(err, bids){
 			if(err)
-				console.log(err);
-			if(bid.length == 0)
-				return callback();
-			if (bid.length > 0)
-				previousBid = bid[0].toObject();
-			previousBid.statusObj = {};
-			statusObj.offerStatus = offerStatuses[1];
-			statusObj.bidStatus = bidStatuses[1];
-			statusObj.dealStatus = dealStatuses[2];
-			previousBid.statusObj = statusObj;
-			var dataObj =  callStatusUpdates(previousBid);
-				AssetSaleBid.update({_id : previousBid._id}, {
-					$set: dataObj}, function(err, result) {
-					if (err)
-						return callback(err);
-					return callback();
-				});
+				return callback({status:500,msg:err});
+			req.otherBids = bids;
+			req.otherBids.forEach(function(bid){
+				if(req.query.typeOfRequest === "buynow"){
+				 	AssetSaleUtil.setStatus(bid,bidStatuses[5],'bidStatus','bidStatuses');
+				}else{
+					if(req.query.typeOfRequest == "changeBid")
+						AssetSaleUtil.setStatus(bid,offerStatuses[1],'offerStatus','offerStatuses');
+					AssetSaleUtil.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses');
+				 	AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses');
+				}
+			});
+			return callback();
+		});
+	}
+
+	function validateEnterpriseMaster(callback){
+		AssetSaleUtil.getMasterBasedOnUser(req.body.product.seller._id,{},'enterprisemaster',function(err,entepriseData){
+			if(err || !entepriseData){return callback({status:500,msg:"Enterprise master is not found"});}
+			req.body.emdStartDate = new Date();
+			req.body.emdEndDate = new Date().addDays(entepriseData.emdPeriod);
+			if(req.body.emdEndDate)
+				req.body.emdEndDate = req.body.emdEndDate.setHours(24,0,0,0);
+			return callback();
+		});
+	}
+}
+
+exports.submitBid = function(req, res) {
+	
+	async.parallel([newBidData,updateBidAndProduct],function(err){
+		if(err) return res.status(500).send(err);
+		return res.status(200).send("Bid submitted successfully.");
+	});
+
+	function updateBidAndProduct(callback){
+		async.eachLimit(req.otherBids,5,updateBid,function(err){
+			var updatedData = {};
+			updatedData.bidReceived = true;
+			if(req.query.typeOfRequest === "buynow"){
+				updatedData.cooling = false;
+				updatedData.tradeType = tradeTypeStatuses[2];
+			}
+			Product.update({_id:req.product._id},{$set:updatedData}).exec();
+			return callback();
+		});
+	}
+
+	function updateBid(bid,cb){
+		var bidId = bid._id;
+		delete bid._id;
+		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
+			if(err) console.log("Error in prevoius bid update",err);
+			return cb();
 		});
 	}
 
 	function newBidData(callback) {
-		data = req.body;
+		var data = req.body;
 		AssetSaleBid.create(data, function(err, result) {
 			if (err)
 				return callback(err);
-			bidResult = result.toObject();
-			return callback(bidResult);
+			return callback();
 		});
 	}
 };

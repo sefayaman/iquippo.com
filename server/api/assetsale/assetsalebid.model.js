@@ -24,7 +24,7 @@ var AssetSaleBidSchema = new Schema({
             reservePrise:Number,
             prevTradeType:String
           },
-  offerType:String,
+  offerType:{type:String,default:'Bid'},
   ageingOfAsset:Number,
   parkingCharge:Number,
   bidAmount:Number,

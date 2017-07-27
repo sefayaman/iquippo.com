@@ -98,16 +98,6 @@
       bidSummaryScope.params.typeOfRequest="buynow";
     }
 
-      /*if (bid == "buynow") {
-        bidSummaryScope.params = {};
-        bidSummaryScope.params.negotiation = false;
-        bidSummaryScope.params.type = "BUY";
-        bidSummaryScope.params.offer = $scope.currentProduct.grossPrice;
-        bidSummaryScope.params.user = Auth.getCurrentUser();
-        bidSummaryScope.params.product = $scope.currentProduct;
-        bidSummaryScope.params.bid = "buynow";
-      }*/
-
       var bidSummaryModal = $uibModal.open({
         templateUrl: "/app/assetsale/assetbidpopup.html",
         scope: bidSummaryScope,
@@ -115,13 +105,7 @@
         windowTopClass: 'bidmodal',
         size: 'xs'
       });
-
-      /*bidSummaryModal.result.then(function (result) {
-        // countBid();
-      }, function () {
-
-      });*/
-
+      
       bidSummaryScope.close = function() {
         bidSummaryModal.close();
         filter.userId=Auth.getCurrentUser()._id;
