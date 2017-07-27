@@ -964,6 +964,9 @@ function updateAuctionRequest(data, id) {
     console.log("Auction Request Updated");
   });
 }
+
+ 
+
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
@@ -1037,8 +1040,8 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
-console.log("server side filter",filter);
-console.log("pagination kahani",req.body);
+//console.log("server side filter",filter);
+//console.log("pagination kahani",req.body);
   var result = {};
 
 if (req.body.pagination && !req.body.statusType) {
@@ -1084,6 +1087,7 @@ if (req.body.pagination && !req.body.statusType) {
         return res.status(200).json(result);
       } else {
         result.items=items;
+        console.log("data",result);
         return res.status(200).json(result);
       }
     }
