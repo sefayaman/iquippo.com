@@ -20,10 +20,9 @@ function toIST(value){
   return  moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
 }
 
-function paginatedResult(req,res,modelRef,filter,result){
+function paginatedResult(req,res,modelRef,filter,result,callback){
 
   var bodyData = req.method === 'GET' ? req.query : req.body ;
-  console.log("I confirm I am hit",bodyData);
   var pageSize = bodyData.itemsPerPage || 50;
   var first_id = bodyData.first_id;
   var last_id = bodyData.last_id;
@@ -57,10 +56,8 @@ function paginatedResult(req,res,modelRef,filter,result){
 
       query = modelRef.find(filter).sort(sortFilter).limit(pageSize*skipNumber);
       query.exec(function(err,items){
-        console.log("this is",items);
           if(!err && items.length > pageSize*(skipNumber - 1)){
                 result.items = items.slice(pageSize*(skipNumber - 1),items.length);
-                console.log("result",result.items);
           }else
             result.items = [];
           if(!isNext && result.items.length > 0)
@@ -70,10 +67,12 @@ function paginatedResult(req,res,modelRef,filter,result){
 
   })
   .seq(function(){
-      return res.status(200).json(result);
+    if(callback){
+      return callback(result);
+    }
+   return res.status(200).json(result);
   })
   .catch(function(err){
-    console.log("######rrrr",err);
     handleError(res,err);
   })
  

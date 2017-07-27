@@ -964,10 +964,12 @@ function updateAuctionRequest(data, id) {
     console.log("Auction Request Updated");
   });
 }
+
+ 
+
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
-
   var filter = {};
   if (req.body._id)
     filter["_id"] = req.body._id;
@@ -1040,20 +1042,21 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if (arr.length > 0)
     filter['$or'] = arr;
 
-console.log("server side filter",filter);
-console.log("pagination kahani",req.body);
   var result = {};
-  /*if (req.body.pagination && !req.body.statusType) {
-    Utility.paginatedResult(req, res, AuctionMaster, filter, {});
-    return;
-  }*/
 
-  var sortObj = {};
-  if (req.body.sort)
-    sortObj = req.body.sort;
-  sortObj['startDate'] = 1;
-  
-  var query = AuctionMaster.find(filter).sort(sortObj);
+if (req.body.pagination && !req.body.statusType) {
+    return Utility.paginatedResult(req, res, AuctionMaster, filter, {},function(results){
+      if(req.body.addAuctionType) {
+      result= auctionListing(results);
+       return res.status(200).json(result);
+      }
+      else{
+        return res.status(200).json(results);
+      } 
+    });
+}
+
+ var query = AuctionMaster.find(filter);
   query.exec(
     function(err, items) {
       if (err) {
@@ -1061,9 +1064,22 @@ console.log("pagination kahani",req.body);
       }
       var result={};
       if(req.body.addAuctionType) {
-        var tempArr = [];
-        if(items) {
-        items.forEach(function(auction) {
+        result.items=items;
+       result=auctionListing(result);
+       return res.status(200).json(result);
+      }
+     else {
+        result.items=items;
+        return res.status(200).json(result);
+      }
+    });
+};
+
+function auctionListing(results){
+       var tempArr = [];
+       var result={};
+        if(results) {
+        results.items.forEach(function(auction) {
           auction = auction.toObject();
           var currentDate = new Date();
           var startDate = auction.startDate;
@@ -1083,14 +1099,9 @@ console.log("pagination kahani",req.body);
         })
       }
         result.items=tempArr;
-        return res.status(200).json(result);
-      } else {
-        result.items=items;
-        return res.status(200).json(result);
+        result.totalItems=results.totalItems;
+        return result;
       }
-    }
-  );
-};
 
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};

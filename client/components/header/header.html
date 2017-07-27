@@ -1,6 +1,17 @@
-<div class="container-fluid" ng-controller="HeaderCtrl">
-        <div class="text-right">
+<div class="container" ng-controller="HeaderCtrl">
+        <div class="header-top">     
+          <a class="logo" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
+
           <ul class="top-menu">
+            <li class="Instant-quote">
+              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
+            </li>           
+            <li class="addProduct">
+              <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
+            </li>            
+            <li class="addProduct">
+              <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
+            </li>
             
             <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
@@ -58,10 +69,9 @@
           }
           </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         -->
-        <div class="navbar">
-          <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
+          <!-- <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a> -->
            
-           <nav class="navbar navbar-inverse pull-left" role="navigation">
+           <nav class="navbar navbar-inverse" role="navigation">
               <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                   <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" data-target=".navbar-ex1-collapse">
@@ -76,7 +86,6 @@
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
-               <div class="text-center">
                   <ul class="nav navbar-nav">
                     <li ng-class="{active: isActive(['main'])}"><a href="index.html">Home</a></li>
                     <li ng-class="{active: isActive(['aboutus'])}"><a href="/aboutus">About Us</a></li>
@@ -100,24 +109,30 @@
                     <!-- <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li> -->
                     <li ng-class="{active: isActive(['viewauctions'])}"><a href="javascript:void(0);" ng-click="redirectToAuction()">Auctions</a></li>
                     <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
-                  </ul>
+                  </ul> 
+                  <ul class="nav navbar-nav navbar-right">
+                  <li class="submenu dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
+                    
+                    
+                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
+                      <li role="menuitem">
+                        <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
+                          <strong>
+                            {{auction.startDate | date:'d-MMM'}}
+                            </strong> {{auction.name}}</a>
+                        </li>
+                      <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
+                    </ul>
+                  </li>
+                </ul>    
+
+                   
                 </div><!-- /.navbar-collapse -->
                 <!--<script type="text/javascript">
                   setTimeout(function(){convertSelectToUL();},100);
                 </script>-->
-            </nav>
-          <ul class="nav navbar-nav navbar-right hidden-xs"> 
-            <li>
-              <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
-            </li>           
-            <li>
-              <a href="javascript:void(0);" ng-click="redirectToSpare()"><span class="fa fa-wrench"></span> Add Spares</a>
-            </li>            
-            <li>
-              <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
-            </li>
-          </ul>
-        </div>
+            </nav>            
        <!--  <finance-integration></finance-integration> -->
 
         <!-- common modal container -->

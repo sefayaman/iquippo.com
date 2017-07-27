@@ -79,7 +79,7 @@
         </div>
         <uib-pagination total-items="auctionDateVm.totalItems" ng-model="auctionDateVm.currentPage" items-per-page="auctionDateVm.itemsPerPage" max-size="auctionDateVm.maxSize" ng-change="auctionDateVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination> -->
     		<div class="no-result" ng-if="auctionDateVm.show">No records found</div>
-        <div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'startDate'">  
+        <div class="auction-list form-group" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'endDate'">  
           <div class="media">
             <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionTypeValue={{product.auctionType}}&auctionName={{product.name}}&auctionOwner={{product.auctionOwner}}&auctionOwnerMobile={{product.auctionOwnerMobile}}&termAuction={{product.termAuction}}&contactName={{product.contactName}}&contactNumber={{product.contactNumber}}&docName={{product.docName}}&docNameProxy={{product.docNameProxy}}&docType={{product.docType}}&auctionCity={{product.city}}&id={{product._id}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
@@ -139,7 +139,7 @@
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!product.docType &&  product.docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form </a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="!product.docType && product.docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   <!--<a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>-->
-                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionTypeValue={{product.auctionType}}&auctionName={{product.name}}&auctionOwner={{product.auctionOwner}}&auctionOwnerMobile={{product.auctionOwnerMobile}}&termAuction={{product.termAuction}}&contactName={{product.contactName}}&contactNumber={{product.contactNumber}}&docName={{product.docName}}&docNameProxy={{product.docNameProxy}}&docType={{product.docType}}&auctionCity={{product.city}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>
+                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&id={{product._id}}"  class="btn btn-sm btn-danger">View Assets</a>
                 </div>
               </div>
             </div>
