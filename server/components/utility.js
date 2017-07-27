@@ -20,7 +20,7 @@ function toIST(value){
   return  moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
 }
 
-function paginatedResult(req,res,modelRef,filter,result){
+function paginatedResult(req,res,modelRef,filter,result,callback){
 
   var bodyData = req.method === 'GET' ? req.query : req.body ;
   console.log("I confirm I am hit",bodyData);
@@ -60,33 +60,7 @@ function paginatedResult(req,res,modelRef,filter,result){
         console.log("this is",items);
           if(!err && items.length > pageSize*(skipNumber - 1)){
                 result.items = items.slice(pageSize*(skipNumber - 1),items.length);
-                console.log("result",result.items);
-               // var result={};
-      if(req.body.addAuctionType) {
-        var tempArr = [];
-        if(result.items) {
-        result.items.forEach(function(auction) {
-          auction = auction.toObject();
-          var currentDate = new Date();
-          var startDate = auction.startDate;
-          var endDate = auction.endDate;
-          auction.endTimer = endDate.getTime();
-          var d = new Date();
-          auction.startTimer = d.getTime();
-          
-          if (startDate > currentDate) {
-            auction.auctionValue = "upcomingAuctions";
-          } else if (startDate < currentDate && endDate > currentDate) {
-            auction.auctionValue = "ongoingAuctions";
-          } else if (endDate < currentDate) {
-            auction.auctionValue = "closedAuctions";
-          }
-          tempArr[tempArr.length] = auction;
-        })
-      }
-        result.items=tempArr;
-        return res.status(200).json(result);
-      }
+                console.log("result.items.length",result.items.length);
           }else
             result.items = [];
           if(!isNext && result.items.length > 0)
@@ -96,7 +70,11 @@ function paginatedResult(req,res,modelRef,filter,result){
 
   })
   .seq(function(){
-      return res.status(200).json(result);
+    if(callback){
+    console.log("callback",result);
+      return callback(result);
+    }
+   return res.status(200).json(result);
   })
   .catch(function(err){
     console.log("######rrrr",err);
