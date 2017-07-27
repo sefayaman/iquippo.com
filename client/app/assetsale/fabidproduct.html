@@ -45,15 +45,15 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="fa in bidproductVm.productListing">			   			
-			   			<td>{{fa.assetId}}</td>
-			   			<td>{{fa.category.name}}</td>
-			   			<td>{{fa.brand.name}}</td>
-			   			<!-- <td>{{fa.model.name}}</td> -->
-			   			<!-- <td>{{fa.mfgYear}}</td> -->
-			   			<!-- <td>{{fa.country}}</td> -->
-			   			<!-- <td>{{fa.state}}</td> -->
-			   			<td>{{fa.city}}</td>
+		   			<tr ng-repeat="product in bidproductVm.productListing">			   			
+			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.category.name}}</td>
+			   			<td>{{product.brand.name}}</td>
+			   			<!-- <td>{{product.model.name}}</td> -->
+			   			<!-- <td>{{product.mfgYear}}</td> -->
+			   			<!-- <td>{{product.country}}</td> -->
+			   			<!-- <td>{{product.state}}</td> -->
+			   			<td>{{product.city}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<!-- <td>{{}}</td> -->
@@ -62,7 +62,7 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>	
 			   			<td>
-			   				<a href="/assetsale/faproductbidrequest?productId={{fa._id}}&assetId={{fa.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+			   				<a href="/assetsale/faproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
 							<button type="button" class="btn btn-sm btn-info" ng-click="bidproductVm.openDialog(product,'faRequestDetailPopup')"><i class="fa fa-info"></i></button>
 			   			</td>		   			
 			   		</tr>
@@ -122,16 +122,16 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr>		
-		   				<td>{{fa.ticketId}}</td>	   			
-			   			<td>{{fa.assetId}}</td>
-			   			<td>{{fa.category.name}}</td>
-			   			<td>{{fa.brand.name}}</td>
-			   			<!-- <td>{{fa.model.name}}</td> -->
-			   			<!-- <td>{{fa.mfgYear}}</td> -->
-			   			<!-- <td>{{fa.country}}</td> -->
-			   			<!-- <td>{{fa.state}}</td> -->
-			   			<td>{{fa.city}}</td>			   			
+		   			<tr ng-repeat="product in bidproductVm.productListing">		
+		   				<td>{{product.ticketId}}</td>	   			
+			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.category.name}}</td>
+			   			<td>{{product.brand.name}}</td>
+			   			<!-- <td>{{product.model.name}}</td> -->
+			   			<!-- <td>{{product.mfgYear}}</td> -->
+			   			<!-- <td>{{product.country}}</td> -->
+			   			<!-- <td>{{product.state}}</td> -->
+			   			<td>{{product.city}}</td>			   			
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<!-- <td>{{}}</td> -->

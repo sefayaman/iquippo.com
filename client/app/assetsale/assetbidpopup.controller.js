@@ -68,7 +68,7 @@
         if (query.product.parkingCharges)
         $scope.parking = query.product.parkingCharges;
 
-      $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking || 0) + Number(vm.salePrice || 0);
+      $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking || 0) + Number(vm.bidAmount || 0);
       });
     }
 

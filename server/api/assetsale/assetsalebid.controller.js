@@ -245,6 +245,8 @@ exports.submitBid = function(req, res) {
 		AssetSaleBid.find(filter).exec(function(err, bid){
 			if(err)
 				console.log(err);
+			if(bid.length == 0)
+				return callback();
 			if (bid.length > 0)
 				previousBid = bid[0].toObject();
 			previousBid.statusObj = {};

@@ -4,7 +4,6 @@ angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProdu
 function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
 	var vm = this;
 	var filter = {};
-	var dataToSend={};
 	vm.bidListing = [];
 	vm.activeBid = "auctionable";
 	$scope.onTabChange = onTabChange;
@@ -19,11 +18,11 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	function init() {
 		filter = {};
 		initFilter.pagination = true;
-		angular.copy(initFilter, filter);
 		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
 			$scope.isAdmin = false;
-			filter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
+			initFilter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		}
+		angular.copy(initFilter, filter);
 		filter.offerStatus = offerStatuses[0];
 		filter.dealStatus = dealStatuses[0];
 		getBidData(filter);	
@@ -70,7 +69,6 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
     function openDialog(bidData, popupName){
 		var newScope = $rootScope.$new();
 		newScope.bidData = bidData;
-		newScope.formFlag = true;
 		Modal.openDialog(popupName,newScope);
 	}
 
@@ -96,8 +94,8 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	  		case 'auctionable':
 	  		filter={};
 			angular.copy(initFilter, filter);
-	  		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
-	  			filter.userId = Auth.getCurrentUser()._id;
+	  		// if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
+	  		// 	filter.userId = Auth.getCurrentUser()._id;
 	  		filter.offerStatus = offerStatuses[0];
 	  		filter.dealStatus = dealStatuses[0];
 	  		getBidData(filter);
@@ -105,8 +103,8 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	  		case 'closed':
 	  		filter={};
 	  		angular.copy(initFilter, filter);
-			if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
-	  			filter.userId = Auth.getCurrentUser()._id;
+			// if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
+	  // 			filter.userId = Auth.getCurrentUser()._id;
 	  		filter.buyerClosedFlag = true;
 	  		getBidData(filter);
 	  		break;
@@ -128,9 +126,10 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
               Modal.alert(res.msg, true);
           	filter ={};
           	angular.copy(initFilter, filter);
-          	if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
-          		filter.userId = Auth.getCurrentUser()._id;
+          	// if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
+          	// 	filter.userId = Auth.getCurrentUser()._id;
           	filter.offerStatus = offerStatuses[0];
+          	filter.dealStatus = dealStatuses[0];
           	getBidData(filter);
           })
           .catch(function(err) {
@@ -139,19 +138,14 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
       });
     }
 
-	function fireCommand(reset, filterObj) {
-		if (reset)
-			$scope.pager.reset();
+	function fireCommand(reset) {
+		if(reset)
+		  $scope.pager.reset();
 		var filter = {};
-		if (!filterObj)
-			angular.copy(dataToSend, filter);
-		else
-			filter = filterObj;
-		if (vm.searchStr) {
-			filter.isSearch = true;
+		angular.copy(initFilter, filter);
+		if (vm.searchStr)
 			filter.searchStr = encodeURIComponent(vm.searchStr);
-		}
-
+		
 		getBidData(filter);
 	}
 
@@ -159,7 +153,6 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 		$scope.pager.copy(filter);
 		AssetSaleSvc.fetchBid(filter)
 			.then(function(res) {
-				console.log("res", res);
 				vm.bidListing = res.items;
 				vm.totalItems = res.totalItems;
 				$scope.pager.update(res.items, res.totalItems);

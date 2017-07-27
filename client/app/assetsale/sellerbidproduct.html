@@ -74,7 +74,7 @@
 	<div ng-if="bidproductVm.activeBid == 'closed'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
-		   		Showing : 1 Records
+		   		Showing : {{bidproductVm.productListing.length}}
 		   	</div>
 		   	<div class="col-sm-3 tablesearch text-right">
 		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">

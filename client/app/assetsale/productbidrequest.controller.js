@@ -79,7 +79,6 @@ function ProductBidRequestCtrl($scope, $rootScope, $stateParams,$state, Modal, A
 	function openDialog(bidData, popupName, formType){
 		var newScope = $rootScope.$new();
 		newScope.bidData = bidData;
-		newScope.formFlag = true;
 		if(formType)
 			newScope.formType = formType;
 		Modal.openDialog(popupName,newScope);
