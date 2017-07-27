@@ -44,7 +44,7 @@
 			   			<th>KYC Documents</th>
 			   			<!-- <th>Delivery Order</th> -->
 			   			<!-- <th>Date of Delivery</th> -->
-			   			<th>Asset Delivery Confirmation</th>
+			   			<!-- <th>Asset Delivery Confirmation</th> -->
 			   			<th>Rating</th>
 			   			<th>Feedback</th>
 						<th>Action</th>
@@ -77,23 +77,24 @@
 			   			</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
 			   			<td>
 			   				<span uib-rating ng-model="rate" max="max" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
         					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
 			   			</td>
 			   			<td>
-			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
+			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')" uib-popover="Give Your Feedback" popover-trigger="mouseenter">
 			   				<i class="fa fa-commenting-o fa-2x"></i>
 			   				</a>
 			   			</td>
 						<td> 
-							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-success btn-sm"><i class="fa fa-money"></i></button> 
-							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" ng-click="buyerProductBidRequestVm.openBidModal(bid)">
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-success btn-sm" uib-popover="Pay Now" popover-trigger="mouseenter"><i class="fa fa-money"></i></button> 
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" uib-popover="Change Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openBidModal(bid)">
 								<i class="fa fa-retweet"></i>
 							</button> 
-							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-sm" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)"><i class="fa fa-sign-out"></i></button> 
-							<button type="button" class="btn btn-sm btn-info" ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup')"><i class="fa fa-info"></i></button>
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-sm" uib-popover="Withdraw Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)"><i class="fa fa-sign-out"></i></button> 
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview', 'auctionableBid')"><i class="fa fa-info"></i></button>
+							<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter"><i class="fa fa-check"></i></button>
 						</td>
 			   		</tr>
 		   		</tbody>
@@ -165,12 +166,12 @@
         					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
 			   			</td>
 			   			<td>
-			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
+			   				<a href="javascript:void(0);" uib-popover="Give Your Feedback" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
 			   				<i class="fa fa-commenting-o fa-2x"></i>
 			   				</a>
 			   			</td>
 			   			<td>
-							<button type="button" class="btn btn-sm btn-info"><i class="fa fa-info"></i></button>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter"  ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview', 'closedBid')"><i class="fa fa-info"></i></button>
 			   				
 			   			</td>
 			   		</tr>

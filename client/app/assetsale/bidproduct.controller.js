@@ -85,10 +85,11 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		});
 	}
 
-	function openDialog(bidData, popupName){
+	function openDialog(bidData, popupName, modalClass, viewBlock){
 		var newScope = $rootScope.$new();
 		newScope.bidData = bidData;
-		Modal.openDialog(popupName,newScope);
+		newScope.viewBlock = viewBlock;
+		Modal.openDialog(popupName,newScope,modalClass);
 	}
 
 	//loading start

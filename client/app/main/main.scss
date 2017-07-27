@@ -875,7 +875,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     width: 100px;
     font-size: 16px; margin:10px 0;}
     .form-control[readonly]{cursor: auto;background: #fff;}
-.angularjs-datetime-picker{z-index:9;}
+.angularjs-datetime-picker{z-index:9999;}
 .angularjs-datetime-picker .adp-day{line-height: 18px !important;}
 .angularjs-datetime-picker input[type=range] {
     width: 100%;

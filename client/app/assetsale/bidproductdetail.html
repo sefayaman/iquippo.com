@@ -1,10 +1,10 @@
 <div>
   <div class="modal-header">
-      <button type="button" class="close" ng-click="adminReqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
+      <button type="button" class="close" ng-click="bidReqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
       <h4 class="modal-title">Details</h4>
     </div>
     <div class="modal-body">      
-      <table class="table table-bordred">               
+      <table class="table table-bordred" ng-if="viewBlock == 'auctionable'">               
         <tbody>
           <tr>
             <td class="col-sm-3"><b>Asset Id:</b></td>
@@ -30,76 +30,163 @@
             <td><b>Asset Location:</b></td>
             <td>{{}}</td>
           </tr>
-
-           <tr>
-            <td><b>Asset Description:</b></td>
-            <td>{{}}</td>
+        </tbody>
+        <tbody ng-if="isFAgencyPartner() || isAdmin()">
+          <!-- <td><b>Asset Description:</b></td>
+            <td>{{}}</td> -->
+           <tr>            
             <td><b>Buyer Name:</b></td>
-            <td>{{}}</td>
-          </tr>
-
-          <tr>
+            <td>{{}}</td>          
             <td><b>Buyer Country:</b></td>
             <td>{{}}</td>
-            <td><b>Buyer State:</b></td>
-            <td></td>
           </tr>
-
           <tr>
+            <td><b>Buyer State:</b></td>
+            <td></td>          
             <td><b>Buyer Location:</b></td>
             <td>{{}}</td>
-            <td><b>Buyer Mobile No.:</b></td>
-            <td>{{}}</td>
           </tr>
           <tr>
+            <td><b>Buyer Mobile No.:</b></td>
+            <td>{{}}</td>          
             <td><b>Buyer Email Id:</b></td>
             <td>{{}}</td>
-            <td><b>Repo Date:</b></td>
-            <td>{{}}</td>
           </tr>
+        </tbody>
+        <tbody ng-if="!isFAgencyPartner()">
           <tr>
+            <td><b>Repo Date:</b></td>
+            <td>{{}}</td>          
             <td><b>Ageing of Asset:</b></td>
             <td>{{}}</td>
-            <td><b>Reserve Price:</b></td>
-            <td>{{}}</td>
           </tr>
           <tr>
+            <td><b>Reserve Price:</b></td>
+            <td>{{}}</td>          
             <td><b>Parking Charges:</b></td>
             <td>{{}}</td>
-            <td><b>Buy Now Price:</b></td>
-            <td>{{}}</td>
           </tr>
+        </tbody>
           <tr>
+            <td ng-if="!isFAgencyPartner()"><b>Buy Now Price:</b></td>
+            <td ng-if="!isFAgencyPartner()">{{}}</td>
+            <td ng-if="!isFAgencyPartner() && !isAdmin()"><b>Ageing of the Portal</b></td>
+            <td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>
+          </tr>
+          <tr ng-if="isAdmin()">
             <td><b>Trade Type:</b></td>
             <td>{{}}</td>
             <td><b>Asset Status:</b></td>
             <td>{{}}</td>
           </tr>
-        </tbody>
-        <!-- closed bid -->
+          <tr>
+            <td><b>Asset Description:</b></td>
+            <td colspan="3">{{}}</td>
+          </tr>      
+      </table>
+
+      <!-- closed bid -->
+      <table class="table table-bordred" ng-if="viewBlock == 'closed'"> 
         <tbody>
           <tr>
-            <td class="col-sm-3"><b>Ticket Id:</b></td>
-            <td class="col-sm-3">{{}}</td>
-            <td class="col-sm-3"><b>Offer Type:</b></td>
-            <td class="col-sm-3">{{}} </td>
+            <td class="col-sm-3"><b>Ticket Id::</b></td>
+            <td class="col-sm-3">{{}}</td>            
+            <td class="col-sm-3"><b>Asset Id:</b></td>
+            <td class="col-sm-3">{{}}</td>                              
           </tr>
           <tr>
-            <td><b>Offer Price:</b></td>
+            <td><b>Category:</b></td>
             <td>{{}}</td>
-            <td><b>Offer Status:</b></td>
+            <td><b>Brand:</b></td>
+            <td>{{}}</td>                             
+          </tr>
+          <tr>
+            <td><b>Modal:</b></td>
+            <td>{{}}</td> 
+            <td><b>Manufacturing Year:</b></td>
+            <td>{{}}</td>            
+          </tr>                 
+          <tr>
+            <td><b>Asset Country:</b></td>
+            <td>{{}}</td>
+            <td><b>Asset State:</b></td>
+            <td>{{}}</td>            
+          </tr>
+          <tr>
+            <td><b>Asset Location:</b></td>
+            <td>{{}}</td>
+            <td><b>Offer Type:</b></td>
+            <td>{{}} </td>
+          </tr>
+        </tbody>
+          <!-- commen for seller and admin  -->
+        <tbody ng-if="!isFAgencyPartner()">
+          <tr>
+            <td><b>Repo Date</b></td>
+            <td>{{}} </td>
+            <td><b>Ageing of Asset</b></td>
             <td>{{}} </td>
           </tr>
           <tr>
+            <td><b>Reserve Price</b></td>
+            <td>{{}} </td>
+            <td><b>Parcking Charge</b></td>
+            <td>{{}} </td>
+          </tr>
+          <tr>
+            <td><b>Buy Now Price</b></td>
+            <td>{{}} </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+          <!-- end seller and admin -->
+        <tbody ng-if="isFAgencyPartner() || isAdmin()">
+          <!-- commen for fa and admin -->
+          <tr>
+            <td><b>Buyer Name</b></td>
+            <td>{{}} </td>
+            <td><b>Buyer Country</b></td>
+            <td>{{}} </td>
+          </tr>
+          <tr>
+            <td><b>Buyer State</b></td>
+            <td>{{}} </td>
+            <td><b>Buyer Location</b></td>
+            <td>{{}} </td>
+          </tr>
+          <tr>
+            <td><b>Buyer Mobile No.</b></td>
+            <td>{{}} </td>
+            <td><b>Buyer Email id</b></td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+          <!-- hidden for seller -->
             <td><b>Seller Name:</b></td>
             <td>{{}} </td>          
             <td><b>Seller Contact No.:</b></td>
             <td>{{}}</td>
           </tr>
+          <!-- end for seller-->
+        </tbody>
+          <!-- end fa and admin-->
+        <tbody>
+          <tr>
+            <td><b>Offer Price:</b></td>
+            <td>{{}}</td>
+            <td><b>Offer Status:</b></td>
+            <td>{{}} </td>
+          </tr>          
+
           <tr>
             <td><b>Bid Status:</b></td>
-            <td>{{}} </td>
+            <td colspan="3">{{}} </td>            
+          </tr>
+          <tr>
             <td><b>EMD Amount:</b></td>
+            <td>{{}}</td>
+            <td><b>Full Payment Amount:</b></td>
             <td>{{}}</td>
           </tr>
           <tr>
@@ -121,11 +208,9 @@
               </table>
             </td>
           </tr>
-          <tr>            
-            <td><b>Full Payment Amount:</b></td>
-            <td>{{}}</td>
+          <tr>  
             <td><b>Full Payment Details:</b></td>
-            <td>
+            <td colspan="3">
               <table class="table">
                 <tr>
                   <th>Bank Name</th>
@@ -190,138 +275,17 @@
             <td><b>Deal Status: </b></td>
             <td>{{}}</td>
           </tr>
-          <tr>
+          <!-- only for admin -->
+          <tr ng-if="isAdmin()">
             <td><b>Trade Type: </b></td>
             <td>{{}}</td>
             <td><b>Asset Status:</b></td>
             <td>{{}} </td>
           </tr>
         </tbody>
-      </table>
-
-      <!-- admin request details  popup-->
-      <table class="table table-bordred">               
-        <tbody>
-          <tr>
-            <td class="col-sm-3"><b>Ticket Id:</b></td>
-            <td class="col-sm-3">{{}}</td>
-            <td class="col-sm-3"><b>Offer Type:</b></td>
-            <td class="col-sm-3">{{}}</td>                  
-          </tr>
-          <tr>
-            <td><b>Offer Price:</b></td>
-            <td>{{}}</td>
-            <td><b>Offer Status:</b></td>
-            <td>{{}}</td>                  
-          </tr>
-          <tr>
-            <td><b>Seller Name:</b></td>
-            <td>{{}}</td>
-            <td><b>Seller Contact No.:</b></td>
-            <td>{{}}</td>                  
-          </tr>  
-          <tr>
-            <td><b>Bid Status:</b></td>
-            <td>{{}}</td>
-            <td><b>EMD Amount:</b></td>
-            <td>{{}} </td> 
-          </tr>
-          <tr>
-            <td><b>EMD Details:</b></td>
-            <td colspan="3">
-              <table class="table">
-                <tr>
-                  <th>Bank Name</th>
-                  <th>Mode of Payment</th>
-                  <th>Instrument No</th>
-                  <th>Amount</th>
-                </tr>
-                <tr>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>            
-            <td><b>Full Payment Amount:</b></td>
-            <td>{{}}</td>
-            <td><b>Full Payment Details:</b></td>
-            <td>
-              <table class="table">
-                <tr>
-                  <th>Bank Name</th>
-                  <th>Mode of Payment</th>
-                  <th>Instrument No</th>
-                  <th>Amount</th>
-                </tr>
-                <tr>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                </tr>
-              </table>
-            </td>            
-          </tr>
-          <tr>
-            <td><b>Invoicing Details:</b></td>
-            <td colspan="3">
-              <table class="table">
-                <tr>
-                  <th>Name</th>
-                  <th>Country</th>
-                  <th>State</th>
-                  <th>Location</th>
-                  <th>Address</th>
-                  <th>Email</th>
-                  <th>Mobile No.</th>
-                </tr>
-                <tr>
-                  <td>Name</td>
-                  <td>Country</td>
-                  <td>State</td>
-                  <td>Location</td>
-                  <td>Address</td>
-                  <td>Email</td>
-                  <td>Mobile No.</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td><b>KYC Document:</b></td>
-            <td>
-              <table class="table">
-                <tr>
-                  <th>Address Proof</th>
-                  <th>ID Proof</th>
-                </tr>
-                <tr>
-                  <td>Address Proof</td>
-                  <td>ID Proof</td>
-                </tr>
-              </table>
-            </td>
-            <td><b>Delivery Order:</b></td>
-            <td>{{}} </td>
-          </tr>
-          <tr>
-            <td><b>Date of Delivery: </b></td>
-            <td>{{}}</td>
-            <td><b>Deal Status:</b></td>
-            <td>{{}} </td>
-          </tr>
-          <tr>
-            <td><b>Trade Type: </b></td>
-            <td>{{}}</td>
-            <td><b>Asset Status:</b></td>
-            <td>{{}} </td>
-          </tr>
-        </tbody>
-      </table>
+      </table> 
     </div>
-            
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-danger" ng-click="bidReqDetailVm.closeDialog()">Close</button> 
+    </div>
 </div>

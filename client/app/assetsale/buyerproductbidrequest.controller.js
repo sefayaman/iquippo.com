@@ -66,10 +66,10 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	  	});
     }
 
-    function openDialog(bidData, popupName){
+    function openDialog(bidData, popupName, modalClass){
 		var newScope = $rootScope.$new();
 		newScope.bidData = bidData;
-		Modal.openDialog(popupName,newScope);
+		Modal.openDialog(popupName,newScope, modalClass);
 	}
 
     // Rating

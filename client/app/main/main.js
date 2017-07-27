@@ -529,7 +529,7 @@ angular.module('sreizaoApp')
       })
       .state('assetsale.administrator', {
         url: '/administrator',
-        templateUrl: 'app/assetsale/adminbidproduct.html',
+        templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true,
@@ -537,7 +537,7 @@ angular.module('sreizaoApp')
       })
       .state('assetsale.adminproductbidrequest', {
         url: '/adminproductbidrequest?assetId&productId',
-        templateUrl: 'app/assetsale/adminproductbidrequest.html',
+        templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true,
@@ -545,14 +545,14 @@ angular.module('sreizaoApp')
       })
       .state('assetsale.seller', {
         url: '/seller',
-        templateUrl: 'app/assetsale/sellerbidproduct.html',
+        templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.sellerproductbidrequest', {
         url: '/sellerproductbidrequest?assetId&productId',
-        templateUrl: 'app/assetsale/sellerproductbidrequest.html',
+        templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true
@@ -566,14 +566,14 @@ angular.module('sreizaoApp')
       })
       .state('assetsale.fulfilmentagency', {
         url: '/fulfilmentagency',
-        templateUrl: 'app/assetsale/fabidproduct.html',
+        templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.faproductbidrequest', {
         url: '/faproductbidrequest?assetId&productId',
-        templateUrl: 'app/assetsale/faproductbidrequest.html',
+        templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true

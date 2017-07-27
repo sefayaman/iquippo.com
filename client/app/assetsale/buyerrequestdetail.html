@@ -1,6 +1,6 @@
 <div>
   <div class="modal-header">
-      <button type="button" class="close" ng-click="buyerReqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
+      <button type="button" class="close" ng-click="reqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
       <h4 class="modal-title">Details</h4>
     </div>
     <div class="modal-body">
@@ -35,12 +35,12 @@
           <td><b>Asset Location:</b></td>
           <td>{{bidData.product.city}}</td>
           <td><b>Asset Description:</b></td>
-          <td>{{}}</td>
+          <td>{{currentProduct.comment}}</td>
         </tr>
 
         <tr>
           <td><b>Offer Type:</b></td>
-          <td>{{bidData.model}}</td>
+          <td>{{bidData.offerType}}</td>
           <td><b>Offer Price:</b></td>
           <td>{{bidData.bidAmount}}</td>
         </tr>
@@ -84,10 +84,12 @@
           			<tr>
           				<th>Kyc Type</th>
           				<th>Name</th>
+                  <th>Link</th>
           			</tr>
           			<tr ng-repeat="kyc in bidData.kyc">
           				<td>{{kyc.type}}</td>
           				<td>{{kyc.name}}</td>
+                  <td><a href="javascript:void(0);">{{kyc.docName}}</a></td>
           			</tr>
           		</table>
           	</td>

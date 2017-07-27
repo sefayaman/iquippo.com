@@ -41,7 +41,14 @@
 			   			<th>Buyer Location</th>
 			   			<th>Buyer Mobile No.</th>
 			   			<th>Buyer Email Id</th>	
-			   			<th>Action</th>		   			
+			   			<th>Ageing of Asset</th>
+			   			<th>Reserve Price</th>
+			   			<th>Parking Charges</th>
+			   			<th>Buy Now Price</th>	
+			   			<th>Asset Status</th>	
+			   			<th ng-if="isFAgencyPartner()">Action</th>		   			
+			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Action</th>		   			
+			   			<th ng-if="isAdmin()">Action</th>		   			
 			   		</tr>
 		   		</thead>
 		   		<tbody>
@@ -60,11 +67,27 @@
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   			<td>{{}}</td>	
-			   			<td>
-			   				<a href="/assetsale/faproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
-							<button type="button" class="btn btn-sm btn-info" ng-click="bidproductVm.openDialog(product,'faRequestDetailPopup')"><i class="fa fa-info"></i></button>
-			   			</td>		   			
+			   			<td ng-if="isFAgencyPartner()">
+			   				<!-- fa action -->
+			   				<a href="/assetsale/faproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview','auctionable')"><i class="fa fa-info"></i></button>
+			   			</td>
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">
+			   				<!-- seller action -->
+			   				<a href="/assetsale/sellerproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview','auctionable')"><i class="fa fa-info"></i></button>			   				
+			   			</td>
+			   			<td ng-if="isAdmin()">
+			   				<!-- admin action -->
+			   				<a href="/assetsale/adminproductbidrequest?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup', 'product-preview', 'auctionable')"><i class="fa fa-info"></i></button>
+			   			</td>			   			
 			   		</tr>
 		   		</tbody>
 		   	</table>
@@ -96,6 +119,7 @@
 			   			<!-- <th>Asset Country</th> -->
 			   			<!-- <th>Asset State</th> -->
 			   			<th>Asset Location</th>
+			   			<th>Ageing of Asset</th>
 			   			<!-- <th>Asset Description</th> -->
 			   			<th>Buyer Name</th>
 			   			<!-- <th>Buyer Country</th> -->
@@ -103,12 +127,14 @@
 			   			<th>Buyer Location</th>
 			   			<th>Buyer Mobile No.</th>
 			   			<th>Buyer Email Id</th>	
-			   			<!-- <th>Offer Type</th>-->
-			   			<!-- <th>Offer Price</th>-->
-			   			<!-- <th>Offer Status</th>-->
+			   			<th>Buy Now Price</th>	
+			   			<th>Reserve Price</th>	
+			   			 <!-- <th>Offer Type</th> -->
+			   			 <th>Offer Price</th>
+			   			 <th>Offer Status</th>
 			   			<!-- <th>Seller Name</th>-->
 			   			<!-- <th>Seller Contact No.</th>-->
-			   			<!-- <th>Bid Status</th> -->
+			   			<th>Bid Status</th>
 			   			<!-- <th>EMD Amount</th> -->
 			   			<!-- <th>EMD Details</th> -->
 			   			<!-- <th>Full Payment Amount</th> -->
@@ -117,7 +143,8 @@
 			   			<!-- <th>KYC Document</th> -->
 			   			<!-- <th>Delivery Order</th> -->
 			   			<!-- <th>Date of Delivery</th> -->
-			   			<!-- <th>Deal Status</th> -->
+			   			<th>Deal Status</th>
+			   			<th>Asset Status</th>
 			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
@@ -132,6 +159,7 @@
 			   			<!-- <td>{{product.country}}</td> -->
 			   			<!-- <td>{{product.state}}</td> -->
 			   			<td>{{product.city}}</td>			   			
+			   			<td>{{}}</td>			   			
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{}}</td>
 			   			<!-- <td>{{}}</td> -->
@@ -139,6 +167,14 @@
 			   			<td>{{}}</td>
 			   			<td>{{}}</td>			   			
 			   			<td>{{}}</td>			   			
+			   			<td>{{}}</td>			   			
+			   			<td>{{}}</td>			   			
+			   			<!-- <td>{{}}</td> -->
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td>{{}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
@@ -146,16 +182,10 @@
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
+			   			<td>{{}}</td>
+			   			<td>{{}}</td>
 			   			<td>
-							<button type="button" class="btn btn-sm btn-info" ng-click="bidproductVm.openDialog(product,'faRequestDetailPopup')"><i class="fa fa-info"></i></button>	
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button>	
 			   			</td>
 			   		</tr>
 		   		</tbody>
