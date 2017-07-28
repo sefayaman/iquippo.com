@@ -7,10 +7,10 @@
       <table class="table table-bordred" ng-if="viewBlock == 'auctionable'">               
         <tbody>
           <tr>
-            <td class="col-sm-3"><b>Asset Id:</b></td>
-            <td class="col-sm-3">{{bidReqDetailVm.product.assetId}}</td>
-            <td class="col-sm-3"><b>Category:</b></td>
-            <td class="col-sm-3">{{bidReqDetailVm.product.category.name}}</td>                  
+            <td class="col-sm-2"><b>Asset Id:</b></td>
+            <td class="col-sm-4">{{bidReqDetailVm.product.assetId}}</td>
+            <td class="col-sm-2"><b>Category:</b></td>
+            <td class="col-sm-4">{{bidReqDetailVm.product.category.name}}</td>                  
           </tr>
           <tr>
             <td><b>Brand:</b></td>
@@ -89,10 +89,10 @@
       <table class="table table-bordred" ng-if="viewBlock == 'closed'"> 
         <tbody>
           <tr>
-            <td class="col-sm-3"><b>Ticket Id::</b></td>
-            <td class="col-sm-3">{{}}</td>            
-            <td class="col-sm-3"><b>Asset Id:</b></td>
-            <td class="col-sm-3">{{}}</td>                              
+            <td class="col-sm-2"><b>Ticket Id::</b></td>
+            <td class="col-sm-4">{{}}</td>            
+            <td class="col-sm-2"><b>Asset Id:</b></td>
+            <td class="col-sm-4">{{}}</td>                              
           </tr>
           <tr>
             <td><b>Category:</b></td>
@@ -259,10 +259,12 @@
                 <tr>
                   <th>Address Proof</th>
                   <th>ID Proof</th>
+                  <th>Document Link</th>
                 </tr>
                 <tr>
                   <td>Address Proof</td>
                   <td>ID Proof</td>
+                  <th>Link</th>
                 </tr>
               </table>
             </td>

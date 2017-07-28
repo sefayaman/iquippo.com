@@ -8,10 +8,10 @@
       <table class="table table-bordred">               
         <tbody>
           <tr>
-            <td class="col-sm-3"><b>Ticket Id:</b></td>
-            <td class="col-sm-3">{{bidData.ticketId}}</td>
-            <td class="col-sm-3"><b>Offer Type:</b></td>
-            <td class="col-sm-3">{{bidData.offerType}}</td>                  
+            <td class="col-sm-2"><b>Ticket Id:</b></td>
+            <td class="col-sm-4">{{bidData.ticketId}}</td>
+            <td class="col-sm-2"><b>Offer Type:</b></td>
+            <td class="col-sm-4">{{bidData.offerType}}</td>                  
           </tr>
           <tr>
             <td><b>Offer Price:</b></td>
@@ -31,8 +31,14 @@
           <tr>
             <td><b>Bid Status:</b></td>
             <td>{{bidData.bidStatus}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>            
             <td><b>EMD Amount:</b></td>
             <td>{{bidData.emdAmount}} </td> 
+            <td><b>Full Payment Amount:</b></td>
+            <td>{{bidData.bidAmount - bidData.emdAmount}}</td>
           </tr>
           <tr>
             <td><b>EMD Details:</b></td>
@@ -53,11 +59,9 @@
               </table>
             </td>
           </tr>
-          <tr>            
-            <td><b>Full Payment Amount:</b></td>
-            <td>{{bidData.bidAmount - bidData.emdAmount}}</td>
+          <tr> 
             <td><b>Full Payment Details:</b></td>
-            <td>
+            <td colspan="3">
               <table class="table">
                 <tr>
                   <th>Bank Name</th>
@@ -106,7 +110,7 @@
                 <tr>
                   <th>Kyc Type</th>
                   <th>Kyc Name</th>
-                  <th>Link</th>
+                  <th>Document Link</th>
                 </tr>
                 <tr ng-repeat="kyc in bidData.kyc">
                   <td>{{kyc.type}}</td>
