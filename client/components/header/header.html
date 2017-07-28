@@ -15,12 +15,23 @@
             <li class="dropdown hidden-sm hidden-md hidden-lg">
               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()"><i class="fa fa-calendar-plus-o"></i></a>                
                 <ul class="dropdown-menu">
-                  <li>
-                    <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
-                      <strong>
-                        {{auction.startDate | date:'d-MMM'}}
-                        </strong> {{auction.name}}</a>
-                    </li>
+                   <li role="menuitem" ng-repeat="auction in upcomingAuctions">
+                        <a ng-if="getProductData(auction._id, 'total_products') != 0"
+                       target="_blank"  href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionTypeValue={{auction.auctionType}}&auctionName={{auction.name}}&auctionOwner={{auction.auctionOwner}}&auctionOwnerMobile={{auction.auctionOwnerMobile}}&termAuction={{auction.termAuction}}&contactName={{auction.contactName}}&contactNumber={{auction.contactNumber}}&docName={{auction.docName}}&docNameProxy={{auction.docNameProxy}}&docType={{auction.docType}}&auctionCity={{auction.city}}&id={{auction._id}}"
+                        > 
+                          <strong>
+                            {{auction.startDate | date:'d-MMM'}}
+                            </strong> {{auction.name}}</a>
+
+
+                        <a ng-if="getProductData(auction._id, 'total_products') == 0" 
+                        ng-click="fetchAuctions()"
+                          <strong>
+                            {{auction.startDate | date:'d-MMM'}}
+                            </strong> {{auction.name}}
+                        </a>    
+
+                        </li>
                   <li><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
                 </ul>
             </li>
@@ -128,12 +139,21 @@
                       
                       
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
-                        <li role="menuitem">
-                          <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
-                            <strong>
-                              {{auction.startDate | date:'d-MMM'}}
-                              </strong> {{auction.name}}</a>
-                          </li>
+                        <li role="menuitem" ng-repeat="auction in upcomingAuctions">
+                        <a ng-if="getProductData(auction._id, 'total_products') != 0"
+                       target="_blank"  href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionTypeValue={{auction.auctionType}}&auctionName={{auction.name}}&auctionOwner={{auction.auctionOwner}}&auctionOwnerMobile={{auction.auctionOwnerMobile}}&termAuction={{auction.termAuction}}&contactName={{auction.contactName}}&contactNumber={{auction.contactNumber}}&docName={{auction.docName}}&docNameProxy={{auction.docNameProxy}}&docType={{auction.docType}}&auctionCity={{auction.city}}&id={{auction._id}}"
+                        > 
+                          <strong>
+                            {{auction.startDate | date:'d-MMM'}}
+                            </strong> {{auction.name}}</a>
+                          <a ng-if="getProductData(auction._id, 'total_products') == 0"
+                       target="_blank"  href="/viewauctions?type=upcoming"
+                        > 
+                          <strong>
+                            {{auction.startDate | date:'d-MMM'}}
+                            </strong> {{auction.name}}</a>    
+
+                        </li>
                         <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
                       </ul>
                     </li>
