@@ -982,17 +982,26 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
   }
-  
+   var currentDate = new Date();
   if (req.body.auctionType === 'closed'){
-    var currentDate = new Date();
+    //var currentDate = new Date();
     filter.endDate={
       '$lt': currentDate
     }
   } else if(req.body.auctionType === 'upcoming') {
-    var currentDate = new Date();
+    //var currentDate = new Date();
     filter.endDate={
     '$gt': currentDate
     };
+  }else if(req.body.auctionType === 'upcomingauctions') {
+    //var currentDate = new Date();
+    filter.endDate={
+    '$gt': currentDate
+    };
+   filter.startDate={
+    '$gt': currentDate
+    };
+    
   }
 
   var arr = [];
