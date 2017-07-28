@@ -406,7 +406,7 @@ ul.alert-dropdown{width:200px;}
 
 /* Side Navigation */
 .side-nav{position:fixed;top:55px;left:225px;width:235px;margin-left:-225px;border:none;border-radius:0;overflow-y:auto;background-color:#e3000f;bottom:0;overflow-x:hidden;padding-bottom:40px;height:700px;}
-.side-nav li>a{width:225px;color:#fff;font-size:13px;text-transform:uppercase;padding:3px 5px;}
+.side-nav li>a{width:225px;color:#fff;font-size:13px;text-transform:uppercase;padding:8px;}
 .side-nav li.active a,.side-nav li a:hover,.side-nav li a:focus{outline:none;background-color:#ce1414!important;color:#fff!important;}
 .navbar-default .navbar-nav > li > a{color:#fff}
 .navbar .side-nav .navbar-nav i{background:none;}
