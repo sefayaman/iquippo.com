@@ -87,17 +87,31 @@
 			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
 			   			<td ng-if="isFAgencyPartner()">
 			   				<!-- fa action -->
-			   				<button class="btn btn-sm btn-success" ><i class="fa fa-check"></i></button>
+			   				<button class="btn btn-sm btn-success" uib-popover="EMD Payment" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')" ng-click="productBidRequestVm.update(bid,'emdpayment')"><i class="fa fa-check"></i></button>
+
+			   				<button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')" ng-click="productBidRequestVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button>
+
+			   				<a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a>
+
+			   				<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="productBidRequestVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
+
+							<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
+					           <i class="fa fa-upload"></i>
+					        </button>
+
 							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup','product-preview','productBid')"><i class="fa fa-info"></i></button>	
 			   			</td>
 			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">
 			   				<!-- seller action -->
 			   				<button class="btn btn-sm btn-success" uib-popover="Accept Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
-			   				<button class="btn btn-sm btn-danger" uib-popover="Reject Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
-							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup', 'product-preview', 'productBid')"><i class="fa fa-info"></i></button>	
-							<a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" class="btn btn-sm btn-primary"><i class="fa fa-truck"></i></a>
 
-							<button class="btn bts-sm btn-default active" uib-popover="DO Upload" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
+			   				<button class="btn btn-sm btn-danger" uib-popover="Reject Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
+
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup', 'product-preview', 'productBid')"><i class="fa fa-info"></i></button>
+
+							<a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a>
+
+							<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
 					           <i class="fa fa-upload"></i>
 					        </button>
 					        <!-- <button class="btn bts-sm fileinput-button" uib-popover="DO Upload" popover-trigger="mouseenter">
@@ -107,9 +121,19 @@
 			   			</td>
 			   			<td ng-if="isAdmin()">
 			   				<!-- admin action -->
-			   				<button class="btn btn-sm btn-success" uib-popover="Accept Request" popover-trigger="mouseenter"><i class="fa fa-check"></i></button>
-			   				<button class="btn btn-sm btn-danger" uib-popover="Reject Request" popover-trigger="mouseenter"><i class="fa fa-close"></i></button>
-							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup','product-preview', 'productBid')"><i class="fa fa-info"></i></button>			   				
+			   				<button class="btn btn-sm btn-success" uib-popover="Accept Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
+
+			   				<button class="btn btn-sm btn-danger" uib-popover="Reject Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
+
+			   				<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="productBidRequestVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
+
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup','product-preview', 'productBid')"><i class="fa fa-info"></i></button>
+
+							<a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a>
+
+							<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
+					           <i class="fa fa-upload"></i>
+					        </button>			   				
 			   			</td>
 			   		</tr>
 		   		</tbody>

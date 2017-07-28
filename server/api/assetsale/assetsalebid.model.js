@@ -59,6 +59,7 @@ var AssetSaleBidSchema = new Schema({
   dateOfDelivery:Date,
   proxyBid:{type:Boolean,default:false},
   status:{type:Boolean,default:true},
+  bidChanged:{type:Boolean,default:false},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

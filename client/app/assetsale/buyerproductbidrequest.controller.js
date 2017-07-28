@@ -18,13 +18,9 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	function init() {
 		filter = {};
 		initFilter.pagination = true;
-		if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
-			$scope.isAdmin = false;
-			initFilter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
-		}
+		initFilter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		angular.copy(initFilter, filter);
-		filter.offerStatus = offerStatuses[0];
-		filter.dealStatus = dealStatuses[0];
+		filter.actionable = 'y';
 		getBidData(filter);	
 	}
 	
@@ -94,18 +90,13 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	  		case 'auctionable':
 	  		filter={};
 			angular.copy(initFilter, filter);
-	  		// if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
-	  		// 	filter.userId = Auth.getCurrentUser()._id;
-	  		filter.offerStatus = offerStatuses[0];
-	  		filter.dealStatus = dealStatuses[0];
+			filter.actionable = 'y';
 	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
 	  		filter={};
 	  		angular.copy(initFilter, filter);
-			// if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin')
-	  // 			filter.userId = Auth.getCurrentUser()._id;
-	  		filter.buyerClosedFlag = true;
+			filter.actionable = 'n';
 	  		getBidData(filter);
 	  		break;
 	  	}
@@ -126,10 +117,7 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
               Modal.alert(res.msg, true);
           	filter ={};
           	angular.copy(initFilter, filter);
-          	// if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin')
-          	// 	filter.userId = Auth.getCurrentUser()._id;
-          	filter.offerStatus = offerStatuses[0];
-          	filter.dealStatus = dealStatuses[0];
+          	filter.actionable = 'y';
           	getBidData(filter);
           })
           .catch(function(err) {

@@ -77,8 +77,10 @@ var TimeInterval =  15*60*1000;/*Service interval*/
           bid.product.prevTradeType = prd.tradeType;
           AssetSaleUtil.setStatus(bid,dealStatuses[6],'dealStatus','dealStatuses');
         }
-        else
+        else{
+          bid.status = false;
           AssetSaleUtil.setStatus(bid,dealStatuses[5],'bidStatus','bidStatuses');
+        }
         AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
           if(err) {console.log(err);}
           return innerCallback(err);
@@ -124,6 +126,7 @@ var TimeInterval =  15*60*1000;/*Service interval*/
           return cb();
 
     function updateBid(){
+        item.status = false;
         AssetSaleModel.update({_id:bidId},{$set:item},function(err){
           if(err){
             return cb(err);

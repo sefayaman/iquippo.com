@@ -138,10 +138,10 @@ exports.validateUpdate = function(req,res,next){
 		}else if(req.query.action === 'emdpayment'){
 			if(req.bid.emdPayment.remainingPayment === 0){
 				getEnterprisemaster(function(entData){
-					if(!entepriseData.fullPaymentPeriod)
+					if(!entData.fullPaymentPeriod)
 						return res.status(404).send("Full payment period is not found");
 					req.body.fullPaymentStartDate = new Date();
-					req.body.fullPaymentEndDate = new Date().addDays(entepriseData.fullPaymentPeriod);
+					req.body.fullPaymentEndDate = new Date().addDays(entData.fullPaymentPeriod);
 					if(req.body.fullPaymentEndDate)
 						req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
 					next();
@@ -207,7 +207,7 @@ exports.postUpdate = function(req,res,next){
 			if(coolingObj.coolingEndDate)
 				coolingObj.coolingEndDate = coolingObj.coolingEndDate.setHours(24,0,0,0);
 			Product.update({_id:req.product._id + ""},{$set:coolingObj},function(error,retData){
-				if(err) return handleError(res,error);
+				if(error) return handleError(res,error);
 				return res.status(200).send("Bid updated successfully.");
 			});
 	}
@@ -281,11 +281,14 @@ exports.validateSubmitBid = function(req,res,next){
 				return callback({status:500,msg:err});
 			req.otherBids = bids;
 			req.otherBids.forEach(function(bid){
+				bid.status = false;
 				if(req.query.typeOfRequest === "buynow"){
 				 	AssetSaleUtil.setStatus(bid,bidStatuses[5],'bidStatus','bidStatuses');
 				}else{
-					if(req.query.typeOfRequest == "changeBid")
+					if(req.query.typeOfRequest == "changeBid"){
 						AssetSaleUtil.setStatus(bid,offerStatuses[1],'offerStatus','offerStatuses');
+						bid.bidChanged = true;
+					}
 					AssetSaleUtil.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses');
 				 	AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses');
 				}
@@ -408,6 +411,7 @@ exports.withdrawBid = function(req, res) {
 		statusObj.bidStatus = bidStatuses[1];
 		statusObj.dealStatus = dealStatuses[2];
 		bidData.statusObj = statusObj;
+		bidData.status = false;
 		var dataObj =  callStatusUpdates(bidData);
 		AssetSaleBid.update({_id : bidData._id}, {
 			$set: dataObj}, function(err, result) {
@@ -420,8 +424,15 @@ exports.withdrawBid = function(req, res) {
 
 exports.fetchBid = function(req,res){
 	var filter={};
+	filter.bidChanged = false;
 	if(req.query.userId)
 		filter.user = req.query.userId;
+	
+	if(req.query.actionable === 'y')
+		filter.status = true;
+	
+	if(req.query.actionable === 'n')
+		filter.status = false;
 
 	if(req.query.productId)
 		filter['product.proData'] = req.query.productId;

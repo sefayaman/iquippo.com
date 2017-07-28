@@ -283,7 +283,6 @@ exports.search = function(req, res) {
     if(arr.length > 0)
       filter['$or'] = arr;
     var result = {};
-    console.log("req seller",filter);
     if(req.body.pagination){
       paginatedProducts(req,res,filter,result);
       return;    
@@ -311,7 +310,6 @@ exports.search = function(req, res) {
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
-
           var saleFeaturedProdWithPrice = [],
               saleFeaturedProdWithoutPrice = [],
               bothFeaturedProdWithPrice = [],
@@ -325,7 +323,8 @@ exports.search = function(req, res) {
               rentProdWithoutPrice = [],
               notAvailProd = [],
               soldProd = [],  //status of product
-              rentedProd = []; //status
+              rentedProd = [], //status
+              remainingProd = [];
           products.forEach(function(item){
             item = item.toObject();
             //calculate total parking charge
@@ -410,10 +409,10 @@ exports.search = function(req, res) {
                 rentProdWithoutPrice.push(item);
                 return;
               }
+              remainingProd.push(item);
             }
           });
-
-          var outputProds = [].concat(saleFeaturedProdWithPrice,saleFeaturedProdWithoutPrice,bothFeaturedProdWithPrice,bothFeaturedProdWithoutPrice,rentFeaturedProd,saleProdWithPrice,bothProdWithPrice,rentProdWithPrice,saleProdWithoutPrice,bothProdWithoutPrice,rentProdWithoutPrice,notAvailProd,soldProd,rentedProd);
+          var outputProds = [].concat(saleFeaturedProdWithPrice,saleFeaturedProdWithoutPrice,bothFeaturedProdWithPrice,bothFeaturedProdWithoutPrice,rentFeaturedProd,saleProdWithPrice,bothProdWithPrice,rentProdWithPrice,saleProdWithoutPrice,bothProdWithoutPrice,rentProdWithoutPrice,notAvailProd,soldProd,rentedProd,remainingProd);
           result.products = outputProds;
           self();
          }

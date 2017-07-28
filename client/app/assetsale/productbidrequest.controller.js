@@ -63,26 +63,30 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 				AssetSaleSvc.setStatus(bid,dealStatuses[1],'dealStatus','dealStatuses');
 			break;
 			case 'emdpayment':
-				if(bid.emdPayment.remainingPayment > 0){
+				if(typeof bid.emdPayment.remainingPayment === 'undefined' || bid.emdPayment.remainingPayment > 0){
 					Modal.alert("EMD has not been fully paid.");
 					return;
 				}
 				AssetSaleSvc.setStatus(bid,dealStatuses[7],'dealStatus','dealStatuses');
 			break;
 			case 'fullpayment':
-				if(bid.emdPayment.remainingPayment > 0){
-					Modal.alert("EMD has not been fully paid.");
+				if( typeof bid.fullPayment.remainingPayment === 'undefined' || bid.fullPayment.remainingPayment > 0){
+					Modal.alert("Full payment has not been fully paid.");
 					return;
 				}
 				AssetSaleSvc.setStatus(bid,dealStatuses[8],'dealStatus','dealStatuses');
+			break;
+			case 'deliverd':
+				AssetSaleSvc.setStatus(bid,dealStatuses[10],'dealStatus','dealStatuses');
+			break;
+			case 'deliveryaccept':
+				AssetSaleSvc.setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
+			break;
 			default:
 				return;
 			break
 		}
-		Modal.confirm("Do you want to update bid?",function(retVal){
-			if(retVal === 'yes')
-				updateBid(bid,action);				
-		});
+		updateBid(bid,action);
 	}
 
 	function updateBid(bid,action){
@@ -92,7 +96,8 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 		})
 		.catch(function(err){
 			if(err)
-				Modal.alert(err.data)
+				Modal.alert(err.data);
+			getBidData(angular.copy(initFilter));
 		});
 	}
 

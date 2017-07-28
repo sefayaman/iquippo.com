@@ -67,10 +67,10 @@
 			   			<td>{{bid.offerStatus}}</td>
 			   			<td>{{bid.dealStatus}}</td>
 			   			<td>
-			   				<button type="button" class="btn btn-danger btn-xs" ng-if="!buyerProductBidRequestVm.validateAction(bid,'INVOICEDETAIL')" ng-click="buyerProductBidRequestVm.openDialog(bid, 'invoiceDetails')">Update</button>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-if="buyerProductBidRequestVm.validateAction(bid,'INVOICEDETAIL')" ng-click="buyerProductBidRequestVm.openDialog(bid, 'invoiceDetails')">Update</button>
 			   			</td>
 			   			<td>
-			   				<button type="button" class="btn btn-primary btn-xs" ng-if="!buyerProductBidRequestVm.validateAction(bid,'KYC')" ng-click="buyerProductBidRequestVm.openDialog(bid, 'kycDocument')">
+			   				<button type="button" class="btn btn-primary btn-xs" ng-if="buyerProductBidRequestVm.validateAction(bid,'KYC')" ng-click="buyerProductBidRequestVm.openDialog(bid, 'kycDocument')">
 			   					<span ng-if="true">Upload</span>
 			   					<span ng-if="false">Update</span>
 			   				</button>
@@ -88,13 +88,17 @@
 			   				</a>
 			   			</td>
 						<td> 
-							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-success btn-sm" uib-popover="Pay Now" popover-trigger="mouseenter"><i class="fa fa-money"></i></button> 
-							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" uib-popover="Change Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openBidModal(bid)">
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType')"  class="btn btn-success btn-sm" uib-popover="Pay Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'EMDPAYMENT') || buyerProductBidRequestVm.validateAction(bid,'FULLPAYMENT')"><i class="fa fa-money"></i></button> 
+
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" uib-popover="Change Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openBidModal(bid)" ng-if="buyerProductBidRequestVm.validateAction(bid,'CHANGEBID')">
 								<i class="fa fa-retweet"></i>
 							</button> 
-							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-sm" uib-popover="Withdraw Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)"><i class="fa fa-sign-out"></i></button> 
+
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-sm" uib-popover="Withdraw Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)" ng-if="buyerProductBidRequestVm.validateAction(bid,'WITHDRAWBID')"><i class="fa fa-sign-out"></i></button> 
+
 							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview', 'auctionableBid')"><i class="fa fa-info"></i></button>
-							<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter"><i class="fa fa-check"></i></button>
+
+							<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')"><i class="fa fa-check"></i></button>
 						</td>
 			   		</tr>
 		   		</tbody>

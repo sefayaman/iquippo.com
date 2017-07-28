@@ -199,19 +199,15 @@
       break;
       case 'EMDPAYMENT':
          var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[6] ? true:false;
-         if(Auth.isAdmin() && isValidStatus)
-          retVal = true;
-         else if(isValidStatus && Auth.isFAgencyPartner())
-          retVal = true;
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user === Auth.getCurrentUser()._id))
+            retVal = true;
          else
           retVal = false;
       break;
       case 'FULLPAYMENT':
          var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[7] ? true:false;
-         if(Auth.isAdmin() && isValidStatus)
-          retVal = true;
-         else if(isValidStatus && Auth.isFAgencyPartner())
-          retVal = true;
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user === Auth.getCurrentUser()._id))
+            retVal = true;
          else
           retVal = false;
       break;
@@ -222,11 +218,9 @@
         else
           retVal = false; 
       break;
-      case 'DOUPLOAD':
+      case 'DOISSUED':
         var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[8] ? true:false;
-         if(Auth.isAdmin() && isValidStatus)
-          retVal = true;
-         else if(isValidStatus && Auth.getCurrentUser()._id === bid.product.seller._id)
+         if((Auth.isFAgencyPartner() || Auth.isAdmin() || Auth.getCurrentUser()._id === bid.product.seller._id) && isValidStatus)
           retVal = true;
          else
           retVal = false;
@@ -235,11 +229,33 @@
         var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus)> 5 ? true:false;
         if(isValidStatus && bid.user === Auth.getCurrentUser()._id)
           retVal = true;
-         else if(Auth.isAdmin() || Auth.isFAgencyPartner())
+         else if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner()))
           retVal = true;
          else
           retVal = false;
       break;
+       case 'ACCEPTANCEOFDELIVERY':
+        var isValidStatus = bid.bidStatus === bidStatuses[7] && bid.dealStatus === dealStatuses[10]; 
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user === Auth.getCurrentUser()._id))
+          retVal = true;
+        else
+          retVal = false; 
+      break;
+      case 'DELIVERED':
+        var isValidStatus = bid.bidStatus === bidStatuses[7] && bid.dealStatus === dealStatuses[9]; 
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.product.seller._id === Auth.getCurrentUser()._id))
+          retVal = true;
+        else
+          retVal = false;
+        break;
+        case 'CHANGEBID':
+        case 'WITHDRAWBID':
+        var isValidStatus = [bidStatuses[0],bidStatuses[7]].indexOf(bid.bidStatus) !== -1 && bid.dealStatus === dealStatuses[0]; 
+        if(isValidStatus && bid.user === Auth.getCurrentUser()._id)
+          retVal = true;
+        else
+          retVal = false;
+        break;
       default:
         retVal = false;
       break;

@@ -14,9 +14,9 @@ var EnterpriseMasterSchema = new Schema({
   functionality:String,
   buyNowPriceApproval:{type:String,default:"No"},
   negotiatedSaleApproval:{type:String,default:"No"},
-  coolingPeriod:Number,
-  emdPeriod:Number,
-  fullPaymentPeriod:Number,
+  coolingPeriod:{type:Number,default:0},
+  emdPeriod:{type:Number,default:0},
+  fullPaymentPeriod:{type:Number,default:0},
   status:{type:String,default:"active"},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
