@@ -17,13 +17,11 @@
                 <ul class="dropdown-menu">
                      <li role="menuitem" ng-repeat="auction in upcomingAuctions">
                         <a ng-if="getProductData(auction._id, 'total_products') != 0"
-                       href="/assetinauction?auctionType=upcomingAuctions&auctionId={{auction.auctionId}}&id={{auction._id}}"
-                        > 
+                        ng-click="assetPage(auction.auctionId,auction._id);"> 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
                             </strong> {{auction.name}}</a>
-                          <a ng-if="getProductData(auction._id, 'total_products') == 0"
-                        href="/viewauctions?type=upcoming"
+                          <a ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"
                         > 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
@@ -139,13 +137,11 @@
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
                         <li role="menuitem" ng-repeat="auction in upcomingAuctions">
                         <a ng-if="getProductData(auction._id, 'total_products') != 0"
-                       href="/assetinauction?auctionType=upcomingAuctions&auctionId={{auction.auctionId}}&id={{auction._id}}"
-                        > 
+                        ng-click="assetPage(auction.auctionId,auction._id);"> 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
                             </strong> {{auction.name}}</a>
-                          <a ng-if="getProductData(auction._id, 'total_products') == 0"
-                        href="/viewauctions?type=upcoming"
+                          <a ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"
                         > 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
