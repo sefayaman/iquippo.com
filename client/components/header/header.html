@@ -141,13 +141,13 @@
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
                         <li role="menuitem" ng-repeat="auction in upcomingAuctions">
                         <a ng-if="getProductData(auction._id, 'total_products') != 0"
-                       target="_blank"  href="/assetinauction?auctionId={{auction.auctionId}}&auctionType={{auction.auctionValue}}&auctionTypeValue={{auction.auctionType}}&auctionName={{auction.name}}&auctionOwner={{auction.auctionOwner}}&auctionOwnerMobile={{auction.auctionOwnerMobile}}&termAuction={{auction.termAuction}}&contactName={{auction.contactName}}&contactNumber={{auction.contactNumber}}&docName={{auction.docName}}&docNameProxy={{auction.docNameProxy}}&docType={{auction.docType}}&auctionCity={{auction.city}}&id={{auction._id}}"
+                       href="/assetinauction?auctionType={{product.auctionValue}}&id={{auction._id}}"
                         > 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
                             </strong> {{auction.name}}</a>
                           <a ng-if="getProductData(auction._id, 'total_products') == 0"
-                       target="_blank"  href="/viewauctions?type=upcoming"
+                        href="/viewauctions?type=upcoming"
                         > 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
