@@ -2,7 +2,7 @@
 
 angular.module('sreizaoApp')
   .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc,$window) {
-
+     
     $scope.isCollapsed = true;
     var dataToSend = {};
    // var upcomingAuctions = [];
@@ -10,6 +10,7 @@ angular.module('sreizaoApp')
     $scope.isAuctionType = "upcoming";
 
     $scope.upcomingAuctions =[];
+     $scope.auctionListing  =[];
 
     $scope.isActive = function(states) {
       return states.indexOf($state.current.name) != -1;//routes === $location.path();
@@ -45,16 +46,70 @@ angular.module('sreizaoApp')
     /* forpcoming auctions on new page */
      $scope.fetchAuctions =function(){
         
-      AuctionSvc.getAuctionDateData({auctionType:"upcoming",pagination : true,itemsPerPage:10}).then(function(result){
+      AuctionSvc.getAuctionDateData({auctionType:"upcomingauctions",pagination : true,itemsPerPage:10}).then(function(result){
         
            $scope.upcomingAuctions = result.items; 
            console.log("upcomingauctions",$scope.upcomingAuctions);
+           
             //return upcomingAuctions;
-        
+             var filter = {}; 
+              var auctionIds = []; 
+                if(result && result.items) {     
+                result.items.forEach(function(item) { 
+                 auctionIds[auctionIds.length] = item._id;
+                });
+
+               filter.auctionIds = auctionIds; 
+                AuctionSvc.getAuctionWiseProductData(filter).then(function(data) { 
+                $scope.getConcatData = data; 
+              
+             })  
+            .catch(function() {});  
+
+             } 
+
         
       });
  
      };
+
+      $scope.getProductData =function (id, type) { 
+
+        console.log("vvgh");
+            if (angular.isUndefined($scope.getConcatData)) {  
+                if (type == "total_products") 
+                  $scope.autoRedirect=true;
+                  return 0;        
+                  // if (type == "total_amount")    
+                        //   return 0;        
+                  // if (type == "total_sold")  
+                        //   return 0;    
+            } else {  
+                 
+                     var totalItemsInAuction = 0;
+                       //var totalSaleValue = 0;
+                       //var totalsold = 0;
+                       $scope.getConcatData.forEach(function(data) {
+                         if (id == data._id) {
+                           totalItemsInAuction = data.total_products;
+                           //totalSaleValue = data.sumOfInsale;
+                           //totalsold = data.isSoldCount;
+                          }});
+                           if (type == "total_products") {  
+                             if (totalItemsInAuction > 0)   
+                              return totalItemsInAuction;
+                            }
+                            // if (type == "total_amount") {
+                              // if (totalSaleValue > 0)
+                              //  return totalSaleValue;// }
+                              // if (type == "total_sold") {
+                                //  if (totalsold > 0)
+                                //    return totalsold;
+                                //  } 
+                                
+                                return 0;
+                              };  
+    }
 
     /*---------------------*/
 
