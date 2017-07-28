@@ -12,7 +12,19 @@
             <li class="addProduct">
               <a href="javascript:void(0);" ng-click="redirectToProduct()"><span class="fa fa-truck"></span> Add Product</a>
             </li>
-            
+            <li class="dropdown hidden-sm hidden-md hidden-lg">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()"><i class="fa fa-calendar-plus-o"></i></a>                
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
+                      <strong>
+                        {{auction.startDate | date:'d-MMM'}}
+                        </strong> {{auction.name}}</a>
+                    </li>
+                  <li><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
+                </ul>
+            </li>
+
             <li><a href="javascript:void(0);" ng-click="sendCallback()"><i class="fa fa-phone"></i> <span class="hidden-xs">Call Back</span></a></li>
             <li ng-hide="isLoggedIn()"><a href="javascript:void(0);" ng-click="openLogin()"><i class="fa fa-user"></i> <span class="hidden-xs">Login</span></a></li>
             
@@ -110,22 +122,22 @@
                     <li ng-class="{active: isActive(['viewauctions'])}"><a href="javascript:void(0);" ng-click="redirectToAuction()">Auctions</a></li>
                     <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
                   </ul> 
-                  <ul class="nav navbar-nav navbar-right">
-                  <li class="submenu dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
-                    
-                    
-                    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
-                      <li role="menuitem">
-                        <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
-                          <strong>
-                            {{auction.startDate | date:'d-MMM'}}
-                            </strong> {{auction.name}}</a>
-                        </li>
-                      <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
-                    </ul>
-                  </li>
-                </ul>    
+                  <ul class="nav navbar-nav navbar-right hidden-xs">
+                    <li class="submenu dropdown">
+                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
+                      
+                      
+                      <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
+                        <li role="menuitem">
+                          <a href="javascript:void(0);" ng-repeat="auction in upcomingAuctions"> 
+                            <strong>
+                              {{auction.startDate | date:'d-MMM'}}
+                              </strong> {{auction.name}}</a>
+                          </li>
+                        <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>
+                      </ul>
+                    </li>
+                  </ul>    
 
                    
                 </div><!-- /.navbar-collapse -->

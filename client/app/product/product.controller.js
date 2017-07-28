@@ -826,10 +826,7 @@
 
 
       });
-      if(!$scope.product.status)
-      {
-        $scope.product.auctionListing=false;
-      }
+     
 
       if ($scope.product.images.length == 0) {
         Modal.alert("Please upload atleast one image in General Appearence section.", true);
