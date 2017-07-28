@@ -43,6 +43,23 @@ angular.module('sreizaoApp')
         $state.go("viewauctions",{type:routeTo});
       })*/
     }
+
+
+    
+    $scope.assetPage =function(auctionid,Id){
+     
+      if(auctionid ==undefined){
+         var url ="/viewauctions?type=upcoming";
+                    
+      window.location.href = url;
+
+      }else{
+         var url ="/assetinauction?auctionType=upcomingAuctions&auctionId="+auctionid+"&id="+Id;
+                    
+      window.location.href = url;
+
+      }
+    }
     /* forpcoming auctions on new page */
      $scope.fetchAuctions =function(){
         
@@ -75,37 +92,21 @@ angular.module('sreizaoApp')
 
       $scope.getProductData =function (id, type) { 
 
-        console.log("vvgh");
             if (angular.isUndefined($scope.getConcatData)) {  
                 if (type == "total_products") 
                   $scope.autoRedirect=true;
-                  return 0;        
-                  // if (type == "total_amount")    
-                        //   return 0;        
-                  // if (type == "total_sold")  
-                        //   return 0;    
+                  return 0;          
             } else {  
                  
                      var totalItemsInAuction = 0;
-                       //var totalSaleValue = 0;
-                       //var totalsold = 0;
                        $scope.getConcatData.forEach(function(data) {
                          if (id == data._id) {
                            totalItemsInAuction = data.total_products;
-                           //totalSaleValue = data.sumOfInsale;
-                           //totalsold = data.isSoldCount;
                           }});
                            if (type == "total_products") {  
                              if (totalItemsInAuction > 0)   
                               return totalItemsInAuction;
                             }
-                            // if (type == "total_amount") {
-                              // if (totalSaleValue > 0)
-                              //  return totalSaleValue;// }
-                              // if (type == "total_sold") {
-                                //  if (totalsold > 0)
-                                //    return totalsold;
-                                //  } 
                                 
                                 return 0;
                               };  
