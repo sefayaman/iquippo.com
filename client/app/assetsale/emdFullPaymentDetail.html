@@ -4,6 +4,18 @@
       <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
     </div>
     <div class="modal-body">
+    <table class="table">
+      <tr>
+        <td>{{formType}} :</td>
+        <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>
+        <td ng-if="formType != 'EMD'">{{(bidData.bidAmount - bidData.emdAmount) || 0}}</td>
+      </tr>
+      <!-- <tr>
+        <td>Remaining Payment :</td>
+        <td ng-if="formType == 'EMD'">{{bidData.emdPayment.remainingPayment || 0}}</td>
+        <td ng-if="formType != 'EMD'">{{bidData.fullPayment.remainingPayment || 0}}</td>
+      </tr> -->
+    </table>  
       <form novalidate class="text-left" name="paymentDetailForm">
         <div class="row">
           <div class="col-sm-6">

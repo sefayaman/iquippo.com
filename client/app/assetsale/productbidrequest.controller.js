@@ -81,6 +81,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 			break;
 			case 'deliveryaccept':
 				AssetSaleSvc.setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
+				AssetSaleSvc.setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
 			break;
 			default:
 				return;

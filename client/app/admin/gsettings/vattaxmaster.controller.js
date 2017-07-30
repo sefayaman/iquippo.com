@@ -16,7 +16,7 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.taxType = [{name:"GST"}];
+        vm.taxType = [{name:"GST"}, {name:"Other"}];
         vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
             LocationSvc.getAllState()
@@ -51,6 +51,7 @@
                 $scope.submitted = true;
                 return;
             }
+            
             vm.dataModel.createdBy = {};
             vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
             vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
@@ -75,9 +76,11 @@
                 vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
             if (rowData.effectiveFromDate)
                 vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
-            vm.dataModel.state = rowData.state._id;
+            if(rowData.state && rowData.state._id)
+                vm.dataModel.state = rowData.state._id;
             vm.dataModel.amount = rowData.amount;
-            vm.dataModel.category = rowData.category._id;
+            if(rowData.category && rowData.category._id)
+                vm.dataModel.category = rowData.category._id;
             /*categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
                 .then(function(result) {
                     vm.categoryList = result;

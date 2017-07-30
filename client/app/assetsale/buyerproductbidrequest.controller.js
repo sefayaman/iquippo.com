@@ -13,6 +13,7 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	vm.openBidModal = openBidModal;
 	$scope.pager = PagerSvc.getPager();
 	vm.validateAction = AssetSaleSvc.validateAction;
+	vm.update = update;
 	var initFilter = {};
 
 	function init() {
@@ -62,27 +63,68 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	  	});
     }
 
-    function openDialog(bidData, popupName, modalClass){
+    function openDialog(bidData, popupName, modalClass, formType){
 		var newScope = $rootScope.$new();
 		newScope.bidData = bidData;
+		if(formType)
+			newScope.formType = formType;
 		Modal.openDialog(popupName,newScope, modalClass);
 	}
 
-    // Rating
-	$scope.rate = 1;
+    //Rating
+	/*$scope.rate = 1;
 	$scope.max = 5;
 	$scope.isReadonly = false;
 
 	$scope.hoveringOver = function(value) {
-	$scope.overStar = value;
-	$scope.percent = 100 * (value / $scope.max);
-		};
+		$scope.overStar = value;
+		$scope.percent = 100 * (value / $scope.max);
+		console.log("$scope.percent", $scope.percent);
+	};
 
 	$scope.ratingStates = [
 	{stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'}
-		];
-	console.log($scope.percent);
+		];*/
 	
+	function update(bid,action){
+		switch(action){
+			case 'emdpayment':
+				if(typeof bid.emdPayment.remainingPayment === 'undefined' || bid.emdPayment.remainingPayment > 0){
+					Modal.alert("EMD has not been fully paid.");
+					return;
+				}
+				AssetSaleSvc.setStatus(bid,dealStatuses[7],'dealStatus','dealStatuses');
+			break;
+			case 'fullpayment':
+				if( typeof bid.fullPayment.remainingPayment === 'undefined' || bid.fullPayment.remainingPayment > 0){
+					Modal.alert("Full payment has not been fully paid.");
+					return;
+				}
+				AssetSaleSvc.setStatus(bid,dealStatuses[8],'dealStatus','dealStatuses');
+			break;
+			case 'deliveryaccept':
+				AssetSaleSvc.setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
+				AssetSaleSvc.setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
+			break;
+			default:
+				return;
+			break
+		}
+		updateBid(bid,action);
+	}
+
+	function updateBid(bid,action){
+		AssetSaleSvc.update(bid,action)
+		.then(function(res){
+			getBidData(angular.copy(initFilter));
+		})
+		.catch(function(err){
+			if(err)
+				Modal.alert(err.data);
+			getBidData(angular.copy(initFilter));
+		});
+	}
+
     function onTabChange(tab){
     	vm.activeBid = tab;
     	$scope.pager.reset();

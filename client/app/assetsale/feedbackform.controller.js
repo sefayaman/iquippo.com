@@ -3,7 +3,7 @@
 
 angular.module('sreizaoApp').controller('feedbackCtrl', feedbackCtrl);
 
-function feedbackCtrl($scope, $rootScope, Modal, Auth, UtilSvc, $uibModal, $uibModalInstance) {
+function feedbackCtrl($scope, $rootScope, Modal, Auth, UtilSvc, $uibModal, $uibModalInstance, AssetSaleSvc) {
   var vm = this;
   vm.feedback = {};
   vm.closeDialog = closeDialog;
@@ -15,11 +15,11 @@ function feedbackCtrl($scope, $rootScope, Modal, Auth, UtilSvc, $uibModal, $uibM
       return;
     }
     
-    $scope.bidData.feedback = vm.feedback.comment;
+    $scope.bidData.comment = vm.feedback.comment;
     AssetSaleSvc.update($scope.bidData, 'feedback').
       then(function(res) {
         if (res)
-          Modal.alert(res, true);
+          Modal.alert("Thank you for your feedback.", true);
         closeDialog();
       })
       .catch(function(res) {

@@ -104,11 +104,10 @@ exports.create = function(req, res, next) {
 
 function _getRecord(data, cb) {
   var filter = {};
-  filter.category = data.category;
-  //filter.group = data.group;
-  //filter.brand = data.brand;
-  //filter.model = data.model;
-  filter.state = data.state;
+  if(data.category)
+    filter.category = data.category;
+  if(data.state)
+    filter.state = data.state;
   filter.effectiveFromDate = data.effectiveFromDate;
   filter.effectiveToDate = data.effectiveToDate;
   Model.find(filter, function(err, result) {

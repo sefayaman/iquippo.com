@@ -108,9 +108,7 @@
       
       bidSummaryScope.close = function() {
         bidSummaryModal.close();
-        filter.userId=Auth.getCurrentUser()._id;
-         countBid();
-         countBid(filter);
+        countBid();
       };
     }
 
@@ -434,19 +432,19 @@
       return ret;
     }
 
-    function countBid(filter){
-      if(!filter){
-        filter={};
-      }
+    function countBid(){
+      filter = {};
       filter.productId = $scope.currentProduct._id;
+      if(Auth.getCurrentUser()._id)
+        filter.userId = Auth.getCurrentUser()._id;
     	AssetSaleSvc.countBid(filter)
       .then(function(res){
-        if(filter.userId){
-          $scope.userBids=res;
-        }
-        else{
-        vm.bidCount=res;
-        }
+        //if(filter.userId){
+          $scope.userBids=res.userBidCount;
+        //}
+        //else{
+        vm.bidCount=res.totalBidCount;
+        //}
       })
       .catch(function(err){
         if (err) throw err;
@@ -585,9 +583,6 @@
           }
           //fetch number of bids on a product//
           countBid();
-          filter={};
-          filter.userId=Auth.getCurrentUser()._id;
-          countBid(filter);
 
           getPriceTrendData();
           if ($scope.currentProduct.tradeType == "SELL")

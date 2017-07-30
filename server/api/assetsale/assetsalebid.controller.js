@@ -16,7 +16,7 @@ var MarkupPrice = require('../common/markupprice.model');
 
 var tradeTypeStatuses = ['SELL','BOTH','Not Available'];
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
-var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Accepted','Auto Accepted'];
+var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
 
 
 exports.getEMDBasedOnUser = function(req, res) {
@@ -60,11 +60,6 @@ exports.getBidOrBuyCalculation = function(req, res) {
 
 		    return res.status(200).json(resultObj);
 		} else {
-			// filter = {};
-			// filter.status = true;
-			// filter.deleted = false;
-			// filter._id = queryParam.sellerUserId;
-			//getMarkupPercentOnUser(filter,function(err,result){
 			AssetSaleUtil.getMasterBasedOnUser(queryParam.sellerUserId,{},'markup',function(err,result){
 				if(err)
     				return res.status(err.status || 500).send(err);
@@ -88,7 +83,18 @@ function getGST(filter, callback) {
 	query.exec(function(err, result) {
 		if (err)
 			return callback(err);
-		return callback(null, result);
+		if(result.length == 0) {
+			filter = {};
+			filter.taxType = "Other";
+			var query = VatModel.find(filter);
+			query.exec(function(err, otherRes) {
+				if (err)
+					return callback(err);
+				return callback(null, otherRes);
+			});
+		} else {
+			return callback(null, result);
+		}
 	});
 }
 
@@ -222,18 +228,6 @@ function fetchBid(filter, callback) {
 				return callback(err);
 			return callback(null, results);
 		});
-}
-
-function getBidCount(filter, callback) {
-	if (!filter) {
-		return callback(new APIError(412, 'No filter found'));
-	}
-	var query = AssetSaleBid.count(filter);
-	query.exec(function(err, results) {
-		if (err)
-			return callback(err);
-		return callback(null, results);
-	});
 }
 
 exports.validateSubmitBid = function(req,res,next){
@@ -398,7 +392,9 @@ exports.withdrawBid = function(req, res) {
 		filter['product.proData'] = req.body.productId;
 	if(req.body._id)
 		filter._id = req.body._id;
+	filter.dealStatus = dealStatuses[0];
 	filter.offerStatus = offerStatuses[0];
+	filter.bidStatus = bidStatuses[0];
 	AssetSaleBid.find(filter).exec(function(err, bid){
 		if(err)
 			console.log(err);
@@ -411,8 +407,8 @@ exports.withdrawBid = function(req, res) {
 		statusObj.bidStatus = bidStatuses[1];
 		statusObj.dealStatus = dealStatuses[2];
 		bidData.statusObj = statusObj;
-		bidData.status = false;
 		var dataObj =  callStatusUpdates(bidData);
+		dataObj.status = false;
 		AssetSaleBid.update({_id : bidData._id}, {
 			$set: dataObj}, function(err, result) {
 			if (err)
@@ -443,9 +439,6 @@ exports.fetchBid = function(req,res){
 	if(req.query.dealStatus)
 		filter.dealStatus = req.query.dealStatus;
 	
-	if(req.query.buyerClosedFlag)
-		filter.$or = [{bidStatus : bidStatuses[6]},{offerStatus : offerStatuses[2]},{dealStatus : dealStatuses[12]}];
-
 	if(req.query.bidStatus)
 		filter.bidStatus = req.query.bidStatus;
 	
@@ -456,7 +449,6 @@ exports.fetchBid = function(req,res){
     }
   	if(req.query.assetStatus)
   		filter.assetStatus=req.query.assetStatus;
-  	console.log("Filter buyer###", filter);
   if (req.query.pagination) {
 		paginatedResult(req, res, AssetSaleBid, filter, {});
 		return;
@@ -484,14 +476,42 @@ exports.getBidCount = function(req, res) {
 	var filter = {};
 	if (req.query.productId)
 		filter['product.proData'] = req.query.productId;
-	if (req.query.userId)
-		filter.user = req.query.userId;
 	getBidCount(filter, function(err, results) {
 		if (err)
 			return res.status(err.status || 500).send(err);
-		return res.json(results);
+		var bidRes = {};
+		bidRes.totalBidCount = 0;
+		bidRes.userBidCount = 0;
+		if(results)
+			bidRes.totalBidCount = results;
+
+		if (req.query.userId) {
+			filter.user = req.query.userId;
+			var query = AssetSaleBid.count(filter);
+			query.exec(function(err, userCount) {
+				if (err)
+					return res.status(err.status || 500).send(err);
+				if(userCount)
+					bidRes.userBidCount = userCount;
+				return res.json(bidRes);
+			});
+		} else {
+			return res.json(bidRes);
+		}
 	});
 };
+
+function getBidCount(filter, callback) {
+	if (!filter) {
+		return callback(new APIError(412, 'No filter found'));
+	}
+	var query = AssetSaleBid.count(filter);
+	query.exec(function(err, results) {
+		if (err)
+			return callback(err);
+		return callback(null, results);
+	});
+}
 
 exports.getMaxBidOnProduct = function(req, res) {
 	var filter = {};

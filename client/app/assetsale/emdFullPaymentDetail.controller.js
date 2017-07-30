@@ -33,7 +33,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
 			var remAmount = 0;
-			$scope.bidData.emdPayment.paymentMode = 'offline';
+			//$scope.bidData.emdPayment.paymentMode = 'offline';
 			if($scope.bidData.emdPayment.remainingPayment)
 				remAmount = $scope.bidData.emdPayment.remainingPayment;
 			else
@@ -46,7 +46,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if(!$scope.bidData.fullPayment)
 				$scope.bidData.fullPayment = {};
 			var remAmount = 0;
-			$scope.bidData.fullPayment.paymentMode = 'offline';
+			//$scope.bidData.fullPayment.paymentMode = 'offline';
 			if($scope.bidData.fullPayment.remainingPayment)
 				remAmount = $scope.bidData.fullPayment.remainingPayment;
 			else

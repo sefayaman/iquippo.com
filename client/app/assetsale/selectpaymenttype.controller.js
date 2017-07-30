@@ -8,6 +8,11 @@ function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, $uibModal
   vm.closeDialog = closeDialog;
   vm.submit = submit;
 
+  	function init(){
+  		if($scope.bidData)
+			vm.amount = $scope.bidData.emdAmount;
+	}
+
   function submit() {
     
   }
@@ -15,6 +20,14 @@ function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, $uibModal
   function closeDialog() {
     $uibModalInstance.dismiss('cancel');
   }
+
+  //loading start
+	Auth.isLoggedInAsync(function(loggedIn) {
+		if(loggedIn)
+			init();
+		else
+			$state.go('main');
+	});
 }
 
 })();

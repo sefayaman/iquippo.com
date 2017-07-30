@@ -1629,7 +1629,7 @@
 					</select>
 				</div> -->	
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
-					<select class="form-control" name="category" ng-model="vatVm.dataModel.category" required>
+					<select class="form-control" name="category" ng-model="vatVm.dataModel.category" ng-required="vatVm.dataModel.taxType != 'Other'">
 						<option value="">*Asset Category</option>
 						<option value="{{ct._id}}" ng-repeat="ct in vatVm.categoryList">{{ct.name}}</option>
 					</select>
@@ -1637,9 +1637,10 @@
 			</div>
 			<div class="row form-group">				
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.state.$invalid && submitted}">
-					<select class="form-control" name="state" ng-model="vatVm.dataModel.state" required>
+					<select class="form-control" name="state" ng-model="vatVm.dataModel.state" ng-required="vatVm.dataModel.taxType != 'Other'">
 						<option value="">*State</option>
 						<option value="{{st._id}}" ng-repeat="st in stateList">{{st.name}}</option>
+						<option value="Other">Other</option>
 					</select>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.amount.$invalid && submitted}">
@@ -1982,14 +1983,14 @@
 						<option value="No">No</option>
 					</select>					
 				</div>
-				<div class="col-sm-3" >
-					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" min="0" placeholder="Cooling Period">
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.coolingPeriod.$invalid && submitted}">
+					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" min="0" placeholder="*Cooling Period" required>
 				</div>
-				<div class="col-sm-3">
-					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod" min="0" placeholder="EMD Period">
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.emdPeriod.$invalid && submitted}">
+					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod" min="0" placeholder="*EMD Period" required>
 				</div>
-				<div class="col-sm-3">
-					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod" min="0" placeholder="Full Payment Period">
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.fullPaymentPeriod.$invalid && submitted}">
+					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod" min="0" placeholder="*Full Payment Period" required>
 				</div>				
 			</div>
 			<div class="row form-group">
