@@ -1,22 +1,24 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, Modal, Auth, AssetSaleSvc,PagerSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
 	$scope.assetId = $stateParams.assetId;
 	$scope.bidStatuses = bidStatuses;
 
-	var initFilter = {};
+	var initFilter = {actionable : 'y'};
 	vm.bidListing = [];
 
 	vm.fireCommand = fireCommand;
 	vm.openDialog = openDialog;
+	
 	vm.update = update;
+
 	vm.validateAction = AssetSaleSvc.validateAction;
-	vm.doupload = doupload;
-	vm.backButton =backButton;
+	vm.doUpload = doUpload;
+	vm.backButton = backButton;
 
 	function backButton() {
       $window.history.back();
@@ -24,21 +26,6 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	function init() {
 		initFilter.productId = $stateParams.productId;
 		getBidData(angular.copy(initFilter));
-	}
-	// do upload
-	function doupload(){
-		var scope = $rootScope.$new();
-		scope.doupload = $scope.doupload;
-		var doupload = $uibModal.open({
-		  animation: true,
-		    templateUrl: "doupload.html",
-		    scope: scope,
-		    size: 'lg'
-		});
-
-		scope.close = function () {
-		  doupload.dismiss('cancel');
-		};
 	}
 
 	function fireCommand(reset) {
@@ -53,7 +40,16 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 		getBidData(filter);
 	}
 
-	function update(bid,action){
+	function update(bid,action,cb){
+		
+		Modal.confirm("Do you want to change bid status?.",function(retVal){
+			if(retVal === 'yes')
+				updateBid(bid,action,cb);				
+		});
+	}
+
+	function updateBid(bid,action,cb){
+		
 		switch(action){
 			case 'approve':
 				AssetSaleSvc.setStatus(bid,bidStatuses[7],'bidStatus','bidStatuses');
@@ -76,6 +72,9 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 				}
 				AssetSaleSvc.setStatus(bid,dealStatuses[8],'dealStatus','dealStatuses');
 			break;
+			case 'doissued':
+				AssetSaleSvc.setStatus(bid,dealStatuses[9],'dealStatus','dealStatuses');
+			break;
 			case 'deliverd':
 				AssetSaleSvc.setStatus(bid,dealStatuses[10],'dealStatus','dealStatuses');
 			break;
@@ -87,18 +86,16 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 				return;
 			break
 		}
-		updateBid(bid,action);
-	}
-
-	function updateBid(bid,action){
 		AssetSaleSvc.update(bid,action)
 		.then(function(res){
-			getBidData(angular.copy(initFilter));
+			fireCommand(true);
+			if(cb)
+				cb();
 		})
 		.catch(function(err){
 			if(err)
 				Modal.alert(err.data);
-			getBidData(angular.copy(initFilter));
+			fireCommand(true);
 		});
 	}
 
@@ -123,6 +120,44 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 			newScope.formType = formType;
 		Modal.openDialog(popupName,newScope,modalClass);
 	}
+
+	// do upload
+	function doUpload(bid){
+
+		var scope = $rootScope.$new();
+		scope.bidDt = {};
+		var doupload = $uibModal.open({
+		  animation: true,
+		    templateUrl: "doupload.html",
+		    scope: scope,
+		    size: 'lg'
+		});
+
+		scope.close = function () {
+		  doupload.dismiss('cancel');
+		};
+
+		scope.uploadDoc = function(files,_this){
+			if(!files || !files.length)
+				return;
+			uploadSvc.upload(files[0],bid.product.assetDir)
+			.then(function(res){
+				scope.bidDt.deliveryOrder = res.data.filename;
+	     	})
+		}
+
+		scope.submitDOIssued = function(form){
+
+			if(form.$invalid || !scope.bidDt.deliveryOrder){
+				scope.submitted = true;
+				return;
+			}
+			bid.deliveryOrder = scope.bidDt.deliveryOrder;
+			bid.dateOfDelivery = scope.bidDt.dateOfDelivery;
+			update(bid,'doissued',scope.close);
+		}
+	}
+
 
 	//loading start
 	Auth.isLoggedInAsync(function(loggedIn) {

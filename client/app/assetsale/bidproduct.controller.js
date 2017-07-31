@@ -36,36 +36,33 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
             		$state.go('main');
             break;
 	    }
-		getBidProducts(initFilter);
+		getBidProducts(angular.copy(initFilter));
 	}
 
 
 	function onTabChange(tab) {
 		vm.activeBid = tab;
-		$scope.pager.reset();
-		switch (tab) {
-			case 'auctionable':
-				getBidProducts(initFilter); 
-				break;
-			case 'closed':
-				getClosedBids(initFilter)
-				break;
-		}
+		fireCommand(true);
 	}
 
-	function fireCommand(reset, filterObj) {
-		var filter = {};
+	function fireCommand(reset) {
+		if(reset)
+			$scope.pager.reset();
+		var filter = angular.copy(initFilter);
 		if (vm.searchStr) {
 			filter.isSearch = true;
 			filter.searchStr = encodeURIComponent(vm.searchStr);
 		}
-		getBidProducts(filter);
+		
+		if(vm.activeBid === 'auctionable')
+			getBidProducts(filter);
+		else
+			getClosedBids(filter);			
 	}
 
 
 	function getBidProducts(filter) {
 		$scope.pager.copy(filter);
-		filter.status = true;
 		AssetSaleSvc.getBidProduct(filter)
 			.then(function(result) {
 				vm.productListing = result.products;
@@ -78,6 +75,8 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 
 	function getClosedBids(filter){
 		$scope.pager.copy(filter);
+		filter.status = false;
+		filter.dealStatus = dealStatuses[12];
 		AssetSaleSvc.get(filter)
 		.then(function(result){
 			vm.closedBids = result.items;

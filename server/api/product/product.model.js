@@ -88,6 +88,7 @@ var ProductSchema = new Schema({
   /*Field related to asset sale*/
   bidReceived:Boolean,
   buyerInfo:{},
+  bidRequestApproved:{type:Boolean,default:false},
   cooling:{type:Boolean,default:false},
   coolingStartDate:Date,
   coolingEndDate : Date,

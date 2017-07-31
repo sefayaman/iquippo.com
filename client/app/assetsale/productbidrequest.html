@@ -15,7 +15,7 @@
 	<legend></legend>
 	
 	<!-- Auctionable Bid -->
-	<div ng-if="true">
+	<div>
 		<p><strong>Asset Id:</strong> {{assetId}}</p>
 		<div class="row form-group">
 		   	<div class="col-sm-9">
@@ -91,7 +91,7 @@
 
 			   				<button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')" ng-click="productBidRequestVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button>
 
-			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
+			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doUpload(bid)">
 					           <i class="fa fa-upload"></i>
 					        </button>
 					        
@@ -107,7 +107,7 @@
 
 			   				<button class="btn btn-sm btn-danger" uib-popover="Reject Request" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
 
-			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
+			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doUpload(bid)">
 					           <i class="fa fa-upload"></i>
 					        </button>
 
@@ -129,7 +129,7 @@
 
 			   				<button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')" ng-click="productBidRequestVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button>	
 
-			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doupload()">
+			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.doUpload(bid)">
 					           <i class="fa fa-upload"></i>
 					        </button>
 
@@ -149,29 +149,31 @@
 <script type="text/ng-template" id="doupload.html">
 	<div>
 		<div class="modal-header">
-	      <button type="button" class="close" ng-click="reqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
+	      <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
 	      <h4 class="modal-title">Details</h4>
 	    </div>
-	    <div class="modal-body">      
-	      <div class="row">
-	      	<div class="col-sm-6">
-		      	<button class="btn btn-danger fileinput-button">
-		            <input type="file" name="" file-upload>
-		            <span><i class="fa fa-upload"></i> DO Upload</span>
-		        </button>
-		        <span>{{}}</span>
-	      	</div>
-	      	<div class="col-sm-6">
-	      		<div class="input-group">
-					<input type="text" class="form-control" name="" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Delivery">
-					<a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-check"></i></a>
-				</div>
-	      	</div>
-	      	
-	      </div>
+	    <div class="modal-body"> 
+	    <form name="do_order">     
+		      <div class="row">
+		      	<div class="col-sm-6">
+			      	<button class="btn btn-danger fileinput-button">
+			            <input type="file" name="file" onchange="angular.element(this).scope().uploadDoc(this.files,this)">
+			            <span><i class="fa fa-upload"></i> DO Upload</span>
+			        </button>
+			        <span>{{bidDt.deliveryOrder}}</span>
+		      	</div>
+		      	<div class="col-sm-6">
+		      		<div class="input-group" ng-class="{'has-error':do_order.dateOfDelivery.$invalid && submitted}">
+						<input type="text" class="form-control" name="dateOfDelivery" ng-model="bidDt.dateOfDelivery" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Delivery" required>
+						<a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-check"></i></a>
+					</div>
+		      	</div>
+		      	
+		      </div>
+		     </form>
 	    </div>  
 	    <div class="modal-footer">
-	    	<button class="btn btn-danger">Submit</button>
+	    	<button class="btn btn-danger" ng-click="submitDOIssued(do_order)">Submit</button>
 	    </div>     
 	</div>
 </script>

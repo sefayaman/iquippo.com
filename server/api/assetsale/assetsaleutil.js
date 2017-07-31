@@ -8,10 +8,13 @@ var EMDMaster = require('../common/emdcharge.model');
 * For enterprise master filter must be like {}
 */
 
-exports.setStatus = function(bid,status,statusField,historyField){ 
+exports.setStatus = function(bid,status,statusField,historyField,userId){ 
         bid[statusField] = status;
         var stsObj = {};
         stsObj.status = status;
+        if(userId)
+        	stsObj.userId = userId;
+        else
         stsObj.userId = "SYSTEM";
         stsObj.createdAt = new Date();
         if(!bid[historyField])

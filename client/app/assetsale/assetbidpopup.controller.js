@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('AssetBidPopUpCtrl', AssetBidPopUpCtrl);
 
-  function AssetBidPopUpCtrl($scope, Auth, Modal,MarkupPriceSvc,notificationSvc, AssetSaleSvc, VatTaxSvc) {
+  function AssetBidPopUpCtrl($scope, Auth, Modal,MarkupPriceSvc,notificationSvc, AssetSaleSvc, VatTaxSvc,$uibModalInstance) {
     var vm = this;
     var query = $scope.params;
     var date = new Date();
@@ -12,6 +12,7 @@
     $scope.parking = 0;
 
     vm.submitBid = submitBid;
+    $scope.close = close;
     //vm.buyNow = buyNow;
     var dataToSend = {};
     var filter = {};
@@ -112,38 +113,6 @@
               AssetSaleSvc.setStatus(dataToSend,dealStatuses[6],'dealStatus','dealStatuses');
               AssetSaleSvc.setStatus(dataToSend,bidStatuses[7],'bidStatus','bidStatuses');
             }
-            
-            /*dataToSend.offerStatuses = [];
-            dataToSend.dealStatuses = [];
-            dataToSend.bidStatuses = [];
-            dataToSend.assetStatuses = [];
-            dataToSend.offerStatus = offerStatuses[0];
-            var offerStatusObj = {};
-            offerStatusObj.userId = Auth.getCurrentUser()._id;
-            offerStatusObj.status = offerStatuses[0];
-            offerStatusObj.createdAt = new Date();
-            dataToSend.offerStatuses[dataToSend.offerStatuses.length] = offerStatusObj;
-
-            dataToSend.bidStatus = bidStatuses[0];
-            var bidStatusObj = {};
-            bidStatusObj.userId = Auth.getCurrentUser()._id;
-            bidStatusObj.status = bidStatuses[0];
-            bidStatusObj.createdAt = new Date();
-            dataToSend.bidStatuses[dataToSend.bidStatuses.length] = bidStatusObj;
-
-            dataToSend.dealStatus = dealStatuses[0];
-            var dealStatusObj = {};
-            dealStatusObj.userId = Auth.getCurrentUser()._id;
-            dealStatusObj.status = dealStatuses[0];
-            dealStatusObj.createdAt = new Date();
-            dataToSend.dealStatuses[dataToSend.dealStatuses.length] = dealStatusObj;
-
-            dataToSend.assetStatus = assetStatuses[0].name;
-            var assetStatusObj = {};
-            assetStatusObj.userId = Auth.getCurrentUser()._id;
-            assetStatusObj.status = assetStatuses[0].name;
-            assetStatusObj.createdAt = new Date();
-            dataToSend.assetStatuses[dataToSend.assetStatuses.length] = assetStatusObj;*/
 
             if (query.typeOfRequest)
               dataToSend.typeOfRequest = query.typeOfRequest;
@@ -204,6 +173,10 @@
             }
         });
       });
+    }
+
+    function close(){
+      $uibModalInstance.dismiss('cancel');
     }
 
   }

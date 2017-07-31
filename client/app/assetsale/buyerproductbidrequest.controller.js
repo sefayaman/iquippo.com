@@ -3,7 +3,6 @@
 angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProductBidRequestCtrl);
 function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
 	var vm = this;
-	var filter = {};
 	vm.bidListing = [];
 	vm.activeBid = "auctionable";
 	$scope.onTabChange = onTabChange;
@@ -49,17 +48,7 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 		        typeOfRequest : "changeBid"
 	      	};
 
-		    var bidSummaryModal = $uibModal.open({
-		        templateUrl: "/app/assetsale/assetbidpopup.html",
-		        scope: bidSummaryScope,
-		        controller: 'AssetBidPopUpCtrl as assetBidPopUpVm',
-		        windowTopClass: 'bidmodal',
-		        size: 'xs'
-		    });
-
-		  	bidSummaryScope.close = function() {
-		        bidSummaryModal.close();
-		  	};
+	      	Modal.openDialog('bidRequest',bidSummaryScope,'bidmodal');
 	  	});
     }
 
@@ -87,41 +76,17 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 		];*/
 	
 	function update(bid,action){
-		switch(action){
-			case 'emdpayment':
-				if(typeof bid.emdPayment.remainingPayment === 'undefined' || bid.emdPayment.remainingPayment > 0){
-					Modal.alert("EMD has not been fully paid.");
-					return;
-				}
-				AssetSaleSvc.setStatus(bid,dealStatuses[7],'dealStatus','dealStatuses');
-			break;
-			case 'fullpayment':
-				if( typeof bid.fullPayment.remainingPayment === 'undefined' || bid.fullPayment.remainingPayment > 0){
-					Modal.alert("Full payment has not been fully paid.");
-					return;
-				}
-				AssetSaleSvc.setStatus(bid,dealStatuses[8],'dealStatus','dealStatuses');
-			break;
-			case 'deliveryaccept':
-				AssetSaleSvc.setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
-				AssetSaleSvc.setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
-			break;
-			default:
-				return;
-			break
-		}
-		updateBid(bid,action);
-	}
 
-	function updateBid(bid,action){
+		AssetSaleSvc.setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
+		AssetSaleSvc.setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
 		AssetSaleSvc.update(bid,action)
 		.then(function(res){
-			getBidData(angular.copy(initFilter));
+			fireCommand(true);
 		})
 		.catch(function(err){
 			if(err)
 				Modal.alert(err.data);
-			getBidData(angular.copy(initFilter));
+			fireCommand(true);
 		});
 	}
 

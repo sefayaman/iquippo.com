@@ -64,7 +64,7 @@ var TimeInterval =  15*60*1000;/*Service interval*/
 
             async.eachLimit(bids,2,updateBid,function(err){
               if(!err)
-              Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false}}).exec();
+              Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
               return cb(err);
             });
           });
@@ -115,7 +115,6 @@ var TimeInterval =  15*60*1000;/*Service interval*/
 
         }else if(item.dealStatus == dealStatuses[7]){
             var isExpired = checkExpiryDate(item.fullPaymentEndDate);
-            console.log("exp",isExpired);
            if(isExpired){
               AssetSaleUtil.setStatus(item,bidStatuses[4],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(item,dealStatuses[4],'dealStatus','dealStatuses');
@@ -131,7 +130,7 @@ var TimeInterval =  15*60*1000;/*Service interval*/
           if(err){
             return cb(err);
           }
-          Product.update({_id:item.product.proData},{$set:{tradeType:item.product.tradeType,bidReceived:false}}).exec();;
+          Product.update({_id:item.product.proData},{$set:{tradeType:item.product.tradeType,bidRequestApproved:false}}).exec();;
           return cb();
         });
     }

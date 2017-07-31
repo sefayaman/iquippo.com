@@ -97,19 +97,7 @@
       };
       bidSummaryScope.params.typeOfRequest="buynow";
     }
-
-      var bidSummaryModal = $uibModal.open({
-        templateUrl: "/app/assetsale/assetbidpopup.html",
-        scope: bidSummaryScope,
-        controller: 'AssetBidPopUpCtrl as assetBidPopUpVm',
-        windowTopClass: 'bidmodal',
-        size: 'xs'
-      });
-      
-      bidSummaryScope.close = function() {
-        bidSummaryModal.close();
-        countBid();
-      };
+    Modal.openDialog('bidRequest',bidSummaryScope,'bidmodal');
     }
 
     function withdrawBid() {

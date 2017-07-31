@@ -82,6 +82,10 @@ var Modals = {
   buyerRequestDetailPopup : {
     tplUrl : "app/assetsale/buyerrequestdetail.html",
     Ctrl : 'ViewProductOrRequestDetailCtrl as reqDetailVm'
+  },
+  bidRequest:{
+    tplUrl:'/app/assetsale/assetbidpopup.html',
+    Ctrl:'AssetBidPopUpCtrl as assetBidPopUpVm'
   }
 };
 
