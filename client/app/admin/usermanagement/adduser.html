@@ -143,6 +143,17 @@
                     </tbody>
                   </table>
                 </div>
+                <div class="row form-group" ng-if="((newUser.role === 'customer' || newUser.role === 'channelpartner') && isAdmin() && !isEdit) || (newUser.role != 'enterprise' && (newUser.role == 'channelpartner' || (newUser.createdBy && newUser.createdBy.role != 'channelpartner')) && isEdit)">
+                  <div class="col-sm-4 padd-right">
+                    <input type="text" class="form-control" name="" placeholder="Sale Fulfilment" disabled>
+                  </div>
+                  <div class="col-sm-8 padd-left">
+                    <select class="form-control" name="FAPartnerId" ng-model="newUser.FAPartnerId" >
+                      <option value="">Select Partner</option>
+                      <option ng-repeat="vendor in getVendors('Sale Fulfilment')" value="{{vendor.partnerId}}">{{vendor.name}}</option>
+                    </select>
+                  </div>
+                </div>
 
                 <div class="row">
                   <div class="form-group col-sm-12" ng-class="{'has-error': form.address.$invalid && submitted }">

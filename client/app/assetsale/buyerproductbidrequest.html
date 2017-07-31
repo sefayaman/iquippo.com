@@ -100,7 +100,7 @@
 
 							<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="buyerProductBidRequestVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
 							
-							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview', 'auctionableBid')"><i class="fa fa-info"></i></button>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview')"><i class="fa fa-info"></i></button>
 						</td>
 			   		</tr>
 		   		</tbody>
@@ -147,21 +147,21 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="closedBid in buyerProductBidRequestVm.bidListing">
-		   				<td>{{closedBid.ticketId}}</td>
-			   			<td>{{closedBid.product.assetId}}</td>
-			   			<td>{{closedBid.product.category}}</td>
-			   			<td>{{closedBid.product.brand}}</td>
-			   			<!-- <td>{{closedBid.product.model}}</td> -->
-			   			<!-- <td>{{closedBid.product.mfgYear}}</td> -->
-			   			<!-- <td>{{closedBid.product.country}}</td> -->
-			   			<!-- <td>{{closedBid.product.state}}</td> -->
-			   			<td>{{closedBid.product.city}}</td>
-			   			<!-- <td>{{closedBid.product.assetDesc}}</td> -->			   			
-			   			<!-- <td>{{closedBid.tradeType}}</td> -->
-			   			<td>{{closedBid.bidAmount}}</td>
-			   			<td>{{closedBid.offerStatus}}</td>
-			   			<td>{{closedBid.dealStatus}}</td>
+		   			<tr ng-repeat="bid in buyerProductBidRequestVm.bidListing">
+		   				<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.product.assetId}}</td>
+			   			<td>{{bid.product.category}}</td>
+			   			<td>{{bid.product.brand}}</td>
+			   			<!-- <td>{{bid.product.model}}</td> -->
+			   			<!-- <td>{{bid.product.mfgYear}}</td> -->
+			   			<!-- <td>{{bid.product.country}}</td> -->
+			   			<!-- <td>{{bid.product.state}}</td> -->
+			   			<td>{{bid.product.city}}</td>
+			   			<!-- <td>{{bid.product.assetDesc}}</td> -->			   			
+			   			<!-- <td>{{bid.tradeType}}</td> -->
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
@@ -177,7 +177,7 @@
 			   				</a>
 			   			</td>
 			   			<td>
-							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter"  ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview', 'closedBid')"><i class="fa fa-info"></i></button>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter"  ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview')"><i class="fa fa-info"></i></button>
 			   				
 			   			</td>
 			   		</tr>

@@ -75,6 +75,7 @@ var UserSchema = new Schema({
     type:Boolean,
     default:false
   },
+  FAPartnerId:String,
   createdAt: Date,
   updatedAt: Date, 
   salt: String,
