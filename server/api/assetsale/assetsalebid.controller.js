@@ -151,7 +151,7 @@ exports.validateUpdate = function(req,res,next){
 				if(!req.product.cooling){
 					req.product.cooling = true;
 					req.product.coolingStartDate = new Date();
-					req.product.coolingEndDate = new Date().addDays(req.entData.coolingPeriod);
+					req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod);
 					if(req.product.coolingEndDate)
 						req.product.coolingEndDate = req.product.coolingEndDate.setHours(24,0,0,0);
 					req.updateProduct = true;
@@ -159,7 +159,7 @@ exports.validateUpdate = function(req,res,next){
 
 				req.otherBids.forEach(function(item){
 					if(item.bidStatus === bidStatuses[7]){
-						AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
+						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses');
 						req.bids.push(item);
 					}
 				});
@@ -541,7 +541,7 @@ function paginatedResult(req, res, modelRef, filter) {
 		});
 	}
 
-	function _getResult(){
+	function _getResult(cb){
 
 		var sortFilter = {
 				_id: -1
@@ -580,7 +580,7 @@ function paginatedResult(req, res, modelRef, filter) {
 
 exports.getBidCount = function(req, res) {
 
-	async.parallel([{pCount:_getCountOnProduct,uCount:_getCountOnUser}],function(err,resObj){
+	async.parallel({pCount:_getCountOnProduct,uCount:_getCountOnUser},function(err,resObj){
 		if(err) return handleError(res,err);
 		return res.status(200).json({totalBidCount:resObj.pCount,userBidCount:resObj.uCount});
 	});

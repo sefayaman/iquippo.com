@@ -199,14 +199,14 @@
       break;
       case 'EMDPAYMENT':
          var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[6] ? true:false;
-        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user === Auth.getCurrentUser()._id))
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user._id === Auth.getCurrentUser()._id))
             retVal = true;
          else
           retVal = false;
       break;
       case 'FULLPAYMENT':
          var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[7] ? true:false;
-        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user === Auth.getCurrentUser()._id))
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user._id === Auth.getCurrentUser()._id))
             retVal = true;
          else
           retVal = false;
@@ -227,7 +227,7 @@
       break;
       case 'INVOICEDETAIL':
         var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus)> 5 ? true:false;
-        if(isValidStatus && bid.user === Auth.getCurrentUser()._id)
+        if(isValidStatus && bid.user._id === Auth.getCurrentUser()._id)
           retVal = true;
          else if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner()))
           retVal = true;
@@ -236,7 +236,7 @@
       break;
        case 'ACCEPTANCEOFDELIVERY':
         var isValidStatus = bid.bidStatus === bidStatuses[7] && bid.dealStatus === dealStatuses[10]; 
-        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user === Auth.getCurrentUser()._id))
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user._id === Auth.getCurrentUser()._id))
           retVal = true;
         else
           retVal = false; 
@@ -251,7 +251,7 @@
         case 'CHANGEBID':
         case 'WITHDRAWBID':
         var isValidStatus = [bidStatuses[0],bidStatuses[7]].indexOf(bid.bidStatus) !== -1 && bid.dealStatus === dealStatuses[0]; 
-        if(isValidStatus && bid.user === Auth.getCurrentUser()._id)
+        if(isValidStatus && bid.user._id === Auth.getCurrentUser()._id)
           retVal = true;
         else
           retVal = false;

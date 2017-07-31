@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProductBidRequestCtrl);
-function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
+function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
 	var vm = this;
 	vm.bidListing = [];
 	vm.activeBid = "auctionable";
@@ -16,7 +16,7 @@ function BuyerProductBidRequestCtrl($scope, Auth, Modal, PagerSvc, productSvc, A
 	var initFilter = {};
 
 	function init() {
-		filter = {};
+		var filter = {};
 		initFilter.pagination = true;
 		initFilter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		angular.copy(initFilter, filter);

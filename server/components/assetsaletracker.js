@@ -10,7 +10,7 @@ var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD 
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
 var tradeTypeStatuses = ['SELL','BOTH','Not Available'];
 
-var TimeInterval =  15*60*1000;/*Service interval*/
+var TimeInterval =  1*60*1000;/*Service interval*/
 
   function trackBidRequests(){
     async.parallel([trackCoolingPeriod,trackPaymentPeriod],function(err){
@@ -78,7 +78,7 @@ var TimeInterval =  15*60*1000;/*Service interval*/
           AssetSaleUtil.setStatus(bid,dealStatuses[6],'dealStatus','dealStatuses');
         }
         else{
-          bid.status = false;
+          //bid.status = false;
           AssetSaleUtil.setStatus(bid,bidStatuses[5],'bidStatus','bidStatuses');
         }
         AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
