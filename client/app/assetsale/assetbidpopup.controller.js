@@ -144,12 +144,17 @@
             dataToSend.ageingOfAsset = query.product.ageingOfAsset;
             dataToSend.parkingCharge = query.product.parkingCharges;
             dataToSend.bidAmount = $scope.total;
-            dataToSend.emdAmount = $scope.emdAmount;
+            dataToSend.emdAmount = $scope.emdAmount || 0;
+            dataToSend.emdPayment = {remainingPayment:$scope.emdAmount || 0};
+            dataToSend.fullPayment = {remainingPayment: ($scope.total || 0) - ($scope.emdAmount || 0)};
             dataToSend.proxyBid = query.proxyBid;
             dataToSend.offerType = query.offerType;
             dataToSend.bidReceived = query.product.bidReceived;
             AssetSaleSvc.submitBid(dataToSend)
               .then(function(result) {
+                if($scope.params.callback)
+                    $scope.params.callback();
+
                 Modal.alert("Your bid has been successfully submitted!", true);
                 if(Auth.getCurrentUser().email) {
                   var data = {};

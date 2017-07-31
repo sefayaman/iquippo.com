@@ -10,11 +10,11 @@
         <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>
         <td ng-if="formType != 'EMD'">{{(bidData.bidAmount - bidData.emdAmount) || 0}}</td>
       </tr>
-      <!-- <tr>
+      <tr>
         <td>Remaining Payment :</td>
         <td ng-if="formType == 'EMD'">{{bidData.emdPayment.remainingPayment || 0}}</td>
         <td ng-if="formType != 'EMD'">{{bidData.fullPayment.remainingPayment || 0}}</td>
-      </tr> -->
+      </tr>
     </table>  
       <form novalidate class="text-left" name="paymentDetailForm">
         <div class="row">
@@ -37,7 +37,8 @@
         <div class="modal-footer asset-sale">
           <div class="btn-group">
             <button type="button" class="btn btn-primary" ng-click="emdFullPaymentVm.closeDialog()">Cancel</button>
-            <button type="button" class="btn btn-danger" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Sabmit</button>                
+            <button type="button" class="btn btn-danger" ng-if="formType == 'EMD'" ng-disabled ="(formType == 'EMD' && bidData.emdPayment.remainingPayment == 0)" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Sabmit</button>
+            <button type="button" class="btn btn-danger" ng-if="formType != 'EMD'" ng-disabled ="(formType != 'EMD' && bidData.fullPayment.remainingPayment == 0)" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Sabmit</button>                
           </div>
         </div>
     </form>

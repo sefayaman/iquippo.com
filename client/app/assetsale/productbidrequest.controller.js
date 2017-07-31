@@ -25,6 +25,8 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
     }
 	function init() {
 		initFilter.productId = $stateParams.productId;
+		if(Auth.isFAgencyPartner())
+			initFilter.bidStatus = bidStatuses[7];
 		getBidData(angular.copy(initFilter));
 	}
 
@@ -103,7 +105,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 		
 		$scope.pager.copy(filter);
 		filter.pagination = true;
-		AssetSaleSvc.fetchBid(filter)
+		AssetSaleSvc.get(filter)
 			.then(function(res) {
 				vm.bidListing = res.items;
 				$scope.pager.update(res.items,res.totalItems);

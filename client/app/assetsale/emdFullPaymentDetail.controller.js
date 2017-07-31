@@ -32,26 +32,14 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		if(action == 'emdPayment') {
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
-			var remAmount = 0;
-			//$scope.bidData.emdPayment.paymentMode = 'offline';
-			if($scope.bidData.emdPayment.remainingPayment)
-				remAmount = $scope.bidData.emdPayment.remainingPayment;
-			else
-				remAmount = $scope.bidData.emdAmount;
-			$scope.bidData.emdPayment.remainingPayment = Number(remAmount) - Number(vm.emdFullPaymentInfo.amount); 
+			$scope.bidData.emdPayment.remainingPayment = Number($scope.bidData.emdPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount); 
 			if(!$scope.bidData.emdPayment.paymentsDetail)
 				$scope.bidData.emdPayment.paymentsDetail = [];
 			$scope.bidData.emdPayment.paymentsDetail[$scope.bidData.emdPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
 		} else {
 			if(!$scope.bidData.fullPayment)
 				$scope.bidData.fullPayment = {};
-			var remAmount = 0;
-			//$scope.bidData.fullPayment.paymentMode = 'offline';
-			if($scope.bidData.fullPayment.remainingPayment)
-				remAmount = $scope.bidData.fullPayment.remainingPayment;
-			else
-				remAmount = $scope.bidData.bidAmount - $scope.bidData.emdAmount;
-			$scope.bidData.fullPayment.remainingPayment = Number(remAmount) - Number(vm.emdFullPaymentInfo.amount); 
+			$scope.bidData.fullPayment.remainingPayment = Number($scope.bidData.fullPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount); 
 			if(!$scope.bidData.fullPayment.paymentsDetail)
 				$scope.bidData.fullPayment.paymentsDetail = [];
 			$scope.bidData.fullPayment.paymentsDetail[$scope.bidData.fullPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;

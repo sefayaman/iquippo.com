@@ -29,7 +29,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
         	Modal.alert("Please Login/Register for submitting your request!", true);
         	return;
       	}
-        filter = {};
+        var filter = {};
         filter._id = bid.product.proData;
         filter.status = true;
         productSvc.getProductOnFilter(filter).then(function(result) {
@@ -92,16 +92,15 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 
     function onTabChange(tab){
     	vm.activeBid = tab;
+    	var filter={};
     	$scope.pager.reset();
 	  	switch(tab){
 	  		case 'auctionable':
-	  		filter={};
 			angular.copy(initFilter, filter);
 			filter.actionable = 'y';
 	  		getBidData(filter);
 	  		break;
 	  		case 'closed':
-	  		filter={};
 	  		angular.copy(initFilter, filter);
 			filter.actionable = 'n';
 	  		getBidData(filter);
@@ -122,7 +121,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
           .then(function(res) {
             if(res && res.msg)
               Modal.alert(res.msg, true);
-          	filter ={};
+          	var filter ={};
           	angular.copy(initFilter, filter);
           	filter.actionable = 'y';
           	getBidData(filter);
@@ -146,7 +145,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 
 	function getBidData(filter) {
 		$scope.pager.copy(filter);
-		AssetSaleSvc.fetchBid(filter)
+		AssetSaleSvc.get(filter)
 			.then(function(res) {
 				vm.bidListing = res.items;
 				vm.totalItems = res.totalItems;

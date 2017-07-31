@@ -77,7 +77,8 @@
         product:$scope.currentProduct,
         stateId:$scope.state._id, 
         bid: "placebid",
-        offerType: "Bid"
+        offerType: "Bid",
+        callback: countBid
       };
       if(bid == "proxybid")
         bidSummaryScope.params.proxyBid = true;
@@ -427,12 +428,8 @@
         filter.userId = Auth.getCurrentUser()._id;
     	AssetSaleSvc.countBid(filter)
       .then(function(res){
-        //if(filter.userId){
           $scope.userBids=res.userBidCount;
-        //}
-        //else{
-        vm.bidCount=res.totalBidCount;
-        //}
+          vm.bidCount=res.totalBidCount;
       })
       .catch(function(err){
         if (err) throw err;

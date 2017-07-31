@@ -12,7 +12,7 @@
     svc.countBid = countBid;
 		svc.searchBid = searchBid;
     svc.withdrawBid = withdrawBid;
-    svc.fetchBid = fetchBid;
+    //svc.fetchBid = fetchBid;
     svc.get = get;
     svc.getMaxBidOnProduct = getMaxBidOnProduct;
     svc.getBidProduct = getBidProduct;
@@ -70,7 +70,7 @@
         });
 		}
 
-	function fetchBid(data){
+	/*function fetchBid(data){
 		var serPath = path;
     var queryParam = "";
     if(data)
@@ -85,6 +85,22 @@
       throw err;
     });
 	}
+*/
+  function get(data) {
+    var serPath = path + "?type=request";
+    var queryParam = "";
+    if(data)
+        queryParam = UtilSvc.buildQueryParam(data);
+    if(queryParam)
+      serPath = serPath + "&" + queryParam;
+    return $http.get(serPath)
+    .then(function(res){
+      return res.data;
+    })
+    .catch(function(err){
+      throw err;
+    });
+  }
 
   function getBidOrBuyCalculation(data){
     var serPath = path;
@@ -142,22 +158,6 @@
         queryParam = UtilSvc.buildQueryParam(data);
     if(queryParam)
       serPath = serPath + "/maxbidonproduct" + "?" + queryParam;
-    return $http.get(serPath)
-    .then(function(res){
-      return res.data;
-    })
-    .catch(function(err){
-      throw err;
-    });
-  }
-
-	function get(data) {
-    var serPath = path + "?type=request";
-    var queryParam = "";
-    if(data)
-        queryParam = UtilSvc.buildQueryParam(data);
-    if(queryParam)
-      serPath = serPath + "&" + queryParam;
     return $http.get(serPath)
     .then(function(res){
       return res.data;

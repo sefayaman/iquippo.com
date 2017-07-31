@@ -63,6 +63,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 
 	function getBidProducts(filter) {
 		$scope.pager.copy(filter);
+		filter.pagination = true;
 		AssetSaleSvc.getBidProduct(filter)
 			.then(function(result) {
 				vm.productListing = result.products;
@@ -75,8 +76,9 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 
 	function getClosedBids(filter){
 		$scope.pager.copy(filter);
-		filter.status = false;
+		filter.status = 'n';
 		filter.dealStatus = dealStatuses[12];
+		filter.pagination = true;
 		AssetSaleSvc.get(filter)
 		.then(function(result){
 			vm.closedBids = result.items;

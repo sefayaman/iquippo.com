@@ -149,9 +149,9 @@
 			   		</tr>
 		   		</thead>
 		   		<tbody>
-		   			<tr ng-repeat="product in bidproductVm.productListing">		
+		   			<tr ng-repeat="product in bidproductVm.closedBids">		
 		   				<td>{{product.ticketId}}</td>	   			
-			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.product.proData.assetId}}</td>
 			   			<td>{{product.category.name}}</td>
 			   			<td>{{product.brand.name}}</td>
 			   			<!-- <td>{{product.model.name}}</td> -->

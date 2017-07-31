@@ -133,7 +133,7 @@ exports.update = function(req, res,next) {
 
 exports.validateUpdate = function(req,res,next){
 	
-	if(['approve','Acceptanceofdelivery'].indexOf(req.query.action) !== -1)
+	if(['approve','deliveryaccept'].indexOf(req.query.action) !== -1)
 		async.parallel([validateBid,validateOtherBids,validateProduct],onComplete);
 	else
 		async.parallel([validateBid,validateProduct],onComplete);
@@ -194,10 +194,11 @@ exports.validateUpdate = function(req,res,next){
 			req.updateProduct = true;
 			
 			next();
-		}else if(req.query.action === 'Acceptanceofdelivery'){
+		}else if(req.query.action === 'deliveryaccept'){
 			req.product.bidReceived = false;
 			req.product.bidRequestApproved = false;
 			req.updateProduct = true;
+			req.bids[0].status = false;
 			req.otherBids.forEach(function(item){
 				item.status = false;
 				AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses');
