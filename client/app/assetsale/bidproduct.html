@@ -152,38 +152,38 @@
 		   			<tr ng-repeat="product in bidproductVm.closedBids">		
 		   				<td>{{product.ticketId}}</td>	   			
 			   			<td>{{product.product.proData.assetId}}</td>
-			   			<td>{{product.category.name}}</td>
-			   			<td>{{product.brand.name}}</td>
+			   			<td>{{product.product.proData.category.name}}</td>
+			   			<td>{{product.product.proData.brand.name}}</td>
 			   			<!-- <td>{{product.model.name}}</td> -->
 			   			<!-- <td>{{product.mfgYear}}</td> -->
 			   			<!-- <td>{{product.country}}</td> -->
 			   			<!-- <td>{{product.state}}</td> -->
-			   			<td>{{product.city}}</td>			   			
-			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>			   			
+			   			<td>{{product.product.proData.city}}</td>			   			
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{product.ageingOfAsset}}</td>			   			
 			   			<!-- <td>{{}}</td> -->
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
-			   			<!-- <td>{{}}</td> -->
-			   			<!-- <td>{{}}</td> -->
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>			   			
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>			   			
-			   			<td ng-if="!isFAgencyPartner()">{{}}</td>			   			
-			   			<td ng-if="!isFAgencyPartner()">{{}}</td>			   			
-			   			<!-- <td>{{}}</td> -->
-			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
-			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{product.user.fname}} {{product.user.lname}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
-			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{product.user.city}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{product.user.mobile}}</td>			   			
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{product.user.email}}</td>			   			
+			   			<td ng-if="!isFAgencyPartner()">{{product.product.proData.grossPrice || 0}}</td>			   			
+			   			<td ng-if="!isFAgencyPartner()">{{product.product.proData.reservePrice || 0}}</td>			   			
+			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="!isFAgencyPartner()">{{product.bidAmount || 0}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{product.offerStatus}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="!isFAgencyPartner()">{{product.bidStatus}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
 			   			<!-- <td>{{}}</td> -->
-			   			<td>{{}}</td>
-			   			<td ng-if="isAdmin()">{{}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td>{{product.dealStatus}}</td>
+			   			<td ng-if="isAdmin()">{{product.product.proData.assetStatus}}</td>
 			   			<td>
 							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button>	
 			   			</td>

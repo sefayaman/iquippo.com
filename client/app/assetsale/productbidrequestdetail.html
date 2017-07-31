@@ -120,19 +120,19 @@
               </table>
             </td>
             <td><b>Delivery Order:</b></td>
-            <td>{{}} </td>
+            <td>{{bidData.deliveryOrder}} </td>
           </tr>
           <tr>
             <td><b>Date of Delivery: </b></td>
-            <td>{{}}</td>
+            <td>{{bidData.dateOfDelivery | date:'MM/dd/yyyy'}}</td>
             <td><b>Deal Status:</b></td>
             <td>{{bidData.dealStatus}} </td>
           </tr>
           <tr ng-if="isAdmin()">
             <td><b>Trade Type: </b></td><!--only for admin  -->
-            <td>{{}}</td>
+            <td>{{bidData.product.proData.tradeType}}</td>
             <td><b>Asset Status:</b></td>
-            <td>{{}} </td>
+            <td>{{bidData.product.proData.assetStatus}} </td>
           </tr>
         </tbody>
       </table>

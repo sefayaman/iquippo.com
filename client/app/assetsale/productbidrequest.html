@@ -70,7 +70,7 @@
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">Update Details</a>
 			   			</td>
-			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{bid.parkingCharge || 0}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')" ng-if="productBidRequestVm.validateAction(bid,'INVOICEDETAIL')">Update</button>
 			   			</td>
@@ -80,7 +80,7 @@
 			   					<span ng-if="false">Update</span>
 			   				</button>
 			   			</td>
-			   			<td>{{}}</td>
+			   			<td>{{bid.deliveryOrder}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<td>{{bid.dealStatus}}</td>
 			   			<!-- <td>{{bid.tradeType}}</td> -->
