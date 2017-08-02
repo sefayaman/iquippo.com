@@ -9,8 +9,8 @@ exports.get = function(req, res) {
   var filter = {};
   if(queryParam.categoryId)
     filter.category = queryParam.categoryId;
-  if(queryParam.groupId)
-    filter.group = queryParam.groupId;
+  // if(queryParam.groupId)
+  //   filter.group = queryParam.groupId;
   
   if(queryParam.currentDate && queryParam.currentDate === 'y') {
       filter["effectiveFromDate"] = {$lte:new Date()};
@@ -18,7 +18,7 @@ exports.get = function(req, res) {
   }
 
   var query = Model.find(filter).populate({
-    path: 'category group state'
+    path: 'category state'
   });
   query.exec(function(err, result) {
     if (err) {
@@ -162,6 +162,36 @@ exports.destroy = function(req, res, next) {
     });
   });
 };
+
+exports.getGstOnProduct = function(req, res) {
+  var queryParam = req.query;
+  var filter = {};
+    if(queryParam.categoryId)
+    filter.category = queryParam.categoryId;
+  if(queryParam.stateId)
+    filter.state = queryParam.stateId;
+  if(queryParam.currentDate && queryParam.currentDate === 'y') {
+    filter["effectiveFromDate"] = {$lte:new Date()};
+    filter["effectiveToDate"] = {$gte:new Date()};
+  }
+  var query = Model.find(filter);
+  query.exec(function(err, result) {
+    if (err)
+      return res.status(err.status || 500).send(err);
+    if(result.length == 0) {
+      filter = {};
+      filter.taxType = "Other";
+      var query = Model.find(filter);
+      query.exec(function(err, otherRes) {
+        if (err)
+          return res.status(err.status || 500).send(err);
+        return res.status(200).json(otherRes);
+      });
+    } else {
+      return res.status(200).json(result);
+    }
+  });
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);

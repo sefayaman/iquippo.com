@@ -447,15 +447,21 @@
         return;
       var serData = {};
       serData.categoryId = $scope.product.category._id;
-      serData.groupId = $scope.product.group._id;
-      serData.state = $scope.product.state;
+      //serData.state = $scope.product.state;
+      if($scope.stateList) {
+        $scope.stateList.forEach(function(item){
+          if(item.name == $scope.product.state) {
+            serData.stateId = item._id;
+            return;
+          }
+        });
+      }
       serData.currentDate = 'y'
-      VatTaxSvc.get(serData)
+      VatTaxSvc.getGstOnProduct(serData)
       .then(function(taxes){
         if(taxes.length)
           $scope.product.taxRate = taxes[0].amount;
       });
-
     }
 
     function isEmpty(myObject) {
