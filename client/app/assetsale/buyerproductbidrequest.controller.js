@@ -81,6 +81,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 		AssetSaleSvc.setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
 		AssetSaleSvc.update(bid,action)
 		.then(function(res){
+			Modal.alert("Asset received.");
 			fireCommand(true);
 		})
 		.catch(function(err){
