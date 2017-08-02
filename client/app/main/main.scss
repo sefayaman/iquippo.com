@@ -86,6 +86,13 @@ a.text-muted{position:absolute; top:7px; right:30px; font-size:18px;}
 .video-link ul{padding: 0;}
 .video-link ul li{display: inline-block;padding-right: 15px;}
 .video-link ul li a{text-decoration: none; color: #666;}
+
+.header-top .top-menu{margin-top: 5px;}
+.header-top .top-menu .Instant-quote a, .header-top .top-menu .addProduct a{border-radius: 5px; background: #f2f2f2; padding: 5px 10px; border-bottom: 2px solid #004394;margin-right: 10px;box-shadow: 1px 2px 3px #ddd;}
+.header-top .top-menu .addProduct a{border-bottom: 2px solid #e3000f;}
+.header-top .top-menu .Instant-quote:hover a{background: #004394;}
+.header-top .top-menu .addProduct:hover a{background: #e3000f;}
+.header-top .top-menu .Instant-quote:hover a, .header-top .top-menu .addProduct:hover a{text-decoration: none; color: #fff;}
 header{background:#fff;}
 .navbar.navbar-inverse{background:none;border-radius:0;border:0;min-height:0;margin:0;}
 .navbar-inverse .navbar-nav li a{color:#000 !important;font-size:14px; background:none !important; padding:8px 10px;}
@@ -93,24 +100,29 @@ header{background:#fff;}
 .navbar{margin-bottom:0px;}
 .navbar-brand{padding:0px 10px; position:relative; top:-25px; margin-right: 20px;}
 .navbar-brand img{width:125px;}
-.navbar-nav li.submenu .uib-dropdown-menu{display: none;position: absolute; z-index:100; padding: 0;}
-.navbar-nav li.submenu:hover .uib-dropdown-menu{display:block!important;background-color:rgba(255,255,255,1);border:0; width: 670px; left: -190%;}
+.navbar-nav li.submenu .uib-dropdown-menu{display: none;position: absolute; right: 0; z-index:100; padding: 0; width: 250px; box-shadow: 1px 1px 5px #ccc}
+.navbar-nav li.submenu:hover .uib-dropdown-menu{display:block!important;background-color:rgba(255,255,255,1);border:0;}
+.navbar-nav li.submenu:hover .uib-dropdown-menu li{display: block;}
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {color: #444;background-color: transparent;}
 
 .navbar-nav li.submenu .uib-dropdown-menu li{display: inline-block;}
 .navbar-inverse .navbar-nav > li.active{border-bottom:2px solid #e3000f;}
 
-.navbar-nav li.submenu:hover .uib-dropdown-menu li a{padding:4px 12px; text-decoration: none;}
+.navbar-nav li.submenu:hover .uib-dropdown-menu li a{padding:5px 12px; text-decoration: none;text-transform: capitalize; display: block;}
+.navbar-nav li .uib-dropdown-menu li a strong{margin-right: 20px; display: inline-block;}
+.navbar-nav li .uib-dropdown-menu li a:hover{background: #eee !important;}
 /*.navbar-nav li.dropdown:hover .dropdown-menu li a:hover{}*/
 
 /*.navbar-form .input-group{width:100%;}*/
 
-.navbar .nav.navbar-nav.navbar-right{margin:0;}
-.navbar .nav.navbar-nav.navbar-right a{font-size: 13px; padding:8px 10px;margin-right:5px;margin-top:5px;color: #FFF;background: #e3000f;line-height:15px;}
-.navbar .nav.navbar-nav.navbar-right a:hover,.navbar .nav.navbar-nav.navbar-right a:focus{background: #e3000f;outline: none;color: #FFF;}
-.navbar .nav.navbar-nav.navbar-right li:nth-child(1) a{background: #004394;}
+.navbar .nav.navbar-nav.navbar-right{margin:-5px;}
+.navbar .nav.navbar-nav.navbar-right .submenu{background: #f9bc03; margin-top: 7px;}
+.navbar .nav.navbar-nav.navbar-right .submenu a{ color: #333; padding: 5px 10px;}
+/* .navbar .nav.navbar-nav.navbar-right a{font-size: 13px; padding:8px 10px;margin-right:5px;margin-top:5px;color: #FFF;background: #e3000f;line-height:15px;} */
+/* .navbar .nav.navbar-nav.navbar-right a:hover,.navbar .nav.navbar-nav.navbar-right a:focus{background: #e3000f;outline: none;color: #FFF;} */
+/* .navbar .nav.navbar-nav.navbar-right li:nth-child(1) a{background: #004394;} */
 
-.navbar .navbar-nav i{border-radius:50%;background:#1C2437;color:#fff;width:30px;height:30px;padding:8px;text-align:center;}
+/* .navbar .navbar-nav i{border-radius:50%;background:#1C2437;color:#fff;width:30px;height:30px;padding:8px;text-align:center;} */
 .select-group{width:100%;float:left;position:relative;}
 .select-group .form-control{width:100%;float:left;background:#382516;border-color:#382515;color:#fff;}
 .select{border:1px solid #999;height:40px;line-height:30px;position:relative;background:#FFF;padding:4px 5px 4px 0px;border-radius: 5px;}
@@ -123,7 +135,7 @@ header{background:#fff;}
 .top-menu{padding:0;}
 .top-menu .dropdown-menu li{width:100%;padding:0; margin-bottom:5px;}
 .top-menu li{display:inline-block;padding-top:5px;}
-.top-menu li a{color:#999;font-size:12px; padding: 0 8px;}
+.top-menu li a{color:#666;font-size:12px; padding: 0 8px;}
 .top-menu > .open > .dropdown-menu{left: -65px; border-radius: 0 0 3px 3px;min-width: 140px; padding: 0; margin: 0;}
 .top-menu > .open > .dropdown-menu > li > a{padding: 5px 10px;}
 .carousel-control span{position:relative;top:95px;}
@@ -392,7 +404,7 @@ ul.alert-dropdown{width:200px;}
 
 /* Side Navigation */
 .side-nav{position:fixed;top:55px;left:225px;width:235px;margin-left:-225px;border:none;border-radius:0;overflow-y:auto;background-color:#e3000f;bottom:0;overflow-x:hidden;padding-bottom:40px;height:700px;}
-.side-nav li>a{width:225px;color:#fff;font-size:13px;text-transform:uppercase;padding:3px 5px;}
+.side-nav li>a{width:225px;color:#fff;font-size:13px;text-transform:uppercase;padding:8px;}
 .side-nav li.active a,.side-nav li a:hover,.side-nav li a:focus{outline:none;background-color:#ce1414!important;color:#fff!important;}
 .navbar-default .navbar-nav > li > a{color:#fff}
 .navbar .side-nav .navbar-nav i{background:none;}
@@ -927,8 +939,9 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .sale-price strong{padding: 5px 0 0; display: block; font-size: 18px; color: #444; font-weight: normal;}
 .bank-detail{list-style: none; margin-top: 15px;}
 .btn-warning.disabled, .btn-warning.disabled.active, .btn-warning.disabled:active, .btn-warning.disabled:focus, .btn-warning.disabled:hover, .btn-warning[disabled], .btn-warning[disabled].active, .btn-warning[disabled]:active, .btn-warning[disabled]:focus, .btn-warning[disabled]:hover, fieldset[disabled] .btn-warning, fieldset[disabled] .btn-warning.active, fieldset[disabled] .btn-warning:active, fieldset[disabled] .btn-warning:focus, fieldset[disabled] .btn-warning:hover{background: #e5525b; border-color: #e5525c;}
-.enterprise-value{width: 100%; background: #ddd;}
-.enterprise-value .btn{width: 20%; padding: 10px 0; border-right: 1px solid #ccc; margin: 0 1px;}
+.enterprise-value{width: 100%; border-bottom: 1px solid #ccc;}
+.enterprise-value .btn{width: 20%; padding: 8px 0; border-right: 1px solid #ccc; border-left: 1px solid #ccc;}
+.enterprise-value .btn.active, .enterprise-value .btn.btn-warning{border-left:0;}
 .utube-icon{text-align: center;display: block;}
 .utube-icon img{position: relative;bottom: 115px;margin:auto;width: 44px;height: 40px;}
 .videos-icon{text-align: center;display: block;}
@@ -947,6 +960,21 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
 .auction-list .calltoContact{position: absolute; top: 30%; right: 0;}
 .auctionText{background: #f4f4f4; padding:10px;}
+.calltoContact{position: absolute; right: 0; top: 30px;}
+
+/* asset-sale */
+.asset-sale .panel-heading a.text-danger{text-align: center; font-size: 12px; color: #e3000f;}
+.asset-sale .form-control{height: 34px;}
+.asset-sale .panel-footer .btn.btn-danger{width: 120px;}
+.bidmodal .modal-dialog{width: 450px;}
+.asset-sale.modal-body{padding-left: 0; padding-right: 0; padding-bottom: 0; text-align: left; overflow: hidden;}
+.asset-sale .asset-taxes{background: #e5e5e5; border-top: 1px solid #ddd; padding: 15px 0; margin-top: 15px; border-bottom: 1px solid #d5d5d5;}
+.asset-sale .asset-total{background: #ddd; padding: 10px 0; font-weight: bold; border-top: 1px solid #ddd; border-bottom: 1px solid #d5d5d5;}
+.bidmodal .asset-sale .form-control , .bidmodal .asset-sale .btn{height: 40px;} 
+.bidmodal .asset-sale .btn-group .btn{width: 120px;}
+.bidmodal .asset-action{padding: 20px 15px;}
+.table.bidhistory{border:0;}
+.table.bidhistory tr td, .table.bidhistory tr th{border:0; padding: 4px 5px; border-bottom: 1px solid #eee;}
 
 /* responsive */
 @media (max-width:1199px){
@@ -1105,6 +1133,10 @@ footer .nav{margin-bottom:15px;}
 .media, .media-body {overflow: visible;}
 .media-coverage { overflow-y: scroll;}
 .open > .dropdown-menu {left: -120px;}
+.header-top .top-menu .Instant-quote a, .header-top .top-menu .addProduct a{display: none;}
+.header-top a.logo{float: none;}
+.header-top a.logo img {width: 60px; position: absolute; left:50px; top: 7px; z-index: 9;}
+.header-top .top-menu{margin-top: 6px;}
 #search-result_wrapper{margin-top: 25px;}
  footer .nav li{margin: 0px 0 -7px;}
 .serve .quote-btn{margin: 55px 0 0;}

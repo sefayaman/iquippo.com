@@ -5,6 +5,7 @@ angular.module('sreizaoApp').factory("AuctionSvc",AuctionSvc);
 function AuctionSvc($http,$q,notificationSvc,Auth){
   var auctionId="";
   var svc = {};
+  //svc.auctionData = null;
   var path = "/api/auction";
 
   svc.getAll = getAll;
@@ -23,6 +24,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
 
   svc.getAuctionDateData=getAuctionDateData;  
   svc.getAuctionWiseProductData = getAuctionWiseProductData;
+  svc.getOnId = getOnId;
 
   function getAll(){
         return $http.get(path)
@@ -43,14 +45,24 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
           throw err
         }) 
     }
+    
+    function getOnId(auctionId){
+     return $http.get(path + "/"+auctionId)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        }) ;
+    }
 
     function exportAuction(data){
      return $http.post(path + "/export",data)
         .then(function(res){
-          return res.data
+          return res.data;
         })
         .catch(function(err){
-          throw err
+          throw err;
         }) 
     }
 
@@ -189,15 +201,17 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
     }
 
     function getAuctionDateData(filter){
-      console.log("the filter",filter);
+      //console.log("the filter",filter);
       return $http.post(path + "/auctionmaster/onauctionmasterfilter", filter)
         .then(function(res) {
-          return res.data
+          return res.data;
         })
         .catch(function(err) {
-          throw err
-        })
+          throw err;
+        });
     }
+
+   
 
     function getAuctionWiseProductData(filter){
       return $http.post(path + "/auctionmaster/getauctionwiseproductdata", filter)

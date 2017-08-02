@@ -20,7 +20,7 @@ function toIST(value){
   return  moment(value).utcOffset('+0530').format('MM/DD/YYYY hh:mm a');
 }
 
-function paginatedResult(req,res,modelRef,filter,result){
+function paginatedResult(req,res,modelRef,filter,result,callback){
 
   var bodyData = req.method === 'GET' ? req.query : req.body ;
   var pageSize = bodyData.itemsPerPage || 50;
@@ -67,7 +67,10 @@ function paginatedResult(req,res,modelRef,filter,result){
 
   })
   .seq(function(){
-      return res.status(200).json(result);
+    if(callback){
+      return callback(result);
+    }
+   return res.status(200).json(result);
   })
   .catch(function(err){
     handleError(res,err);
