@@ -75,8 +75,8 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			}
 		} else {
 		  	var ret = false;
-		  	if($scope.country && vm.invoiceInfo.mobile) { 
-		      var value = UtilSvc.validateMobile($scope.country, vm.invoiceInfo.mobile);
+		  	if(vm.invoiceInfo.country && vm.invoiceInfo.mobile) { 
+		      var value = UtilSvc.validateMobile(vm.invoiceInfo.country, vm.invoiceInfo.mobile);
 		      if(!value) {
 		        form.mobile.$invalid = true;
 		        ret = true;
