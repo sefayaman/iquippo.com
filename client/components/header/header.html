@@ -1,7 +1,5 @@
-<div class="container" ng-controller="HeaderCtrl">
-        <div class="header-top">     
-          <a class="logo" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
-
+<div class="container-fluid" ng-controller="HeaderCtrl">
+        <div class="header-top text-right">
           <ul class="top-menu">
             <li class="Instant-quote">
               <a href="javascript:void(0);" ng-click="openDialog('quote')"><span class="fa fa-edit"></span> Get Instant Quote</a>
@@ -15,7 +13,7 @@
             <li class="dropdown hidden-sm hidden-md hidden-lg">
               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()"><i class="fa fa-calendar-plus-o"></i></a>                
                 <ul class="dropdown-menu">
-                     <li role="menuitem" ng-repeat="auction in upcomingAuctions">
+                     <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
                         <a ng-if="getProductData(auction._id, 'total_products') != 0"
                         ng-click="assetPage(auction.auctionId,auction._id);"> 
                           <strong>
@@ -88,7 +86,8 @@
           }
           </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         -->
-          <!-- <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a> -->
+        <div class="navbar">
+          <a class="navbar-brand" href="index.html"><img src="assets/images/srei-logo-img.png"></a>
            
            <nav class="navbar navbar-inverse" role="navigation">
               <!-- Brand and toggle get grouped for better mobile display -->
@@ -105,43 +104,45 @@
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed = true">
-                  <ul class="nav navbar-nav">
-                    <li ng-class="{active: isActive(['main'])}"><a href="index.html">Home</a></li>
-                    <li ng-class="{active: isActive(['aboutus'])}"><a href="/aboutus">About Us</a></li>
-                    <li ng-class="{active: isActive(['shipping'])}"><a href="/shipping">Shipping</a></li>
-                     <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
-                     <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
-                      <!--  <li ng-class="{active: isActive(['financing'])}"><a href="/financing">Financing</a></li> -->
-                     <li ng-class="{active: isActive(['insurance'])}"><a href="/insurance">Insurance</a></li>
-                     <li ng-class="{active: isActive(['manpower'])}" ><a href="/manpower">Manpower</a></li>
-					           <li ng-class="{active: isActive(['sparehome','sparedetail','manufacturerspare','viewspares'])}"><a href="/sparehome">Spare Parts</a></li>
-                    <!-- <li class="submenu dropdown">
-                      <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Services</a>
-                      <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
-                        <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
-                        <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
-                        <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
-                        <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
-                      </ul>
-                    </li> -->
-                    
-                    <!-- <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li> -->
-                    <li ng-class="{active: isActive(['viewauctions'])}"><a href="javascript:void(0);" ng-click="redirectToAuction()">Auctions</a></li>
-                    <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
-                  </ul> 
+                  <div class="text-center">
+                    <ul class="nav navbar-nav">
+                      <li ng-class="{active: isActive(['main'])}"><a href="index.html">Home</a></li>
+                      <li ng-class="{active: isActive(['aboutus'])}"><a href="/aboutus">About Us</a></li>
+                      <li ng-class="{active: isActive(['shipping'])}"><a href="/shipping">Shipping</a></li>
+                       <li ng-class="{active: isActive(['valuation'])}"><a href="/valuation">Valuation</a></li>
+                       <li ng-class="{active: isActive(['financing'])}"><a href="javascript:void(0);" ng-click="submitToRapid(createnewloan)">Financing</a></li>
+                        <!--  <li ng-class="{active: isActive(['financing'])}"><a href="/financing">Financing</a></li> -->
+                       <li ng-class="{active: isActive(['insurance'])}"><a href="/insurance">Insurance</a></li>
+                       <li ng-class="{active: isActive(['manpower'])}" ><a href="/manpower">Manpower</a></li>
+                       <li ng-class="{active: isActive(['sparehome','sparedetail','manufacturerspare','viewspares'])}"><a href="/sparehome">Spare Parts</a></li>
+                      <!-- <li class="submenu dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button"  uib-dropdown-toggle >Services</a>
+                        <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                          <li role="menuitem"><a href="/shipping"> <img src="assets/images/transport.png" class="hidden-xs"> Shipping</a></li>
+                          <li role="menuitem"><a href="/valuation"> <img src="assets/images/valuation.png" class="hidden-xs"> Valuation</a></li>
+                          <li role="menuitem"><a href="/certifiedbyiquippo"> <img src="assets/images/certified.png" class="hidden-xs"> Certified by iQuippo</a></li>
+                          <li role="menuitem"><a href="/manpower"> <img src="assets/images/lease.png" class="hidden-xs"> Manpower</a></li>
+                        </ul>
+                      </li> -->
+                      
+                      <!-- <li ng-class="{active: isActive(['viewauctions'])}"><a href="/viewauctions?type=upcoming">Auctions</a></li> -->
+                      <li ng-class="{active: isActive(['viewauctions'])}"><a href="javascript:void(0);" ng-click="redirectToAuction()">Auctions</a></li>
+                      <li ng-class="{active: isActive(['contactus'])}"><a href="/contactus">Contact Us</a></li>
+                    </ul> 
+                  </div>
                   <ul class="nav navbar-nav navbar-right hidden-xs">
                     <li class="submenu dropdown">
                       <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()" uib-dropdown-toggle ><i class="fa fa-calendar-plus-o"></i> Upcoming Auctions <i class="fa fa-chevron-down"></i></a>
                       
                       
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
-                        <li role="menuitem" ng-repeat="auction in upcomingAuctions">
-                        <a ng-if="getProductData(auction._id, 'total_products') != 0"
+                        <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
+                        <a href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') != 0"
                         ng-click="assetPage(auction.auctionId,auction._id);"> 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
                             </strong> {{auction.name}}</a>
-                          <a ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"
+                          <a  href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"
                         > 
                           <strong>
                             {{auction.startDate | date:'d-MMM'}}
@@ -160,7 +161,7 @@
                 </script>-->
             </nav>            
        <!--  <finance-integration></finance-integration> -->
-
+        </div>
         <!-- common modal container -->
       </div>  
 
