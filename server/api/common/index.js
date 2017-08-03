@@ -7,6 +7,7 @@ var valuationPurposeCtrl = require('./valuationpurpose.controller');
 var servicefeeCtrl = require('./servicefee.controller');
 var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
+var countCtrl = require('./count.controller');
 var financeIntegrationCtrl = require('./financeintegration.controller');
 var apiCtrl=require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
@@ -98,9 +99,14 @@ router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 router.get('/render.xlsx',controller.renderXLSX);
 router.get('/redirecttorapid',financeIntegrationCtrl.setCustomerData);
 router.post('/zip/reports',apiCtrl.uploadZip);
-
+ 
 //Bulk Upload Routes
 router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.renderJson);
-router.post('/bulkupload/request/delete',bulkUploadCtrl.delete)
+router.post('/bulkupload/request/delete',bulkUploadCtrl.delete);
+
+//counts on dashboard//
+router.post('/assetlisted', auth.hasRole('admin'),countCtrl.create);
+router.get('/assetlisted',countCtrl.getAssetCount);
+router.put('/assetlisted/:id', auth.hasRole('admin'),countCtrl.updateAssetListed);
 
 module.exports = router;
