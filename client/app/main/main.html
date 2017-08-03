@@ -129,7 +129,7 @@
                <div class="col-sm-6 text-center">
                  <div class="uploded-asset">
                   <a href="javascript:void(0);" class="text-priamry">
-                    <strong>{{(mainVm.productCountObj.listed + mainVm.productCountObj.sold + mainVm.productCountObj.rented) || 0}}</strong>
+                    <strong>{{(mainVm.assetlisted)||(mainVm.productCountObj.listed + mainVm.productCountObj.sold + mainVm.productCountObj.rented)||0}}</strong>
                     <p> Assets Listed</p>
                   </a>
                  </div>
@@ -137,17 +137,17 @@
                <div class="col-sm-6 text-center">
                  <div class="uploded-asset">
                   <a href="javascript:void(0);" class="text-warning">
-                    <strong>{{(mainVm.productCountObj.sold + mainVm.productCountObj.rented )|| 0}}</strong>
+                    <strong>{{(mainVm.assetsold)||(mainVm.productCountObj.sold + mainVm.productCountObj.rented )||0}}</strong>
                     <p> Assets Sold/Rented</p>
                   </a>
                  </div>
                </div>
              </div>
-             <div class="row">
+             <div class="row"> 
               <div class="col-sm-6 text-center">
                 <div class="uploded-asset">
                   <a href="javascript:void(0);" class="text-danger">
-                    <strong>{{mainVm.spareCountObj.active || 0}}</strong>
+                    <strong>{{(mainVm.sparelist)||(mainVm.spareCountObj.active)||0}}</strong>
                     <p>Spares Listed</p>
                   </a>
                 </div>
@@ -155,7 +155,7 @@
                <div class="col-sm-6 text-center">
                  <div class="uploded-asset">
                   <a href="javascript:void(0);" class="text-info">
-                    <strong>{{mainVm.manPowerCountObj.true || 0}}</strong>
+                    <strong>{{(mainVm.manpowerlisted)||(mainVm.manPowerCountObj.true)||0}}</strong>
                     <p> Manpower Listed</p>
                   </a>
                  </div>

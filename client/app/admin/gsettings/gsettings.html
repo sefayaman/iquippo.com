@@ -23,6 +23,7 @@
 						<option value="vpurpose">Valuation Purpose Master</option>
 						<option value="assetgroup">Asset Group Master</option>
 						<option value="vatmaster">GST Tax Master</option>
+						<option value="assetcount">Asset Count</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -1661,5 +1662,112 @@
 			</table>
 		</div>
 	</div>
+
+	<!--- Add aseet Count -->
+    <div ng-if="gsettingVm.tabValue == 'assetcount'" ng-controller="CountCtrl as countVm">
+
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Asset Count Configuration</h4>
+		   <select class="form-control" ng-model="countVm.tabValue" ng-change="onTabChange(countVm.tabValue)">
+			<option value=""> Select Configurable Options </option>  
+			<option value="assetlisted">Assetlisted</option>
+		      <option value="assetsold">Asset Sold/Rented</option>
+		       <option value="sparelist">Sparelisted</option>
+		       <option value="manpower">Manpower Listed</option>
+	       </select>
+			</div>
+		</div>
+		<legend></legend>
+
+		<div ng-if="countVm.tabValue == 'assetlisted'">
+		<form class="assetGroupForm" name="assetListedForm" >
+			<div class="row form-group">
+				<strong></strong>
+               <div class="col-sm-3">
+				 <input type="text" class="form-control" name="asetcount"  placeholder="{{(countVm.productCountObj.listed + countVm.productCountObj.sold + countVm.productCountObj.rented) || 0}}" disabled>
+				</div>
+
+				<div class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+				  <input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
+				</div>
+
+				<div class="col-sm-3">	<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="countVm.update(assetListedForm)">Update</button> </div>
+				<div class="col-sm-3">	<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="countVm.save(assetListedForm)">Save</button> </div>
+			
+			</div>
+		</form>
+		</div>
+	
+		 <div ng-if="countVm.tabValue == 'assetsold'">
+		 <form class="assetGroupForm" name="assetSoldFom" >
+			<div class="row form-group">
+				<strong></strong>
+               <div class="col-sm-3">
+				 <input type="text" class="form-control" name="asetsold"  placeholder="{{( countVm.productCountObj.sold + countVm.productCountObj.rented) || 0}}" disabled>
+		      </div>
+
+
+				<div  class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
+				</div>
+
+				<div class="col-sm-3">
+					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(assetSoldFom)">Update</button></div>
+				<div class="col-sm-3">
+					<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(assetSoldFom)">Save</button>
+				</div>
+			</div>
+		</form>
+
+		</div>	
+
+		 <div ng-if="countVm.tabValue =='sparelist'">
+		 <form class="assetGroupForm" name="spareFom" >
+			<div class="row form-group">
+				<strong></strong>
+               <div class="col-sm-3">
+				 <input type="text" class="form-control" name="sparelisted"  placeholder="{{countVm.spareCountObj.active || 0}}" disabled>
+		      </div>
+              <div  class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
+				</div>
+
+				<div class="col-sm-3">
+					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(spareFom)">Update</button></div>
+				<div class="col-sm-3">	<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(spareFom)">Save</button>
+				</div>
+				
+			</div>
+		</form>
+
+		</div>
+	   
+		 <div ng-if="countVm.tabValue =='manpower'">
+		 <form class="assetGroupForm" name="manpowerForm" >
+			<div class="row form-group">
+				<strong></strong>
+               <div class="col-sm-3">
+				 <input type="text" class="form-control" name="manpowerlisted"  placeholder="{{countVm.manPowerCountObj.true || 0}}" disabled>
+			  </div>
+					  
+			   <div class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
+				</div>
+			  
+			  <div class="col-sm-3">
+				<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(manpowerForm)">Update</button></div>
+				<div class="col-sm-3">
+				  <button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(manpowerForm)">Save</button>
+				</div>
+			</div>
+		</form>
+
+		</div>
+
+		<legend></legend>
+		
+	</div>
+
 </div>
 </div>

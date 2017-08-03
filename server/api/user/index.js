@@ -26,6 +26,7 @@ router.post('/validateotp',controller.validateOtp);
 router.post('/resetpassword',controller.resetPassword);
 router.post('/export', controller.exportUsers);
 router.post('/getproductscountonuserids', controller.getProductsCountOnUserIds);
+router.post('/v1/import',controller.parseImportExcel,controller.validateExcel,controller.createUserReq);
 // router.get('/', controller.getAll);
 
 
