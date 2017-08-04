@@ -10,6 +10,11 @@ module.exports = {
 	'*State': 'state', //if present then populate otherName and make name to Other
 	'*Location': 'city',
 	'*Mobile_No': 'mobile',
-    '*Agree':'agree',
-    '*Password':'password'
+    '*Password':'password',
+	'Middle_Name':'mname',
+	'Email_Address':'email',
+	'Phone_No':'phone',
+	'PAN_Number':'panNumber',
+	'AADHAAR_Number':'aadhaarNumber',
+	'*Company':'company'
 };
