@@ -169,9 +169,15 @@ var excelData = req.excelData;
     }
 
     function validateEmailAddress(callback){
-     console.log("row email",row.email);
       if(row.email){
-      User.find({email:row.email},function(err,users){
+        if(!(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(row.email))){
+        errorList.push({
+    Error:'Error while validating email Id pattern not matching',
+    rowCount:row.rowCount
+  });
+   return callback('Error');       
+        }
+      User.find({email:row.email,deleted:false},function(err,users){
         if(err || !users){
           errorList.push({
             Error : 'Error while validating user',
@@ -179,7 +185,6 @@ var excelData = req.excelData;
           });
           return callback('Error');
         }
-        console.log("User",users);
 
         if(users.length){
           errorList.push({
@@ -204,6 +209,7 @@ var excelData = req.excelData;
   return callback('Error');  
       }
     }
+    else
     return callback();
   }
   
@@ -217,7 +223,8 @@ var excelData = req.excelData;
   return callback('Error');  
       }  
   }
-    return callback();
+  else
+  return callback();
   }
 
     function validateCity(callback){
