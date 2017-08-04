@@ -281,7 +281,7 @@ var excelData = req.excelData;
     }
 
     function validateDupUser(callback){
-      User.find({mobile:row.mobile},function(err,users){
+      User.find({mobile:row.mobile,deleted:false},function(err,users){
         if(err || !users){
           errorList.push({
             Error : 'Error while validating user',
