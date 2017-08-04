@@ -138,8 +138,12 @@ var excelData = req.excelData;
       if(!userObj[row.mobile]){
         userObj[row.mobile] = true;
         async.parallel({
+          validateEmailAddress:validateEmailAddress,
           validateMandatoryCols : validateMandatoryCols,
           validateDupUser : validateDupUser,
+          validateLegalEntity:validateLegalEntity,
+          validatePan:validatePan,
+          validateAadhaar:validateAadhaar,
           validateCity : validateCity,
         }, buildData);
       }else{
@@ -150,6 +154,71 @@ var excelData = req.excelData;
           return cb();
       }
     }
+
+    function validateLegalEntity(callback){
+      if(row.userType == 'Legal Entity'){
+        if(!row.company){
+          errorList.push({
+           Error:'Missing mandatory parameter : Legal_Entity_Name',
+           rowCount:row.rowCount
+          });
+          return callback('Error');
+        }
+      }
+      return callback();
+    }
+
+    function validateEmailAddress(callback){
+     console.log("row email",row.email);
+      if(row.email){
+      User.find({email:row.email},function(err,users){
+        if(err || !users){
+          errorList.push({
+            Error : 'Error while validating user',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        console.log("User",users);
+
+        if(users.length){
+          errorList.push({
+            Error : 'Duplicate email',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        return callback();
+      });
+    }else
+      return callback();
+    }
+
+    function validatePan(callback){ 
+      if(row.panNumber){
+        if(!(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(row.panNumber))){
+    errorList.push({
+    Error:'Error while validating Pan card pattern not matching',
+    rowCount:row.rowCount
+  });
+  return callback('Error');  
+      }
+    }
+    return callback();
+  }
+  
+ function validateAadhaar(callback){
+      if(row.aadhaarNumber){
+        if(!(/^\d{4}\s\d{4}\s\d{4}$/.test(row.aadhaarNumber))){
+    errorList.push({
+    Error:'Error while validating Aadhaar Number pattern not matching',
+    rowCount:row.rowCount
+  });
+  return callback('Error');  
+      }  
+  }
+    return callback();
+  }
 
     function validateCity(callback){
       if(row.city){
@@ -186,7 +255,7 @@ var excelData = req.excelData;
 
     function validateMandatoryCols(callback){
       var error;
-      ['role','fname','lname','userType','password','country','state','city','mobile','agree'].some(function(x){
+      ['role','fname','lname','userType','password','country','state','city','mobile'].some(function(x){
         if(!row[x]){
           error = true;
           errorList.push({
@@ -256,6 +325,9 @@ exports.createUserReq = function(req,res,next){
 
   function intialize(data,cb){
     data.createdBy = req.body.user;
+    data.createdAt = new Date();
+    data.updatedAt = new Date();
+    data.agree=true;
     
     User.create(data,function(err,doc){
       if(err || !doc){
@@ -272,8 +344,6 @@ exports.createUserReq = function(req,res,next){
 };
 
 exports.create = function (req, res, next) {
-  console.log("----create[---",req.body);
-  //console.log(req.body);
   var newUser = new User(req.body);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
