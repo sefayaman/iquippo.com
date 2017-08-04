@@ -37,7 +37,6 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.productCountObj = {};
     vm.spareCountObj = {};
     vm.manPowerCountObj = {};
-    vm.assetlisted ={};
 
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
@@ -224,8 +223,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
             if(value.key == "assetlisted"){
               vm.assetlisted = value.value;
-
-            }
+             }
             if(value.key == "assetsold"){
                vm.assetsold = value.value;
 
