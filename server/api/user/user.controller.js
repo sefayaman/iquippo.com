@@ -130,6 +130,7 @@ var excelData = req.excelData;
     }
     req.errorList = errorList;
     req.uploadData = uploadData;
+  console.log("req.excelData",req.uploadData);   
     next();
   }
    
@@ -156,29 +157,32 @@ var excelData = req.excelData;
     }
 
     function validateLegalEntity(callback){
-      if(row.userType == 'Legal Entity'){
+      if(row.userType !== 'Legal Entity')
+        return callback();
+
         if(!row.company){
           errorList.push({
            Error:'Missing mandatory parameter : Legal_Entity_Name',
            rowCount:row.rowCount
           });
           return callback('Error');
-        }
-      }
-      return callback();
+        }else
+          return callback();
     }
 
     function validateEmailAddress(callback){
-      if(row.email){
+      if(!row.email)
+      return callback();
+      
         if(!(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(row.email))){
-        errorList.push({
-    Error:'Error while validating email Id pattern not matching',
-    rowCount:row.rowCount
-  });
-   return callback('Error');       
+            errorList.push({
+            Error:'Error while validating email Id pattern not matching',
+            rowCount:row.rowCount
+          });
+            return callback('Error');       
         }
       User.find({email:row.email,deleted:false},function(err,users){
-        if(err || !users){
+        if(err){
           errorList.push({
             Error : 'Error while validating user',
             rowCount : row.rowCount
@@ -195,36 +199,33 @@ var excelData = req.excelData;
         }
         return callback();
       });
-    }else
-      return callback();
+
     }
 
     function validatePan(callback){ 
-      if(row.panNumber){
+      if(!row.panNumber)
+      return callback();
         if(!(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(row.panNumber))){
     errorList.push({
     Error:'Error while validating Pan card pattern not matching',
     rowCount:row.rowCount
   });
-  return callback('Error');  
-      }
-    }
-    else
-    return callback();
+      return callback('Error');  
+    }else
+      return callback();
   }
   
  function validateAadhaar(callback){
-      if(row.aadhaarNumber){
+   if(!row.aadhaarNumber)
+   return callback();
         if(!(/^\d{4}\s\d{4}\s\d{4}$/.test(row.aadhaarNumber))){
     errorList.push({
     Error:'Error while validating Aadhaar Number pattern not matching',
     rowCount:row.rowCount
   });
   return callback('Error');  
-      }  
-  }
-  else
-  return callback();
+      }else
+        return callback();
   }
 
     function validateCity(callback){
