@@ -1665,18 +1665,18 @@
 
 	<!--- Add aseet Count -->
     <div ng-if="gsettingVm.tabValue == 'assetcount'" ng-controller="CountCtrl as countVm">
-
+    	<h4>Asset Count Configuration</h4>
+    	<legend></legend>
 		<div class="row">
-			<div class="col-sm-6">
-				<h4>Asset Count Configuration</h4>
-		   <select class="form-control" ng-model="countVm.tabValue" ng-change="onTabChange(countVm.tabValue)">
-			<option value=""> Select Configurable Options </option>  
-			<option value="assetlisted">Assetlisted</option>
-		      <option value="assetsold">Asset Sold/Rented</option>
-		       <option value="sparelist">Sparelisted</option>
-		       <option value="manpower">Manpower Listed</option>
-	       </select>
-			</div>
+			<div class="col-sm-4 form-group">			
+			   <select class="form-control" ng-model="countVm.tabValue" ng-change="onTabChange(countVm.tabValue)">
+				<option value=""> Select Configurable Options </option>  
+				<option value="assetlisted">Assetlisted</option>
+			      <option value="assetsold">Asset Sold/Rented</option>
+			       <option value="sparelist">Sparelisted</option>
+			       <option value="manpower">Manpower Listed</option>
+		       </select>
+				</div>
 		</div>
 		<legend></legend>
 
@@ -1692,9 +1692,10 @@
 				  <input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
 				</div>
 
-				<div class="col-sm-3">	<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="countVm.update(assetListedForm)">Update</button> </div>
-				<div class="col-sm-3">	<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="countVm.save(assetListedForm)">Save</button> </div>
-			
+				<div class="col-sm-2 col-sm-offset-4">	
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="countVm.update(assetListedForm)">Update</button> 
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="countVm.save(assetListedForm)">Save</button>
+				</div>			
 			</div>
 		</form>
 		</div>
@@ -1712,9 +1713,8 @@
 					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
 				</div>
 
-				<div class="col-sm-3">
-					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(assetSoldFom)">Update</button></div>
-				<div class="col-sm-3">
+				<div class="col-sm-2 col-sm-offset-4">
+					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(assetSoldFom)">Update</button>
 					<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(assetSoldFom)">Save</button>
 				</div>
 			</div>
