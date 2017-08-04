@@ -130,7 +130,6 @@ var excelData = req.excelData;
     }
     req.errorList = errorList;
     req.uploadData = uploadData;
-  console.log("req.excelData",req.uploadData);   
     next();
   }
    
