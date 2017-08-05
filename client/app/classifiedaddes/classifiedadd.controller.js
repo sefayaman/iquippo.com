@@ -159,8 +159,12 @@ function ClassifiedAdCtrl($scope,$rootScope, uploadSvc,Auth, classifiedSvc,$uibM
           ret = false;
         }
       }
-      if($scope.form.$invalid || ret){
+      /*if($scope.form.$invalid || ret){
         $scope.form.submitted = true;
+        return;
+      }*/
+      if($scope.form.fname.$invalid || $scope.form.lname.$invalid || $scope.form.email.$invalid || $scope.form.mobile.$invalid || ret){
+        $scope.form.submitted=true;
         return;
       }
       if(!$scope.edit){

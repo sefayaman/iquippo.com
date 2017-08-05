@@ -130,7 +130,6 @@ var excelData = req.excelData;
     }
     req.errorList = errorList;
     req.uploadData = uploadData;
-  console.log("req.excelData",req.uploadData);   
     next();
   }
    
@@ -157,17 +156,21 @@ var excelData = req.excelData;
     }
 
     function validateLegalEntity(callback){
-      if(row.userType !== 'Legal Entity')
-        return callback();
-
+      if(row.userType === 'Legal Entity'){
         if(!row.company){
           errorList.push({
            Error:'Missing mandatory parameter : Legal_Entity_Name',
            rowCount:row.rowCount
           });
           return callback('Error');
-        }else
-          return callback();
+        }
+    }
+    else{
+      if(row.company){
+        delete row.company;  
+    }
+  }
+  return callback();
     }
 
     function validateEmailAddress(callback){
@@ -337,6 +340,13 @@ exports.createUserReq = function(req,res,next){
     data.updatedAt = new Date();
     data.agree=true;
     
+    if(data.userType === "Individual")
+       data.userType="individual";
+       if(data.userType === "Private Entrepreneur")
+       data.userType="private";
+       if(data.userType === "Legal Entity")
+       data.userType="legalentity";
+
     User.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
