@@ -156,7 +156,10 @@ var excelData = req.excelData;
     }
 
     function validateLegalEntity(callback){
+<<<<<<< HEAD
       console.log("row",row);
+=======
+>>>>>>> master
       if(row.userType === 'Legal Entity'){
         if(!row.company){
           errorList.push({
