@@ -147,7 +147,7 @@
         </div>
         <div class="auction-list form-group" ng-if="auctionType == 'closed'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'-endDate'">  
           <div class="media">
-            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionTypeValue={{product.auctionType}}&auctionName={{product.name}}&auctionOwner={{product.auctionOwner}}&auctionOwnerMobile={{product.auctionOwnerMobile}}&termAuction={{product.termAuction}}&contactName={{product.contactName}}&contactNumber={{product.contactNumber}}&docName={{product.docName}}&docNameProxy={{product.docNameProxy}}&docType={{product.docType}}&auctionCity={{product.city}}&id={{product._id}}">
+            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="assets/images/closed.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="assets/images/upcoming.jpg" alt="Image">
@@ -164,7 +164,7 @@
                 <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') == 0">
                   {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
                 </a>
-                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionTypeValue={{product.auctionType}}&auctionName={{product.name}}&auctionOwner={{product.auctionOwner}}&auctionOwnerMobile={{product.auctionOwnerMobile}}&termAuction={{product.termAuction}}&contactName={{product.contactName}}&contactNumber={{product.contactNumber}}&docName={{product.docName}}&docNameProxy={{product.docNameProxy}}&docType={{product.docType}}&auctionCity={{product.city}}&id={{product._id}}">
+                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
                   {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
                 </a>
                 
