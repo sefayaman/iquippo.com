@@ -1,0 +1,18 @@
+<div class="container">
+    <p>
+      iQuippo, through its financing partners, helps you meet all your equipment financing needs.
+      With partners present throughout India, iQuippo helps you get the best offers for both new and used equipment.
+      Having served a wide spectrum of clients – from first time buyers to fleet owners and corporates – we understand the needs for each buyer and help tailor solutions best suited for your varied needs.
+    </p>
+    <div class="row">
+      <div class="col-sm-2">
+        <uib-carousel interval="financeVm.myInterval" no-wrap="noWrapSlides">
+          <uib-slide data-ng-repeat="slide in financeVm.slides">
+            <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">
+          </uib-slide>
+        </uib-carousel>
+      </div>
+      <div class="col-sm-8"></div>
+      <div class="col-sm-2"></div>
+    </div>
+</div>
