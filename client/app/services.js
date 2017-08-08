@@ -267,7 +267,7 @@
       };
       return brandService;
   }])
-  .factory("modelSvc",['$http', '$rootScope','$q',function($http, $rootScope,$q){
+  .factory("modelSvc",['$http','$rootScope','$q',function($http, $rootScope,$q){
       var modelService = {};
       var path = '/api/model';
       modelService.getAllModel = getAllModel;
@@ -319,6 +319,16 @@
                   throw err
                 });
 
+      };
+
+      userService.parseExcel=function(fileName,user){   
+          return $http.post(path + "/v1/import",{filename:fileName,user:user})
+                .then(function(res){
+                  return res.data;
+                })
+                .catch(function(res){
+                  throw res;
+                });
       };
 
       userService.updateUser = function(user){

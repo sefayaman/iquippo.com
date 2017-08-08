@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
 
-  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, $uibModal, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc) {
+  function MainCtrl($scope, $rootScope, $http,$window, $interval, $timeout, $uibModal, Auth, productSvc, categorySvc,classifiedSvc,LocationSvc,$state, Modal, UtilSvc,spareSvc,ManpowerSvc,BannerSvc,BiddingSvc,CountSvc) {
     var vm = this;
     vm.allCategoryList = [];
     vm.activeCategoryList = [];
@@ -36,7 +36,7 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     vm.sortedFeaturedProduct = [];
     vm.productCountObj = {};
     vm.spareCountObj = {};
-    vm.manPowerCountObj = {}
+    vm.manPowerCountObj = {};
 
     vm.doSearch = doSearch;
     vm.myFunct = myFunct;
@@ -52,6 +52,10 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
       vm.myInterval = 7000;
       getHighestBids();
     })
+
+
+
+
 
     function openPrintMedia(imageName) {
       var prMediaScope = $rootScope.$new();
@@ -197,6 +201,9 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
     getStatusWiseProductCount();
     getStatusWiseSpareCount();
     getStatusWiseManPowerCount();
+    getAssetCount();
+
+
 
      function myFunct(keyEvent) {
       if(keyEvent)
@@ -205,6 +212,46 @@ angular.module('sreizaoApp').controller('MainCtrl',MainCtrl);
         doSearch();
       }
     }
+    
+    function getAssetCount(){
+
+           CountSvc.getData(vm.dataModel)
+             .then(function(result){
+            $scope.data = result;
+
+         angular.forEach($scope.data, function(value, key){
+
+            if(value.key == "assetlisted"){
+              vm.assetlisted = value.value;
+             }
+            if(value.key == "assetsold"){
+               vm.assetsold = value.value;
+
+             }
+            if(value.key == "sparelist"){
+              vm.sparelist = value.value;
+
+             }
+              if(value.key == "manpower"){
+                vm.manpowerlisted = value.value;
+
+              }
+         
+          });
+
+           })
+           .catch(
+             function(res){
+           //error handling
+          });
+
+
+
+     }
+
+      
+   
+      
 
     function doSearch(){
 
