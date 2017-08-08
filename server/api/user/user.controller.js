@@ -18,7 +18,7 @@ var async = require('async');
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
-};
+}; 
 
 /**
  * Get list of users
@@ -362,15 +362,20 @@ exports.createUserReq = function(req,res,next){
 };
 
 exports.create = function (req, res, next) {
+  console.log("----create[---",req.body);
+  //console.log(req.body);
   var newUser = new User(req.body);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
    
+
+
   newUser.save(function(err, user) {
   if (err) return validationError(res, err);
   res.json(user);
   });
 };
+
 
 /**
  * Get a single user
@@ -405,7 +410,8 @@ exports.getUser = function(req, res) {
   }*/
 
   if(req.body.searchstr){
-    console.log("req.body.searchstr", req.body.searchstr);
+    //console.log("req.body.searchstr", req.body.searchstr);
+    arr[arr.length] = { customerId: { $regex: searchStrReg }};
     arr[arr.length] = { fname: { $regex: searchStrReg }};
     arr[arr.length] = { lname: { $regex: searchStrReg }};
     arr[arr.length] = { mobile: { $regex: searchStrReg }};
@@ -811,6 +817,15 @@ function excel_from_data(data) {
     var cell = null;
     if(R != 0)
       user = data[R-1];
+   if(R == 0)
+      cell = {v: "Customer Id"};
+    else {
+      if(user)
+        cell = {v: user.customerId || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
 
     if(R == 0)
       cell = {v: "Name"};
@@ -1097,4 +1112,33 @@ function addNoCacheHeader(res) {
    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
    res.header('Expires', '-1');
    res.header('Pragma', 'no-cache');
+}
+//create user unique number
+
+
+exports.createUniqueUserNo = function(req,res){
+   
+   User.find({}, function (err, users) {
+    //if(err) return res.status(500).send(err);
+    var i=1;
+    users.forEach(function(doc) {
+    //if (err) throw err;
+     if(doc){
+      var id = 100000+i;
+       doc.update({$set:{customerId:id}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      
+      i++;
+     }
+  });
+
+   res.status(200);console.log("Customer Id created successfully.");
+   
+  });
+   /*res.each(function(doc) {
+    //if (err) throw err;
+    console.log(doc);
+  });*/
 }

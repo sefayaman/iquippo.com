@@ -10,7 +10,7 @@ angular.module('sreizaoApp')
     vm.totalItems = 0;
     vm.maxSize = 6;
     var first_id = null;
-    var last_id = null;
+    var last_id = null;  
 
     vm.userList = [];
     //vm.globleUsers = [];
@@ -25,7 +25,6 @@ angular.module('sreizaoApp')
     vm.openAddUserDialog = openAddUserDialog;
     $scope.bulkUserUpload={};
     $scope.bulkUserUpload.template="BulkUserUpload.xlsx";
-    
     vm.userSearchFilter = {};
     var dataToSend = {};
     vm.getProductData = getProductData;
@@ -33,7 +32,7 @@ angular.module('sreizaoApp')
     $scope.userInfo = {};
     $scope.$on('updateUserList',function(){
       fireCommand(true);
-    });
+   });
 
       //listen for the file selected event
   $scope.$on("fileSelected", function (event, args) {
@@ -683,5 +682,4 @@ angular.module('sreizaoApp')
        $uibModalInstance.dismiss('cancel');
     };
 }]);
-
 

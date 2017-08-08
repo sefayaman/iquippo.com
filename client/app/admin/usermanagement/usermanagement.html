@@ -6,7 +6,7 @@
           <!-- User Management
           <button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button> -->
           <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-8"> 
               <h3>User Management</h3>
             </div>
             <div class="col-xs-6 col-sm-2">
@@ -57,6 +57,7 @@
             <table class="table table-bordred table-striped">
               <thead>
                 <tr>
+                   <th>Customer Id</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>PAN Number</th>
@@ -77,6 +78,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="user in userManagementVm.userList">
+                  <td>{{user.customerId}}</td>
                   <td>{{user.fname}} {{user.mname}} {{user.lname}}</td>
                   <td>{{user.email}}</td>
                   <td>{{user.panNumber}}</td>
