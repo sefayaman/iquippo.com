@@ -16,5 +16,22 @@ module.exports = {
 	'Phone_No':'phone',
 	'PAN_Number':'panNumber',
 	'AADHAAR_Number':'aadhaarNumber',
-	'*Company':'company'
+	'*Company':'company',
+	'*Enterprise':'enterprise',
+	'Valuation':'valuation',
+	'Financing':'financing',
+	'Asset_Inspection':'assetInspection',
+	'Valuation_Agency':'valuationAgency',
+	'Asset_Inspection_Agency':'assetInspectionAgency',
+	'Finance_Agency':'financeAgency',
+	'Vrequester':'vrequester',
+	'Vapprover':'vapprover',
+	'Arequester':'arequester',
+	'Aapprover':'aapprover',
+	'Frequester':'frequester',
+	'Fapprover':'fapprover',
+	'If_Enterprise':'ifEnterprise',
+	'VApproval_Required':'vapprovalRequired',
+	'AApproval_Required':'aapprovalRequired',
+	'FApproval_Required':'fapprovalRequired'
 };
