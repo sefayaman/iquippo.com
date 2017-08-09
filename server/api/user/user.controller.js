@@ -34,8 +34,6 @@ exports.index = function(req, res) {
     res.status(200).json(users);
   });
 };
-<<<<<<< HEAD
-=======
 
 exports.fetchSingleUser = function(req,res){
   var id = req.params.id;
@@ -54,7 +52,7 @@ exports.fetchSingleUser = function(req,res){
   });
 };
 
->>>>>>> 8ee67c8b7d10971a6895e379842af51cc16f2302
+
 /**
  * Creates a new user
  */
