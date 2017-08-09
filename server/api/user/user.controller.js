@@ -15,6 +15,8 @@ var ManpowerUser = require('../manpower/manpower.model');
 var Utility = require('./../../components/utility.js');
 var userFieldsMap=require('../../config/user_temp_field_map');
 var Utillity = require('./../../components/utility');
+var Seqgen = require('./../../components/seqgenerator').sequence();
+
 var async = require('async');
 
 var validationError = function(res, err) {
@@ -1139,10 +1141,11 @@ exports.createUniqueUserNo = function(req,res){
    User.find({}, function (err, users) {
     //if(err) return res.status(500).send(err);
     var i=1;
+    var id = 100000;
     users.forEach(function(doc) {
     //if (err) throw err;
      if(doc){
-      var id = 100000+i;
+       id =  parseInt(id) + 1;
        doc.update({$set:{customerId:id}},function(err){
         
         //return res.status(200).json(req.body);
@@ -1153,7 +1156,13 @@ exports.createUniqueUserNo = function(req,res){
   });
 
    res.status(200);console.log("Customer Id created successfully.");
-   
+   ///
+   var SeqModel = Seqgen.getSchema();
+   SeqModel.update({collectionName : "users"},{$set:{nextSeqNumber:id+1}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      ///
   });
    /*res.each(function(doc) {
     //if (err) throw err;
