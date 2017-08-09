@@ -6,7 +6,7 @@ var config = require('../../config/environment');
 var auth = require('../../auth/auth.service');
 
 var router = express.Router();
-
+router.get('/createuniqueuserno',  controller.createUniqueUserNo);
 router.get('/', auth.hasRole('admin'), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 //router.delete('/:id', controller.destroy);
