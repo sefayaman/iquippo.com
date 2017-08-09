@@ -6,7 +6,7 @@ var config = require('../../config/environment');
 var auth = require('../../auth/auth.service');
 
 var router = express.Router();
-
+router.get('/createuniqueuserno',  controller.createUniqueUserNo);
 router.get('/', auth.hasRole('admin'), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 //router.delete('/:id', controller.destroy);
@@ -25,6 +25,7 @@ router.post('/validatesignup',controller.validateSignup);
 router.post('/validateotp',controller.validateOtp);
 router.post('/resetpassword',controller.resetPassword);
 router.post('/export', controller.exportUsers);
+router.get('/fetch/single/:id',auth.isAuthenticated(),controller.fetchSingleUser);
 router.post('/getproductscountonuserids', controller.getProductsCountOnUserIds);
 router.post('/v1/import',controller.parseImportExcel,controller.validateExcel,controller.createUserReq);
 // router.get('/', controller.getAll);

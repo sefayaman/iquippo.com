@@ -44,6 +44,7 @@
       prdService.unlockIncomingProduct = unlockIncomingProduct;
       prdService.statusWiseCount = statusWiseCount;
       prdService.createOrUpdateAuction = createOrUpdateAuction;
+      prdService.getProductOnSellerId = getProductOnSellerId;
 
        function getFeaturedProduct(id){
           var deferred = $q.defer();
@@ -102,6 +103,17 @@
           deferred.reject(res);
         })
         return deferred.promise;
+      };
+
+      function getProductOnSellerId(filter){
+        
+        return $http.post(path + "/search",filter)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(res){
+            throw res;
+          })
       };
 
       function getProductOnFilter(filter){

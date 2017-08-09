@@ -100,6 +100,7 @@ angular.module('sreizaoApp',[
     $rootScope.spareStatus = spareStatus;
     $rootScope.paymentOptions = paymentOptions;
     $rootScope.allMadeInCountries = allMadeInCountries;
+    $rootScope.KYCType = KYCType;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
 
@@ -198,6 +199,7 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceRequester = Auth.isServiceRequester;
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
+    $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
     
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

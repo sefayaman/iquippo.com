@@ -6,6 +6,7 @@ angular.module('admin').factory("VatTaxSvc",VatTaxSvc);
     var svcPath = '/api/common/vattax';
 
     svc.get = get;
+    svc.search = search;
     svc.save = save;
     svc.update = update;
     svc.destroy = destroy;
@@ -26,9 +27,20 @@ angular.module('admin').factory("VatTaxSvc",VatTaxSvc);
           });
      }
 
+     function search(filter){
+       return $http.post(svcPath+'/search',filter)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+     }
+
      function save(data){
         return $http.post(svcPath,data)
         .then(function(res){
+          console.log("res",res);
           return res.data;
         })
         .catch(function(err){

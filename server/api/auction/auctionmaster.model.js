@@ -24,6 +24,7 @@ var AuctionMasterSchema = new Schema({
 	primaryImg: String,
 	contactName:String,
 	contactNumber:String,
+	allowBid:String,
 	termAuction:String,
 	docType:String,
 	docName: String,
