@@ -10,10 +10,13 @@ var xlsx = require('xlsx');
 var Product = require('../product/product.model');
 var CityModel = require('../common/location.model');
 var Vendor = require('../vendor/vendor.model');
+var validator=require('validator');
 var ManpowerUser = require('../manpower/manpower.model');
 var Utility = require('./../../components/utility.js');
 var userFieldsMap = require('../../config/user_temp_field_map');
 var Utillity = require('./../../components/utility');
+var Seqgen = require('./../../components/seqgenerator').sequence();
+
 var async = require('async');
 var APIError = require('../../components/_error');
 
@@ -31,6 +34,27 @@ exports.index = function(req, res) {
     res.status(200).json(users);
   });
 };
+<<<<<<< HEAD
+=======
+
+exports.fetchSingleUser = function(req,res){
+  var id = req.params.id;
+  if(!validator.isMongoId(id)){
+    return res.send(400).json({err:'Invalid id '});
+  }
+
+  User.findById(id).exec(function(err,user){
+    if(err)
+      return res.send(500);
+
+    if(!user)
+      return res.send(404).json({err:'Invalid user'});
+
+    return res.json(user);
+  });
+};
+
+>>>>>>> 8ee67c8b7d10971a6895e379842af51cc16f2302
 /**
  * Creates a new user
  */
@@ -1754,10 +1778,11 @@ exports.createUniqueUserNo = function(req,res){
    User.find({}, function (err, users) {
     //if(err) return res.status(500).send(err);
     var i=1;
+    var id = 100000;
     users.forEach(function(doc) {
     //if (err) throw err;
      if(doc){
-      var id = 100000+i;
+       id =  parseInt(id) + 1;
        doc.update({$set:{customerId:id}},function(err){
         
         //return res.status(200).json(req.body);
@@ -1768,7 +1793,13 @@ exports.createUniqueUserNo = function(req,res){
   });
 
    res.status(200);console.log("Customer Id created successfully.");
-   
+   ///
+   var SeqModel = Seqgen.getSchema();
+   SeqModel.update({collectionName : "users"},{$set:{nextSeqNumber:id+1}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      ///
   });
    /*res.each(function(doc) {
     //if (err) throw err;
