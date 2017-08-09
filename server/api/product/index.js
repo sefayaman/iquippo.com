@@ -39,9 +39,7 @@ router.get('/script/featured',scriptController.script);
 //v1 version of bulk create product
 router.post('/v1/import',controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
 
-
-
-
+router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 
 
 

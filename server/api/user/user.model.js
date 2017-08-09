@@ -1,11 +1,14 @@
 'use strict';
-
+var seqGenerator = require('../../components/seqgenerator');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var crypto = require('crypto');
 var authTypes = ['twitter', 'facebook', 'google','linkedin'];
 
 var UserSchema = new Schema({
+  customerId:{
+    type: String,
+  },
   fname: String,
   mname: String,
   lname: String,
@@ -180,12 +183,26 @@ var validatePresenceOf = function(value) {
  */
 UserSchema
   .pre('save', function(next) {
-    if (!this.isNew) return next();
+    /*if (!this.isNew) return next();
 
     if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1)
       next(new Error('Invalid password'));
     else
-      next();
+      next();*/
+      if (!this.isNew) return next();
+
+    if (!validatePresenceOf(this.hashedPassword) && authTypes.indexOf(this.provider) === -1){
+      next(new Error('Invalid password'));
+    }else{ 
+      //next();
+      var self = this;
+      var sequence = seqGenerator.sequence();
+      sequence.next(function(seqnum){
+        self.customerId = seqnum;
+        return next();
+      },'users',100108);
+      
+    }
   });
 
 /**

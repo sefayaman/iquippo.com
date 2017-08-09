@@ -6,7 +6,7 @@
           <!-- User Management
           <button class="btn btn-success btn-md pull-right" ng-click="exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button> -->
           <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-8"> 
               <h3>User Management</h3>
             </div>
             <div class="col-xs-6 col-sm-2">
@@ -16,9 +16,26 @@
               <h3><button class="btn btn-success btn-md btn-block" ng-click="userManagementVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export</button></h3>
             </div>
           </div>
+            <div class="row">
+            <div class="form-group col-sm-offset-1 col-sm-10" ng-if="isAdmin()" >
+                          <ul class="list-instrct">
+                            <li>Download the <a href="/download/templates/{{bulkUserUpload.template}}" target="_blank">template</a> for creating customers/channel partners using bulk upload and fill all fields. (*) mark fields are mandatory.</li>
+                           <li>System will accept only 100 records in a single file.</li>  
+                          </ul>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control input-md" disabled placeholder="Upload Excel">                          
+                        </div>
+                        <div class="col-sm-3">
+                          <span class="btn btn-warning fileinput-button bulk-browse">
+                            <span>Browse</span>
+                            <input type="file" name="doc" data-filetype="doc" file-upload="" class="ng-scope">
+                          </span>
+                        </div>
+            </div>
+            </div>
 
           <legend></legend>
-          
+          {{successMessage}}
           <p class="text-right">Showing : {{userManagementVm.totalItems}} Records</p>
           <div class="row">
             <div class="col-sm-9 form-group">
@@ -40,6 +57,7 @@
             <table class="table table-bordred table-striped">
               <thead>
                 <tr>
+                   <th>Customer Id</th>
                   <th>Name</th>
                   <th>Email</th>
                   <th>PAN Number</th>
@@ -60,6 +78,7 @@
               </thead>
               <tbody>
                 <tr ng-repeat="user in userManagementVm.userList">
+                  <td>{{user.customerId}}</td>
                   <td>{{user.fname}} {{user.mname}} {{user.lname}}</td>
                   <td>{{user.email}}</td>
                   <td>{{user.panNumber}}</td>

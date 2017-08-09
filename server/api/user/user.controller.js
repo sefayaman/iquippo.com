@@ -8,14 +8,18 @@ var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var  xlsx = require('xlsx');
 var Product = require('../product/product.model');
+var CityModel = require('../common/location.model');
 var Vendor = require('../vendor/vendor.model');
 var validator=require('validator');
 var ManpowerUser = require('../manpower/manpower.model');
 var Utility = require('./../../components/utility.js');
+var userFieldsMap=require('../../config/user_temp_field_map');
+var Utillity = require('./../../components/utility');
+var async = require('async');
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
-};
+}; 
 
 /**
  * Get list of users
@@ -95,7 +99,285 @@ exports.validateSignup = function(req, res){
     }
   });
 }
+exports.parseImportExcel = function(req,res,next){
+  var body = req.body;
+  var ret;
+  ['filename', 'user'].forEach(function(x) {
+    if (!body[x]) {
+      ret = x;
+    }
+  });
 
+  if(ret)
+    return  next(new APIError(412,'Missing mandatory parameter: ' + ret));
+  var options = {
+    file: body.filename,
+    headers: Object.keys(userFieldsMap),
+    mapping: userFieldsMap,
+    notValidateHeaders: true
+  };
+  req.excelData = Utillity.toJSON(options);
+  req.reqType = 'Upload';
+  return next();
+};
+
+exports.validateExcel=function(req,res,next){
+var excelData = req.excelData;
+  var user = req.body.user;
+  var reqType = req.reqType;
+
+  if(!reqType)
+    return next(new APIError(400,'Invalid request type'));
+
+  if (excelData instanceof Error) {
+    return  next(new APIError(412,'Invalid Excel File'));
+  }
+
+  var uploadData = [];
+  var errorList = [];
+  var userObj = {};
+  req.totalCount = excelData.length;
+  async.eachLimit(excelData, 10, initialize, finalize);
+
+  function finalize(err) {
+    if (err) {
+      return next(new APIError(500,'Error while updating'));
+    }
+    if(!uploadData.length && !errorList.length){
+      return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
+    }
+    req.errorList = errorList;
+    req.uploadData = uploadData;
+    next();
+  }
+   
+   function initialize(row,cb){
+     if(reqType === 'Upload'){
+      if(!userObj[row.mobile]){
+        userObj[row.mobile] = true;
+        async.parallel({
+          validateEmailAddress:validateEmailAddress,
+          validateMandatoryCols : validateMandatoryCols,
+          validateDupUser : validateDupUser,
+          validateLegalEntity:validateLegalEntity,
+          validatePan:validatePan,
+          validateAadhaar:validateAadhaar,
+          validateCity : validateCity,
+        }, buildData);
+      }else{
+        errorList.push({
+            Error: 'Duplicate Records in excel sheet',
+            rowCount: row.rowCount
+          });
+          return cb();
+      }
+    }
+
+    function validateLegalEntity(callback){
+      if(row.userType === 'Legal Entity'){
+        if(!row.company){
+          errorList.push({
+           Error:'Missing mandatory parameter : Legal_Entity_Name',
+           rowCount:row.rowCount
+          });
+          return callback('Error');
+        }
+    }
+    else{
+      if(row.company){
+        delete row.company;  
+    }
+  }
+  return callback();
+    }
+
+    function validateEmailAddress(callback){
+      if(!row.email)
+      return callback();
+      
+        if(!(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(row.email))){
+            errorList.push({
+            Error:'Error while validating email Id pattern not matching',
+            rowCount:row.rowCount
+          });
+            return callback('Error');       
+        }
+      User.find({email:row.email,deleted:false},function(err,users){
+        if(err){
+          errorList.push({
+            Error : 'Error while validating user',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        if(users.length){
+          errorList.push({
+            Error : 'Duplicate email',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        return callback();
+      });
+
+    }
+
+    function validatePan(callback){ 
+      if(!row.panNumber)
+      return callback();
+        if(!(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(row.panNumber))){
+    errorList.push({
+    Error:'Error while validating Pan card pattern not matching',
+    rowCount:row.rowCount
+  });
+      return callback('Error');  
+    }else
+      return callback();
+  }
+  
+ function validateAadhaar(callback){
+   if(!row.aadhaarNumber)
+   return callback();
+        if(!(/^\d{4}\s\d{4}\s\d{4}$/.test(row.aadhaarNumber))){
+    errorList.push({
+    Error:'Error while validating Aadhaar Number pattern not matching',
+    rowCount:row.rowCount
+  });
+  return callback('Error');  
+      }else
+        return callback();
+  }
+
+    function validateCity(callback){
+      if(row.city){
+        CityModel.City.find({name : row.city},function(err,cityInfo){
+          if(err || !cityInfo){
+            errorList.push({
+              Error : 'Error while validating city',
+              rowCount :row.rowCount
+            });
+              return callback('Error');
+            }
+
+            if(!cityInfo.length){
+              errorList.push({
+                Error : 'Invalid City',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
+            if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
+              errorList.push({
+                Error : 'Invalid State or country',
+                rowCount :row.rowCount
+              });
+              return callback('Error');
+            }
+
+            return callback();
+        });
+      } else {
+        return callback();
+      }
+    }
+
+    function validateMandatoryCols(callback){
+      var error;
+      ['role','fname','lname','userType','password','country','state','city','mobile'].some(function(x){
+        if(!row[x]){
+          error = true;
+          errorList.push({
+            Error : 'Missing mandatory parameter : ' + x,
+            rowCount :row.rowCount
+          });
+        }
+        if(row[x]=="TRUE")
+        row[x]=true;
+      });
+      if(error)
+        return callback('Error');
+
+      return callback();
+
+    }
+
+    function validateDupUser(callback){
+      User.find({mobile:row.mobile,deleted:false},function(err,users){
+        if(err || !users){
+          errorList.push({
+            Error : 'Error while validating user',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+
+        if(users.length){
+          errorList.push({
+            Error : 'Duplicate mobile',
+            rowCount : row.rowCount
+          });
+          return callback('Error');
+        }
+        return callback();
+      });
+    }
+
+    function buildData(err,parseData) {
+      if (err)
+        return cb();
+     uploadData.push(row);
+      return cb();
+    }
+}
+};
+
+exports.createUserReq = function(req,res,next){
+  if(!req.uploadData.length && !req.errorList.length)
+    return next(new APIError(500,'Error while updation'));
+
+  var successCount = 0;
+  if(!req.uploadData.length && req.errorList.length)
+    return res.json({successCount : successCount,errorList : req.errorList,totalCount : req.totalCount});
+
+  var dataToUpdate = req.uploadData;
+
+  async.eachLimit(dataToUpdate,5,intialize,finalize);
+
+  function finalize(err){
+    if(err){
+      return next(new APIError(500,'Error while updation'));
+    }
+
+    return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
+  }
+
+  function intialize(data,cb){
+    data.createdBy = req.body.user;
+    data.createdAt = new Date();
+    data.updatedAt = new Date();
+    data.agree=true;
+    
+    if(data.userType === "Individual")
+       data.userType="individual";
+       if(data.userType === "Private Entrepreneur")
+       data.userType="private";
+       if(data.userType === "Legal Entity")
+       data.userType="legalentity";
+
+    User.create(data,function(err,doc){
+      if(err || !doc){
+        req.errorList.push({
+          Error:'Error while updating information',
+          rowCount : data.rowCount
+        });
+        return cb();
+      }
+      successCount++;
+      return cb();
+    });
+  }
+};
 
 exports.create = function (req, res, next) {
   console.log("----create[---",req.body);
@@ -146,7 +428,8 @@ exports.getUser = function(req, res) {
   }*/
 
   if(req.body.searchstr){
-    console.log("req.body.searchstr", req.body.searchstr);
+    //console.log("req.body.searchstr", req.body.searchstr);
+    arr[arr.length] = { customerId: { $regex: searchStrReg }};
     arr[arr.length] = { fname: { $regex: searchStrReg }};
     arr[arr.length] = { lname: { $regex: searchStrReg }};
     arr[arr.length] = { mobile: { $regex: searchStrReg }};
@@ -552,6 +835,15 @@ function excel_from_data(data) {
     var cell = null;
     if(R != 0)
       user = data[R-1];
+   if(R == 0)
+      cell = {v: "Customer Id"};
+    else {
+      if(user)
+        cell = {v: user.customerId || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell;
 
     if(R == 0)
       cell = {v: "Name"};
@@ -838,4 +1130,33 @@ function addNoCacheHeader(res) {
    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
    res.header('Expires', '-1');
    res.header('Pragma', 'no-cache');
+}
+//create user unique number
+
+
+exports.createUniqueUserNo = function(req,res){
+   
+   User.find({}, function (err, users) {
+    //if(err) return res.status(500).send(err);
+    var i=1;
+    users.forEach(function(doc) {
+    //if (err) throw err;
+     if(doc){
+      var id = 100000+i;
+       doc.update({$set:{customerId:id}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      
+      i++;
+     }
+  });
+
+   res.status(200);console.log("Customer Id created successfully.");
+   
+  });
+   /*res.each(function(doc) {
+    //if (err) throw err;
+    console.log(doc);
+  });*/
 }

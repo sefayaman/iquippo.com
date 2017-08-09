@@ -2,10 +2,15 @@
 
 angular.module('sreizaoApp')
   .controller('HeaderCtrl', function ($state, $scope, $rootScope, $http,$location, Auth,$uibModal,Modal,notificationSvc, AuctionSvc,$window) {
-
+     
     $scope.isCollapsed = true;
     var dataToSend = {};
+   // var upcomingAuctions = [];
+
     $scope.isAuctionType = "upcoming";
+
+    $scope.upcomingAuctions =[];
+     $scope.auctionListing  =[];
 
     $scope.isActive = function(states) {
       return states.indexOf($state.current.name) != -1;//routes === $location.path();
@@ -17,6 +22,8 @@ angular.module('sreizaoApp')
         else
           Modal.alert("Please Login/Register for uploading the products!", true);
     };
+
+
     $scope.redirectToSpare = function(){
       if($rootScope.getCurrentUser()._id) 
           $state.go('spareupload');
@@ -36,6 +43,77 @@ angular.module('sreizaoApp')
         $state.go("viewauctions",{type:routeTo});
       })*/
     }
+
+
+    
+    $scope.assetPage =function(auctionid,Id){
+     
+      if(auctionid ==undefined){
+         var url ="/viewauctions?type=upcoming";
+                    
+      window.location.href = url;
+
+      }else{
+         var url ="/assetinauction?auctionType=upcomingAuctions&auctionId="+auctionid+"&id="+Id;
+                    
+      window.location.href = url;
+
+      }
+    }
+    /* forpcoming auctions on new page */
+     $scope.fetchAuctions =function(){
+        
+      AuctionSvc.getAuctionDateData({auctionType:"upcomingauctions",pagination : true,itemsPerPage:10}).then(function(result){
+        
+           $scope.upcomingAuctions = result.items; 
+           console.log("upcomingauctions",$scope.upcomingAuctions);
+           
+            //return upcomingAuctions;
+             var filter = {}; 
+              var auctionIds = []; 
+                if(result && result.items) {     
+                result.items.forEach(function(item) { 
+                 auctionIds[auctionIds.length] = item._id;
+                });
+
+               filter.auctionIds = auctionIds; 
+                AuctionSvc.getAuctionWiseProductData(filter).then(function(data) { 
+                $scope.getConcatData = data; 
+              
+             })  
+            .catch(function() {});  
+
+             } 
+
+        
+      });
+ 
+     };
+
+      $scope.getProductData =function (id, type) { 
+
+            if (angular.isUndefined($scope.getConcatData)) {  
+                if (type == "total_products") 
+                  $scope.autoRedirect=true;
+                  return 0;          
+            } else {  
+                 
+                     var totalItemsInAuction = 0;
+                       $scope.getConcatData.forEach(function(data) {
+                         if (id == data._id) {
+                           totalItemsInAuction = data.total_products;
+                          }});
+                           if (type == "total_products") {  
+                             if (totalItemsInAuction > 0)   
+                              return totalItemsInAuction;
+                            }
+                                
+                                return 0;
+                              };  
+    }
+
+    /*---------------------*/
+
 
     $scope.openLogin = function(){
       Auth.doNotRedirect = false;

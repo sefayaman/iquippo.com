@@ -7,42 +7,23 @@
     var vm = this;
 
     var query = $location.search();
-    $scope.auctionName=$location.search().auctionName;
+    //$scope.auctionName=$location.search().auctionName;
     $scope.auctionType=$location.search().auctionType;
-    $scope.docName=$location.search().docName;
-    $scope.docType=$location.search().docType;
-    $scope.docNameProxy=$location.search().docNameProxy;
-    $scope.auctionOwner=$location.search().auctionOwner;
-    $scope.auctionOwnerMobile=$location.search().auctionOwnerMobile;
-    $scope.auctionCity=$location.search().auctionCity;
     $scope.auctionTypeValue=$location.search().auctionTypeValue;
-    $scope.termAuction=$location.search().termAuction;
-    $scope.contactName=$location.search().contactName;
-    $scope.contactNumber=$location.search().contactNumber;
     var filter = {};
-
     $scope.equipmentSearchFilter={};
     $scope.mfgyr = {};
     vm.fireCommand = fireCommand;
     vm.productSearchOnMfg=productSearchOnMfg;
     vm.auctionDetailListing = [];
     vm.backButton = backButton;
-    vm.auctionName=$location.search().auctionName;
-    vm.auctionOwner=$location.search().auctionOwner;
-    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
-    vm.auctionCity=$location.search().auctionCity;
-    $scope.auctionValue=$location.search().auctionType;
-    vm.auctionOwner=$location.search().auctionOwner;
-    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
-    vm.auctionCity=$location.search().auctionCity;
-    vm.auctionTypeValue=$location.search().auctionTypeValue;
-    vm.termAuction=$location.search().termAuction;
     $scope.openUrl = openUrl;
 
     //registering category brand functions
     vm.onCategoryChange=onCategoryChange;
     vm.onBrandChange=onBrandChange;
     vm.openBidModal = openBidModal;
+    vm.getAuctionById = getAuctionById;
 
     // bid summary
     function openBidModal(){
@@ -90,7 +71,6 @@
               Modal.alert(err.data); 
       });
     }
-
     function openUrl(_id) {
       if(!_id)
         return;
@@ -105,11 +85,37 @@
       });
       $scope.auctionId=query.auctionId;
       filter.auctionId = query.auctionId;
+      getAuctionById();
       filter.status = "request_approved";
+     
       getAssetsInAuction(filter);
     }
 
     init();
+    function getAuctionById() {
+      var filter = {};
+       filter._id  = $location.search().id;
+      AuctionSvc.getAuctionDateData(filter)
+      .then(function(res){
+        
+        $scope.auctionId = res.items[0].auctionId;
+        $scope.auctionName=res.items[0].name;
+        $scope.auctionOwner= res.items[0].auctionOwner;
+        $scope.auctionTypeValue = res.items[0].auctionType;
+        $scope.auctionOwnerMobile=res.items[0].auctionOwnerMobile;
+        $scope.auctionCity = res.items[0].city;
+        $scope.termAuction = res.items[0].termAuction;
+        $scope.docName = res.items[0].docName;
+        $scope.docNameProxy = res.items[0].docNameProxy;
+        $scope.docType = res.items[0].docType;
+        $scope.contactName=res.items[0].contactName;
+        $scope.contactNumber=res.items[0].contactNumber;
+        
+    })
+    .catch(function(err){
+
+    });
+    }
 
     function backButton() {
       $window.history.back();
@@ -188,7 +194,6 @@
 
   function getAssetsInAuction(filter){
     var assetIds = [];
-    filter.notInSoldPro = "notInSold";
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {

@@ -27,6 +27,7 @@ router.post('/resetpassword',controller.resetPassword);
 router.post('/export', controller.exportUsers);
 router.get('/fetch/single/:id',auth.isAuthenticated(),controller.fetchSingleUser);
 router.post('/getproductscountonuserids', controller.getProductsCountOnUserIds);
+router.post('/v1/import',controller.parseImportExcel,controller.validateExcel,controller.createUserReq);
 // router.get('/', controller.getAll);
 
 
