@@ -164,31 +164,23 @@ exports.validateExcel = function(req, res, next) {
   }
 
   function initialize(row, cb) {
-    if (row.ifEnterprise === 'yes')
+    if (!row.enterpriseId && row.role === 'enterprise'){
       tasksBasedOnRole = {
         validateEmailAddress: validateEmailAddress,
         validateMandatoryCols: validateMandatoryCols,
         validateDupUser: validateDupUser,
         validateLegalEntity: validateLegalEntity,
-        validateEnterprise:validateEnterprise,
-        validatePan: validatePan,
+        validatePan:validatePan,
         validateAadhaar: validateAadhaar,
         validateCity: validateCity,
-        validatingAgencies:validatingAgencies
+        validateValuationAgencies:validateValuationAgencies,
+        validateAssetInspectionAgencies:validateAssetInspectionAgencies,
+        validateFinanceAgencies:validateFinanceAgencies,
+        validateEnterpriseAvailedServices:validateEnterpriseAvailedServices
       };
-    else {
-      if(row.vapprovalRequired)
-        delete row.vapprovalRequired;
-      if(row.aapprovalRequired)
-        delete row.aapprovalRequired;
-      if(row.fapprovalRequired)
-        delete row.fapprovalRequired;
-      if(row.valuationAgency)
-        delete row.valuationAgency;
-      if(row.assetInspectionAgency)
-        delete row.assetInspectionAgency;
-      if(row.financeAgency)
-        delete row.financeAgency;
+      row.enterpriseId="E" + row.mobile + "" + Math.floor(Math.random() *10);
+    }
+    else if(row.enterpriseId && row.role === 'enterprise'){
       tasksBasedOnRole = {
         validateEmailAddress: validateEmailAddress,
         validateMandatoryCols: validateMandatoryCols,
@@ -199,6 +191,39 @@ exports.validateExcel = function(req, res, next) {
         validateAadhaar: validateAadhaar,
         validateCity: validateCity
       };
+      if(row.vapprovalRequired)
+        delete row.vapprovalRequired;
+      if(row.aapprovalRequired)
+        delete row.aapprovalRequired;
+      if(row.fapprovalRequired)
+        delete row.fapprovalRequired;
+    }
+    else if (row.role !== 'enterprise'){
+      tasksBasedOnRole = {
+        validateEmailAddress: validateEmailAddress,
+        validateMandatoryCols: validateMandatoryCols,
+        validateDupUser: validateDupUser,
+        validateLegalEntity: validateLegalEntity,
+        validatePan: validatePan,
+        validateAadhaar: validateAadhaar,
+        validateCity: validateCity,
+      };
+      if(row.vapprovalRequired)
+        delete row.vapprovalRequired;
+      if(row.aapprovalRequired)
+        delete row.aapprovalRequired;
+      if(row.fapprovalRequired)
+        delete row.fapprovalRequired;
+      if(row.valuationPartnerId)
+        delete row.valuationPartnerId;
+      if(row.assetInspectionPartnerId)
+        delete row.assetInspectionPartnerId;
+      if(row.financePartnerId)
+        delete row.financePartnerId;
+      if(row.enterpriseId)
+        delete row.enterpriseId;
+      if(row.employeeCode)
+        delete row.employeeCode;
     }
     if (reqType === 'Upload') {
       if (!userObj[row.mobile]) {
@@ -230,136 +255,79 @@ exports.validateExcel = function(req, res, next) {
       return callback();
     }
 
-    function validateValuationAgencies(CallBack) {
-      if (!row.valuationAgency)
-        return CallBack();
+    function validateValuationAgencies(callback) {
+      if (!row.valuationPartnerId)
+        return callback();
       Vendor.find({
-        "services": {
-          $in: ['Valuation']
-        }
-      }, function(err, vendors) {
-        if (err) {
-          errorList.push({
-            Error: 'Error while validating user',
-            rowCount: row.rowCount
-          });
-          return CallBack('Error');
-        }
-        
-        if (vendors.length) {
-        var match=0;
-          vendors.some(function(x){
-          if (row.valuationAgency === x.entityName) {
-            row.vpartnerId = x.partnerId;
-            row.vObjectId=x._id;
-            match=1;
-             return CallBack();
-          }  
-        });
-          if(match === 0)
-          {
-            errorList.push({
-            Error: 'Error while validating valuationAgency',
-            rowCount: row.rowCount
-          });
-          return CallBack('Error');            
-          }
-        }
-        else {
-            errorList.push({
-              Error: 'Error while validating Valuation Agency No valuation Agency found',
-              rowCount: row.rowCount
-            });
-            return CallBack('Error');
-          }
-      });
-    }
-
-    function validateAssetInspectionAgencies(CallBack) {
-      if (!row.assetInspectionAgency)
-        return CallBack();
-      Vendor.find({
-        "services": {
-          $in: ['Asset Inspection']
-        }
+        "partnerId":row.valuationPartnerId 
       }, function(err, vendors) {
         if (err) {
           errorList.push({
             Error: 'Error while validating vendor',
             rowCount: row.rowCount
           });
-          return CallBack('Error');
+          return callback('Error');
         }
-        
-        if (vendors.length) {
-        var match=0;
-          vendors.some(function(x){
-           if (row.assetInspectionAgency === vendors.entityName) {
-            row.apartnerId = vendors.partnerId;
-            row.aObjectId=vendors._id;
-            match =1;
-            return CallBack();
-          }       
+        if (vendors.length > 0){ 
+         return callback();
+       }
+         else{
+          errorList.push({
+            Error:'Error while validating Vendor : vendorId:'+ row.valuationPartnerId ,
           });
-          if(match === 0){
-           errorList.push({
-              Error: 'Error while validating Asset Inspection Agency',
-              rowCount: row.rowCount
-            });
-            return CallBack('Error');
-          }
-        }
-        else {
-            errorList.push({
-              Error: 'Error while validating Asset Inspection Agency',
-              rowCount: row.rowCount
-            });
-            return CallBack('Error');
-          }
-      });
+          return callback('Error');
+         }  
+        });
     }
 
-    function validateFinanceAgencies(CallBack) {
-      if (!row.financeAgency)
-        return CallBack();
+    function validateAssetInspectionAgencies(callback) {
+       if (!row.assetInspectionPartnerId)
+        return callback();
       Vendor.find({
-        "services": {
-          $in: ['Finance']
-        }
+        "partnerId":row.assetInspectionPartnerId 
       }, function(err, vendors) {
         if (err) {
           errorList.push({
-            Error: 'Error while validating user',
+            Error: 'Error while validating vendor',
             rowCount: row.rowCount
           });
-          return CallBack('Error');
+          return callback('Error');
         }
-        if (vendors.length) {
-          var match=0;
-          vendors.some(function(x){
-          if (row.financeAgency === x.entityName) {
-            row.fpartnerId = x.partnerId;
-            row.fObjectId=x._id;
-             match = 1;
-             return CallBack();
-          }  
+        if (vendors.length > 0){ 
+         return callback();
+       }
+         else{
+          errorList.push({
+            Error:'Error while validating Vendor : vendorId:'+ row.assetInspectionPartnerId ,
+          });
+          return callback('Error');
+         }  
         });
-          if(match === 0){
-            errorList.push({
-              Error: 'Error while validating Finance Agency',
-              rowCount: row.rowCount
-            });
-            return CallBack('Error');
-          }
+    }
+
+    function validateFinanceAgencies(callback) {
+      if (!row.financePartnerId)
+        return callback();
+      Vendor.find({
+        "partnerId":row.financePartnerId 
+      }, function(err, vendors) {
+        if (err) {
+          errorList.push({
+            Error: 'Error while validating vendor',
+            rowCount: row.rowCount
+          });
+          return callback('Error');
         }
-        else {
-            errorList.push({
-              Error: 'Error while validating Finance Agency',
-              rowCount: row.rowCount
-            });
-            return CallBack('Error');
-          }
-      });
+        if (vendors.length > 0){ 
+         return callback();
+       }
+         else{
+          errorList.push({
+            Error:'Error while validating Vendor : vendorId:'+ row.financePartnerId ,
+          });
+          return callback('Error');
+         }  
+        });
     }
 
     function validateEmailAddress(callback) {
@@ -500,18 +468,18 @@ exports.validateExcel = function(req, res, next) {
 
 
     function validateEnterprise(callback) {
-      if (!row.enterprise)
+      if (!row.enterpriseId)
         return callback();
-
-      if (row.role === 'enterprise') {
+      if(!row.employeeCode){
+        errorList.push({
+          Error:'Missing mandatory parameter : employeeCode'
+        })
+      }
+      var mobileNo=row.enterpriseId.slice(1,(row.enterpriseId.length -1));
         User.find({
-          "role": "enterprise",
-          "enterprise": true,
-          "status": true,
-          "enterpriseId": {
-            $exists: true
-          }
-        }, function(err, enterprises) {
+          "enterpriseId":row.enterpriseId,
+          "mobile":mobileNo 
+        }, function(err, enterprise) {
           if (err) {
             errorList.push({
               Error: 'Error while validating user',
@@ -519,49 +487,24 @@ exports.validateExcel = function(req, res, next) {
             });
             return callback('Error');
           }
-          if (enterprises.length > 0) {
-            var matchFound=0;
-            enterprises.some(function(x) {
-              if ((x.fname + (x.mname || " ") + (x.lname || "")).toLowerCase() === row.enterprise.toLowerCase()) {
-                if(row.ifEnterprise==='yes'){
-                 errorList.push({
-              Error: 'Duplicate enterprise',
-              rowCount: row.rowCount
-            });
-            return callback('Error'); 
-                }
-                matchFound=1;  
-                row.enterpriseId = x.enterpriseId;
-                x.availedServices.forEach(function(x) {
+          if (enterprise.length > 0) {
+                enterprise[0].availedServices.forEach(function(x) {
                   enterpriseAvailedServices.push(x.name);
                 });
                 row.availedServices = validateAvailedServices(enterpriseAvailedServices);
                 return callback();
               }
-            });
-            if(matchFound === 0){
-              row.enterpriseId="E" + row.mobile + "" + Math.floor(Math.random() *10);
-            return callback(); 
-          }
-          } else {
+           else {
             errorList.push({
-              Error: 'Error while validating enterprise',
+              Error: 'Error while validating enterprise :'+ row.enterpriseId,
               rowCount: row.rowCount
             });
             return callback('Error');
           }
         });
-      }
     }
 
-   function validatingAgencies(callback){
-    async.series([validateValuationAgencies,validateAssetInspectionAgencies,validateFinanceAgencies,validateEnterpriseAvailedServices],function(err){
-     if(err) return callback(err);
-     return callback();
-    });
-  }
-
-    function validateEnterpriseAvailedServices(CallBack) {
+    function validateEnterpriseAvailedServices(callback) {
       var availedServices = [];
       var data = {};
         if (row.valuation && row.valuation.toLowerCase() === 'checked') {
@@ -575,8 +518,8 @@ exports.validateExcel = function(req, res, next) {
           if(row.vapprovalRequired)
           data.approvalRequired=row.vapprovalRequired;
 
-           if(row.vpartnerId)
-            data.partnerId=row.vpartnerId;
+           if(row.valuationPartnerId)
+            data.partnerId=row.valuationPartnerId;
           
           if (row.vapprover && row.vapprover.toLowerCase() === 'checked') {
             data.approver = true;
@@ -600,8 +543,8 @@ exports.validateExcel = function(req, res, next) {
           if(row.aapprovalRequired)
           data.approvalRequired=row.aapprovalRequired;
           
-          if(row.apartnerId)
-            data.partnerId=row.apartnerId;
+          if(row.assetInspectionPartnerId)
+            data.partnerId=row.assetInspectionPartnerId;
 
           if (row.aapprover && row.aapprover.toLowerCase() === 'checked') {
             data.approver = true;
@@ -625,8 +568,8 @@ exports.validateExcel = function(req, res, next) {
           if(row.fapprovalRequired)
           data.approvalRequired=row.fapprovalRequired;
           
-          if(row.fpartnerId)
-            data.partnerId=row.fpartnerId;
+          if(row.financePartnerId)
+            data.partnerId=row.financePartnerId;
 
           if (row.fapprover && row.fapprover.toLowerCase() === 'checked') {
             data.approver = true;
@@ -653,7 +596,7 @@ exports.validateExcel = function(req, res, next) {
         delete row.frequester;
 
        row.availedServices=availedServices;
-      return CallBack();
+      return callback();
     }
 
     function validateAvailedServices(enterpriseAvailedServices) {
