@@ -113,6 +113,7 @@
       if(!filter.auctionType)
         filter.auctionType = $stateParams.type;
       filter.addAuctionType = true;
+
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
         getAuctionWiseProductData(result); 
        /*vm.auctionListing = result.items;
