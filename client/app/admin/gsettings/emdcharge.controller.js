@@ -43,7 +43,7 @@
 
             loadViewData(filter);
             getEnterpriseUser();
-            getChannelpartnerUser();
+            //getChannelpartnerUser();
         }
 
         function getEnterpriseUser() {
@@ -56,14 +56,14 @@
             });
         }
 
-        function getChannelpartnerUser() {
+        /*function getChannelpartnerUser() {
             userFilter = {};
             userFilter.role = "channelpartner";
             userFilter.status = true;
             userSvc.getUsers(userFilter).then(function(data){
               vm.channelpartnerUser = data;
             });
-        }
+        }*/
 
         function loadViewData(filter){
             $scope.pager.copy(filter);
@@ -87,7 +87,7 @@
         }
 
         function getUserOnRole(role, noChange) {
-            if(role == 'Other' || role == 'customer') {
+            if(role == 'default' || role == 'customer') {
                 $scope.container.mobile = "";
                 $scope.container.userId = "";
                 return;
@@ -103,14 +103,14 @@
                         angular.copy(vm.enterpriseUser, vm.users);
                     }
                     break;
-                case "channelpartner" : 
-                    if (vm.channelpartnerUser.length < 0) {
-                        getChannelpartnerUser();
-                    } else {
-                        vm.users = [];
-                        angular.copy(vm.channelpartnerUser, vm.users);
-                    }
-                    break;     
+                // case "channelpartner" : 
+                //     if (vm.channelpartnerUser.length < 0) {
+                //         getChannelpartnerUser();
+                //     } else {
+                //         vm.users = [];
+                //         angular.copy(vm.channelpartnerUser, vm.users);
+                //     }
+                //     break;     
             }
         }
 
@@ -191,11 +191,11 @@
                 $scope.submitted = true;
                 return;
             }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.category.name != 'Other') {
+            /*if(vm.dataModel.userRole == 'default' && vm.dataModel.category.name != 'Other') {
                 Modal.alert('Please Select Other category!');
                 return;
-            }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+            }*/
+            if(vm.dataModel.userRole == 'default' && vm.dataModel.user) {
                 delete vm.dataModel.user;
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;

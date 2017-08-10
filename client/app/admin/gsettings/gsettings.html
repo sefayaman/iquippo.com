@@ -1954,7 +1954,7 @@
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in enterpriseVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div> -->
-				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.userId.$invalid && submitted}" ng-if="enterpriseVm.dataModel.userRole == 'enterprise' || enterpriseVm.dataModel.userRole == 'channelpartner'">
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.userId.$invalid && submitted}" ng-if="enterpriseVm.dataModel.userRole == 'enterprise'">
 					<select class="form-control" name="userId" ng-model="container.userId" ng-change="enterpriseVm.onUserChange(container.userId, enterpriseVm.dataModel.userRole)" required>
 						<option value="">*Select User</option>
 						<option value="{{user._id}}" ng-repeat="user in enterpriseVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
@@ -1985,14 +1985,25 @@
 						<option value="No">No</option>
 					</select>					
 				</div>
-				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.coolingPeriod.$invalid && submitted}">
-					<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" min="0" placeholder="Cooling Period">
+				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.coolingPeriodIn.$invalid && submitted}">
+					<div class="row">
+						<div class="col-sm-5 padd-right">
+							<select class="form-control" name="coolingPeriodIn" ng-model="enterpriseVm.dataModel.coolingPeriodIn" required>
+								<option value="">*Cooling In</option>
+								<option value="Days">Days</option>
+								<option value="Hours">Hours</option>
+							</select>
+						</div>
+						<div class="col-sm-7 padd-left">
+							<input type="number" class="form-control" name="coolingPeriod" ng-model="enterpriseVm.dataModel.coolingPeriod" min="0" placeholder="*Cooling Period" required>
+						</div>
+					</div>					
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.emdPeriod.$invalid && submitted}">
-					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod" min="0" placeholder="EMD Period">
+					<input type="number" class="form-control" name="emdPeriod" ng-model="enterpriseVm.dataModel.emdPeriod" min="0" placeholder="*EMD Period" required>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':enterpriseMasterForm.fullPaymentPeriod.$invalid && submitted}">
-					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod" min="0" placeholder="Full Payment Period">
+					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="enterpriseVm.dataModel.fullPaymentPeriod" min="0" placeholder="*Full Payment Period" required>
 				</div>				
 			</div>
 			<div class="row form-group">
@@ -2032,9 +2043,17 @@
 				<tbody>
 					<tr ng-repeat="ent in enterpriseVm.filteredList">
 						<!-- <td>{{ent.enterpriseId}}</td> -->
-						<td>{{ent.userRole}}</td>
-						<td ng-if="ent.userRole != 'default'">{{ent.user.name}} ({{ent.user.mobile}})</td>
-						<td ng-if="ent.userRole == 'default'">Default</td>
+						<td>
+							<span ng-if="ent.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="ent.userRole == 'customer'">Seller</span>
+							<span ng-if="ent.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="ent.userRole != 'default'">{{ent.user.name}} ({{ent.user.mobile}})</span>
+							<span ng-if="ent.userRole == 'default'">Default</span>
+						</td>
+						<!-- <td ng-if="ent.userRole != 'default'">{{ent.user.name}} ({{ent.user.mobile}})</td>
+						<td ng-if="ent.userRole == 'default'">Default</td> -->
 						<td>{{ent.functionality}}</td>
 						<td>{{ent.buyNowPriceApproval}}</td>
 						<td>{{ent.negotiatedSaleApproval}}</td>
@@ -2081,9 +2100,9 @@
 					<select class="form-control" name="userRole" ng-model="markupVm.dataModel.userRole" ng-change="markupVm.getUserOnRole(markupVm.dataModel.userRole)" required>
 						<option value="">*Select Type</option>
 						<option value="enterprise">Enterprise</option>
-						<option value="channelpartner">Channel Partner</option>
-						<option value="customer">Customer</option>
-						<option value="Other">Other</option>
+						<!-- <option value="channelpartner">Channel Partner</option> -->
+						<option value="customer">Seller</option>
+						<option value="default">Default</option>
 					</select>
 				</div>
 				<!-- <div class="col-sm-3" ng-class="{'has-error':markupForm.enterpriseId.$invalid && submitted}">
@@ -2092,7 +2111,7 @@
 						<option value="{{ent.enterpriseId}}" ng-repeat="ent in markupVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
 					</select>
 				</div> -->
-				<div class="col-sm-3" ng-class="{'has-error':markupForm.userId.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'enterprise' || markupVm.dataModel.userRole == 'channelpartner' || markupVm.dataModel.userRole == ''">
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.userId.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'enterprise' || markupVm.dataModel.userRole == ''">
 					<select class="form-control" name="userId" ng-model="container.userId" ng-change="markupVm.onUserChange(container.userId, markupVm.dataModel.userRole)" required>
 						<option value="">*Select User</option>
 						<option value="{{user._id}}" ng-repeat="user in markupVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
@@ -2135,9 +2154,17 @@
 				<tbody>
 					<tr ng-repeat="markup in markupVm.filteredList">
 						<!-- <td>{{markup.enterpriseId}}</td> -->
-						<td>{{markup.userRole}}</td>
-						<td ng-if="markup.userRole != 'Other'">{{markup.user.name}} ({{markup.user.mobile}})</td>
-						<td ng-if="markup.userRole == 'Other'">Other</td>
+						<td>
+							<span ng-if="markup.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="markup.userRole == 'customer'">Seller</span>
+							<span ng-if="markup.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="markup.userRole != 'default'">{{markup.user.name}} ({{markup.user.mobile}})</span>
+							<span ng-if="markup.userRole == 'default'">Default</span>
+						</td>
+						<!-- <td ng-if="markup.userRole != 'default'">{{markup.user.name}} ({{markup.user.mobile}})</td>
+						<td ng-if="markup.userRole == 'default'">Default</td> -->
 						<td>{{markup.price}}</td>
 						<td>
 							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
@@ -2159,12 +2186,12 @@
 						<select class="form-control" name="userRole" ng-model="emdChargeVm.dataModel.userRole" ng-change="emdChargeVm.getUserOnRole(emdChargeVm.dataModel.userRole)" required>
 							<option value="">*Select Type</option>
 							<option value="enterprise">Enterprise</option>
-							<option value="channelpartner">Channel Partner</option>
-							<option value="customer">Customer</option>
-							<option value="Other">Other</option>
+							<!-- <option value="channelpartner">Channel Partner</option> -->
+							<option value="customer">Seller</option>
+							<option value="default">Default</option>
 						</select>
 					</div>
-					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.userId.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'enterprise' || emdChargeVm.dataModel.userRole == 'channelpartner'">
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.userId.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'enterprise'">
 					<select class="form-control" name="userId" ng-model="container.userId" ng-change="emdChargeVm.onUserChange(container.userId, emdChargeVm.dataModel.userRole)" required>
 						<option value="">*Select User</option>
 						<option value="{{user._id}}" ng-repeat="user in emdChargeVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
@@ -2173,7 +2200,7 @@
 					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.mobile.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'customer'">
 						<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in emdChargeVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="emdChargeVm.findSingleUser()" typeahead-on-select="emdChargeVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
 					</div>
-					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.categoryId.$invalid && submitted}">
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.categoryId.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole != 'default'">
 						<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="emdChargeVm.onCategoryChange(container.categoryId)"required>
 							<option value="">*Asset Category</option>
 							<option value="{{ct._id}}" ng-repeat="ct in emdChargeVm.categoryList">{{ct.name}}</option>
@@ -2215,9 +2242,17 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="emd in emdChargeVm.filteredList">
-						<td>{{emd.userRole}}</td>
-						<td ng-if="emd.userRole != 'Other'">{{emd.user.name}} ({{emd.user.mobile}})</td>
-						<td ng-if="emd.userRole == 'Other'">Other</td>
+						<td>
+							<span ng-if="emd.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="emd.userRole == 'customer'">Seller</span>
+							<span ng-if="emd.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="emd.userRole != 'default'">{{emd.user.name}} ({{emd.user.mobile}})</span>
+							<span ng-if="emd.userRole == 'default'">Default</span>
+						</td>
+						<!-- <td ng-if="emd.userRole != 'Other'">{{emd.user.name}} ({{emd.user.mobile}})</td>
+						<td ng-if="emd.userRole == 'Other'">Other</td> -->
 						<td>{{emd.category.name}}</td>
 						<td>{{emd.emdCharge}}</td>
 						<td>

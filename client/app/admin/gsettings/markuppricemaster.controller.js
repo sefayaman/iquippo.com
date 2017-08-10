@@ -33,7 +33,7 @@
             angular.copy(initFilter, filter);
 
             getEnterpriseUser();
-            getChannelpartnerUser();
+            //getChannelpartnerUser();
             loadViewData(filter);
         } 
 
@@ -48,7 +48,7 @@
         }
 
         function getUserOnRole(role, noChange) {
-            if(role == 'Other' || role == 'customer') {
+            if(role == 'default' || role == 'customer') {
                 $scope.container.mobile = "";
                 $scope.container.userId = "";
                 return;
@@ -64,14 +64,14 @@
                         angular.copy(vm.enterpriseUser, vm.users);
                     }
                     break;
-                case "channelpartner" : 
-                    if (vm.channelpartnerUser.length < 0) {
-                        getChannelpartnerUser();
-                    } else {
-                        vm.users = [];
-                        angular.copy(vm.channelpartnerUser, vm.users);
-                    }
-                    break;     
+                // case "channelpartner" : 
+                //     if (vm.channelpartnerUser.length < 0) {
+                //         getChannelpartnerUser();
+                //     } else {
+                //         vm.users = [];
+                //         angular.copy(vm.channelpartnerUser, vm.users);
+                //     }
+                //     break;     
             }
         }
 
@@ -85,14 +85,14 @@
             });
         }
 
-        function getChannelpartnerUser() {
+        /*function getChannelpartnerUser() {
             userFilter = {};
             userFilter.role = "channelpartner";
             userFilter.status = true;
             userSvc.getUsers(userFilter).then(function(data){
               vm.channelpartnerUser = data;
             });
-        }
+        }*/
 
         function onUserChange(user, role) {
             if(!user)
@@ -171,7 +171,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+            if(vm.dataModel.userRole == 'default' && vm.dataModel.user) {
                 delete vm.dataModel.user;
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;
@@ -195,7 +195,7 @@
         function editClicked(rowData){
             vm.dataModel = angular.copy(rowData);
             getUserOnRole(rowData.userRole, true);
-            if(vm.dataModel.user && vm.dataModel.user.userId && (vm.dataModel.userRole == 'enterprise' || vm.dataModel.userRole == 'channelpartner')) {
+            if(vm.dataModel.user && vm.dataModel.user.userId && vm.dataModel.userRole == 'enterprise') {
                 onUserChange(vm.dataModel.user.userId, vm.dataModel.userRole);
                 $scope.container.userId = vm.dataModel.user.userId;
             }
@@ -211,7 +211,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+            if(vm.dataModel.userRole == 'default' && vm.dataModel.user) {
                 delete vm.dataModel.user;
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;

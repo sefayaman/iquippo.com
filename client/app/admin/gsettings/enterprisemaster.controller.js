@@ -15,8 +15,6 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.fireCommand = fireCommand;
-        vm.dataModel.functionality = "assetsale";
-        vm.dataModel.negotiatedSaleApproval = "Yes";
         vm.getUserOnRole = getUserOnRole;
         vm.onUserChange = onUserChange;
         vm.userSearch=userSearch;
@@ -197,14 +195,16 @@
         function initializeValue() {
             vm.dataModel = {};
             vm.dataModel.functionality = "assetsale";
-            // vm.dataModel.buyNowPriceApproval = "Yes";
             vm.dataModel.negotiatedSaleApproval = "Yes";
+            vm.dataModel.coolingPeriod = 0;
+            vm.dataModel.emdPeriod = 0;
+            vm.dataModel.fullPaymentPeriod = 0;
         }
 
         function editClicked(rowData){
             vm.dataModel = angular.copy(rowData);
             getUserOnRole(vm.dataModel.userRole, true);
-            if(vm.dataModel.user && vm.dataModel.user.userId && (vm.dataModel.userRole == 'enterprise' || vm.dataModel.userRole == 'channelpartner')) {
+            if(vm.dataModel.user && vm.dataModel.user.userId && vm.dataModel.userRole == 'enterprise') {
                 onUserChange(vm.dataModel.user.userId, vm.dataModel.userRole);
                 $scope.container.userId = vm.dataModel.user.userId;
             }
