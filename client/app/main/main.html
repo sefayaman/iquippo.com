@@ -65,7 +65,7 @@
     <div class="row main-container">
     <div class="col-sm-2 col-md-2 hidden-xs">
             
-       <a ng-href="{{mainVm.classifiedAd.imgLeftTop.websiteUrl}}" target="_blank" data-ng-if="mainVm.classifiedAd.imgLeftTop.src">
+       <a ng-click="submitToRapid()" data-ng-if="mainVm.classifiedAd.imgLeftTop.src">
       <!--  <a href="/financing" target="_blank"> -->
           <img data-ng-src="{{uploadImagePrefix}}{{classifiedAdDir}}/{{mainVm.classifiedAd.imgLeftTop.src}}" class="img-responsive add1">
        </a>
