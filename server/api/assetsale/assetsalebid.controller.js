@@ -72,7 +72,11 @@ exports.submitBid = function(req, res) {
 		});
 	} else if (req.query.typeOfRequest == "changeBid") {
 		var bidResult = {};
-		function updateBid(callback) {
+		async.series([updateBid, newBidData], function(err, results) {
+			return res.status(201).json(bidResult);
+		});
+	}
+	function updateBid(callback) {
 			data = {};
 			if (req.body.user)
 				data.user = req.body.user;
@@ -104,11 +108,6 @@ exports.submitBid = function(req, res) {
 				return callback();
 			});
 		}
-
-		async.series([updateBid, newBidData], function(err, results) {
-			return res.status(201).json(bidResult);
-		});
-	}
 };
 
 exports.fetchBid=function(req,res){
