@@ -13,6 +13,7 @@ var User = require('../user/user.model');
 var Vendor = require('../vendor/vendor.model');
 var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
+var fieldConfig = require('./fieldsConfig');
 
 var tradeTypeStatuses = ['SELL','BOTH','Not Available'];
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
@@ -625,22 +626,18 @@ exports.getMaxBidOnProduct = function(req, res) {
 	});
 };
 
-exports.getBidProduct = function(req,res,next){
-  
-  var bodyData = req.body;
-  req.body.bidReceived = true;
-  req.body.pagination = true;
+exports.getSellers = function(req,res,next){
 
-  if(!bodyData.userType || bodyData.userType !== 'FA')
-  	return next();
+	var userType = req.body.userType || req.query.userType;
+	var partnerId = req.body.partnerId || req.query.partnerId;
+	var defaultPartner = req.body.default || req.query.Default;
 
+	if(!userType || userType !== 'FA')
+		return next();
   var users = [];
   async.parallel([getUsersAssociatedToEnterprise,getUsersAssociatedToChannelPartner,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
-  	if(!users.length)
-  		return res.status(200).json({totalItems:0,products:[]});
   	req.sellers = users;
-  	req.bidRequestApproved = true;
   	return next();
   });
 
@@ -649,8 +646,8 @@ exports.getBidProduct = function(req,res,next){
     filter.deleted = false;
     filter.status = true;
     filter.enterprise = true;
-    filter.$or = [{"availedServices.partnerId" : bodyData.partnerId}];
-    if(bodyData.default === 'y')
+    filter.$or = [{"availedServices.partnerId" : partnerId}];
+    if(defaultPartner === 'y')
       filter.$or[filter.$or.length] = {"availedServices.code" : {$ne:"Sale Fulfilment"}};
     User.find(filter,function(err,enterprises){
       if(err){return callback("Error in getting user")};
@@ -676,8 +673,8 @@ exports.getBidProduct = function(req,res,next){
     filter.deleted = false;
     filter.status = true;
     filter.role = "channelpartner";
-    filter.$or = [{FAPartnerId : bodyData.partnerId}];
-    if(bodyData.default === 'y')
+    filter.$or = [{FAPartnerId : partnerId}];
+    if(defaultPartner === 'y')
       filter.$or[filter.$or.length] = {FAPartnerId : {$exist:false}};
     User.find(filter,function(err,chUsers){
       if(err){return callback("Error in getting user")};
@@ -702,9 +699,9 @@ exports.getBidProduct = function(req,res,next){
      var filter = {};
     filter.deleted = false;
     filter.status = true;
-    filter.$or = [{FAPartnerId : bodyData.partnerId}];
+    filter.$or = [{FAPartnerId : partnerId}];
     filter.role = {$ne:"channelpartner"};
-    if(bodyData.default === 'y')
+    if(defaultPartner === 'y')
       filter.$or[filter.$or.length] = {FAPartnerId : {$exist:false}};
     User.find(filter,function(err,finalUsers){
       if(err){return callback("Error in getting user")};
@@ -715,6 +712,84 @@ exports.getBidProduct = function(req,res,next){
     });
 
   }
+}
+
+exports.getBidProduct = function(req,res,next){
+  	
+  	if(req.body.userType === 'FA'){
+  		if(!req.sellers.length)
+  			return res.status(200).json({totalItems:0,products:[]});
+  		req.bidRequestApproved = true;
+  	}
+	req.body.bidReceived = true;
+	req.body.pagination = true;
+  	next();
+}
+
+exports.exportExcel = function(req,res){
+	
+	var filter = {};
+	var user = req.user;
+	var queryParam = req.query;
+	var fieldsMap = {};
+
+	if(user.role == 'customer' && queryParam.seller == 'y'){
+		filter['product.seller._id'] = req.user._id;
+		fieldsMap = fieldConfig['SELLER_FIELDS'];
+	}
+
+	if(user.role == 'customer' && queryParam.buyer == 'y'){
+		filter.user = req.user._id;
+		fieldsMap = fieldConfig['BUYER_FIELDS'];
+	}
+
+	if(queryParam.fa == 'y'){
+		filter['product.seller._id'] = {$in:req.sellers};
+		fieldsMap = fieldConfig['BUYER_FIELDS'];
+	};
+
+	if(user.role == 'admin')
+  		fieldsMap = fieldConfig['ADMIN_FIELDS'];
+
+	var query = AssetSale.find(filter).populate('user product.proData');
+	query.exec(function(err,resList){
+		if(err) return handleError(res,err);
+		renderExcel(resList);
+	});
+
+	function renderExcel(resList){
+	  var dataArr = [];
+	  var headers = Object.keys(fieldsMap);
+	  dataArr.push(headers);
+	  resList.forEach(function(item,idx){
+	    dataArr[idx + 1] = [];
+	    headers.forEach(function(header){
+	      var keyObj = fieldMap[header];
+	      var val = _.get(item,keyObj.key,"");
+	      if(keyObj.type && keyObj.type == 'boolean')
+	          val = val?'YES':'NO';
+	      if(keyObj.type && keyObj.type == 'date' && val)
+	        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+	      
+	      if(keyObj.type && keyObj.type == 'url' && val){
+	        if(val.filename)
+	            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+	        else
+	          val = "";
+	      }
+	       dataArr[idx + 1].push(val);
+	    });
+	  });
+
+	  var ws = Utility.excel_from_data(dataArr,headers);
+	  var ws_name = "bids_" + new Date().getTime();
+	  var wb = Utility.getWorkbook();
+	  wb.SheetNames.push(ws_name);
+	  wb.Sheets[ws_name] = ws;
+	  var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+	  res.end(wbout);
+	}
+
 }
 
 function handleError(res, err) {
