@@ -14,9 +14,29 @@
 	</div>
 	<legend></legend>
 	
-	<!-- Auctionable Bid -->
+	<!-- Approved Bid -->
 	<div>
-		<p><strong>Asset Id:</strong> {{assetId}}</p>
+		<div class="well">
+			<div class="row">
+				<div class="col-sm-4">
+					<p><strong>Asset Id:</strong> {{currentProduct.assetId}}</p>
+					<p><strong>Asset Name:</strong> {{currentProduct.name}}</p>
+					<p><strong>Valuation Amount/Reserve Price:</strong> {{currentProduct.valuationAmount || 0}} / {{currentProduct.reservePrice || 0}}</p>
+					
+				</div>
+				<div class="col-sm-4">
+					<p><strong>Year of Manufacturing:</strong> {{currentProduct.mfgYear}}</p>
+					<p><strong>Aging of Asset:</strong> {{currentProduct.ageingOfAsset || 0}}</p>
+					<p><strong>Aging of Portal:</strong> {{}}</p>
+				</div>
+				<div class="col-sm-4">					
+					<p><strong>Parking Charge:</strong> {{currentProduct.parkingCharges}}</p>
+					<p><strong>General Conditions:</strong> {{currentProduct.productCondition}}</p>
+					<p><a href="javascript:void(0);">Click here to view Valuation Report</a></p>
+				</div>
+			</div>
+		</div>
+		
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{productBidRequestVm.bidListing.length}}
@@ -31,7 +51,7 @@
 		   			<tr>		   				
 			   			<th>Ticket Id</th>
 			   			<th>Offer Type</th>
-			   			<th>Offer Price</th>
+			   			<th>Bid Amount</th>
 			   			<th>Offer Status</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Name</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Contact No.</th>

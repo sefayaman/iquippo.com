@@ -16,7 +16,8 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.taxType = [{name:"GST"}, {name:"Other"}];
+        vm.getCategory = getCategory;
+        vm.taxType = [{name:"GST"}, {name:"Default"}];
         vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
             LocationSvc.getAllState()
@@ -24,12 +25,28 @@
                 $scope.stateList = result;
               });
 
-            categorySvc.getCategoryOnFilter()
+            /*categorySvc.getCategoryOnFilter()
+                .then(function(result) {
+                    vm.categoryList = result;
+                })*/
+            groupSvc.getAllGroup()
+            .then(function(result) {
+              $scope.allGroup = result;
+            });
+            loadViewData();
+        }
+
+        function getCategory(groupId) {
+            vm.categoryList = [];
+            
+            if (!groupId) {
+                vm.dataModel.category = "";
+                return;
+            }
+            categorySvc.getCategoryOnFilter({groupId: groupId})
                 .then(function(result) {
                     vm.categoryList = result;
                 })
-
-            loadViewData();
         }
 
         function loadViewData(){
@@ -79,13 +96,17 @@
             if(rowData.state && rowData.state._id)
                 vm.dataModel.state = rowData.state._id;
             vm.dataModel.amount = rowData.amount;
-            if(rowData.category && rowData.category._id)
-                vm.dataModel.category = rowData.category._id;
-            /*categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
-                .then(function(result) {
-                    vm.categoryList = result;
-                    vm.dataModel.category = rowData.category._id;
-                })*/
+            // if(rowData.category && rowData.category._id)
+            //     vm.dataModel.category = rowData.category._id;
+            if(rowData.group && rowData.group._id) {
+                vm.dataModel.group = rowData.group._id;
+            
+                categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
+                    .then(function(result) {
+                        vm.categoryList = result;
+                        vm.dataModel.category = rowData.category._id;
+                    });
+            }
             $scope.isEdit = true;
         }
 

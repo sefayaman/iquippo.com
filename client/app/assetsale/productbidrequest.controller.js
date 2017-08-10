@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('ProductBidRequestCtrl', ProductBidRequestCtrl);
-function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
+function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $stateParams,$state, productSvc, Modal, Auth, AssetSaleSvc,PagerSvc,uploadSvc) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
@@ -24,10 +24,17 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
       $window.history.back();
     }
 	function init() {
-		initFilter.productId = $stateParams.productId;
-		if(Auth.isFAgencyPartner())
-			initFilter.bidStatus = bidStatuses[7];
-		getBidData(angular.copy(initFilter));
+		var filter = {};
+		filter._id = $stateParams.productId;
+		productSvc.getProductOnFilter(filter).then(function(result) {
+		 	if(!result)
+		 		return;
+	    	$scope.currentProduct = result[0];
+	    	initFilter.productId = $stateParams.productId;
+			if(Auth.isFAgencyPartner())
+				initFilter.bidStatus = bidStatuses[7];
+			getBidData(angular.copy(initFilter));
+	  	});
 	}
 
 	function fireCommand(reset) {

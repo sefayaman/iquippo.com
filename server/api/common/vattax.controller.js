@@ -9,8 +9,8 @@ exports.get = function(req, res) {
   var filter = {};
   if(queryParam.categoryId)
     filter.category = queryParam.categoryId;
-  // if(queryParam.groupId)
-  //   filter.group = queryParam.groupId;
+  if(queryParam.groupId)
+    filter.group = queryParam.groupId;
   
   if(queryParam.currentDate && queryParam.currentDate === 'y') {
       filter["effectiveFromDate"] = {$lte:new Date()};
@@ -18,7 +18,7 @@ exports.get = function(req, res) {
   }
 
   var query = Model.find(filter).populate({
-    path: 'category state'
+    path: 'group category state'
   });
   query.exec(function(err, result) {
     if (err) {
@@ -104,6 +104,10 @@ exports.create = function(req, res, next) {
 
 function _getRecord(data, cb) {
   var filter = {};
+  if(data.taxType)
+    filter.taxType = data.taxType;
+  if(data.group)
+    filter.group = data.group;
   if(data.category)
     filter.category = data.category;
   if(data.state)
@@ -120,7 +124,9 @@ exports.update = function(req, res, next) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
+  console.log("req.body!@@@@", req.body);
   _getRecord(req.body, function(err, result) {
+    console.log("req.body!@@@@", result);
     if (err) {
       return handleError(res, err);
     }
@@ -131,6 +137,7 @@ exports.update = function(req, res, next) {
   });
 
   function update() {
+    console.log("req.body!@@@@", req.body);
     Model.update({
       _id: req.params.id
     }, {
@@ -166,7 +173,9 @@ exports.destroy = function(req, res, next) {
 exports.getGstOnProduct = function(req, res) {
   var queryParam = req.query;
   var filter = {};
-    if(queryParam.categoryId)
+  if(queryParam.groupId)
+    filter.group = queryParam.groupId;
+  if(queryParam.categoryId)
     filter.category = queryParam.categoryId;
   if(queryParam.stateId)
     filter.state = queryParam.stateId;
@@ -180,7 +189,7 @@ exports.getGstOnProduct = function(req, res) {
       return res.status(err.status || 500).send(err);
     if(result.length == 0) {
       filter = {};
-      filter.taxType = "Other";
+      filter.taxType = "Default";
       var query = Model.find(filter);
       query.exec(function(err, otherRes) {
         if (err)

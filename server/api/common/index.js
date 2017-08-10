@@ -97,7 +97,7 @@ router.post('/vattax', auth.hasRole('admin'),vattaxCtrl.create);
 router.put('/vattax/:id', auth.hasRole('admin'),vattaxCtrl.update);
 router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 router.post('/vattax/search',vattaxCtrl.search);
-router.get('/vattax/getgstonproduct',vattaxCtrl.getGstOnProduct);
+//router.get('/vattax/getgstonproduct',vattaxCtrl.getGstOnProduct);
 
 router.get('/kyc',auth.hasRole('admin'), kycCtrl.get);
 router.post('/kyc', auth.hasRole('admin'),kycCtrl.create);

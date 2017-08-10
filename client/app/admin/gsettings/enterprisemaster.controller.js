@@ -16,6 +16,7 @@
         vm.editClicked = editClicked;
         vm.fireCommand = fireCommand;
         vm.dataModel.functionality = "assetsale";
+        vm.dataModel.negotiatedSaleApproval = "Yes";
         vm.getUserOnRole = getUserOnRole;
         vm.onUserChange = onUserChange;
         vm.userSearch=userSearch;
@@ -39,7 +40,7 @@
 
           loadViewData(filter);
           getEnterpriseUser();
-          getChannelpartnerUser();
+          //getChannelpartnerUser();
         } 
 
         function loadViewData(filter){
@@ -62,17 +63,17 @@
             });
         }
 
-        function getChannelpartnerUser() {
+        /*function getChannelpartnerUser() {
             userFilter = {};
             userFilter.role = "channelpartner";
             userFilter.status = true;
             userSvc.getUsers(userFilter).then(function(data){
               vm.channelpartnerUser = data;
             });
-        }
+        }*/
 
         function getUserOnRole(role, noChange) {
-            if(role == 'Other' || role == 'customer') {
+            if(role == 'default' || role == 'customer') {
                 $scope.container.mobile = "";
                 $scope.container.userId = "";
                 return;
@@ -88,14 +89,14 @@
                         angular.copy(vm.enterpriseUser, vm.users);
                     }
                     break;
-                case "channelpartner" : 
+                /*case "channelpartner" : 
                     if (vm.channelpartnerUser.length < 0) {
                         getChannelpartnerUser();
                     } else {
                         vm.users = [];
                         angular.copy(vm.channelpartnerUser, vm.users);
                     }
-                    break;     
+                    break;  */   
             }
         }
 
@@ -176,7 +177,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+            if(vm.dataModel.userRole == 'default' && vm.dataModel.user) {
                 delete vm.dataModel.user;
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;
@@ -197,7 +198,7 @@
             vm.dataModel = {};
             vm.dataModel.functionality = "assetsale";
             // vm.dataModel.buyNowPriceApproval = "Yes";
-            // vm.dataModel.negotiatedSaleApproval = "Yes";
+            vm.dataModel.negotiatedSaleApproval = "Yes";
         }
 
         function editClicked(rowData){
@@ -219,7 +220,7 @@
                 $scope.submitted = true;
                 return;
             }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+            if(vm.dataModel.userRole == 'default' && vm.dataModel.user) {
                 delete vm.dataModel.user;
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;

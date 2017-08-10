@@ -314,8 +314,8 @@
           }
           $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
-          if(!$scope.product.taxRate)
-            getTaxRate();
+          // if(!$scope.product.taxRate)
+          //   getTaxRate();
         })
       } else {
         prepareImgArr();
@@ -440,8 +440,7 @@
 
     init();
 
-    function getTaxRate(){
-
+    /*function getTaxRate(){
         $scope.product.taxRate = "";
       if(!$scope.product.category._id || !$scope.product.group._id || !$scope.product.state)
         return;
@@ -462,7 +461,7 @@
         if(taxes.length)
           $scope.product.taxRate = taxes[0].amount;
       });
-    }
+    }*/
 
     function isEmpty(myObject) {
       if (!myObject)
@@ -507,7 +506,7 @@
           return item.state.name == $scope.product.state;
         });
       });
-      getTaxRate();
+      //getTaxRate();
     }
 
     function reset(){
@@ -530,7 +529,7 @@
           return item.country == $scope.product.country;
         });
       });
-      getTaxRate();
+      //getTaxRate();
     }
 
     function userSearch(userSearchText){
@@ -607,7 +606,7 @@
         .catch(function(res) {
           console.log("error in fetching brand", res);
         })
-        getTaxRate();
+        //getTaxRate();
     }
 
     function onBrandChange(brandId, noChange) {

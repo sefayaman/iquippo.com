@@ -38,6 +38,8 @@ exports.getBidOrBuyCalculation = function(req, res) {
   	var resultObj = {};
   	resultObj.taxRate = 0;
   	resultObj.tcs = 0;
+  	if(queryParam.groupId)
+	  filter.group = queryParam.groupId;
   	if(queryParam.categoryId)
 	  filter.category = queryParam.categoryId;
 	if(queryParam.stateId)
@@ -85,7 +87,7 @@ function getGST(filter, callback) {
 			return callback(err);
 		if(result.length == 0) {
 			filter = {};
-			filter.taxType = "Other";
+			filter.taxType = "Default";
 			var query = VatModel.find(filter);
 			query.exec(function(err, otherRes) {
 				if (err)

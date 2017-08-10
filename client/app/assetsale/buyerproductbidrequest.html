@@ -8,11 +8,11 @@
   </div>
   <legend></legend>
    <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Approved Bid</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
-   <!-- Auctionable Bid -->
+   <!-- Approved Bid -->
 	<div ng-if="buyerProductBidRequestVm.activeBid=='auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
@@ -28,19 +28,20 @@
 		   			<tr>
 		   				<th>Ticket Id</th>
 			   			<th>Asset Id</th>
-			   			<th>Category</th>
-			   			<th>Brand</th>
+			   			<th>Asset Name</th>
+			   			<!-- <th>Category</th> -->
+			   			<!-- <th>Brand</th> -->
 			   			<!-- <th>Modal</th> -->
 			   			<!-- <th>Manufacturing Year</th> -->
 			   			<!-- <th>Asset Country</th> -->
 			   			<!-- <th>Asset State</th> -->
-			   			<th>Asset Location</th>
+			   			<th>Location</th>
 			   			<!-- <th>Asset Description</th> -->
 			   			<!-- <th>Offer Type</th> -->
-			   			<th>Offer Price</th>
+			   			<th>Bid Amount</th>
 			   			<th>Offer Status</th>
 			   			<th>Deal Status</th>
-			   			<th>Invoice Details</th>
+			   			<th>Invoice in Favour of</th>
 			   			<th>KYC Documents</th>
 			   			<!-- <th>Delivery Order</th> -->
 			   			<!-- <th>Date of Delivery</th> -->
@@ -54,8 +55,9 @@
 		   			<tr ng-repeat="bid in buyerProductBidRequestVm.bidListing">
 		   				<td>{{bid.ticketId}}</td>
 			   			<td>{{bid.product.assetId}}</td>
-			   			<td>{{bid.product.category}}</td>
-			   			<td>{{bid.product.brand}}</td>
+			   			<td>{{bid.product.name}}</td>
+			   			<!-- <td>{{bid.product.category}}</td> -->
+			   			<!-- <td>{{bid.product.brand}}</td> -->
 			   			<!-- <td>{{bid.product.model}}</td> -->
 			   			<!-- <td>{{bid.product.mfgYear}}</td> -->
 			   			<!-- <td>{{bid.product.country}}</td> -->
@@ -124,19 +126,20 @@
 		   			<tr>
 		   				<th>Ticket Id</th>
 			   			<th>Asset Id</th>
-			   			<th>Category</th>
-			   			<th>Brand</th>
+			   			<th>Asset Name</th>
+			   			<!-- <th>Category</th> -->
+			   			<!-- <th>Brand</th> -->
 			   			<!-- <th>Modal</th> -->
 			   			<!-- <th>Manufacturing Year</th> -->
 			   			<!-- <th>Asset Country</th> -->
 			   			<!-- <th>Asset State</th> -->
-			   			<th>Asset Location</th>
+			   			<th>Location</th>
 			   			<!-- <th>Asset Description</th> -->			   			
 			   			<!-- <th>Offer Type</th> -->
 			   			<th>Offer Price</th>
 			   			<th>Offer Status</th>
 			   			<th>Deal Status</th>
-			   			<!-- <th>Invoice Details</th> -->
+			   			<!-- <th>Invoice in Favour of</th> -->
 			   			<!-- <th>KYC Documents</th> -->
 			   			<!-- <th>Delivery Order</th> -->
 			   			<!-- <th>Date of Delivery</th> -->
@@ -150,8 +153,9 @@
 		   			<tr ng-repeat="bid in buyerProductBidRequestVm.bidListing">
 		   				<td>{{bid.ticketId}}</td>
 			   			<td>{{bid.product.assetId}}</td>
-			   			<td>{{bid.product.category}}</td>
-			   			<td>{{bid.product.brand}}</td>
+			   			<td>{{bid.product.name}}</td>
+			   			<!-- <td>{{bid.product.category}}</td> -->
+			   			<!-- <td>{{bid.product.brand}}</td> -->
 			   			<!-- <td>{{bid.product.model}}</td> -->
 			   			<!-- <td>{{bid.product.mfgYear}}</td> -->
 			   			<!-- <td>{{bid.product.country}}</td> -->

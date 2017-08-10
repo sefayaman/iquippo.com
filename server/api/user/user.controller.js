@@ -185,7 +185,8 @@ exports.getUser = function(req, res) {
     }
 
     if(req.body.onlyUser) {
-      filter["createdBy.role"] = {$ne:"channelpartner"};
+      filter["role"] = {$in: ['customer', 'channelpartner']};
+      //filter["createdBy.role"] = {$ne:"channelpartner"};
     }
 
     if(arr.length > 0)

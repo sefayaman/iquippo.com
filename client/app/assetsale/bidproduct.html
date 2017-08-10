@@ -7,12 +7,17 @@
   	</div>
   </div>
   <legend></legend>
-  <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Auctionable Bid</button>
+  <!-- <div class="btn-group enterprise-value form-group">
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Approved Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+   </div> -->
+   <div class="btn-group enterprise-value form-group">
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Pending for Approval</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Approved Bid</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
-   	<!-- Auctionable Auction -->
+   	<!-- Approved Bid -->
 	<div ng-if="bidproductVm.activeBid == 'auctionable'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
@@ -27,13 +32,14 @@
 		   		<thead>
 		   			<tr>			   			
 			   			<th>Asset Id</th>
-			   			<th>Category</th>
-			   			<th>Brand</th>
+			   			<th>Asset Name</th>
+			   			<!-- <th>Category</th> -->
+			   			<!-- <th>Brand</th> -->
 			   			<!-- <th>Modal</th> -->
 			   			<!-- <th>Manufacturing Year</th> -->
 			   			<!-- <th>Asset Country</th> -->
 			   			<!-- <th>Asset State</th> -->
-			   			<th>Asset Location</th>
+			   			<th ng-if="!isFAgencyPartner()">Reserve Price</th>	
 			   			<!-- <th>Asset Description</th> -->
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Name</th>
 			   			<!-- <th>Buyer Country</th> -->
@@ -41,10 +47,12 @@
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Location</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Mobile No.</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Email Id</th>	
-			   			<th ng-if="!isFAgencyPartner()">Ageing of Asset</th>
-			   			<th ng-if="!isFAgencyPartner()">Reserve Price</th>
+			   			<!-- <th ng-if="!isFAgencyPartner()">Ageing of Asset</th> -->
 			   			<th ng-if="!isFAgencyPartner()">Parking Charges</th>
 			   			<th ng-if="!isFAgencyPartner()">Buy Now Price</th>	
+			   			<th ng-if="!isFAgencyPartner()">No. of Bids</th>	
+			   			<th ng-if="!isFAgencyPartner()">Highest Bid</th>	
+			   			<th>Location</th>
 			   			<th ng-if="isAdmin()">Asset Status</th>	
 			   			<th ng-if="isFAgencyPartner()">Action</th>		   			
 			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Action</th>		   			
@@ -54,13 +62,14 @@
 		   		<tbody>
 		   			<tr ng-repeat="product in bidproductVm.productListing">			   			
 			   			<td>{{product.assetId}}</td>
-			   			<td>{{product.category.name}}</td>
-			   			<td>{{product.brand.name}}</td>
+			   			<td>{{product.name}}</td>
+			   			<!-- <td>{{product.category.name}}</td> -->
+			   			<!-- <td>{{product.brand.name}}</td> -->
 			   			<!-- <td>{{product.model.name}}</td> -->
 			   			<!-- <td>{{product.mfgYear}}</td> -->
 			   			<!-- <td>{{product.country}}</td> -->
 			   			<!-- <td>{{product.state}}</td> -->
-			   			<td>{{product.city}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{product.reservePrice}}</td>	
 			   			<!-- <td>{{}}</td> -->
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
 			   			<!-- <td>{{}}</td> -->
@@ -68,10 +77,12 @@
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{}}</td>
-			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
-			   			<td ng-if="!isFAgencyPartner()">{{product.reservePrice}}</td>
+			   			<!-- <td ng-if="!isFAgencyPartner()">{{}}</td> -->
 			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
 			   			<td ng-if="!isFAgencyPartner()">{{product.grossPrice}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{}}</td>
+			   			<td>{{product.city}}</td>
 			   			<td ng-if="isAdmin()">{{product.assetStatus}}</td>	
 			   			<td ng-if="isFAgencyPartner()">
 			   				<!-- fa action -->
@@ -112,8 +123,9 @@
 		   			<tr>
 		   				<th>Ticket Id</th>
 			   			<th>Asset Id</th>
-			   			<th>Category</th>
-			   			<th>Brand</th>
+			   			<th>Asset Name</th>
+			   			<!-- <th>Category</th> -->
+			   			<!-- <th>Brand</th> -->
 			   			<!-- <th>Modal</th> -->
 			   			<!-- <th>Manufacturing Year</th> -->
 			   			<!-- <th>Asset Country</th> -->
@@ -130,7 +142,7 @@
 			   			<th ng-if="!isFAgencyPartner()">Buy Now Price</th>	
 			   			<th ng-if="!isFAgencyPartner()">Reserve Price</th>	
 			   			 <!-- <th>Offer Type</th> -->
-			   			 <th ng-if="!isFAgencyPartner()">Offer Price</th>
+			   			 <th ng-if="!isFAgencyPartner()">Bid Amount</th>
 			   			 <th ng-if="!isFAgencyPartner()">Offer Status</th>
 			   			<!-- <th>Seller Name</th>-->
 			   			<!-- <th>Seller Contact No.</th>-->
@@ -152,8 +164,9 @@
 		   			<tr ng-repeat="product in bidproductVm.closedBids">		
 		   				<td>{{product.ticketId}}</td>	   			
 			   			<td>{{product.product.proData.assetId}}</td>
-			   			<td>{{product.product.proData.category.name}}</td>
-			   			<td>{{product.product.proData.brand.name}}</td>
+			   			<td>{{product.product.proData.name}}</td>
+			   			<!-- <td>{{product.product.proData.category.name}}</td> -->
+			   			<!-- <td>{{product.product.proData.brand.name}}</td> -->
 			   			<!-- <td>{{product.model.name}}</td> -->
 			   			<!-- <td>{{product.mfgYear}}</td> -->
 			   			<!-- <td>{{product.country}}</td> -->
