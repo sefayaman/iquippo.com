@@ -24,6 +24,7 @@
 						<option value="assetgroup">Asset Group Master</option>
 						<option value="vatmaster">GST Tax Master</option>
 						<option value="assetcount">Asset Count</option>
+						<option value="lotmaster">Lot Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -1765,6 +1766,85 @@
 		</div>
 
 		<legend></legend>
+		
+	</div>
+	<!--- Add lotmaster -->
+    <div ng-if="gsettingVm.tabValue == 'lotmaster'" ng-controller="CountCtrl as countVm">
+    	<h4>Add Lot</h4>
+    	<legend></legend>
+		<form>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="" value="" placeholder="Auction ID">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="" value="" placeholder="Lot ID">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="" value="" placeholder="Asset ID">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="" value="" placeholder="Asset Description">
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<input type="number" class="form-control" name="" value="" placeholder="Start price">
+				</div>
+				<div class="col-sm-3">
+					<input type="number" class="form-control" name="" value="" placeholder="Reserve price">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="" value="" placeholder="Last Minute Bid ( in minutes)">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="" value="" placeholder="Extended To ( in minutes)">
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(manpowerForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(manpowerForm)">Save</button>				  
+				</div>
+			</div>
+
+		</form>
+
+		<legend></legend>
+
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Auction ID</th>
+						<th>Lot ID</th>
+						<th>Asset ID</th>
+						<th>Asset Description</th>
+						<th>Start price</th>
+						<th>Reserve price</th>
+						<th>Last Minute Bid ( in minutes)</th>
+						<th>Extended To ( in minutes)</th>
+						<th>Auction</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 		
 	</div>
 
