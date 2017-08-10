@@ -1685,14 +1685,17 @@
 			<div class="row form-group">
 				<strong></strong>
                <div class="col-sm-3">
+               	<label>Backend Count</label>
 				 <input type="text" class="form-control" name="asetcount"  placeholder="{{(countVm.productCountObj.listed + countVm.productCountObj.sold + countVm.productCountObj.rented) || 0}}" disabled>
 				</div>
 
 				<div class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+				<label>Configurable Count</label>
 				  <input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
 				</div>
 
-				<div class="col-sm-2 col-sm-offset-4">	
+				<div class="col-sm-2 col-sm-offset-4">
+					<label>&nbsp;</label>	
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="countVm.update(assetListedForm)">Update</button> 
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="countVm.save(assetListedForm)">Save</button>
 				</div>			
@@ -1705,15 +1708,18 @@
 			<div class="row form-group">
 				<strong></strong>
                <div class="col-sm-3">
+               	<label>Backend Count</label>
 				 <input type="text" class="form-control" name="asetsold"  placeholder="{{( countVm.productCountObj.sold + countVm.productCountObj.rented) || 0}}" disabled>
 		      </div>
 
 
 				<div  class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+					<label>Configurable Count</label>
 					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
 				</div>
 
 				<div class="col-sm-2 col-sm-offset-4">
+					<label>&nbsp;</label>
 					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(assetSoldFom)">Update</button>
 					<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(assetSoldFom)">Save</button>
 				</div>
@@ -1727,13 +1733,16 @@
 			<div class="row form-group">
 				<strong></strong>
                <div class="col-sm-3">
+               	<label>Backend Count</label>
 				 <input type="text" class="form-control" name="sparelisted"  placeholder="{{countVm.spareCountObj.active || 0}}" disabled>
 		      </div>
               <div  class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+              	<label>Configurable Count</label>
 					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
 				</div>
 
 				<div class="col-sm-2 col-sm-offset-4">
+					<label>&nbsp;</label>
 					<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(spareFom)">Update</button>
 					<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(spareFom)">Save</button>
 				</div>
@@ -1748,14 +1757,17 @@
 			<div class="row form-group">
 				<strong></strong>
                <div class="col-sm-3">
+               	<label>Backend Count</label>
 				 <input type="text" class="form-control" name="manpowerlisted"  placeholder="{{countVm.manPowerCountObj.true || 0}}" disabled>
 			  </div>
 					  
 			   <div class="col-sm-3" ng-class="{'has-error':countVm.value.$invalid && submitted}">
+			   	<label>Configurable Count</label>
 					<input type="text" class="form-control" name="value" ng-model="countVm.dataModel.value" placeholder="Enter Count" required>
 				</div>
 			  
 			  <div class="col-sm-2 col-sm-offset-4">
+			  	<label>&nbsp;</label>
 				<button type="button" class="btn btn-block btn-primary"  ng-if="isEdit" ng-click="countVm.update(manpowerForm)">Update</button>
 				<button type="button" class="btn btn-block btn-primary"  ng-if="!isEdit"  ng-click="countVm.save(manpowerForm)">Save</button>				  
 				</div>
