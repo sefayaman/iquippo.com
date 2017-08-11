@@ -58,3 +58,22 @@ exports.script = function(req, res) {
 		}
 	})
 }
+
+exports.modifyProductTypeId = function(req, res) {
+	
+    query = Product.find({"category._id": { $type : 7 }});
+      query.exec(function(err,products){
+         if(err){
+		  }else{
+			 products.forEach(function(item) {
+                 Product.update(
+                    {"_id": item._id},
+					{ $set: {"category._id":item.category._id + ""}}).exec();
+					
+		  });
+           console.log("done");
+       }
+		
+	  });
+
+}

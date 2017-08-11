@@ -13,7 +13,7 @@
             <li class="dropdown hidden-sm hidden-md hidden-lg">
               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" id="single-button" ng-mouseover="fetchAuctions()" ng-click="fetchAuctions()"><i class="fa fa-calendar-plus-o"></i></a>                
                 <ul class="dropdown-menu">
-                     <li role="menuitem" ng-repeat="auction in upcomingAuctions">
+                     <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
                         <a ng-if="getProductData(auction._id, 'total_products') != 0"
                         ng-click="assetPage(auction.auctionId,auction._id);"> 
                           <strong>
@@ -136,17 +136,16 @@
                       
                       
                       <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button" >
-                        <li role="menuitem" ng-repeat="auction in upcomingAuctions">
+                        <li role="menuitem" ng-repeat="auction in upcomingAuctions | orderBy :'startDate'">
                         <a href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') != 0"
                         ng-click="assetPage(auction.auctionId,auction._id);"> 
-                          <strong>
-                            {{auction.startDate | date:'d-MMM'}}
-                            </strong> {{auction.name}}</a>
-                          <a  href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"
-                        > 
-                          <strong>
-                            {{auction.startDate | date:'d-MMM'}}
-                            </strong> {{auction.name}}</a>    
+                          <strong>{{auction.startDate | date:'d-MMM'}}</strong> 
+                          <span>{{auction.name}}</span>
+                        </a>
+                        <a  href="javascript:void(0);" ng-if="getProductData(auction._id, 'total_products') == 0" ng-click="assetPage();"> 
+                          <strong>{{auction.startDate | date:'d-MMM'}}</strong> 
+                          <span>{{auction.name}}</span>
+                        </a>    
 
                         </li>
                         <li role="menuitem"><a href="javascript:void(0);" ng-click="redirectToAuction()" class="text-center"> View All</a></li>

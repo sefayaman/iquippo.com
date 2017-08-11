@@ -11,7 +11,7 @@ router.get('/:id', controller.getOnId);
 
 router.get('/unique/assetId',controller.updateAssetId);
 router.post('/', controller.create);
-router.put('/:id', controller.update);
+router.put('/:id', controller.validateUpdate,controller.update);
 router.post('/setexpiry', controller.setExpiry);
 //router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
@@ -39,9 +39,7 @@ router.get('/script/featured',scriptController.script);
 //v1 version of bulk create product
 router.post('/v1/import',controller.parseImportExcel,controller.validateExcelData,controller.createProductReq);
 
-
-
-
+router.get('/script/modifyproducttype',scriptController.modifyProductTypeId);
 
 
 

@@ -162,15 +162,15 @@ angular.module('sreizaoApp')
       }
     }
 
-    $scope.submitToRapid = function(){
+    $rootScope.submitToRapid = function(){
       var userId = "";
       Auth.removeCookies();
       if(Auth.getCurrentUser()._id)
         userId = Auth.getCurrentUser()._id;
       $http.get("/api/common/redirecttorapid?_id=" + userId)
       .then(function(res){
-        //$window.location.href = res.data;
-        $window.open(res.data,"_blank");
+        $window.location.href = res.data;
+        //$window.open(res.data,"_blank");
       });
     };
     

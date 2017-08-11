@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sreizaoApp')
-  .controller('UserManagementCtrl', ['$scope', '$rootScope', 'DTOptionsBuilder','Auth','userSvc', 'Modal','$http', function ($scope, $rootScope, DTOptionsBuilder, Auth, userSvc, Modal,$http) {
+  .controller('UserManagementCtrl', ['$scope', '$rootScope', 'DTOptionsBuilder','Auth','uploadSvc','notificationSvc','userSvc', 'Modal','$http', function ($scope, $rootScope, DTOptionsBuilder, Auth,uploadSvc,notificationSvc, userSvc, Modal,$http) {
    	var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -10,7 +10,7 @@ angular.module('sreizaoApp')
     vm.totalItems = 0;
     vm.maxSize = 6;
     var first_id = null;
-    var last_id = null;
+    var last_id = null;  
 
     vm.userList = [];
     //vm.globleUsers = [];
@@ -23,7 +23,8 @@ angular.module('sreizaoApp')
     vm.getRegisteredBy = getRegisteredBy;
     vm.editUserClick = editUserClick;
     vm.openAddUserDialog = openAddUserDialog;
-    
+    $scope.bulkUserUpload={};
+    $scope.bulkUserUpload.template="BulkUserUpload.xlsx";
     vm.userSearchFilter = {};
     var dataToSend = {};
     vm.getProductData = getProductData;
@@ -31,7 +32,90 @@ angular.module('sreizaoApp')
     $scope.userInfo = {};
     $scope.$on('updateUserList',function(){
       fireCommand(true);
+   });
+
+      //listen for the file selected event
+  $scope.$on("fileSelected", function (event, args) {
+      if(args.files.length === 0)
+        return;
+      $scope.$apply(function () { 
+          uploadExcel(args.files[0]);       
+      });
+  });
+    
+     function uploadExcel(file){
+    if(!file)
+      return;
+     if(file.name.indexOf('.xlsx') == -1){
+        Modal.alert('Please upload a valid file');
+        return;
+      }
+    uploadSvc.upload(file,importDir)
+    .then(function(result){
+      var fileName = result.data.filename;
+      $rootScope.loading = true;
+       var user = {};
+        user._id = Auth.getCurrentUser()._id;
+        user.fname = Auth.getCurrentUser().fname;
+        user.mname = Auth.getCurrentUser().mname;
+        user.lname = Auth.getCurrentUser().lname;
+        user.role = Auth.getCurrentUser().role;
+        user.userType = Auth.getCurrentUser().userType;
+        user.phone = Auth.getCurrentUser().phone;
+        user.mobile = Auth.getCurrentUser().mobile;
+        user.email = Auth.getCurrentUser().email;
+        user.country = Auth.getCurrentUser().country;
+        user.company = Auth.getCurrentUser().company;
+      userSvc.parseExcel(fileName,user)
+      .then(function(res){
+
+         // loadIncomingProduct();
+          $rootScope.loading = false;
+          var totalRecord = res.totalCount;
+          var message =  res.successCount + " out of "+ totalRecord  + " records are  processed successfully.";
+          if(res.errorList.length > 0){
+             var data = {};
+            data.to = Auth.getCurrentUser().email;
+            data.subject = 'Bulk user upload error details.';
+            var serData = {};
+            serData.serverPath = serverPath;
+            serData.errorList = res.errorList;
+            notificationSvc.sendNotification('BulkUserUploadError', data, serData,'email');
+            message += "Error details have been sent on registered email id.";
+          }
+          $scope.successMessage = message;
+          $scope.autoSuccessMessage(20); 
+          resetPagination();   
+          var filter = {};
+            filter.role = "channelpartner";
+            userSvc.getUsers(filter).then(function(data){
+            vm.getUsersOnRole = data;
+            })
+            .catch(function(err){
+              Modal.alert("Error in geting user");
+            });
+            filter.role = "enterprise";
+            filter.enterprise = true;
+            filter.status = true;
+            userSvc.getUsers(filter).then(function(data){
+              vm.enterprises = data;
+          dataToSend.pagination = true;
+          dataToSend.itemsPerPage = vm.itemsPerPage;
+          getUser(dataToSend);  
+          })
+            .catch(function(err){
+              Modal.alert("Error in geting user");
+            });      
+      })
+      .catch(function(res){
+        $rootScope.loading = false;
+        Modal.alert("error in parsing data",true);
+      });
     })
+    .catch(function(res){
+       Modal.alert("error in file upload",true);
+    });
+  }
 
     function editUserClick(userData) {
       angular.copy(userData, $scope.userInfo)
@@ -264,7 +348,8 @@ angular.module('sreizaoApp')
                       {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
                       {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"No"},
                       {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
-                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"}
+                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"},
+                      {name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
                     ]
     //$scope.editImage = false;
     //$scope.users = [];
@@ -598,5 +683,4 @@ angular.module('sreizaoApp')
        $uibModalInstance.dismiss('cancel');
     };
 }]);
-
 

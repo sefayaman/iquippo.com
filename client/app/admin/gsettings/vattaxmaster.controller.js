@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('VatTaxMasterCtrl', VatTaxMasterCtrl);
 
-    function VatTaxMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,VatTaxSvc,categorySvc,modelSvc,brandSvc,LocationSvc){
+    function VatTaxMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,VatTaxSvc,categorySvc,groupSvc,modelSvc,brandSvc,LocationSvc){
     	 var vm  = this;
         vm.dataModel = {};
         vm.dataList = [];
@@ -16,21 +16,40 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        vm.getBrand = getBrand;
-        vm.getModel = getModel;
-
+        //vm.getCategory = getCategory;
+        vm.taxType = [{name:"GST"}];
+        vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
-        categorySvc.getAllCategory()
+        /*groupSvc.getAllGroup()
         .then(function(result) {
-          $scope.categoryList = result;
-        });
+          $scope.allGroup = result;
+        });*/
 
         LocationSvc.getAllState()
           .then(function(result){
             $scope.stateList = result;
           });
-          loadViewData();
+
+        categorySvc.getCategoryOnFilter()
+            .then(function(result) {
+                vm.categoryList = result;
+            })
+
+        loadViewData();
         } 
+
+        /*function getCategory(groupId) {
+            vm.categoryList = [];
+            
+            if (!groupId) {
+                vm.dataModel.category = "";
+                return;
+            }
+            categorySvc.getCategoryOnFilter({groupId: groupId})
+                .then(function(result) {
+                    vm.categoryList = result;
+                })
+        }*/
 
         function loadViewData(){
             VatTaxSvc.get()
@@ -39,33 +58,6 @@
                 vm.filteredList = result;
                 $scope.pager.update(null,vm.filteredList.length,1);
             });
-        }
-
-        function getBrand(categoryId){
-            $scope.brandList = [];
-            $scope.modelList = [];
-            vm.dataModel.brand = "";
-            vm.dataModel.model = "";
-
-             if(!categoryId)
-                return;
-            brandSvc.getBrandOnFilter({categoryId:categoryId})
-            .then(function(result) {
-                $scope.brandList = result;
-
-            });
-        }
-
-        function getModel(brandId){
-            $scope.modelList = [];
-            vm.dataModel.model = "";
-            if(!brandId)
-                return;
-            modelSvc.getModelOnFilter({brandId:brandId})
-            .then(function(result) {
-              $scope.modelList = result;
-            });
-            
         }
 
         function searchFn(type){
@@ -84,6 +76,7 @@
             VatTaxSvc.save(vm.dataModel)
             .then(function(){
                 vm.dataModel = {};
+                $scope.submitted = false;
                 loadViewData();
                 Modal.alert('Data saved successfully!');
             })
@@ -96,20 +89,19 @@
         function editClicked(rowData){
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.category = rowData.category._id;
-            vm.dataModel.brand = rowData.brand._id;
-            vm.dataModel.model = rowData.model._id;
+            vm.dataModel.group = rowData.group._id;
+            vm.dataModel.taxType = rowData.taxType;
+            if (rowData.effectiveToDate)
+                vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
+            if (rowData.effectiveFromDate)
+                vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
             vm.dataModel.state = rowData.state._id;
             vm.dataModel.amount = rowData.amount;
-            brandSvc.getBrandOnFilter({categoryId:rowData.category._id})
-            .then(function(result) {
-                $scope.brandList = result;
-
-            });
-            modelSvc.getModelOnFilter({brandId:rowData.brand._id})
-            .then(function(result) {
-              $scope.modelList = result;
-            });
+            categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
+                .then(function(result) {
+                    vm.categoryList = result;
+                    vm.dataModel.category = rowData.category._id;
+                })
             $scope.isEdit = true;
         }
 
@@ -120,7 +112,8 @@
             }
             VatTaxSvc.update(vm.dataModel)
             .then(function(){
-                 vm.dataModel = {};
+                vm.dataModel = {};
+                $scope.submitted = false;
                 $scope.isEdit = false;
                 loadViewData();
                 Modal.alert('Data updated successfully!');

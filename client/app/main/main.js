@@ -12,7 +12,7 @@ angular.module('sreizaoApp')
           $rootScope.choosenTitle=pagesTitles.index.title;
           $rootScope.metaDescription=pagesTitles.index.meta;
         }
-      })
+      }) 
       .state('contactus', {
         url: '/contactus',
         templateUrl: 'app/contactus/contactus.html',
@@ -521,6 +521,7 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

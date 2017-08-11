@@ -65,6 +65,40 @@ exports.getOnId = function(req, res) {
   });
 };
 
+exports.getAuctionInfoForProduct = function(req, res) {
+  AuctionRequest.findById(req.body._id, function(err, auction) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!auction) {
+      return res.status(404).send('Not Found');
+    }
+    var filter = {};
+    filter._id = auction.dbAuctionId;
+    var query = AuctionMaster.find(filter);
+    query.exec(function(err, result) {
+      if (err) {
+        return handleError(res, err);
+      }
+      
+      var tempArr = [];
+      if(result) {
+        result.forEach(function(auction) {
+          auction = auction.toObject();
+          var currentDate = new Date();
+          result.visibleBuyNow = true;
+          if (auction.startDate < currentDate && auction.endDate > currentDate)
+            auction.visibleBuyNow = false;
+          tempArr[tempArr.length] = auction;
+        })
+        result = tempArr;
+      }
+
+      return res.status(200).json(result);
+    });
+  });
+};
+
 function _create(data,cb){
 
   var assetIdExist = false;
@@ -525,6 +559,9 @@ exports.getOnFilter = function(req, res) {
     filter["product.brand"]=req.body.brand;
   if(req.body.model)
     filter["product.model"]=req.body.model;
+  if(req.body.notInSoldPro)
+    filter["product.isSold"] = { $ne: true};
+  
   if(req.body.mfgYear){
     var mfgYear = false;
     var mfgFilter = {};
@@ -549,7 +586,6 @@ exports.getOnFilter = function(req, res) {
     Utility.paginatedResult(req, res, AuctionRequest, filter, {});
     return;
   }
-
   var query = AuctionRequest.find(filter);
   query.exec(
     function(err, auctions) {
@@ -592,10 +628,32 @@ exports.update = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
+      if(!req.body.external && req.body.product.isSold)
+        updateProduct(req.body);
       return res.status(200).json(req.body)
     });
   });
 };
+
+function updateProduct(data) {
+  Product.find({assetId: data.product.assetId}, function(err, product) {
+    var proData = {};
+    proData.isSold = true;
+    proData.assetStatus = "sold";
+    var stObj = {};
+    if(data.user && data.user._id)
+      stObj.userId = data.user._id;
+    stObj.status = "sold";
+    stObj.createdAt = new Date();
+    if(!proData.assetStatuses)
+      proData.assetStatuses = [];
+    proData.assetStatuses[proData.assetStatuses.length] = stObj;
+    Product.update({assetId:data.product.assetId},{$set:proData},function(err){
+      if (err) { console.log("err", err); }
+      console.log("Product Updated");
+    });
+  });
+}
 
 // Deletes a auction from the DB.
 exports.destroy = function(req, res) {
@@ -1192,9 +1250,16 @@ exports.getAuctionWiseProductData = function(req, res) {
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
+  if (req.body._id)
+    filter._id = req.body._id;
+
   if (queryObj.yetToStartDate)
     filter['startDate'] = {
       '$gt': new Date()
+    }
+
+    if(queryObj.dbauctionId){
+      filter._id=queryObj.dbauctionId;
     }
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1
