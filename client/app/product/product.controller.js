@@ -314,8 +314,7 @@
           }
           $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
-          // if(!$scope.product.taxRate)
-          //   getTaxRate();
+         
         })
       } else {
         prepareImgArr();
@@ -440,29 +439,6 @@
 
     init();
 
-    /*function getTaxRate(){
-        $scope.product.taxRate = "";
-      if(!$scope.product.category._id || !$scope.product.group._id || !$scope.product.state)
-        return;
-      var serData = {};
-      serData.categoryId = $scope.product.category._id;
-      //serData.state = $scope.product.state;
-      if($scope.stateList) {
-        $scope.stateList.forEach(function(item){
-          if(item.name == $scope.product.state) {
-            serData.stateId = item._id;
-            return;
-          }
-        });
-      }
-      serData.currentDate = 'y'
-      VatTaxSvc.getGstOnProduct(serData)
-      .then(function(taxes){
-        if(taxes.length)
-          $scope.product.taxRate = taxes[0].amount;
-      });
-    }*/
-
     function isEmpty(myObject) {
       if (!myObject)
         return true;
@@ -506,7 +482,6 @@
           return item.state.name == $scope.product.state;
         });
       });
-      //getTaxRate();
     }
 
     function reset(){
@@ -529,7 +504,6 @@
           return item.country == $scope.product.country;
         });
       });
-      //getTaxRate();
     }
 
     function userSearch(userSearchText){
@@ -606,7 +580,6 @@
         .catch(function(res) {
           console.log("error in fetching brand", res);
         })
-        //getTaxRate();
     }
 
     function onBrandChange(brandId, noChange) {

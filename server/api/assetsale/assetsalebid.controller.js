@@ -101,7 +101,7 @@ function getGST(filter, callback) {
 	});
 }
 
-function create(data,callback){
+/*function create(data,callback){
 	if (!data)
 			return callback(new APIError( 412,'No data for creation'));
         
@@ -113,7 +113,7 @@ function create(data,callback){
 			return callback(null, res);
 		});
 }
-
+*/
 // Updates an existing record in the DB.
 exports.update = function(req, res,next) {
 
@@ -122,8 +122,7 @@ exports.update = function(req, res,next) {
   	next();
   });
 
-  function _update(bid,cb){
-  	  
+  function _update(bid,cb){ 
   	  var bidId = bid._id;
 	  if(bid._id) { delete bid._id; }
 	  bid.updatedAt = new Date();
@@ -147,22 +146,23 @@ exports.validateUpdate = function(req,res,next){
 		req.bids = [];
 		req.bids[req.bids.length] = req.body;
 		if(req.query.action === 'approve'){
-			getEnterprisemaster(function(entData){
+			getSaleProcessMaster(function(entData){
 				if(!entData.coolingPeriod){
 					return res.status(404).send("Cooling period configuration is not found");
 				}
 				if(!req.product.cooling){
 					req.product.cooling = true;
 					req.product.coolingStartDate = new Date();
-					req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod);
-					if(req.product.coolingEndDate)
-						req.product.coolingEndDate = req.product.coolingEndDate.setHours(24,0,0,0);
+					if(entData.coolingPeriodIn === 'Hours')
+						req.product.coolingEndDate = new Date().addHours(entData.coolingPeriod ||0);
+					else
+						req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod || 0);
 					req.updateProduct = true;
 				}
 
 				req.otherBids.forEach(function(item){
 					if(item.bidStatus === bidStatuses[7]){
-						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses');
+						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
 						req.bids.push(item);
 					}
 				});
@@ -171,7 +171,7 @@ exports.validateUpdate = function(req,res,next){
 
 		}else if(req.query.action === 'emdpayment'){
 			if(req.bid.emdPayment.remainingPayment === 0){
-				getEnterprisemaster(function(entData){
+				getSaleProcessMaster(function(entData){
 					if(!entData.fullPaymentPeriod)
 						return res.status(404).send("Full payment period is not found");
 					req.body.fullPaymentStartDate = new Date();
@@ -184,7 +184,6 @@ exports.validateUpdate = function(req,res,next){
 			else
 				return res.status(412).send("EMD payment remaining");		
 		}else if(req.query.action === 'fullpayment'){
-			console.log("req.bid.fullPayment.remainingPayment",req.bid.fullPayment.remainingPayment);
 			if(req.bid.fullPayment.remainingPayment == 0)
 				next();
 			else
@@ -204,8 +203,8 @@ exports.validateUpdate = function(req,res,next){
 			req.bids[0].status = false;
 			req.otherBids.forEach(function(item){
 				item.status = false;
-				AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses');
-				AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses');
+				AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
+				AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
 				req.bids.push(item);
 			});
 			next();
@@ -215,7 +214,7 @@ exports.validateUpdate = function(req,res,next){
 		
 	}
 
-	function getEnterprisemaster(cb){
+	function getSaleProcessMaster(cb){
 		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'saleprocessmaster',function(err,entepriseData){
 			if(err || !entepriseData){return res.status(404).send("Sale Process master is not found");}
 			return cb(entepriseData);
@@ -282,17 +281,41 @@ exports.validateSubmitBid = function(req,res,next){
 
 	if(!req.body || Object.keys(req.body).length < 1)
 	   return res.status(412).json({err: 'No data found for create'});
-	if(req.query.typeOfRequest === "buynow")
-		async.parallel([validateProduct,validateOtherBids,validateEnterpriseMaster],onComplete);
-	else
-		async.parallel([validateProduct,validateOtherBids],onComplete);
+	async.parallel([validateProduct,validateOtherBids],onComplete);
 
 	function onComplete(err){
 		if(err) return res.status(err.status).send(err.msg);
-		
-		if(req.query.typeOfRequest === "buynow")
-			req.body.product.prevTradeType = req.product.tradeType;
-		next();
+		if(req.query.typeOfRequest !== "buynow")
+		 return next();
+
+		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'saleprocessmaster',function(err,saleProcessData){
+			if(err || !saleProcessData){return res.status(404).send("Sale Process master is not found");}
+			//return cb(entepriseData);
+			if(saleProcessData.buyNowPriceApproval === 'Yes'){
+				req.otherBids = [];
+				return next();
+			}
+			AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
+			if(!req.product.cooling){
+				req.product.cooling = true;
+				req.product.coolingStartDate = new Date();
+				if(saleProcessData.coolingPeriodIn === 'Hours')
+					req.product.coolingEndDate = new Date().addHours(saleProcessData.coolingPeriod ||0);
+				else
+					req.product.coolingEndDate = new Date().addDays(saleProcessData.coolingPeriod || 0);
+			}
+			var otherBids = req.otherBids;
+			req.otherBids = [];
+			otherBids.forEach(function(item){
+				if(item.bidStatus === bidStatuses[7]){
+					AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
+					req.otherBids.push(item);
+				}
+			});
+			next();
+
+		});
+
 	}
 
 	function validateProduct(callback){
@@ -322,33 +345,22 @@ exports.validateSubmitBid = function(req,res,next){
 			if(err)
 				return callback({status:500,msg:err});
 			req.otherBids = bids;
+			if(req.query.typeOfRequest === "buynow")
+				return callback();
+
 			req.otherBids.forEach(function(bid){
-				if(req.query.typeOfRequest === "buynow"){
-				 	AssetSaleUtil.setStatus(bid,bidStatuses[5],'bidStatus','bidStatuses');
-				}else{
-					if(req.query.typeOfRequest == "changeBid"){
-						AssetSaleUtil.setStatus(bid,offerStatuses[1],'offerStatus','offerStatuses');
-						bid.bidChanged = true;
-						bid.status = false;
-					}
-					AssetSaleUtil.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses');
-				 	AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses');
+				if(req.query.typeOfRequest == "changeBid"){
+					AssetSaleUtil.setStatus(bid,offerStatuses[1],'offerStatus','offerStatuses',req.user._id);
+					bid.bidChanged = true;
+					bid.status = false;
 				}
+				AssetSaleUtil.setStatus(bid,bidStatuses[1],'bidStatus','bidStatuses',req.user._id);
+			 	AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses',req.user._id);
 			});
 			return callback();
 		});
 	}
 
-	function validateEnterpriseMaster(callback){
-		AssetSaleUtil.getMasterBasedOnUser(req.body.product.seller._id,{},'saleprocessmaster',function(err,entepriseData){
-			if(err || !entepriseData){return callback({status:500,msg:"Sale Process master is not found"});}
-			req.body.emdStartDate = new Date();
-			req.body.emdEndDate = new Date().addDays(entepriseData.emdPeriod);
-			if(req.body.emdEndDate)
-				req.body.emdEndDate = req.body.emdEndDate.setHours(24,0,0,0);
-			return callback();
-		});
-	}
 }
 
 exports.submitBid = function(req, res) {
@@ -360,15 +372,27 @@ exports.submitBid = function(req, res) {
 
 	function updateBidAndProduct(callback){
 		async.eachLimit(req.otherBids,5,updateBid,function(err){
-			var updatedData = {};
-			updatedData.bidReceived = true;
-			if(req.query.typeOfRequest === "buynow"){
-				updatedData.cooling = false;
-				updatedData.tradeType = tradeTypeStatuses[2];
-				updatedData.bidRequestApproved = true;
-			}
-			Product.update({_id:req.product._id},{$set:updatedData}).exec();
-			return callback();
+			var filter = {};
+			filter.dealStatus = dealStatuses[0];
+			filter.status = true;
+			filter['product.proData'] = req.product._id;
+			AssetSale.find(filter,function(err,resList){
+				if(err) return callback(err);
+				if(!resList.length)
+					return callback();
+
+				req.product.bidCount = resList.length;
+				var highestBid = resList[0].bidAmount;
+				resList.forEach(function(item){
+					if(item.bidAmount > highestBid)
+						highestBid = item.bidAmount;
+				});
+				req.product.highestBid = highestBid;
+				var prdId = req.product._id;
+				delete req.product._id;
+				Product.update({_id:prdId},{$set:req.product}).exec();
+				return callback();
+			});
 		});
 	}
 
@@ -391,36 +415,6 @@ exports.submitBid = function(req, res) {
 	}
 };
 
-function callStatusUpdates(preBidData) {
-	var dataObj = {}
-	dataObj.offerStatus = preBidData.statusObj.offerStatus;
-	dataObj.bidStatus = preBidData.statusObj.bidStatus;
-	dataObj.dealStatus = preBidData.statusObj.dealStatus;
-	dataObj.offerStatuses = preBidData.offerStatuses;
-    dataObj.dealStatuses = preBidData.dealStatuses;
-    dataObj.bidStatuses = preBidData.bidStatuses;
-    
-    var offerStatusObj = {};
-    offerStatusObj.userId = preBidData.user;
-    offerStatusObj.status = preBidData.statusObj.offerStatus;
-    offerStatusObj.createdAt = new Date();
-    dataObj.offerStatuses[dataObj.offerStatuses.length] = offerStatusObj;
-
-    var bidStatusObj = {};
-    bidStatusObj.userId = preBidData.user;
-    bidStatusObj.status = preBidData.statusObj.bidStatus;
-    bidStatusObj.createdAt = new Date();
-    dataObj.bidStatuses[dataObj.bidStatuses.length] = bidStatusObj;
-
-    var dealStatusObj = {};
-    dealStatusObj.userId = preBidData.user;
-    dealStatusObj.status = preBidData.statusObj.dealStatus;
-    dealStatusObj.createdAt = new Date();
-    dataObj.dealStatuses[dataObj.dealStatuses.length] = dealStatusObj;
-
-    return dataObj;
-}
-
 function updateBidReqFlagInProduct(data) {
 	var filter = {};
 	filter.assetId = data.product.assetId;
@@ -432,40 +426,74 @@ function updateBidReqFlagInProduct(data) {
 }
 
 exports.withdrawBid = function(req, res) {
+
+	var withdrawBid = async.seq(getBid,updateBid,updateCountAndBidAmount);
 	
-	var filter={};
-	var statusObj = {};
-	var bidData = {};
-	if(req.body.userId)
-		filter.user = req.body.userId;
-	if(req.body.productId)
-		filter['product.proData'] = req.body.productId;
-	if(req.body._id)
-		filter._id = req.body._id;
-	filter.dealStatus = dealStatuses[0];
-	filter.offerStatus = offerStatuses[0];
-	filter.bidStatus = bidStatuses[0];
-	AssetSaleBid.find(filter).exec(function(err, bid){
-		if(err)
-			console.log(err);
-		if(bid.length == 0)
-				return res.json({msg: "No active bid for this product for withdrawn!"});
-		if (bid.length > 0)
-			bidData = bid[0].toObject();
-		bidData.statusObj = {};
-		statusObj.offerStatus = offerStatuses[2];
-		statusObj.bidStatus = bidStatuses[1];
-		statusObj.dealStatus = dealStatuses[2];
-		bidData.statusObj = statusObj;
-		var dataObj =  callStatusUpdates(bidData);
-		dataObj.status = false;
-		AssetSaleBid.update({_id : bidData._id}, {
-			$set: dataObj}, function(err, result) {
-			if (err)
-				return res.status(500).send(err);
-			return res.json({msg: "Bid withdrawn Successfully!"});
+	withdrawBid(function(err,result){
+		if(err) return res.status(err.status).send(err.msg);
+		return res.json({msg: "Bid withdrawn Successfully!"});
+	});
+
+	function getBid(param,callback){
+		
+		var filter={};
+		var statusObj = {};
+		var bidData = {};
+		if(req.body.userId)
+			filter.user = req.body.userId;
+		if(req.body.productId)
+			filter['product.proData'] = req.body.productId;
+		if(req.body._id)
+			filter._id = req.body._id;
+		filter.dealStatus = dealStatuses[0];
+		filter.offerStatus = offerStatuses[0];
+		filter.bidStatus = bidStatuses[0];
+		AssetSaleBid.find(filter).exec(function(err, bid){
+			if(err) callback({status:500,msg:err});
+			if(bid.length == 0)
+				return callback({status:404,msg: "No active bid for this product for withdrawn!"})
+			if (bid.length > 0)
+				bidData = bid[0].toObject();
+			callback(null,bidData);
+			
 		});
-	});	
+	}
+
+	function updateBid(bidData,callback){
+
+		AssetSaleUtil.setStatus(bidData,bidStatuses[1],'bidStatus','bidStatuses',req.user._id);
+	 	AssetSaleUtil.setStatus(bidData,dealStatuses[2],'dealStatus','dealStatuses',req.user._id);
+	 	AssetSaleUtil.setStatus(bidData,offerStatuses[2],'offerStatus','offerStatuses',req.user._id);
+	 	bidData.status = false;
+		var bidId = bidData._id;
+		delete bidData._id;
+		AssetSaleBid.update({_id : bidId}, {
+			$set: dataObj}, function(err, result) {
+			if (err) return callback({status:500,msg:err});
+			return callback(null,bidData);
+		});
+	}
+
+	function updateCountAndBidAmount(bidData,callback){
+
+		var filter = {};
+		filter.dealStatus = dealStatuses[0];
+		filter.status = true;
+		filter['product.proData'] = req.body.productId;
+		AssetSale.find(filter,function(err,resList){
+			if(err) return callback({status:500,msg:err});
+			var updatedData = {};
+			updatedData.bidCount = resList.length;
+			var highestBid = resList[0].bidAmount;
+			resList.forEach(function(item){
+				if(item.bidAmount > highestBid)
+					highestBid = item.bidAmount;
+			});
+			updatedData.highestBid = highestBid;
+			Product.update({_id:req.body.productId},{$set:updatedData}).exec();
+			return callback(null);
+		});
+	}	
 };
 
 exports.fetchBid = function(req,res){
@@ -635,7 +663,7 @@ exports.getSellers = function(req,res,next){
 	if(!userType || userType !== 'FA')
 		return next();
   var users = [];
-  async.parallel([getUsersAssociatedToEnterprise,getUsersAssociatedToChannelPartner,getCustomer],function(err,result){
+  async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
   	req.sellers = users;
   	return next();
@@ -663,33 +691,6 @@ exports.getSellers = function(req,res,next){
         finalUsers.forEach(function(user){
           users.push(user._id + "");
         })
-        return callback();  
-      })
-    });
-  }
-
-  function getUsersAssociatedToChannelPartner(callback){
-    var filter = {};
-    filter.deleted = false;
-    filter.status = true;
-    filter.role = "channelpartner";
-    filter.$or = [{FAPartnerId : partnerId}];
-    if(defaultPartner === 'y')
-      filter.$or[filter.$or.length] = {FAPartnerId : {$exist:false}};
-    User.find(filter,function(err,chUsers){
-      if(err){return callback("Error in getting user")};
-      var chIds = [];
-      if(!chUsers.length)
-        return callback();
-      chUsers.forEach(function(item){
-        chIds.push(item._id + "");
-        users.push(item._id + "");
-      });
-      User.find({'createdBy._id':{$in:chIds},deleted:false,status:true},function(error,finalUsers){
-        if(err){return callback("Error in getting user")};
-        finalUsers.forEach(function(user){
-          users.push(user._id + "");
-        });
         return callback();  
       })
     });

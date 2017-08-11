@@ -18,6 +18,11 @@ Date.prototype.addDays = function(days) {
     return this;
 };
 
+Date.prototype.addHours = function(hours) {
+    this.setDate(this.getHours() + parseInt(hours));
+    return this;
+};
+
 function toIST(value){
   if(!value)
     return '';

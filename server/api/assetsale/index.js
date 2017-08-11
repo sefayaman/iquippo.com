@@ -13,7 +13,7 @@ router.get('/', controller.fetchBid);
 //router.get('/count/:productId');
 router.get('/maxbidonproduct/',controller.getMaxBidOnProduct);
 router.get('/count',controller.getBidCount);
-router.post('/withdrawbid',controller.withdrawBid);
+router.post('/withdrawbid',auth.isAuthenticated(),controller.withdrawBid);
 router.get('/bidorbuycalculation',controller.getBidOrBuyCalculation);
 router.get('/getemd',controller.getEMDBasedOnUser);
 router.get('/export',auth.isAuthenticated(),controller.getSellers,controller.exportExcel);
