@@ -19,7 +19,7 @@ var notification = require('./../../components/notification.js');
 var async = require('async');
 var APIError = require('../../components/_error');
 var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
-
+var Seqgen = require('./../../components/seqgenerator').sequence();
 var validationError = function(res, err) {
   return res.status(422).json(err);
 }; 
@@ -1798,11 +1798,14 @@ exports.createUniqueUserNo = function(req,res){
    User.find({}, function (err, users) {
     //if(err) return res.status(500).send(err);
     var i=1;
+    var customerId = 0;
+    var id = 0;
     users.forEach(function(doc) {
     //if (err) throw err;
      if(doc){
-      var id = 100000+i;
-       doc.update({$set:{customerId:id}},function(err){
+      id = 100000+i;
+      customerId = 'IQ'+id;
+       doc.update({$set:{customerId:customerId}},function(err){
         
         //return res.status(200).json(req.body);
       });
@@ -1812,7 +1815,13 @@ exports.createUniqueUserNo = function(req,res){
   });
 
    res.status(200);console.log("Customer Id created successfully.");
-   
+    ///
+   var SeqModel = Seqgen.getSchema();
+   SeqModel.update({collectionName : "users"},{$set:{nextSeqNumber:id+1}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      ///
   });
    /*res.each(function(doc) {
     //if (err) throw err;

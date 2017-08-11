@@ -198,7 +198,7 @@ UserSchema
       var self = this;
       var sequence = seqGenerator.sequence();
       sequence.next(function(seqnum){
-        self.customerId = seqnum;
+        self.customerId = 'IQ'+seqnum;
         return next();
       },'users',100108);
       

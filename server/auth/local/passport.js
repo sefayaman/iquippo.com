@@ -12,7 +12,11 @@ exports.setup = function (User, config) {
       if (/^\d+$/.test(userId)) {
         dataToSend['mobile'] = userId;
       } else {
-        dataToSend['email'] = userId.toLowerCase();
+       if(userId.substr(0,2) === 'IQ'){
+          dataToSend.customerId = userId;
+        }else{
+          dataToSend.email = userId.toLowerCase();
+        }
       }
       dataToSend['deleted'] = false;
       //dataToSend['status'] = true;
