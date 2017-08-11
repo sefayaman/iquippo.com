@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var EnterpriseMasterSchema = new Schema({
+var SaleProcessMasterSchema = new Schema({
   user: {
       userId: {type:Schema.Types.ObjectId,ref:'User'},
       mobile: String,
@@ -23,4 +23,4 @@ var EnterpriseMasterSchema = new Schema({
   updatedAt: {type:Date,default:Date.now}
 });
 
-module.exports = mongoose.model('EnterpriseMaster', EnterpriseMasterSchema);
+module.exports = mongoose.model('SaleProcessMaster', SaleProcessMasterSchema);

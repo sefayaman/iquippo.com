@@ -93,7 +93,7 @@ function _getRecord(data, cb) {
     filter.enterpriseId = data.enterpriseId;
   if(data.user && data.user.userId)
     filter['user.userId'] = data.user.userId;
-  if(data.category.categoryId)
+  if(data.category && data.category.categoryId)
     filter['category.categoryId'] = data.category.categoryId;
   Model.find(filter, function(err, result) {
     cb(err, result);

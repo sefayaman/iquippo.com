@@ -216,8 +216,8 @@ exports.validateUpdate = function(req,res,next){
 	}
 
 	function getEnterprisemaster(cb){
-		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'enterprisemaster',function(err,entepriseData){
-			if(err || !entepriseData){return res.status(404).send("Enterprise master is not found");}
+		AssetSaleUtil.getMasterBasedOnUser(req.product.seller._id,{},'saleprocessmaster',function(err,entepriseData){
+			if(err || !entepriseData){return res.status(404).send("Sale Process master is not found");}
 			return cb(entepriseData);
 		});
 	}
@@ -340,8 +340,8 @@ exports.validateSubmitBid = function(req,res,next){
 	}
 
 	function validateEnterpriseMaster(callback){
-		AssetSaleUtil.getMasterBasedOnUser(req.body.product.seller._id,{},'enterprisemaster',function(err,entepriseData){
-			if(err || !entepriseData){return callback({status:500,msg:"Enterprise master is not found"});}
+		AssetSaleUtil.getMasterBasedOnUser(req.body.product.seller._id,{},'saleprocessmaster',function(err,entepriseData){
+			if(err || !entepriseData){return callback({status:500,msg:"Sale Process master is not found"});}
 			req.body.emdStartDate = new Date();
 			req.body.emdEndDate = new Date().addDays(entepriseData.emdPeriod);
 			if(req.body.emdEndDate)

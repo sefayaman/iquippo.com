@@ -1,7 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var Model = require('./enterprisemaster.model');
+var Model = require('./saleprocessmaster.model');
 var ApiError = require('../../components/_error');
 var Utility = require('./../../components/utility.js');
 

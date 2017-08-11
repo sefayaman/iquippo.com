@@ -27,6 +27,8 @@ var AssetSaleBidSchema = new Schema({
   offerType:{type:String,default:'Bid'},
   ageingOfAsset:Number,
   parkingCharge:Number,
+  gst:Number,
+  tcs:Number,
   bidAmount:Number,
   emdAmount:Number,
   offerStatus:String,
@@ -68,7 +70,17 @@ var AssetSaleBidSchema = new Schema({
 
 AssetSaleBidSchema.pre('save',function(next){
   var self = this;
-  var prefix = 'TAS';
+  var offerType = self.offerType;
+  var prefix = '';
+
+  switch(offerType){
+    case 'Bid' :
+      prefix = 'SB'
+      break;
+    case 'Buynow' : 
+      prefix = 'BN'
+      break;
+  }
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
     self.ticketId = prefix+seqnum;

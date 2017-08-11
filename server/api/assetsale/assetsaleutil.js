@@ -1,6 +1,6 @@
 'use strict';
 
-var EnterpriseMaster= require('../common/enterprisemaster.model');
+var SaleProcessMaster= require('../common/saleprocessmaster.model');
 var User = require('../user/user.model');
 var MarkupPrice = require('../common/markupprice.model');
 var EMDMaster = require('../common/emdcharge.model');
@@ -44,8 +44,8 @@ exports.getMasterBasedOnUser = function(userId,filter,type, callback) {
 	    }
 
 	    switch(type){
-	    	case 'enterprisemaster':
-	    		getValueFromEnterpirseMaster(filter,callback);
+	    	case 'saleprocessmaster':
+	    		getValueFromSaleProcessMaster(filter,callback);
 	    	break;
 	    	case 'markup':
 	    		getMarkupPrice(filter,callback);
@@ -68,7 +68,7 @@ function getMarkupPrice(filter, callback) {
 			return callback(err);
 		if(result.length == 0) {
 			filter = {};
-			filter.userRole = "Other";
+			filter.userRole = "default";
 			var query = MarkupPrice.find(filter);
 			query.exec(function(err, markupPrice) {
 				if (err)
@@ -81,15 +81,15 @@ function getMarkupPrice(filter, callback) {
 	});
 }
 
-function getValueFromEnterpirseMaster(filter, callback) {
-	var query = EnterpriseMaster.find(filter);
+function getValueFromSaleProcessMaster(filter, callback) {
+	var query = SaleProcessMaster.find(filter);
 	query.exec(function(err, result) {
 		if (err)
 			return callback(err);
 		if(result.length == 0) {
 			var filterObj = {};
-			filterObj.userRole = "Other";
-			var query = EnterpriseMaster.find(filterObj);
+			filterObj.userRole = "default";
+			var query = SaleProcessMaster.find(filterObj);
 			query.exec(function(err, periods) {
 				if (err || !periods.length)
 					return callback(err);
@@ -132,7 +132,7 @@ function getEmdFromMaster(filter, callback) {
 		});
 		} else {
 			var filterObj = {};
-			filterObj.userRole = "Other";
+			filterObj.userRole = "default";
 			var query = EMDMaster.find(filterObj);
 			query.exec(function(err, emdcharge) {
 				if (err || !emdcharge.length)

@@ -27,7 +27,7 @@
         vm.searchStr = "";
         $scope.container = {};
         vm.users = [];
-        vm.channelpartnerUser = [];
+        //vm.channelpartnerUser = [];
         vm.enterpriseUser = [];
 
         function init(){
@@ -214,7 +214,7 @@
         function editClicked(rowData){
             vm.dataModel = angular.copy(rowData);
             getUserOnRole(vm.dataModel.userRole, true);
-            if(vm.dataModel.user && vm.dataModel.user.userId && (vm.dataModel.userRole == 'enterprise' || vm.dataModel.userRole == 'channelpartner')) {
+            if(vm.dataModel.user && vm.dataModel.user.userId && vm.dataModel.userRole == 'enterprise') {
                 onUserChange(vm.dataModel.user.userId, vm.dataModel.userRole);
                 $scope.container.userId = vm.dataModel.user.userId;
             }
@@ -222,7 +222,8 @@
                 $scope.container.mobile = vm.dataModel.user.mobile;
                 findSingleUser();
             }
-            $scope.container.categoryId = vm.dataModel.category.categoryId;
+            if(vm.dataModel.category && vm.dataModel.category.categoryId)
+                $scope.container.categoryId = vm.dataModel.category.categoryId;
             $scope.isEdit = true;
         }
 
@@ -231,11 +232,11 @@
                 $scope.submitted = true;
                 return;
             }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.category.name != 'Other') {
+            /*if(vm.dataModel.userRole == 'Other' && vm.dataModel.category.name != 'Other') {
                 Modal.alert('Please Select Other category!');
                 return;
-            }
-            if(vm.dataModel.userRole == 'Other' && vm.dataModel.user) {
+            }*/
+            if(vm.dataModel.userRole == 'default' && vm.dataModel.user) {
                 delete vm.dataModel.user;
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;

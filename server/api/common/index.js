@@ -9,7 +9,7 @@ var servicetaxCtrl = require('./servicetax.controller');
 var vattaxCtrl = require('./vattax.controller');
 var financeIntegrationCtrl = require('./financeintegration.controller');
 var kycCtrl = require('./kycmaster.controller');
-var enterpriseCtrl = require('./enterprisemaster.controller');
+var saleProcessCtrl = require('./saleprocessmaster.controller');
 var markupPriceCtrl = require('./markupprice.controller');
 var assetSaleChargeCtrl = require('./assetsalecharge.controller');
 var emdChargeCtrl = require('./emdcharge.controller');
@@ -105,11 +105,11 @@ router.put('/kyc/:id', auth.hasRole('admin'),kycCtrl.update);
 router.delete('/kyc/:id',auth.hasRole('admin'), kycCtrl.destroy);
 router.post('/kyc/search',kycCtrl.search);
 
-router.get('/enterprise',auth.hasRole('admin'), enterpriseCtrl.get);
-router.post('/enterprise', auth.hasRole('admin'),enterpriseCtrl.create);
-router.put('/enterprise/:id', auth.hasRole('admin'),enterpriseCtrl.update);
-router.delete('/enterprise/:id',auth.hasRole('admin'), enterpriseCtrl.destroy);
-router.post('/enterprise/search',enterpriseCtrl.search);
+router.get('/saleprocess',auth.hasRole('admin'), saleProcessCtrl.get);
+router.post('/saleprocess', auth.hasRole('admin'),saleProcessCtrl.create);
+router.put('/saleprocess/:id', auth.hasRole('admin'),saleProcessCtrl.update);
+router.delete('/saleprocess/:id',auth.hasRole('admin'), saleProcessCtrl.destroy);
+router.post('/saleprocess/search',saleProcessCtrl.search);
 
 router.get('/markupprice',auth.hasRole('admin'), markupPriceCtrl.get);
 router.post('/markupprice', auth.hasRole('admin'),markupPriceCtrl.create);

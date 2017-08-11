@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    angular.module('admin').controller('EnterpriseMasterCtrl', EnterpriseMasterCtrl);
+    angular.module('admin').controller('SaleProcesssMasterCtrl', SaleProcesssMasterCtrl);
 
-    function EnterpriseMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, EnterpriseMasterSvc){
+    function SaleProcesssMasterCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,userSvc, SaleProcessSvc){
     	var vm  = this;
         vm.dataModel = {};
         vm.filteredList = [];
@@ -26,7 +26,7 @@
         vm.searchStr = "";
         $scope.container = {};
         vm.users = [];
-        vm.channelpartnerUser = [];
+        //vm.channelpartnerUser = [];
         vm.enterpriseUser = [];
 
         function init(){
@@ -43,7 +43,7 @@
 
         function loadViewData(filter){
             $scope.pager.copy(filter);
-            EnterpriseMasterSvc.get(filter)
+            SaleProcessSvc.get(filter)
             .then(function(result){
                 vm.filteredList = result.items;
                 vm.totalItems = result.totalItems;
@@ -180,7 +180,7 @@
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;
             }
-            EnterpriseMasterSvc.save(vm.dataModel)
+            SaleProcessSvc.save(vm.dataModel)
             .then(function(){
                 initializeValue();
                 fireCommand(true);
@@ -194,6 +194,7 @@
 
         function initializeValue() {
             vm.dataModel = {};
+            $scope.submitted = false;
             vm.dataModel.functionality = "assetsale";
             vm.dataModel.negotiatedSaleApproval = "Yes";
             vm.dataModel.coolingPeriod = 0;
@@ -225,7 +226,7 @@
                 if(vm.dataModel.enterpriseId)
                     delete vm.dataModel.enterpriseId;
             }
-            EnterpriseMasterSvc.update(vm.dataModel)
+            SaleProcessSvc.update(vm.dataModel)
             .then(function(){
                  vm.dataModel = {};
                 $scope.isEdit = false;
@@ -247,7 +248,7 @@
         }
 
         function confirmDestory(id){
-            EnterpriseMasterSvc.destroy(id)
+            SaleProcessSvc.destroy(id)
             .then(function(){
                 fireCommand(true);
             })

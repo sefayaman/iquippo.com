@@ -24,7 +24,7 @@
         vm.searchStr = "";
         $scope.container = {};
         vm.users = [];
-        vm.channelpartnerUser = [];
+        //vm.channelpartnerUser = [];
         vm.enterpriseUser = [];
 
         function init(){
