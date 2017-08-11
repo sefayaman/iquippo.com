@@ -37,7 +37,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
 
     function initialize(prd,cb){
 
-      AssetSaleUtil.getMasterBasedOnUser(prd.seller._id,{},'enterprisemaster',function(err,entMasterData){
+      AssetSaleUtil.getMasterBasedOnUser(prd.seller._id,{},'saleprocessmaster',function(err,entMasterData){
          if(err) return cb(err);
          if(!entMasterData || !entMasterData.emdPeriod)
           return cb("emd period not found");
@@ -52,15 +52,21 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               return cb(err);
             }
 
-            for(var i=0;i < bids.length ; i++){
-              if(bids[i].bidStatus === bidStatuses[7]){
-                bids[i].emdStartDate = new Date(); 
-                bids[i].emdEndDate = new Date().addDays(entMasterData.emdPeriod);
-                if(bids[i].emdEndDate)
-                  bids[i].emdEndDate.setHours(24,0,0,0); 
-                break;
-              }
+            var maxBid = getMaxBid(bids);
+            if(maxBid){
+              maxBid.emdStartDate = new Date(); 
+              maxBid.emdEndDate = new Date().addDays(entMasterData.emdPeriod);
+              if(maxBid.emdEndDate)
+                bids[i].emdEndDate.setHours(24,0,0,0);
+              maxBid.product.prevTradeType = prd.tradeType;
+              AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
             }
+
+            bids.forEach(function(item){
+              if(item._id == maxBid._id )
+                return;
+              AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses');
+            });
 
             async.eachLimit(bids,2,updateBid,function(err){
               if(!err)
@@ -70,16 +76,18 @@ var TimeInterval =  1*60*1000;/*Service interval*/
           });
       });
 
+      function getMaxBid(bids){
+        var maxBid = bids[0];
+        for(var i=0;i < bids.length ; i++){
+          if(maxBid.bidAmount < bids[i].bidAmount)
+            maxBid = bids[0];
+        }
+        return maxBid;
+      }
+
       function updateBid(bid,innerCallback){
         var bidId = bid._id;
         delete bid._id;
-        if(bid.bidStatus === bidStatuses[7]){
-          bid.product.prevTradeType = prd.tradeType;
-          AssetSaleUtil.setStatus(bid,dealStatuses[6],'dealStatus','dealStatuses');
-        }
-        else{
-          AssetSaleUtil.setStatus(bid,bidStatuses[5],'bidStatus','bidStatuses');
-        }
         AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
           if(err) {console.log(err);}
           return innerCallback(err);
