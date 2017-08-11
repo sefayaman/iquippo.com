@@ -479,10 +479,9 @@ exports.validateExcel = function(req, res, next) {
           Error:'Missing mandatory parameter : employeeCode'
         })
       }
-      var mobileNo=row.enterpriseId.slice(1,(row.enterpriseId.length -1));
         User.find({
           "enterpriseId":row.enterpriseId,
-          "mobile":mobileNo 
+          "enterprise":true 
         }, function(err, enterprise) {
           if (err) {
             errorList.push({
