@@ -14,8 +14,11 @@ var ManpowerUser = require('../manpower/manpower.model');
 var Utility = require('./../../components/utility.js');
 var userFieldsMap = require('../../config/user_temp_field_map');
 var Utillity = require('./../../components/utility');
+var commonController = require('./../common/common.controller');
+var notification = require('./../../components/notification.js');
 var async = require('async');
 var APIError = require('../../components/_error');
+var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 
 var validationError = function(res, err) {
   return res.status(422).json(err);
@@ -686,6 +689,18 @@ exports.validateExcel = function(req, res, next) {
   }
 };
 
+function sendMail(tplData, emailData, tmplName) {
+    commonController.compileTemplate(tplData, config.serverPath, tmplName, function(ret,retData){
+      if(!ret){
+          console.log(ret);
+      }else{
+          emailData.content =  retData;
+          notification.pushNotification(emailData,function(pushed){
+        });
+      }
+    });
+  }
+
 exports.createUserReq = function(req, res, next) {
   if (!req.uploadData.length && !req.errorList.length)
     return next(new APIError(500, 'Error while updation'));
@@ -715,10 +730,14 @@ exports.createUserReq = function(req, res, next) {
   }
 
   function intialize(data, cb) {
+    console.log("I am here");
+
     data.createdBy = req.body.user;
     data.createdAt = new Date();
     data.updatedAt = new Date();
     data.agree = true;
+
+    console.log("DATAs",data);
 
     if (data.userType === "Individual")
       data.userType = "individual";
@@ -729,12 +748,37 @@ exports.createUserReq = function(req, res, next) {
 
     User.create(data, function(err, doc) {
       if (err || !doc) {
+        console.log("I am being pushed");
         req.errorList.push({
           Error: 'Error while updating information',
           rowCount: data.rowCount
         });
         return cb();
       }
+
+      var tplData={};
+      var tplName="";
+        tplData.fname=data.fname;
+        tplData.lname=data.lname;
+        tplData.email=data.email;
+        //tplData.serverPath=config.serverPath;
+        tplData.password=data.password;
+        tplName=USER_REG_REQ;
+        var emailData = {};
+        emailData.to = data.email;
+        emailData.notificationType = "email";
+        if(data.role == 'customer'){
+          emailData.subject = 'New User Registration: Success';
+        }
+        else if(data.role == 'enterprise'){
+          emailData.subject = 'New Enterprise Registration: Success';
+        }
+        else{
+          emailData.subject = 'New Channel Partner Registration: Success';
+          }
+          
+          sendMail(tplData, emailData, tplName);
+        
       successCount++;
       return cb();
     });
