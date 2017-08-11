@@ -182,6 +182,7 @@ exports.validateExcel = function(req, res, next) {
         validateEnterpriseAvailedServices:validateEnterpriseAvailedServices
       };
       row.enterpriseId="E" + row.mobile + "" + Math.floor(Math.random() *10);
+      row.enterprise=true;
     }
     else if(row.enterpriseId && row.role === 'enterprise'){
       tasksBasedOnRole = {
