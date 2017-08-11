@@ -938,13 +938,14 @@
         Modal.alert("Valuation report is mandatory for aution listing");
         return;
       }*/
+     
       addOrUpdate(postAuction);
     }
 
 
 
     function postAuction(productObj) {
-
+    console.log ("prod",productObj);
       var stsObj = {};
       if (!productObj.auction)
         productObj.auction = {};
@@ -1233,6 +1234,7 @@
       $scope.product.assetId = $scope.assetDir;
 
       $rootScope.loading = true;
+      $scope.product.auctId = $scope.auctionReq.dbAuctionId;
       productSvc.addProduct(product).then(function(result) {
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
         dataLayer.push(gaMasterObject.uploadProductSubmit);
