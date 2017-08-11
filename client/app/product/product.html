@@ -223,6 +223,39 @@
                       </div>
                     </div>
                     <div class="row">
+                      <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
+                      <div class="form-group col-xs-9 col-sm-6" ng-class="{'has-error': form.lotId.$invalid && submitted}">
+                        <input type="text" name="lotId" ng-value="product.lotId" ng-model="product.lotId" class="form-control" placeholder="Enter Lot Number"/>
+                      </div>
+                    </div>
+                    <div class="row">
+                     <div class="form-group col-xs-9 col-sm-6">Starting Price<span class="text-warning">*</span></div>
+                      <div class="form-group col-xs-9 col-sm-6" ng-class="{'has-error': form.startPrice.$invalid && submitted}">
+                          <span class="input-group-addon currency-width">
+                           Rupee
+                          </span>
+                          <input type="number"  placeholder="20,000"  name="startPrice" min="0" ng-value="product.startPrice" class="form-control" ng-model="product.startPrice" ng-required="!product.startPrice">
+                    </div>
+                    </div>
+
+                     <div class="row">
+                      <div class="form-group col-xs-9 col-sm-6">Last Minute Bid  <span class="text-warning">*</span></div>
+                        <div class="form-group col-xs-9 col-sm-6" ng-class="{'has-error': form.lastMintBid.$invalid && submitted}">
+                     
+                          <input type="text" placeholder="Last Mint Bid" ng-value="product.lastMintBid" ng-model="product.lastMintBid" name="lastMintBid" class="form-control">
+                   
+                        </div>
+                     </div>
+
+                     <div class="row">
+                      <div class="form-group col-xs-9 col-sm-6">Extended To<span class="text-warning">*</span></div>
+                        <div class="form-group col-xs-9 col-sm-6" ng-class="{'has-error': form.extendedTo.$invalid && submitted}">
+                         <input type="text" placeholder="Extended To" ng-value="product.extendedTo" ng-model="product.extendedTo" name="extendedTo" class="form-control">
+                      </div> 
+                    </div>
+
+                   
+                    <div class="row">
                       <div class="form-group col-sm-5">Operating Hours/HMR</div>
                       <div class="form-group col-sm-7" ng-class="{'has-error': form.opHour.$invalid && submitted}">
                         <input type="text" name="opHour" placeholder="Operating Hours/HMR" ng-value="product.operatingHour" ng-model="product.operatingHour"  class="form-control">
@@ -943,7 +976,7 @@
         <div class="row" ng-if="product.auctionListing">
           <div class="form-group col-sm-5">Auction</div>
           <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.auctionDate.$invalid && auctSubmitted}">
-            <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
+           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
               <option value="">Select Date</option>
               <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
             </select>

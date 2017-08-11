@@ -24,6 +24,8 @@
 						<option value="assetgroup">Asset Group Master</option>
 						<option value="vatmaster">GST Tax Master</option>
 						<option value="assetcount">Asset Count</option>
+						<option value="emd">EMD Auction Master</option>
+						<option value="lot">Lot Master</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -1669,13 +1671,13 @@
     	<legend></legend>
 		<div class="row">
 			<div class="col-sm-4 form-group">			
-			   <select class="form-control" ng-model="countVm.tabValue" ng-change="onTabChange(countVm.tabValue)">
-				<option value=""> Select Configurable Options </option>  
-				<option value="assetlisted">Asset Listed</option>
-			      <option value="assetsold">Asset Sold/Rented</option>
-			       <option value="sparelist">Spare Listed</option>
-			       <option value="manpower">Manpower Listed</option>
-		       </select>
+			    <select class="form-control" ng-model="countVm.tabValue" ng-change="onTabChange(countVm.tabValue)">
+				    <option value=""> Select Configurable Options </option>  
+				    <option value="assetlisted">Asset Listed</option>
+			        <option value="assetsold">Asset Sold/Rented</option>
+			        <option value="sparelist">Spare Listed</option>
+			        <option value="manpower">Manpower Listed</option>
+		         </select>
 				</div>
 		</div>
 		<legend></legend>
@@ -1769,6 +1771,169 @@
 	</div>
 
 
-</div>
+	<!-- Select Emd Auction Master -->
+	<div ng-if="gsettingVm.tabValue == 'emd'" ng-controller="EmdCtrl as emdVm">
+		<div class="col-sm-12">
+			<div class="form-group">
+				<div>
+					<form class="techInformationForm" name="emdform" novalidate>
+					 <div class="row form-group">
+				        <div class="col-sm-3" ng-class="{'has-error':emdVm.auctId.$invalid && submitted}">
+			 		       <select class="form-control" name="auctId" ng-model="emdVm.dataModel.auctId"  ng-change="onSelectAuction(emdVm.dataModel.auctId)" required> 
+								 <option value=""> Select Auction  Id </option> 
+						        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
+					       </select>
+						</div>
+					     <div class="col-sm-3" ng-class="{'has-error':emdVm.auctName.$invalid && submitted}">
+							<input type="text" class="form-control" name="auctName" ng-model="emdVm.dataModel.auctName" value="{{emdVm.auctionname}}" placeholder="{{emdVm.auctionname}}" disabled>
+						</div>
+                        <div class="col-sm-3" ng-class="{'has-error':emdVm.lotId.$invalid && submitted}">
+							<input type="text" class="form-control" name="lotId" ng-model="emdVm.dataModel.lotId" placeholder="Enter Lot Id's" required>
+							<i>Enter comma seperated value</i>					
+                       </div>
+						<div class="col-sm-3" ng-class="{'has-error':emdVm.amount.$invalid && submitted}">
+			 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.amount" placeholder="Enter Emd Amount" required>
+						</div>
+						<div class="col-sm-offset-7 col-sm-2">
+					       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="emdVm.update(emdform)">Update</button>
+					       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="emdVm.save(emdform)">Save</button>
+					   </div>
+				      </div>
+					</form>
+				</div>
+			</div>
+			<p class="text-right">Showing : </p>
+			<div class="row form-group">
+				<div class="col-sm-12 tablesearch text-right">
+				Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.searchFn()" ng-model-options="{debounce:500}">
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class=" table-responsive ">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Auction Id</th>
+									<th>Auction Name</th>
+									<th>Lot ID</th>
+									<th>EMD Amount</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="emddata in emdVm.filteredList">
+									<td>{{emddata.auctId}}</td>
+									<td>{{emddata.auctName}}</td>
+									<td>{{emddata.lotId}}</td>
+									<td>{{emddata.amount}}</td>
+									<td>
+										<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.editClicked(emddata)">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.destroy(emddata._id)"><i class="fa fa-trash" ></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-if="gsettingVm.tabValue == 'lot'" ng-controller="LotCtrl as lotVm">
+	 <div class="col-sm-12">
+		 	<div class="form-group">
+				<div>
+					<form class="techInformationForm" name="lotform" novalidate>
+					 <div class="row form-group">
+				        <div class="col-sm-3" ng-class="{'has-error':lotVm.auctId.$invalid && submitted}">
+			 		       <select class="form-control" name="auctId" ng-model="lotVm.dataModel.auctId"  required> 
+								 <option value=""> Select Auction  Id </option> 
+						        <option value="{{product._id}}"  ng-repeat="product in lotVm.auctionListing">{{product.auctionId}}</option>
+					       </select>
+						</div>
+					     <div class="col-sm-3" ng-class="{'has-error':lotVm.assetId.$invalid && submitted}">
+							<input type="text" class="form-control" name="assetId" ng-model="lotVm.dataModel.assetId" value="{{lotVm.assetId}}" placeholder="Enter Asset Id">
+						</div>
+
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotId.$invalid && submitted}">
+							<input type="text" class="form-control" name="lotId" ng-model="lotVm.dataModel.lotId" value="{{lotVm.lotId}}" placeholder="Enter Lot Id">
+						</div>
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
+							<input type="text" class="form-control" name="assetDesc" ng-model="lotVm.dataModel.assetDesc" value="{{lotVm.assetDesc}}" placeholder="Enter Asset Description" > 
+						</div>
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.startPrice.$invalid && submitted}">
+							<input type="text" class="form-control" name="startPrice" ng-model="lotVm.dataModel.startPrice" value="{{lotVm.startPrice}}" placeholder="Enter StartPrice">
+						</div>
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.ReservePrice.$invalid && submitted}">
+							<input type="text" class="form-control" name="ReservePrice" ng-model="lotVm.dataModel.ReservePrice" value="{{lotVm.ReservePrice}}" placeholder="Enter Reserve Price">
+						</div>
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lastMintBid.$invalid && submitted}">
+							<input type="text" class="form-control" name="lastMintBid" ng-model="lotVm.dataModel.lastMintBid" value="{{lotVm.lastMintBid}}" placeholder="Enter Last Minute Id (in Minutes)"> 
+						</div>
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.extendedTo.$invalid && submitted}">
+							<input type="text" class="form-control" name="extendedTo" ng-model="lotVm.dataModel.extendedTo" value="{{lotVm.extendedTo}}" placeholder="Enter Extended To(in Minutes)">
+						</div>
+                       
+						<div class="col-sm-offset-7 col-sm-2">
+					       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="lotVm.update(lotform)">Update</button>
+					       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="lotVm.save(lotform)">Save</button>
+					   </div>
+				      </div>
+					</form>
+				</div>
+			</div>
+	 	<p class="text-right">Showing : </p>
+			<div class="row form-group">
+				<div class="col-sm-12 tablesearch text-right">
+				Search: <input type="text" placeholder="Search..." ng-model="lotVm.searchStr" ng-change="lotVm.searchFn()" ng-model-options="{debounce:500}">
+               </div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class=" table-responsive ">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Auction Id</th>
+									<th>Lot Id</th>
+									<th>Asset Id</th>
+									<th>Asset Description</th>
+									<th>Start Price</th>
+									<th>Reserve Price</th>
+									<th>Last Minute Bid</th>
+									<th>Extended To </th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="lotdata in lotVm.filteredList">
+									<td>{{lotdata.auctId}}</td>
+									<td>{{lotdata.lotId}}</td>
+									<td>{{lotdata.assetId}}</td>
+									<td>{{lotdata.assetDesc}}</td>
+									<td>{{lotdata.startPrice}}</td>
+									<td>{{lotdata.ReservePrice}}</td>
+									<td>{{lotdata.lastMintBid}}</td>
+									<td>{{lotdata.extendedTo}}</td>
+									<td>
+										<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="lotVm.editClicked(lotdata)">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="lotVm.destroy(lotdata._id)"><i class="fa fa-trash" ></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+				</div>
+			</div>
+		</div>
+    </div>
 </div>
 arc land --revision D123
