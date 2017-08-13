@@ -10,6 +10,7 @@ var AssetSaleBidSchema = new Schema({
             proData : {type:Schema.Types.ObjectId,ref:'Product'},
             assetId:String,
             assetDir:String,
+            name:String,
             category:String,
             brand:String,
             model:String,

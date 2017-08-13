@@ -1611,14 +1611,14 @@
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':vatForm.effectiveFromDate.$invalid && submitted}">
 					
-					<input type="text" name="effectiveFromDate" id="taxfrom" class="form-control" ng-model="vatVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+					<input type="text" name="effectiveFromDate" id="taxfrom" class="form-control" ng-model="vatVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" ng-disabled="vatVm.dataModel.taxType == 'Default'" ng-required="vatVm.dataModel.taxType != 'Default'">
 					<label class="input-group-addon" for="taxfrom"><i class="fa fa-calendar"></i></label>
 		              <!-- <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="vatVm.dataModel.effectiveFromDate" myid="fromdate" required></custom-datepicker> -->
 		            </div>
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':vatForm.effectiveToDate.$invalid && submitted}">
-		              <input type="text" name="effectiveToDate" id="taxto" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
+		              <input type="text" name="effectiveToDate" id="taxto" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" ng-disabled="vatVm.dataModel.taxType == 'Default'" ng-required="vatVm.dataModel.taxType != 'Default'">
 		            <label class="input-group-addon" for="taxto"><i class="fa fa-calendar"></i></label>
 		            </div>
 				</div>
@@ -1827,7 +1827,7 @@
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveFromDate.$invalid && submitted}">
-		              <input type="text" name="effectiveFromDate" id="chargefrom" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" required>
+		              <input type="text" name="effectiveFromDate" id="chargefrom" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" ng-disabled="assetSaleChargeVm.dataModel.userRole == 'default'" ng-required="assetSaleChargeVm.dataModel.userRole != 'default'">
 		              <label for="chargefrom" class="input-group-addon">
 		              	<i class="fa fa-calendar"></i>
 		              </label>
@@ -1835,7 +1835,7 @@
 				</div>
 				<div class="col-sm-3">
 					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveToDate.$invalid && submitted}">
-		              <input type="text" name="effectiveToDate" id="chargeto" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" required>
+		              <input type="text" name="effectiveToDate" id="chargeto" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" ng-disabled="assetSaleChargeVm.dataModel.userRole == 'default'" ng-required="assetSaleChargeVm.dataModel.userRole != 'default'">
 		              <label for="chargeto" class="input-group-addon">
 		              	<i class="fa fa-calendar"></i>
 		              </label>

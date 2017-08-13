@@ -8,12 +8,12 @@
   </div>
   <legend></legend>
    <div class="btn-group enterprise-value form-group">
-    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'auctionable'}" ng-click="onTabChange('auctionable')">Approved Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
    </div>
 
    <!-- Approved Bid -->
-	<div ng-if="buyerProductBidRequestVm.activeBid=='auctionable'">
+	<div ng-if="buyerProductBidRequestVm.activeBid=='approved'">
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{buyerProductBidRequestVm.bidListing.length}}

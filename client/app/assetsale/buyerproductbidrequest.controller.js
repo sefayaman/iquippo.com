@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProdu
 function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
 	var vm = this;
 	vm.bidListing = [];
-	vm.activeBid = "auctionable";
+	vm.activeBid = "approved";
 	$scope.onTabChange = onTabChange;
 	vm.withdrawBid = withdrawBid;
 	vm.fireCommand = fireCommand;
@@ -96,7 +96,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
     	var filter={};
     	$scope.pager.reset();
 	  	switch(tab){
-	  		case 'auctionable':
+	  		case 'approved':
 			angular.copy(initFilter, filter);
 			filter.actionable = 'y';
 	  		getBidData(filter);

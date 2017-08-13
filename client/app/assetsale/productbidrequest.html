@@ -2,7 +2,7 @@
 	<div class="row">
 	  	<div class="col-sm-6">
 	  		<h4>
-	  		<a href="javascript:void(0);" ng-click="productBidRequestVm.backButton()" class="btn btn-default active"><i class="fa fa-chevron-left"></i>  Back</a>
+	  		<a ng-if="!isFAgencyPartner()" href="javascript:void(0);" ng-click="productBidRequestVm.backButton()" class="btn btn-default active"><i class="fa fa-chevron-left"></i>  Back</a>
 	  		</h4>
 	  	</div>
 	  	<div class="col-sm-6 text-right">
@@ -16,7 +16,7 @@
 	
 	<!-- Approved Bid -->
 	<div>
-		<div class="well">
+		<div class="well" ng-if="!isFAgencyPartner()">
 			<div class="row">
 				<div class="col-sm-4">
 					<p><strong>Asset Id:</strong> {{currentProduct.assetId}}</p>
@@ -27,7 +27,7 @@
 				<div class="col-sm-4">
 					<p><strong>Year of Manufacturing:</strong> {{currentProduct.mfgYear}}</p>
 					<p><strong>Aging of Asset:</strong> {{currentProduct.ageingOfAsset || 0}}</p>
-					<p><strong>Aging of Portal:</strong> {{}}</p>
+					<p><strong>Aging of Portal:</strong> {{dayDiff(currentProduct.createdAt)}} Days</p>
 				</div>
 				<div class="col-sm-4">					
 					<p><strong>Parking Charge:</strong> {{currentProduct.parkingCharges}}</p>
@@ -36,7 +36,11 @@
 				</div>
 			</div>
 		</div>
-		
+		<div class="btn-group enterprise-value form-group" ng-if="isFAgencyPartner()">
+		    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
+		    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+		    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'allbid'}" ng-click="onTabChange('allbid')">All Bid</button>
+	   </div>
 		<div class="row form-group">
 		   	<div class="col-sm-9">
 		   		Showing : {{productBidRequestVm.bidListing.length}}
@@ -48,24 +52,30 @@
 		   <div class="table-responsive">
 		   	<table class="table table-bordered">
 		   		<thead>
-		   			<tr>		   				
+		   			<tr>
+		   				<th ng-if="isFAgencyPartner()">Asset Id</th>	   				
 			   			<th>Ticket Id</th>
-			   			<th>Offer Type</th>
-			   			<th>Bid Amount</th>
-			   			<th>Offer Status</th>
+			   			<th ng-if="isFAgencyPartner()">Asset Name</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Name</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Contact No.</th>
+			   			
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Mobile No.</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Email Id</th>	
+			   			<th>Bid Amount</th>
+			   			<!-- <th>Offer Type</th>
+			   			<th>Offer Status</th> -->
 			   			<th>Bid Status</th>
+			   			<th>Deal Status</th>
 			   			<!-- <th>EMD Amount</th> -->
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">EMD Details</th>
 			   			<!-- <th>Full Payment Amount</th> -->
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">Full Payment Details</th>
 			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Parking Charge</th>
-			   			<th ng-if="isFAgencyPartner() || isAdmin()">Invoicing Details</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Invoice in Favour of</th>
 			   			<th ng-if="isFAgencyPartner() || isAdmin()">KYC Documents</th>
 			   			<th>Delivery Order</th>
 			   			<!-- <th>Date of Delivery</th> -->
-			   			<th>Deal Status</th>
 			   			<!-- <th>Trade Type</th> -->
 			   			<th ng-if="!isFAgencyPartner()">Asset Status</th>
 			   			<th ng-if="isFAgencyPartner()">Action</th>
@@ -75,13 +85,20 @@
 		   		</thead>
 		   		<tbody>
 		   			<tr ng-repeat="bid in productBidRequestVm.bidListing">
+		   				<td ng-if="isFAgencyPartner()">{{bid.product.assetId}}</td>
 			   			<td>{{bid.ticketId}}</td>
-			   			<td>{{bid.offerType}}</td>
-			   			<td>{{bid.bidAmount}}</td>
-			   			<td>{{bid.offerStatus}}</td>
+			   			<td ng-if="isFAgencyPartner()">{{bid.product.name}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.name}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.mobile}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.user.fname}} {{bid.product.user.lname}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.user.mobile}}</td>			   			
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.user.email}}</td>
+
+			   			<td>{{bid.bidAmount}}</td>
+			   			<!-- <td>{{bid.offerType}}</td>
+			   			<td>{{bid.offerStatus}}</td> -->
 			   			<td>{{bid.bidStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
 			   			<!-- <td>{{}}</td> -->
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">
 			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')">Update Details</a>
@@ -102,7 +119,6 @@
 			   			</td>
 			   			<td><a href="{{uploadImagePrefix}}{{bid.product.assetDir}}{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a></td>
 			   			<!-- <td>{{}}</td> -->
-			   			<td>{{bid.dealStatus}}</td>
 			   			<!-- <td>{{bid.tradeType}}</td> -->
 			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
 			   			<td ng-if="isFAgencyPartner()">

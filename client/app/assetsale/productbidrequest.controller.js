@@ -19,6 +19,8 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.validateAction = AssetSaleSvc.validateAction;
 	vm.doUpload = doUpload;
 	vm.backButton = backButton;
+	vm.activeBid = "approved";
+	$scope.onTabChange = onTabChange;
 
 	function backButton() {
       $window.history.back();
@@ -35,6 +37,40 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 				initFilter.bidStatus = bidStatuses[7];
 			getBidData(angular.copy(initFilter));
 	  	});
+	}
+
+	function onTabChange(tab){
+    	vm.activeBid = tab;
+    	var filter={};
+    	$scope.pager.reset();
+	  	switch(tab){
+	  		case 'approved':
+			angular.copy(initFilter, filter);
+			filter.actionable = 'y';
+	  		getBidData(filter);
+	  		break;
+	  		case 'closed':
+	  		angular.copy(initFilter, filter);
+			filter.actionable = 'n';
+	  		getBidData(filter);
+	  		break;
+	  		case 'allbid':
+	  		angular.copy(initFilter, filter);
+			filter.actionable = 'n';
+			vm.bidListing = [];
+	  		getBidData(filter);
+	  		break;
+	  	}
+  	}
+
+	$scope.dayDiff = function(createdDate){
+		var date2 = new Date(createdDate);
+		var date1 = new Date();
+		var timeDiff = Math.abs(date2.getTime() - date1.getTime());   
+		var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+		console.log(dayDifference);
+
+		return dayDifference;
 	}
 
 	function fireCommand(reset) {

@@ -564,15 +564,15 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
-      .state('assetsale.fulfilmentagency', {
+      /*.state('assetsale.fulfilmentagency', {
         url: '/fulfilmentagency',
         templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true
-      })
-      .state('assetsale.faproductbidrequest', {
-        url: '/faproductbidrequest?assetId&productId',
+      })*/
+      .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency?assetId&productId',
         templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
