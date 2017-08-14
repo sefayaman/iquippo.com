@@ -265,7 +265,6 @@ exports.search = function(req, res) {
     filter.bidRequestApproved = false;
   if(req.body.bidReceived)
     filter.bidReceived = true;
-  console.log("@@@@@@",filter);
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){
@@ -465,12 +464,10 @@ function paginatedProducts(req,res,filter,result){
       var sortFilter = {_id : -1};
       if(last_id && isNext){
         filter['_id'] = {'$lt' : last_id};
-        console.log("going forward");
       }
       if(first_id && !isNext){
         filter['_id'] = {'$gt' : first_id};
         sortFilter['_id'] = 1;
-        console.log("going backward");
       }
 
       var query = null;
@@ -862,7 +859,6 @@ exports.setExpiry = function(req, res) {
   obj['status'] = false;
   //obj['featured'] = false;
   obj['expired'] = true;
-  console.log("setExpiry:::", req.body.ids);
   Product.update({_id : {"$in":ids}}, {$set:obj}, {multi: true} , function(err, product) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(product);
@@ -980,7 +976,6 @@ exports.userWiseProductCount = function(req,res){
             },
             function (err, inCount) {
               if (err) return handleError(err);
-              console.log(data);
               result = result.concat(inCount);
               return res.status(200).json(result);
             }
@@ -1489,7 +1484,6 @@ exports.validateExcelData = function(req, res, next) {
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
     if(reqType == 'Update'){
-      console.log("aset id",row.assetId);
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
@@ -2808,7 +2802,6 @@ function bulkProductStatusUpdate(req,res,data){
 }
 
 function checkValidTransition(tradeType,assetStatus){
-  console.log(tradeType, assetStatus);
   var ret = false;
   if(tradeType == 'BOTH')
       ret = true;

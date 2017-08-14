@@ -427,8 +427,6 @@ exports.withdrawBid = function(req, res) {
 	});
 
 	function getBid(callback){
-		//console.log('ccc',callback);
-		//console.log('sss',param);
 		var filter={};
 		var statusObj = {};
 		var bidData = {};
@@ -468,11 +466,10 @@ exports.withdrawBid = function(req, res) {
 	}
 
 	function updateCountAndBidAmount(bidData,callback){
-
 		var filter = {};
 		filter.dealStatus = dealStatuses[0];
 		filter.status = true;
-		filter['product.proData'] = req.body.productId;
+		filter['product.proData'] = bidData.product.proData;
 		AssetSaleBid.find(filter,function(err,resList){
 			if(err) return callback({status:500,msg:err});
 			var updatedData = {};
@@ -485,7 +482,10 @@ exports.withdrawBid = function(req, res) {
 					highestBid = item.bidAmount;
 			});
 			updatedData.highestBid = highestBid;
-			Product.update({_id:req.body.productId},{$set:updatedData}).exec();
+			var proId = bidData.product.proData;
+			if(updatedData.bidCount === 0)
+				updatedData.bidReceived = false;
+			Product.update({_id:proId},{$set:updatedData}).exec();
 			return callback(null);
 		});
 	}	
