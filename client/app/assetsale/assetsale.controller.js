@@ -9,15 +9,11 @@
 		vm.activeBid="Auctionable";
 		$scope.tabValue='auctionable';
 		$scope.onTabChange=onTabChange;
-		//vm.fireCommand=fireCommand;
 
 		function init() {
 			switch($state.current.name){
-            case 'assetsale.administrator':
-                $scope.tabValue = 'administrator';
-            break;
-            case 'assetsale.seller':
-                $scope.tabValue = 'seller';
+            case 'assetsale.bidproduct':
+                $scope.tabValue = Auth.isAdmin()?'administrator':'seller';
             break;
             case 'assetsale.buyer':
                 $scope.tabValue = 'buyer';  
@@ -30,17 +26,6 @@
               break;
         }
         onTabChange($scope.tabValue);
-			/*Auth.isLoggedInAsync(function(loggedIn) {
-				if (loggedIn) {
-
-					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
-						$scope.isAdmin = false;
-						$scope.tabValue='seller';
-						$state.go('seller');
-					}
-					getBidProducts(filter);
-				}
-			});*/
 		}
 		init();
 	  
@@ -48,11 +33,11 @@
       switch(tabValue){
         case "administrator":
           $scope.tabValue = 'administrator';
-          $state.go("assetsale.administrator");
+          $state.go("assetsale.bidproduct");
         break;
         case "seller":
           $scope.tabValue = 'seller';
-          $state.go("assetsale.seller");
+          $state.go("assetsale.bidproduct");
         break;
         case "buyer":
           $scope.tabValue = 'buyer';
@@ -64,19 +49,6 @@
         break;
       } 
     }
-
-   /* function getBidProducts(filter){
-    	filter.userid=Auth.getCurrentUser()._id;
-    	productSvc.getProductOnSellerId(filter)
-						.then(function(res) {
-							console.log("res", res);
-							vm.bidListing=res;
-						})
-						.catch(function(err) {
-
-						});
-    
-    }*/
 
 	}
 })();

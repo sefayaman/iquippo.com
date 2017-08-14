@@ -1,24 +1,21 @@
 (function() {
 	'use strict';
-	angular.module('sreizaoApp').controller('BidProductCtrl', BidProductCtrl);
-function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
+	angular.module('sreizaoApp').controller('FAProcessCtrl', FAProcessCtrl);
+function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
 	var initFilter = {};
-	vm.bidListing = [];
-	vm.activeBid = "actionable";
+	vm.dataList = [];
+	vm.tabVal = "approved";
 	$scope.onTabChange = onTabChange;
 	vm.fireCommand = fireCommand;
 	vm.openDialog = openDialog;
 
 	function init() {
-
-		initFilter.bidReceived = true;
-		$scope.tabValue = Auth.isAdmin()?'administrator':'seller';
-		if(!Auth.isAdmin())
-		 	initFilter.userid = Auth.getCurrentUser()._id;
-		 
+		if(!Auth.isFAgencyPartner())
+			$state.go('main');
+		//initFilter.bidReceived = true;
 		/*switch($state.current.name){
             case 'assetsale.administrator':
                 $scope.tabValue = 'administrator';
@@ -40,12 +37,14 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
             		$state.go('main');
             break;
 	    }*/
-		getBidProducts(angular.copy(initFilter));
+		//getBidProducts(angular.copy(initFilter));
+		$scope.tabValue = 'fulfilmentagency';
+		getApprovedBids({});
 	}
 
 
 	function onTabChange(tab) {
-		vm.activeBid = tab;
+		vm.tabVal = tab;
 		fireCommand(true);
 	}
 
@@ -58,29 +57,38 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 			filter.searchStr = encodeURIComponent(vm.searchStr);
 		}
 		
-		if(vm.activeBid === 'actionable'){
-			filter.bidRequestApproved = 'n';
+		/*if(vm.activeBid === 'auctionable')
 			getBidProducts(filter);
-		}
-		else if(vm.activeBid === 'saleinprocess'){
-			filter.bidRequestApproved = 'y';
-			getBidProducts(filter);
-		}else
-		 getClosedBids(filter);			
+		else
+			getClosedBids(filter);	*/		
 	}
 
 
 	function getBidProducts(filter) {
 		$scope.pager.copy(filter);
 		filter.pagination = true;
+		filter.userType = 'FA';
+        filter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
 		AssetSaleSvc.getBidProduct(filter)
 			.then(function(result) {
-				vm.productListing = result.products;
+				vm.dataList = result.products;
 				$scope.pager.update(result.prodcuts,result.totalItems);
 			})
 			.catch(function(err) {
 
 			});
+	}
+
+	function getApprovedBids(filter){
+		$scope.pager.copy(filter);
+		filter.status = 'y';
+		//filter.dealStatus = dealStatuses[12];
+		filter.pagination = true;
+		AssetSaleSvc.get(filter)
+		.then(function(result){
+			vm.dataList = result.items;
+			$scope.pager.update(result.items,result.totalItems);
+		});
 	}
 
 	function getClosedBids(filter){
@@ -90,7 +98,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)
 		.then(function(result){
-			vm.closedBids = result.items;
+			vm.dataList = result.items;
 			$scope.pager.update(result.items,result.totalItems);
 		});
 	}

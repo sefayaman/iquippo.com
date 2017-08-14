@@ -527,7 +527,7 @@ angular.module('sreizaoApp')
         templateUrl: 'app/assetsale/assetsale.html',
         controller: 'AssetSaleCtrl as assetsaleVm'
       })
-      .state('assetsale.administrator', {
+      /*.state('assetsale.administrator', {
         url: '/administrator',
         templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
@@ -542,16 +542,16 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true,
         restrict:true
-      })
-      .state('assetsale.seller', {
-        url: '/seller',
+      })*/
+      .state('assetsale.bidproduct', {
+        url: '/bidproduct',
         templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
         authenticate:true
       })
-      .state('assetsale.sellerproductbidrequest', {
-        url: '/sellerproductbidrequest?assetId&productId',
+      .state('assetsale.bidrequests', {
+        url: '/bidrequests?assetId&productId',
         templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
@@ -564,20 +564,20 @@ angular.module('sreizaoApp')
         layout:'admin',
         authenticate:true
       })
-      /*.state('assetsale.fulfilmentagency', {
+      .state('assetsale.fulfilmentagency', {
         url: '/fulfilmentagency',
-        templateUrl: 'app/assetsale/bidproduct.html',
-        controller:'BidProductCtrl as bidproductVm',
+        templateUrl: 'app/assetsale/faprocess.html',
+        controller:'FAProcessCtrl as faVm',
         layout:'admin',
         authenticate:true
-      })*/
-      .state('assetsale.fulfilmentagency', {
+      })
+     /* .state('assetsale.fulfilmentagency', {
         url: '/fulfilmentagency?assetId&productId',
         templateUrl: 'app/assetsale/productbidrequest.html',
         controller:'ProductBidRequestCtrl as productBidRequestVm',
         layout:'admin',
         authenticate:true
-      })
+      })*/
       .state('assetbidhistory', {
         url: '/bidhistory',
         templateUrl: 'app/assetsale/bidhistory.html',
