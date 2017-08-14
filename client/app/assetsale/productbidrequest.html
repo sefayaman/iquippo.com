@@ -77,9 +77,9 @@
 			   			<td ng-if="isFAgencyPartner()">{{bid.product.name}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.name}}</td>
 			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.mobile}}</td>
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.user.fname}} {{bid.product.user.lname}}</td>
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.user.mobile}}</td>			   			
-			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.user.email}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.user.fname}} {{bid.product.user.lname}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.user.mobile}}</td>			   			
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.user.email}}</td>
 
 			   			<td>{{bid.bidAmount}}</td>
 			   			<td>{{bid.bidStatus}}</td>
