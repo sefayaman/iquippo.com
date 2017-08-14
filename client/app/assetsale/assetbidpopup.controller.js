@@ -126,6 +126,7 @@
             dataToSend.product.seller.mobile = query.product.seller.mobile;
             dataToSend.product.proData = query.product._id;
             dataToSend.product.assetId = query.product.assetId;
+            dataToSend.product.assetDir = query.product.assetDir;
             dataToSend.product.name = query.product.name;
             dataToSend.product.category = query.product.category.name;
             dataToSend.product.brand = query.product.brand.name;

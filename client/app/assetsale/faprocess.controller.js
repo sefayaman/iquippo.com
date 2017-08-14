@@ -5,7 +5,7 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
-	var initFilter = {};
+	//var initFilter = {};
 	vm.dataList = [];
 	vm.tabVal = "approved";
 	$scope.onTabChange = onTabChange;
@@ -13,13 +13,14 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	vm.openDialog = openDialog;
 	vm.validateAction = AssetSaleSvc.validateAction;
 	vm.update = update;
-
+	var initFilter = {actionable : 'y'};
 	function init() {
 		if(!Auth.isFAgencyPartner())
 			$state.go('main');
 		$scope.tabValue = 'fulfilmentagency';
 		initFilter.userType = 'FA';
-		initFilter.defaultPartner = 'y';
+		if(Auth.getCurrentUser().partnerInfo.defaultPartner)
+			initFilter.defaultPartner = 'y';
         initFilter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
 		getApprovedBids(angular.copy(initFilter));
 	}
@@ -67,7 +68,7 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 
 	function getApprovedBids(filter){
 		$scope.pager.copy(filter);
-		filter.status = 'y';
+		filter.actionable = 'y';
 		filter.dealStatuses = dealStatuses.slice(6,12);
 		filter.bidStatus = bidStatuses[7];
 		//filter.dealStatus = dealStatuses[12];
@@ -81,7 +82,7 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 
 	function getClosedBids(filter){
 		$scope.pager.copy(filter);
-		filter.status = 'n';
+		filter.actionable = 'n';
 		filter.dealStatus = dealStatuses[12];
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)

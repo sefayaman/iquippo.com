@@ -417,16 +417,6 @@ exports.submitBid = function(req, res) {
 	}
 };
 
-function updateBidReqFlagInProduct(data) {
-	var filter = {};
-	filter.assetId = data.product.assetId;
-	filter.status = true;
-	filter.deleted = false;
-	Product.update(filter, {$set:{"bidReceived":true}},function(err,result){
-        if(err){console.log(err)};
-    });  
-}
-
 exports.withdrawBid = function(req, res) {
 
 	var withdrawBid = async.seq(getBid,updateBid,updateCountAndBidAmount);
@@ -536,8 +526,7 @@ exports.fetchBid = function(req,res){
 		paginatedResult(req, res, AssetSaleBid, filter);
 		return;
 	}
-
-    fetchBid(filter,function(err,results){
+	fetchBid(filter,function(err,results){
     	if(err)
     		return res.status(err.status || 500).send(err);
     	return res.json(results);
@@ -664,16 +653,12 @@ exports.getSellers = function(req,res,next){
 	var partnerId = req.body.partnerId || req.query.partnerId;
 	var defaultPartner = req.body.defaultPartner || req.query.defaultPartner;
 
-	console.log("userType",userType);
-	console.log("partnerId",partnerId);
-	console.log("Default",defaultPartner);
 	if(!userType || userType !== 'FA')
 		return next();
   var users = [];
   async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
   	req.sellers = users;
-  	console.log('sellers2222222',req.sellers);
   	return next();
   });
 
@@ -708,14 +693,11 @@ exports.getSellers = function(req,res,next){
      var filter = {};
     filter.deleted = false;
     filter.status = true;
-    //filter.FAPartnerId =  {$exist:true};
     filter.$or = [{FAPartnerId : partnerId}];
     filter.role = {$ne:"enterprise"};
     if(defaultPartner === 'y')
       filter.$or[filter.$or.length] = {FAPartnerId : {$exists:false}};
-  console.log("######111111",filter);
     User.find(filter,function(err,finalUsers){
-    	console.log("######",err);
       if(err){return callback("Error in getting user")};
       finalUsers.forEach(function(item){
         users.push(item._id + "");

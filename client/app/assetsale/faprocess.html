@@ -81,7 +81,7 @@
                   <span ng-if="false">Update</span>
                 </button>
               </td>
-              <td><a href="{{uploadImagePrefix}}{{bid.product.assetDir}}{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a></td>
+              <td><a href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a></td>
               <!-- <td>{{}}</td> -->
               <!-- <td>{{bid.tradeType}}</td> -->
               <td>
@@ -122,7 +122,8 @@
             <tr>
               <th>Ticket Id</th>
               <th>Asset Id</th>
-              <th>Asset Location</th>
+              <th>Asset Name</th>
+              <!-- <th>Asset Location</th> -->
               <th>Buyer Name</th>
               <th>Buyer Location</th>
               <th>Buyer Mobile No.</th>
@@ -137,11 +138,12 @@
               <td>{{product.ticketId}}</td>         
               <td>{{product.product.proData.assetId}}</td>
               <td>{{product.product.proData.name}}</td>
-              <td>{{product.product.proData.city}}</td>                          
+              <!-- <td>{{product.product.proData.city}}</td> -->                          
               <td>{{product.user.fname}} {{product.user.lname}}</td>
               <td>{{product.user.city}}</td>
               <td>{{product.user.mobile}}</td>              
-              <td>{{product.user.email}}</td>             
+              <td>{{product.user.email}}</td> 
+              <td>{{product.product.proData.grossPrice}}</td>            
               <td>{{product.dealStatus}}</td>
               <td>
               <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="faVm.openDialog(product,'bidProductDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button> 
@@ -184,8 +186,8 @@
               <td>{{product.reservePrice}}</td> 
               <td>{{}}</td>
               <td>{{product.grossPrice}}</td>
-              <td>{{}}</td>
-              <td>{{}}</td>
+              <td>{{product.bidCount}}</td>
+              <td>{{product.highestBid}}</td>
               <td>{{product.city}}</td>
               <td>
                 <!-- seller action -->
