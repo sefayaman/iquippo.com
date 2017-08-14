@@ -376,7 +376,16 @@
 							
 							<input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
 						</div>
-						<div class="col-sm-3 form-group">
+						<div class="col-sm-3">
+							<select class="form-control">
+								<option>Auction Type</option>
+								<option>Live Auction</option>
+								<option>Online</option>
+								<option>Admin</option>
+								<option>Seller</option>
+							</select>
+						</div>
+						<!-- <div class="col-sm-3 form-group">
 							Auction Type
 							<div class="row">
 								<div class="col-xs-6">
@@ -386,17 +395,52 @@
 									<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
 								</div>
 							</div>
+						</div> -->
+						<div class="col-sm-3 form-group">
+							<select class="form-control">
+								<option>Select LOT</option>
+								<option>Lot1</option>
+								<option>Lot2</option>
+								<option>Lot3</option>								
+							</select>
+						</div>						
+					</div>
+					<div class="row">
+						<div class="col-sm-3 form-group">
+							<input type="checkbox" id="inlinecheck" name="" value="">
+							<label for="inlinecheck">Tax Applicability</label>
 						</div>
 						<div class="col-sm-3 form-group">
 							
 							<!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
 							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount">
 						</div>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" name="" value="" placeholder="*Multiplier Factor for Credit Limit">
+						</div>
+						<div class="col-sm-3">
+							<select class="form-control">
+								<option>*Tax Applicability</option>
+								<option>Tax included</option>
+								<option>Tax not included</option>						
+							</select>
+						</div>
 					</div>
 					<div class="row">
+						<div class="col-sm-3">
+							<input type="number" class="form-control" name="" value="" placeholder="Bid Increment">
+						</div>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" name="" value="" placeholder="Last Minute Bid ( in minutes )">
+						</div>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" name="" value="" placeholder="Extended To ( in minutes )">
+						</div>
 						<div class="col-sm-3 form-group">
 							<input type="text" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.termAuction" placeholder="Terms of Auction">
 						</div>
+					</div>
+					<div class="row">						
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Terms &amp; Conditions</span>
@@ -419,12 +463,11 @@
 							</span>
 							<span>{{gsettingVm.auctionData.primaryImg}}</span>
 						</div>
-					</div>
-					<div class="row form-group">
-
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
 						</div>
+					</div>
+					<div class="row form-group">
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
 						</div>
@@ -1775,8 +1818,7 @@
 	<div ng-if="gsettingVm.tabValue == 'emd'" ng-controller="EmdCtrl as emdVm">
 		<div class="col-sm-12">
 			<div class="form-group">
-				<div>
-					<form class="techInformationForm" name="emdform" novalidate>
+				<form class="techInformationForm" name="emdform" novalidate>
 					 <div class="row form-group">
 				        <div class="col-sm-3" ng-class="{'has-error':emdVm.auctId.$invalid && submitted}">
 			 		       <select class="form-control" name="auctId" ng-model="emdVm.dataModel.auctId"  ng-change="onSelectAuction(emdVm.dataModel.auctId)" required> 
@@ -1788,23 +1830,31 @@
 							<input type="text" class="form-control" name="auctName" ng-model="emdVm.dataModel.auctName" value="{{emdVm.auctionname}}" placeholder="{{emdVm.auctionname}}" disabled>
 						</div>
                         <div class="col-sm-3" ng-class="{'has-error':emdVm.lotId.$invalid && submitted}">
-							<input type="text" class="form-control" name="lotId" ng-model="emdVm.dataModel.lotId" placeholder="Enter Lot Id's" required>
-							<i>Enter comma seperated value</i>					
+							<select class="form-control" multiple="" style="height: 80px;">
+				              <option>Select Lot</option>
+				              <option>Lot1</option>
+				              <option>Lot2</option>
+				              <option>Lot3</option>
+				            </select>
+							<!-- <input type="text" class="form-control" name="lotId" ng-model="emdVm.dataModel.lotId" placeholder="Enter Lot Id's" required>
+							<i>Enter comma seperated value</i> -->					
                        </div>
-						<div class="col-sm-3" ng-class="{'has-error':emdVm.amount.$invalid && submitted}">
+						<div class="col-sm-3 form-group" ng-class="{'has-error':emdVm.amount.$invalid && submitted}">
 			 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.amount" placeholder="Enter Emd Amount" required>
 						</div>
-						<div class="col-sm-offset-7 col-sm-2">
+						<div class="col-sm-2 pull-right">
 					       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="emdVm.update(emdform)">Update</button>
 					       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="emdVm.save(emdform)">Save</button>
 					   </div>
 				      </div>
-					</form>
-				</div>
+				</form>
 			</div>
-			<p class="text-right">Showing : </p>
+			<legend></legend>			
 			<div class="row form-group">
-				<div class="col-sm-12 tablesearch text-right">
+				<div class="col-sm-6">
+					<p>Showing : </p>
+				</div>
+				<div class="col-sm-6 tablesearch text-right">
 				Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.searchFn()" ng-model-options="{debounce:500}">
 
 				</div>
