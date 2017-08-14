@@ -426,8 +426,9 @@ exports.withdrawBid = function(req, res) {
 		return res.json({msg: "Bid withdrawn Successfully!"});
 	});
 
-	function getBid(param,callback){
-		
+	function getBid(callback){
+		//console.log('ccc',callback);
+		//console.log('sss',param);
 		var filter={};
 		var statusObj = {};
 		var bidData = {};
@@ -460,7 +461,7 @@ exports.withdrawBid = function(req, res) {
 		var bidId = bidData._id;
 		delete bidData._id;
 		AssetSaleBid.update({_id : bidId}, {
-			$set: dataObj}, function(err, result) {
+			$set: bidData}, function(err, result) {
 			if (err) return callback({status:500,msg:err});
 			return callback(null,bidData);
 		});
@@ -476,7 +477,9 @@ exports.withdrawBid = function(req, res) {
 			if(err) return callback({status:500,msg:err});
 			var updatedData = {};
 			updatedData.bidCount = resList.length;
-			var highestBid = resList[0].bidAmount;
+			var highestBid = 0;
+			if(resList.length)
+				highestBid = resList[0].bidAmount;
 			resList.forEach(function(item){
 				if(item.bidAmount > highestBid)
 					highestBid = item.bidAmount;

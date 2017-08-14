@@ -115,6 +115,7 @@
           .then(function(res) {
             if(res && res.msg)
               Modal.alert(res.msg, true);
+            countBid();
           })
           .catch(function(err) {
           });
