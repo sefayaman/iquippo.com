@@ -3,7 +3,7 @@
 
 	angular.module('sreizaoApp').factory("AssetSaleSvc", AssetSaleSvc);
 
-	function AssetSaleSvc($http,Auth,UtilSvc) {
+	function AssetSaleSvc($http,Auth,UtilSvc, Modal) {
 		var svc = {};
 		var path='api/assetSale';
 		svc.submitBid = submitBid;
