@@ -6,7 +6,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 	$scope.pager = PagerSvc.getPager();
 
 	var initFilter = {};
-	vm.bidListing = [];
+	vm.dataList = [];
 	vm.activeBid = "actionable";
 	$scope.onTabChange = onTabChange;
 	vm.fireCommand = fireCommand;
@@ -40,7 +40,9 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
             		$state.go('main');
             break;
 	    }*/
-		getBidProducts(angular.copy(initFilter));
+	    var filter = angular.copy(initFilter);
+	    filter.bidRequestApproved = 'n';
+		getBidProducts(filter);
 	}
 
 
@@ -75,7 +77,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		filter.pagination = true;
 		AssetSaleSvc.getBidProduct(filter)
 			.then(function(result) {
-				vm.productListing = result.products;
+				vm.dataList = result.products;
 				$scope.pager.update(result.prodcuts,result.totalItems);
 			})
 			.catch(function(err) {
@@ -90,7 +92,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)
 		.then(function(result){
-			vm.closedBids = result.items;
+			vm.dataList = result.items;
 			$scope.pager.update(result.items,result.totalItems);
 		});
 	}

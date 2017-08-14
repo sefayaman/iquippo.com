@@ -35,7 +35,7 @@
 			   			<th ng-if="isAdmin()">Buyer Location</th>
 			   			<th ng-if="isAdmin()">Buyer Mobile No.</th>
 			   			<th ng-if="isAdmin()">Buyer Email Id</th>	 -->
-			   			<th>Parking Charges</th>
+			   			<!-- <th>Parking Charges</th> -->
 			   			<th>Buy Now Price</th>	
 			   			<th>No. of Bids</th>	
 			   			<th>Highest Bid</th>	
@@ -53,10 +53,10 @@
 			   			<td ng-if="isAdmin()">{{}}</td>
 			   			<td ng-if="isAdmin()">{{}}</td>
 			   			<td ng-if="isAdmin()">{{}}</td> -->
-			   			<td>{{}}</td>
+			   			<!-- <td>{{}}</td> -->
 			   			<td>{{product.grossPrice}}</td>
-			   			<td>{{}}</td>
-			   			<td>{{}}</td>
+			   			<td>{{product.bidCount}}</td>
+			   			<td>{{product.highestBid}}</td>
 			   			<td>{{product.city}}</td>
 			   			<td ng-if="isAdmin()">{{product.assetStatus}}</td>	
 			   			<td>

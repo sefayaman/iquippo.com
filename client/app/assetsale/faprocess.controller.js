@@ -11,35 +11,17 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	$scope.onTabChange = onTabChange;
 	vm.fireCommand = fireCommand;
 	vm.openDialog = openDialog;
+	vm.validateAction = AssetSaleSvc.validateAction;
+	vm.update = update;
 
 	function init() {
 		if(!Auth.isFAgencyPartner())
 			$state.go('main');
-		//initFilter.bidReceived = true;
-		/*switch($state.current.name){
-            case 'assetsale.administrator':
-                $scope.tabValue = 'administrator';
-            break;
-            case 'assetsale.seller':
-				if (!Auth.isAdmin()) {
-					initFilter.userid = Auth.getCurrentUser()._id;
-				}
-                $scope.tabValue = 'seller';
-            break;
-            case "assetsale.fulfilmentagency":
-            	$scope.tabValue = 'fulfilmentagency';
-            	if(Auth.isFAgencyPartner()){
-            		initFilter.userType = 'FA';
-            		initFilter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
-            	}
-
-            	if(!Auth.isFAgencyPartner() && !Auth.isAdmin())
-            		$state.go('main');
-            break;
-	    }*/
-		//getBidProducts(angular.copy(initFilter));
 		$scope.tabValue = 'fulfilmentagency';
-		getApprovedBids({});
+		initFilter.userType = 'FA';
+		initFilter.defaultPartner = 'y';
+        initFilter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
+		getApprovedBids(angular.copy(initFilter));
 	}
 
 
@@ -56,7 +38,13 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 			filter.isSearch = true;
 			filter.searchStr = encodeURIComponent(vm.searchStr);
 		}
-		
+		if(vm.tabVal === 'approved')
+			getApprovedBids(filter);
+		else if(vm.tabVal === 'closed')
+			getClosedBids(filter);
+		else
+			getBidProducts(filter);
+
 		/*if(vm.activeBid === 'auctionable')
 			getBidProducts(filter);
 		else
@@ -67,8 +55,6 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	function getBidProducts(filter) {
 		$scope.pager.copy(filter);
 		filter.pagination = true;
-		filter.userType = 'FA';
-        filter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
 		AssetSaleSvc.getBidProduct(filter)
 			.then(function(result) {
 				vm.dataList = result.products;
@@ -82,6 +68,8 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	function getApprovedBids(filter){
 		$scope.pager.copy(filter);
 		filter.status = 'y';
+		filter.dealStatuses = dealStatuses.slice(6,12);
+		filter.bidStatus = bidStatuses[7];
 		//filter.dealStatus = dealStatuses[12];
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)
@@ -103,12 +91,22 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 		});
 	}
 
-	function openDialog(data, popupName, modalClass, viewBlock){
+	function update(bid,action,cb){
+		
+		Modal.confirm("Do you want to change bid status?.",function(retVal){
+			if(retVal === 'yes')
+				AssetSaleSvc.changeBidStatus(bid,action,cb || fireCommand);				
+		});
+	}
+
+	function openDialog(bidData, popupName, modalClass, formType){
 		var newScope = $rootScope.$new();
-		newScope.data = data;
-		newScope.viewBlock = viewBlock;
+		newScope.bidData = bidData;
+		if(formType)
+			newScope.formType = formType;
 		Modal.openDialog(popupName,newScope,modalClass);
 	}
+
 
 	//loading start
 	Auth.isLoggedInAsync(function(loggedIn) {

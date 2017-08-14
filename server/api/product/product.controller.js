@@ -259,11 +259,13 @@ exports.search = function(req, res) {
   
   if(req.sellers && req.sellers.length)
     filter["seller._id"] = {$in:req.sellers};
-  if(req.bidRequestApproved)
-    filter.bidRequestApproved = req.bidRequestApproved;
-
+  if(req.body.bidRequestApproved && req.body.bidRequestApproved === 'y')
+    filter.bidRequestApproved = true;
+  if(req.body.bidRequestApproved && req.body.bidRequestApproved === 'n')
+    filter.bidRequestApproved = false;
   if(req.body.bidReceived)
     filter.bidReceived = true;
+  console.log("@@@@@@",filter);
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){

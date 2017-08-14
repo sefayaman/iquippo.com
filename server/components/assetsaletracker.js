@@ -57,8 +57,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               maxBid.emdStartDate = new Date(); 
               maxBid.emdEndDate = new Date().addDays(entMasterData.emdPeriod);
               if(maxBid.emdEndDate)
-                bids[i].emdEndDate.setHours(24,0,0,0);
+                maxBid.emdEndDate.setHours(24,0,0,0);
               maxBid.product.prevTradeType = prd.tradeType;
+              AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
             }
 
@@ -80,7 +81,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         var maxBid = bids[0];
         for(var i=0;i < bids.length ; i++){
           if(maxBid.bidAmount < bids[i].bidAmount)
-            maxBid = bids[0];
+            maxBid = bids[i];
         }
         return maxBid;
       }

@@ -9,7 +9,7 @@ var router = express.Router();
 router.post('/bidproduct',auth.isAuthenticated(),controller.getSellers,controller.getBidProduct,productCtrl.search);
 router.post('/submitbid',auth.isAuthenticated(),controller.validateSubmitBid,controller.submitBid);
 router.put('/:id',auth.isAuthenticated(),controller.validateUpdate,controller.update,controller.postUpdate);
-router.get('/', controller.fetchBid);
+router.get('/',controller.getSellers,controller.fetchBid);
 //router.get('/count/:productId');
 router.get('/maxbidonproduct/',controller.getMaxBidOnProduct);
 router.get('/count',controller.getBidCount);

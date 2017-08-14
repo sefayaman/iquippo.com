@@ -19,6 +19,7 @@
 	  svc.getBidOrBuyCalculation = getBidOrBuyCalculation;
     svc.validateAction = validateAction;
     svc.getEmdOnProduct = getEmdOnProduct;
+    svc.changeBidStatus = changeBidStatus;
 
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
@@ -263,6 +264,57 @@
     }
 
     return retVal;
+  }
+
+  function changeBidStatus(bid,action,cb){
+    
+    switch(action){
+      case 'approve':
+        setStatus(bid,bidStatuses[7],'bidStatus','bidStatuses');
+      break;
+      case 'reject':
+        setStatus(bid,bidStatuses[6],'bidStatus','bidStatuses');
+        setStatus(bid,dealStatuses[1],'dealStatus','dealStatuses');
+      break;
+      case 'emdpayment':
+        if(typeof bid.emdPayment.remainingPayment === 'undefined' || bid.emdPayment.remainingPayment > 0){
+          Modal.alert("EMD has not been fully paid.");
+          return;
+        }
+        setStatus(bid,dealStatuses[7],'dealStatus','dealStatuses');
+      break;
+      case 'fullpayment':
+        if( typeof bid.fullPayment.remainingPayment === 'undefined' || bid.fullPayment.remainingPayment > 0){
+          Modal.alert("Full payment has not been fully paid.");
+          return;
+        }
+        setStatus(bid,dealStatuses[8],'dealStatus','dealStatuses');
+      break;
+      case 'doissued':
+        setStatus(bid,dealStatuses[9],'dealStatus','dealStatuses');
+      break;
+      case 'deliverd':
+        setStatus(bid,dealStatuses[10],'dealStatus','dealStatuses');
+      break;
+      case 'deliveryaccept':
+        setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
+        setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
+      break;
+      default:
+        return;
+      break
+    }
+    update(bid,action)
+    .then(function(res){
+      if(cb)
+        cb(true);
+    })
+    .catch(function(err){
+      if(err)
+        Modal.alert(err.data);
+        if(cb)
+          cb(true);
+    });
   }
 
 		return svc;

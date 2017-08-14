@@ -365,7 +365,7 @@ exports.validateSubmitBid = function(req,res,next){
 
 exports.submitBid = function(req, res) {
 	
-	async.parallel([newBidData,updateBidAndProduct],function(err){
+	async.series([newBidData,updateBidAndProduct],function(err){
 		if(err) return res.status(500).send(err);
 		return res.status(200).send("Bid submitted successfully.");
 	});
@@ -376,12 +376,14 @@ exports.submitBid = function(req, res) {
 			filter.dealStatus = dealStatuses[0];
 			filter.status = true;
 			filter['product.proData'] = req.product._id;
-			AssetSale.find(filter,function(err,resList){
+			AssetSaleBid.find(filter,function(err,resList){
 				if(err) return callback(err);
 				if(!resList.length)
 					return callback();
 
 				req.product.bidCount = resList.length;
+				req.product.bidReceived = true;
+				req.product.bidRequestApproved = false;
 				var highestBid = resList[0].bidAmount;
 				resList.forEach(function(item){
 					if(item.bidAmount > highestBid)
@@ -454,7 +456,7 @@ exports.withdrawBid = function(req, res) {
 				return callback({status:404,msg: "No active bid for this product for withdrawn!"})
 			if (bid.length > 0)
 				bidData = bid[0].toObject();
-			callback(null,bidData);
+			callback(null, bidData);
 			
 		});
 	}
@@ -480,7 +482,7 @@ exports.withdrawBid = function(req, res) {
 		filter.dealStatus = dealStatuses[0];
 		filter.status = true;
 		filter['product.proData'] = req.body.productId;
-		AssetSale.find(filter,function(err,resList){
+		AssetSaleBid.find(filter,function(err,resList){
 			if(err) return callback({status:500,msg:err});
 			var updatedData = {};
 			updatedData.bidCount = resList.length;
@@ -528,6 +530,8 @@ exports.fetchBid = function(req,res){
     }
   	if(req.query.assetStatus)
   		filter.assetStatus = req.query.assetStatus;
+  	if(req.sellers && req.sellers.length)
+  		filter['product.seller._id'] = {$in:req.sellers};
   if (req.query.pagination) {
 		paginatedResult(req, res, AssetSaleBid, filter);
 		return;
@@ -658,14 +662,18 @@ exports.getSellers = function(req,res,next){
 
 	var userType = req.body.userType || req.query.userType;
 	var partnerId = req.body.partnerId || req.query.partnerId;
-	var defaultPartner = req.body.default || req.query.Default;
+	var defaultPartner = req.body.defaultPartner || req.query.defaultPartner;
 
+	console.log("userType",userType);
+	console.log("partnerId",partnerId);
+	console.log("Default",defaultPartner);
 	if(!userType || userType !== 'FA')
 		return next();
   var users = [];
   async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
   	req.sellers = users;
+  	console.log('sellers2222222',req.sellers);
   	return next();
   });
 
@@ -700,11 +708,14 @@ exports.getSellers = function(req,res,next){
      var filter = {};
     filter.deleted = false;
     filter.status = true;
+    //filter.FAPartnerId =  {$exist:true};
     filter.$or = [{FAPartnerId : partnerId}];
-    filter.role = {$ne:"channelpartner"};
+    filter.role = {$ne:"enterprise"};
     if(defaultPartner === 'y')
-      filter.$or[filter.$or.length] = {FAPartnerId : {$exist:false}};
+      filter.$or[filter.$or.length] = {FAPartnerId : {$exists:false}};
+  console.log("######111111",filter);
     User.find(filter,function(err,finalUsers){
+    	console.log("######",err);
       if(err){return callback("Error in getting user")};
       finalUsers.forEach(function(item){
         users.push(item._id + "");
@@ -752,7 +763,7 @@ exports.exportExcel = function(req,res){
 	if(user.role == 'admin')
   		fieldsMap = fieldConfig['ADMIN_FIELDS'];
 
-	var query = AssetSale.find(filter).populate('user product.proData');
+	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
 		renderExcel(resList);

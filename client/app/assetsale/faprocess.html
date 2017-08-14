@@ -58,9 +58,9 @@
               <td>{{bid.product.name}}</td>
               <td>{{bid.product.seller.name}}</td>
               <td>{{bid.product.seller.mobile}}</td>
-              <td>{{bid.product.user.fname}} {{bid.product.user.lname}}</td>
-              <td>{{bid.product.user.mobile}}</td>              
-              <td>{{bid.product.user.email}}</td>
+              <td>{{bid.user.fname}} {{bid.user.lname}}</td>
+              <td>{{bid.user.mobile}}</td>              
+              <td>{{bid.user.email}}</td>
 
               <td>{{bid.bidAmount}}</td>
               <td>{{bid.bidStatus}}</td>
@@ -90,7 +90,7 @@
 
                 <button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'FULLPAYMENT')" ng-click="faVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button>
 
-                <button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="faVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="faVm.doUpload(bid)">
+                <button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="faVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'DoUpload','')">
                      <i class="fa fa-upload"></i>
                   </button>
                   
@@ -178,7 +178,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="product in bidproductVm.dataList">             
+            <tr ng-repeat="product in faVm.dataList">             
               <td>{{product.assetId}}</td>
               <td>{{product.name}}</td>
               <td>{{product.reservePrice}}</td> 
@@ -190,7 +190,7 @@
               <td>
                 <!-- seller action -->
                 <a href="/assetsale/bidrequests?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
-              <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview','actionable')"><i class="fa fa-info"></i></button>                
+              <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="faVm.openDialog(product,'bidProductDetailPopup','product-preview','actionable')"><i class="fa fa-info"></i></button>                
               </td>             
             </tr>
           </tbody>
