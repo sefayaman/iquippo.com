@@ -138,7 +138,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
           if(err){
             return cb(err);
           }
-          Product.update({_id:item.product.proData},{$set:{tradeType:item.product.tradeType,bidRequestApproved:false}}).exec();;
+          Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidReceived:false,bidCount:0,highestBid:0}}).exec();;
           return cb();
         });
     }
