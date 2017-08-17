@@ -1,15 +1,8 @@
 <div>
-  <div class="row">
-  	<div class="col-sm-6 col-sm-offset-6 text-right">
-  		<h4>
-  			<button class="btn btn-success" ng-click=""><i class="fa fa-file-excel-o"></i> Export Excel</button>
-  		</h4>
-  	</div>
-  </div>
-  <legend></legend>
    <div class="btn-group enterprise-value form-group">
     <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+    <button class="btn btn-success pull-right" ng-click="" style="width:120px;" ><i class="fa fa-file-excel-o"></i> Export Excel</button>
    </div>
 
    <!-- Approved Bid -->

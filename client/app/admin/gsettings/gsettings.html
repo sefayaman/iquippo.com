@@ -1724,15 +1724,13 @@
 		<form class="" name="kycForm" >			
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':kycForm.kycType.$invalid && submitted}">
-					<label>KYC Type</label>
 					<select class="form-control" name="kycType" ng-model="kycVm.dataModel.kycType" required>
-		              <option value="">*Select KYC Type</option>
+		              <option value="">*KYC Type</option>
 		              <option ng-repeat="kyc in KYCType" value="{{kyc.name}}">{{kyc.name}}</option>
 		            </select>
 		            <i class="caret"></i>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':kycForm.docName.$invalid && submitted}">
-					<label>Document Name</label>
 					<input type="text" class="form-control" name="docName" ng-model="kycVm.dataModel.docName" placeholder="*Document Name" required>
 				</div>
 				<div class="col-sm-offset-4 col-sm-2">

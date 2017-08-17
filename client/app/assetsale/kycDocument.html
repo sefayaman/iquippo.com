@@ -19,6 +19,7 @@
                 <span class="fa fa-upload"></span>
               </span> 
             </div>
+            <div class="col-sm-offset-4 col-sm-8 form-group"> {{}}</div>
           </div>
           <div class="row">
             <div class="col-sm-4 form-group">ID Proof</div>
@@ -32,8 +33,10 @@
               <span class="btn btn-warning fileinput-button">
                 <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this,'idProof')"  class="ng-scope">
                 <span class="fa fa-upload"></span>
-              </span> 
-            </div>                
+              </span>
+            </div> 
+            <div class="col-sm-offset-4 col-sm-8 form-group"> {{}}</div>
+                           
           </div> 
           <div class="modal-footer">
             <button type="button" class="btn btn-default" ng-click="kycDocumentVm.closeDialog()">Close</button>
