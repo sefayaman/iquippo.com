@@ -445,6 +445,115 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
   function restoreState(){
 
       $scope.equipmentSearchFilter = {};
+      $scope.equipmentSearchFilter.mfgYear = {};
+      $scope.equipmentSearchFilter.currency = {};
+      $scope.currency = {};
+      $scope.mfgyr = {};
+      if($stateParams.mfgYearMin){
+        $scope.equipmentSearchFilter.mfgYear.min = $stateParams.mfgYearMin;
+        $scope.setDate($stateParams.mfgYearMin,1,1,'min');
+
+      }
+      if($stateParams.mfgYearMax){
+         $scope.equipmentSearchFilter.mfgYear.max = $stateParams.mfgYearMax;
+         $scope.setDate($stateParams.mfgYearMax,1,1,'max');
+      }
+      if($stateParams.currencyType){
+         $scope.equipmentSearchFilter.currency.type = $stateParams.currencyType;
+         $scope.currencyType = $stateParams.currencyType;
+      }
+        if($stateParams.currencyMin){
+         $scope.equipmentSearchFilter.currency.min = $stateParams.currencyMin;
+         $scope.currency.minPrice = parseInt($stateParams.currencyMin) || 0;
+        }
+        if($stateParams.currencyMax){
+         $scope.equipmentSearchFilter.currency.max = $stateParams.currencyMax;
+         $scope.currency.maxPrice = parseInt($stateParams.currencyMax)|| 0;
+        }
+      
+      if($stateParams.type){
+        $scope.type = $stateParams.type;
+        onTypeChange($scope.type);
+      }
+      var excludeFiledArr = ['currencyType','currencyMin','currencyMax','mfgYearMin','mfgYearMax','type'];
+      for(var key in $stateParams){
+        if(excludeFiledArr.indexOf(key) == -1)
+            $scope.equipmentSearchFilter[key] =  $stateParams[key];  
+      }
+      
+      if(!$scope.equipmentSearchFilter.group)
+        $scope.equipmentSearchFilter.group = "";
+      
+      if(!$scope.equipmentSearchFilter.category)
+        $scope.equipmentSearchFilter.category = "";
+      
+      if(!$scope.equipmentSearchFilter.brand)
+        $scope.equipmentSearchFilter.brand = "";
+      
+      if(!$scope.equipmentSearchFilter.model)
+        $scope.equipmentSearchFilter.model = "";
+      vm.currentPage = parseInt($stateParams.currentPage) || 1;
+  }
+   init();
+}
+})();
+
+function restoreState(){
+
+      $scope.equipmentSearchFilter = {};
+      $scope.equipmentSearchFilter.mfgYear = {};
+      $scope.equipmentSearchFilter.currency = {};
+      $scope.currency = {};
+      $scope.mfgyr = {};
+      if($stateParams.mfgYearMin){
+        $scope.equipmentSearchFilter.mfgYear.min = $stateParams.mfgYearMin;
+        $scope.setDate($stateParams.mfgYearMin,1,1,'min');
+
+      }
+      if($stateParams.mfgYearMax){
+         $scope.equipmentSearchFilter.mfgYear.max = $stateParams.mfgYearMax;
+         $scope.setDate($stateParams.mfgYearMax,1,1,'max');
+      }
+      if($stateParams.currencyType){
+         $scope.equipmentSearchFilter.currency.type = $stateParams.currencyType;
+         $scope.currencyType = $stateParams.currencyType;
+      }
+        if($stateParams.currencyMin){
+         $scope.equipmentSearchFilter.currency.min = $stateParams.currencyMin;
+         $scope.currency.minPrice = parseInt($stateParams.currencyMin) || 0;
+        }
+        if($stateParams.currencyMax){
+         $scope.equipmentSearchFilter.currency.max = $stateParams.currencyMax;
+         $scope.currency.maxPrice = parseInt($stateParams.currencyMax)|| 0;
+        }
+      
+      if($stateParams.type){
+        $scope.type = $stateParams.type;
+        onTypeChange($scope.type);
+      }
+      var excludeFiledArr = ['currencyType','currencyMin','currencyMax','mfgYearMin','mfgYearMax','type'];
+      for(var key in $stateParams){
+        if(excludeFiledArr.indexOf(key) == -1)
+            $scope.equipmentSearchFilter[key] =  $stateParams[key];  
+      }
+      
+      if(!$scope.equipmentSearchFilter.group)
+        $scope.equipmentSearchFilter.group = "";
+      
+      if(!$scope.equipmentSearchFilter.category)
+        $scope.equipmentSearchFilter.category = "";
+      
+      if(!$scope.equipmentSearchFilter.brand)
+        $scope.equipmentSearchFilter.brand = "";
+      
+      if(!$scope.equipmentSearchFilter.model)
+        $scope.equipmentSearchFilter.model = "";
+      vm.currentPage = parseInt($stateParams.currentPage) || 1;
+  }
+
+  function restoreStatey(){
+
+      $scope.equipmentSearchFilter = {};
       
       if($stateParams.type){
         $scope.type = $stateParams.type;
@@ -459,6 +568,3 @@ function ViewProductsCtrl($scope,$state, $stateParams, $rootScope,$uibModal, Aut
       
       vm.currentPage = parseInt($stateParams.currentPage) || 1;
   }
-   init();
-}
-})();
