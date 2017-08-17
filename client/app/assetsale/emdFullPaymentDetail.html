@@ -4,7 +4,7 @@
       <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
     </div>
     <div class="modal-body">
-    <table class="table">
+    <table class="table" ng-if="emdFullPaymentVm.visibleFlag">
       <tr>
         <td>{{formType}} :</td>
         <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>
@@ -16,7 +16,7 @@
         <td ng-if="formType != 'EMD'">{{bidData.fullPayment.remainingPayment || 0}}</td>
       </tr>
     </table>  
-      <form novalidate class="text-left" name="paymentDetailForm">
+    <form novalidate class="text-left" name="paymentDetailForm" ng-if="emdFullPaymentVm.visibleFlag">
         <div class="row">
           <div class="col-sm-6 form-group">
             <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.bankName" name="bankName" placeholder="Bank Name">
@@ -42,7 +42,7 @@
           </div>
         </div>
     </form>
-    <div class="table-responsive" ng-if="emdFullPaymentVm.paymentList">
+    <div class="table-responsive" ng-if="emdFullPaymentVm.paymentList" ng-if="!emdFullPaymentVm.visibleFlag">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -50,6 +50,7 @@
                 <th>Mode of Payment</th>
                 <th>Instrument No</th>
                 <th>Amount</th>
+                <th>Date of Payment</th>
               </tr>
             </thead>
             <tbody>
@@ -58,6 +59,7 @@
                  <td>{{payment.paymentMode}}</td>
                  <td>{{payment.instrumentNo}}</td>
                  <td>{{payment.amount}}</td>
+                 <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
               </tr>
             </tbody>
           </table>

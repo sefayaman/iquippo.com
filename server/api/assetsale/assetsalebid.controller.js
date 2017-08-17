@@ -7,7 +7,7 @@ var trim = require('trim');
 var AssetSaleBid = require('./assetsalebid.model');
 var AssetSaleUtil = require('./assetsaleutil');
 var APIError=require('../../components/_error');
-var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
 var Product = require('../product/product.model');
 var User = require('../user/user.model');
 var Vendor = require('../vendor/vendor.model');
@@ -423,7 +423,7 @@ exports.withdrawBid = function(req, res) {
 	
 	withdrawBid(function(err,result){
 		if(err) return res.status(err.status).send(err.msg);
-		return res.json({msg: "Bid withdrawn Successfully!"});
+		return res.json({msg: "Bid withdraw Successfully!"});
 	});
 
 	function getBid(callback){
@@ -442,7 +442,7 @@ exports.withdrawBid = function(req, res) {
 		AssetSaleBid.find(filter).exec(function(err, bid){
 			if(err) callback({status:500,msg:err});
 			if(bid.length == 0)
-				return callback({status:404,msg: "No active bid for this product for withdrawn!"})
+				return callback({status:404,msg: "No active bid for this product for withdraw!"})
 			if (bid.length > 0)
 				bidData = bid[0].toObject();
 			callback(null, bidData);

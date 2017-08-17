@@ -10,13 +10,15 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
     vm.closeDialog = closeDialog;
     vm.submit = submit;
   	var action = $scope.formType == 'EMD' ? 'emdPayment' : 'fullPayment';
-
+  	vm.visibleFlag = true;
   	function init(){
 		if($scope.bidData.emdPayment && $scope.bidData.emdPayment.paymentsDetail && action == 'emdPayment') {
 			vm.paymentList = [];
+			vm.visibleFlag = $scope.bidData.emdPayment.remainingPayment < 1 ? false : true;
 			angular.copy($scope.bidData.emdPayment.paymentsDetail, vm.paymentList);
 		} else if($scope.bidData.fullPayment && $scope.bidData.fullPayment.paymentsDetail && action == 'fullPayment') {
 			vm.paymentList = [];
+			vm.visibleFlag = $scope.bidData.fullPayment.remainingPayment < 1 ? false : true;
 			angular.copy($scope.bidData.fullPayment.paymentsDetail, vm.paymentList);
 		}
     }

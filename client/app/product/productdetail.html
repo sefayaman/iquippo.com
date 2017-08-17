@@ -501,7 +501,7 @@
                     <small class="pull-right">Asset Listed in Auction</small>
                   </div> -->
                   <div class="col-sm-3" ng-if="productDetailVm.bidCount !== 0">
-                    <a href="javascript:void(0);" class="text-danger pull-right">[{{productDetailVm.bidCount}} Bids]</a>
+                    <p class="text-danger pull-right">[{{productDetailVm.bidCount}} Bids]</p>
                   </div>
                 </div>
                </div>
@@ -523,7 +523,7 @@
                      </button>
 
                      <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
-                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdrawn</button>
+                     <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdraw</button>
                      <button type="button" ng-if="auctionsData.allowBid == 'No' && auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                    </div>
                  </div>

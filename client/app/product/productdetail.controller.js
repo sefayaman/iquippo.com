@@ -109,7 +109,7 @@
       filter = {};
       filter.userId = Auth.getCurrentUser()._id;
       filter.productId = $scope.currentProduct._id;
-      Modal.confirm("Do you want to withdrawn bid?", function(ret) {
+      Modal.confirm("Do you want to withdraw bid?", function(ret) {
         if (ret == "yes") {
           AssetSaleSvc.withdrawBid(filter)
           .then(function(res) {

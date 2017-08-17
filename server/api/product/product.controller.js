@@ -40,7 +40,7 @@ var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
 var moment = require('moment');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
-var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
 
 // Get list of products
 exports.getAll = function(req, res) {
