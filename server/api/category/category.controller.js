@@ -66,6 +66,8 @@ exports.searchCategory = function(req, res) {
   filter["deleted"] = false;
   if(req.body.status)
     filter["status"] = req.body.status;
+  if(req.body.groupId)
+    filter['group._id'] = req.body.groupId;
   if(req.body.searchStr){
     var term = new RegExp(req.body.searchStr, 'i');
     filter['name'] = { $regex: term };

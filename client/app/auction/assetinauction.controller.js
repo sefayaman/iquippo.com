@@ -17,6 +17,16 @@
     vm.productSearchOnMfg=productSearchOnMfg;
     vm.auctionDetailListing = [];
     vm.backButton = backButton;
+    vm.auctionName=$location.search().auctionName;
+    vm.auctionOwner=$location.search().auctionOwner;
+    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
+    vm.auctionCity=$location.search().auctionCity;
+    $scope.auctionValue=$location.search().auctionType;
+    vm.auctionOwner=$location.search().auctionOwner;
+    vm.auctionOwnerMobile=$location.search().auctionOwnerMobile;
+    vm.auctionCity=$location.search().auctionCity;
+    vm.auctionTypeValue=$location.search().auctionTypeValue;
+    vm.termAuction=$location.search().termAuction;
     $scope.openUrl = openUrl;
 
     //registering category brand functions
@@ -72,9 +82,9 @@
       });
     }
     function openUrl(_id) {
-      if(!_id)
+      if (!_id)
         return;
-      
+
       $window.open('/productdetail/' + _id, '_blank');
     }
 
@@ -219,7 +229,7 @@
                     }
                   });
                   vm.auctionDetailListing = result;
-                  $scope.auctionValue=$location.search().auctionType;
+                  $scope.auctionValue = $location.search().auctionType;
                 });
             } else {
               assetIds = [];
