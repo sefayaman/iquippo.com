@@ -507,7 +507,7 @@
                </div>
                <div class="panel-footer">
                   <!-- <a href="javascript:void(0);" ng-click="redirectToAuction()"><strong>{{auctionsData.name}} </strong></a> -->
-                  <p ng-if="auctionsData.name"><strong>Listed in Auction:</strong> <a href="javascript:void(0);">{{auctionsData.name}} ({{auctionsData.auctionId}}) </a> <span class="pull-right">{{auctionsData.startDate | date:'MMM d, y'}} to {{auctionsData.endDate | date:'MMM d, y'}}</span>  
+                  <p ng-if="auctionsData.name && currentProduct.assetStatus != 'sold'"><strong>Listed in Auction:</strong> <a href="javascript:void(0);">{{auctionsData.name}} ({{auctionsData.auctionId}}) </a> <span class="pull-right">{{auctionsData.startDate | date:'MMM d, y'}} to {{auctionsData.endDate | date:'MMM d, y'}}</span>  
                   <legend></legend>
                   </p>
                  <h4 ng-if="currentProduct.priceOnRequest == false && !auctionsData.name">Sale Price: <i class="fa fa-inr"></i>{{currentProduct.grossPrice}}</h4>

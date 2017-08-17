@@ -95,6 +95,8 @@ function _getRecord(data, cb) {
     filter['user.userId'] = data.user.userId;
   if(data.category && data.category.categoryId)
     filter['category.categoryId'] = data.category.categoryId;
+  if(data.category && data.category.name == "All")
+    filter['category.name'] = "All";
   Model.find(filter, function(err, result) {
     cb(err, result);
   });

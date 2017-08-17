@@ -78,10 +78,13 @@
         function onCategoryChange(categoryId, noChange) {
           if (!noChange) {
             vm.dataModel.category = {};
-            if (categoryId) {
+            if (categoryId != 'All') {
               var ct = categorySvc.getCategoryOnId(categoryId);
               vm.dataModel.category.categoryId = ct._id;
               vm.dataModel.category.name = ct.name;
+            } else {
+              //vm.dataModel.category.categoryId = "All";
+              vm.dataModel.category.name = "All";
             }
           }
         }
@@ -224,6 +227,8 @@
             }
             if(vm.dataModel.category && vm.dataModel.category.categoryId)
                 $scope.container.categoryId = vm.dataModel.category.categoryId;
+            if(vm.dataModel.category && vm.dataModel.category.name == "All")
+                $scope.container.categoryId = "All";
             $scope.isEdit = true;
         }
 

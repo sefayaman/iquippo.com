@@ -214,7 +214,7 @@
       break;
 
       case 'KYC':
-        if(bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus) > 5)
+        if(bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus) > 8)
           retVal = true;
         else
           retVal = false; 
@@ -227,7 +227,7 @@
           retVal = false;
       break;
       case 'INVOICEDETAIL':
-        var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus)> 5 ? true:false;
+        var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus)> 8 ? true:false;
         if(isValidStatus && bid.user._id === Auth.getCurrentUser()._id)
           retVal = true;
          else if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner()))

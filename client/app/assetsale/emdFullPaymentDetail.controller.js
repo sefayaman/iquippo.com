@@ -39,6 +39,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			$scope.bidData.emdPayment.remainingPayment = (Number($scope.bidData.emdPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0; 
 			if(!$scope.bidData.emdPayment.paymentsDetail)
 				$scope.bidData.emdPayment.paymentsDetail = [];
+			vm.emdFullPaymentInfo.createdAt = new Date();
 			$scope.bidData.emdPayment.paymentsDetail[$scope.bidData.emdPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
 		} else {
 			if(vm.emdFullPaymentInfo.amount > $scope.bidData.fullPayment.remainingPayment) {
@@ -50,6 +51,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			$scope.bidData.fullPayment.remainingPayment = (Number($scope.bidData.fullPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0; 
 			if(!$scope.bidData.fullPayment.paymentsDetail)
 				$scope.bidData.fullPayment.paymentsDetail = [];
+			vm.emdFullPaymentInfo.createdAt = new Date();
 			$scope.bidData.fullPayment.paymentsDetail[$scope.bidData.fullPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
 		}
 	    AssetSaleSvc.update($scope.bidData, action).

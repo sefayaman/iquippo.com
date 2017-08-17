@@ -1846,6 +1846,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.categoryId.$invalid && submitted}">
 					<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="assetSaleChargeVm.onCategoryChange(container.categoryId)" ng-disabled="assetSaleChargeVm.dataModel.userRole == 'default'" ng-required="assetSaleChargeVm.dataModel.userRole != 'default'">
 						<option value="">*Asset Category</option>
+						<option value="All">All</option>
 						<option value="{{ct._id}}" ng-repeat="ct in assetSaleChargeVm.categoryList">{{ct.name}}</option>
 					</select>
 				</div>
@@ -2209,6 +2210,7 @@
 					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.categoryId.$invalid && submitted}">
 						<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="emdChargeVm.onCategoryChange(container.categoryId)" ng-disabled="emdChargeVm.dataModel.userRole == 'default'" ng-required="emdChargeVm.dataModel.userRole != 'default'">
 							<option value="">*Asset Category</option>
+							<option value="All">All</option>
 							<option value="{{ct._id}}" ng-repeat="ct in emdChargeVm.categoryList">{{ct.name}}</option>
 						</select>
 					</div>

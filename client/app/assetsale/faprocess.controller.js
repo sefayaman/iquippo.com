@@ -21,6 +21,8 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 		initFilter.userType = 'FA';
 		if(Auth.getCurrentUser().partnerInfo.defaultPartner)
 			initFilter.defaultPartner = 'y';
+		else
+			initFilter.defaultPartner = 'n';
         initFilter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
 		getApprovedBids(angular.copy(initFilter));
 	}

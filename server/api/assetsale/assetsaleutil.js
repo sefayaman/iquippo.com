@@ -102,7 +102,6 @@ function getValueFromSaleProcessMaster(filter, callback) {
 }
 
 function getEmdFromMaster(filter, callback) {
-	console.log("tempFilter userId", filter);
 	var tempFilter = {};
 	if(filter.enterpriseId)
 		tempFilter.enterpriseId = filter.enterpriseId;
@@ -118,7 +117,7 @@ function getEmdFromMaster(filter, callback) {
 			if (err)
 				return callback(err);
 			if(result.length == 0) {
-				tempFilter['category.name'] = "Other";
+				tempFilter['category.name'] = "All";
 				var query = EMDMaster.find(tempFilter);
 				query.exec(function(err, emdcharge) {
 					if (err || !emdcharge.length)

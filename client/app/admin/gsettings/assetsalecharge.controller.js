@@ -77,10 +77,13 @@
         function onCategoryChange(categoryId, noChange) {
           if (!noChange) {
             vm.dataModel.category = {};
-            if (categoryId) {
+            if (categoryId != 'All') {
               var ct = categorySvc.getCategoryOnId(categoryId);
               vm.dataModel.category.categoryId = ct._id;
               vm.dataModel.category.name = ct.name;
+            } else {
+              //vm.dataModel.category.categoryId = "All";
+              vm.dataModel.category.name = "All";
             }
           }
         }
@@ -229,6 +232,10 @@
                 vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
             if(rowData.category && rowData.category.categoryId)
                 $scope.container.categoryId = rowData.category.categoryId;
+            if(vm.dataModel.category && vm.dataModel.category.name == "All")
+                $scope.container.categoryId = "All";
+            if(vm.dataModel.userRole == "default")
+                $scope.container.categoryId = "";
             $scope.isEdit = true;
         }
 
