@@ -1986,13 +1986,14 @@
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-3">
+					<label>Negotiated Sale Approval Required</label>
 					<select class="form-control" name="negotiatedSaleApproval" ng-model="saleProcesssVm.dataModel.negotiatedSaleApproval">
-						<option value="">Negotiated Sale Approval Required</option>
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
 					</select>					
 				</div>
 				<div class="col-sm-3">
+					<label>Cooling Period</label>
 					<div class="row">
 						<div class="col-sm-5 padd-right" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriodIn.$invalid && submitted}">
 							<select class="form-control" name="coolingPeriodIn" ng-model="saleProcesssVm.dataModel.coolingPeriodIn" required>
@@ -2007,9 +2008,11 @@
 					</div>					
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.emdPeriod.$invalid && submitted}">
+					<label>EMD Period</label>
 					<input type="number" class="form-control" name="emdPeriod" ng-model="saleProcesssVm.dataModel.emdPeriod" min="0" placeholder="*EMD Period" ng-pattern="/^\d+$/" required>
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.fullPaymentPeriod.$invalid && submitted}">
+					<label>Full Payment Period</label>
 					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="saleProcesssVm.dataModel.fullPaymentPeriod" min="0" placeholder="*Full Payment Period" ng-pattern="/^\d+$/" required>
 				</div>				
 			</div>
