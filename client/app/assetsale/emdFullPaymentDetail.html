@@ -1,9 +1,9 @@
 <div> 
-    <div class="modal-header">
-      <button type="button" class="close" ng-click="emdFullPaymentVm.closeDialog()">&times;</button>
-      <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
-    </div>
-    <div class="modal-body">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="emdFullPaymentVm.closeDialog()">&times;</button>
+    <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
+  </div>
+  <div class="modal-body">
     <table class="table" ng-if="emdFullPaymentVm.visibleFlag">
       <tr>
         <td>{{formType}} :</td>
@@ -43,27 +43,33 @@
         </div>
     </form>
     <div class="table-responsive" ng-if="emdFullPaymentVm.paymentList" ng-if="!emdFullPaymentVm.visibleFlag">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Bank Name</th>
-                <th>Mode of Payment</th>
-                <th>Instrument No</th>
-                <th>Amount</th>
-                <th>Date of Payment</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="payment in emdFullPaymentVm.paymentList">
-                 <td>{{payment.bankName}}</td>
-                 <td>{{payment.paymentMode}}</td>
-                 <td>{{payment.instrumentNo}}</td>
-                 <td>{{payment.amount}}</td>
-                 <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-  </div>    
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Bank Name</th>
+            <th>Mode of Payment</th>
+            <th>Instrument No</th>
+            <th>Date of Payment</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="payment in emdFullPaymentVm.paymentList">
+             <td>{{payment.bankName}}</td>
+             <td>{{payment.paymentMode}}</td>
+             <td>{{payment.instrumentNo}}</td>
+             <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
+             <td>{{payment.amount}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div> 
+    <div class="row">
+      <div class="col-sm-offset-6 col-sm-4 text-right">
+        Total: 
+      </div>
+      <div class="col-sm-2">25000</div>
+    </div>        
+  </div>  
+   
 </div>

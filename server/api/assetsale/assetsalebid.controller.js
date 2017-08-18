@@ -651,15 +651,13 @@ exports.getMaxBidOnProduct = function(req, res) {
 };
 
 exports.getSellers = function(req,res,next){
-
 	var userType = req.body.userType || req.query.userType;
 	var partnerId = req.body.partnerId || req.query.partnerId;
 	var defaultPartner = req.body.defaultPartner || req.query.defaultPartner;
-
 	if(!userType || userType !== 'FA')
 		return next();
-  var users = [];
-  async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
+	var users = [];
+	async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
   	req.sellers = users;
   	return next();
@@ -670,10 +668,15 @@ exports.getSellers = function(req,res,next){
     filter.deleted = false;
     filter.status = true;
     filter.enterprise = true;
-    filter.$or = [{"availedServices.partnerId" : partnerId}];
+    filter.role = "enterprise";
+    //filter.$or = [{"availedServices.partnerId" : partnerId}];
+    //filter['availedServices.partnerId'] = partnerId;
+    filter.$or = [{FAPartnerId : partnerId}];
+    // if(defaultPartner === 'y')
+    //   filter.$or[filter.$or.length] = {"availedServices.code" : {$ne:"Sale Fulfilment"}};
     if(defaultPartner === 'y')
-      filter.$or[filter.$or.length] = {"availedServices.code" : {$ne:"Sale Fulfilment"}};
-    User.find(filter,function(err,enterprises){
+      filter.$or[filter.$or.length] = {FAPartnerId : {$exists:false}};
+  	User.find(filter,function(err,enterprises){
       if(err){return callback("Error in getting user")};
       var entIds = [];
       if(!enterprises.length)
@@ -697,13 +700,13 @@ exports.getSellers = function(req,res,next){
     filter.deleted = false;
     filter.status = true;
     filter.$or = [{FAPartnerId : partnerId}];
-    filter.role = {$ne:"enterprise"};
+    filter.role = {$in: ['customer', 'channelpartner']};
     if(defaultPartner === 'y')
       filter.$or[filter.$or.length] = {FAPartnerId : {$exists:false}};
     User.find(filter,function(err,finalUsers){
       if(err){return callback("Error in getting user")};
       finalUsers.forEach(function(item){
-        users.push(item._id + "");
+      	users.push(item._id + "");
       });
       return callback();
     });
