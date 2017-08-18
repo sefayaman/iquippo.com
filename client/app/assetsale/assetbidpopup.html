@@ -17,26 +17,26 @@
             </div>
             <div class="asset-taxes">
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-5">GST : </div>
-                <div class="col-sm-3"><i class="fa fa-inr"></i> {{taxRate}}</div>
+                <div class="col-sm-offset-2 col-sm-4">GST</div>
+                <div class="col-sm-3 col-sm-offset-1"><i class="fa fa-inr"></i> {{taxRate}}</div>
               </div>
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-5">TCS : </div>
-                <div class="col-sm-3"><i class="fa fa-inr"></i> {{tcs}}</div>
+                <div class="col-sm-offset-2 col-sm-4">TCS</div>
+                <div class="col-sm-3 col-sm-offset-1"><i class="fa fa-inr"></i> {{tcs}}</div>
               </div>
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-5">Parking : </div>
-                <div class="col-sm-3"><i class="fa fa-inr"></i> {{parking}}</div>
+                <div class="col-sm-offset-2 col-sm-4">Parking</div>
+                <div class="col-sm-3 col-sm-offset-1"><i class="fa fa-inr"></i> {{parking}}</div>
               </div>
             </div>
             <div class="asset-total">
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-5">Total : </div>
-                <div class="col-sm-3"><i class="fa fa-inr"></i> {{total}} </div>
+                <div class="col-sm-offset-2 col-sm-4">Total : </div>
+                <div class="col-sm-offset-1 col-sm-3"><i class="fa fa-inr"></i> {{total}} </div>
               </div>
             </div>
             <div class="asset-action text-right">
-              <div class="btn-group">
+              <div>
                 <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
                 <button type="button" ng-if="params.bid == 'placebid'" class="btn btn-danger" ng-click="assetBidPopUpVm.submitBid(bidPopup)">Submit Bid</button>
                 <button type="button" ng-if="params.bid == 'buynow'" class="btn btn-danger" ng-click="assetBidPopUpVm.submitBid(bidPopup)">Buy Now</button>

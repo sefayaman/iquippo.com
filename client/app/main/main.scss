@@ -957,9 +957,12 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .asset-sale .panel-footer .btn.btn-danger{width: 120px;}
 .bidmodal .modal-dialog{width: 450px;}
 .asset-sale.modal-body{padding-left: 0; padding-right: 0; padding-bottom: 0; text-align: left; overflow: hidden;}
-.asset-sale .asset-taxes{background: #e5e5e5; border-top: 1px solid #ddd; padding: 15px 0; margin-top: 15px; border-bottom: 1px solid #d5d5d5;}
-.asset-sale .asset-total{background: #ddd; padding: 10px 0; font-weight: bold; border-top: 1px solid #ddd; border-bottom: 1px solid #d5d5d5;}
-.bidmodal .asset-sale .form-control , .bidmodal .asset-sale .btn{height: 40px;} 
+.asset-sale .asset-taxes{background: #e5e5e5; border-top: 1px solid #ddd; margin-top: 15px; border-bottom: 1px solid #d5d5d5;}
+.asset-sale .asset-taxes .row:nth-child(odd){background: #eee;}
+.asset-sale .asset-taxes .row .col-sm-offset-2, .asset-sale .asset-total .row .col-sm-offset-2{border-right: 1px solid #bbb; padding: 10px 15px;}
+.asset-sale .asset-taxes .row .col-sm-offset-1, .asset-sale .asset-total .row .col-sm-offset-1{padding: 10px 15px;}
+.asset-sale .asset-total{background: #ddd; font-weight: bold; border-top: 1px solid #ddd; border-bottom: 1px solid #d5d5d5;}
+/* .bidmodal .asset-sale .form-control , .bidmodal .asset-sale .btn{height: 40px;}  */
 .bidmodal .asset-sale .btn-group .btn{width: 120px;}
 .bidmodal .asset-action{padding: 20px 15px;}
 .table.bidhistory{border:0;}
