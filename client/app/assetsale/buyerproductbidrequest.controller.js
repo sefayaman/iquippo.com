@@ -12,6 +12,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 	vm.openBidModal = openBidModal;
 	$scope.pager = PagerSvc.getPager();
 	vm.validateAction = AssetSaleSvc.validateAction;
+	vm.exportExcel = exportExcel;
 	vm.update = update;
 	var initFilter = {};
 
@@ -156,6 +157,12 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 
 			});
 
+	}
+
+	function exportExcel() {
+		var filter = {};
+        filter.buyer = 'y';
+		AssetSaleSvc.exportExcel(filter);
 	}
 
 	//loading start

@@ -4,7 +4,7 @@
     <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'saleinprocess'}" ng-click="onTabChange('saleinprocess')">Sale In Progress</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed</button>
 
-    <button class="btn btn-success pull-right" ng-click="" style="width: 120px;"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+    <button class="btn btn-success pull-right" ng-click="bidproductVm.exportExcel()" style="width: 120px;"><i class="fa fa-file-excel-o"></i> Export Excel</button>
    </div>
 
    	<!-- Approved Bid -->

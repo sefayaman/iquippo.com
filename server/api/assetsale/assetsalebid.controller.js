@@ -4,6 +4,9 @@ var _ = require('lodash');
 var Seq=require('seq');
 var async = require('async');
 var trim = require('trim');
+var xlsx = require('xlsx');
+var moment = require('moment');
+var Utility = require('./../../components/utility.js');
 var AssetSaleBid = require('./assetsalebid.model');
 var AssetSaleUtil = require('./assetsaleutil');
 var APIError=require('../../components/_error');
@@ -659,6 +662,7 @@ exports.getSellers = function(req,res,next){
 	var users = [];
 	async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
+  	console.log("req.sellers = users", users);
   	req.sellers = users;
   	return next();
   });
@@ -727,18 +731,19 @@ exports.getBidProduct = function(req,res,next){
 }
 
 exports.exportExcel = function(req,res){
-	
 	var filter = {};
 	var user = req.user;
 	var queryParam = req.query;
 	var fieldsMap = {};
-
-	if(user.role == 'customer' && queryParam.seller == 'y'){
-		filter['product.seller._id'] = req.user._id;
+	console.log("req.user@@@", req.user);
+	console.log("req.sellers@@@", queryParam);
+	if(queryParam.seller == 'y'){
+		console.log("queryParam.seller@@@", queryParam.seller);
+		filter['product.seller._id'] = req.user._id +"";
 		fieldsMap = fieldConfig['SELLER_FIELDS'];
 	}
 
-	if(user.role == 'customer' && queryParam.buyer == 'y'){
+	if(queryParam.buyer == 'y'){
 		filter.user = req.user._id;
 		fieldsMap = fieldConfig['BUYER_FIELDS'];
 	}
@@ -750,7 +755,7 @@ exports.exportExcel = function(req,res){
 
 	if(user.role == 'admin')
   		fieldsMap = fieldConfig['ADMIN_FIELDS'];
-
+  	console.log("FilterBid###", filter);
 	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
@@ -764,12 +769,16 @@ exports.exportExcel = function(req,res){
 	  resList.forEach(function(item,idx){
 	    dataArr[idx + 1] = [];
 	    headers.forEach(function(header){
-	      var keyObj = fieldMap[header];
+	      var keyObj = fieldsMap[header];
 	      var val = _.get(item,keyObj.key,"");
 	      if(keyObj.type && keyObj.type == 'boolean')
 	          val = val?'YES':'NO';
 	      if(keyObj.type && keyObj.type == 'date' && val)
 	        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+	      if(keyObj.key && keyObj.key == 'buyerName')
+	        val = item.user.fname + " " + item.user.fname;
+	      if(keyObj.key && keyObj.key == 'fullPaymentAmount')
+	        val = item.bidAmount - item.emdAmount;
 	      
 	      if(keyObj.type && keyObj.type == 'url' && val){
 	        if(val.filename)

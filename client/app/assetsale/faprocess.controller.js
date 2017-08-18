@@ -13,7 +13,9 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	vm.openDialog = openDialog;
 	vm.validateAction = AssetSaleSvc.validateAction;
 	vm.update = update;
+	vm.exportExcel = exportExcel;
 	var initFilter = {actionable : 'y'};
+	
 	function init() {
 		if(!Auth.isFAgencyPartner())
 			$state.go('main');
@@ -110,6 +112,11 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 		Modal.openDialog(popupName,newScope,modalClass);
 	}
 
+	function exportExcel() {
+		var filter = {};
+        filter.fa = 'y';
+		AssetSaleSvc.exportExcel(filter);
+	}
 
 	//loading start
 	Auth.isLoggedInAsync(function(loggedIn) {

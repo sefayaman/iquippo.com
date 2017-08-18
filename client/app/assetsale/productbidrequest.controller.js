@@ -15,7 +15,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.openDialog = openDialog;
 	
 	vm.update = update;
-
+	vm.exportExcel = exportExcel;
 	vm.validateAction = AssetSaleSvc.validateAction;
 	vm.backButton = backButton;
 	vm.activeBid = "approved";
@@ -112,6 +112,12 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 		if(formType)
 			newScope.formType = formType;
 		Modal.openDialog(popupName,newScope,modalClass);
+	}
+
+	function exportExcel() {
+		var filter = {};
+        filter.seller = 'y';
+		AssetSaleSvc.exportExcel(filter);
 	}
 
 	//loading start

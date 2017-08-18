@@ -20,6 +20,7 @@
     svc.validateAction = validateAction;
     svc.getEmdOnProduct = getEmdOnProduct;
     svc.changeBidStatus = changeBidStatus;
+    svc.exportExcel = exportExcel;
 
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
@@ -315,6 +316,24 @@
         if(cb)
           cb(true);
     });
+  }
+
+  function exportExcel(filter){
+    var serPath = path;
+    var reportType = "Product_Bid";
+    var queryParam = "";
+    if(filter)
+        queryParam = UtilSvc.buildQueryParam(filter);
+    if(queryParam)
+      serPath = serPath + "/export" + "?" + queryParam;
+    return $http.get(serPath)
+    .then(function(res){
+       saveAs(new Blob([s2ab(res.data)],{type:"application/octet-stream"}),reportType+"_"+ new Date().getTime() +".xlsx");
+      //return res.data
+    })
+    .catch(function(err){
+      throw err;
+    })
   }
 
 		return svc;

@@ -11,7 +11,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 	$scope.onTabChange = onTabChange;
 	vm.fireCommand = fireCommand;
 	vm.openDialog = openDialog;
-
+	vm.exportExcel = exportExcel;
 	function init() {
 
 		initFilter.bidReceived = true;
@@ -102,6 +102,12 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		newScope.data = data;
 		newScope.viewBlock = viewBlock;
 		Modal.openDialog(popupName,newScope,modalClass);
+	}
+
+	function exportExcel() {
+		var filter = {};
+        filter.seller = 'y';
+		AssetSaleSvc.exportExcel(filter);
 	}
 
 	//loading start
