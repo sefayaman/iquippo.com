@@ -381,8 +381,6 @@
 								<option>Auction Type</option>
 								<option>Live Auction</option>
 								<option>Online</option>
-								<option>Admin</option>
-								<option>Seller</option>
 							</select>
 						</div>
 						<!-- <div class="col-sm-3 form-group">
@@ -398,22 +396,17 @@
 						</div> -->
 						<div class="col-sm-3 form-group">
 							<select class="form-control">
-								<option>Select LOT</option>
-								<option>Lot1</option>
-								<option>Lot2</option>
-								<option>Lot3</option>								
+								<option>EMD and Tax Applicability</option>
+								<option>Lot Wise</option>
+								<option>Overall</option>					
 							</select>
 						</div>						
 					</div>
 					<div class="row">
 						<div class="col-sm-3 form-group">
-							<input type="checkbox" id="inlinecheck" name="" value="">
-							<label for="inlinecheck">Tax Applicability</label>
-						</div>
-						<div class="col-sm-3 form-group">
 							
 							<!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
-							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount">
+							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount" disabled>
 						</div>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" name="" value="" placeholder="*Multiplier Factor for Credit Limit">
@@ -425,11 +418,11 @@
 								<option>Tax not included</option>						
 							</select>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col-sm-3">
 							<input type="number" class="form-control" name="" value="" placeholder="Bid Increment">
 						</div>
+					</div>
+					<div class="row">						
 						<div class="col-sm-3">
 							<input type="text" class="form-control" name="" value="" placeholder="Last Minute Bid ( in minutes )">
 						</div>
@@ -439,8 +432,6 @@
 						<div class="col-sm-3 form-group">
 							<input type="text" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.termAuction" placeholder="Terms of Auction">
 						</div>
-					</div>
-					<div class="row">						
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Terms &amp; Conditions</span>
@@ -448,6 +439,8 @@
 							</span>
 							<span>{{gsettingVm.auctionData.docName}}</span>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Bid Proxy Form</span>
@@ -466,11 +459,11 @@
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
 						</div>
-					</div>
-					<div class="row form-group">
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
 						</div>
+					</div>
+					<div class="row form-group">						
 						<div class="col-sm-2 pull-right">
 							<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
 							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
