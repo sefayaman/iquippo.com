@@ -29,7 +29,7 @@
             console.log("filter",filter);
             LotSvc.getData(filter)
             .then(function(res){
-            vm.lotList=res;
+            vm.lotList=res;          
             });
           }
 
@@ -123,6 +123,9 @@
               .then(function(result){
 
               vm.EmdData = result;
+              result.forEach(function(x){
+               x.lots=x.selectedLots.toString();
+              });
               vm.filteredList = result;
               console.log(vm.EmdData);
               })
