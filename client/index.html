@@ -17,8 +17,7 @@
       <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <link rel="stylesheet" href="bower_components/DataTables/media/css/jquery.dataTables.css" />
       <link rel="stylesheet" href="bower_components/Hover/css/hover.css" />
-      <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
-      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.css" />
+      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
       <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css" />
       <!-- endbower -->
     <!-- endbuild -->
@@ -33,7 +32,7 @@
     Date: 07/07/2016
     Description : Add hotjar Tag(IQUIPPO Live Server)
   -->
-  <script>
+  <!-- <script>
       (function(h,o,t,j,a,r){
           h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
           h._hjSettings={hjid:245774,hjsv:5};
@@ -42,7 +41,19 @@
           r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
           a.appendChild(r);
       })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
+  </script> -->
+  <!-- Hotjar Tracking Code for http://iquippo.com/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:581377,hjsv:5};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
 
       <!-- injector:css -->
       <!-- endinjector -->
@@ -142,7 +153,6 @@
       <!-- bower:js -->
       <script src="bower_components/jquery/dist/jquery.js"></script>
       <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/json3/lib/json3.js"></script>
       <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
       <script src="bower_components/angular-resource/angular-resource.js"></script>
       <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -153,7 +163,7 @@
       <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
       <script src="bower_components/DataTables/media/js/jquery.dataTables.js"></script>
       <script src="bower_components/moment/moment.js"></script>
-      <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
+      <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
       <script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
       <script src="bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.js"></script>
       <script src="bower_components/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.js"></script>
@@ -167,7 +177,7 @@
       <script src="bower_components/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
       <script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script>
       <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
-      <script src="bower_components/tinymce-dist/tinymce.js"></script>
+      <script src="bower_components/tinymce/tinymce.js"></script>
       <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
       <script src="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.js"></script>
@@ -200,6 +210,8 @@
           <script src="app/admin/emailer/emailer.controller.js"></script>
           <script src="app/admin/gsettings/assetGroup.controller.js"></script>
           <script src="app/admin/gsettings/assetGroup.service.js"></script>
+          <script src="app/admin/gsettings/count.controller.js"></script>
+          <script src="app/admin/gsettings/count.service.js"></script>
           <script src="app/admin/gsettings/gsettings.controller.js"></script>
           <script src="app/admin/gsettings/gsettings.service.js"></script>
           <script src="app/admin/gsettings/servicefee.service.js"></script>

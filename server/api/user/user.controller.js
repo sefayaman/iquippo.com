@@ -6,82 +6,108 @@ var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
-var  xlsx = require('xlsx');
+var xlsx = require('xlsx');
 var Product = require('../product/product.model');
 var CityModel = require('../common/location.model');
 var Vendor = require('../vendor/vendor.model');
 var ManpowerUser = require('../manpower/manpower.model');
 var Utility = require('./../../components/utility.js');
-var userFieldsMap=require('../../config/user_temp_field_map');
+var userFieldsMap = require('../../config/user_temp_field_map');
 var Utillity = require('./../../components/utility');
+var commonController = require('./../common/common.controller');
+var notification = require('./../../components/notification.js');
 var async = require('async');
-
+var APIError = require('../../components/_error');
+var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
+var Seqgen = require('./../../components/seqgenerator').sequence();
 var validationError = function(res, err) {
   return res.status(422).json(err);
-};
+}; 
 
 /**
  * Get list of users
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
-    if(err) return res.status(500).send(err);
+  User.find({}, '-salt -hashedPassword', function(err, users) {
+    if (err) return res.status(500).send(err);
     res.status(200).json(users);
   });
 };
-
 /**
  * Creates a new user
  */
-exports.signUp = function (req, res, next) {
+exports.signUp = function(req, res, next) {
   var newUser = new User(req.body);
   console.log("username::::" + req.body.name);
- newUser.createdAt = new Date();
- newUser.updatedAt = new Date();
- newUser.save(function(err, user) {
-  if (err) return validationError(res, err);
-  var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-  res.json({ token: token });
+  newUser.createdAt = new Date();
+  newUser.updatedAt = new Date();
+  newUser.save(function(err, user) {
+    if (err) return validationError(res, err);
+    var token = jwt.sign({
+      _id: user._id
+    }, config.secrets.session, {
+      expiresInMinutes: 60 * 5
+    });
+    res.json({
+      token: token
+    });
   });
 };
 
-exports.validateSignup = function(req, res){
+exports.validateSignup = function(req, res) {
   var filter = {}
-  if(!req.body.mobile)
+  if (!req.body.mobile)
     return res.status(401).send('Insufficient data');
-  if(req.body.userid)
-     filter['_id'] = {$ne:req.body.userid}; 
-  if(req.body.mobile)
-    filter['mobile'] = req.body.mobile;
-  filter['deleted'] = false;
-  User.find(filter,function(err,users){
-    if(err){ return handleError(res, err); }
-    else if(users.length > 0){
-      return res.status(200).json({errorCode:1,message:"Mobile number is already in used"});
-    }
-    else {
-          if(!req.body.email) 
-            return res.status(200).json({errorCode:0,message:""});
+  if (req.body.userid)
+    filter._id = {
+      $ne: req.body.userid
+    };
+  if (req.body.mobile)
+    filter.mobile = req.body.mobile;
+  filter.deleted = false;
+  User.find(filter, function(err, users) {
+    if (err) {
+      return handleError(res, err);
+    } else if (users.length > 0) {
+      return res.status(200).json({
+        errorCode: 1,
+        message: "Mobile number is already in used"
+      });
+    } else {
+      if (!req.body.email)
+        return res.status(200).json({
+          errorCode: 0,
+          message: ""
+        });
 
-          filter = {}
-          if(req.body.userid)
-            filter['_id'] = {$ne:req.body.userid}; 
-          // if(req.body.email)
-          filter['email'] = req.body.email;
-          filter['deleted'] = false;
-          User.find(filter,function(err,usrs){
-             if(err){ return handleError(res, err); }
-             else if(usrs.length > 0){
-                return res.status(200).json({errorCode:2,message:"Email is already in used"});
-             }
-           else
-          return res.status(200).json({errorCode:0,message:""});
-        })
+      filter = {};
+      if (req.body.userid)
+        filter._id = {
+          $ne: req.body.userid
+        };
+      // if(req.body.email)
+      filter.email = req.body.email;
+      filter.deleted = false;
+      User.find(filter, function(err, usrs) {
+        if (err) {
+          return handleError(res, err);
+        } else if (usrs.length > 0) {
+          return res.status(200).json({
+            errorCode: 2,
+            message: "Email is already in used"
+          });
+        } else
+          return res.status(200).json({
+            errorCode: 0,
+            message: ""
+          });
+      });
     }
   });
 }
-exports.parseImportExcel = function(req,res,next){
+
+exports.parseImportExcel = function(req, res, next) {
   var body = req.body;
   var ret;
   ['filename', 'user'].forEach(function(x) {
@@ -90,8 +116,8 @@ exports.parseImportExcel = function(req,res,next){
     }
   });
 
-  if(ret)
-    return  next(new APIError(412,'Missing mandatory parameter: ' + ret));
+  if (ret)
+    return next(new APIError(412, 'Missing mandatory parameter: ' + ret));
   var options = {
     file: body.filename,
     headers: Object.keys(userFieldsMap),
@@ -103,18 +129,21 @@ exports.parseImportExcel = function(req,res,next){
   return next();
 };
 
-exports.validateExcel=function(req,res,next){
-var excelData = req.excelData;
+exports.validateExcel = function(req, res, next) {
+  var tasksBasedOnRole = {};
+  var excelData = req.excelData;
   var user = req.body.user;
   var reqType = req.reqType;
 
-  if(!reqType)
-    return next(new APIError(400,'Invalid request type'));
+  if (!reqType)
+    return next(new APIError(400, 'Invalid request type'));
 
   if (excelData instanceof Error) {
-    return  next(new APIError(412,'Invalid Excel File'));
+    return next(new APIError(412, 'Invalid Excel File'));
   }
 
+
+  var enterpriseAvailedServices = [];
   var uploadData = [];
   var errorList = [];
   var userObj = {};
@@ -123,181 +152,317 @@ var excelData = req.excelData;
 
   function finalize(err) {
     if (err) {
-      return next(new APIError(500,'Error while updating'));
+      return next(new APIError(500, 'Error while updating'));
     }
-    if(!uploadData.length && !errorList.length){
-      return res.json({successCount:0 , errorList : excelData.length,totalCount : req.totalCount});
+    if (!uploadData.length && !errorList.length) {
+      return res.json({
+        successCount: 0,
+        errorList: excelData.length,
+        totalCount: req.totalCount
+      });
     }
     req.errorList = errorList;
     req.uploadData = uploadData;
     next();
   }
-   
-   function initialize(row,cb){
-     if(reqType === 'Upload'){
-      if(!userObj[row.mobile]){
+
+  function initialize(row, cb) {
+    if (!row.enterpriseId && row.role === 'enterprise'){
+      tasksBasedOnRole = {
+        validateEmailAddress: validateEmailAddress,
+        validateMandatoryCols: validateMandatoryCols,
+        validateDupUser: validateDupUser,
+        validateLegalEntity: validateLegalEntity,
+        validatePan:validatePan,
+        validateAadhaar: validateAadhaar,
+        validateCity: validateCity,
+        validateValuationAgencies:validateValuationAgencies,
+        validateAssetInspectionAgencies:validateAssetInspectionAgencies,
+        validateFinanceAgencies:validateFinanceAgencies,
+        validateEnterpriseAvailedServices:validateEnterpriseAvailedServices
+      };
+      row.enterpriseId="E" + row.mobile + "" + Math.floor(Math.random() *10);
+      row.enterprise=true;
+    }
+    else if(row.enterpriseId && row.role === 'enterprise'){
+      tasksBasedOnRole = {
+        validateEmailAddress: validateEmailAddress,
+        validateMandatoryCols: validateMandatoryCols,
+        validateDupUser: validateDupUser,
+        validateEnterprise: validateEnterprise,
+        validateLegalEntity: validateLegalEntity,
+        validatePan: validatePan,
+        validateAadhaar: validateAadhaar,
+        validateCity: validateCity
+      };
+      if(row.vapprovalRequired)
+        delete row.vapprovalRequired;
+      if(row.aapprovalRequired)
+        delete row.aapprovalRequired;
+      if(row.fapprovalRequired)
+        delete row.fapprovalRequired;
+    }
+    else if (row.role !== 'enterprise'){
+      tasksBasedOnRole = {
+        validateEmailAddress: validateEmailAddress,
+        validateMandatoryCols: validateMandatoryCols,
+        validateDupUser: validateDupUser,
+        validateLegalEntity: validateLegalEntity,
+        validatePan: validatePan,
+        validateAadhaar: validateAadhaar,
+        validateCity: validateCity,
+      };
+      if(row.vapprovalRequired)
+        delete row.vapprovalRequired;
+      if(row.aapprovalRequired)
+        delete row.aapprovalRequired;
+      if(row.fapprovalRequired)
+        delete row.fapprovalRequired;
+      if(row.valuationPartnerId)
+        delete row.valuationPartnerId;
+      if(row.assetInspectionPartnerId)
+        delete row.assetInspectionPartnerId;
+      if(row.financePartnerId)
+        delete row.financePartnerId;
+      if(row.enterpriseId)
+        delete row.enterpriseId;
+      if(row.employeeCode)
+        delete row.employeeCode;
+    }
+    if (reqType === 'Upload') {
+      if (!userObj[row.mobile]) {
         userObj[row.mobile] = true;
-        async.parallel({
-          validateEmailAddress:validateEmailAddress,
-          validateMandatoryCols : validateMandatoryCols,
-          validateDupUser : validateDupUser,
-          validateLegalEntity:validateLegalEntity,
-          validatePan:validatePan,
-          validateAadhaar:validateAadhaar,
-          validateCity : validateCity,
-        }, buildData);
-      }else{
+        async.parallel(tasksBasedOnRole, buildData);
+      } else {
         errorList.push({
-            Error: 'Duplicate Records in excel sheet',
-            rowCount: row.rowCount
-          });
-          return cb();
+          Error: 'Duplicate Records in excel sheet',
+          rowCount: row.rowCount
+        });
+        return cb();
       }
     }
 
-    function validateLegalEntity(callback){
-      if(row.userType === 'Legal Entity'){
-        if(!row.company){
+    function validateLegalEntity(callback) {
+      if (row.userType === 'Legal Entity') {
+        if (!row.company) {
           errorList.push({
-           Error:'Missing mandatory parameter : Legal_Entity_Name',
-           rowCount:row.rowCount
+            Error: 'Missing mandatory parameter : Legal_Entity_Name',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
-    }
-    else{
-      if(row.company){
-        delete row.company;  
-    }
-  }
-  return callback();
-    }
-
-    function validateEmailAddress(callback){
-      if(!row.email)
+      } else {
+        if (row.company) {
+          delete row.company;
+        }
+      }
       return callback();
-      
-        if(!(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(row.email))){
-            errorList.push({
-            Error:'Error while validating email Id pattern not matching',
-            rowCount:row.rowCount
-          });
-            return callback('Error');       
-        }
-      User.find({email:row.email,deleted:false},function(err,users){
-        if(err){
+    }
+
+    function validateValuationAgencies(callback) {
+      if (!row.valuationPartnerId)
+        return callback();
+      Vendor.find({
+        "partnerId":row.valuationPartnerId 
+      }, function(err, vendors) {
+        if (err) {
           errorList.push({
-            Error : 'Error while validating user',
-            rowCount : row.rowCount
+            Error: 'Error while validating vendor',
+            rowCount: row.rowCount
+          });
+          return callback('Error');
+        }
+        if (vendors.length > 0){ 
+         return callback();
+       }
+         else{
+          errorList.push({
+            Error:'Error while validating Vendor : vendorId:'+ row.valuationPartnerId ,
+          });
+          return callback('Error');
+         }  
+        });
+    }
+
+    function validateAssetInspectionAgencies(callback) {
+       if (!row.assetInspectionPartnerId)
+        return callback();
+      Vendor.find({
+        "partnerId":row.assetInspectionPartnerId 
+      }, function(err, vendors) {
+        if (err) {
+          errorList.push({
+            Error: 'Error while validating vendor',
+            rowCount: row.rowCount
+          });
+          return callback('Error');
+        }
+        if (vendors.length > 0){ 
+         return callback();
+       }
+         else{
+          errorList.push({
+            Error:'Error while validating Vendor : vendorId:'+ row.assetInspectionPartnerId ,
+          });
+          return callback('Error');
+         }  
+        });
+    }
+
+    function validateFinanceAgencies(callback) {
+      if (!row.financePartnerId)
+        return callback();
+      Vendor.find({
+        "partnerId":row.financePartnerId 
+      }, function(err, vendors) {
+        if (err) {
+          errorList.push({
+            Error: 'Error while validating vendor',
+            rowCount: row.rowCount
+          });
+          return callback('Error');
+        }
+        if (vendors.length > 0){ 
+         return callback();
+       }
+         else{
+          errorList.push({
+            Error:'Error while validating Vendor : vendorId:'+ row.financePartnerId ,
+          });
+          return callback('Error');
+         }  
+        });
+    }
+
+    function validateEmailAddress(callback) {
+      if (!row.email)
+        return callback();
+
+      if (!(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(row.email))) {
+        errorList.push({
+          Error: 'Error while validating email Id pattern not matching',
+          rowCount: row.rowCount
+        });
+        return callback('Error');
+      }
+      User.find({
+        email: row.email,
+        deleted: false
+      }, function(err, users) {
+        if (err) {
+          errorList.push({
+            Error: 'Error while validating user',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
 
-        if(users.length){
+        if (users.length) {
           errorList.push({
-            Error : 'Duplicate email',
-            rowCount : row.rowCount
+            Error: 'Duplicate email',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
         return callback();
       });
-
     }
 
-    function validatePan(callback){ 
-      if(!row.panNumber)
-      return callback();
-        if(!(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(row.panNumber))){
-    errorList.push({
-    Error:'Error while validating Pan card pattern not matching',
-    rowCount:row.rowCount
-  });
-      return callback('Error');  
-    }else
-      return callback();
-  }
-  
- function validateAadhaar(callback){
-   if(!row.aadhaarNumber)
-   return callback();
-        if(!(/^\d{4}\s\d{4}\s\d{4}$/.test(row.aadhaarNumber))){
-    errorList.push({
-    Error:'Error while validating Aadhaar Number pattern not matching',
-    rowCount:row.rowCount
-  });
-  return callback('Error');  
-      }else
+    function validatePan(callback) {
+      if (!row.panNumber)
         return callback();
-  }
+      if (!(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(row.panNumber))) {
+        errorList.push({
+          Error: 'Error while validating Pan card pattern not matching',
+          rowCount: row.rowCount
+        });
+        return callback('Error');
+      } else
+        return callback();
+    }
 
-    function validateCity(callback){
-      if(row.city){
-        CityModel.City.find({name : row.city},function(err,cityInfo){
-          if(err || !cityInfo){
+    function validateAadhaar(callback) {
+      if (!row.aadhaarNumber)
+        return callback();
+      if (!(/^\d{4}\s\d{4}\s\d{4}$/.test(row.aadhaarNumber))) {
+        errorList.push({
+          Error: 'Error while validating Aadhaar Number pattern not matching',
+          rowCount: row.rowCount
+        });
+        return callback('Error');
+      } else
+        return callback();
+    }
+
+    function validateCity(callback) {
+      if (row.city) {
+        CityModel.City.find({
+          name: row.city
+        }, function(err, cityInfo) {
+          if (err || !cityInfo) {
             errorList.push({
-              Error : 'Error while validating city',
-              rowCount :row.rowCount
+              Error: 'Error while validating city',
+              rowCount: row.rowCount
             });
-              return callback('Error');
-            }
+            return callback('Error');
+          }
 
-            if(!cityInfo.length){
-              errorList.push({
-                Error : 'Invalid City',
-                rowCount :row.rowCount
-              });
-              return callback('Error');
-            }
-            if(cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country){
-              errorList.push({
-                Error : 'Invalid State or country',
-                rowCount :row.rowCount
-              });
-              return callback('Error');
-            }
-
-            return callback();
+          if (!cityInfo.length) {
+            errorList.push({
+              Error: 'Invalid City',
+              rowCount: row.rowCount
+            });
+            return callback('Error');
+          }
+          if (cityInfo[0].state.name !== row.state || cityInfo[0].state.country !== row.country) {
+            errorList.push({
+              Error: 'Invalid State or country',
+              rowCount: row.rowCount
+            });
+            return callback('Error');
+          }
+          return callback();
         });
       } else {
         return callback();
       }
     }
 
-    function validateMandatoryCols(callback){
+    function validateMandatoryCols(callback) {
       var error;
-      ['role','fname','lname','userType','password','country','state','city','mobile'].some(function(x){
-        if(!row[x]){
+      ['role', 'fname', 'lname', 'userType', 'password', 'country', 'state', 'city', 'mobile'].some(function(x) {
+        if (!row[x]) {
           error = true;
           errorList.push({
-            Error : 'Missing mandatory parameter : ' + x,
-            rowCount :row.rowCount
+            Error: 'Missing mandatory parameter : ' + x,
+            rowCount: row.rowCount
           });
         }
-        if(row[x]=="TRUE")
-        row[x]=true;
+        if (row[x] == "TRUE")
+          row[x] = true;
       });
-      if(error)
+      if (error)
         return callback('Error');
-
       return callback();
-
     }
 
-    function validateDupUser(callback){
-      User.find({mobile:row.mobile,deleted:false},function(err,users){
-        if(err || !users){
+    function validateDupUser(callback) {
+      User.find({
+        mobile: row.mobile,
+        deleted: false
+      }, function(err, users) {
+        if (err || !users) {
           errorList.push({
-            Error : 'Error while validating user',
-            rowCount : row.rowCount
+            Error: 'Error while validating user',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
 
-        if(users.length){
+        if (users.length) {
           errorList.push({
-            Error : 'Duplicate mobile',
-            rowCount : row.rowCount
+            Error: 'Duplicate mobile',
+            rowCount: row.rowCount
           });
           return callback('Error');
         }
@@ -305,79 +470,340 @@ var excelData = req.excelData;
       });
     }
 
-    function buildData(err,parseData) {
+
+    function validateEnterprise(callback) {
+      if (!row.enterpriseId)
+        return callback();
+      if(!row.employeeCode){
+        errorList.push({
+          Error:'Missing mandatory parameter : employeeCode'
+        })
+      }
+        User.find({
+          "enterpriseId":row.enterpriseId,
+          "enterprise":true 
+        }, function(err, enterprise) {
+          if (err) {
+            errorList.push({
+              Error: 'Error while validating user',
+              rowCount: row.rowCount
+            });
+            return callback('Error');
+          }
+          if (enterprise.length > 0) {
+                enterprise[0].availedServices.forEach(function(x) {
+                  enterpriseAvailedServices.push(x.name);
+                });
+                row.availedServices = validateAvailedServices(enterpriseAvailedServices);
+                return callback();
+              }
+           else {
+            errorList.push({
+              Error: 'Error while validating enterprise :'+ row.enterpriseId,
+              rowCount: row.rowCount
+            });
+            return callback('Error');
+          }
+        });
+    }
+
+    function validateEnterpriseAvailedServices(callback) {
+      var availedServices = [];
+      var data = {};
+        if (row.valuation && row.valuation.toLowerCase() === 'checked') {
+          data = {};
+          data = {
+            name: 'Valuation',
+            code: 'Valuation',
+            sequence: 1,
+            checked: true,
+          };
+          if(row.vapprovalRequired)
+          data.approvalRequired=row.vapprovalRequired;
+
+           if(row.valuationPartnerId)
+            data.partnerId=row.valuationPartnerId;
+          
+          if (row.vapprover && row.vapprover.toLowerCase() === 'checked') {
+            data.approver = true;
+            delete row.vapprover;
+          }
+          if (row.vrequester && row.vrequester.toLowerCase() === 'checked') {
+            data.requester = true;
+            delete row.vrequester;
+          }
+          availedServices.push(data);
+          delete row.valuation;
+        }
+        if (row.assetInspection && row.assetInspection.toLowerCase() === 'checked') {
+          data = {};
+          data = {
+            name: 'Asset Inspection',
+            code: 'Inspection',
+            sequence: 2,
+            checked: true,
+          };
+          if(row.aapprovalRequired)
+          data.approvalRequired=row.aapprovalRequired;
+          
+          if(row.assetInspectionPartnerId)
+            data.partnerId=row.assetInspectionPartnerId;
+
+          if (row.aapprover && row.aapprover.toLowerCase() === 'checked') {
+            data.approver = true;
+            delete row.aapprover;
+          }
+          if (row.arequester && row.arequester.toLowerCase() === 'checked') {
+            data.requester = true;
+            delete row.arequester;
+          }
+          availedServices.push(data);
+          delete row.assetInspection;
+        }
+        if (row.financing && row.financing.toLowerCase() === 'checked') {
+          data = {};
+          data = {
+            name: 'Financing',
+            code: 'Financing',
+            sequence: 3,
+            checked: true,
+          };
+          if(row.fapprovalRequired)
+          data.approvalRequired=row.fapprovalRequired;
+          
+          if(row.financePartnerId)
+            data.partnerId=row.financePartnerId;
+
+          if (row.fapprover && row.fapprover.toLowerCase() === 'checked') {
+            data.approver = true;
+            delete row.fapprover;
+          }
+          if (row.frequester && row.frequester.toLowerCase() === 'checked') {
+            data.requester = true;
+            delete row.frequester;
+          }
+          availedServices.push(data);
+          delete row.financing;
+        }
+      if (row.vapprover)
+        delete row.vapprover;
+      if (row.vrequester)
+        delete row.vrequester;
+      if (row.approver)
+        delete row.aapprover;
+      if (row.arequester)
+        delete row.arequester;
+      if (row.fapprover)
+        delete row.fapprover;
+      if (row.frequester)
+        delete row.frequester;
+
+       row.availedServices=availedServices;
+      return callback();
+    }
+
+    function validateAvailedServices(enterpriseAvailedServices) {
+      var availedServices = [];
+      var data = {};
+      enterpriseAvailedServices.forEach(function(x) {
+        if (row.valuation && row.valuation.toLowerCase() === 'checked' && x === 'Valuation') {
+          data = {};
+          data = {
+            name: 'Valuation',
+            code: 'Valuation',
+            sequence: 1,
+            checked: true,
+          };
+          if (row.vapprover && row.vapprover.toLowerCase() === 'checked') {
+            data.approver = true;
+            delete row.vapprover;
+          }
+          if (row.vrequester && row.vrequester.toLowerCase() === 'checked') {
+            data.requester = true;
+            delete row.vrequester;
+          }
+          availedServices.push(data);
+          delete row.valuation;
+        }
+        if (row.assetInspection && row.assetInspection.toLowerCase() === 'checked' && x === 'Asset Inspection') {
+          data = {};
+          data = {
+            name: 'Asset Inspection',
+            code: 'Inspection',
+            sequence: 2,
+            checked: true,
+          };
+          if (row.aapprover && row.aapprover.toLowerCase() === 'checked') {
+            data.approver = true;
+            delete row.aapprover;
+          }
+          if (row.arequester && row.arequester.toLowerCase() === 'checked') {
+            data.requester = true;
+            delete row.arequester;
+          }
+          availedServices.push(data);
+          delete row.assetInspection;
+        }
+        if (row.financing && row.financing.toLowerCase() === 'checked' && x === 'Financing') {
+          data = {};
+          data = {
+            name: 'Financing',
+            code: 'Financing',
+            sequence: 3,
+            checked: true,
+          };
+          if (row.fapprover && row.fapprover.toLowerCase() === 'checked') {
+            data.approver = true;
+            delete row.fapprover;
+          }
+          if (row.frequester && row.frequester.toLowerCase() === 'checked') {
+            data.requester = true;
+            delete row.frequester;
+          }
+          availedServices.push(data);
+          delete row.financing;
+        }
+      });
+      if (row.vapprover)
+        delete row.vapprover;
+      if (row.vrequester)
+        delete row.vrequester;
+      if (row.approver)
+        delete row.aapprover;
+      if (row.arequester)
+        delete row.arequester;
+      if (row.fapprover)
+        delete row.fapprover;
+      if (row.frequester)
+        delete row.frequester;
+
+      return availedServices;
+    }
+
+    function buildData(err, parseData) {
       if (err)
         return cb();
-     uploadData.push(row);
+      uploadData.push(row);
       return cb();
     }
-}
+  }
 };
 
-exports.createUserReq = function(req,res,next){
-  if(!req.uploadData.length && !req.errorList.length)
-    return next(new APIError(500,'Error while updation'));
+function sendMail(tplData, emailData, tmplName) {
+    commonController.compileTemplate(tplData, config.serverPath, tmplName, function(ret,retData){
+      if(!ret){
+          console.log(ret);
+      }else{
+          emailData.content =  retData;
+          notification.pushNotification(emailData,function(pushed){
+        });
+      }
+    });
+  }
+
+exports.createUserReq = function(req, res, next) {
+  if (!req.uploadData.length && !req.errorList.length)
+    return next(new APIError(500, 'Error while updation'));
 
   var successCount = 0;
-  if(!req.uploadData.length && req.errorList.length)
-    return res.json({successCount : successCount,errorList : req.errorList,totalCount : req.totalCount});
+  if (!req.uploadData.length && req.errorList.length)
+    return res.json({
+      successCount: successCount,
+      errorList: req.errorList,
+      totalCount: req.totalCount
+    });
 
   var dataToUpdate = req.uploadData;
 
-  async.eachLimit(dataToUpdate,5,intialize,finalize);
+  async.eachLimit(dataToUpdate, 5, intialize, finalize);
 
-  function finalize(err){
-    if(err){
-      return next(new APIError(500,'Error while updation'));
+  function finalize(err) {
+    if (err) {
+      return next(new APIError(500, 'Error while updation'));
     }
 
-    return res.json({successCount:successCount , errorList : req.errorList,totalCount : req.totalCount});
+    return res.json({
+      successCount: successCount,
+      errorList: req.errorList,
+      totalCount: req.totalCount
+    });
   }
 
-  function intialize(data,cb){
+  function intialize(data, cb) {
+    console.log("I am here");
+
     data.createdBy = req.body.user;
     data.createdAt = new Date();
     data.updatedAt = new Date();
-    data.agree=true;
-    
-    if(data.userType === "Individual")
-       data.userType="individual";
-       if(data.userType === "Private Entrepreneur")
-       data.userType="private";
-       if(data.userType === "Legal Entity")
-       data.userType="legalentity";
+    data.agree = true;
 
-    User.create(data,function(err,doc){
-      if(err || !doc){
+    console.log("DATAs",data);
+
+    if (data.userType === "Individual")
+      data.userType = "individual";
+    if (data.userType === "Private Entrepreneur")
+      data.userType = "private";
+    if (data.userType === "Legal Entity")
+      data.userType = "legalentity";
+
+    User.create(data, function(err, doc) {
+      if (err || !doc) {
+        console.log("I am being pushed");
         req.errorList.push({
-          Error:'Error while updating information',
-          rowCount : data.rowCount
+          Error: 'Error while updating information',
+          rowCount: data.rowCount
         });
         return cb();
       }
+
+      var tplData={};
+      var tplName="";
+        tplData.fname=data.fname;
+        tplData.lname=data.lname;
+        tplData.email=data.email;
+        //tplData.serverPath=config.serverPath;
+        tplData.password=data.password;
+        tplName=USER_REG_REQ;
+        var emailData = {};
+        emailData.to = data.email;
+        emailData.notificationType = "email";
+        if(data.role == 'customer'){
+          emailData.subject = 'New User Registration: Success';
+        }
+        else if(data.role == 'enterprise'){
+          emailData.subject = 'New Enterprise Registration: Success';
+        }
+        else{
+          emailData.subject = 'New Channel Partner Registration: Success';
+          }
+          
+          sendMail(tplData, emailData, tplName);
+        
       successCount++;
       return cb();
     });
   }
 };
 
-exports.create = function (req, res, next) {
+exports.create = function(req, res, next) {
   var newUser = new User(req.body);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
-   
+
+
   newUser.save(function(err, user) {
-  if (err) return validationError(res, err);
-  res.json(user);
+    if (err) return validationError(res, err);
+    res.json(user);
   });
 };
+
 
 /**
  * Get a single user
  */
-exports.show = function (req, res, next) {
+exports.show = function(req, res, next) {
   var userId = req.params.id;
-  User.findById(userId, function (err, user) {
+  User.findById(userId, function(err, user) {
     if (err) return next(err);
     if (!user) return res.status(401).send('Unauthorized');
     res.json(user.profile);
@@ -390,10 +816,10 @@ exports.getUser = function(req, res) {
   var filter = {};
   filter["deleted"] = false;
   //filter["isManpower"] = false;
-  if(req.body.status)
+  if (req.body.status)
     filter["status"] = true;
   var arr = [];
-  
+
   /*if(req.body.notManpower) {
     arr[arr.length] = { isManpower: false};
     arr[arr.length] = { isPartner: true};
@@ -405,7 +831,8 @@ exports.getUser = function(req, res) {
   }*/
 
   if(req.body.searchstr){
-    console.log("req.body.searchstr", req.body.searchstr);
+    //console.log("req.body.searchstr", req.body.searchstr);
+    arr[arr.length] = { customerId: { $regex: searchStrReg }};
     arr[arr.length] = { fname: { $regex: searchStrReg }};
     arr[arr.length] = { lname: { $regex: searchStrReg }};
     arr[arr.length] = { mobile: { $regex: searchStrReg }};
@@ -416,133 +843,153 @@ exports.getUser = function(req, res) {
     arr[arr.length] = { state: { $regex: searchStrReg }};
     arr[arr.length] = { userType: { $regex: searchStrReg }};
   }
-  
-  if(req.body.userId)
+
+  if (req.body.userId)
     filter["createdBy._id"] = req.body.userId;
-   if(req.body.enterpriseId)
+  if (req.body.enterpriseId)
     filter["enterpriseId"] = req.body.enterpriseId;
-   if(req.body.enterprise)
+  if (req.body.enterprise)
     filter["enterprise"] = req.body.enterprise;
 
-  if(req.body.mobileno){
+  if (req.body.mobileno) {
     var contactRegex = new RegExp(req.body.mobileno, 'i');
-    filter['mobile'] = {$regex:contactRegex};
+    filter.mobile = {
+      $regex: contactRegex
+    };
   }
-  if(req.body.contact)
-    filter['mobile']=req.body.contact;
-  
-  if(req.body.userType)
-    filter["userType"] = req.body.userType;
+  if (req.body.contact)
+    filter.mobile = req.body.contact;
 
-    if(req.body.role)
-      filter["role"] = req.body.role;
-    else {
-      var typeFilter = {};
-      typeFilter['$ne'] = "admin";
-      filter["role"] = typeFilter;    
-    }
-    if(arr.length > 0)
-      filter['$or'] = arr;
-    var result = {};
-    if(req.body.pagination){
-      paginatedUser(req,res,filter,result);
-      return;    
-    }
+  if (req.body.userType)
+    filter.userType = req.body.userType;
 
-    var sortObj = {}; 
-    if(req.body.sort)
-      sortObj = req.body.sort;
-    sortObj['createdAt'] = -1;
+  if (req.body.role)
+    filter.role= req.body.role;
+  else {
+    var typeFilter = {};
+    typeFilter.$ne = "admin";
+    filter.role= typeFilter;
+  }
+  if (arr.length > 0)
+    filter.$or = arr;
+  var result = {};
+  if (req.body.pagination) {
+    paginatedUser(req, res, filter, result);
+    return;
+  }
+
+  var sortObj = {};
+  if (req.body.sort)
+    sortObj = req.body.sort;
+  sortObj.createdAt = -1;
 
   var query = User.find(filter).sort(sortObj);
-    Seq()
-    .par(function(){
+  Seq()
+    .par(function() {
       var self = this;
-      User.count(filter,function(err, counts){
+      User.count(filter, function(err, counts) {
         result.totalItems = counts;
         self(err);
       })
     })
-    .par(function(){
+    .par(function() {
       var self = this;
-      query.exec(function (err, users) {
-          if(err) { return handleError(res, err); }
-          result.users = users;
-          self();
-         }
-      );
-
+      query.exec(function(err, users) {
+        if (err) {
+          return handleError(res, err);
+        }
+        result.users = users;
+        self();
+      });
     })
-    .seq(function(){
+    .seq(function() {
       return res.status(200).json(result.users);
     })
 };
 
-function paginatedUser(req,res,filter,result){
-    var pageSize = req.body.itemsPerPage;
-    var first_id = req.body.first_id;
-    var last_id = req.body.last_id;
-    var currentPage = req.body.currentPage;
-    var prevPage = req.body.prevPage;
-    var isNext = currentPage - prevPage >= 0?true:false;
-    Seq()
-    .par(function(){
+function paginatedUser(req, res, filter, result) {
+  var pageSize = req.body.itemsPerPage;
+  var first_id = req.body.first_id;
+  var last_id = req.body.last_id;
+  var currentPage = req.body.currentPage;
+  var prevPage = req.body.prevPage;
+  var isNext = currentPage - prevPage >= 0 ? true : false;
+  Seq()
+    .par(function() {
       var self = this;
-      User.count(filter,function(err,counts){
+      User.count(filter, function(err, counts) {
         result.totalItems = counts;
         self(err);
       })
     })
-    .par(function(){
+    .par(function() {
 
-        var self = this;
-        var sortFilter = {_id : -1};
-        if(last_id && isNext){
-          filter['_id'] = {'$lt' : last_id};
-        }
-        if(first_id && !isNext){
-          filter['_id'] = {'$gt' : first_id};
-          sortFilter['_id'] = 1;
-        }
+      var self = this;
+      var sortFilter = {
+        _id: -1
+      };
+      if (last_id && isNext) {
+        filter._id = {
+          '$lt': last_id
+        };
+      }
+      if (first_id && !isNext) {
+        filter._id = {
+          '$gt': first_id
+        };
+        sortFilter._id = 1;
+      }
 
-        var query = null;
-        var skipNumber = currentPage - prevPage;
-        if(skipNumber < 0)
-          skipNumber = -1*skipNumber;
+      var query = null;
+      var skipNumber = currentPage - prevPage;
+      if (skipNumber < 0)
+        skipNumber = -1 * skipNumber;
 
-        query = User.find(filter).sort(sortFilter).limit(pageSize*skipNumber);
-        query.exec(function(err,users){
-            if(!err && users.length > pageSize*(skipNumber - 1)){
-                  result.users = users.slice(pageSize*(skipNumber - 1),users.length);
-            }else
-              result.users = [];
-            if(!isNext && result.users.length > 0)
-             result.users.reverse();
-             self(err);
+      query = User.find(filter).sort(sortFilter).limit(pageSize * skipNumber);
+      query.exec(function(err, users) {
+        if (!err && users.length > pageSize * (skipNumber - 1)) {
+          result.users = users.slice(pageSize * (skipNumber - 1), users.length);
+        } else
+          result.users = [];
+        if (!isNext && result.users.length > 0)
+          result.users.reverse();
+        self(err);
       });
     })
-    .seq(function(){
-        return res.status(200).json(result);
+    .seq(function() {
+      return res.status(200).json(result);
     })
-    .catch(function(err){
-      handleError(res,err);
-    }) 
-  }
+    .catch(function(err) {
+      handleError(res, err);
+    });
+}
 
 //get products count on User Ids
 exports.getProductsCountOnUserIds = function(req, res) {
   var filter = {};
-    filter['deleted'] = false;
-    filter['status'] = true;
-    if(req.body.userIds)
-      filter['seller._id'] = {$in:req.body.userIds};
-    Product.aggregate(
-    { $match:filter},
-    { $group: 
-      { _id: '$seller._id', total_products: { $sum: 1 } } 
+  filter.deleted = false;
+  filter.status = true;
+  if (req.body.userIds){
+   filter.seller = {};
+   filter.seller._id = {
+      $in: req.body.userIds
+    }; 
+  }
+  Product.aggregate({
+      $match: filter
+    }, {
+      $group: {
+        _id: '$seller._id',
+        total_products: {
+          $sum: 1
+        }
+      }
+    }, {
+      $sort: {
+        count: -1
+      }
     },
-    {$sort:{count:-1}},
-    function (err, result) {
+    function(err, result) {
       if (err) return handleError(err);
       return res.status(200).json(result);
     }
@@ -556,21 +1003,50 @@ exports.getProductsCountOnUserIds = function(req, res) {
 exports.destroy = function(req, res) {
 
   var userId = req.params.id;
-  Product.find({'seller._id':userId,deleted:false,isSold:false},function(err,prds){
-    if(err){ return handleError(res, err); }
-    if(prds.length > 0){
-      return res.status(200).json({errorCode:1,message:"User has products."})
-    }else{
-      User.find({'createdBy._id':userId,deleted:false},function(err,usrs){
-          if(err){ return handleError(res, err); }
-          if(usrs.length > 0){
-            return res.status(200).json({errorCode:1,message:"User has customers."})  
-          }else{
-            User.update({_id:userId},{$set:{deleted:true,status:false}},function(err,user){
-              if(err){ return handleError(res, err); }
-              return res.status(200).json({errorCode:0,message:""})
+  Product.find({
+    'seller._id': userId,
+    deleted: false,
+    isSold: false
+  }, function(err, prds) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (prds.length > 0) {
+      return res.status(200).json({
+        errorCode: 1,
+        message: "User has products."
+      });
+    } else {
+      User.find({
+        'createdBy._id': userId,
+        deleted: false
+      }, function(err, usrs) {
+        if (err) {
+          return handleError(res, err);
+        }
+        if (usrs.length > 0) {
+          return res.status(200).json({
+            errorCode: 1,
+            message: "User has customers."
+          });
+        } else {
+          User.update({
+            _id: userId
+          }, {
+            $set: {
+              deleted: true,
+              status: false
+            }
+          }, function(err, user) {
+            if (err) {
+              return handleError(res, err);
+            }
+            return res.status(200).json({
+              errorCode: 0,
+              message: ""
             })
-          }
+          });
+        }
       })
     }
   })
@@ -579,58 +1055,82 @@ exports.destroy = function(req, res) {
 
 // Updates an existing user in the DB.
 exports.update = function(req, res) {
-  if(req.body._id) { delete req.body._id; }
+  if (req.body._id) {
+    delete req.body._id;
+  }
   req.body.updatedAt = new Date();
-  User.findById(req.params.id, function (err, user) {
-    if (err) { return handleError(res, err); }
-    if(!user) { return res.status(404).send('Not Found'); }
-    User.update({_id:req.params.id},{$set:req.body},function(err){
-        if (err) { return handleError(res, err); }
-        var dataObj = {};
-        dataObj['user.fname'] = req.body.fname;
-          if(req.body.mname)
+  User.findById(req.params.id, function(err, user) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!user) {
+      return res.status(404).send('Not Found');
+    }
+    User.update({
+      _id: req.params.id
+    }, {
+      $set: req.body
+    }, function(err) {
+      if (err) {
+        return handleError(res, err);
+      }
+      var dataObj = {};
+      dataObj['user.fname'] = req.body.fname;
+      if (req.body.mname)
         dataObj['user.mname'] = req.body.mname;
-        dataObj['user.lname'] = req.body.lname;
-        if(req.body.email)
-          dataObj['user.email'] = req.body.email;
-        dataObj['user.mobile'] = req.body.mobile;
-        if(req.body.phone)
-          dataObj['user.phone'] = req.body.phone;
-        dataObj['user.city'] = req.body.city;
-        if(req.body.state)
-          dataObj['user.state'] = req.body.state;
-        if(req.body.imgsrc)
-          dataObj['user.imgsrc'] = req.body.imgsrc;
-        //if(req.body.isPartner) {
-          updateVendor(dataObj, req, res);
-        //}
-        //if(req.body.isManpower) {
-          updateManpower(dataObj, req, res);
-        //}
-        return res.status(200).json(req.body);
+      dataObj['user.lname'] = req.body.lname;
+      if (req.body.email)
+        dataObj['user.email'] = req.body.email;
+      dataObj['user.mobile'] = req.body.mobile;
+      if (req.body.phone)
+        dataObj['user.phone'] = req.body.phone;
+      dataObj['user.city'] = req.body.city;
+      if (req.body.state)
+        dataObj['user.state'] = req.body.state;
+      if (req.body.imgsrc)
+        dataObj['user.imgsrc'] = req.body.imgsrc;
+      //if(req.body.isPartner) {
+      updateVendor(dataObj, req, res);
+      //}
+      //if(req.body.isManpower) {
+      updateManpower(dataObj, req, res);
+      //}
+      return res.status(200).json(req.body);
     });
   });
 };
 
 //update partner
-  function updateVendor(userData, req, res){
-    var userId = req.params.id;
-    userData.updatedAt = new Date();
-    
-    Vendor.update({'user.userId':userId},{$set:userData},function(err,userObj){
-      if(err){console.log('error in partner updation',err);}
-    });
-  };
+function updateVendor(userData, req, res) {
+  var userId = req.params.id;
+  userData.updatedAt = new Date();
 
-  //update manpower
-  function updateManpower(userData, req, res){
-    var userId = req.params.id;
-    userData.updatedAt = new Date();
-    
-    ManpowerUser.update({'user.userId':userId},{$set:userData},function(err,userObj){
-      if(err){console.log('error in manpower updation',err);}
-    });
-  };
+  Vendor.update({
+    'user.userId': userId
+  }, {
+    $set: userData
+  }, function(err, userObj) {
+    if (err) {
+      console.log('error in partner updation', err);
+    }
+  });
+}
+
+//update manpower
+function updateManpower(userData, req, res) {
+  var userId = req.params.id;
+  userData.updatedAt = new Date();
+
+  ManpowerUser.update({
+    'user.userId': userId
+  }, {
+    $set: userData
+  }, function(err, userObj) {
+    if (err) {
+      console.log('error in manpower updation', err);
+    }
+  });
+}
 
 /**
  * Change a users password
@@ -640,8 +1140,8 @@ exports.changePassword = function(req, res, next) {
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
 
-  User.findById(userId, function (err, user) {
-    if(user.authenticate(oldPass)) {
+  User.findById(userId, function(err, user) {
+    if (user.authenticate(oldPass)) {
       user.password = newPass;
       user.updatedAt = new Date();
       user.save(function(err) {
@@ -657,13 +1157,13 @@ exports.changePassword = function(req, res, next) {
 exports.resetPassword = function(req, res) {
   var userId = req.body.userId;
   var newPass = String(req.body.password);
-  User.findById(userId, function (err, user){
-      user.password = newPass;
-      user.updatedAt = new Date();
-      user.save(function(err) {
-        if (err) return validationError(res, err);
-        res.status(200).send('OK');
-      }); 
+  User.findById(userId, function(err, user) {
+    user.password = newPass;
+    user.updatedAt = new Date();
+    user.save(function(err) {
+      if (err) return validationError(res, err);
+      res.status(200).send('OK');
+    });
   });
 };
 
@@ -675,52 +1175,60 @@ exports.me = function(req, res, next) {
   var userId = req.user._id;
   User.findOne({
     _id: userId,
-    deleted:false
+    deleted: false
   }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.status(401).send('Unauthorized');
     user = user.toObject();
-    if(user.isPartner)
-      return getPartenerDetail(req,res,user);
-    if(user.isManpower)
-      return getManpowerDetail(req,res,user);
+    if (user.isPartner)
+      return getPartenerDetail(req, res, user);
+    if (user.isManpower)
+      return getManpowerDetail(req, res, user);
     addNoCacheHeader(res)
     return res.json(user);
   });
 };
 
-function getPartenerDetail(req,res,user){
-   var filter = {};
-      filter["deleted"] = false;
-      filter["status"] = true;
-      if(user._id)
-        filter['user.userId'] = "" + user._id;
-      Vendor.findOne(filter, function (err, partnerData) {
-        if(err) { return handleError(res, err); }
-        if(!partnerData) { console.log("Not Exist!!!"); }
-        user.partnerInfo = partnerData;
-        if(user.isManpower) {
-          getManpowerDetail(req,res,user);
-        } else {
-          addNoCacheHeader(res)
-          res.json(user);
-        }
-      });
+function getPartenerDetail(req, res, user) {
+  var filter = {};
+  filter.deleted = false;
+  filter.status = true;
+  if (user._id)
+    filter.user.userId = "" + user._id;
+  Vendor.findOne(filter, function(err, partnerData) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!partnerData) {
+      console.log("Not Exist!!!");
+    }
+    user.partnerInfo = partnerData;
+    if (user.isManpower) {
+      getManpowerDetail(req, res, user);
+    } else {
+      addNoCacheHeader(res);
+      res.json(user);
+    }
+  });
 }
 
-function getManpowerDetail(req,res,user){
-   var filter = {};
-      filter["deleted"] = false;
-      filter["status"] = true;
-      if(user._id)
-        filter['user.userId'] = "" + user._id;
-      ManpowerUser.findOne(filter, function (err, manpowerData) {
-        if(err) { return handleError(res, err); }
-        if(!manpowerData) { console.log("Not Exist!!!"); }
-        user.manpowerInfo = manpowerData;
-        addNoCacheHeader(res)
-        res.json(user);
-      });
+function getManpowerDetail(req, res, user) {
+  var filter = {};
+  filter.deleted = false;
+  filter.status = true;
+  if (user._id)
+    filter.user.userId = "" + user._id;
+  ManpowerUser.findOne(filter, function(err, manpowerData) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!manpowerData) {
+      console.log("Not Exist!!!");
+    }
+    user.manpowerInfo = manpowerData;
+    addNoCacheHeader(res);
+    res.json(user);
+  });
 }
 /**
  * Authentication callback
@@ -731,78 +1239,102 @@ exports.authCallback = function(req, res, next) {
 
 //validate user on email or mobile
 
-exports.validateUser = function(req, res){
+exports.validateUser = function(req, res) {
   var filter = {}
-  filter['deleted'] = false;
-  if(!req.body.mobile && !req.body.email)
+  filter.deleted= false;
+  if (!req.body.mobile && !req.body.email)
     return res.status(401).send('Unauthorized');
-  if(req.body.email)
-      filter['email'] = req.body.email;
-  if(req.body.mobile)
-    filter['mobile'] = req.body.mobile;
-  User.find(filter,function(err,users){
-    if(err){ return handleError(res, err); }
-    if(users.length == 0) return res.status(200).json({errorCode:1,message:"User not found"});
-    else if(users.length == 1)
-      return res.status(200).json({errorCode:0,user:users[0]});
+  if (req.body.email)
+    filter.email = req.body.email;
+  if (req.body.mobile)
+    filter.mobile = req.body.mobile;
+  User.find(filter, function(err, users) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (users.length === 0) return res.status(200).json({
+      errorCode: 1,
+      message: "User not found"
+    });
+    else if (users.length === 1)
+      return res.status(200).json({
+        errorCode: 0,
+        user: users[0]
+      });
     else
-      return res.status(200).json({errorCode:2,message:"More than one user found"});
+      return res.status(200).json({
+        errorCode: 2,
+        message: "More than one user found"
+      });
   });
 }
 
-exports.validateOtp = function(req,res){
+exports.validateOtp = function(req, res) {
   var otp = req.body.otp;
-  if(!otp)
-     return res.status(401).send('Unauthorized');
-   //console.log("otp filetr",{'otp.otp':otp})
-   User.findOne({'otp.otp':otp},function(err,user){
-      if(err){ return handleError(res, err); }
-      if(!user){return res.status(404).send('Invalid OTP');}
-      else{
-        var otpTime = new Date(user.otp.createdAt).getTime();
-        var currTime = new Date().getTime();
-        User.update({_id:user._id},{$set:{otp:{}}},function(err,user){
-           if(err){ return handleError(res, err); }
-           if(currTime - otpTime >= 15*60*1000){
-              return res.status(404).send('OTP has been expired.Please get another otp');
-            }else{
-              return res.status(200).send(user);
-            }
-        })
-      }
-   });
+  if (!otp)
+    return res.status(401).send('Unauthorized');
+  //console.log("otp filetr",{'otp.otp':otp})
+  User.findOne({
+    'otp.otp': otp
+  }, function(err, user) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!user) {
+      return res.status(404).send('Invalid OTP');
+    } else {
+      var otpTime = new Date(user.otp.createdAt).getTime();
+      var currTime = new Date().getTime();
+      User.update({
+        _id: user._id
+      }, {
+        $set: {
+          otp: {}
+        }
+      }, function(err, user) {
+        if (err) {
+          return handleError(res, err);
+        }
+        if (currTime - otpTime >= 15 * 60 * 1000) {
+          return res.status(404).send('OTP has been expired.Please get another otp');
+        } else {
+          return res.status(200).send(user);
+        }
+      });
+    }
+  });
 }
 
 //export data into excel
 function Workbook() {
-  if(!(this instanceof Workbook)) return new Workbook();
+  if (!(this instanceof Workbook)) return new Workbook();
   this.SheetNames = [];
   this.Sheets = {};
 }
 
 function datenum(v, date1904) {
-  if(date1904) v+=1462;
+  if (date1904) v += 1462;
   var epoch = Date.parse(v);
   return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
 }
- 
-function setType(cell){
-  if(typeof cell.v === 'number')
+
+function setType(cell) {
+  if (typeof cell.v === 'number')
     cell.t = 'n';
-  else if(typeof cell.v === 'boolean')
-      cell.t = 'b';
-  else if(cell.v instanceof Date)
-   {
-        cell.t = 'n'; cell.z = xlsx.SSF._table[14];
-        cell.v = datenum(cell.v);
-    }
-    else cell.t = 's';
+  else if (typeof cell.v === 'boolean')
+    cell.t = 'b';
+  else if (cell.v instanceof Date) {
+    cell.t = 'n';
+    cell.z = xlsx.SSF._table[14];
+    cell.v = datenum(cell.v);
+  } else cell.t = 's';
 }
+
 
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {s: {c:0, r:0}, e: {c:17, r:data.length }};
+  range = {s: {c:0, r:0}, e: {c:18, r:data.length }};
 
   for(var R = 0; R != data.length + 1 ; ++R){
     
@@ -811,6 +1343,16 @@ function excel_from_data(data) {
     var cell = null;
     if(R != 0)
       user = data[R-1];
+
+    if(R === 0)
+      cell = {v: "Customer Id"};
+    else {
+      if(user)
+        cell = {v: user.customerId || ""};
+    }
+    setType(cell);
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
+    ws[cell_ref] = cell;
 
     if(R == 0)
       cell = {v: "Name"};
@@ -996,84 +1538,100 @@ function excel_from_data(data) {
   return ws;
 }
 
-  function isStatus(status, deleted) {
-  if(status && !deleted)
+function isStatus(status, deleted) {
+  if (status && !deleted)
     return "Active";
-  else if(!status && !deleted)
+  else if (!status && !deleted)
     return "Deactive";
-  else if(!status && deleted)
+  else if (!status && deleted)
     return "Deleted";
-   else
+  else
     return "";
-  } 
-
-  function getRegisteredBy(user){
-    if(!user.createdBy)
-      return user.fname + " " + user.lname + ' (Self)';
-
-    if(user.createdBy.role == 'admin')
-      return user.createdBy.fname + " " + user.createdBy.lname + ' (Admin)';
-    else if(user.createdBy.role == 'channelpartner') 
-      return user.createdBy.fname + " " + user.createdBy.lname + ' (Channel Partner)';
-    else 
-      return user.createdBy.fname + " " + user.createdBy.lname + ' (Self)';
-  }
-
-exports.exportUsers = function(req,res){
-  var filter = {};
-  filter['deleted'] = false;
-  if(req.body.userId) {
-    filter["createdBy._id"] = req.body.userId;
-  }
-  if(req.body.enterpriseId) {
-    filter["enterpriseId"] = req.body.enterpriseId;
-  }
-  if(req.body.filter)
-    filter = req.body.filter;
-  var query = User.find(filter).sort({createdAt: -1});
-  query.exec(
-     function (err, users) {
-        if(err) { return handleError(res, err); }
-        var userIds = [];
-        users.forEach(function(item){
-          userIds[userIds.length] = item._id + "";
-        });
-        getProductData(req, res, users, userIds);
-        // var ws_name = "users"
-        // var wb = new Workbook();
-        // var ws = excel_from_data(users);
-        // wb.SheetNames.push(ws_name);
-        // wb.Sheets[ws_name] = ws;
-        // var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
-        // res.end(wbout);
-     });
 }
 
-function getProductData(req, res, users, userIds){
+function getRegisteredBy(user) {
+  if (!user.createdBy)
+    return user.fname + " " + user.lname + ' (Self)';
+
+  if (user.createdBy.role == 'admin')
+    return user.createdBy.fname + " " + user.createdBy.lname + ' (Admin)';
+  else if (user.createdBy.role == 'channelpartner')
+    return user.createdBy.fname + " " + user.createdBy.lname + ' (Channel Partner)';
+  else
+    return user.createdBy.fname + " " + user.createdBy.lname + ' (Self)';
+}
+
+exports.exportUsers = function(req, res) {
   var filter = {};
-    filter['deleted'] = false;
-    filter['status'] = true;
-    if(userIds)
-      filter['seller._id'] = {$in:userIds};
-    Product.aggregate(
-    { $match:filter},
-    { $group: 
-      { _id: '$seller._id', total_products: { $sum: 1 } } 
+  filter.deleted = false;
+  if (req.body.userId) {
+    filter.createdBy._id = req.body.userId;
+  }
+  if (req.body.enterpriseId) {
+    filter.enterpriseId = req.body.enterpriseId;
+  }
+  if (req.body.filter)
+    filter = req.body.filter;
+  var query = User.find(filter).sort({
+    createdAt: -1
+  });
+  query.exec(
+    function(err, users) {
+      if (err) {
+        return handleError(res, err);
+      }
+      var userIds = [];
+      users.forEach(function(item) {
+        userIds[userIds.length] = item._id + "";
+      });
+      getProductData(req, res, users, userIds);
+      // var ws_name = "users"
+      // var wb = new Workbook();
+      // var ws = excel_from_data(users);
+      // wb.SheetNames.push(ws_name);
+      // wb.Sheets[ws_name] = ws;
+      // var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+      // res.end(wbout);
+    });
+}
+
+function getProductData(req, res, users, userIds) {
+  var filter = {};
+  filter.deleted = false;
+  filter.status = true;
+  if (userIds){
+    filter.seller={};
+  filter.seller._id = {
+      $in: userIds
+    };
+  }  
+  Product.aggregate({
+      $match: filter
+    }, {
+      $group: {
+        _id: '$seller._id',
+        total_products: {
+          $sum: 1
+        }
+      }
+    }, {
+      $sort: {
+        count: -1
+      }
     },
-    {$sort:{count:-1}},
-    function (err, products) {
+    function(err, products) {
       if (err) return handleError(err);;
-      for(var i=0; i < users.length; i++) {
+      for (var i = 0; i < users.length; i++) {
         var countFlag = false;
-        for(var j=0; j < products.length; j++){
-          if(users[i]._id == products[j]._id) {
+        for (var j = 0; j < products.length; j++) {
+          if (users[i]._id == products[j]._id) {
             countFlag = true;
             users[i].total_products = products[j].total_products;
             users[i].have_products = "Yes";
             break;
           }
         }
-        if(!countFlag) {
+        if (!countFlag) {
           users[i].total_products = 0;
           users[i].have_products = "No";
         }
@@ -1084,11 +1642,16 @@ function getProductData(req, res, users, userIds){
       var ws = excel_from_data(users);
       wb.SheetNames.push(ws_name);
       wb.Sheets[ws_name] = ws;
-      var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+      var wbout = xlsx.write(wb, {
+        bookType: 'xlsx',
+        bookSST: true,
+        type: 'binary'
+      });
       res.end(wbout);
     }
   );
-} 
+}
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }
@@ -1097,4 +1660,42 @@ function addNoCacheHeader(res) {
    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
    res.header('Expires', '-1');
    res.header('Pragma', 'no-cache');
+}
+//create user unique number
+
+
+exports.createUniqueUserNo = function(req,res){
+   
+   User.find({}, function (err, users) {
+    //if(err) return res.status(500).send(err);
+    var i=1;
+    var customerId = 0;
+    var id = 0;
+    users.forEach(function(doc) {
+    //if (err) throw err;
+     if(doc){
+      id = 100000+i;
+      customerId = 'IQ'+id;
+       doc.update({$set:{customerId:customerId}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      
+      i++;
+     }
+  });
+
+   res.status(200);console.log("Customer Id created successfully.");
+    ///
+   var SeqModel = Seqgen.getSchema();
+   SeqModel.update({collectionName : "users"},{$set:{nextSeqNumber:id+1}},function(err){
+        
+        //return res.status(200).json(req.body);
+      });
+      ///
+  });
+   /*res.each(function(doc) {
+    //if (err) throw err;
+    console.log(doc);
+  });*/
 }

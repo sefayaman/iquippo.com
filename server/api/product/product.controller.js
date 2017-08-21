@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Seq = require('seq');
 var trim = require('trim');
 var fs = require('fs');
-var gm = require('gm').subClass({imageMagick: true});;
+var gm = require('gm').subClass({imageMagick: true});
 var fsExtra = require('fs.extra');
 var lwip = require('lwip');
 var Product = require('./product.model');
@@ -18,6 +18,7 @@ var SubCategory = require('./../category/subcategory.model');
 var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var CityModel = require('../common/location.model');
+var AssetSaleModel = require('./../assetsale/assetsalebid.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
@@ -38,6 +39,9 @@ var async = require('async');
 var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
+var moment = require('moment');
+var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -303,6 +307,7 @@ exports.search = function(req, res) {
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
+
           var saleFeaturedProdWithPrice = [],
               saleFeaturedProdWithoutPrice = [],
               bothFeaturedProdWithPrice = [],
@@ -318,6 +323,16 @@ exports.search = function(req, res) {
               soldProd = [],  //status of product
               rentedProd = []; //status
           products.forEach(function(item){
+            item = item.toObject();
+            //calculate total parking charge
+            var todayDate = moment().daysInMonth();
+            var repoDate = moment(item.repoDate);
+            var a = moment(repoDate, 'DD/MM/YYYY');
+            var b = moment(todayDate, 'DD/MM/YYYY');
+            var days = b.diff(a, 'days') + 1;
+            item.ageingOfAsset = days;
+            item.parkingCharges = days * item.parkingChargePerDay;
+            
             if(!assetIdCache[item.assetId]){
               assetIdCache[item.assetId] = true;
 
@@ -411,7 +426,7 @@ exports.search = function(req, res) {
       }
     })
     .seq(function(){
-         res.setHeader('Cache-Control','private,max-age=2592000');
+      res.setHeader('Cache-Control','private,max-age=2592000');
       return res.status(200).json(result.products);
     })
   }
@@ -547,6 +562,24 @@ function singleProductActive(req,res){
         bulkActive(req,res);
         //return res.status(200).json(req.body);
   });
+}
+
+//Validate update product
+
+exports.validateUpdate = function(req,res,next){
+  if(req.body.tradeType !== 'RENT')
+    return next();
+
+  var _id = req.body._id;
+  var filter = {};
+  filter.product = _id;
+  filter.offerStatus = offerStatuses[0];
+  AssetSaleModel.find(filter,function(err,resultArr){
+    if(err)return next(err);
+    if(resultArr.length) return next(new APIError(409,'There is active bid for this product'));
+    next();
+  });
+
 }
 
 // Updates an existing product in the DB.
@@ -1362,7 +1395,7 @@ exports.createProductReq = function(req,res,next){
       status : 'listed',
       createdAt : new Date()
     }];
-    
+
     IncomingProduct.create(data,function(err,doc){
       if(err || !doc){
         req.errorList.push({
@@ -1483,6 +1516,7 @@ exports.validateExcelData = function(req, res, next) {
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
     if(reqType == 'Update'){
+      console.log("aset id",row.assetId);
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
@@ -1496,6 +1530,7 @@ exports.validateExcelData = function(req, res, next) {
 
         if(type === 'template_update') {
           async.parallel({
+            validateGenericField:validateGenericField,
             validateCategory: validateCategory, //{}
             validateSeller: validateSeller,
             validateTechnicalInfo: validateTechnicalInfo,
@@ -1503,7 +1538,8 @@ exports.validateExcelData = function(req, res, next) {
             validateCity : validateCity,
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
-            validateOnlyAdminCols: validateOnlyAdminCols
+            validateOnlyAdminCols: validateOnlyAdminCols,
+            validateForBid:validateForBid
           }, buildData);          
         }else if(type === 'auction_update'){
           async.parallel({
@@ -1516,6 +1552,7 @@ exports.validateExcelData = function(req, res, next) {
       if(!assetIdObj[row.assetId]){
         assetIdObj[row.assetId] = true;
         async.parallel({
+          validateGenericField:validateGenericField,
           validateMadnatoryCols : validateMadnatoryCols,
           validateDupProd : validateDupProd,
           validateDupIncomingProd : validateDupIncomingProd,
@@ -1535,6 +1572,65 @@ exports.validateExcelData = function(req, res, next) {
           })
           return cb();
       }
+    }
+
+    function validateForBid(callback){
+
+      if(row.tradeType !== 'RENT' || !row.assetId)
+        return callback();
+
+      Product.find({assetId:row.assetId,deleted:false},function(err,prds){
+        if(err || !prds.length){
+           errorList.push({
+                Error : 'Error in finding product',
+                rowCount :row.rowCount
+            });
+          return callback('Error')
+        };
+        var filter = {};
+        filter.product = prds[0]._id;
+        filter.offerStatus = offerStatuses[0];
+        AssetSaleModel.find(filter,function(err,resultArr){
+          if(err){
+            errorList.push({
+                Error : 'Error in finding active bids',
+                rowCount :row.rowCount
+            }); 
+            return callback('Error')
+          };
+          if(resultArr.length){
+            errorList.push({
+                Error : 'There is active bid for this product',
+                rowCount :row.rowCount
+            });
+            return callback("Error");
+          }
+          return callback();
+        });
+      });
+    }
+
+    function validateGenericField(callback){
+      var obj = {};
+      var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice'];
+      var dateColumns = ['repoDate'];
+      var fieldsToBeCopied = ['addressOfAsset'];
+      numericColumns.forEach(function(x){
+        if(row[x] && !isNaN(row[x]))
+          obj[x] = row[x];
+      });
+      dateColumns.forEach(function(x){
+        if(row[x]){
+          var d = Utillity.dateUtil.isValidDateTime(row[x],validDateFormat);
+          if(d.isValid())
+            obj[x] = new Date(Utillity.dateUtil.validateAndFormatDate(d,'MM/DD/YYYY'));
+        }
+      });
+
+      fieldsToBeCopied.forEach(function(x){
+        obj[x] = row[x];
+      })
+      return callback(null,obj);
     }
 
     function validateCity(callback){

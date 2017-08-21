@@ -33,6 +33,9 @@ function sequenceGenerator(){
           });
         }
       });
+    },
+    getSchema : function(){
+      return Sequence;
     }
   };
 }

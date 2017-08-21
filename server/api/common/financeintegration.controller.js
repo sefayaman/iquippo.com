@@ -4,7 +4,7 @@ var _ = require('lodash');
 var User = require('./../user/user.model');
 var auth = require('./../../auth/externalauth.service.js');
 
-var REDIRECT_URL = "http://finance.iquippo.com/customer-portal-iquippo/sso";
+var config = require('./../../config/environment');
 
 exports.setCustomerData = function(req,res){
 
@@ -48,10 +48,10 @@ exports.setCustomerData = function(req,res){
     res.cookie("dealership_name",user.company || "",{ domain: '.iquippo.com' });
     var token = auth.signToken(user._id,user.role,20);
     res.cookie("access_token",token,{ domain: '.iquippo.com' });
-      res.status(200).send(REDIRECT_URL);
+      res.status(200).send(config.REDIRECT_URL);
     });
    }else
-    return res.status(200).send(REDIRECT_URL);
+    return res.status(200).send(config.REDIRECT_URL);
 
   function isServiceAvailed(user,service){
     if(user.availedServices && user.availedServices.length > 0){
