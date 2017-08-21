@@ -1214,7 +1214,7 @@ function getPartenerDetail(req, res, user) {
   filter.status = true;
   filter.user={};
   if (user._id)
-    filter.user.userId = "" + user._id;
+    filter['user.userId'] = "" + user._id;
   Vendor.findOne(filter, function(err, partnerData) {
     if (err) {
       return handleError(res, err);
@@ -1238,7 +1238,7 @@ function getManpowerDetail(req, res, user) {
   filter.status = true;
   filter.user={};
   if (user._id)
-    filter.user.userId = "" + user._id;
+    filter['user.userId'] = "" + user._id;
   ManpowerUser.findOne(filter, function(err, manpowerData) {
     if (err) {
       return handleError(res, err);
@@ -1586,7 +1586,7 @@ exports.exportUsers = function(req, res) {
   var filter = {};
   filter.deleted = false;
   if (req.body.userId) {
-    filter.createdBy._id = req.body.userId;
+    filter['createdBy._id'] = req.body.userId;
   }
   if (req.body.enterpriseId) {
     filter.enterpriseId = req.body.enterpriseId;
@@ -1621,8 +1621,8 @@ function getProductData(req, res, users, userIds) {
   filter.deleted = false;
   filter.status = true;
   if (userIds){
-    filter.seller={};
-  filter.seller._id = {
+    //filter.seller={};
+  filter['seller._id'] = {
       $in: userIds
     };
   }  
