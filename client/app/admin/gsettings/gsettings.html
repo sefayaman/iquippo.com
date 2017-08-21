@@ -395,14 +395,17 @@
 							</div>
 						</div> -->
 						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" name="" value="" placeholder="EMD and Tax Applicability">
+						</div>											
+					</div>
+					<div class="row">
+						<div class="col-sm-3 form-group">
 							<select class="form-control">
-								<option>EMD and Tax Applicability</option>
+								<option>Select Lot</option>
 								<option>Lot Wise</option>
 								<option>Overall</option>					
 							</select>
-						</div>						
-					</div>
-					<div class="row">
+						</div>	
 						<div class="col-sm-3 form-group">
 							
 							<!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
@@ -417,12 +420,12 @@
 								<option>Tax included</option>
 								<option>Tax not included</option>						
 							</select>
-						</div>
+						</div>						
+					</div>
+					<div class="row">	
 						<div class="col-sm-3">
 							<input type="number" class="form-control" name="" value="" placeholder="Bid Increment">
-						</div>
-					</div>
-					<div class="row">						
+						</div>					
 						<div class="col-sm-3">
 							<input type="text" class="form-control" name="" value="" placeholder="Last Minute Bid ( in minutes )">
 						</div>
@@ -431,7 +434,9 @@
 						</div>
 						<div class="col-sm-3 form-group">
 							<input type="text" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.termAuction" placeholder="Terms of Auction">
-						</div>
+						</div>						
+					</div>
+					<div class="row">
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Terms &amp; Conditions</span>
@@ -439,8 +444,6 @@
 							</span>
 							<span>{{gsettingVm.auctionData.docName}}</span>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Bid Proxy Form</span>
@@ -458,12 +461,12 @@
 						</div>
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
-						</div>
+						</div>						
+					</div>
+					<div class="row form-group">
 						<div class="col-sm-3">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
-						</div>
-					</div>
-					<div class="row form-group">						
+						</div>						
 						<div class="col-sm-2 pull-right">
 							<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
 							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
