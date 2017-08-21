@@ -870,7 +870,7 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-2">
-					Hyperlink :
+					Express Interest :
 					<div class="row">
 						<div class="col-xs-6 col-sm-6">
 							<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
@@ -914,7 +914,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group col-sm-offset-1 col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
+				<div class="form-group col-sm-2" ng-if="gsettingVm.banner.showInMobile == 'Yes'">
 					<span class="btn btn-warning fileinput-button">
 						<span>Browse image...</span>
 						<input type="file" name="file" onchange="angular.element(this).scope().updateMobBannerImage(this.files,this)" accept="image/*" class="ng-scope">
@@ -922,6 +922,12 @@
 					<div class="col-sm-2">
 						{{gsettingVm.banner.mobileImg}}
 					</div>
+				</div>
+				<div class="form-group col-sm-2">
+					<input type="checkbox" name="Bannerhyperlink" ng-model="gsettingVm.banner.isClickable" ng-true-value="'Yes'"> Hyperlink
+				</div>
+				<div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.linkUrl.$invalid && submitted}">
+					<input type="url" name="linkUrl" ng-model="gsettingVm.banner.linkUrl" ng-if="gsettingVm.banner.isClickable === 'Yes'" ng-required="gsettingVm.banner.isClickable === 'Yes'" class="form-control" placeholder="Enter url">
 				</div>
 			</div>
 			<div class="row form-group">
@@ -936,11 +942,12 @@
 						<tr>
 							<th>Image</th>
 							<th>Promo Code</th>
-							<th>Hyperlink</th>
+							<th>Express Interest</th>
 							<th>Ticker</th>
 							<th>Banner start date</th>
 							<th>Banner end date</th>
 							<th>Show in mobile</th>
+							<th>Hyperlink</th>
 							<th>Sequence</th>
 							<th>Action</th>
 						</tr>
@@ -955,6 +962,7 @@
 							<td>{{banner.sDate | date:'MM/dd/yyyy'}}</td>
 							<td>{{banner.eDate | date:'MM/dd/yyyy'}}</td>
 							<td>{{banner.showInMobile}}</td>
+							<td>{{banner.linkUrl}}</td>
 							<td>{{banner.sequence}}</td>
 							<td>
 								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editBanner($index)"><i class="fa fa-edit"></i> </a>
