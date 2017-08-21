@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 var EmdSchema = new Schema({
   auctId:String,
   auctName:String,
-  lotId:String,
+  selectedLots:[],
   amount:String,
   createdBy:{},
   createdAt: {type:Date,default:Date.now},

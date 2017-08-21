@@ -4,7 +4,7 @@
   angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
   //Product upload controller
-  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc) {
+  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc,LotSvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc) {
 
     var vm = this;
     //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -85,6 +85,7 @@
     $scope.firstStep = firstStep;
     $scope.secondStep = secondStep;
     $scope.goToUsermanagement = goToUsermanagement;
+    $scope.lot={};
 
     function productInit() {
 
@@ -1248,6 +1249,14 @@
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
+        $scope.lot.assetId=$scope.product.assetId;
+        $scope.lot.assetDesc=$scope.product.assetDesc;
+        $scope.lot.auctionId=$scope.auctionreq.dbAuctionId;
+        console.log("lot",$scope.lot);
+        LotSvc.saveLot($scope.lot)
+        .then(function(result){
+          console.log("result",result);
+        })
         //addToHistory(result,"Create");
         if (Auth.isAdmin()) {
           if (result.status)
@@ -1321,6 +1330,16 @@
           cb(product);
         else
           $state.go('productlisting', AppStateSvc.get('productlisting'));
+
+        $scope.lot.assetId=$scope.product.assetId;
+        $scope.lot.assetDesc=$scope.product.assetDesc || "";
+        $scope.lot.auctionId=$scope.auctionReq.dbAuctionId;
+        $scope.lot.reservePrice=$scope.product.reservePrice || 0;
+        console.log("lot",$scope.lot);
+        LotSvc.saveLot($scope.lot)
+        .then(function(result){
+          console.log("result",result);
+        });
       });
     }
 
