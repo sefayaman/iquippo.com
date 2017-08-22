@@ -1123,6 +1123,10 @@
                 Modal.alert("Please upload image for mobile.", true);
                 return;
             }
+            if (!vm.banner.linkUrl && vm.banner.isClickable == 'Yes') {
+                Modal.alert("Please enter hyperlink url.", true);
+                return;
+            }
             //$scope.submitted = false;
             BannerSvc.save(vm.banner)
                 .then(function(res) {
@@ -1143,6 +1147,10 @@
             }*/
             if (!vm.banner.mobileImg && vm.banner.showInMobile == 'Yes') {
                 Modal.alert("Please upload image for mobile.", true);
+                return;
+            }
+            if (!vm.banner.linkUrl && vm.banner.isClickable == 'Yes') {
+                Modal.alert("Please enter hyperlink url.", true);
                 return;
             }
             $scope.submitted = false;
