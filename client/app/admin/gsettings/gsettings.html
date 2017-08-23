@@ -376,14 +376,14 @@
 							
 							<input type="text" class="form-control" name="auctionAddr" ng-model="gsettingVm.auctionData.auctionAddr" placeholder="Address of Auction" />
 						</div>
-						<div class="col-sm-3">
+						<!-- <div class="col-sm-3">
 							<select class="form-control">
 								<option>Auction Type</option>
 								<option>Live Auction</option>
 								<option>Online</option>
 							</select>
-						</div>
-						<!-- <div class="col-sm-3 form-group">
+						</div> -->
+						<div class="col-sm-3 form-group">
 							Auction Type
 							<div class="row">
 								<div class="col-xs-6">
@@ -393,41 +393,41 @@
 									<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="online"> On-Line Auction
 								</div>
 							</div>
-						</div> -->
+						</div>
 						<div class="col-sm-3 form-group">
-							<select class="form-control">
-								<option>EMD and Tax Applicability</option>
-								<option>Lot Wise</option>
-								<option>Overall</option>					
+							<select class="form-control"  name="emd&Tax" ng-model="gsettingVm.auctionData.emdTax">
+								<option value="">EMD and Tax Applicability</option>
+								<option value="lotWise">Lot Wise</option>
+								<option value="overall">Overall</option>					
 							</select>
-						</div>						
+						</div>					
 					</div>
 					<div class="row">
-						<div class="col-sm-3 form-group">
+						<div class="col-sm-3 form-group" ng-if="gsettingVm.auctionData.emdTax === 'overall'">
 							
 							<!-- <input type="Number" class="form-control" name="regCharges" ng-model="gsettingVm.auctionData.regCharges" placeholder="Registration Charges for Auction" disabled> -->
-							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount" disabled>
+							<input type="Number" class="form-control" name="emdAmount" ng-model="gsettingVm.auctionData.emdAmount" placeholder="EMD Amount">
 						</div>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" name="" value="" placeholder="*Multiplier Factor for Credit Limit">
+							<input type="Number" class="form-control" ng-model="gsettingVm.auctionData.factorCreditlimit" name="" value="" placeholder="*Multiplier Factor for Credit Limit">
 						</div>
 						<div class="col-sm-3">
-							<select class="form-control">
-								<option>*Tax Applicability</option>
-								<option>Tax included</option>
-								<option>Tax not included</option>						
+							<select class="form-control" ng-model="gsettingVm.auctionData.taxApplicability">
+								<option value="">*Tax Applicability</option>
+								<option value="included">Tax included</option>
+								<option value="notIncluded">Tax not included</option>						
 							</select>
 						</div>
 						<div class="col-sm-3">
-							<input type="number" class="form-control" name="" value="" placeholder="Bid Increment">
+							<input type="number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.bidIncrement" placeholder="Bid Increment">
 						</div>
 					</div>
 					<div class="row">						
 						<div class="col-sm-3">
-							<input type="text" class="form-control" name="" value="" placeholder="Last Minute Bid ( in minutes )">
+							<input type="Number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.lastMinuteBid" placeholder="Last Minute Bid ( in minutes )">
 						</div>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" name="" value="" placeholder="Extended To ( in minutes )">
+							<input type="Number" class="form-control" ng-model="gsettingVm.auctionData.extendedTo" name="" value="" placeholder="Extended To ( in minutes )">
 						</div>
 						<div class="col-sm-3 form-group">
 							<input type="text" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.termAuction" placeholder="Terms of Auction">
@@ -499,7 +499,13 @@
 						<th>Contact Person Name</th>
 						<th>Contact Person Number</th>
 						<th>Auction type</th>
+						<th>EMD and Tax Applicability</th>
 						<th>EMD Amount</th>
+						<th>Multiplier Factor for Credit Limit</th>
+						<th>Tax Applicability</th>
+						<th>Bid Increment</th>
+						<th>Last Minute Bid</th>
+						<th>Extended To</th>
 						<th>Document attachment type</th>
 						<th>Assets in Auctions</th>
 						<th class="col-xs-2 col-sm-1">Action</th>
@@ -521,12 +527,18 @@
 						<td>{{auc.contactName}}</td>
 						<td>{{auc.contactNumber}}</td>
 						<td>{{auc.auctionType | titleCase}}</td>
+						<td>{{}}</td>
 						<td>{{auc.emdAmount}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>
+						<td>{{}}</td>	
 						<td>
 							<span ng-if="auc.docName">Terms and Conditions</span>
 							<span ng-if="auc.docName && auc.docNameProxy"> | </span>
 							<span ng-if="auc.docNameProxy">Bid Proxy Form</span>
-						</td>
+						</td>											
 						<td>{{gsettingVm.getProductData(auc._id, "total_products")}}</td>
 						<td>
 							<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editAuctionMaster($index)"><i class="fa fa-pencil"></i> </a>
@@ -1834,13 +1846,11 @@
 					     <div class="col-sm-3" ng-class="{'has-error':emdVm.auctName.$invalid && submitted}">
 							<input type="text" class="form-control" name="auctName" ng-model="emdVm.dataModel.auctName" value="{{emdVm.auctionname}}" placeholder="{{emdVm.auctionname}}" disabled>
 						</div>
-                        <div class="col-sm-3" ng-class="{'has-error':emdVm.lotId.$invalid && submitted}">
-							<select class="form-control" multiple="" style="height: 80px;">
-				              <option>Select Lot</option>
-				              <option>Lot1</option>
-				              <option>Lot2</option>
-				              <option>Lot3</option>
+                        <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
+                        <label>Select the lot:</label>
+							<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in emdVm.lotList" ng-model="emdVm.dataModel.selectedLots" multiple>
 				            </select>
+				            {{emdVm.datamodel.selectedLots}}
 							<!-- <input type="text" class="form-control" name="lotId" ng-model="emdVm.dataModel.lotId" placeholder="Enter Lot Id's" required>
 							<i>Enter comma seperated value</i> -->					
                        </div>
@@ -1881,7 +1891,7 @@
 								<tr ng-repeat="emddata in emdVm.filteredList">
 									<td>{{emddata.auctId}}</td>
 									<td>{{emddata.auctName}}</td>
-									<td>{{emddata.lotId}}</td>
+									<td>{{emddata.lots}}</td>
 									<td>{{emddata.amount}}</td>
 									<td>
 										<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.editClicked(emddata)">
@@ -1967,12 +1977,12 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="lotdata in lotVm.filteredList">
-									<td>{{lotdata.auctId}}</td>
-									<td>{{lotdata.lotId}}</td>
+									<td>{{lotdata.auctionId}}</td>
+									<td>{{lotdata.lotNumber}}</td>
 									<td>{{lotdata.assetId}}</td>
 									<td>{{lotdata.assetDesc}}</td>
-									<td>{{lotdata.startPrice}}</td>
-									<td>{{lotdata.ReservePrice}}</td>
+									<td>{{lotdata.startingPrice}}</td>
+									<td>{{lotdata.reservePrice}}</td>
 									<td>{{lotdata.lastMintBid}}</td>
 									<td>{{lotdata.extendedTo}}</td>
 									<td>
@@ -1991,4 +2001,3 @@
 		</div>
     </div>
 </div>
-arc land --revision D123

@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('EmdCtrl', EmdCtrl);
 
-    function EmdCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,AuctionSvc,EmdSvc){
+    function EmdCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,EmdSvc){
           var vm  = this;
           vm.dataModel = {};
           vm.auctionListing = [];
@@ -16,12 +16,22 @@
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
+          vm.lotList=[];
         
           function init(){
               getAuctions();
               getEmdData();
+              //getLotData();
 
           }         
+
+          function getLotData(filter){
+            console.log("filter",filter);
+            LotSvc.getData(filter)
+            .then(function(res){
+            vm.lotList=res;          
+            });
+          }
 
           
           
@@ -34,6 +44,7 @@
             filter._id  = data;
             AuctionSvc.getAuctionDateData(filter).then(function(res) {
             vm.auctionname = res.items[0].name;
+            getLotData({auctionId:res.items[0].auctionId});
             }).catch(function(err){
 
             });
@@ -61,7 +72,7 @@
               vm.dataModel.createdBy = {};
               vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
               vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
-
+              console.log("vm.dataModel",vm.dataModel);
               EmdSvc.saveEmd(vm.dataModel)
               .then(function(){
                 vm.dataModel = {};
@@ -112,6 +123,9 @@
               .then(function(result){
 
               vm.EmdData = result;
+              result.forEach(function(x){
+               x.lots=x.selectedLots.toString();
+              });
               vm.filteredList = result;
               console.log(vm.EmdData);
               })

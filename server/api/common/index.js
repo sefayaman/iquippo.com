@@ -143,6 +143,6 @@ router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
 router.delete('/emd/:id',auth.hasRole('admin'), emdCtrl.destroy);
 router.get('/lot',lotCtrl.getLotData);
 router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
-router.post('/lot', auth.hasRole('admin'),lotCtrl.create);
+router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
 module.exports = router;

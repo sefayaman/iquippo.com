@@ -85,6 +85,7 @@
     $scope.firstStep = firstStep;
     $scope.secondStep = secondStep;
     $scope.goToUsermanagement = goToUsermanagement;
+    $scope.lot={};
 
     function productInit() {
 
@@ -1270,6 +1271,14 @@
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
+        $scope.lot.assetId=$scope.product.assetId;
+        $scope.lot.assetDesc=$scope.product.assetDesc;
+        $scope.lot.auctionId=$scope.auctionreq.dbAuctionId;
+        console.log("lot",$scope.lot);
+        LotSvc.saveLot($scope.lot)
+        .then(function(result){
+          console.log("result",result);
+        })
         //addToHistory(result,"Create");
         if (Auth.isAdmin()) {
           if (result.status)
@@ -1346,11 +1355,24 @@
           cb(product);
         else
           $state.go('productlisting', AppStateSvc.get('productlisting'));
+<<<<<<< HEAD
       })
       .catch(function(err){
         $rootScope.loading = false;
         if(err && err.data)
           Modal.alert(err.data);
+=======
+
+        $scope.lot.assetId=$scope.product.assetId;
+        $scope.lot.assetDesc=$scope.product.assetDesc || "";
+        $scope.lot.auctionId=$scope.auctionReq.dbAuctionId;
+        $scope.lot.reservePrice=$scope.product.reservePrice || 0;
+        console.log("lot",$scope.lot);
+        LotSvc.saveLot($scope.lot)
+        .then(function(result){
+          console.log("result",result);
+        });
+>>>>>>> c9f8199a34439fce6ff0419f385ec368826ee299
       });
     }
 
