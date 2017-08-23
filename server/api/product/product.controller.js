@@ -617,10 +617,9 @@ exports.calculatePrice = function(req,res,next){
           return next();
       });
     }else
-      res.status(412).('Unable to process your request.Please contact support team.')
-  }
-
+      res.status(412).send('Unable to process your request.Please contact support team.');
 }
+
 
 // Updates an existing product in the DB.
 exports.update = function(req, res) {
@@ -634,7 +633,6 @@ exports.update = function(req, res) {
   }else{
     updateProduct(req,res)    
   }
-
 };
 
 // Creates a new product in the DB.
