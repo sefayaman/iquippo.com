@@ -14,7 +14,7 @@ router.get('/',controller.getSellers,controller.fetchBid);
 router.get('/maxbidonproduct/',controller.getMaxBidOnProduct);
 router.get('/count',controller.getBidCount);
 router.post('/withdrawbid',auth.isAuthenticated(),controller.withdrawBid);
-router.get('/bidorbuycalculation',controller.getBidOrBuyCalculation);
+router.get('/bidorbuycalculation',controller.callculateGst,controller.callculateTcs,controller.callculateParkingCharge,controller.getBidOrBuyCalculation);
 router.get('/getemd',controller.getEMDBasedOnUser);
 router.get('/export',auth.isAuthenticated(),controller.getSellers,controller.exportExcel);
 

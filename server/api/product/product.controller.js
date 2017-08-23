@@ -39,6 +39,7 @@ var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
 var moment = require('moment');
+var AssetSaleUtil = require('../assetsale/assetsaleutil');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
 var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
 
@@ -584,6 +585,40 @@ exports.validateUpdate = function(req,res,next){
     if(resultArr.length) return next(new APIError(409,'There is active bid for this product'));
     next();
   });
+
+}
+
+//pre creation process
+
+exports.calculatePrice = function(req,res,next){
+
+  if(!req.body.priceOnRequest && !req.body.grossPrice && !req.body.reservePrice && !req.body.valuationAmount)
+      return res.status(412).send("Please enter price or select price on request");
+  if(req.user.role !== 'enterprise')
+    return next();
+  if(req.body.grossPrice)
+    return next();
+  if(!req.body.grossPrice && req.body.reservePrice){
+    req.body.grossPrice = req.body.reservePrice;
+    return next();
+  }
+
+  if(!req.body.grossPrice && req.body.seller && req.body.valuationAmount){
+    AssetSaleUtil.getMasterBasedOnUser(req.body.seller._id,{},'markup',function(err,result){
+        if(err)
+            return res.status(500).send(err);
+
+          var markupPercent = 0;
+          if(result && result.length)
+            markupPercent = result[0].price || 0;
+
+          var buyNowPrice = Number(req.body.valuationAmount || 0) + (Number(req.body.valuationAmount || 0) * Number(markupPercent || 0) / 100);
+          req.body.grossPrice = Math.round(buyNowPrice || 0);
+          return next();
+      });
+    }else
+      res.status(412).('Unable to process your request.Please contact support team.')
+  }
 
 }
 

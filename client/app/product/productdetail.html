@@ -535,7 +535,7 @@
                             </div>
                             <div class="col-sm-offset-1 col-sm-4">
                               <div>
-                                <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-danger btn-block">Buy Now</a>
+                                <a href="javascript:void(0);" ng-click="productDetailVm.openBidModal(currentProduct.grossPrice || 0,'buynow')" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-danger btn-block">Buy Now</a>
                               </div>
                             </div>
                           </div>

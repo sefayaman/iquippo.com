@@ -36,73 +36,98 @@ exports.getEMDBasedOnUser = function(req, res) {
 	});
 }
 
-exports.getBidOrBuyCalculation = function(req, res) {
-	var queryParam = req.query;
-	//var filter = {};
-  	var resultObj = {};
-  	resultObj.taxRate = 0;
-  	resultObj.tcs = 0;
-  	/*if(queryParam.groupId)
-	  filter.group = queryParam.groupId;
-  	if(queryParam.categoryId)
-	  filter.category = queryParam.categoryId;
-	if(queryParam.stateId)
-	  filter.state = queryParam.stateId;
-	if(queryParam.currentDate && queryParam.currentDate === 'y') {
-	  filter["effectiveFromDate"] = {$lte:new Date()};
-	  filter["effectiveToDate"] = {$gte:new Date()};
-	}*/
-  	
-	// getGST(filter,function(err,gstax){
-    //	if(err)
-    //		return res.status(err.status || 500).send(err);
-    	var taxPercent = 0;
-    //	if(gstax && gstax.length)
-    //		taxPercent = gstax[0].amount;
-    	if(queryParam.buyNowFlag) {
-	    	resultObj.taxRate = (Number(queryParam.bidAmount) * Number(taxPercent)) / 100;
-	    	if (Number(queryParam.bidAmount) + Number(resultObj.taxRate) > 1000000)
-	    	   resultObj.tcs = Number(queryParam.bidAmount) * 0.01;
+exports.callculateGst = function(req,res,next){
+	req.result = {};
+	req.result.taxRate = 0;
+	var donotCalGST = true;
+	if(donotCalGST)
+		next();
 
-		    return res.status(200).json(resultObj);
-		} else {
-			AssetSaleUtil.getMasterBasedOnUser(queryParam.sellerUserId,{},'markup',function(err,result){
-				if(err)
-    				return res.status(err.status || 500).send(err);
-    			var markupPercent = 0;
-    			if(result && result.length)
-		    		markupPercent = result[0].price;
-		    	resultObj.buyNowPrice = Number(queryParam.bidAmount) + (Number(queryParam.bidAmount) * Number(markupPercent) / 100);
-    			resultObj.taxRate = (Number(resultObj.buyNowPrice) * Number(taxPercent)) / 100;
-			    if (Number(queryParam.bidAmount) + Number(resultObj.taxRate) > 1000000) {
-			       resultObj.tcs = Number(resultObj.buyNowPrice) * 0.01;
-			    }
-			    return res.status(200).json(resultObj);
-			});
+	async.parallel({gst:getGST,defaultGST:getDefaultGST},function(err,result){
+		if(err) return res.status(500).send(err);
+		var gst = null;
+		if(result.gst)
+			gst = result.gst;
+		else if(result.defaultGST)
+			gst = result.defaultGST;
+		else
+			return res.status(412).send("Unable to process request.Please contact support team.");
+		req.result.taxRate = (Number(req.query.bidAmount) * Number(gst.amount)) / 100;
+		req.result.taxRate = Math.round(req.result.taxRate);
+		next();
+	});
+
+	function getGST(cb){
+
+		var queryParam = req.query;
+		var filter = {};
+	  	if(queryParam.groupId)
+		  filter.group = queryParam.groupId;
+	  	if(queryParam.categoryId)
+		  filter.category = queryParam.categoryId;
+		if(queryParam.stateId)
+		  filter.state = queryParam.stateId;
+		if(queryParam.currentDate && queryParam.currentDate === 'y') {
+		  filter["effectiveFromDate"] = {$lte:new Date()};
+		  filter["effectiveToDate"] = {$gte:new Date()};
 		}
-	    
-    //});
+		var query = VatModel.find(filter);
+		query.exec(function(err, result) {
+			if (err)
+				return res.status(500).send(err);
+			if(result.length)
+				cb(null,result[0]);
+			else
+				cb(null,null);
+		});
+	}
+
+	function getDefaultGST(cb){
+		var filter = {};
+		filter.taxType = "Default";
+		var query = VatModel.find(filter);
+		query.exec(function(err, otherRes) {
+			if (err)
+				return res.status(500).send(err);
+			if(otherRes.length)
+				cb(null,otherRes[0]);
+			else
+				cb(null,null);
+		});
+	}
 }
 
-/*function getGST(filter, callback) {
-	var query = VatModel.find(filter);
-	query.exec(function(err, result) {
-		if (err)
-			return callback(err);
-		if(result.length == 0) {
-			filter = {};
-			filter.taxType = "Default";
-			var query = VatModel.find(filter);
-			query.exec(function(err, otherRes) {
-				if (err)
-					return callback(err);
-				return callback(null, otherRes);
-			});
-		} else {
-			return callback(null, result);
-		}
-	});
-}*/
+exports.callculateTcs = function(req,res,next){
+	if (Number(req.query.bidAmount) + Number(req.result.taxRate) > 1000000)
+	    req.result.tcs = Number(queryParam.bidAmount) * 0.01;
+	else
+		req.result.tcs = 0;
+	req.result.tcs = Math.round(req.result.tcs || 0);
+
+	next();
+}
+
+exports.callculateParkingCharge = function(req,res,next){
+	var prdId = req.query.productId;
+	Product.find({_id:prdId,status:true,deleted:false},function(err,products){
+		if(err) return res.status(500).send(err);
+		if(!products.length)
+			res.status(412).send("Invalid product");
+		var todayDate = moment().daysInMonth();
+        var repoDate = moment(item.repoDate);
+        var a = moment(repoDate, 'DD/MM/YYYY');
+        var b = moment(todayDate, 'DD/MM/YYYY');
+        var days = b.diff(a, 'days') + 1;
+        req.result.parkingCharges = days * products[0].parkingChargePerDay || 0;
+        req.result.parkingCharges = Math.round(req.result.parkingCharges);
+
+	})
+}
+
+exports.getBidOrBuyCalculation = function(req, res) {
+	req.result.total = Math.round(req.result.taxRate + req.result.tcs + req.query.bidAmount);
+	res.status(200).json(req.result);
+}
 
 // Updates an existing record in the DB.
 exports.update = function(req, res,next) {
