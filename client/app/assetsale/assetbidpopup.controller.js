@@ -63,7 +63,7 @@
       filter.assetId = query.product.assetId;
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
         var msg = "";
-        if((Number($scope.total) < Number(result.bidAmount)) 
+        if((Number($scope.result.total) < Number(result.bidAmount)) 
           && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
           msg = "Higher Bid available for the Asset. "
         Modal.confirm(msg + "Do you want to change your Bid?", function(ret) {

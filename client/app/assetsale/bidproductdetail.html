@@ -71,7 +71,7 @@
             <td ng-if="!isFAgencyPartner()"><b>Buy Now Price:</b></td>
             <td ng-if="!isFAgencyPartner()">{{bidReqDetailVm.product.grossPrice || 0}}</td>
             <td ng-if="!isFAgencyPartner() && !isAdmin()"><b>Ageing of the Portal</b></td>
-            <td ng-if="!isFAgencyPartner() && !isAdmin()">{{}}</td>
+            <td ng-if="!isFAgencyPartner() && !isAdmin()">{{dayDiff(bidReqDetailVm.product.createdAt)}} Days</td>
           </tr>
           <tr ng-if="isAdmin()">
             <td><b>Trade Type:</b></td>

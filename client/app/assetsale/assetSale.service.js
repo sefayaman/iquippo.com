@@ -21,6 +21,7 @@
     svc.getEmdOnProduct = getEmdOnProduct;
     svc.changeBidStatus = changeBidStatus;
     svc.exportExcel = exportExcel;
+    svc.ageingOfAssetInPortal = ageingOfAssetInPortal;
 
 		function submitBid(data) {
 			return $http.post(path + '/submitbid?typeOfRequest='+data.typeOfRequest, data)
@@ -329,6 +330,15 @@
         if(cb)
           cb(true);
     });
+  }
+
+  function ageingOfAssetInPortal(createdDate) {
+    var date2 = new Date(createdDate);
+    var date1 = new Date();
+    var timeDiff = Math.abs(date2.getTime() - date1.getTime());   
+    var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+    
+    return dayDifference;
   }
 
   function exportExcel(filter){

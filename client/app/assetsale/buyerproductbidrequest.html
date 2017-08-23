@@ -83,9 +83,9 @@
 			   				</a>
 			   			</td>
 						<td> 
-							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType', '', 'EMD')" class="btn btn-success btn-sm" uib-popover="Pay EMD Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'EMDPAYMENT')"><i class="fa fa-money"></i></button> 
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType', '', 'EMD')" class="btn btn-success btn-sm" uib-popover="Pay EMD Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'EMDPAYMENT') && !bid.emdPayment.paymentMode"><i class="fa fa-money"></i></button> 
 
-							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType', '', 'Fullpayment')" class="btn btn-success btn-sm" uib-popover="Pay Full Payment Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'FULLPAYMENT')"><i class="fa fa-money"></i></button>
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType', '', 'Fullpayment')" class="btn btn-success btn-sm" uib-popover="Pay Full Payment Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'FULLPAYMENT') && !bid.fullPayment.paymentMode"><i class="fa fa-money"></i></button>
 
 							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" uib-popover="Change Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openBidModal(bid)" ng-if="buyerProductBidRequestVm.validateAction(bid,'CHANGEBID')">
 								<i class="fa fa-retweet"></i>

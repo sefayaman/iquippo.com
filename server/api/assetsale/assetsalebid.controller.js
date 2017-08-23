@@ -662,6 +662,8 @@ exports.getMaxBidOnProduct = function(req, res) {
 	var filter = {};
 	if(req.query.assetId)
 		filter['product.assetId'] = req.query.assetId;
+	if(req.query.userId)
+		filter.user = req.query.userId;
 	filter.offerStatus = offerStatuses[0];
 	var query = AssetSaleBid.find(filter).sort({bidAmount:-1}).limit(1);
 	query.exec(function(err,results){

@@ -17,6 +17,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.update = update;
 	vm.exportExcel = exportExcel;
 	vm.validateAction = AssetSaleSvc.validateAction;
+	$scope.dayDiff = AssetSaleSvc.ageingOfAssetInPortal;
 	vm.backButton = backButton;
 	vm.activeBid = "approved";
 	$scope.onTabChange = onTabChange;
@@ -61,16 +62,6 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	  		break;
 	  	}
   	}
-
-	$scope.dayDiff = function(createdDate){
-		var date2 = new Date(createdDate);
-		var date1 = new Date();
-		var timeDiff = Math.abs(date2.getTime() - date1.getTime());   
-		var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-		console.log(dayDifference);
-
-		return dayDifference;
-	}
 
 	function fireCommand(reset) {
 		if(reset)

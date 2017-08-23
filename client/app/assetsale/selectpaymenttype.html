@@ -5,21 +5,21 @@
         </div>
       <div class="modal-body">
         <form novalidate class="" name="paymentForm">
-              <!-- <div class="row">
-                <div class="col-sm-6" ng-if="paymentVm.validateAction(bid,'EMDPAYMENT')">
-                  <div class="radio radio-info">
-                      <input type="radio" id="inlineRadio1" name="type" value="emd">
-                      <label for="inlineRadio1"> EMD </label>
-                  </div>  
-                </div>
-                <div class="col-sm-6" ng-if="paymentVm.validateAction(bid,'FULLPAYMENT')">
-                  <div class="radio radio-info">
-                      <input type="radio" id="inlineRadio2" name="type" value="fullpayment">
-                      <label for="inlineRadio2"> Full Payment </label>
-                  </div>  
-                </div>
-              </div> -->
               <div class="row">
+                <div class="col-xs-6 col-sm-6 form-group">
+                  <div class="radio radio-info">
+                          <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
+                          <label for="offline"> Offline </label>
+                      </div>                   
+                </div>
+                <div class="col-xs-6 col-sm-6 form-group">
+                  <div class="radio radio-info">
+                          <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
+                          <label for="online"> Online </label>
+                      </div>     
+                </div>
+              </div>
+              <div class="row" ng-if="option.select == 'online'">
                 <div class="col-sm-offset-1 col-sm-10">
                   <input type="text" class="form-control" name="amount" value="" ng-model="paymentVm.amount" placeholder="Amount" disabled>
                 </div>

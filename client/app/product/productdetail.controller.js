@@ -437,6 +437,22 @@
       });
     }
 
+    function getLastBidForUser(){
+      if(!Auth.getCurrentUser()._id)
+        return;
+      filter = {};
+      filter.assetId = $scope.currentProduct.assetId;
+      if(Auth.getCurrentUser()._id)
+        filter.userId = Auth.getCurrentUser()._id;
+      AssetSaleSvc.getMaxBidOnProduct(filter)
+      .then(function(res){
+          vm.bidAmount=res.bidAmount;
+      })
+      .catch(function(err){
+        if (err) throw err;
+      });
+    }
+
     function init() {
       vendorSvc.getAllVendors()
         .then(function() {
@@ -569,7 +585,7 @@
           }
           //fetch number of bids on a product//
           countBid();
-
+          getLastBidForUser();
           getPriceTrendData();
           if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"
@@ -687,7 +703,6 @@
     }
 
     function serviceRequest(form, type) {
-
       Auth.isLoggedInAsync(function(loggedIn) {
         if (!loggedIn) {
           Modal.openDialog('login');
@@ -696,13 +711,8 @@
         }
       });
 
-      console.log($scope.currentProduct.user);
-
-
       var serviceReq = {};
       serviceReq.user = $scope.currentProduct.user;
-
-
     }
 
     function getPriceTrendData() {
@@ -729,7 +739,6 @@
     }
 
     function getPriceTrendSurveyCount() {
-
       filter = {};
       filter.productId = $scope.currentProduct._id;
       filter.priceTrendId = $scope.priceTrendData._id;
