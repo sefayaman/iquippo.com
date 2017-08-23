@@ -95,6 +95,22 @@ exports.unIncomingProduct = function(req,res){
   })
 }
 
+//Set all seller related to a enterprise
+exports.getSellers = function(req,res,next){
+  if(!req.body.enterprieId)
+    return next();
+  req.sellers = [];
+  User.find({enterpriseId:req.body.enterprieId,deleted:false,status:true},function(err,sellers){
+    if(err || sellers.length){
+      return next();
+    }
+    sellers.forEach(function(item){
+      req.sellers.push(item._id + "")
+    });
+    next();
+  })
+}
+
 //search products
 exports.search = function(req, res) {
   var term = new RegExp(req.body.searchstr, 'i');
@@ -591,6 +607,8 @@ exports.validateUpdate = function(req,res,next){
 //pre creation process
 
 exports.calculatePrice = function(req,res,next){
+  if(req.body.tradeType === 'RENT')
+    return next();
 
   if(!req.body.priceOnRequest && !req.body.grossPrice && !req.body.reservePrice && !req.body.valuationAmount)
       return res.status(412).send("Please enter price or select price on request");
@@ -1086,6 +1104,11 @@ exports.exportProducts = function(req, res) {
         }
         fetchResults();
       })
+    } else if(req.user.role === 'enterprise' && req.user.enterprise){
+      filter["seller._id"] = {
+          "$in": req.sellers || []
+        }
+        return fetchResults();
     } else {
       filter["seller._id"] = req.body.userid;
       fetchResults();
@@ -1542,7 +1565,7 @@ exports.validateExcelData = function(req, res, next) {
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
             validateForBid:validateForBid,
-            calculatePriceOnBatchUpload : calculatePriceOnBatchUpload
+            validatePrice : validatePrice
           }, buildData);          
         }else if(type === 'auction_update'){
           async.parallel({
@@ -1567,7 +1590,7 @@ exports.validateExcelData = function(req, res, next) {
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
           validateOnlyAdminCols: validateOnlyAdminCols,
-          calculatePriceOnBatchUpload : calculatePriceOnBatchUpload
+          validatePrice : validatePrice
         }, buildData);
       }else{
         errorList.push({
@@ -1616,7 +1639,7 @@ exports.validateExcelData = function(req, res, next) {
 
     function validateGenericField(callback){
       var obj = {};
-      var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice'];
+      var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice','grossPrice'];
       var dateColumns = ['repoDate'];
       var fieldsToBeCopied = ['addressOfAsset','parkingPaymentTo'];
       numericColumns.forEach(function(x){
@@ -1637,25 +1660,46 @@ exports.validateExcelData = function(req, res, next) {
       return callback(null,obj);
     }
 
-    function calculatePriceOnBatchUpload(callback){
-      
-      var calculationReq = ['enterprise','admin'].indexOf(req.user.role) !== -1? true:false;
-      if(!calculationReq)
+    function validatePrice(callback){
+      if(row.tradeType && row.tradeType.toLowerCase() === 'rent')
         return callback();
+
+      var isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
-      if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice && !row.reservePrice && !row.valuationAmount){
+      if(isCustomer){
+        if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice ){
+          errorList.push({
+            Error : 'Selling price is mandatory when Price on request not selected',
+            rowCount :row.rowCount
+          });
+          return callback('Error');
+        }
+      }
+      var gp = row.grossPrice;
+      var prOnReq = row.priceOnRequest || "";
+      var cr = row["currencyType"] || "INR";
+      if (gp && cr) {
+        obj.grossPrice = Number(gp);
+        obj.currencyType = cr;
+      }
+      obj.priceOnRequest = prOnReq.toLowerCase() == 'yes' ? true:false;
+      if(isCustomer)
+        return callback(null,obj);
+
+      if(!obj.priceOnRequest && !obj.grossPrice && !row.reservePrice && !row.valuationAmount){
         errorList.push({
-              Error : 'Please enter price or mark price on request as yes.',
+              Error : 'Please enter valid price or mark price on request as yes.',
               rowCount :row.rowCount
         });
         return callback('Error');
       }
 
-      if(row.grossPrice)
-        return callback();
+      if(obj.grossPrice)
+        return callback(null,obj);
       if(row.reservePrice){
-        row.grossPrice = row.reservePrice;
-        return callback();
+        obj.grossPrice = row.reservePrice;
+        return callback(null,obj);
       }
 
       if(row.seller_mobile && row.valuationAmount){
@@ -1672,11 +1716,11 @@ exports.validateExcelData = function(req, res, next) {
               markupPercent = result[0].price || 0;
 
             var buyNowPrice = Number(row.valuationAmount || 0) + (Number(row.valuationAmount || 0) * Number(markupPercent || 0) / 100);
-            row.grossPrice = Math.round(buyNowPrice || 0);
-            return callback();
+            obj.grossPrice = Math.round(buyNowPrice || 0);
+            return callback(null,obj);
           });
-        }else if(row.priceOnRequest.toLowerCase() === 'yes')
-          return callback();
+        }else if(obj.priceOnRequest)
+          return callback(null,obj);
         else{
            errorList.push({
               Error : 'Unable to process your request.Please contact support team.',
@@ -1762,7 +1806,7 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
-      var  isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+     /* var  isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
       if(!isCustomer)
         return callback();
       row.priceOnRequest = row.priceOnRequest || "";
@@ -1774,7 +1818,7 @@ exports.validateExcelData = function(req, res, next) {
         });
 
         return callback('Error');
-      }
+      }*/
 
       return callback();
 
@@ -2341,8 +2385,10 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateRentInfo(callback) {
+      if(row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available"))
+        return callback();
       var product = {};
-      if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
+     // if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
         product["rent"] = {};
 
         var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
@@ -2399,7 +2445,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.minPeriodH = Number(trim(minPeriodH));
 
           var maxPeriodH = row["maxPeriodH"];
-          if (!isNaN(maxPeriodH)) {
+          if (isNaN(maxPeriodH)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2409,7 +2455,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.maxPeriodH = Number(trim(maxPeriodH));
 
           var rentAmountH = row["rentAmountH"];
-          if (!isNaN(rentAmountH)) {
+          if (isNaN(rentAmountH)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2419,7 +2465,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.rentAmountH = Number(trim(rentAmountH));
 
           var seqDepositH = row["seqDepositH"];
-          if (!isNaN(seqDepositH)) {
+          if (isNaN(seqDepositH)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2442,7 +2488,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.minPeriodD = Number(trim(minPeriodD));
 
           var maxPeriodD = row["maxPeriodD"];
-          if (!isNaN(maxPeriodD)) {
+          if (isNaN(maxPeriodD)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2452,7 +2498,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.maxPeriodD = Number(trim(maxPeriodD));
 
           var rentAmountD = row["rentAmountD"];
-          if (!isNaN(rentAmountD)) {
+          if (isNaN(rentAmountD)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2462,7 +2508,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.rentAmountD = Number(trim(rentAmountD));
 
           var seqDepositD = row["seqDepositD"];
-          if (!isNaN(seqDepositD)) {
+          if (isNaN(seqDepositD)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2485,7 +2531,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.minPeriodM = Number(trim(minPeriodM));
 
           var maxPeriodM = row["maxPeriodM"];
-          if (!isNaN(maxPeriodM)) {
+          if (isNaN(maxPeriodM)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2495,7 +2541,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.maxPeriodM = Number(trim(maxPeriodM));
 
           var rentAmountM = row["rentAmountM"];
-          if (!isNaN(rentAmountM)) {
+          if (isNaN(rentAmountM)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2505,7 +2551,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.rentAmountM = Number(trim(rentAmountM));
 
           var seqDepositM = row["seqDepositM"];
-          if (!isNaN(seqDepositM)) {
+          if (isNaN(seqDepositM)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2515,10 +2561,10 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
+     /* } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
         var gp = row["grossPrice"];
         var prOnReq = row["priceOnRequest"];
-        var cr = row["currencyType"];
+        var cr = row["currencyType"] || "INR";
         if (!isNaN(gp) && cr) {
           product["grossPrice"] = Number(trim(gp));
           product["currencyType"] = trim(cr);
@@ -2539,7 +2585,7 @@ exports.validateExcelData = function(req, res, next) {
             product["priceOnRequest"] = false;
           }
         }
-      }
+      }*/
       return callback(null, product);
     }
 
@@ -2608,11 +2654,14 @@ exports.validateExcelData = function(req, res, next) {
     //validate seller information if exists
     function validateSeller(callback) {
       var obj = {};
-      if (row.seller_mobile && row.seller_email) {
-        User.find({
-          mobile: row.seller_mobile,
-          email: row.seller_email
-        }, function(err, seller) {
+      if (row.seller_mobile) {
+        var filter = {};
+        filter.deleted = false;
+        filter.status = true;
+        filter.mobile = row.seller_mobile;
+        if(row.seller_email)
+          filter.email = row.seller_email;
+        User.find(filter, function(err, seller) {
           if (err || !seller) {
             errorList.push({
               Error: 'Error while fetching seller',

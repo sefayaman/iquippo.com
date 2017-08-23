@@ -1,6 +1,7 @@
 'use strict';
 var Seq = require('seq');
 var  xlsx = require('xlsx');
+var trim = require('trim');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug');
@@ -229,7 +230,7 @@ function toJSON(options) {
   data = data.filter(function(x) {
     Object.keys(x).forEach(function(key) {
       if (fieldMapping[key]) {
-        x[fieldMapping[key]] = x[key];
+        x[fieldMapping[key]] = trim(x[key] || "");
       }
       delete x[key];
     })
