@@ -97,11 +97,11 @@ exports.unIncomingProduct = function(req,res){
 
 //Set all seller related to a enterprise
 exports.getSellers = function(req,res,next){
-  if(!req.body.enterprieId)
+  if(!req.body.enterpriseId)
     return next();
   req.sellers = [];
-  User.find({enterpriseId:req.body.enterprieId,deleted:false,status:true},function(err,sellers){
-    if(err || sellers.length){
+  User.find({enterpriseId:req.body.enterpriseId,deleted:false,status:true},function(err,sellers){
+    if(err || !sellers.length){
       return next();
     }
     sellers.forEach(function(item){

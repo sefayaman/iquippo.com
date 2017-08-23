@@ -37,7 +37,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   vm.featured = false;
   vm.active = false;
   var dataToSend = {};
-
+  function init(){
     if(Auth.getCurrentUser().profileStatus == 'incomplete'){
         $state.go('myaccount');
         return;
@@ -49,7 +49,6 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
       if(Auth.isEnterprise()){
         delete dataToSend.userid;
         dataToSend.enterpriseId = Auth.getCurrentUser().enterpriseId; 
-        //dataToSend["userid"] = Auth.getCurrentUser()._id;
       }
     }
     //pagination flag
@@ -317,8 +316,7 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
      }
 
      //entry point
-     function init(){
-      Auth.isLoggedInAsync(function(loggedIn){
+     Auth.isLoggedInAsync(function(loggedIn){
          if(loggedIn)
             init();
           else

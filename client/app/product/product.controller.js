@@ -191,6 +191,10 @@
           if(Auth.getCurrentUser().role == 'channelpartner')
             filter.role = Auth.getCurrentUser().role;
           filter.userid = Auth.getCurrentUser()._id;
+          if(Auth.isEnterprise()){
+            delete filter.userid;
+            filter.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+          }
         }
         productSvc.getProductOnFilter(filter).then(function(response) {
           if(response && response.length < 1) {
