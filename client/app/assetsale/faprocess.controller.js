@@ -114,8 +114,9 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 
 	function exportExcel() {
 		var filter = {};
+		angular.copy(initFilter, filter)
         filter.fa = 'y';
-		AssetSaleSvc.exportExcel(filter);
+        AssetSaleSvc.exportExcel(filter);
 	}
 
 	//loading start

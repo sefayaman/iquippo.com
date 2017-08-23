@@ -56,6 +56,7 @@
               <td>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'EMDPAYMENT')">
                   <span ng-if="bid.emdPayment.remainingPayment > 0">Update Details</span>
+                  <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
                 </a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'VIEWEMDPAYMENT')">
                   <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
@@ -65,6 +66,7 @@
               <td>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')">
                   <span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
+                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
                 </a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'VIEWFULLPAYMENT')">
                   <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
@@ -88,11 +90,13 @@
 
                 <button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'FULLPAYMENT')" ng-click="faVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button>
 
-                <button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="faVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'DoUpload','')">
+                <button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="faVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'DoUpload','', 'doIssued')">
                      <i class="fa fa-upload"></i>
                   </button>
                   
-                <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="faVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a>
+                <!-- <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="faVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a> -->
+
+                <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="faVm.openDialog(bid,'DoUpload','', 'deliverd')"><i class="fa fa-truck"></i></a>
 
                 <button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="faVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
 

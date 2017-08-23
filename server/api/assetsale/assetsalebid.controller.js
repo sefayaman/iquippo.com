@@ -680,7 +680,6 @@ exports.getSellers = function(req,res,next){
 	var users = [];
 	async.parallel([getUsersAssociatedToEnterprise,getCustomer],function(err,result){
   	if(err){console.log("error", err);}
-  	console.log("req.sellers = users", users);
   	req.sellers = users;
   	return next();
   });
@@ -753,10 +752,7 @@ exports.exportExcel = function(req,res){
 	var user = req.user;
 	var queryParam = req.query;
 	var fieldsMap = {};
-	console.log("req.user@@@", req.user);
-	console.log("req.sellers@@@", queryParam);
 	if(queryParam.seller == 'y'){
-		console.log("queryParam.seller@@@", queryParam.seller);
 		filter['product.seller._id'] = req.user._id +"";
 		fieldsMap = fieldConfig['SELLER_FIELDS'];
 	}
@@ -767,14 +763,13 @@ exports.exportExcel = function(req,res){
 	}
 
 	if(queryParam.fa == 'y'){
-		filter['product.seller._id'] = {$in:req.sellers};
+		filter['product.seller._id'] = {$in:req.sellers || []};
 		fieldsMap = fieldConfig['BUYER_FIELDS'];
 	};
 
 	if(user.role == 'admin')
   		fieldsMap = fieldConfig['ADMIN_FIELDS'];
-  	console.log("FilterBid###", filter);
-	var query = AssetSaleBid.find(filter).populate('user product.proData');
+  	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
 		renderExcel(resList);
@@ -820,5 +815,5 @@ exports.exportExcel = function(req,res){
 }
 
 function handleError(res, err) {
-  return res.status(500).send(err);
+	return res.status(500).send(err);
 }

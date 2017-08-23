@@ -9,7 +9,8 @@ function DoUploadCtrl($scope, $state, $rootScope, Modal, Auth, uploadSvc, AssetS
    	$scope.submitDOIssued = submitDOIssued;
    	$scope.bidDt = {};
    	$scope.close = close;
-
+   	vm.validateAction = AssetSaleSvc.validateAction;
+   	var action = $scope.formType == 'doIssued' ? 'doissued' : 'deliverd';
    // do upload
    function uploadDoc(files,_this){
 		if(!files || !files.length)
@@ -21,13 +22,20 @@ function DoUploadCtrl($scope, $state, $rootScope, Modal, Auth, uploadSvc, AssetS
 	}
 
 	function submitDOIssued(form){
-		if(form.$invalid || !$scope.bidDt.deliveryOrder){
+		if(action === 'doissued' && !$scope.bidDt.deliveryOrder) {
+			Modal.alert("Please Upload DO!");
+			return;
+		}
+
+		if(action === 'deliverd' && (form.$invalid || !$scope.bidDt.dateOfDelivery)){
 			$scope.submitted = true;
 			return;
 		}
-		$scope.bidData.deliveryOrder = $scope.bidDt.deliveryOrder;
-		$scope.bidData.dateOfDelivery = $scope.bidDt.dateOfDelivery;
-		AssetSaleSvc.changeBidStatus($scope.bidData,'doissued',$scope.close);
+		if($scope.bidDt.deliveryOrder)
+			$scope.bidData.deliveryOrder = $scope.bidDt.deliveryOrder;
+		if($scope.bidDt.dateOfDelivery)
+			$scope.bidData.dateOfDelivery = $scope.bidDt.dateOfDelivery;
+		AssetSaleSvc.changeBidStatus($scope.bidData,action,$scope.close);
 	}
 
 	function close() {
