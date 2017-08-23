@@ -206,6 +206,13 @@
          else
           retVal = false;
       break;
+      case 'VIEWEMDPAYMENT':
+         var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus) > 6 ? true:false;
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user._id === Auth.getCurrentUser()._id))
+            retVal = true;
+         else
+          retVal = false;
+      break;
       case 'FULLPAYMENT':
          var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[7] ? true:false;
         if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user._id === Auth.getCurrentUser()._id))
@@ -213,7 +220,13 @@
          else
           retVal = false;
       break;
-
+      case 'VIEWFULLPAYMENT':
+         var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus) > 7 ? true:false;
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.user._id === Auth.getCurrentUser()._id))
+            retVal = true;
+         else
+          retVal = false;
+      break;
       case 'KYC':
         if(bidStatuses.indexOf(bid.bidStatus) > 6 && dealStatuses.indexOf(bid.dealStatus) > 7)
           retVal = true;

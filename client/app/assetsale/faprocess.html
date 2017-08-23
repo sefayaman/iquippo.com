@@ -57,7 +57,7 @@
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'EMDPAYMENT')">
                   <span ng-if="bid.emdPayment.remainingPayment > 0">Update Details</span>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')">
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'VIEWEMDPAYMENT')">
                   <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
                 </a>
               </td>
@@ -66,7 +66,7 @@
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')">
                   <span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
                 </a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')">
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'VIEWFULLPAYMENT')">
                   <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
                 </a>
               </td>
