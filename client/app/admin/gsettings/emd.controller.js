@@ -41,9 +41,9 @@
 
           function onSelectAuction(data) {
             var filter={};
-            filter._id  = data;
+            filter.auctionId  = data;
             AuctionSvc.getAuctionDateData(filter).then(function(res) {
-            vm.auctionname = res.items[0].name;
+            vm.auctionName = res.items[0].name;
             getLotData({auctionId:res.items[0].auctionId});
             }).catch(function(err){
 
@@ -56,8 +56,8 @@
             getAuctions();
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.auctId = rowData.auctId;
-            vm.dataModel.auctName = rowData.auctName;
+            vm.dataModel.auctionId = rowData.auctionId;
+            vm.dataModel.auctionName = rowData.auctionName;
             vm.dataModel.lotId = rowData.lotId;
             vm.dataModel.amount = rowData.amount;
             $scope.isEdit = true;
@@ -68,7 +68,8 @@
               $scope.submitted = true;
               return;
               }
-              vm.dataModel.auctName =  vm.auctionname;
+              vm.dataModel.auctionName =  vm.auctionName;
+              console.log("AuctionName",vm.dataModel.auctionName);
               vm.dataModel.createdBy = {};
               vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
               vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
