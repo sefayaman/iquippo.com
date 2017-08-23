@@ -526,7 +526,7 @@
                             <div class="col-sm-4">
                               <div class="price-request">
                                 <div ng-if="currentProduct.grossPrice">
-                                  <i class="fa fa-inr"></i> {{currentProduct.grossPrice}}
+                                  <i class="fa fa-inr"></i> {{currentProduct.grossPrice | number:0}}
                                 </div>
                                 <div ng-if="!currentProduct.grossPrice" ng-model="valuefor">
                                   <i class="fa fa-inr"></i> Price On Request

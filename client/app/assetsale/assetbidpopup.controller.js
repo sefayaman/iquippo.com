@@ -15,20 +15,21 @@
     $scope.close = close;
     //vm.buyNow = buyNow;
     var dataToSend = {};
-    var filter = {};
+    //var filter = {};
+    var initFilter = {};
 
     vm.calculateBid = calculateBid;
 
     function init() {
-      filter = {};
-      filter.buyNowFlag = false;
+      var filter = {};
+      initFilter.buyNowFlag = false;
       if (query.product.category)
-        filter.categoryId = query.product.category._id;
-      filter.stateId = query.stateId;
-      filter.currentDate = 'y'
+        initFilter.categoryId = query.product.category._id;
+      initFilter.stateId = query.stateId;
+      initFilter.currentDate = 'y'
       if($scope.params.bid === "placebid") {
-        filter.buyNowFlag = true;
-        filter.bidAmount = vm.bidAmount = query.bidAmount;
+        initFilter.buyNowFlag = true;
+        initFilter.bidAmount = vm.bidAmount = query.bidAmount;
       }
       if($scope.params.bid === "buynow") {
         if(!query.product.grossPrice) {
@@ -36,15 +37,15 @@
             Modal.alert("You can not request on this product!", true);
             return;
           }
-          filter.buyNowFlag = false;
-          filter.sellerUserId = query.product.seller._id;
+          initFilter.buyNowFlag = false;
+          initFilter.sellerUserId = query.product.seller._id;
           if(query.product.reservePrice)
-            filter.bidAmount = vm.bidAmount = query.product.reservePrice;
+            initFilter.bidAmount = vm.bidAmount = query.product.reservePrice;
           else if(query.product.valuationAmount) 
-            filter.bidAmount = vm.bidAmount = query.product.valuationAmount;
+            initFilter.bidAmount = vm.bidAmount = query.product.valuationAmount;
         } else {
-          filter.buyNowFlag = true;
-          filter.bidAmount = vm.bidAmount = query.product.grossPrice;
+          initFilter.buyNowFlag = true;
+          initFilter.bidAmount = vm.bidAmount = query.product.grossPrice;
         }
       }
       var emdFilter = {};
@@ -53,6 +54,7 @@
       AssetSaleSvc.getEmdOnProduct(emdFilter).then(function(result){
         if(result)
           $scope.emdAmount = result.emdCharge;
+        angular.copy(initFilter, filter);
         getBidOrBuyCalculation(filter);
         });
     }
@@ -63,17 +65,19 @@
       AssetSaleSvc.getBidOrBuyCalculation(filter).then(function(result){
         console.log(result);
         if(result.buyNowPrice)
-          vm.bidAmount = result.buyNowPrice;
-        $scope.taxRate = result.taxRate;
-        $scope.tcs = result.tcs;
+          vm.bidAmount = Math.round(result.buyNowPrice);
+        $scope.taxRate = Math.round(result.taxRate);
+        $scope.tcs = Math.round(result.tcs);
         if (query.product.parkingCharges)
-        $scope.parking = query.product.parkingCharges;
+        $scope.parking = Math.round(query.product.parkingCharges);
 
       $scope.total = Number($scope.taxRate || 0) + Number($scope.tcs || 0) + Number($scope.parking || 0) + Number(vm.bidAmount || 0);
       });
     }
 
     function calculateBid(amount) {
+      var filter = {};
+      angular.copy(initFilter, filter);
       filter.bidAmount = amount;
       getBidOrBuyCalculation(filter);
     }
@@ -93,15 +97,15 @@
         return $state.go("myaccount");
       }
 
-      filter = {};
+      var filter = {};
       filter.assetId = query.product.assetId;
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
         var msg = "";
         if((Number($scope.total) < Number(result.bidAmount)) 
           && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
-          msg = "Higher bid available in the system. "
-        Modal.confirm(msg + "Do you want to submit?", function(ret) {
-          if (ret == "yes") {
+          msg = "Higher Bid available for the Asset. "
+        Modal.confirm(msg + "Do you want to change your Bid?", function(ret) {
+          if (ret == "no") {
             dataToSend = {};
 
             AssetSaleSvc.setStatus(dataToSend,offerStatuses[0],'offerStatus','offerStatuses');

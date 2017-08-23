@@ -54,11 +54,21 @@
               <td>{{bid.bidStatus}}</td>
               <td>{{bid.dealStatus}}</td>
               <td>
-                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'EMDPAYMENT')"><span ng-if="bid.emdPayment.remainingPayment > 0">Update Details</span><span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span></a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'EMDPAYMENT')">
+                  <span ng-if="bid.emdPayment.remainingPayment > 0">Update Details</span>
+                </a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')">
+                  <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
+                </a>
               </td>
               <!-- <td>{{}}</td> -->
               <td>
-                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')"><span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span><span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span></a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')">
+                  <span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
+                </a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')">
+                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+                </a>
               </td>
               <td>
                 <button type="button" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'invoiceDetails')" ng-if="faVm.validateAction(bid,'INVOICEDETAIL')">Update</button>

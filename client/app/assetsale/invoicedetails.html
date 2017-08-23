@@ -61,14 +61,14 @@
                     Please enter a valid email.
                     </p> 
                   </div>
-                  <div class="col-sm-2 form-group padd-right" ng-class="{'has-error': invoiceForm.mobile.$invalid && invoiceForm.submitted }">
+                  <!-- <div class="col-sm-2 form-group padd-right" ng-class="{'has-error': invoiceForm.mobile.$invalid && invoiceForm.submitted }">
                     <select class="form-control" ng-model="invoiceDetailsVm.invoiceInfo.countryCode" ng-change="auctionRegVm.onCodeChange(auctionRegVm.user.countryCode)" required>
                     <option value="" disabled>*Code</option>
                     <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
-                  </select>
-                  </div>
-                  <div class="col-sm-4 form-group padd-left" ng-class="{'has-error': invoiceForm.mobile.$invalid && invoiceForm.submitted }">
-                    <input type="text" class="form-control" name="mobile" ng-model="invoiceDetailsVm.invoiceInfo.mobile" placeholder="*Mobile No." uib-tooltip="98-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                    </select>
+                  </div> -->
+                  <div class="col-sm-6 form-group padd-left" ng-class="{'has-error': invoiceForm.mobile.$invalid && invoiceForm.submitted }">
+                    <input type="text" class="form-control" name="mobile" ng-model="invoiceDetailsVm.invoiceInfo.mobile" placeholder="*Mobile No." uib-tooltip="XX-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
                   </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                     <td>{{bidData.invoiceDetail.city}}</td>
                     <td>{{bidData.invoiceDetail.address}}</td>
                     <td>{{bidData.invoiceDetail.email}}</td>
-                    <td>+{{bidData.invoiceDetail.countryCode}} {{bidData.invoiceDetail.mobile}}</td>
+                    <td>{{bidData.invoiceDetail.mobile}}</td>
                   </tr>
                 </tbody>
               </table>

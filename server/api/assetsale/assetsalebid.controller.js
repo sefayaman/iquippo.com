@@ -38,11 +38,11 @@ exports.getEMDBasedOnUser = function(req, res) {
 
 exports.getBidOrBuyCalculation = function(req, res) {
 	var queryParam = req.query;
-	var filter = {};
+	//var filter = {};
   	var resultObj = {};
   	resultObj.taxRate = 0;
   	resultObj.tcs = 0;
-  	if(queryParam.groupId)
+  	/*if(queryParam.groupId)
 	  filter.group = queryParam.groupId;
   	if(queryParam.categoryId)
 	  filter.category = queryParam.categoryId;
@@ -51,18 +51,18 @@ exports.getBidOrBuyCalculation = function(req, res) {
 	if(queryParam.currentDate && queryParam.currentDate === 'y') {
 	  filter["effectiveFromDate"] = {$lte:new Date()};
 	  filter["effectiveToDate"] = {$gte:new Date()};
-	}
+	}*/
   	
-	getGST(filter,function(err,gstax){
-    	if(err)
-    		return res.status(err.status || 500).send(err);
+	// getGST(filter,function(err,gstax){
+    //	if(err)
+    //		return res.status(err.status || 500).send(err);
     	var taxPercent = 0;
-    	if(gstax && gstax.length)
-    		taxPercent = gstax[0].amount;
+    //	if(gstax && gstax.length)
+    //		taxPercent = gstax[0].amount;
     	if(queryParam.buyNowFlag) {
 	    	resultObj.taxRate = (Number(queryParam.bidAmount) * Number(taxPercent)) / 100;
 	    	if (Number(queryParam.bidAmount) + Number(resultObj.taxRate) > 1000000)
-		       resultObj.tcs = Number(queryParam.bidAmount) * 0.01;
+	    	   resultObj.tcs = Number(queryParam.bidAmount) * 0.01;
 
 		    return res.status(200).json(resultObj);
 		} else {
@@ -81,10 +81,10 @@ exports.getBidOrBuyCalculation = function(req, res) {
 			});
 		}
 	    
-    });
+    //});
 }
 
-function getGST(filter, callback) {
+/*function getGST(filter, callback) {
 	var query = VatModel.find(filter);
 	query.exec(function(err, result) {
 		if (err)
@@ -102,21 +102,8 @@ function getGST(filter, callback) {
 			return callback(null, result);
 		}
 	});
-}
+}*/
 
-/*function create(data,callback){
-	if (!data)
-			return callback(new APIError( 412,'No data for creation'));
-        
-		AssetSaleBid.create(data,function(err,res){
-			if (err && err.original && err.original.code === 'ER_DUP_ENTRY') {
-				var e = new APIError(409,'Duplicate Entry');
-			return callback(e);
-		}
-			return callback(null, res);
-		});
-}
-*/
 // Updates an existing record in the DB.
 exports.update = function(req, res,next) {
 
@@ -138,7 +125,7 @@ exports.update = function(req, res,next) {
 
 exports.validateUpdate = function(req,res,next){
 	
-	if(['approve','deliveryaccept'].indexOf(req.query.action) !== -1)
+	if(['approve','deliveryaccept','emdpayment'].indexOf(req.query.action) !== -1)
 		async.parallel([validateBid,validateOtherBids,validateProduct],onComplete);
 	else
 		async.parallel([validateBid,validateProduct],onComplete);
@@ -181,6 +168,12 @@ exports.validateUpdate = function(req,res,next){
 					req.body.fullPaymentEndDate = new Date().addDays(entData.fullPaymentPeriod);
 					if(req.body.fullPaymentEndDate)
 						req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
+					req.otherBids.forEach(function(item){
+						item.status = false;
+						AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
+						AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
+						req.bids.push(item);
+					});
 					next();
 				});
 			}
@@ -204,12 +197,12 @@ exports.validateUpdate = function(req,res,next){
 			req.product.bidRequestApproved = false;
 			req.updateProduct = true;
 			req.bids[0].status = false;
-			req.otherBids.forEach(function(item){
+			/*req.otherBids.forEach(function(item){
 				item.status = false;
 				AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
 				AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
 				req.bids.push(item);
-			});
+			});*/
 			next();
 		}
 		else

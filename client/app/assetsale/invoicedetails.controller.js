@@ -54,9 +54,9 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
       });
     }
 
-    function onCodeChange(code) {
+    /*function onCodeChange(code) {
 	    $scope.country = LocationSvc.getCountryNameByCode(code);
-	}
+	}*/
 
 	function submit(form) {
 		if($scope.option.select == 'yes') {
@@ -90,6 +90,7 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		      return;
 		    }
 		}
+		vm.invoiceInfo.countryCode = LocationSvc.getCountryCode(vm.invoiceInfo.country);
 		$scope.bidData.invoiceDetail = {};
 	    $scope.bidData.invoiceDetail = vm.invoiceInfo;
 	    AssetSaleSvc.update($scope.bidData, 'invoice').
