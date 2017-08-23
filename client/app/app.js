@@ -200,6 +200,7 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
     $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
+    $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

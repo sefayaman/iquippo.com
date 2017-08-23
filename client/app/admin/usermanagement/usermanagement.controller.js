@@ -263,7 +263,7 @@ angular.module('sreizaoApp')
       var services = [
                       {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
                       {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"No"},
-                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
+                      //{name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
                       {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"}
                       //{name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
                     ]
@@ -341,6 +341,7 @@ angular.module('sreizaoApp')
       for(var i = 0; i < $scope.enterprises.length;i++){
         if($scope.newUser.enterpriseId == $scope.enterprises[i].enterpriseId){
             enterpriseSvcList = angular.copy($scope.enterprises[i].availedServices);
+            $scope.newUser.buySale = $scope.enterprises[i].buySale || false;
           break;
         }
       }
@@ -540,7 +541,9 @@ angular.module('sreizaoApp')
       $scope.availedServices.forEach(function(item){
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
-      })
+      });
+      if(!$scope.newUser.buySale)
+        $scope.newUser.buySaleApprover = false;
     }
 
   function saveNewUser(){

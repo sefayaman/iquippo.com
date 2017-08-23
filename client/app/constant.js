@@ -298,6 +298,15 @@ var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD 
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
 var tradeTypeStatuses = ['Sell','Both','NOT_AVAILABLE'];
 
+var StatusChangeConfirmationMsg = {
+  approve : "You are APPROVING this BID?.",
+  reject : "You are REJECTING this bid?.",
+  doissued : "You are issueing  DO for this bid?.",
+  doissued : "You are issueing  DO for this bid?.",
+  deliverd:"You are giving delivery date?.",
+  deliveryaccept:"You are confirming asset is delivered successfully?."
+}
+
 var tradeType = [
 {
   "name" : "Rent",

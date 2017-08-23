@@ -18,28 +18,11 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		$scope.tabValue = Auth.isAdmin()?'administrator':'seller';
 		if(!Auth.isAdmin())
 		 	initFilter.userid = Auth.getCurrentUser()._id;
-		 
-		/*switch($state.current.name){
-            case 'assetsale.administrator':
-                $scope.tabValue = 'administrator';
-            break;
-            case 'assetsale.seller':
-				if (!Auth.isAdmin()) {
-					initFilter.userid = Auth.getCurrentUser()._id;
-				}
-                $scope.tabValue = 'seller';
-            break;
-            case "assetsale.fulfilmentagency":
-            	$scope.tabValue = 'fulfilmentagency';
-            	if(Auth.isFAgencyPartner()){
-            		initFilter.userType = 'FA';
-            		initFilter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
-            	}
+		if(Auth.isEnterprise()|| (Auth.isEnterpriseUser() && Auth.isBuySaleApprover())){
+			delete initFilter.userid;
+			initFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
+		}
 
-            	if(!Auth.isFAgencyPartner() && !Auth.isAdmin())
-            		$state.go('main');
-            break;
-	    }*/
 	    var filter = angular.copy(initFilter);
 	    filter.bidRequestApproved = 'n';
 		getBidProducts(filter);

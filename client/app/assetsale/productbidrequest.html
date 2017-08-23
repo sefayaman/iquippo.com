@@ -113,7 +113,7 @@
 			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
 			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">
 			   				<!-- seller action -->
-			   				<button class="btn btn-sm btn-success" uib-popover="Approved" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
+			   				<button class="btn btn-sm btn-success" uib-popover="Approved" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE') && isBuySaleApprover()" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
 
 			   				<button class="btn btn-sm btn-danger" uib-popover="Reject" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
 

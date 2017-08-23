@@ -98,7 +98,7 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 
 	function update(bid,action,cb){
 		
-		Modal.confirm("Do you want to change bid status?.",function(retVal){
+		Modal.confirm(StatusChangeConfirmationMsg[action],function(retVal){
 			if(retVal === 'yes')
 				AssetSaleSvc.changeBidStatus(bid,action,cb || fireCommand);				
 		});

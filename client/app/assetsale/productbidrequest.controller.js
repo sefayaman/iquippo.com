@@ -86,7 +86,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 
 	function update(bid,action,cb){
 		
-		Modal.confirm("You are APPROVING this BID?.",function(retVal){
+		Modal.confirm(StatusChangeConfirmationMsg[action],function(retVal){
 			if(retVal === 'yes')
 				AssetSaleSvc.changeBidStatus(bid,action,cb || fireCommand);				
 		});

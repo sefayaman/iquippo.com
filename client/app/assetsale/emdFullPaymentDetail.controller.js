@@ -14,11 +14,11 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
   	function init(){
 		if($scope.bidData.emdPayment && $scope.bidData.emdPayment.paymentsDetail && action == 'emdPayment') {
 			vm.paymentList = [];
-			vm.visibleFlag = $scope.bidData.emdPayment.remainingPayment < 1 ? false : true;
+			vm.visibleFlag = $scope.bidData.emdPayment.remainingPayment > 0 ? true : false;
 			angular.copy($scope.bidData.emdPayment.paymentsDetail, vm.paymentList);
 		} else if($scope.bidData.fullPayment && $scope.bidData.fullPayment.paymentsDetail && action == 'fullPayment') {
 			vm.paymentList = [];
-			vm.visibleFlag = $scope.bidData.fullPayment.remainingPayment < 1 ? false : true;
+			vm.visibleFlag = $scope.bidData.fullPayment.remainingPayment > 0 ? true : false;
 			angular.copy($scope.bidData.fullPayment.paymentsDetail, vm.paymentList);
 		}
     }
@@ -28,39 +28,53 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 	      form.submitted = true;
 	      return;
 	    }
-		
-		//var action = $scope.formType == 'EMD' ? 'emdPayment' : 'fullPayment';
-
+		var msg = "";
+		var serverAction = "";
 		if(action == 'emdPayment') {
-			// if(vm.emdFullPaymentInfo.amount > $scope.bidData.emdPayment.remainingPayment) {
-			// 	Modal.alert("Please enter correct amount!");
-			// 	return;
-			// }
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
-			$scope.bidData.emdPayment.remainingPayment = (Number($scope.bidData.emdPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0; 
+			var remainingPayment = (Number($scope.bidData.emdPayment.remainingPayment || 0) - Number(vm.emdFullPaymentInfo.amount)) || 0
+			$scope.bidData.emdPayment.remainingPayment = remainingPayment > 0? remainingPayment: 0;
+			$scope.bidData.emdPayment.remainingPayment = Math.round($scope.bidData.emdPayment.remainingPayment || 0) //(Number($scope.bidData.emdPayment.remainingPayment || 0) - Number(vm.emdFullPaymentInfo.amount)) || 0; 
 			if(!$scope.bidData.emdPayment.paymentsDetail)
 				$scope.bidData.emdPayment.paymentsDetail = [];
 			vm.emdFullPaymentInfo.createdAt = new Date();
 			$scope.bidData.emdPayment.paymentsDetail[$scope.bidData.emdPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
+			if(remainingPayment < 0 && $scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment)
+				$scope.bidData.fullPayment.remainingPayment = Math.round(Number($scope.bidData.fullPayment.remainingPayment) + vm.emdFullPaymentInfo.amount) || 0;
+			if($scope.bidData.emdPayment.remainingPayment == 0){
+				serverAction = "emdpayment";
+				AssetSaleSvc.setStatus(bid,dealStatuses[7],'dealStatus','dealStatuses');
+				msg = "EMD payment completed and fullPayment period started."
+			}
 		} else {
-			// if(vm.emdFullPaymentInfo.amount > $scope.bidData.fullPayment.remainingPayment) {
-			// 	Modal.alert("Please enter correct amount!");
-			// 	return;
-			// }
 			if(!$scope.bidData.fullPayment)
 				$scope.bidData.fullPayment = {};
-			$scope.bidData.fullPayment.remainingPayment = (Number($scope.bidData.fullPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0; 
+			var remainingPayment = (Number($scope.bidData.fullPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0;
+			if(remainingPayment < 0){
+				Modal.alert("Invalid payment amount.");
+				return;
+			}
+			$scope.bidData.fullPayment.remainingPayment = Math.round(remainingPayment); 
 			if(!$scope.bidData.fullPayment.paymentsDetail)
 				$scope.bidData.fullPayment.paymentsDetail = [];
 			vm.emdFullPaymentInfo.createdAt = new Date();
 			$scope.bidData.fullPayment.paymentsDetail[$scope.bidData.fullPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
+			if($scope.bidData.fullPayment.remainingPayment == 0){
+			 serverAction = "fullpayment";
+			 AssetSaleSvc.setStatus(bid,dealStatuses[8],'dealStatus','dealStatuses');
+			 msg = "fullPayment completed.Now bid request is ready for DO issued."
+			}
 		}
-	    AssetSaleSvc.update($scope.bidData, action).
+	    AssetSaleSvc.update($scope.bidData,serverAction).
 	      then(function(res) {
-	        if (res)
+	      	if(msg)
+	      		Modal.alert(msg, true);	
+	        else if(res)
 	          Modal.alert(res, true);
 	      	closeDialog();
+	      	if($scope.callback)
+	      		$scope.callback();
 	      })
 	      .catch(function(res) {
 	        console.log(res);

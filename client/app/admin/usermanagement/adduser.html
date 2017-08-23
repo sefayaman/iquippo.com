@@ -108,7 +108,7 @@
                         <th width="20%">Services</th>
                         <th ng-if="newUser.enterprise">Approval Required</th>
                         <th>Role </th>
-                        <th  ng-if="!newUser.enterpriseId || isEdit" width="28%">Default Partner</th>
+                        <th  ng-if="newUser.enterprise" width="28%">Default Partner</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -143,7 +143,7 @@
                     </tbody>
                   </table>
                 </div>
-                <div class="row form-group" ng-if="(newUser.role === 'customer' || newUser.role === 'channelpartner' || newUser.role === 'enterprise') && isAdmin()">
+                <div class="row form-group" ng-if="isAdmin()">
                   <div class="col-sm-4 padd-right">
                     <input type="text" class="form-control" name="" placeholder="Sale Fulfilment" disabled>
                   </div>
@@ -152,6 +152,15 @@
                       <option value="">Select Partner</option>
                       <option ng-repeat="vendor in getVendors('Sale Fulfilment')" value="{{vendor.partnerId}}">{{vendor.name}}</option>
                     </select>
+                  </div>
+                </div>
+
+                <div class="row form-group" ng-if="(isAdmin() || isEnterprise()) && newUser.role === 'enterprise' && (newUser.buySale || newUser.enterprise)">
+                  <div class="col-sm-6 padd-right">
+                  <input type="checkbox" name="assetSale" ng-model="newUser.buySale" ng-if="newUser.enterprise"> Approval Authority buy Now/Make an Offer
+                  </div>
+                  <div class="col-sm-6 padd-left">
+                     <input type="checkbox" ng-true ng-model="newUser.buySaleApprover" ng-disabled = "!newUser.buySale">
                   </div>
                 </div>
 

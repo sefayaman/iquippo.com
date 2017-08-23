@@ -185,7 +185,7 @@ exports.validateUpdate = function(req,res,next){
 			});
 
 		}else if(req.query.action === 'emdpayment'){
-			if(req.bid.emdPayment.remainingPayment === 0){
+			//if(req.bid.emdPayment.remainingPayment === 0){
 				getSaleProcessMaster(function(entData){
 					if(!entData.fullPaymentPeriod)
 						return res.status(404).send("Full payment period is not found");
@@ -201,14 +201,14 @@ exports.validateUpdate = function(req,res,next){
 					});
 					next();
 				});
-			}
-			else
-				return res.status(412).send("EMD payment remaining");		
+			//}
+			//else
+			//	return res.status(412).send("EMD payment remaining");		
 		}else if(req.query.action === 'fullpayment'){
-			if(req.bid.fullPayment.remainingPayment == 0)
+			//if(req.bid.fullPayment.remainingPayment == 0)
 				next();
-			else
-				return res.status(412).send("Full payment remaining");		
+			//else
+			//	return res.status(412).send("Full payment remaining");		
 		}else if(req.query.action === 'doissued'){
 			req.product.assetStatus = 'sold';
 			req.product.updatedAt = new Date();
@@ -672,9 +672,14 @@ exports.getMaxBidOnProduct = function(req, res) {
 };
 
 exports.getSellers = function(req,res,next){
+	
 	var userType = req.body.userType || req.query.userType;
 	var partnerId = req.body.partnerId || req.query.partnerId;
 	var defaultPartner = req.body.defaultPartner || req.query.defaultPartner;
+	var enterpriseId = req.body.enterpriseId || req.query.enterpriseId;
+	if(enterpriseId)
+		return getEnteriseUser();
+	
 	if(!userType || userType !== 'FA')
 		return next();
 	var users = [];
@@ -684,17 +689,26 @@ exports.getSellers = function(req,res,next){
   	return next();
   });
 
+	function getEnteriseUser(){
+	  req.sellers = [];
+	  User.find({enterpriseId:enterpriseId,deleted:false,status:true},function(err,sellers){
+	    if(err || !sellers.length){
+	      return next();
+	    }
+	    sellers.forEach(function(item){
+	      req.sellers.push(item._id + "")
+	    });
+	    next();
+	  })
+	}
+
   function getUsersAssociatedToEnterprise(callback){
     var filter = {};
     filter.deleted = false;
     filter.status = true;
     filter.enterprise = true;
     filter.role = "enterprise";
-    //filter.$or = [{"availedServices.partnerId" : partnerId}];
-    //filter['availedServices.partnerId'] = partnerId;
     filter.$or = [{FAPartnerId : partnerId}];
-    // if(defaultPartner === 'y')
-    //   filter.$or[filter.$or.length] = {"availedServices.code" : {$ne:"Sale Fulfilment"}};
     if(defaultPartner === 'y')
       filter.$or[filter.$or.length] = {FAPartnerId : {$exists:false}};
   	User.find(filter,function(err,enterprises){

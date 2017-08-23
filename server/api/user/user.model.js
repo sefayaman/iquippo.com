@@ -47,6 +47,8 @@ var UserSchema = new Schema({
   }],
   enterprise:Boolean,
   enterpriseId:String,
+  buySale:{type:Boolean,default:false},
+  buySaleApprover :{type:Boolean,default:false},
   status:{
     type: Boolean,
     default: true

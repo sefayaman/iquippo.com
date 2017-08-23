@@ -286,6 +286,16 @@ angular.module('sreizaoApp')
         if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
           return currentUser.partnerInfo.services.indexOf("Sale Fulfilment") > -1 ? true : false;
       },
+      isBuySaleApprover:function(){
+        if(this.isAdmin())
+          return true;
+        if(currentUser.role !== 'enterprise')
+          return true;
+        if(currentUser.buySale && currentUser.buySaleApprover)
+          return true;
+        else
+          return false;
+      },
       isCustomer: function() { 
         return currentUser.role === 'customer';
       },
