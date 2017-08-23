@@ -8,7 +8,7 @@
 			</div>
 			<hr>
 			<div class="row form-group">
-				<div class="col-sm-4">
+				<div class="col-sm-3 padd-right">
 					<select class="form-control" ng-model="gsettingVm.tabValue" ng-change="gsettingVm.onTabChange(gsettingVm.tabValue)">
 						<!-- <option value="sc">Sub Category</option> -->
 						<option value="loc">Location</option>
@@ -762,6 +762,7 @@
 				
 			</div>
 		</form>
+		<legend></legend>
 		<div class="table-responsive">
 			<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
 				<thead>
@@ -792,7 +793,7 @@
 		<form name="manufactureForm" novalidate class="invMasterForm">
 			<div class="row">
 				
-				<div class="form-group col-sm-4" ng-class="{'has-error': manufactureForm.name.$invalid && submitted}">
+				<div class="form-group col-sm-3" ng-class="{'has-error': manufactureForm.name.$invalid && submitted}">
 					<input name="name" ng-model="gsettingVm.manufacturer.name" type="text" class="form-control" placeholder="Manufacturers Name*" required>
 				</div>
 				<div class="form-group col-sm-2">
@@ -804,7 +805,7 @@
 				<div class="col-sm-4">
 					{{gsettingVm.manufacturer.imgsrc}}
 				</div>
-				<div class="form-group col-sm-2">
+				<div class="form-group col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveManufacturer(manufactureForm)" ng-if="!gsettingVm.manufacturerEdit">Save</button>
 					<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateManufacturer(manufactureForm)" ng-if="gsettingVm.manufacturerEdit">Update</button>
 				</div>
@@ -1995,14 +1996,14 @@
 				<div class="col-sm-3">
 					<label>Cooling Period</label>
 					<div class="row">
-						<div class="col-sm-5 padd-right" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriodIn.$invalid && submitted}">
+						<div class="col-sm-6 padd-right" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriodIn.$invalid && submitted}">
 							<select class="form-control" name="coolingPeriodIn" ng-model="saleProcesssVm.dataModel.coolingPeriodIn" required>
 								<option value="">*Cooling In</option>
 								<option value="Days">Days</option>
 								<option value="Hours">Hours</option>
 							</select>
 						</div>
-						<div class="col-sm-7 padd-left" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriod.$invalid && submitted}">
+						<div class="col-sm-6 padd-left" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriod.$invalid && submitted}">
 							<input type="number" class="form-control" name="coolingPeriod" ng-model="saleProcesssVm.dataModel.coolingPeriod" min="0" placeholder="*Cooling Period" ng-pattern="/^\d+$/" required>
 						</div>
 					</div>					
@@ -2133,7 +2134,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':markupForm.price.$invalid && submitted}">
 					<input type="text" class="form-control" name="price" ng-model="markupVm.dataModel.price" placeholder="*Price in %" required>
 				</div>
-				<div class="col-sm-offset-1 col-sm-2">
+				<div class="col-sm-2 pull-right">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="markupVm.update(markupForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="markupVm.save(markupForm)">Save</button>
 				</div>

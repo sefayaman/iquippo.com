@@ -217,7 +217,7 @@
                         <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" max-date="maxDate" min-date="minDate" date-disabled="disabled(date, mode)" close-text="Close" required disabled ngMinlength="4" ngMaxlength="4"/>
                       </div>
                       <div class="form-group col-xs-3 col-sm-1 text-center padd">
-                        <a href class="form-control" ng-click="open($event, 'mfgYear')">
+                        <a href class="form-control btn btn-default" ng-click="open($event, 'mfgYear')">
                           <i class="fa fa-calendar-o fa-1x"></i>
                         </a>
                       </div>
@@ -260,8 +260,15 @@
                     </div>
                     <div class="row">
                       <div class="form-group col-sm-5">Date of Repo</div>
-                      <div class="form-group col-sm-7">
-                      <input type="text" name="repoDate" class="form-control" ng-model="product.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Repo" >
+                      <div class="form-group col-sm-6">
+                          <input type="text" name="repoDate" class="form-control" id="dateofrepo" ng-model="product.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Repo" >
+                      </div>
+                      <div class="col-sm-1 padd">
+                        <div class="input-group">
+                          <label class="btn btn-block btn-default" for="dateofrepo">
+                            <i class="fa fa-calendar-o"></i>
+                          </label>
+                        </div>
                       </div>
                     </div>
                     <div class="row" ng-if="isEnterprise() || isEnterpriseUser()">
