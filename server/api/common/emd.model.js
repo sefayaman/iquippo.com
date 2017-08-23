@@ -4,8 +4,8 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var EmdSchema = new Schema({
-  auctId:String,
-  auctName:String,
+  auctionId:String,
+  auctionName:String,
   selectedLots:[],
   amount:String,
   createdBy:{},

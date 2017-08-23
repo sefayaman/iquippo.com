@@ -1826,13 +1826,13 @@
 				<form class="techInformationForm" name="emdform" novalidate>
 					 <div class="row form-group">
 				        <div class="col-sm-3" ng-class="{'has-error':emdVm.auctId.$invalid && submitted}">
-			 		       <select class="form-control" name="auctId" ng-model="emdVm.dataModel.auctId"  ng-change="onSelectAuction(emdVm.dataModel.auctId)" required> 
+			 		       <select class="form-control" name="auctionId" ng-model="emdVm.dataModel.auctionId"  ng-change="onSelectAuction(emdVm.dataModel.auctionId)" required> 
 								 <option value=""> Select Auction  Id </option> 
-						        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
+						        <option value="{{product.auctionId}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
 					       </select>
 						</div>
-					     <div class="col-sm-3" ng-class="{'has-error':emdVm.auctName.$invalid && submitted}">
-							<input type="text" class="form-control" name="auctName" ng-model="emdVm.dataModel.auctName" value="{{emdVm.auctionname}}" placeholder="{{emdVm.auctionname}}" disabled>
+					     <div class="col-sm-3" ng-class="{'has-error':emdVm.auctionName.$invalid && submitted}">
+							<input type="text" class="form-control" name="auctionName" ng-model="emdVm.dataModel.auctionName" value="{{emdVm.auctionName}}" placeholder="{{emdVm.auctionName}}" disabled>
 						</div>
                         <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
                         <label>Select the lot:</label>
@@ -1877,8 +1877,8 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="emddata in emdVm.filteredList">
-									<td>{{emddata.auctId}}</td>
-									<td>{{emddata.auctName}}</td>
+									<td>{{emddata.auctionId}}</td>
+									<td>{{emddata.auctionName}}</td>
 									<td>{{emddata.lots}}</td>
 									<td>{{emddata.amount}}</td>
 									<td>
