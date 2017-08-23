@@ -61,6 +61,12 @@ exports.getMasterBasedOnUser = function(userId,filter,type, callback) {
 	});
 }
 
+exports.getMarkupOnSellerMobile = function(mobile,cb){
+	var filter = {};
+	filter['user.mobile'] = mobile;
+	getMarkupPrice(filter,cb);
+
+}
 function getMarkupPrice(filter, callback) {
 	var query = MarkupPrice.find(filter);
 	query.exec(function(err, result) {
