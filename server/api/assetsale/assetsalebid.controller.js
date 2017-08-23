@@ -36,12 +36,12 @@ exports.getEMDBasedOnUser = function(req, res) {
 	});
 }
 
-exports.callculateGst = function(req,res,next){
+exports.calculateGst = function(req,res,next){
 	req.result = {};
 	req.result.taxRate = 0;
 	var donotCalGST = true;
 	if(donotCalGST)
-		next();
+		return next();
 
 	async.parallel({gst:getGST,defaultGST:getDefaultGST},function(err,result){
 		if(err) return res.status(500).send(err);
@@ -54,11 +54,10 @@ exports.callculateGst = function(req,res,next){
 			return res.status(412).send("Unable to process request.Please contact support team.");
 		req.result.taxRate = (Number(req.query.bidAmount) * Number(gst.amount)) / 100;
 		req.result.taxRate = Math.round(req.result.taxRate);
-		next();
+		return next();
 	});
 
 	function getGST(cb){
-
 		var queryParam = req.query;
 		var filter = {};
 	  	if(queryParam.groupId)
@@ -97,14 +96,14 @@ exports.callculateGst = function(req,res,next){
 	}
 }
 
-exports.callculateTcs = function(req,res,next){
+exports.calculateTcs = function(req,res,next){
 	if (Number(req.query.bidAmount) + Number(req.result.taxRate) > 1000000)
-	    req.result.tcs = Number(queryParam.bidAmount) * 0.01;
+	    req.result.tcs = Number(req.query.bidAmount) * 0.01;
 	else
 		req.result.tcs = 0;
 	req.result.tcs = Math.round(req.result.tcs || 0);
 
-	next();
+	return next();
 }
 
 exports.callculateParkingCharge = function(req,res,next){
@@ -114,18 +113,19 @@ exports.callculateParkingCharge = function(req,res,next){
 		if(!products.length)
 			res.status(412).send("Invalid product");
 		var todayDate = moment().daysInMonth();
-        var repoDate = moment(item.repoDate);
+        var repoDate = moment(products[0].repoDate);
         var a = moment(repoDate, 'DD/MM/YYYY');
         var b = moment(todayDate, 'DD/MM/YYYY');
         var days = b.diff(a, 'days') + 1;
         req.result.parkingCharges = days * products[0].parkingChargePerDay || 0;
         req.result.parkingCharges = Math.round(req.result.parkingCharges);
+        return next();
 
 	})
 }
 
 exports.getBidOrBuyCalculation = function(req, res) {
-	req.result.total = Math.round(req.result.taxRate + req.result.tcs + req.query.bidAmount);
+	req.result.total = Math.round(req.result.taxRate + req.result.tcs + req.result.parkingCharges + parseInt(req.query.bidAmount));
 	res.status(200).json(req.result);
 }
 

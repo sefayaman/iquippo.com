@@ -594,8 +594,8 @@ exports.calculatePrice = function(req,res,next){
 
   if(!req.body.priceOnRequest && !req.body.grossPrice && !req.body.reservePrice && !req.body.valuationAmount)
       return res.status(412).send("Please enter price or select price on request");
-  if(req.user.role !== 'enterprise')
-    return next();
+  /*if(req.user.role !== 'enterprise')
+    return next();*/
   if(req.body.grossPrice)
     return next();
   if(!req.body.grossPrice && req.body.reservePrice){
@@ -616,8 +616,10 @@ exports.calculatePrice = function(req,res,next){
           req.body.grossPrice = Math.round(buyNowPrice || 0);
           return next();
       });
-    }else
-      res.status(412).send('Unable to process your request.Please contact support team.');
+    }else if(req.body.priceOnRequest)
+      return next();
+    else
+      return res.status(412).send('Unable to process your request.Please contact support team.');
 }
 
 
@@ -1539,7 +1541,8 @@ exports.validateExcelData = function(req, res, next) {
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
-            validateForBid:validateForBid
+            validateForBid:validateForBid,
+            calculatePriceOnBatchUpload : calculatePriceOnBatchUpload
           }, buildData);          
         }else if(type === 'auction_update'){
           async.parallel({
@@ -1563,7 +1566,8 @@ exports.validateExcelData = function(req, res, next) {
           validateCity : validateCity,
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
-          validateOnlyAdminCols: validateOnlyAdminCols
+          validateOnlyAdminCols: validateOnlyAdminCols,
+          calculatePriceOnBatchUpload : calculatePriceOnBatchUpload
         }, buildData);
       }else{
         errorList.push({
@@ -1614,7 +1618,7 @@ exports.validateExcelData = function(req, res, next) {
       var obj = {};
       var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice'];
       var dateColumns = ['repoDate'];
-      var fieldsToBeCopied = ['addressOfAsset'];
+      var fieldsToBeCopied = ['addressOfAsset','parkingPaymentTo'];
       numericColumns.forEach(function(x){
         if(row[x] && !isNaN(row[x]))
           obj[x] = row[x];
@@ -1631,6 +1635,55 @@ exports.validateExcelData = function(req, res, next) {
         obj[x] = row[x];
       })
       return callback(null,obj);
+    }
+
+    function calculatePriceOnBatchUpload(callback){
+      
+      var calculationReq = ['enterprise','admin'].indexOf(req.user.role) !== -1? true:false;
+      if(!calculationReq)
+        return callback();
+      row.priceOnRequest = row.priceOnRequest || "";
+      if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice && !row.reservePrice && !row.valuationAmount){
+        errorList.push({
+              Error : 'Please enter price or mark price on request as yes.',
+              rowCount :row.rowCount
+        });
+        return callback('Error');
+      }
+
+      if(row.grossPrice)
+        return callback();
+      if(row.reservePrice){
+        row.grossPrice = row.reservePrice;
+        return callback();
+      }
+
+      if(row.seller_mobile && row.valuationAmount){
+        AssetSaleUtil.getMarkupOnSellerMobile(row.seller_mobile,function(err,result){
+            if(err){
+               errorList.push({
+                      Error : 'Please enter price or mark price on request as yes.',
+                      rowCount :row.rowCount
+                });
+                return callback('Error');
+            }
+            var markupPercent = 0;
+            if(result && result.length)
+              markupPercent = result[0].price || 0;
+
+            var buyNowPrice = Number(row.valuationAmount || 0) + (Number(row.valuationAmount || 0) * Number(markupPercent || 0) / 100);
+            row.grossPrice = Math.round(buyNowPrice || 0);
+            return callback();
+          });
+        }else if(row.priceOnRequest.toLowerCase() === 'yes')
+          return callback();
+        else{
+           errorList.push({
+              Error : 'Unable to process your request.Please contact support team.',
+              rowCount :row.rowCount
+            });
+              return callback('Error');
+        }
     }
 
     function validateCity(callback){
@@ -1708,6 +1761,11 @@ exports.validateExcelData = function(req, res, next) {
 
         return callback('Error');
       }
+
+      var  isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      if(!isCustomer)
+        return callback();
+      row.priceOnRequest = row.priceOnRequest || "";
 
       if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice ){
         errorList.push({

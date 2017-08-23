@@ -51,7 +51,7 @@ var ProductSchema = new Schema({
   parkingChargePerDay:Number,
   addressOfAsset:String,
   reservePrice:Number,
-  parkingPaymentTo:String,
+  parkingPaymentTo:{type:String,default:'Seller'},
   deleted: {
     type: Boolean,
     default: false

@@ -500,7 +500,7 @@
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
-                $scope.auctionsData = aucts[0];
+                $scope.auctionsData = aucts;
               });
           }
           if($scope.currentProduct.state) {
