@@ -28,14 +28,16 @@
     init();
 
     function getBidOrBuyCalculation(amount) {
-       var filter = {};
+      var filter = {};
+      if (query.product.group)
+        filter.groupId = query.product.group._id;
       if (query.product.category)
         filter.categoryId = query.product.category._id;
       filter.stateId = query.stateId;
       filter.currentDate = 'y'
       filter.bidAmount = vm.bidAmount = query.bidAmount;
       if(amount)
-        filter.bidAmount = amount;
+        filter.bidAmount = vm.bidAmount = amount;
       filter.productId = query.product._id;
       AssetSaleSvc.getBidOrBuyCalculation(filter).then(function(result){
         $scope.result = result;
