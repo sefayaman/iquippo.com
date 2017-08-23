@@ -22,6 +22,7 @@ module.exports = {
 		"Bid Status" :{key : "bidStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
+		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
 		"Request Date":{key:"createdAt",type:'date'}
 	},
 	'SELLER_FIELDS':{
@@ -43,6 +44,7 @@ module.exports = {
 		"Bid Status" :{key : "bidStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
+		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
 		"Request Date":{key:"createdAt",type:'date'}
 	},
 	'BUYER_FIELDS':{
@@ -58,6 +60,7 @@ module.exports = {
 		"Offer Status" :{key :"offerStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
+		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
 		"Request Date":{key:"createdAt",type:'date'}
 	},
 	'FA_FIELDS':{
@@ -81,6 +84,7 @@ module.exports = {
 		"Bid Status" :{key : "bidStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
+		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
 		"Request Date":{key:"createdAt",type:'date'}
 	}
 }

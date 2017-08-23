@@ -106,9 +106,15 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 
 	function openDialog(bidData, popupName, modalClass, formType){
 		var newScope = $rootScope.$new();
-		newScope.bidData = bidData;
-		if(formType)
-			newScope.formType = formType;
+		if(popupName === 'bidProductDetailPopup') {
+			newScope.data = bidData;
+			if(formType)
+				newScope.viewBlock = formType;
+		} else {
+			newScope.bidData = bidData;
+			if(formType)
+				newScope.formType = formType;
+		}
 		Modal.openDialog(popupName,newScope,modalClass);
 	}
 

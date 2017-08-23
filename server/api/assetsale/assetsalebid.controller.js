@@ -780,7 +780,7 @@ exports.exportExcel = function(req,res){
 
 	if(queryParam.fa == 'y'){
 		filter['product.seller._id'] = {$in:req.sellers || []};
-		fieldsMap = fieldConfig['BUYER_FIELDS'];
+		fieldsMap = fieldConfig['FA_FIELDS'];
 	};
 
 	if(user.role == 'admin')
@@ -808,7 +808,7 @@ exports.exportExcel = function(req,res){
 	        val = item.user.fname + " " + item.user.fname;
 	      if(keyObj.key && keyObj.key == 'fullPaymentAmount')
 	        val = item.bidAmount - item.emdAmount;
-	      
+
 	      if(keyObj.type && keyObj.type == 'url' && val){
 	        if(val.filename)
 	            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";

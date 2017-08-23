@@ -15,7 +15,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.openDialog = openDialog;
 	
 	vm.update = update;
-	vm.exportExcel = exportExcel;
+	//vm.exportExcel = exportExcel;
 	vm.validateAction = AssetSaleSvc.validateAction;
 	$scope.dayDiff = AssetSaleSvc.ageingOfAssetInPortal;
 	vm.backButton = backButton;
@@ -105,11 +105,13 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 		Modal.openDialog(popupName,newScope,modalClass);
 	}
 
-	function exportExcel() {
+	/*function exportExcel() {
 		var filter = {};
-        filter.seller = 'y';
+		angular.copy(initFilter, filter);
+		if(!Auth.isAdmin())
+        	filter.seller = 'y';
 		AssetSaleSvc.exportExcel(filter);
-	}
+	}*/
 
 	//loading start
 	Auth.isLoggedInAsync(function(loggedIn) {
