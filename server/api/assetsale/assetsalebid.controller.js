@@ -111,7 +111,7 @@ exports.callculateParkingCharge = function(req,res,next){
 	Product.find({_id:prdId,status:true,deleted:false},function(err,products){
 		if(err) return res.status(500).send(err);
 		if(!products.length)
-			res.status(412).send("Invalid product");
+			return res.status(412).send("Invalid product");
 		var todayDate = moment().daysInMonth();
         var repoDate = moment(products[0].repoDate);
         var a = moment(repoDate, 'DD/MM/YYYY');
