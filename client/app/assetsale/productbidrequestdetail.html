@@ -15,7 +15,21 @@
           </tr>
           <tr>
             <td><b>Bid Amount:</b></td>
-            <td>{{bidData.bidAmount}}</td>
+            <!-- <td>{{bidData.bidAmount}}</td> -->
+            <td>
+              <table class="table">
+                <tr>
+                  <th>TCS</th>
+                  <th>Parking <span>(* Pay to yard)</span></th>
+                  <th>Total</th>
+                </tr>
+                <tr>
+                  <td>{{}}</td>
+                  <td>{{}}</td>
+                  <td>{{}}</td>
+                </tr>
+              </table>
+            </td>
             <td><b>Offer Status:</b></td>
             <td>{{bidData.offerStatus}}</td>                  
           </tr>

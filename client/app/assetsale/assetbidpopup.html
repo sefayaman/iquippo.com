@@ -25,22 +25,26 @@
                 <div class="col-sm-3 col-sm-offset-1"><i class="fa fa-inr"></i> {{result.tcs | number:0}}</div>
               </div>
               <div class="row">
-                <div class="col-sm-offset-2 col-sm-4">Parking</div>
+                <div class="col-sm-offset-2 col-sm-4">Parking <small>(* Pay to yard)</small></div>
                 <div class="col-sm-3 col-sm-offset-1"><i class="fa fa-inr"></i> {{result.parkingCharges | number:0}}</div>
               </div>
             </div>
-            <div class="asset-total">
+            <div class="asset-total form-group">
               <div class="row">
                 <div class="col-sm-offset-2 col-sm-4">Total : </div>
                 <div class="col-sm-offset-1 col-sm-3"><i class="fa fa-inr"></i> {{result.total | number:0}} </div>
               </div>
             </div>
-            <div class="asset-action text-right">
-              <div>
-                <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
+            <div class="row">
+              <div class="col-sm-offset-2 col-sm-8">
+                Note : This price is GST inclusive
+              </div>
+            </div>
+            
+            <div class="asset-action text-right clearfix">
+              <button type="button" class="btn btn-primary" ng-click="close()">Cancel</button>
                 <button type="button" ng-if="params.bid == 'placebid'" class="btn btn-danger" ng-click="assetBidPopUpVm.submitBid(bidPopup)">Submit Bid</button>
                 <button type="button" ng-if="params.bid == 'buynow'" class="btn btn-danger" ng-click="assetBidPopUpVm.submitBid(bidPopup)">Buy Now</button>
-              </div>
             </div>
         </div>  
     </div>
