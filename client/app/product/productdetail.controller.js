@@ -27,6 +27,9 @@
       $scope.productQuote.user = Auth.getCurrentUser();
     }
 
+    $scope.$on('refreshProductDetailPage',function(){
+      getLastBidForUser();
+    })
 
     //$scope.financeContact.interestedIn="finance";
     $scope.buycontact.interestedIn = "buyORrent";
@@ -446,6 +449,7 @@
         filter.userId = Auth.getCurrentUser()._id;
       AssetSaleSvc.getMaxBidOnProduct(filter)
       .then(function(res){
+          vm.userCurrentBid = res;
           vm.bidAmount=res.bidAmount;
       })
       .catch(function(err){

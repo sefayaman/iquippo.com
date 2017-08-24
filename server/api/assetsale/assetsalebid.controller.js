@@ -18,7 +18,7 @@ var VatModel = require('../common/vattax.model');
 var MarkupPrice = require('../common/markupprice.model');
 var fieldConfig = require('./fieldsConfig');
 
-var tradeTypeStatuses = ['SELL','BOTH','Not Available'];
+var tradeTypeStatuses = ['SELL','BOTH','NOT_AVAILABLE'];
 var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
 var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
 
@@ -313,26 +313,43 @@ exports.validateSubmitBid = function(req,res,next){
 			if(err || !saleProcessData){return res.status(404).send("Sale Process master is not found");}
 			//return cb(entepriseData);
 			if(saleProcessData.buyNowPriceApproval === 'Yes'){
+				AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
+				AssetSaleUtil.setStatus(req.body,dealStatuses[0],'dealStatus','dealStatuses',req.user._id);	
+				if(!req.product.cooling){
+					req.product.cooling = true;
+					req.product.coolingStartDate = new Date();
+					if(saleProcessData.coolingPeriodIn === 'Hours')
+						req.product.coolingEndDate = new Date().addHours(saleProcessData.coolingPeriod ||0);
+					else
+						req.product.coolingEndDate = new Date().addDays(saleProcessData.coolingPeriod || 0);
+				}
+				//req.otherBids = [];
+				var otherBids = req.otherBids;
 				req.otherBids = [];
+				otherBids.forEach(function(item){
+					if(item.bidStatus === bidStatuses[7]){
+						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
+						req.otherBids.push(item);
+					}
+				});
 				return next();
 			}
+			AssetSaleUtil.setStatus(req.body,dealStatuses[6],'dealStatus','dealStatuses',req.user._id);
 			AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
-			if(!req.product.cooling){
-				req.product.cooling = true;
-				req.product.coolingStartDate = new Date();
-				if(saleProcessData.coolingPeriodIn === 'Hours')
-					req.product.coolingEndDate = new Date().addHours(saleProcessData.coolingPeriod ||0);
-				else
-					req.product.coolingEndDate = new Date().addDays(saleProcessData.coolingPeriod || 0);
-			}
+			req.body.emdStartDate = new Date(); 
+			req.body.emdEndDate = new Date().addDays(saleProcessData.emdPeriod);
+			if(req.body.emdEndDate)
+				req.body.emdEndDate.setHours(24,0,0,0);
+			req.body.product.prevTradeType = req.product.tradeType;
+			req.product.tradeType = tradeTypeStatuses[2];
 			var otherBids = req.otherBids;
-			req.otherBids = [];
-			otherBids.forEach(function(item){
-				if(item.bidStatus === bidStatuses[7]){
-					AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
+				req.otherBids = [];
+				otherBids.forEach(function(item){
+					AssetSaleUtil.setStatus(item,bidStatuses[5],'bidStatus','bidStatuses',req.user._id);
 					req.otherBids.push(item);
-				}
-			});
+				});
+
+			req.autoApprove = true;
 			next();
 
 		});
@@ -392,20 +409,24 @@ exports.submitBid = function(req, res) {
 	});
 
 	function updateBidAndProduct(callback){
+		console.log("updatebid and product1234");
 		async.eachLimit(req.otherBids,5,updateBid,function(err){
+			console.log("updatebid and product89");
 			var filter = {};
-			filter.dealStatus = dealStatuses[0];
+			filter.dealStatus = {$in:[dealStatuses[0],dealStatuses[6]]};
 			filter.status = true;
 			filter['product.proData'] = req.product._id;
 			AssetSaleBid.find(filter,function(err,resList){
 				if(err) return callback(err);
-				if(!resList.length)
-					return callback();
+				/*if(!resList.length)
+					return callback();*/
 
 				req.product.bidCount = resList.length;
 				req.product.bidReceived = true;
-				req.product.bidRequestApproved = false;
-				var highestBid = resList[0].bidAmount;
+				req.product.bidRequestApproved = req.autoApprove?true:false;
+				var highestBid = 0;
+				if(resList.length)
+					highestBid = resList[0].bidAmount;
 				resList.forEach(function(item){
 					if(item.bidAmount > highestBid)
 						highestBid = item.bidAmount;
@@ -413,7 +434,9 @@ exports.submitBid = function(req, res) {
 				req.product.highestBid = highestBid;
 				var prdId = req.product._id;
 				delete req.product._id;
-				Product.update({_id:prdId},{$set:req.product}).exec();
+				Product.update({_id:prdId},{$set:req.product}).exec(function(err){
+					console.log("err",err);
+				});
 				return callback();
 			});
 		});
@@ -700,6 +723,7 @@ exports.getSellers = function(req,res,next){
 	    sellers.forEach(function(item){
 	      req.sellers.push(item._id + "")
 	    });
+	    console.log('sellers',req.sellers);
 	    next();
 	  })
 	}

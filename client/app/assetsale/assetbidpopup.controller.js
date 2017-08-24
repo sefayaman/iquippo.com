@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('AssetBidPopUpCtrl', AssetBidPopUpCtrl);
 
-  function AssetBidPopUpCtrl($scope, Auth, Modal,MarkupPriceSvc,notificationSvc, AssetSaleSvc, VatTaxSvc,$uibModalInstance) {
+  function AssetBidPopUpCtrl($scope, $rootScope, Auth, Modal,MarkupPriceSvc,notificationSvc, AssetSaleSvc, VatTaxSvc,$uibModalInstance) {
     var vm = this;
     var query = $scope.params;
     
@@ -66,7 +66,11 @@
         if((Number($scope.result.total) < Number(result.bidAmount)) 
           && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
           msg = "Higher Bid available for the Asset. "
-        Modal.confirm(msg + "Do you want to change your Bid?", function(ret) {
+        if(query.offerType == "Buynow")
+          var forbuynow="On submission sale process will be initiated Felfillment Team will get in touch with you shortly";
+        else
+          var forbuynow= msg + "Do you want to change your Bid?"
+        Modal.confirm(forbuynow, function(ret) {
           if (ret == "no") 
             proceedToSubmit();
         });
@@ -149,6 +153,8 @@
               }
               notificationSvc.sendNotification('bidReceiveEmailToCustomer',data, dataToSend,'email');
             }
+            if(query.offerType == "Buynow")
+              $rootScope.$broadcast('refreshProductDetailPage');
             $scope.close();
           })
           .catch(function(err) {

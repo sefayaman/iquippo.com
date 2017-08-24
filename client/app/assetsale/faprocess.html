@@ -86,9 +86,9 @@
               <!-- <td>{{bid.tradeType}}</td> -->
               <td>
                 <!-- fa action -->
-                <button class="btn btn-sm btn-success" uib-popover="EMD Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'EMDPAYMENT')" ng-click="faVm.update(bid,'emdpayment')"><i class="fa fa-check"></i></button>
+                <!-- <button class="btn btn-sm btn-success" uib-popover="EMD Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'EMDPAYMENT')" ng-click="faVm.update(bid,'emdpayment')"><i class="fa fa-check"></i></button>
 
-                <button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'FULLPAYMENT')" ng-click="faVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button>
+                <button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'FULLPAYMENT')" ng-click="faVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button> -->
 
                 <button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="faVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'DoUpload','', 'doIssued')">
                      <i class="fa fa-upload"></i>
@@ -173,12 +173,12 @@
               <th>Asset Id</th>
               <th>Asset Name</th>
               <th>Reserve Price</th>  
-              <th>Parking Charges</th>
+              <th>Approved</th>
               <th>Buy Now Price</th>  
               <th>No. of Bids</th>  
               <th>Highest Bid</th>  
               <th>Location</th>
-              <th>Action</th>           
+              <!-- <th>Action</th> -->           
             </tr>
           </thead>
           <tbody>
@@ -186,16 +186,17 @@
               <td>{{product.assetId}}</td>
               <td>{{product.name}}</td>
               <td>{{product.reservePrice}}</td> 
-              <td>{{}}</td>
+              <td><span ng-if="product.bidRequestApproved">Yes</span>
+                  <span ng-if="!product.bidRequestApproved">No</span>
+              </td>
               <td>{{product.grossPrice}}</td>
               <td>{{product.bidCount}}</td>
               <td>{{product.highestBid}}</td>
               <td>{{product.city}}</td>
-              <td>
-                <!-- seller action -->
+              <!-- <td>
                 <a href="/assetsale/bidrequests?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
               <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="faVm.openDialog(product,'bidProductDetailPopup','product-preview','actionable')"><i class="fa fa-info"></i></button>                
-              </td>             
+              </td> -->             
             </tr>
           </tbody>
         </table>

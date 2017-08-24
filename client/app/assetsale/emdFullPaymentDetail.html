@@ -39,7 +39,7 @@
             <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentMode" name="paymentMode" placeholder="Mode of Payment">
           </div>
           <div class="col-sm-6 form-group">
-            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.bankName" name="bankName" placeholder="Bank Name">
+            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.bankName" name="bankName" placeholder="Bank Name / Branch">
           </div>
         </div>
         <div class="row">
@@ -52,7 +52,7 @@
         </div>
         <div class="row">
           <div class="col-sm-6 form-group">
-            <input type="text" class="form-control" name="paymentDate" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Payment Date">
+            <input type="text" class="form-control" name="paymentDate" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Payment / Instrument Date">
           </div>
         </div>
         <div class="modal-footer asset-sale">
@@ -67,10 +67,10 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Bank Name</th>
+            <th>Bank Name / Branch </th>
             <th>Mode of Payment</th>
             <th>Instrument No</th>
-            <th>Payment Date</th>
+            <th>Payment / Instrument Date</th>
             <th>Date of Entry</th>
             <th>Amount</th>
           </tr>

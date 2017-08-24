@@ -89,7 +89,9 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 
 	function exportExcel() {
 		var filter = {};
-        filter.seller = 'y';
+		angular.copy(initFilter, filter);
+		if(!Auth.isAdmin())
+        	filter.seller = 'y';
 		AssetSaleSvc.exportExcel(filter);
 	}
 
