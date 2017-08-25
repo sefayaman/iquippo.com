@@ -59,8 +59,8 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Bank Name / Branch </th>
             <th>Mode of Payment</th>
+            <th>Bank Name / Branch </th>
             <th>Instrument No</th>
             <th>Payment / Instrument Date</th>
             <th>Date of Entry</th>
@@ -69,12 +69,12 @@
         </thead>
         <tbody>
           <tr ng-repeat="payment in emdFullPaymentVm.paymentList">
-             <td>{{payment.bankName}}</td>
-             <td>{{payment.paymentMode}}</td>
-             <td>{{payment.instrumentNo}}</td>
-             <td>{{payment.paymentDate | date:'MM/dd/yyyy'}}</td>
-             <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
-             <td>{{payment.amount}}</td>
+            <td>{{payment.paymentMode}}</td>
+            <td>{{payment.bankName}}</td>
+            <td>{{payment.instrumentNo}}</td>
+            <td>{{payment.paymentDate | date:'MM/dd/yyyy'}}</td>
+            <td>{{payment.createdAt | date:'MM/dd/yyyy'}}</td>
+            <td>{{payment.amount}}</td>
           </tr>
         </tbody>
       </table>

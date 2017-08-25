@@ -12,6 +12,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 	vm.fireCommand = fireCommand;
 	vm.openDialog = openDialog;
 	vm.exportExcel = exportExcel;
+	
 	function init() {
 
 		initFilter.bidReceived = true;
@@ -54,7 +55,6 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		 getClosedBids(filter);			
 	}
 
-
 	function getBidProducts(filter) {
 		$scope.pager.copy(filter);
 		filter.pagination = true;
@@ -70,7 +70,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 
 	function getClosedBids(filter){
 		$scope.pager.copy(filter);
-		filter.status = 'n';
+		filter.actionable = 'n';
 		filter.dealStatus = dealStatuses[12];
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)
@@ -88,11 +88,22 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 	}
 
 	function exportExcel() {
-		var filter = {};
-		angular.copy(initFilter, filter);
+		var exportFilter = {};
+		angular.copy(initFilter, exportFilter)
+		if(vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
+			if(vm.dataList) {
+				exportFilter.productIds = [];
+				vm.dataList.forEach(function(item) {
+	              exportFilter.productIds.push(item._id);
+	            });
+			}
+		} else {
+			exportFilter.actionable = 'n';
+			exportFilter.dealStatuses = dealStatuses[12];
+		}
 		if(!Auth.isAdmin())
-        	filter.seller = 'y';
-		AssetSaleSvc.exportExcel(filter);
+        	exportFilter.seller = 'y';
+		AssetSaleSvc.exportExcel(exportFilter);
 	}
 
 	//loading start

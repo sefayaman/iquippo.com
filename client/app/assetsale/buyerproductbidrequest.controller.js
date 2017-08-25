@@ -14,14 +14,14 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 	vm.validateAction = AssetSaleSvc.validateAction;
 	vm.exportExcel = exportExcel;
 	vm.update = update;
-	var initFilter = {};
+	var initFilter = {actionable : 'y'};
 
 	function init() {
 		var filter = {};
 		initFilter.pagination = true;
 		initFilter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		angular.copy(initFilter, filter);
-		filter.actionable = 'y';
+		//filter.actionable = 'y';
 		getBidData(filter);	
 	}
 	
@@ -141,7 +141,6 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 		angular.copy(initFilter, filter);
 		if (vm.searchStr)
 			filter.searchStr = encodeURIComponent(vm.searchStr);
-		
 		getBidData(filter);
 	}
 
@@ -156,13 +155,18 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 			.catch(function(err) {
 
 			});
-
 	}
 
 	function exportExcel() {
-		var filter = {};
-        filter.buyer = 'y';
-		AssetSaleSvc.exportExcel(filter);
+		var exportFilter = {};
+		angular.copy(initFilter, exportFilter)
+		if(vm.activeBid === 'approved') {
+			exportFilter.actionable = 'y';
+		} else {
+			exportFilter.actionable = 'n';
+		}
+        exportFilter.buyer = 'y';
+		AssetSaleSvc.exportExcel(exportFilter);
 	}
 
 	//loading start

@@ -5,7 +5,6 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
-	//var initFilter = {};
 	vm.dataList = [];
 	vm.tabVal = "approved";
 	$scope.onTabChange = onTabChange;
@@ -29,7 +28,6 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 		getApprovedBids(angular.copy(initFilter));
 	}
 
-
 	function onTabChange(tab) {
 		vm.tabVal = tab;
 		fireCommand(true);
@@ -49,7 +47,6 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 			getClosedBids(filter);
 		else
 			getBidProducts(filter);
-
 		/*if(vm.activeBid === 'auctionable')
 			getBidProducts(filter);
 		else
@@ -97,7 +94,6 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	}
 
 	function update(bid,action,cb){
-		
 		Modal.confirm(StatusChangeConfirmationMsg[action],function(retVal){
 			if(retVal === 'yes')
 				AssetSaleSvc.changeBidStatus(bid,action,cb || fireCommand);				
@@ -119,10 +115,26 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 	}
 
 	function exportExcel() {
-		var filter = {};
-		angular.copy(initFilter, filter)
-        filter.fa = 'y';
-        AssetSaleSvc.exportExcel(filter);
+		var exportFilter = {};
+		angular.copy(initFilter, exportFilter)
+		if(vm.tabVal === 'approved') {
+			exportFilter.actionable = 'y';
+			exportFilter.dealStatuses = dealStatuses.slice(6,12);
+			exportFilter.bidStatus = bidStatuses[7];
+		} else if(vm.tabVal === 'closed') {
+			exportFilter.actionable = 'n';
+			exportFilter.dealStatuses = dealStatuses[12];
+		} else {
+			if(vm.dataList) {
+				exportFilter.productIds = [];
+				vm.dataList.forEach(function(item) {
+	              exportFilter.productIds.push(item._id);
+	            });
+			}
+		}
+
+        exportFilter.fa = 'y';
+        AssetSaleSvc.exportExcel(exportFilter);
 	}
 
 	//loading start
@@ -132,6 +144,5 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 		else
 			$state.go('main');
 	});
-
 }
 })();

@@ -584,6 +584,7 @@ exports.fetchBid = function(req,res){
   		filter.assetStatus = req.query.assetStatus;
   	if(req.sellers && req.sellers.length)
   		filter['product.seller._id'] = {$in:req.sellers};
+
   if (req.query.pagination) {
 		paginatedResult(req, res, AssetSaleBid, filter);
 		return;
@@ -806,13 +807,21 @@ exports.exportExcel = function(req,res){
 	var user = req.user;
 	var queryParam = req.query;
 	var fieldsMap = {};
+	filter.bidChanged = false;
+	
+	if(req.query.actionable === 'y')
+		filter.status = true;
+	
+	if(req.query.actionable === 'n')
+		filter.status = false;
+
 	if(queryParam.seller == 'y'){
 		filter['product.seller._id'] = req.user._id +"";
 		fieldsMap = fieldConfig['SELLER_FIELDS'];
 	}
 
 	if(queryParam.buyer == 'y'){
-		filter.user = req.user._id;
+		filter.user = req.user._id +"";
 		fieldsMap = fieldConfig['BUYER_FIELDS'];
 	}
 
@@ -823,6 +832,22 @@ exports.exportExcel = function(req,res){
 
 	if(user.role == 'admin')
   		fieldsMap = fieldConfig['ADMIN_FIELDS'];
+
+  	if(queryParam.productIds)
+		filter['product.proData'] = {$in:queryParam.productIds.split(',') || []};
+	
+	if(queryParam.offerStatus)
+		filter.offerStatus = queryParam.offerStatus;
+
+	if(queryParam.dealStatuses)
+		filter.dealStatus = {$in:queryParam.dealStatuses.split(',')};
+	
+	if(queryParam.bidStatus)
+		filter.bidStatus = queryParam.bidStatus;
+	
+	if(req.sellers && req.sellers.length)
+  		filter['product.seller._id'] = {$in:req.sellers};
+  	
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
