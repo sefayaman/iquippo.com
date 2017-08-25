@@ -62,7 +62,9 @@ exports.updateLotData = function(req, res) {
 
 exports.getLotData = function(req, res) {
   var filter = {};
+  if(req.query.auctionId){
   filter.auctionId=req.query.auctionId;
+}
   console.log("filter",filter);
   var query = Lot.find(filter);
   query.exec(function(err, result) {
