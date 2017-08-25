@@ -669,6 +669,8 @@ angular.module('sreizaoApp')
         else
           data['subject'] = 'New Channel Partner Registration: Success';
         $scope.newUser.serverPath = serverPath;
+        $scope.newUser.customerId = result.customerId;
+        
         notificationSvc.sendNotification('userRegEmailFromAdminChannelPartner', data, $scope.newUser,'email');
         $scope.closeDialog();
         $rootScope.$broadcast('updateUserList');

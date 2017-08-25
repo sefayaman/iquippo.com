@@ -494,14 +494,14 @@
           }
           //End
           $scope.currentProduct = result[0];
-          if ($scope.currentProduct.auction && $scope.currentProduct.auction._id) {
+          /*if ($scope.currentProduct.auction && $scope.currentProduct.auction._id) {
             var auctionFilter = {};
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
                 $scope.auctionsData = aucts[0];
               });
-          }
+          }*/
           if ($scope.currentProduct.specialOffers) {
             $scope.status.basicInformation = false;
             $scope.status.specialOffers = true;

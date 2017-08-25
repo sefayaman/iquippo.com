@@ -1127,6 +1127,8 @@
                 Modal.alert("Please enter hyperlink url.", true);
                 return;
             }
+             if(vm.banner.isClickable !== 'Yes')
+                vm.banner.linkUrl = "";
             //$scope.submitted = false;
             BannerSvc.save(vm.banner)
                 .then(function(res) {
@@ -1153,6 +1155,9 @@
                 Modal.alert("Please enter hyperlink url.", true);
                 return;
             }
+            if(vm.banner.isClickable !== 'Yes')
+                vm.banner.linkUrl = "";
+
             $scope.submitted = false;
             BannerSvc.update(vm.banner)
                 .then(function(res) {
