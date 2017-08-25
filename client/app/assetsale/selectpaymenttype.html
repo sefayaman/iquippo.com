@@ -24,6 +24,38 @@
                   <input type="text" class="form-control" name="amount" value="" ng-model="paymentVm.amount" placeholder="Amount" disabled>
                 </div>
               </div>
+              <div ng-if="option.select == 'offline'">
+                <form novalidate class="text-left" name="">
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
+                      <select class="form-control">
+                        <option>Mode of Payment</option>
+                        <option>Cash</option>
+                        <option>Check</option>
+                        <option>DD</option>
+                        <option>RTGS</option>
+                        <option>NEFT</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" name="bankName" placeholder="Bank Name / Branch">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" name="instrumentNo" placeholder="Instrument No">
+                    </div>
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" name="amount" placeholder="Amount">
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+                    <div class="col-sm-6 form-group">
+                      <input type="text" class="form-control" name="paymentDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Payment / Instrument Date">
+                    </div>
+                  </div> -->
+              </form>
+              </div>
         </div>  
         <div class="modal-footer asset-sale">
           <div class="btn-group">

@@ -8,7 +8,7 @@
         <form novalidate class="bidPopup" name="bidPopup">
             <div class="row">
               <div class="col-sm-offset-2 col-sm-3">
-                <h5>Base plus GST (as applicable)</h5>
+                <h5>Base plus GST <small>(as applicable)</small></h5>
               </div>
               <div class="col-sm-5" ng-class="{'has-error': bidPopup.bidAmount.$invalid && submitted}">
                 <!-- <input  type="text" ng-disabled="params.bid == 'buynow'" class="form-control" name="bidAmount" ng-model="assetBidPopUpVm.bidAmount" ng-value="" ng-change="assetBidPopUpVm.calculateBid(assetBidPopUpVm.bidAmount)" placeholder="Enter Bid Amount" required> -->
@@ -42,9 +42,16 @@
                 <button type="button" ng-if="params.bid == 'buynow'" class="btn btn-danger" ng-click="assetBidPopUpVm.submitBid(bidPopup)">Buy Now</button>
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-offset-2 col-sm-8">
-              Note : This Base Price is inclusive of GST  " Bifurcation will be mentioned in the Invoice ".
+            <div class="row form-group">
+              <div class="col-sm-offset-2 col-sm-1 padd-right">
+                <small>
+                  <em><strong>Note:</strong></em>
+                </small>
+              </div>
+              <div class="col-sm-7">
+                <small>
+                  <em>This Base Price is inclusive of GST  " Bifurcation will be mentioned in the Invoice ".</em>
+                </small>
               </div>
             </div>
         </div>  
