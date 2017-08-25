@@ -1210,7 +1210,7 @@ function getPartenerDetail(req, res, user) {
   filter.deleted = false;
   filter.status = true;
   if (user._id)
-    filter.user.userId = "" + user._id;
+    filter['user.userId'] = "" + user._id;
   Vendor.findOne(filter, function(err, partnerData) {
     if (err) {
       return handleError(res, err);
@@ -1233,7 +1233,7 @@ function getManpowerDetail(req, res, user) {
   filter.deleted = false;
   filter.status = true;
   if (user._id)
-    filter.user.userId = "" + user._id;
+    filter['user.userId'] = "" + user._id;
   ManpowerUser.findOne(filter, function(err, manpowerData) {
     if (err) {
       return handleError(res, err);
@@ -1346,28 +1346,21 @@ function setType(cell) {
   } else cell.t = 's';
 }
 
+
 function excel_from_data(data) {
   var ws = {};
   var range;
-  range = {
-    s: {
-      c: 0,
-      r: 0
-    },
-    e: {
-      c: 17,
-      r: data.length
-    }
-  };
+  range = {s: {c:0, r:0}, e: {c:18, r:data.length }};
 
-  for (var R = 0; R != data.length + 1; ++R) {
-
+  for(var R = 0; R != data.length + 1 ; ++R){
+    
     var C = 0;
     var user = null;
     var cell = null;
     if(R != 0)
       user = data[R-1];
-   if(R === 0)
+
+    if(R === 0)
       cell = {v: "Customer Id"};
     else {
       if(user)
@@ -1377,306 +1370,184 @@ function excel_from_data(data) {
     var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}); 
     ws[cell_ref] = cell;
 
-    if(R === 0)
+    if(R == 0)
       cell = {v: "Name"};
     else{
       if(user)
         cell =  {v: (user.fname || "") + " " + (user.mname || "") + " " + (user.lname || "")};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "Email"
-      };
+    if(R == 0)
+      cell = {v: "Email"};
     else {
-      if (user)
-        cell = {
-          v: user.email || ""
-        };
+      if(user)
+        cell = {v: user.email || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "PAN Number"
-      };
+    if(R == 0)
+      cell = {v: "PAN Number"};
     else {
-      if (user)
-        cell = {
-          v: user.panNumber || ""
-        };
+      if(user)
+        cell = {v: user.panNumber || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "AADHAAR Number"
-      };
+    if(R == 0)
+      cell = {v: "AADHAAR Number"};
     else {
-      if (user)
-        cell = {
-          v: user.aadhaarNumber || ""
-        };
+      if(user)
+        cell = {v: user.aadhaarNumber || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "Role"
-      };
+    if(R == 0)
+      cell = {v: "Role"};
     else {
-      if (user)
-        cell = {
-          v: user.role || ""
-        };
+      if(user)
+        cell = {v: user.role || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "UserType"
-      };
+     if(R == 0)
+      cell = {v: "UserType"};
     else {
-      if (user)
-        cell = {
-          v: user.userType || ""
-        };
+      if(user)
+        cell = {v: user.userType || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R ===0)
-      cell = {
-        v: "Employee Code"
-      };
+    if(R == 0)
+      cell = {v: "Employee Code"};
     else {
-      if (user)
-        cell = {
-          v: user.employeeCode || "NA"
-        };
+      if(user)
+        cell = {v: user.employeeCode || "NA"};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "Company Name"
-      };
+    if(R == 0)
+      cell = {v: "Company Name"};
     else {
-      if (user)
-        cell = {
-          v: user.company || ""
-        };
+      if(user)
+        cell = {v: user.company || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R ===0)
-      cell = {
-        v: "Mobile No."
-      };
+     if(R == 0)
+      cell = {v: "Mobile No."};
     else {
-      if (user)
-        cell = {
-          v: user.mobile || ""
-        };
+      if(user)
+        cell = {v: user.mobile || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "Phone No."
-      };
+     if(R == 0)
+      cell = {v: "Phone No."};
     else {
-      if (user)
-        cell = {
-          v: user.phone || ""
-        };
+      if(user)
+        cell = {v: user.phone || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R ===0)
-      cell = {
-        v: "Country"
-      };
+     if(R == 0)
+      cell = {v: "Country"};
     else {
-      if (user)
-        cell = {
-          v: user.country || ""
-        };
+      if(user)
+        cell = {v: user.country || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "State"
-      };
+    if(R == 0)
+      cell = {v: "State"};
     else {
-      if (user)
-        cell = {
-          v: user.state || ""
-        };
+      if(user)
+        cell = {v: user.state || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R ===0)
-      cell = {
-        v: "Location"
-      };
+    if(R == 0)
+      cell = {v: "Location"};
     else {
-      if (user)
-        cell = {
-          v: user.city || ""
-        };
+      if(user)
+        cell = {v: user.city || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "Registered By"
-      };
+    if(R == 0)
+      cell = {v: "Registered By"};
     else {
       //if(user)
-      cell = {
-        v: getRegisteredBy(user) || ""
-      };
+        cell = {v: getRegisteredBy(user) || ""};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R ===0)
-      cell = {
-        v: "Product Uploaded"
-      };
+    if(R == 0)
+      cell = {v: "Product Uploaded"};
     else {
-      if (user)
-        cell = {
-          v: user.have_products
-        };
+      if(user)
+        cell = {v: user.have_products};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
 
-    if (R === 0)
-      cell = {
-        v: "Counts"
-      };
+    if(R == 0)
+      cell = {v: "Counts"};
     else {
-      if (user)
-        cell = {
-          v: user.total_products
-        };
+      if(user)
+        cell = {v: user.total_products};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
-    ws[cell_ref] = cell;
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell; 
 
-    if (R ===0)
-      cell = {
-        v: "Status"
-      };
+    if(R == 0)
+      cell = {v: "Status"};
     else {
-      if (user)
-        cell = {
-          v: isStatus(user.status, user.deleted)
-        };
+      if(user)
+        cell = {v: isStatus(user.status, user.deleted)};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
-    ws[cell_ref] = cell;
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
+    ws[cell_ref] = cell; 
 
-    if (R === 0)
-      cell = {
-        v: "Creation Date"
-      };
+    if(R == 0)
+      cell = {v: "Creation Date"};
     else {
-      if (user)
-        cell = {
-          v: Utility.toIST(_.get(user, 'createdAt', ''))
-        };
+      if(user)
+        cell = {v: Utility.toIST(_.get(user, 'createdAt', ''))};
     }
     setType(cell);
-    cell_ref = xlsx.utils.encode_cell({
-      c: C++,
-      r: R
-    });
+    var cell_ref = xlsx.utils.encode_cell({c:C++,r:R}) 
     ws[cell_ref] = cell;
   }
   ws['!ref'] = xlsx.utils.encode_range(range);
@@ -1710,7 +1581,7 @@ exports.exportUsers = function(req, res) {
   var filter = {};
   filter.deleted = false;
   if (req.body.userId) {
-    filter.createdBy._id = req.body.userId;
+    filter['createdBy._id'] = req.body.userId;
   }
   if (req.body.enterpriseId) {
     filter.enterpriseId = req.body.enterpriseId;
@@ -1745,8 +1616,8 @@ function getProductData(req, res, users, userIds) {
   filter.deleted = false;
   filter.status = true;
   if (userIds){
-    filter.seller={};
-  filter.seller._id = {
+    //filter.seller={};
+  filter['seller._id'] = {
       $in: userIds
     };
   }  

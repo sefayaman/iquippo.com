@@ -22,6 +22,8 @@ var BannerSchema = new Schema({
     type: Boolean,
     default: false
   },
+  isClickable:{type:String,default:'No'},
+  linkUrl:{type:String},
   sequence:{type:Number,default:0},
   default:{type:Boolean,default:false},
   createdAt: {type:Date,default:Date.now},

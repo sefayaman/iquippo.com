@@ -25,7 +25,7 @@ a:focus,.btn{outline: none;}
 .static-search-banner{position: absolute; bottom: 20px; padding: 20px 0 0; width: 100%; background: rgba(0,0,0,0.6); z-index: 9;}
 .static-search-banner .spare-content{position: relative; z-index: 10; }
 .static-search-banner .spare-content .btn{height: 40px; padding: 7px 10px; font-size: 18px;}
-.overlay{position:absolute; background:rgba(0,0,0,0.1); height:380px; z-index:7; width:100%;}
+.overlay{position:absolute; background:rgba(0,0,0,0.1); height:380px; z-index:7; width:100%; display: block;}
 .goog-te-gadget-simple{border:transparent !important;}
 .goog-tooltip.skiptranslate{display:none !important;}
 .goog-text-highlight{background:none !important; box-shadow:none !important;}
