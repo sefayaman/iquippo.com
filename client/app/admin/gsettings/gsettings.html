@@ -1904,7 +1904,7 @@
 					<form class="techInformationForm" name="lotform" novalidate>
 					 <div class="row form-group">
 				        <div class="col-sm-3" ng-class="{'has-error':lotVm.auctId.$invalid && submitted}">
-			 		       <select class="form-control" name="auctId" ng-model="lotVm.dataModel.auctId"  required> 
+			 		       <select class="form-control" name="auctId" ng-model="lotVm.dataModel.auctionId"  required> 
 								 <option value=""> Select Auction  Id </option> 
 						        <option value="{{product._id}}"  ng-repeat="product in lotVm.auctionListing">{{product.auctionId}}</option>
 					       </select>
@@ -1914,23 +1914,23 @@
 						</div>
 
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotId.$invalid && submitted}">
-							<input type="text" class="form-control" name="lotId" ng-model="lotVm.dataModel.lotId" value="{{lotVm.lotId}}" placeholder="Enter Lot Id">
+							<input type="text" class="form-control" name="lotId" ng-model="lotVm.dataModel.lotNumber" value="{{lotVm.lotId}}" placeholder="Enter Lot Id">
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
 							<input type="text" class="form-control" name="assetDesc" ng-model="lotVm.dataModel.assetDesc" value="{{lotVm.assetDesc}}" placeholder="Enter Asset Description" > 
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.startPrice.$invalid && submitted}">
-							<input type="text" class="form-control" name="startPrice" ng-model="lotVm.dataModel.startPrice" value="{{lotVm.startPrice}}" placeholder="Enter StartPrice">
+							<input type="text" class="form-control" name="startPrice" ng-model="lotVm.dataModel.startingPrice" value="{{lotVm.startPrice}}" placeholder="Enter StartPrice">
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.ReservePrice.$invalid && submitted}">
 							<input type="text" class="form-control" name="ReservePrice" ng-model="lotVm.dataModel.ReservePrice" value="{{lotVm.ReservePrice}}" placeholder="Enter Reserve Price">
 						</div>
-						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lastMintBid.$invalid && submitted}">
+						 <!-- <div class="col-sm-3" ng-class="{'has-error':lotVm.lastMintBid.$invalid && submitted}">
 							<input type="text" class="form-control" name="lastMintBid" ng-model="lotVm.dataModel.lastMintBid" value="{{lotVm.lastMintBid}}" placeholder="Enter Last Minute Id (in Minutes)"> 
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.extendedTo.$invalid && submitted}">
 							<input type="text" class="form-control" name="extendedTo" ng-model="lotVm.dataModel.extendedTo" value="{{lotVm.extendedTo}}" placeholder="Enter Extended To(in Minutes)">
-						</div>
+						</div> -->
                        
 						<div class="col-sm-offset-7 col-sm-2">
 					       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="lotVm.update(lotform)">Update</button>
@@ -1953,7 +1953,7 @@
 							<thead>
 								<tr>
 									<th>Auction Id</th>
-									<th>Lot Id</th>
+									<th>Lot Number</th>
 									<th>Asset Id</th>
 									<th>Asset Description</th>
 									<th>Start Price</th>
