@@ -1212,7 +1212,6 @@ function getPartenerDetail(req, res, user) {
   var filter = {};
   filter.deleted = false;
   filter.status = true;
-  filter.user={};
   if (user._id)
     filter['user.userId'] = "" + user._id;
   Vendor.findOne(filter, function(err, partnerData) {
@@ -1236,7 +1235,6 @@ function getManpowerDetail(req, res, user) {
   var filter = {};
   filter.deleted = false;
   filter.status = true;
-  filter.user={};
   if (user._id)
     filter['user.userId'] = "" + user._id;
   ManpowerUser.findOne(filter, function(err, manpowerData) {
