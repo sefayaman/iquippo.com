@@ -62,18 +62,22 @@
       var filter = {};
       filter.assetId = query.product.assetId;
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
-        var msg = "";
-        if((Number($scope.result.total) < Number(result.bidAmount)) 
-          && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
-          msg = "Higher Bid available for the Asset. "
-        if(query.offerType == "Buynow")
-          var forbuynow="On submission sale process will be initiated Felfillment Team will get in touch with you shortly";
-        else
-          var forbuynow= msg + "Do you want to change your Bid?"
-        Modal.confirm(forbuynow, function(ret) {
-          if (ret == "no") 
-            proceedToSubmit();
-        });
+        switch (query.typeOfRequest) {
+          case "buynow":
+                        proceedToSubmit();
+                        break;
+          case "changeBid":
+          case "submitBid":
+                        var msg = "";
+                        if((Number($scope.result.total) < Number(result.bidAmount)) 
+                        && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
+                        msg = informationMessage.higherBidMsg;
+                        Modal.confirm(msg +" Do you want to change your Bid?", function(ret) {
+                          if (ret == "no") 
+                            proceedToSubmit();
+                        });
+                        break;
+        }
       });
     }
 
@@ -124,6 +128,7 @@
         dataToSend.gst = $scope.result.taxRate || 0;
         dataToSend.tcs = $scope.result.tcs || 0;
         dataToSend.bidAmount = $scope.result.total || 0;
+        dataToSend.actualBidAmount = vm.bidAmount || 0;
         dataToSend.emdAmount = $scope.emdAmount || 0;
         dataToSend.parkingPaymentTo = query.product.parkingPaymentTo;
         dataToSend.fullPaymentAmount = $scope.result.total - $scope.emdAmount;
@@ -139,7 +144,7 @@
             if($scope.params.callback)
                 $scope.params.callback();
 
-            Modal.alert("Your bid has been successfully submitted!", true);
+            Modal.alert(result.message, true);
             if(Auth.getCurrentUser().email) {
               var data = {};
               dataToSend = {};

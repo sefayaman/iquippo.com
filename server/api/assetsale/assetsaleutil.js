@@ -33,12 +33,7 @@ exports.getMasterBasedOnUser = function(userId,filter,type, callback) {
 	    			filter.enterpriseId = user.enterpriseId;
 	    			break;
 	    	case "channelpartner" : 
-	    			// filter['user.userId'] = user._id;
-	    			// break;
 	    	case "customer" : 
-	    			// if(user.createdBy && user.createdBy.role === 'channelpartner')
-	    			// 	filter['user.userId'] = user.createdBy._id;
-	    			// else 
 	    			filter['user.userId'] = user._id;
 	    			break;
 	    }

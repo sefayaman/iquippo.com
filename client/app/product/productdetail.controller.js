@@ -28,7 +28,9 @@
     }
 
     $scope.$on('refreshProductDetailPage',function(){
-      getLastBidForUser();
+      init();
+      //countBid();
+      //getLastBidForUser();
     })
 
     //$scope.financeContact.interestedIn="finance";

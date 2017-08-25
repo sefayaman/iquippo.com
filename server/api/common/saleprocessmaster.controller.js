@@ -45,8 +45,6 @@ exports.search = function(req, res) {
   if (body.status)
     filter.status = body.status;
 
-  console.log("filter", filter);
-
   var query = Model.find(filter);
   query.exec(function(err, result) {
     if (err) {
@@ -63,7 +61,7 @@ exports.create = function(req, res, next) {
       return handleError(res, err);
     }
     if (result.length > 0)
-      return next(new ApiError(409, "Enterprise already exits!!!"));
+      return next(new ApiError(409, "Sale process already exits!!!"));
     else
       create();
   });
@@ -75,7 +73,7 @@ exports.create = function(req, res, next) {
         return handleError(res, err);
       }
       return res.status(200).json({
-        message: "Enterprise record saved sucessfully"
+        message: "Sale process record saved sucessfully"
       });
     });
   }
@@ -83,7 +81,6 @@ exports.create = function(req, res, next) {
 
 function _getRecord(data, cb) {
   var filter = {};
-  console.log("@@@data", data);
   if(data.userRole)
     filter.userRole = data.userRole;
   if(data.enterpriseId)
@@ -107,7 +104,7 @@ exports.update = function(req, res, next) {
     if (result.length === 0 || (result.length === 1 && result[0]._id.toString() === req.params.id))
       return update();
     else
-      return next(new ApiError(409, "Enterprise record already exits!!!"));
+      return next(new ApiError(409, "Sale process record already exits!!!"));
   });
 
     function update() {
@@ -137,7 +134,7 @@ exports.destroy = function(req, res, next) {
         return handleError(res, err);
       }
       return res.status(204).send({
-        message: "Enterpirse record deleted sucessfully!!!"
+        message: "Sale process record deleted sucessfully!!!"
       });
     });
   });

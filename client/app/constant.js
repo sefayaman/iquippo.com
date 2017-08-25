@@ -159,6 +159,24 @@ var assetStatuses = [
 }
 ];
 
+var modeOfPayment = [
+{
+  name:"Cash",
+},
+{
+  name:"Check",
+},
+{
+  name:"DD",
+},
+{
+  name:"RTGS",
+},
+{
+  name:"NEFT",
+}
+];
+
 var paymentOptions = [
   "Online",
   "Offline",
@@ -509,6 +527,11 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 /*channel partner messsage */
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
 
+/*Asset Sale messages*/
+informationMessage['buyNowApprovalIfYes'] = "Your Request has been submitted successfully , We will get in touch with You.";
+informationMessage['buyNowApprovalIfNo'] = "Your Sale process is in process , you may contact us at 03366022059";
+informationMessage['buyNowApprovalIfNoForNextUser'] = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
+informationMessage['higherBidMsg'] = "Higher Bid available for the Asset.";
 var newsEvents = [
   {
     name:"The Economic Times",

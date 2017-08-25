@@ -31,6 +31,7 @@ var AssetSaleBidSchema = new Schema({
   parkingPaymentTo:String,
   gst:Number,
   tcs:Number,
+  actualBidAmount:Number,
   bidAmount:Number,
   emdAmount:Number,
   fullPaymentAmount:Number,
@@ -48,12 +49,26 @@ var AssetSaleBidSchema = new Schema({
   emdPayment:{
     paymentMode:String,
     remainingPayment:{type:Number,default:0},
-    paymentsDetail:[{}]
+    paymentsDetail:[{
+      createdAt: {type:Date,default:Date.now},
+      paymentDate : Date,
+      amount : {type:Number,default:0},
+      instrumentNo : String,
+      bankName : String,
+      paymentMode : String
+    }]
   },
   fullPayment:{
     paymentMode:String,
     remainingPayment:{type:Number,default:0},
-    paymentsDetail:[{}]
+    paymentsDetail:[{
+      createdAt: {type:Date,default:Date.now},
+      paymentDate : Date,
+      amount : {type:Number,default:0},
+      instrumentNo : String,
+      bankName : String,
+      paymentMode : String
+    }]
   },
   invoiceDetail:{},
   emdStartDate:Date,

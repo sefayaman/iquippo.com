@@ -4,70 +4,54 @@
     <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
   </div>
   <div class="modal-body">
-    <!-- <table class="table" ng-if="emdFullPaymentVm.visibleFlag">
+    <table class="table" ng-if="emdFullPaymentVm.visibleFlag">
       <tr>
-        <td>{{formType}} :</td>
+        <td>Total Bid Amount :</td>
         <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>
-        <td ng-if="formType != 'EMD'">{{(bidData.bidAmount - bidData.emdAmount) || 0}}</td>
+        <td ng-if="formType != 'EMD'">{{bidData.bidAmount || 0}}</td>
+      </tr>
+      <tr>
+        <td>Recieved Payment :</td>
+        <td ng-if="formType == 'EMD'">{{(bidData.emdAmount - bidData.emdPayment.remainingPayment) || 0}}</td>
+        <td ng-if="formType != 'EMD'">{{(bidData.bidAmount - bidData.fullPayment.remainingPayment) || 0}}</td>
       </tr>
       <tr>
         <td>Remaining Payment :</td>
         <td ng-if="formType == 'EMD'">{{bidData.emdPayment.remainingPayment || 0}}</td>
         <td ng-if="formType != 'EMD'">{{bidData.fullPayment.remainingPayment || 0}}</td>
       </tr>
-    </table>  --> 
-    <table class="table">
-      <tr>
-        <td>Total Bid Amount :</td>
-        <td>{{}}</td>
-        <td>{{}}</td>
-      </tr>
-      <tr>
-        <td>Recieved Payment :</td>
-        <td>{{}}</td>
-        <td>{{}}</td>
-      </tr>
-      <tr>
-        <td>Remaining Payment :</td>
-        <td>{{}}</td>
-        <td>{{}}</td>
-      </tr>
     </table> 
     <form novalidate class="text-left" name="paymentDetailForm" ng-if="emdFullPaymentVm.visibleFlag">
         <div class="row">
-          <div class="col-sm-6 form-group">
-            <select class="form-control">
-              <option>Mode of Payment</option>
-              <option>Cash</option>
-              <option>Check</option>
-              <option>DD</option>
-              <option>RTGS</option>
-              <option>NEFT</option>
+          <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.paymentMode.$invalid && submitted}">
+            <select class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentMode" name="paymentMode" required>
+              <option value="">*Mode of Payment</option>
+              <option ng-repeat="mode in modeOfPayment" value="{{mode.name}}">{{mode.name}}</option>
             </select>
-            <!-- <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentMode" name="paymentMode" placeholder="Mode of Payment"> -->
           </div>
-          <div class="col-sm-6 form-group">
-            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.bankName" name="bankName" placeholder="Bank Name / Branch">
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6 form-group">
-            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.instrumentNo" name="instrumentNo" placeholder="Instrument No">
-          </div>
-          <div class="col-sm-6 form-group">
-            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.amount" name="amount" placeholder="Amount">
+          <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.bankName.$invalid && submitted}">
+            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.bankName" name="bankName" placeholder="Bank Name / Branch" required>
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-6 form-group">
-            <input type="text" class="form-control" name="paymentDate" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Payment / Instrument Date">
+          <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.instrumentNo.$invalid && submitted}">
+            <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.instrumentNo" name="instrumentNo" placeholder="Instrument No" ng-required="emdFullPaymentVm.emdFullPaymentInfo.paymentMode !== 'Cash'" ng-disabled="emdFullPaymentVm.emdFullPaymentInfo.paymentMode === 'Cash'">
+          </div>
+          <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.amount.$invalid && submitted}">
+            <input type="number" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.amount" name="amount" placeholder="Amount" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.paymentDate.$invalid && submitted}">
+            <input type="text" class="form-control" name="paymentDate" ng-model="emdFullPaymentVm.emdFullPaymentInfo.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Payment / Instrument Date" required>
           </div>
         </div>
         <div class="modal-footer asset-sale">
           <div class="btn-group">
             <button type="button" class="btn btn-primary" ng-click="emdFullPaymentVm.closeDialog()">Cancel</button>
-            <button type="button" class="btn btn-danger" ng-if="formType == 'EMD'" ng-disabled ="(formType == 'EMD' && bidData.emdPayment.remainingPayment == 0)" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Submit</button>
-            <button type="button" class="btn btn-danger" ng-if="formType != 'EMD'" ng-disabled ="(formType != 'EMD' && bidData.fullPayment.remainingPayment == 0)" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Submit</button>                
+            <button type="button" class="btn btn-danger" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Submit</button>
+            <!-- <button type="button" class="btn btn-danger" ng-if="formType == 'EMD'" ng-disabled ="(formType == 'EMD' && bidData.emdPayment.remainingPayment == 0)" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Submit</button>
+            <button type="button" class="btn btn-danger" ng-if="formType != 'EMD'" ng-disabled ="(formType != 'EMD' && bidData.fullPayment.remainingPayment == 0)" ng-click="emdFullPaymentVm.submit(paymentDetailForm)">Submit</button> -->                
           </div>
         </div>
     </form>

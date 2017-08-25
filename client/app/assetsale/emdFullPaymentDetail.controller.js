@@ -9,6 +9,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
     vm.paymentList = [];
     vm.closeDialog = closeDialog;
     vm.submit = submit;
+    $scope.modeOfPayment = modeOfPayment;
   	var action = $scope.formType == 'EMD' ? 'emdPayment' : 'fullPayment';
   	vm.visibleFlag = true;
   	function init(){
@@ -25,7 +26,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 
 	function submit(form) {
 		if(form.$invalid){
-	      form.submitted = true;
+	      $scope.submitted = true;
 	      return;
 	    }
 		var msg = "";
@@ -41,7 +42,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			vm.emdFullPaymentInfo.createdAt = new Date();
 			$scope.bidData.emdPayment.paymentsDetail[$scope.bidData.emdPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
 			if(remainingPayment < 0 && $scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment)
-				$scope.bidData.fullPayment.remainingPayment = Math.round(Number($scope.bidData.fullPayment.remainingPayment) + vm.emdFullPaymentInfo.amount) || 0;
+				$scope.bidData.fullPayment.remainingPayment = Math.round(Number($scope.bidData.fullPayment.remainingPayment) + remainingPayment) || 0;
 			if($scope.bidData.emdPayment.remainingPayment == 0){
 				serverAction = "emdpayment";
 				AssetSaleSvc.setStatus($scope.bidData,dealStatuses[7],'dealStatus','dealStatuses');
@@ -63,7 +64,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if($scope.bidData.fullPayment.remainingPayment == 0){
 			 serverAction = "fullpayment";
 			 AssetSaleSvc.setStatus($scope.bidData,dealStatuses[8],'dealStatus','dealStatuses');
-			 msg = "fullPayment completed.Now bid request is ready for DO issued."
+			 msg = "FullPayment completed. Now bid request is ready for DO issued."
 			}
 		}
 	    AssetSaleSvc.update($scope.bidData,serverAction).

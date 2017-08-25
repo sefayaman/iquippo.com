@@ -20,7 +20,7 @@ function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, AssetSale
 
   var pinCode = "110017";
   var city = "Delhi";
-
+  $scope.modeOfPayment = modeOfPayment;
   vm.closeDialog = closeDialog;
   vm.submit = submit;
   var action = $scope.formType == 'EMD' ? 'emdPayment' : 'fullPayment';
@@ -48,8 +48,8 @@ function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, AssetSale
 
   function submit() {
     if($scope.option.select == 'offline') {
-      Modal.confirm("Please Contact at 033-66022059", function(ret) {
-        if (ret == "yes") {
+      //Modal.confirm("Please Contact at 033-66022059", function(ret) {
+        //if (ret == "yes") {
           switch (action) {
             case 'emdPayment':
                 if(!$scope.bidData.emdPayment)
@@ -63,8 +63,8 @@ function SelectPaymentCtrl($scope, $rootScope, Modal, Auth, $uibModal, AssetSale
                 break;
           }
           save();
-        }
-      });
+        //}
+      //});
       return;
     }
 

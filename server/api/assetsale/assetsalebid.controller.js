@@ -350,6 +350,7 @@ exports.validateSubmitBid = function(req,res,next){
 				});
 
 			req.autoApprove = true;
+			req.buyNowApprovalValue = saleProcessData.buyNowPriceApproval;
 			next();
 
 		});
@@ -383,8 +384,15 @@ exports.validateSubmitBid = function(req,res,next){
 			if(err)
 				return callback({status:500,msg:err});
 			req.otherBids = bids;
-			if(req.query.typeOfRequest === "buynow")
+			var buynowCount = 0;
+			if(req.query.typeOfRequest === "buynow"){
+				req.otherBids.forEach(function(bid){
+					if(bid.offerType === 'Buynow')
+						buynowCount++;
+				});
+				req.buynowCount = buynowCount;
 				return callback();
+			}
 
 			req.otherBids.forEach(function(bid){
 				if(req.query.typeOfRequest == "changeBid"){
@@ -405,13 +413,20 @@ exports.submitBid = function(req, res) {
 	
 	async.series([newBidData,updateBidAndProduct],function(err){
 		if(err) return res.status(500).send(err);
-		return res.status(200).send("Bid submitted successfully.");
+		var msg = ""
+		if(req.query.typeOfRequest === "buynow" && req.buyNowApprovalValue === 'No' && req.buynowCount === 0)
+			msg = "Your Sale process is in process , you may contact us at 03366022059";
+		else if(req.query.typeOfRequest === "buynow" && req.buyNowApprovalValue == 'No' && req.buynowCount > 0)	
+			msg = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
+		else
+			msg = "Your Request has been submitted successfully , We will get in touch with You.";
+
+		return res.status(200).json({message:msg});
+		//return res.status(200).send("Bid submitted successfully.");
 	});
 
 	function updateBidAndProduct(callback){
-		console.log("updatebid and product1234");
 		async.eachLimit(req.otherBids,5,updateBid,function(err){
-			console.log("updatebid and product89");
 			var filter = {};
 			filter.dealStatus = {$in:[dealStatuses[0],dealStatuses[6]]};
 			filter.status = true;
@@ -723,7 +738,6 @@ exports.getSellers = function(req,res,next){
 	    sellers.forEach(function(item){
 	      req.sellers.push(item._id + "")
 	    });
-	    console.log('sellers',req.sellers);
 	    next();
 	  })
 	}
