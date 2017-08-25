@@ -169,9 +169,9 @@
               });
             }
             var data = {};
+           
             if (vm.user.mobile)
               data['to'] = vm.user.mobile;
-
             data['countryCode']=LocationSvc.getCountryCode(Auth.getCurrentUser().country);
             data['subject'] = 'New User Registration: Success';
             var dataToSend = {};
@@ -181,18 +181,33 @@
             dataToSend['email'] = vm.user.email;
             dataToSend['password'] = vm.user.password;
             dataToSend['serverPath'] = serverPath;
-            notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
-            if (vm.user.email) {
-              data['to'] = vm.user.email;
-              notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');
-            }
+           
+           
+          Auth.isLoggedInAsync(function(loggedIn){
+            if(loggedIn){
+               
+                 dataToSend['customerId'] = Auth.getCurrentUser().customerId;
+                  notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
+                  if (vm.user.email) {
+                    data['to'] = vm.user.email;
+                    notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');
+                    closeDialog();
+                    vm.user = {};
+                  }
+                }
+          });
+           // notificationSvc.sendNotification('manpowerRegSmsToUser', data, dataToSend, 'sms');
+            //if (vm.user.email) {
+             // data['to'] = vm.user.email;
+             //notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');
+            //}
             /*var data = {};
             data['to'] = vm.user.email;
             data['subject'] = 'New User Registration: Success';
             vm.user.serverPath = serverPath;
             notificationSvc.sendNotification('userRegEmail', data, vm.user,'email');*/
-            closeDialog();
-            vm.user = {};
+            //closeDialog();
+            //vm.user = {};
           })
           .catch(function(err) {
             err = err.data;
