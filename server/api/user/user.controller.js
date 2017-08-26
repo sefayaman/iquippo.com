@@ -749,6 +749,10 @@ exports.createUserReq = function(req, res, next) {
   }
 
   function intialize(data, cb) {
+<<<<<<< HEAD
+=======
+    
+>>>>>>> UAT
 
     data.createdBy = req.body.user;
     data.createdAt = new Date();
@@ -771,12 +775,14 @@ exports.createUserReq = function(req, res, next) {
         });
         return cb();
       }
-
+      
       var tplData={};
       var tplName="";
         tplData.fname=data.fname;
         tplData.lname=data.lname;
         tplData.email=data.email;
+        tplData.mobile = data.mobile;
+        tplData.customerId = doc.customerId;
         //tplData.serverPath=config.serverPath;
         tplData.password=data.password;
         tplName=USER_REG_REQ;
