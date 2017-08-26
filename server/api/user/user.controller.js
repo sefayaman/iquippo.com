@@ -749,10 +749,6 @@ exports.createUserReq = function(req, res, next) {
   }
 
   function intialize(data, cb) {
-<<<<<<< HEAD
-=======
-    
->>>>>>> UAT
 
     data.createdBy = req.body.user;
     data.createdAt = new Date();
