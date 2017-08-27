@@ -63,7 +63,7 @@
           <tr>
             <td><b>Reserve Price:</b></td>
             <td>{{bidReqDetailVm.product.reservePrice || 0}}</td>          
-            <td><b>Parking Charges <small>(* Pay to yard)</small> :</b></td>
+            <td><b>Parking Charges <small ng-if="bidReqDetailVm.product.parkingPaymentTo == 'Yard'">(* Pay to yard)</small> :</b></td>
             <td>{{bidReqDetailVm.product.parkingCharges || 0}}</td>
           </tr>
         </tbody>
@@ -174,7 +174,21 @@
         <tbody>
           <tr>
             <td><b>Bid Amount:</b></td>
-            <td>{{data.bidAmount || 0}}</td>
+            <!-- <td>{{data.bidAmount || 0}}</td> -->
+            <td>
+              <table class="table">
+                <tr>
+                  <th>TCS</th>
+                  <th>Parking <small ng-if="data.parkingPaymentTo == 'Yard'">(* Pay to yard)</small></th>
+                  <th>Total</th>
+                </tr>
+                <tr>
+                  <td>{{data.tcs || 0}}</td>
+                  <td>{{data.parkingCharge || 0}}</td>
+                  <td>{{data.bidAmount || 0}}</td>
+                </tr>
+              </table>
+            </td>
             <td><b>Offer Status:</b></td>
             <td>{{data.offerStatus}} </td>
           </tr>          

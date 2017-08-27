@@ -551,7 +551,6 @@ exports.withdrawBid = function(req, res) {
 };
 
 exports.fetchBid = function(req,res){
-	
 	var filter={};
 	filter.bidChanged = false;
 	if(req.query.userId)
@@ -582,10 +581,11 @@ exports.fetchBid = function(req,res){
     }
   	if(req.query.assetStatus)
   		filter.assetStatus = req.query.assetStatus;
+  	if(req.query.userid)
+  		filter['product.seller._id'] = req.query.userid +"";
   	if(req.sellers && req.sellers.length)
   		filter['product.seller._id'] = {$in:req.sellers};
-
-  if (req.query.pagination) {
+  	if (req.query.pagination) {
 		paginatedResult(req, res, AssetSaleBid, filter);
 		return;
 	}
@@ -844,10 +844,9 @@ exports.exportExcel = function(req,res){
 	
 	if(queryParam.bidStatus)
 		filter.bidStatus = queryParam.bidStatus;
-	
 	if(req.sellers && req.sellers.length)
-  		filter['product.seller._id'] = {$in:req.sellers};
-  	
+  		filter['product.seller._id'] = {$in:req.sellers || []};
+	 	
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);

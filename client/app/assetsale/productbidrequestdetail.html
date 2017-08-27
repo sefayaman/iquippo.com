@@ -20,13 +20,13 @@
               <table class="table">
                 <tr>
                   <th>TCS</th>
-                  <th>Parking <small>(* Pay to yard)</small></th>
+                  <th>Parking <small ng-if="bidData.parkingPaymentTo == 'Yard'">(* Pay to yard)</small></th>
                   <th>Total</th>
                 </tr>
                 <tr>
-                  <td>{{}}</td>
-                  <td>{{}}</td>
-                  <td>{{}}</td>
+                  <td>{{bidData.tcs || 0}}</td>
+                  <td>{{bidData.parkingCharge || 0}}</td>
+                  <td>{{bidData.bidAmount || 0}}</td>
                 </tr>
               </table>
             </td>

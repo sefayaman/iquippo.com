@@ -87,7 +87,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		Modal.openDialog(popupName,newScope,modalClass);
 	}
 
-	function exportExcel() {
+	function exportExcel(allReport) {
 		var exportFilter = {};
 		angular.copy(initFilter, exportFilter)
 		if(vm.activeBid === 'actionable' || vm.activeBid === 'saleinprocess') {
@@ -101,6 +101,11 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 			exportFilter.actionable = 'n';
 			exportFilter.dealStatuses = dealStatuses[12];
 		}
+		if(allReport === 'all'){
+			exportFilter = {};
+			angular.copy(initFilter, exportFilter);
+		}
+
 		if(!Auth.isAdmin())
         	exportFilter.seller = 'y';
 		AssetSaleSvc.exportExcel(exportFilter);
