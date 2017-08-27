@@ -11,6 +11,9 @@
 		$scope.onTabChange=onTabChange;
 
 		function init() {
+      if(Auth.isEnterpriseUser() && !Auth.isBuySaleViewOnly())
+        return $state.go('main');
+
 			switch($state.current.name){
             case 'assetsale.bidproduct':
                 $scope.tabValue = Auth.isAdmin()?'administrator':'seller';
@@ -49,6 +52,14 @@
         break;
       } 
     }
+
+    //loading start
+  Auth.isLoggedInAsync(function(loggedIn) {
+    if(loggedIn)
+      init();
+    else
+      $state.go('main');
+  });
 
 	}
 })();

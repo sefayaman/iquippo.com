@@ -20,7 +20,7 @@ Date.prototype.addDays = function(days) {
 };
 
 Date.prototype.addHours = function(hours) {
-    this.setDate(this.getHours() + parseInt(hours));
+    this.setHours(this.getHours() + parseInt(hours));
     return this;
 };
 

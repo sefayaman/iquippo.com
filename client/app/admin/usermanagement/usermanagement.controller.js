@@ -341,7 +341,6 @@ angular.module('sreizaoApp')
       for(var i = 0; i < $scope.enterprises.length;i++){
         if($scope.newUser.enterpriseId == $scope.enterprises[i].enterpriseId){
             enterpriseSvcList = angular.copy($scope.enterprises[i].availedServices);
-            $scope.newUser.buySale = $scope.enterprises[i].buySale || false;
           break;
         }
       }
@@ -542,7 +541,7 @@ angular.module('sreizaoApp')
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
       });
-      if(!$scope.newUser.buySale)
+      if(!$scope.newUser.buySaleViewOnly && $scope.newUser.buySaleApprover)
         $scope.newUser.buySaleApprover = false;
     }
 

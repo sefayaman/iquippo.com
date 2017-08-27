@@ -291,7 +291,22 @@ angular.module('sreizaoApp')
           return true;
         if(currentUser.role !== 'enterprise')
           return true;
-        if(currentUser.buySale && currentUser.buySaleApprover)
+        if(currentUser.enterprise)
+          return true;
+        if(currentUser.buySaleApprover)
+          return true;
+        else
+          return false;
+      },
+      isBuySaleViewOnly:function(){
+        if(this.isAdmin())
+          return true;
+        if(currentUser.role !== 'enterprise')
+          return true;
+        if(currentUser.enterprise)
+          return true;
+        
+        if(currentUser.buySaleViewOnly)
           return true;
         else
           return false;

@@ -155,12 +155,13 @@
                   </div>
                 </div>
 
-                <div class="row form-group" ng-if="(isAdmin() || isEnterprise()) && newUser.role === 'enterprise' && (newUser.buySale || newUser.enterprise)">
+                <div class="row form-group" ng-if="isAdmin() || isEnterprise()">
                   <div class="col-sm-6 padd-right text-left">
-                  <input type="checkbox" name="assetSale" ng-model="newUser.buySale" ng-if="newUser.enterprise"> Approval Authority buy Now/Make an Offer
+                  Approval Authority buy Now/Make an Offer
                   </div>
                   <div class="col-sm-6 padd-left text-left">
-                     <input type="checkbox" ng-true ng-model="newUser.buySaleApprover" ng-disabled = "!newUser.buySale"> Approval Required
+                     <input type="checkbox" ng-checked="newUser.buySaleApprover || newUser.buySaleViewOnly" ng-model="newUser.buySaleViewOnly" ng-disabled="newUser.buySaleApprover"> View Only
+                     <input type="checkbox"  ng-model="newUser.buySaleApprover"> Approver
                   </div>
                 </div>
 

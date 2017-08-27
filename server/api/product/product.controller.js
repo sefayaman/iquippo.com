@@ -610,18 +610,17 @@ exports.calculatePrice = function(req,res,next){
   if(req.body.tradeType === 'RENT')
     return next();
 
-  if(!req.body.priceOnRequest && !req.body.grossPrice && !req.body.reservePrice && !req.body.valuationAmount)
-      return res.status(412).send("Please enter price or select price on request");
-  /*if(req.user.role !== 'enterprise')
-    return next();*/
-  if(req.body.grossPrice)
+  if(!req.body.grossPrice && !req.body.reservePrice && !req.body.valuationAmount){
+    req.body.priceOnRequest = true;
     return next();
-  if(!req.body.grossPrice && req.body.reservePrice){
+  }
+
+  if(req.body.reservePrice){
     req.body.grossPrice = req.body.reservePrice;
     return next();
   }
 
-  if(!req.body.grossPrice && req.body.seller && req.body.valuationAmount){
+  if(req.body.seller && req.body.valuationAmount){
     AssetSaleUtil.getMasterBasedOnUser(req.body.seller._id,{},'markup',function(err,result){
         if(err)
             return res.status(500).send(err);
@@ -634,7 +633,7 @@ exports.calculatePrice = function(req,res,next){
           req.body.grossPrice = Math.round(buyNowPrice || 0);
           return next();
       });
-    }else if(req.body.priceOnRequest)
+    }else if(req.body.grossPrice)
       return next();
     else
       return res.status(412).send('Unable to process your request.Please contact support team.');
@@ -1644,7 +1643,7 @@ exports.validateExcelData = function(req, res, next) {
       var fieldsToBeCopied = ['addressOfAsset','parkingPaymentTo'];
       numericColumns.forEach(function(x){
         if(row[x] && !isNaN(row[x]))
-          obj[x] = row[x];
+          obj[x] = Number(row[x]);
       });
       dateColumns.forEach(function(x){
         if(row[x]){
@@ -1661,52 +1660,35 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validatePrice(callback){
+      
       if(row.tradeType && row.tradeType.toLowerCase() === 'rent')
         return callback();
 
       var isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
       var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
+      obj.currencyType = row.currencyType || "INR";
+      obj.grossPrice = row.grossPrice;
+      obj.priceOnRequest = row.priceOnRequest.toLowerCase() !== 'yes'? true:false; 
       if(isCustomer){
-        if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice ){
-          errorList.push({
-            Error : 'Selling price is mandatory when Price on request not selected',
-            rowCount :row.rowCount
-          });
-          return callback('Error');
-        }
-      }
-      var gp = row.grossPrice;
-      var prOnReq = row.priceOnRequest || "";
-      var cr = row["currencyType"] || "INR";
-      if (gp && cr) {
-        obj.grossPrice = Number(gp);
-        obj.currencyType = cr;
-      }
-      obj.priceOnRequest = prOnReq.toLowerCase() == 'yes' ? true:false;
-      if(isCustomer)
+         if(!obj.grossPrice)
+            obj.priceOnRequest = true;
         return callback(null,obj);
+      } 
 
-      if(!obj.priceOnRequest && !obj.grossPrice && !row.reservePrice && !row.valuationAmount){
-        errorList.push({
-              Error : 'Please enter valid price or mark price on request as yes.',
-              rowCount :row.rowCount
-        });
-        return callback('Error');
+      if(!obj.grossPrice && !row.reservePrice && !row.valuationAmount){
+        obj.priceOnRequest = true;
+        return callback(null,obj);
       }
 
-      if(obj.grossPrice)
-        return callback(null,obj);
       if(row.reservePrice){
         obj.grossPrice = row.reservePrice;
         return callback(null,obj);
-      }
-
-      if(row.seller_mobile && row.valuationAmount){
+      }else if(row.seller_mobile && row.valuationAmount){
         AssetSaleUtil.getMarkupOnSellerMobile(row.seller_mobile,function(err,result){
             if(err){
                errorList.push({
-                      Error : 'Please enter price or mark price on request as yes.',
+                      Error : 'Error in getting markup data.',
                       rowCount :row.rowCount
                 });
                 return callback('Error');
@@ -1719,7 +1701,7 @@ exports.validateExcelData = function(req, res, next) {
             obj.grossPrice = Math.round(buyNowPrice || 0);
             return callback(null,obj);
           });
-        }else if(obj.priceOnRequest)
+        }else if(obj.grossPrice)
           return callback(null,obj);
         else{
            errorList.push({
@@ -2561,31 +2543,6 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-     /* } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
-        var gp = row["grossPrice"];
-        var prOnReq = row["priceOnRequest"];
-        var cr = row["currencyType"] || "INR";
-        if (!isNaN(gp) && cr) {
-          product["grossPrice"] = Number(trim(gp));
-          product["currencyType"] = trim(cr);
-        } else {
-          errorList.push({
-            Error: 'Mandatory field Gross_Price and Currency is invalid or not present',
-            rowCount: row.rowCount
-          });
-          return callback('Error');
-        }
-        if (!prOnReq) {
-          product["priceOnRequest"] = false;
-        } else {
-          prOnReq = trim(prOnReq).toLowerCase();
-          if (prOnReq == 'yes' || prOnReq == 'y') {
-            product["priceOnRequest"] = true;
-          } else {
-            product["priceOnRequest"] = false;
-          }
-        }
-      }*/
       return callback(null, product);
     }
 
@@ -2686,6 +2643,8 @@ exports.validateExcelData = function(req, res, next) {
           obj.seller["countryCode"] = seller[0]['countryCode'];
           obj.seller["userType"] = seller[0]['userType'];
           obj.seller["role"] = seller[0]['role'];
+          if(obj.seller.role == 'enterprise')
+            obj.seller.enterpriseId = seller[0].enterpriseId;
           obj.seller["lname"] = seller[0]['lname'];
           obj.seller["fname"] = seller[0]['fname'];
           obj.seller["_id"] = seller[0]['_id'] + "";

@@ -303,6 +303,8 @@
             $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
             $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
           }
+          if ($scope.product.repoDate)
+              $scope.product.repoDate = moment($scope.product.repoDate).format('MM/DD/YYYY');
           if ($scope.product.currencyType == "INR")
             $scope.product.currencyType = "";
           $scope.productName = $scope.product.name;
@@ -699,6 +701,7 @@
       product.seller.alternateMobile = seller.alternateMobile;
       $scope.product.seller.email = product.seller.email = seller.email;
       product.seller.country = seller.country;
+      product.seller.enterpriseId = seller.enterpriseId || "";
       product.seller.countryCode=LocationSvc.getCountryCode(seller.country);
       product.seller.company = seller.company;
       $scope.container.sellerName = seller.fname + " " + seller.lname;
@@ -1216,6 +1219,7 @@
       product.user.phone = Auth.getCurrentUser().phone;
       product.user.mobile = Auth.getCurrentUser().mobile;
       product.user.email = Auth.getCurrentUser().email;
+      product.user.enterpriseId = Auth.getCurrentUser().enterpriseId || "";
       product.user.country = Auth.getCurrentUser().country;
       product.user.countryCode=LocationSvc.getCountryCode(product.user.country);
       product.user.company = Auth.getCurrentUser().company;

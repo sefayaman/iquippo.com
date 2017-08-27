@@ -68,7 +68,7 @@
                     <!-- <li>
                         <a href="javascript:void(0);" ng-click="redirectToUrl()"><i class="fa fa-gavel"></i> Asset Sale</a>
                     </li> -->
-                    <li ng-if="isAdmin() || !isFAgencyPartner()">
+                    <li ng-if="!isFAgencyPartner() && isBuySaleViewOnly()">
                         <a href="/assetsale/bidproduct"><i class="fa fa-gavel"></i> TRADE DETAILS </a>
                     </li>
                     <li ng-if="isFAgencyPartner()">
