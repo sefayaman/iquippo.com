@@ -4,7 +4,7 @@
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
 
-  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
+  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
 
     var vm = this;
     $scope.currentProduct = {};
@@ -27,6 +27,11 @@
       $scope.productQuote.user = Auth.getCurrentUser();
     }
 
+    $scope.$on('refreshProductDetailPage',function(){
+      init();
+      //countBid();
+      //getLastBidForUser();
+    })
 
     //$scope.financeContact.interestedIn="finance";
     $scope.buycontact.interestedIn = "buyORrent";
@@ -56,6 +61,7 @@
     vm.isEmpty = isEmpty;
     vm.checkServiceInfo = checkServiceInfo;
     $scope.redirectToAuction = redirectToAuction;
+    vm.withdrawBid = withdrawBid;
     // bid summary
     function openBidModal(bidAmounts, bid, form) {
       if (form && form.$invalid) {
@@ -74,7 +80,10 @@
       bidSummaryScope.params = {
         bidAmount: bidAmounts,
         product:$scope.currentProduct,
-        bid: "placebid"
+        stateId:$scope.state._id, 
+        bid: "placebid",
+        offerType: "Bid",
+        callback: countBid
       };
       if(bid == "proxybid")
         bidSummaryScope.params.proxyBid = true;
@@ -84,37 +93,39 @@
       bidSummaryScope.params.typeOfRequest="submitBid";
     }
 
-
-      if (bid == "buynow") {
-        bidSummaryScope.params = {};
-        bidSummaryScope.params.negotiation = false;
-        bidSummaryScope.params.type = "BUY";
-        bidSummaryScope.params.offer = $scope.currentProduct.grossPrice;
-        bidSummaryScope.params.user = Auth.getCurrentUser();
-        bidSummaryScope.params.product = $scope.currentProduct;
-        bidSummaryScope.params.bid = "buynow";
-      }
-
-      var bidSummaryModal = $uibModal.open({
-        templateUrl: "/app/assetsale/assetbidpopup.html",
-        scope: bidSummaryScope,
-        controller: 'AssetBidPopUpCtrl as assetBidPopUpVm',
-        windowTopClass: 'bidmodal',
-        size: 'xs'
-      });
-
-      /*bidSummaryModal.result.then(function (result) {
-        // countBid();
-      }, function () {
-
-      });*/
-
-      bidSummaryScope.close = function() {
-        bidSummaryModal.close();
-        filter.userId=Auth.getCurrentUser()._id;
-         countBid();
-         countBid(filter);
+    if (bid == "buynow") {
+      bidSummaryScope.params = {
+        bidAmount: bidAmounts,
+        product: $scope.currentProduct,
+        stateId:$scope.state._id,
+        bid: "buynow",
+        offerType: "Buynow"
       };
+      bidSummaryScope.params.typeOfRequest="buynow";
+    }
+    Modal.openDialog('bidRequest',bidSummaryScope,'bidmodal');
+    }
+
+    function withdrawBid() {
+      if (!Auth.getCurrentUser()._id) {
+        Modal.alert("Please Login/Register for submitting your request!", true);
+        return;
+      }
+      filter = {};
+      filter.userId = Auth.getCurrentUser()._id;
+      filter.productId = $scope.currentProduct._id;
+      Modal.confirm("Do you want to withdraw bid?", function(ret) {
+        if (ret == "yes") {
+          AssetSaleSvc.withdrawBid(filter)
+          .then(function(res) {
+            if(res && res.msg)
+              Modal.alert(res.msg, true);
+            countBid();
+          })
+          .catch(function(err) {
+          });
+        }
+      });
     }
 
     //Submit Valuation Request
@@ -417,19 +428,32 @@
       return ret;
     }
 
-    function countBid(filter){
-      if(!filter){
-        filter={};
-      }
+    function countBid(){
+      filter = {};
       filter.productId = $scope.currentProduct._id;
+      if(Auth.getCurrentUser()._id)
+        filter.userId = Auth.getCurrentUser()._id;
     	AssetSaleSvc.countBid(filter)
       .then(function(res){
-        if(filter.userId){
-          $scope.userBids=res;
-        }
-        else{
-        vm.bidCount=res;
-        }
+          $scope.userBids=res.userBidCount;
+          vm.bidCount=res.totalBidCount;
+      })
+      .catch(function(err){
+        if (err) throw err;
+      });
+    }
+
+    function getLastBidForUser(){
+      if(!Auth.getCurrentUser()._id)
+        return;
+      filter = {};
+      filter.assetId = $scope.currentProduct.assetId;
+      if(Auth.getCurrentUser()._id)
+        filter.userId = Auth.getCurrentUser()._id;
+      AssetSaleSvc.getMaxBidOnProduct(filter)
+      .then(function(res){
+          vm.userCurrentBid = res;
+          vm.bidAmount=res.bidAmount;
       })
       .catch(function(err){
         if (err) throw err;
@@ -494,14 +518,21 @@
           }
           //End
           $scope.currentProduct = result[0];
-          /*if ($scope.currentProduct.auction && $scope.currentProduct.auction._id) {
+          if ($scope.currentProduct.auction && $scope.currentProduct.auction._id) {
             var auctionFilter = {};
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
-                $scope.auctionsData = aucts[0];
+                $scope.auctionsData = aucts;
               });
-          }*/
+          }
+          if($scope.currentProduct.state) {
+            var stateFilter = {};
+            stateFilter.stateName = $scope.currentProduct.state;
+            LocationSvc.getStateHelp(stateFilter).then(function(result){
+              $scope.state = result[0];
+            });
+          }
           if ($scope.currentProduct.specialOffers) {
             $scope.status.basicInformation = false;
             $scope.status.specialOffers = true;
@@ -561,10 +592,7 @@
           }
           //fetch number of bids on a product//
           countBid();
-          filter={};
-          filter.userId=Auth.getCurrentUser()._id;
-          countBid(filter);
-
+          getLastBidForUser();
           getPriceTrendData();
           if ($scope.currentProduct.tradeType == "SELL")
             vm.showText = "To Buy"
@@ -682,7 +710,6 @@
     }
 
     function serviceRequest(form, type) {
-
       Auth.isLoggedInAsync(function(loggedIn) {
         if (!loggedIn) {
           Modal.openDialog('login');
@@ -691,13 +718,8 @@
         }
       });
 
-      console.log($scope.currentProduct.user);
-
-
       var serviceReq = {};
       serviceReq.user = $scope.currentProduct.user;
-
-
     }
 
     function getPriceTrendData() {
@@ -724,7 +746,6 @@
     }
 
     function getPriceTrendSurveyCount() {
-
       filter = {};
       filter.productId = $scope.currentProduct._id;
       filter.priceTrendId = $scope.priceTrendData._id;
