@@ -1,0 +1,186 @@
+<div>
+   <div class="btn-group enterprise-value form-group">
+    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+    <button class="btn btn-success pull-right" ng-click="buyerProductBidRequestVm.exportExcel()" style="width:120px;" ><i class="fa fa-file-excel-o"></i> Export Excel</button>
+   </div>
+
+   <!-- Approved Bid -->
+	<div ng-if="buyerProductBidRequestVm.activeBid=='approved'">
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{buyerProductBidRequestVm.bidListing.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="buyerProductBidRequestVm.searchStr" ng-change="buyerProductBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>
+		   				<th>Ticket Id</th>
+			   			<th>Asset Id</th>
+			   			<th>Asset Name</th>
+			   			<!-- <th>Category</th> -->
+			   			<!-- <th>Brand</th> -->
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>Asset Country</th> -->
+			   			<!-- <th>Asset State</th> -->
+			   			<th>Location</th>
+			   			<!-- <th>Asset Description</th> -->
+			   			<!-- <th>Offer Type</th> -->
+			   			<th>Bid Amount</th>
+			   			<th>Offer Status</th>
+			   			<th>Deal Status</th>
+			   			<th>Invoice in Favour of</th>
+			   			<th>KYC Documents</th>
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
+			   			<!-- <th>Asset Delivery Confirmation</th> -->
+			   			<!-- <th>Rating</th> -->
+			   			<th>Feedback</th>
+						<th>Action</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="bid in buyerProductBidRequestVm.bidListing">
+		   				<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.product.assetId}}</td>
+			   			<td>{{bid.product.name}}</td>
+			   			<!-- <td>{{bid.product.category}}</td> -->
+			   			<!-- <td>{{bid.product.brand}}</td> -->
+			   			<!-- <td>{{bid.product.model}}</td> -->
+			   			<!-- <td>{{bid.product.mfgYear}}</td> -->
+			   			<!-- <td>{{bid.product.country}}</td> -->
+			   			<!-- <td>{{bid.product.state}}</td> -->
+			   			<td>{{bid.product.city}}</td>
+			   			<!-- <td>{{bid.product.assetDesc}}</td> -->
+			   			<!-- <td>{{bid.offerType}}</td> -->
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<td>
+			   				<button type="button" class="btn btn-danger btn-xs" ng-if="buyerProductBidRequestVm.validateAction(bid,'INVOICEDETAIL')" ng-click="buyerProductBidRequestVm.openDialog(bid, 'invoiceDetails')">Update</button>
+			   			</td>
+			   			<td>
+			   				<button type="button" class="btn btn-primary btn-xs" ng-if="buyerProductBidRequestVm.validateAction(bid,'KYC')" ng-click="buyerProductBidRequestVm.openDialog(bid, 'kycDocument')">
+			   					<span ng-if="true">Upload</span>
+			   					<span ng-if="false">Update</span>
+			   				</button>
+			   			</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
+			   				<span uib-rating ng-model="rate" max="max" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
+        					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+			   			</td> -->
+			   			<td>
+			   				<a href="javascript:void(0);" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')" uib-popover="Give Your Feedback" popover-trigger="mouseenter">
+			   				<i class="fa fa-commenting-o fa-2x"></i>
+			   				</a>
+			   			</td>
+						<td> 
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType', '', 'EMD')" class="btn btn-success btn-sm" uib-popover="Pay EMD Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'EMDPAYMENT') && !bid.emdPayment.paymentMode"><i class="fa fa-money"></i></button> 
+
+							<button type="button" ng-click="buyerProductBidRequestVm.openDialog(bid, 'selectPaymentType', '', 'Fullpayment')" class="btn btn-success btn-sm" uib-popover="Pay Full Payment Now" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'FULLPAYMENT') && !bid.fullPayment.paymentMode"><i class="fa fa-money"></i></button>
+
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-primary btn-sm" uib-popover="Change Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openBidModal(bid)" ng-if="buyerProductBidRequestVm.validateAction(bid,'CHANGEBID')">
+								<i class="fa fa-retweet"></i>
+							</button> 
+
+							<button type="button" ng-disabled="offerType = 'Bid' && bid.proxyBid" class="btn btn-danger btn-sm" uib-popover="Withdraw Bid" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.withdrawBid(bid._id)" ng-if="buyerProductBidRequestVm.validateAction(bid,'WITHDRAWBID')"><i class="fa fa-sign-out"></i></button> 
+
+							<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="buyerProductBidRequestVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="buyerProductBidRequestVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
+							
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview')"><i class="fa fa-info"></i></button>
+						</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="buyerProductBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+  <!-- Closed Auction -->
+	<div ng-if="buyerProductBidRequestVm.activeBid=='closed'">
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{buyerProductBidRequestVm.bidListing.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="buyerProductBidRequestVm.searchStr" ng-change="buyerProductBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>
+		   				<th>Ticket Id</th>
+			   			<th>Asset Id</th>
+			   			<th>Asset Name</th>
+			   			<!-- <th>Category</th> -->
+			   			<!-- <th>Brand</th> -->
+			   			<!-- <th>Modal</th> -->
+			   			<!-- <th>Manufacturing Year</th> -->
+			   			<!-- <th>Asset Country</th> -->
+			   			<!-- <th>Asset State</th> -->
+			   			<th>Location</th>
+			   			<!-- <th>Asset Description</th> -->			   			
+			   			<!-- <th>Offer Type</th> -->
+			   			<th>Bid Amount</th>
+			   			<th>Offer Status</th>
+			   			<th>Deal Status</th>
+			   			<!-- <th>Invoice in Favour of</th> -->
+			   			<!-- <th>KYC Documents</th> -->
+			   			<!-- <th>Delivery Order</th> -->
+			   			<!-- <th>Date of Delivery</th> -->
+			   			<!-- <th>Asset Delivery Confirmation</th> -->
+			   			<!-- <th>Rating</th> -->
+			   			<th>Feedback</th>
+			   			<th>Action</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="bid in buyerProductBidRequestVm.bidListing">
+		   				<td>{{bid.ticketId}}</td>
+			   			<td>{{bid.product.assetId}}</td>
+			   			<td>{{bid.product.name}}</td>
+			   			<!-- <td>{{bid.product.category}}</td> -->
+			   			<!-- <td>{{bid.product.brand}}</td> -->
+			   			<!-- <td>{{bid.product.model}}</td> -->
+			   			<!-- <td>{{bid.product.mfgYear}}</td> -->
+			   			<!-- <td>{{bid.product.country}}</td> -->
+			   			<!-- <td>{{bid.product.state}}</td> -->
+			   			<td>{{bid.product.city}}</td>
+			   			<!-- <td>{{bid.product.assetDesc}}</td> -->			   			
+			   			<!-- <td>{{bid.tradeType}}</td> -->
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.offerStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<!-- <td>
+			   				<span uib-rating ng-model="rate" max="max" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
+        					<span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
+			   			</td> -->
+			   			<td>
+			   				<a href="javascript:void(0);" uib-popover="Give Your Feedback" popover-trigger="mouseenter" ng-click="buyerProductBidRequestVm.openDialog(bid, 'feedbackForm')">
+			   				<i class="fa fa-commenting-o fa-2x"></i>
+			   				</a>
+			   			</td>
+			   			<td>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter"  ng-click="buyerProductBidRequestVm.openDialog(bid,'buyerRequestDetailPopup', 'product-preview')"><i class="fa fa-info"></i></button>
+			   				
+			   			</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="buyerProductBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+</div>

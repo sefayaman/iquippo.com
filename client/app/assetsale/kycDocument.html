@@ -1,0 +1,65 @@
+<div> 
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="kycDocumentVm.closeDialog()">&times;</button>
+    <h4 class="modal-title">Update KYC Document</h4>
+  </div>
+  <div class="modal-body">
+    <form novalidate class="text-left" name="kycForm">
+          <div class="row">
+            <div class="col-sm-4 form-group">Address Proof</div>
+            <div class="col-sm-6 form-group">
+              <select class="form-control" ng-model="kycDocumentVm.kycInfo.addressProof" name="addressProof">
+                <option value="">Select Document</option>
+                <option ng-repeat="addProof in kycDocumentVm.addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>
+              </select>
+            </div>
+            <div class="col-sm-2 form-group">
+              <span class="btn btn-warning fileinput-button">
+                <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this,'addressProof')"  class="ng-scope">
+                <span class="fa fa-upload"></span>
+              </span> 
+            </div>
+            <div class="col-sm-offset-4 col-sm-8 form-group"> {{kycDocumentVm.kycInfo.addressProofDocName}}</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4 form-group">ID Proof</div>
+           <div class="col-sm-6 form-group">
+              <select class="form-control" ng-model="kycDocumentVm.kycInfo.idProof" name="idProof">
+                <option value="">Select Document</option>
+                <option ng-repeat="idProof in kycDocumentVm.idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
+              </select>
+            </div>
+            <div class="col-sm-2 form-group">
+              <span class="btn btn-warning fileinput-button">
+                <input type="file" name="doc" data-filetype="doc" onchange="angular.element(this).scope().uploadDoc(this.files,this,'idProof')"  class="ng-scope">
+                <span class="fa fa-upload"></span>
+              </span>
+            </div> 
+            <div class="col-sm-offset-4 col-sm-8 form-group"> {{kycDocumentVm.kycInfo.idProofDocName}}</div>
+                           
+          </div> 
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="kycDocumentVm.closeDialog()">Close</button>
+            <button type="button" class="btn btn-primary" ng-click="kycDocumentVm.submit(kycForm)">Submit</button>
+          </div>
+    </form>
+    <div class="table-responsive" ng-if="kycDocumentVm.kycList">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Kyc Type</th>
+            <th>Kyc Name</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="kyc in kycDocumentVm.kycList">
+            <td>{{kyc.type}}</td>
+            <td>{{kyc.name}}</td>
+            <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -891,6 +891,10 @@ exports.getUser = function(req, res) {
     typeFilter.$ne = "admin";
     filter.role= typeFilter;
   }
+	if(req.body.onlyUser) {
+      filter["role"] = {$in: ['customer', 'channelpartner']};
+      //filter["createdBy.role"] = {$ne:"channelpartner"};
+    }
   if (arr.length > 0)
     filter.$or = arr;
   var result = {};

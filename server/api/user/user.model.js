@@ -50,6 +50,8 @@ var UserSchema = new Schema({
   }],
   enterprise:Boolean,
   enterpriseId:String,
+  buySaleViewOnly:{type:Boolean,default:false},
+  buySaleApprover :{type:Boolean,default:false},
   status:{
     type: Boolean,
     default: true
@@ -78,6 +80,7 @@ var UserSchema = new Schema({
     type:Boolean,
     default:false
   },
+  FAPartnerId:String,
   createdAt: Date,
   updatedAt: Date, 
   salt: String,
