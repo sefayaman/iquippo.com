@@ -47,13 +47,13 @@
             <table class="table">
               <tr>
                 <th>TCS</th>
-                <th>Parking <span>(* Pay to yard)</span></th>
+                <th>Parking <span ng-if="bidData.parkingPaymentTo == 'Yard'">(* Pay to yard)</span></th>
                 <th>Total</th>
               </tr>
               <tr>
-                <td>{{}}</td>
-                <td>{{}}</td>
-                <td>{{}}</td>
+                <td>{{bidData.tcs || 0}}</td>
+                <td>{{bidData.parkingCharge || 0}}</td>
+                <td>{{bidData.bidAmount || 0}}</td>
               </tr>
             </table>
           </td>
@@ -116,7 +116,7 @@
         </tr>
         <tr>
           <td><b>Asset Delivery Confirmation:</b></td>
-          <td>{{}}</td>
+          <td><span ng-if="bidData.dealStatus == 'Closed'">Yes</span></td>
           <td><b>Rating:</b></td>
           <td>{{}}</td>                  
         </tr>
