@@ -158,8 +158,8 @@
               }
               notificationSvc.sendNotification('bidReceiveEmailToCustomer',data, dataToSend,'email');
             }
-            if(query.offerType == "Buynow")
-              $rootScope.$broadcast('refreshProductDetailPage');
+            //if(query.offerType == "Buynow")
+            $rootScope.$broadcast('refreshProductDetailPage');
             $scope.close();
           })
           .catch(function(err) {
