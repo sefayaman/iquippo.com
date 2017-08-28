@@ -1,11 +1,17 @@
 <div>  
-   <div class="btn-group enterprise-value form-group">
-   <button class="btn btn-success pull-right" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')" style="width: 120px;"><i class="fa fa-file-excel-o"></i>All Export Excel</button>
+	<div class="row form-group">
+		<div class="col-sm-12 text-right">
+			<button class="btn btn-success" ng-click="bidproductVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+    		<button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Export Excel</button>
+
+    		<button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Payment Export Excel</button>
+		</div>
+	</div>
+<legend></legend>
+   <div class="btn-group enterprise-value form-group">   
     <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'actionable'}" ng-click="onTabChange('actionable')">Pending for Approval</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'saleinprocess'}" ng-click="onTabChange('saleinprocess')">Sale In Progress</button>
     <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed</button>
-
-    <button class="btn btn-success pull-right" ng-click="bidproductVm.exportExcel()" style="width: 120px;"><i class="fa fa-file-excel-o"></i> Export Excel</button>
    </div>
 
    	<!-- Approved Bid -->
