@@ -159,9 +159,15 @@
                   <div class="col-sm-6 padd-right text-left">
                   Approval Authority buy Now/Make an Offer
                   </div>
-                  <div class="col-sm-6 padd-left text-left">
-                     <input type="checkbox" ng-checked="newUser.buySaleApprover || newUser.buySaleViewOnly" ng-model="newUser.buySaleViewOnly" ng-disabled="newUser.buySaleApprover"> View Only
-                     <input type="checkbox"  ng-model="newUser.buySaleApprover"> Approver
+                  <div class="col-sm-6 text-left">
+                     <div class="row">
+                       <div class="col-sm-5">
+                         <input type="checkbox" ng-checked="newUser.buySaleApprover || newUser.buySaleViewOnly" ng-model="newUser.buySaleViewOnly" ng-disabled="newUser.buySaleApprover"> View Only
+                       </div>
+                       <div class="col-sm-5">
+                         <input type="checkbox"  ng-model="newUser.buySaleApprover"> Approver
+                       </div>
+                     </div>
                   </div>
                 </div>
 
