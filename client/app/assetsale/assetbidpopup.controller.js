@@ -163,7 +163,8 @@
             $scope.close();
           })
           .catch(function(err) {
-            throw err; 
+            if(err && err.status == 412)
+              Modal.alert(err.data, true);
             $scope.close();
           });       
     }

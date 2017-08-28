@@ -320,7 +320,6 @@ var StatusChangeConfirmationMsg = {
   approve : "You are APPROVING this BID?.",
   reject : "You are REJECTING this bid?.",
   doissued : "You are issueing  DO for this bid?.",
-  doissued : "You are issueing  DO for this bid?.",
   deliverd:"You are giving delivery date?.",
   deliveryaccept:"You are confirming asset is delivered successfully?."
 }
