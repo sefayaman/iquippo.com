@@ -164,7 +164,7 @@ var modeOfPayment = [
   name:"Cash",
 },
 {
-  name:"Check",
+  name:"Cheque",
 },
 {
   name:"DD",
