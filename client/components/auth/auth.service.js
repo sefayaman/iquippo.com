@@ -283,8 +283,33 @@ angular.module('sreizaoApp')
           return currentUser.partnerInfo.services.indexOf("Auction") > -1 ? true : false;
       },
       isFAgencyPartner: function() {
-        if(currentUser && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
+        if(currentUser && currentUser.isPartner && currentUser.partnerInfo && currentUser.partnerInfo.services.length > 0)
           return currentUser.partnerInfo.services.indexOf("Sale Fulfilment") > -1 ? true : false;
+      },
+      isBuySaleApprover:function(){
+        if(this.isAdmin())
+          return true;
+        if(currentUser.role !== 'enterprise')
+          return true;
+        if(currentUser.enterprise)
+          return true;
+        if(currentUser.buySaleApprover)
+          return true;
+        else
+          return false;
+      },
+      isBuySaleViewOnly:function(){
+        if(this.isAdmin())
+          return true;
+        if(currentUser.role !== 'enterprise')
+          return true;
+        if(currentUser.enterprise)
+          return true;
+        
+        if(currentUser.buySaleViewOnly)
+          return true;
+        else
+          return false;
       },
       isCustomer: function() { 
         return currentUser.role === 'customer';

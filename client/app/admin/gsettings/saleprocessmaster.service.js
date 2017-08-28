@@ -1,10 +1,9 @@
 (function(){
   'use strict';
-angular.module('admin').factory("EnterpriseMasterSvc",EnterpriseMasterSvc);
- function EnterpriseMasterSvc($http, $q, $httpParamSerializer){
-    //var assetSaleHost = "http://localhost:7000";
+angular.module('admin').factory("SaleProcessSvc",SaleProcessSvc);
+ function SaleProcessSvc($http, $q, $httpParamSerializer){
     var svc = {};
-    var svcPath = 'api/common/enterprise';
+    var svcPath = 'api/common/saleprocess';
 
     svc.get = get;
     svc.save = save;

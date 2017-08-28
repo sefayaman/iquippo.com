@@ -18,7 +18,7 @@ exports.get = function(req, res) {
   }
 
   var query = Model.find(filter).populate({
-    path: 'category group state'
+    path: 'group category state'
   });
   query.exec(function(err, result) {
     if (err) {
@@ -104,11 +104,14 @@ exports.create = function(req, res, next) {
 
 function _getRecord(data, cb) {
   var filter = {};
-  filter.category = data.category;
-  filter.group = data.group;
-  //filter.brand = data.brand;
-  //filter.model = data.model;
-  filter.state = data.state;
+  if(data.taxType)
+    filter.taxType = data.taxType;
+  if(data.group)
+    filter.group = data.group;
+  if(data.category)
+    filter.category = data.category;
+  if(data.state)
+    filter.state = data.state;
   filter.effectiveFromDate = data.effectiveFromDate;
   filter.effectiveToDate = data.effectiveToDate;
   Model.find(filter, function(err, result) {
@@ -121,7 +124,9 @@ exports.update = function(req, res, next) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
+  console.log("req.body!@@@@", req.body);
   _getRecord(req.body, function(err, result) {
+    console.log("req.body!@@@@", result);
     if (err) {
       return handleError(res, err);
     }
@@ -132,6 +137,7 @@ exports.update = function(req, res, next) {
   });
 
   function update() {
+    console.log("req.body!@@@@", req.body);
     Model.update({
       _id: req.params.id
     }, {
@@ -163,6 +169,38 @@ exports.destroy = function(req, res, next) {
     });
   });
 };
+
+exports.getGstOnProduct = function(req, res) {
+  var queryParam = req.query;
+  var filter = {};
+  if(queryParam.groupId)
+    filter.group = queryParam.groupId;
+  if(queryParam.categoryId)
+    filter.category = queryParam.categoryId;
+  if(queryParam.stateId)
+    filter.state = queryParam.stateId;
+  if(queryParam.currentDate && queryParam.currentDate === 'y') {
+    filter["effectiveFromDate"] = {$lte:new Date()};
+    filter["effectiveToDate"] = {$gte:new Date()};
+  }
+  var query = Model.find(filter);
+  query.exec(function(err, result) {
+    if (err)
+      return res.status(err.status || 500).send(err);
+    if(result.length == 0) {
+      filter = {};
+      filter.taxType = "Default";
+      var query = Model.find(filter);
+      query.exec(function(err, otherRes) {
+        if (err)
+          return res.status(err.status || 500).send(err);
+        return res.status(200).json(otherRes);
+      });
+    } else {
+      return res.status(200).json(result);
+    }
+  });
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);
