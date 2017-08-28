@@ -363,7 +363,7 @@ exports.validateSubmitBid = function(req,res,next){
 		Product.findById(req.body.product.proData, function (err, product) {
 			if(err) { return callback({status:500,msg:err}) }
 			if(product.assetStatus === 'sold' || product.tradeType == 'NOT_AVAILABLE' || !product.status || product.deleted) {
-				return callback({status:412,msg:"Product is not available for bid"});
+				return callback({status:412,msg:"Product is not available for bid!"});
 			}
 			req.product = product;
 			return callback();
