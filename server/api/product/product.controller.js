@@ -1074,7 +1074,7 @@ exports.exportProducts = function(req, res) {
         products.forEach(function(x) {
           var colData = x._doc;
           var obj = {};
-          if (colData) {
+          if (colData && Object.keys(colData).length) {
             Object.keys(colData).forEach(function(y) {
               if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
                 obj[mapedFields[y]] = x[y];
