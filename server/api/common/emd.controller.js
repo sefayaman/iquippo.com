@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Emd = require('./emd.model');
 var ApiError = require('../../components/_error');
+var async = require('async');
 
       exports.create = function(req, res,next) {
 
@@ -26,17 +27,76 @@ var ApiError = require('../../components/_error');
 
       };
 
-
-
-      exports.getEmdData = function(req, res) {
-
+        exports.getEmdData = function(req, res) {
+         
           var filter={};
+          if(req.query.auctionId){
+              filter.auctionId = req.query.auctionId;
+          }
+          if(req.query.auctionId){
+              filter.selectedLots = req.query.selectedLots;
+          }
+        console.log(filter);
           var query = Emd.find(filter);
-
           query.exec(function (err, result) {
           if(err) { res.status(err.status || 500).send(err); }
+          console.log("emdresult",result);
           return res.json(result);
           });
+        };
+
+        exports.getEmdAmountData = function(req,res,callback){
+        var filter ={};
+        var data = req.query.selectedLots;
+
+
+         if (data instanceof Array) {
+              var lots = data;
+          } else {
+        
+            var lots = [ data ];
+            console.log("lots",lots);
+        }
+        
+        var emdamount =[];
+        async.each(lots, function(item, callback){
+        filter.auctionId = req.query.auctionId;
+        filter.selectedLots = item;
+        console.log("item",item);
+        Emd.find(filter,function(err,result){
+
+        if (result.length > 0){
+
+        emdamount.push(result[0].amount);
+
+        }
+
+        callback(null);
+        });
+
+        },
+
+        function(err){
+            
+            return res.json(arraySum(emdamount));
+
+        }
+        );
+
+
+        }
+
+
+
+        function arraySum(array){  
+        var total = 0,
+        len = array.length;
+
+        for (var i = 0; i < len; i++){
+        total += parseInt(array[i]);
+
+        }
+            return total;
         };
 
       exports.destroy = function(req, res,next) {

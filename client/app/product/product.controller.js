@@ -1355,13 +1355,6 @@
           cb(product);
         else
           $state.go('productlisting', AppStateSvc.get('productlisting'));
-<<<<<<< HEAD
-      })
-      .catch(function(err){
-        $rootScope.loading = false;
-        if(err && err.data)
-          Modal.alert(err.data);
-=======
 
         $scope.lot.assetId=$scope.product.assetId;
         $scope.lot.assetDesc=$scope.product.assetDesc || "";
@@ -1372,7 +1365,6 @@
         .then(function(result){
           console.log("result",result);
         });
->>>>>>> c9f8199a34439fce6ff0419f385ec368826ee299
       });
     }
 

@@ -130,7 +130,7 @@
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>               
                 <div class="col-xs-12 col-sm-6 text-right">
-                  <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openBidModal(product)">Register Now</button>
+                  <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openAuctionLot(product)">Register Now</button>
                   <!--<a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   -->
@@ -196,7 +196,7 @@
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>               
                 <div class="col-xs-12 col-sm-6 text-right">
-                  <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openBidModal(product)">Register Now</button>
+                  <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openAuctionLot(product)">Register Now</button>
                   <!--<a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   -->

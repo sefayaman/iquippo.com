@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var UserRegForAuctionSchema = new Schema({
   auction:{},
   user:{},
+  lotNumber:[],
   status:{type:Boolean,default:true},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

@@ -50,6 +50,10 @@ var Modals = {
   auctionRegistration : {
     tplUrl : "app/auction/userregisterforauction.html",
     Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
+  },
+  auctionRegislogin : {
+    tplUrl : "app/auction/auctloginregis.html",
+    Ctrl : 'AuctionRegisCtrl as auctionRegisVm'
   }
 };
 

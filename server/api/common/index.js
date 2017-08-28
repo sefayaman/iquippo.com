@@ -139,6 +139,7 @@ router.get('/assetlisted',countCtrl.getAssetCount);
 router.put('/assetlisted/:id', auth.hasRole('admin'),countCtrl.updateAssetListed);
 router.post('/emd', auth.hasRole('admin'),emdCtrl.create);
 router.get('/emd',emdCtrl.getEmdData);
+router.get('/emd/amount',emdCtrl.getEmdAmountData);
 router.put('/emd/:id', auth.hasRole('admin'),emdCtrl.updateEmdData);
 router.delete('/emd/:id',auth.hasRole('admin'), emdCtrl.destroy);
 router.get('/lot',lotCtrl.getLotData);
