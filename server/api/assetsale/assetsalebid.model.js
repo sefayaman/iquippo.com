@@ -80,6 +80,7 @@ var AssetSaleBidSchema = new Schema({
   rating:Number,
   comment:String,
   proxyBid:{type:Boolean,default:false},
+  lastAccepted:{type:Boolean,default:false},
   status:{type:Boolean,default:true},
   bidChanged:{type:Boolean,default:false},
   createdAt: {type:Date,default:Date.now},

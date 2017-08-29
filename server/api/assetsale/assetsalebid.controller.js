@@ -174,9 +174,11 @@ exports.validateUpdate = function(req,res,next){
 						req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod || 0);
 					req.updateProduct = true;
 				}
-
+				if(req.bids.length)
+					req.bids[0].lastAccepted = true;
 				req.otherBids.forEach(function(item){
 					if(item.bidStatus === bidStatuses[7]){
+						item.lastAccepted = false;
 						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
 						req.bids.push(item);
 					}
@@ -191,8 +193,8 @@ exports.validateUpdate = function(req,res,next){
 						return res.status(404).send("Full payment period is not found");
 					req.body.fullPaymentStartDate = new Date();
 					req.body.fullPaymentEndDate = new Date().addDays(entData.fullPaymentPeriod);
-					if(req.body.fullPaymentEndDate)
-						req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
+					//if(req.body.fullPaymentEndDate)
+					//	req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
 					req.otherBids.forEach(function(item){
 						item.status = false;
 						AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
@@ -338,8 +340,8 @@ exports.validateSubmitBid = function(req,res,next){
 			AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
 			req.body.emdStartDate = new Date(); 
 			req.body.emdEndDate = new Date().addDays(saleProcessData.emdPeriod);
-			if(req.body.emdEndDate)
-				req.body.emdEndDate.setHours(24,0,0,0);
+			//if(req.body.emdEndDate)
+			//	req.body.emdEndDate.setHours(24,0,0,0);
 			req.body.product.prevTradeType = req.product.tradeType;
 			req.product.tradeType = tradeTypeStatuses[2];
 			var otherBids = req.otherBids;
