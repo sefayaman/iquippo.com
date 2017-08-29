@@ -1,8 +1,13 @@
 <div>
+	<div class="row form-group">
+		<div class="col-sm-12 text-right">
+			<button class="btn btn-success pull-right" ng-click="buyerProductBidRequestVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+		</div>
+	</div>
+	<legend></legend>
    <div class="btn-group enterprise-value form-group">
     <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
-    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
-    <button class="btn btn-success pull-right" ng-click="buyerProductBidRequestVm.exportExcel()" style="width:120px;" ><i class="fa fa-file-excel-o"></i> Export Excel</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': buyerProductBidRequestVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>    
    </div>
 
    <!-- Approved Bid -->
