@@ -112,9 +112,9 @@
 			   					<span ng-if="false">Update</span>
 			   				</button>
 			   			</td>
-			   			<td><a href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a>
-			   			<!-- <button type="button" class="btn btn-primary btn-sm" uib-popover="Upload" popover-trigger="mouseenter"><i class="fa fa-upload"></i></button>
-			   			<button type="button" class="btn btn-default btn-sm" uib-popover="Update" popover-trigger="mouseenter"><i class="fa fa-retweet"></i></button> -->
+			   			<td><!-- <a href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a> -->
+			   			<a class="btn btn-primary btn-sm" ng-if="bid.deliveryOrder" uib-popover="Download" popover-trigger="mouseenter" href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank"><i class="fa fa-download"></i></a>
+			   			<button type="button" class="btn btn-default btn-sm" ng-if="bid.deliveryOrder && bid.dealStatus === 'DO Issued'" uib-popover="Update" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','', 'doIssued')"><i class="fa fa-retweet"></i></button>
 			   			</td>
 			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
 			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">

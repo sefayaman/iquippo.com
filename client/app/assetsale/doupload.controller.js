@@ -11,6 +11,8 @@ function DoUploadCtrl($scope, $state, $rootScope, Modal, Auth, uploadSvc, AssetS
    	$scope.close = close;
    	vm.validateAction = AssetSaleSvc.validateAction;
    	var action = $scope.formType == 'doIssued' ? 'doissued' : 'deliverd';
+   	if($scope.bidData && $scope.bidData.deliveryOrder)
+   		$scope.bidDt.deliveryOrder = $scope.bidData.deliveryOrder;
    // do upload
    function uploadDoc(files,_this){
 		if(!files || !files.length)

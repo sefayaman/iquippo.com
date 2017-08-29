@@ -84,11 +84,11 @@ var Modals = {
     Ctrl : 'ViewProductOrRequestDetailCtrl as reqDetailVm'
   },
   bidRequest:{
-    tplUrl:'/app/assetsale/assetbidpopup.html',
+    tplUrl:'app/assetsale/assetbidpopup.html',
     Ctrl:'AssetBidPopUpCtrl as assetBidPopUpVm'
   },
   DoUpload:{
-    tplUrl:'/app/assetsale/doupload.html',
+    tplUrl:'app/assetsale/doupload.html',
     Ctrl:'DoUploadCtrl as doUploadVm'
   }
 };
