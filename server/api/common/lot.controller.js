@@ -15,7 +15,7 @@ exports.create = function(req, res, next) {
           _id: req.body.auctionId
         }, function(err, auctions) {
           if (err)
-            throw callback(err);
+            return callback(err);
           console.log("auctions",auctions[0]);
           req.body.lastMintBid = auctions[0].lastMinBid || "";
           req.body.extendedTo = auctions[0].extendedTo || "";

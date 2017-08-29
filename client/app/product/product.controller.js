@@ -4,7 +4,7 @@
   angular.module('sreizaoApp').controller('CropImageCtrl', CropImageCtrl);
 
   //Product upload controller
-  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc) {
+  function ProductCtrl($scope, $http, $rootScope, $stateParams, groupSvc, categorySvc, SubCategorySvc, LocationSvc, uploadSvc, productSvc, brandSvc, modelSvc, Auth, $uibModal, Modal, $state, notificationSvc, AppNotificationSvc, userSvc, $timeout, $sce, vendorSvc, AuctionMasterSvc, AuctionSvc, PaymentMasterSvc, ValuationSvc, ProductTechInfoSvc, AppStateSvc,VatTaxSvc,LotSvc) {
 
     var vm = this;
     //Start NJ : uploadProductClick object push in GTM dataLayer
@@ -26,7 +26,7 @@
     $rootScope.isSuccess = false;
     $rootScope.isError = false;
     $scope.assetDir = "";
-
+    $scope.auctionreq ={};
     var product = null;
     $scope.isEdit = false;
 
@@ -1271,10 +1271,12 @@
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
-        $scope.lot.assetId=$scope.product.assetId;
-        $scope.lot.assetDesc=$scope.product.assetDesc;
-        $scope.lot.auctionId=$scope.auctionreq.dbAuctionId;
+        $scope.lot.assetId = $scope.product.assetId;
+        $scope.lot.assetDesc = $scope.product.name;
+        $scope.lot.auctionId =$scope.product.auctId;
+
         console.log("lot",$scope.lot);
+          console.log("gg",$scope.auctionReq.dbAuctionId);
         LotSvc.saveLot($scope.lot)
         .then(function(result){
           console.log("result",result);
@@ -1356,11 +1358,12 @@
         else
           $state.go('productlisting', AppStateSvc.get('productlisting'));
 
-        $scope.lot.assetId=$scope.product.assetId;
-        $scope.lot.assetDesc=$scope.product.assetDesc || "";
-        $scope.lot.auctionId=$scope.auctionReq.dbAuctionId;
-        $scope.lot.reservePrice=$scope.product.reservePrice || 0;
+        $scope.lot.assetId =$scope.product.assetId;
+        $scope.lot.assetDesc =$scope.product.assetDesc || "";
+        $scope.lot.auctionId= $scope.auctionReq.dbAuctionId;
+        $scope.lot.reservePrice = $scope.product.reservePrice || 0;
         console.log("lot",$scope.lot);
+        console.log("gg",$scope.auctionReq.dbAuctionId);
         LotSvc.saveLot($scope.lot)
         .then(function(result){
           console.log("result",result);
