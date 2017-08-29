@@ -6,14 +6,14 @@
       <div class="modal-body"> 
       <form name="do_order">     
           <div class="row">
-            <div class="col-sm-6" ng-if="doUploadVm.validateAction(bidData,'DOISSUED')">
+            <div class="col-sm-6" ng-if="doUploadVm.validateAction(bidData,'DOISSUED') || formType === 'doIssued'">
               <button class="btn btn-danger fileinput-button">
                   <input type="file" name="file" onchange="angular.element(this).scope().uploadDoc(this.files,this)">
                   <span><i class="fa fa-upload"></i> DO Upload</span>
               </button>
               <span>{{bidDt.deliveryOrder}}</span>
             </div>
-            <div class="col-sm-6" ng-if="doUploadVm.validateAction(bidData,'DELIVERED')">
+            <div class="col-sm-6" ng-if="doUploadVm.validateAction(bidData,'DELIVERED') && formType === 'deliverd'">
               <div ng-class="{'has-error':do_order.dateOfDelivery.$invalid && submitted}">
             <input type="text" class="form-control" name="dateOfDelivery" ng-model="bidDt.dateOfDelivery" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Delivery" required>
             <!-- <a href="javascript:void(0);" class="input-group-addon"><i class="fa fa-check"></i></a> -->

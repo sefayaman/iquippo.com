@@ -868,10 +868,10 @@ exports.exportExcel = function(req,res){
 	          val = val?'YES':'NO';
 	      if(keyObj.type && keyObj.type == 'date' && val)
 	        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-	      if(keyObj.key && keyObj.key == 'buyerName')
-	        val = item.user.fname + " " + item.user.fname;
+	      if(keyObj.key && keyObj.key == 'buyerName' && item.user)
+	        val = item.user.fname + " " + item.user.lname;
 	      if(keyObj.key && keyObj.key == 'fullPaymentAmount')
-	        val = item.bidAmount - item.emdAmount;
+	        val = item.fullPaymentAmount;
 
 	      if(keyObj.type && keyObj.type == 'url' && val){
 	        if(val.filename)
