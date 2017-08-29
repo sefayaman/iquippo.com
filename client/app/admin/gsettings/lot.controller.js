@@ -6,6 +6,7 @@
     function LotCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,AuctionSvc,LotSvc){
           var vm  = this;
           vm.dataModel = {};
+          vm.duplicate = {};
           vm.auctionListing = [];
           vm.save = save;
           vm.LotData = [];
@@ -35,9 +36,9 @@
             getAuctions();
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.auctId = rowData.auctId;
+            vm.dataModel.auctionId = rowData.auctionId;
             vm.dataModel.assetId = rowData.assetId;
-            vm.dataModel.lotId = rowData.lotId;
+            vm.dataModel.lotNumber = rowData.lotNumber;
             vm.dataModel.assetDesc = rowData.assetDesc;
             vm.dataModel.startPrice = rowData.startPrice;
             vm.dataModel.ReservePrice = rowData.ReservePrice;
@@ -53,17 +54,35 @@
               }
               vm.dataModel.createdBy = {};
               vm.dataModel.createdBy = Auth.getCurrentUser().email;
+              
+               vm.duplicate.auctionId = vm.dataModel.auctionId
+               vm.duplicate.assetId = vm.dataModel.assetId;
+               vm.duplicate.lotNumber = vm.dataModel.lotNumber;
 
-              LotSvc.saveLot(vm.dataModel)
-              .then(function(){
-                vm.dataModel = {};
-                getLotData();
-                Modal.alert('Data saved successfully!');
-              })
-              .catch(function(err){
-              if(err.data)
-                Modal.alert(err.data); 
-              });
+               LotSvc.getData(vm.duplicate).then(function(result){
+                   vm.filteredduplicate = "exist";
+
+                   if(result!=""){
+                       Modal.alert('Data already exist with same auction id , asset id and lot number!');
+                       return;
+                   }else{
+                             LotSvc.saveLot(vm.dataModel).then(function(){
+                             vm.dataModel = {};
+                             getLotData();
+                             Modal.alert('Data saved successfully!');
+                             })
+                             .catch(function(err){
+                            if(err.data)
+                             Modal.alert(err.data); 
+                            });
+                    }
+                   
+               })
+               .catch(function(res){
+
+               });
+
+           
 
           }
 

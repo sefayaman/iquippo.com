@@ -33,7 +33,7 @@ var async = require('async');
           if(req.query.auctionId){
               filter.auctionId = req.query.auctionId;
           }
-          if(req.query.auctionId){
+          if(req.query.selectedLots){
               filter.selectedLots = req.query.selectedLots;
           }
         console.log(filter);

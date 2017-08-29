@@ -64,7 +64,13 @@ exports.getLotData = function(req, res) {
   var filter = {};
   if(req.query.auctionId){
   filter.auctionId=req.query.auctionId;
-}
+   }
+   if(req.query.assetId){
+  filter.assetId=req.query.assetId;
+   }
+   if(req.query.lotNumber){
+  filter.lotNumber=req.query.lotNumber;
+   }
   console.log("filter",filter);
   var query = Lot.find(filter);
   query.exec(function(err, result) {

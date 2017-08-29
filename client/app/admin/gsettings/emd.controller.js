@@ -6,11 +6,13 @@
     function EmdCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,EmdSvc){
           var vm  = this;
           vm.dataModel = {};
+          vm.duplicate = {};
           vm.auctionListing = [];
           vm.save = save;
           $scope.onSelectAuction = onSelectAuction; 
           vm.EmdData = [];
           vm.filteredList = [];
+           vm.filteredduplicate = null;
           vm.editClicked = editClicked;
           $scope.isEdit = false;
           vm.update = update;
@@ -74,18 +76,47 @@
               vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
               vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
               console.log("vm.dataModel",vm.dataModel);
-              EmdSvc.saveEmd(vm.dataModel)
-              .then(function(){
-                vm.dataModel = {};
-                getEmdData();
-                Modal.alert('Data saved successfully!');
-              })
-              .catch(function(err){
-              if(err.data)
-                Modal.alert(err.data); 
-              });
+              
+               vm.duplicate.auctionId = vm.dataModel.auctionId
+               vm.duplicate.selectedLots = vm.dataModel.selectedLots;
+
+               EmdSvc.getData(vm.duplicate).then(function(result){
+                   vm.filteredduplicate = "exist";
+
+                   if(result!=""){
+                       Modal.alert('Data already exist with same auction id and lot number!');
+                       return;
+                   }else{
+                       EmdSvc.saveEmd(vm.dataModel).then(function(){
+                        vm.dataModel = {};
+                        getEmdData();
+                        Modal.alert('Data saved successfully!');
+                        })
+                    .catch(function(err){
+                       if(err.data)
+                        Modal.alert(err.data); 
+                      });
+                   }
+                   
+               })
+               .catch(function(res){
+
+               });
 
           }
+
+
+          function checkDeuplicate(data){
+               console.log(data);
+               EmdSvc.getData(data).then(function(result){
+                   vm.filteredduplicate = "exist";
+                   console.log("filteredduplicate",vm.filteredduplicate);
+                   
+               })
+               .catch(function(res){
+
+               });
+             }
 
           function update(form){
               if(form.$invalid){

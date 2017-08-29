@@ -1859,7 +1859,7 @@
 						</div>
 						<div class="col-sm-2 pull-right">
 					       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="emdVm.update(emdform)">Update</button>
-					       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="emdVm.save(emdform)">Save</button>
+					       <button type="button" class="btn btn-block btn-primary"   ng-if="!isEdit" ng-click="emdVm.save(emdform)">Save</button> vm.duplicate.auctionName = vm.auctionName;
 					   </div>
 				      </div>
 				</form>
@@ -1915,18 +1915,20 @@
 				<div>
 					<form class="techInformationForm" name="lotform" novalidate>
 					 <div class="row form-group">
-				        <div class="col-sm-3" ng-class="{'has-error':lotVm.auctId.$invalid && submitted}">
-			 		       <select class="form-control" name="auctId" ng-model="lotVm.dataModel.auctionId"  required> 
+				        <div class="col-sm-3" ng-class="{'has-error':lotVm.auctionId.$invalid && submitted}">
+			 		       <select class="form-control" name="auctionId" ng-model="lotVm.dataModel.auctionId"  required> 
 								 <option value=""> Select Auction  Id </option> 
-						        <option value="{{product.auctionId}}"  ng-repeat="product in lotVm.auctionListing">{{product.auctionId}}</option>
-					       </select>
+						         <option value="{{product.auctionId}}"  ng-repeat="product in lotVm.auctionListing">{{product.auctionId}}</option>
+						   </select>
+							
 						</div>
 					     <div class="col-sm-3" ng-class="{'has-error':lotVm.assetId.$invalid && submitted}">
 							<input type="text" class="form-control" name="assetId" ng-model="lotVm.dataModel.assetId" value="{{lotVm.assetId}}" placeholder="Enter Asset Id">
 						</div>
 
-						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotId.$invalid && submitted}">
-							<input type="text" class="form-control" name="lotId" ng-model="lotVm.dataModel.lotNumber" value="{{lotVm.lotId}}" placeholder="Enter Lot Id">
+						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotNumber.$invalid && submitted}">
+							<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Id">
+							
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
 							<input type="text" class="form-control" name="assetDesc" ng-model="lotVm.dataModel.assetDesc" value="{{lotVm.assetDesc}}" placeholder="Enter Asset Description" > 
