@@ -11,8 +11,9 @@ exports.create = function(req, res, next) {
   aysnc.series({
     fetchAuction: function(callback) {
       if (req.body && req.body.auctionId) {
+        console.log("I am here");
         AuctionMaster.find({
-          _id: req.body.auctionId
+          "auctionId": req.body.auctionId
         }, function(err, auctions) {
           if (err)
             return callback(err);
