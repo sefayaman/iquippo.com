@@ -108,7 +108,7 @@
                         <th width="20%">Services</th>
                         <th ng-if="newUser.enterprise">Approval Required</th>
                         <th>Role </th>
-                        <th  ng-if="!newUser.enterpriseId || isEdit" width="28%">Default Partner</th>
+                        <th  ng-if="newUser.enterprise" width="28%">Default Partner</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -142,6 +142,33 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div class="row form-group" ng-if="isAdmin()">
+                  <div class="col-sm-4 padd-right">
+                    <input type="text" class="form-control" name="" placeholder="Sale Fulfilment" disabled>
+                  </div>
+                  <div class="col-sm-8 padd-left">
+                    <select class="form-control" name="FAPartnerId" ng-model="newUser.FAPartnerId" >
+                      <option value="">Select Partner</option>
+                      <option ng-repeat="vendor in getVendors('Sale Fulfilment')" value="{{vendor.partnerId}}">{{vendor.name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row form-group" ng-if="isAdmin() || isEnterprise()">
+                  <div class="col-sm-6 padd-right text-left">
+                  Approval Authority buy Now/Make an Offer
+                  </div>
+                  <div class="col-sm-6 text-left">
+                     <div class="row">
+                       <div class="col-sm-5">
+                         <input type="checkbox" ng-checked="newUser.buySaleApprover || newUser.buySaleViewOnly" ng-model="newUser.buySaleViewOnly" ng-disabled="newUser.buySaleApprover"> View Only
+                       </div>
+                       <div class="col-sm-5">
+                         <input type="checkbox"  ng-model="newUser.buySaleApprover"> Approver
+                       </div>
+                     </div>
+                  </div>
                 </div>
 
                 <div class="row">

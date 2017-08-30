@@ -84,9 +84,10 @@ module.exports = {
 	'Uploaded_By' : 'uploaded_by',
 	'Listing_Date' : 'listing_date',
 	//Extra field added for asset sale
-	'Date_Of_Repo' : 'repoDate',
+	'Parked_Since' : 'repoDate',
 	'Valuation_Amount' : 'valuationAmount',
 	'Address_Of_Asset' : 'addressOfAsset',
 	'Parking_Charge_Per_Day' : 'parkingChargePerDay',
-	'Reserve_Price' : 'reservePrice'
+	'Reserve_Price' : 'reservePrice',
+	'Parking_Charge_Payment_To(Yard/Seller)':'parkingPaymentTo'
 }

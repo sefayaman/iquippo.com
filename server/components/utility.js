@@ -1,6 +1,7 @@
 'use strict';
 var Seq = require('seq');
 var  xlsx = require('xlsx');
+var trim = require('trim');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug');
@@ -12,6 +13,23 @@ exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
+
+Date.prototype.addDays = function(days) {
+    //this.setDate(this.getDate() + parseInt(days));
+    this.setMinutes(this.getMinutes() + parseInt(days));
+    return this;
+};
+
+Date.prototype.addHours = function(hours) {
+    this.setMinutes(this.getMinutes() + parseInt(hours));
+    //this.setHours(this.getHours() + parseInt(hours));
+    return this;
+};
+
+Date.prototype.addMinutes = function(minutes) {
+    this.setMinutes(this.getMinutes() + parseInt(minutes));
+    return this;
+};
 
 function toIST(value){
   if(!value)
@@ -221,7 +239,7 @@ function toJSON(options) {
   data = data.filter(function(x) {
     Object.keys(x).forEach(function(key) {
       if (fieldMapping[key]) {
-        x[fieldMapping[key]] = x[key];
+        x[fieldMapping[key]] = trim(x[key] || "");
       }
       delete x[key];
     })

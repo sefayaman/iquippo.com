@@ -36,38 +36,32 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
   
   vm.featured = false;
   vm.active = false;
-
   var dataToSend = {};
-
   function init(){
-      Auth.isLoggedInAsync(function(loggedIn){
-         if(loggedIn){
-            if(Auth.getCurrentUser().profileStatus == 'incomplete'){
-                $state.go('myaccount');
-                return;
-            }
-
-            if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') {
-              if(Auth.getCurrentUser().role == 'channelpartner')
-                dataToSend["role"] = Auth.getCurrentUser().role;
-              dataToSend["userid"] = Auth.getCurrentUser()._id;
-            }
-            //pagination flag
-            dataToSend.pagination = true;
-            dataToSend.itemsPerPage = vm.itemsPerPage;
-            var assetVal = $stateParams.assetStatus;
-            var tradeType = $stateParams.tradeType;
-            if(assetVal)
-              dataToSend["assetStatus"] = assetVal;
-            if(tradeType)
-              dataToSend["tradeValue"] = tradeType;
-            restoreState();
-            fireCommand(false);
-
-         }else{
-             $state.go('main');
-         }
-      });
+    if(Auth.getCurrentUser().profileStatus == 'incomplete'){
+        $state.go('myaccount');
+        return;
+    }
+    if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role != 'admin') {
+      if(Auth.getCurrentUser().role == 'channelpartner')
+        dataToSend.role = Auth.getCurrentUser().role;
+      dataToSend.userid = Auth.getCurrentUser()._id;
+      if(Auth.isEnterprise()){
+        delete dataToSend.userid;
+        dataToSend.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+      }
+    }
+    //pagination flag
+    dataToSend.pagination = true;
+    dataToSend.itemsPerPage = vm.itemsPerPage;
+    var assetVal = $stateParams.assetStatus;
+    var tradeType = $stateParams.tradeType;
+    if(assetVal)
+      dataToSend["assetStatus"] = assetVal;
+    if(tradeType)
+      dataToSend["tradeValue"] = tradeType;
+    restoreState();
+    fireCommand(false);
 
   }
 
@@ -92,8 +86,6 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
         }
      })
   }
-
-  init();
   
   function restoreState(){
     if($stateParams.searchstr)
@@ -323,6 +315,13 @@ function ProductListingCtrl($scope, $location, $rootScope, $http, productSvc, cl
         })
      }
 
+     //entry point
+     Auth.isLoggedInAsync(function(loggedIn){
+         if(loggedIn)
+            init();
+          else
+            $state.go('main');
+      });
 }
 
 })();

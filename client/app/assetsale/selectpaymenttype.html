@@ -1,0 +1,61 @@
+<div> 
+      <div class="modal-header">
+          <button type="button" class="close" ng-click="paymentVm.closeDialog()">&times;</button>
+          <h4 class="modal-title">Pay {{formType}} Amount</h4>
+        </div>
+      <div class="modal-body">
+        <form novalidate class="" name="paymentForm">
+              <div class="row">
+                <div class="col-xs-6 col-sm-6 form-group">
+                  <div class="radio radio-info">
+                          <input type="radio" id="offline" name="payment" ng-model="option.select" value="offline">
+                          <label for="offline"> Offline </label>
+                      </div>                   
+                </div>
+                <div class="col-xs-6 col-sm-6 form-group">
+                  <div class="radio radio-info">
+                          <input type="radio" id="online" name="payment" ng-model="option.select" value="online">
+                          <label for="online"> Online </label>
+                      </div>     
+                </div>
+              </div>
+              <div class="row" ng-if="option.select == 'online'">
+                <div class="col-sm-offset-1 col-sm-10">
+                  <input type="text" class="form-control" name="amount" value="" ng-model="paymentVm.amount" placeholder="Amount" disabled>
+                </div>
+              </div>
+              <!-- <div ng-if="option.select == 'offline'">
+                  <div class="row">
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':paymentForm.paymentMode.$invalid && submitted}">
+                      <select class="form-control" ng-model="paymentVm.emdFullPaymentInfo.paymentMode" name="paymentMode" required>
+                        <option value="">*Mode of Payment</option>
+                        <option ng-repeat="mode in modeOfPayment" value="{{mode.name}}">{{mode.name}}</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':paymentForm.bankName.$invalid && submitted}">
+                      <input type="text" class="form-control" ng-model="paymentVm.emdFullPaymentInfo.bankName" name="bankName" placeholder="Bank Name / Branch" required>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':paymentForm.instrumentNo.$invalid && submitted}">
+                      <input type="text" class="form-control" ng-model="paymentVm.emdFullPaymentInfo.instrumentNo" name="instrumentNo" placeholder="Instrument No" ng-required="paymentVm.emdFullPaymentInfo.paymentMode !== 'Cash'" ng-disabled="paymentVm.emdFullPaymentInfo.paymentMode === 'Cash'">
+                    </div>
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':paymentForm.amount.$invalid && submitted}">
+                      <input type="number" class="form-control" ng-model="paymentVm.emdFullPaymentInfo.amount" name="amount" placeholder="Amount" required>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 form-group" ng-class="{'has-error':paymentForm.paymentDate.$invalid && submitted}">
+                      <input type="text" class="form-control" name="paymentDate" ng-model="paymentVm.emdFullPaymentInfo.paymentDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Payment / Instrument Date" required>
+                    </div>
+                  </div>
+              </div> -->
+        </div>  
+        <div class="modal-footer asset-sale">
+          <div>
+            <button type="button" class="btn btn-primary" ng-click="paymentVm.closeDialog()">Cancel</button>
+            <button type="button" class="btn btn-danger" ng-click="paymentVm.submit(paymentForm)">Proceed</button>                
+          </div>
+        </div>
+    </div>

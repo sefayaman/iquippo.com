@@ -531,7 +531,69 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-      
+      .state('assetsale', {
+        url: '/assetsale',
+        abstract:true,
+        templateUrl: 'app/assetsale/assetsale.html',
+        controller: 'AssetSaleCtrl as assetsaleVm'
+      })
+      /*.state('assetsale.administrator', {
+        url: '/administrator',
+        templateUrl: 'app/assetsale/bidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
+        layout:'admin',
+        authenticate:true,
+        restrict:true
+      })
+      .state('assetsale.adminproductbidrequest', {
+        url: '/adminproductbidrequest?assetId&productId',
+        templateUrl: 'app/assetsale/productbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
+        layout:'admin',
+        authenticate:true,
+        restrict:true
+      })*/
+      .state('assetsale.bidproduct', {
+        url: '/bidproduct',
+        templateUrl: 'app/assetsale/bidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.bidrequests', {
+        url: '/bidrequests?assetId&productId',
+        templateUrl: 'app/assetsale/productbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.buyer', {
+        url: '/buyer',
+        templateUrl: 'app/assetsale/buyerproductbidrequest.html',
+        controller:'BuyerProductBidRequestCtrl as buyerProductBidRequestVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency',
+        templateUrl: 'app/assetsale/faprocess.html',
+        controller:'FAProcessCtrl as faVm',
+        layout:'admin',
+        authenticate:true
+      })
+     /* .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency?assetId&productId',
+        templateUrl: 'app/assetsale/productbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
+        layout:'admin',
+        authenticate:true
+      })*/
+      .state('assetbidhistory', {
+        url: '/bidhistory',
+        templateUrl: 'app/assetsale/bidhistory.html',
+        layout:'client',
+        authenticate:true
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

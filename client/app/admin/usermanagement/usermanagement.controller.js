@@ -347,9 +347,9 @@ angular.module('sreizaoApp')
       var services = [
                       {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
                       {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"No"},
-                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
-                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"},
-                      {name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
+                      //{name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
+                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"}
+                      //{name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
                     ]
     //$scope.editImage = false;
     //$scope.users = [];
@@ -624,7 +624,9 @@ angular.module('sreizaoApp')
       $scope.availedServices.forEach(function(item){
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
-      })
+      });
+      if(!$scope.newUser.buySaleViewOnly && $scope.newUser.buySaleApprover)
+        $scope.newUser.buySaleApprover = false;
     }
 
   function saveNewUser(){
@@ -669,6 +671,8 @@ angular.module('sreizaoApp')
         else
           data['subject'] = 'New Channel Partner Registration: Success';
         $scope.newUser.serverPath = serverPath;
+        $scope.newUser.customerId = result.customerId;
+        
         notificationSvc.sendNotification('userRegEmailFromAdminChannelPartner', data, $scope.newUser,'email');
         $scope.closeDialog();
         $rootScope.$broadcast('updateUserList');

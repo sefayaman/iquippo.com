@@ -1,0 +1,211 @@
+<div>
+  <div class="btn-group enterprise-value form-group">
+      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
+      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
+      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'bidproduct'}" ng-click="onTabChange('bidproduct')">All Bid</button>
+      <button class="btn btn-success pull-right" ng-click="faVm.exportExcel()" style="width:120px;" ><i class="fa fa-file-excel-o"></i> Export Excel</button>
+   </div>
+  <!-- Approved Bid -->
+  <div ng-if="faVm.tabVal === 'approved'">
+    <div class="row form-group">
+        <div class="col-sm-9">
+          Showing : {{faVm.dataList.length}}
+        </div>
+        <div class="col-sm-3 tablesearch text-right">
+            Search: <input type="text" placeholder="Search..." ng-model="faVm.searchStr" ng-change="faVm.fireCommand(true)" ng-model-options="{debounce:500}">
+          </div>
+       </div>
+       <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Asset Id</th>            
+              <th>Ticket Id</th>
+              <th>Asset Name</th>
+              <th>Seller Name</th>
+              <th>Seller Contact No.</th>
+              
+              <th>Buyer Name</th>
+              <th>Buyer Mobile No.</th>
+              <th>Buyer Email Id</th> 
+              <th>Bid Amount</th>
+              <th>Bid Status</th>
+              <th>Deal Status</th>
+              <th>EMD Details</th>
+              <th>Full Payment Details</th>
+              <th>Invoice in Favour of</th>
+              <th>KYC Documents</th>
+              <th>Delivery Order</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="bid in faVm.dataList">
+              <td>{{bid.product.assetId}}</td>
+              <td>{{bid.ticketId}}</td>
+              <td>{{bid.product.name}}</td>
+              <td>{{bid.product.seller.name}}</td>
+              <td>{{bid.product.seller.mobile}}</td>
+              <td>{{bid.user.fname}} {{bid.user.lname}}</td>
+              <td>{{bid.user.mobile}}</td>              
+              <td>{{bid.user.email}}</td>
+
+              <td>{{bid.bidAmount}}</td>
+              <td>{{bid.bidStatus}}</td>
+              <td>{{bid.dealStatus}}</td>
+              <td>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'EMDPAYMENT')">
+                  <span ng-if="bid.emdPayment.remainingPayment > 0">Update Details</span>
+                  <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
+                </a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="faVm.validateAction(bid,'VIEWEMDPAYMENT')">
+                  <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
+                </a>
+              </td>
+              <!-- <td>{{}}</td> -->
+              <td>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')">
+                  <span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
+                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+                </a>
+                <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'VIEWFULLPAYMENT')">
+                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+                </a>
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'invoiceDetails')" ng-if="faVm.validateAction(bid,'INVOICEDETAIL')">Update</button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary btn-xs" ng-click="faVm.openDialog(bid,'kycDocument')" ng-if="faVm.validateAction(bid,'KYC')">
+                  <span ng-if="true">Upload</span>
+                  <span ng-if="false">Update</span>
+                </button>
+              </td>
+              <td><!-- <a href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a> -->
+                <a class="btn btn-primary btn-sm" ng-if="bid.deliveryOrder" uib-popover="Download" popover-trigger="mouseenter" href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank"><i class="fa fa-download"></i></a>
+                <button type="button" class="btn btn-default btn-sm" ng-if="bid.deliveryOrder && bid.dealStatus === 'DO Issued'" uib-popover="Update" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'DoUpload','', 'doIssued')"><i class="fa fa-retweet"></i></button>
+              </td>
+              <!-- <td>{{}}</td> -->
+              <!-- <td>{{bid.tradeType}}</td> -->
+              <td>
+                <!-- fa action -->
+                <!-- <button class="btn btn-sm btn-success" uib-popover="EMD Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'EMDPAYMENT')" ng-click="faVm.update(bid,'emdpayment')"><i class="fa fa-check"></i></button>
+
+                <button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'FULLPAYMENT')" ng-click="faVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button> -->
+
+                <button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="faVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'DoUpload','', 'doIssued')">
+                     <i class="fa fa-upload"></i>
+                  </button>
+                  
+                <!-- <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="faVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a> -->
+
+                <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="faVm.openDialog(bid,'DoUpload','', 'deliverd')"><i class="fa fa-truck"></i></a>
+
+                <button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="faVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="faVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
+
+              <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="faVm.openDialog(bid,'productRequestDetailPopup','product-preview','productBid')"><i class="fa fa-info"></i></button> 
+              </td>
+            </tr>
+          </tbody>
+        </table>
+       </div> 
+    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+  </div>
+   <!-- Closed Bid -->
+  <div ng-if="faVm.tabVal == 'closed'">
+    <div class="row form-group">
+        <div class="col-sm-9">
+          Showing : {{faVm.dataList.length}}
+        </div>
+        <div class="col-sm-3 tablesearch text-right">
+            Search: <input type="text" placeholder="Search..." ng-model="faVm.searchStr" ng-change="faVm.fireCommand(true)" ng-model-options="{debounce:500}">
+          </div>
+       </div>
+       <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Ticket Id</th>
+              <th>Asset Id</th>
+              <th>Asset Name</th>
+              <!-- <th>Asset Location</th> -->
+              <th>Buyer Name</th>
+              <th>Buyer Location</th>
+              <th>Buyer Mobile No.</th>
+              <th>Buyer Email Id</th> 
+              <th>Buy Now Price</th>  
+              <th>Deal Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="product in faVm.dataList">   
+              <td>{{product.ticketId}}</td>         
+              <td>{{product.product.proData.assetId}}</td>
+              <td>{{product.product.proData.name}}</td>
+              <!-- <td>{{product.product.proData.city}}</td> -->                          
+              <td>{{product.user.fname}} {{product.user.lname}}</td>
+              <td>{{product.user.city}}</td>
+              <td>{{product.user.mobile}}</td>              
+              <td>{{product.user.email}}</td> 
+              <td>{{product.product.proData.grossPrice}}</td>            
+              <td>{{product.dealStatus}}</td>
+              <td>
+              <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="faVm.openDialog(product,'productRequestDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button> 
+              </td>
+            </tr>
+          </tbody>
+        </table>
+       </div> 
+    <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+  </div> 
+  <!--bid product -->
+  <div ng-if="faVm.tabVal == 'bidproduct'">
+    <div class="row form-group">
+        <div class="col-sm-9">
+          Showing : {{faVm.dataList.length}}
+        </div>
+        <div class="col-sm-3 tablesearch text-right">
+            Search: <input type="text" placeholder="Search..." ng-model="faVm.searchStr" ng-change="faVm.fireCommand(true)" ng-model-options="{debounce:500}">
+          </div>
+       </div>
+       <div class="table-responsive">
+      <table class="table table-bordered">
+          <thead>
+            <tr>              
+              <th>Asset Id</th>
+              <th>Asset Name</th>
+              <th>Reserve Price</th>  
+              <th>Approved</th>
+              <th>Buy Now Price</th>  
+              <th>No. of Bids</th>  
+              <th>Highest Bid</th>  
+              <th>Location</th>
+              <!-- <th>Action</th> -->           
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="product in faVm.dataList">             
+              <td>{{product.assetId}}</td>
+              <td>{{product.name}}</td>
+              <td>{{product.reservePrice}}</td> 
+              <td><span ng-if="product.bidRequestApproved">Yes</span>
+                  <span ng-if="!product.bidRequestApproved">No</span>
+              </td>
+              <td>{{product.grossPrice}}</td>
+              <td>{{product.bidCount}}</td>
+              <td>{{product.highestBid}}</td>
+              <td>{{product.city}}</td>
+              <!-- <td>
+                <a href="/assetsale/bidrequests?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+              <button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="faVm.openDialog(product,'bidProductDetailPopup','product-preview','actionable')"><i class="fa fa-info"></i></button>                
+              </td> -->             
+            </tr>
+          </tbody>
+        </table>
+       </div> 
+        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="faVm.fireCommand()" class="pagination-sm" rotate="false">
+    </uib-pagination>
+  
+  </div>
+</div>
