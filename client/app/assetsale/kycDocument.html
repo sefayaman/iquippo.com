@@ -7,8 +7,8 @@
     <form novalidate class="text-left" name="kycForm">
           <div class="row">
             <div class="col-sm-4 form-group">Address Proof</div>
-            <div class="col-sm-6 form-group">
-              <select class="form-control" ng-model="kycDocumentVm.kycInfo.addressProof" name="addressProof">
+            <div class="col-sm-6 form-group" ng-class="{'has-error': kycForm.addressProof.$invalid && kycForm.submitted }">
+              <select class="form-control" ng-model="kycDocumentVm.kycInfo.addressProof" name="addressProof" ng-required="kycDocumentVm.kycInfo.addressProofDocName">
                 <option value="">Select Document</option>
                 <option ng-repeat="addProof in kycDocumentVm.addressProofList | orderBy:'name'" value="{{addProof.docName}}">{{addProof.docName}}</option>
               </select>
@@ -23,8 +23,8 @@
           </div>
           <div class="row">
             <div class="col-sm-4 form-group">ID Proof</div>
-           <div class="col-sm-6 form-group">
-              <select class="form-control" ng-model="kycDocumentVm.kycInfo.idProof" name="idProof">
+           <div class="col-sm-6 form-group" ng-class="{'has-error': kycForm.idProof.$invalid && kycForm.submitted }">
+              <select class="form-control" ng-model="kycDocumentVm.kycInfo.idProof" name="idProof" ng-required="kycDocumentVm.kycInfo.idProofDocName">
                 <option value="">Select Document</option>
                 <option ng-repeat="idProof in kycDocumentVm.idProofList | orderBy:'name'" value="{{idProof.docName}}">{{idProof.docName}}</option>
               </select>
@@ -39,8 +39,8 @@
                            
           </div> 
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="kycDocumentVm.closeDialog()">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="kycDocumentVm.submit(kycForm)">Submit</button>
+            <button type="button" class="btn btn-primary" ng-click="kycDocumentVm.closeDialog()">Close</button>
+            <button type="button" class="btn btn-danger" ng-click="kycDocumentVm.submit(kycForm)">Submit</button>
           </div>
     </form>
     <div class="table-responsive" ng-if="kycDocumentVm.kycList">

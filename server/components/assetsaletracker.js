@@ -56,8 +56,8 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             if(maxBid){
               maxBid.emdStartDate = new Date(); 
               maxBid.emdEndDate = new Date().addDays(entMasterData.emdPeriod);
-              if(maxBid.emdEndDate)
-                maxBid.emdEndDate.setHours(24,0,0,0);
+              //if(maxBid.emdEndDate)
+                //maxBid.emdEndDate.setHours(24,0,0,0);
               maxBid.product.prevTradeType = prd.tradeType;
               AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
@@ -71,31 +71,14 @@ var TimeInterval =  1*60*1000;/*Service interval*/
 
             async.eachLimit(bids,2,updateBid,function(err){
               if(!err)
-              Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
+                Product.update({_id:prd._id},{$set:{tradeType:tradeTypeStatuses[2],cooling:false,bidRequestApproved:true}}).exec();
               return cb(err);
             });
           });
       });
-
-      function getMaxBid(bids){
-        var maxBid = bids[0];
-        for(var i=0;i < bids.length ; i++){
-          if(maxBid.bidAmount < bids[i].bidAmount)
-            maxBid = bids[i];
-        }
-        return maxBid;
-      }
-
-      function updateBid(bid,innerCallback){
-        var bidId = bid._id;
-        delete bid._id;
-        AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
-          if(err) {console.log(err);}
-          return innerCallback(err);
-        });
-      }
     }
   }
+
 
   function trackPaymentPeriod(callback){
     var filter = {};
@@ -109,15 +92,13 @@ var TimeInterval =  1*60*1000;/*Service interval*/
     });
 
     function initialize(item,cb){
-        var bidId = item._id;
-        delete item._id;
        if(item.dealStatus == dealStatuses[6]){  
          var isExpired = checkExpiryDate(item.emdEndDate);
          if(isExpired){
             AssetSaleUtil.setStatus(item,bidStatuses[3],'bidStatus','bidStatuses');
             AssetSaleUtil.setStatus(item,dealStatuses[3],'dealStatus','dealStatuses');
-            updateBid();
-
+            item.findNextBid = true; 
+            async.parallel({saleProcessData:getSaleProcessMaster,otherBids:getOtherBids},processBids);
          }else
            return cb();
 
@@ -126,35 +107,114 @@ var TimeInterval =  1*60*1000;/*Service interval*/
            if(isExpired){
               AssetSaleUtil.setStatus(item,bidStatuses[4],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(item,dealStatuses[4],'dealStatus','dealStatuses');
-              updateBid();
+              async.parallel({otherBids:getOtherBids},processBids);
           }else
             return cb();
         }else
           return cb();
 
-    function updateBid(){
-        item.status = false;
-        AssetSaleModel.update({_id:bidId},{$set:item},function(err){
-          if(err){
-            return cb(err);
-          }
-          Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidReceived:false,bidCount:0,highestBid:0}}).exec();;
-          return cb();
+    function processBids(err,result){
+      if(err)
+        return cb(err);
+
+      var actionableBids = [];
+      actionableBids.push(item);
+      var selBid = null;
+      if(item.findNextBid)
+        selBid = nextApprovableBid(item,result.otherBids);;
+      if(selBid){
+        selBid.emdStartDate = new Date();
+        if(result.saleProcessData && result.saleProcessData.emdPeriod) 
+          selBid.emdEndDate = new Date().addDays(result.saleProcessData.emdPeriod || 0);
+        //if(selBid.emdEndDate)
+          //selBid.emdEndDate.setHours(24,0,0,0);
+        selBid.product.prevTradeType = item.product.prevTradeType;
+        AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
+        AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
+        actionableBids.push(selBid); 
+      }else{
+        item.updateProduct = true;
+        result.otherBids.forEach(function(bid){
+          //bid.status = false;
+          AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses');
+          actionableBids.push(bid);
         });
+      }
+      
+      async.eachLimit(actionableBids,3,updateBid,function(err){
+        if(err)
+          return callback(err);
+        if(item.updateProduct)
+            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidReceived:false,bidCount:0,highestBid:0}}).exec();
+          return callback();
+      });
+    }
+
+    function getOtherBids(innerCallback){
+      AssetSaleModel.find({dealStatus:dealStatuses[0],status:true,'product.proData':item.product.proData},function(err,otherBids){
+        if(err)
+          return innerCallback(err);
+        innerCallback(null,otherBids);
+      });
+    }
+
+    function getSaleProcessMaster(innerCallback){
+      if(!item.product || !item.product.seller || !item.product.seller._id)
+        return innerCallback("Seller not found");
+
+      AssetSaleUtil.getMasterBasedOnUser(item.product.seller._id,{},'saleprocessmaster',function(err,saleProcessData){
+         if(err) return innerCallback(err);
+         if(!saleProcessData || !saleProcessData.emdPeriod)
+          return innerCallback("emd period not found");
+          return innerCallback(null,saleProcessData);
+      });
+
     }
   }
 }
 
-  function checkExpiryDate(date){
-    if(!date)
-      return false;
-    var currDate = new Date();
-    var dt = new Date(date);
-    if(currDate >= dt)
-      return true;
-    else
-      return false;
+function nextApprovableBid(bid,otherBids){
+  var selBid = null;
+  if(bid.lastAccepted || !otherBids.length)
+    return selBid;
+  otherBids.sort(function(a,b){
+    return a.bidAmount - b.bidAmount;
+  });
+  otherBids.reverse();
+  selBid = otherBids[0];
+  return selBid;
+}
+
+function updateBid(bid,callback){
+  var bidId = bid._id;
+  delete bid._id;
+  AssetSaleModel.update({_id:bidId},{$set:bid},function(err,res){
+    if(err) {
+      return callback(err);
+    }
+    return callback();
+  });
+}
+
+function getMaxBid(bids){
+  var maxBid = bids[0];
+  for(var i=0;i < bids.length ; i++){
+    if(maxBid.bidAmount < bids[i].bidAmount)
+      maxBid = bids[i];
   }
+  return maxBid;
+}
+
+function checkExpiryDate(date){
+  if(!date)
+    return false;
+  var currDate = new Date();
+  var dt = new Date(date);
+  if(currDate >= dt)
+    return true;
+  else
+    return false;
+}
 
 exports.start = function() {
   console.log("Asset sale service started");

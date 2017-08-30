@@ -15,6 +15,7 @@ function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $ui
   $scope.uploadDoc = uploadDoc;
   
   	function init(){
+      reset();
       KYCSvc.get().then(function(result) {
       	if(!result)
       		return;
@@ -40,6 +41,10 @@ function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $ui
       }
     }
 
+    function reset(){
+      vm.kycInfo = {};
+    }
+
     function uploadDoc(files, _this, type) {
       if (files.length == 0)
         return;
@@ -61,36 +66,48 @@ function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $ui
     }
 
 	function submit(form) {
-		/*var ret = false;
-  	if(form.$invalid || ret){
+		if(form.$invalid){
       form.submitted = true;
       return;
-    }*/
+    }
     $scope.bidData.kyc =[];
 		var addProofObj = {};
 		if(vm.kycInfo.addressProof) {
 			addProofObj.type = $scope.type[0];
 			addProofObj.name = vm.kycInfo.addressProof;
-			addProofObj.docName = vm.kycInfo.addressProofDocName;
-		}
-		$scope.bidData.kyc[$scope.bidData.kyc.length] = addProofObj;
+      if(vm.kycInfo.addressProofDocName)
+			 addProofObj.docName = vm.kycInfo.addressProofDocName;
+      else {
+        Modal.alert("Please upload address proof document.", true);
+        return;
+      }
+      $scope.bidData.kyc[$scope.bidData.kyc.length] = addProofObj;
+    }
 		var idProofObj = {};
-		if(vm.kycInfo.addressProof) {
+		if(vm.kycInfo.idProof) {
 			idProofObj.type = $scope.type[1];
 			idProofObj.name = vm.kycInfo.idProof;
-			idProofObj.docName = vm.kycInfo.idProofDocName;
-		}
-		$scope.bidData.kyc[$scope.bidData.kyc.length] = idProofObj;
-
-	    AssetSaleSvc.update($scope.bidData, 'kyc').
-	      then(function(res) {
-	        if (res)
-	          Modal.alert(res, true);
-	      	closeDialog();
-	      })
-	      .catch(function(res) {
-	        console.log(res);
-	      });
+      if(vm.kycInfo.idProofDocName)
+			 idProofObj.docName = vm.kycInfo.idProofDocName;
+      else {
+        Modal.alert("Please upload ID proof document.", true);
+        return;
+      }
+      $scope.bidData.kyc[$scope.bidData.kyc.length] = idProofObj;
+    }
+	  if($scope.bidData.kyc.length === 0) {
+      Modal.alert("Please upload at least one document.", true);
+      return;
+    }
+    AssetSaleSvc.update($scope.bidData, 'kyc').
+      then(function(res) {
+        if (res)
+          Modal.alert(res, true);
+      	closeDialog();
+      })
+      .catch(function(res) {
+        console.log(res);
+      });
 	}
 
 	function closeDialog() {

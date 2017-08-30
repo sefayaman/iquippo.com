@@ -189,10 +189,20 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.valuation.meta;
         }
       })
-      .state('financing', {
-        url:"/financing",
-        templateUrl: 'app/staticpages/financing.html',
-        controller:"FinanceCtrl",
+      // .state('financing', {
+      //   url:"/financing",
+      //   templateUrl: 'app/staticpages/financing.html',
+      //   controller:"FinanceCtrl",
+      //   layout:'client',
+      //   onEnter:function($rootScope){
+      //     $rootScope.choosenTitle=pagesTitles.financing.title;
+      //     $rootScope.metaDescription=pagesTitles.financing.meta;
+      //   }
+      // })
+      .state('finance', {
+        url:"/finance",
+        templateUrl: 'app/finance/finance.html',
+        controller: 'FinanceCtrl as financeVm',
         layout:'client',
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.financing.title;
