@@ -105,6 +105,11 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 			exportFilter = {};
 			angular.copy(initFilter, exportFilter);
 		}
+		if(allReport === 'payment'){
+			exportFilter = {};
+			angular.copy(initFilter, exportFilter);
+			exportFilter.payment = 'y'
+		}
 
 		if(!Auth.isAdmin())
         	exportFilter.seller = 'y';

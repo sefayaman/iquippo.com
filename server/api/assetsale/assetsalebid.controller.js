@@ -834,7 +834,9 @@ exports.exportExcel = function(req,res){
 
 	if(user.role == 'admin')
   		fieldsMap = fieldConfig['ADMIN_FIELDS'];
-
+  	if(user.role == 'admin' && queryParam.payment === 'y') {
+  		fieldsMap = fieldConfig['EXPORT_PAYMENT'];
+  	}
   	if(queryParam.productIds)
 		filter['product.proData'] = {$in:queryParam.productIds.split(',') || []};
 	
@@ -852,6 +854,26 @@ exports.exportExcel = function(req,res){
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
+		if(queryParam.payment === 'y' && resList) {
+			var jsonArr = [];
+	        resList.forEach(function(item,index){
+	            if(item.emdPayment && item.emdPayment.paymentsDetail){
+	              item.emdPayment.paymentsDetail.forEach(function(innerItem){
+	                _formatPayments(item,innerItem,jsonArr);
+	              });
+	            }
+	            if(item.fullPayment && item.fullPayment.paymentsDetail){
+	              item.fullPayment.paymentsDetail.forEach(function(innerItem){
+	                _formatPayments(item,innerItem,jsonArr);
+	              });
+	            }
+	        });
+	        resList = [];
+	        if(jsonArr.length > 0)
+	        	resList = jsonArr.slice();
+	        	//resList = JSON.parse(JSON.stringify(jsonArr));
+	    }
+
 		renderExcel(resList);
 	});
 
@@ -893,6 +915,23 @@ exports.exportExcel = function(req,res){
 	}
 
 }
+
+function _formatPayments(item,innerItem,jsonArr){
+    var obj = {};
+    obj['ticketId'] = item.ticketId || "";
+    obj['assetId'] = item.product.assetId || "";
+    obj['assetName'] = item.product.name || "";
+    obj['buyerName'] = item.user.fname + " " + item.user.lname || "";
+    obj['buyerMobile'] = item.user.mobile|| "" ;
+    obj['buyerEmail'] = item.user.email || "" ;
+    obj['paymentMode'] = innerItem.paymentMode || "";
+    obj['bankName'] = innerItem.bankName || "";
+    obj['instrumentNo'] = innerItem.instrumentNo || "";
+    obj['amount'] = innerItem.amount || 0;
+    obj['paymentDate'] = innerItem.paymentDate || "";
+    obj['createdAt'] = innerItem.createdAt || ""
+    jsonArr.push(obj);
+  }
 
 function handleError(res, err) {
 	return res.status(500).send(err);
