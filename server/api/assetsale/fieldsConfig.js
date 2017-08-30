@@ -99,5 +99,19 @@ module.exports = {
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
 		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
 		"Request Date":{key:"createdAt",type:'date'}
+	},
+	'EXPORT_PAYMENT':{
+		"Ticket Id":{key :"ticketId"},
+		"Asset Id" :{key :"assetId"},
+		"Asset Name":{key :"assetName"},
+		"Buyer Name" :{key :"buyerName"},
+		"Buyer Mobile No.":{key :"buyerMobile"},
+		"Buyer Email Id":{key :"buyerEmail"},
+		"Payment Mode":{key:"paymentMode"},
+		"Bank Name":{key:"bankName"},
+		"Instrument No":{key:"instrumentNo"},
+		"Amount":{key:"amount"},
+		"Payment Date":{key:"paymentDate",type:'date'},
+		"Date of Entry":{key:"createdAt",type:'date'}
 	}
 }

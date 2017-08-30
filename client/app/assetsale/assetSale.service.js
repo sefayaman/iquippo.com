@@ -182,11 +182,14 @@
 
   function validateAction(bid,action){
     var retVal = false;
+    var validEnterprise = (Auth.isEnterprise() || Auth.isEnterpriseUser()) && Auth.getCurrentUser().enterpriseId === bid.product.seller.enterpriseId;
     switch(action){
       case 'APPROVE':
         var isValidStatus = bid.bidStatus === bidStatuses[0]?true:false;
         if(Auth.isAdmin() && isValidStatus)
           retVal = true;
+        else if(validEnterprise && isValidStatus)
+          return true;
         else if(isValidStatus && Auth.getCurrentUser()._id === bid.product.seller._id)
           retVal = true;
         else

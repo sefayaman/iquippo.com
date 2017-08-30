@@ -175,9 +175,11 @@ exports.validateUpdate = function(req,res,next){
 					req.updateProduct = true;
 
 				}
-
+				if(req.bids.length)
+					req.bids[0].lastAccepted = true;
 				req.otherBids.forEach(function(item){
 					if(item.bidStatus === bidStatuses[7]){
+						item.lastAccepted = false;
 						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
 						req.bids.push(item);
 					}
@@ -192,8 +194,8 @@ exports.validateUpdate = function(req,res,next){
 						return res.status(404).send("Full payment period is not found");
 					req.body.fullPaymentStartDate = new Date();
 					req.body.fullPaymentEndDate = new Date().addDays(entData.fullPaymentPeriod);
-					if(req.body.fullPaymentEndDate)
-						req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
+					//if(req.body.fullPaymentEndDate)
+					//	req.body.fullPaymentEndDate = req.body.fullPaymentEndDate.setHours(24,0,0,0);
 					req.otherBids.forEach(function(item){
 						item.status = false;
 						AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
@@ -340,8 +342,8 @@ exports.validateSubmitBid = function(req,res,next){
 			AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
 			req.body.emdStartDate = new Date(); 
 			req.body.emdEndDate = new Date().addDays(saleProcessData.emdPeriod);
-			if(req.body.emdEndDate)
-				req.body.emdEndDate.setHours(24,0,0,0);
+			//if(req.body.emdEndDate)
+			//	req.body.emdEndDate.setHours(24,0,0,0);
 			req.body.product.prevTradeType = req.product.tradeType;
 			req.product.tradeType = tradeTypeStatuses[2];
 			var otherBids = req.otherBids;
@@ -834,7 +836,9 @@ exports.exportExcel = function(req,res){
 
 	if(user.role == 'admin')
   		fieldsMap = fieldConfig['ADMIN_FIELDS'];
-
+  	if(user.role == 'admin' && queryParam.payment === 'y') {
+  		fieldsMap = fieldConfig['EXPORT_PAYMENT'];
+  	}
   	if(queryParam.productIds)
 		filter['product.proData'] = {$in:queryParam.productIds.split(',') || []};
 	
@@ -852,6 +856,26 @@ exports.exportExcel = function(req,res){
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
+		if(queryParam.payment === 'y' && resList) {
+			var jsonArr = [];
+	        resList.forEach(function(item,index){
+	            if(item.emdPayment && item.emdPayment.paymentsDetail){
+	              item.emdPayment.paymentsDetail.forEach(function(innerItem){
+	                _formatPayments(item,innerItem,jsonArr);
+	              });
+	            }
+	            if(item.fullPayment && item.fullPayment.paymentsDetail){
+	              item.fullPayment.paymentsDetail.forEach(function(innerItem){
+	                _formatPayments(item,innerItem,jsonArr);
+	              });
+	            }
+	        });
+	        resList = [];
+	        if(jsonArr.length > 0)
+	        	resList = jsonArr.slice();
+	        	//resList = JSON.parse(JSON.stringify(jsonArr));
+	    }
+
 		renderExcel(resList);
 	});
 
@@ -893,6 +917,23 @@ exports.exportExcel = function(req,res){
 	}
 
 }
+
+function _formatPayments(item,innerItem,jsonArr){
+    var obj = {};
+    obj['ticketId'] = item.ticketId || "";
+    obj['assetId'] = item.product.assetId || "";
+    obj['assetName'] = item.product.name || "";
+    obj['buyerName'] = item.user.fname + " " + item.user.lname || "";
+    obj['buyerMobile'] = item.user.mobile|| "" ;
+    obj['buyerEmail'] = item.user.email || "" ;
+    obj['paymentMode'] = innerItem.paymentMode || "";
+    obj['bankName'] = innerItem.bankName || "";
+    obj['instrumentNo'] = innerItem.instrumentNo || "";
+    obj['amount'] = innerItem.amount || 0;
+    obj['paymentDate'] = innerItem.paymentDate || "";
+    obj['createdAt'] = innerItem.createdAt || ""
+    jsonArr.push(obj);
+  }
 
 function handleError(res, err) {
 	return res.status(500).send(err);
