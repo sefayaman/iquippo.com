@@ -23,7 +23,8 @@ var AssetSaleBidSchema = new Schema({
             seller:{},
             repoDate:Date,
             reservePrise:Number,
-            prevTradeType:String
+            prevTradeType:String,
+            primaryImg:String
           },
   offerType:{type:String,default:'Bid'},
   ageingOfAsset:Number,
