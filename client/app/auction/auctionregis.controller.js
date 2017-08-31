@@ -29,6 +29,8 @@
      	}
        LotSvc.getData({auctionId:$scope.currentAuction.auctionId}).then(function(res){
             vm.lotList = res;   
+
+            console.log("lotslist",res);
             
          });
     }
@@ -88,7 +90,8 @@
       function save(dataObj,amount){
       userRegForAuctionSvc.save(dataObj)
       .then(function(){
-        
+          $rootScope.loading = false;
+          closeDialog();
           Modal.alert('Your emd amount is' + amount);
       })
       .catch(function(err){

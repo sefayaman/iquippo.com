@@ -86,6 +86,31 @@
     $scope.secondStep = secondStep;
     $scope.goToUsermanagement = goToUsermanagement;
     $scope.lot={};
+    $scope.mandatory = true;
+
+
+
+    $scope.listInAuction = function(data){
+         //console.log("erthh",data);
+        if(data ==true){
+          $scope.mandatory = false;
+         }else{
+          $scope.mandatory = true;
+
+         }
+        
+    }
+
+    $scope.listInPortal = function(data){
+       //console.log("hggg",data);
+         if(data ==true){
+          $scope.mandatory = true;
+         }else{
+          $scope.mandatory = false;
+
+         }
+
+    }
 
     function productInit() {
 
@@ -850,16 +875,20 @@
 
       });
      
+      if($scope.mandatory == true){
 
       if ($scope.product.images.length == 0) {
         Modal.alert("Please upload atleast one image in General Appearence section.", true);
         $rootScope.loading = false;
         return;
       }
+      
 
       if (!primaryFound) {
         $scope.product.primaryImg = $scope.product.images[0].src;
         $scope.product.images[0].isPrimary = true;
+      }
+
       }
 
       checkPrimaryAndMergeOnSubmit($scope.imagesEngine, $scope.product.images);
