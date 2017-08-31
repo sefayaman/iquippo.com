@@ -3,7 +3,7 @@
 		<td valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
 	</tr>
     <tr>
-        <td style="font-size:16px;"><h3>Dear {{user.fname}}  {{user.mname}} {{user.lname}},</h3></td>   
+        <td style="font-size:16px;"><h3>Dear {{user.fname}} {{user.lname}},</h3></td>   
     </tr>
     
   <tr>
@@ -13,7 +13,7 @@
             <td>
                 <table border="0" cellspacing="1" cellpadding="1" style="font-size:13px;line-height:20px;color:#333333; text-align: left; margin: 5px 0;">
                     <tr>
-                        <td>Your request for the below product has been cancelled due to non-payment of Earnest Money Deposit (EMD) as per schedule. </td>  
+                        <td>Thank You! We have received your EMD payment of <strong>INR {{}}</strong> for the asset mentioned below – </td>  
                     </tr>
                      <tr>
                         <td><strong>{{product.name}}</strong></td>
@@ -35,7 +35,7 @@
             <td align="center">
                 <img width="200" height="165" src="{{serverPath}}/assets/uploads/{{product.assetDir}}/{{product.primaryImg}}" style="border: 3px solid #ccc;">
                 <p style="font-weight: bold; margin: 15px 15px 5px 0;">
-                    <a href="{{serverPath}}/productdetail/{{product._id}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
+                    <a href="{{serverPath}}/productdetail/{{product.proData._id}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
                 </p>
             </td>
         </tr>

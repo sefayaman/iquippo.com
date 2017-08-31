@@ -411,8 +411,12 @@ exports.validateSubmitBid = function(req,res,next){
 
 }
 
+function pushNotification(bidsArr) {
+	if(bidsArr.length > 0)
+		AssetSaleUtil.sendNotification(bids);
+}
+
 exports.submitBid = function(req, res) {
-	
 	async.series([newBidData,updateBidAndProduct],function(err){
 		if(err) return res.status(500).send(err);
 		var msg = ""
@@ -464,6 +468,12 @@ exports.submitBid = function(req, res) {
 		delete bid._id;
 		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
 			if(err) console.log("Error in prevoius bid update",err);
+			var bidArr = [];
+			var bidObj = {};
+			bidObj.ticketId = bid.ticketId;
+			bidObj.action = "BIDCHANGED";
+			bidArr.push(bidObj);
+			AssetSaleUtil.sendNotification(bidArr);
 			return cb();
 		});
 	}
@@ -473,6 +483,17 @@ exports.submitBid = function(req, res) {
 		AssetSaleBid.create(data, function(err, result) {
 			if (err)
 				return callback(err);
+			if(req.query.typeOfRequest !== "changeBid") {
+				var bidArr = [];
+				var bidObj = {};
+				if(req.query.typeOfRequest === "buynow")
+					bidObj.action = "BUYNOW";
+				if(req.query.typeOfRequest === "submitBid")
+					bidObj.action = "BIDREQUEST";
+				bidObj.ticketId = result.ticketId;
+				bidArr.push(bidObj);
+				AssetSaleUtil.sendNotification(bidArr);
+			}
 			return callback();
 		});
 	}
@@ -484,6 +505,12 @@ exports.withdrawBid = function(req, res) {
 	
 	withdrawBid(function(err,result){
 		if(err) return res.status(err.status).send(err.msg);
+		var bidArr = [];
+		var bidObj = {};
+		bidObj.ticketId = result.ticketId;
+		bidObj.action = "BIDWITHDRAW";
+		bidArr.push(bidObj);
+		AssetSaleUtil.sendNotification(bidArr);
 		return res.json({msg: "Bid withdraw Successfully!"});
 	});
 
@@ -547,7 +574,7 @@ exports.withdrawBid = function(req, res) {
 			if(updatedData.bidCount === 0)
 				updatedData.bidReceived = false;
 			Product.update({_id:proId},{$set:updatedData}).exec();
-			return callback(null);
+			return callback(null,bidData);
 		});
 	}	
 };
