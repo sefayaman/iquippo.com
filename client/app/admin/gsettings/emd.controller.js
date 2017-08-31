@@ -31,7 +31,9 @@
             console.log("filter",filter);
             LotSvc.getData(filter)
             .then(function(res){
-            vm.lotList=res;          
+              console.log("res",res);
+            vm.lotList=res;
+            console.log("list",vm.lotList);          
             });
           }
 

@@ -63,21 +63,28 @@ exports.updateLotData = function(req, res) {
 
 exports.getLotData = function(req, res) {
   var filter = {};
+  var query={};
   if(req.query.auctionId){
   filter.auctionId=req.query.auctionId;
+query = Lot.find(filter).distinct('lotNumber');
    }
-   if(req.query.assetId){
+   else if(req.query.assetId){
   filter.assetId=req.query.assetId;
+query = Lot.find(filter);
    }
-   if(req.query.lotNumber){
+   else if(req.query.lotNumber){
   filter.lotNumber=req.query.lotNumber;
+query = Lot.find(filter);
    }
+   else{
   console.log("filter",filter);
-  var query = Lot.find(filter);
+query = Lot.find(filter)
+}
   query.exec(function(err, result) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
+    console.log("ressults",result);
     return res.json(result);
   });
 };

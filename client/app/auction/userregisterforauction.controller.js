@@ -129,6 +129,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
         Auth.login(dataToSend)
         .then( function() {
           $rootScope.loading = true;
+          console.log("CurrentAuction",$scope.currentAuction);
           createReqData($scope.currentAuction, userData,vm.selectedLots);
          })
         .catch( function(err) {
@@ -199,16 +200,20 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
   	dataObj.auction.name = auctionData.name;
   	dataObj.auction.auctionId = auctionData.auctionId;
   	dataObj.auction.emdAmount = auctionData.emdAmount;
-    dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile;
-    	if(userData._id)
+    dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile
+   console.log("dataObj",dataObj);
+   console.log("UserData",userData);
+        	if(userData._id)
   		dataObj.user._id = userData._id;
   	dataObj.user.fname = userData.fname;
   	dataObj.user.lname = userData.lname;
   	dataObj.user.countryCode = userData.countryCode ? userData.countryCode : LocationSvc.getCountryCode(userData.country);
     dataObj.user.mobile = userData.mobile;
     dataObj.lotNumber = lotdata;
+    console.log("dataObj",dataObj);
 
     if(auctionData.emdTax =="overall"){
+      console.log("the value is",auctionData);
 
       vm.emdAmount = auctionData.emdAmount;
       
@@ -219,6 +224,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
     }else{
           vm.dataModel.auctionId = auctionData.auctionId;
            vm.dataModel.selectedLots = lotdata;
+           console.log("I m here going");
                   
                    EmdSvc.getAmount(vm.dataModel).then(function(result){
                          if(Auth.getCurrentUser().email)
@@ -235,6 +241,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
   function save(dataObj,amount){
     userRegForAuctionSvc.save(dataObj)
     .then(function(){
+      $rootScope.loading=true
         closeDialog();
          Modal.alert('Your emd amount is' + amount);
     })

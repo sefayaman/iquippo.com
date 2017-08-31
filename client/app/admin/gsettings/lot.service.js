@@ -32,6 +32,7 @@
             console.log("path",path);
             return $http.get(path)
                 .then(function(res) {
+                    console.log("res lot data",res);
                     return res.data;
                 })
                 .catch(function(err) {
