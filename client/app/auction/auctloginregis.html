@@ -9,7 +9,8 @@
         <form class="form" name="form" novalidate>
           <div class="row">
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
-             <select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in auctionRegisVm.lotList" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple>
+
+                <select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in auctionRegisVm.lotList" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple>
               </select>
               <div class="text-right">
                 <button type="button" class="btn btn-danger" ng-click="auctionRegisVm.openAuctionModel(form)">Submit</button>

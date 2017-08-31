@@ -241,7 +241,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
   function save(dataObj,amount){
     userRegForAuctionSvc.save(dataObj)
     .then(function(){
-      $rootScope.loading=true
+      $rootScope.loading = false;
         closeDialog();
          Modal.alert('Your emd amount is' + amount);
     })
