@@ -79,9 +79,9 @@
         </tbody>
       </table>      
     </div>    
-    <div class="row">
+    <div class="row" ng-if="totalPaidAmount > 0">
       <div class="col-sm-offset-7 col-sm-2 text-right"><strong>Total :</strong></div>
-      <div class="col-sm-3 text-left">  23231{{}}</div>
+      <div class="col-sm-3 text-left"> {{totalPaidAmount}}</div>
     </div>  
   </div>  
    
