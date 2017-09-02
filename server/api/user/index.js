@@ -17,6 +17,7 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/update/:id', auth.hasRole('admin'), controller.update);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/register', controller.create);
+router.post('/external_register', controller.externalCreate);
 router.post('/', controller.signUp);
 //router.post('/register', auth.hasRole('admin'), controller.create);
 

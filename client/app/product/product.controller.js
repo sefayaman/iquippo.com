@@ -1459,6 +1459,12 @@
           return "No";
       }
     }
+    
+    $scope.getImageURL = function(assetDir,key){
+        var uploadImagePrefix = $rootScope.uploadImagePrefix;
+        //console.log(uploadImagePrefix + assetDir+'/'+key);
+        return uploadImagePrefix + assetDir+'/'+key;
+    };
 
     $scope.timestamp = new Date().getTime();
 
