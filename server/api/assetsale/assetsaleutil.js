@@ -152,7 +152,8 @@ exports.sendNotification = function(bidArr){
     if(!bidArr.length)
 		return;
     async.eachLimit(bidArr,5,initialize,function(err){
-		console.log("error in sending mail for buy sale",err);
+    	if(err)
+			console.log("error in sending mail for buy sale",err);
     });
 
 	function initialize(bid,callback){
@@ -185,10 +186,20 @@ exports.sendNotification = function(bidArr){
 					subject = "Ticket ID:" + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Approved.";
 					break;
 				case 'EMDPAYMENT':
+					var totalPaidAmount = 0;
+					tplData.emdPayment.paymentsDetail.forEach(function(item) {
+		                totalPaidAmount = totalPaidAmount + item.amount;
+		            });
+		            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "EMDReceivedEmailToBuyer";
 					subject = "Ticket ID:" + tplData.ticketId +": Your Earnest Money Deposit (EMD) for " + tplData.product.name + " has been Received.";
 					break;
 				case 'FULLPAYMENT':
+					var totalPaidAmount = 0;
+					tplData.fullPayment.paymentsDetail.forEach(function(item) {
+		                totalPaidAmount = totalPaidAmount + item.amount;
+		            });
+		            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "FullpaymentReceivedEmailToBuyer";
 					subject = "Ticket ID:" + tplData.ticketId +": Your Full Payment for " + tplData.product.name + " has been Received.";
 					break;
@@ -230,6 +241,7 @@ exports.sendNotification = function(bidArr){
 				return callback();
 			emailData.to = tplData.user.email;
 			emailData.notificationType = "email";
+			console.log("emailData###", emailData);
 			sendEmail(tplData,emailData,tplName,callback);
 	    });
 	}

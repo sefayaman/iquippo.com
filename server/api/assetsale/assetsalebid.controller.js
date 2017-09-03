@@ -142,10 +142,46 @@ exports.update = function(req, res,next) {
 	  if(bid._id) { delete bid._id; }
 	  bid.updatedAt = new Date();
 	   AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
-	       cb(err);
+	        cb(err);
+	        if([bidStatuses[3],bidStatuses[4]].indexOf(bid.bidStatus) !== -1 || 
+	        	[dealStatuses[1],dealStatuses[6],dealStatuses[7],dealStatuses[8],dealStatuses[9],dealStatuses[12]].indexOf(bid.dealStatus) !== -1)
+	       		sendStatusMail(bid);
 	  });
   }
-  
+}
+
+function sendStatusMail(bid) {
+	var bidArr = [];
+	var bidObj = {};
+	switch(bid.dealStatus || bid.bidStatus) {
+		case dealStatuses[6] /*Approved*/:
+			bidObj.action = "APPROVE";
+			break;
+		case dealStatuses[7] /*EMD Received*/:
+			bidObj.action = "EMDPAYMENT";
+			break;
+		case dealStatuses[8] /*Full Payment Received*/:
+			bidObj.action = "FULLPAYMENT";
+			break;
+		case dealStatuses[9] /*do issued*/:
+			bidObj.action = "DOISSUED";
+			break;
+		case dealStatuses[1] /*Offer Rejected*/:
+			bidObj.action = "OFFERREJECTED";
+			break;
+		case dealStatuses[12] /*Closed*/:
+			bidObj.action = "CLOSED";
+			break;
+		case bidStatuses[3] /*EMD Failed*/:
+			bidObj.action = "EMDFAILED";
+			break;
+		case bidStatuses[4] /*Full Payment Failed*/:
+			bidObj.action = "FULLPAYMENTFAILED";
+			break;
+	}
+	bidObj.ticketId = bid.ticketId;
+	bidArr.push(bidObj);
+	AssetSaleUtil.sendNotification(bidArr);
 }
 
 exports.validateUpdate = function(req,res,next){
@@ -728,6 +764,7 @@ exports.getBidCount = function(req, res) {
 
 exports.getMaxBidOnProduct = function(req, res) {
 	var filter = {};
+	filter.status = true;
 	if(req.query.assetId)
 		filter['product.assetId'] = req.query.assetId;
 	if(req.query.userId)
