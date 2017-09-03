@@ -37,6 +37,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
       lServices.getAssetIdHelp = getAssetIdHelp;
       lServices.exportExcel=exportExcel;
       lServices.importExcel=importExcel;
+      
 
 
       function getAllLocation(){
@@ -867,4 +868,149 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
   }
 
+angular.module('admin').factory("FinanceMasterSvc",FinanceMasterSvc);
+ function FinanceMasterSvc($http,$q,UtilSvc){
+   var svc = {};
+   var path = "/api/finance/financemaster"
+   svc.get = get;
+   svc.delFinanceMaster = delFinanceMaster;
+   // svc.parseExcel = parseExcel;
+    //svc.getFinanceOwnerFilter = getFinanceOwnerFilter;
+    svc.saveFinanceMaster = saveFinanceMaster;
+    svc.updateFinanceMaster = updateFinanceMaster;
+    svc.getFilterOnFinanceMaster = getFilterOnFinanceMaster;
+    var financeMasterCache = [];
+    
+    function get(filter){
+
+      var queryParam = UtilSvc.buildQueryParam(filter);
+      var locPath = path + "/get";
+      if(queryParam)
+        locPath += "?" + queryParam;
+     return $http.get(locPath)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
+    }
+    
+    function getFilterOnFinanceMaster(data){
+     return $http.post(path + "/onfinancemasterfilter",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        }) 
+    }
+    
+    function saveFinanceMaster(data){
+      return $http.post(path + "/save", data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function updateFinanceMaster(data){console.log("update2===",data);
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+    function delFinanceMaster(data){
+      return $http.delete(path + "/" + data._id)
+          .then(function(res){
+             financeMasterCache = [];
+            return res.data;
+          })
+          .catch(function(err){
+              throw err;
+          });
+    }
+
+    return svc;
+ }
+
+ angular.module('admin').factory("LeadMasterSvc",LeadMasterSvc);
+ function LeadMasterSvc($http,$q,UtilSvc){
+   var svc = {};
+   var path = "/api/lead/leadmaster";
+   //getFilterOnLeadMastersvc.get = get;
+   //svc.delFinanceMaster = delFinanceMaster;
+   // svc.parseExcel = parseExcel;
+    //svc.getFinanceOwnerFilter = getFinanceOwnerFilter;
+    //svc.saveFinanceMaster = saveFinanceMaster;
+    //svc.updateFinanceMaster = updateFinanceMaster;
+    svc.getFilterOnLeadMaster = getFilterOnLeadMaster;
+    svc.getLeadExportExcel = getLeadExportExcel;
+    var leadMasterCache = [];
+    
+    /*function get(filter){
+
+      var queryParam = UtilSvc.buildQueryParam(filter);
+      var locPath = path + "/get";
+      if(queryParam)
+        locPath += "?" + queryParam;
+     return $http.get(locPath)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      })
+    }*/
+    
+    function getFilterOnLeadMaster(data){
+     return $http.post(path + "/onleadmasterfilter",data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        }) 
+    }
+    
+    function saveFinanceMaster(data){
+      return $http.post(path + "/save", data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err
+        })
+    }
+
+    function updateLeadMaster(data){
+       return $http.put(path + "/" + data._id, data)
+        .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+    }
+
+    function getLeadExportExcel(dataToSend) {
+         return  $http.post(path +'/export', dataToSend)
+           .then(function(res){
+          return res.data;
+        })
+        .catch(function(err){
+          throw err;
+        });
+           
+  }
+
+    return svc;
+ }
+ 
 })();

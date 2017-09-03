@@ -30,7 +30,7 @@ var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
 var taskRunner = require('./components/taskRunner.js');
 var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
-
+var utility=require('./components/utility.js');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -142,7 +142,9 @@ app.post('/api/multiplefile/upload', function(req, res) {
 });
 
 function resizeImg(req, res, assetDir, dimension, isMultiple) {
-  try {
+  
+   try {
+     
     if (req.counter < req.total) {
       var fileName = req.files[req.counter].filename;
       var imgPath = config.uploadPath + assetDir + "/" + fileName;
@@ -158,9 +160,6 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
         if (err) throw err;
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
-          console.log("-----image",image);
-          //var wRatio = 700 / image.width();
-          //var hRatio= 450 / image.height();
           image.scale(0.75, function(err, rzdImage) {
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
@@ -168,10 +167,16 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
               }, function(err, buffer) {
                 fs.writeFile(imgPath, buffer, function(err) {
                   if (err) throw err;
-                  req.counter++;
-                })
-              })
-              resizeImg(req, res, assetDir, dimension, isMultiple);
+                  utility.uploadFileS3(config.uploadPath + assetDir,assetDir,function(err,s3res){
+                    if(err){
+                      throw err;
+                    }
+                    console.log("res",s3res);
+                    req.counter++;
+                    return resizeImg(req, res, assetDir, dimension, isMultiple);
+                  });
+                });
+              });
             } else {
               if (extPart == 'png') {
                 rzdImage.toBuffer(extPart, {
@@ -181,14 +186,18 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
                 }, function(err, buffer) {
                   fs.writeFile(imgPath, buffer, function(err) {
                     if (err) throw err;
-                    req.counter++;
-                  })
-                })
-                return resizeImg(req, res, assetDir, dimension, isMultiple);
+                        utility.uploadFileS3(config.uploadPath + assetDir,assetDir,function(err,s3res){
+                        if(err)
+                          throw err;
+                        req.counter++;
+                        return resizeImg(req, res, assetDir, dimension, isMultiple);
+                      });
+                  });
+                });
               }
             }
           });
-        })
+        });
     }
     else{
       req.counter++;

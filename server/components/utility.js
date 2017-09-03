@@ -4,8 +4,27 @@ var  xlsx = require('xlsx');
 var trim = require('trim');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
-var debug = require('debug');
+var debug = require('debug')('server.components.utility');
 var moment = require('moment');
+var fs=require('fs');
+var AWS=require('aws-sdk');
+var util=require('util');
+var bucket=config.awsBucket;
+var s3baseUrl=config.awsUrl;
+var s3 = require('s3');
+var s3Options={
+   accessKeyId:config.awsAccessKeyId,
+   secretAccessKey:config.awsSecretAccessKey,
+   endpoint:config.awsEndpoint,
+   sslEnabled:true
+ };
+
+var awsS3Client = new AWS.S3(s3Options);
+var options = {
+   s3Client: awsS3Client
+ };
+
+var client = s3.createClient(options);
 
 exports.toIST = toIST;
 exports.paginatedResult = paginatedResult;
@@ -13,6 +32,11 @@ exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
 exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
+exports.uploadFileS3 = uploadFileS3;
+exports.uploadDirToS3 = uploadDirToS3;
+exports.downloadFromS3 = downloadFromS3;
+
+
 
 Date.prototype.addDays = function(days) {
     //this.setDate(this.getDate() + parseInt(days));
@@ -30,6 +54,72 @@ Date.prototype.addMinutes = function(minutes) {
     this.setMinutes(this.getMinutes() + parseInt(minutes));
     return this;
 };
+
+
+function uploadFileS3 (localFilePath,dirName,cb) {   
+  var params = {
+    localDir: localFilePath,
+    deleteRemoved:true,
+      s3Params: {
+        Bucket: config.awsBucket,
+        Prefix: "assets/uploads/"+ dirName
+      }
+  };
+  
+  var uploader = client.uploadDir(params);
+  uploader.on('error', function(err) {
+      if(err){
+        debug(err);
+        return cb(err);
+      }
+  });
+  
+  uploader.on('end', function() {
+    return cb();
+  });
+}
+//AA:Upload a directory to S3
+function uploadDirToS3 (localDirPath,cb) { 
+  var params = {
+      localDir: localDirPath,
+      deleteRemoved:true,
+        s3Params: {
+          Bucket: config.awsBucket,
+          Prefix: "assets/"
+
+        }
+    };
+    
+    var uploader = client.uploadDir(params);
+    uploader.on('error', function(err) {
+        if(err){
+          util.log(err);
+          cb(new Error('Unable to upload file'));
+        }
+    });
+    uploader.on('end', function() {
+      return cb();
+    });
+}
+ 
+function downloadFromS3(localFilePath, cb){
+  AWS.config.update({
+    accessKeyId: config.awsAccessKeyId,
+    secretAccessKey: config.awsSecretAccessKey
+  });
+  var s3 = new AWS.S3();
+  s3.getObject({ Bucket: config.awsBucket, Key: localFilePath },
+    function (error, data) {
+      if (error || !data) {
+          debug(error);
+          return cb(error || new Error('Error while fetching images from s3'))
+      } else {
+        debug(data);
+        return cb();
+      }
+  })
+}
+ 
 
 function toIST(value){
   if(!value)

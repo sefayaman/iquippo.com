@@ -982,6 +982,15 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .table.bidhistory{border:0;}
 .table.bidhistory tr td, .table.bidhistory tr th{border:0; padding: 4px 5px; border-bottom: 1px solid #eee;}
 
+/* finance module */
+.promotion-slider .carousel-inner > .item > img, .promotion-slider .carousel-inner > .item > a > img{height: 300px;}
+.finance-menu{padding: 0;}
+.finance-menu li{display: inline-block; margin-right: 10px; float: left;}
+.finance-menu li:last-child{margin-right: 0px;}
+.finance-menu li a{padding: 30px 15px; display: block; background: #eee; text-align: center; color: #666; text-decoration: none; border-radius: 50%; width: 140px; height: 140px; font-size: 13px;}
+.finance-menu li a:hover{background: #ccc;}
+.finance-menu li a img{display: block; margin: auto; height: 60px; width: 60px;}
+
 /* responsive */
 @media (max-width:1199px){
 .icn2{left:65px;}

@@ -29,6 +29,8 @@
 						<option value="markup">Markup Price Master</option>
 						<option value="emdmaster">EMD Master</option>
 						<option value="assetcount">Asset Count</option>
+						<option value="promotion">Promotions</option>
+						<option value="leaddata">Lead Data</option>
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -38,47 +40,47 @@
 			</div>
 			<!--Select category  -->
 			<!-- <div ng-if="gsettingVm.tabValue == 'sc'">
-						<form name="subCategoryForm" novalidate class="subCategoryForm">
-									<h4>Add New Sub Category</h4>
-									<legend></legend>
-									<div class="row">
-												<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
-															<select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
-																		<option value="">Select Category</option>
-																		<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
-															</select>
-															<i class="caret"></i>
-												</div>
-												<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
-															<input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
-												</div>
-												<div class="form-group col-sm-2 pull-right">
-															<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
-															<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
-												</div>
-												
-									</div>
-						</form>
-						<div class="table-responsive">
-									<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-												<thead>
-															<th>Category</th>
-															<th>Sub Category</th>
-															<th>Action</th>
-															
-												</thead>
-												<tbody>
-															<tr ng-repeat="sc in gsettingVm.subCategoryList">
-																		<td>{{sc.category.name}}</td>
-																		<td>{{sc.name}}</td>
-																		<td>
-																					<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-																					<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
-																		</td>
-															</tr>
-												</tbody>
-									</table>
+					<form name="subCategoryForm" novalidate class="subCategoryForm">
+						<h4>Add New Sub Category</h4>
+						<legend></legend>
+						<div class="row">
+							<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
+								<select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
+									<option value="">Select Category</option>
+									<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
+								<input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
+							</div>
+							<div class="form-group col-sm-2 pull-right">
+								<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
+								<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
+							</div>
+									
 						</div>
+					</form>	
+					<div class="table-responsive">
+						<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+							<thead>
+										<th>Category</th>
+										<th>Sub Category</th>
+										<th>Action</th>
+										
+							</thead>
+							<tbody>
+								<tr ng-repeat="sc in gsettingVm.subCategoryList">
+									<td>{{sc.category.name}}</td>
+									<td>{{sc.name}}</td>
+									<td>
+										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 			</div>
 			
 			<div class="clearfix form-group"></div> -->
@@ -2403,5 +2405,126 @@
 		
 	</div>
 
+	<!--- Add promotion -->
+    <div ng-if="gsettingVm.tabValue == 'promotion'" ng-controller="CountCtrl as countVm">
+    	<h4>Add Promotion</h4>
+    	<legend></legend>
+		<form class="form-group" name="financeDataForm">
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<select class="form-control"  ng-model="gsettingVm.financeData.type">
+						<!--<option>Select Type</option>-->
+						<option value="promotion" selected="selected">Promotion</option>
+						<option value="financePartner">Finance Partner</option>
+						<option value="otherPartner">Other Partners</option>
+						<option value="tabMenu">Tab Menu</option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<span class="btn btn-warning fileinput-button">
+						<span>Browse image...</span>
+						<input type="file" name="file" onchange="angular.element(this).scope().updateFinanceMasterImage(this.files,this)" accept="image/*" ng-model="gsettingVm.financeData.file">
+					</span>
+					<span>
+						{{gsettingVm.financeData.image}}
+					</span>
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="url" placeholder="Website Url" ng-model="gsettingVm.financeData.url">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" placeholder="Start Date(mm/dd/yyyy)" ng-model="gsettingVm.financeData.startDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<input type="text" class="form-control" placeholder="End Date(mm/dd/yyyy)" ng-model="gsettingVm.financeData.endDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+				</div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-primary btn-block" ng-click="gsettingVm.saveFinanceMaster(financeDataForm)" ng-if="!gsettingVm.financeEdit">Save</button>
+					<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateFinanceMaster(financeDataForm)" ng-if="gsettingVm.financeEdit">Update</button>
+						
+				</div>
+			</div>
+		</form>
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'financemaster')" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Image</th>
+						<th>Website Url</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Auction</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="finance in gsettingVm.finances">
+						<td ng-if="finance.type == 'promotion'">Promotion</td>
+						<td ng-if="finance.type == 'financePartner'">Finance Partner</td>
+						<td ng-if="finance.type == 'otherPartner'">Other Partner</td>
+						<td ng-if="finance.type == 'tabMenu'">Tab Menu</td>
+						<td><img width="50" height="50" src="assets/uploads/financemaster/{{finance.image}}" ></td>
+						<td>{{finance.url}}</td>
+						<td>{{finance.startDate}}</td>
+						<td>{{finance.endDate}}</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-sm" ng-click="gsettingVm.editFinanceMaster($index)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-danger btn-sm"  ng-click="gsettingVm.deleteFinanceMaster($index)" ><i class="fa fa-trash"></i></button>
+						
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'financemaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+	<!--- Listing Lead Data -->
+    <div ng-if="gsettingVm.tabValue == 'leaddata'" ng-controller="CountCtrl as countVm">
+    	<h4>Listing Lead Data</h4>
+    	<button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.leadExportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Lead Id</th>
+						<th>Customer Name</th>
+						<th>Mobile</th>
+						<th>Asset Name</th>
+						<th>Offer Detail</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="lead in gsettingVm.leads">
+						<td>{{lead.leadId}}</td>
+						<td>{{lead.customerName}}</td>
+						<td>{{lead.mobile}}</td>
+						<td>{{lead.assetName}}</td>
+						<td>{{lead.offerDetail}}</td>
+						<td>{{lead.status}}</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'leadmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
 </div>
 </div>
