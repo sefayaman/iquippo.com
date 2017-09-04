@@ -134,8 +134,20 @@ exports.update = function(req, res,next) {
 
   async.eachLimit(req.bids,5,_update,function(err){
   	if(err)return handleError(res, err);
-  	next();
-  });
+	sendStatusMail(req.bids[0]);
+	var bidArr = [];
+	if(req.bidLost){
+		req.bids.forEach(function(item,index){
+			if(!index)
+				return;
+			var bidObj = {action:"BIDREJECTED"};
+			bidObj.ticketId = item.ticketId;
+			bidArr.push(bidObj);
+		});
+	AssetSaleUtil.sendNotification(bidArr);
+	}
+	next();
+});
 
   function _update(bid,cb){ 
   	  var bidId = bid._id;
@@ -143,9 +155,6 @@ exports.update = function(req, res,next) {
 	  bid.updatedAt = new Date();
 	   AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
 	        cb(err);
-	        if([bidStatuses[3],bidStatuses[4]].indexOf(bid.bidStatus) !== -1 || 
-	        	[dealStatuses[1],dealStatuses[6],dealStatuses[7],dealStatuses[8],dealStatuses[9],dealStatuses[12]].indexOf(bid.dealStatus) !== -1)
-	       		sendStatusMail(bid);
 	  });
   }
 }
@@ -172,13 +181,10 @@ function sendStatusMail(bid) {
 		case dealStatuses[12] /*Closed*/:
 			bidObj.action = "CLOSED";
 			break;
-		case bidStatuses[3] /*EMD Failed*/:
-			bidObj.action = "EMDFAILED";
-			break;
-		case bidStatuses[4] /*Full Payment Failed*/:
-			bidObj.action = "FULLPAYMENTFAILED";
-			break;
 	}
+	if(!bidObj.action)
+		return;
+
 	bidObj.ticketId = bid.ticketId;
 	bidArr.push(bidObj);
 	AssetSaleUtil.sendNotification(bidArr);
@@ -294,7 +300,7 @@ exports.validateUpdate = function(req,res,next){
 			productId = req.body.product.proData;
 		if(!productId)
 			return callback({statusCode:404,message:"Bad Request"});
-		AssetSaleBid.find({'product.proData':productId,status:true,_id:{$ne:req.params.id}}, function (err, bids) {
+		AssetSaleBid.find({'product.proData':productId,status:true,_id:{$ne:req.params.id},dealStatus:dealStatuses[0]}, function (err, bids) {
 		    if (err) {return callback({statusCode:404,message:"Bid not found"});}
 		    req.otherBids = bids;
 		    return callback();
@@ -351,7 +357,7 @@ exports.validateSubmitBid = function(req,res,next){
 			if(err || !saleProcessData){return res.status(404).send("Sale Process master is not found");}
 			//return cb(entepriseData);
 			if(saleProcessData.buyNowPriceApproval === 'Yes'){
-				AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
+				/*AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
 				AssetSaleUtil.setStatus(req.body,dealStatuses[0],'dealStatus','dealStatuses',req.user._id);	
 				if(!req.product.cooling){
 					req.product.cooling = true;
@@ -369,9 +375,10 @@ exports.validateSubmitBid = function(req,res,next){
 						AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses',req.user._id);
 						req.otherBids.push(item);
 					}
-				});
+				});*/
 				return next();
 			}
+			req.body.autoApprove = true;
 			AssetSaleUtil.setStatus(req.body,dealStatuses[6],'dealStatus','dealStatuses',req.user._id);
 			AssetSaleUtil.setStatus(req.body,bidStatuses[7],'bidStatus','bidStatuses',req.user._id);
 			req.body.emdStartDate = new Date(); 
@@ -742,6 +749,7 @@ exports.getBidCount = function(req, res) {
 		var filter = {status:true};
 		if (req.query.productId)
 			filter['product.proData'] = req.query.productId;
+		filter.bidStatus = {$in:[bidStatuses[0],bidStatuses[7]]};
 		var query = AssetSaleBid.count(filter);
 		query.exec(function(err, results) {
 			return callback(err, results);
@@ -752,6 +760,7 @@ exports.getBidCount = function(req, res) {
 		var filter = {status:true};
 		if (req.query.productId)
 			filter['product.proData'] = req.query.productId;
+		filter.bidStatus = {$in:[bidStatuses[0],bidStatuses[7]]};
 		if (req.query.userId)
 			filter.user = req.query.userId;
 		var query = AssetSaleBid.count(filter);
@@ -770,6 +779,7 @@ exports.getMaxBidOnProduct = function(req, res) {
 	if(req.query.userId)
 		filter.user = req.query.userId;
 	filter.offerStatus = offerStatuses[0];
+	filter.bidStatus = {$in:[bidStatuses[0],bidStatuses[7]]};
 	var query = AssetSaleBid.find(filter).sort({bidAmount:-1}).limit(1);
 	query.exec(function(err,results){
 		if(err)

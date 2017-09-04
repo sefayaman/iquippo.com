@@ -97,7 +97,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
          if(isExpired){
             AssetSaleUtil.setStatus(item,bidStatuses[3],'bidStatus','bidStatuses');
             AssetSaleUtil.setStatus(item,dealStatuses[3],'dealStatus','dealStatuses');
-            item.findNextBid = true; 
+            AssetSaleUtil.sendNotification([{action:"EMDFAILED",ticketId:item.ticketId}]);
+            if(!item.autoApprove)
+              item.findNextBid = true;
             async.parallel({saleProcessData:getSaleProcessMaster,otherBids:getOtherBids},processBids);
          }else
            return cb();
@@ -107,6 +109,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
            if(isExpired){
               AssetSaleUtil.setStatus(item,bidStatuses[4],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(item,dealStatuses[4],'dealStatus','dealStatuses');
+              AssetSaleUtil.sendNotification([{action:"FULLPAYMENTFAILED",ticketId:item.ticketId}]);
               async.parallel({otherBids:getOtherBids},processBids);
           }else
             return cb();
@@ -121,7 +124,8 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       actionableBids.push(item);
       var selBid = null;
       if(item.findNextBid)
-        selBid = nextApprovableBid(item,result.otherBids);;
+        selBid = nextApprovableBid(item,result.otherBids);
+
       if(selBid){
         selBid.emdStartDate = new Date();
         if(result.saleProcessData && result.saleProcessData.emdPeriod) 
@@ -135,17 +139,20 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       }else{
         item.updateProduct = true;
         result.otherBids.forEach(function(bid){
-          //bid.status = false;
-          AssetSaleUtil.setStatus(bid,dealStatuses[2],'dealStatus','dealStatuses');
+          AssetSaleUtil.setStatus(bid,dealStatuses[0],'dealStatus','dealStatuses');
+          AssetSaleUtil.setStatus(bid,bidStatuses[0],'bidStatus','bidStatuses');
           actionableBids.push(bid);
         });
       }
-      
+      var bidCount = result.otherBids.length || 0;
+      var highestBid = 0;
+      if(result.otherBids.length)
+        highestBid = getMaxBid(result.otherBids).bidAmount || 0;
       async.eachLimit(actionableBids,3,updateBid,function(err){
         if(err)
           return callback(err);
         if(item.updateProduct)
-            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidReceived:false,bidCount:0,highestBid:0}}).exec();
+            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
           return callback();
       });
     }
@@ -159,6 +166,9 @@ var TimeInterval =  1*60*1000;/*Service interval*/
     }
 
     function getSaleProcessMaster(innerCallback){
+      if(item.autoApprove)
+        return innerCallback();
+
       if(!item.product || !item.product.seller || !item.product.seller._id)
         return innerCallback("Seller not found");
 
@@ -175,7 +185,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
 
 function nextApprovableBid(bid,otherBids){
   var selBid = null;
-  if(bid.lastAccepted || !otherBids.length)
+  if(bid.lastAccepted || !otherBids.length || bid.autoApprove)
     return selBid;
   otherBids.sort(function(a,b){
     return a.bidAmount - b.bidAmount;

@@ -241,7 +241,6 @@ exports.sendNotification = function(bidArr){
 				return callback();
 			emailData.to = tplData.user.email;
 			emailData.notificationType = "email";
-			console.log("emailData###", emailData);
 			sendEmail(tplData,emailData,tplName,callback);
 	    });
 	}
