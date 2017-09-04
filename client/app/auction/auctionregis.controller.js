@@ -15,15 +15,18 @@
     vm.openAuctionModel =openAuctionModel;
     vm.auctionId ="";
     vm.log =[];
+    $scope.currentAuction = {};
 
     function init() {
+
+      console.log("sdfd",$scope);
      if($scope._id) {
   		var filter = {};
     	filter._id = $scope._id;
     	AuctionSvc.getAuctionDateData(filter).then(function(result) {
           if(!result)
           return;
-           $scope.currentAuction = {};
+           
             angular.copy(result.items[0], $scope.currentAuction);	
           });
      	}
