@@ -71,7 +71,7 @@
               <td>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')">
                   <span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
-                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+                  <span ng-if="bid.fullPayment.remainingPayment <= 0">View Details</span>
                 </a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'VIEWFULLPAYMENT')">
                   <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>

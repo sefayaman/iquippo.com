@@ -39,6 +39,8 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 	    }
 		var msg = "";
 		var serverAction = "";
+		if(vm.emdFullPaymentInfo.paymentMode === 'Cash')
+			vm.emdFullPaymentInfo.instrumentNo = "";
 		if(action == 'emdPayment') {
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
