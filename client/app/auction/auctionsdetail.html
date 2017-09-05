@@ -69,7 +69,7 @@
           </button>
         </div>         
         <div class="col-xs-12 col-sm-6 text-right padd-left">
-          <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal()" class="btn btn-default btn-sm active">Register Now</a>
+          <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal(product)" class="btn btn-default btn-sm active">Register Now</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> <span class="hidden-xs">Auction Catalogue</span></a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!docType &&  docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
@@ -161,40 +161,61 @@
                   
                 </div>
       </div> -->
-      <div class="no-result" ng-if="auctionDetailsVm.show">No records found</div>
-      <div class="row" ng-if="auctionDetailsVm.auctionDetailListing">
-        <div class="col-sm-6" ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
-          <div class="auction-list auction-details">
-            <div class="media">
-              <a href="javascript:void(0);" class="pull-left" ng-if="auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
-                <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
-              </a>
-              <a href="javascript:void(0);" class="pull-left" ng-if="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">
-                <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.product.assetDir}}/{{auctionProduct.product.primaryImg}}" alt="">
-              </a>
-              <div class="media-body">
-                <h4 class="media-heading text-ellips">
-                  {{auctionProduct.product.category}} {{auctionProduct.product.brand}} {{auctionProduct.product.model}}</h4>
-                <p ng-class="{'text-warning': auctionValue =='upcomingAuctions' }">
-                  <span ng-if="auctionValue =='upcomingAuctions'"><i class="fa fa-clock-o"></i> Upcoming</span>
-                  <span ng-if="auctionValue =='ongoingAuctions'"><i class="fa fa-clock-o"></i> Ongoing</span>
-                  <span ng-if="auctionValue =='closedAuctions'"><i class="fa fa-clock-o"></i> Closed</span>
-                </p>
-                <p ng-if="auctionProduct.product.assetId">Asset Id : {{auctionProduct.product.assetId}}</p>
-                <p ng-if="auctionProduct.product.mfgYear"><i class="fa fa-calendar-o"></i> {{auctionProduct.product.mfgYear}} </p>
-                <p ng-if="auctionProduct.product.contactName"><a href="tel:{{auctionProduct.product.contactNumber}}"><i class="fa fa-phone"></i>  <span>{{auctionProduct.product.contactName}}</span> <span ng-if="auctionProduct.product.contactNumber">({{auctionProduct.product.contactNumber}})</span>
-                  </a>
-                </p>
-               
-                  <p ng-if="auctionProduct.product.city"><i class="fa fa-map-marker"></i> {{auctionProduct.product.city}}</p>
-              </div>
-              <div class="media-footer">
-                <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct.product._id" ng-click="openUrl(auctionProduct.product._id)">View Details</a>
-              </div>
-            </div>
+      <div class="no-result" ng-if="!auctionDetailsVm.show" ng>No records found</div>
+
+    <div ng-repeat="lot in auctionDetailsVm.lotListing" data-ng-init='load(lot)'>
+           <h2>LotNumber - {{lot}}</h2>
+
+      <div class="widgit">
+          <div class="container-fluid mjuszb4">
+          <input type="hidden" id="auction_user_id" value="">
+
+          <div id="classifiedAuctionBid" data-classifiedAuctionid="{{auctionDetailsVm.auctionId}}"></div>
+          <div id="bidHistoryDialogForAuction" style="display:none"></div>
+          <div id="messageDialogForAuction"></div>
           </div>
-        </div>
       </div>
+       
+      <div class= "row" ng-if="auctionDetailsVm.show">
+       <div  ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+        
+              <div class="col-sm-6">
+                  <div class="auction-list auction-details">
+                    <div class="media">
+                      <a href="javascript:void(0);" class="pull-left" ng-if="auctionProduct._id" ng-click="openUrl(auctionProduct._id)">
+                        <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.assetDir}}/{{auctionProduct.primaryImg}}" alt="">
+                      </a>
+                      <a href="javascript:void(0);" class="pull-left" ng-if="!auctionProduct._id" ng-click="openUrl(auctionProduct._id)">
+                        <img class="media-object" src="{{uploadImagePrefix}}{{auctionProduct.assetDir}}/{{auctionProduct.primaryImg}}" alt="">
+                      </a>
+                      <div class="media-body">
+                        <h4 class="media-heading text-ellips">
+                          {{auctionProduct.category.name}} {{auctionProduct.brand.name}} {{auctionProduct.model.name}}</h4>
+                        <p ng-class="{'text-warning': auctionValue =='upcomingAuctions' }">
+                          <span ng-if="auctionValue =='upcomingAuctions'"><i class="fa fa-clock-o"></i> Upcoming</span>
+                          <span ng-if="auctionValue =='ongoingAuctions'"><i class="fa fa-clock-o"></i> Ongoing</span>
+                          <span ng-if="auctionValue =='closedAuctions'"><i class="fa fa-clock-o"></i> Closed</span>
+                        </p>
+                        <p ng-if="auctionProduct.product.assetId">Asset Id : {{auctionProduct.assetId}}</p>
+                        <p ng-if="auctionProduct.product.mfgYear"><i class="fa fa-calendar-o"></i> {{auctionProduct.mfgYear}} </p>
+                        <p ng-if="auctionProduct.seller.mobile"><a href="tel:{{auctionProduct.seller.mobile}}"><i class="fa fa-phone"></i> 
+                           <span>{{auctionProduct.seller.mobile}}</span>
+                            <span ng-if="auctionProduct.seller.mobile">({{auctionProduct.seller.mobile}})</span>
+                          </a>
+                        </p>
+                      
+                          <p ng-if="auctionProduct.city"><i class="fa fa-map-marker"></i> {{auctionProduct.city}}</p>
+                      </div>
+                      <div class="media-footer">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger" ng-disabled="!auctionProduct._id" ng-click="openUrl(auctionProduct._id)">View Details</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+       </div>
+      </div>
+   
     </div>
   </div>	
 </div>
