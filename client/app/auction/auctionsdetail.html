@@ -167,7 +167,13 @@
            <h2>LotNumber - {{lot}}</h2>
 
       <div class="widgit">
-             Place widgit here
+          <div class="container-fluid mjuszb4">
+          <input type="hidden" id="auction_user_id" value="">
+
+          <div id="classifiedAuctionBid" data-classifiedAuctionid="{{auctionDetailsVm.auctionId}}"></div>
+          <div id="bidHistoryDialogForAuction" style="display:none"></div>
+          <div id="messageDialogForAuction"></div>
+          </div>
       </div>
        
       <div class= "row" ng-if="auctionDetailsVm.show">
