@@ -27,6 +27,9 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var Product = require('./../product/product.model');
 var config = require('./../../config/environment');
+var path = require('path');
+var utility = require('./../../components/utility.js'); 
+
 
 var SearchSuggestion = require('./searchsuggestion.model');
 var SavedSearch = require('./savedsearch.model');
@@ -1207,7 +1210,18 @@ function buildSuggestion(req, res, suggestions) {
 }
 
 exports.rotate = function(req, res) {
-	var imgPath = config.uploadPath + req.body.imgPath;
+    var imgPath = config.uploadPath + req.body.imgPath;
+    var imgName = req.body.imgPath;
+    var s3ImgPath = 'assets/uploads/' + req.body.imgPath;
+    
+    /**Start S3 Operation **/
+    console.log('Line no : 1213 Do something here.....',imgPath);
+    utility.downloadFromS3(s3ImgPath, imgName ,function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+    /**End S3 Operation **/
+    
     lwip.open(imgPath,function(err,image){
      	if(err)
      		throw err;

@@ -59,11 +59,11 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Mode of Payment</th>
-            <th>Bank Name / Branch </th>
+            <th>Mode of <br> Payment</th>
+            <th>Bank Name <br> / Branch </th>
             <th>Instrument No</th>
-            <th>Payment / Instrument Date</th>
-            <th>Date of Entry</th>
+            <th>Payment <br> / Instrument Date</th>
+            <th>Date of <br> Entry</th>
             <th>Amount</th>
           </tr>
         </thead>
@@ -77,12 +77,12 @@
             <td>{{payment.amount}}</td>
           </tr>
         </tbody>
-      </table>
-      <!-- <div class="row">
-        <div class="col-sm-offset-5 col-sm-2 text-center">Total :</div>
-        <div class="col-sm-5">{{}}</div>
-      </div> -->
-    </div>      
+      </table>      
+    </div>    
+    <div class="row" ng-if="totalPaidAmount > 0">
+      <div class="col-sm-offset-7 col-sm-2 text-right"><strong>Total :</strong></div>
+      <div class="col-sm-3 text-left"> {{totalPaidAmount}}</div>
+    </div>  
   </div>  
    
 </div>

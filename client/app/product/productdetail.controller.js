@@ -453,7 +453,7 @@
       AssetSaleSvc.getMaxBidOnProduct(filter)
       .then(function(res){
           vm.userCurrentBid = res;
-          vm.bidAmount=res.bidAmount;
+          vm.bidAmount=res.actualBidAmount;
       })
       .catch(function(err){
         if (err) throw err;
@@ -518,7 +518,7 @@
           }
           //End
           $scope.currentProduct = result[0];
-          if ($scope.currentProduct.auction && $scope.currentProduct.auction._id) {
+          if ($scope.currentProduct.auctionListing && $scope.currentProduct.auction && $scope.currentProduct.auction._id) {
             var auctionFilter = {};
             auctionFilter._id = $scope.currentProduct.auction._id;
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)

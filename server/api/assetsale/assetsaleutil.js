@@ -1,9 +1,13 @@
 'use strict';
-
+var async = require("async");
 var SaleProcessMaster= require('../common/saleprocessmaster.model');
 var User = require('../user/user.model');
 var MarkupPrice = require('../common/markupprice.model');
 var EMDMaster = require('../common/emdcharge.model');
+var config = require('./../../config/environment');
+var commonController = require('./../common/common.controller');
+var notification = require('./../../components/notification.js');
+var AssetSaleBid = require('./assetsalebid.model');
 /*
 * For enterprise master filter must be like {}
 */
@@ -143,6 +147,116 @@ function getEmdFromMaster(filter, callback) {
 		}
 	});
 }
+
+exports.sendNotification = function(bidArr){
+    if(!bidArr.length)
+		return;
+    async.eachLimit(bidArr,5,initialize,function(err){
+    	if(err)
+			console.log("error in sending mail for buy sale",err);
+    });
+
+	function initialize(bid,callback){
+		if(!bid.ticketId || !bid.action)
+			return callback("Invalid bid");
+
+	    var query = AssetSaleBid.find({ticketId:bid.ticketId}).populate("user product.proData");
+	    query.exec(function(err,bids){
+			if(err || !bids.length)
+				return callback(err);
+			var tplData = bids[0];
+			delete tplData._id;
+			var tplName = "";
+			var subject = "";
+			switch(bid.action){
+				case 'BUYNOW':
+					tplName = "BuynowRequestEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Buy Now Request Received for " + tplData.product.name;
+					break;
+				case 'BIDREQUEST':
+					tplName = "BidRequestEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Bid Request Received for " + tplData.product.name;
+					break;
+				case 'OFFERREJECTED':
+					tplName = "OfferRejectedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Rejected.";
+					break;
+				case 'APPROVE':
+					tplName = "OfferApprovedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Approved.";
+					break;
+				case 'EMDPAYMENT':
+					var totalPaidAmount = 0;
+					tplData.emdPayment.paymentsDetail.forEach(function(item) {
+		                totalPaidAmount = totalPaidAmount + item.amount;
+		            });
+		            tplData.totalAtEMDPayment = totalPaidAmount;
+					tplName = "EMDReceivedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your Earnest Money Deposit (EMD) for " + tplData.product.name + " has been Received.";
+					break;
+				case 'FULLPAYMENT':
+					var totalPaidAmount = 0;
+					tplData.fullPayment.paymentsDetail.forEach(function(item) {
+		                totalPaidAmount = totalPaidAmount + item.amount;
+		            });
+		            tplData.totalAtEMDPayment = totalPaidAmount;
+					tplName = "FullpaymentReceivedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your Full Payment for " + tplData.product.name + " has been Received.";
+					break;
+				case 'EMDFAILED':
+					tplName = "EMDFailedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your request for " + tplData.product.name + " has been Cancelled.";
+					break;
+				case 'FULLPAYMENTFAILED':
+					tplName = "FullpaymentFailedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your request for " + tplData.product.name + " has been Cancelled.";
+					break;
+				case 'DOISSUED':
+					tplName = "DOIssuedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your Delivery Order (DO) for " + tplData.product.name + " has been generated.";
+					break;
+				case 'BIDREJECTED':
+					tplName = "BidRejectedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
+					break;
+				case 'BIDCHANGED':
+					tplName = "BidChangedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": You have revised your Bid for " + tplData.product.name;
+					break;
+				case 'BIDWITHDRAW':
+					tplName = "BidWithdrawEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
+					break;
+				case 'CLOSED':
+					tplName = "BidClosedEmailToBuyer";
+					subject = "Ticket ID:" + tplData.ticketId +": Your request for " + tplData.product.name + " has been successfully completed.";
+					break;
+			}
+			if(!tplName)
+				return callback("Invalid Action");
+
+			var emailData = {};
+			emailData.subject = subject;
+			if(!tplData.user || !tplData.user.email)
+				return callback();
+			emailData.to = tplData.user.email;
+			emailData.notificationType = "email";
+			sendEmail(tplData,emailData,tplName,callback);
+	    });
+	}
+  }
+
+	function sendEmail(tplData,emailData,tplName,cb) {
+		commonController.compileTemplate(tplData, config.serverPath, tplName, function(success,retData){
+		if(success){
+			emailData.content =  retData;
+			notification.pushNotification(emailData);
+		}
+		if(cb)
+			cb();
+		});
+	}
+
 /*function getEmdFromMaster(filter, callback) {
 	var query = EMDMaster.find(filter);
 	query.exec(function(err, result) {

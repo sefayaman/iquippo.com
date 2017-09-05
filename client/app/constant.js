@@ -93,6 +93,11 @@ var Modals = {
   }
 };
 
+var s3Detais = {
+    baseURL : "http://s3.ap-south-1.amazonaws.com",
+    s3bucket : "iquippo-image-upload-dev"
+};
+
 var priceRange = [
 {
   min:0,
@@ -135,6 +140,7 @@ var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
 var auctionmasterDir="auctionmaster";
+var financemasterDir="financemaster";
 var choosenTitle="";
 var metaDescription="";
 

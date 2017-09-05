@@ -1,9 +1,14 @@
 <div>
+  <div class="row text-right">
+    <div class="col-sm-12">
+      <button class="btn btn-success pull-right" ng-click="faVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+    </div>
+  </div>
   <div class="btn-group enterprise-value form-group">
       <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
       <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
       <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'bidproduct'}" ng-click="onTabChange('bidproduct')">All Bid</button>
-      <button class="btn btn-success pull-right" ng-click="faVm.exportExcel()" style="width:120px;" ><i class="fa fa-file-excel-o"></i> Export Excel</button>
+      
    </div>
   <!-- Approved Bid -->
   <div ng-if="faVm.tabVal === 'approved'">
@@ -66,7 +71,7 @@
               <td>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'FULLPAYMENT')">
                   <span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
-                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+                  <span ng-if="bid.fullPayment.remainingPayment <= 0">View Details</span>
                 </a>
                 <a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="faVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="faVm.validateAction(bid,'VIEWFULLPAYMENT')">
                   <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>

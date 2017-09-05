@@ -291,7 +291,8 @@ angular.module('sreizaoApp')
       }
 
       $http.post('/api/users/export', dataToSend)
-      .then(function(res){
+      .then(function(res){console.log("res===",res);
+      console.log("data==",res.data);
         var data = res.data;
         saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
       },

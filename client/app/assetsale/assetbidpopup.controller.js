@@ -89,10 +89,10 @@
         AssetSaleSvc.setStatus(dataToSend,bidStatuses[0],'bidStatus','bidStatuses');
         AssetSaleSvc.setStatus(dataToSend,assetStatuses[0].name,'assetStatus','assetStatuses');
 
-        if(query.offerType == "Buynow"){
+        /*if(query.offerType == "Buynow"){
           AssetSaleSvc.setStatus(dataToSend,dealStatuses[6],'dealStatus','dealStatuses');
           AssetSaleSvc.setStatus(dataToSend,bidStatuses[7],'bidStatus','bidStatuses');
-        }
+        }*/
 
         if (query.typeOfRequest)
           dataToSend.typeOfRequest = query.typeOfRequest;

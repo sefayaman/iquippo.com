@@ -4,25 +4,25 @@
         <h4 class="modal-title">Details</h4>
       </div>
       <div class="modal-body"> 
-      <form name="do_order">     
+        <form name="do_order">     
           <div class="row">
-            <div class="col-sm-offset-2 col-sm-4" ng-if="doUploadVm.validateAction(bidData,'DOISSUED') || formType === 'doIssued'">
+            <div class="col-sm-offset-2 col-sm-5" ng-if="doUploadVm.validateAction(bidData,'DOISSUED') || formType === 'doIssued'">
               <button class="btn btn-danger fileinput-button">
                   <input type="file" name="file" onchange="angular.element(this).scope().uploadDoc(this.files,this)">
                   <span><i class="fa fa-upload"></i> DO Upload</span>
               </button>
               <span>{{bidDt.deliveryOrder}}</span>
             </div>
-            <div class="col-sm-offset-2 col-sm-4" ng-if="doUploadVm.validateAction(bidData,'DELIVERED') && formType === 'deliverd'">
+            <div class="col-sm-offset-2 col-sm-5" ng-if="doUploadVm.validateAction(bidData,'DELIVERED') && formType === 'deliverd'">
               <div class="input-group" ng-class="{'has-error':do_order.dateOfDelivery.$invalid && submitted}">
                 <input type="text" class="form-control" id="dodate" name="dateOfDelivery" ng-model="bidDt.dateOfDelivery" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Delivery" required>
                 <label class="input-group-addon" for="dodate"><i class="fa fa-calendar"></i></label>
               </div>
             </div>
-            <div class="col-sm-4 text-right">
+            <div class="col-sm-3 text-right">
               <button class="btn btn-danger" ng-click="submitDOIssued(do_order)">Submit</button>
             </div>
           </div>
-         </form>
+        </form>
       </div>   
   </div>

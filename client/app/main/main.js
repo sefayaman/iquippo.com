@@ -202,7 +202,7 @@ angular.module('sreizaoApp')
       .state('finance', {
         url:"/finance",
         templateUrl: 'app/finance/finance.html',
-        controller: 'FinanceCtrl as financeVm',
+        controller: 'FinancingCtrl as financingVm',
         layout:'client',
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.financing.title;

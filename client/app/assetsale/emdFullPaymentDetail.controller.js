@@ -15,11 +15,19 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
   	function init(){
 		if($scope.bidData.emdPayment && $scope.bidData.emdPayment.paymentsDetail && action == 'emdPayment') {
 			vm.paymentList = [];
+			$scope.totalPaidAmount = 0;
 			vm.visibleFlag = $scope.bidData.emdPayment.remainingPayment > 0 ? true : false;
+			$scope.bidData.emdPayment.paymentsDetail.forEach(function(item) {
+              $scope.totalPaidAmount = Number($scope.totalPaidAmount) + Number(item.amount);
+            });
 			angular.copy($scope.bidData.emdPayment.paymentsDetail, vm.paymentList);
 		} else if($scope.bidData.fullPayment && $scope.bidData.fullPayment.paymentsDetail && action == 'fullPayment') {
 			vm.paymentList = [];
+			$scope.totalPaidAmount = 0;
 			vm.visibleFlag = $scope.bidData.fullPayment.remainingPayment > 0 ? true : false;
+			$scope.bidData.fullPayment.paymentsDetail.forEach(function(item) {
+              $scope.totalPaidAmount = Number($scope.totalPaidAmount) + Number(item.amount);
+            });
 			angular.copy($scope.bidData.fullPayment.paymentsDetail, vm.paymentList);
 		}
     }
@@ -31,6 +39,8 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 	    }
 		var msg = "";
 		var serverAction = "";
+		if(vm.emdFullPaymentInfo.paymentMode === 'Cash')
+			vm.emdFullPaymentInfo.instrumentNo = "";
 		if(action == 'emdPayment') {
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
