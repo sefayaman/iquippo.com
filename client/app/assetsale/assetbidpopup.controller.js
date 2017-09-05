@@ -147,19 +147,6 @@
                 $scope.params.callback();
 
             Modal.alert(result.message, true);
-            if(Auth.getCurrentUser().email) {
-              var data = {};
-              dataToSend = {};
-              data['to'] = Auth.getCurrentUser().email;
-              dataToSend.serverPath = serverPath;
-              dataToSend.ticketId = result.ticketId;
-              if(query.typeOfRequest == "buynow") {
-                data['subject'] = 'No reply: Buynow request received';
-              } else {
-                data['subject'] = 'No reply: Bid request received';
-              }
-              notificationSvc.sendNotification('bidReceiveEmailToCustomer',data, dataToSend,'email');
-            }
             //if(query.offerType == "Buynow")
             $rootScope.$broadcast('refreshProductDetailPage');
             $scope.close();
