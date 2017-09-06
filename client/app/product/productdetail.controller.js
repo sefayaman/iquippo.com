@@ -1009,8 +1009,7 @@
     vm.priceTrendSurvey.user = {};
     vm.priceTrendSurvey.product = {};
     vm.priceTrendSurvey.priceTrend = {};
-    Sreiglobal_Asset_Sale
-
+    
     vm.save = save;
     vm.close = close;
     vm.onCodeChange = onCodeChange;
