@@ -302,7 +302,7 @@
 			<uib-tabset justified="true" class="asset-auction">
 			<uib-tab heading="Auction" select="gsettingVm.onActionTabClick('auctionmaster')">
 			<!-- <form name="invMasterForm" novalidate class="invMasterForm"> -->
-			<p>Download the <a href="/download/templates/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
+			<p>Download the <a href="{{templateDir}}/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
 			
 			<div class="row form-group">
 				<div class="col-sm-8">
@@ -996,7 +996,7 @@
 			<div class="row">
 				<div class="col-sm-8">
 					<h4>Technical Information</h4>
-					<p>Download the <a href="/download/templates/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
+					<p>Download the <a href="{{templateDir}}/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
 				</div>
 				<div class="col-xs-12 col-sm-1 padd-left">
 					<h3><button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
@@ -1478,7 +1478,7 @@
 	<!-- Asset group master -->
 	<div ng-if="gsettingVm.tabValue == 'assetgroup'" ng-controller="AssetGroupCtrl as assetGroupVm">
 		<ul class="list-instrct">
-			<li>Download the <a href="/download/templates/{{assetGroupVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory.</li>
+			<li>Download the <a href="{{templateDir}}/{{assetGroupVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory.</li>
 			<li>System will accept only 100 records in a single file.</li>
 		</ul>
 		<div class="row">
