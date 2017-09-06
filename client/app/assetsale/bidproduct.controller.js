@@ -41,7 +41,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 		var filter = angular.copy(initFilter);
 		if (vm.searchStr) {
 			filter.isSearch = true;
-			filter.searchStr = encodeURIComponent(vm.searchStr);
+			filter.searchstr = encodeURIComponent(vm.searchStr);
 		}
 		
 		if(vm.activeBid === 'actionable'){
