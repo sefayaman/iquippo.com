@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: 'RobotoCondensed-Regular';
   src: url('/assets/fonts/RobotoCondensed-Regular.eot?#iefix') format('embedded-opentype'),  url('/assets/fonts/RobotoCondensed-Regular.woff') format('woff'), url('/assets/fonts/RobotoCondensed-Regular.ttf')  format('truetype'), url('/assets/fonts/RobotoCondensed-Regular.svg#RobotoCondensed-Regular') format('svg');
@@ -118,7 +119,7 @@ header{background:#fff;}
 
 .navbar .nav.navbar-nav.navbar-right{margin:-5px;}
 .navbar .nav.navbar-nav.navbar-right .submenu{background: #f9bc03; margin-top: 7px;}
-.navbar .nav.navbar-nav.navbar-right .submenu a{ color: #333; padding: 5px 10px;}
+.navbar .nav.navbar-nav.navbar-right .submenu a{ color: #333; padding: 5px 10px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 /* .navbar .nav.navbar-nav.navbar-right a{font-size: 13px; padding:8px 10px;margin-right:5px;margin-top:5px;color: #FFF;background: #e3000f;line-height:15px;} */
 /* .navbar .nav.navbar-nav.navbar-right a:hover,.navbar .nav.navbar-nav.navbar-right a:focus{background: #e3000f;outline: none;color: #FFF;} */
 /* .navbar .nav.navbar-nav.navbar-right li:nth-child(1) a{background: #004394;} */
