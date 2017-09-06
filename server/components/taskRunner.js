@@ -116,6 +116,8 @@ module.exports.startTaskRunner = function() {
 
 if(require.main === module){
   (function(){
-    getTask();
+    setInterval(function(){
+      getTask();
+    },5000);
   }())
 }
