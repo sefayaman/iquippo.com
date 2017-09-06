@@ -61,6 +61,7 @@ angular.module('sreizaoApp',[
     // Redirect to login if route requires auth and you're not logged in
 
     $rootScope.uploadImagePrefix = s3Detais.baseURL+"/"+s3Detais.s3bucket+"/assets/uploads/";
+    $rootScope.templateDir = $rootScope.uploadImagePrefix  + 'templates';
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
     $rootScope.auctionDir = auctionDir;
