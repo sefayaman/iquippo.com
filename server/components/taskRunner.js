@@ -6,10 +6,12 @@ var config = require('../config/environment');
 var commonController = require('../api/common/common.controller');
 var bulkUpload = require('./bulkUpload')
 var notification = require('./notification.js');
+var util = require('util');
 
 var Uploaded_TEMPLATE_NAME = "BulkProductUploaded"
 
 function getTask() {
+  util.log('Starting Tasks');
   Task.find({
     counter: {
       $lte: 3
@@ -106,7 +108,14 @@ function pushNotification(taskData) {
   });
 }
 
-exports.startTaskRunner = function() {
+module.exports.startTaskRunner = function() {
   console.log("task runner service started");
   getTask();
+}
+
+
+if(require.main === module){
+  (function(){
+    getTask();
+  }())
 }
