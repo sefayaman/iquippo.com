@@ -356,6 +356,12 @@ angular.module('sreizaoApp')
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'
       })
+      .state('auctionlot', {
+        url: '/buyerdashboard',
+        templateUrl: 'app/auction/buyerdashboard.html',
+        authenticate:true,
+        layout:'admin'
+      })
       .state('valuationrequests', {
         url: '/valuationrequests/:mode',
         templateUrl: 'app/valuation/valuationlisting.html',
