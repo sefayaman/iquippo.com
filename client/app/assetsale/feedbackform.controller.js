@@ -19,7 +19,7 @@ function feedbackCtrl($scope, $rootScope, Modal, Auth, UtilSvc, $uibModal, $uibM
     AssetSaleSvc.update($scope.bidData, 'feedback').
       then(function(res) {
         if (res)
-          Modal.alert("Thank you for your feedback.", true);
+          Modal.alert("Thank You for your valuable feedback.", true);
         closeDialog();
       })
       .catch(function(res) {

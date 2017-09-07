@@ -376,6 +376,7 @@ exports.validateSubmitBid = function(req,res,next){
 						req.otherBids.push(item);
 					}
 				});*/
+				req.buyNowApprovalValue = saleProcessData.buyNowPriceApproval;
 				return next();
 			}
 			req.body.autoApprove = true;
@@ -467,9 +468,10 @@ exports.submitBid = function(req, res) {
 			msg = "Your Sale process is in process , you may contact us at 03366022059";
 		else if(req.query.typeOfRequest === "buynow" && req.buyNowApprovalValue == 'No' && req.buynowCount > 0)	
 			msg = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
+		else if(req.query.typeOfRequest === "buynow" && req.buyNowApprovalValue === 'Yes')
+			msg = "Your Buy Now request is submitted successfully. Our executives will get in touch with you. ";
 		else
-			msg = "Your Request has been submitted successfully , We will get in touch with You.";
-
+			msg = "Your Bid request has been submitted successfully. Our executives will get in touch with you.";
 		return res.status(200).json({message:msg});
 		//return res.status(200).send("Bid submitted successfully.");
 	});
@@ -958,24 +960,46 @@ exports.exportExcel = function(req,res){
 	  resList.forEach(function(item,idx){
 	    dataArr[idx + 1] = [];
 	    headers.forEach(function(header){
-	      var keyObj = fieldsMap[header];
-	      var val = _.get(item,keyObj.key,"");
-	      if(keyObj.type && keyObj.type == 'boolean')
-	          val = val?'YES':'NO';
-	      if(keyObj.type && keyObj.type == 'date' && val)
-	        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-	      if(keyObj.key && keyObj.key == 'buyerName' && item.user)
-	        val = item.user.fname + " " + item.user.lname;
-	      if(keyObj.key && keyObj.key == 'fullPaymentAmount')
-	        val = item.fullPaymentAmount;
+			var keyObj = fieldsMap[header];
+			var val = _.get(item,keyObj.key,"");
+			if(keyObj.type && keyObj.type == 'boolean')
+			  val = val?'YES':'NO';
+			if(keyObj.type && keyObj.type == 'date' && val)
+			val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+			if(keyObj.key && queryParam.seller === 'y') {
+				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.fname + " " + item.user.lname;
+				else if(item.user && item.user.mobile && keyObj.key === 'buyerMobile' && dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.mobile;
+				else if(item.user && item.user.email && keyObj.key === 'buyerEmail' && dealStatuses.indexOf(item.dealStatus) > 8)
+					val = item.user.email;
+				else
+					val = "";
+			}
+			/*if(keyObj.key && keyObj.key === 'buyerMobile' && queryParam.seller === 'y') {
+				if(item.user && dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.mobile;
+				else
+					val = "";
+			}
+			if(keyObj.key && keyObj.key === 'buyerEmail' && queryParam.seller === 'y') {
+				if(item.user && item.user.email && dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.email;
+				else
+					val = "";
+			}*/
+			if(keyObj.key && keyObj.key === 'buyerName' && item.user && queryParam.seller !== 'y')
+				val = item.user.fname + " " + item.user.lname;
+			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
+				val = item.fullPaymentAmount;
 
-	      if(keyObj.type && keyObj.type == 'url' && val){
-	        if(val.filename)
-	            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
-	        else
-	          val = "";
-	      }
-	       dataArr[idx + 1].push(val);
+			if(keyObj.type && keyObj.type == 'url' && val){
+			if(val.filename)
+			    val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+			else
+				val = "";
+			}
+			dataArr[idx + 1].push(val);
 	    });
 	  });
 

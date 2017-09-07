@@ -545,7 +545,8 @@ angular.module('sreizaoApp')
         $scope.submitted = true;
         return;
     }
-
+    if(!$scope.newUser.buySaleViewOnly && $scope.newUser.buySaleApprover)
+      $scope.newUser.buySaleViewOnly = true;
     if($scope.newUser.agree) {
       var dataToSend = {};
       if($scope.newUser.email) 
@@ -626,8 +627,6 @@ angular.module('sreizaoApp')
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
       });
-      if(!$scope.newUser.buySaleViewOnly && $scope.newUser.buySaleApprover)
-        $scope.newUser.buySaleApprover = false;
     }
 
   function saveNewUser(){
