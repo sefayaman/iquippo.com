@@ -117,7 +117,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
       }
       var data = {};
       data._id = bidId;
-      Modal.confirm("Do you want to withdraw bid?", function(ret) {
+      Modal.confirm("Do you want to withdraw your bid?", function(ret) {
         if (ret == "yes") {
           AssetSaleSvc.withdrawBid(data)
           .then(function(res) {

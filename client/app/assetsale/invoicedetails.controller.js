@@ -59,6 +59,7 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 	}*/
 
 	function submit(form) {
+		var msg = "";
 		if($scope.option.select == 'yes') {
 			vm.invoiceInfo = {};
 			if(Auth.getCurrentUser()._id) {
@@ -72,6 +73,7 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 				vm.invoiceInfo.address = Auth.getCurrentUser().address;
 				vm.invoiceInfo.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
 				vm.invoiceInfo.mobile = Auth.getCurrentUser().mobile;
+				msg = informationMessage.invoiceUpdateForSelf;
 			}
 		} else {
 		  	var ret = false;
@@ -89,14 +91,16 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		      form.submitted = true;
 		      return;
 		    }
+		    msg = informationMessage.invoiceUpdateForThirdParty;
 		}
 		vm.invoiceInfo.countryCode = LocationSvc.getCountryCode(vm.invoiceInfo.country);
 		$scope.bidData.invoiceDetail = {};
 	    $scope.bidData.invoiceDetail = vm.invoiceInfo;
 	    AssetSaleSvc.update($scope.bidData, 'invoice').
 	      then(function(res) {
-	        if(res)
-	        	Modal.alert(res, true);
+	      	Modal.alert(msg, true); 
+	        // if(res)
+	        // 	Modal.alert(res, true);
 	      	closeDialog();
 	      })
 	      .catch(function(res) {

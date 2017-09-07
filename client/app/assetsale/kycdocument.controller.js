@@ -71,6 +71,7 @@ function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $ui
       return;
     }
     $scope.bidData.kyc =[];
+    var msg="";
 		var addProofObj = {};
 		if(vm.kycInfo.addressProof) {
 			addProofObj.type = $scope.type[0];
@@ -101,8 +102,9 @@ function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $ui
     }
     AssetSaleSvc.update($scope.bidData, 'kyc').
       then(function(res) {
-        if (res)
-          Modal.alert(res, true);
+        Modal.alert(informationMessage.kycUpdate, true); 
+        // else if (res)
+        //   Modal.alert(res, true);
       	closeDialog();
       })
       .catch(function(res) {
