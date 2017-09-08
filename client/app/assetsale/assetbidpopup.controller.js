@@ -61,21 +61,32 @@
       
       var filter = {};
       filter.assetId = query.product.assetId;
+      var msg = ""
       AssetSaleSvc.getMaxBidOnProduct(filter).then(function(result) {
         switch (query.typeOfRequest) {
           case "buynow":
                         proceedToSubmit();
                         break;
-          case "changeBid":
+          case "changeBid": msg = informationMessage.changeBid;
           case "submitBid":
-                        var msg = "";
+                        var higherBidMsg = "";
+                        if(!msg)
+                          msg = informationMessage.submitBid;
                         if((Number($scope.result.total) < Number(result.bidAmount)) 
-                        && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid"))
-                        msg = informationMessage.higherBidMsg;
-                        Modal.confirm(msg +" Do you want to change your Bid?", function(ret) {
-                          if (ret == "no") 
-                            proceedToSubmit();
-                        });
+                          && (query.typeOfRequest == "changeBid" || query.typeOfRequest == "submitBid")) {
+                          higherBidMsg = informationMessage.higherBidMsg;
+                        }
+                        if(higherBidMsg) {
+                          Modal.confirm(higherBidMsg, function(ret) {
+                            if (ret == "no") 
+                              proceedToSubmit();
+                          });
+                        } else {
+                          Modal.confirm(msg, function(ret) {
+                            if (ret == "yes") 
+                              proceedToSubmit();
+                          });
+                        }
                         break;
         }
       });

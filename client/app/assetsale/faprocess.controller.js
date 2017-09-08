@@ -1,12 +1,12 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('FAProcessCtrl', FAProcessCtrl);
-function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
+function FAProcessCtrl($scope, $rootScope, $state,$stateParams, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
 	vm.dataList = [];
-	vm.tabVal = "approved";
+	//vm.tabVal = $stateParams.t == 1?"approved":"closed";
 	$scope.onTabChange = onTabChange;
 	vm.fireCommand = fireCommand;
 	vm.openDialog = openDialog;
@@ -25,12 +25,22 @@ function FAProcessCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSv
 		else
 			initFilter.defaultPartner = 'n';
         initFilter.partnerId = Auth.getCurrentUser().partnerInfo.partnerId;
-		getApprovedBids(angular.copy(initFilter));
+        
+        if($stateParams.t == 1)
+        	vm.tabVal = "approved";
+        else if($stateParams.t == 2)
+        	vm.tabVal ="closed";
+        else
+        	vm.tabVal ="bidproduct";
+
+		fireCommand(true);
+		//getApprovedBids(angular.copy(initFilter));
 	}
 
-	function onTabChange(tab) {
+	function onTabChange(tab,tabVal) {
 		vm.tabVal = tab;
 		fireCommand(true);
+		$state.go($state.current.name,{t:tabVal},{location:'replace',notify:false});
 	}
 
 	function fireCommand(reset) {

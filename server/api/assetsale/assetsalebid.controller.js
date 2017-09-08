@@ -192,7 +192,7 @@ function sendStatusMail(bid) {
 
 exports.validateUpdate = function(req,res,next){
 	
-	if(['approve','deliveryaccept','emdpayment'].indexOf(req.query.action) !== -1)
+	if(['approve','deliveryaccept','emdpayment','fullpayment'].indexOf(req.query.action) !== -1)
 		async.parallel([validateBid,validateOtherBids,validateProduct],onComplete);
 	else
 		async.parallel([validateBid,validateProduct],onComplete);
@@ -204,16 +204,24 @@ exports.validateUpdate = function(req,res,next){
 		req.bids[req.bids.length] = req.body;
 		if(req.query.action === 'approve'){
 			getSaleProcessMaster(function(entData){
-				if(!entData.coolingPeriod){
+				if(!entData){
 					return res.status(404).send("Cooling period configuration is not found");
 				}
 				if(!req.product.cooling){
 					req.product.cooling = true;
 					req.product.coolingStartDate = new Date();
-					if(entData.coolingPeriodIn === 'Hours')
-						req.product.coolingEndDate = new Date().addHours(entData.coolingPeriod ||0);
-					else
-						req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod || 0);
+					if(entData.coolingPeriodIn === 'Hours'){
+						if(entData.coolingPeriod > 0)
+							req.product.coolingEndDate = new Date().addHours(entData.coolingPeriod ||0);
+						else
+							req.product.coolingEndDate = new Date();
+					}
+					else{
+						if(entData.coolingPeriod > 0)
+							req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod || 0);
+						else
+							req.product.coolingEndDate = new Date();		
+					}
 					req.updateProduct = true;
 
 				}
@@ -250,6 +258,12 @@ exports.validateUpdate = function(req,res,next){
 			//else
 			//	return res.status(412).send("EMD payment remaining");		
 		}else if(req.query.action === 'fullpayment'){
+				req.otherBids.forEach(function(item){
+					item.status = false;
+					AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
+					AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
+					req.bids.push(item);
+				});
 			//if(req.bid.fullPayment.remainingPayment == 0)
 				next();
 			//else
@@ -378,6 +392,7 @@ exports.validateSubmitBid = function(req,res,next){
 						req.otherBids.push(item);
 					}
 				});*/
+				req.buyNowApprovalValue = saleProcessData.buyNowPriceApproval;
 				return next();
 			}
 			req.body.autoApprove = true;
@@ -469,9 +484,10 @@ exports.submitBid = function(req, res) {
 			msg = "Your Sale process is in process , you may contact us at 03366022059";
 		else if(req.query.typeOfRequest === "buynow" && req.buyNowApprovalValue == 'No' && req.buynowCount > 0)	
 			msg = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
+		else if(req.query.typeOfRequest === "buynow" && req.buyNowApprovalValue === 'Yes')
+			msg = "Your Buy Now request is submitted successfully. Our executives will get in touch with you. ";
 		else
-			msg = "Your Request has been submitted successfully , We will get in touch with You.";
-
+			msg = "Your Bid request has been submitted successfully. Our executives will get in touch with you.";
 		return res.status(200).json({message:msg});
 		//return res.status(200).send("Bid submitted successfully.");
 	});
@@ -641,6 +657,9 @@ exports.fetchBid = function(req,res){
 	
 	if(req.query.offerStatus)
 		filter.offerStatus = req.query.offerStatus;
+
+	if(req.query.dealStatuses)
+		filter.dealStatus = {$in:req.query.dealStatuses.split(',')};
 
 	if(req.query.dealStatus)
 		filter.dealStatus = req.query.dealStatus;
@@ -960,24 +979,46 @@ exports.exportExcel = function(req,res){
 	  resList.forEach(function(item,idx){
 	    dataArr[idx + 1] = [];
 	    headers.forEach(function(header){
-	      var keyObj = fieldsMap[header];
-	      var val = _.get(item,keyObj.key,"");
-	      if(keyObj.type && keyObj.type == 'boolean')
-	          val = val?'YES':'NO';
-	      if(keyObj.type && keyObj.type == 'date' && val)
-	        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-	      if(keyObj.key && keyObj.key == 'buyerName' && item.user)
-	        val = item.user.fname + " " + item.user.lname;
-	      if(keyObj.key && keyObj.key == 'fullPaymentAmount')
-	        val = item.fullPaymentAmount;
+			var keyObj = fieldsMap[header];
+			var val = _.get(item,keyObj.key,"");
+			if(keyObj.type && keyObj.type == 'boolean')
+			  val = val?'YES':'NO';
+			if(keyObj.type && keyObj.type == 'date' && val)
+			val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+			if(keyObj.key && queryParam.seller === 'y') {
+				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.fname + " " + item.user.lname;
+				else if(item.user && item.user.mobile && keyObj.key === 'buyerMobile' && dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.mobile;
+				else if(item.user && item.user.email && keyObj.key === 'buyerEmail' && dealStatuses.indexOf(item.dealStatus) > 8)
+					val = item.user.email;
+				else
+					val = "";
+			}
+			/*if(keyObj.key && keyObj.key === 'buyerMobile' && queryParam.seller === 'y') {
+				if(item.user && dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.mobile;
+				else
+					val = "";
+			}
+			if(keyObj.key && keyObj.key === 'buyerEmail' && queryParam.seller === 'y') {
+				if(item.user && item.user.email && dealStatuses.indexOf(item.dealStatus) > 8)
+				    val = item.user.email;
+				else
+					val = "";
+			}*/
+			if(keyObj.key && keyObj.key === 'buyerName' && item.user && queryParam.seller !== 'y')
+				val = item.user.fname + " " + item.user.lname;
+			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
+				val = item.fullPaymentAmount;
 
-	      if(keyObj.type && keyObj.type == 'url' && val){
-	        if(val.filename)
-	            val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
-	        else
-	          val = "";
-	      }
-	       dataArr[idx + 1].push(val);
+			if(keyObj.type && keyObj.type == 'url' && val){
+			if(val.filename)
+			    val =  req.protocol + "://" + req.headers.host + "/download/"+ item.assetDir + "/" + val.filename || "";
+			else
+				val = "";
+			}
+			dataArr[idx + 1].push(val);
 	    });
 	  });
 

@@ -100,6 +100,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
             AssetSaleUtil.sendNotification([{action:"EMDFAILED",ticketId:item.ticketId}]);
             if(!item.autoApprove)
               item.findNextBid = true;
+            item.status = false;
             async.parallel({saleProcessData:getSaleProcessMaster,otherBids:getOtherBids},processBids);
          }else
            return cb();
@@ -110,6 +111,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               AssetSaleUtil.setStatus(item,bidStatuses[4],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(item,dealStatuses[4],'dealStatus','dealStatuses');
               AssetSaleUtil.sendNotification([{action:"FULLPAYMENTFAILED",ticketId:item.ticketId}]);
+               item.status = false;
               async.parallel({otherBids:getOtherBids},processBids);
           }else
             return cb();

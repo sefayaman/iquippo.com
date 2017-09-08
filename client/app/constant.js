@@ -323,11 +323,11 @@ var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment
 var tradeTypeStatuses = ['Sell','Both','NOT_AVAILABLE'];
 
 var StatusChangeConfirmationMsg = {
-  approve : "You are APPROVING this BID?.",
-  reject : "You are REJECTING this bid?.",
+  approve : "Do you want to Approve this bid?",
+  reject : "Do you want to Reject this bid?",
   doissued : "You are issueing  DO for this bid?.",
   deliverd:"You are giving delivery date?.",
-  deliveryaccept:"You are confirming asset is delivered successfully?."
+  deliveryaccept:"You are confirming the asset delivery."
 }
 
 var tradeType = [
@@ -533,10 +533,20 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
 
 /*Asset Sale messages*/
-informationMessage['buyNowApprovalIfYes'] = "Your Request has been submitted successfully , We will get in touch with You.";
-informationMessage['buyNowApprovalIfNo'] = "Your Sale process is in process , you may contact us at 03366022059";
-informationMessage['buyNowApprovalIfNoForNextUser'] = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
-informationMessage['higherBidMsg'] = "Higher Bid available for the Asset.";
+//informationMessage['buyNowApprovalIfYes'] = "Your Bid request has been submitted successfully.";
+//informationMessage['buyNowApprovalIfNo'] = "Your Sale process is in process , you may contact us at 03366022059";
+//informationMessage['buyNowApprovalIfNoForNextUser'] = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
+informationMessage['changeBid'] = "You are changing your existing bid. Proceed?";
+informationMessage['submitBid'] = "Do you want to submit your bid?";
+informationMessage['higherBidMsg'] = "A higher bid is available for this asset. Do you want to change your Bid?";
+informationMessage['partialEMD'] = "Partial EMD payment details submitted successfully.";
+informationMessage['partialFullpayment'] = "Partial Payment details submitted successfully.";
+informationMessage['EMDPayment'] = "EMD Payment has been received. Kindly pay the full payment as per schedule.";
+informationMessage['Fullpayment'] = "Full payment has been received.";
+informationMessage['kycUpdate'] = "KYC Documents uploaded successfully.";
+informationMessage['invoiceUpdateForSelf'] = "Invoice in your name has been submitted successfully.";
+informationMessage['invoiceUpdateForThirdParty'] = "Invoice in third party's name has been submitted successfully.";
+
 var newsEvents = [
   {
     name:"The Economic Times",

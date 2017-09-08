@@ -53,10 +53,22 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			$scope.bidData.emdPayment.paymentsDetail[$scope.bidData.emdPayment.paymentsDetail.length] = vm.emdFullPaymentInfo;
 			if(remainingPayment < 0 && $scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment)
 				$scope.bidData.fullPayment.remainingPayment = Math.round(Number($scope.bidData.fullPayment.remainingPayment) + remainingPayment) || 0;
+
+			if($scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment < 0){
+				Modal.alert("Invalid payment amount.");
+				return;
+			}
+			
 			if($scope.bidData.emdPayment.remainingPayment == 0){
 				serverAction = "emdpayment";
 				AssetSaleSvc.setStatus($scope.bidData,dealStatuses[7],'dealStatus','dealStatuses');
-				msg = "EMD payment completed and fullPayment period started."
+				msg = informationMessage.EMDPayment;
+			} else msg = informationMessage.partialEMD;
+
+			if($scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment === 0){
+				serverAction = "fullpayment";
+				AssetSaleSvc.setStatus($scope.bidData,dealStatuses[8],'dealStatus','dealStatuses');
+				msg = informationMessage.Fullpayment;
 			}
 		} else {
 			if(!$scope.bidData.fullPayment)
@@ -74,8 +86,8 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if($scope.bidData.fullPayment.remainingPayment == 0){
 			 serverAction = "fullpayment";
 			 AssetSaleSvc.setStatus($scope.bidData,dealStatuses[8],'dealStatus','dealStatuses');
-			 msg = "FullPayment completed. Now bid request is ready for DO issued."
-			}
+			 msg = informationMessage.Fullpayment;
+			} else  msg = informationMessage.partialFullpayment;
 		}
 	    AssetSaleSvc.update($scope.bidData,serverAction).
 	      then(function(res) {

@@ -29,7 +29,7 @@ router.post('/importMasterData', controller.importMasterData);
 router.post('/exportMasterData', controller.exportMasterData);
 router.post('/deleteMasterData', controller.deleteMasterData);
 router.post('/updateMasterData', controller.updateMasterData);
-router.post('/rotate', controller.rotate);
+router.post('/rotate', controller.downloadFromS3,controller.rotate,controller.uploadToS3);
 router.post('/saveasimage', controller.saveAsImage);
 router.post('/upsertsetting', controller.upsertSetting);
 router.post('/getsettingonkey', controller.getSettingByKey);
