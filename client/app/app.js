@@ -60,7 +60,8 @@ angular.module('sreizaoApp',[
   .run(function ($rootScope, $cookieStore, $location, Auth,Modal, $state,$http, groupSvc, categorySvc,$timeout, vendorSvc, $uibModal,CartSvc,modelSvc,brandSvc, settingSvc, InvitationSvc,UtilSvc,MarketingSvc,AppStateSvc, LocationSvc) {
     // Redirect to login if route requires auth and you're not logged in
 
-    $rootScope.uploadImagePrefix = "assets/uploads/";
+    $rootScope.uploadImagePrefix = s3Detais.baseURL+"/"+s3Detais.s3bucket+"/assets/uploads/";
+    $rootScope.templateDir = $rootScope.uploadImagePrefix  + 'templates';
     $rootScope.categoryDir = categoryDir;
     $rootScope.manpowerDir = manpowerDir;
     $rootScope.auctionDir = auctionDir;
@@ -68,6 +69,7 @@ angular.module('sreizaoApp',[
     $rootScope.avatarDir = avatarDir;
     $rootScope.bannerDir = bannerDir;
     $rootScope.auctionmasterDir = auctionmasterDir;
+    $rootScope.financemasterDir = financemasterDir;
     $rootScope.choosenTitle=choosenTitle;
     $rootScope.metaDescription=metaDescription;
     $rootScope.classifiedAdDir = classifiedAdDir;
@@ -200,6 +202,8 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
     $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
+    $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
+    $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     
     $rootScope.closeMeassage = function(){
       $rootScope.isSuccess = false;

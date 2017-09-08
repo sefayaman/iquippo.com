@@ -27,9 +27,11 @@ var gm = require('gm');
 var lwip = require('lwip');
 var task = require('./components/task.js');
 var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
-var taskRunner = require('./components/taskRunner.js');
+//var taskRunner = require('./components/taskRunner.js');
+var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
-
+var utility = require('./components/utility.js');
+var path = require('path');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -87,28 +89,45 @@ app.post('/api/uploads', function(req, res) {
       console.log("I am Vara");
       return res.end("Error uploading file.");
     }
-    console.log("req.files",req.query.name);
     if (resize == 'y') {
       var dimension = {};
       dimension.width = req.query.width;
       dimension.height = req.query.height;
-      dimension.size=req.query.size;
+      dimension.size = req.query.size;
       req.counter = 0;
       req.total = 1;
       resizeImg(req, res, assetDir, dimension, false);
     } else {
-      try {
-        res.status(200).json({
-          assetDir: assetDir,
-          filename: req.files[0].filename
+      var localDirPath = config.uploadPath + assetDir;
+      if (assetDir === 'temp') {
+        localDirPath = req.files && req.files[0] && req.files[0].path;
+        var filename  = req.files && req.files[0] && req.files[0].filename;
+        
+        if(!filename || !localDirPath)
+          return res.status(500);
+
+        utility.uploadZipFileToS3(localDirPath, filename, function(uploadErr, s3res) {
+          if (uploadErr) {
+            throw uploadErr;
+          }
+          res.status(200).json({
+            assetDir: assetDir,
+            filename: req.files[0].filename
+          });
         });
-      } catch (err) {
-        return res.end("Error uploading file.");
+      } else {
+        utility.uploadFileS3(localDirPath, assetDir, function(uploadErr, s3res) {
+          if (uploadErr) {
+            throw err;
+          }
+          res.status(200).json({
+            assetDir: assetDir,
+            filename: req.files[0].filename
+          });
+        });
       }
     }
-
   });
-
 });
 
 app.post('/api/multiplefile/upload', function(req, res) {
@@ -127,7 +146,7 @@ app.post('/api/multiplefile/upload', function(req, res) {
       var dimension = {};
       dimension.width = req.query.width;
       dimension.height = req.query.height;
-      dimension.size=req.query.size;
+      dimension.size = req.query.size;
 
       req.counter = 0;
       req.total = req.files.length;
@@ -147,52 +166,78 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       var imgPath = config.uploadPath + assetDir + "/" + fileName;
       var fileNameParts = fileName.split('.');
       var extPart = fileNameParts[fileNameParts.length - 1];
-      if(extPart)
-          extPart = extPart.toLowerCase();
+      if (extPart)
+        extPart = extPart.toLowerCase();
       var namePart = fileNameParts[0];
       var originalFilePath = config.uploadPath + assetDir + "/" + namePart + "_original." + extPart;
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
       }, function(err, result) {
-        if (err) throw err;
-        if(dimension.size > 50000){
-        lwip.open(imgPath, function(err, image) {
-          console.log("-----image",image);
-          //var wRatio = 700 / image.width();
-          //var hRatio= 450 / image.height();
-          image.scale(0.75, function(err, rzdImage) {
-            if (extPart === 'jpg' || extPart === 'jpeg') {
-              rzdImage.toBuffer(extPart, {
-                quality: 85
-              }, function(err, buffer) {
-                fs.writeFile(imgPath, buffer, function(err) {
-                  if (err) throw err;
-                  req.counter++;
-                })
-              })
-              resizeImg(req, res, assetDir, dimension, isMultiple);
-            } else {
-              if (extPart == 'png') {
+        if (err)
+          throw err;
+
+        if (dimension.size > 50000) {
+
+          lwip.open(imgPath, function(err, image) {
+
+            if (err)
+              throw err;
+            image.scale(0.75, function(err, rzdImage) {
+
+              if (err)
+                throw err;
+              if (extPart === 'jpg' || extPart === 'jpeg') {
                 rzdImage.toBuffer(extPart, {
-                  compression: "high",
-                  interlaced: false,
-                  transparency: 'auto'
+                  quality: 85
                 }, function(err, buffer) {
+
+                  if (err)
+                    throw err;
                   fs.writeFile(imgPath, buffer, function(err) {
-                    if (err) throw err;
-                    req.counter++;
-                  })
-                })
-                return resizeImg(req, res, assetDir, dimension, isMultiple);
+
+                    if (err)
+                      throw err;
+                    utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
+                      if (err) {
+                        throw err;
+                      }
+                      console.log("res", s3res);
+                      req.counter++;
+                      return resizeImg(req, res, assetDir, dimension, isMultiple);
+                    });
+                  });
+                });
+              } else {
+                if (extPart == 'png') {
+
+                  rzdImage.toBuffer(extPart, {
+                    compression: "high",
+                    interlaced: false,
+                    transparency: 'auto'
+                  }, function(err, buffer) {
+
+                    if (err)
+                      throw err;
+                    fs.writeFile(imgPath, buffer, function(err) {
+
+                      if (err) throw err;
+                      utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
+
+                        if (err)
+                          throw err;
+                        req.counter++;
+                        return resizeImg(req, res, assetDir, dimension, isMultiple);
+                      });
+                    });
+                  });
+                }
               }
-            }
+            });
           });
-        })
-    }
-    else{
-      req.counter++;
-      resizeImg(req, res, assetDir, dimension, isMultiple);
-    }
+        } else {
+          req.counter++;
+          resizeImg(req, res, assetDir, dimension, isMultiple);
+        }
       });
 
     } else {
@@ -209,7 +254,7 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       }
     }
   } catch (err) {
-    console.log("err",err);
+    console.log("err", err);
     handleError(res, err);
   }
 }
@@ -288,8 +333,10 @@ app.post('/api/quippovaluaion', function(req, res) {
   var bodyData = req.body;
 
   var resList = [];
-  bodyData.forEach(function(item){
-    var obj = {success : "true"};
+  bodyData.forEach(function(item) {
+    var obj = {
+      success: "true"
+    };
     obj.uniqueControlNo = item.uniqueControlNo;
     obj.jobId = "JOB" + new Date().getTime();
     resList.push(obj);
@@ -328,8 +375,9 @@ function handleError(res, err) {
 server.listen(config.port, config.ip, function() {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   notification.startNotification();
-  taskRunner.startTaskRunner();
+  //taskRunner.startTaskRunner();
   valReqSubmitter.start();
+  assetSaleTracker.start();
   checkQuickQueryNotificationService.start();
   checkSearchMatchingNotificationService.start();
 });

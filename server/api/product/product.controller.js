@@ -39,8 +39,9 @@ var debug = require('debug')('api.product.controller');
 var productFieldsMap = require('./../../config/product_temp_field_map');
 var productInfoModel = require('../productinfo/productinfo.model');
 var moment = require('moment');
+var AssetSaleUtil = require('../assetsale/assetsaleutil');
 var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.ISO_8601];
-var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
 
 // Get list of products
 exports.getAll = function(req, res) {
@@ -91,6 +92,22 @@ exports.unIncomingProduct = function(req,res){
   IncomingProduct.update({_id:req.body.productId},{$set:{lock:false}},function(err,dt){
     if(err) { return handleError(res, err); }
     return res.status(200).json(dt);
+  })
+}
+
+//Set all seller related to a enterprise
+exports.getSellers = function(req,res,next){
+  if(!req.body.enterpriseId)
+    return next();
+  req.sellers = [];
+  User.find({enterpriseId:req.body.enterpriseId,deleted:false,status:true},function(err,sellers){
+    if(err || !sellers.length){
+      return next();
+    }
+    sellers.forEach(function(item){
+      req.sellers.push(item._id + "")
+    });
+    next();
   })
 }
 
@@ -256,7 +273,15 @@ exports.search = function(req, res) {
 
   if(req.body.categoryId)
     filter["category._id"] = req.body.categoryId;
-
+  
+  if(req.sellers && req.sellers.length)
+    filter["seller._id"] = {$in:req.sellers};
+  if(req.body.bidRequestApproved && req.body.bidRequestApproved === 'y')
+    filter.bidRequestApproved = true;
+  if(req.body.bidRequestApproved && req.body.bidRequestApproved === 'n')
+    filter.bidRequestApproved = false;
+  if(req.body.bidReceived)
+    filter.bidReceived = true;
   if(req.body.role && req.body.userid) {
     var usersArr = [req.body.userid];
     fetchUsers(req.body.userid,function(data){
@@ -306,7 +331,6 @@ exports.search = function(req, res) {
       var assetIdCache ={};
       query.exec(function (err, products) {
           if(err) { return handleError(res, err); }
-
           var saleFeaturedProdWithPrice = [],
               saleFeaturedProdWithoutPrice = [],
               bothFeaturedProdWithPrice = [],
@@ -320,7 +344,8 @@ exports.search = function(req, res) {
               rentProdWithoutPrice = [],
               notAvailProd = [],
               soldProd = [],  //status of product
-              rentedProd = []; //status
+              rentedProd = [], //status
+              remainingProd = [];
           products.forEach(function(item){
             item = item.toObject();
             //calculate total parking charge
@@ -405,10 +430,10 @@ exports.search = function(req, res) {
                 rentProdWithoutPrice.push(item);
                 return;
               }
+              remainingProd.push(item);
             }
           });
-
-          var outputProds = [].concat(saleFeaturedProdWithPrice,saleFeaturedProdWithoutPrice,bothFeaturedProdWithPrice,bothFeaturedProdWithoutPrice,rentFeaturedProd,saleProdWithPrice,bothProdWithPrice,rentProdWithPrice,saleProdWithoutPrice,bothProdWithoutPrice,rentProdWithoutPrice,notAvailProd,soldProd,rentedProd);
+          var outputProds = [].concat(saleFeaturedProdWithPrice,saleFeaturedProdWithoutPrice,bothFeaturedProdWithPrice,bothFeaturedProdWithoutPrice,rentFeaturedProd,saleProdWithPrice,bothProdWithPrice,rentProdWithPrice,saleProdWithoutPrice,bothProdWithoutPrice,rentProdWithoutPrice,notAvailProd,soldProd,rentedProd,remainingProd);
           result.products = outputProds;
           self();
          }
@@ -436,11 +461,11 @@ exports.search = function(req, res) {
 
 function paginatedProducts(req,res,filter,result){
 
-  var pageSize = req.body.itemsPerPage;
+  var pageSize = req.body.itemsPerPage || 50;
   var first_id = req.body.first_id;
   var last_id = req.body.last_id;
-  var currentPage = req.body.currentPage;
-  var prevPage = req.body.prevPage;
+  var currentPage = req.body.currentPage || 1;
+  var prevPage = req.body.prevPage || 0;
   var isNext = currentPage - prevPage >= 0?true:false;
   Seq()
   .par(function(){
@@ -456,12 +481,10 @@ function paginatedProducts(req,res,filter,result){
       var sortFilter = {_id : -1};
       if(last_id && isNext){
         filter['_id'] = {'$lt' : last_id};
-        console.log("going forward");
       }
       if(first_id && !isNext){
         filter['_id'] = {'$gt' : first_id};
         sortFilter['_id'] = 1;
-        console.log("going backward");
       }
 
       var query = null;
@@ -581,6 +604,42 @@ exports.validateUpdate = function(req,res,next){
 
 }
 
+//pre creation process
+
+exports.calculatePrice = function(req,res,next){
+  if(req.body.tradeType === 'RENT')
+    return next();
+
+  if(!req.body.grossPrice && !req.body.reservePrice && !req.body.valuationAmount){
+    req.body.priceOnRequest = true;
+    return next();
+  }
+
+  if(req.body.reservePrice){
+    req.body.grossPrice = req.body.reservePrice;
+    return next();
+  }
+
+  if(req.body.seller && req.body.valuationAmount){
+    AssetSaleUtil.getMasterBasedOnUser(req.body.seller._id,{},'markup',function(err,result){
+        if(err)
+            return res.status(500).send(err);
+
+          var markupPercent = 0;
+          if(result && result.length)
+            markupPercent = result[0].price || 0;
+
+          var buyNowPrice = Number(req.body.valuationAmount || 0) + (Number(req.body.valuationAmount || 0) * Number(markupPercent || 0) / 100);
+          req.body.grossPrice = Math.round(buyNowPrice || 0);
+          return next();
+      });
+    }else if(req.body.grossPrice)
+      return next();
+    else
+      return res.status(412).send('Unable to process your request.Please contact support team.');
+}
+
+
 // Updates an existing product in the DB.
 exports.update = function(req, res) {
   req.isEdit = true;
@@ -593,7 +652,6 @@ exports.update = function(req, res) {
   }else{
     updateProduct(req,res)    
   }
-
 };
 
 // Creates a new product in the DB.
@@ -853,7 +911,6 @@ exports.setExpiry = function(req, res) {
   obj['status'] = false;
   //obj['featured'] = false;
   obj['expired'] = true;
-  console.log("setExpiry:::", req.body.ids);
   Product.update({_id : {"$in":ids}}, {$set:obj}, {multi: true} , function(err, product) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(product);
@@ -971,7 +1028,6 @@ exports.userWiseProductCount = function(req,res){
             },
             function (err, inCount) {
               if (err) return handleError(err);
-              console.log(data);
               result = result.concat(inCount);
               return res.status(200).json(result);
             }
@@ -1047,6 +1103,11 @@ exports.exportProducts = function(req, res) {
         }
         fetchResults();
       })
+    } else if(req.user.role === 'enterprise' && req.user.enterprise){
+      filter["seller._id"] = {
+          "$in": req.sellers || []
+        }
+        return fetchResults();
     } else {
       filter["seller._id"] = req.body.userid;
       fetchResults();
@@ -1074,7 +1135,7 @@ exports.exportProducts = function(req, res) {
         products.forEach(function(x) {
           var colData = x._doc;
           var obj = {};
-          if (colData) {
+          if (colData && Object.keys(colData).length) {
             Object.keys(colData).forEach(function(y) {
               if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
                 obj[mapedFields[y]] = x[y];
@@ -1480,7 +1541,6 @@ exports.validateExcelData = function(req, res, next) {
     validateOnlyAdminCols : This function validates the cols which only admin can update
     */
     if(reqType == 'Update'){
-      console.log("aset id",row.assetId);
       Product.find({
         assetId: row.assetId
       }, function(err, doc) {
@@ -1503,7 +1563,8 @@ exports.validateExcelData = function(req, res, next) {
             validateRentInfo: validateRentInfo,
             validateAdditionalInfo: validateAdditionalInfo,
             validateOnlyAdminCols: validateOnlyAdminCols,
-            validateForBid:validateForBid
+            validateForBid:validateForBid,
+            validatePrice : validatePrice
           }, buildData);          
         }else if(type === 'auction_update'){
           async.parallel({
@@ -1527,7 +1588,8 @@ exports.validateExcelData = function(req, res, next) {
           validateCity : validateCity,
           validateRentInfo: validateRentInfo,
           validateAdditionalInfo: validateAdditionalInfo,
-          validateOnlyAdminCols: validateOnlyAdminCols
+          validateOnlyAdminCols: validateOnlyAdminCols,
+          validatePrice : validatePrice
         }, buildData);
       }else{
         errorList.push({
@@ -1576,12 +1638,12 @@ exports.validateExcelData = function(req, res, next) {
 
     function validateGenericField(callback){
       var obj = {};
-      var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice'];
+      var numericColumns = ['valuationAmount','parkingChargePerDay','reservePrice','grossPrice'];
       var dateColumns = ['repoDate'];
-      var fieldsToBeCopied = ['addressOfAsset'];
+      var fieldsToBeCopied = ['addressOfAsset','parkingPaymentTo'];
       numericColumns.forEach(function(x){
         if(row[x] && !isNaN(row[x]))
-          obj[x] = row[x];
+          obj[x] = Number(row[x]);
       });
       dateColumns.forEach(function(x){
         if(row[x]){
@@ -1595,6 +1657,59 @@ exports.validateExcelData = function(req, res, next) {
         obj[x] = row[x];
       })
       return callback(null,obj);
+    }
+
+    function validatePrice(callback){
+      
+      if(row.tradeType && row.tradeType.toLowerCase() === 'rent')
+        return callback();
+
+      var isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      var obj = {};
+      row.priceOnRequest = row.priceOnRequest || "";
+      obj.currencyType = row.currencyType || "INR";
+      obj.grossPrice = row.grossPrice;
+      obj.priceOnRequest = row.priceOnRequest.toLowerCase() !== 'yes'? true:false; 
+      if(isCustomer){
+         if(!obj.grossPrice)
+            obj.priceOnRequest = true;
+        return callback(null,obj);
+      } 
+
+      if(!obj.grossPrice && !row.reservePrice && !row.valuationAmount){
+        obj.priceOnRequest = true;
+        return callback(null,obj);
+      }
+
+      if(row.reservePrice){
+        obj.grossPrice = row.reservePrice;
+        return callback(null,obj);
+      }else if(row.seller_mobile && row.valuationAmount){
+        AssetSaleUtil.getMarkupOnSellerMobile(row.seller_mobile,function(err,result){
+            if(err){
+               errorList.push({
+                      Error : 'Error in getting markup data.',
+                      rowCount :row.rowCount
+                });
+                return callback('Error');
+            }
+            var markupPercent = 0;
+            if(result && result.length)
+              markupPercent = result[0].price || 0;
+
+            var buyNowPrice = Number(row.valuationAmount || 0) + (Number(row.valuationAmount || 0) * Number(markupPercent || 0) / 100);
+            obj.grossPrice = Math.round(buyNowPrice || 0);
+            return callback(null,obj);
+          });
+        }else if(obj.grossPrice)
+          return callback(null,obj);
+        else{
+           errorList.push({
+              Error : 'Unable to process your request.Please contact support team.',
+              rowCount :row.rowCount
+            });
+              return callback('Error');
+        }
     }
 
     function validateCity(callback){
@@ -1673,6 +1788,11 @@ exports.validateExcelData = function(req, res, next) {
         return callback('Error');
       }
 
+     /* var  isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      if(!isCustomer)
+        return callback();
+      row.priceOnRequest = row.priceOnRequest || "";
+
       if(row.priceOnRequest.toLowerCase() !== 'yes' && !row.grossPrice ){
         errorList.push({
           Error : 'Selling price is mandatory when Price on request not selected',
@@ -1680,7 +1800,7 @@ exports.validateExcelData = function(req, res, next) {
         });
 
         return callback('Error');
-      }
+      }*/
 
       return callback();
 
@@ -2247,8 +2367,10 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateRentInfo(callback) {
+      if(row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available"))
+        return callback();
       var product = {};
-      if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
+     // if (row.tradeType && row.tradeType.toLowerCase() !== "sell" && row.tradeType.toLowerCase() !== "not_available" ) {
         product["rent"] = {};
 
         var rateTypeH = trim(row["rateHours"] || "").toLowerCase();
@@ -2305,7 +2427,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.minPeriodH = Number(trim(minPeriodH));
 
           var maxPeriodH = row["maxPeriodH"];
-          if (!isNaN(maxPeriodH)) {
+          if (isNaN(maxPeriodH)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2315,7 +2437,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.maxPeriodH = Number(trim(maxPeriodH));
 
           var rentAmountH = row["rentAmountH"];
-          if (!isNaN(rentAmountH)) {
+          if (isNaN(rentAmountH)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2325,7 +2447,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateHours.rentAmountH = Number(trim(rentAmountH));
 
           var seqDepositH = row["seqDepositH"];
-          if (!isNaN(seqDepositH)) {
+          if (isNaN(seqDepositH)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Hours is invalid or not present',
               rowCount: row.rowCount
@@ -2348,7 +2470,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.minPeriodD = Number(trim(minPeriodD));
 
           var maxPeriodD = row["maxPeriodD"];
-          if (!isNaN(maxPeriodD)) {
+          if (isNaN(maxPeriodD)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2358,7 +2480,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.maxPeriodD = Number(trim(maxPeriodD));
 
           var rentAmountD = row["rentAmountD"];
-          if (!isNaN(rentAmountD)) {
+          if (isNaN(rentAmountD)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2368,7 +2490,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateDays.rentAmountD = Number(trim(rentAmountD));
 
           var seqDepositD = row["seqDepositD"];
-          if (!isNaN(seqDepositD)) {
+          if (isNaN(seqDepositD)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Days is invalid or not present',
               rowCount: row.rowCount
@@ -2391,7 +2513,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.minPeriodM = Number(trim(minPeriodM));
 
           var maxPeriodM = row["maxPeriodM"];
-          if (!isNaN(maxPeriodM)) {
+          if (isNaN(maxPeriodM)) {
             errorList.push({
               Error: 'Mandatory field Max_Rental_Period_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2401,7 +2523,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.maxPeriodM = Number(trim(maxPeriodM));
 
           var rentAmountM = row["rentAmountM"];
-          if (!isNaN(rentAmountM)) {
+          if (isNaN(rentAmountM)) {
             errorList.push({
               Error: 'Mandatory field Rent_Amount_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2411,7 +2533,7 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.rentAmountM = Number(trim(rentAmountM));
 
           var seqDepositM = row["seqDepositM"];
-          if (!isNaN(seqDepositM)) {
+          if (isNaN(seqDepositM)) {
             errorList.push({
               Error: 'Mandatory field Security_Deposit_Months is invalid or not present',
               rowCount: row.rowCount
@@ -2421,31 +2543,6 @@ exports.validateExcelData = function(req, res, next) {
           product["rent"].rateMonths.seqDepositM = Number(trim(seqDepositM));
         }
         product["rent"].negotiable = negotiableFlag;
-      } else if (row.tradeType && (row.tradeType.toLowerCase() === 'sell' || row.tradeType.toLowerCase() === "not_available")) {
-        var gp = row["grossPrice"];
-        var prOnReq = row["priceOnRequest"];
-        var cr = row["currencyType"];
-        if (!isNaN(gp) && cr) {
-          product["grossPrice"] = Number(trim(gp));
-          product["currencyType"] = trim(cr);
-        } else {
-          errorList.push({
-            Error: 'Mandatory field Gross_Price and Currency is invalid or not present',
-            rowCount: row.rowCount
-          });
-          return callback('Error');
-        }
-        if (!prOnReq) {
-          product["priceOnRequest"] = false;
-        } else {
-          prOnReq = trim(prOnReq).toLowerCase();
-          if (prOnReq == 'yes' || prOnReq == 'y') {
-            product["priceOnRequest"] = true;
-          } else {
-            product["priceOnRequest"] = false;
-          }
-        }
-      }
       return callback(null, product);
     }
 
@@ -2514,11 +2611,14 @@ exports.validateExcelData = function(req, res, next) {
     //validate seller information if exists
     function validateSeller(callback) {
       var obj = {};
-      if (row.seller_mobile && row.seller_email) {
-        User.find({
-          mobile: row.seller_mobile,
-          email: row.seller_email
-        }, function(err, seller) {
+      if (row.seller_mobile) {
+        var filter = {};
+        filter.deleted = false;
+        filter.status = true;
+        filter.mobile = row.seller_mobile;
+        if(row.seller_email)
+          filter.email = row.seller_email;
+        User.find(filter, function(err, seller) {
           if (err || !seller) {
             errorList.push({
               Error: 'Error while fetching seller',
@@ -2543,6 +2643,8 @@ exports.validateExcelData = function(req, res, next) {
           obj.seller["countryCode"] = seller[0]['countryCode'];
           obj.seller["userType"] = seller[0]['userType'];
           obj.seller["role"] = seller[0]['role'];
+          if(obj.seller.role == 'enterprise')
+            obj.seller.enterpriseId = seller[0].enterpriseId;
           obj.seller["lname"] = seller[0]['lname'];
           obj.seller["fname"] = seller[0]['fname'];
           obj.seller["_id"] = seller[0]['_id'] + "";
@@ -2799,7 +2901,6 @@ function bulkProductStatusUpdate(req,res,data){
 }
 
 function checkValidTransition(tradeType,assetStatus){
-  console.log(tradeType, assetStatus);
   var ret = false;
   if(tradeType == 'BOTH')
       ret = true;

@@ -1567,6 +1567,12 @@ var parameters = {
 exports.updateFromAgency = function(req,res){
   
   var bodyData = req.body;
+   var generalCond = req.body.overallGeneralCondition;
+  if(generalCond){
+   var bufferObj = new Buffer(generalCond, 'base64');
+   req.body.overallGeneralCondition = bufferObj.toString('utf8');
+  }
+
 
   var result = {};
   result['success'] = true;

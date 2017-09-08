@@ -217,7 +217,7 @@
                         <input type="text" name="mfgyear" ng-value="container.mfgYear" ng-model="container.mfgYear" class="form-control" placeholder="yyyy" uib-datepicker-popup="{{format}}" datepicker-options="{{datepickerOptions}}" is-open="container.opened" max-date="maxDate" min-date="minDate" date-disabled="disabled(date, mode)" close-text="Close" required disabled ngMinlength="4" ngMaxlength="4"/>
                       </div>
                       <div class="form-group col-xs-3 col-sm-1 text-center padd">
-                        <a href class="form-control" ng-click="open($event, 'mfgYear')">
+                        <a href class="form-control btn btn-default" ng-click="open($event, 'mfgYear')">
                           <i class="fa fa-calendar-o fa-1x"></i>
                         </a>
                       </div>
@@ -241,16 +241,16 @@
                       </div>
                     </div>
                     <div class="row" ng-if="product.tradeType != 'RENT'">
-                      <div class="form-group col-sm-5">Price (Excl. Tax).<span class="text-warning">*</span></div>
+                      <div class="form-group col-sm-5">Sale Price (Excl. Tax).<span class="text-warning">*</span></div>
                       <div class="form-group col-sm-4">
-                        <div class="input-group" ng-class="{'has-error': form.gPrice.$invalid && submitted}">
+                        <div class="input-group">
                           <span class="input-group-addon currency-width">
                             <select class="form-control"  name="currencyType" ng-model="product.currencyType">
                               <option value="" selected>&#x20B9; Rupee</option>
                             </select>
                             <!-- <i class="caret"></i> -->
                           </span>
-                          <input type="number"  placeholder="20,000" ng-disabled="priceOnRequest" name="gPrice" min="0" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice" ng-required="!product.priceOnRequest">
+                          <input type="number"  placeholder="20,000" name="gPrice" min="0" ng-value="product.grossPrice" class="form-control" ng-model="product.grossPrice">
                         </div>
                       </div>
                       <div class="form-group col-sm-3 check">
@@ -259,15 +259,32 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="form-group col-sm-5">Date of Repo</div>
-                      <div class="form-group col-sm-7">
-                      <input type="text" name="repoDate" class="form-control" ng-model="product.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Date of Repo" >
+                      <div class="form-group col-sm-5">Parked Since</div>
+                      <div class="form-group col-sm-6">
+                          <input type="text" name="repoDate" class="form-control" id="dateofrepo" ng-model="product.repoDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Parked Since" >
+                      </div>
+                      <div class="col-sm-1 padd">
+                        <div class="input-group">
+                          <label class="btn btn-block btn-default" for="dateofrepo">
+                            <i class="fa fa-calendar-o"></i>
+                          </label>
+                        </div>
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
                       <div class="form-group col-sm-5">Valuation Amount</div>
                       <div class="form-group col-sm-7">
                         <input type="number" class="form-control"  min="0" ng-model="product.valuationAmount" name="valuationAmount" placeholder="Valuation Amount">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-sm-5">Parking Payment Details</div>
+                      <div class="form-group col-sm-7">
+                        <select class="form-control" ng-model="product.parkingPaymentTo">
+                          <option value="">Select </option>
+                          <option value="Yard">Yard</option>
+                          <option value="Seller">Seller</option>
+                        </select>
                       </div>
                     </div>
                     <div class="row">
@@ -282,7 +299,7 @@
                         <input type="text" class="form-control" name="addressOfAsset" ng-model="product.addressOfAsset" placeholder="Address of Asset">
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
                       <div class="form-group col-sm-5">Reserve Price</div>
                       <div class="form-group col-sm-7">
                         <input type="number" class="form-control" min="0" name="reservePrice" ng-model="product.reservePrice" placeholder="Reserve Price">
@@ -322,12 +339,6 @@
                           <option ng-repeat="location in locationList| orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
                         </select>
                         <i class="caret"></i>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="form-group col-sm-5">Tax Rate</div>
-                      <div class="form-group col-sm-7">
-                        <input type="number" class="form-control" name="taxRate" ng-model="product.taxRate" placeholder="Tax Rate">
                       </div>
                     </div>
                     <div class="row">
@@ -509,7 +520,7 @@
                                   <a href="javascript:void(0);" ng-click="rotate(img)"><i class="fa fa-repeat"></i></a>
                                 </div>
                                 <span class="fileinput-button"><a href="javascript:void(0);"  class="al2">
-                                  <img ng-src="{{uploadImagePrefix}}{{assetDir}}/{{img.src}}?timestamp={{timestamp}}" class="img-responsive">
+                                  <img ng-src="{{getImageURL(assetDir,img.src)}}?timestamp={{timestamp}}" class="img-responsive">
                                 </a>
                               </span>
                             </span>
@@ -871,8 +882,8 @@
             <div class="col-sm-2 form-group">
               <select class="form-control" ng-model="miscDoc.type">
                 <option value="">Document Type</option>
-                <option value="Policy">Policy</option>
-                <option value="Certification">Certification</option>
+                <option value="Policy">Insurance Policy</option>
+                <option value="Certification">Inspection Certificate</option>
                 <option value="Valuation">Valuation Report</option>
                 <option value="Other">Other</option>
               </select>

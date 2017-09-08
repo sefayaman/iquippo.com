@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: 'RobotoCondensed-Regular';
   src: url('/assets/fonts/RobotoCondensed-Regular.eot?#iefix') format('embedded-opentype'),  url('/assets/fonts/RobotoCondensed-Regular.woff') format('woff'), url('/assets/fonts/RobotoCondensed-Regular.ttf')  format('truetype'), url('/assets/fonts/RobotoCondensed-Regular.svg#RobotoCondensed-Regular') format('svg');
@@ -270,7 +271,7 @@ header{background:#fff;}
 /*vendors*/
 .panel-group .panel{border-radius:0;}
 .panel-group .panel.panel-primary{border-radius:0; border:0;}
-.panel-group .panel.panel-primary .panel-heading{border-radius:0; background-color:#104095; border-color:#104095;}
+.panel-group .panel.panel-primary .panel-heading{border-radius:0; background-color:#104095; border-color:#104095; color: #fff;}
 .panel-group .panel.panel-primary .panel-body{border:1px solid #ddd; border-top:0;}
 .information .panel-group .panel .panel-heading{background-color:#eee;border-radius:0;padding:0;}
 .information .panel-group .panel .panel-heading a{display:block;outline:none;text-decoration:none;padding:10px;}
@@ -308,6 +309,7 @@ img.sheduleImg{width:50px;height:50px;border-radius:50%;margin:0 auto}
     height: 55vh;
     overflow-y: auto;
 }
+#page-wrapper .input-group{width: 100%;}
 .table-responsive .table th{white-space: nowrap; border-bottom-width:0;}
 .table-responsive .table td:last-child {
     white-space: nowrap;
@@ -888,7 +890,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     width: 100px;
     font-size: 16px; margin:10px 0;}
     .form-control[readonly]{cursor: auto;background: #fff;}
-.angularjs-datetime-picker{z-index:9;}
+.angularjs-datetime-picker{z-index:9999;}
 .angularjs-datetime-picker .adp-day{line-height: 18px !important;}
 .angularjs-datetime-picker input[type=range] {
     width: 100%;
@@ -898,7 +900,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     line-height:34px;
     position:relative;
     font-size:16px;
-    margin-left:20px;
+    margin-left:12px;
     padding:0 10px 0 15px;
     background:#bbb;
     color:#333;
@@ -936,6 +938,7 @@ div#jivo_close_button{position: absolute; right: -20px;}
     -webkit-box-shadow:-1px -1px 2px #666;
     box-shadow:-1px -1px 2px #666;
     }
+.listed-item{background: #f5f5f5; padding: 10px 15px;}
 .sale-price{background: #e9e9e9; padding: 10px 15px;}
 .sale-price strong{padding: 5px 0 0; display: block; font-size: 18px; color: #444; font-weight: normal;}
 .bank-detail{list-style: none; margin-top: 15px;}
@@ -964,18 +967,30 @@ div#jivo_close_button{position: absolute; right: -20px;}
 .calltoContact{position: absolute; right: 0; top: 30px;}
 
 /* asset-sale */
-.asset-sale .panel-heading a.text-danger{text-align: center; font-size: 12px; color: #e3000f;}
+.asset-sale .panel-heading span{text-align: center; font-size: 12px; color: #fff;}
 .asset-sale .form-control{height: 34px;}
 .asset-sale .panel-footer .btn.btn-danger{width: 120px;}
 .bidmodal .modal-dialog{width: 450px;}
 .asset-sale.modal-body{padding-left: 0; padding-right: 0; padding-bottom: 0; text-align: left; overflow: hidden;}
-.asset-sale .asset-taxes{background: #e5e5e5; border-top: 1px solid #ddd; padding: 15px 0; margin-top: 15px; border-bottom: 1px solid #d5d5d5;}
-.asset-sale .asset-total{background: #ddd; padding: 10px 0; font-weight: bold; border-top: 1px solid #ddd; border-bottom: 1px solid #d5d5d5;}
-.bidmodal .asset-sale .form-control , .bidmodal .asset-sale .btn{height: 40px;} 
+.asset-sale .asset-taxes{background: #e5e5e5; border-top: 1px solid #ddd; margin-top: 15px; border-bottom: 1px solid #d5d5d5;}
+.asset-sale .asset-taxes .row:nth-child(odd){background: #eee;}
+.asset-sale .asset-taxes .row .col-sm-offset-2, .asset-sale .asset-total .row .col-sm-offset-2{border-right: 1px solid #bbb; padding: 10px 15px;}
+.asset-sale .asset-taxes .row .col-sm-offset-1, .asset-sale .asset-total .row .col-sm-offset-1{padding: 10px 15px;}
+.asset-sale .asset-total{background: #ddd; font-weight: bold; border-top: 1px solid #ddd; border-bottom: 1px solid #d5d5d5;}
+/* .bidmodal .asset-sale .form-control , .bidmodal .asset-sale .btn{height: 40px;}  */
 .bidmodal .asset-sale .btn-group .btn{width: 120px;}
 .bidmodal .asset-action{padding: 20px 15px;}
 .table.bidhistory{border:0;}
 .table.bidhistory tr td, .table.bidhistory tr th{border:0; padding: 4px 5px; border-bottom: 1px solid #eee;}
+
+/* finance module */
+.promotion-slider .carousel-inner > .item > img, .promotion-slider .carousel-inner > .item > a > img{height: 300px;}
+.finance-menu{padding: 0;}
+.finance-menu li{display: inline-block; margin-right: 10px; float: left;}
+.finance-menu li:last-child{margin-right: 0px;}
+.finance-menu li a{padding: 30px 15px; display: block; background: #eee; text-align: center; color: #666; text-decoration: none; border-radius: 50%; width: 140px; height: 140px; font-size: 13px;}
+.finance-menu li a:hover{background: #ccc;}
+.finance-menu li a img{display: block; margin: auto; height: 60px; width: 60px;}
 
 /* responsive */
 @media (max-width:1199px){

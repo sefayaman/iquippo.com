@@ -10,9 +10,10 @@ var vattaxCtrl = require('./vattax.controller');
 var countCtrl = require('./count.controller');
 var financeIntegrationCtrl = require('./financeintegration.controller');
 var kycCtrl = require('./kycmaster.controller');
-var enterpriseCtrl = require('./enterprisemaster.controller');
+var saleProcessCtrl = require('./saleprocessmaster.controller');
 var markupPriceCtrl = require('./markupprice.controller');
 var assetSaleChargeCtrl = require('./assetsalecharge.controller');
+var emdChargeCtrl = require('./emdcharge.controller');
 var apiCtrl=require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
 var json2xls = require('json2xls');
@@ -28,7 +29,7 @@ router.post('/importMasterData', controller.importMasterData);
 router.post('/exportMasterData', controller.exportMasterData);
 router.post('/deleteMasterData', controller.deleteMasterData);
 router.post('/updateMasterData', controller.updateMasterData);
-router.post('/rotate', controller.rotate);
+router.post('/rotate', controller.downloadFromS3,controller.rotate,controller.uploadToS3);
 router.post('/saveasimage', controller.saveAsImage);
 router.post('/upsertsetting', controller.upsertSetting);
 router.post('/getsettingonkey', controller.getSettingByKey);
@@ -97,6 +98,7 @@ router.post('/vattax', auth.hasRole('admin'),vattaxCtrl.create);
 router.put('/vattax/:id', auth.hasRole('admin'),vattaxCtrl.update);
 router.delete('/vattax/:id',auth.hasRole('admin'), vattaxCtrl.destroy);
 router.post('/vattax/search',vattaxCtrl.search);
+//router.get('/vattax/getgstonproduct',vattaxCtrl.getGstOnProduct);
 
 router.get('/kyc',auth.hasRole('admin'), kycCtrl.get);
 router.post('/kyc', auth.hasRole('admin'),kycCtrl.create);
@@ -104,11 +106,11 @@ router.put('/kyc/:id', auth.hasRole('admin'),kycCtrl.update);
 router.delete('/kyc/:id',auth.hasRole('admin'), kycCtrl.destroy);
 router.post('/kyc/search',kycCtrl.search);
 
-router.get('/enterprise',auth.hasRole('admin'), enterpriseCtrl.get);
-router.post('/enterprise', auth.hasRole('admin'),enterpriseCtrl.create);
-router.put('/enterprise/:id', auth.hasRole('admin'),enterpriseCtrl.update);
-router.delete('/enterprise/:id',auth.hasRole('admin'), enterpriseCtrl.destroy);
-router.post('/enterprise/search',enterpriseCtrl.search);
+router.get('/saleprocess',auth.hasRole('admin'), saleProcessCtrl.get);
+router.post('/saleprocess', auth.hasRole('admin'),saleProcessCtrl.create);
+router.put('/saleprocess/:id', auth.hasRole('admin'),saleProcessCtrl.update);
+router.delete('/saleprocess/:id',auth.hasRole('admin'), saleProcessCtrl.destroy);
+router.post('/saleprocess/search',saleProcessCtrl.search);
 
 router.get('/markupprice',auth.hasRole('admin'), markupPriceCtrl.get);
 router.post('/markupprice', auth.hasRole('admin'),markupPriceCtrl.create);
@@ -121,6 +123,12 @@ router.post('/assetsalecharge', auth.hasRole('admin'),assetSaleChargeCtrl.create
 router.put('/assetsalecharge/:id', auth.hasRole('admin'),assetSaleChargeCtrl.update);
 router.delete('/assetsalecharge/:id',auth.hasRole('admin'), assetSaleChargeCtrl.destroy);
 router.post('/assetsalecharge/search',assetSaleChargeCtrl.search);
+
+router.get('/emdcharge',auth.hasRole('admin'), emdChargeCtrl.get);
+router.post('/emdcharge', auth.hasRole('admin'),emdChargeCtrl.create);
+router.put('/emdcharge/:id', auth.hasRole('admin'),emdChargeCtrl.update);
+router.delete('/emdcharge/:id',auth.hasRole('admin'), emdChargeCtrl.destroy);
+router.post('/emdcharge/search',emdChargeCtrl.search);
 //render excel
 router.get('/render.xlsx',controller.renderXLSX);
 router.get('/redirecttorapid',financeIntegrationCtrl.setCustomerData);

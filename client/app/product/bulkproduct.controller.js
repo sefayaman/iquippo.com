@@ -21,7 +21,7 @@ function BulkProductCtrl($state,$scope,$rootScope,$window,uploadSvc,productSvc,s
   vm.deleteProduct = deleteProduct;
   $scope.assetStatuses = assetStatuses;
   vm.images = [];
-
+  $scope.templateDir = $rootScope.templateDir;
   $scope.updateTemplate = updateTemplate;
   $scope.uploadZip = uploadZip;
 

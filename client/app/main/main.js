@@ -189,10 +189,20 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.valuation.meta;
         }
       })
-      .state('financing', {
-        url:"/financing",
-        templateUrl: 'app/staticpages/financing.html',
-        controller:"FinanceCtrl",
+      // .state('financing', {
+      //   url:"/financing",
+      //   templateUrl: 'app/staticpages/financing.html',
+      //   controller:"FinanceCtrl",
+      //   layout:'client',
+      //   onEnter:function($rootScope){
+      //     $rootScope.choosenTitle=pagesTitles.financing.title;
+      //     $rootScope.metaDescription=pagesTitles.financing.meta;
+      //   }
+      // })
+      .state('finance', {
+        url:"/finance",
+        templateUrl: 'app/finance/finance.html',
+        controller: 'FinancingCtrl as financingVm',
         layout:'client',
         onEnter:function($rootScope){
           $rootScope.choosenTitle=pagesTitles.financing.title;
@@ -521,7 +531,69 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
-      
+      .state('assetsale', {
+        url: '/assetsale',
+        abstract:true,
+        templateUrl: 'app/assetsale/assetsale.html',
+        controller: 'AssetSaleCtrl as assetsaleVm'
+      })
+      /*.state('assetsale.administrator', {
+        url: '/administrator',
+        templateUrl: 'app/assetsale/bidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
+        layout:'admin',
+        authenticate:true,
+        restrict:true
+      })
+      .state('assetsale.adminproductbidrequest', {
+        url: '/adminproductbidrequest?assetId&productId',
+        templateUrl: 'app/assetsale/productbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
+        layout:'admin',
+        authenticate:true,
+        restrict:true
+      })*/
+      .state('assetsale.bidproduct', {
+        url: '/bidproduct?t',
+        templateUrl: 'app/assetsale/bidproduct.html',
+        controller:'BidProductCtrl as bidproductVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.bidrequests', {
+        url: '/bidrequests?assetId&productId',
+        templateUrl: 'app/assetsale/productbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.buyer', {
+        url: '/buyer?t',
+        templateUrl: 'app/assetsale/buyerproductbidrequest.html',
+        controller:'BuyerProductBidRequestCtrl as buyerProductBidRequestVm',
+        layout:'admin',
+        authenticate:true
+      })
+      .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency?t',
+        templateUrl: 'app/assetsale/faprocess.html',
+        controller:'FAProcessCtrl as faVm',
+        layout:'admin',
+        authenticate:true
+      })
+     /* .state('assetsale.fulfilmentagency', {
+        url: '/fulfilmentagency?assetId&productId',
+        templateUrl: 'app/assetsale/productbidrequest.html',
+        controller:'ProductBidRequestCtrl as productBidRequestVm',
+        layout:'admin',
+        authenticate:true
+      })*/
+      .state('assetbidhistory', {
+        url: '/bidhistory',
+        templateUrl: 'app/assetsale/bidhistory.html',
+        layout:'client',
+        authenticate:true
+      })
 
       $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   });

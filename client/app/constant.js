@@ -50,7 +50,52 @@ var Modals = {
   auctionRegistration : {
     tplUrl : "app/auction/userregisterforauction.html",
     Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
+  },
+  invoiceDetails : {
+    tplUrl : "app/assetsale/invoicedetails.html",
+    Ctrl : 'invoiceDetailsCtrl as invoiceDetailsVm'
+  },
+  kycDocument : {
+    tplUrl : "app/assetsale/kycDocument.html",
+    Ctrl : 'kycDocumentCtrl as kycDocumentVm'
+  },
+  feedbackForm : {
+    tplUrl : "app/assetsale/feedbackForm.html",
+    Ctrl : 'feedbackCtrl as feedbackVm'
+  },
+  selectPaymentType : {
+    tplUrl : "app/assetsale/selectpaymenttype.html",
+    Ctrl : 'SelectPaymentCtrl as paymentVm'
+  },
+  emdFullPaymentPopup : {
+    tplUrl : "app/assetsale/emdFullPaymentDetail.html",
+    Ctrl : 'EmdFullPaymentCtrl as emdFullPaymentVm'
+  },
+  bidProductDetailPopup : {
+    tplUrl : "app/assetsale/bidproductdetail.html",
+    Ctrl : 'BidRequestDetailCtrl as bidReqDetailVm'
+  },
+  productRequestDetailPopup : {
+    tplUrl : "app/assetsale/productbidrequestdetail.html",
+    Ctrl : 'BidRequestDetailCtrl as bidReqDetailVm'
+  },
+  buyerRequestDetailPopup : {
+    tplUrl : "app/assetsale/buyerrequestdetail.html",
+    Ctrl : 'ViewProductOrRequestDetailCtrl as reqDetailVm'
+  },
+  bidRequest:{
+    tplUrl:'app/assetsale/assetbidpopup.html',
+    Ctrl:'AssetBidPopUpCtrl as assetBidPopUpVm'
+  },
+  DoUpload:{
+    tplUrl:'app/assetsale/doupload.html',
+    Ctrl:'DoUploadCtrl as doUploadVm'
   }
+};
+
+var s3Detais = {
+    baseURL : "http://s3.ap-south-1.amazonaws.com",
+    s3bucket : "iquippo-image-upload-dev"
 };
 
 var priceRange = [
@@ -95,6 +140,7 @@ var classifiedAdDir = "classifiedad";
 var manufacturerDir = "manufacturer";
 var bannerDir = "banner";
 var auctionmasterDir="auctionmaster";
+var financemasterDir="financemaster";
 var choosenTitle="";
 var metaDescription="";
 
@@ -116,6 +162,24 @@ var assetStatuses = [
 {
   name:"Sold",
   code:"sold"
+}
+];
+
+var modeOfPayment = [
+{
+  name:"Cash",
+},
+{
+  name:"Cheque",
+},
+{
+  name:"DD",
+},
+{
+  name:"RTGS",
+},
+{
+  name:"NEFT",
 }
 ];
 
@@ -252,10 +316,19 @@ var transactionStatuses = [
 var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
 var TaxList =  ["Service Tax","Swatch Bharat Cess","Krishi Kalyan Cess"];
 
-var offerStatuses=['Bid Received','Bid Changed','Bid Withdrawn'];
-var dealStatuses=['Decision Pending','Approved','EMD Received','Rejected-EMD Failed','Full Payment Received','Rejected-Full Sale Value Not Realized','DO Issued','Asset Delivered','Acceptance of Delivery','Offer Rejected','Closed','Bid-Rejected','Cancelled'];
-var bidStatuses=['In Progress','Accepted','Auto Accepted','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling','Rejected','Cancelled'];
-var tradeTypeStatuses = ['Sell','Both','Not Available'];
+var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
+
+var dealStatuses=['Decision Pending','Offer Rejected','Cancelled','Rejected-EMD Failed','Rejected-Full Sale Value Not Realized','Bid-Rejected','Approved','EMD Received','Full Payment Received','DO Issued','Asset Delivered','Acceptance of Delivery','Closed'];
+var bidStatuses=['In Progress','Cancelled','Bid Lost','EMD Failed','Full Payment Failed','Auto Rejected-Cooling Period','Rejected','Accepted','Auto Accepted'];
+var tradeTypeStatuses = ['Sell','Both','NOT_AVAILABLE'];
+
+var StatusChangeConfirmationMsg = {
+  approve : "Do you want to Approve this bid?",
+  reject : "Do you want to Reject this bid?",
+  doissued : "You are issueing  DO for this bid?.",
+  deliverd:"You are giving delivery date?.",
+  deliveryaccept:"You are confirming the asset delivery."
+}
 
 var tradeType = [
 {
@@ -458,6 +531,21 @@ informationMessage['classifiedSuccess'] = "Your request for Classified Ad has be
 
 /*channel partner messsage */
 informationMessage['deleteChannelPartnerConfirm'] = "Do you want to delete this user?";
+
+/*Asset Sale messages*/
+//informationMessage['buyNowApprovalIfYes'] = "Your Bid request has been submitted successfully.";
+//informationMessage['buyNowApprovalIfNo'] = "Your Sale process is in process , you may contact us at 03366022059";
+//informationMessage['buyNowApprovalIfNoForNextUser'] = "Someone else has already submitted the before you , in case of his cancellation you will be getting the same , You may Contact us at 03366022059";
+informationMessage['changeBid'] = "You are changing your existing bid. Proceed?";
+informationMessage['submitBid'] = "Do you want to submit your bid?";
+informationMessage['higherBidMsg'] = "A higher bid is available for this asset. Do you want to change your Bid?";
+informationMessage['partialEMD'] = "Partial EMD payment details submitted successfully.";
+informationMessage['partialFullpayment'] = "Partial Payment details submitted successfully.";
+informationMessage['EMDPayment'] = "EMD Payment has been received. Kindly pay the full payment as per schedule.";
+informationMessage['Fullpayment'] = "Full payment has been received.";
+informationMessage['kycUpdate'] = "KYC Documents uploaded successfully.";
+informationMessage['invoiceUpdateForSelf'] = "Invoice in your name has been submitted successfully.";
+informationMessage['invoiceUpdateForThirdParty'] = "Invoice in third party's name has been submitted successfully.";
 
 var newsEvents = [
   {

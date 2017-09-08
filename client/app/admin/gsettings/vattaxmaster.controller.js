@@ -16,29 +16,27 @@
         vm.destroy = destroy;
         vm.editClicked = editClicked;
         vm.searchFn = searchFn;
-        //vm.getCategory = getCategory;
-        vm.taxType = [{name:"GST"}];
+        vm.getCategory = getCategory;
+        vm.taxType = [{name:"GST"}, {name:"Default"}];
         vm.dataModel.taxType = vm.taxType[0].name;
         function init(){
-        /*groupSvc.getAllGroup()
-        .then(function(result) {
-          $scope.allGroup = result;
-        });*/
+            LocationSvc.getAllState()
+              .then(function(result){
+                $scope.stateList = result;
+              });
 
-        LocationSvc.getAllState()
-          .then(function(result){
-            $scope.stateList = result;
-          });
-
-        categorySvc.getCategoryOnFilter()
+            /*categorySvc.getCategoryOnFilter()
+                .then(function(result) {
+                    vm.categoryList = result;
+                })*/
+            groupSvc.getAllGroup()
             .then(function(result) {
-                vm.categoryList = result;
-            })
+              $scope.allGroup = result;
+            });
+            loadViewData();
+        }
 
-        loadViewData();
-        } 
-
-        /*function getCategory(groupId) {
+        function getCategory(groupId) {
             vm.categoryList = [];
             
             if (!groupId) {
@@ -49,7 +47,7 @@
                 .then(function(result) {
                     vm.categoryList = result;
                 })
-        }*/
+        }
 
         function loadViewData(){
             VatTaxSvc.get()
@@ -70,6 +68,7 @@
                 $scope.submitted = true;
                 return;
             }
+            
             vm.dataModel.createdBy = {};
             vm.dataModel.createdBy._id = Auth.getCurrentUser()._id;
             vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
@@ -89,19 +88,25 @@
         function editClicked(rowData){
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
-            vm.dataModel.group = rowData.group._id;
             vm.dataModel.taxType = rowData.taxType;
             if (rowData.effectiveToDate)
                 vm.dataModel.effectiveToDate = moment(rowData.effectiveToDate).format('MM/DD/YYYY');
             if (rowData.effectiveFromDate)
                 vm.dataModel.effectiveFromDate = moment(rowData.effectiveFromDate).format('MM/DD/YYYY');
-            vm.dataModel.state = rowData.state._id;
+            if(rowData.state && rowData.state._id)
+                vm.dataModel.state = rowData.state._id;
             vm.dataModel.amount = rowData.amount;
-            categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
-                .then(function(result) {
-                    vm.categoryList = result;
-                    vm.dataModel.category = rowData.category._id;
-                })
+            // if(rowData.category && rowData.category._id)
+            //     vm.dataModel.category = rowData.category._id;
+            if(rowData.group && rowData.group._id) {
+                vm.dataModel.group = rowData.group._id;
+            
+                categorySvc.getCategoryOnFilter({groupId: rowData.group._id})
+                    .then(function(result) {
+                        vm.categoryList = result;
+                        vm.dataModel.category = rowData.category._id;
+                    });
+            }
             $scope.isEdit = true;
         }
 
