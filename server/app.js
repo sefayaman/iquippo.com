@@ -165,14 +165,22 @@ function resizeImg(req, res, assetDir, dimension, isMultiple) {
       fsExtra.copy(imgPath, originalFilePath, {
         replace: true
       }, function(err, result) {
-        if (err) throw err;
+        if (err) 
+          throw err;
+        
         if(dimension.size > 50000){
         lwip.open(imgPath, function(err, image) {
+          if(err)
+            throw err;
           image.scale(0.75, function(err, rzdImage) {
+            if(err)
+              throw err;
             if (extPart === 'jpg' || extPart === 'jpeg') {
               rzdImage.toBuffer(extPart, {
                 quality: 85
               }, function(err, buffer) {
+                if(err)
+                  throw err;
                 fs.writeFile(imgPath, buffer, function(err) {
                   if (err) throw err;
                   utility.uploadFileS3(config.uploadPath + assetDir,assetDir,function(err,s3res){
