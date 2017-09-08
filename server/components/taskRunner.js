@@ -24,6 +24,7 @@ function getTask() {
         localDir : config.uploadPath + '/temp',
         prefix : 'assets/uploads/temp'
     };
+
     utility.downloadFromS3(opts ,function(err, s3res) {
         if(err){
             console.error(err);

@@ -1212,6 +1212,12 @@ function buildSuggestion(req, res, suggestions) {
 exports.downloadFromS3 = function(req, res, next) {
 	var dirName = req.body.imgPath && req.body.imgPath.split('/');
 	dirName = dirName[0];
+
+	if(fs.existsSync(config.uploadPath + dirName)){
+		req.dirName = dirName;
+		return next();		
+	}
+
 	var opts = {
 		localDir: config.uploadPath + dirName,
 		prefix: 'assets/uploads/' + dirName
@@ -1229,6 +1235,9 @@ exports.downloadFromS3 = function(req, res, next) {
 
 exports.uploadToS3 = function(req, res, next) {
 	var dirName = req.dirName;
+	if(!dirName)
+		return next(new Error('Invalid delete directory'));
+
 	var opts = {
 		prefix : 'assets/uploads/' + dirName,
 		dirName : dirName

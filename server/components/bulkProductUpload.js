@@ -12,6 +12,7 @@ var IncomingProduct = require('./incomingproduct.model');
 var Product = require('./../api/product/product.model');
 var Model = require('./../api/model/model.model');
 var appNotificationCtrl = require('../api/appnotification/appnotification.controller');
+var utility = ('./utility');
 
 bulkProductUpload.commitProduct = function(taskData,cb){
   var filename;
@@ -131,7 +132,16 @@ function placeWaterMark(assetIds,product,zipEntryObj,taskData,cb){
         placeWaterMark(assetIds,product,zipEntryObj,taskData,cb);
       }
     }else{
-      commitProduct(assetIds,product,zipEntryObj,taskData,cb);        
+      var localFilePath = config.uploadPath + product.assetDir;
+      var dirName = product.assetDir;
+      console.log('Found some file');
+      utility.uploadFileS3(localFilePath,dirName,function(err,data){
+        if(err){
+          console.log(err)
+          return cb(true,taskData);
+        }
+        return commitProduct(assetIds,product,zipEntryObj,taskData,cb);   
+      });     
     }
      
 }

@@ -61,7 +61,6 @@ Date.prototype.addMinutes = function(minutes) {
 function uploadFileS3(localFilePath, dirName, cb) {
   var params = {
     localDir: localFilePath,
-    deleteRemoved: true,
     s3Params: {
       Bucket: config.awsBucket,
       Prefix: "assets/uploads/" + dirName
@@ -81,33 +80,34 @@ function uploadFileS3(localFilePath, dirName, cb) {
   });
 }
 //AA:Upload a directory to S3
-function uploadZipFileToS3(localDirPath, cb) {
-  var params = {
-    localDir: localDirPath,
-    deleteRemoved: true,
-    s3Params: {
-      Bucket: config.awsBucket,
-      Prefix: "assets/"
-
-    }
-  };
-
-  var uploader = client.uploadFile(params);
-  uploader.on('error', function(err) {
+function uploadZipFileToS3(localDirPath, filename, cb) {
+  fs.readFile(localDirPath, function(err, data) {
     if (err) {
-      util.log(err);
-      cb(new Error('Unable to upload file'));
+      console.log(err);
+      return cb(err);
     }
-  });
-  uploader.on('end', function() {
-    return cb();
+    //var base64data = new Buffer(data, 'binary').toString('base64');
+
+    var s3Params = {
+      Bucket: config.awsBucket,
+      Key: 'assets/uploads/temp/' + filename,
+      ContentType: 'application/zip',
+      Body: data
+    };
+
+    awsS3Client.putObject(s3Params, function(perr, presp) {
+      if (perr) {
+        return cb(perr)
+      }
+      return cb();
+    });
   });
 }
 
 function downloadFromS3(opts, cb) {
   var params = {
     localDir: opts.localDir,
-    deleteRemoved: true,
+
     s3Params: {
       Bucket: config.awsBucket,
       Prefix: opts.prefix
@@ -156,7 +156,7 @@ function deleteFromS3(opts, cb) {
 function uploadDirToS3(localDirPath, cb) {
   var params = {
     localDir: localDirPath,
-    deleteRemoved: true,
+
     s3Params: {
       Bucket: config.awsBucket,
       Prefix: "assets/"

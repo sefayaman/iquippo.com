@@ -31,6 +31,7 @@ var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
 var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
+var path = require('path');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -97,27 +98,36 @@ app.post('/api/uploads', function(req, res) {
       req.total = 1;
       resizeImg(req, res, assetDir, dimension, false);
     } else {
-      try {
-        /*For doccument upload on s3 Start- J.K*/
-        utility.uploadFileS3(config.uploadPath + assetDir, assetDir, function(err, s3res) {
-          if (err) {
+      var localDirPath = config.uploadPath + assetDir;
+      if (assetDir === 'temp') {
+        localDirPath = req.files && req.files[0] && req.files[0].path;
+        var filename  = req.files && req.files[0] && req.files[0].filename;
+        
+        if(!filename || !localDirPath)
+          return res.status(500);
+
+        utility.uploadZipFileToS3(localDirPath, filename, function(uploadErr, s3res) {
+          if (uploadErr) {
+            throw uploadErr;
+          }
+          res.status(200).json({
+            assetDir: assetDir,
+            filename: req.files[0].filename
+          });
+        });
+      } else {
+        utility.uploadFileS3(localDirPath, assetDir, function(uploadErr, s3res) {
+          if (uploadErr) {
             throw err;
           }
           res.status(200).json({
             assetDir: assetDir,
             filename: req.files[0].filename
           });
-
         });
-        /*For doccument upload on s3 End- J.K*/
-
-      } catch (err) {
-        return res.end("Error uploading file.");
       }
     }
-
   });
-
 });
 
 app.post('/api/multiplefile/upload', function(req, res) {
