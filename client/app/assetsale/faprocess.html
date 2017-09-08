@@ -5,9 +5,9 @@
     </div>
   </div>
   <div class="btn-group enterprise-value form-group">
-      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'approved'}" ng-click="onTabChange('approved')">Approved Bid</button>
-      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'closed'}" ng-click="onTabChange('closed')">Closed Bid</button>
-      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'bidproduct'}" ng-click="onTabChange('bidproduct')">All Bid</button>
+      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'approved'}" ng-click="onTabChange('approved',1)">Approved Bid</button>
+      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'closed'}" ng-click="onTabChange('closed',2)">Closed Bid</button>
+      <button type="button" class="btn active" ng-class="{'btn-primary': faVm.tabVal == 'bidproduct'}" ng-click="onTabChange('bidproduct',3)">All Bid</button>
       
    </div>
   <!-- Approved Bid -->

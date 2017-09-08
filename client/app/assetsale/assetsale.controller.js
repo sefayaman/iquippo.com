@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('AssetSaleCtrl', AssetSaleCtrl);
 
-	function AssetSaleCtrl($scope, $state, Auth, AssetSaleSvc) {
+	function AssetSaleCtrl($scope, $state,$location, Auth, AssetSaleSvc) {
 		var vm = this;
 		var filter={};
 		vm.bidListing=[];
@@ -28,27 +28,31 @@
               $scope.tabValue = '';
               break;
         }
-        onTabChange($scope.tabValue);
+        onTabChange($scope.tabValue,false);
 		}
 		init();
 	  
-	  function onTabChange(tabValue){
+	  function onTabChange(tabValue,tabReset){
+      var t = $location.search().t || 1;
+      if(tabReset)
+         t = 1;
+       
       switch(tabValue){
         case "administrator":
           $scope.tabValue = 'administrator';
-          $state.go("assetsale.bidproduct");
+          $state.go("assetsale.bidproduct",{t:t});
         break;
         case "seller":
           $scope.tabValue = 'seller';
-          $state.go("assetsale.bidproduct");
+          $state.go("assetsale.bidproduct",{t:t});
         break;
         case "buyer":
           $scope.tabValue = 'buyer';
-          $state.go("assetsale.buyer");
+          $state.go("assetsale.buyer",{t:t});
         break;
          case "fulfilmentagency":
           $scope.tabValue = 'fulfilmentagency';
-          $state.go("assetsale.fulfilmentagency");
+          $state.go("assetsale.fulfilmentagency",{t:t});
         break;
       } 
     }

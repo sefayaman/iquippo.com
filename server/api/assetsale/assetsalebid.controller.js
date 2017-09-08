@@ -192,7 +192,7 @@ function sendStatusMail(bid) {
 
 exports.validateUpdate = function(req,res,next){
 	
-	if(['approve','deliveryaccept','emdpayment'].indexOf(req.query.action) !== -1)
+	if(['approve','deliveryaccept','emdpayment','fullpayment'].indexOf(req.query.action) !== -1)
 		async.parallel([validateBid,validateOtherBids,validateProduct],onComplete);
 	else
 		async.parallel([validateBid,validateProduct],onComplete);
@@ -204,16 +204,24 @@ exports.validateUpdate = function(req,res,next){
 		req.bids[req.bids.length] = req.body;
 		if(req.query.action === 'approve'){
 			getSaleProcessMaster(function(entData){
-				if(!entData.coolingPeriod){
+				if(!entData){
 					return res.status(404).send("Cooling period configuration is not found");
 				}
 				if(!req.product.cooling){
 					req.product.cooling = true;
 					req.product.coolingStartDate = new Date();
-					if(entData.coolingPeriodIn === 'Hours')
-						req.product.coolingEndDate = new Date().addHours(entData.coolingPeriod ||0);
-					else
-						req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod || 0);
+					if(entData.coolingPeriodIn === 'Hours'){
+						if(entData.coolingPeriod > 0)
+							req.product.coolingEndDate = new Date().addHours(entData.coolingPeriod ||0);
+						else
+							req.product.coolingEndDate = new Date();
+					}
+					else{
+						if(entData.coolingPeriod > 0)
+							req.product.coolingEndDate = new Date().addDays(entData.coolingPeriod || 0);
+						else
+							req.product.coolingEndDate = new Date();		
+					}
 					req.updateProduct = true;
 				}
 				if(req.bids.length)
@@ -249,6 +257,12 @@ exports.validateUpdate = function(req,res,next){
 			//else
 			//	return res.status(412).send("EMD payment remaining");		
 		}else if(req.query.action === 'fullpayment'){
+				req.otherBids.forEach(function(item){
+					item.status = false;
+					AssetSaleUtil.setStatus(item,bidStatuses[2],'bidStatus','bidStatuses',req.user._id);
+					AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
+					req.bids.push(item);
+				});
 			//if(req.bid.fullPayment.remainingPayment == 0)
 				next();
 			//else
@@ -641,6 +655,9 @@ exports.fetchBid = function(req,res){
 	
 	if(req.query.offerStatus)
 		filter.offerStatus = req.query.offerStatus;
+
+	if(req.query.dealStatuses)
+		filter.dealStatus = {$in:req.query.dealStatuses.split(',')};
 
 	if(req.query.dealStatus)
 		filter.dealStatus = req.query.dealStatus;

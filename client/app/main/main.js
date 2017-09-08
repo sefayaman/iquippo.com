@@ -554,7 +554,7 @@ angular.module('sreizaoApp')
         restrict:true
       })*/
       .state('assetsale.bidproduct', {
-        url: '/bidproduct',
+        url: '/bidproduct?t',
         templateUrl: 'app/assetsale/bidproduct.html',
         controller:'BidProductCtrl as bidproductVm',
         layout:'admin',
@@ -568,14 +568,14 @@ angular.module('sreizaoApp')
         authenticate:true
       })
       .state('assetsale.buyer', {
-        url: '/buyer',
+        url: '/buyer?t',
         templateUrl: 'app/assetsale/buyerproductbidrequest.html',
         controller:'BuyerProductBidRequestCtrl as buyerProductBidRequestVm',
         layout:'admin',
         authenticate:true
       })
       .state('assetsale.fulfilmentagency', {
-        url: '/fulfilmentagency',
+        url: '/fulfilmentagency?t',
         templateUrl: 'app/assetsale/faprocess.html',
         controller:'FAProcessCtrl as faVm',
         layout:'admin',
