@@ -34,7 +34,9 @@ exports.validateExcelHeader = validateExcelHeader;
 exports.toJSON = toJSON;
 exports.uploadFileS3 = uploadFileS3;
 exports.uploadDirToS3 = uploadDirToS3;
+exports.uploadZipFileToS3 = uploadZipFileToS3;
 exports.downloadFromS3 = downloadFromS3;
+exports.deleteFromS3 = deleteFromS3;
 
 
 
@@ -79,6 +81,82 @@ function uploadFileS3 (localFilePath,dirName,cb) {
   });
 }
 //AA:Upload a directory to S3
+function uploadZipFileToS3 (localDirPath, cb) { 
+  var params = {
+      localDir: localDirPath,
+      deleteRemoved:true,
+        s3Params: {
+          Bucket: config.awsBucket,
+          Prefix: "assets/"
+
+        }
+    };
+    
+    var uploader = client.uploadFile(params);
+    uploader.on('error', function(err) {
+        if(err){
+          util.log(err);
+          cb(new Error('Unable to upload file'));
+        }
+    });
+    uploader.on('end', function() {
+      return cb();
+    });
+}
+ 
+function downloadFromS3(opts, cb){
+    var params = {
+      localDir: opts.localDir,
+      deleteRemoved:true,
+        s3Params: {
+          Bucket: config.awsBucket,
+          Prefix: opts.prefix
+        }
+    };
+  //var s3 = new AWS.S3();
+  var downloader = client.downloadDir(params);
+  
+  downloader.on('error', function(err) {
+      if(err){
+        debug(err);
+        return cb(err);
+      }
+  });
+  
+  downloader.on('end', function(){
+      return cb();
+    });
+  
+}
+
+function deleteFromS3(opts, cb){
+    var params = {
+      localDir: opts.localDir,
+      deleteRemoved:true,
+        s3Params: {
+          Bucket: config.awsBucket,
+          Prefix: opts.prefix
+        }
+    };
+  //var s3 = new AWS.S3();
+  var uploader = client.deleteDir(params);
+  
+  uploader.on('error', function(err) {
+      if(err){
+        debug(err);
+        return cb(err);
+      }
+  });
+  
+  uploader.on('end', function(){
+      return cb();
+    });
+  
+}
+
+ 
+
+//AA:Upload a directory to S3
 function uploadDirToS3 (localDirPath,cb) { 
   var params = {
       localDir: localDirPath,
@@ -101,26 +179,8 @@ function uploadDirToS3 (localDirPath,cb) {
       return cb();
     });
 }
- 
-function downloadFromS3(localFilePath, cb){
-  AWS.config.update({
-    accessKeyId: config.awsAccessKeyId,
-    secretAccessKey: config.awsSecretAccessKey
-  });
-  var s3 = new AWS.S3();
-  s3.getObject({ Bucket: config.awsBucket, Key: localFilePath },
-    function (error, data) {
-      if (error || !data) {
-          debug(error);
-          return cb(error || new Error('Error while fetching images from s3'))
-      } else {
-        debug(data);
-        return cb();
-      }
-  })
-}
- 
 
+ 
 function toIST(value){
   if(!value)
     return '';

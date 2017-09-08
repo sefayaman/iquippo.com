@@ -1211,30 +1211,20 @@ function buildSuggestion(req, res, suggestions) {
 
 exports.rotate = function(req, res) {
     var imgPath = config.uploadPath + req.body.imgPath;
-    var imgName = req.body.imgPath;
-    var s3ImgPath = 'assets/uploads/' + req.body.imgPath;
-    
-    /**Start S3 Operation **/
-    console.log('Line no : 1213 Do something here.....',imgPath);
-    utility.downloadFromS3(s3ImgPath, imgName ,function(err, data) {
-        if (err) console.log(err, err.stack); // an error occurred
-        else     console.log(data);           // successful response
-    });
-    /**End S3 Operation **/
     
     lwip.open(imgPath,function(err,image){
      	if(err)
-     		throw err;
+            throw err;
 
      	image.batch()
 	    .rotate(-90,"white")
 		.writeFile(imgPath, function(e) {
-			if (e) {
-				throw e;
-			} else
-				res.send("done");
+                    if (e) {
+                        throw e;
+                    } else
+                        res.send("done");
 		}); 	
-    })
+    });
 	// image.batch()
 	/*gm(config.uploadPath + imgPath)
 =======
@@ -1275,7 +1265,7 @@ exports.saveAsImage = function(req, res) {
 		fsExtra.copy(filePath, originalFilePath, function(err, result) {
 			console.log("-----------", err);
 			saveImage(req, res, filePath, extPart);
-		})
+		});
 
 	}
 

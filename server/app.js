@@ -88,7 +88,6 @@ app.post('/api/uploads', function(req, res) {
       console.log("I am Vara");
       return res.end("Error uploading file.");
     }
-    console.log("req.files",req.query.name);
     if (resize == 'y') {
       var dimension = {};
       dimension.width = req.query.width;
@@ -99,10 +98,19 @@ app.post('/api/uploads', function(req, res) {
       resizeImg(req, res, assetDir, dimension, false);
     } else {
       try {
-        res.status(200).json({
-          assetDir: assetDir,
-          filename: req.files[0].filename
-        });
+        /*For doccument upload on s3 Start- J.K*/
+          utility.uploadFileS3(config.uploadPath + assetDir,assetDir,function(err,s3res){
+            if(err){
+              throw err;
+            }
+            res.status(200).json({
+                assetDir: assetDir,
+                filename: req.files[0].filename
+            });
+            
+          });
+        /*For doccument upload on s3 End- J.K*/
+        
       } catch (err) {
         return res.end("Error uploading file.");
       }
