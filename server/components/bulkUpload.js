@@ -118,7 +118,7 @@ bulkUpload.init = function(taskData, next) {
 			};
 
 			_fetchRequestData(options, function(err, data) {
-				if (err)
+			    if (err)
 					return next('', taskData);
 				if (!data.length)
 					return next('', taskData);
@@ -149,9 +149,8 @@ bulkUpload.init = function(taskData, next) {
 								product.otherImages.push(imagesObj[product.assetId][j].name)
 							}
 						}
-					}
 
-					product.isSold = product.isSold ? true : false;
+                                    product.isSold = product.isSold ? true : false;
 					if (product.isSold) {
 						product.saleVal = Number(product.saleVal);
 					}
@@ -199,16 +198,22 @@ bulkUpload.init = function(taskData, next) {
 					};
 
 					_uploadToS3(opts, function(err, data) {
-						if (err) {
+                                            if (err) {
 							console.log(err);
 							return cb(err);
 						}
 						return cb();
 					});
+                                    
+                                    } else {
+                                        return cb();
+                                    }
+
+					
 				}
 
 				function finish(err) {
-					if (err)
+                                    	if (err)
 						return next(false, taskData);
 
 					var rejectIds = [];
@@ -306,7 +311,9 @@ bulkUpload.init = function(taskData, next) {
 							}
 							return cb();
 						})
-					}
+					} else {
+                                            return cb();
+                                        }
 				}
 
 				function final(err) {
