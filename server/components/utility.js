@@ -64,8 +64,7 @@ function uploadFileS3(localFilePath, dirName, cb) {
     deleteRemoved: true,
     s3Params: {
       Bucket: config.awsBucket,
-      Prefix: "assets/uploads/" ,
-      Key: dirName, 
+      Prefix: "assets/uploads/" + dirName
     }
   };
 
@@ -132,10 +131,8 @@ function downloadFromS3(opts, cb) {
 
 function deleteFromS3(opts, cb) {
   var params = {
-    s3Params: {
-      Bucket: config.awsBucket,
-      Prefix: opts.prefix
-    }
+    Bucket: config.awsBucket,
+    Prefix: opts.prefix
   };
   //var s3 = new AWS.S3();
   var deleter = client.deleteDir(params);

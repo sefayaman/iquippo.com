@@ -1230,7 +1230,8 @@ exports.downloadFromS3 = function(req, res, next) {
 exports.uploadToS3 = function(req, res, next) {
 	var dirName = req.dirName;
 	var opts = {
-		prefix : 'assets/uploads/' + dirName
+		prefix : 'assets/uploads/' + dirName,
+		dirName : dirName
 	};
 
 	utility.deleteFromS3(opts,function(err,data){
@@ -1246,7 +1247,6 @@ exports.uploadToS3 = function(req, res, next) {
 				debug(err);
 				return next(new Error('Error while uploading new updated directory'));
 			}
-
 			return res.send('done');
 		})
 	})
