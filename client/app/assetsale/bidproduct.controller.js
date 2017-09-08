@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('sreizaoApp').controller('BidProductCtrl', BidProductCtrl);
-function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
+function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSvc, AssetSaleSvc,userSvc,PagerSvc, Modal) {
 	var vm = this;
 	$scope.pager = PagerSvc.getPager();
 
@@ -16,7 +16,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 	function init() {
 
 		initFilter.bidReceived = true;
-		$scope.tabValue = Auth.isAdmin()?'administrator':'seller';
+		$scope.$parent.tabValue = Auth.isAdmin()?'administrator':'seller';
 		if(!Auth.isAdmin())
 		 	initFilter.userid = Auth.getCurrentUser()._id;
 		if(Auth.isEnterprise()|| (Auth.isEnterpriseUser() && Auth.isBuySaleApprover())){
@@ -24,14 +24,22 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 			initFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
 		}
 
-	    var filter = angular.copy(initFilter);
-	    filter.bidRequestApproved = 'n';
-		getBidProducts(filter);
+	    //var filter = angular.copy(initFilter);
+	    //filter.bidRequestApproved = 'n';
+		//getBidProducts(filter);
+		if($stateParams.t == 2)
+			vm.activeBid = 'saleinprocess';
+		else if($stateParams.t == 3)
+			vm.activeBid = 'closed';
+		else
+			vm.activeBid = "actionable";
+		fireCommand(true);
 	}
 
 
-	function onTabChange(tab) {
+	function onTabChange(tab,tabVal) {
 		vm.activeBid = tab;
+		$state.go($state.current.name,{t:tabVal},{location:'replace',notify:false});
 		fireCommand(true);
 	}
 
@@ -71,7 +79,7 @@ function BidProductCtrl($scope, $rootScope, $state, Auth, productSvc, AssetSaleS
 	function getClosedBids(filter){
 		$scope.pager.copy(filter);
 		filter.actionable = 'n';
-		filter.dealStatus = dealStatuses[12];
+		//filter.dealStatus = dealStatuses[12];
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)
 		.then(function(result){

@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 angular.module('sreizaoApp').controller('BuyerProductBidRequestCtrl', BuyerProductBidRequestCtrl);
-function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
+function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, PagerSvc, productSvc, AssetSaleSvc, $rootScope, $uibModal) {
 	var vm = this;
 	vm.bidListing = [];
 	vm.activeBid = "approved";
@@ -17,12 +17,16 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 	var initFilter = {actionable : 'y'};
 
 	function init() {
+		$scope.$parent.tabValue = 'buyer'
 		var filter = {};
 		initFilter.pagination = true;
 		initFilter.userId = encodeURIComponent(Auth.getCurrentUser()._id);
 		angular.copy(initFilter, filter);
 		//filter.actionable = 'y';
-		getBidData(filter);	
+		//getBidData(filter);
+		if($stateParams.t != 1)
+			vm.activeBid = 'closed';
+		onTabChange(vm.activeBid);	
 	}
 	
 	function openBidModal(bid) {
@@ -96,6 +100,7 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
     	vm.activeBid = tab;
     	var filter={};
     	$scope.pager.reset();
+    	var tabVal = 1;
 	  	switch(tab){
 	  		case 'approved':
 			angular.copy(initFilter, filter);
@@ -106,8 +111,10 @@ function BuyerProductBidRequestCtrl($scope, $state, Auth, Modal, PagerSvc, produ
 	  		angular.copy(initFilter, filter);
 			filter.actionable = 'n';
 	  		getBidData(filter);
+	  		tabVal = 2;
 	  		break;
 	  	}
+	  	$state.go($state.current.name,{t:tabVal},{location:'replace',notify:false});
   	}
 
 	function withdrawBid(bidId) {

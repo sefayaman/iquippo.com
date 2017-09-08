@@ -9,9 +9,9 @@
 	</div>
 <legend></legend>
    <div class="btn-group enterprise-value form-group">   
-    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'actionable'}" ng-click="onTabChange('actionable')">Pending for Approval</button>
-    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'saleinprocess'}" ng-click="onTabChange('saleinprocess')">Sale In Progress</button>
-    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed')">Closed</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'actionable'}" ng-click="onTabChange('actionable',1)">Pending for Approval</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'saleinprocess'}" ng-click="onTabChange('saleinprocess',2)">Sale In Progress</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed',3)">Closed</button>
    </div>
 
    	<!-- Approved Bid -->
