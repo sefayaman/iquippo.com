@@ -1,19 +1,19 @@
 'use strict';
 
 var Task = require('./task').task;
-var bulkProductUpload = require('./bulkProductUpload');
-var config = require('../config/environment');
-var commonController = require('../api/common/common.controller');
-var bulkUpload = require('./bulkUpload')
-var notification = require('./notification.js');
-var util = require('util');
-var utility = require('./utility.js'); 
 var mongoose = require('mongoose');
+var config = require('../config/environment');
 mongoose.connect(config.mongo.uri, config.mongo.options);
 mongoose.connection.on('error', function(err) {
   console.error('MongoDB connection error: ' + err);
   process.exit(-1);
 });
+var bulkProductUpload = require('./bulkProductUpload');
+var commonController = require('../api/common/common.controller');
+var bulkUpload = require('./bulkUpload')
+var notification = require('./notification.js');
+var util = require('util');
+var utility = require('./utility.js'); 
 
 
 var Uploaded_TEMPLATE_NAME = "BulkProductUploaded"

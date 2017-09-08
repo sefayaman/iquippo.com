@@ -8,13 +8,20 @@ var fsExtra = require('fs.extra');
 var gm = require('gm').subClass({imageMagick: true});
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
+var mongoose = require('mongoose');
+mongoose.createConnection(config.mongo.uri, config.mongo.options);
+mongoose.connection.on('error', function(err) {
+  console.error('MongoDB connection error: ' + err);
+  process.exit(-1);
+});
 var IncomingProduct = require('./incomingproduct.model');
 var Product = require('./../api/product/product.model');
 var Model = require('./../api/model/model.model');
 var appNotificationCtrl = require('../api/appnotification/appnotification.controller');
-var utility = ('./utility');
+var utility = require('./utility');
 
 bulkProductUpload.commitProduct = function(taskData,cb){
+  debugger;
   var filename;
   if (taskData && taskData.taskInfo && taskData.taskInfo.filename) {
     filename = taskData.taskInfo.filename;
@@ -45,10 +52,12 @@ bulkProductUpload.commitProduct = function(taskData,cb){
 }
 
 function getProduct(assetIds,zipEntryObj,taskData,cb){
+    debugger;
     if(assetIds.length > 0){
       var assetId = assetIds[0];
       IncomingProduct.findOneAndUpdate({assetId:assetId,'user._id':taskData.user._id,lock:{$ne:true}},{ $set: {lock:true}},function(err,incPrd){
-        if(err || !incPrd){
+          debugger;
+          if(err || !incPrd){
             assetIds.splice(0,1);
             getProduct(assetIds,zipEntryObj,taskData,cb);
           }else{
@@ -66,7 +75,8 @@ function getProduct(assetIds,zipEntryObj,taskData,cb){
 }
 
 function extractEntryAndMapImages(assetIds,product,zipEntryObj,taskData,cb){
-  var ret = false;
+  debugger;
+    var ret = false;
    try{
        product.images = [];
        product.assetDir = new Date().getTime();
@@ -100,6 +110,7 @@ function extractEntryAndMapImages(assetIds,product,zipEntryObj,taskData,cb){
 }
 
 function placeWaterMark(assetIds,product,zipEntryObj,taskData,cb){
+    debugger;
     if(taskData.imgCounter < product.images.length){
       var waterMarkWidth = 144;
       var waterMarkHeight = 86;
@@ -132,22 +143,24 @@ function placeWaterMark(assetIds,product,zipEntryObj,taskData,cb){
         placeWaterMark(assetIds,product,zipEntryObj,taskData,cb);
       }
     }else{
-      var localFilePath = config.uploadPath + product.assetDir;
+        var localFilePath = config.uploadPath + product.assetDir;
       var dirName = product.assetDir;
       console.log('Found some file');
       utility.uploadFileS3(localFilePath,dirName,function(err,data){
-        if(err){
+        debugger;
+          if(err){
           console.log(err)
           return cb(true,taskData);
         }
-        return commitProduct(assetIds,product,zipEntryObj,taskData,cb);   
-      });     
+            return commitProduct(assetIds,product,zipEntryObj,taskData,cb);
+        });
     }
      
 }
 
 function commitProduct(assetIds,product,zipEntryObj,taskData,cb){
-  IncomingProduct.remove({_id:product._id},function(err,dt){
+    debugger;
+    IncomingProduct.remove({_id:product._id},function(err,dt){
     if(err){
         IncomingProduct.update({_id:product._id},{$set:{lock:false}});
         console.log("error in deleting product")
@@ -158,6 +171,7 @@ function commitProduct(assetIds,product,zipEntryObj,taskData,cb){
     product.relistingDate = new Date();
 
     Product.create(product, function(err, prd) {
+        debugger;
       if(err){console.log('error in creating product')}
       if(!err) taskData.uploadedProducts.push(product.assetId);
       //create app notificaton data
