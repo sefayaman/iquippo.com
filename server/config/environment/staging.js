@@ -32,7 +32,7 @@ module.exports = {
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
-  awsBucket: 'iquippo-image-upload-dev',
+  awsBucket: 'iquippo-image-upload',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/'
   
 
