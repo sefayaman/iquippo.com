@@ -1,15 +1,28 @@
 'use strict';
 
 var fs = require('fs');
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
 var config = require('../config/environment');
 var path = require('path');
-var utility = require('../components/utility.js'); // /server/components/utility.js
+//var utility = require('../components/utility.js'); // /server/components/utility.js
 var async = require('async');
 var _ = require('lodash');
 var rimraf = require('rimraf');
 var count = 0;
 var util = require('util');
+var AWS = require('aws-sdk');
+var util = require('util');
+var bucket = config.awsBucket;
+var s3baseUrl = config.awsUrl;
+var s3 = require('s3');
+var s3Options = {
+	accessKeyId: config.awsAccessKeyId,
+	secretAccessKey: config.awsSecretAccessKey,
+	endpoint: config.awsEndpoint,
+	sslEnabled: true
+};
+
+var awsS3Client = new AWS.S3(s3Options);
 
 /*
 AA;Process of existing uploading images on s3
@@ -55,18 +68,50 @@ function init(cb) {
 								if (cA && cA.length) {
 									cA.forEach(function(d, index) {
 										var uploadDirPath = path.join(newUploadPath, d);
-										utility.uploadFileS3(uploadDirPath, d, function(err) {
-											if (err) {
-												util.log(err);
-											} else {
-												util.log('Uploaded directory # %d for chunkId # %d with path %s ', index, chunkId, uploadDirPath);
-												util.log('Deleting uploaded directory');
 
-												rimraf(uploadDirPath, function(err, data) {
-													util.log(err || 'Deletind directory');
+										fs.readdir(uploadDirPath, (err, files) => {
+
+											if (!files || files.length === 0) {
+												console.log(`provided folder '${uploadDirPath}' is empty or does not exist.`);
+												console.log('Make sure your project was compiled!');
+												return;
+											}
+
+											// for each file in the directory
+											for (const fileName of files) {
+
+												// get the full path of the file
+												const filePath = path.join(uploadDirPath, fileName);
+
+												// ignore if directory
+												if (fs.lstatSync(filePath).isDirectory()) {
+													continue;
+												}
+
+												// read file contents
+												fs.readFile(filePath, (error, fileContent) => {
+													// if unable to read file contents, throw exception
+													if (error) {
+														throw error;
+													}
+
+													// upload file to S3
+													awsS3Client.putObject({
+														Bucket: bucket,
+														Key: 'assets/uploads/' + d + '/' + fileName,
+														Body: fileContent
+													}, (res) => {
+														console.log(`Successfully uploaded '${fileName}'!`);
+														util.log('Uploaded directory # %d for chunkId # %d with path %s ', index, chunkId, filePath);
+
+														fs.unlink(filePath, function(err, data) {
+															util.log(err || 'Deleted File');
+														});
+													});
 												});
 											}
 										});
+
 									});
 									return endCb();
 								}
