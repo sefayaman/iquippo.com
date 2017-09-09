@@ -1063,6 +1063,17 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     };
     
   }
+  else if(req.body.auctionType === 'sellerauction') {
+    //var currentDate = new Date();
+    filter.endDate={
+      '$gt': currentDate
+      };
+
+      filter.paymentstatus = "Not Applicable";
+      filter.sellerAuction = "SA";
+      
+    
+  }
 
   var arr = [];
 
