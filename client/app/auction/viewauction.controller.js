@@ -292,12 +292,17 @@
         filter.auctionIds = auctionIds; 
         filter.status = "request_approved";  
         filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
+
+        console.log("view")
         AuctionSvc.getAuctionWiseProductData(filter) 
         .then(function(data) { 
         $scope.getConcatData = data; 
+        console.log("qsjsjw",$scope.getConcatData);
         vm.auctionListing = result.items;
          vm.totalItems = result.totalItems;
          $scope.pager.update(result.items,result.totalItems); 
+
+         console.log("sellerlsit",vm.auctionListing);
         if(vm.auctionListing.length < 1){   
             vm.show = true;            
         }else{ 

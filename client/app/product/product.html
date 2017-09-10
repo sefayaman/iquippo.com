@@ -985,8 +985,8 @@
         <div ng-if="isAdmin()">
         <div class="row" ng-if="product.auctionListing">
           <div class="form-group col-sm-5">Auction</div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.auctionDate.$invalid && auctSubmitted}">
-           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
+          <div class="form-group col-sm-7">
+           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
               <option value="">Select Date</option>
               <option  ng-repeat="act in auctions" value="{{act.auctionId}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
             </select>
@@ -1023,12 +1023,13 @@
            </div>
         </div>
          
-     <div class="row">
+      <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.lotId.$invalid && submitted}">
             <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number"/>
           </div>
         </div>
+        
         <div class="row">
          <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.startPrice.$invalid && submitted}">

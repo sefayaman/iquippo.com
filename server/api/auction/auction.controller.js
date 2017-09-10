@@ -42,7 +42,12 @@ var dateUtil = {
 }
 
 exports.getAll = function(req, res) {
-  AuctionRequest.find(function(err, auctions) {
+  var filter = {};
+  if(req.query.auctionId){
+    filter.auctionId = req.query.auctionId;
+    console.log("filter.auctionId",filter.auctionId);
+    }
+  AuctionRequest.find(filter,function(err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -1066,12 +1071,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   else if(req.body.auctionType === 'sellerauction') {
     //var currentDate = new Date();
     filter.endDate={
-      '$gt': currentDate
-      };
-
-      filter.paymentstatus = "Not Applicable";
-      filter.sellerAuction = "SA";
-      
+    '$gt': currentDate
+    };
+   filter.sellerAuction="SA";
     
   }
 
@@ -1267,7 +1269,11 @@ exports.getAuctionMaster = function(req, res) {
     filter['startDate'] = {
       '$gt': new Date()
     }
-
+    if(req.query.auctionId){
+      filter.auctionId = req.query.auctionId;
+      console.log("filter.auctionId",filter.auctionId);
+      }
+    
     if(queryObj.dbauctionId){
       filter._id=queryObj.dbauctionId;
     }

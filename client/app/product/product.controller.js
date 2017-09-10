@@ -87,6 +87,7 @@
     $scope.secondStep = secondStep;
     $scope.goToUsermanagement = goToUsermanagement;
     $scope.lot={};
+    $scope.lotsaved ={};
     $scope.mandatory = true;
 
 
@@ -997,12 +998,15 @@
           Modal.confirm("Do you want to submit?", function(ret){
             if (ret == "yes") {
               //createAuction();
-
+              var certification ="Yes";
+              var paymentstatus ="Pending";
+           createAuction(product,postAuction,certification,paymentstatus);
 
 
             }else{
-
-              createAuction(product,postAuction);
+                 var certification ="No";
+                 var paymentstatus ="Not Applicable";
+              createAuction(product,postAuction,certification,paymentstatus);
 
             }
 
@@ -1017,7 +1021,7 @@
           return Math.floor(1000 + Math.random() * 9000);
         }
      
-    function createAuction(product,postAuction){
+    function createAuction(product,postAuction,certification,paymentstatus){
 
       console.log("dfg",product);
       console.log("tyuuiio",$scope.lot);
@@ -1029,25 +1033,39 @@
         master.endDate   = lotdata.endDate;
         master.lastMinuteBid = lotdata.lastMintBid;
         master.extendedTo    = lotdata.extendedTo;
-        master.certification = "No";
+        master.certification = certification;
         master.bidIncrement  = lotdata.bidIncrement;
         master.emdTax        = lotdata.emdTax;
         master.sellerAuction = "SA";
         master.auctionId     = "SA" + $scope.getRandomSpan();
-        master.paymentstatus     = "Not Applicable";
+        master.paymentstatus     = paymentstatus;
+
+        $scope.auctionReq.cerification = certification;
 
         console.log("seller",master);
           AuctionMasterSvc.saveAuctionMaster(master)
                 .then(function(res){
-
+                  filter = {};
+                  filter['auctionId'] = master.auctionId;
+                /*  AuctionMasterSvc.get(filter)
+                    .then(function(aucts) {
+                      $scope.auctions = {};
+                      $scope.auctions = aucts[0];
+                      console.log("scsd",aucts[0]);
+                      
+                      console.log("auction",$scope.auctionReq.dbAuctionId);
+                    });*/
+                    $scope.auctionReq.dbAuctionId = master.auctionId;
                       console.log("res",res);
+                      //addOrUpdateSeller(postAuction,master.auctionId);
+                      addOrUpdate(postAuction);
 
-                       if (res.errorCode == 0) {
+                     /*  if (res.errorCode == 0) {
 
                         console.log("auctionId", master.auctionId);
 
                         filter ={};
-                        filter.auctionId = master.auctionId;
+                        filter.dbAuctionId = master.auctionId;
                         filter.user = {};
                         filter.user._id = Auth.getCurrentUser()._id;
                         filter.user.mobile = Auth.getCurrentUser().mobile;
@@ -1089,7 +1107,7 @@
                         //error handling
                         });
 
-                    }
+                    }*/
 
                        
                 });
@@ -1267,12 +1285,32 @@
       paymentTransaction.requestType = requestType;;
       var payObj = null;
       var createTraction = false;
-      if (!productObj.auction._id && productObj.auctionListing) {
+      var certified = $scope.auctionReq.cerification;
+      if (Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing) {
         payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreq";
         payObj.charge = pyMaster.fees || 0;
         paymentTransaction.totalAmount += payObj.charge;
+        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+        createTraction = true;
+      }
+
+      if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing  && certified =="Yes") {
+        payObj = {};
+        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+        payObj.type = "auctionreqseller";
+        payObj.charge = "5000" || 0;
+        paymentTransaction.totalAmount = payObj.charge;
+        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+        createTraction = true;
+      }
+      if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && certified =="No") {
+        payObj = {};
+        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+        payObj.type = "auctionreq";
+        payObj.charge = pyMaster.fees || 0;
+        paymentTransaction.totalAmount = payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
       }
@@ -1400,6 +1438,8 @@
 
       $rootScope.loading = true;
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
+      //product.auction = {};
+     // product.auction._id = $scope.auctionReq.dbAuctionId;
       productSvc.addProduct(product).then(function(result) {
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
         dataLayer.push(gaMasterObject.uploadProductSubmit);
@@ -1413,16 +1453,37 @@
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
         $scope.autoSuccessMessage(20);
-        $scope.lot.assetId = $scope.product.assetId;
-        $scope.lot.assetDesc = $scope.product.name;
-        $scope.lot.auctionId =$scope.product.auctId;
+        if(!Auth.isAdmin() && $scope.lot.emdTax === 'lotwise'){
+        $scope.lotsaved.assetId = $scope.product.assetId;
+        $scope.lotsaved.assetDesc = $scope.product.name;
+        $scope.lotsaved.auctionId = $scope.product.auctId;
+        $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+        //$scope.lotsaved.userId = Auth.isAdmin()._id;
+        $scope.lotsaved.startingPrice =$scope.product.startingPrice;
 
-        console.log("lot",$scope.lot);
+        console.log("lot",$scope.lotsaved);
           console.log("gg",$scope.auctionReq.dbAuctionId);
-        LotSvc.saveLot($scope.lot)
+        LotSvc.saveLot($scope.lotsaved)
         .then(function(result){
           console.log("result",result);
-        })
+        });
+
+      }else{
+        $scope.lotsaved.assetId = $scope.product.assetId;
+        $scope.lotsaved.assetDesc = $scope.product.name;
+        $scope.lotsaved.auctionId = $scope.product.auctId;
+        $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+        //$scope.lotsaved.userId = Auth.isAdmin()._id;
+        $scope.lotsaved.startingPrice =$scope.product.startingPrice;
+
+        console.log("lot",$scope.lotsaved);
+          console.log("gg",$scope.auctionReq.dbAuctionId);
+        LotSvc.saveLot($scope.lotsaved)
+        .then(function(result){
+          console.log("result",result);
+        });
+
+      }
         //addToHistory(result,"Create");
         if (Auth.isAdmin()) {
           if (result.status)
@@ -1491,6 +1552,7 @@
 
       $rootScope.loading = true;
       $scope.product.auctId = auctionId;
+      product.auction._id = $scope.auctionReq.dbAuctionId;
       productSvc.addProduct(product).then(function(result) {
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
         dataLayer.push(gaMasterObject.uploadProductSubmit);
@@ -1508,9 +1570,18 @@
         $scope.lot.assetDesc = $scope.product.name;
         $scope.lot.auctionId = auctionId ;
 
-        console.log("lot",$scope.lot);
+        $scope.lotsaved.assetId = $scope.product.assetId;
+        $scope.lotsaved.assetDesc = $scope.product.name;
+        $scope.lotsaved.auctionId = auctionId;
+        $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+        $scope.lotsaved.userId = Auth.isAdmin()._id;
+        $scope.lotsaved.startingPrice =$scope.product.startingPrice;
+
+        
+
+        console.log("lot",$scope.lotsaved);
           console.log("gg",auctionId);
-        LotSvc.saveLot($scope.lot)
+        LotSvc.saveLot($scope.lotsaved)
         .then(function(result){
           console.log("result",result);
         })
