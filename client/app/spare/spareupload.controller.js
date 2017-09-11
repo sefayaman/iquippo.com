@@ -17,7 +17,7 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
     vm.images = [{isPrimary:true}];
     vm.primaryIndex = 0;
     vm.enableButton = false;
-    var imgDim = {width:700,height:459};
+    var imgDim = {width:700,height:459,size:};
 
     vm.tabObj = {};
     vm.tabObj.step1 = true;
@@ -214,6 +214,7 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
               resizeParam.resize = true;
               resizeParam.width = imgDim.width;
               resizeParam.height = imgDim.height;
+              resizeParam.size=args.files[0].size;
             }
             $rootScope.loading = true;
             uploadSvc.upload(args.files[0], vm.assetDir, resizeParam).then(function(result){
