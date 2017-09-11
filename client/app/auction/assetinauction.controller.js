@@ -261,15 +261,9 @@
               LotSvc.getData(filter).then(function(res){
                   console.log("response",res);
                    vm.lotListing = res;
-                 
-                 
-
-              });
-
-            
-            
-          
+              });   
           }
+          setTimeout(function(){ fetchClassifiedBidPage(); }, 3000);
         });
   }
 
