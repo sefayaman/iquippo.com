@@ -32,18 +32,18 @@
         
 
           function editClicked(rowData){
-
-            getAuctions();
+           
+           getAuctions();
             vm.dataModel = {};
             vm.dataModel._id  = rowData._id;
             vm.dataModel.auctionId = rowData.auctionId;
             vm.dataModel.assetId = rowData.assetId;
             vm.dataModel.lotNumber = rowData.lotNumber;
             vm.dataModel.assetDesc = rowData.assetDesc;
-            vm.dataModel.startPrice = rowData.startPrice;
-            vm.dataModel.ReservePrice = rowData.ReservePrice;
-            vm.dataModel.lastMintBid = rowData.lastMintBid;
-             vm.dataModel.extendedTo = rowData.extendedTo;
+            vm.dataModel.startingPrice = rowData.startingPrice;
+            vm.dataModel.reservePrice = rowData.reservePrice;
+            vm.dataModel.startDate = rowData.startDate;
+             vm.dataModel.endDate = rowData.endDate;
             $scope.isEdit = true;
           }
 
@@ -54,6 +54,7 @@
               }
               vm.dataModel.createdBy = {};
               vm.dataModel.createdBy = Auth.getCurrentUser().email;
+              vm.dataModel.customerId = Auth.getCurrentUser().customerId;
               
                vm.duplicate.auctionId = vm.dataModel.auctionId
                vm.duplicate.assetId = vm.dataModel.assetId;
@@ -127,7 +128,7 @@
 
               vm.LotData = result;
               vm.filteredList = result;
-              console.log(vm.LotData);
+              //console.log(vm.LotData);
               })
               .catch(function(res){
               });
@@ -161,7 +162,7 @@
             .catch(function() {});  
             
              }
-           }
+          }
 
           Auth.isLoggedInAsync(function(loggedIn){
               if(loggedIn){

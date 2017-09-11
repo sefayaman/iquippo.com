@@ -15,6 +15,7 @@
         function saveLot(data) {
             return $http.post(svcPath + "/lot", data)
                 .then(function(res) {
+                   //lot response data come console.log("reslotdata",res.data.lotData);
                     return res.data;
                 })
                 .catch(function(err) {
