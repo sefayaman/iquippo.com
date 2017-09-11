@@ -41,6 +41,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  			
  			for(var i = 0;i< vm.payTransaction.payments.length;i++){
  				if(vm.payTransaction.payments[i].type == "auctionreq")
+					 getAuctionReqDetail(vm.payTransaction._id);
+				else if(vm.payTransaction.payments[i].type == "auctionreqData")
  					getAuctionReqDetail(vm.payTransaction._id);
  				else if(vm.payTransaction.payments[i].type == "valuationreq")
  					getValuatonReqDetail(vm.payTransaction._id);

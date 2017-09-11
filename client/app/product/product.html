@@ -988,7 +988,7 @@
           <div class="form-group col-sm-7">
            <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
               <option value="">Select Date</option>
-              <option  ng-repeat="act in auctions" value="{{act.auctionId}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
+              <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
             </select>
             <i class="caret"></i>
           </div>
@@ -1037,7 +1037,7 @@
                 <span class="input-group-addon currency-width">
                  Rupee
                 </span>
-                <input type="number"  placeholder="20,000"  name="startingPrice" min="0" ng-value="product.startingPrice" class="form-control" ng-model="lot.startingPrice" ng-required="!lot.startingPrice">
+                <input type="number"  placeholder="20,000"  name="startingPrice" min="0" ng-value="lot.startingPrice" class="form-control" ng-model="lot.startingPrice" ng-required="!lot.startingPrice">
               </div>
           </div>
         </div>  

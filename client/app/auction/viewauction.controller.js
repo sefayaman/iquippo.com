@@ -139,7 +139,7 @@
             vm.lotList = res;   
             
             console.log(vm.lotList);
-            fetchClassifiedBidPage();
+           // fetchClassifiedBidPage();
          });
 
       filter = {};
