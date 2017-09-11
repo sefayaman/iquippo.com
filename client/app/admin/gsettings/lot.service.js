@@ -12,8 +12,8 @@
         svc.destroy = destroy;
         svc.update = update;
 
-        function saveLot(data) {
-            return $http.post(svcPath + "/lot", data)
+        function saveLot(data) {console.log(data);
+            return $http.post(svcPath + "/lot", data) 
                 .then(function(res) {
                    //lot response data come console.log("reslotdata",res.data.lotData);
                     return res.data;
@@ -30,10 +30,10 @@
                 queryParam = $httpParamSerializer(filter);
             if (queryParam)
                 path = path + "?" + queryParam;
-            console.log("path",path);
+            //console.log("path",path);
             return $http.get(path)
                 .then(function(res) {
-                    console.log("res lot data",res);
+                   // console.log("res lot data",res);
                     return res.data;
                 })
                 .catch(function(err) {

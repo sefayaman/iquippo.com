@@ -982,28 +982,54 @@
         <h3 class="panel-title">Auction Details</h3>
       </div>
       <div class="panel-body">
+        <div ng-if="isAdmin()">
         <div class="row" ng-if="product.auctionListing">
           <div class="form-group col-sm-5">Auction</div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.auctionDate.$invalid && auctSubmitted}">
-           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
+          <div class="form-group col-sm-7">
+           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
               <option value="">Select Date</option>
               <option  ng-repeat="act in auctions" value="{{act.auctionId}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
             </select>
             <i class="caret"></i>
           </div>
         </div>
+        </div>
         <div class="row" ng-if="isCustomer()">
-          <div class="form-group col-sm-5">EMD Amount </div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.emdAmount.$invalid && auctSubmitted}">
-            <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" min="0" placeholder="EMD Ammount" required>
+          <div class="form-group col-sm-5">Auction </div>
+          <div class="form-group col-sm-7">
+            <input type="text" name="emdAmount" class="form-control" ng-model="lot.auctname" min="0" placeholder="auctname" required>
           </div>
         </div>
-        <div class="row">
+
+        <div class="row" ng-if="isCustomer()">
+          <div class="col-sm-5 form-group">
+            EMD Tax Type 
+          </div>
+          <div class="col-sm-7 form-group">
+             <div class="col-sm-4">
+                <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="overall"> overall
+              </div>
+              <div class="col-sm-4">
+                <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="lotwise"> lotwise
+              </div>
+                 </div>
+        </div>
+        <div class="row" ng-if="isCustomer()">
+          <div ng-if="lot.emdTax === 'overall'">
+            <div class="form-group col-sm-5">EMD Amount </div>
+            <div class="form-group col-sm-7">
+              <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
+            </div>
+           </div>
+        </div>
+         
+      <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.lotId.$invalid && submitted}">
             <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number"/>
           </div>
         </div>
+        
         <div class="row">
          <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.startPrice.$invalid && submitted}">
@@ -1015,64 +1041,37 @@
               </div>
           </div>
         </div>  
-
-        <div class="row" ng-if="isCustomer()">
-          <div class="col-sm-5 form-group">
-            Tax Included
-          </div>
-          <div class="col-sm-7 form-group">
-            <div class="row">
-              <div class="col-sm-4">
-                <input type="radio" name="taxincluded" value=""> Yes
-              </div>
-              <div class="col-sm-4">
-                <input type="radio" name="taxincluded" value=""> No
-              </div>
-            </div>
-          </div>
-        </div> 
-        <div class="row" ng-if="isCustomer()">
-          <div class="col-sm-5 form-group">
-            Tax Rate
-          </div>
-          <div class="col-sm-7 form-group">
-            <input type="text" class="form-control" name="" value="" placeholder="Tax Rate">
-          </div>
-        </div>
-        <div class="row" ng-if="isCustomer()">
+       
+       <div class="row" ng-if="isCustomer()">
           <div class="col-sm-5 form-group">
             Bid Increment
           </div>
           <div class="col-sm-7 form-group">
-            <input type="text" class="form-control" name="" ng-model="lot.bidIncrement" value="" placeholder="Bid Increment">
+            <input type="text" class="form-control" name="bidIncrement" ng-model="lot.bidIncrement" value="" placeholder="Bid Increment">
           </div>
         </div>
-        <div class="row" ng-if="isCustomer()">
-          <div class="col-sm-5 form-group">
-            EMD Amount
-          </div>
-          <div class="col-sm-7 form-group">
-            <input type="text" class="form-control" name="" ng-model=lot.emd value="" placeholder="EMD Amount">
-          </div>
-        </div>
-        <div class="row" ng-if="isCustomer()">
+      
+
+         <div class="row" ng-if="isCustomer()">
           <div class="col-sm-5 form-group">
             Start Date of Auction
           </div>
           <div class="col-sm-7 form-group">
             <div class="input-group">
-              <input class="form-control" id="startdate" name="repoDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
+              <input class="form-control" id="startdate" name="startdate" ng-model="lot.startdate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
               <label for="startdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
         </div>
+  
+
         <div class="row" ng-if="isCustomer()">
           <div class="col-sm-5 form-group">
             End Date of Auction
           </div>
           <div class="col-sm-7 form-group">
             <div class="input-group">
-              <input class="form-control" id="enddate" name="repoDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
+              <input class="form-control" id="enddate" name="repoDate" ng-model="lot.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
               <label for="enddate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
@@ -1087,7 +1086,7 @@
             </div>
          </div>
 
-         <div class="row" ng-if="isCustomer()">
+        <div class="row" ng-if="isCustomer()">
           <div class="form-group col-sm-5">Extended To<span class="text-warning">*</span></div>
             <div class="form-group col-sm-7" ng-class="{'has-error': form.extendedTo.$invalid && submitted}">
              <input type="text" placeholder="Extended To" ng-value="product.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">

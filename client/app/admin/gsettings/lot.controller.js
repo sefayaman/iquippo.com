@@ -80,11 +80,9 @@
                    
                })
                .catch(function(res){
-
+ 
                });
-
-           
-
+               
           }
 
           function update(form){

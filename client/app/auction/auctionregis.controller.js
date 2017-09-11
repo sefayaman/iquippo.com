@@ -15,7 +15,7 @@
     vm.openAuctionModel =openAuctionModel;
     vm.auctionId ="";
     vm.log =[];
-    $scope.currentAuction = {};
+    // $scope.currentAuction = {};
 
     function init() {
 

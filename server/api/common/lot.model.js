@@ -12,7 +12,7 @@ var LotSchema = new Schema({
   startingPrice:Number,
   reservePrice:Number,
   startDate:String,
-  endDate:String,
+  endDate:String, 
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

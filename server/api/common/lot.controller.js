@@ -7,8 +7,8 @@ var aysnc= require('async');
 var ApiError = require('../../components/_error');
 
 exports.create = function(req, res, next) {
-  console.log("req.body", req.body);
-  aysnc.series({
+  //console.log("req.body", req.body);
+  aysnc.series({ 
     fetchAuction: function(callback) {
       if (req.body && req.body.auctionId) {
         //console.log("I am here");
