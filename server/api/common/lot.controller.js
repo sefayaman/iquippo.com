@@ -11,17 +11,17 @@ exports.create = function(req, res, next) {
   aysnc.series({
     fetchAuction: function(callback) {
       if (req.body && req.body.auctionId) {
-        console.log("I am here");
+        //console.log("I am here");
         AuctionMaster.find({
           "auctionId": req.body.auctionId
         }, function(err, auctions) {
           if (err)
             return callback(err);
-          console.log("auctions",auctions[0]);
-          req.body.lastMintBid = auctions[0].lastMinBid || "";
-          req.body.extendedTo = auctions[0].extendedTo || "";
+          //console.log("auctions",auctions[0]);
+          //req.body.lastMintBid = auctions[0].lastMinBid || "";
+          //req.body.extendedTo = auctions[0].extendedTo || "";
           req.body.auctionId = auctions[0].auctionId;
-          console.log("req.body after",req.body);
+          //console.log("req.body after",req.body);
           return callback();
         });
       } else
@@ -32,7 +32,8 @@ exports.create = function(req, res, next) {
       model.save(function(err, st) {
         if (err) throw callback(err);
         return callback(null, {
-          message: "Data saved successfully"
+          message: "Data saved successfully",
+          lotData:st
         });
       });
     }
@@ -40,7 +41,7 @@ exports.create = function(req, res, next) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    console.log("results proceed",results.saveLot);
+    //console.log("results proceed",results.saveLot);
     return res.status(200).json(results.saveLot);
   });
 };
@@ -77,14 +78,14 @@ query = Lot.find(filter);
 query = Lot.find(filter);
    }
    else{
-  console.log("filter",filter);
+  //console.log("filter",filter);
 query = Lot.find(filter)
 }
   query.exec(function(err, result) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    console.log("ressults",result);
+    //console.log("ressults",result);
     return res.json(result);
   });
 };
