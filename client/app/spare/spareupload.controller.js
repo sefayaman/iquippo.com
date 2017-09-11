@@ -17,7 +17,7 @@ function SpareUploadCtrl($scope, $http, $rootScope,$stateParams, groupSvc, spare
     vm.images = [{isPrimary:true}];
     vm.primaryIndex = 0;
     vm.enableButton = false;
-    var imgDim = {width:700,height:459,size:};
+    var imgDim = {width:700,height:459};
 
     vm.tabObj = {};
     vm.tabObj.step1 = true;
