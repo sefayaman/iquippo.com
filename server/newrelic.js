@@ -11,7 +11,7 @@ exports.config = {
    *
    * @env NEW_RELIC_APP_NAME
    */
-  app_name: ['iquippo app'],
+  app_name: ['iquippo app UAT'],
   /**
    * The user's license key. Must be set by per-app configuration file.
    *
