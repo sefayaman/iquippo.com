@@ -141,7 +141,7 @@
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!product.docType &&  product.docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form </a>
                   <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="!product.docType && product.docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
                   <!--<a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>-->
-                  <a ng-disabled="auctionDateVm.getProductData(product._id, 'total_products') == 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}"  class="btn btn-sm btn-danger">View Lot</a>
+                  <a  href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}"  class="btn btn-sm btn-danger">View Lot</a>
                 </div>
               </div>
             </div>

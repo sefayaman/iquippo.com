@@ -130,6 +130,8 @@
 
     function init() {
 
+
+
        console.log("auctio123n",$scope.currentAuction.auctionId);
       
 
@@ -137,6 +139,7 @@
             vm.lotList = res;   
             
             console.log(vm.lotList);
+            fetchClassifiedBidPage();
          });
 
       filter = {};
@@ -147,10 +150,10 @@
       }
       filter.pagination = true;
       getAuctions(filter);
-
     }
 
     init();
+  
 
     function getAuctions(filter) {
       // filter.prevPage = prevPage;
