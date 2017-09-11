@@ -8,6 +8,7 @@
 
     var query = $location.search();
     //$scope.auctionName=$location.search().auctionName;
+    console.log("query",query);
     $scope.auctionType=$location.search().auctionType;
     $scope.auctionTypeValue=$location.search().auctionTypeValue;
     var filter = {};
@@ -119,10 +120,11 @@
     init();
     function getAuctionById() {
       var filter = {};
-       filter._id  = $location.search().id;
+       filter._id  = query.id;
       AuctionSvc.getAuctionDateData(filter)
       .then(function(res){
         
+        console.log("getacu",res);
         $scope.auctionId = res.items[0].auctionId;
         $scope.auctionName=res.items[0].name;
         $scope.auctionOwner= res.items[0].auctionOwner;
@@ -220,7 +222,8 @@
                         console.log("jh",id);
                         var assetIds = [];
                         filter ={};
-                        filter.lotNumber = id;
+                        filter.lotNumber = id.lotNumber;
+                        filter.auctionid=id.auctionId;
                         LotSvc.getData(filter).then(function(response){
 
                         console.log("response123",response);
@@ -258,6 +261,8 @@
                 console.log("resultsasqd",result);
             filter ={};
              filter.auctionId = $scope.auctionId;
+             filter.listing=true;
+             console.log("filter for assets",filter);
               LotSvc.getData(filter).then(function(res){
                   console.log("response",res);
                    vm.lotListing = res;

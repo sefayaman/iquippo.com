@@ -164,7 +164,19 @@
       <div class="no-result" ng-if="!auctionDetailsVm.show" ng>No records found</div>
 
     <div ng-repeat="lot in auctionDetailsVm.lotListing" data-ng-init='load(lot)'>
-           <strong>Lot Number - {{lot}}</strong>       
+           <strong>Lot Number - {{lot.lotNumber}}</strong>
+
+      <div class="widgit">
+          <div class="container-fluid mjuszb4">
+          <input type="hidden" id="auction_user_id" value="194">
+
+          <div id="classifiedAuctionBid" data-classifiedAuctionid="45152458" data-classifiedLotid="11" classifiedAssetid="asset11"></div>
+          <div id="bidHistoryDialogForAuction" style="display:none"></div>
+          <div id="messageDialogForAuction"></div>
+          </div>
+      </div>
+       
+
       <div class= "row" ng-if="auctionDetailsVm.show">
         <div class="col-sm-6">
           <div ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">

@@ -65,21 +65,20 @@ exports.updateLotData = function(req, res) {
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
-  if(req.query.auctionId){
+   if(req.query.auctionId && req.query.distinct){
   filter.auctionId=req.query.auctionId;
 query = Lot.find(filter).distinct('lotNumber');
    }
-   else if(req.query.assetId){
+else if(req.query){
+  if(req.query.auctionId)
+  filter.auctionId=req.query.auctionId;
+  if(req.query.assetId)
   filter.assetId=req.query.assetId;
-query = Lot.find(filter);
-   }
-   else if(req.query.lotNumber){
+ if(req.query.lotNumber)
   filter.lotNumber=req.query.lotNumber;
-query = Lot.find(filter);
-   }
-   else{
-  //console.log("filter",filter);
-query = Lot.find(filter)
+ 
+ query = Lot.find(filter);
+
 }
   query.exec(function(err, result) {
     if (err) {
