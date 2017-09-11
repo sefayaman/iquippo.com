@@ -362,6 +362,11 @@ angular.module('sreizaoApp')
         authenticate:true,
         layout:'admin'
       })
+      .state('auctionlive', {
+        url: '/liveauction',
+        templateUrl: 'app/auction/liveauction.html',
+        layout:'client'
+      })
       .state('valuationrequests', {
         url: '/valuationrequests/:mode',
         templateUrl: 'app/valuation/valuationlisting.html',

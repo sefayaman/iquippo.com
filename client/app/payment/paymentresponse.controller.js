@@ -8,7 +8,8 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  	vm.payTransaction = null;
  	vm.enablePayment = false;
  	var valuationReq = null;
- 	var auctionReq = null;
+	var auctionReq = null;
+	var auctionreqseller = null;
  	vm.success = true;
 
  	function init(){
