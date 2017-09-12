@@ -1029,6 +1029,14 @@
             <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number"/>
           </div>
         </div>
+       <div class="col-sm-3" ng-class="{'has-error': lot.startDate.$invalid && submitted }">
+              
+              <input class="form-control" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
+            </div>
+         <div class="col-sm-3" ng-class="{'has-error': lot.endDate.$invalid && submitted }">
+              
+              <input class="form-control" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" required/>
+            </div>
         
         <div class="row">
          <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>

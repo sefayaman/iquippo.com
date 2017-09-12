@@ -17,9 +17,11 @@ exports.create = function(req, res, next) {
         }, function(err, auctions) {
           if (err)
             return callback(err);
+          console.log("-----",auctions);
           //console.log("auctions",auctions[0]);
           //req.body.lastMintBid = auctions[0].lastMinBid || "";
           //req.body.extendedTo = auctions[0].extendedTo || "";
+          if(auctions.length > 0)
           req.body.auctionId = auctions[0].auctionId;
           //console.log("req.body after",req.body);
           return callback();
@@ -49,6 +51,8 @@ exports.create = function(req, res, next) {
 exports.updateLotData = function(req, res) {
 
   req.body.updatedAt = new Date();
+  console.log("-----++++");
+  delete req.body._id;
   Lot.update({
     _id: req.params.id
   }, {
@@ -65,6 +69,7 @@ exports.updateLotData = function(req, res) {
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
+  console.log("get Lot Data",req.query);
    if(req.query.auctionId && req.query.distinct){
   filter.auctionId=req.query.auctionId;
 query = Lot.find(filter).distinct('lotNumber');
@@ -77,6 +82,7 @@ else if(req.query){
  if(req.query.lotNumber)
   filter.lotNumber=req.query.lotNumber;
  
+ console.log("the filter");
  query = Lot.find(filter);
 
 }
