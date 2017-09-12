@@ -1471,6 +1471,7 @@
               $scope.lotsaved.assetDesc = $scope.product.name;
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+              $scope.lotsaved.primaryImg=$scope.product.primaryImg;
               //$scope.lotsaved.userId = Auth.isAdmin()._id;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
       

@@ -239,7 +239,8 @@
 
                             console.log("resultdata",data);
                             vm.show=true; 
-                            vm.auctionDetailListing = data;
+                            vm.auctionDetailListing.push(data);
+                            console.log("Array",vm.auctionDetailListing);
                             $scope.auctionValue = $location.search().auctionType;
                             });
                           } else {
