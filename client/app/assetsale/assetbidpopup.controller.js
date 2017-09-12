@@ -21,8 +21,9 @@
       AssetSaleSvc.getEmdOnProduct(emdFilter).then(function(result){
         if(result)
           $scope.emdAmount = result.emdCharge;
-        });
-      getBidOrBuyCalculation();
+        getBidOrBuyCalculation();
+      });
+      //getBidOrBuyCalculation();
     }
 
     init();
@@ -144,7 +145,7 @@
         dataToSend.actualBidAmount = vm.bidAmount || 0;
         dataToSend.emdAmount = $scope.emdAmount || 0;
         dataToSend.parkingPaymentTo = query.product.parkingPaymentTo;
-        dataToSend.fullPaymentAmount = $scope.result.total - $scope.emdAmount;
+        dataToSend.fullPaymentAmount = $scope.result.total - ($scope.emdAmount || 0);
         if(dataToSend.parkingPaymentTo == 'Yard')
           dataToSend.fullPaymentAmount = (dataToSend.fullPaymentAmount || 0) - (dataToSend.parkingCharge || 0);
         dataToSend.emdPayment = {remainingPayment:$scope.emdAmount || 0};

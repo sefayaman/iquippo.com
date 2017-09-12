@@ -171,19 +171,19 @@ exports.sendNotification = function(bidArr){
 			switch(bid.action){
 				case 'BUYNOW':
 					tplName = "BuynowRequestEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Buy Now Request Received for " + tplData.product.name;
+					subject = "Ticket ID- " + tplData.ticketId +": Buy Now Request Received for " + tplData.product.name;
 					break;
 				case 'BIDREQUEST':
 					tplName = "BidRequestEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Bid Request Received for " + tplData.product.name;
+					subject = "Ticket ID- " + tplData.ticketId +": Bid Request Received for " + tplData.product.name;
 					break;
 				case 'OFFERREJECTED':
 					tplName = "OfferRejectedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Rejected.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Rejected.";
 					break;
 				case 'APPROVE':
 					tplName = "OfferApprovedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Approved.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your offer for " + tplData.product.name + " has been Approved.";
 					break;
 				case 'EMDPAYMENT':
 					var totalPaidAmount = 0;
@@ -192,7 +192,7 @@ exports.sendNotification = function(bidArr){
 		            });
 		            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "EMDReceivedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your Earnest Money Deposit (EMD) for " + tplData.product.name + " has been Received.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Earnest Money Deposit (EMD) for " + tplData.product.name + " has been Received.";
 					break;
 				case 'FULLPAYMENT':
 					var totalPaidAmount = 0;
@@ -201,35 +201,35 @@ exports.sendNotification = function(bidArr){
 		            });
 		            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "FullpaymentReceivedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your Full Payment for " + tplData.product.name + " has been Received.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Full Payment for " + tplData.product.name + " has been Received.";
 					break;
 				case 'EMDFAILED':
 					tplName = "EMDFailedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your request for " + tplData.product.name + " has been Cancelled.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your request for " + tplData.product.name + " has been Cancelled.";
 					break;
 				case 'FULLPAYMENTFAILED':
 					tplName = "FullpaymentFailedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your request for " + tplData.product.name + " has been Cancelled.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your request for " + tplData.product.name + " has been Cancelled.";
 					break;
 				case 'DOISSUED':
 					tplName = "DOIssuedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your Delivery Order (DO) for " + tplData.product.name + " has been generated.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Delivery Order (DO) for " + tplData.product.name + " has been generated.";
 					break;
 				case 'BIDREJECTED':
 					tplName = "BidRejectedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
 					break;
 				case 'BIDCHANGED':
 					tplName = "BidChangedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": You have revised your Bid for " + tplData.product.name;
+					subject = "Ticket ID- " + tplData.ticketId +": You have revised your Bid for " + tplData.product.name;
 					break;
 				case 'BIDWITHDRAW':
 					tplName = "BidWithdrawEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
 					break;
 				case 'CLOSED':
 					tplName = "BidClosedEmailToBuyer";
-					subject = "Ticket ID:" + tplData.ticketId +": Your request for " + tplData.product.name + " has been successfully completed.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your request for " + tplData.product.name + " has been successfully completed.";
 					break;
 			}
 			if(!tplName)
