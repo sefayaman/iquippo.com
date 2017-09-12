@@ -43,6 +43,8 @@ var EnterpriseValuationSchema = new Schema({
   disFromCustomerOffice:String,
   customerInvoiceDate:Date,
   customerInvoiceValue:Number,
+  invoiceDoc:{},
+  rcDoc:{},
   /* Valuation agency  field */
   submittedToAgencyDate:Date,
   jobId:String,
@@ -77,6 +79,7 @@ var EnterpriseValuationSchema = new Schema({
   /*Common fields*/
   assetDir:String,
   remarks:String,
+  auditLogs:[{}],
   deleted:{type:Boolean,default:false},
   status:{type:String,default:"Request Initiated"},
   statuses:[],

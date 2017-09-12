@@ -444,18 +444,18 @@
 					<input type="text" name="assetDescription" ng-model="addTransactionVm.enterpriseValuation.assetDescription" ng-disabled="!editEnterpriseField()" placeholder="*Asset Name" class="form-control" required/>
 				</div>
 			</div>
-			<div class="row" ng-class="{'has-error': (form.engineNo.$invalid || form.chassisNo.$invalid || form.registrationNo.$invalid || form.serialNo.$invalid ) && form.submitted}">
+			<div class="row">
 				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="enginNo" ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )" placeholder="Engine No." ng-model="addTransactionVm.enterpriseValuation.engineNo">
+					<input type="text" class="form-control" name="enginNo" placeholder="Engine No." ng-model="addTransactionVm.enterpriseValuation.engineNo">
+				</div>
+				<div class="col-sm-3 form-group" ng-class="{'has-error': (form.chassisNo.$invalid || form.registrationNo.$invalid) && form.submitted}">
+					<input type="text" class="form-control" name="chassisNo" ng-required="!( addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo)" placeholder="Chassis No." ng-model="addTransactionVm.enterpriseValuation.chassisNo">
+				</div>
+				<div class="col-sm-3 form-group" ng-class="{'has-error': (form.chassisNo.$invalid || form.registrationNo.$invalid) && form.submitted}">
+					<input type="text" class="form-control" name="registrationNo" ng-required="!(addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo)" placeholder="Registration No." ng-model="addTransactionVm.enterpriseValuation.registrationNo">
 				</div>
 				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="chassisNo" ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )" placeholder="Chassis No." ng-model="addTransactionVm.enterpriseValuation.chassisNo">
-				</div>
-				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="registrationNo" ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )" placeholder="Registration No." ng-model="addTransactionVm.enterpriseValuation.registrationNo">
-				</div>
-				<div class="col-sm-3 form-group">
-					<input type="text" class="form-control" name="serialNo" ng-required="!(addTransactionVm.enterpriseValuation.engineNo || addTransactionVm.enterpriseValuation.chassisNo || addTransactionVm.enterpriseValuation.registrationNo  || addTransactionVm.enterpriseValuation.serialNo )" placeholder="Serial No." ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No.">
+					<input type="text" class="form-control" name="serialNo" placeholder="Serial No." ng-model="addTransactionVm.enterpriseValuation.serialNo" placeholder="Serial No.">
 				</div>
 			</div>
 			<div class="row">
@@ -485,6 +485,20 @@
 				<div class="col-sm-3 form-group" ng-class="{'has-error': form.customerInvoiceValue.$invalid && form.submitted}">
 					<input type="number" class="form-control" name="customerInvoiceValue" min="0" ng-model="addTransactionVm.enterpriseValuation.customerInvoiceValue" placeholder="Invoice Value">
 				</div>
+				 <div class="col-sm-3">
+	            <span class="btn btn-default fileinput-button">
+	             <input type="file" id="upload" name="upload" onchange="angular.element(this).scope().upload(this.files,'invoiceDoc')" >
+	              <span><i class="fa fa-upload"></i> Invoice Upload</span>
+	            </span>
+	            <span>{{addTransactionVm.enterpriseValuation.invoiceDoc.filename}}</span>  
+	          </div>
+	          <div class="col-sm-3">
+	            <span class="btn btn-default fileinput-button">
+	             <input type="file" id="upload" name="upload" data-filetype="doc" onchange="angular.element(this).scope().upload(this.files,'rcDoc')">
+	              <span><i class="fa fa-upload"></i> RC Upload</span>
+	            </span>
+	            <span>{{addTransactionVm.enterpriseValuation.rcDoc.filename}}</span>
+	          </div>
 			</div>
 			<div class="row">
 				<div class="col-xs-12">

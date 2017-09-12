@@ -427,7 +427,7 @@ exports.bulkUpload = function(req, res) {
     numericCols : ['customerInvoiceValue'],
     dateParams : ['customerInvoiceDate','repoDate'],
     madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'],
-    madnatorySpecialParams : ['engineNo','chassisNo','registrationNo','serialNo']
+    madnatorySpecialParams : ['chassisNo','registrationNo']
   };
   
   if(user.role == 'admin')

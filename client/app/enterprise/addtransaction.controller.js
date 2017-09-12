@@ -101,7 +101,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
             onStateChange(vm.enterpriseValuation.state, true);
             getAssetGroup();
             var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
-            if(!vm.enterpriseValuation.reportDate && statusIndex > 1 && statusIndex < 4)
+            if(!vm.enterpriseValuation.reportDate && statusIndex > 1 && statusIndex < 6)
                 vm.enterpriseValuation.reportDate = new Date();
 
             if (vm.enterpriseValuation.requestDate)
@@ -144,30 +144,33 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   }
 
   function showPaymentSection(){
-    return Auth.isAdmin() && editMode && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) > 4;
+    return Auth.isAdmin() && editMode && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) > 6;
   }
 
   function editEnterpriseField(){
+
     var validRole = Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser();
+    var validStatuses = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
     if(validRole && !editMode)
       return true;
-    else if(validRole && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) < 2)
+    else if(validRole && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
       return true
     else
       return false;
   }
 
   function editAgencyField(){
-    var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
-    if(Auth.isAdmin())
+    var validStatuses = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
+    if(Auth.isAdmin() && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
       return true;
-    else if(Auth.isPartner() && statusIndex > 1 && statusIndex < 4)
+    else if(Auth.isPartner() && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
       return true;
     else
       false;
   }
 
   function showAgencySection(){
+    
     var validRole = Auth.isAdmin() || Auth.isPartner();
     var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
     if(validRole && statusIndex > 1)
@@ -250,10 +253,15 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     function upload(files,fieldName){
       if(files.length == 0)
         return;
+      $rootScope.loading = true;
       uploadSvc.upload(files[0],vm.enterpriseValuation.assetDir)
       .then(function(res){
         vm.enterpriseValuation.assetDir = res.data.assetDir;
         vm.enterpriseValuation[fieldName] = {external:false,filename:res.data.filename};
+        $rootScope.loading = false;
+      })
+      .catch(function(){
+        $rootScope.loading = false;
       });
     }
 
@@ -340,8 +348,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
       if(editMode && (Auth.isPartner() || Auth.isAdmin())){
         var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
-        if(statusIndex > 1 && statusIndex < 4 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
-          EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[4]);
+        if(statusIndex > 1 && statusIndex < 6 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
+          EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[6]);
       }
 
       vm.assetCategoryList.forEach(function(item){

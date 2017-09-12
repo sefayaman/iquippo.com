@@ -17,6 +17,7 @@ var Field_MAP = {
     purpose : "purpose",
     agencyName : "agency.name",
     enterprise:"enterprise.name",
+    enterpriseId:"enterprise.enterpriseId",
     customerTransactionId : "customerTransactionId",
     customerValuationNo : "customerValuationNo",
     customerPartyNo : "customerPartyNo",
@@ -131,8 +132,17 @@ function submitRequest(reqs,cb){
 
       if(obj.model && obj.model == "Other")
         obj.model = item.otherModel;
-      
+
+      var s3Path = "";
+      if(item.assetDir)
+        s3Path = config.awsUrl + config.awsBucket + "/" + assetDir + "/";
+      if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
+          obj.invoiceDoc = s3Path + invoiceDoc.filename;
+      if(s3Path && item.rcDoc && item.rcDoc.filename)
+          obj.invoiceDoc = s3Path + rcDoc.filename;
+
       dataArr[dataArr.length] = obj;
+
     });
     request({
         url: config.qpvalURL,

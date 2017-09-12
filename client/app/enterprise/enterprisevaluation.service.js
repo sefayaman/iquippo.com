@@ -263,6 +263,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     purpose : "purpose",
     agencyName : "agency.name",
     enterprise:"enterprise.name",
+    enterpriseId:"enterprise.enterpriseId",
     customerTransactionId : "customerTransactionId",
     customerValuationNo : "customerValuationNo",
     customerPartyNo : "customerPartyNo",
@@ -319,7 +320,14 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
 
       if(obj.model && obj.model == "Other")
         obj.model = item.otherModel;
-      
+
+      var s3Path = "";
+      if(item.assetDir)
+        s3Path = $rootScope.uploadImagePrefix + assetDir + "/"
+      if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
+          obj.invoiceDoc = s3Path + invoiceDoc.filename;
+      if(s3Path && item.rcDoc && item.rcDoc.filename)
+          obj.invoiceDoc = s3Path + rcDoc.filename;
       dataArr[dataArr.length] = obj;
     });
 
