@@ -1058,6 +1058,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter.endDate={
     '$gt': currentDate
     };
+
+    filter.sellerAuction = {'$ne':"SA"};
+
   }else if(req.body.auctionType === 'upcomingauctions') {
     //var currentDate = new Date();
     filter.endDate={
@@ -1066,6 +1069,10 @@ exports.getFilterOnAuctionMaster = function(req, res) {
    filter.startDate={
     '$gt': currentDate
     };
+
+    filter.sellerAuction = {'$ne': "SA"};
+
+
     
   }
   else if(req.body.auctionType === 'sellerauction') {
