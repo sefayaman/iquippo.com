@@ -16,7 +16,7 @@
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
-          vm.checkLot = checkLot;
+         
           vm.checkForLot = checkForLot;
         
           function init(){

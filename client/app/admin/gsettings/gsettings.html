@@ -1851,7 +1851,7 @@
 						</div>
                         <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
                         <label>Select the lot</label>
-							<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in emdVm.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
+							<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in emdVm.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
 				           
 						    </select>
 				            
