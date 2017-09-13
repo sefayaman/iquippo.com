@@ -30,7 +30,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       });
     }
 
-    LotSvc.getData({auctionId:$scope.currentAuction.auctionId}).then(function(res){
+    LotSvc.getData({auctionId:$scope.currentAuction.auctionId,distinct:true}).then(function(res){
             vm.lotList = res;   
             
          });
