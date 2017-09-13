@@ -118,6 +118,8 @@
     }
 
     init();
+    load();
+
     function getAuctionById() {
       var filter = {};
        filter._id  = query.id;
@@ -218,7 +220,7 @@
       filter.auctionId = $scope.auctionId;
       getAssetsInAuction(filter);
   }
-    $scope.load = function(id){
+    $scope.load = function(){
                         console.log("jh",id);
                         var assetIds = [];
                         filter ={};

@@ -5,7 +5,7 @@ var Lot = require('./lot.model');
 var AuctionMaster = require('../auction/auctionmaster.model');
 var aysnc= require('async');
 var ApiError = require('../../components/_error');
-
+var Util=require('../../components/utility');
 exports.create = function(req, res, next) {
   //console.log("req.body", req.body);
   aysnc.series({ 
@@ -44,6 +44,7 @@ exports.create = function(req, res, next) {
       res.status(err.status || 500).send(err);
     }
     //console.log("results proceed",results.saveLot);
+    //Util.sendLotData(results.saveLot.lotData);
     return res.status(200).json(results.saveLot);
   });
 };
@@ -61,6 +62,7 @@ exports.updateLotData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
+    //Util.sendLotData(req.body);
     return res.status(200).json(req.body);
   });
 

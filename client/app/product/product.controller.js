@@ -30,6 +30,7 @@
     var product = null;
     $scope.isEdit = false;
     $scope.isEditdata = false;
+    $scope.lotDate=false;
 
     $scope.images = [{
       isPrimary: true
@@ -86,6 +87,7 @@
     $scope.firstStep = firstStep;
     $scope.secondStep = secondStep;
     $scope.goToUsermanagement = goToUsermanagement;
+    $scope.checkForLot=checkForLot;
     $scope.lot={};
     $scope.lotsaved ={};
     $scope.mandatory = true;
@@ -1658,6 +1660,33 @@
         $rootScope.loading = false;
       });
     }
+
+    function checkForLot(lotNumber,auctionId){
+      filter={};
+      console.log("product",$scope.product);
+      console.log("auctionProduct",$scope.auctionReq);
+      filter.lotNumber=lotNumber;
+      filter.auctionId=$scope.auctionReq.auctionId;
+      LotSvc.getData(filter)
+      .then(function(res){
+        if(res.length >0){
+          $scope.lotCreation=false;
+          $scope.lotDate=true;
+       console.log("res lot data",res[0]);
+       $scope.lot.startDate=res[0].startDate;
+       $scope.lot.endDate=res[0].endDate;
+       $scope.lot.startingPrice=res[0].startingPrice;
+      }
+      else{
+        $scope.lotCreation=true;
+        $scope.lotDate=false;
+        }//$scope.lot.startDate="";
+        //$scope.lot.endDate="";
+      })
+      .catch(function(err){
+
+      });
+    }
     
 
     function updateProduct(cb) {
@@ -1708,10 +1737,18 @@
         $scope.lot.primaryImg=$scope.product.primaryImg;
         console.log("lot is this",$scope.lot);
         console.log("gg",$scope.auctionReq.auctionId);
+        if($scope.lotCreation){
+         LotSvc.saveLot($scope.lot)
+              .then(function(result){
+                console.log("result",result);
+              });
+        }
+        else{
         LotSvc.update($scope.lot)
         .then(function(result){
           console.log("result",result);
         });
+      }
       });
     }
 
