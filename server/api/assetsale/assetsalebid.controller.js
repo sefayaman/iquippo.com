@@ -527,12 +527,12 @@ exports.submitBid = function(req, res) {
 		delete bid._id;
 		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
 			if(err) console.log("Error in prevoius bid update",err);
-			var bidArr = [];
+			/*var bidArr = [];
 			var bidObj = {};
 			bidObj.ticketId = bid.ticketId;
 			bidObj.action = "BIDCHANGED";
 			bidArr.push(bidObj);
-			AssetSaleUtil.sendNotification(bidArr);
+			AssetSaleUtil.sendNotification(bidArr);*/
 			return cb();
 		});
 	}
@@ -542,9 +542,11 @@ exports.submitBid = function(req, res) {
 		AssetSaleBid.create(data, function(err, result) {
 			if (err)
 				return callback(err);
-			if(req.query.typeOfRequest !== "changeBid") {
+			//if(req.query.typeOfRequest !== "changeBid") {
 				var bidArr = [];
 				var bidObj = {};
+				if(req.query.typeOfRequest === "changeBid")
+					bidObj.action = "BIDCHANGED";
 				if(req.query.typeOfRequest === "buynow")
 					bidObj.action = "BUYNOW";
 				if(req.query.typeOfRequest === "submitBid")
@@ -552,7 +554,7 @@ exports.submitBid = function(req, res) {
 				bidObj.ticketId = result.ticketId;
 				bidArr.push(bidObj);
 				AssetSaleUtil.sendNotification(bidArr);
-			}
+			//}
 			return callback();
 		});
 	}

@@ -225,7 +225,7 @@ exports.sendNotification = function(bidArr){
 					break;
 				case 'BIDWITHDRAW':
 					tplName = "BidWithdrawEmailToBuyer";
-					subject = "Ticket ID- " + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been Withdrawn.";
 					break;
 				case 'CLOSED':
 					tplName = "BidClosedEmailToBuyer";
