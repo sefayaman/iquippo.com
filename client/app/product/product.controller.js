@@ -1016,7 +1016,7 @@
           if(lotdata.emdTax=="overall"){
              $scope.isEditdata ==true;
             }
-          Modal.confirm("Do you want to submit?", function(ret){
+          Modal.confirm("Do you want iquippo_certification?", function(ret){
             if (ret == "yes") {
               //createAuction();
               var certification ="Yes";
