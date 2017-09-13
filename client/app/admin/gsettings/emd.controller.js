@@ -48,7 +48,7 @@
             filter.auctionId  = data;
             AuctionSvc.getAuctionDateData(filter).then(function(res) {
             vm.auctionName = res.items[0].name;
-            getLotData({auctionId:res.items[0].auctionId});
+            getLotData({auctionId:res.items[0].auctionId,distinct:true});
             }).catch(function(err){
 
             });
