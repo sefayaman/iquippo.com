@@ -5,6 +5,7 @@
   font-style: normal;
 }
 body{top:0 !important;font-family:'RobotoCondensed-Regular',sans-serif;}
+.btn, .navbar .navbar-nav > li > a.btn{font-family:'RobotoCondensed-Regular',sans-serif;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .clearfix{clear: both;}
@@ -1214,6 +1215,7 @@ input.cmn-toggle-round-flat:checked + label:after
 .auction-list .media-heading{margin-top: 1px; margin-bottom: 8px; font-size: 18px;}
 .auction-list .media-heading a{text-decoration: none;}
 .auction-list .media p{margin-bottom: 3px;}
+.auction-list .media-body{display: block;}
 .Asset-filter{padding-top:  25px;}
 .Asset-filter select, .Asset-filter .btn{padding:  5px; border: 1px solid #999;}
 .auction-list img{width: 200px; height: 145px; border: 1px solid #ccc;}
