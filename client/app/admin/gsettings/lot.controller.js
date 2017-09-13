@@ -16,6 +16,8 @@
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
+         
+          vm.checkForLot = checkForLot;
         
           function init(){
               getAuctions();
@@ -161,6 +163,35 @@
             
              }
           }
+
+          
+          function checkForLot(lotNumber,auctionId){
+            var filter={};
+            
+            filter.lotNumber=lotNumber;
+            filter.auctionId=auctionId;
+            if(auctionId && lotNumber){
+                LotSvc.getData(filter)
+                .then(function(res){
+                if(res.length >0){
+                // $scope.lotCreation=false;
+                    $scope.lotDate=true;
+                    vm.dataModel.startDate=res[0].startDate;
+                    vm.dataModel.endDate=res[0].endDate;
+                    //$scope.lot.startingPrice=res[0].startingPrice;
+                }
+                else{
+                    //$scope.lotCreation=true;
+                    $scope.lotDate=false;
+                    //vm.dataModel.startDate='';
+                    //vm.dataModel.endDate='';
+                    }
+                })
+                .catch(function(err){
+
+                });
+            }
+         }
 
           Auth.isLoggedInAsync(function(loggedIn){
               if(loggedIn){
