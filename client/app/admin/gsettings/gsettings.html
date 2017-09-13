@@ -1844,15 +1844,17 @@
 						        <option value="{{product.auctionId}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
 					       	</select>
 						</div>
+						
 					     <div class="col-sm-3" ng-class="{'has-error':emdVm.auctionName.$invalid && submitted}">
 					     	<label>Auction Name </label>
 							<input type="text" class="form-control" name="auctionName" ng-model="emdVm.dataModel.auctionName" value="{{emdVm.auctionName}}" placeholder="{{emdVm.auctionName}}" disabled>
 						</div>
                         <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
                         <label>Select the lot</label>
-							<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in emdVm.lotList" ng-model="emdVm.dataModel.selectedLots" multiple>
-				            </select>
-				            {{emdVm.datamodel.selectedLots}}
+							<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in emdVm.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
+				           
+						    </select>
+				            
 							<!-- <input type="text" class="form-control" name="lotId" ng-model="emdVm.dataModel.lotId" placeholder="Enter Lot Id's" required>
 							<i>Enter comma seperated value</i> -->					
                        </div>
@@ -1930,7 +1932,7 @@
 						</div>
 
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotNumber.$invalid && submitted}">
-							<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkLot(lotVm.dataModel.lotNumber)" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
+							<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auctionId)" ng-disabled="!lotVm.dataModel.auctionId" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
 							
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
@@ -1945,11 +1947,13 @@
 							<input type="text" class="form-control" name="reservePrice" ng-model="lotVm.dataModel.reservePrice" value="{{lotVm.reservePrice}}" placeholder="Enter Reserve Price">
 						</div> 
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.startDate.$invalid && submitted}">
-							<input class="form-control" name="startDate" ng-model="lotVm.dataModel.startDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only  placeholder="Start Date"> 
+							<!--<input class="form-control" name="startDate" ng-model="lotVm.dataModel.startDate" datetime-picker readonly date-format="MM/dd/yyyy hh:mm a" date-only  placeholder="Start Date"> -->
+							<input class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" datetime-picker="" readonly="" name="startDate" ng-model="lotVm.dataModel.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required="">
 							<!--<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />-->
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.endDate.$invalid && submitted}">
-							<input class="form-control" name="endDate" ng-model="lotVm.dataModel.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only  placeholder="End Date"> 
+						<!--<input class="form-control" name="endDate" ng-model="lotVm.dataModel.endDate" datetime-picker readonly date-format="MM/dd/yyyy hh:mm a" date-only  placeholder="End Date"> -->
+							<input class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" datetime-picker="" readonly="" name="endDate" ng-model="lotVm.dataModel.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required="">
 						</div
                        
 						<div class="col-sm-offset-4 col-sm-2">

@@ -17,6 +17,7 @@
           vm.destroy = destroy;
           vm.searchFn = searchFn;
           vm.checkLot = checkLot;
+          vm.checkForLot = checkForLot;
         
           function init(){
               getAuctions();
@@ -163,26 +164,34 @@
              }
           }
 
-          function checkLot(lotNumber){
-            console.log("notno======",lotNumber);
-            var filter = {};
-            filter.lotNumber = lotNumber;
-             LotSvc.getData(filter)
-              .then(function(result){
-                console.log("re=====",result);
-                console.log("length==",result.length);
-             if(result.length >0){
-             vm.dataModel.checkDate = true;
-             }else{
-                 vm.dataModel.checkDate = false;
-             }
-              vm.LotData = result;
-              vm.filteredList = result;
-              //console.log(vm.LotData);
-              })
-              .catch(function(res){
-              });
-          }
+          
+          function checkForLot(lotNumber,auctionId){
+            var filter={};
+            
+            filter.lotNumber=lotNumber;
+            filter.auctionId=auctionId;
+            if(auctionId && lotNumber){
+                LotSvc.getData(filter)
+                .then(function(res){
+                if(res.length >0){
+                // $scope.lotCreation=false;
+                    $scope.lotDate=true;
+                    vm.dataModel.startDate=res[0].startDate;
+                    vm.dataModel.endDate=res[0].endDate;
+                    //$scope.lot.startingPrice=res[0].startingPrice;
+                }
+                else{
+                    //$scope.lotCreation=true;
+                    $scope.lotDate=false;
+                    //vm.dataModel.startDate='';
+                    //vm.dataModel.endDate='';
+                    }
+                })
+                .catch(function(err){
+
+                });
+            }
+         }
 
           Auth.isLoggedInAsync(function(loggedIn){
               if(loggedIn){
