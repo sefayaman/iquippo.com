@@ -1930,7 +1930,7 @@
 						</div>
 
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotNumber.$invalid && submitted}">
-							<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Id">
+							<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkLot(lotVm.dataModel.lotNumber)" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
 							
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
@@ -1943,13 +1943,13 @@
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.reservePrice.$invalid && submitted}">
 							<input type="text" class="form-control" name="reservePrice" ng-model="lotVm.dataModel.reservePrice" value="{{lotVm.reservePrice}}" placeholder="Enter Reserve Price">
-						</div>
+						</div> 
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.startDate.$invalid && submitted}">
 							<input class="form-control" name="startDate" ng-model="lotVm.dataModel.startDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only  placeholder="Start Date"> 
 							<!--<input class="form-control" name="regEndDate" ng-model="gsettingVm.auctionData.regEndDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Registration End Date" />-->
 						</div>
 						 <div class="col-sm-3" ng-class="{'has-error':lotVm.endDate.$invalid && submitted}">
-							<input class="form-control" name="endDate" ng-model="lotVm.dataModel.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only  placeholder="End Date"> 
+							<input class="form-control" name="endDate" ng-model="lotVm.dataModel.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only ng-disabled="lotVm.checkDate" placeholder="End Date"> 
 						</div>
                        
 						<div class="col-sm-offset-4 col-sm-2">

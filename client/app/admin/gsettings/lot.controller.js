@@ -16,6 +16,7 @@
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
+          vm.checkLot = checkLot;
         
           function init(){
               getAuctions();
@@ -160,6 +161,27 @@
             .catch(function() {});  
             
              }
+          }
+
+          function checkLot(lotNumber){
+            console.log("notno======",lotNumber);
+            var filter = {};
+            filter.lotNumber = lotNumber;
+             LotSvc.getData(filter)
+              .then(function(result){
+                console.log("re=====",result);
+                console.log("length==",result.length);
+             if(result.length >0){
+             vm.dataModel.checkDate = true;
+             }else{
+                 vm.dataModel.checkDate = false;
+             }
+              vm.LotData = result;
+              vm.filteredList = result;
+              //console.log(vm.LotData);
+              })
+              .catch(function(res){
+              });
           }
 
           Auth.isLoggedInAsync(function(loggedIn){
