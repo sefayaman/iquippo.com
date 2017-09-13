@@ -118,7 +118,7 @@
     }
 
     init();
-    load();
+    //load();
 
     function getAuctionById() {
       var filter = {};
