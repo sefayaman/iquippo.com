@@ -1588,6 +1588,35 @@ function importAuctionMaster(req, res, data) {
     });
   }
 }
+exports.changeAuctionType = function(req, res) {
+  var filter = {};
+  
+  AuctionMaster.find(filter,function(err, auctions) {
+    var auctionType={};
+        auctions.forEach(function(doc) {
+            if(doc){
+              if(doc.auctionType=='live'){
+                 auctionType='L';
+                 doc.update({$set:{auctionType:auctionType}},function(err){
+                //return res.status(200).json(req.body);
+              });
+              }
+              if(doc.auctionType=='online'){
+                 auctionType='A';
+                 doc.update({$set:{auctionType:auctionType}},function(err){
+                //return res.status(200).json(req.body);
+              });
+
+              }
+              
+            }
+          });
+    if (err) {
+      return handleError(res, err);
+    }
+    //return res.status(200).json(auctions);
+  });
+};
 /* end of auctionmaster */
 function handleError(res, err) {
   return res.status(500).send(err);
@@ -1665,5 +1694,5 @@ exports.getAuctionWiseProductData = function(req, res) {
   .catch(function(err){
     return handleError(res, err);
   });
-
+  
 }
