@@ -154,7 +154,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         if(err)
           return callback(err);
         if(item.updateProduct)
-            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:false,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
           return callback();
       });
     }

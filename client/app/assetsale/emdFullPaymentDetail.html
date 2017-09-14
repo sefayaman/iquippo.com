@@ -4,7 +4,7 @@
     <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
   </div>
   <div class="modal-body">
-    <table class="table" ng-if="emdFullPaymentVm.visibleFlag">
+    <table class="table">
       <tr>
         <td>Total Bid Amount :</td>
         <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>

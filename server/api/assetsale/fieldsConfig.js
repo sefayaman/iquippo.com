@@ -19,14 +19,18 @@ module.exports = {
 		"TCS" :{key :"tcs"},
 		"Parking" :{key :"parkingCharge"},
 		"EMD Amount" :{key :"emdAmount"},
-		"Full Payment Amount" :{key :"fullPaymentAmount"},
+		"Full Payment Excluding EMD" :{key :"fullPaymentAmount"},
 		"Parking Payment To" :{key :"parkingPaymentTo"},
 		"Offer Status" :{key :"offerStatus"},
 		"Bid Status" :{key : "bidStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
 		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
-		"Request Date":{key:"createdAt",type:'date'}
+		"Request Date":{key:"createdAt",type:'date'},
+		"Request Time":{key:"createdAt",type:'datetime'},
+		"Last Modified Date":{key:"updatedAt",type:'date'},
+		"Last Modified Time":{key:"updatedAt",type:'datetime'},
+		"Feedback" : {key :"comment"}
 	},
 	'SELLER_FIELDS':{
 		"Ticket Id":{key :"ticketId"},
@@ -44,14 +48,18 @@ module.exports = {
 		"TCS" :{key :"tcs"},
 		"Parking" :{key :"parkingCharge"},
 		"EMD Amount" :{key :"emdAmount"},
-		"Full Payment Amount" :{key :"fullPaymentAmount"},
+		"Full Payment Excluding EMD" :{key :"fullPaymentAmount"},
 		"Parking Payment To" :{key :"parkingPaymentTo"},	
 		"Offer Status" :{key :"offerStatus"},
 		"Bid Status" :{key : "bidStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
 		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
-		"Request Date":{key:"createdAt",type:'date'}
+		"Request Date":{key:"createdAt",type:'date'},
+		"Request Time":{key:"createdAt",type:'datetime'},
+		"Last Modified Date":{key:"updatedAt",type:'date'},
+		"Last Modified Time":{key:"updatedAt",type:'datetime'},
+		"Feedback" : {key :"comment"}
 	},
 	'BUYER_FIELDS':{
 		"Ticket Id":{key :"ticketId"},
@@ -65,13 +73,17 @@ module.exports = {
 		"TCS" :{key :"tcs"},
 		"Parking" :{key :"parkingCharge"},
 		"EMD Amount" :{key :"emdAmount"},
-		"Full Payment Amount" :{key :"fullPaymentAmount"},
+		"Full Payment Excluding EMD" :{key :"fullPaymentAmount"},
 		"Parking Payment To" :{key :"parkingPaymentTo"},	
 		"Offer Status" :{key :"offerStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
 		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
-		"Request Date":{key:"createdAt",type:'date'}
+		"Request Date":{key:"createdAt",type:'date'},
+		"Request Time":{key:"createdAt",type:'datetime'},
+		"Last Modified Date":{key:"updatedAt",type:'date'},
+		"Last Modified Time":{key:"updatedAt",type:'datetime'},
+		"Feedback" : {key :"comment"}
 	},
 	'FA_FIELDS':{
 		"Ticket Id":{key :"ticketId"},
@@ -91,14 +103,18 @@ module.exports = {
 		"TCS" :{key :"tcs"},
 		"Parking" :{key :"parkingCharge"},
 		"EMD Amount" :{key :"emdAmount"},
-		"Full Payment Amount" :{key :"fullPaymentAmount"},	
+		"Full Payment Excluding EMD" :{key :"fullPaymentAmount"},
 		"Parking Payment To" :{key :"parkingPaymentTo"},	
 		"Offer Status" :{key :"offerStatus"},
 		"Bid Status" :{key : "bidStatus"},
 		"Deal Status" :{key : "dealStatus"},
 		"Date of Delivery" :{key : "dateOfDelivery",type:'date'},
 		"Proxy Bid" : {key : "proxyBid",type:"boolean"},
-		"Request Date":{key:"createdAt",type:'date'}
+		"Request Date":{key:"createdAt",type:'date'},
+		"Request Time":{key:"createdAt",type:'datetime'},
+		"Last Modified Date":{key:"updatedAt",type:'date'},
+		"Last Modified Time":{key:"updatedAt",type:'datetime'},
+		"Feedback" : {key :"comment"}
 	},
 	'EXPORT_PAYMENT':{
 		"Ticket Id":{key :"ticketId"},
