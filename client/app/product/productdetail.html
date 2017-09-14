@@ -489,7 +489,7 @@
           </div>
           <div class="col-sm-5 col-md-7 panel-group">
            
-            <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+            <div class="panel panel-primary" ng-if="(currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE') && assetListedInAuction !='true'">
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>
               </div>
