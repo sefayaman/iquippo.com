@@ -6,6 +6,7 @@
 }
 body{top:0 !important;font-family:'RobotoCondensed-Regular',sans-serif;}
 .btn, .navbar .navbar-nav > li > a.btn{font-family:'RobotoCondensed-Regular',sans-serif;}
+.btn{background-color:transparent;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .clearfix{clear: both;}
@@ -345,9 +346,10 @@ footer .subscribe{height: 40px;}
 /*modal*/
 .modal-dialog{width:550px;}
 .modal-dialog .modal-body{max-height: 500px;overflow-y: auto;}
-.modal-content{border-radius:0;}
+.modal-content{border-radius:0; width: 100%;}
 .form-signin{width:90%;margin:0 auto;}
 .form-signin .btn-default{width:50px;}
+.form-signin a.pull-right.btn{color: #666;}
 .social-facebook:hover{background-color:#3A5795;border-color:#3A5794;color:#fff;}
 .social-twitter:hover{background-color:#55ACEE;border-color:#55ACEd;color:#fff;}
 .social-linkedin:hover{background-color:#0077B5;border-color:#0077B4;color:#fff;}
@@ -1215,7 +1217,7 @@ input.cmn-toggle-round-flat:checked + label:after
 .auction-list .media-heading{margin-top: 1px; margin-bottom: 8px; font-size: 18px;}
 .auction-list .media-heading a{text-decoration: none;}
 .auction-list .media p{margin-bottom: 3px;}
-.auction-list .media-body{display: block;}
+.media-body{display: block;}
 .Asset-filter{padding-top:  25px;}
 .Asset-filter select, .Asset-filter .btn{padding:  5px; border: 1px solid #999;}
 .auction-list img{width: 200px; height: 145px; border: 1px solid #ccc;}
