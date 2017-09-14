@@ -904,7 +904,8 @@ exports.exportExcel = function(req,res){
 	var user = req.user;
 	var queryParam = req.query;
 	var fieldsMap = {};
-	filter.bidChanged = false;
+	if(!req.query.bidChanged)
+		filter.bidChanged = false;
 	
 	if(req.query.actionable === 'y')
 		filter.status = true;
@@ -945,7 +946,6 @@ exports.exportExcel = function(req,res){
 		filter.bidStatus = queryParam.bidStatus;
 	if(req.sellers && req.sellers.length)
   		filter['product.seller._id'] = {$in:req.sellers || []};
-	 	
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
@@ -984,8 +984,10 @@ exports.exportExcel = function(req,res){
 			if(keyObj.type && keyObj.type == 'boolean')
 			  val = val?'YES':'NO';
 			if(keyObj.type && keyObj.type == 'date' && val)
-			val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-			if(keyObj.key && queryParam.seller === 'y') {
+				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+			if(keyObj.type && keyObj.type == 'datetime' && val)
+				val = moment(val).utcOffset('+0530').format('hh:mm a');
+			if(keyObj.key && queryParam.seller === 'y' && (keyObj.key === 'buyerName' || keyObj.key === 'buyerMobile' || keyObj.key === 'buyerEmail')) {
 				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
 				    val = item.user.fname + " " + item.user.lname;
 				else if(item.user && item.user.mobile && keyObj.key === 'buyerMobile' && dealStatuses.indexOf(item.dealStatus) > 8)
