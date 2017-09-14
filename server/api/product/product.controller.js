@@ -22,6 +22,7 @@ var AssetSaleModel = require('./../assetsale/assetsalebid.model');
 
 var PaymentTransaction = require('./../payment/payment.model');
 var PaymentMaster = require('../common/paymentmaster.model');
+var Lot = require('../common/lot.model');
 var ValuationReq = require('./../valuation/valuation.model');
 var AuctionReq = require('./../auction/auction.model');
 var AuctionMaster = require('./../auction/auctionmaster.model');
@@ -656,7 +657,27 @@ exports.update = function(req, res) {
 
 // Creates a new product in the DB.
 exports.create = function(req, res) {
+
   req.isEdit = false;
+
+  console.log("reuest oroduct",req.body);
+     //// Saving Lot master data for additional Fields////
+     var lotdata = {};
+     lotdata.auctId = req.body.auctId;
+     lotdata.assetId = req.body.assetId;
+     lotdata.lotId = req.body.lotId;
+     lotdata.startPrice = req.body.startPrice;
+     lotdata.ReservePrice = "gff";
+     lotdata.assetDesc = req.body.name;
+     lotdata.lastMintBid= req.body.lastMintBid;
+     lotdata.extendedTo = req.body.extendedTo;
+     lotdata.createdBy = req.body.user.email;
+     lotdata.createdAt =  new Date();
+
+
+      saveLotMasterData(lotdata,req,res);
+
+  //////////////////////////////////////////////////////
   Product.find({assetId:req.body.assetId},function(err,pds){
     if (err) { return handleError(res, err); }
     else if(pds.length > 0){return res.status(404).json({errorCode:1});}
@@ -673,6 +694,21 @@ exports.create = function(req, res) {
     } 
   });
 };
+
+function saveLotMasterData(lotdata,req,res){
+       var model = new Lot(lotdata);
+          model.save(function(err, st) {
+          if(err) {
+             console.log("error in lot master saved");
+           }else{
+             console.log("lotmaster saved");
+           }
+         
+      });
+
+
+}
+
 
 function checkAndCopyImage(req,res,cb){
   
@@ -3698,6 +3734,8 @@ function fileExists(filePath)
 }
 
 exports.createOrUpdateAuction = function(req,res){
+
+  
   Seq()
     .seq(function(){
       var self = this;

@@ -5,6 +5,8 @@ var Model = require('./userregisterforauction.model');
 var ApiError = require('../../components/_error');
 var User = require('./../user/user.model');
 var Utility = require('./../../components/utility.js');
+var PaymentTransaction = require('./../payment/payment.model');
+var Seq = require('seq');
 var  xlsx = require('xlsx');
 
 exports.getFilterOnRegisterUser = function(req, res) {
@@ -110,11 +112,52 @@ exports.create = function(req, res,next) {
   });
 
   function create(){
-    var model = new Model(req.body);
+  ///
+  Seq()
+    .seq(function(){
+      var self = this;
+      /*if(!req.body.payment){
+        self()
+        return;
+      }*/
+     // req.body.payment.createdAt = new Date();
+      //req.body.payment.updatedAt = new Date();
+      //req.body.payment.totalAmount = req.body.totalAmount;
+     
+       PaymentTransaction.create(req.body, function(err, payment) {
+          if(err){return handleError(err,res)}
+            else{
+              req.transactionId = payment._id;
+              self();
+            }
+          });
+      })
+      .seq(function(){
+        var self = this;
+        req.body.auction.createdAt = new Date();
+        req.body.auction.updatedAt = new Date();
+        req.body.transactionId = req.transactionId;
+       
+        var model = new Model(req.body);
+        model.save(function(err, st) {
+            if(err) { return handleError(res, err); }
+           // return res.status(200).json({message:"Your request has been successfully submitted!"});
+             var resObj = {}
+             resObj.transactionId = req.transactionId;
+             resObj.errorCode = 0;
+             return res.status(200).json(resObj);
+            
+          });
+        
+      })
+
+  ///
+
+    /*var model = new Model(req.body);
      model.save(function(err, st) {
         if(err) { return handleError(res, err); }
          return res.status(200).json({message:"Your request has been successfully submitted!"});
-      });
+      });*/
   }
 };
 

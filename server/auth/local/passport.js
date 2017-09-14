@@ -18,7 +18,12 @@ exports.setup = function (User, config) {
           dataToSend.email = userId.toLowerCase();
         }
       }
-      dataToSend['deleted'] = false;
+      if(req.body.extAuth === "yes"){
+      dataToSend['deleted'] = true;
+    }
+    else{
+     dataToSend['deleted'] = false; 
+    }
       //dataToSend['status'] = true;
       User.findOne(dataToSend, function(err, user) {
         if (err) return done(err);

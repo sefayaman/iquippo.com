@@ -132,6 +132,7 @@
       };
 
       function addProduct(product){
+        console.log("productsvc",product);
         return $http.post(path,product)
         .then(function(res){
           featuredProductCache = [];

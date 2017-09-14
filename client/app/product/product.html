@@ -130,7 +130,12 @@
                     <div class="row">
                       <div class="form-group col-xs-6  col-sm-5">List for Auction</div>
                       <div class="form-group col-xs-6  col-sm-7">
-                        <input type="checkbox" ng-value="product.auctionListing" ng-model="product.auctionListing">
+                        <input type="checkbox" ng-value="product.auctionListing" ng-model="product.auctionListing" ng-change ="listInAuction(product.auctionListing)">
+                      </div>
+
+                      <div class="form-group col-xs-6  col-sm-5">List on Portal</div>
+                      <div class="form-group col-xs-6  col-sm-7">
+                        <input type="checkbox" ng-value="product.portalListing" ng-model="product.portalListing" ng-change ="listInPortal(product.portalListing)">
                       </div>
                       
                     </div>
@@ -222,6 +227,7 @@
                         </a>
                       </div>
                     </div>
+                                       
                     <div class="row">
                       <div class="form-group col-sm-5">Operating Hours/HMR</div>
                       <div class="form-group col-sm-7" ng-class="{'has-error': form.opHour.$invalid && submitted}">
@@ -987,21 +993,123 @@
         <h3 class="panel-title">Auction Details</h3>
       </div>
       <div class="panel-body">
+        <div ng-if="isAdmin()">
         <div class="row" ng-if="product.auctionListing">
           <div class="form-group col-sm-5">Auction</div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.auctionDate.$invalid && auctSubmitted}">
-            <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" required>
+          <div class="form-group col-sm-7">
+           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
               <option value="">Select Date</option>
               <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
             </select>
             <i class="caret"></i>
           </div>
         </div>
-        <div class="row">
-          <div class="form-group col-sm-5">EMD Amount </div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': auctForm.emdAmount.$invalid && auctSubmitted}">
-            <input type="number" name="emdAmount" class="form-control" ng-model="auctionReq.emdAmount" min="0" placeholder="EMD Ammount" required>
+        </div>
+        <div class="row" ng-if="isCustomer()">
+          <div class="form-group col-sm-5">Auction </div>
+          <div class="form-group col-sm-7">
+            <input type="text" name="emdAmount" class="form-control" ng-model="lot.auctname" min="0" placeholder="auctname" required>
           </div>
+        </div>
+
+        <div class="row" ng-if="isCustomer()">
+          <div class="col-sm-5 form-group">
+            EMD Tax Type 
+          </div>
+          <div class="col-sm-7 form-group">
+             <div class="col-sm-4">
+                <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="overall"> overall
+              </div>
+              <div class="col-sm-4">
+                <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="lotwise"> lotwise
+              </div>
+                 </div>
+        </div>
+        <div class="row" ng-if="isCustomer()">
+          <div ng-if="lot.emdTax === 'overall'">
+            <div class="form-group col-sm-5">EMD Amount </div>
+            <div class="form-group col-sm-7">
+              <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
+            </div>
+           </div>
+        </div>
+         
+      <div class="row">
+          <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
+          <div class="form-group col-sm-7" ng-class="{'has-error': form.lotId.$invalid && submitted}">
+            <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number" ng-change="checkForLot(lot.lotNumber)"/>
+          </div>
+        </div>
+       <div class="col-sm-3" ng-class="{'has-error': lot.startDate.$invalid && submitted }">
+              
+              <input class="form-control" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate"required/>
+            </div>
+         <div class="col-sm-3" ng-class="{'has-error': lot.endDate.$invalid && submitted }">
+              
+              <input class="form-control" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required/>
+            </div>
+        
+        <div class="row">
+         <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>
+          <div class="form-group col-sm-7" ng-class="{'has-error': form.startPrice.$invalid && submitted}">
+              <div class="input-group">
+                <span class="input-group-addon currency-width">
+                 Rupee
+                </span>
+                <input type="number"  placeholder="20,000"  name="startingPrice" min="0" ng-value="lot.startingPrice" class="form-control" ng-model="lot.startingPrice" ng-required="!lot.startingPrice">
+              </div>
+          </div>
+        </div>  
+       
+       <div class="row" ng-if="isCustomer()">
+          <div class="col-sm-5 form-group">
+            Bid Increment
+          </div>
+          <div class="col-sm-7 form-group">
+            <input type="text" class="form-control" name="bidIncrement" ng-model="lot.bidIncrement" value="" placeholder="Bid Increment">
+          </div>
+        </div>
+      
+
+         <div class="row" ng-if="isCustomer()">
+          <div class="col-sm-5 form-group">
+            Start Date of Auction
+          </div>
+          <div class="col-sm-7 form-group">
+            <div class="input-group">
+              <input class="form-control" id="startdate" name="startdate" ng-model="lot.startdate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
+              <label for="startdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+          </div>
+        </div>
+  
+
+        <div class="row" ng-if="isCustomer()">
+          <div class="col-sm-5 form-group">
+            End Date of Auction
+          </div>
+          <div class="col-sm-7 form-group">
+            <div class="input-group">
+              <input class="form-control" id="enddate" name="repoDate" ng-model="lot.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
+              <label for="enddate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
+            </div>
+          </div>
+        </div>
+
+         <div class="row" ng-if="isCustomer()">
+          <div class="form-group col-sm-5">Last Minute Bid  <span class="text-warning">*</span></div>
+            <div class="form-group col-sm-7" ng-class="{'has-error': form.lastMintBid.$invalid && submitted}">
+         
+              <input type="text" placeholder="Last Mint Bid" ng-value="product.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
+       
+            </div>
+         </div>
+
+        <div class="row" ng-if="isCustomer()">
+          <div class="form-group col-sm-5">Extended To<span class="text-warning">*</span></div>
+            <div class="form-group col-sm-7" ng-class="{'has-error': form.extendedTo.$invalid && submitted}">
+             <input type="text" placeholder="Extended To" ng-value="product.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
+          </div> 
         </div>
         <div class="row">
           <div class="form-group col-sm-5">Valuation Report</div>

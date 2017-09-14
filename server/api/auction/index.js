@@ -8,7 +8,7 @@ var auth = require('../../auth/auth.service');
 //var auctionDetailController=require('./auctionDetail.controller');
 
 var router = express.Router();
-
+router.get('/changeauctiontype', controller.changeAuctionType);
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);

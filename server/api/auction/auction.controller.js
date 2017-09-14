@@ -42,7 +42,12 @@ var dateUtil = {
 }
 
 exports.getAll = function(req, res) {
-  AuctionRequest.find(function(err, auctions) {
+  var filter = {};
+  if(req.query.auctionId){
+    filter.auctionId = req.query.auctionId;
+    console.log("filter.auctionId",filter.auctionId);
+    }
+  AuctionRequest.find(filter,function(err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -1044,9 +1049,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user.mobile"] = req.body.mobile;
   if(req.body.auctionId)
     filter.auctionId = req.body.auctionId;
-  if(req.body.statusType){
+  /*if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
-  }
+  }*/
    var currentDate = new Date();
   if (req.body.auctionType === 'closed'){
     //var currentDate = new Date();
@@ -1058,6 +1063,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter.endDate={
     '$gt': currentDate
     };
+
+    filter.auctionType = {'$ne':"S"};
+
   }else if(req.body.auctionType === 'upcomingauctions') {
     //var currentDate = new Date();
     filter.endDate={
@@ -1066,6 +1074,18 @@ exports.getFilterOnAuctionMaster = function(req, res) {
    filter.startDate={
     '$gt': currentDate
     };
+
+    filter.auctionType = {'$ne': "S"};
+
+
+    
+  }
+  else if(req.body.auctionType === 'S') {
+    //var currentDate = new Date();
+    filter.endDate={
+    '$gt': currentDate
+    };
+   filter.auctionType="S";
     
   }
 
@@ -1261,7 +1281,11 @@ exports.getAuctionMaster = function(req, res) {
     filter['startDate'] = {
       '$gt': new Date()
     }
-
+    if(req.query.auctionId){
+      filter.auctionId = req.query.auctionId;
+      console.log("filter.auctionId",filter.auctionId);
+      }
+    
     if(queryObj.dbauctionId){
       filter._id=queryObj.dbauctionId;
     }
@@ -1569,6 +1593,35 @@ function importAuctionMaster(req, res, data) {
     });
   }
 }
+exports.changeAuctionType = function(req, res) {
+  var filter = {};
+  
+  AuctionMaster.find(filter,function(err, auctions) {
+    var auctionType={};
+        auctions.forEach(function(doc) {
+            if(doc){
+              if(doc.auctionType=='live'){
+                 auctionType='L';
+                 doc.update({$set:{auctionType:auctionType}},function(err){
+                //return res.status(200).json(req.body);
+              });
+              }
+              if(doc.auctionType=='online'){
+                 auctionType='A';
+                 doc.update({$set:{auctionType:auctionType}},function(err){
+                //return res.status(200).json(req.body);
+              });
+
+              }
+              
+            }
+          });
+    if (err) {
+      return handleError(res, err);
+    }
+    //return res.status(200).json(auctions);
+  });
+};
 /* end of auctionmaster */
 function handleError(res, err) {
   return res.status(500).send(err);
@@ -1646,5 +1699,5 @@ exports.getAuctionWiseProductData = function(req, res) {
   .catch(function(err){
     return handleError(res, err);
   });
-
+  
 }

@@ -1537,7 +1537,7 @@
                     else
                         return Modal.alert('Error while updating');
 
-                    return;
+                    //return;
 
                 });
         }
