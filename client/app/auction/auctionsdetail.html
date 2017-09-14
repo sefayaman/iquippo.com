@@ -164,67 +164,26 @@
       <div class="no-result" ng-if="!auctionDetailsVm.show" ng>No records found</div>
 
     <div ng-repeat="lot in auctionDetailsVm.lotListing">
-           <strong>Lot Number - {{lot.lotNumber}}</strong>
 
-      <div class="widgit">
-          <div class="container-fluid mjuszb4">
-          <input type="hidden" id="auction_user_id" value="194">
-
-          <div id="classifiedAuctionBid" data-classifiedAuctionid="45152458" data-classifiedLotid="11" classifiedAssetid="asset11"></div>
-          <div id="bidHistoryDialogForAuction" style="display:none"></div>
-          <div id="messageDialogForAuction"></div>
-          </div>
-      </div>
-       
-
-      <div class= "row" ng-if="auctionDetailsVm.show">
+      <div class= "row">
         <div class="col-sm-6">
-          <div ng-repeat="auctionProduct in auctionDetailsVm.auctionDetailListing">
+          <div ng-repeat="lot in auctionDetailsVm.lotListing">
             <div class="auction-list auction-details">
               <div class="media">
             <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
-              <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
+              <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{lot.primaryImg}}" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="assets/images/closed.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="assets/images/upcoming.jpg" alt="Image">
               <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='ongoingAuctions'" src="assets/images/ongoing.jpg" alt="Image">
             </a>
-            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') == 0" class="pull-left" >
-              <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">
-              <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="assets/images/closed.jpg" alt="Image">
-              <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="assets/images/upcoming.jpg" alt="Image">
-              <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='ongoingAuctions'" src="assets/images/ongoing.jpg" alt="Image">
-            </a>
+           
             <div class="media-body">
-              <h4 class="media-heading text-primary">
-                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') == 0">
-                  {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
-                </a>
-                <a ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
-                  {{product.auctionType | titleCase}} {{product.name}} - {{product.city}}
-                </a>
-                
-              </h4>
              
-              <p ng-if="product.auctionValue =='upcomingAuctions'"><strong>Auction Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}}</p>
-              <p ng-if="product.auctionValue =='ongoingAuctions'" class="text-success"><strong>Ongoing Auction Time : <timer end-time="product.endTimer">{{days}} days, {{hours}} hours, {{minutes}} minutes, {{seconds}} seconds.</timer></strong></p>
-              <p ng-if="product.auctionValue =='closedAuctions'"><strong>Auction Closed</strong></p>
-              <p ng-if="product.insStartDate && product.insEndDate"><strong>Inspection Date : </strong> {{product.insStartDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.insEndDate | date:'dd-MMM-yyyy hh:mm a'}} </p>
-              <p ng-if="product.emdAmount"><strong>Earnest Money Deposit : </strong> <i class="fa fa-inr"></i> {{product.emdAmount}}</p>
-              <!--remove -->
-              <!-- <p ng-if="product.startDate && product.endDate"><strong>start Date : </strong> {{product.startDate | date:'dd-MMM-yyyy hh:mm a'}} - {{product.endDate | date:'dd-MMM-yyyy hh:mm a'}} </p> -->
-              <p>
-                <strong>Assets Listed in Auction :</strong> {{auctionDateVm.getProductData(product._id, 'total_products')}}
-              </p>
-              <p ng-if="product.contactNumber" class="calltoContact">
-                <a href="tel:{{product.contactNumber}}">
-                  <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
-                </a>
-              </p>
-              <p ng-if="!product.contactNumber" class="calltoContact">
-                <a>
-                  <strong ng-if="product.contactNumber"><i class="fa fa-phone"></i></strong>  {{product.contactName}} <span ng-if="product.contactNumber">({{product.contactNumber}})</span>
-                </a>
-              </p>
+              <p>Lot Number - {{lot.lotNumber}}</p>
+            <p ng-repeat="assetId in lot.assetDesc">
+              <a href="javascript:void(0)" ng-click="fetchAsset(assetId)"> {{assetId}} </a>
+            </p>
+            <p>Lot Amount Value - {{lot.amount}}</p>
               
               <div class="row callLocation">
                 <div class="col-sm-6">
@@ -259,6 +218,16 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="widgit">
+          <div class="container-fluid mjuszb4">
+          <input type="hidden" id="auction_user_id" value="194">
+
+          <div id="classifiedAuctionBid" data-classifiedAuctionid="45152458" data-classifiedLotid="11" classifiedAssetid="asset11"></div>
+          <div id="bidHistoryDialogForAuction" style="display:none"></div>
+          <div id="messageDialogForAuction"></div>
+          </div>
       </div>
     </div>
    

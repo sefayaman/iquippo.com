@@ -120,6 +120,7 @@
         
         return $http.post(path + "/search",filter)
           .then(function(res){
+            ///console.log("productData",res);
             if(filter.pagination)
                 updateCache(res.data.products);
               else

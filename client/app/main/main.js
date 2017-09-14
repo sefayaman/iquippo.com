@@ -360,7 +360,7 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.viewauctions.meta;
         }
       })
-      .state('assetinacuction', {
+      .state('assetinauction', {
         url: '/assetinauction',
         templateUrl: 'app/auction/auctionsdetail.html',
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
