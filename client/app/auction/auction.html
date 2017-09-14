@@ -19,7 +19,7 @@
       <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'upcoming'}" ng-click="auctionDateVm.fireCommandType('upcoming')">Upcoming Auctions</button>
       <!-- <button type="button" class="btn btn-default" ng-class="{'active': auctionType == 'ongoing'}" ng-click="auctionDateVm.fireCommandType('ongoing')">Ongoing Auctions</button>  -->
       <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'closed'}" ng-click="auctionDateVm.fireCommandType('closed')">Closed Auctions</button>
-      <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'sellerauction'}" ng-click="auctionDateVm.fireCommandType('sellerauction')">Seller Auctions</button>
+      <button type="button" class="btn btn-default " ng-class="{'active': auctionType == 'S'}" ng-click="auctionDateVm.fireCommandType('S')">Seller Auctions</button>
       
     </div>          
 
@@ -213,7 +213,7 @@
             </div>
           </div>
         </div>
-        <div class="auction-list form-group" ng-if="auctionType == 'sellerauction'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'-endDate'">  
+        <div class="auction-list form-group" ng-if="auctionType == 'S'" ng-repeat="product in auctionDateVm.auctionListing | orderBy :'-endDate'">  
           <div class="media">
             <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
               <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{product.primaryImg}}" alt="Image">

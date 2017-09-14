@@ -978,6 +978,8 @@
       $scope.tabObj.step2 = true;
       filter = {};
       filter['yetToStartDate'] = new Date();
+      filter.auctionType="L";
+      filter.another
       AuctionMasterSvc.get(filter)
         .then(function(aucts) {
           $scope.auctions = aucts;
@@ -1058,7 +1060,6 @@
         master.bidIncrement  = lotdata.bidIncrement;
         master.emdTax        = lotdata.emdTax;
         master.auctionType   ="S";
-        master.sellerAuction = "SA";
         master.auctionId     = "SA" + $scope.getRandomSpan();
         master.paymentstatus     = paymentstatus;
 

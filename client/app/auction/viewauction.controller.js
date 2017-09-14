@@ -166,6 +166,8 @@
         filter.auctionType = $stateParams.type;
       filter.addAuctionType = true;
 
+      console.log("auction filter",filter);
+
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
         getAuctionWiseProductData(result); 
        /*vm.auctionListing = result.items;
@@ -287,7 +289,8 @@
     }
     function getAuctionWiseProductData(result) {  
         var filter = {};      
-        var auctionIds = []; 
+        var auctionIds = [];
+        console.log("result auctionWise",result); 
         if(result && result.items) {     
           result.items.forEach(function(item) { 
           auctionIds[auctionIds.length] = item._id;
@@ -316,6 +319,10 @@
           } 
     }
     function getProductData(id, type) { 
+
+         console.log("id",id);
+         console.log("type",type);
+         console.log("getConact",$scope.getConcatData);
             if (angular.isUndefined($scope.getConcatData)) {  
                 if (type == "total_products") 
                   return 0;        
@@ -324,7 +331,6 @@
                   // if (type == "total_sold")  
                         //   return 0;    
             } else {  
-                 
                      var totalItemsInAuction = 0;
                        //var totalSaleValue = 0;
                        //var totalsold = 0;

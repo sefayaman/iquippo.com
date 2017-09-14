@@ -1044,9 +1044,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user.mobile"] = req.body.mobile;
   if(req.body.auctionId)
     filter.auctionId = req.body.auctionId;
-  if(req.body.statusType){
+  /*if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
-  }
+  }*/
    var currentDate = new Date();
   if (req.body.auctionType === 'closed'){
     //var currentDate = new Date();
@@ -1059,7 +1059,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     '$gt': currentDate
     };
 
-    filter.sellerAuction = {'$ne':"SA"};
+    filter.auctionType = {'$ne':"S"};
 
   }else if(req.body.auctionType === 'upcomingauctions') {
     //var currentDate = new Date();
@@ -1070,17 +1070,17 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     '$gt': currentDate
     };
 
-    filter.sellerAuction = {'$ne': "SA"};
+    filter.auctionType = {'$ne': "S"};
 
 
     
   }
-  else if(req.body.auctionType === 'sellerauction') {
+  else if(req.body.auctionType === 'S') {
     //var currentDate = new Date();
     filter.endDate={
     '$gt': currentDate
     };
-   filter.sellerAuction="SA";
+   filter.auctionType="S";
     
   }
 
