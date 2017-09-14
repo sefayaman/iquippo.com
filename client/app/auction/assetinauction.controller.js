@@ -31,7 +31,8 @@
     vm.termAuction=$location.search().termAuction;
     $scope.openUrl = openUrl;
     $scope.currentAuction ={};
-
+    $scope.fetchAsset=fetchAsset;
+    var temp = [];
     //registering category brand functions
     vm.onCategoryChange=onCategoryChange;
     vm.onBrandChange=onBrandChange;
@@ -261,19 +262,56 @@
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {
-                console.log("resultsasqd",result);
             filter ={};
+            var lotArr = [];
+            var lotDataArr = [];
              filter.auctionId = $scope.auctionId;
              filter.listing=true;
-             console.log("filter for assets",filter);
               LotSvc.getData(filter).then(function(res){
-                  console.log("response",res);
-                   vm.lotListing = res;
+                   temp=res;
+                   temp.forEach(function(data) {
+                     var lot={};
+                     lot.assetDesc=[];
+                     lot.amount=0;
+                    if(data){
+                      var pos=vm.lotListing.map(function(e) { return e.lotNumber; }).indexOf(data.lotNumber);
+                      if(pos > -1){
+                       vm.lotListing[pos].assetDesc.push(data.assetId);
+                       vm.lotListing[pos].amount=vm.lotListing[pos].amount + data.startingPrice; 
+                      }
+                     else{
+                      lot.lotNumber=data.lotNumber;
+                      lot.assetDesc.push(data.assetId);
+                      lot.amount=lot.amount + data.startingPrice;
+                      vm.lotListing.push(lot);
+                    }
+                     // if(doc.auctionType=='live'){
+                       
+                      //}
+                
+                    }
+                  });
+                  
+                  /////
               });   
           }
           setTimeout(function(){ fetchClassifiedBidPage(); }, 3000);
         });
+
   }
+
+  function fetchAsset(assetId){
+    filter={};
+    filter.assetId=assetId;
+    productSvc.getProductOnFilter(filter)
+    .then(function(res){
+      $state.go('productdetail',{id:res[0]._id});
+    })
+    .catch(function(err){
+     if(err) throw err;
+    });
+  }
+
 
   $scope.today = function() {
     $scope.mfgyr = new Date();
