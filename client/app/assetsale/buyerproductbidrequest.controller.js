@@ -45,7 +45,7 @@ function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, Pa
           	$scope.currentProduct = result[0];
 			var bidSummaryScope = $rootScope.$new();
 	      	bidSummaryScope.params = {
-		        bidAmount : result.actualBidAmount,
+		        bidAmount : bid.actualBidAmount || 0,
 		        product : $scope.currentProduct,
 		        stateId : bid.stateId, 
 		        bid : "placebid",
