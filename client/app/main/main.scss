@@ -5,8 +5,6 @@
   font-style: normal;
 }
 body{top:0 !important;font-family:'RobotoCondensed-Regular',sans-serif;}
-.btn, .navbar .navbar-nav > li > a.btn{font-family:'RobotoCondensed-Regular',sans-serif;}
-.btn{background-color:transparent;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .clearfix{clear: both;}
@@ -1130,6 +1128,25 @@ input.cmn-toggle-round-flat:checked + label:after
     line-height: 1;
     margin-top: 10px;
 }
+ul.countdown-widgit{
+  display: block !important;
+  text-align: center;
+}
+.countdown-widgit li.item {
+    width: 70px;
+    margin: 5px auto;
+    display: inline-block;
+    float: none;
+}
+.countdown-widgit li.item i{
+    width: 50px;
+    height: 50px;
+    line-height: 18px;
+    font-size: 18px;
+    padding: 5px;
+}
+.countdown-widgit li.item span{margin-top: 3px; font-size: 12px;}
+.widgit-panel .panel.panel-default .panel-heading{font-size: 12px;}
 .price-wp {
     font-size: 16px;
     font-weight: 600;
@@ -1225,6 +1242,7 @@ input.cmn-toggle-round-flat:checked + label:after
 .auction-details{position: relative; padding: 10px;border: 1px solid #ccc;}
 .auction-details .media-heading{font-size: 16px;}
 .auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
+.auction-details.lots-buttons .btn{position: inherit; bottom: auto; right: auto;}
 .auction-list .calltoContact{position: absolute; top: 30%; right: 0;}
 .auctionText{background: #f4f4f4; padding:10px;}
 .calltoContact{position: absolute; right: 0; top: 30px;}
