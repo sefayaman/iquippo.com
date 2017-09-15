@@ -986,9 +986,9 @@
         <div class="row" ng-if="product.auctionListing">
           <div class="form-group col-sm-5">Auction</div>
           <div class="form-group col-sm-7">
-           <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
-              <option value="">Select Date</option>
-              <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
+           <select class="form-control" name="auctionDate" ng-model="auctionReq.auctionId">
+              <option value="">Select Auction</option>
+              <option  ng-repeat="act in auctions" value="{{act.auctionId}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
             </select>
             <i class="caret"></i>
           </div>
@@ -1026,7 +1026,7 @@
       <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.lotId.$invalid && submitted}">
-            <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number" ng-change="checkForLot(lot.lotNumber)"/>
+            <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number" ng-blur="checkForLot(lot.lotNumber)"/>
           </div>
         </div>
        <div class="col-sm-3" ng-class="{'has-error': lot.startDate.$invalid && submitted }">

@@ -71,7 +71,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('productdetail', {
-        url: '/productdetail/:id',
+        url: '/productdetail/:id?assetListedInAuction',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'

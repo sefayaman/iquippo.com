@@ -12,7 +12,7 @@
         svc.destroy = destroy;
         svc.update = update;
 
-        function saveLot(data) {console.log(data);
+        function saveLot(data) {console.log("lotsavedata==".data);
             return $http.post(svcPath + "/lot", data) 
                 .then(function(res) {
                    //lot response data come console.log("reslotdata",res.data.lotData);
