@@ -4,9 +4,11 @@
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
 
-  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state) {
 
+  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$location) {
     var vm = this;
+   var query=$location.search();
+   
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};
@@ -21,6 +23,8 @@
     $scope.mstep = 1;
     $scope.ismeridian = true;
     var filter = {};
+    $scope.assetListedInAuction = '';
+    $scope.assetListedInAuction = query.assetListedInAuction;
     //certification request
     $scope.productQuote = {};
     if (Auth.getCurrentUser()._id) {

@@ -305,13 +305,12 @@
     filter.assetId=assetId;
     productSvc.getProductOnFilter(filter)
     .then(function(res){
-      $state.go('productdetail',{id:res[0]._id});
+      window.open('/productdetail/'+res[0]._id +'?assetListedInAuction=true');
     })
     .catch(function(err){
      if(err) throw err;
     });
   }
-
 
   $scope.today = function() {
     $scope.mfgyr = new Date();
