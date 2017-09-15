@@ -1379,10 +1379,16 @@
         sObj.status = transactionStatuses[0].code;
         sObj.userId = Auth.getCurrentUser()._id;
         paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
-        if (Auth.isAdmin())
+        if (Auth.isAdmin()){
           paymentTransaction.paymentMode = "offline";
-        else
+        }else if(!Auth.isAdmin() && certified =="Yes") {
           paymentTransaction.paymentMode = "online";
+        }else if(!Auth.isAdmin() && certified =="No") {
+          paymentTransaction.paymentMode = "offline";
+        }
+        else{
+          paymentTransaction.paymentMode = "online";
+        }
       }
 
       if (createTraction)
