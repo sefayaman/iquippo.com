@@ -161,21 +161,19 @@
                   
                 </div>
       </div> -->
-      <div class="no-result" ng-if="!auctionDetailsVm.show" ng>No records found</div>
+      <!-- <div class="no-result" ng-if="!auctionDetailsVm.show" ng>No records found</div> -->
 
     <div ng-repeat="lot in auctionDetailsVm.lotListing">
 
       <div class= "row">
-        <div class="col-sm-6">
-          <div ng-repeat="lot in auctionDetailsVm.lotListing">
-            <div class="auction-list auction-details">
-              <div class="media">
-            <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
-              <img class="media-object" ng-if="product.primaryImg" src="{{uploadImagePrefix}}{{auctionmasterDir}}/{{lot.primaryImg}}" alt="Image">
-              <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='closedAuctions'" src="assets/images/closed.jpg" alt="Image">
-              <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='upcomingAuctions'" src="assets/images/upcoming.jpg" alt="Image">
-              <img class="media-object" ng-if="!product.primaryImg && product.auctionValue =='ongoingAuctions'" src="assets/images/ongoing.jpg" alt="Image">
-            </a>
+        <div class="col-sm-6" ng-repeat="lot in auctionDetailsVm.lotListing">
+          <div>
+            <div class="auction-list auction-details lots-buttons">
+              <div class="media form-group">
+              <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
+                <img class="media-object" ng-if="lot.primaryImg" src="{{uploadImagePrefix}}{{lot.assetDir}}/{{lot.primaryImg}}" alt="Image">                
+                <img class="media-object" ng-if="!lot.primaryImg" src="assets/uploads/auctionmaster/upcoming_12.jpg" alt="Image" height="100">                
+              </a>
            
             <div class="media-body">
              
@@ -192,25 +190,85 @@
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>               
                 <div class="col-xs-12 col-sm-6 text-right">
-                  <button ng-if="auctionType != 'closed'" type="button" class="btn btn-default btn-sm active" ng-click="auctionDateVm.openAuctionLot(product)">Register Now</button>
-                  <!--<a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  -->
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm btn-primary" ng-if="product.docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="product.docType == 'tc'" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docNameProxy}}" class="btn btn-sm btn-primary" ng-if="!product.docType &&  product.docNameProxy" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form </a>
-                  <a href="{{uploadImagePrefix}}{{auctionDir}}/{{product.docName}}" class="btn btn-sm active btn-default" ng-if="!product.docType && product.docName" target="_blank"><i class="fa fa-file-pdf-o"></i> Auction Catalogue</a>
-                  <!--<a href="/assetinauction?auctionId={{product.auctionId}}&auctionType={{product.auctionValue}}&auctionName={{product.name}}&docName={{product.docName}}&docType={{product.docType}}&id={{product._id}}" class="btn btn-sm btn-danger">View Assets</a>-->
-                  <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Lot</a>
+                  <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="row panel-group widgit-panel">
+            <div class="col-sm-3 padd-right">
+              <div class="panel panel-default">
+                <div class="panel-heading">Start price</div>
+                <div class="panel-body">
+                  <i class="fa fa-inr"></i> 200.00
+                </div>                
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">Current Bid</div>
+                <div class="panel-body">
+                  <i class="fa fa-inr"></i> 208.00
+                </div>                
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <h4 class="text-center">Time left</h4>
+                  <timer>
+                    <div class="countdown-time">
+                      <ul class="countdown-widgit">
+                        <li class="item"><i class="day">{{days}} <span>Day</span></i></li>
+                        <li class="item"><i class="hour">{{hours}}<span>Hrs</span></i></li>
+                        <li class="item"><i class="minute">{{minutes}}<span>Mins</span></i></li>
+                        <li class="item"><i class="second">{{seconds}}<span>Secs</span></i></li>
+                      </ul>
+                    </div>
+                  </timer>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3 padd-left">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  Next Bid
+                </div>
+                <div class="panel-body">
+                  <p><i class="fa fa-inr"></i> 208 or More </p>   
+                  <button type="button" class="btn btn-primary btn-block">Bid History</button>              
+                </div>                
+              </div>
+            </div>
+          </div>
+          <div class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <form novalidate="" name="negotiations">
+                  <div class="row">
+                    <div class="col-sm-3 padd-right">
+                      <h5>
+                        Make an Offer
+                      </h5>
+                    </div>
+                    <div class="col-sm-6">
+                      <div ng-class="{'has-error': negotiations.amount.$invalid &amp;&amp; negotiationSubmitted}">
+                        <input type="number" min="0" name="amount" class="form-control" placeholder="Enter Offer" required="">
+                      </div>
+                    </div>
+                    <div class="col-sm-3 padd-left text-right">
+                      <div>
+                        <a href="javascript:void(0);" class="btn btn-warning btn-block">Submit Bid</a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-6">
-          <div class="widgit">
+        <div class="col-sm-6 padd-left">
+          <!-- <div class="widgit">
             <div class="container-fluid mjuszb4">
             <input type="hidden" id="auction_user_id" value="1949999">
 
@@ -218,11 +276,12 @@
             <div id="bidHistoryDialogForAuction" style="display:none"></div>
             <div id="messageDialogForAuction"></div>
             </div>
-          </div>
+          </div> -->
+          
         </div>
       </div>
 
-      <div class="widgit">
+      <!-- <div class="widgit">
           <div class="container-fluid mjuszb4">
           <input type="hidden" id="auction_user_id" value="194">
 
@@ -230,7 +289,7 @@
           <div id="bidHistoryDialogForAuction" style="display:none"></div>
           <div id="messageDialogForAuction"></div>
           </div>
-      </div>
+      </div> -->
     </div>
    
     </div>
