@@ -159,58 +159,6 @@ function getEmdFromMaster(filter, callback) {
 		});
 	}
 }
-/*function getEmdFromMaster(filter, callback) {
-	var tempFilter = {};
-	if(filter.enterpriseId)
-		tempFilter.enterpriseId = filter.enterpriseId;
-	if(filter['user.userId'])
-		tempFilter['user.userId'] = filter['user.userId'];
-	var query = EMDMaster.find(tempFilter);
-	query.exec(function(err, result) {
-		if (err)
-			return callback(err);
-		if(result.length > 0) {
-			var query = EMDMaster.find(filter);
-			query.exec(function(err, result) {
-			if (err)
-				return callback(err);
-			if(result.length === 0) {
-				tempFilter['category.name'] = "All";
-				var query = EMDMaster.find(tempFilter);
-				query.exec(function(err, emdcharge) {
-					if (err || !emdcharge.length)
-						return callback(err);
-					if(emdcharge.length === 0) {
-						var filterObj = {};
-						filterObj.userRole = "default";
-						var query = EMDMaster.find(filterObj);
-						query.exec(function(err, emdcharge) {
-							if (err || !emdcharge.length)
-								return callback(err);
-							
-							return callback(null, emdcharge[0]);
-						});
-					} else {
-						return callback(null, emdcharge[0]);
-					}
-				});
-			} else {
-				return callback(null, result[0]);
-			}
-		});
-		} else {
-			var filterObj = {};
-			filterObj.userRole = "default";
-			var query = EMDMaster.find(filterObj);
-			query.exec(function(err, emdcharge) {
-				if (err || !emdcharge.length)
-					return callback(err);
-				
-				return callback(null, emdcharge[0]);
-			});
-		}
-	});
-}*/
 
 exports.sendNotification = function(bidArr){
     if(!bidArr.length)
