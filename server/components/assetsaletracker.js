@@ -150,11 +150,14 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       var highestBid = 0;
       if(result.otherBids.length)
         highestBid = getMaxBid(result.otherBids).bidAmount || 0;
+      var bidRec = true;
+      if(bidCount === 0)
+        bidRec = false;
       async.eachLimit(actionableBids,3,updateBid,function(err){
         if(err)
           return callback(err);
         if(item.updateProduct)
-            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:false,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
           return callback();
       });
     }
