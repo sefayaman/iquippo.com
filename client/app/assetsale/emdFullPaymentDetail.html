@@ -38,7 +38,7 @@
             <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.instrumentNo" name="instrumentNo" placeholder="Instrument No" ng-required="emdFullPaymentVm.emdFullPaymentInfo.paymentMode !== 'Cash'" ng-disabled="emdFullPaymentVm.emdFullPaymentInfo.paymentMode === 'Cash'">
           </div>
           <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.amount.$invalid && submitted}">
-            <input type="number" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.amount" name="amount" placeholder="Amount" required>
+            <input type="number" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.amount" name="amount" min="0" placeholder="Amount" required>
           </div>
         </div>
         <div class="row">
