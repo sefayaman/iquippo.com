@@ -45,7 +45,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		if(action == 'emdPayment') {
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
-			if(Number($scope.bidData.emdAmount + $scope.bidData.fullPaymentAmount) < vm.emdFullPaymentInfo.amount) {
+			if((Number($scope.bidData.emdAmount + $scope.bidData.fullPaymentAmount) < vm.emdFullPaymentInfo.amount) || vm.emdFullPaymentInfo.amount <= 0) {
 				Modal.alert("Invalid payment amount.");
 				return;
 			}
@@ -80,7 +80,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if(!$scope.bidData.fullPayment)
 				$scope.bidData.fullPayment = {};
 			var remainingPayment = (Number($scope.bidData.fullPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0;
-			if(remainingPayment < 0){
+			if(remainingPayment < 0 || vm.emdFullPaymentInfo.amount <= 0){
 				Modal.alert("Invalid payment amount.");
 				return;
 			}
