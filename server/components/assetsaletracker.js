@@ -61,6 +61,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               maxBid.product.prevTradeType = prd.tradeType;
               AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
+              AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
             }
 
             bids.forEach(function(item){
@@ -138,6 +139,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
         AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
         actionableBids.push(selBid); 
+        AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
       }else{
         item.updateProduct = true;
         result.otherBids.forEach(function(bid){

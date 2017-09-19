@@ -251,6 +251,7 @@ exports.validateUpdate = function(req,res,next){
 						AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
 						req.bids.push(item);
 					});
+					req.bidLost = true;
 					next();
 				});
 			//}
@@ -263,6 +264,7 @@ exports.validateUpdate = function(req,res,next){
 					AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
 					req.bids.push(item);
 				});
+				req.bidLost = true;
 			//if(req.bid.fullPayment.remainingPayment == 0)
 				next();
 			//else
@@ -572,7 +574,7 @@ exports.withdrawBid = function(req, res) {
 		bidObj.action = "BIDWITHDRAW";
 		bidArr.push(bidObj);
 		AssetSaleUtil.sendNotification(bidArr);
-		return res.json({msg: "Bid withdraw Successfully!"});
+		return res.json({msg: "Bid withdrawn Successfully!"});
 	});
 
 	function getBid(callback){
@@ -987,7 +989,7 @@ exports.exportExcel = function(req,res){
 				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
 			if(keyObj.type && keyObj.type == 'datetime' && val)
 				val = moment(val).utcOffset('+0530').format('hh:mm a');
-			if(keyObj.key && queryParam.seller === 'y' && (keyObj.key === 'buyerName' || keyObj.key === 'buyerMobile' || keyObj.key === 'buyerEmail')) {
+			/*if(keyObj.key && queryParam.seller === 'y' && (keyObj.key === 'buyerName' || keyObj.key === 'buyerMobile' || keyObj.key === 'buyerEmail')) {
 				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
 				    val = item.user.fname + " " + item.user.lname;
 				else if(item.user && item.user.mobile && keyObj.key === 'buyerMobile' && dealStatuses.indexOf(item.dealStatus) > 8)
@@ -996,20 +998,8 @@ exports.exportExcel = function(req,res){
 					val = item.user.email;
 				else
 					val = "";
-			}
-			/*if(keyObj.key && keyObj.key === 'buyerMobile' && queryParam.seller === 'y') {
-				if(item.user && dealStatuses.indexOf(item.dealStatus) > 8)
-				    val = item.user.mobile;
-				else
-					val = "";
-			}
-			if(keyObj.key && keyObj.key === 'buyerEmail' && queryParam.seller === 'y') {
-				if(item.user && item.user.email && dealStatuses.indexOf(item.dealStatus) > 8)
-				    val = item.user.email;
-				else
-					val = "";
 			}*/
-			if(keyObj.key && keyObj.key === 'buyerName' && item.user && queryParam.seller !== 'y')
+			if(keyObj.key && keyObj.key === 'buyerName' && item.user)
 				val = item.user.fname + " " + item.user.lname;
 			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
 				val = item.fullPaymentAmount;

@@ -6,7 +6,10 @@
   <div class="modal-body">
     <table class="table">
       <tr>
-        <td>Total Bid Amount :</td>
+        <td>
+          <spne  ng-if="formType == 'EMD'">Total EMD Amount :</spne>
+          <spne  ng-if="formType != 'EMD'">Total Bid Amount :</spne>
+        </td>
         <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>
         <td ng-if="formType != 'EMD'">{{bidData.bidAmount || 0}}</td>
       </tr>
