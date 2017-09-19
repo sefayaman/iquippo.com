@@ -25,6 +25,7 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
   svc.getAuctionDateData=getAuctionDateData;  
   svc.getAuctionWiseProductData = getAuctionWiseProductData;
   svc.getOnId = getOnId;
+  svc.getAuctionExpire  =getAuctionExpire;
 
   function getAll(){
         return $http.get(path)
@@ -209,6 +210,17 @@ function AuctionSvc($http,$q,notificationSvc,Auth){
         .catch(function(err) {
           throw err;
         });
+    }
+
+    function getAuctionExpire(data){
+      //console.log("the filter",filter);
+        return $http.get(path + "/auctionmaster/auctiondetail?auctionId="+data._id+'&auctiontype='+data.auctionType)
+        .then(function(res) {
+          return res.data;
+        })
+        .catch(function(err) {
+          throw err
+        })
     }
 
    

@@ -91,11 +91,11 @@
     $scope.lot={};
     $scope.lotsaved ={};
     $scope.mandatory = true;
+    $scope.auctionselect = false;
 
 
 
     $scope.listInAuction = function(data){
-         //console.log("erthh",data);
         if(data ==true){
           $scope.mandatory = false;
          }else{
@@ -106,7 +106,6 @@
     }
 
     $scope.listInPortal = function(data){
-       //console.log("hggg",data);
          if(data ==true){
           $scope.mandatory = true;
          }else{
@@ -115,6 +114,15 @@
          }
 
     }
+    $scope.checkauction = function(data){
+      if(data ==true){
+       $scope.auctionselect = true;
+      }else{
+       $scope.auctionselect = false;
+
+      }
+
+   }
 
     function productInit() {
 
@@ -148,6 +156,7 @@
       $scope.valuationReq = {};
       $scope.valuationReq.valuationAgency = {};
       $scope.auctionReq = {};
+      $scope.isExpire = false;
     }
 
     function goToUsermanagement() {
@@ -165,7 +174,6 @@
         $state.go('myaccount');
         return;
       }
-       console.log("role",Auth.getCurrentUser().role);
       groupSvc.getAllGroup()
         .then(function(result) {
           $scope.allGroup = result;
@@ -187,6 +195,8 @@
 
 
       });*/
+
+      
 
       if (!Auth.isAdmin() && !Auth.isChannelPartner()) {
         product.seller = Auth.getCurrentUser();
@@ -229,8 +239,36 @@
             return;
           }
 
+          
+
           product = $scope.product = response[0];
           console.log("Response is ",response[0]);
+          var filter ={};
+          filter.auctionType = "expireauction";
+          filter._id = product.auction._id;
+ 
+          console.log($scope.product.auction._id);
+       
+          AuctionSvc.getAuctionExpire(filter).then(function(result){
+           $scope.date = new Date();
+ 
+           console.log("result",result);
+ 
+         
+           if(result!=""){
+ 
+             $scope.auctionReq.auctionexpire ="expire";
+             $scope.auctionReq.auctionname = result[0].name;
+             $scope.isExpire = true;
+ 
+             console.log("hj");
+           }else{
+             $scope.isExpire = false;
+ 
+             console.log("hjdghghg");
+           }
+ 
+          });
           $scope.imagesEngine = [];
           $scope.imagesHydraulic = [];
           $scope.imagesCabin = [];
@@ -981,9 +1019,11 @@
       $scope.tabObj.step2 = true;
       filter = {};
       filter['yetToStartDate'] = new Date();
+      console.log("sxs");
       AuctionMasterSvc.get(filter)
         .then(function(aucts) {
           $scope.auctions = aucts;
+          console.log( $scope.auctions);
         });
 
       $scope.auctionReq.valuationReport = checkValuationReport();
@@ -1047,7 +1087,7 @@
      
     function createAuction(product,postAuction,certification,paymentstatus){
 
-      console.log("dfg",product);
+      console.log("dfghijkio",product);
       console.log("tyuuiio",$scope.lot);
       var lotdata = $scope.lot;
 
