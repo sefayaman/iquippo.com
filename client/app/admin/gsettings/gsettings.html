@@ -419,7 +419,32 @@
 							</select>
 						</div>
 						<div class="col-sm-3 form-group">
-							<input type="number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.bidIncrement" placeholder="Bid Increment">
+							<!-- <input type="number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.bidIncrement" placeholder="Bid Increment"> -->
+							Bid Increment
+							<div class="row">
+								<div class="col-xs-6">
+									<input type="radio" name="bidIncrement" ng-model="gsettingVm.auctionData.bidIncrement" value="S"> Static
+								</div>
+								<div class="col-xs-6">
+									<input type="radio" name="bidIncrement" ng-model="gsettingVm.auctionData.bidIncrement" value="R"> Range Wise
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" name="" value="" placeholder="Bid Increment Amount" ng-if="gsettingVm.auctionData.bidIncrement == 'S'">
+							<div class="row" ng-if="gsettingVm.auctionData.bidIncrement == 'R'">
+								<div class="col-sm-6">
+									<select class="form-control">
+										<option>Select range</option>
+										<option>1-2</option>
+										<option>2-3</option>
+										<option>3-4</option>
+									</select>
+								</div>
+								<div class="col-sm-6">
+									<input type="text" class="form-control" name="" value="" placeholder="Bid Increment">
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row">						
@@ -595,6 +620,20 @@
 						<div>
 							{{gsettingVm.auctionProduct.product.otherImages[0]}}
 						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3 form-group">
+						<input class="form-control" name="startDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date" />
+					</div>
+					<div class="col-sm-3 form-group">
+						<input class="form-control" name="endDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date" />
+					</div>
+					<div class="col-sm-3 form-group">
+						<input type="text" class="form-control" name="" value="" placeholder="Starting Price">
+					</div>
+					<div class="col-sm-3 form-group">
+						<input type="text" class="form-control" name="" value="" placeholder="Reserve Price">
 					</div>
 				</div>
 				<div class="row">
