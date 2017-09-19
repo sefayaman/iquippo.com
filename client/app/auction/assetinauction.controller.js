@@ -260,6 +260,7 @@
         }
 
   function getAssetsInAuction(filter){
+    console.log("AssetsInAuction");
     AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           if (result) {

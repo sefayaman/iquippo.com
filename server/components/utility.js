@@ -73,7 +73,9 @@ function sendLotData(lotData){
     // "updatedAt" : temp,
     // "createdAt" : temp
 }];*/
-var  lotData=JSON.stringify(lotData);
+
+console.log("lotData",lotData);
+//var  lotData=JSON.stringify(lotData);
 var data = {
   "lots":lotData
 };
