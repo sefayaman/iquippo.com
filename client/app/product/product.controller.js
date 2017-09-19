@@ -331,8 +331,10 @@
                   if (result.length > 0) {
                     $scope.auctionReq = result[0];
                     filter={};
+          
                     filter.auctionId=$scope.auctionReq.auctionId;
                     filter.assetId=$scope.product.assetId;
+                    console.log("edit filter======",filter);
                     LotSvc.getData(filter)
                     .then(function(res){
                       if(res.length > 0){
@@ -1619,10 +1621,11 @@
 
     function checkForLot(lotNumber,auctionId){
       filter={};
-      console.log("product",$scope.product);
+      console.log("product===================",$scope.product);
       console.log("auctionProduct",$scope.auctionReq);
       filter.lotNumber=lotNumber;
       filter.auctionId=$scope.auctionReq.auctionId;
+      console.log("filter==",filter);
       LotSvc.getData(filter)
       .then(function(res){
         if(res.length >0){
