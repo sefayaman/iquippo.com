@@ -1615,106 +1615,7 @@
       });
     }
 
-     function addProductSeller(cb,auctionId) {
-
-      product.user = {};
-      product.user._id = Auth.getCurrentUser()._id;
-      product.user.fname = Auth.getCurrentUser().fname;
-      product.user.mname = Auth.getCurrentUser().mname;
-      product.user.lname = Auth.getCurrentUser().lname;
-      product.user.role = Auth.getCurrentUser().role;
-      product.user.userType = Auth.getCurrentUser().userType;
-      product.user.phone = Auth.getCurrentUser().phone;
-      product.user.mobile = Auth.getCurrentUser().mobile;
-      product.user.email = Auth.getCurrentUser().email;
-      product.user.country = Auth.getCurrentUser().country;
-      product.user.countryCode=LocationSvc.getCountryCode(product.user.country);
-      product.user.company = Auth.getCurrentUser().company;
-      if ($.isEmptyObject(product.seller)) {
-        product.seller = {};
-        product.seller = product.user;
-      }
-
-      if ($scope.product.currencyType == "")
-        $scope.product.currencyType = "INR";
-
-      $scope.product.assetStatuses = [];
-      var stObj = {};
-      stObj.userId = product.user._id;
-      stObj.status = assetStatuses[0].code;
-      stObj.createdAt = new Date();
-      $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
-      $scope.product.assetId = $scope.assetDir;
-
-      $rootScope.loading = true;
-      $scope.product.auctId = auctionId;
-      product.auction._id = $scope.auctionReq.dbAuctionId;
-      productSvc.addProduct(product).then(function(result) {
-        //Start NJ : uploadProductSubmit object push in GTM dataLayer
-        dataLayer.push(gaMasterObject.uploadProductSubmit);
-        //NJ : set upload product Start time
-        var productUploadSubmitTime = new Date();
-        var timeDiff = Math.floor(((productUploadSubmitTime - $scope.productUploadStartTime) / 1000) * 1000);
-        gaMasterObject.uploadProductSubmitTime.timingValue = timeDiff;
-        ga('send', gaMasterObject.uploadProductSubmitTime);
-        //End
-        $rootScope.loading = false;
-        setScroll(0);
-        $scope.successMessage = "Product added successfully.";
-        $scope.autoSuccessMessage(20);
-        $scope.lot.assetId = $scope.product.assetId;
-        $scope.lot.assetDesc = $scope.product.name;
-        $scope.lot.auctionId = auctionId ;
-
-        $scope.lotsaved.assetId = $scope.product.assetId;
-        $scope.lotsaved.assetDesc = $scope.product.name;
-        $scope.lotsaved.auctionId = auctionId;
-        $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-        $scope.lotsaved.userId = Auth.isAdmin()._id;
-        $scope.lotsaved.startingPrice =$scope.product.startingPrice;
-
-        
-
-        console.log("lot",$scope.lotsaved);
-          console.log("gg",auctionId);
-        LotSvc.saveLot($scope.lotsaved)
-        .then(function(result){
-          console.log("result",result);
-        })
-        //addToHistory(result,"Create");
-        if (Auth.isAdmin()) {
-          if (result.status)
-            AppNotificationSvc.createAppNotificationFromProduct(result);
-          mailToCustomerForApprovedAndFeatured(result, product);
-        } else {
-
-          var data = {};
-          data['to'] = result.seller.email;
-          data['subject'] = 'Product Upload: Request for Listing';
-          result.serverPath = serverPath;
-          result.listedFor = result.tradeType;
-          if (result.listedFor == 'BOTH')
-            result.listedFor = "SELL & RENT"
-          notificationSvc.sendNotification('productUploadEmailToCustomer', data, result, 'email');
-
-          data['to'] = supportMail;
-          data['subject'] = 'Product Upload: Request for activation';
-          result.serverPath = serverPath;
-          notificationSvc.sendNotification('productUploadEmailToAdmin', data, result, 'email');
-
-        }
-        if (cb)
-          cb(result)
-        else {
-          product = $scope.product = {};
-          $state.go('productlisting');
-        }
-
-      })
-      .catch(function(err){
-        $rootScope.loading = false;
-      });
-    }
+   
 
     function checkForLot(lotNumber,auctionId){
       filter={};
@@ -1814,8 +1715,10 @@
             $scope.lotsaved.assetDesc = $scope.product.name;
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-            $scope.lotsaved.userId = Auth.isAdmin()._id;
+           // $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+            $scope.lotsaved.assetDir=$scope.product.assetDir;
+            $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
             $scope.lotsaved.startDate=scope.lot.startDate;
             $scope.lotsaved.endDate=$scope.lot.endDate;
@@ -1840,10 +1743,14 @@
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-            //$scope.lotsaved.userId = Auth.isAdmin()._id;
+            $scope.lotsaved.assetDir=$scope.product.assetDir;
+            $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+            $scope.lotsaved.startDate=$scope.lot.startDate;
+            $scope.lotsaved.endDate=$scope.lot.endDate;
+            $scope.lotsaved.reservePrice=$scope.product.reservePrice;
     
-            LotSvc.update($scope.lotsaved)
+            LotSvc.updateProductLot($scope.lotsaved)
             .then(function(result){
               console.log("result",result);
             });
@@ -1853,11 +1760,16 @@
             $scope.lotsaved.assetDesc = $scope.product.name;
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-            //$scope.lotsaved.userId = Auth.isAdmin()._id;
+           // $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+            $scope.lotsaved.assetDir=$scope.product.assetDir;
+            $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+            $scope.lotsaved.startDate=scope.lot.startDate;
+            $scope.lotsaved.endDate=$scope.lot.endDate;
+            $scope.lotsaved.reservePrice=$scope.product.reservePrice;
 
-            LotSvc.update($scope.lotsaved)
+            LotSvc.updateProductLot($scope.lotsaved)
             .then(function(result){
               console.log("result",result);
             });
