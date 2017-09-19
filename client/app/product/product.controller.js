@@ -1045,7 +1045,7 @@
      
     function createAuction(product,postAuction,certification,paymentstatus){
 
-      console.log("dfghijk",product);
+      console.log("dfghijkio",product);
       console.log("tyuuiio",$scope.lot);
       var lotdata = $scope.lot;
 
