@@ -21,14 +21,14 @@
       AssetSaleSvc.getEmdOnProduct(emdFilter).then(function(result){
         if(result)
           $scope.emdAmount = result.emdCharge;
-        getBidOrBuyCalculation();
+        getBidOrBuyCalculation(null, true);
       });
       //getBidOrBuyCalculation();
     }
 
     init();
 
-    function getBidOrBuyCalculation(amount) {
+    function getBidOrBuyCalculation(amount, oldValue) {
       var filter = {};
       if (query.product.group)
         filter.groupId = query.product.group._id;
@@ -36,7 +36,8 @@
         filter.categoryId = query.product.category._id;
       filter.stateId = query.stateId;
       filter.currentDate = 'y'
-      filter.bidAmount = vm.bidAmount = query.bidAmount;
+      if(oldValue)
+        filter.bidAmount = vm.bidAmount = query.bidAmount;
       if(amount)
         filter.bidAmount = vm.bidAmount = amount;
       filter.productId = query.product._id;
