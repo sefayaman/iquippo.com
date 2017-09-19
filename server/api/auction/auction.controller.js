@@ -1061,6 +1061,13 @@ exports.getFilterOnAuctionMaster = function(req, res) {
 
     filter.auctionType = {'$ne':"S"};
 
+  }else if(req.body.auctionType === 'expireauction') {
+    //var currentDate = new Date();
+    filter.endDate={
+    '$lt': currentDate
+    };
+    filter["_id"] = req.body._id;
+
   }else if(req.body.auctionType === 'upcomingauctions') {
     //var currentDate = new Date();
     filter.endDate={
@@ -1266,16 +1273,48 @@ exports.getAuctionWiseProductData = function(req, res) {
 
 }
 
+exports.auctiondetail = function(req, res) {
+  var filter = {};
+  var queryObj = req.query;
+
+     
+   var currentDate = new Date();
+
+    filter.endDate ={
+    '$lt': currentDate
+    };
+
+    filter._id = queryObj.auctionId;
+      var query = AuctionMaster.find(filter);
+      query.exec(function(err, auctions) {
+      if (err) {
+           console.log("err", err);
+          return handleError(res, err);
+      }
+      return res.status(200).json(auctions);
+      });
+}
+
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
+  console.log("fhghg",queryObj);
   if (req.body._id)
     filter._id = req.body._id;
 
-  if (queryObj.yetToStartDate)
-    filter['startDate'] = {
+  if (queryObj.yetToStartDate){
+     filter.endDate={
+        '$gt': new Date()
+      };
+  
+      filter.auctionType = {'$ne':"S"};
+   }
+   /* filter['startDate'] = {
       '$gt': new Date()
-    }
+    }*/
+
+
+
     if(req.query.auctionId){
       filter.auctionId = req.query.auctionId;
       console.log("filter.auctionId",filter.auctionId);
@@ -1284,6 +1323,8 @@ exports.getAuctionMaster = function(req, res) {
     if(queryObj.dbauctionId){
       filter._id=queryObj.dbauctionId;
     }
+
+
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1
   })

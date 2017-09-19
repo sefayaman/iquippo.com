@@ -91,11 +91,11 @@
     $scope.lot={};
     $scope.lotsaved ={};
     $scope.mandatory = true;
+    $scope.auctionselect = false;
 
 
 
     $scope.listInAuction = function(data){
-         //console.log("erthh",data);
         if(data ==true){
           $scope.mandatory = false;
          }else{
@@ -106,7 +106,6 @@
     }
 
     $scope.listInPortal = function(data){
-       //console.log("hggg",data);
          if(data ==true){
           $scope.mandatory = true;
          }else{
@@ -115,6 +114,15 @@
          }
 
     }
+    $scope.checkauction = function(data){
+      if(data ==true){
+       $scope.auctionselect = true;
+      }else{
+       $scope.auctionselect = false;
+
+      }
+
+   }
 
     function productInit() {
 
@@ -148,6 +156,7 @@
       $scope.valuationReq = {};
       $scope.valuationReq.valuationAgency = {};
       $scope.auctionReq = {};
+      $scope.isExpire = false;
     }
 
     function goToUsermanagement() {
@@ -165,7 +174,6 @@
         $state.go('myaccount');
         return;
       }
-       console.log("role",Auth.getCurrentUser().role);
       groupSvc.getAllGroup()
         .then(function(result) {
           $scope.allGroup = result;
@@ -187,6 +195,8 @@
 
 
       });*/
+
+      
 
       if (!Auth.isAdmin() && !Auth.isChannelPartner()) {
         product.seller = Auth.getCurrentUser();
@@ -229,8 +239,36 @@
             return;
           }
 
+          
+
           product = $scope.product = response[0];
           console.log("Response is ",response[0]);
+          var filter ={};
+          filter.auctionType = "expireauction";
+          filter._id = product.auction._id;
+ 
+          console.log($scope.product.auction._id);
+       
+          AuctionSvc.getAuctionExpire(filter).then(function(result){
+           $scope.date = new Date();
+ 
+           console.log("result",result);
+ 
+         
+           if(result!=""){
+ 
+             $scope.auctionReq.auctionexpire ="expire";
+             $scope.auctionReq.auctionname = result[0].name;
+             $scope.isExpire = true;
+ 
+             console.log("hj");
+           }else{
+             $scope.isExpire = false;
+ 
+             console.log("hjdghghg");
+           }
+ 
+          });
           $scope.imagesEngine = [];
           $scope.imagesHydraulic = [];
           $scope.imagesCabin = [];
@@ -979,9 +1017,11 @@
       $scope.tabObj.step2 = true;
       filter = {};
       filter['yetToStartDate'] = new Date();
+      console.log("sxs");
       AuctionMasterSvc.get(filter)
         .then(function(aucts) {
           $scope.auctions = aucts;
+          console.log( $scope.auctions);
         });
 
       $scope.auctionReq.valuationReport = checkValuationReport();
@@ -1058,7 +1098,7 @@
         master.certification = certification;
         master.bidIncrement  = lotdata.bidIncrement;
         master.emdTax        = lotdata.emdTax;
-        master.auctionType = "S";
+        master.sellerAuction = "SA";
         master.auctionId     = "SA" + $scope.getRandomSpan();
         master.paymentstatus     = paymentstatus;
 
@@ -1499,13 +1539,9 @@
               $scope.lotsaved.assetDesc = $scope.product.name;
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
-              $scope.lotsaved.assetDir = $scope.product.assetDir;
               $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-              $scope.lotsaved.userId = Auth.isAdmin()._id;
+              //$scope.lotsaved.userId = Auth.isAdmin()._id;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-              $scope.lotsaved.startDate=scope.lot.startDate;
-              $scope.lotsaved.endDate=$scope.lot.endDate;
-              $scope.lotsaved.reservePrice=$scope.product.reservePrice;
       
               console.log("lot",$scope.lotsaved);
                 console.log("gg",$scope.auctionReq.dbAuctionId);
@@ -1519,14 +1555,10 @@
               $scope.lotsaved.assetDesc = $scope.product.name;
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-              $scope.lotsaved.assetDir=$scope.product.assetDir;
-              $scope.lotsaved.userId = Auth.isAdmin()._id;
+              //$scope.lotsaved.userId = Auth.isAdmin()._id;
               $scope.lotsaved.primaryImg=$scope.product.primaryImg;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-              $scope.lotsaved.startDate=scope.lot.startDate;
-              $scope.lotsaved.endDate=$scope.lot.endDate;
-              $scope.lotsaved.reservePrice=$scope.product.reservePrice; 
-
+      
               console.log("lot is this",$scope.lotsaved);
                 console.log("gg",$scope.auctionReq.dbAuctionId);
               LotSvc.saveLot($scope.lotsaved)
@@ -1686,15 +1718,10 @@
       .then(function(res){
         if(res.length >0){
           $scope.lotCreation=false;
-          if(res[0] && res[0].startDate && res[0].endDate){
-       $scope.lotDate=true;
+          $scope.lotDate=true;
+       console.log("res lot data",res[0]);
        $scope.lot.startDate=res[0].startDate;
        $scope.lot.endDate=res[0].endDate;
-     }
-     else{
-      $scope.lotDate=false;
-     }
-       console.log("res lot data",res[0]);
        $scope.lot.startingPrice=res[0].startingPrice;
       }
       else{
@@ -1756,14 +1783,9 @@
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-            $scope.lotsaved.assetDir=$scope.product.assetDir;
-            $scope.lotsaved.userId = Auth.isAdmin()._id;
+            //$scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-            $scope.lotsaved.startDate=$scope.lot.startDate;
-            $scope.lotsaved.endDate=$scope.lot.endDate;
-            $scope.lotsaved.reservePrice=$scope.product.reservePrice;
-            
-
+    
             LotSvc.saveLot($scope.lotsaved)
             .then(function(result){
               console.log("result",result);
@@ -1774,12 +1796,9 @@
             $scope.lotsaved.assetDesc = $scope.product.name;
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-            $scope.lotsaved.userId = Auth.isAdmin()._id;
+            //$scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-            $scope.lotsaved.startDate=scope.lot.startDate;
-            $scope.lotsaved.endDate=$scope.lot.endDate;
-            $scope.lotsaved.reservePrice=$scope.product.reservePrice;
 
             LotSvc.saveLot($scope.lotsaved)
             .then(function(result){
