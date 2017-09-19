@@ -1012,10 +1012,10 @@
               <div class="col-sm-4">
                 <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="lotwise"> lotwise
               </div>
-                 </div>
+          </div>
         </div>
-        <div class="row" ng-if="isCustomer()">
-          <div ng-if="lot.emdTax === 'overall'">
+        <div ng-if="isCustomer()">
+          <div class="row" ng-if="lot.emdTax === 'overall'">
             <div class="form-group col-sm-5">EMD Amount </div>
             <div class="form-group col-sm-7">
               <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
@@ -1023,20 +1023,27 @@
            </div>
         </div>
          
-      <div class="row">
+        <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.lotId.$invalid && submitted}">
             <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number" ng-blur="checkForLot(lot.lotNumber)"/>
           </div>
         </div>
-       <div class="col-sm-3" ng-class="{'has-error': lot.startDate.$invalid && submitted }">
-              
-              <input class="form-control" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate"required/>
+        <div class="row">
+          <div class="form-group col-sm-5">Lot Start Date and End Date</div>
+          <div class="col-sm-3 form-group" ng-class="{'has-error': lot.startDate.$invalid && submitted }">
+            <div class="input-group">
+              <input class="form-control" id="lotstart" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required/>
+              <label class="input-group-addon" for="lotstart"><i class="fa fa-calendar"></i></label>
             </div>
-         <div class="col-sm-3" ng-class="{'has-error': lot.endDate.$invalid && submitted }">
-              
-              <input class="form-control" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required/>
-            </div>
+          </div>
+          <div class="col-sm-3 form-group" ng-class="{'has-error': lot.endDate.$invalid && submitted }">            
+            <div class="input-group">
+              <input class="form-control" id="lotend" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required/>
+              <label class="input-group-addon" for="lotend"><i class="fa fa-calendar"></i></label>
+            </div>  
+          </div>
+        </div>
         
         <div class="row">
          <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>
