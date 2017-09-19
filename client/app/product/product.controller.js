@@ -165,6 +165,7 @@
         $state.go('myaccount');
         return;
       }
+       console.log("role",Auth.getCurrentUser().role);
       groupSvc.getAllGroup()
         .then(function(result) {
           $scope.allGroup = result;
@@ -1059,7 +1060,7 @@
         master.certification = certification;
         master.bidIncrement  = lotdata.bidIncrement;
         master.emdTax        = lotdata.emdTax;
-        master.sellerAuction = "SA";
+        master.auctionType = "S";
         master.auctionId     = "SA" + $scope.getRandomSpan();
         master.paymentstatus     = paymentstatus;
 
@@ -1500,9 +1501,13 @@
               $scope.lotsaved.assetDesc = $scope.product.name;
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+              $scope.lotsaved.assetDir = $scope.product.assetDir;
               $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-              //$scope.lotsaved.userId = Auth.isAdmin()._id;
+              $scope.lotsaved.userId = Auth.isAdmin()._id;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+              $scope.lotsaved.startDate=scope.lot.startDate;
+              $scope.lotsaved.endDate=$scope.lot.endDate;
+              $scope.lotsaved.reservePrice=$scope.product.reservePrice;
       
               console.log("lot",$scope.lotsaved);
                 console.log("gg",$scope.auctionReq.dbAuctionId);
@@ -1516,10 +1521,14 @@
               $scope.lotsaved.assetDesc = $scope.product.name;
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-              //$scope.lotsaved.userId = Auth.isAdmin()._id;
+              $scope.lotsaved.assetDir=$scope.product.assetDir;
+              $scope.lotsaved.userId = Auth.isAdmin()._id;
               $scope.lotsaved.primaryImg=$scope.product.primaryImg;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-      
+              $scope.lotsaved.startDate=scope.lot.startDate;
+              $scope.lotsaved.endDate=$scope.lot.endDate;
+              $scope.lotsaved.reservePrice=$scope.product.reservePrice; 
+
               console.log("lot is this",$scope.lotsaved);
                 console.log("gg",$scope.auctionReq.dbAuctionId);
               LotSvc.saveLot($scope.lotsaved)
@@ -1680,10 +1689,15 @@
       .then(function(res){
         if(res.length >0){
           $scope.lotCreation=false;
-          $scope.lotDate=true;
-       console.log("res lot data",res[0]);
+          if(res[0] && res[0].startDate && res[0].endDate){
+       $scope.lotDate=true;
        $scope.lot.startDate=res[0].startDate;
        $scope.lot.endDate=res[0].endDate;
+     }
+     else{
+      $scope.lotDate=false;
+     }
+       console.log("res lot data",res[0]);
        $scope.lot.startingPrice=res[0].startingPrice;
       }
       else{
@@ -1745,9 +1759,14 @@
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-            //$scope.lotsaved.userId = Auth.isAdmin()._id;
+            $scope.lotsaved.assetDir=$scope.product.assetDir;
+            $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-    
+            $scope.lotsaved.startDate=$scope.lot.startDate;
+            $scope.lotsaved.endDate=$scope.lot.endDate;
+            $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+            
+
             LotSvc.saveLot($scope.lotsaved)
             .then(function(result){
               console.log("result",result);
@@ -1758,9 +1777,12 @@
             $scope.lotsaved.assetDesc = $scope.product.name;
             $scope.lotsaved.auctionId = result.items[0].auctionId;
             $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-            //$scope.lotsaved.userId = Auth.isAdmin()._id;
+            $scope.lotsaved.userId = Auth.isAdmin()._id;
             $scope.lotsaved.primaryImg=$scope.product.primaryImg;
             $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+            $scope.lotsaved.startDate=scope.lot.startDate;
+            $scope.lotsaved.endDate=$scope.lot.endDate;
+            $scope.lotsaved.reservePrice=$scope.product.reservePrice;
 
             LotSvc.saveLot($scope.lotsaved)
             .then(function(result){

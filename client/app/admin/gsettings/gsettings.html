@@ -1879,6 +1879,38 @@
 			Search: <input type="text" placeholder="Search..." ng-model="emdVm.searchStr" ng-change="emdVm.searchFn()" ng-model-options="{debounce:500}">
 
 			</div>
+<<<<<<< HEAD
+			<div class="row">
+				<div class="col-sm-12">
+					<div class=" table-responsive ">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>Auction Id</th>
+									<th>Auction Name</th>
+									<th>Lot ID</th>
+									<th>EMD Amount</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="emddata in emdVm.filteredList">
+									<td>{{emddata.auctionId}}</td>
+									<td>{{emddata.auctionName}}</td>
+									<td>{{emddata.selectedLots[0].lotNumber.toString()}}</td>
+									<td>{{emddata.amount}}</td>
+									<td>
+										<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.editClicked(emddata)">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a href="javascript:void(0);" class="btn btn-danger btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.destroy(emddata._id)"><i class="fa fa-trash" ></i></a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
+=======
 		</div>
 		<div class="row">
 			<div class="col-sm-12">
@@ -1908,6 +1940,7 @@
 							</tr>
 						</tbody>
 					</table>
+>>>>>>> c1f812a15165ab423e859c067a6efcfd85fcf619
 				</div>
 				<uib-pagination total-items="gsettingVm.totalProductTechInfoCount" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'technical')" class="pagination-sm" rotate="false">  </uib-pagination>
 			</div>

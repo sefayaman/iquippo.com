@@ -88,6 +88,7 @@
          });*/
     }
 
+
     function save(dataObj){
       userRegForAuctionSvc.save(dataObj)
       .then(function(){
