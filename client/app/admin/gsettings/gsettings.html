@@ -418,42 +418,14 @@
 								<option value="notIncluded">Tax not included</option>						
 							</select>
 						</div>
-						<div class="col-sm-3 form-group">
-							<!-- <input type="number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.bidIncrement" placeholder="Bid Increment"> -->
-							Bid Increment
-							<div class="row">
-								<div class="col-xs-6">
-									<input type="radio" name="bidIncrementType" ng-model="gsettingVm.auctionData.bidIncrementType" value="S"> Static
-								</div>
-								<div class="col-xs-6">
-									<input type="radio" name="bidIncrementType" ng-model="gsettingVm.auctionData.bidIncrementType" value="R"> Range Wise
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-3 form-group">
-							<input type="text" class="form-control" ng-model="gsettingVm.auctionData.bidIncrement" name="" value="" placeholder="Bid Increment Amount" ng-if="gsettingVm.auctionData.bidIncrementType == 'S'">
-							<div class="row" ng-if="gsettingVm.auctionData.bidIncrementType == 'R'">
-								<div class="col-sm-6">
-									<select ng-model="gsettingVm.auctionData.bidIncrementRange" class="form-control">
-										<option value="">Select range</option>
-										<option>1-2</option>
-										<option>2-3</option>
-										<option>3-4</option>
-									</select>
-								</div>
-								<div class="col-sm-6">
-									<input type="text" class="form-control" ng-model="gsettingVm.auctionData.bidIncrement" name="" value="" placeholder="Bid Increment">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">						
 						<div class="col-sm-3">
 							<input type="Number" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.lastMinuteBid" placeholder="Last Minute Bid ( in minutes )">
 						</div>
 						<div class="col-sm-3">
 							<input type="Number" class="form-control" ng-model="gsettingVm.auctionData.extendedTo" name="" value="" placeholder="Extended To ( in minutes )">
 						</div>
+					</div>
+					<div class="row">	
 						<div class="col-sm-3 form-group">
 							<input type="text" class="form-control" name="" value="" ng-model="gsettingVm.auctionData.termAuction" placeholder="Terms of Auction">
 						</div>
@@ -464,8 +436,6 @@
 							</span>
 							<span>{{gsettingVm.auctionData.docName}}</span>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col-sm-3 form-group">
 							<span class="btn btn-warning btn-block fileinput-button">
 								<span>Upload Bid Proxy Form</span>
@@ -481,11 +451,28 @@
 							</span>
 							<span>{{gsettingVm.auctionData.primaryImg}}</span>
 						</div>
-						<div class="col-sm-3">	
+					</div>
+					<div class="row">						
+						<div class="col-sm-3 form-group">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person Name" ng-model="gsettingVm.auctionData.contactName">
 						</div>
-						<div class="col-sm-3">	
+						<div class="col-sm-3 form-group">	
 							<input type="text" name="" class="form-control" placeholder="Contact Person No." ng-model="gsettingVm.auctionData.contactNumber">
+						</div>
+					</div>
+					<h5>Bid Increment</h5>
+					<div class="row">
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" name="" value="" placeholder="Bid From">
+						</div>
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" name="" value="" placeholder="Bid To">
+						</div>
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" name="" value="" placeholder="Increment">
+						</div>
+						<div class="col-sm-3 form-group ">
+							<button type="button" class="btn btn-default">Add More</button>
 						</div>
 					</div>
 					<div class="row form-group">						
@@ -494,9 +481,12 @@
 							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
 						</div>
 					</div>
+					<legend></legend>
 				</form>
 			</div>
+
 		</form>
+		
 		<!-- <p class="text-right">Showing : {{gsettingVm.totalMItems}} Records</p> -->
 		<div class="row">
 			
