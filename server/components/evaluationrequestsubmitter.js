@@ -137,9 +137,9 @@ function submitRequest(reqs,cb){
       if(item.assetDir)
         s3Path = config.awsUrl + config.awsBucket + "/" + assetDir + "/";
       if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
-          obj.invoiceDoc = s3Path + invoiceDoc.filename;
+          obj.invoiceDoc = s3Path + item.invoiceDoc.filename;
       if(s3Path && item.rcDoc && item.rcDoc.filename)
-          obj.invoiceDoc = s3Path + rcDoc.filename;
+          obj.invoiceDoc = s3Path + item.rcDoc.filename;
 
       dataArr[dataArr.length] = obj;
 

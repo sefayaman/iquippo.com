@@ -147,13 +147,14 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     return Auth.isAdmin() && editMode && EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status) > 6;
   }
 
-  function editEnterpriseField(){
+  function editEnterpriseField(fieldName){
 
     var validRole = Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser();
-    var validStatuses = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
+    var editableFields = ['customerTransactionId','assetDescription','engineNo','chassisNo','registrationNo','serialNo','yearOfManufacturing','yardParked','country','state','city','contactPerson','contactPersonTelNo','nameOfCustomerSeeking','rcDoc','invoiceDoc','updatebutton'];
+    var validStatuses = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[6]];
     if(validRole && !editMode)
       return true;
-    else if(validRole && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
+    else if(validRole && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1 && editableFields.indexOf(fieldName) !== -1)
       return true
     else
       return false;
@@ -265,7 +266,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       });
     }
 
-    function addOrUpdateRequest(form) {
+    function addOrUpdateRequest(form,formFlag) {
       if(form.$invalid){
           form.submitted = true;
           return;
@@ -273,9 +274,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       form.submitted = false;
 
       if(!$scope.isEdit)
-        save();
+        save(formFlag);
       else 
-        update();
+        update(formFlag);
     }
 
     function save() {
@@ -296,8 +297,8 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         })
     }
 
-    function update() {
-      setData();
+    function update(formFlag) {
+      setData(formFlag);
       var serData = {
         data:vm.enterpriseValuation,
         user:Auth.getCurrentUser()
@@ -322,42 +323,50 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
      
     }
 
-    function setData(){
+    function setData(formFlag){
 
-       vm.enterprises.forEach(function(item){
-        if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
-          vm.enterpriseValuation.enterprise._id = item._id;
-          vm.enterpriseValuation.enterprise.mobile = item.mobile;
-          vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
-          vm.enterpriseValuation.enterprise.email = item.email;
-          vm.enterpriseValuation.enterprise.employeeCode = item.employeeCode;
-          //vm.enterpriseValuation.enterprise.legalEntityName = (item.company || "");
-        }
+      switch(formFlag){
+        
+        case 'enterpriseform':
+          vm.enterprises.forEach(function(item){
+          if(item.enterpriseId == vm.enterpriseValuation.enterprise.enterpriseId){
+            vm.enterpriseValuation.enterprise._id = item._id;
+            vm.enterpriseValuation.enterprise.mobile = item.mobile;
+            vm.enterpriseValuation.enterprise.name = item.fname + " " + item.lname;
+            vm.enterpriseValuation.enterprise.email = item.email;
+            vm.enterpriseValuation.enterprise.employeeCode = item.employeeCode;
+            //vm.enterpriseValuation.enterprise.legalEntityName = (item.company || "");
+          }
 
-      });
+        });
 
-      vm.valAgencies.forEach(function(item){
-        if(item.partnerId == vm.enterpriseValuation.agency.partnerId){
-          vm.enterpriseValuation.agency._id = item._id;
-          vm.enterpriseValuation.agency.name = item.name;
-          vm.enterpriseValuation.agency.mobile = item.mobile;
-          vm.enterpriseValuation.agency.email = item.email;
-        }
+        vm.valAgencies.forEach(function(item){
+          if(item.partnerId == vm.enterpriseValuation.agency.partnerId){
+            vm.enterpriseValuation.agency._id = item._id;
+            vm.enterpriseValuation.agency.name = item.name;
+            vm.enterpriseValuation.agency.mobile = item.mobile;
+            vm.enterpriseValuation.agency.email = item.email;
+          }
 
-      });
+        });
 
-      if(editMode && (Auth.isPartner() || Auth.isAdmin())){
-        var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
-        if(statusIndex > 1 && statusIndex < 6 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
-          EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[6]);
+        vm.assetCategoryList.forEach(function(item){
+          if(item.assetCategory && item.assetCategory === vm.enterpriseValuation.assetCategory){
+            vm.enterpriseValuation.valuerGroupId = item.valuerGroupId || "";
+            vm.enterpriseValuation.valuerAssetId = item.valuerAssetId || ""; 
+          }
+        });
+
+        break;
+        case 'agencyform':
+         if(editMode && (Auth.isPartner() || Auth.isAdmin())){
+            var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
+            if(statusIndex > 1 && statusIndex < 6 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
+              EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[6]);
+          }
+        break;
+
       }
-
-      vm.assetCategoryList.forEach(function(item){
-        if(item.assetCategory && item.assetCategory === vm.enterpriseValuation.assetCategory){
-          vm.enterpriseValuation.valuerGroupId = item.valuerGroupId || "";
-          vm.enterpriseValuation.valuerAssetId = item.valuerAssetId || ""; 
-        }
-      });
         
     }
 

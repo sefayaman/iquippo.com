@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSvc){
+function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSvc,ValuationCancellationSvc){
   var entSvc = {};
   var enterprise = null;
 
@@ -22,6 +22,8 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
   entSvc.updateInvoice = updateInvoice;
   entSvc.generateinvoice = generateinvoice;
   entSvc.submitToAgency = submitToAgency;
+  entSvc.getCancellationFee = getCancellationFee;
+  entSvc.cancelEnterprise = cancelEnterprise;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
@@ -79,6 +81,59 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         });
     }
 
+    function getCancellationFee(entReq){
+      var apiUrl = "http://13.126.19.255/valuation/api.php?type=statuscheck";
+      if(DevEnvironment)
+        apiUrl = "";
+       var enableRemote = false;
+      var deferred = $q.defer();
+      var isReqSubmitted = EnterpriseValuationStatuses.indexOf(entReq.status) > 1 && entReq.jobId && enableRemote;
+      if(isReqSubmitted){
+        $http.get(apiUrl + "&uniqueControlNo=" + entReq.uniqueControlNo + "&jobID" + entReq.jobId)
+        .then(function(res){
+          if(res.status)
+            getFee(res.status);
+          else
+            getFee(entReq.status);                
+        })
+        .catch(function(err){
+          getFee(entReq.status); 
+        });
+      }else{
+        getFee(entReq.status);        
+      }
+
+      function getFee(status){
+        filter.status = entReq.status;
+        ValuationCancellationSvc,get(filter)
+        .then(function(res){
+          if(res.data.length)
+            deferred.resolve(res.data[0]);
+          else
+            deferred.reject({data:"Cancellation fee not found.Please contact support team."});     
+        })
+        .catch(function(err){
+          deferred.reject({data:"Unable to find cancellation fee.Please contact support team."});
+        })
+      }
+
+      return deferred.promise;
+    }
+
+    function cancelEnterprise(valReq,cencellationFee){
+      var dataToSend = {_id:valReq._id};
+      dataToSend.uniqueControlNo = valReq.uniqueControlNo;
+      dataToSend.jobId = valReq.jobId;
+      dataToSend.cancellationFee = cencellationFee;
+      $http.post(path + "/cancel",dataToSend)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        throw err;
+      });
+
+    }
 
     function save(data){
       var deferred = $q.defer();
@@ -125,7 +180,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
         data.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. - ' + reqData.uniqueControlNo;
         dataToSend.status = "submitted";
       }
-      if(reqData.status === EnterpriseValuationStatuses[4]) {
+      if(reqData.status === EnterpriseValuationStatuses[6]) {
         data.cc = reqData.enterprise.email;
         data.subject = 'Valuation Report as an attachment for Unique Control No. - ' + reqData.uniqueControlNo;
         dataToSend.assetDir = reqData.assetDir;
@@ -138,7 +193,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       dataToSend.name = reqData.createdBy.name;
       dataToSend.requestType = reqData.requestType;
       dataToSend.serverPath = serverPath;
-      if(reqData.status === EnterpriseValuationStatuses[4])
+      if(reqData.status === EnterpriseValuationStatuses[6])
         notificationSvc.sendNotification('ValuationReportSubmission', data, dataToSend,'email');
       else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]) {
         var approverUsers = [];
@@ -327,7 +382,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
       if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
           obj.invoiceDoc = s3Path + invoiceDoc.filename;
       if(s3Path && item.rcDoc && item.rcDoc.filename)
-          obj.invoiceDoc = s3Path + rcDoc.filename;
+          obj.rcDoc = s3Path + rcDoc.filename;
       dataArr[dataArr.length] = obj;
     });
 

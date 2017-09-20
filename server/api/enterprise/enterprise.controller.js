@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
+var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
 
@@ -21,7 +22,8 @@ var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.
 var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
 var AssetGroupModel = require('./assetgroup.model');
-var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
+var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection In Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+//var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var validRequestType = ['Valuation','Inspection'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
@@ -799,7 +801,7 @@ exports.bulkUpload = function(req, res) {
             emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. - ' + reqData.uniqueControlNo;
             tplData.status = "submitted";
           }
-          if(reqData.status === EnterpriseValuationStatuses[4]) {
+          if(reqData.status === EnterpriseValuationStatuses[6]) {
             tmplName = VALUATION_REPORT_SUBMISSION;
             emailData.cc = reqData.enterprise.email;
             emailData.subject = 'Valuation Report as an attachment for Unique Control No. - ' + reqData.uniqueControlNo;
@@ -812,7 +814,7 @@ exports.bulkUpload = function(req, res) {
           tplData.uniqueControlNo = reqData.uniqueControlNo;
           tplData.name = reqData.createdBy.name;
           tplData.requestType = reqData.requestType;
-          if(reqData.status === EnterpriseValuationStatuses[4]) {
+          if(reqData.status === EnterpriseValuationStatuses[6]) {
             sendMail(tplData, emailData, tmplName);
           } else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]){
             var approverUsers = [];
@@ -1000,7 +1002,7 @@ exports.bulkModify = function(req, res) {
 
         
         var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
-        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5]];
         
         row.valData = result[0];
         if(updateType == 'agency'){
@@ -1249,11 +1251,11 @@ exports.bulkModify = function(req, res) {
       delete row.valData;
       if(updateType == 'agency'){
         row.reportSubmissionDate = new Date();
-        row.status = EnterpriseValuationStatuses[4];
+        row.status = EnterpriseValuationStatuses[6];
         row.statuses = valReq.statuses;
         row.statuses.push({
             createdAt : new Date(),
-            status : EnterpriseValuationStatuses[4],
+            status : EnterpriseValuationStatuses[6],
             userId : user._id
         });
 
@@ -1310,15 +1312,22 @@ exports.update = function(req, res) {
   
   var bodyData = req.body.data;
   var user = req.body.user;
-
   if(bodyData._id) { delete bodyData._id; }
+  bodyData.updatedAt = new Date();
+
+  EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
+      if (err) { return handleError(res, err); }
+      return res.status(200).send("Enterprise valuation updated sucessfully");
+  });
+
+  /*if(bodyData._id) { delete bodyData._id; }
   bodyData.updatedAt = new Date();
   EnterpriseValuation.findById(req.params.id, function (err, enterprise) {
     if (err) { return handleError(res, err); }
     if(!enterprise) { return res.status(404).send('Not Found'); }
 
     var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
-    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
+    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5]];
     if(user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId)
       return update();
     else if(user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)
@@ -1330,7 +1339,7 @@ exports.update = function(req, res) {
   });
 
   function update(){
-    if(bodyData.status === EnterpriseValuationStatuses[4]){
+    if(bodyData.status === EnterpriseValuationStatuses[6]){
       bodyData.reportDate = new Date()
       bodyData.reportSubmissionDate = new Date();
     }
@@ -1338,8 +1347,137 @@ exports.update = function(req, res) {
         if (err) { return handleError(res, err); }
         return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
     });
-  }
+  }*/
 };
+
+exports.validateUpdate = function(req,res){
+  
+  var user = req.body.user;
+  var bodyData = req.body.data;
+  var updateType = req.body.updateType;
+  var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[6]];
+  var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[4],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
+  EnterpriseValuation.findById(req.params.id,function(err,enterprise){
+    if (err) { return handleError(res, err); }
+    if(!enterprise) { return res.status(404).send('Not Found'); }
+    req.enterprise = enterprise;
+    if(updateType === 'agency'){
+      if(user.role == 'admin' || (user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)){
+        if(bodyData.status === EnterpriseValuationStatuses[6]){
+          bodyData.reportDate = new Date();
+          bodyData.reportSubmissionDate = new Date();
+        }
+        return next();
+      }else
+        return res.status(401).send('User does not have privilege to update record');  
+    }else if(updateType === 'enterprise'){
+      if(user.role === 'admin' || (user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId))
+        return next();
+      else
+        return res.status(401).send('User does not have privilege to update record !!!'); 
+
+    }else
+      return res.status(400).send('Invalid update request !!!');
+
+  });
+}
+
+exports.updateAtAgency = function(req,res){
+  if(req.body.updateType === 'agency')
+    return next();
+  var bodyData = req.body.data;
+  bodyData.auditLogs = [req.enterprise];
+  if([EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[6]].indexOf(req.enterprise.status) == -1 || !req.body.jobId)
+    return next();
+
+  var FIELD_MAP = fieldsConfig.ENTERPRISE_UPDATABLE;
+  var servObj = {};
+  var keys = Object.keys(FIELD_MAP);
+  keys.forEach(function(key){
+    servObj[key] = _.get(req.body,FIELD_MAP[key],"");
+  });
+  var s3Path = "";
+  if(req.body.assetDir)
+    s3Path = config.awsUrl + config.awsBucket + "/" + assetDir + "/";
+  if(s3Path && req.body.invoiceDoc&& req.body.invoiceDoc.filename)
+      servObj.invoiceDoc = s3Path + req.body.invoiceDoc.filename;
+  if(s3Path && req.body.rcDoc && req.body.rcDoc.filename)
+      servObj.invoiceDoc = s3Path + req.body.rcDoc.filename;
+
+   request({
+        url: config.qpvalURL,
+        method: "POST",
+        json: true, 
+        body: [servObj]
+    }, function (error, response, body){
+      if(response.statusCode == 200){
+        if(bodyData.status !== EnterpriseValuationStatuses[2])
+          bodyData.status = EnterpriseValuationStatuses[2];
+        return next();
+      }else{
+        return res.status(412).send("Unable to process request.Please contact support team !!!");
+      }
+
+    });
+}
+
+exports.cancelRequest = function(req,res){
+  
+  var bodyData = req.body;
+  if(!bodyData._id)
+    return res.status(400).send("Invalid cancel request !!!");
+  if(req.user.role == 'admin')
+    return cancelRequestAtQVAPL();
+
+  EnterpriseValuation.findById(bodyData._id,function(err,entReq){
+    if(err) return handleError(res, err);
+    if(!entReq)
+      return res.status(404).send("Valuation request not found !!!");
+    if(entReq.enterprise.enterpriseId === req.user.enterpriseId)
+      cancelRequestAtQVAPL();
+    else
+      return res.status(401).send("Invalid cancel request !!!");
+  });
+
+  function cancelRequestAtQVAPL(){
+    if(!bodyData.jobId)
+      return update();
+
+    var serverData = {action:"cancel"};
+    serverData.uniqueControlNo = bodyData.uniqueControlNo;
+    serverData.jobId = bodyData.jobId;
+    serverData.cancellationFee = bodyData.cancellationFee || 0; 
+    request({
+        url: config.qpvalURL,
+        method: "POST",
+        json: true, 
+        body: [serverData]
+    }, function (error, response, body){
+      if(response.statusCode == 200){
+          update();
+      }else{
+        return res.status(412).send("Unable to cancel request.Please contact support team");
+      }
+
+    });
+  }
+
+  function update(){
+    var updateData = {};
+    updateData.cancelled = true;
+    updateData.cancellationFee = bodyData.cancellationFee || 0; 
+    updateData.cancelledBy = {
+      userId:req.user._id,
+      name:req.user.fname || "" + " " + req.user.lname || "",
+      createdAt : new Date() 
+    }
+    EnterpriseValuation.update({_id:bodyData._id},{$set:updateData},function(err,retVal){
+      if(err) return handleError(res, err);
+      return res.status(200).send("Valuation request cancelled successfully !!!");
+    }); 
+  }
+
+}
 
 exports.bulkUpdate = function(req,res){
   var dataArr = req.body;
@@ -1537,7 +1675,7 @@ exports.updateInvoice = function(req, res) {
   }
 };
 
-var parameters = {
+/*var REPORT_UPLOAD = {
   jobID:{key:"jobId",required:true},
   unique_controll_no:{key:"uniqueControlNo",required:true},
   reportNo:{key:"reportNo",required:true},
@@ -1562,22 +1700,39 @@ var parameters = {
   cabin_image_url:{key:"cabinImage",type:"file"},
   under_carriage_tyre_image_url:{key:"underCarriageImage",type:"file"},
   other_image_url:{key:"otherImage",type:"file"}
-}
+}*/
+
 
 exports.updateFromAgency = function(req,res){
-  
+  var validActions = ['reportupload','putonhold','reportupdate','statusupdate'];  
   var bodyData = req.body;
-   var generalCond = req.body.overallGeneralCondition;
-  if(generalCond){
-   var bufferObj = new Buffer(generalCond, 'base64');
-   req.body.overallGeneralCondition = bufferObj.toString('utf8');
-  }
-
+  var action = bodyData.action;
 
   var result = {};
   result['success'] = true;
   result['jobID'] = bodyData.jobID;
   result['unique_controll_no']= bodyData.unique_controll_no;
+
+  if(validActions.indexOf(action) === -1){
+    result['msg'] = "Invalid action";
+    return sendResponse();
+  }
+
+   var generalCond = req.body.overallGeneralCondition;
+  if(generalCond){
+   var bufferObj = new Buffer(generalCond, 'base64');
+   req.body.overallGeneralCondition = bufferObj.toString('utf8');
+  }
+  var parameters = null;
+  if(action == 'putonhold')
+    parameters = fieldsConfig.PUT_ON_HOLD;
+  else if(action == 'statusupdate')
+    parameters = fieldsConfig.STATUS_UPDATE;
+  else if(action == 'reportupdate')
+    parameters = fieldsConfig.REPORT_UPDATE;
+  else
+    parameters = fieldsConfig.REPORT_UPLOAD;
+
   var msg = validateRequest(bodyData);
   if(msg){
     result['msg'] = msg;
@@ -1593,7 +1748,7 @@ exports.updateFromAgency = function(req,res){
     }else
         update(valReq);      
 
-  })
+  });
 
   function update(valReq){
 
@@ -1608,28 +1763,47 @@ exports.updateFromAgency = function(req,res){
           valObj.filename = val;
           val = valObj;
          }
-        updateObj[parameters[key].key] = val;
-       
+         if(val)
+          updateObj[parameters[key].key] = val;
       });
 
-      updateObj.status = EnterpriseValuationStatuses[4];
-      updateObj.statuses = valReq.statuses;
-      updateObj.reportDate = new Date();
-      updateObj.reportSubmissionDate = new Date();
-      var stsObj = {};
-      stsObj.createdAt = new Date();
-      stsObj.userId = "IQVL";
-      stsObj.status = EnterpriseValuationStatuses[4];
-      if(updateObj.statuses)
-        updateObj.statuses[updateObj.statuses.length] = stsObj;
+      if(action === 'putonhold'){
+        updateObj.onHold = true;
+        updateObj.onHoldDate = new Date();
+      }else if(action === 'statusupdate'){
+        
+        if([EnterpriseValuationStatuses[4],EnterpriseValuationStatuses[5]].indexOf(updateObj.status) === -1){
+          result['msg'] = "Invalid status update";
+          return sendResponse();
+        }
+        updateObj.statuses = valReq.statuses;
+        var stsObj = {};
+        stsObj.createdAt = new Date();
+        stsObj.userId = "IQVL";
+        stsObj.status = updateObj.status;
+        if(updateObj.statuses)
+          updateObj.statuses[updateObj.statuses.length] = stsObj;
 
-       //return sendResponse();
+      }else{
+        updateObj.status = EnterpriseValuationStatuses[6];
+        updateObj.statuses = valReq.statuses;
+        updateObj.reportDate = new Date();
+        updateObj.reportSubmissionDate = new Date();
+        var stsObj = {};
+        stsObj.createdAt = new Date();
+        stsObj.userId = "IQVL";
+        stsObj.status = EnterpriseValuationStatuses[6];
+        if(updateObj.statuses)
+          updateObj.statuses[updateObj.statuses.length] = stsObj;
+      }
+
       EnterpriseValuation.update({_id:valReq._id},{$set:updateObj},function(err){
           if(err){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
           }
-          pushNotification(valReq);
+          if(action === 'reportupload')
+            pushNotification(valReq);
           return sendResponse();
       });
   }
