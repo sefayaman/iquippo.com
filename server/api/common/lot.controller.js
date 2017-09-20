@@ -68,6 +68,25 @@ exports.updateLotData = function(req, res) {
 
 };
 
+exports.updateProductLotData = function(req, res) {
+  
+    req.body.updatedAt = new Date();
+    console.log("-----++++");
+    delete req.body._id;
+    Lot.update({
+      auctionId: req.params.id
+    }, {
+      $set: req.body
+    }, function(err) {
+      if (err) {
+        res.status(err.status || 500).send(err);
+      }
+      //Util.sendLotData(req.body);
+      return res.status(200).json(req.body);
+    });
+  
+  };
+
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
