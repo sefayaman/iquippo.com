@@ -592,75 +592,7 @@
 
             <div class="panel panel-default">
               <div class="panel-body">
-                <div class="row panel-group">
-                  <div class="col-sm-3">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">Start price</div>
-                      <div class="panel-body">
-                        <i class="fa fa-inr"></i> 200.00
-                      </div>                
-                    </div>
-                    <div class="panel panel-default">
-                      <div class="panel-heading">Current Bid</div>
-                      <div class="panel-body">
-                        <i class="fa fa-inr"></i> 208.00
-                      </div>                
-                    </div>
-                  </div>
-                  <div class="col-sm-6 padd-left padd-right">
-                    <div class="panel panel-default">
-                      <div class="panel-body">
-                        <h4 class="text-center">Time left</h4>
-                        <timer>
-                          <div class="countdown-time">
-                            <ul class="countdown-widgit">
-                              <li class="item"><i class="day">{{days}} <span>Day</span></i></li>
-                              <li class="item"><i class="hour">{{hours}}<span>Hrs</span></i></li>
-                              <li class="item"><i class="minute">{{minutes}}<span>Mins</span></i></li>
-                              <li class="item"><i class="second">{{seconds}}<span>Secs</span></i></li>
-                            </ul>
-                          </div>
-                        </timer>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                        Next Bid
-                      </div>
-                      <div class="panel-body">
-                        <p><i class="fa fa-inr"></i> 208 or More </p>   
-                        <button type="button" class="btn btn-primary btn-block">Bid History</button>              
-                      </div>                
-                    </div>
-                  </div>
-                </div>
-                <div class="panel-group">
-                  <div class="panel panel-default">
-                    <div class="panel-body">
-                      <form novalidate="" name="negotiations">
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <h5>
-                              Make an Offer
-                            </h5>
-                          </div>
-                          <div class="col-sm-6 padd-left padd-right">
-                            <div ng-class="{'has-error': negotiations.amount.$invalid &amp;&amp; negotiationSubmitted}">
-                              <input type="number" min="0" name="amount" class="form-control" placeholder="Enter Offer" required="">
-                            </div>
-                          </div>
-                          <div class="col-sm-3 text-right">
-                            <div>
-                              <a href="javascript:void(0);" class="btn btn-warning btn-block">Submit Bid</a>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
+                <iframe src="http://auctionsoftwaremarketplace.com:3007/new-html/timer-website/demo/widget.html" style="width: 100%; height: 300px; border: 1px solid #eee;"></iframe>
               </div>
             </div>
     
