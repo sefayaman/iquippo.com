@@ -19,7 +19,7 @@ module.exports = {
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             //'mongodb://localhost/sreiglobaldb'
-            'mongodb://appUser:IquippoAppUser@#$%^23456@localhost/sreiglobaldb'
+            'mongodb://appUser:iQuippoAppUser^*$!2K17@localhost/sreiglobaldb'
             /*commented by J.K 'mongodb://uatdb1.iquippo.com,uatdb2.iquippo.com,uatdb3.iquippo.com/sreiglobaldb' */
   },
   uploadPath: "./../public/assets/uploads/",
