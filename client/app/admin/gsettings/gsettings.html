@@ -386,10 +386,10 @@
 						<div class="col-sm-3 form-group">
 							Auction Type
 							<div class="row">
-								<div class="col-xs-6">
+								<div class="col-xs-5">
 									<input type="radio" id="inlineRadio1" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="L"> Live Auction
 								</div>
-								<div class="col-xs-6">
+								<div class="col-xs-7">
 									<input type="radio" id="inlineRadio2" name="auctionType" ng-model="gsettingVm.auctionData.auctionType" value="A"> On-Line Auction
 								</div>
 							</div>
@@ -423,26 +423,26 @@
 							Bid Increment
 							<div class="row">
 								<div class="col-xs-6">
-									<input type="radio" name="bidIncrement" ng-model="gsettingVm.auctionData.bidIncrement" value="S"> Static
+									<input type="radio" name="bidIncrementType" ng-model="gsettingVm.auctionData.bidIncrementType" value="S"> Static
 								</div>
 								<div class="col-xs-6">
-									<input type="radio" name="bidIncrement" ng-model="gsettingVm.auctionData.bidIncrement" value="R"> Range Wise
+									<input type="radio" name="bidIncrementType" ng-model="gsettingVm.auctionData.bidIncrementType" value="R"> Range Wise
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-3 form-group">
-							<input type="text" class="form-control" name="" value="" placeholder="Bid Increment Amount" ng-if="gsettingVm.auctionData.bidIncrement == 'S'">
-							<div class="row" ng-if="gsettingVm.auctionData.bidIncrement == 'R'">
+							<input type="text" class="form-control" ng-model="gsettingVm.auctionData.bidIncrement" name="" value="" placeholder="Bid Increment Amount" ng-if="gsettingVm.auctionData.bidIncrementType == 'S'">
+							<div class="row" ng-if="gsettingVm.auctionData.bidIncrementType == 'R'">
 								<div class="col-sm-6">
-									<select class="form-control">
-										<option>Select range</option>
+									<select ng-model="gsettingVm.auctionData.bidIncrementRange" class="form-control">
+										<option value="">Select range</option>
 										<option>1-2</option>
 										<option>2-3</option>
 										<option>3-4</option>
 									</select>
 								</div>
 								<div class="col-sm-6">
-									<input type="text" class="form-control" name="" value="" placeholder="Bid Increment">
+									<input type="text" class="form-control" ng-model="gsettingVm.auctionData.bidIncrement" name="" value="" placeholder="Bid Increment">
 								</div>
 							</div>
 						</div>
