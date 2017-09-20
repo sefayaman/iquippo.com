@@ -952,6 +952,24 @@ div#jivo_close_button{position: absolute; right: -20px;}
     text-align: center;
     color: #555;
 }
+.fixed-button {
+    position: fixed;
+    z-index: 9999;
+    bottom: 200px;
+    right: 0px;
+}
+.open-btn {
+    border: 2px solid #e3000f;
+    border-radius: 32px;
+    background: white;
+    color: #e3000f !important;
+    display: inline-block;
+    margin: 10px 0 0;
+    padding: 9px 16px;
+    font-size: 31px;
+    text-decoration: none !important;
+    text-transform: uppercase;
+}
 .online-room .online-tb table tr td.onln-tit {
     text-align: center;
     font-size: 20px;
