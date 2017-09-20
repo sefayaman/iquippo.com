@@ -952,6 +952,45 @@ div#jivo_close_button{position: absolute; right: -20px;}
     text-align: center;
     color: #555;
 }
+.fixed-button {
+    position: fixed;
+    z-index: 9999;
+    bottom: 200px;
+    right: 0px;
+}
+.open-btn {
+    border: 2px solid #e3000f;
+    border-radius: 32px;
+    background: white;
+    color: #e3000f !important;
+    display: inline-block;
+    margin: 10px 0 0;
+    padding: 9px 16px;
+    font-size: 31px;
+    text-decoration: none !important;
+    text-transform: uppercase;
+}
+.popup-box-on {
+    display: block !important;
+    z-index: 9999999;
+    background: #004394;
+}
+#sidebar_secondary {
+    background-attachment: fixed;
+    background-clip: border-box;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url(https://scontent.fixc1-1.fna.fbcdn.net/v/t1.0-9/12670232_624826600991767_3547881030871377118_n.jpg?oh=92b8b3e…&oe=57CC10E7);
+    background-origin: padding-box;
+    background-position: center top;
+    background-repeat: repeat;
+    border: 1px solid #304445;
+    bottom: 0;
+    display: none;
+    height: 466px;
+    position: fixed;
+    right: 70px;
+    width: 300px;
+}
 .online-room .online-tb table tr td.onln-tit {
     text-align: center;
     font-size: 20px;

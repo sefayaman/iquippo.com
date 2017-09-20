@@ -517,7 +517,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }) 
     }
     
-    function saveAuctionMaster(data){
+    function saveAuctionMaster(data){console.log("data======",data);
       return $http.post(path + "/save", data)
         .then(function(res){
           return res.data;
