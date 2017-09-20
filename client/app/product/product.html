@@ -1020,7 +1020,7 @@
           </div>
         </div>
 
-        <div class="row" ng-if="isCustomer()">
+       <!-- <div class="row" ng-if="isCustomer()">
           <div class="col-sm-5 form-group">
             EMD Tax Type 
           </div>
@@ -1032,9 +1032,9 @@
                 <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="lotwise"> lotwise
               </div>
           </div>
-        </div>
-        <div ng-if="isCustomer()">
-          <div class="row" ng-if="lot.emdTax === 'overall'">
+        </div>-->
+        <div>
+          <div class="row">
             <div class="form-group col-sm-5">EMD Amount </div>
             <div class="form-group col-sm-7">
               <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
@@ -1124,7 +1124,7 @@
           </div>
           <div class="col-sm-7 form-group">
             <div class="input-group">
-              <input class="form-control" id="startdate" name="startdate" ng-model="lot.startdate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
+              <input class="form-control" id="startdate" name="startdate" ng-model="lot.startdateauction" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
               <label for="startdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
@@ -1137,7 +1137,7 @@
           </div>
           <div class="col-sm-7 form-group">
             <div class="input-group">
-              <input class="form-control" id="enddate" name="repoDate" ng-model="lot.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
+              <input class="form-control" id="enddate" name="repoDate" ng-model="lot.endDateaucion" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
               <label for="enddate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
@@ -1147,7 +1147,7 @@
           <div class="form-group col-sm-5">Last Minute Bid  <span class="text-warning">*</span></div>
             <div class="form-group col-sm-7" ng-class="{'has-error': form.lastMintBid.$invalid && submitted}">
          
-              <input type="text" placeholder="Last Mint Bid" ng-value="product.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
+              <input type="text" placeholder="Last Mint Bid" ng-value="lot.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
        
             </div>
          </div>
@@ -1155,7 +1155,7 @@
         <div class="row" ng-if="isCustomer()">
           <div class="form-group col-sm-5">Extended To<span class="text-warning">*</span></div>
             <div class="form-group col-sm-7" ng-class="{'has-error': form.extendedTo.$invalid && submitted}">
-             <input type="text" placeholder="Extended To" ng-value="product.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
+             <input type="text" placeholder="Extended To" ng-value="lot.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
           </div> 
         </div>
         <div class="row">

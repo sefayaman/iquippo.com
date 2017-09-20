@@ -1084,9 +1084,7 @@ exports.getFilterOnAuctionMaster = function(req, res) {
   }
   else if(req.body.auctionType === 'S') {
     //var currentDate = new Date();
-    filter.endDate={
-    '$gt': currentDate
-    };
+  
    filter.auctionType="S";
     
   }
@@ -1299,30 +1297,32 @@ exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
   console.log("fhghg",queryObj);
-  if (req.body._id)
-    filter._id = req.body._id;
+        if (req.body._id){
+        filter._id = req.body._id;
+        }
 
-  if (queryObj.yetToStartDate){
-     filter.endDate={
+        if (queryObj.yetToStartDate){
+        filter.endDate={
         '$gt': new Date()
-      };
-  
-      filter.auctionType = {'$ne':"S"};
-   }
-   /* filter['startDate'] = {
-      '$gt': new Date()
-    }*/
+        };
+
+        filter.auctionType = {'$ne':"S"};
+        }
 
 
+        if(req.query.auctionId){
+        filter.auctionId = req.query.auctionId;
+        console.log("filter.auctionId",filter.auctionId);
+        }
 
-    if(req.query.auctionId){
-      filter.auctionId = req.query.auctionId;
-      console.log("filter.auctionId",filter.auctionId);
-      }
-    
-    if(queryObj.dbauctionId){
-      filter._id=queryObj.dbauctionId;
-    }
+        if(req.query._id){
+        filter._id = req.query._id;
+        console.log("filter._id",filter);
+        }
+
+        if(queryObj.dbauctionId){
+        filter._id=queryObj.dbauctionId;
+        }
 
 
   var query = AuctionMaster.find(filter).sort({
@@ -1333,6 +1333,8 @@ exports.getAuctionMaster = function(req, res) {
       console.log("err", err);
       return handleError(res, err);
     }
+
+    console.log("auctions",auctions);
     return res.status(200).json(auctions);
   });
 }
