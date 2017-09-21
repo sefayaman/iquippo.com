@@ -1002,14 +1002,14 @@
           
 
             <div class="row" ng-if="!isExpire">
-            <div class="form-group col-sm-5">Auction</div>
-            <div>
-                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
-                  <option value="">Select Date</option>
-                  <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
-                </select>
-                <i class="caret"></i>
-            </div>
+              <div class="form-group col-sm-5">Auction</div>
+              <div class="col-sm-7 form-group">
+                  <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
+                    <option value="">Select Date</option>
+                    <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
+                  </select>
+                  <i class="caret"></i>
+              </div>
               
             </div>
         </div>
@@ -1020,7 +1020,7 @@
           </div>
         </div>
 
-        <div class="row" ng-if="isCustomer()">
+       <!-- <div class="row" ng-if="isCustomer()">
           <div class="col-sm-5 form-group">
             EMD Tax Type 
           </div>
@@ -1032,15 +1032,13 @@
                 <input type="radio" name="emdTax"  ng-model="lot.emdTax" value="lotwise"> lotwise
               </div>
           </div>
-        </div>
-        <div ng-if="isCustomer()">
-          <div class="row" ng-if="lot.emdTax === 'overall'">
+        </div>-->
+          <div class="row">
             <div class="form-group col-sm-5">EMD Amount </div>
             <div class="form-group col-sm-7">
               <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
             </div>
            </div>
-        </div>
          
         <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
@@ -1076,46 +1074,67 @@
           </div>
         </div>  
        
-         <div class="row" ng-if="isCustomer() || isAdmin()">
-            <div class="col-sm-5 form-group">
-              Bid Increment
-            </div>
-            <div class="col-sm-7 form-group">
-              <!-- <input type="text" class="form-control" name="bidIncrement" ng-model="lot.bidIncrement" value="" placeholder="Bid Increment"> -->
-              <div class="row">
-                <div class="col-sm-3">
-                  <input type="radio" name="bidIncrement" ng-model="lot.bidIncrement" value="S"> Static
-                </div>
-                <div class="col-sm-3">
-                  <input type="radio" name="bidIncrement" ng-model="lot.bidIncrement" value="R"> Range Wise
-                </div>
+        <!-- <div class="row" ng-if="isCustomer() || isAdmin()">
+          <div class="col-sm-5 form-group">
+            Bid Increment
+          </div>
+          <div class="col-sm-7 form-group">
+            <div class="row">
+              <div class="col-sm-3">
+                <input type="radio" name="bidIncrement" ng-model="lot.bidIncrement" value="S"> Static
+              </div>
+              <div class="col-sm-3">
+                <input type="radio" name="bidIncrement" ng-model="lot.bidIncrement" value="R"> Range Wise
               </div>
             </div>
           </div>
-          <div class="row" ng-if="lot.bidIncrement == 'S'">
-            <div class="col-sm-5">Static</div>
-            <div class="col-sm-7 form-group">
-              <input type="text" class="form-control" name="" value="" placeholder="Bid Increment Amount">
-            </div>
+        </div>
+        <div class="row" ng-if="lot.bidIncrement == 'S'">
+          <div class="col-sm-5">Static</div>
+          <div class="col-sm-7 form-group">
+            <input type="text" class="form-control" name="" value="" placeholder="Bid Increment Amount">
           </div>
-          <div class="row" ng-if="lot.bidIncrement == 'R'">
-            <div class="col-sm-5">Range Wise</div>
-            <div class="col-sm-7 form-group">
-              <div class="row">
+        </div>
+        <div class="row" ng-if="lot.bidIncrement == 'R'">
+          <div class="col-sm-5">Range Wise</div>
+          <div class="col-sm-7 form-group">
+            <div class="row">
+              <div class="col-sm-6">
+                  <select class="form-control">
+                    <option>Select range</option>
+                    <option>1-2</option>
+                    <option>2-3</option>
+                    <option>3-4</option>
+                  </select>
+                </div>
                 <div class="col-sm-6">
-                    <select class="form-control">
-                      <option>Select range</option>
-                      <option>1-2</option>
-                      <option>2-3</option>
-                      <option>3-4</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="text" class="form-control" name="" value="" placeholder="Bid Increment">
-                  </div>
+                  <input type="text" class="form-control" name="" value="" placeholder="Bid Increment">
+                </div>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="row">
+          <div class="col-sm-5 form-group">
+            Bid Increment
+          </div>
+          <div class="col-sm-7">
+            <div class="row">
+              <div class="col-sm-3 form-group">
+                <input type="text" class="form-control" name="" value="" placeholder="Bid From">
+              </div>
+              <div class="col-sm-3 form-group">
+                <input type="text" class="form-control" name="" value="" placeholder="Bid To">
+              </div>
+              <div class="col-sm-3 form-group">
+                <input type="text" class="form-control" name="" value="" placeholder="Increment">
+              </div>
+              <div class="col-sm-3 form-group ">
+                <button type="button" class="btn btn-default">Add More</button>
               </div>
             </div>
           </div>
+        </div>
       
 
          <div class="row" ng-if="isCustomer()">
@@ -1124,7 +1143,7 @@
           </div>
           <div class="col-sm-7 form-group">
             <div class="input-group">
-              <input class="form-control" id="startdate" name="startdate" ng-model="lot.startdate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
+              <input class="form-control" id="startdate" name="startdate" ng-model="lot.startdateauction" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date of Auction" />
               <label for="startdate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
@@ -1137,7 +1156,7 @@
           </div>
           <div class="col-sm-7 form-group">
             <div class="input-group">
-              <input class="form-control" id="enddate" name="repoDate" ng-model="lot.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
+              <input class="form-control" id="enddate" name="repoDate" ng-model="lot.endDateaucion" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date of Auction" />
               <label for="enddate" class="input-group-addon"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
@@ -1147,7 +1166,7 @@
           <div class="form-group col-sm-5">Last Minute Bid  <span class="text-warning">*</span></div>
             <div class="form-group col-sm-7" ng-class="{'has-error': form.lastMintBid.$invalid && submitted}">
          
-              <input type="text" placeholder="Last Mint Bid" ng-value="product.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
+              <input type="text" placeholder="Last Mint Bid" ng-value="lot.lastMintBid" ng-model="lot.lastMintBid" name="lastMintBid" class="form-control">
        
             </div>
          </div>
@@ -1155,7 +1174,7 @@
         <div class="row" ng-if="isCustomer()">
           <div class="form-group col-sm-5">Extended To<span class="text-warning">*</span></div>
             <div class="form-group col-sm-7" ng-class="{'has-error': form.extendedTo.$invalid && submitted}">
-             <input type="text" placeholder="Extended To" ng-value="product.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
+             <input type="text" placeholder="Extended To" ng-value="lot.extendedTo" ng-model="lot.extendedTo" name="extendedTo" class="form-control">
           </div> 
         </div>
         <div class="row">
