@@ -365,6 +365,7 @@ angular.module('sreizaoApp')
       .state('auctionlive', {
         url: '/liveauction',
         templateUrl: 'app/auction/liveauction.html',
+        controller:'LiveAuctionCtrl as liveAuctionVm',
         layout:'client'
       })
       .state('valuationrequests', {

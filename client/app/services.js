@@ -27,7 +27,40 @@
       }
     };
   })
-   .factory('AppStateSvc', function () {
+  .factory('socketSvc', function ($rootScope) {
+      var service = {};
+      service.getSocket = getSocket;
+  
+      function getSocket(url) {
+
+          var socket = {};
+          socket.connection  = io.connect(url);
+
+          socket.on = function(){
+            socket.connection.on(eventName, function () {  
+            var args = arguments;
+            $rootScope.$apply(function () {
+              callback.apply(socket.connection, args);
+            });
+          });
+          };
+
+          socket.emit = function(){
+            socket.connection.emit(eventName, function () {  
+              var args = arguments;
+              $rootScope.$apply(function () {
+              if (callback) {
+                callback.apply(socket.connection, args);
+                }
+              });
+            });
+          };
+          return socket;
+      }
+
+      return service;
+})
+.factory('AppStateSvc', function () {
     var appStateCache = {};
     var svc = {};
     svc.get = get;

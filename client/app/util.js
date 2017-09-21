@@ -24,35 +24,11 @@ $(document).ready(function () {
         }
 
     });
+
+   
+
 });
 
-    $(function(){
-$("#addClass").click(function () {
-url="http://auctionsoftwaremarketplace.com:3007/chat";
-  $.ajax({
-           type: 'post',
-            url: url,
-            async : false,
-             data : {'userid':$("#au_user_id").val(),'auctionid':$("#au_auction_id").val()},
-            success: function(data) {
-              console.log(data);
-               bb='<iframe src='+data.url+' width="100%" height="459px" style="border:none;"> ></iframe>';
-              $("#sidebar_secondary").html(bb);
-            $('#sidebar_secondary').addClass('popup-box-on');
-            },
-            error: function (http, message, exc) {
-                 
-                alert("Something went wrong.");
-            }
-        });
-
-
-  });
-
-  $("#removeClass").click(function () {
-$('#sidebar_secondary').removeClass('popup-box-on');
-  });
-});
  
 function setScroll(val){
 
