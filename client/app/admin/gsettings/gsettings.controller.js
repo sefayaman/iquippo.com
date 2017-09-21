@@ -133,7 +133,8 @@
         vm.updateProductTechInfo = updateProductTechInfo;
         vm.deleteProductTechInfo = deleteProductTechInfo;
         vm.productTechInfoTemplate = 'ProductTechInfoTemplate.xlsx';
-
+        vm.bidIncrementObj = {};
+        vm.getChangeAuctionMasterData = getChangeAuctionMasterData;
         function closeTechInfo() {
             return $scope.isTechCollapsed = !$scope.isTechCollapsed;
         }
@@ -839,7 +840,14 @@
             });
             if (vm.auctionData.docType)
                 vm.auctionData.docType = '';
-
+            if (vm.auctionData.bidIncrementType === "S"){
+                vm.auctionData.bidIncrement = {"static":vm.auctionData.bidIncrement};
+            }
+            if (vm.auctionData.bidIncrementType === "R"){
+                vm.bidIncrementObj[vm.auctionData.bidIncrementRange] = vm.auctionData.bidIncrement;
+                vm.auctionData.bidIncrement = vm.bidIncrementObj;
+                
+            }
             if (vm.auctionData.city)
                 vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
 
@@ -860,6 +868,16 @@
             if (vm.auctionData.docType === 'bidProxy'){
                 vm.auctionData.docNameProxy = vm.auctionData.docName;
                  vm.auctionData.docName = '';
+            }
+            //if(!vm.auctionData.bidIncrementRange) vm.auctionData.bidIncrementRange = '';
+            if (vm.auctionData.bidIncrement){
+                var range = Object.keys(vm.auctionData.bidIncrement);
+                if (vm.auctionData.bidIncrementType === "R"){
+                 vm.auctionData.bidIncrementRange = range[0];// Object.keys(vm.auctionData.bidIncrement);
+                }
+                var amount = Object.values(vm.auctionData.bidIncrement);
+                 vm.auctionData.bidIncrement = amount[0];//Object.values(vm.auctionData.bidIncrement);
+            
             }
             if (vm.auctionData.startDate)
                 vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
