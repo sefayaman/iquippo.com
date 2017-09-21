@@ -101,7 +101,7 @@
 			   			<th>Offer Status</th>
 			   			<th>Bid Status</th>
 			   			<th>Deal Status</th>
-			   			<th ng-if="isAdmin()">Asset Status</th>
+			   			<th>Asset Status</th>
 			   			<th>Action</th>
 			   		</tr>
 		   		</thead>
@@ -122,7 +122,7 @@
 			   			<td>{{product.offerStatus}}</td>
 			   			<td ng-if="!isFAgencyPartner()">{{product.bidStatus}}</td>
 			   			<td>{{product.dealStatus}}</td>
-			   			<td ng-if="isAdmin()">{{product.product.proData.assetStatus}}</td>
+			   			<td>{{product.product.proData.assetStatus}}</td>
 			   			<td>
 							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button>	
 			   			</td>
