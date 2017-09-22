@@ -27,7 +27,7 @@
       }
     };
   })
-  .factory('socketSvc', function ($rootScope) {
+  .factory('socketSvc',['$rootScope', function ($rootScope) {
       var service = {};
       service.getSocket = getSocket;
   
@@ -36,7 +36,7 @@
           var socket = {};
           socket.connection  = io.connect(url);
 
-          socket.on = function(){
+          /*socket.on = function(eventName){
             socket.connection.on(eventName, function () {  
             var args = arguments;
             $rootScope.$apply(function () {
@@ -45,7 +45,8 @@
           });
           };
 
-          socket.emit = function(){
+
+          socket.emit = function(eventName){
             socket.connection.emit(eventName, function () {  
               var args = arguments;
               $rootScope.$apply(function () {
@@ -54,12 +55,19 @@
                 }
               });
             });
-          };
+          };*/
+          socket.on=function(eventName,callback){
+            socket.connection.on(eventName,callback);
+          }
+          
+          socket.emit=function(eventName,data){
+            socket.connection.emit(eventName,data);
+          }
           return socket;
       }
 
       return service;
-})
+}])
 .factory('AppStateSvc', function () {
     var appStateCache = {};
     var svc = {};

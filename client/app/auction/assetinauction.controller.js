@@ -30,6 +30,7 @@
     vm.auctionTypeValue=$location.search().auctionTypeValue;
     vm.termAuction=$location.search().termAuction;
     $scope.openUrl = openUrl;
+    $scope.userId=Auth.getCurrentUser()._id;
     $scope.currentAuction ={};
     $scope.fetchAsset=fetchAsset;
     var temp = [];
