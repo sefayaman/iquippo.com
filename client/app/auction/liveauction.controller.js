@@ -3,16 +3,18 @@
 
 angular.module('sreizaoApp').controller('LiveAuctionCtrl', LiveAuctionCtrl);
 
-function LiveAuctionCtrl($scope, $http,socketSvc,AuctionSvc,$location) {
+function LiveAuctionCtrl($scope,$state, $http,socketSvc,AuctionSvc,$location) {
  $scope.chatStatus=false;
  $scope.chat=chat;
  var query=$location.search();
  var filter={};
   $scope.currentPrice=0;
  $scope.reservePrice=0; 
+ 
+ filter.auctionId=query.auctionId;
+ filter.lotId=query.lotNumber;
 
- filter.auctionId="Au2002";
- filter.lotId="126";
+ console.log("Params",filter);
  function init(){
  	AuctionSvc.liveAuctionRoomData(filter)
  	.then(function(res){

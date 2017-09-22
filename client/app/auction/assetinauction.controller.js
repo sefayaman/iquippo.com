@@ -33,6 +33,7 @@
     $scope.userId=Auth.getCurrentUser()._id;
     $scope.currentAuction ={};
     $scope.fetchAsset=fetchAsset;
+    $scope.liveAuctionView=liveAuctionView;
     var temp = [];
     //registering category brand functions
     vm.onCategoryChange=onCategoryChange;
@@ -305,7 +306,6 @@
                   /////
               });   
           }
-          setTimeout(function(){ fetchClassifiedBidPage(); }, 3000);
         });
 
   }
@@ -321,6 +321,13 @@
      if(err) throw err;
     });
   }
+
+   function liveAuctionView(lotNumber,auctionId){
+    console.log("auctionId",$scope.auctionId);
+    console.log("lotNumber",lotNumber);
+
+    $state.go('auctionlive',{"auctionId":auctionId,"lotNumber":lotNumber});
+   }
 
   $scope.today = function() {
     $scope.mfgyr = new Date();
