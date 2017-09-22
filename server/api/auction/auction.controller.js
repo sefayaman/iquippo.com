@@ -965,10 +965,29 @@ exports.createAuctionMaster = function(req, res) {
   })
 
 };
-
+exports.updateAuctionMasterproduct = function(req, res) {
+  var _id = req.body._id;
+  AuctionMaster.update({
+        _id: _id
+      }, {
+        $set: req.body
+      }, function(err) {
+            if (err) {
+              return handleError(res, err);
+            }
+            res.status(200).json({
+              errorCode: 0,
+              message: "Auction Data Successfully saved."
+            });
+         
+      });
+    
+  }
 // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
   var _id = req.body._id;
+
+  console.log("_id",_id);
   if (req.body._id) {
     delete req.body._id;
   }

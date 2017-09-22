@@ -21,6 +21,7 @@ router.get('/auctionmaster/get', controller.getAuctionMaster);
 router.get('/auctionmaster/auctiondetail', controller.auctiondetail);
 router.post('/auctionmaster/save', controller.createAuctionMaster);
 router.put('/auctionmaster/:id', controller.updateAuctionMaster);
+router.put('/auctionmasterproduct/:id', controller.updateAuctionMasterproduct);
 router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);

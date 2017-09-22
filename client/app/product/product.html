@@ -1041,6 +1041,9 @@
             </div>
            </div>
         </div>
+        <div class="row" ng-if="isCustomer()">
+          <input type="text" name="certification" class="form-control" ng-model="lot.cerification" placeholder="lot.cerification">
+        </div>
          
         <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
