@@ -461,20 +461,23 @@
 						</div>
 					</div>
 					<h5>Bid Increment</h5>
-					<div class="row">
+					<div class="row" ng-repeat="bidinfo in gsettingVm.auctionData.bidInfo">
 						<div class="col-sm-3 form-group">
-							<input type="text" class="form-control" name="" value="" placeholder="Bid From">
+							<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="" value="" placeholder="Bid From">
 						</div>
 						<div class="col-sm-3 form-group">
-							<input type="text" class="form-control" name="" value="" placeholder="Bid To">
+							<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
 						</div>
 						<div class="col-sm-3 form-group">
-							<input type="text" class="form-control" name="" value="" placeholder="Increment">
+							<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
 						</div>
 						<div class="col-sm-3 form-group ">
-							<button type="button" class="btn btn-default">Add More</button>
+							<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidInfo.push({})" ng-if="$last">Add More</button>
+							<button type="button" class="btn btn-default" ng-click="gsettingVm.auctionData.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
 						</div>
+						
 					</div>
+					
 					<div class="row form-group">						
 						<div class="col-sm-2 pull-right">
 							<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
