@@ -17,7 +17,7 @@
                   <i class="fa fa-database"></i> Bulk Product Update
                 </span>
               </span>
-            </div>
+            </div> 
             </h3>
           </div>
           <div class="col-xs-4 col-sm-2 text-right">
@@ -1039,6 +1039,10 @@
               <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
             </div>
            </div>
+        
+        <div class="row" ng-if="isCustomer()">
+          <input type="hidden" name="certification" class="form-control" ng-model="lot.cerification" placeholder="lot.cerification">
+        </div>
          
         <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
