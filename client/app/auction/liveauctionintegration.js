@@ -10,7 +10,7 @@ angular.module('sreizaoApp')
 
  var bb=""
  var url="http://auctionsoftwaremarketplace.com:3007/chat";
-  alert("user_id",angular.element(document.querySelector("#au_user_id")));
+//alert("user_id",angular.element(document.querySelector("#au_user_id")));
   //console.log("user_id",angular.element("#au_user_id").val());
   $.ajax({
            type: 'post',

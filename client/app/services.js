@@ -36,26 +36,6 @@
           var socket = {};
           socket.connection  = io.connect(url);
 
-          /*socket.on = function(eventName){
-            socket.connection.on(eventName, function () {  
-            var args = arguments;
-            $rootScope.$apply(function () {
-              callback.apply(socket.connection, args);
-            });
-          });
-          };
-
-
-          socket.emit = function(eventName){
-            socket.connection.emit(eventName, function () {  
-              var args = arguments;
-              $rootScope.$apply(function () {
-              if (callback) {
-                callback.apply(socket.connection, args);
-                }
-              });
-            });
-          };*/
           socket.on=function(eventName,callback){
             socket.connection.on(eventName,callback);
           }

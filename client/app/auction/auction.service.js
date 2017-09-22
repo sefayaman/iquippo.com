@@ -50,12 +50,7 @@
 
     function liveAuctionRoomData(filter) {
       var path = "http://auctionsoftwaremarketplace.com:3007/bidapi/LiveAuctionRoom";
-      var queryParam = "";
-      if (filter)
-        queryParam = $httpParamSerializer(filter);
-      if (queryParam)
-        path = path + "?" + queryParam;
-      return $http.get(path)
+      return $http.post(path,filter)
         .then(function(res) {
           console.log("Api result call",res);
           return res;
