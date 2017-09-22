@@ -243,7 +243,6 @@
           
 
           product = $scope.product = response[0];
-          console.log("Response is ",response[0]);
           var filter ={};
           filter.auctionType = "expireauction";
           filter._id = product.auction._id;
@@ -1099,6 +1098,7 @@
                 Modal.confirm("Do you want iquippo_certification?", function(ret){
                   if (ret == "yes") {
                     $scope.auctionReq.paymentDue = 'Yes';
+                    console.log("yeesss",$scope.auctionReq.paymentDue);
 
                     var certification ="Yes";
                     var paymentstatus ="Pending";
@@ -1107,8 +1107,6 @@
 
 
                   }else{
-                    $scope.auctionReq.updateauction ="update";
-
                     var certification ="No";
                     var paymentstatus ="Not Applicable";
 
@@ -1172,7 +1170,9 @@
                   AuctionMasterSvc.updateAuctionMasterProduct(master)
                   .then(function(res){
                     console.log("kjkj",res);
-                    addOrUpdate(postAuction);
+                  
+                        addOrUpdate(postAuction);
+                    
   
                  });
           
@@ -1252,6 +1252,33 @@
         stsObj.status = auctionStatuses[0].code;
         stsObj.userId = Auth.getCurrentUser()._id;
         $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
+      }
+      if(productObj.auction._id && $scope.auctionReq.paymentDue == "Yes"){
+
+        $scope.auctionReq.user = {};
+        $scope.auctionReq.user._id = Auth.getCurrentUser()._id;
+        $scope.auctionReq.user.mobile = Auth.getCurrentUser().mobile;
+        $scope.auctionReq.user.email = Auth.getCurrentUser().email;
+        $scope.auctionReq.seller = {};
+        $scope.auctionReq.seller._id = productObj.seller._id;
+        $scope.auctionReq.seller.name = productObj.seller.fname;
+
+        if (productObj.seller.mname)
+          $scope.auctionReq.seller.name += " " + productObj.seller.mname;
+        if (productObj.seller.lname)
+          $scope.auctionReq.seller.name += " " + productObj.seller.lname;
+
+        $scope.auctionReq.seller.email = productObj.seller.email;
+        $scope.auctionReq.seller.mobile = productObj.seller.mobile;
+        $scope.auctionReq.seller.countryCode=productObj.seller.countryCode;
+        $scope.auctionReq.status = auctionStatuses[0].code;
+        $scope.auctionReq.statuses = [];
+        stsObj.createdAt = new Date();
+        stsObj.status = auctionStatuses[0].code;
+        stsObj.userId = Auth.getCurrentUser()._id;
+        $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
+  
+
       }
 
       $scope.auctionReq.product = {};
@@ -1412,6 +1439,18 @@
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
       }
+
+      if (!Auth.isAdmin() && productObj.auctionListing  && certified =="Yes") {
+        payObj = {};
+        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+        payObj.type = "auctionreqseller";
+        payObj.charge = "5000" || 0;
+        paymentTransaction.totalAmount = payObj.charge;
+        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+        createTraction = true;
+      }
+
+      
       if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && certified =="No") {
         payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
@@ -1878,36 +1917,11 @@
         if (cb){
           cb(product);
         }else{
-          if ($scope.product.auctionListing ==true && $scope.auctionReq.paymentDue == 'Yes') {
-            
-            var paymentTransaction = createPaymentObj(productObj, "Auction Listing");
-           
-            var serverObj = {};
-            serverObj['auction'] = $scope.auctionReq;
-
-            productSvc.createOrUpdateAuction(serverObj)
-            .then(function(res) {
-              if (paymentTransaction && res.transactionId)
-                $state.go("payment", {
-                  tid: res.transactionId
-                });
-              else
-                $state.go('productlisting', AppStateSvc.get('productlisting'));
-            })
-            .catch(function(err) {
-              //error handling
-            })
-
-            
-
-
-         }else{
-
           $state.go('productlisting', AppStateSvc.get('productlisting'));
 
           }
 
-        }
+        
         
       });
     }
