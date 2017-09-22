@@ -897,7 +897,9 @@
                 //tempObj[index] = {from:arr[0],to:arr[1],bidincrement:vm.auctionData.bidIncrement[item]};
                 vm.auctionData.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:vm.auctionData.bidIncrement[item]};
                 });
-            }//console.log(tempObj);
+            }else{
+                vm.auctionData.bidInfo = [{}];
+            }
             if (vm.auctionData.startDate)
                 vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
             if (vm.auctionData.endDate)
