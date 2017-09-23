@@ -18,7 +18,7 @@ module.exports = {
     uri:    process.env.MONGOLAB_URI ||
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
-            'mongodb://uatdb3.iquippo.com/sreiglobaldb'
+            'mongodb://appUser:iQuippoAppUser^*$!2K17@newuatdb1.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@newuatdb2.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@newuatdb3.iquippo.com:28018/sreiglobaldb'
   },
   uploadPath: "./../public/assets/uploads/",
   templatePath:'./../public/assets',
