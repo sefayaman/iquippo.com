@@ -1016,7 +1016,7 @@
         <div class="row" ng-if="isCustomer()">
           <div class="form-group col-sm-5">Auction </div>
           <div class="form-group col-sm-7">
-            <input type="text" name="emdAmount" class="form-control" ng-model="lot.auctname" min="0" placeholder="auctname" required>
+            <input type="text" name="auctname" class="form-control" ng-model="lot.auctname" min="0" placeholder="auctname" required>
           </div>
         </div>
 
@@ -1033,10 +1033,10 @@
               </div>
           </div>
         </div>-->
-          <div class="row">
+          <div class="row" ng-if="isCustomer()">
             <div class="form-group col-sm-5">EMD Amount </div>
             <div class="form-group col-sm-7">
-              <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Ammount">
+              <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Amount">
             </div>
            </div>
         
