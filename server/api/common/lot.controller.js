@@ -71,10 +71,10 @@ exports.updateLotData = function(req, res) {
 exports.updateProductLotData = function(req, res) {
   
     req.body.updatedAt = new Date();
-    console.log("-----++++");
+    console.log("-----++++",req.params);
     delete req.body._id;
     Lot.update({
-      auctionId: req.params.id
+      "_id": req.params.id
     }, {
       $set: req.body
     }, function(err) {

@@ -328,8 +328,9 @@
                 .then(function(result) {
                   if (result.length > 0) {
                     $scope.auctionReq = result[0];
+                    console.log("AuctionData after Edit case",$scope.auctionReq);
                     filter={};
-          
+                     
                     filter.auctionId=$scope.auctionReq.auctionId;
                     filter.assetId=$scope.product.assetId;
                     
@@ -337,13 +338,25 @@
                     .then(function(res){
                       if(res.length > 0){
                       console.log("LOT info",res[0]);
+                      if(res[0].lotNumber)
                       $scope.lot.lotNumber=res[0].lotNumber;
+                       if(res[0].startingPrice)
                       $scope.lot.startingPrice=res[0].startingPrice;
+                      if(res[0].startDate && res[0].endDate){
+                        $scope.lotDate=true;
                       $scope.lot.startDate=res[0].startDate;
                       $scope.lot.endDate=res[0].endDate;
+                    }
                       $scope.lot._id=res[0]._id;
+                      if(res[0].auctionId)
                       $scope.lot.auctionId =res[0].auctionId;
+                      $scope.lotCreation=false;
                       }
+                      else
+                      {
+                        $scope.lotCreation=true;
+                      }
+                      
                     })
                     .catch(function(err){
 
@@ -1016,8 +1029,7 @@
 
       $scope.tabObj.step1 = false;
       $scope.tabObj.step2 = true;
-      if($stateParams.id) {
-      
+      /*if($stateParams.id) {
           var auctiond ={};
           auctiond._id = $scope.product.auction._id;
           $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
@@ -1041,7 +1053,7 @@
 
           
          });
-       }
+       }*/
       filter = {};
       filter['yetToStartDate'] = new Date();
 
@@ -1709,18 +1721,14 @@
 
     function checkForLot(lotNumber,auctionId){
       filter = {};
-
-      filter.lotNumber = $scope.lot.lotNumber;
-      filter.assetId = $scope.product.assetId;
-
+      filter.lotNumber = lotNumber;
+      filter.auctionId = auctionId;
+      //filter.assetId=$scope.product.assetId;
       LotSvc.getData(filter)
       .then(function(res){
         if(res.length >0){
-
-     $scope.lotCreation = false;
-
+          console.log("lotDAta",res);
      if(res[0] && res[0].startDate && res[0].endDate){
-        
          $scope.lotDate = true;
          $scope.lot.startDate = res[0].startDate;
          $scope.lot.endDate = res[0].endDate;
@@ -1733,7 +1741,7 @@
        $scope.lot.startingPrice = res[0].startingPrice;
       }
       else{
-          $scope.lotCreation = true;
+          //$scope.lotCreation = true;
           $scope.lotDate = false;
         }
       })

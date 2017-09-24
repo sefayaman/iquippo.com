@@ -322,12 +322,12 @@
     });
   }
 
-   function liveAuctionView(lotNumber,auctionId){
+   /*function liveAuctionView(lotNumber,auctionId){
     console.log("auctionId",$scope.auctionId);
     console.log("lotNumber",lotNumber);
 
     $state.go('auctionlive',{"auctionId":auctionId,"lotNumber":lotNumber});
-   }
+   }*/
 
   $scope.today = function() {
     $scope.mfgyr = new Date();
