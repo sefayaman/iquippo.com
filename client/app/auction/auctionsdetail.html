@@ -191,7 +191,7 @@
                   <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                 </div>               
                 <div class="col-xs-12">
-                  <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
+                  <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId,lot.lotNumber)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
                 </div>
                 <div class="col-xs-12 col-sm-3 text-right">
                   <a ng-disabled="lot.assetDesc.length > 1" href="/liveauction?auctionId={{auctionId}}&lotNumber={{lot.lotNumber}}"  class="btn btn-sm btn-danger">View Live Auction</a>

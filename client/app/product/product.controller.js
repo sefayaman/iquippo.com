@@ -1723,7 +1723,7 @@
       filter = {};
       filter.lotNumber = lotNumber;
       filter.auctionId = auctionId;
-      //filter.assetId=$scope.product.assetId;
+      alert($scope.lotCreation);
       LotSvc.getData(filter)
       .then(function(res){
         if(res.length >0){
@@ -1743,6 +1743,8 @@
       else{
           //$scope.lotCreation = true;
           $scope.lotDate = false;
+          $scope.lot.startDate="";
+          $scope.lot.endDate=""; 
         }
       })
       .catch(function(err){

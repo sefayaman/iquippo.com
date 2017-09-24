@@ -33,7 +33,7 @@
     $scope.userId=Auth.getCurrentUser()._id;
     $scope.currentAuction ={};
     $scope.fetchAsset=fetchAsset;
-    $scope.liveAuctionView=liveAuctionView;
+    //$scope.liveAuctionView=liveAuctionView;
     var temp = [];
     //registering category brand functions
     vm.onCategoryChange=onCategoryChange;
@@ -310,12 +310,12 @@
 
   }
 
-  function fetchAsset(assetId){
+  function fetchAsset(assetId,lotNumber){
     filter={};
     filter.assetId=assetId;
     productSvc.getProductOnFilter(filter)
     .then(function(res){
-      window.open('/productdetail/'+res[0]._id +'?assetListedInAuction=true');
+      window.open('/productdetail/'+res[0]._id +'?assetListedInAuction=true&auctionId='+$scope.auctionId+'&lotId='+lotNumber+'&userId='+Auth.getCurrentUser()._id);
     })
     .catch(function(err){
      if(err) throw err;
