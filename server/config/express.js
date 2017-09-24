@@ -75,7 +75,7 @@ module.exports = function(app) {
     app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
     app.use(express.static(path.join(config.root, 'public')));
     app.set('appPath', path.join(config.root, 'public'));
-    app.use(morgan());
+    app.use(morgan('dev'));
     app.use(function(err, req, res, next) {
       res.status(err.status || 500);
       res.render('error', {
