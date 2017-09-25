@@ -1174,7 +1174,8 @@ exports.exportProducts = function(req, res) {
           if (colData && Object.keys(colData).length) {
             Object.keys(colData).forEach(function(y) {
               if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
-                obj[mapedFields[y]] = x[y];
+                if(x[y])
+                  obj[mapedFields[y]] = x[y];
                 ['category', 'brand', 'model'].forEach(function(u) {
                   if (x[u])
                     obj[mapedFields[u]] = x[u].name;
