@@ -29,7 +29,7 @@ var gm = require('gm');
 var lwip = require('lwip');
 var task = require('./components/task.js');
 var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
-//var taskRunner = require('./components/taskRunner.js');
+var taskRunner = require('./components/taskRunner.js');
 var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
@@ -377,7 +377,7 @@ function handleError(res, err) {
 server.listen(config.port, config.ip, function() {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   notification.startNotification();
-  //taskRunner.startTaskRunner();
+  taskRunner.startTaskRunner();
   valReqSubmitter.start();
   assetSaleTracker.start();
   checkQuickQueryNotificationService.start();

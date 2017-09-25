@@ -1,13 +1,7 @@
 'use strict';
 
 var Task = require('./task').task;
-var mongoose = require('mongoose');
 var config = require('../config/environment');
-mongoose.connect(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-  console.error('MongoDB connection error: ' + err);
-  process.exit(-1);
-});
 var bulkProductUpload = require('./bulkProductUpload');
 var commonController = require('../api/common/common.controller');
 var bulkUpload = require('./bulkUpload')
