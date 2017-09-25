@@ -24,7 +24,11 @@ $(document).ready(function () {
         }
 
     });
+
+   
+
 });
+
  
 function setScroll(val){
 

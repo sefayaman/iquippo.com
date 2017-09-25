@@ -56,7 +56,7 @@
         }
         function updateProductLot(data) {
             
-                        return $http.put(svcPath + "/lot/updateproductlot/" + data.auctionId, data)
+                        return $http.put(svcPath + "/lot/updateproductlot/" + data._id, data)
                             .then(function(res) {
                                 return res.data;
                             })
