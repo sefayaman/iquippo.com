@@ -95,7 +95,7 @@ var Modals = {
 
 var s3Detais = {
     baseURL : "http://s3.ap-south-1.amazonaws.com",
-    s3bucket : "iquppo-image-upload"
+    s3bucket : "iquippo-image-upload-dev"
 };
 
 var priceRange = [

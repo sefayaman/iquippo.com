@@ -3,7 +3,7 @@
 		<td valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
 	</tr>
     <tr>
-		<td style="font-size:16px;"><h3>Dear {{user.fname}}  {{user.mname}} {{user.lname}},</h3></td>	
+		<td style="font-size:16px;"><h3>Dear {{user.fname}} {{user.lname}},</h3></td>	
 	</tr>
   <tr>
     <td style="color:#01395c; padding-bottom:10px;">       
@@ -18,13 +18,13 @@
                         <td><strong>{{product.name}}</strong></td>
                     </tr>
                     <tr>
-                        <td><b>Brand :</b> {{product.brand.name}}</td>
+                        <td><b>Brand :</b> {{product.brand}}</td>
                     </tr>
                     <tr>
-                        <td><b>Model :</b> {{product.model.name}}</td>
+                        <td><b>Model :</b> {{product.model}}</td>
                     </tr>
                     <tr>
-                        <td><b>Category :</b>{{product.category.name}}</td>
+                        <td><b>Category :</b>{{product.category}}</td>
                     </tr>
                     <tr>
                         <td><b>Asset ID :</b>{{product.assetId}}</td>
@@ -34,7 +34,7 @@
             <td align="center">
                 <img width="200" height="165" src="{{serverPath}}/assets/uploads/{{product.assetDir}}/{{product.primaryImg}}" style="border: 3px solid #ccc;">
                 <p style="font-weight: bold; margin: 15px 15px 5px 0;">
-                    <a href="{{serverPath}}/productdetail/{{product._id}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
+                    <a href="{{serverPath}}/productdetail/{{product.proData._id}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
                 </p>
             </td>
         </tr>
@@ -43,7 +43,7 @@
   </tr>
     <tr>
         <td style="color:#01395c; padding-bottom:10px;">
-        We have received your Buy Now request of <strong>INR {{offer}}</strong>.  
+        We have received your Buy Now request of <strong>INR {{bidAmount}}</strong>.  
 	
         </td>
     </tr>

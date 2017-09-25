@@ -25,43 +25,68 @@ module.exports = function(app) {
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(compression());
-  app.use(bodyParser.urlencoded({ extended: false,limit:"25mb" }));
-  app.use(bodyParser.json({limit:"25mb"}));
-  app.use(bodyParser({ keepExtensions: true, uploadDir: 'c:/temp',limit:'25mb' }));
+  app.use(bodyParser.urlencoded({
+    extended: false,
+    limit: "25mb"
+  }));
+  app.use(bodyParser.json({
+    limit: "25mb"
+  }));
+  app.use(bodyParser({
+    keepExtensions: true,
+    uploadDir: 'c:/temp',
+    limit: '25mb'
+  }));
   app.use(methodOverride());
   app.use(cookieParser());
   app.use(cors());
   //app.use(passport.initialize());
-  app.use(expressSession({secret: config.secrets.session}));
+  app.use(expressSession({
+    secret: config.secrets.session
+  }));
   app.use(passport.initialize());
   app.use(passport.session());
   //app.use(require('connect-livereload')({ignore: ['.pdf','.docx']}));
   console.log(config.root);
-  if ('production' === env) {
-    app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
-    app.use(express.static(path.join(config.root, 'public')));
-    app.set('appPath', path.join(config.root, 'public'));
-    app.use(morgan('dev'));
-  }
+  // if ('production' === env) {
+  //   app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
+  //   app.use(express.static(path.join(config.root, 'public')));
+  //   app.set('appPath', path.join(config.root, 'public'));
+  //   app.use(morgan('dev'));
+  // }
 
-  if ('staging' === env) {
-    app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
-    app.use(express.static(path.join(config.root, 'public')));
-    app.set('appPath', path.join(config.root, 'public'));
-    app.use(morgan('dev'));
-  }
+  // if ('staging' === env) {
+  //   app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
+  //   app.use(express.static(path.join(config.root, 'public')));
+  //   app.set('appPath', path.join(config.root, 'public'));
+  //   app.use(morgan('dev'));
+  // }
 
-  if ('development' === env || 'test' === env) {
+  if ('development' === env) {
     //app.use(require('connect-livereload')());
     app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(path.join(config.root, 'client')));
     app.set('appPath', path.join(config.root, 'client'));
     app.use(morgan('dev'));
     app.use(errorHandler()); // Error handler - has to be last
+  } 
+
+  if('development' != env){
+    app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
+    app.use(express.static(path.join(config.root, 'public')));
+    app.set('appPath', path.join(config.root, 'public'));
+    app.use(morgan('dev'));
+    app.use(function(err, req, res, next) {
+      res.status(err.status || 500);
+      res.render('error', {
+        message: err.message,
+        error: {}
+      });
+    });
   }
 
-  app.head('*', function(req, res, next){
-      res.status(501).end();
+  app.head('*', function(req, res, next) {
+    res.status(501).end();
   });
   app.all('*', function(req, res, next) {
     res.setHeader('Last-Modified', (new Date()).toUTCString());

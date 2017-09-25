@@ -4,13 +4,6 @@ var fs = require('fs');
 
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
-var mongoose = require('mongoose');
-mongoose.createConnection(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-	console.error('MongoDB connection error: ' + err);
-	process.exit(-1);
-});
-
 var UploadRequestModel = require('../api/common/uploadrequest/uploadrequest.model');
 var AuctionController = require('../api/auction/auction.controller');
 var APIError = require('./_error');
@@ -118,7 +111,7 @@ bulkUpload.init = function(taskData, next) {
 			};
 
 			_fetchRequestData(options, function(err, data) {
-			    if (err)
+				if (err)
 					return next('', taskData);
 				if (!data.length)
 					return next('', taskData);
@@ -150,70 +143,70 @@ bulkUpload.init = function(taskData, next) {
 							}
 						}
 
-                                    product.isSold = product.isSold ? true : false;
-					if (product.isSold) {
-						product.saleVal = Number(product.saleVal);
-					}
+						product.isSold = product.isSold ? true : false;
+						if (product.isSold) {
+							product.saleVal = Number(product.saleVal);
+						}
 
-					product.originalInvoice = product.originalInvoice ? "Yes" : "No";
+						product.originalInvoice = product.originalInvoice ? "Yes" : "No";
 
-					if (product.originalInvoice === "Yes") {
-						if (!product.invioceDate) {
-							delete product.invoiceDate;
+						if (product.originalInvoice === "Yes") {
+							if (!product.invioceDate) {
+								delete product.invoiceDate;
+							} else {
+								product.invoiceDate = (moment(product.invioceDate, validDateFormat).format('MM/DD/YYYY'));
+							}
 						} else {
-							product.invoiceDate = (moment(product.invioceDate, validDateFormat).format('MM/DD/YYYY'));
+							delete product.invoiceDate;
 						}
+
+						if (product.contactNumber) {
+							product.contactNumber = Number(product.contactNumber);
+						}
+
+						if (product.vatPercentage) {
+							product.vatPercentage = Number(product.vatPercentage);
+						}
+
+						obj.product = product;
+						obj.user = x.user;
+						obj.dbAuctionId = x.auction.dbAuctionId;
+						obj.lotNo = x.lotNo;
+						obj.auctionId = x.auction.auctionId;
+						obj.startDate = x.auction.startDate;
+						obj.endDate = x.auction.endDate;
+						obj.external = true;
+						obj.statuses = [{
+							createdAt: new Date(),
+							status: x.status,
+							userId: x.user._id
+						}];
+						obj.status = 'request_approved';
+						obj.external = true;
+						uploadedProducts.push(product.assetId);
+						approvedObj.push(obj);
+						approvedIds.push(x._id.toString());
+						var opts = {
+							assetDir: product.assetDir
+						};
+
+						_uploadToS3(opts, function(err, data) {
+							if (err) {
+								console.log(err);
+								return cb(err);
+							}
+							return cb();
+						});
+
 					} else {
-						delete product.invoiceDate;
-					}
-
-					if (product.contactNumber) {
-						product.contactNumber = Number(product.contactNumber);
-					}
-
-					if (product.vatPercentage) {
-						product.vatPercentage = Number(product.vatPercentage);
-					}
-
-					obj.product = product;
-					obj.user = x.user;
-					obj.dbAuctionId = x.auction.dbAuctionId;
-					obj.lotNo = x.lotNo;
-					obj.auctionId = x.auction.auctionId;
-					obj.startDate = x.auction.startDate;
-					obj.endDate = x.auction.endDate;
-					obj.external = true;
-					obj.statuses = [{
-						createdAt: new Date(),
-						status: x.status,
-						userId: x.user._id
-					}];
-					obj.status = 'request_approved';
-					obj.external = true;
-					uploadedProducts.push(product.assetId);
-					approvedObj.push(obj);
-					approvedIds.push(x._id.toString());
-					var opts = {
-						assetDir: product.assetDir
-					};
-
-					_uploadToS3(opts, function(err, data) {
-                                            if (err) {
-							console.log(err);
-							return cb(err);
-						}
 						return cb();
-					});
-                                    
-                                    } else {
-                                        return cb();
-                                    }
+					}
 
-					
+
 				}
 
 				function finish(err) {
-                                    	if (err)
+					if (err)
 						return next(false, taskData);
 
 					var rejectIds = [];
@@ -312,11 +305,11 @@ bulkUpload.init = function(taskData, next) {
 							return cb();
 						})
 					} else {
-                                            return cb();
-                                        }
+						return cb();
+					}
 				}
 
-				function final(err) {
+				function finish(err) {
 					if (err)
 						return next(false, taskData);
 
