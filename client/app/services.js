@@ -27,7 +27,28 @@
       }
     };
   })
-   .factory('AppStateSvc', function () {
+  .factory('socketSvc',['$rootScope', function ($rootScope) {
+      var service = {};
+      service.getSocket = getSocket;
+  
+      function getSocket(url) {
+
+          var socket = {};
+          socket.connection  = io.connect(url);
+
+          socket.on=function(eventName,callback){
+            socket.connection.on(eventName,callback);
+          }
+          
+          socket.emit=function(eventName,data){
+            socket.connection.emit(eventName,data);
+          }
+          return socket;
+      }
+
+      return service;
+}])
+.factory('AppStateSvc', function () {
     var appStateCache = {};
     var svc = {};
     svc.get = get;

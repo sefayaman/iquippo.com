@@ -108,6 +108,11 @@
       </uib-carousel>
       <h4 class="product-bottit"> Tipper Ashok Leyland 2516 </h4>     
     </div>
+     <div class="col-md-12 fixed-button">
+        <div class="round hollow pull-right">
+        <a href="#" class="open-btn" id="addClass"><i class="fa fa-comments" ng-click="chat()" aria-hidden="true"></i></a>
+        </div>
+      </div>
     <div class="col-md-12 online-live mar-table text-center">
       <h3>Live Video Auction </h3>
       <div class="row">
@@ -124,6 +129,8 @@
         </div>
       </div>
       <div class="row price-wp">
+        <input type="hidden" id="au_user_id" value="{{Auth.getCurrentUser()._id}}">
+        <input type="hidden" id="au_auction_id" value="AU202002">
         <div class="col-sm-6 text-right">Current Price</div>
         <div class="col-sm-6 text-left">Rs.180,0000</div>
       </div>
@@ -141,3 +148,4 @@
       </div>
     </div>
   </div>
+  <aside id="sidebar_secondary" ng-if="chatStatus" class="tabbed_sidebar ng-scope chat_sidebar" live-auction-integration></aside>

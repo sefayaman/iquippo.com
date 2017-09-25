@@ -31,6 +31,7 @@
     $scope.isEdit = false;
     $scope.isEditdata = false;
     $scope.lotDate=false;
+    $scope.lotCreation=true;
 
     $scope.images = [{
       isPrimary: true
@@ -91,11 +92,11 @@
     $scope.lot={};
     $scope.lotsaved ={};
     $scope.mandatory = true;
+    $scope.auctionselect = false;
 
 
 
     $scope.listInAuction = function(data){
-         //console.log("erthh",data);
         if(data ==true){
           $scope.mandatory = false;
          }else{
@@ -106,7 +107,6 @@
     }
 
     $scope.listInPortal = function(data){
-       //console.log("hggg",data);
          if(data ==true){
           $scope.mandatory = true;
          }else{
@@ -115,6 +115,15 @@
          }
 
     }
+    $scope.checkauction = function(data){
+      if(data ==true){
+       $scope.auctionselect = true;
+      }else{
+       $scope.auctionselect = false;
+
+      }
+
+   }
 
     function productInit() {
 
@@ -148,6 +157,7 @@
       $scope.valuationReq = {};
       $scope.valuationReq.valuationAgency = {};
       $scope.auctionReq = {};
+      $scope.isExpire = false;
     }
 
     function goToUsermanagement() {
@@ -186,6 +196,8 @@
 
 
       });*/
+
+      
 
       if (!Auth.isAdmin() && !Auth.isChannelPartner()) {
         product.seller = Auth.getCurrentUser();
@@ -232,8 +244,35 @@
             return;
           }
 
+
+          
+
           product = $scope.product = response[0];
-          console.log("Response is ",response[0]);
+          var filter ={};
+          filter.auctionType = "expireauction";
+          if(product.auction && product.auction._id)
+          filter._id = product.auction._id;
+         
+         AuctionSvc.getAuctionExpire(filter).then(function(result){
+           $scope.date = new Date();
+ 
+           console.log("result",result);
+ 
+         
+           if(result!=""){
+ 
+             $scope.auctionReq.auctionexpire ="expire";
+             $scope.auctionReq.auctionname = result[0].name;
+             $scope.isExpire = true;
+ 
+             console.log("hj");
+           }else{
+             $scope.isExpire = false;
+ 
+             console.log("hjdghghg");
+           }
+ 
+          });
           $scope.imagesEngine = [];
           $scope.imagesHydraulic = [];
           $scope.imagesCabin = [];
@@ -295,19 +334,35 @@
                 .then(function(result) {
                   if (result.length > 0) {
                     $scope.auctionReq = result[0];
+                    console.log("AuctionData after Edit case",$scope.auctionReq);
                     filter={};
+                     
                     filter.auctionId=$scope.auctionReq.auctionId;
                     filter.assetId=$scope.product.assetId;
+                    
                     LotSvc.getData(filter)
                     .then(function(res){
                       if(res.length > 0){
                       console.log("LOT info",res[0]);
+                      if(res[0].lotNumber)
                       $scope.lot.lotNumber=res[0].lotNumber;
+                       if(res[0].startingPrice)
                       $scope.lot.startingPrice=res[0].startingPrice;
+                      if(res[0].startDate && res[0].endDate){
+                        $scope.lotDate=true;
                       $scope.lot.startDate=res[0].startDate;
                       $scope.lot.endDate=res[0].endDate;
+                    }
                       $scope.lot._id=res[0]._id;
+                      if(res[0].auctionId)
+                      $scope.lot.auctionId =res[0].auctionId;
+                      $scope.lotCreation=false;
                       }
+                      else
+                      {
+                        $scope.lotCreation=true;
+                      }
+                      
                     })
                     .catch(function(err){
 
@@ -961,11 +1016,36 @@
 
       $scope.tabObj.step1 = false;
       $scope.tabObj.step2 = true;
+      /*if($stateParams.id) {
+          var auctiond ={};
+          auctiond._id = $scope.product.auction._id;
+          $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
+          AuctionMasterSvc.get(auctiond).then(function(result){
+
+          $scope.lot.auctname = result[0].name;
+          $scope.lot.auctionId = result[0].auctionId;
+          $scope.lot.emdTax = result[0].emdTax;
+           $scope.lot.emdAmount = result[0].emdAmount;
+           $scope.lot.bidIncrement = result[0].bidIncrement;
+           $scope.lot.startdateauction = result[0].startDate;
+           $scope.lot.endDateaucion = result[0].endDate;
+           $scope.lot.lastMintBid = result[0].lastMinuteBid;
+           $scope.lot.extendedTo = result[0].extendedTo;
+           $scope.lot.cerification = result[0].certification;
+           $scope.lot.paymentstatus = result[0].paymentstatus;
+
+           console.log("sxsassasxs",$scope.lot.cerification);
+
+          // $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
+
+          
+         });
+       }*/
       filter = {};
       filter['yetToStartDate'] = new Date();
-      filter.auctionType="L";
-      filter.another
-      AuctionMasterSvc.get(filter)
+
+    
+     AuctionMasterSvc.get(filter)
         .then(function(aucts) {
           $scope.auctions = aucts;
         });
@@ -998,27 +1078,63 @@
        if(Auth.isAdmin()){
              addOrUpdate(postAuction);
         }else{
-          console.log("jhjhj");
            var lotdata = $scope.lot;
           if(lotdata.emdTax=="overall"){
              $scope.isEditdata ==true;
             }
-          Modal.confirm("Do you want iquippo_certification?", function(ret){
-            if (ret == "yes") {
-              //createAuction();
-              var certification ="Yes";
-              var paymentstatus ="Pending";
-           createAuction(product,postAuction,certification,paymentstatus);
 
+        if($stateParams.id) {
+           console.log("certificate",$scope.lot.cerification);
+              if($scope.lot.cerification =="Yes"){
+                 var certification = $scope.lot.cerification;
+                 var paymentstatus = $scope.lot.paymentstatus;
+                
+                UpdateCertificationAuction(product,postAuction,certification,paymentstatus);
+
+              }
+              else{
+
+                Modal.confirm("Do you want iquippo_certification?", function(ret){
+                  if (ret == "yes") {
+                    $scope.auctionReq.paymentDue = 'Yes';
+                    console.log("yeesss",$scope.auctionReq.paymentDue);
+
+                    var certification ="Yes";
+                    var paymentstatus ="Pending";
+                    
+                 UpdateCertificationAuction(product,postAuction,certification,paymentstatus);
+
+
+                  }else{
+                    var certification ="No";
+                    var paymentstatus ="Not Applicable";
+
+                    UpdateCertificationAuction(product,postAuction,certification,paymentstatus);
+                  }
+
+                });
+
+              }
 
             }else{
-                 var certification ="No";
-                 var paymentstatus ="Not Applicable";
-              createAuction(product,postAuction,certification,paymentstatus);
 
+               Modal.confirm("Do you want iquippo_certification?", function(ret){
+                    if (ret == "yes") {
+                      //createAuction();
+                      var certification ="Yes";
+                      var paymentstatus ="Pending";
+                  createAuction(product,postAuction,certification,paymentstatus);
+
+
+                    }else{
+                        var certification ="No";
+                        var paymentstatus ="Not Applicable";
+                      createAuction(product,postAuction,certification,paymentstatus);
+
+                    }
+
+                  });
             }
-
-          });
 
          }
      
@@ -1029,22 +1145,57 @@
           return Math.floor(1000 + Math.random() * 9000);
         }
      
+
+        function UpdateCertificationAuction(product,postAuction,certification,paymentstatus){
+          
+                var lotdata = $scope.lot;
+          
+                  var master = {};
+                  master.name      =  lotdata.auctname;
+                  master.startDate =  lotdata.startdateauction;
+                  master.endDate   =  lotdata.endDateaucion;
+                  master.lastMinuteBid = lotdata.lastMintBid;
+                  master.extendedTo    = lotdata.extendedTo;
+                  master.certification = certification;
+                  master.bidIncrement  = lotdata.bidIncrement;
+                  master.emdTax        = lotdata.emdTax;
+                  master.emdAmount     = lotdata.emdAmount;
+                  master.paymentstatus = paymentstatus;
+                  master.auctionId     = $scope.lot.auctionId;
+                  master._id = $scope.auctionReq.dbAuctionId;
+                  
+                  $scope.auctionReq.cerification = certification;
+
+                  AuctionMasterSvc.updateAuctionMasterProduct(master)
+                  .then(function(res){
+                    console.log("kjkj",res);
+                  
+                        addOrUpdate(postAuction);
+                    
+  
+                 });
+          
+                 
+          
+          
+              }
+          
+        
     function createAuction(product,postAuction,certification,paymentstatus){
 
-      console.log("dfg",product);
-      console.log("tyuuiio",$scope.lot);
       var lotdata = $scope.lot;
 
         var master = {};
         master.name      = lotdata.auctname;
-        master.startDate = lotdata.startdate;
-        master.endDate   = lotdata.endDate;
+        master.startDate = lotdata.startdateauction;
+        master.endDate   = lotdata.endDateaucion;
         master.lastMinuteBid = lotdata.lastMintBid;
         master.extendedTo    = lotdata.extendedTo;
         master.certification = certification;
         master.bidIncrement  = lotdata.bidIncrement;
         master.emdTax        = lotdata.emdTax;
-        master.auctionType   ="S";
+        master.emdAmount      = lotdata.emdAmount;
+        master.auctionType = "S";
         master.auctionId     = "SA" + $scope.getRandomSpan();
         master.paymentstatus     = paymentstatus;
 
@@ -1065,66 +1216,6 @@
                     addOrUpdate(postAuction);
 
                   });
-                /*  AuctionMasterSvc.get(filter)
-                    .then(function(aucts) {
-                      $scope.auctions = {};
-                      $scope.auctions = aucts[0];
-                      console.log("scsd",aucts[0]);
-                      
-                      console.log("auction",$scope.auctionReq.dbAuctionId);
-                    });*/
-                     
-
-                     /*  if (res.errorCode == 0) {
-
-                        console.log("auctionId", master.auctionId);
-
-                        filter ={};
-                        filter.dbAuctionId = master.auctionId;
-                        filter.user = {};
-                        filter.user._id = Auth.getCurrentUser()._id;
-                        filter.user.mobile = Auth.getCurrentUser().mobile;
-                        filter.user.email = Auth.getCurrentUser().email;
-                        filter.seller = {};
-                        filter.seller._id = product.seller._id;
-                        filter.seller.name = product.seller.fname;
-                        filter.product = {};
-                        filter.product._id = product._id;
-                        filter.product.assetId = product.assetId;
-                        filter.product.name = product.name;
-                        filter.product.productId = product.productId;
-                        filter.product.category = product.category.name;
-                        filter.product.brand = product.brand.name;
-                        filter.product.model = product.model.name;
-                        filter.product.mfgYear = product.mfgYear;
-                        filter.product.serialNo = product.serialNo;
-                        filter.product.grossPrice = product.grossPrice;
-                        filter.product.assetDir = product.assetDir;
-                        filter.product.primaryImg = product.primaryImg;
-                        filter.product.city = product.city;
-
-
-                        AuctionSvc.save(filter)
-                        .then(function(result) {
-                        if (!result.errorCode) {
-                          
-                           addOrUpdateSeller(postAuction,master.auctionId);
-                        
-                       } else{
-
-                           Modal.alert(result.message);
-
-                        }
-
-                        })
-                        .catch(function(err) {
-                        console.log(err);
-                        //error handling
-                        });
-
-                    }*/
-
-                       
                 });
 
 
@@ -1160,6 +1251,33 @@
         stsObj.status = auctionStatuses[0].code;
         stsObj.userId = Auth.getCurrentUser()._id;
         $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
+      }
+      if(productObj.auction._id && $scope.auctionReq.paymentDue == "Yes"){
+
+        $scope.auctionReq.user = {};
+        $scope.auctionReq.user._id = Auth.getCurrentUser()._id;
+        $scope.auctionReq.user.mobile = Auth.getCurrentUser().mobile;
+        $scope.auctionReq.user.email = Auth.getCurrentUser().email;
+        $scope.auctionReq.seller = {};
+        $scope.auctionReq.seller._id = productObj.seller._id;
+        $scope.auctionReq.seller.name = productObj.seller.fname;
+
+        if (productObj.seller.mname)
+          $scope.auctionReq.seller.name += " " + productObj.seller.mname;
+        if (productObj.seller.lname)
+          $scope.auctionReq.seller.name += " " + productObj.seller.lname;
+
+        $scope.auctionReq.seller.email = productObj.seller.email;
+        $scope.auctionReq.seller.mobile = productObj.seller.mobile;
+        $scope.auctionReq.seller.countryCode=productObj.seller.countryCode;
+        $scope.auctionReq.status = auctionStatuses[0].code;
+        $scope.auctionReq.statuses = [];
+        stsObj.createdAt = new Date();
+        stsObj.status = auctionStatuses[0].code;
+        stsObj.userId = Auth.getCurrentUser()._id;
+        $scope.auctionReq.statuses[$scope.auctionReq.statuses.length] = stsObj;
+  
+
       }
 
       $scope.auctionReq.product = {};
@@ -1320,6 +1438,18 @@
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
       }
+
+      if (!Auth.isAdmin() && productObj.auctionListing  && certified =="Yes") {
+        payObj = {};
+        var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
+        payObj.type = "auctionreqseller";
+        payObj.charge = "5000" || 0;
+        paymentTransaction.totalAmount = payObj.charge;
+        paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
+        createTraction = true;
+      }
+
+      
       if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && certified =="No") {
         payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
@@ -1366,10 +1496,16 @@
         sObj.status = transactionStatuses[0].code;
         sObj.userId = Auth.getCurrentUser()._id;
         paymentTransaction.statuses[paymentTransaction.statuses.length] = sObj;
-        if (Auth.isAdmin())
+        if (Auth.isAdmin()){
           paymentTransaction.paymentMode = "offline";
-        else
+        }else if(!Auth.isAdmin() && certified =="Yes") {
           paymentTransaction.paymentMode = "online";
+        }else if(!Auth.isAdmin() && certified =="No") {
+          paymentTransaction.paymentMode = "offline";
+        }
+        else{
+          paymentTransaction.paymentMode = "online";
+        }
       }
 
       if (createTraction)
@@ -1406,22 +1542,17 @@
 
       if (!$scope.isEdit)
         addProduct(cb);
-      else
-        updateProduct(cb);
+      else{
+          updateProduct(cb);
+       
+         
+      }
     }
 
-    function addOrUpdateSeller(cb,auctionId) {
-
-       if (!$scope.isEdit){
-             console.log("auct",auctionId);
-        addProductSeller(cb,auctionId);
-       }else{
-        updateProduct(cb);
-       }
-    }
 
     function addProduct(cb) {
-
+      
+      $scope.lotCreation=true;
       product.user = {};
       product.user._id = Auth.getCurrentUser()._id;
       product.user.fname = Auth.getCurrentUser().fname;
@@ -1436,6 +1567,7 @@
       product.user.country = Auth.getCurrentUser().country;
       product.user.countryCode=LocationSvc.getCountryCode(product.user.country);
       product.user.company = Auth.getCurrentUser().company;
+
       if ($.isEmptyObject(product.seller)) {
         product.seller = {};
         product.seller = product.user;
@@ -1455,16 +1587,22 @@
       $rootScope.loading = true;
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
       //product.auction = {};
-     // product.auction._id = $scope.auctionReq.dbAuctionId;
-      productSvc.addProduct(product).then(function(result) {
+
+      product.auction._id = $scope.auctionReq.dbAuctionId;
+
+      productSvc.addProduct(product).then(function(result){
+
         //Start NJ : uploadProductSubmit object push in GTM dataLayer
+
         dataLayer.push(gaMasterObject.uploadProductSubmit);
+
         //NJ : set upload product Start time
+
         var productUploadSubmitTime = new Date();
         var timeDiff = Math.floor(((productUploadSubmitTime - $scope.productUploadStartTime) / 1000) * 1000);
         gaMasterObject.uploadProductSubmitTime.timingValue = timeDiff;
         ga('send', gaMasterObject.uploadProductSubmitTime);
-        //End
+      
         $rootScope.loading = false;
         setScroll(0);
         $scope.successMessage = "Product added successfully.";
@@ -1472,148 +1610,67 @@
          var auctionfilter ={};
          auctionfilter._id = $scope.product.auctId;
 
-         console.log("sasascs",auctionfilter);
-        AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
-            console.log("auctiondata",result.items[0].auctionId);
-            if(!Auth.isAdmin() && $scope.lot.emdTax === 'lotwise'){
+         if($scope.product.auctionListing ==true){
+
+        AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
+
+            if(!Auth.isAdmin()){
+
               $scope.lotsaved.assetId = $scope.product.assetId;
               $scope.lotsaved.assetDesc = $scope.product.name;
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+              $scope.lotsaved.assetDir = $scope.product.assetDir;
               $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-              //$scope.lotsaved.userId = Auth.isAdmin()._id;
+              $scope.lotsaved.userId = product.seller._id;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+              $scope.lotsaved.startDate=$scope.lot.startDate;
+              $scope.lotsaved.endDate=$scope.lot.endDate;
+              $scope.lotsaved.reservePrice=$scope.product.reservePrice;
       
-              console.log("lot",$scope.lotsaved);
-                console.log("gg",$scope.auctionReq.dbAuctionId);
               LotSvc.saveLot($scope.lotsaved)
               .then(function(result){
-                console.log("result",result);
               });
+
+           
       
             }else{
-              $scope.lotsaved.assetId = $scope.product.assetId;
-              $scope.lotsaved.assetDesc = $scope.product.name;
-              $scope.lotsaved.auctionId = result.items[0].auctionId;
-              $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-              //$scope.lotsaved.userId = Auth.isAdmin()._id;
-              $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-              $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                    $scope.lotsaved.assetId = $scope.product.assetId;
+                    $scope.lotsaved.assetDesc = $scope.product.name;
+                    $scope.lotsaved.auctionId = result.items[0].auctionId;
+                    $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+                    $scope.lotsaved.assetDir= $scope.product.assetDir;
+                    $scope.lotsaved.userId = Auth.isAdmin()._id;
+                    $scope.lotsaved.primaryImg = $scope.product.primaryImg;
+                    $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                    $scope.lotsaved.startDate = $scope.lot.startDate;
+                    $scope.lotsaved.endDate = $scope.lot.endDate;
+                    $scope.lotsaved.reservePrice = $scope.product.reservePrice; 
       
-              console.log("lot is this",$scope.lotsaved);
-                console.log("gg",$scope.auctionReq.dbAuctionId);
-              LotSvc.saveLot($scope.lotsaved)
-              .then(function(result){
-                console.log("result",result);
-              });
-      
-            }
+                    LotSvc.saveLot($scope.lotsaved)
+                    .then(function(result){
+                    });
+                 
+
+                    var master = {};
+                    master.emdAmount = $scope.lot.emdAmount;
+                    master.auctionId = result.items[0].auctionId;
+                    master._id = $scope.auctionReq.dbAuctionId;
+                    AuctionMasterSvc.updateAuctionMasterProduct(master)
+                            .then(function(res){
+                            
+          
+                      });
+
+                
+               }
 
 
         });
 
-        
-        //addToHistory(result,"Create");
-        if (Auth.isAdmin()) {
-          if (result.status)
-            AppNotificationSvc.createAppNotificationFromProduct(result);
-          mailToCustomerForApprovedAndFeatured(result, product);
-        } else {
-
-          var data = {};
-          data['to'] = result.seller.email;
-          data['subject'] = 'Product Upload: Request for Listing';
-          result.serverPath = serverPath;
-          result.listedFor = result.tradeType;
-          if (result.listedFor == 'BOTH')
-            result.listedFor = "SELL & RENT"
-          notificationSvc.sendNotification('productUploadEmailToCustomer', data, result, 'email');
-
-          data['to'] = supportMail;
-          data['subject'] = 'Product Upload: Request for activation';
-          result.serverPath = serverPath;
-          notificationSvc.sendNotification('productUploadEmailToAdmin', data, result, 'email');
-
-        }
-        if (cb)
-          cb(result)
-        else {
-          product = $scope.product = {};
-          $state.go('productlisting');
-        }
-
-      })
-      .catch(function(err){
-        $rootScope.loading = false;
-      });
-    }
-
-     function addProductSeller(cb,auctionId) {
-
-      product.user = {};
-      product.user._id = Auth.getCurrentUser()._id;
-      product.user.fname = Auth.getCurrentUser().fname;
-      product.user.mname = Auth.getCurrentUser().mname;
-      product.user.lname = Auth.getCurrentUser().lname;
-      product.user.role = Auth.getCurrentUser().role;
-      product.user.userType = Auth.getCurrentUser().userType;
-      product.user.phone = Auth.getCurrentUser().phone;
-      product.user.mobile = Auth.getCurrentUser().mobile;
-      product.user.email = Auth.getCurrentUser().email;
-      product.user.country = Auth.getCurrentUser().country;
-      product.user.countryCode=LocationSvc.getCountryCode(product.user.country);
-      product.user.company = Auth.getCurrentUser().company;
-      if ($.isEmptyObject(product.seller)) {
-        product.seller = {};
-        product.seller = product.user;
       }
 
-      if ($scope.product.currencyType == "")
-        $scope.product.currencyType = "INR";
-
-      $scope.product.assetStatuses = [];
-      var stObj = {};
-      stObj.userId = product.user._id;
-      stObj.status = assetStatuses[0].code;
-      stObj.createdAt = new Date();
-      $scope.product.assetStatuses[$scope.product.assetStatuses.length] = stObj;
-      $scope.product.assetId = $scope.assetDir;
-
-      $rootScope.loading = true;
-      $scope.product.auctId = auctionId;
-      product.auction._id = $scope.auctionReq.dbAuctionId;
-      productSvc.addProduct(product).then(function(result) {
-        //Start NJ : uploadProductSubmit object push in GTM dataLayer
-        dataLayer.push(gaMasterObject.uploadProductSubmit);
-        //NJ : set upload product Start time
-        var productUploadSubmitTime = new Date();
-        var timeDiff = Math.floor(((productUploadSubmitTime - $scope.productUploadStartTime) / 1000) * 1000);
-        gaMasterObject.uploadProductSubmitTime.timingValue = timeDiff;
-        ga('send', gaMasterObject.uploadProductSubmitTime);
-        //End
-        $rootScope.loading = false;
-        setScroll(0);
-        $scope.successMessage = "Product added successfully.";
-        $scope.autoSuccessMessage(20);
-        $scope.lot.assetId = $scope.product.assetId;
-        $scope.lot.assetDesc = $scope.product.name;
-        $scope.lot.auctionId = auctionId ;
-
-        $scope.lotsaved.assetId = $scope.product.assetId;
-        $scope.lotsaved.assetDesc = $scope.product.name;
-        $scope.lotsaved.auctionId = auctionId;
-        $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-        $scope.lotsaved.userId = Auth.isAdmin()._id;
-        $scope.lotsaved.startingPrice =$scope.product.startingPrice;
-
         
-
-        console.log("lot",$scope.lotsaved);
-          console.log("gg",auctionId);
-        LotSvc.saveLot($scope.lotsaved)
-        .then(function(result){
-          console.log("result",result);
-        })
         //addToHistory(result,"Create");
         if (Auth.isAdmin()) {
           if (result.status)
@@ -1649,33 +1706,38 @@
       });
     }
 
+   
+
     function checkForLot(lotNumber,auctionId){
-      filter={};
-      console.log("product",$scope.product);
-      console.log("auctionProduct",$scope.auctionReq);
-      filter.lotNumber=lotNumber;
-      filter.auctionId=$scope.auctionReq.auctionId;
+      filter = {};
+      filter.lotNumber = lotNumber;
+      filter.auctionId = auctionId;
+      //alert($scope.lotCreation);
       LotSvc.getData(filter)
       .then(function(res){
         if(res.length >0){
-          $scope.lotCreation=false;
-          $scope.lotDate=true;
-       console.log("res lot data",res[0]);
-       $scope.lot.startDate=res[0].startDate;
-       $scope.lot.endDate=res[0].endDate;
-       $scope.lot.startingPrice=res[0].startingPrice;
+          console.log("lotDAta",res);
+     if(res[0] && res[0].startDate && res[0].endDate){
+         //$scope.lotDate = true;
+         $scope.lot.startDate = res[0].startDate;
+         $scope.lot.endDate = res[0].endDate;
+     }
+        if(res[0] && res[0].startingPrice)
+       $scope.lot.startingPrice = res[0].startingPrice;
       }
       else{
-        $scope.lotCreation=true;
-        $scope.lotDate=false;
-        }//$scope.lot.startDate="";
-        //$scope.lot.endDate="";
+          //$scope.lotCreation = true;
+          //$scope.lotDate = false;
+          //$scope.lot.startDate="";
+          //$scope.lot.endDate=""; 
+        }
       })
       .catch(function(err){
 
       });
     }
-    
+
+   
 
     function updateProduct(cb) {
 
@@ -1703,40 +1765,159 @@
         }
       }
 
+
+      
       if (!$scope.product.assetId)
         $scope.product.assetId = $scope.assetDir;
       $rootScope.loading = true;
+      $scope.product.auctId = $scope.auctionReq.dbAuctionId;
+
+      product.auction._id = $scope.auctionReq.dbAuctionId;
+
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;
         setScroll(0);
         $scope.successMessage = "Product updated successfully";
         $scope.autoSuccessMessage(20);
+        var auctionfilter ={};
+        auctionfilter._id = $scope.product.auctId;
+        if($scope.product.auctionListing ==true){
+          if($scope.lotCreation){
+            AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
+
+              if(!Auth.isAdmin()){
+                $scope.lotsaved.assetId = $scope.product.assetId;
+                $scope.lotsaved.assetDesc = $scope.product.name;
+                $scope.lotsaved.auctionId = result.items[0].auctionId;
+                $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.assetDir=$scope.product.assetDir;
+                $scope.lotsaved.userId = product.seller._id;
+                $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                $scope.lotsaved.startDate=$scope.lot.startDate;
+                $scope.lotsaved.endDate=$scope.lot.endDate;
+                $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                //$scope.lotsaved._id = $scope.lot._id;
+                
+
+                LotSvc.saveLot($scope.lotsaved)
+                .then(function(result){
+                  console.log("lot saved",result);
+                });
+
+              }else{
+                    $scope.lotsaved.assetId = $scope.product.assetId;
+                    $scope.lotsaved.assetDesc = $scope.product.name;
+                    $scope.lotsaved.auctionId = result.items[0].auctionId;
+                    $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+                    $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                    $scope.lotsaved.assetDir=$scope.product.assetDir;
+                    $scope.lotsaved.userId = Auth.isAdmin()._id;
+                    $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                    $scope.lotsaved.startDate = $scope.lot.startDate;
+                    $scope.lotsaved.endDate= $scope.lot.endDate;
+                    $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                    //$scope.lotsaved._id = $scope.lot._id;
+
+                    LotSvc.saveLot($scope.lotsaved)
+                    .then(function(result){
+                      console.log("result",result);
+                    });
+                
+
+                    var master = {};
+                    master.emdAmount = $scope.lot.emdAmount;
+                    master.auctionId = result.items[0].auctionId;
+                    master._id = $scope.auctionReq.dbAuctionId;
+                    AuctionMasterSvc.updateAuctionMasterProduct(master)
+                            .then(function(res){
+                            
+          
+                      });
+
+                 }
+
+
+            });
+          }
+          else{
+            AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
+              console.log("auctiondata",result.items[0].auctionId);
+              if(!Auth.isAdmin()){
+                $scope.lotsaved.assetId = $scope.product.assetId;
+                $scope.lotsaved.assetDesc = $scope.product.name;
+                $scope.lotsaved.auctionId = result.items[0].auctionId;
+                $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
+                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.assetDir=$scope.product.assetDir;
+                $scope.lotsaved.userId = product.seller._id;
+                $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                $scope.lotsaved.startDate=$scope.lot.startDate;
+                $scope.lotsaved.endDate=$scope.lot.endDate;
+                $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                $scope.lotsaved._id = $scope.lot._id;
+        
+                LotSvc.updateProductLot($scope.lotsaved)
+                .then(function(result){
+                  console.log("lot update",result);
+                });
+                
+
+              }else{
+                $scope.lotsaved.assetId = $scope.product.assetId;
+                $scope.lotsaved.assetDesc = $scope.product.name;
+                $scope.lotsaved.auctionId = result.items[0].auctionId;
+                $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.assetDir=$scope.product.assetDir;
+                $scope.lotsaved.userId = Auth.isAdmin()._id;
+                $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                $scope.lotsaved.startDate=$scope.lot.startDate;
+                $scope.lotsaved.endDate=$scope.lot.endDate;
+                $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                $scope.lotsaved._id = $scope.lot._id;
+
+                LotSvc.updateProductLot($scope.lotsaved)
+                .then(function(result){
+                  console.log("update lot admin",result);
+                });
+
+
+                var master = {};
+                master.emdAmount = $scope.lot.emdAmount;
+                master.auctionId = result.items[0].auctionId;
+                master._id = $scope.auctionReq.dbAuctionId;
+
+                AuctionMasterSvc.updateAuctionMasterProduct(master)
+                        .then(function(res){
+                        
+      
+                  });
+
+     
+
+              
+        
+              }
+
+
+            });
+          }
+        }
+
+        
+        
         AppNotificationSvc.createAppNotificationFromProduct(product);
         mailToCustomerForApprovedAndFeatured(result, product);
-        if (cb)
+        if (cb){
           cb(product);
-        else
+        }else{
           $state.go('productlisting', AppStateSvc.get('productlisting'));
 
-        $scope.lot.assetId =$scope.product.assetId;
-        $scope.lot.assetDesc =$scope.product.assetDesc || "";
-        $scope.lot.auctionId= $scope.auctionReq.auctionId;
-        $scope.lot.reservePrice = $scope.product.reservePrice || 0;
-        $scope.lot.primaryImg=$scope.product.primaryImg;
-        console.log("lot is this",$scope.lot);
-        console.log("gg",$scope.auctionReq.auctionId);
-        if($scope.lotCreation){
-         LotSvc.saveLot($scope.lot)
-              .then(function(result){
-                console.log("result",result);
-              });
-        }
-        else{
-        LotSvc.update($scope.lot)
-        .then(function(result){
-          console.log("result",result);
-        });
-      }
+          }
+
+        
+        
       });
     }
 

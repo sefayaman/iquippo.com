@@ -6,8 +6,6 @@
   font-style: normal;
 }
 body{top:0 !important;font-family:'RobotoCondensed-Regular',sans-serif;}
-.btn, .navbar .navbar-nav > li > a.btn{font-family:'RobotoCondensed-Regular',sans-serif;}
-.btn{background-color:transparent;}
 a:focus{outline: none; cursor:pointer;}
 a:focus,.btn{outline: none;}
 .clearfix{clear: both;}
@@ -956,6 +954,45 @@ div#jivo_close_button{position: absolute; right: -20px;}
     text-align: center;
     color: #555;
 }
+.fixed-button {
+    position: fixed;
+    z-index: 9999;
+    bottom: 200px;
+    right: 0px;
+}
+.open-btn {
+    border: 2px solid #e3000f;
+    border-radius: 32px;
+    background: white;
+    color: #e3000f !important;
+    display: inline-block;
+    margin: 10px 0 0;
+    padding: 9px 16px;
+    font-size: 31px;
+    text-decoration: none !important;
+    text-transform: uppercase;
+}
+.popup-box-on {
+    display: block !important;
+    z-index: 9999999;
+    background: #004394;
+}
+#sidebar_secondary {
+    background-attachment: fixed;
+    background-clip: border-box;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url(https://scontent.fixc1-1.fna.fbcdn.net/v/t1.0-9/12670232_624826600991767_3547881030871377118_n.jpg?oh=92b8b3e…&oe=57CC10E7);
+    background-origin: padding-box;
+    background-position: center top;
+    background-repeat: repeat;
+    border: 1px solid #304445;
+    bottom: 0;
+    display: none;
+    height: 466px;
+    position: fixed;
+    right: 70px;
+    width: 300px;
+}
 .online-room .online-tb table tr td.onln-tit {
     text-align: center;
     font-size: 20px;
@@ -1132,6 +1169,25 @@ input.cmn-toggle-round-flat:checked + label:after
     line-height: 1;
     margin-top: 10px;
 }
+ul.countdown-widgit{
+  display: block !important;
+  text-align: center;
+}
+.countdown-widgit li.item {
+    width: 70px;
+    margin: 5px auto;
+    display: inline-block;
+    float: none;
+}
+.countdown-widgit li.item i{
+    width: 50px;
+    height: 50px;
+    line-height: 18px;
+    font-size: 18px;
+    padding: 5px;
+}
+.countdown-widgit li.item span{margin-top: 3px; font-size: 12px;}
+.widgit-panel .panel.panel-default .panel-heading{font-size: 12px;}
 .price-wp {
     font-size: 16px;
     font-weight: 600;
@@ -1228,6 +1284,7 @@ input.cmn-toggle-round-flat:checked + label:after
 .auction-details{position: relative; padding: 10px;border: 1px solid #ccc;}
 .auction-details .media-heading{font-size: 16px;}
 .auction-details .btn{position: absolute; bottom: 8px; right: 10px;}
+.auction-details.lots-buttons .btn{position: inherit; bottom: auto; right: auto;}
 .auction-list .calltoContact{position: absolute; top: 30%; right: 0;}
 .auctionText{background: #f4f4f4; padding:10px;}
 .calltoContact{position: absolute; right: 0; top: 30px;}

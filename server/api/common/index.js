@@ -154,4 +154,5 @@ router.get('/lot',lotCtrl.getLotData);
 router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
+router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
 module.exports = router;

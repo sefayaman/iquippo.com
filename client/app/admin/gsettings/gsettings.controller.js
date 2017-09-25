@@ -82,7 +82,7 @@
         vm.auctionData = {};
         vm.auctionEdit = false;
         vm.saveAuctionMaster = saveAuctionMaster;
-
+        vm.auctionData.bidInfo = [{}];
         vm.editAuctionMaster = editAuctionMaster;
         vm.updateAuctionMaster = updateAuctionMaster;
         vm.fireCommand = fireCommand;
@@ -139,7 +139,16 @@
         vm.updateProductTechInfo = updateProductTechInfo;
         vm.deleteProductTechInfo = deleteProductTechInfo;
         vm.productTechInfoTemplate = 'ProductTechInfoTemplate.xlsx';
+        vm.bidIncrementObj = {};
+        vm.getChangeAuctionMasterData = getChangeAuctionMasterData;
 
+        /*vm.auctionData.bidInfo = vm.auctionData.bidInfo.filter(function(item, idx) {
+        if (item && (item.bidFrom || item.bidTo || item.bidIncrement))
+          return true;
+        else
+          return false;
+
+      });*/
         function closeTechInfo() {
             return $scope.isTechCollapsed = !$scope.isTechCollapsed;
         }
@@ -781,6 +790,9 @@
             vm.auctionEdit = false;
             $scope.isCollapsed = !$scope.isCollapsed;
             vm.auctionData = {};
+            vm.auctionData.bidInfo=[{}];
+            
+           
             loadAuctionData();
         }
 
@@ -860,9 +872,23 @@
                     vm.auctionData.auctionOwner = item.entityName;
                 //vm.auctionData.auctionOwner = item.user.fname + " " + item.user.lname;
             });
+           
+            vm.auctionData.bidInfo.forEach(function(item) {
+                var range = item.bidFrom+"-"+item.bidTo;
+                 vm.bidIncrementObj[range] = item.bidIncrement;
+            });
+            vm.auctionData.bidIncrement = '';
+            vm.auctionData.bidIncrement = vm.bidIncrementObj;
             if (vm.auctionData.docType)
                 vm.auctionData.docType = '';
-
+           /* if (vm.auctionData.bidIncrementType === "S"){
+                vm.auctionData.bidIncrement = {"static":vm.auctionData.bidIncrement};
+            }
+            if (vm.auctionData.bidIncrementType === "R"){
+                vm.bidIncrementObj[vm.auctionData.bidIncrementRange] = vm.auctionData.bidIncrement;
+                vm.auctionData.bidIncrement = vm.bidIncrementObj;
+                
+            }*/
             if (vm.auctionData.city)
                 vm.auctionData.state = LocationSvc.getStateByCity(vm.auctionData.city);
 
@@ -879,11 +905,22 @@
         }
 
         function editAuctionMaster(index) {
+           
             angular.copy(vm.auctions[index], vm.auctionData)
             if (vm.auctionData.docType === 'bidProxy'){
                 vm.auctionData.docNameProxy = vm.auctionData.docName;
                  vm.auctionData.docName = '';
             }
+            //if(!vm.auctionData.bidIncrementRange) vm.auctionData.bidIncrementRange = '';
+             vm.auctionData.bidInfo = [];
+            if (vm.auctionData.bidIncrement){
+                var range = Object.keys(vm.auctionData.bidIncrement);
+               Object.keys(vm.auctionData.bidIncrement).forEach(function(item,index) {
+                var arr = item.split('-');
+                //tempObj[index] = {from:arr[0],to:arr[1],bidincrement:vm.auctionData.bidIncrement[item]};
+                vm.auctionData.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:vm.auctionData.bidIncrement[item]};
+                });
+            }//console.log(tempObj);
             if (vm.auctionData.startDate)
                 vm.auctionData.startDate = moment(vm.auctionData.startDate).format('MM/DD/YYYY hh:mm A');
             if (vm.auctionData.endDate)
