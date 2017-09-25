@@ -637,16 +637,16 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-3 form-group">
-						<input class="form-control" name="startDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date" />
+						<input class="form-control" name="startDate" ng-model="gsettingVm.auctionProduct.startDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="Start Date" />
 					</div>
 					<div class="col-sm-3 form-group">
-						<input class="form-control" name="endDate" ng-model="dt" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date" />
+						<input class="form-control" name="endDate" ng-model="gsettingVm.auctionProduct.endDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="End Date" />
 					</div>
 					<div class="col-sm-3 form-group">
-						<input type="text" class="form-control" name="" value="" placeholder="Starting Price">
+						<input type="text" class="form-control" name="startingPrice" value="" ng-model="gsettingVm.auctionProduct.startingPrice" placeholder="Starting Price">
 					</div>
 					<div class="col-sm-3 form-group">
-						<input type="text" class="form-control" name="" value="" placeholder="Reserve Price">
+						<input type="text" class="form-control" name="reservePrice" value="" ng-model="gsettingVm.auctionProduct.reservePrice" placeholder="Reserve Price">
 					</div>
 				</div>
 				<div class="row">
