@@ -10,13 +10,14 @@ angular.module('sreizaoApp')
 
  var bb=""
  var url="http://auctionsoftwaremarketplace.com:3007/chat";
+ console.log("scopdeData",scope.auctionId);
 //alert("user_id",angular.element(document.querySelector("#au_user_id")));
   //console.log("user_id",angular.element("#au_user_id").val());
   $.ajax({
            type: 'post',
             url: url,
             async : false,
-             data : {'userid':angular.element("au_user_id").val(),'auctionid':angular.element("au_auction_id").val()},
+             data : {'userid':scope.userId,'auctionid':scope.auctionId},
             success: function(data) {
               console.log(data);
                bb='<iframe src='+data.url+' width="100%" height="459px" style="border:none;"> ></iframe>';
