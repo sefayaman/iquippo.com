@@ -31,6 +31,7 @@
     $scope.isEdit = false;
     $scope.isEditdata = false;
     $scope.lotDate=false;
+    $scope.lotCreation=true;
 
     $scope.images = [{
       isPrimary: true
@@ -245,6 +246,7 @@
           product = $scope.product = response[0];
           var filter ={};
           filter.auctionType = "expireauction";
+          if(product.auction && product.auction._id)
           filter._id = product.auction._id;
          
          AuctionSvc.getAuctionExpire(filter).then(function(result){
@@ -1564,7 +1566,8 @@
 
 
     function addProduct(cb) {
-
+      
+      $scope.lotCreation=true;
       product.user = {};
       product.user._id = Auth.getCurrentUser()._id;
       product.user.fname = Auth.getCurrentUser().fname;
@@ -1723,28 +1726,24 @@
       filter = {};
       filter.lotNumber = lotNumber;
       filter.auctionId = auctionId;
-      alert($scope.lotCreation);
+      //alert($scope.lotCreation);
       LotSvc.getData(filter)
       .then(function(res){
         if(res.length >0){
           console.log("lotDAta",res);
      if(res[0] && res[0].startDate && res[0].endDate){
-         $scope.lotDate = true;
+         //$scope.lotDate = true;
          $scope.lot.startDate = res[0].startDate;
          $scope.lot.endDate = res[0].endDate;
      }
-     else{
-
-        $scope.lotDate = false;
-
-     }
+        if(res[0] && res[0].startingPrice)
        $scope.lot.startingPrice = res[0].startingPrice;
       }
       else{
           //$scope.lotCreation = true;
-          $scope.lotDate = false;
-          $scope.lot.startDate="";
-          $scope.lot.endDate=""; 
+          //$scope.lotDate = false;
+          //$scope.lot.startDate="";
+          //$scope.lot.endDate=""; 
         }
       })
       .catch(function(err){
