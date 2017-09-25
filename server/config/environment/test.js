@@ -7,8 +7,8 @@ module.exports = {
   mongo: {
     uri: 'mongodb://appUser:iQuippoAppUser^*$!2K17@127.0.0.1/sreiglobaldb'
   },
-  uploadPath: 'public/assets/uploads/',
-  templatePath:'public/assets',
+  uploadPath: "./../public/assets/uploads/",
+  templatePath:'./../public/assets',
   serverPath: "http://192.168.14.120",
   contactNumber: "011 66025672",
   ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
