@@ -62,7 +62,7 @@ exports.updateLotData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    //Util.sendLotData(req.body);
+    Util.sendLotData(req.body);
     return res.status(200).json(req.body);
   });
 
@@ -81,7 +81,7 @@ exports.updateProductLotData = function(req, res) {
       if (err) {
         res.status(err.status || 500).send(err);
       }
-      //Util.sendLotData(req.body);
+      Util.sendLotData(req.body);
       return res.status(200).json(req.body);
     });
   
