@@ -222,31 +222,26 @@ console.log(data);
 }
 
 function sendLotData(req,res){
-/*if(req && req.body && req.body.startDate && req.body.endDate){
+if(req && req.body && req.body.startDate && req.body.endDate){
   req.body.startDate=req.body.startDate.toString();
   req.body.endDate=req.body.endDate.toString();
 }
+if(req.body.updatedAt)
+delete req.body.updatedAt;
+if(req.body.assetDir)
+delete req.body.assetDir;
+if(req.body.primaryImg)
+delete req.body.primaryImg;
+if(!req.body.emdAmount)
+  req.body.emdAmount="";
+if(req.body._id){
+  req.body.lot_id=req.body._id;
+delete req.body._id;
+   }
 var lotData=[];
-lotData.push(req.body);*/
-/*var lotData=[
-    // {"_id" : "59ae41ab7e1bc33158217363",
-    {
-    //"_id" :"59af9f376608dfb14c3a3b10",
-    "userId":"589183a407ca290e48df2b1f",
-    //"_id" : "59af9f246608dfb14c3a3b0e"),
-    "lotNumber" : "46",
-    "startingPrice" : 56000,
-    "assetId" : "1502690241346",
-    "assetDesc" : "",
-    "auctionId" : "5680",
-    "reservePrice" : 0,
-    "updatedAt" : "2017-09-06T07:09:24.895Z",
-    "createdAt" : "2017-09-06T07:09:24.895Z"
-    // "updatedAt" : temp,
-    // "createdAt" : temp
-}];*/
+lotData.push(req.body);
  
-var lotData=[];
+/*var lotData=[];
 lotData.push({ 
 "lot_id":"",
 "assetDesc":"Backhoe Loader Ashok Leyland BHL435",
@@ -260,7 +255,7 @@ lotData.push({
 "startDate":"2017-09-19T08:17:00.000Z",
 "startingPrice":5600
 });
-
+*/
 console.log("lotData",lotData);
 lotData=JSON.stringify(lotData);
 var data =  {"lots":lotData
