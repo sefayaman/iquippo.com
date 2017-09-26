@@ -89,6 +89,15 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 		filter.pagination = true;
 		AssetSaleSvc.get(filter)
 			.then(function(res) {
+				$scope.approvFlag = false;
+				if(!Auth.isAdmin()) {
+					for(var i = 0;i < res.items.length;i++){
+				      if([bidStatuses[7],bidStatuses[8]].indexOf(res.items[i].bidStatus) !== -1){
+				        $scope.approvFlag = true;
+				        break;
+				      }
+				    }
+				}
 				vm.bidListing = res.items;
 				$scope.pager.update(res.items,res.totalItems);
 			})
