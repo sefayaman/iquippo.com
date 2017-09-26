@@ -196,14 +196,18 @@ var data = {
 request.post({
   url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-auction",
   form:data
-},function(err,httpres,data){
-  if(err) throw err;
-  console.log("response",data);
-  //data = JSON.parse(data);
-  console.log("Data",data);
-  res.json(data);
-
-console.log(data);
+},function(err,httpres,asData){
+  if(err){throw err;
+  }
+else{
+   try{
+      asData = JSON.parse(asData);
+      res.json(asData);
+    }
+    catch(err){
+      handleError(res,err);
+    }
+  }
 });
 }
 
@@ -239,12 +243,17 @@ var data =  {"lots":lotData
 request.post({
   url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-lots",
   form:data
-},function(err,httpres,data){
+},function(err,httpres,asData){
   if(err){
       console.log(err); 
     } else{
-      data = JSON.parse(data);
-      res.json(data);
+      try{
+      asData = JSON.parse(asData);
+      res.json(asData);
+    }
+    catch(err){
+      handleError(res,err);
+    }
     }
 });
 }
