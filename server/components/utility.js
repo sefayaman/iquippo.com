@@ -159,7 +159,14 @@ exports.sendAuctionData=sendAuctionData;
 exports.sendLotData=sendLotData;
 exports.sendUserInfo=sendUserInfo;
 
-function sendAuctionData(auctionsData){
+function sendAuctionData(req,res){
+  if(req && req.body && req.body.startDate && req.body.endDate){
+    req.body.startDate=req.body.startDate.toString();
+    req.body.endDate=req.body.endDate.toString();
+  }
+  var auctionsData=[];
+  auctionsData.push(req.body);
+  console.log("auctionsData",auctionsData);
   /*var auctionsData=[{
     //"_id" : "59af77f012667780104fffe1",
     "name" : "RockSteel",
@@ -182,22 +189,31 @@ function sendAuctionData(auctionsData){
     "updatedAt" : "2017-09-06T04:22:08.634Z",
     "createdAt" : "2017-09-06T04:22:08.634Z" 
 }];*/
-var  auctions=JSON.stringify(auctionsData);
-var tempo = {
-  "auctions":auctions
+//var  auctions=JSON.stringify(auctionsData);
+var data = {
+  "auctions":auctionsData
 };
 request.post({
   url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-auction",
-  form:tempo
-},function(err,res,data){
+  form:data
+},function(err,httpres,data){
   if(err) throw err;
-  // console.log("response",
-//data= JSON.parse(data);
+  console.log("response",data);
+  //data = JSON.parse(data);
+  console.log("Data",data);
+  res.json(data);
+
 console.log(data);
 });
 }
 
-function sendLotData(lotData){
+function sendLotData(req,res){
+if(req && req.body && req.body.startDate && req.body.endDate){
+  req.body.startDate=req.body.startDate.toString();
+  req.body.endDate=req.body.endDate.toString();
+}
+var lotData=[];
+lotData.push(req.body);
 /*var lotData=[
     // {"_id" : "59ae41ab7e1bc33158217363",
     {
@@ -218,8 +234,7 @@ function sendLotData(lotData){
 
 console.log("lotData",lotData);
 //var  lotData=JSON.stringify(lotData);
-var data = {
-  "lots":lotData
+var data =  {"lots":lotData
 };
 request.post({
   url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-lots",

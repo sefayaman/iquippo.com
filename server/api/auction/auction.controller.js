@@ -961,6 +961,8 @@ exports.createAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
+        console.log("auctionData",req.body);
+        Utility.sendAuctionData(req,res);
         return res.status(201).json({
           errorCode: 0,
           message: ""
@@ -1023,6 +1025,7 @@ exports.updateAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
+        Utility.sendAuctionData(req,res);
         updateAuctionRequest(req.body, _id);
         return res.status(200).json({
           errorCode: 0,
