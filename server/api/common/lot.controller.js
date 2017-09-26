@@ -44,7 +44,7 @@ exports.create = function(req, res, next) {
       res.status(err.status || 500).send(err);
     }
     //console.log("results proceed",results.saveLot);
-    Util.sendLotData(results.saveLot.lotData);
+    Util.sendLotData(req,res);
     return res.status(200).json(results.saveLot);
   });
 };
@@ -62,7 +62,7 @@ exports.updateLotData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    Util.sendLotData(req.body);
+    Util.sendLotData(req,res);
     return res.status(200).json(req.body);
   });
 
