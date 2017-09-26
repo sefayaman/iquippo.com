@@ -1031,7 +1031,7 @@
 
       $scope.tabObj.step1 = false;
       $scope.tabObj.step2 = true;
-      /*if($stateParams.id) {
+      if($stateParams.id && !Auth.isAdmin()) {
           var auctiond ={};
           auctiond._id = $scope.product.auction._id;
           $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
@@ -1051,11 +1051,8 @@
 
            console.log("sxsassasxs",$scope.lot.cerification);
 
-          // $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
-
-          
          });
-       }*/
+       }
       filter = {};
       filter['yetToStartDate'] = new Date();
 
@@ -1602,7 +1599,7 @@
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
       //product.auction = {};
 
-      product.auction._id = $scope.auctionReq.dbAuctionId;
+      product.auction.id = $scope.auctionReq.dbAuctionId;
 
       productSvc.addProduct(product).then(function(result){
 
@@ -1786,7 +1783,7 @@
       $rootScope.loading = true;
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
 
-      product.auction._id = $scope.auctionReq.dbAuctionId;
+      product.auction.id = $scope.auctionReq.dbAuctionId;
 
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;

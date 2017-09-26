@@ -1004,11 +1004,11 @@
             <div class="row" ng-if="!isExpire">
               <div class="form-group col-sm-5">Auction</div>
               <div class="col-sm-7 form-group">
-                  <select class="form-control" name="auctionDate" ng-model="auctionReq.auctionId">
-                    <option value="">Select Date</option>
-                    <option  ng-repeat="act in auctions" value="{{act.auctionId}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
-                  </select>
-                  <i class="caret"></i>
+                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
+                  <option value="">Select Auction</option>
+                  <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
+                </select>
+                <i class="caret"></i>
               </div>
               
             </div>
