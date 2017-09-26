@@ -1891,6 +1891,7 @@
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
 
+                console.log("lOTdaTA scope",$scope.lotsaved);
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
                   console.log("update lot admin",result);

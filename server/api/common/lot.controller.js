@@ -52,7 +52,7 @@ exports.create = function(req, res, next) {
 exports.updateLotData = function(req, res) {
 
   req.body.updatedAt = new Date();
-  console.log("-----++++");
+  console.log("-----++++",req.body);
   delete req.body._id;
   Lot.update({
     _id: req.params.id
