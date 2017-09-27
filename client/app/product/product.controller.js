@@ -1823,7 +1823,7 @@
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                     $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                     $scope.lotsaved.assetDir=$scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.isAdmin()._id;
+                    $scope.lotsaved.userId = Auth.getCurrentUser()._id;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate= $scope.lot.endDate;
@@ -1881,13 +1881,14 @@
                 $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                 $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = Auth.isAdmin()._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser()._id;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
 
+                console.log("lOTdaTA scope",$scope.lotsaved);
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
                   console.log("update lot admin",result);

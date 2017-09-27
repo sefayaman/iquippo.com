@@ -52,7 +52,7 @@ exports.create = function(req, res, next) {
 exports.updateLotData = function(req, res) {
 
   req.body.updatedAt = new Date();
-  console.log("-----++++");
+  console.log("-----++++",req.body);
   delete req.body._id;
   Lot.update({
     _id: req.params.id
@@ -72,7 +72,6 @@ exports.updateProductLotData = function(req, res) {
   
     req.body.updatedAt = new Date();
     console.log("-----++++",req.params);
-    delete req.body._id;
     Lot.update({
       "_id": req.params.id
     }, {
@@ -81,7 +80,7 @@ exports.updateProductLotData = function(req, res) {
       if (err) {
         res.status(err.status || 500).send(err);
       }
-      Util.sendLotData(req.body);
+      Util.sendLotData(req,res);
       return res.status(200).json(req.body);
     });
   

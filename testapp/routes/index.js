@@ -11,21 +11,19 @@ router.get('/', function(req, res, next) {
     "auctionId" : "5680",
     "startDate":"2017-09-13T04:21:00.000Z",
     "endDate" : "2017-09-16T04:21:00.000Z",
-    "auctionOwnerMobile" : "8697733634",
     "insStartDate" : "2017-09-09T04:21:00.000Z",
     "insEndDate" : "2017-09-12T04:21:00.000Z",
     "regEndDate" : "2017-09-11T18:30:00.000Z",
     "city" : "Allahabad",
     "auctionType" : "A",
     "emdTax" : "lotWise",
+    "emdAmount" : '3000',
+    "primaryImg":"http://s3.ap-south-1.amazonaws.com/iquppo-image-upload/assets/uploads/1495866315358/Belaz_240T_-_2068_x_1468_75.jpg",
     "taxApplicability" : "included",
     "bidIncrement" : 10000,
     "lastMinuteBid" : 45,
     "extendedTo" : 60,
-    "auctionOwner" : "Balaji Andhavarapu",
-    "state" : "Uttar Pradesh",
-    "updatedAt" : "2017-09-06T04:22:08.634Z",
-    "createdAt" : "2017-09-06T04:22:08.634Z" 
+    "state" : "Uttar Pradesh"
 }];
 var  auctions=JSON.stringify(auctionsData);
 var tempo = {
