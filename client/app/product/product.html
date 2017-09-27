@@ -1070,8 +1070,8 @@
          <div class="form-group col-sm-5">Starting Price<span class="text-warning">*</span></div>
           <div class="form-group col-sm-7" ng-class="{'has-error': form.startPrice.$invalid && submitted}">
               <div class="input-group">
-                <span class="input-group-addon currency-width">
-                 Rupee
+                <span class="input-group-addon">
+                 <i class="fa fa-inr"></i>
                 </span>
                 <input type="number"  placeholder="20,000"  name="startingPrice" min="0" ng-value="lot.startingPrice" class="form-control" ng-model="lot.startingPrice" ng-required="!lot.startingPrice">
               </div>
@@ -1117,10 +1117,32 @@
             </div>
           </div>
         </div> -->
-
         <div class="row">
           <div class="col-sm-5 form-group">
             Bid Increment
+          </div>
+          <div class="col-sm-7 form-group">
+            <div class="row">
+              <div class="col-sm-3">
+                <input type="radio" name="increment" ng-model="bidinfo.increment" value="Static"> Static
+              </div>
+              <div class="col-sm-4">
+                <input type="radio" name="increment" ng-model="bidinfo.increment" value="Range"> Bid Range
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" ng-if="bidinfo.increment == 'Static'">
+            <div class="col-sm-5 form-group">
+              Bid Static Increment
+            </div>
+            <div class="col-sm-7 form-group">                   
+              <input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Bid Increment">
+            </div>
+          </div>
+        <div class="row" ng-if="bidinfo.increment == 'Range'">
+          <div class="col-sm-5 form-group">
+            Bid Range Increment
           </div>
           <div class="col-sm-7">
             <div class="row" ng-repeat="bidinfo in lot.bidInfo">
