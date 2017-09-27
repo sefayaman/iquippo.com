@@ -164,6 +164,15 @@ function sendAuctionData(req,res){
     req.body.startDate=req.body.startDate.toString();
     req.body.endDate=req.body.endDate.toString();
   }
+  req.body.primaryImg="http://s3.ap-south-1.amazonaws.com/iquppo-image-upload/assets/uploads/1495866315358/Belaz_240T_-_2068_x_1468_75.jpg";
+  if(req.body._id)
+    delete req.body._id;
+  if(req.body.auctionOwner && req.body.auctionOwnerMobile){
+    delete req.body.auctionOwner;
+    delete req.body.auctionOwnerMobile;
+  }
+  if(req.body.bidInfo)
+    delete req.body.bidInfo;
   var auctionsData=[];
   auctionsData.push(req.body);
   console.log("auctionsData",auctionsData);
@@ -189,7 +198,7 @@ function sendAuctionData(req,res){
     "updatedAt" : "2017-09-06T04:22:08.634Z",
     "createdAt" : "2017-09-06T04:22:08.634Z" 
 }];*/
-//var  auctions=JSON.stringify(auctionsData);
+var  auctionsData=JSON.stringify(auctionsData);
 var data = {
   "auctions":auctionsData
 };
@@ -199,10 +208,15 @@ request.post({
 },function(err,httpres,data){
   if(err) throw err;
   console.log("response",data);
-  //data = JSON.parse(data);
+  try{
+  data = JSON.parse(data);
   console.log("Data",data);
-  res.json(data);
-
+  /*res.json({data:data,
+    message:"Your auction has been created"});*/
+}
+catch(err){
+  handleError(res,err);
+}
 console.log(data);
 });
 }
@@ -212,40 +226,56 @@ if(req && req.body && req.body.startDate && req.body.endDate){
   req.body.startDate=req.body.startDate.toString();
   req.body.endDate=req.body.endDate.toString();
 }
+if(req.body.updatedAt)
+delete req.body.updatedAt;
+if(req.body.assetDir)
+delete req.body.assetDir;
+if(req.body.primaryImg)
+delete req.body.primaryImg;
+if(!req.body.emdAmount)
+  req.body.emdAmount="";
+if(req.body._id){
+  req.body.lot_id=req.body._id;
+delete req.body._id;
+   }
 var lotData=[];
 lotData.push(req.body);
-/*var lotData=[
-    // {"_id" : "59ae41ab7e1bc33158217363",
-    {
-    //"_id" :"59af9f376608dfb14c3a3b10",
-    "userId":"589183a407ca290e48df2b1f",
-    //"_id" : "59af9f246608dfb14c3a3b0e"),
-    "lotNumber" : "46",
-    "startingPrice" : 56000,
-    "assetId" : "1502690241346",
-    "assetDesc" : "",
-    "auctionId" : "5680",
-    "reservePrice" : 0,
-    "updatedAt" : "2017-09-06T07:09:24.895Z",
-    "createdAt" : "2017-09-06T07:09:24.895Z"
-    // "updatedAt" : temp,
-    // "createdAt" : temp
-}];*/
-
+ 
+/*var lotData=[];
+lotData.push({ 
+"lot_id":"",
+"assetDesc":"Backhoe Loader Ashok Leyland BHL435",
+"emdAmount":"4500",
+"assetId":"1502690241346",
+"auctionId":"564674",
+"endDate":"2017-09-28T08:17:00.000Z",
+"lotNumber":"856",
+"userId":"589183a407ca290e48df2b1f",
+"reservePrice":320000,
+"startDate":"2017-09-19T08:17:00.000Z",
+"startingPrice":5600
+});
+*/
 console.log("lotData",lotData);
-//var  lotData=JSON.stringify(lotData);
+lotData=JSON.stringify(lotData);
 var data =  {"lots":lotData
 };
 request.post({
   url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-lots",
   form:data
-},function(err,httpres,data){
+},function(err,httpres,asData){
   if(err){
       console.log(err); 
     } else{
-      data = JSON.parse(data);
-      res.json(data);
+      try{
+        console.log(asData);
+      //asData = JSON.parse(asData);
+      //res.json(data);      
     }
+    catch(err){
+     // handleError(res,err);
+    }
+  }
 });
 }
 

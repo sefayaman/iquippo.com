@@ -16,7 +16,7 @@ angular.module('sreizaoApp')
            type: 'post',
             url: url,
             async : false,
-             data : {'userid':angular.element("au_user_id").val(),'auctionid':angular.element("au_auction_id").val()},
+             data : {'userid':scope.userId,'auctionid':scope.auctionId},
             success: function(data) {
               console.log(data);
                bb='<iframe src='+data.url+' width="100%" height="459px" style="border:none;"> ></iframe>';
