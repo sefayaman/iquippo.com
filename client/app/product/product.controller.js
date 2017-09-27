@@ -93,7 +93,8 @@
     $scope.lotsaved ={};
     $scope.mandatory = true;
     $scope.auctionselect = false;
-
+     $scope.lot.bidInfo=[{}];
+    $scope.bidIncrementObj = {};
 
 
     $scope.listInAuction = function(data){
@@ -255,21 +256,13 @@
          
          AuctionSvc.getAuctionExpire(filter).then(function(result){
            $scope.date = new Date();
- 
-           console.log("result",result);
- 
-         
            if(result!=""){
  
              $scope.auctionReq.auctionexpire ="expire";
              $scope.auctionReq.auctionname = result[0].name;
              $scope.isExpire = true;
- 
-             console.log("hj");
            }else{
              $scope.isExpire = false;
- 
-             console.log("hjdghghg");
            }
  
           });
@@ -334,7 +327,7 @@
                 .then(function(result) {
                   if (result.length > 0) {
                     $scope.auctionReq = result[0];
-                    console.log("AuctionData after Edit case",$scope.auctionReq);
+                    //console.log("AuctionData after Edit case",$scope.auctionReq);
                     filter={};
                      
                     filter.auctionId=$scope.auctionReq.auctionId;
@@ -343,7 +336,7 @@
                     LotSvc.getData(filter)
                     .then(function(res){
                       if(res.length > 0){
-                      console.log("LOT info",res[0]);
+                      //console.log("LOT info",res[0]);
                       if(res[0].lotNumber)
                       $scope.lot.lotNumber=res[0].lotNumber;
                        if(res[0].startingPrice)
@@ -357,6 +350,15 @@
                       if(res[0].auctionId)
                       $scope.lot.auctionId =res[0].auctionId;
                       $scope.lotCreation=false;
+                      $scope.lot.bidInfo = [];
+                          //console.log("bidincrement===",res[0].bidIncrement);
+                          if (res[0].bidIncrement){
+                              var range = Object.keys(res[0].bidIncrement);
+                            Object.keys(res[0].bidIncrement).forEach(function(item,index) {
+                                  var arr = item.split('-');
+                                  $scope.lot.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:res[0].bidIncrement[item]};
+                              });
+                          }
                       }
                       else
                       {
@@ -1034,7 +1036,7 @@
            $scope.lot.cerification = result[0].certification;
            $scope.lot.paymentstatus = result[0].paymentstatus;
 
-           console.log("sxsassasxs",$scope.lot.cerification);
+           //console.log("sxsassasxs",$scope.lot.cerification);
 
          });
        }
@@ -1081,7 +1083,7 @@
             }
 
         if($stateParams.id) {
-           console.log("certificate",$scope.lot.cerification);
+           //console.log("certificate",$scope.lot.cerification);
               if($scope.lot.cerification =="Yes"){
                  var certification = $scope.lot.cerification;
                  var paymentstatus = $scope.lot.paymentstatus;
@@ -1165,7 +1167,7 @@
 
                   AuctionMasterSvc.updateAuctionMasterProduct(master)
                   .then(function(res){
-                    console.log("kjkj",res);
+                    //console.log("kjkj",res);
                   
                         addOrUpdate(postAuction);
                     
@@ -1198,7 +1200,7 @@
 
         $scope.auctionReq.cerification = certification;
 
-        console.log("seller",master);
+        //console.log("seller",master);
           AuctionMasterSvc.saveAuctionMaster(master)
                 .then(function(res){
                   filter = {};
@@ -1220,7 +1222,7 @@
 
 
     function postAuction(productObj) {
-    console.log ("prod",productObj);
+    //console.log ("prod",productObj);
       var stsObj = {};
       if (!productObj.auction)
         productObj.auction = {};
@@ -1624,7 +1626,13 @@
               $scope.lotsaved.startDate=$scope.lot.startDate;
               $scope.lotsaved.endDate=$scope.lot.endDate;
               $scope.lotsaved.reservePrice=$scope.product.reservePrice;
-      
+              //bid data
+               $scope.lot.bidInfo.forEach(function(item) {
+                 var range = item.bidFrom+"-"+item.bidTo;
+                 $scope.bidIncrementObj[range] = item.bidIncrement;
+                });
+                $scope.lotsaved.bidIncrement = '';
+                $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
               LotSvc.saveLot($scope.lotsaved)
               .then(function(result){
               });
@@ -1643,7 +1651,13 @@
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate = $scope.lot.endDate;
                     $scope.lotsaved.reservePrice = $scope.product.reservePrice; 
-      
+                    //bid data
+                    $scope.lot.bidInfo.forEach(function(item) {
+                    var range = item.bidFrom+"-"+item.bidTo;
+                    $scope.bidIncrementObj[range] = item.bidIncrement;
+                    });
+                    $scope.lotsaved.bidIncrement = '';
+                    $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                     LotSvc.saveLot($scope.lotsaved)
                     .then(function(result){
                     });
@@ -1713,7 +1727,7 @@
       LotSvc.getData(filter)
       .then(function(res){
         if(res.length >0){
-          console.log("lotDAta",res);
+         // console.log("lotDAta",res);
      if(res[0] && res[0].startDate && res[0].endDate){
          //$scope.lotDate = true;
          $scope.lot.startDate = res[0].startDate;
@@ -1795,11 +1809,17 @@
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 //$scope.lotsaved._id = $scope.lot._id;
-                
+                //bid data
+                $scope.lot.bidInfo.forEach(function(item) {
+                 var range = item.bidFrom+"-"+item.bidTo;
+                 $scope.bidIncrementObj[range] = item.bidIncrement;
+                });
+                $scope.lotsaved.bidIncrement = '';
+                $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
 
                 LotSvc.saveLot($scope.lotsaved)
                 .then(function(result){
-                  console.log("lot saved",result);
+                  //console.log("lot saved",result);
                 });
 
               }else{
@@ -1815,10 +1835,16 @@
                     $scope.lotsaved.endDate= $scope.lot.endDate;
                     $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                     //$scope.lotsaved._id = $scope.lot._id;
-
+                      //bid data
+                     $scope.lot.bidInfo.forEach(function(item) {
+                      var range = item.bidFrom+"-"+item.bidTo;
+                      $scope.bidIncrementObj[range] = item.bidIncrement;
+                      });
+                      $scope.lotsaved.bidIncrement = '';
+                      $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                     LotSvc.saveLot($scope.lotsaved)
                     .then(function(result){
-                      console.log("result",result);
+                      //console.log("result",result);
                     });
                 
 
@@ -1839,7 +1865,7 @@
           }
           else{
             AuctionSvc.getAuctionDateData(auctionfilter).then(function(result) {
-              console.log("auctiondata",result.items[0].auctionId);
+              //console.log("auctiondata",result.items[0].auctionId);
               if(!Auth.isAdmin()){
                 $scope.lotsaved.assetId = $scope.product.assetId;
                 $scope.lotsaved.assetDesc = $scope.product.name;
@@ -1853,10 +1879,16 @@
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
-        
+                //bid data
+               $scope.lot.bidInfo.forEach(function(item) {
+                 var range = item.bidFrom+"-"+item.bidTo;
+                 $scope.bidIncrementObj[range] = item.bidIncrement;
+                });
+                $scope.lotsaved.bidIncrement = '';
+                $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
-                  console.log("lot update",result);
+                  //console.log("lot update",result);
                 });
                 
 
@@ -1873,11 +1905,16 @@
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
-
-                console.log("lOTdaTA scope",$scope.lotsaved);
+                  //bid data
+               $scope.lot.bidInfo.forEach(function(item) {
+                 var range = item.bidFrom+"-"+item.bidTo;
+                 $scope.bidIncrementObj[range] = item.bidIncrement;
+                });
+                $scope.lotsaved.bidIncrement = '';
+                $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
-                  console.log("update lot admin",result);
+                  //console.log("update lot admin",result);
                 });
 
 

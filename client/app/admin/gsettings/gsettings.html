@@ -2739,6 +2739,23 @@
 					<input class="form-control ng-pristine ng-invalid ng-invalid-required ng-touched" datetime-picker="" readonly="" name="endDate" ng-model="lotVm.dataModel.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required="">
 				</div>
 			</div>
+			<h5>Bid Increment</h5>
+					<div class="row" ng-repeat="bidinfo in lotVm.dataModel.bidInfo">
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control"  ng-model="bidinfo.bidFrom" name="" value="" placeholder="Bid From">
+						</div>
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
+						</div>
+						<div class="col-sm-3 form-group">
+							<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
+						</div>
+						<div class="col-sm-3 form-group ">
+							<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidInfo.push({})" ng-if="$last">Add More</button>
+							<button type="button" class="btn btn-default" ng-click="lotVm.dataModel.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
+						</div>
+						
+					</div>
 			<div class="row form-group">
 				<div class="col-sm-2 pull-right">
 			   <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="lotVm.update(lotform)">Update</button>

@@ -4,11 +4,13 @@
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
 
-
-  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, LocationSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$location) {
+  function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc,LocationSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce,$location) {
     var vm = this;
    var query=$location.search();
-   
+
+    var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/"+query.auctionId+"/"+query.lotId+"/"+query.userId;
+    $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
+   console.log("url",$scope.asWidgetURLSCE);
    $scope.asAuctionId=query.auctionId;
    $scope.asLotId=query.lotId;
    $scope.asUserId=query.userId;
