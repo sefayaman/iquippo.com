@@ -1296,57 +1296,15 @@
                 });
         }
           
-        function checkForLot(){
-            var filter={};
-            filter.auctionId = vm.auctionProduct.dbAuctionId;
-            filter.assetId =  vm.auctionProduct.product.assetId;
-           
-                LotSvc.getData(filter)
-                .then(function(res){
-                    if(res.length > 0){
+      
 
-                    if(res[0].lotNumber)
-                      vm.auctionProduct.lotNo = res[0].lotNumber;
-                    if(res[0].startingPrice)
-                      vm.auctionProduct.startingPrice = res[0].startingPrice;
-                    if(res[0].reservePrice)
-                      $scope.lotsaved.reservePrice = res[0].reservePrice;
-                    if(res[0].startDate && res[0].endDate){
-                        $scope.lotDate = true;
-                        vm.auctionProduct.startDate = res[0].startDate;
-                        vm.auctionProduct.endDate = res[0].endDate;
-                    }
-
-                    $scope.lot._id = res[0]._id;
-
-                    $scope.lotCreation=false;
-
-                    }
-                    else
-                    {
-
-                    $scope.lotCreation=true;
-
-                    }
-                    
-                })
-                .catch(function(err){
-
-                });
-
-
-        }
         function saveAssetInAuction(form) {
 
             if (form.$invalid) {
                 $scope.submitted = true;
                 return;
             }
-            /*var imgFound = vm.auctionProduct.product.primaryImg && vm.auctionProduct.product.otherImages && vm.auctionProduct.product.otherImages.length > 0 ? true : false;
-            if (!imgFound) {
-                Modal.alert("Please upload both images.");
-                return;
-            }*/
+
             for (var i = 0; i < vm.upcomingAuctions.length; i++){
                 if (vm.upcomingAuctions[i]._id == vm.auctionProduct.dbAuctionId){
                     vm.auctionProduct.auctionId = vm.upcomingAuctions[i].auctionId;
@@ -1374,7 +1332,7 @@
                 auctionfilter._id = vm.auctionProduct.dbAuctionId;
                 AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
                     var filter={};
-                    filter.auctionId = vm.auctionProduct.dbAuctionId;
+                    filter.auctionId = result.items[0].auctionId;
                     filter.assetId =  vm.auctionProduct.product.assetId;
                    
                         LotSvc.getData(filter)
@@ -1446,8 +1404,56 @@
             onBrandChange(vm.auctionProduct.product.brand, false);
             checkForLot();
            
+
+
            
         }
+
+        function checkForLot(){
+            var auctionfilter ={};
+            auctionfilter._id = vm.auctionProduct.dbAuctionId;
+   
+           AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
+            var filter={};
+            filter.auctionId = result.items[0].auctionId;
+            filter.assetId =  vm.auctionProduct.product.assetId;
+           
+                LotSvc.getData(filter)
+                .then(function(res){
+                  if(res.length > 0){
+                     vm.auctionProduct.lotNo = res[0].lotNumber;
+                     vm.auctionProduct.startingPrice = res[0].startingPrice;
+                     vm.auctionProduct.reservePrice = res[0].reservePrice;
+                     $scope.lotsaved.reservePrice = res[0].reservePrice;
+                     console.log("bjj",vm.auctionProduct.lotNo);
+
+                    if(res[0].startDate && res[0].endDate){
+                        $scope.lotDate = true;
+                        vm.auctionProduct.startDate = res[0].startDate;
+                        vm.auctionProduct.endDate = res[0].endDate;
+                    }
+
+                    $scope.lot._id = res[0]._id;
+
+                    $scope.lotCreation=false;
+
+                    }
+                    else
+                    {
+
+                    $scope.lotCreation=true;
+
+                    }
+                    
+                })
+                .catch(function(err){
+
+                });
+            });
+
+
+        }
+
 
         function updateAssetInAuction(form) {
             if (form.$invalid) {
