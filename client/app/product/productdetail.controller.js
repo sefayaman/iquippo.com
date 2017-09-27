@@ -8,6 +8,10 @@
     var vm = this;
    var query=$location.search();
 
+   if(query.assetListedInAuction){
+    $scope.assetListedInAuction=query.assetListedInAuction;
+console.log("assetListedInAuction",$scope.assetListedInAuction);
+}
     var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/"+query.auctionId+"/"+query.lotId+"/"+query.userId;
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
    console.log("url",$scope.asWidgetURLSCE);
