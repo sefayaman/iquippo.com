@@ -41,9 +41,15 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		var serverAction = "";
 		if(vm.emdFullPaymentInfo.paymentMode === 'Cash')
 			vm.emdFullPaymentInfo.instrumentNo = "";
+
 		if(action == 'emdPayment') {
 			if(!$scope.bidData.emdPayment)
 				$scope.bidData.emdPayment = {};
+			if((Number($scope.bidData.emdAmount + $scope.bidData.fullPaymentAmount) < vm.emdFullPaymentInfo.amount) || vm.emdFullPaymentInfo.amount <= 0) {
+				Modal.alert("Invalid payment amount.");
+				return;
+			}
+
 			var remainingPayment = (Number($scope.bidData.emdPayment.remainingPayment || 0) - Number(vm.emdFullPaymentInfo.amount)) || 0
 			$scope.bidData.emdPayment.remainingPayment = remainingPayment > 0? remainingPayment: 0;
 			$scope.bidData.emdPayment.remainingPayment = Math.round($scope.bidData.emdPayment.remainingPayment || 0) //(Number($scope.bidData.emdPayment.remainingPayment || 0) - Number(vm.emdFullPaymentInfo.amount)) || 0; 
@@ -54,10 +60,10 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if(remainingPayment < 0 && $scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment)
 				$scope.bidData.fullPayment.remainingPayment = Math.round(Number($scope.bidData.fullPayment.remainingPayment) + remainingPayment) || 0;
 
-			if($scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment < 0){
+			/*if($scope.bidData.fullPayment && $scope.bidData.fullPayment.remainingPayment < 0){
 				Modal.alert("Invalid payment amount.");
 				return;
-			}
+			}*/
 			
 			if($scope.bidData.emdPayment.remainingPayment == 0){
 				serverAction = "emdpayment";
@@ -74,7 +80,7 @@ function EmdFullPaymentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 			if(!$scope.bidData.fullPayment)
 				$scope.bidData.fullPayment = {};
 			var remainingPayment = (Number($scope.bidData.fullPayment.remainingPayment) - Number(vm.emdFullPaymentInfo.amount)) || 0;
-			if(remainingPayment < 0){
+			if(remainingPayment < 0 || vm.emdFullPaymentInfo.amount <= 0){
 				Modal.alert("Invalid payment amount.");
 				return;
 			}

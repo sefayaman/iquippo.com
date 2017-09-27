@@ -1103,12 +1103,12 @@ exports.exportProducts = function(req, res) {
         }
         fetchResults();
       })
-    } /*else if(req.user.role === 'enterprise' && req.user.enterprise){
+    } else if(req.user.role === 'enterprise' && req.user.enterprise){
       filter["seller._id"] = {
           "$in": req.sellers || []
         }
         return fetchResults();
-    }*/ else {
+    } else {
       filter["seller._id"] = req.body.userid;
       fetchResults();
     }
@@ -1602,11 +1602,8 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateForBid(callback){
-      var ret = true;
-      if(ret)
-        return callback();
-      
-      if(row.tradeType !== 'RENT' || !row.assetId )
+
+      if(row.tradeType !== 'RENT' || !row.assetId)
         return callback();
 
       Product.find({assetId:row.assetId,deleted:false},function(err,prds){
@@ -1668,7 +1665,7 @@ exports.validateExcelData = function(req, res, next) {
       if(row.tradeType && row.tradeType.toLowerCase() === 'rent')
         return callback();
 
-      var isCustomer = true; //['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      var isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
       var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";

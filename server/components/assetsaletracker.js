@@ -61,6 +61,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
               maxBid.product.prevTradeType = prd.tradeType;
               AssetSaleUtil.setStatus(maxBid,bidStatuses[7],'bidStatus','bidStatuses');
               AssetSaleUtil.setStatus(maxBid,dealStatuses[6],'dealStatus','dealStatuses'); 
+              AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:maxBid.ticketId}]);
             }
 
             bids.forEach(function(item){
@@ -138,6 +139,7 @@ var TimeInterval =  1*60*1000;/*Service interval*/
         AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
         AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
         actionableBids.push(selBid); 
+        AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
       }else{
         item.updateProduct = true;
         result.otherBids.forEach(function(bid){
@@ -150,11 +152,14 @@ var TimeInterval =  1*60*1000;/*Service interval*/
       var highestBid = 0;
       if(result.otherBids.length)
         highestBid = getMaxBid(result.otherBids).bidAmount || 0;
+      var bidRec = true;
+      if(bidCount === 0)
+        bidRec = false;
       async.eachLimit(actionableBids,3,updateBid,function(err){
         if(err)
           return callback(err);
         if(item.updateProduct)
-            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
+            Product.update({_id:item.product.proData},{$set:{tradeType:item.product.prevTradeType,bidReceived:bidRec,bidRequestApproved:false,bidCount:bidCount,highestBid:highestBid}}).exec();
           return callback();
       });
     }
