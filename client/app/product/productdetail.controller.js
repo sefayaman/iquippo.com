@@ -9,6 +9,9 @@
     var vm = this;
    var query=$location.search();
    
+   $scope.asAuctionId=query.auctionId;
+   $scope.asLotId=query.lotId;
+   $scope.asUserId=query.userId;
     $scope.currentProduct = {};
     $scope.priceTrendData = null;
     $rootScope.currntUserInfo = {};

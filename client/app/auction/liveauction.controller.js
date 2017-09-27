@@ -15,6 +15,7 @@ function LiveAuctionCtrl($scope,$state,Auth, $http,socketSvc,AuctionSvc,$locatio
  filter.auctionId=query.auctionId;
  $scope.auctionId=query.auctionId;
  filter.lotId=query.lotNumber;
+ $scope.userId=Auth.getCurrentUser()._id;
 
  console.log("Params",filter);
  function init(){

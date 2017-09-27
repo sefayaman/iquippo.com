@@ -1016,7 +1016,7 @@
 
       $scope.tabObj.step1 = false;
       $scope.tabObj.step2 = true;
-      /*if($stateParams.id) {
+      if($stateParams.id && !Auth.isAdmin()) {
           var auctiond ={};
           auctiond._id = $scope.product.auction._id;
           $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
@@ -1036,11 +1036,8 @@
 
            console.log("sxsassasxs",$scope.lot.cerification);
 
-          // $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
-
-          
          });
-       }*/
+       }
       filter = {};
       filter['yetToStartDate'] = new Date();
 
@@ -1588,7 +1585,7 @@
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
       //product.auction = {};
 
-      product.auction._id = $scope.auctionReq.dbAuctionId;
+      product.auction.id = $scope.auctionReq.dbAuctionId;
 
       productSvc.addProduct(product).then(function(result){
 
@@ -1772,7 +1769,7 @@
       $rootScope.loading = true;
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
 
-      product.auction._id = $scope.auctionReq.dbAuctionId;
+      product.auction.id = $scope.auctionReq.dbAuctionId;
 
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;
@@ -1812,7 +1809,7 @@
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                     $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                     $scope.lotsaved.assetDir=$scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.isAdmin()._id;
+                    $scope.lotsaved.userId = Auth.getCurrentUser()._id;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate= $scope.lot.endDate;
@@ -1870,13 +1867,14 @@
                 $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                 $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = Auth.isAdmin()._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser()._id;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
 
+                console.log("lOTdaTA scope",$scope.lotsaved);
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
                   console.log("update lot admin",result);
