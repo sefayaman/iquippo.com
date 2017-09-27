@@ -140,10 +140,6 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
 
    
 
-
-
-
-
   function createUser(auctionData, userData){
     vm.UserObj = {};
   	vm.UserObj.fname = userData.fname;
@@ -238,7 +234,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
  
   }
 
-  function save(dataObj,amount){
+  /*function save(dataObj,amount){
     userRegForAuctionSvc.save(dataObj)
     .then(function(){
       $rootScope.loading = false;
@@ -249,11 +245,43 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
        if(err.data)
             Modal.alert(err.data); 
     });
-  }
+  }*/
 
-  function closeDialog() {
-    $uibModalInstance.dismiss('cancel');
-  }
+      function save(dataObj,amount){
+        dataObj.totalAmount = amount;
+        userRegForAuctionSvc.save(dataObj)
+        .then(function(result){
+            $rootScope.loading = false;
+            closeDialog();
+
+            Modal.confirm('Your emd amount is ' + amount,function(isGo){
+          if(isGo == 'no')
+            return;
+          $rootScope.loading = true;
+        
+          if(result && result.errorCode != 0) {
+                $state.go('main');
+                return;
+          }
+          
+          if (result.transactionId){
+            $rootScope.loading = false;
+            $state.go('payment', {
+              tid: result.transactionId
+          });
+          }
+        });
+            
+        })
+        .catch(function(err){
+          if(err.data)
+                Modal.alert(err.data); 
+        });
+      }
+
+      function closeDialog() {
+        $uibModalInstance.dismiss('cancel');
+      }
 }
 
 })();
