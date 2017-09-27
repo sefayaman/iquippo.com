@@ -13,6 +13,8 @@ var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
 var PaymentMasterModel = require('../common/paymentmaster.model');
+var PaymentTransactionModel=require('../payment/payment.model');
+var UserModel=require('../user/user.model');
 var vendorModel = require('../vendor/vendor.model');
 
 // Get list of auctions
@@ -967,6 +969,59 @@ exports.createAuctionMaster = function(req, res) {
   })
 
 };
+
+exports.getAssetInfo=function(req,res){
+  var filter={};
+  var data={};
+  filter._id=req.query.dbAuctionId;
+  AuctionMaster.find(filter,function(err,results){
+  if(err){
+    return handleError(res,err);
+  }
+  console.log("auctionData",results);
+  if(results.length > 0){
+    if(results[0].auctionType === 'S')
+    data.auctionType=results[0].auctionType;
+  filter={};
+  filter.assetId=req.query.assetId;
+  Product.update(filter,{$set:{"status":true}},function(err,resproduct){
+   if(err){
+    return handleError(res,err);
+   }
+   return res.status(200).json({"message":"userActive"});
+  });
+  }
+  else{
+  return res.status(500).json({"message":"No Auction Data"});
+}
+});
+  };
+
+exports.sendUserToAs=function(req,res){
+var userData={};
+var filter={};
+filter._id=req.body._id;
+UserModel.find(filter,function(err,res){
+  if(err) return handleError(res,err);
+  if(res.length > 0){
+   userData=res[0];
+   console.log("fetched User",userData);
+   Utility.sendUserInfo(userData,function(err,asData){
+  if(err){
+    return handleError(res,err);
+  }
+  console.log("AsDATA",asData);
+  return res.status(200).json(asData);
+});
+  }
+  else{
+    return res.status(500).json({"message":"no user Data"});
+  }
+})
+};
+
+
+
 exports.updateAuctionMasterproduct = function(req, res) {
   var _id = req.body._id;
   AuctionMaster.update({

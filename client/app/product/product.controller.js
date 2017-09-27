@@ -1038,8 +1038,8 @@
           auctiond._id = $scope.product.auction._id;
           $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
           AuctionMasterSvc.get(auctiond).then(function(result){
-
-          $scope.lot.auctname = result[0].name;
+           console.log("result Data",result[0]);
+           $scope.lot.auctname = result[0].name;
           $scope.lot.auctionId = result[0].auctionId;
           $scope.lot.emdTax = result[0].emdTax;
            $scope.lot.emdAmount = result[0].emdAmount;
