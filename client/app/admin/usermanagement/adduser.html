@@ -143,7 +143,7 @@
                     </tbody>
                   </table>
                 </div>
-                <div class="row form-group" ng-if="isAdmin()">
+                <div class="row form-group" ng-if="isAdmin() && ((newUser.role == 'enterprise' && newUser.enterprise) || newUser.role == 'customer' || newUser.role == 'channelpartner')">
                   <div class="col-sm-4 padd-right">
                     <input type="text" class="form-control" name="" placeholder="Sale Fulfilment" disabled>
                   </div>

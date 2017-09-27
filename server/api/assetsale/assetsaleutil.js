@@ -107,45 +107,57 @@ function getValueFromSaleProcessMaster(filter, callback) {
 }
 
 function getEmdFromMaster(filter, callback) {
-	var tempFilter = {};
-	if(filter.enterpriseId)
-		tempFilter.enterpriseId = filter.enterpriseId;
-	if(filter['user.userId'])
-		tempFilter['user.userId'] = filter['user.userId'];
-	var query = EMDMaster.find(tempFilter);
-	query.exec(function(err, result) {
-		if (err)
-			return callback(err);
-		if(result.length > 0) {
-			var query = EMDMaster.find(filter);
-			query.exec(function(err, result) {
+	async.parallel({emd:getEMD,defaultEMD:getDefaultEMD},function(err,result){
+		if(err) return callback(err);
+		if(result.emd)
+			return callback(null, result.emd);
+		else if(result.defaultEMD)
+			return callback(null, result.defaultEMD);
+		else
+			return callback(null, null);
+	});
+
+	function getEMD(callback){
+		var tempFilter = {};
+		if(filter.enterpriseId)
+			tempFilter.enterpriseId = filter.enterpriseId;
+		if(filter['user.userId'])
+			tempFilter['user.userId'] = filter['user.userId'];
+		
+		var query = EMDMaster.find(filter);
+		query.exec(function(err, result) {
 			if (err)
 				return callback(err);
-			if(result.length == 0) {
+			if(result.length === 0) {
 				tempFilter['category.name'] = "All";
 				var query = EMDMaster.find(tempFilter);
 				query.exec(function(err, emdcharge) {
 					if (err || !emdcharge.length)
 						return callback(err);
-					
-					return callback(null, emdcharge[0]);
+					if(emdcharge.length > 0)
+						return callback(null, emdcharge[0]);
+					else
+						return callback(null, null);
 				});
 			} else {
-				return callback(null, result[0]);
+					return callback(null, result[0]);
 			}
 		});
-		} else {
-			var filterObj = {};
-			filterObj.userRole = "default";
-			var query = EMDMaster.find(filterObj);
-			query.exec(function(err, emdcharge) {
-				if (err || !emdcharge.length)
-					return callback(err);
-				
+	}
+
+	function getDefaultEMD(callback){
+		var filterObj = {};
+		filterObj.userRole = "default";
+		var query = EMDMaster.find(filterObj);
+		query.exec(function(err, emdcharge) {
+			if (err || !emdcharge.length)
+				return callback(err);
+			if(emdcharge.length)
 				return callback(null, emdcharge[0]);
-			});
-		}
-	});
+			else
+				return callback(null, null);
+		});
+	}
 }
 
 exports.sendNotification = function(bidArr){
@@ -225,7 +237,7 @@ exports.sendNotification = function(bidArr){
 					break;
 				case 'BIDWITHDRAW':
 					tplName = "BidWithdrawEmailToBuyer";
-					subject = "Ticket ID- " + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been rejected.";
+					subject = "Ticket ID- " + tplData.ticketId +": Your Bid for " + tplData.product.name + " has been Withdrawn.";
 					break;
 				case 'CLOSED':
 					tplName = "BidClosedEmailToBuyer";
