@@ -131,7 +131,6 @@ exports.getBidOrBuyCalculation = function(req, res) {
 
 // Updates an existing record in the DB.
 exports.update = function(req, res,next) {
-
   async.eachLimit(req.bids,5,_update,function(err){
   	if(err)return handleError(res, err);
 	sendStatusMail(req.bids[0]);
@@ -149,15 +148,15 @@ exports.update = function(req, res,next) {
 	next();
 });
 
-  function _update(bid,cb){ 
-  	  var bidId = bid._id;
-	  if(bid._id) { delete bid._id; }
-	  bid.updatedAt = new Date();
-	   AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
-	        cb(err);
-	  });
-  }
-}
+	function _update(bid,cb){
+		var bidId = bid._id;
+		if(bid._id) { delete bid._id; }
+		bid.updatedAt = new Date();
+		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
+			cb(err);
+		});
+	}
+	}
 
 function sendStatusMail(bid) {
 	var bidArr = [];
@@ -191,8 +190,7 @@ function sendStatusMail(bid) {
 }
 
 exports.validateUpdate = function(req,res,next){
-	
-	if(['approve','deliveryaccept','emdpayment','fullpayment'].indexOf(req.query.action) !== -1)
+	if(['approve','deliveryaccept','emdpayment','fullpayment','reject'].indexOf(req.query.action) !== -1)
 		async.parallel([validateBid,validateOtherBids,validateProduct],onComplete);
 	else
 		async.parallel([validateBid,validateProduct],onComplete);
@@ -289,10 +287,73 @@ exports.validateUpdate = function(req,res,next){
 				req.bids.push(item);
 			});*/
 			next();
+		} else if(req.query.action === 'reject') {
+			if(req.bid.dealStatus == dealStatuses[6]){
+				var selBid = null;
+				if(!req.bid.autoApprove)
+					selBid = nextApprovableBid(req.bid,req.otherBids);
+				getSaleProcessMaster(function(entData){
+					if(selBid){
+						selBid.emdStartDate = new Date();
+						if(entData.emdPeriod)
+						  selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
+						selBid.product.prevTradeType = req.bid.product.prevTradeType;
+						AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
+						AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
+						req.bids.push(selBid);
+						AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+					}else{
+						req.updateProduct = true;
+						req.otherBids.forEach(function(item){
+						  AssetSaleUtil.setStatus(item,dealStatuses[0],'dealStatus','dealStatuses');
+						  AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses');
+						  req.bids.push(item);
+						});
+						var bidCount = req.otherBids.length || 0;
+						var highestBid = 0;
+						if(req.otherBids.length)
+							highestBid = getMaxBid(req.otherBids).bidAmount || 0;
+						var bidRec = true;
+						if(bidCount === 0)
+							bidRec = false;
+						req.product.tradeType = req.bid.product.prevTradeType;
+						req.product.bidReceived = bidRec;
+						req.product.bidRequestApproved = false;
+						req.product.bidCount = bidCount;
+						req.product.highestBid = highestBid;
+					}
+					next();
+				});
+			} else {
+				if(req.bid.dealStatus === dealStatuses[0] && req.bid.bidStatus === bidStatuses[7] && req.bid.lastAccepted)
+					req.bids[0].lastAccepted = false;
+				next();
+			}
 		}
 		else
 			next();
 		
+	}
+
+	function nextApprovableBid(bid,otherBids){
+	  var selBid = null;
+	  if(bid.lastAccepted || !otherBids.length || bid.autoApprove)
+	    return selBid;
+	  otherBids.sort(function(a,b){
+	    return a.bidAmount - b.bidAmount;
+	  });
+	  otherBids.reverse();
+	  selBid = otherBids[0];
+	  return selBid;
+	}
+
+	function getMaxBid(bids){
+	  var maxBid = bids[0];
+	  for(var i=0;i < bids.length ; i++){
+	    if(maxBid.bidAmount < bids[i].bidAmount)
+	      maxBid = bids[i];
+	  }
+	  return maxBid;
 	}
 
 	function getSaleProcessMaster(cb){

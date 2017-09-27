@@ -196,9 +196,9 @@
           retVal = false;
       break;
       case 'REJECT':
-        if((Auth.isAdmin() || validEnterprise) && [bidStatuses[0],bidStatuses[7],bidStatuses[8]].indexOf(bid.bidStatus) !== -1)
+        if(Auth.isAdmin() && [bidStatuses[0],bidStatuses[7],bidStatuses[8]].indexOf(bid.bidStatus) !== -1)
           retVal = true;
-        else if(Auth.getCurrentUser()._id === bid.product.seller._id && bid.bidStatus === bidStatuses[0])
+        else if((Auth.getCurrentUser()._id === bid.product.seller._id || validEnterprise) && bid.bidStatus === bidStatuses[0])
           retVal = true;
         else
           retVal = false;
