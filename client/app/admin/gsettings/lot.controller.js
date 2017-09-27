@@ -16,8 +16,9 @@
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
-         
+          vm.dataModel.bidInfo = [{}];
           vm.checkForLot = checkForLot;
+          vm.bidIncrementObj = {};
         
           function init(){
               getAuctions();
@@ -45,7 +46,18 @@
             vm.dataModel.startingPrice = rowData.startingPrice;
             vm.dataModel.reservePrice = rowData.reservePrice;
             vm.dataModel.startDate = rowData.startDate;
-             vm.dataModel.endDate = rowData.endDate;
+            vm.dataModel.endDate = rowData.endDate;
+            vm.dataModel.bidIncrement = rowData.bidIncrement;
+            vm.dataModel.bidInfo = [];
+            if (vm.dataModel.bidIncrement){
+                var range = Object.keys(vm.dataModel.bidIncrement);
+               Object.keys(vm.dataModel.bidIncrement).forEach(function(item,index) {
+                    var arr = item.split('-');
+                    vm.dataModel.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:vm.dataModel.bidIncrement[item]};
+                });
+            }else{
+                vm.dataModel.bidInfo = [{}];
+            }
             $scope.isEdit = true;
           }
 
@@ -61,7 +73,12 @@
                vm.duplicate.auctionId = vm.dataModel.auctionId
                vm.duplicate.assetId = vm.dataModel.assetId;
                vm.duplicate.lotNumber = vm.dataModel.lotNumber;
-
+               vm.dataModel.bidInfo.forEach(function(item) {
+                 var range = item.bidFrom+"-"+item.bidTo;
+                 vm.bidIncrementObj[range] = item.bidIncrement;
+                });
+                vm.dataModel.bidIncrement = '';
+                vm.dataModel.bidIncrement = vm.bidIncrementObj;
                LotSvc.getData(vm.duplicate).then(function(result){
                    vm.filteredduplicate = "exist";
 
@@ -91,7 +108,14 @@
               if(form.$invalid){
               $scope.submitted = true;
               return;
-              }
+            }
+                vm.dataModel.bidInfo.forEach(function(item) {
+                 var range = item.bidFrom+"-"+item.bidTo;
+                 vm.bidIncrementObj[range] = item.bidIncrement;
+                });
+                vm.dataModel.bidIncrement = '';
+                vm.dataModel.bidIncrement = vm.bidIncrementObj;
+                
               LotSvc.update(vm.dataModel)
               .then(function(){
               vm.dataModel = {};
