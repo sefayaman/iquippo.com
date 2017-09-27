@@ -1123,18 +1123,19 @@
             Bid Increment
           </div>
           <div class="col-sm-7">
-            <div class="row">
+            <div class="row" ng-repeat="bidinfo in lot.bidInfo">
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" name="" value="" placeholder="Bid From">
+                <input type="text" class="form-control" name="" ng-model="bidinfo.bidFrom" value="" placeholder="Bid From">
               </div>
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" name="" value="" placeholder="Bid To">
+                <input type="text" class="form-control" ng-model="bidinfo.bidTo" name="" value="" placeholder="Bid To">
               </div>
               <div class="col-sm-3 form-group">
-                <input type="text" class="form-control" name="" value="" placeholder="Increment">
+                <input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Increment">
               </div>
               <div class="col-sm-3 form-group ">
-                <button type="button" class="btn btn-default">Add More</button>
+               <button type="button" class="btn btn-default" ng-click="lot.bidInfo.push({})" ng-if="$last">Add More</button>
+							<button type="button" class="btn btn-default" ng-click="lot.bidInfo.splice($index,1)" ng-if="!$last">Delete</button>
               </div>
             </div>
           </div>

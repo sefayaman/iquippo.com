@@ -14,7 +14,7 @@ var LotSchema = new Schema({
   reservePrice:Number,
   startDate:Date,
   endDate:Date, 
-  bidIncrement:Number,
+  bidIncrement:Object,
   lastMintBid:String,
   extendedTo:String,
   createdBy:{},
