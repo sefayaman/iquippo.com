@@ -10,7 +10,7 @@ module.exports = {
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
   //serverPath: "http://192.168.14.120", 
-  serverPath: "http://localhost:8100", 
+  serverPath: "http://dev.iquippo.com", 
   contactNumber: "011 66025672",
   ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
 
