@@ -1396,6 +1396,7 @@
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
             }
+            console.log("product====",vm.auctionProduct);
             AuctionSvc.save(vm.auctionProduct)
                 .then(function(result) {
                     if (!result.errorCode) {
@@ -1437,6 +1438,7 @@
                                 $scope.lotsaved.startDate= vm.auctionProduct.startDate;
                                 $scope.lotsaved.endDate = vm.auctionProduct.endDate;
                                 $scope.lotsaved.reservePrice = vm.auctionProduct.reservePrice;
+                                $scope.lotsaved.primaryImg = vm.auctionProduct.product.primaryImg;
                                 $scope.bidIncrementObj = {};
                                 vm.auctionProduct.bidInfo.forEach(function(item) {
                                     var range = item.bidFrom+"-"+item.bidTo;
@@ -1576,6 +1578,7 @@
                         $scope.lotsaved.startDate= vm.auctionProduct.startDate;
                         $scope.lotsaved.endDate = vm.auctionProduct.endDate;
                         $scope.lotsaved.reservePrice = vm.auctionProduct.reservePrice;
+                        $scope.lotsaved.primaryImg = vm.auctionProduct.product.primaryImg;
                         //$scope.lotsaved._id =  $scope.lot._id;
                         //bid
                         //vm.auctionProduct.bidInfo = [];
@@ -1600,6 +1603,7 @@
                         $scope.lotsaved.endDate = vm.auctionProduct.endDate;
                         $scope.lotsaved.reservePrice = vm.auctionProduct.reservePrice;
                         $scope.lotsaved._id =  $scope.lot._id;
+                        $scope.lotsaved.primaryImg = vm.auctionProduct.product.primaryImg;
                         //bid
                         //vm.auctionProduct.bidInfo = [];
                         $scope.bidIncrementObj = {};
