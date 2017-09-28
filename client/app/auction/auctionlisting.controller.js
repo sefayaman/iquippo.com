@@ -128,7 +128,20 @@
             Modal.alert("This Assset id is already approved and listed in an Auction.");
             return;
           }
-
+          AuctionSvc.checkForAsset(auctionReq.dbAuctionId,auctionReq.product['assetId'])
+          .then(function(res){
+           if(res.message === 'userActive'){
+            console.log("sendData to AuctionSoftware",auctionReq.user);
+            return AuctionSvc.sendUserToAs(auctionReq.user);
+           }
+          })
+          .then(function(res){
+            console.log("im the respone",res);
+            return; 
+          })
+          .catch(function(err){
+           throw err;
+          });
           AuctionSvc.sendNotification(auctionReq, UtilSvc.getStatusOnCode(auctionStatuses, status).notificationText, 2);
         });
     }

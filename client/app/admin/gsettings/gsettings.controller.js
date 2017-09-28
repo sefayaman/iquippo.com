@@ -1219,6 +1219,11 @@
 
         /*Auction Request for external product  start*/
 
+        function extend(obj, src) {
+            Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
+            return obj;
+        }
+
         function getApprovedAuctionAsset(filter) {
 
             filter.prevPage = prevPage;
@@ -1228,13 +1233,55 @@
             filter['status'] = auctionStatuses[2].code;
             AuctionSvc.getOnFilter(filter)
                 .then(function(result) {
-                    vm.assetsInAuction = result.items;
+                    /*vm.assetsInAuction = result.items;
                     vm.totalItems = result.totalItems;
                     prevPage = vm.currentPage;
                     if (vm.assetsInAuction.length > 0) {
                         first_id = vm.assetsInAuction[0]._id;
                         last_id = vm.assetsInAuction[vm.assetsInAuction.length - 1]._id;
-                    }
+                    }*/
+
+
+                    vm.assetsInAuction = [];
+
+                    result.items.forEach(function(x){
+
+                        var auctionfilter ={};
+                        auctionfilter._id = x.dbAuctionId;
+                        AuctionSvc.getAuctionDateData(auctionfilter).then(function(result){
+                          var filter={};
+                          filter.auctionId = result.items[0].auctionId;
+                          filter.assetId =  x.product.assetId;
+                         
+                              LotSvc.getData(filter)
+                              .then(function(res){
+                                if(res.length > 0){
+                                   var c =  extend(x, res[0]);
+
+
+                                   vm.assetsInAuction.push(c);
+                                    
+                                  }else{
+                                    var c = x;
+                                    //console.log("sxsc",c);
+                                    vm.assetsInAuction.push(c);
+                                  }
+                                  
+                               }) 
+                              .catch(function(err){
+              
+                              });
+                          });
+                       });
+
+
+                      // vm.assetsInAuction = result.items;
+                       vm.totalItems = result.totalItems;
+                       prevPage = vm.currentPage;
+                       if (vm.assetsInAuction.length > 0) {
+                           first_id = vm.assetsInAuction[0]._id;
+                           last_id = vm.assetsInAuction[vm.assetsInAuction.length - 1]._id;
+                       }
                 })
         }
 

@@ -27,6 +27,8 @@
     svc.getAuctionWiseProductData = getAuctionWiseProductData;
     svc.getOnId = getOnId;
     svc.getAuctionExpire = getAuctionExpire;
+    svc.checkForAsset=checkForAsset;
+    svc.sendUserToAs=sendUserToAs;
 
     function getAll() {
       return $http.get(path)
@@ -37,6 +39,27 @@
           throw err
         })
     }
+
+   function checkForAsset(dbAuctionId,assetId){
+   return $http.get(path+"/checkforasset/asset?dbAuctionId="+dbAuctionId+"&assetId="+assetId)
+   .then(function(res){
+    console.log("checkForAsset",res);
+    return res.data;
+   })
+   .catch(function(err){
+     throw err;
+   });
+ }
+
+function sendUserToAs(user){
+ return $http.post(path+"/sendusertoas/asset",user)
+.then(function(res){
+return res.data;
+})
+.catch(function(err){
+throw err;
+});
+ }
 
     function getOnFilter(data) {
       return $http.post(path + "/onfilter", data)
