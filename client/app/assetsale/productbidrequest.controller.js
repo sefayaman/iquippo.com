@@ -19,8 +19,8 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	vm.validateAction = AssetSaleSvc.validateAction;
 	$scope.dayDiff = AssetSaleSvc.ageingOfAssetInPortal;
 	vm.backButton = backButton;
-	vm.activeBid = "approved";
-	$scope.onTabChange = onTabChange;
+	//vm.activeBid = "approved";
+	//$scope.onTabChange = onTabChange;
 
 	function backButton() {
       $window.history.back();
@@ -39,8 +39,9 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	  	});
 	}
 
-	function onTabChange(tab){
+	/*function onTabChange(tab){
     	vm.activeBid = tab;
+    	vm.searchStr = "";
     	var filter={};
     	$scope.pager.reset();
 	  	switch(tab){
@@ -61,7 +62,7 @@ function ProductBidRequestCtrl($scope, $rootScope, $window, $uibModal, $statePar
 	  		getBidData(filter);
 	  		break;
 	  	}
-  	}
+  	}*/
 
 	function fireCommand(reset) {
 		if(reset)

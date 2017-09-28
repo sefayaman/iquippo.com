@@ -98,6 +98,7 @@ function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, Pa
 
     function onTabChange(tab){
     	vm.activeBid = tab;
+		vm.searchStr = "";
     	var filter={};
     	$scope.pager.reset();
     	var tabVal = 1;
