@@ -9,7 +9,8 @@ module.exports = {
   },
   uploadPath: 'client/assets/uploads/',
   templatePath:'client/assets',
-  serverPath: "http://192.168.14.120",
+  //serverPath: "http://192.168.14.120", /*Commented for email templete images from s3 URL*/
+  serverPath: "https://s3.ap-south-1.amazonaws.com/iquippo-image-upload-dev", 
   contactNumber: "011 66025672",
   ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
 

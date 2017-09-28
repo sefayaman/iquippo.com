@@ -122,6 +122,11 @@ function postOtpRequest(fn, data, req, res) {
 
 exports.compileHtml = function(req, res) {
 	var dataObj = req.body.data;
+        /* J.K s3 URL for email templete.*/
+        if (dataObj.serverPath) {
+            dataObj.serverPath = config.serverPath;
+        }
+        
 	var tplName = req.body.templateName;
 	if (!tplName || !dataObj)
 		return res.status(404).send("template not found");
