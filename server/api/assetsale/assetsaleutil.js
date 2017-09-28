@@ -211,6 +211,11 @@ exports.sendNotification = function(bidArr){
 					tplData.fullPayment.paymentsDetail.forEach(function(item) {
 		                totalPaidAmount = totalPaidAmount + item.amount;
 		            });
+		            if(totalPaidAmount <= 0) {
+		            	tplData.emdPayment.paymentsDetail.forEach(function(item) {
+			                totalPaidAmount = totalPaidAmount + item.amount;
+			            });
+		            }
 		            tplData.totalAtEMDPayment = totalPaidAmount;
 					tplName = "FullpaymentReceivedEmailToBuyer";
 					subject = "Ticket ID- " + tplData.ticketId +": Your Full Payment for " + tplData.product.name + " has been Received.";
