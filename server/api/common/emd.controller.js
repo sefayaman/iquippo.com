@@ -28,15 +28,15 @@ var async = require('async');
       };
 
         exports.getEmdData = function(req, res) {
-         
           var filter={};
-          if(req.query.auctionId){
-              filter.auctionId = req.query.auctionId;
+          if(req.body.auctionId){
+              filter.auctionId = req.body.auctionId;
           }
-          if(req.query.selectedLots){
-              filter.selectedLots = req.query.selectedLots;
-          }
-        console.log(filter);
+          if(req.body.selectedLots && req.body.selectedLots.lotNumber){
+            //console.log("selectedLots",req.body.selectedLots);
+            filter["selectedLots.lotNumber"] = {$eq:req.body.selectedLots.lotNumber}
+                 }
+        console.log("filter for checking EmdData",filter);
           var query = Emd.find(filter);
           query.exec(function (err, result) {
           if(err) { res.status(err.status || 500).send(err); }
