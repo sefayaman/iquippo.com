@@ -6,12 +6,29 @@ angular.module('admin').factory("ValuationCancellationSvc",ValuationCancellation
     var svcPath = '/api/common/valuationcancellationfee';
 
     svc.get = get;
+    svc.getCancellationFee = getCancellationFee;
     svc.save = save;
     svc.update = update;
     svc.destroy = destroy;
      
    function get(filter){
       var path = svcPath; 
+      var queryParam = "";
+        if(filter)
+          queryParam = $httpParamSerializer(filter);
+        if(queryParam)
+          path  = path + "?" + queryParam;
+       return $http.get(path)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          })
+     }
+
+     function getCancellationFee(filter){
+      var path = '/api/common/findcancellationfee'; 
       var queryParam = "";
         if(filter)
           queryParam = $httpParamSerializer(filter);

@@ -112,7 +112,7 @@
               </select>
           </div>
           <div class="col-sm-3" ng-class="{'has-error': (enterpriseValForm.brand.$invalid || enterpriseValForm.otherBrand.$invalid) && enterpriseValForm.submitted}">
-            <select class="form-control" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField('brand'')" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
+            <select class="form-control" name="brand" ng-model="addTransactionVm.enterpriseValuation.brand" ng-disabled="!editEnterpriseField('brand')" ng-change="addTransactionVm.onBrandChange(addTransactionVm.enterpriseValuation.brand)">
               <option value="">Select Brand</option>
               <option ng-repeat="br in addTransactionVm.brandList" value="{{br.name}}">{{br.name}}</option>
             </select>

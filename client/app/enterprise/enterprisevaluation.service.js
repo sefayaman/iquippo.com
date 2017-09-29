@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('sreizaoApp').factory("EnterpriseSvc",EnterpriseSvc);
-function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSvc,ValuationCancellationSvc){
+function EnterpriseSvc($http,$rootScope ,$q,$timeout, notificationSvc,Auth,UtilSvc,userSvc,ValuationCancellationSvc){
   var entSvc = {};
   var enterprise = null;
 
@@ -24,6 +24,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
   entSvc.submitToAgency = submitToAgency;
   entSvc.getCancellationFee = getCancellationFee;
   entSvc.cancelEnterprise = cancelEnterprise;
+  entSvc.resumeRequest = resumeRequest;
 
   function getRequestOnId(id) {
     var deferred = $q.defer();
@@ -82,57 +83,43 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     }
 
     function getCancellationFee(entReq){
-      var apiUrl = "http://13.126.19.255/valuation/api.php?type=statuscheck";
-      if(DevEnvironment)
-        apiUrl = "";
-       var enableRemote = false;
       var deferred = $q.defer();
-      var isReqSubmitted = EnterpriseValuationStatuses.indexOf(entReq.status) > 1 && entReq.jobId && enableRemote;
-      if(isReqSubmitted){
-        $http.get(apiUrl + "&uniqueControlNo=" + entReq.uniqueControlNo + "&jobID" + entReq.jobId)
-        .then(function(res){
-          if(res.status)
-            getFee(res.status);
-          else
-            getFee(entReq.status);                
-        })
-        .catch(function(err){
-          getFee(entReq.status); 
-        });
-      }else{
-        getFee(entReq.status);        
-      }
-
-      function getFee(status){
-        filter.status = entReq.status;
-        ValuationCancellationSvc,get(filter)
-        .then(function(res){
-          if(res.data.length)
-            deferred.resolve(res.data[0]);
-          else
-            deferred.reject({data:"Cancellation fee not found.Please contact support team."});     
-        })
-        .catch(function(err){
+      ValuationCancellationSvc.getCancellationFee({_id:entReq._id,enterpriseId:entReq.enterprise.enterpriseId})
+      .then(function(res){
+        if(res.length)
+            deferred.resolve(res[0]);
+        else
           deferred.reject({data:"Unable to find cancellation fee.Please contact support team."});
-        })
-      }
-
+      })
+      .catch(function(err){
+        deferred.reject({data:"Unable to find cancellation fee.Please contact support team."});
+      });
       return deferred.promise;
     }
 
-    function cancelEnterprise(valReq,cencellationFee){
+    function cancelEnterprise(valReq,cancelFee){
       var dataToSend = {_id:valReq._id};
       dataToSend.uniqueControlNo = valReq.uniqueControlNo;
       dataToSend.jobId = valReq.jobId;
-      dataToSend.cancellationFee = cencellationFee;
-      $http.post(path + "/cancel",dataToSend)
+      dataToSend.cancellationFee = cancelFee.cancellationFee;
+      dataToSend.cancelled = cancelFee.cancelled;
+      return $http.post(path + "/cancel",dataToSend)
+            .then(function(res){
+              return res.data;
+            })
+            .catch(function(err){
+              throw err;
+            });
+    }
+
+    function resumeRequest(valReq){
+      return $http.post(path + "/removeonhold",valReq)
       .then(function(res){
         return res.data;
       })
       .catch(function(err){
         throw err;
       });
-
     }
 
     function save(data){
@@ -162,7 +149,7 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
               deferred.resolve(resData);
               return;
             }
-            submitToAgency([resData],deferred);
+            submitToAgency([resData._id],'Mjobupdation',deferred);
       })
     }
 
@@ -218,15 +205,20 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     }
 
     function update(data){
-       return $http.put(path + "/" + data.data._id, data)
+      var deferred = $q.defer();
+       $http.put(path + "/" + data.data._id, data)
         .then(function(res){
-          if(data.data.valuationReport && data.data.valuationReport.filename)
+          if(data.data.jobId && data.updateType === 'enterprise')
+            return submitToAgency([data.data._id],'Mjobupdation',deferred);
+          if(data.data.updateType === 'agency' && data.data.valuationReport && data.data.valuationReport.filename){
             sendNotification(data.data);
-          return res.data;
+          }
+          return deferred.resolve(res.data);
         })
         .catch(function(err){
-          throw err;
+          deferred.reject(err);
         });
+        return deferred.promise;
     }
 
     function bulkUpdate(dtArr){
@@ -312,101 +304,31 @@ function EnterpriseSvc($http,$rootScope ,$q, notificationSvc,Auth,UtilSvc,userSv
     return path + "/generateinvoice/" + invoiceNo;
    }
 
-   var Field_MAP = {
-    uniqueControlNo : "uniqueControlNo",
-    requestType:"requestType",
-    purpose : "purpose",
-    agencyName : "agency.name",
-    enterprise:"enterprise.name",
-    enterpriseId:"enterprise.enterpriseId",
-    customerTransactionId : "customerTransactionId",
-    customerValuationNo : "customerValuationNo",
-    customerPartyNo : "customerPartyNo",
-    customerPartyName : "customerPartyName",
-    userName : "userName",
-    requestDate : "requestDate",
-    assetId:"assetId",
-    repoDate : "repoDate",
-    assetCategory:"assetCategory",
-    valuerGroupId:"valuerGroupId",
-    valuerAssetId:"valuerAssetId",
-    assetDescription : "assetDescription",
-    engineNo:"engineNo",
-    chassisNo :"chassisNo",
-    registrationNo :"registrationNo",
-    serialNo:"serialNo",
-    yearOfManufacturing :"yearOfManufacturing",
-    category:"category",
-    brand:"brand",
-    model:"model",
-    yardParked:"yardParked",
-    country:"country",
-    state:"state",
-    city:"city",
-    contactPerson:"contactPerson",
-    contactPersonTelNo:"contactPersonTelNo",
-    disFromCustomerOffice:"disFromCustomerOffice",
-    customerSeekingFinance:"nameOfCustomerSeeking",
-    invoiceDate:"customerInvoiceDate",
-    invoiceValue:"customerInvoiceValue"
-  }
-
   var submmitted = false;
-   function submitToAgency(items,deferred){
-    if(submmitted)
-      return;
-    if(!items || items.length == 0)
-      return;
-
-    if(!deferred)
+   function submitToAgency(valReqsIds,type,deferred){
+     if(!deferred)
       deferred = $q.defer();
+
+    if(!valReqsIds || valReqsIds.length == 0 || submmitted){
+      $timeout(function(){
+        deferred.reject();
+      },0);
+      return deferred.promise;
+    }
     submmitted = true;
-
-    var dataArr = [];
-    var keys = Object.keys(Field_MAP);
-    items.forEach(function(item){
-      var obj = {};
-      keys.forEach(function(key){
-        obj[key] = _.get(item,Field_MAP[key]);
-      })
-
-      if(obj.brand && obj.brand == "Other")
-        obj.brand = item.otherBrand;
-
-      if(obj.model && obj.model == "Other")
-        obj.model = item.otherModel;
-
-      var s3Path = "";
-      if(item.assetDir)
-        s3Path = $rootScope.uploadImagePrefix + assetDir + "/"
-      if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
-          obj.invoiceDoc = s3Path + invoiceDoc.filename;
-      if(s3Path && item.rcDoc && item.rcDoc.filename)
-          obj.rcDoc = s3Path + rcDoc.filename;
-      dataArr[dataArr.length] = obj;
-    });
-
-    var apiUrl = "http://quippoauctions.com/valuation/api.php?type=Mjobcreation";
-
-    if(DevEnvironment)
-        apiUrl = "http://13.126.19.255/valuation/api.php?type=Mjobcreation";
-
     $rootScope.loading = true;
-    $http.post(apiUrl,dataArr)
+    $http.post(path + "/submitrequest?type=" + type,valReqsIds)
     .then(function(res){
       submmitted = false;
-      if(res.data && res.data.length > 0)
-        updateValReqs(res.data,items,deferred);
-      else{
-        $rootScope.loading = false;
-        deferred.resolve(res.data);
-      }
+      $rootScope.loading = false;
+      return deferred.resolve(res.data);
     })
     .catch(function(err){
       submmitted = false;
       $rootScope.loading = false;
-      deferred.reject(err)
+      deferred.reject(err);
     });
+
     return deferred.promise;
    }
 

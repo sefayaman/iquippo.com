@@ -202,6 +202,7 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
     $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
+    $rootScope.isValuationPartner = Auth.isValuationPartner;
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     

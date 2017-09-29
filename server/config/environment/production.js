@@ -28,7 +28,7 @@ module.exports = {
   serverPath: "http://iquippo.com",
   ccAvenueWorkingKey:"4B309EB35A3F3C9F903427AB11E062EE",
   mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "no-reply@iquippo.com", Mailpassword: "welcome@123",from:"info@iquippo.com"},
-  qpvalURL:"http://quippoauctions.com/valuation/api.php?type=Mjobcreation",
+  qpvalURL:"http://quippoauctions.com/valuation/api.php",
   REDIRECT_URL:"http://finance.iquippo.com/customer-portal-iquippo/sso",
 
   //S3 Configuration

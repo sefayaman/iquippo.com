@@ -145,11 +145,14 @@ function submitRequest(reqs,cb){
 
     });
     request({
-        url: config.qpvalURL,
+        url: config.qpvalURL + "?type=Mjobcreation",
         method: "POST",
         json: true, 
         body: dataArr
     }, function (error, response, body){
+      if(error)
+          return cb("Error from server",null);
+        
       if(response.statusCode == 200){
         cb(null,response.body);
       }else{

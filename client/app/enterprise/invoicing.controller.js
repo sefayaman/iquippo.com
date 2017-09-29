@@ -107,7 +107,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       filter.pagination = true;
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
         filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
+      if(Auth.isValuationPartner())
         filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
 
       EnterpriseSvc.getInvoice(filter)
@@ -413,7 +413,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       var filter = {};
        if(Auth.isEnterprise() || Auth.isEnterpriseUser())
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
+      if(Auth.isValuationPartner())
           filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
       if(selectedItems && selectedItems.length > 0){
         var ids = [];

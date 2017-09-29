@@ -95,6 +95,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       EnterpriseSvc.getRequestOnId($stateParams.id)
         .then(function(result){
           if(result) {
+            if(!checkEditRight(result)){
+              Modal.alert("You don't have permission to edit");
+              return $state.go('main');
+            }
             vm.enterpriseValuation = result;
             onBrandChange(vm.enterpriseValuation.brand, true);
             onCountryChange(vm.enterpriseValuation.country, true);
@@ -126,6 +130,18 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
     }
   }
   
+  function checkEditRight(valReq){
+    if(Auth.isAdmin())
+      return true;
+    if((Auth.isEnterprise() || Auth.isEnterpriseUser()) && valReq.enterprise.enterpriseId === Auth.getCurrentUser().enterpriseId)
+      return true;
+    else if(Auth.isValuationPartner() && valReq.agency.partnerId === Auth.getCurrentUser().partnerInfo.partnerId)
+      return true;
+    else
+      return false;
+
+  }
+
   function setAgency(data,code) {
     if(data.length > 0) {
       data.forEach(function(item) {
@@ -140,7 +156,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   }
 
   function showEnterpriseSection(){
-     return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser() || Auth.isPartner();
+     return Auth.isAdmin() || Auth.isEnterprise() || Auth.isEnterpriseUser() || Auth.isValuationPartner();
   }
 
   function showPaymentSection(){
@@ -161,10 +177,10 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
   }
 
   function editAgencyField(){
-    var validStatuses = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
+    var validStatuses = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[4],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
     if(Auth.isAdmin() && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
       return true;
-    else if(Auth.isPartner() && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
+    else if(Auth.isValuationPartner() && validStatuses.indexOf(vm.enterpriseValuation.status) !== -1)
       return true;
     else
       false;
@@ -172,7 +188,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
   function showAgencySection(){
     
-    var validRole = Auth.isAdmin() || Auth.isPartner();
+    var validRole = Auth.isAdmin() || Auth.isValuationPartner();
     var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
     if(validRole && statusIndex > 1)
       return true;
@@ -294,20 +310,21 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
       EnterpriseSvc.save(vm.enterpriseValuation)
           .then(function(res) {
             $state.go('enterprisevaluation.transaction');
-        })
+        });
     }
 
     function update(formFlag) {
       setData(formFlag);
       var serData = {
         data:vm.enterpriseValuation,
-        user:Auth.getCurrentUser()
+        user:Auth.getCurrentUser(),
+        updateType: formFlag === 'enterpriseform'? 'enterprise':'agency'
       };
       
       EnterpriseSvc.update(serData)
           .then(function(res) {
             $state.go('enterprisevaluation.transaction');
-        })
+        });
     }
 
     function setCustomerData(entId){
@@ -359,7 +376,7 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
 
         break;
         case 'agencyform':
-         if(editMode && (Auth.isPartner() || Auth.isAdmin())){
+         if(editMode && (Auth.isValuationPartner() || Auth.isAdmin())){
             var statusIndex = EnterpriseValuationStatuses.indexOf(vm.enterpriseValuation.status);
             if(statusIndex > 1 && statusIndex < 6 && vm.enterpriseValuation.valuationReport && vm.enterpriseValuation.valuationReport.filename)
               EnterpriseSvc.setStatus(vm.enterpriseValuation,EnterpriseValuationStatuses[6]);

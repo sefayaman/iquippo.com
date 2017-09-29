@@ -147,6 +147,7 @@ router.put('/assetlisted/:id', auth.hasRole('admin'),countCtrl.updateAssetListed
 
 //Valuation Cancellation Fee master
 router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
+router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);
 router.post('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.validate, valuationCancellationCtrl.create);
 router.put('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.validate,valuationCancellationCtrl.update);
 router.delete('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.destroy);
