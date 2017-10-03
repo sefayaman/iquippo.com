@@ -11,6 +11,7 @@
       console.log("query", query);
       $scope.auctionType = $location.search().auctionType;
       $scope.auctionTypeValue = $location.search().auctionTypeValue;
+      $scope.auctionOrientation=query.auctionOrientation;
       var filter = {};
       $scope.equipmentSearchFilter = {};
       $scope.mfgyr = {};
