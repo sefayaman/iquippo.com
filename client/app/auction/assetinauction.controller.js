@@ -313,23 +313,23 @@
 
       }
 
-      function fetchAsset(assetId, lotNumber) {
-        filter = {};
-        filter.assetId = assetId;
-
-        productSvc.getProductOnFilter(filter)
-          .then(function(res) {
-
-              $http.get('https://www.google.co.in')
-                .then(function(res) {
-                  console.log('here');
-                  console.log("-----", res);
-                  window.open('/productdetail/' + res[0]._id + '?assetListedInAuction=true&auctionId=' + $scope.auctionId + '&lotId=' + lotNumber + '&userId=' + Auth.getCurrentUser()._id);
-                })
-                }).catch(function(err) {
-                  if (err) throw err;
-                });
-}
+function fetchAsset(assetId,lotNumber,displayBid){
+    filter={};
+    filter.assetId=assetId;
+    console.log("displayBid",displayBid);
+    productSvc.getProductOnFilter(filter)
+    .then(function(res){
+      if(displayBid){
+      window.open('/productdetail/'+res[0]._id +'?assetListedInAuction=true&auctionId='+$scope.auctionId+'&lotId='+ lotNumber +'&userId='+Auth.getCurrentUser()._id + '&displayBid='+displayBid);
+    }
+    else{
+      window.open('/productdetail/'+res[0]._id +'?assetListedInAuction=true&auctionId='+$scope.auctionId+'&lotId='+lotNumber+'&userId='+Auth.getCurrentUser()._id + '&displayBid='+displayBid); 
+    }
+    })
+    .catch(function(err){
+     if(err) throw err;
+    });
+  }
 
             /*function liveAuctionView(lotNumber,auctionId){
              console.log("auctionId",$scope.auctionId);

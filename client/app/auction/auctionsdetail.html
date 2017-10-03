@@ -183,7 +183,7 @@
                       <p>Lot Number - {{lot.lotNumber}}</p>
                       <p>Asset Description :
                     <span ng-repeat="assetId in lot.assetDesc">
-                      <a href="javascript:void(0)" ng-click="fetchAsset(assetId)"> {{assetId}} ,</a>
+                      <a href="javascript:void(0)" ng-click="fetchAsset(assetId,lot.lotNumber,false)"> {{assetId}} ,</a>
                     </span>
                     </p>
                     <p>Lot Amount Value - {{lot.amount}}</p>
@@ -193,7 +193,7 @@
                           <p ng-if="product.auctionAddr"><strong><i class="fa fa-map-marker"></i> </strong> <a href="javascript:void(0);" ng-click="auctionDateVm.showAddress(product.auctionAddr,product.city,product.state)">{{product.auctionAddr}}</a> </p>
                         </div>               
                         <div class="col-xs-12 text-right">
-                          <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId,lot.lotNumber)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
+                          <a ng-disabled="lot.assetDesc.length > 1" ng-click="fetchAsset(assetId,lot.lotNumber,true)" href="javascript:void(0)"  class="btn btn-sm btn-danger">View Details</a>
                         </div>                        
                     </div>
                   </div>
