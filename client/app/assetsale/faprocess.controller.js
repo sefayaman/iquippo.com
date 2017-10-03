@@ -39,6 +39,7 @@ function FAProcessCtrl($scope, $rootScope, $state,$stateParams, Auth, productSvc
 
 	function onTabChange(tab,tabVal) {
 		vm.tabVal = tab;
+		vm.searchStr = "";
 		fireCommand(true);
 		$state.go($state.current.name,{t:tabVal},{location:'replace',notify:false});
 	}
@@ -48,8 +49,11 @@ function FAProcessCtrl($scope, $rootScope, $state,$stateParams, Auth, productSvc
 			$scope.pager.reset();
 		var filter = angular.copy(initFilter);
 		if (vm.searchStr) {
-			filter.isSearch = true;
 			filter.searchStr = encodeURIComponent(vm.searchStr);
+			if(vm.tabVal === 'bidproduct'){
+				filter.isSearch = true;
+				filter.searchstr = vm.searchStr;
+			}
 		}
 		if(vm.tabVal === 'approved')
 			getApprovedBids(filter);

@@ -182,7 +182,7 @@
 
   function validateAction(bid,action){
     var retVal = false;
-    var validEnterprise = (Auth.isEnterprise() || Auth.isEnterpriseUser()) && Auth.getCurrentUser().enterpriseId === bid.product.seller.enterpriseId;
+    var validEnterprise = (Auth.isEnterprise() || (Auth.isEnterpriseUser() && Auth.isBuySaleApprover())) && Auth.getCurrentUser().enterpriseId === bid.product.seller.enterpriseId;
     switch(action){
       case 'APPROVE':
         var isValidStatus = bid.bidStatus === bidStatuses[0]?true:false;
@@ -198,7 +198,7 @@
       case 'REJECT':
         if(Auth.isAdmin() && [bidStatuses[0],bidStatuses[7],bidStatuses[8]].indexOf(bid.bidStatus) !== -1)
           retVal = true;
-        else if(Auth.getCurrentUser()._id === bid.product.seller._id && bid.bidStatus === bidStatuses[0])
+        else if((Auth.getCurrentUser()._id === bid.product.seller._id || validEnterprise) && bid.bidStatus === bidStatuses[0])
           retVal = true;
         else
           retVal = false;
@@ -239,7 +239,7 @@
       break;
       case 'DOISSUED':
         var isValidStatus = bidStatuses.indexOf(bid.bidStatus) > 6 && bid.dealStatus === dealStatuses[8] ? true:false;
-         if((Auth.isFAgencyPartner() || Auth.isAdmin() || Auth.getCurrentUser()._id === bid.product.seller._id) && isValidStatus)
+         if((Auth.isFAgencyPartner() || Auth.isAdmin() || Auth.getCurrentUser()._id === bid.product.seller._id || validEnterprise) && isValidStatus)
           retVal = true;
          else
           retVal = false;
@@ -262,7 +262,7 @@
       break;
       case 'DELIVERED':
         var isValidStatus = bid.bidStatus === bidStatuses[7] && bid.dealStatus === dealStatuses[9]; 
-        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.product.seller._id === Auth.getCurrentUser()._id))
+        if(isValidStatus && (Auth.isAdmin() || Auth.isFAgencyPartner() || bid.product.seller._id === Auth.getCurrentUser()._id || validEnterprise))
           retVal = true;
         else
           retVal = false;

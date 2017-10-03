@@ -45,7 +45,7 @@ function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, Pa
           	$scope.currentProduct = result[0];
 			var bidSummaryScope = $rootScope.$new();
 	      	bidSummaryScope.params = {
-		        bidAmount : 0,
+		        bidAmount : bid.actualBidAmount || 0,
 		        product : $scope.currentProduct,
 		        stateId : bid.stateId, 
 		        bid : "placebid",
@@ -98,6 +98,7 @@ function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, Pa
 
     function onTabChange(tab){
     	vm.activeBid = tab;
+		vm.searchStr = "";
     	var filter={};
     	$scope.pager.reset();
     	var tabVal = 1;
@@ -171,6 +172,7 @@ function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, Pa
 			exportFilter.actionable = 'y';
 		} else {
 			exportFilter.actionable = 'n';
+			exportFilter.bidChanged = true;
 		}
         exportFilter.buyer = 'y';
 		AssetSaleSvc.exportExcel(exportFilter);
