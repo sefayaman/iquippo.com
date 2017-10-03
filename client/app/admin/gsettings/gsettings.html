@@ -2011,7 +2011,7 @@
 							<tr ng-repeat="emddata in emdVm.filteredList">
 								<td>{{emddata.auctionId}}</td>
 								<td>{{emddata.auctionName}}</td>
-								<td>{{emddata.lots}}</td>
+								<td>{{emddata.selectedLots[0].lotNumber.toString()}}</td>
 								<td>{{emddata.amount}}</td>
 								<td>
 									<a href="javascript:void(0);" class="btn btn-primary btn-sm" uib-popover="Edit" popover-trigger="mouseenter" ng-click="emdVm.editClicked(emddata)">

@@ -81,7 +81,8 @@
               
                vm.duplicate.auctionId = vm.dataModel.auctionId
                vm.duplicate.selectedLots = vm.dataModel.selectedLots;
-
+               console.log("vm.duplicate",vm.duplicate);
+               
                EmdSvc.getData(vm.duplicate).then(function(result){
                    vm.filteredduplicate = "exist";
 

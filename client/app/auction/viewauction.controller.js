@@ -57,7 +57,7 @@
     }
 
     function openAuctionModel(lotData){
-       console.log('currentscope',$scope.currentAuction);
+      // console.log('currentscope',$scope.currentAuction);
       Auth.isLoggedInAsync(function(loggedIn) {
           if (loggedIn) {
             var dataObj = {};
@@ -84,7 +84,7 @@
             }else{
               vm.dataModel.auctionId = $scope.currentAuction.auctionId;
               EmdSvc.getData(vm.dataModel).then(function(result){
-                 console.log("dataObj",dataObj);
+                // console.log("dataObj",dataObj);
                if(Auth.getCurrentUser().email)
                 dataObj.user.email = Auth.getCurrentUser().email;
                 save(dataObj,result[0].amount);
@@ -108,7 +108,7 @@
       userRegForAuctionSvc.save(dataObj)
       .then(function(){
         
-          console.log("emd",amount);
+          //console.log("emd",amount);
           Modal.alert('Your emd amount is' + amount);
       })
       .catch(function(err){
@@ -132,13 +132,13 @@
 
 
 
-       console.log("auctio123n",$scope.currentAuction.auctionId);
+       //console.log("auctio123n",$scope.currentAuction.auctionId);
       
 
        LotSvc.getData({auctionId:$scope.currentAuction.auctionId}).then(function(res){
             vm.lotList = res;   
             
-            console.log(vm.lotList);
+            //console.log(vm.lotList);
            // fetchClassifiedBidPage();
          });
 
@@ -166,7 +166,7 @@
         filter.auctionType = $stateParams.type;
       filter.addAuctionType = true;
 
-      console.log("auction filter",filter);
+      //console.log("auction filter",filter);
 
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
         getAuctionWiseProductData(result); 
@@ -290,7 +290,7 @@
     function getAuctionWiseProductData(result) {  
         var filter = {};      
         var auctionIds = [];
-        console.log("result auctionWise",result); 
+        //console.log("result auctionWise",result); 
         if(result && result.items) {     
           result.items.forEach(function(item) { 
           auctionIds[auctionIds.length] = item._id;
@@ -299,16 +299,16 @@
         filter.status = "request_approved";  
         filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
 
-        console.log("view")
+        //console.log("view")
         AuctionSvc.getAuctionWiseProductData(filter) 
         .then(function(data) { 
         $scope.getConcatData = data; 
-        console.log("qsjsjw",$scope.getConcatData);
+        //console.log("qsjsjw",$scope.getConcatData);
         vm.auctionListing = result.items;
          vm.totalItems = result.totalItems;
          $scope.pager.update(result.items,result.totalItems); 
 
-         console.log("sellerlsit",vm.auctionListing);
+         //console.log("sellerlsit",vm.auctionListing);
         if(vm.auctionListing.length < 1){   
             vm.show = true;            
         }else{ 
@@ -320,9 +320,9 @@
     }
     function getProductData(id, type) { 
 
-         console.log("id",id);
-         console.log("type",type);
-         console.log("getConact",$scope.getConcatData);
+         //console.log("id",id);
+         //console.log("type",type);
+         //console.log("getConact",$scope.getConcatData);
             if (angular.isUndefined($scope.getConcatData)) {  
                 if (type == "total_products") 
                   return 0;        

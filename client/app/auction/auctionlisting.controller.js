@@ -59,7 +59,7 @@
       AuctionSvc.getOnFilter(filter)
         .then(function(result) {
           vm.auctions = result.items;
-          console.log("+++++---+++",vm.auctions);
+          console.log("+++++---+++", vm.auctions);
           vm.totalItems = result.totalItems;
           prevPage = vm.currentPage;
           if (result.items.length > 0) {
@@ -123,25 +123,18 @@
       var prevStatus = auctionReq.status;
       AuctionSvc.updateStatus(auctionReq, status)
         .then(function(result) {
-          if(result.errorCode === 1) {
+          if (result.errorCode === 1) {
             auctionReq.status = prevStatus;
             Modal.alert("This Assset id is already approved and listed in an Auction.");
             return;
           }
-          AuctionSvc.checkForAsset(auctionReq.dbAuctionId,auctionReq.product['assetId'])
-          .then(function(res){
-           if(res.message === 'userActive'){
-            console.log("sendData to AuctionSoftware",auctionReq.user);
-            return AuctionSvc.sendUserToAs(auctionReq.user);
-           }
-          })
-          .then(function(res){
-            console.log("im the respone",res);
-            return; 
-          })
-          .catch(function(err){
-           throw err;
-          });
+          AuctionSvc.checkForAsset(auctionReq.dbAuctionId, auctionReq.product['assetId'])
+            .then(function(res) {
+              return;
+            })
+            .catch(function(err) {
+              throw err;
+            });
           AuctionSvc.sendNotification(auctionReq, UtilSvc.getStatusOnCode(auctionStatuses, status).notificationText, 2);
         });
     }
