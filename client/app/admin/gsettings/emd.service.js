@@ -34,6 +34,7 @@
             }
 
              function getAmount(filter){
+                console.log("getAmount",filter);
                 var path = svcPath +"/emd/amount"; 
                 var queryParam = "";
                 if(filter)
@@ -42,6 +43,7 @@
                 path  = path + "?" + queryParam;
                 return $http.get(path)
                 .then(function(res){
+                    console.log("EMDAMT",res);
                     return res.data;
                 })
                 .catch(function(err){

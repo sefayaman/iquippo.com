@@ -100,7 +100,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       var data = {};
     if(vm.userId)
       data.userId = vm.userId;
-      console.log(vm.userId);
+      console.log("user",vm.userId);
 		
     userRegForAuctionSvc.validateUser(data).
       success(function(res) {
@@ -124,13 +124,13 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       dataToSend['userId'] = vm.userId;;
       dataToSend['password'] = vm.passwordlogin;
         
-      console.log("lots",vm.selectedLots);
+      console.log("lots",vm.selectedLots.lotNumber);
 
         Auth.login(dataToSend)
         .then( function() {
           $rootScope.loading = true;
           console.log("CurrentAuction",$scope.currentAuction);
-          createReqData($scope.currentAuction, userData,vm.selectedLots);
+          createReqData($scope.currentAuction, userData,vm.selectedLots.lotNumber);
          })
         .catch( function(err) {
           $scope.errors.other = err.message;
@@ -172,7 +172,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
               data['to'] = vm.user.email;
               notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');
             }
-            createReqData($scope.currentAuction, vm.user,vm.selectedLots);
+            createReqData($scope.currentAuction, vm.user,vm.selectedLots.lotNumber);
            // vm.user = {};
           })
           .catch(function(err) {
@@ -188,8 +188,11 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
           });
 
   }
-  function createReqData(auctionData, userData,lotdata) {
+  function createReqData(auctionData, userData,lotData) {
   	var dataObj = {};
+    console.log("AuctionData",auctionData);
+    console.log("userData",userData);
+    console.log("lotData",lotData);
   	dataObj.auction = {};
   	dataObj.user = {};
   	dataObj.auction.dbAuctionId = auctionData._id;
@@ -205,7 +208,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
   	dataObj.user.lname = userData.lname;
   	dataObj.user.countryCode = userData.countryCode ? userData.countryCode : LocationSvc.getCountryCode(userData.country);
     dataObj.user.mobile = userData.mobile;
-    dataObj.lotNumber = lotdata;
+    dataObj.lotNumber = lotData;
     console.log("dataObj",dataObj);
 
     if(auctionData.emdTax =="overall"){
@@ -215,11 +218,11 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       
               if(Auth.getCurrentUser().email)
                 dataObj.user.email = Auth.getCurrentUser().email;
-                save(dataObj,vm.emdamount);
+                save(dataObj,vm.emdAmount);
 
     }else{
           vm.dataModel.auctionId = auctionData.auctionId;
-           vm.dataModel.selectedLots = lotdata;
+           vm.dataModel.selectedLots = lotData;
            console.log("I m here going");
                   
                    EmdSvc.getAmount(vm.dataModel).then(function(result){
