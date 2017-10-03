@@ -9,7 +9,7 @@
     var vm = this;
    var query=$location.search();
 
-    var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/"+query.auctionId+"/"+query.lotId || ""+"/"+query.userId;
+    var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/"+query.auctionId+"/"+query.lotId+"/"+query.userId;
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
    console.log("url",$scope.asWidgetURLSCE);
 

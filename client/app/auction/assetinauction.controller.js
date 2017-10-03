@@ -3,12 +3,16 @@
 
     angular.module('sreizaoApp').controller('AssetInAuctionCtrl', AssetInAuctionCtrl);
 
-    function AssetInAuctionCtrl($scope, $state, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $http,$location, $uibModal, LotSvc) {
+    function AssetInAuctionCtrl($scope, $state, $rootScope, $window, categorySvc, Auth, Modal, brandSvc, LocationSvc, modelSvc, userRegForAuctionSvc, productSvc, AuctionSvc, $http,$location, $uibModal,$sce, LotSvc) {
       var vm = this;
 
       var query = $location.search();
       //$scope.auctionName=$location.search().auctionName;
       console.log("query", query);
+      var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/{{lot.auctionId}}/{{lot.lotNumber}}/{{userId}}";
+      $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
+      console.log("url",$scope.asWidgetURLSCE);
+
       $scope.auctionType = $location.search().auctionType;
       $scope.auctionTypeValue = $location.search().auctionTypeValue;
       $scope.auctionOrientation=query.auctionOrientation;
@@ -102,6 +106,15 @@
               Modal.alert(err.data);
           });
       }
+
+     /* function fetchASURL(lotNumber,auctionOrientation){
+        var displayBid='true';
+        var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/";
+        aswidgetUrl=aswidgetUrl + $scope.auctionId + '/' + lotNumber + '/' + Auth.getCurrentUser()._id; 
+        $scope.aswidgetUrlSCE=$sce.trustAsResourceUrl(aswidgetUrl);
+        console.log("URL",$scope.asWidgetURLSCE);
+        return $scope.aswidgetUrlSCE;
+      }*/
 
       function openUrl(_id) {
         if (!_id)
@@ -316,6 +329,9 @@
 function fetchAsset(assetId,lotNumber,displayBid){
     filter={};
     filter.assetId=assetId;
+    if($scope.auctionOrientation === 'L'){
+      displayBid=false;
+    }
     console.log("displayBid",displayBid);
     productSvc.getProductOnFilter(filter)
     .then(function(res){
