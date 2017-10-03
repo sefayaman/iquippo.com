@@ -26,7 +26,7 @@
             <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
               <input type="text" class="form-control form-group" name="userId" placeholder="Enter Mobile/Email Id" ng-model="auctionRegVm.userId" required>
               <input class="form-control form-group" placeholder="Password" type="password" name="passwordlogin" ng-model="auctionRegVm.passwordlogin" required>
-              <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots" multiple>
+              <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> 
               
               <div class="text-right">
@@ -118,7 +118,7 @@
             <select class="form-control" 
             name="selectedLots" id="selectedLots" 
             style="height: 80px;"
-             ng-options="lots as lots for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots" multiple>
+             ng-options="lots as lots for lots in auctionRegVm.lotList" ng-model="auctionRegVm.selectedLots.lotNumber" multiple>
               </select> 
           </div>
         </div>

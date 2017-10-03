@@ -278,8 +278,10 @@ request.post({
 });
 }
 
-function sendUserInfo(userData){
-  /*var userData=
+function sendUserInfo(user,cb){
+  var userData=[];
+  userData.push(user);
+    /*var userData=
     // {"_id" : "59ae41ab7e1bc33158217363",
     {
     "_id" : "596db5e0005b85184c791d43",
@@ -316,20 +318,28 @@ function sendUserInfo(userData){
 //go ahead
 //please add those values
 
-// var  userData=JSON.stringify(userData);
-// var data = {
-//  "users":userData
-// };
+  userData=JSON.stringify(userData);
+ var data = {
+  "users":userData
+ };
+ console.log("users",data);
 request.post({
   url:"http://auctionsoftwaremarketplace.com:3007/api_call/registered-user-update",
-  form:userData
-},function(err,httpres,data){
+  form:data
+},function(err,httpres,asData){
   if(err){
       console.log(err); 
     } else{
-      data = JSON.parse(data);
-      res.json(data);
+      try{
+        console.log(asData);
+        cb(null,"data updated successfully");
+      //asData = JSON.parse(asData);
+      //res.json(data);      
     }
+    catch(err){
+     // handleError(res,err);
+    }
+  }
 });
 }
 

@@ -24,13 +24,7 @@
             }
 
             function getData(filter){
-                var path = svcPath +"/emd"; 
-                var queryParam = "";
-                if(filter)
-                queryParam = $httpParamSerializer(filter);
-                if(queryParam)
-                path  = path + "?" + queryParam;
-                return $http.get(path)
+                return $http.post(svcPath+"/emd/getData",filter)
                 .then(function(res){
                     return res.data;
                 })
@@ -40,6 +34,7 @@
             }
 
              function getAmount(filter){
+                console.log("getAmount",filter);
                 var path = svcPath +"/emd/amount"; 
                 var queryParam = "";
                 if(filter)
@@ -48,6 +43,7 @@
                 path  = path + "?" + queryParam;
                 return $http.get(path)
                 .then(function(res){
+                    console.log("EMDAMT",res);
                     return res.data;
                 })
                 .catch(function(err){

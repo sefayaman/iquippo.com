@@ -100,7 +100,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       var data = {};
     if(vm.userId)
       data.userId = vm.userId;
-      console.log(vm.userId);
+      console.log("user",vm.userId);
 		
     userRegForAuctionSvc.validateUser(data).
       success(function(res) {
@@ -124,13 +124,13 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       dataToSend['userId'] = vm.userId;;
       dataToSend['password'] = vm.passwordlogin;
         
-      console.log("lots",vm.selectedLots);
+      console.log("lots",vm.selectedLots.lotNumber);
 
         Auth.login(dataToSend)
         .then( function() {
           $rootScope.loading = true;
           console.log("CurrentAuction",$scope.currentAuction);
-          createReqData($scope.currentAuction, userData,vm.selectedLots);
+          createReqData($scope.currentAuction, userData,vm.selectedLots.lotNumber);
          })
         .catch( function(err) {
           $scope.errors.other = err.message;
@@ -139,10 +139,6 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
     };
 
    
-
-
-
-
 
   function createUser(auctionData, userData){
     vm.UserObj = {};
@@ -176,7 +172,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
               data['to'] = vm.user.email;
               notificationSvc.sendNotification('userRegEmail', data, dataToSend, 'email');
             }
-            createReqData($scope.currentAuction, vm.user,vm.selectedLots);
+            createReqData($scope.currentAuction, vm.user,vm.selectedLots.lotNumber);
            // vm.user = {};
           })
           .catch(function(err) {
@@ -192,8 +188,11 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
           });
 
   }
-  function createReqData(auctionData, userData,lotdata) {
+  function createReqData(auctionData, userData,lotData) {
   	var dataObj = {};
+    console.log("AuctionData",auctionData);
+    console.log("userData",userData);
+    console.log("lotData",lotData);
   	dataObj.auction = {};
   	dataObj.user = {};
   	dataObj.auction.dbAuctionId = auctionData._id;
@@ -209,7 +208,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
   	dataObj.user.lname = userData.lname;
   	dataObj.user.countryCode = userData.countryCode ? userData.countryCode : LocationSvc.getCountryCode(userData.country);
     dataObj.user.mobile = userData.mobile;
-    dataObj.lotNumber = lotdata;
+    dataObj.lotNumber = lotData;
     console.log("dataObj",dataObj);
 
     if(auctionData.emdTax =="overall"){
@@ -219,11 +218,11 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
       
               if(Auth.getCurrentUser().email)
                 dataObj.user.email = Auth.getCurrentUser().email;
-                save(dataObj,vm.emdamount);
+                save(dataObj,vm.emdAmount);
 
     }else{
           vm.dataModel.auctionId = auctionData.auctionId;
-           vm.dataModel.selectedLots = lotdata;
+           vm.dataModel.selectedLots = lotData;
            console.log("I m here going");
                   
                    EmdSvc.getAmount(vm.dataModel).then(function(result){
@@ -238,7 +237,7 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
  
   }
 
-  function save(dataObj,amount){
+  /*function save(dataObj,amount){
     userRegForAuctionSvc.save(dataObj)
     .then(function(){
       $rootScope.loading = false;
@@ -249,11 +248,43 @@ function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, Locatio
        if(err.data)
             Modal.alert(err.data); 
     });
-  }
+  }*/
 
-  function closeDialog() {
-    $uibModalInstance.dismiss('cancel');
-  }
+      function save(dataObj,amount){
+        dataObj.totalAmount = amount;
+        userRegForAuctionSvc.save(dataObj)
+        .then(function(result){
+            $rootScope.loading = false;
+            closeDialog();
+
+            Modal.confirm('Your emd amount is ' + amount,function(isGo){
+          if(isGo == 'no')
+            return;
+          $rootScope.loading = true;
+        
+          if(result && result.errorCode != 0) {
+                $state.go('main');
+                return;
+          }
+          
+          if (result.transactionId){
+            $rootScope.loading = false;
+            $state.go('payment', {
+              tid: result.transactionId
+          });
+          }
+        });
+            
+        })
+        .catch(function(err){
+          if(err.data)
+                Modal.alert(err.data); 
+        });
+      }
+
+      function closeDialog() {
+        $uibModalInstance.dismiss('cancel');
+      }
 }
 
 })();

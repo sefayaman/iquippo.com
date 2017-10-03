@@ -290,12 +290,14 @@ exports.paymentResponse = function(req,res){
     paymentVal.tracking_id = resPayment.tracking_id;
     payment.ccAvenueRes = paymentVal;
 
-      if(status == "success")
+      if(status == "success"){
         payment.statusCode = 0;
+      }
           
       payment.save(function(err,pys){
         if(err) { return handleError(res, err); }
         else{
+          console.log("payment",payment);
           sendPaymentRes(req,res,resPayment);
         }
 

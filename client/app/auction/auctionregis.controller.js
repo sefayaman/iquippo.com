@@ -32,9 +32,7 @@
      	}
        LotSvc.getData({auctionId:$scope.currentAuction.auctionId,distinct:true}).then(function(res){
             vm.lotList = res;   
-
             console.log("lotslist",res);
-            
          });
     }
 
@@ -90,14 +88,13 @@
     
      
 
-      function save(dataObj,amount){
+  function save(dataObj,amount){
       dataObj.totalAmount = amount;
       userRegForAuctionSvc.save(dataObj)
       .then(function(result){
           $rootScope.loading = false;
           closeDialog();
-         // Modal.alert('Your emd amount is2-' + amount);
-          ///
+
            Modal.confirm('Your emd amount is ' + amount,function(isGo){
         if(isGo == 'no')
           return;
@@ -109,27 +106,16 @@
               //Modal.alert(result.message, true);  
               $state.go('main');
               return;
-				}
-        //vm.valuationReq = {purpose:"Financing"};
+        }
+        
         if (result.transactionId){
           $rootScope.loading = false;
           $state.go('payment', {
             tid: result.transactionId
         });
         }
-        /*userSvc.deleteUser(user._id).then(function(result){
-          $rootScope.loading = false;
-          fireCommand(true);
-          if(result.errorCode == 0)
-           Modal.alert("User deleted succesfully",true);
-         else
-          Modal.alert(result.message,true);
-        })
-        .catch(function(err){
-           $rootScope.loading = false;
-        });*/
       });
-          ////
+          
       })
       .catch(function(err){
          if(err.data)
