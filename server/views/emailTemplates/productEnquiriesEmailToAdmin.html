@@ -4,7 +4,7 @@
 <body>
   <table style="width:80%; margin:0 auto; padding:15px; /* [disabled]font-family:Verdana, Geneva, sans-serif; */ border: 5px solid rgba(128, 128, 128, 0.28);">
     <tr>
-      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
+      <td style="height:70px;padding-bottom:20px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
     </tr>
     <tr>
       <td style="font-size:20px; color:#FF4342; padding-bottom:20px; font-family:Verdana, Geneva, sans-serif;">Dear User, </td>
@@ -71,7 +71,7 @@
       <td colspan="3">
         {{#each spares}}
         <div style="background: rgba(204, 204, 204, 0.3); float:left;width:49%; margin-bottom:10px;margin-left:10px">
-          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../serverPath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
+          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../awsBaseImagePath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
           <div style=" float:left;">
             <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
               <b>Spare Part Name:</b> {{name}}
@@ -112,7 +112,7 @@
       <td colspan="3">
         {{#each product}}
         <div style="background: rgba(204, 204, 204, 0.3); float:left;width:49%;margin-bottom:10px;margin-left:10px">
-          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../serverPath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
+          <a href="javascript:void(0);"><img width="100%" height="150" src="{{../awsBaseImagePath}}/assets/uploads/{{assetDir}}/{{primaryImg}}" style="float:left; width:150px;"></a>
           <div style=" float:left;">
             <p style="font-size:12px;margin: 7px 10px 7px;color:#333333; font-family:Verdana, Geneva, sans-serif;">
               <b>Category :</b>{{category}}

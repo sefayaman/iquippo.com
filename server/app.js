@@ -346,6 +346,10 @@ app.post('/api/updateproductmaster', function(req, res) {
   BulkProductUpload.updateProductMaster(req, res);
 });
 
+app.post('/api/getdevenvironment', function(req, res) {
+  return res.status(200).json({"mode":app.get('env')});
+});
+
 app.post('/api/quippovaluaion', function(req, res) {
   var bodyData = req.body;
 

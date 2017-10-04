@@ -39,6 +39,7 @@ function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSv
 
 	function onTabChange(tab,tabVal) {
 		vm.activeBid = tab;
+		vm.searchStr = "";
 		$state.go($state.current.name,{t:tabVal},{location:'replace',notify:false});
 		fireCommand(true);
 	}
@@ -50,6 +51,8 @@ function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSv
 		if (vm.searchStr) {
 			filter.isSearch = true;
 			filter.searchstr = vm.searchStr;
+			if(vm.activeBid === 'closed')
+				filter.searchStr = vm.searchStr;
 		}
 		
 		if(vm.activeBid === 'actionable'){

@@ -106,6 +106,7 @@ angular.module('sreizaoApp',[
     $rootScope.KYCType = KYCType;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
+    var DevEnvironment = false;
 
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
@@ -126,6 +127,14 @@ angular.module('sreizaoApp',[
             $rootScope.allCountries[i]['count'] = 0;
       }
     });
+    
+    settingSvc.getDevEnvironment()
+    .then(function(res){
+        DevEnvironment = res.mode === 'production'?false:true;
+        setEnviormentVariables();
+      })
+      .catch(function(stRes){
+      });
 
    settingSvc.get(UPDATE_INVITATION_MASTER)
     .then(function(res){
@@ -257,6 +266,11 @@ angular.module('sreizaoApp',[
         } 
      }
    });
+
+    function setEnviormentVariables(){
+      if(DevEnvironment)
+        supportMail = "iquippo.uat@gmail.com";
+    }
    
    Auth.removeCookies();
     //global logout

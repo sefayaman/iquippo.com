@@ -491,12 +491,12 @@ var HOME_BANNER =  [{
 var serverPath = location.protocol +"//" + location.host; 
 //var serverPath = "http://14.141.64.180:8100"; 
 var supportMail = "info@iquippo.com";
-var DevEnvironment = false; 
+//var DevEnvironment = false; 
 var supportContact = "011 66025672";
-if(location.host.indexOf('iquippo.com') == -1){
+/*if(location.host.indexOf('iquippo.com') == -1){
   supportMail = "iquippo.uat@gmail.com";
   DevEnvironment = true;
-}
+}*/
 
 var informationMessage = {};
 informationMessage['unknownError'] = "There is some issue.Please contact our support team.";

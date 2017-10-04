@@ -682,6 +682,18 @@ function updateWallet(couponData){
         throw ex;
       })
     }
+
+    settingSvc.getDevEnvironment = function(key){
+      var data ={};
+       return $http.post("/api/getdevenvironment", data)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(ex){
+        throw ex;
+      })
+    }
+
     return settingSvc;
 }])
 .factory("BuyContactSvc",BuyContactSvc);
