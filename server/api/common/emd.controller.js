@@ -91,8 +91,8 @@ exports.getEmdAmountData = function(req, res, callback) {
   }],function(err,results){
   if(err)
     res.status(err.status || 500).send(err);
-  console.log("results",results);
-  return res.json(results); 
+  console.log("results",results[1]);
+  return res.json(results[1]); 
  });
 
 }
