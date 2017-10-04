@@ -133,7 +133,11 @@ exports.getBidOrBuyCalculation = function(req, res) {
 exports.update = function(req, res,next) {
   async.eachLimit(req.bids,5,_update,function(err){
   	if(err)return handleError(res, err);
-	sendStatusMail(req.bids[0]);
+  	var emailFlag = true;
+  	if(req.bids[0].mailSend === 'No')
+  		emailFlag = false;
+  	if(emailFlag)
+		sendStatusMail(req.bids[0]);
 	var bidArr = [];
 	if(req.bidLost){
 		req.bids.forEach(function(item,index){

@@ -96,6 +96,7 @@ function invoiceDetailsCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, 
 		vm.invoiceInfo.countryCode = LocationSvc.getCountryCode(vm.invoiceInfo.country);
 		$scope.bidData.invoiceDetail = {};
 	    $scope.bidData.invoiceDetail = vm.invoiceInfo;
+	    $scope.bidData.mailSend = 'No';
 	    AssetSaleSvc.update($scope.bidData, 'invoice').
 	      then(function(res) {
 	      	Modal.alert(msg, true); 

@@ -100,6 +100,7 @@ function kycDocumentCtrl($scope, $state, $rootScope, Modal, Auth, $uibModal, $ui
       Modal.alert("Please upload at least one document.", true);
       return;
     }
+    $scope.bidData.mailSend = 'No';
     AssetSaleSvc.update($scope.bidData, 'kyc').
       then(function(res) {
         Modal.alert(informationMessage.kycUpdate, true); 
