@@ -18,9 +18,8 @@ module.exports = {
     uri:    process.env.MONGOLAB_URI ||
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
-            //'mongodb://localhost/sreiglobaldb'
-            'mongodb://appUser:iQuippoAppUser^*$!2K17@db1.iquippo.com/sreiglobaldb'
-            /*commented by J.K 'mongodb://uatdb1.iquippo.com,uatdb2.iquippo.com,uatdb3.iquippo.com/sreiglobaldb' */
+            'mongodb://appUser:iQuippoAppUser^*$!2K17@db1.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@db2.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@db3.iquippo.com:28018/sreiglobaldb'
+  },
   },
   uploadPath: "./../public/assets/uploads/",
   templatePath:'./../public/assets',
