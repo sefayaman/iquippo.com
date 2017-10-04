@@ -20,7 +20,6 @@ module.exports = {
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://appUser:iQuippoAppUser^*$!2K17@db1.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@db2.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@db3.iquippo.com:28018/sreiglobaldb'
   },
-  },
   uploadPath: "./../public/assets/uploads/",
   templatePath:'./../public/assets',
   contactNumber: "011 66025672",
