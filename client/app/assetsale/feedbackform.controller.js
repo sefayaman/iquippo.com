@@ -16,7 +16,6 @@ function feedbackCtrl($scope, $rootScope, Modal, Auth, UtilSvc, $uibModal, $uibM
     }
     
     $scope.bidData.comment = vm.feedback.comment;
-    $scope.bidData.mailSend = 'No';
     AssetSaleSvc.update($scope.bidData, 'feedback').
       then(function(res) {
         if (res)
