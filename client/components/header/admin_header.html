@@ -62,7 +62,7 @@
                     <li ng-if="isAdmin()">
                         <a href="/partnermanagement"><i class="fa fa-users"></i> Partner Management</a>
                     </li>                    
-                    <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isPartner()">
+                    <li ng-if="isAdmin() || isEnterprise() || isEnterpriseUser() || isValuationPartner()">
                         <a href="/enterprisevaluation/transaction"><i class="fa fa-user-plus"></i> Enterprise Valuation</a>
                     </li>
                     <!-- <li>
@@ -137,7 +137,7 @@
                     <!-- <li ng-if="isAuctionPartner() || isAdmin()">
                         <a href="/auctionregreport"><i class="fa fa-gavel"></i>Auction Registration Report</a>
                     </li> -->
-                    <li ng-if="isPartner()">
+                    <li ng-if="isValuationPartner()">
                         <a href="/valuationrequests/valuationpartner"><i class="fa fa-tags"></i>Valuation Request</a>
                     </li>
                     <li>

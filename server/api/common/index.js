@@ -18,6 +18,7 @@ var assetSaleChargeCtrl = require('./assetsalecharge.controller');
 var emdChargeCtrl = require('./emdcharge.controller');
 var apiCtrl=require('./api.controller');	
 var bulkUploadCtrl = require('./uploadrequest/uploadrequest.controller');
+var valuationCancellationCtrl = require('./valuationcancellationfee.controller');
 var json2xls = require('json2xls');
 var router = express.Router();
 
@@ -155,4 +156,12 @@ router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
 router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
+
+//Valuation Cancellation Fee master
+router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
+router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);
+router.post('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.validate, valuationCancellationCtrl.create);
+router.put('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.validate,valuationCancellationCtrl.update);
+router.delete('/valuationcancellationfee/:id',auth.hasRole('admin'),valuationCancellationCtrl.destroy);
+
 module.exports = router;

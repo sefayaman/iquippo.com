@@ -28,6 +28,7 @@ var client = s3.createClient(options);
 var request=require('request');
 
 exports.toIST = toIST;
+exports.convertQVAPLStatus = convertQVAPLStatus;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
@@ -365,6 +366,18 @@ function uploadDirToS3(localDirPath, cb) {
   });
 }
 
+function convertQVAPLStatus(qvaplStatus){
+  
+  var statusMapping = {
+    created : "Request Submitted",
+    assign :  "Request Submitted",
+    accept: "Inspection In Progress",
+    complete : "Inspection Completed",
+    updated : "Valuation Report Submitted",
+    cancel : 'Cancelled'
+  }
+  return statusMapping[qvaplStatus];
+}
 
 function toIST(value) {
   if (!value)
