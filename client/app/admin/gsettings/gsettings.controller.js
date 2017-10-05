@@ -1220,7 +1220,7 @@
         /*Auction Request for external product  start*/
 
         function extend(obj, src) {
-            Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
+        Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
             return obj;
         }
 
@@ -1256,6 +1256,10 @@
                               LotSvc.getData(filter)
                               .then(function(res){
                                 if(res.length > 0){
+                                    if(res[0]._id){
+                                        res[0].lotId=res[0]._id;
+                                        delete res[0]._id;
+                                    }
                                    var c =  extend(x, res[0]);
 
 
@@ -1511,6 +1515,7 @@
         }
 
         function editAssetInAuctionClicked(assetInAuct) {
+            console.log("assetIn Auct",assetInAuct);
             $scope.isEdit = true;
             $scope.isAssetCollapsed = false;
             vm.auctionProduct = {};
@@ -1591,12 +1596,13 @@
                     vm.auctionProduct.endDate = vm.upcomingAuctions[i].endDate;
                 }
             }
-
+            console.log("the auction Data",vm.auctionProduct);
             AuctionSvc.update(vm.auctionProduct)
                 .then(function(result) {
                     if (!result.errorCode) {
                         $scope.submitted = false;
                         $scope.isAssetCollapsed = true;
+                        console.log("auctionData",vm.auctionProduct);
                         fireCommand('true', null, "auctionrequest");
                     } else{
                         Modal.alert(result.message);
@@ -1664,11 +1670,6 @@
 
                  });
                 
-            
-
-
-            
-
         }
 
         function deleteAssetFromAuction(auct) {
