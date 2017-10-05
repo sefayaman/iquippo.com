@@ -1675,7 +1675,7 @@
         function deleteAssetFromAuction(auct) {
             if (!auct)
                 return;
-            Modal.confirm('Would you want to delete?.', function(ret) {
+            Modal.confirm('Would you want to delete?', function(ret) {
                 if (ret == 'yes')
                     deleteFn(auct);
             });
