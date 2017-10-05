@@ -105,11 +105,15 @@ exports.validateUser = function(req, res){
 exports.checkUserRegis = function(req,res){
 
   var filter = {};
+
   if(req.body.auction.dbAuctionId){
     filter['auction.dbAuctionId'] = req.body.auction.dbAuctionId;
   }
+
   if(req.body.user._id){
+
     filter['user._id'] = req.body.user._id;
+
   }
   if(req.body.user.mobile){
 
@@ -117,18 +121,19 @@ exports.checkUserRegis = function(req,res){
 
   }
   if(req.body.lotNumber){
-   filter['lotNumber'] = {
-      $in: req.query.selectedLots
-    };
+
+    filter['lotNumber'] ={
+      $in:req.body.lotNumber
+    } 
 
   }
-    
+    console.log("filterdata",filter);
+
   var query = Model.find(filter);
 
   query.exec(
      function(err, data){
         if(data.length > 0){
-                  console.log("data",data[0].transactionId);
                   var filter ={};
                   filter['_id'] = data[0].transactionId;
 
@@ -137,12 +142,17 @@ exports.checkUserRegis = function(req,res){
                         return handleError(err,res);
                       }
                       
-                          var message ="";
+                          var message ={};
                           if(payment[0].status =="completed"){
-                              message = "done";
+                              message.data = "done";
+
                             }else{
-                              message = "undone";
+                              message.data = "undone";
+
                             }
+                            message.lotNumber = data[0].lotNumber;
+                            message.transactionId = data[0].transactionId;
+                            message.errorCode = 0;
                             return  res.status(200).json(message);
                         
                     });
