@@ -54,29 +54,53 @@
             dataObj.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
             dataObj.user.mobile = Auth.getCurrentUser().mobile;
             dataObj.lotNumber =  vm.dataToSend.selectedLots;
+                   
 
-            if($scope.currentAuction.emdTax =="overall"){
+            userRegForAuctionSvc.checkUserRegis(dataObj)
+            .then(function(result){
+              console.log("ggghhkhkjkhkjkjjkj",result);
 
-              vm.emdamount = $scope.currentAuction.emdAmount;
-              closeDialog();
-              if(Auth.getCurrentUser().email)
-                dataObj.user.email = Auth.getCurrentUser().email;
-                save(dataObj,vm.emdamount);
-            
-            }else{
-                  vm.dataModel.auctionId = $scope.currentAuction.auctionId;
 
-                  vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
-                  closeDialog();
-                   EmdSvc.getAmount(vm.dataModel).then(function(result){
-                    console.log("The amount is",result);
-                         if(Auth.getCurrentUser().email)
-                         dataObj.user.email = Auth.getCurrentUser().email;
-                         save(dataObj,result);
-                     }).catch(function(err){
-                   });
-             }
-           
+              if(result.length>0){
+                
+                if(result =="done"){
+                   Modal.alert("You have already registered with this auction"); 
+                 }
+
+                 if(result =="undone"){
+                   Modal.alert("You have done partial registration payment part is pending"); 
+                 }
+
+              }else{
+
+                if($scope.currentAuction.emdTax =="overall"){
+                  
+                                vm.emdamount = $scope.currentAuction.emdAmount;
+                                closeDialog();
+                                if(Auth.getCurrentUser().email)
+                                  dataObj.user.email = Auth.getCurrentUser().email;
+                                  save(dataObj,vm.emdamount);
+                              
+                              }else{
+                                    vm.dataModel.auctionId = $scope.currentAuction.auctionId;
+                  
+                                    vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
+                                    closeDialog();
+                                     EmdSvc.getAmount(vm.dataModel).then(function(result){
+                                      console.log("The amount is",result);
+                                           if(Auth.getCurrentUser().email)
+                                           dataObj.user.email = Auth.getCurrentUser().email;
+                                           save(dataObj,result);
+                                       }).catch(function(err){
+                                     });
+                               }
+                             
+
+              }
+            });
+
+
+          
             
           } else {
              closeDialog();
