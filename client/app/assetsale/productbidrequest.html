@@ -1,0 +1,164 @@
+<div>
+	<div class="row">
+	  	<div class="col-sm-6">
+	  		<h4>
+	  		<a href="javascript:void(0);" ng-click="productBidRequestVm.backButton()" class="btn btn-default active"><i class="fa fa-chevron-left"></i>  Back</a>
+	  		</h4>
+	  	</div>
+	  	<!-- <div class="col-sm-6 text-right">
+	  		<h4>	  			
+	  			<button class="btn btn-success" ng-click="productBidRequestVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+	  			
+	  		</h4>
+	  	</div> -->
+	</div>
+	<legend></legend>
+	
+	<!-- Approved Bid -->
+	<div>
+		<div class="well" ng-if="!isFAgencyPartner()">
+			<div class="row">
+				<div class="col-sm-4">
+					<p><strong>Asset Id:</strong> {{currentProduct.assetId}}</p>
+					<p><strong>Asset Name:</strong> {{currentProduct.name}}</p>
+					<p><strong>Valuation Amount / Reserve Price:</strong> {{currentProduct.valuationAmount || 0}} / {{currentProduct.reservePrice || 0}}</p>
+					
+				</div>
+				<div class="col-sm-4">
+					<p><strong>Year of Manufacturing:</strong> {{currentProduct.mfgYear}}</p>
+					<p><strong>Ageing of Asset:</strong> {{currentProduct.ageingOfAsset || 0}}</p>
+					<p><strong>Ageing of Portal:</strong> {{dayDiff(currentProduct.createdAt)}} Days</p>
+				</div>
+				<div class="col-sm-4">					
+					<p><strong>Parking Charge:</strong> {{currentProduct.parkingCharges}}</p>
+					<!-- <p><strong>General Conditions:</strong> {{currentProduct.productCondition}}</p>
+					<p><a href="javascript:void(0);">Click here to view Valuation Report</a></p> -->
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{productBidRequestVm.bidListing.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="productBidRequestVm.searchStr" ng-change="productBidRequestVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>
+		   				<th ng-if="isFAgencyPartner()">Asset Id</th>	   				
+			   			<th>Ticket Id</th>
+			   			<th ng-if="isFAgencyPartner()">Asset Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Seller Contact No.</th>
+			   			
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Name</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Mobile No.</th>
+			   			<th ng-if="isFAgencyPartner() || isAdmin()">Buyer Email Id</th>	
+			   			<th>Bid Amount</th>
+			   			<th>Bid Status</th>
+			   			<th>Deal Status</th>
+			   			<th ng-if="isAdmin()">EMD Details</th>
+			   			<th ng-if="isAdmin()">Full Payment Details</th>
+			   			<th ng-if="!isFAgencyPartner() && !isAdmin()">Parking Charge</th>
+			   			<th ng-if="isAdmin()">Invoice in Favour of</th>
+			   			<th ng-if="isAdmin()">KYC Documents</th>
+			   			<th>Delivery Order</th>
+			   			<th ng-if="!isFAgencyPartner()">Asset Status</th>
+			   			<th ng-if="!isFAgencyPartner()">Action</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="bid in productBidRequestVm.bidListing">
+		   				<td ng-if="isFAgencyPartner()">{{bid.product.assetId}}</td>
+			   			<td>{{bid.ticketId}}</td>
+			   			<td ng-if="isFAgencyPartner()">{{bid.product.name}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.name}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.product.seller.mobile}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.user.fname}} {{bid.user.lname}}</td>
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.user.mobile}}</td>			   			
+			   			<td ng-if="isFAgencyPartner() || isAdmin()">{{bid.user.email}}</td>
+
+			   			<td>{{bid.bidAmount}}</td>
+			   			<td>{{bid.bidStatus}}</td>
+			   			<td>{{bid.dealStatus}}</td>
+			   			<td ng-if="isAdmin()">
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')"><span ng-if="bid.emdPayment.remainingPayment > 0">Update Details</span>
+			   				<span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
+			   				</a>
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'EMD')" ng-if="productBidRequestVm.validateAction(bid,'VIEWEMDPAYMENT')">
+			                  <span ng-if="!bid.emdPayment.remainingPayment > 0">View Details</span>
+			                </a>
+			   			</td>
+			   			<!-- <td>{{}}</td> -->
+			   			<td ng-if="isAdmin()">
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')">
+			   					<span ng-if="bid.fullPayment.remainingPayment > 0">Update Details</span>
+			   					<span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+			   				</a>
+			   				<a href="javascript:void(0);" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'emdFullPaymentPopup', '', 'Full Payment')" ng-if="productBidRequestVm.validateAction(bid,'VIEWFULLPAYMENT')">
+			                  <span ng-if="!bid.fullPayment.remainingPayment > 0">View Details</span>
+			                </a>
+			   			</td>
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">{{bid.parkingCharge || 0}}</td>
+			   			<td ng-if="isAdmin()">
+			   				<button type="button" class="btn btn-danger btn-xs" ng-click="productBidRequestVm.openDialog(bid,'invoiceDetails')" ng-if="productBidRequestVm.validateAction(bid,'INVOICEDETAIL')">Update</button>
+			   			</td>
+			   			<td ng-if="isAdmin()">
+			   				<button type="button" class="btn btn-primary btn-xs" ng-click="productBidRequestVm.openDialog(bid,'kycDocument')" ng-if="productBidRequestVm.validateAction(bid,'KYC')">
+			   					<span ng-if="true">Upload</span>
+			   					<span ng-if="false">Update</span>
+			   				</button>
+			   			</td>
+			   			<td><!-- <a href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank">{{bid.deliveryOrder}}</a> -->
+			   			<a class="btn btn-primary btn-sm" ng-if="bid.deliveryOrder" uib-popover="Download" popover-trigger="mouseenter" href="{{uploadImagePrefix}}{{bid.product.assetDir}}/{{bid.deliveryOrder}}" target="_blank"><i class="fa fa-download"></i></a>
+			   			<button type="button" class="btn btn-default btn-sm" ng-if="bid.deliveryOrder && bid.dealStatus === 'DO Issued'" uib-popover="Update" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','', 'doIssued')"><i class="fa fa-retweet"></i></button>
+			   			</td>
+			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
+			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">
+			   				<!-- seller action -->
+							<button class="btn btn-sm btn-success" uib-popover="Approved" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE') && isBuySaleApprover()" ng-click="productBidRequestVm.update(bid,'approve')" ng-disabled="approvFlag"><i class="fa fa-check"></i></button>
+
+							<button class="btn btn-sm btn-danger" uib-popover="Reject" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')" ng-disabled="approvFlag"><i class="fa fa-close"></i></button>
+
+			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','', 'doIssued')" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter">
+					           <i class="fa fa-upload"></i>
+					        </button>
+
+							<!-- <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a> -->
+
+							<a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','','deliverd')"><i class="fa fa-truck"></i></a>
+
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup', 'product-preview', 'productBid')"><i class="fa fa-info"></i></button>
+						</td>
+			   			<td ng-if="isAdmin()">
+			   				<!-- admin action -->
+			   				<button class="btn btn-sm btn-success" uib-popover="Approved" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE')" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
+
+			   				<button class="btn btn-sm btn-danger" uib-popover="Reject" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
+
+			   				<!-- <button class="btn btn-sm btn-success" uib-popover="EMD Payment" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'EMDPAYMENT')" ng-click="productBidRequestVm.update(bid,'emdpayment')"><i class="fa fa-check"></i></button>
+
+			   				<button class="btn btn-sm btn-success" uib-popover="Full Payment" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'FULLPAYMENT')" ng-click="productBidRequestVm.update(bid,'fullpayment')"><i class="fa fa-check"></i></button> -->	
+
+			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','', 'doIssued')">
+					           <i class="fa fa-upload"></i>
+					        </button>
+
+			   				<button class="btn btn-success btn-sm" uib-popover="Asset Delivery Confirmation" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'ACCEPTANCEOFDELIVERY')" ng-click="productBidRequestVm.update(bid,'deliveryaccept')"><i class="fa fa-check"></i></button>
+
+							<!-- <a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.update(bid,'deliverd')"><i class="fa fa-truck"></i></a> -->
+							
+							<a href="javascript:void(0);" uib-popover="Change Deal Status to Asset Delivered" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'DELIVERED')" class="btn btn-sm btn-primary" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','', 'deliverd')"><i class="fa fa-truck"></i></a>
+
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="productBidRequestVm.openDialog(bid,'productRequestDetailPopup','product-preview', 'productBid')"><i class="fa fa-info"></i></button>
+						</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="productBidRequestVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+</div>

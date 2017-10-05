@@ -236,6 +236,10 @@
           if(Auth.getCurrentUser().role == 'channelpartner')
             filter.role = Auth.getCurrentUser().role;
           filter.userid = Auth.getCurrentUser()._id;
+          if(Auth.isEnterprise()){
+            delete filter.userid;
+            filter.enterpriseId = Auth.getCurrentUser().enterpriseId; 
+          }
         }
         productSvc.getProductOnFilter(filter).then(function(response) {
           if(response && response.length < 1) {
@@ -421,6 +425,8 @@
             $scope.product.rent.fromDate = moment($scope.product.rent.fromDate).toDate();
             $scope.product.rent.toDate = moment($scope.product.rent.toDate).toDate();
           }
+          if ($scope.product.repoDate)
+              $scope.product.repoDate = moment($scope.product.repoDate).format('MM/DD/YYYY');
           if ($scope.product.currencyType == "INR")
             $scope.product.currencyType = "";
           $scope.productName = $scope.product.name;
@@ -436,8 +442,7 @@
           }
           $scope.onTradeTypeChange($scope.product.tradeType);
           prepareImgArr();
-          if(!$scope.product.taxRate)
-            getTaxRate();
+         
         })
       } else {
         prepareImgArr();
@@ -562,24 +567,6 @@
 
     init();
 
-    function getTaxRate(){
-
-        $scope.product.taxRate = "";
-      if(!$scope.product.category._id || !$scope.product.group._id || !$scope.product.state)
-        return;
-      var serData = {};
-      serData.categoryId = $scope.product.category._id;
-      serData.groupId = $scope.product.group._id;
-      serData.state = $scope.product.state;
-      serData.currentDate = 'y'
-      VatTaxSvc.get(serData)
-      .then(function(taxes){
-        if(taxes.length)
-          $scope.product.taxRate = taxes[0].amount;
-      });
-
-    }
-
     function isEmpty(myObject) {
       if (!myObject)
         return true;
@@ -623,7 +610,6 @@
           return item.state.name == $scope.product.state;
         });
       });
-      getTaxRate();
     }
 
     function reset(){
@@ -646,7 +632,6 @@
           return item.country == $scope.product.country;
         });
       });
-      getTaxRate();
     }
 
     function userSearch(userSearchText){
@@ -723,7 +708,6 @@
         .catch(function(res) {
           console.log("error in fetching brand", res);
         })
-        getTaxRate();
     }
 
     function onBrandChange(brandId, noChange) {
@@ -839,6 +823,7 @@
       product.seller.alternateMobile = seller.alternateMobile;
       $scope.product.seller.email = product.seller.email = seller.email;
       product.seller.country = seller.country;
+      product.seller.enterpriseId = seller.enterpriseId || "";
       product.seller.countryCode=LocationSvc.getCountryCode(seller.country);
       product.seller.company = seller.company;
       $scope.container.sellerName = seller.fname + " " + seller.lname;
@@ -1643,6 +1628,7 @@
       product.user.phone = Auth.getCurrentUser().phone;
       product.user.mobile = Auth.getCurrentUser().mobile;
       product.user.email = Auth.getCurrentUser().email;
+      product.user.enterpriseId = Auth.getCurrentUser().enterpriseId || "";
       product.user.country = Auth.getCurrentUser().country;
       product.user.countryCode=LocationSvc.getCountryCode(product.user.country);
       product.user.company = Auth.getCurrentUser().company;
@@ -2182,6 +2168,12 @@
           return "No";
       }
     }
+    
+    $scope.getImageURL = function(assetDir,key){
+        var uploadImagePrefix = $rootScope.uploadImagePrefix;
+        //console.log(uploadImagePrefix + assetDir+'/'+key);
+        return uploadImagePrefix + assetDir+'/'+key;
+    };
 
     $scope.timestamp = new Date().getTime();
 

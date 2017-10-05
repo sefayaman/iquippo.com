@@ -83,12 +83,17 @@ exports.getAuctionInfoForProduct = function(req, res) {
     var filter = {};
     filter._id = auction.dbAuctionId;
     var query = AuctionMaster.find(filter);
+    var auctionData = {};
     query.exec(function(err, result) {
       if (err) {
         return handleError(res, err);
       }
-      
-      var tempArr = [];
+      auctionData = result[0].toObject();
+      var currentDate = new Date();
+      auctionData.visibleBuyNow = true;
+      if (auctionData.insStartDate < currentDate && auctionData.endDate > currentDate)
+        auctionData.visibleBuyNow = false;
+      /*var tempArr = [];
       if(result) {
         result.forEach(function(auction) {
           auction = auction.toObject();
@@ -99,9 +104,9 @@ exports.getAuctionInfoForProduct = function(req, res) {
           tempArr[tempArr.length] = auction;
         })
         result = tempArr;
-      }
-
-      return res.status(200).json(result);
+      }*/
+      console.log("auctionData", auctionData);
+      return res.status(200).json(auctionData);
     });
   });
 };
@@ -618,10 +623,12 @@ exports.update = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
+    console.log("auctions Result",auctions[0]._id);
+    console.log("id in params",req.params.id);
     /*if (auctions.length == 0) {
       return res.status(404).send("Not Found.");
     }*/
-    if (auctions.length > 1 || (auctions.length == 1 && auctions[0]._id != req.params.id)) {
+    if (auctions.length > 1 || (auctions.length == 1 && ((auctions[0]._id + "") !== req.params.id))) {
       return res.status(201).json({
         errorCode: 1,
         message: "Duplicate asset id found."

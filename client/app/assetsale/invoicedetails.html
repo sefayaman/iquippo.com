@@ -1,0 +1,110 @@
+<div> 
+      <div class="modal-header">
+          <button type="button" class="close" ng-click="invoiceDetailsVm.closeDialog()">&times;</button>
+          <h4 class="modal-title">Invoice Details</h4>
+        </div>
+      <div class="modal-body">
+          <p>Invoice in favour of self</p>
+          <form class="form" name="invoiceForm" novalidate>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="radio radio-info">
+                  <input type="radio" id="self" name="invoice" ng-model="option.select" value="yes">
+                  <label for="self"> Yes </label>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="radio radio-info">
+                  <input type="radio"  placeholder="" id="other" name="invoice" ng-model="option.select" value="no">
+                  <label for="other"> No </label>
+                </div>
+              </div>
+            </div>
+            <div ng-if="option.select == 'no'">
+                <div class="row">
+                  <div class="col-sm-6 form-group" ng-class="{'has-error': invoiceForm.fname.$invalid && invoiceForm.submitted }">
+                    <input type="text" class="form-control" name="fname" ng-model="invoiceDetailsVm.invoiceInfo.fname" placeholder="*First Name" required>
+                  </div>
+                  <div class="col-sm-6 form-group" ng-class="{'has-error': invoiceForm.lname.$invalid && invoiceForm.submitted }">
+                    <input type="text" class="form-control" name="lname" ng-model="invoiceDetailsVm.invoiceInfo.lname" placeholder="*Last Name" required>
+                  </div>
+                </div>              
+                <div class="row">
+                  <div class="col-sm-4 form-group" ng-class="{'has-error': invoiceForm.country.$invalid && invoiceForm.submitted }">
+                    <select class="form-control" ng-model="invoiceDetailsVm.invoiceInfo.country" name="country" ng-change="onCountryChange(invoiceDetailsVm.invoiceInfo.country)" required>
+                      <option value="">*Select Country</option>
+                      <option ng-repeat="country in allCountries | orderBy:'name'" value="{{country.name}}">{{country.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-4 form-group" ng-class="{'has-error': invoiceForm.state.$invalid && invoiceForm.submitted }">
+                    <select class="form-control" name="state" ng-model="invoiceDetailsVm.invoiceInfo.state" ng-change="onStateChange(invoiceDetailsVm.invoiceInfo.state)" required>
+                      <option value="">*Select State</option>
+                        <option ng-repeat="state in stateList | orderBy:'name'" value="{{state.name}}">{{state.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-4 form-group" ng-class="{'has-error': invoiceForm.location.$invalid && invoiceForm.submitted }">
+                    <select class="form-control" name="location" ng-model="invoiceDetailsVm.invoiceInfo.city" required>
+                      <option value="">*Select Location</option>
+                        <option ng-repeat="location in locationList | orderBy:'name'" value="{{location.name}}">{{location.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <input type="text" class="form-control" name="address" ng-model="invoiceDetailsVm.invoiceInfo.address" placeholder="Address">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6 form-group" ng-class="{'has-error': invoiceForm.email.$invalid && invoiceForm.submitted }">
+                    <input type="email" class="form-control" name="email" ng-model="invoiceDetailsVm.invoiceInfo.email" placeholder="Email">
+                    <p class="help-block" ng-show="(invoiceForm.email.$error.email || invoiceForm.email.$error.pattern) && invoiceForm.submitted">
+                    Please enter a valid email.
+                    </p> 
+                  </div>
+                  <!-- <div class="col-sm-2 form-group padd-right" ng-class="{'has-error': invoiceForm.mobile.$invalid && invoiceForm.submitted }">
+                    <select class="form-control" ng-model="invoiceDetailsVm.invoiceInfo.countryCode" ng-change="auctionRegVm.onCodeChange(auctionRegVm.user.countryCode)" required>
+                    <option value="" disabled>*Code</option>
+                    <option  ng-repeat ="country in allCountries | orderBy:'name'" value="{{country.countryCode}}">+{{country.countryCode}}</option>
+                    </select>
+                  </div> -->
+                  <div class="col-sm-6 form-group padd-left" ng-class="{'has-error': invoiceForm.mobile.$invalid && invoiceForm.submitted }">
+                    <input type="text" class="form-control" name="mobile" ng-model="invoiceDetailsVm.invoiceInfo.mobile" placeholder="*Mobile No." uib-tooltip="XX-XXXX-XXXX" tooltip-trigger="focus" tooltip-placement="top" required>
+                  </div>
+                </div>
+            </div>
+                
+            <div class="modal-footer asset-sale">
+              <div>
+                <button type="button" class="btn btn-primary" ng-click="invoiceDetailsVm.closeDialog()">Cancel</button>
+                <button type="button" class="btn btn-danger" ng-click="invoiceDetailsVm.submit(invoiceForm)">Submit</button>                
+              </div>
+            </div>
+          </form>
+            <!-- <div class="table-responsive" >
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>Location</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{bidData.invoiceDetail.fname}} {{bidData.invoiceDetail.lname}}</td>
+                    <td>{{bidData.invoiceDetail.country}}</td>
+                    <td>{{bidData.invoiceDetail.state}}</td>
+                    <td>{{bidData.invoiceDetail.city}}</td>
+                    <td>{{bidData.invoiceDetail.address}}</td>
+                    <td>{{bidData.invoiceDetail.email}}</td>
+                    <td>{{bidData.invoiceDetail.mobile}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div> -->
+        </div>  
+    </div>

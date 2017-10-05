@@ -1,0 +1,311 @@
+<div>
+  <div class="modal-header">
+      <button type="button" class="close" ng-click="bidReqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Details</h4>
+    </div>
+    <div class="modal-body">      
+      <table class="table table-bordred" ng-if="viewBlock == 'actionable'">               
+        <tbody>
+          <tr>
+            <td class="col-sm-2"><b>Asset Id:</b></td>
+            <td class="col-sm-4">{{bidReqDetailVm.product.assetId}}</td>
+            <td class="col-sm-2"><b>Category:</b></td>
+            <td class="col-sm-4">{{bidReqDetailVm.product.category.name}}</td>                  
+          </tr>
+          <tr>
+            <td><b>Brand:</b></td>
+            <td>{{bidReqDetailVm.product.brand.name}}</td>
+            <td><b>Model:</b></td>
+            <td>{{bidReqDetailVm.product.model.name}}</td>                  
+          </tr>
+          <tr>
+            <td><b>Manufacturing Year:</b></td>
+            <td>{{bidReqDetailVm.product.mfgYear}}</td>
+            <td><b>Asset Country:</b></td>
+            <td>{{bidReqDetailVm.product.country}}</td>
+          </tr>                 
+          <tr>
+            <td><b>Asset State:</b></td>
+            <td>{{bidReqDetailVm.product.state}}</td>
+            <td><b>Asset Location:</b></td>
+            <td>{{bidReqDetailVm.product.city}}</td>
+          </tr>
+        </tbody>
+        <tbody ng-if="isFAgencyPartner() || isAdmin()">
+          <!-- <td><b>Asset Description:</b></td>
+            <td>{{}}</td> -->
+           <tr>            
+            <td><b>Buyer Name:</b></td>
+            <td>{{}}</td>          
+            <td><b>Buyer Country:</b></td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+            <td><b>Buyer State:</b></td>
+            <td></td>          
+            <td><b>Buyer Location:</b></td>
+            <td>{{}}</td>
+          </tr>
+          <tr>
+            <td><b>Buyer Mobile No.:</b></td>
+            <td>{{}}</td>          
+            <td><b>Buyer Email Id:</b></td>
+            <td>{{}}</td>
+          </tr>
+        </tbody>
+        <tbody ng-if="!isFAgencyPartner()">
+          <tr>
+            <td><b>Repo Date:</b></td>
+            <td>{{bidReqDetailVm.product.repoDate | date:'MM/dd/yyyy'}}</td>          
+            <td><b>Ageing of Asset:</b></td>
+            <td>{{bidReqDetailVm.product.ageingOfAsset || 0}}</td>
+          </tr>
+          <tr>
+            <td><b>Reserve Price:</b></td>
+            <td>{{bidReqDetailVm.product.reservePrice || 0}}</td>          
+            <td><b>Parking Charges <small ng-if="bidReqDetailVm.product.parkingPaymentTo == 'Yard'">(* Pay to yard)</small> :</b></td>
+            <td>{{bidReqDetailVm.product.parkingCharges || 0}}</td>
+          </tr>
+        </tbody>
+          <tr>
+            <td ng-if="!isFAgencyPartner()"><b>Buy Now Price:</b></td>
+            <td ng-if="!isFAgencyPartner()">{{bidReqDetailVm.product.grossPrice || 0}}</td>
+            <td ng-if="!isFAgencyPartner() && !isAdmin()"><b>Ageing of the Portal</b></td>
+            <td ng-if="!isFAgencyPartner() && !isAdmin()">{{dayDiff(bidReqDetailVm.product.createdAt)}} Days</td>
+          </tr>
+          <tr ng-if="isAdmin()">
+            <td><b>Trade Type:</b></td>
+            <td>{{bidReqDetailVm.product.tradeType}}</td>
+            <td><b>Asset Status:</b></td>
+            <td>{{bidReqDetailVm.product.assetStatus}}</td>
+          </tr>
+          <tr>
+            <td><b>Asset Description:</b></td>
+            <td colspan="3">{{bidReqDetailVm.product.comment}}</td>
+          </tr>      
+      </table>
+
+      <!-- closed bid -->
+      <table class="table table-bordred" ng-if="viewBlock == 'closed'"> 
+        <tbody>
+          <tr>
+            <td class="col-sm-2"><b>Ticket Id::</b></td>
+            <td class="col-sm-4">{{data.ticketId}}</td>            
+            <td class="col-sm-2"><b>Asset Id:</b></td>
+            <td class="col-sm-4">{{data.product.proData.assetId}}</td>                              
+          </tr>
+          <tr>
+            <td><b>Category:</b></td>
+            <td>{{data.product.proData.category.name}}</td>
+            <td><b>Brand:</b></td>
+            <td>{{data.product.proData.brand.name}}</td>                             
+          </tr>
+          <tr>
+            <td><b>Model:</b></td>
+            <td>{{data.product.proData.model.name}}</td> 
+            <td><b>Manufacturing Year:</b></td>
+            <td>{{data.product.proData.mfgYear}}</td>            
+          </tr>                 
+          <tr>
+            <td><b>Asset Country:</b></td>
+            <td>{{data.product.proData.country}}</td>
+            <td><b>Asset State:</b></td>
+            <td>{{data.product.proData.state}}</td>            
+          </tr>
+          <tr>
+            <td><b>Asset Location:</b></td>
+            <td>{{data.product.proData.city}}</td>
+            <td><b>Offer Type:</b></td>
+            <td>{{data.offerType}} </td>
+          </tr>
+        </tbody>
+          <!-- commen for seller and admin  -->
+        <tbody ng-if="!isFAgencyPartner()">
+          <tr>
+            <td><b>Repo Date</b></td>
+            <td>{{data.product.proData.repoDate | date:'MM/dd/yyyy'}} </td>
+            <td><b>Ageing of Asset</b></td>
+            <td>{{data.ageingOfAsset}} </td>
+          </tr>
+          <tr>
+            <td><b>Reserve Price</b></td>
+            <td>{{data.product.proData.reservePrice || 0}} </td>
+            <td><b>Parcking Charge</b></td>
+            <td>{{data.parkingCharge || 0}} </td>
+          </tr>
+          <tr>
+            <td><b>Buy Now Price</b></td>
+            <td>{{data.product.proData.grossPrice || 0}} </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+          <!-- end seller and admin -->
+        <tbody ng-if="isFAgencyPartner() || isAdmin()">
+          <!-- commen for fa and admin -->
+          <tr>
+            <td><b>Buyer Name</b></td>
+            <td>{{data.user.fname}} {{data.user.lname}}</td>
+            <td><b>Buyer Country</b></td>
+            <td>{{data.user.country}} </td>
+          </tr>
+          <tr>
+            <td><b>Buyer State</b></td>
+            <td>{{data.user.state}} </td>
+            <td><b>Buyer Location</b></td>
+            <td>{{data.user.city}} </td>
+          </tr>
+          <tr>
+            <td><b>Buyer Mobile No.</b></td>
+            <td>{{data.user.mobile}} </td>
+            <td><b>Buyer Email id</b></td>
+            <td>{{data.user.email}}</td>
+          </tr>
+          <tr>
+          <!-- hidden for seller -->
+            <td><b>Seller Name:</b></td>
+            <td>{{data.product.seller.name}}</td>          
+            <td><b>Seller Contact No.:</b></td>
+            <td>{{data.product.seller.mobile}}</td>
+          </tr>
+          <!-- end for seller-->
+        </tbody>
+          <!-- end fa and admin-->
+        <tbody>
+          <tr>
+            <td><b>Bid Amount:</b></td>
+            <!-- <td>{{data.bidAmount || 0}}</td> -->
+            <td>
+              <table class="table">
+                <tr>
+                  <th>TCS</th>
+                  <th>Parking <small ng-if="data.parkingPaymentTo == 'Yard'">(* Pay to yard)</small></th>
+                  <th>Total</th>
+                </tr>
+                <tr>
+                  <td>{{data.tcs || 0}}</td>
+                  <td>{{data.parkingCharge || 0}}</td>
+                  <td>{{data.bidAmount || 0}}</td>
+                </tr>
+              </table>
+            </td>
+            <td><b>Offer Status:</b></td>
+            <td>{{data.offerStatus}} </td>
+          </tr>          
+
+          <tr>
+            <td><b>Bid Status:</b></td>
+            <td colspan="3">{{data.bidStatus}} </td>            
+          </tr>
+          <tr>
+            <td><b>EMD Amount:</b></td>
+            <td>{{data.emdAmount || 0}}</td>
+            <td><b>Full Payment Amount:</b></td>
+            <td>{{data.fullPaymentAmount || 0}}</td>
+          </tr>
+          <tr>
+            <td><b>EMD Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr ng-repeat="payment in data.emdPayment.paymentsDetail">
+                  <td>{{payment.bankName}}</td>
+                  <td>{{payment.paymentMode}}</td>
+                  <td>{{payment.instrumentNo}}</td>
+                  <td>{{payment.amount}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>  
+            <td><b>Full Payment Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr ng-repeat="payment in data.fullPayment.paymentsDetail">
+                  <td>{{payment.bankName}}</td>
+                  <td>{{payment.paymentMode}}</td>
+                  <td>{{payment.instrumentNo}}</td>
+                  <td>{{payment.amount}}</td>
+                </tr>
+              </table>
+            </td>            
+          </tr>
+          <tr>
+            <td><b>Invoice in Favour of:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Country</th>
+                  <th>State</th>
+                  <th>Location</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  <th>Mobile No.</th>
+                </tr>
+                <tr>
+                  <td>{{data.invoiceDetail.fname}} {{data.invoiceDetail.lname}}</td>
+                  <td>{{data.invoiceDetail.country}}</td>
+                  <td>{{data.invoiceDetail.state}}</td>
+                  <td>{{data.invoiceDetail.city}}</td>
+                  <td>{{data.invoiceDetail.address}}</td>
+                  <td>{{data.invoiceDetail.email}}</td>
+                  <td>{{data.invoiceDetail.mobile}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><b>KYC Document:</b></td>
+            <td>
+              <table class="table">
+                <tr>
+                  <th>Address Proof</th>
+                  <th>ID Proof</th>
+                  <th>Document Link</th>
+                </tr>
+                <tr ng-repeat="kyc in data.kyc">
+                  <td>{{kyc.type}}</td>
+                  <td>{{kyc.name}}</td>
+                  <td><a href="{{uploadImagePrefix}}{{data.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+                </tr>
+              </table>
+            </td>
+            <td><b>Delivery Order:</b></td>
+            <td><a href="{{uploadImagePrefix}}{{data.product.assetDir}}/{{data.deliveryOrder}}" target="_blank">{{data.deliveryOrder}}</a></td>
+          </tr>
+          <tr>
+            <td><b>Date of Delivery:</b></td>
+            <td>{{data.dateOfDelivery | date:'MM/dd/yyyy'}} </td>
+            <td><b>Deal Status: </b></td>
+            <td>{{data.dealStatus}}</td>
+          </tr>
+          <!-- only for admin -->
+          <tr ng-if="isAdmin()">
+            <td><b>Trade Type: </b></td>
+            <td>{{data.product.proData.tradeType}}</td>
+            <td><b>Asset Status:</b></td>
+            <td>{{data.product.proData.assetStatus}} </td>
+          </tr>
+          <tr>
+            <td><b>Feedback</b></td>
+            <td colspan="3">{{data.comment}}</td>
+          </tr>
+        </tbody>
+      </table> 
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-danger" ng-click="bidReqDetailVm.closeDialog()">Close</button> 
+    </div>
+</div>

@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('userRegForAuctionCtrl', userRegForAuctionCtrl);
 
-  function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc, LocationSvc, Modal, Auth, AuctionSvc, UtilSvc, $uibModal, $uibModalInstance, notificationSvc, MarketingSvc, EmdSvc, LotSvc) {
+  function userRegForAuctionCtrl($scope, $rootScope, userRegForAuctionSvc,$state,LocationSvc, Modal, Auth, AuctionSvc, UtilSvc, $uibModal, $uibModalInstance, notificationSvc, MarketingSvc, EmdSvc, LotSvc) {
     var vm = this;
     vm.closeDialog = closeDialog;
     vm.submit = submit;
@@ -132,7 +132,7 @@
 
       Auth.login(dataToSend)
         .then(function() {
-          $rootScope.loading = true;
+          //$rootScope.loading = true;
           console.log("CurrentAuction", $scope.currentAuction);
           createReqData($scope.currentAuction, userData, vm.selectedLots.lotNumber);
         })
@@ -195,18 +195,13 @@
 
     function createReqData(auctionData, userData, lotData) {
       var dataObj = {};
-      console.log("AuctionData", auctionData);
-      console.log("userData", userData);
-      console.log("lotData", lotData);
       dataObj.auction = {};
       dataObj.user = {};
       dataObj.auction.dbAuctionId = auctionData._id;
       dataObj.auction.name = auctionData.name;
       dataObj.auction.auctionId = auctionData.auctionId;
       dataObj.auction.emdAmount = auctionData.emdAmount;
-      dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile
-      console.log("dataObj", dataObj);
-      console.log("UserData", userData);
+      dataObj.auction.auctionOwnerMobile = auctionData.auctionOwnerMobile;
       if (userData._id)
         dataObj.user._id = userData._id;
       dataObj.user.fname = userData.fname;
@@ -214,34 +209,68 @@
       dataObj.user.countryCode = userData.countryCode ? userData.countryCode : LocationSvc.getCountryCode(userData.country);
       dataObj.user.mobile = userData.mobile;
       dataObj.lotNumber = lotData;
-      console.log("dataObj", dataObj);
+      
+      userRegForAuctionSvc.checkUserRegis(dataObj)
+      .then(function(result){
+       if(result){
+        closeDialog();
+          if(result.data =="done"){
 
-      if (auctionData.emdTax == "overall") {
-        console.log("the value is", auctionData);
+             Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.lotNumber); 
+           }
 
-        vm.emdAmount = auctionData.emdAmount;
+           if(result.data =="undone"){
 
-        if (Auth.getCurrentUser().email)
-          dataObj.user.email = Auth.getCurrentUser().email;
-        save(dataObj, vm.emdAmount);
+                Modal.confirm("You have done partial registration, payment part is pending with lotnumbers "+" "+ result.lotNumber,function(isGo){
+                     if(isGo == 'no')
+                       return;
+                     $rootScope.loading = true;
+                    
+                      if(result && result.errorCode != 0) { 
+                           //Modal.alert(result.message, true);  
+                           $state.go('main');
+                           return;
+                     }
+                     
+                     if(result.transactionId){
 
-      } else {
-        vm.dataModel.auctionId = auctionData.auctionId;
-        vm.dataModel.selectedLots = lotData;
-        console.log("I m here going");
+                       $rootScope.loading = false;
+                       $state.go('payment', {
+                         tid: result.transactionId
+                     });
+                     }
+                   });
+           
+           
+            }
 
-        EmdSvc.getAmount(vm.dataModel)
-          .then(function(result) {
-            console.log("The total Amount", result);
-            if (Auth.getCurrentUser().email)
-              dataObj.user.email = Auth.getCurrentUser().email;
-            save(dataObj, result);
-          })
-          .catch(function(err) {});
-      }
+        }else{
+           if (auctionData.emdTax == "overall") {
+            
+                    vm.emdAmount = auctionData.emdAmount;
+            
+                    if (Auth.getCurrentUser().email)
+                      dataObj.user.email = Auth.getCurrentUser().email;
+                    save(dataObj, vm.emdAmount);
+            
+                  } else {
+                    vm.dataModel.auctionId = auctionData.auctionId;
+                    vm.dataModel.selectedLots = lotData;
+                    EmdSvc.getAmount(vm.dataModel)
+                      .then(function(result) {
+                        console.log("The total Amount", result);
+                        if (Auth.getCurrentUser().email)
+                          dataObj.user.email = Auth.getCurrentUser().email;
+                        save(dataObj, result);
+                      })
+                      .catch(function(err) {});
+                  }
+            
 
+        }
+      });
 
-
+       
     }
 
     /*function save(dataObj,amount){

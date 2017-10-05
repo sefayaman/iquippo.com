@@ -291,7 +291,8 @@ angular.module('sreizaoApp')
       }
 
       $http.post('/api/users/export', dataToSend)
-      .then(function(res){
+      .then(function(res){console.log("res===",res);
+      console.log("data==",res.data);
         var data = res.data;
         saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
       },
@@ -347,9 +348,9 @@ angular.module('sreizaoApp')
       var services = [
                       {name:"Valuation",code:"Valuation",sequence:1,approvalRequired:"No"},
                       {name:"Asset Inspection",code:"Inspection",sequence:2,approvalRequired:"No"},
-                      {name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
-                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"},
-                      {name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
+                      //{name:"Approval Authority buy Now/Make an Offer",code:"Authority",sequence:3,approvalRequired:"No"},
+                      {name:"Financing",code:"Finance",sequence:4,approvalRequired:"No"}
+                      //{name:"Sale Fulfilment",code:"Sale Fulfilment",sequence:5,approvalRequired:"No"}
                     ]
     //$scope.editImage = false;
     //$scope.users = [];
@@ -544,7 +545,8 @@ angular.module('sreizaoApp')
         $scope.submitted = true;
         return;
     }
-
+    if(!$scope.newUser.buySaleViewOnly && $scope.newUser.buySaleApprover)
+      $scope.newUser.buySaleViewOnly = true;
     if($scope.newUser.agree) {
       var dataToSend = {};
       if($scope.newUser.email) 
@@ -624,7 +626,7 @@ angular.module('sreizaoApp')
       $scope.availedServices.forEach(function(item){
         if(item.checked)
           $scope.newUser.availedServices[$scope.newUser.availedServices.length] = item;
-      })
+      });
     }
 
   function saveNewUser(){
@@ -669,6 +671,8 @@ angular.module('sreizaoApp')
         else
           data['subject'] = 'New Channel Partner Registration: Success';
         $scope.newUser.serverPath = serverPath;
+        $scope.newUser.customerId = result.customerId;
+        
         notificationSvc.sendNotification('userRegEmailFromAdminChannelPartner', data, $scope.newUser,'email');
         $scope.closeDialog();
         $rootScope.$broadcast('updateUserList');

@@ -2,22 +2,21 @@
 	'use strict';
 	angular.module('sreizaoApp').controller('AssetSaleCtrl', AssetSaleCtrl);
 
-	function AssetSaleCtrl($scope, Auth,productSvc, AssetSaleSvc) {
+	function AssetSaleCtrl($scope, $state,$location, Auth, AssetSaleSvc) {
 		var vm = this;
 		var filter={};
 		vm.bidListing=[];
 		vm.activeBid="Auctionable";
 		$scope.tabValue='auctionable';
 		$scope.onTabChange=onTabChange;
-		vm.fireCommand=fireCommand;
 
 		function init() {
+      if(Auth.isEnterpriseUser() && !Auth.isBuySaleViewOnly())
+        return $state.go('main');
+
 			switch($state.current.name){
-            case 'assetsale.administrator':
-                $scope.tabValue = 'administrator';
-            break;
-            case 'assetsale.seller':
-                $scope.tabValue = 'seller';
+            case 'assetsale.bidproduct':
+                $scope.tabValue = Auth.isAdmin()?'administrator':'seller';
             break;
             case 'assetsale.buyer':
                 $scope.tabValue = 'buyer';  
@@ -29,54 +28,42 @@
               $scope.tabValue = '';
               break;
         }
-        onTabChange($scope.tabValue);
-			/*Auth.isLoggedInAsync(function(loggedIn) {
-				if (loggedIn) {
-
-					if (Auth.getCurrentUser().mobile && Auth.getCurrentUser().role != 'admin') {
-						$scope.isAdmin = false;
-						$scope.tabValue='seller';
-						$state.go('seller');
-					}
-					getBidProducts(filter);
-				}
-			});*/
+        onTabChange($scope.tabValue,false);
 		}
 		init();
 	  
-	  function onTabChange(tabValue){
+	  function onTabChange(tabValue,tabReset){
+      var t = $location.search().t || 1;
+      if(tabReset)
+         t = 1;
+       
       switch(tabValue){
         case "administrator":
-          $scope.tabValue = 'dashboard';
-          $state.go("assetsale.administrator");
+          $scope.tabValue = 'administrator';
+          $state.go("assetsale.bidproduct",{t:t});
         break;
         case "seller":
           $scope.tabValue = 'seller';
-          $state.go("assetsale.seller");
+          $state.go("assetsale.bidproduct",{t:t});
         break;
         case "buyer":
           $scope.tabValue = 'buyer';
-          $state.go("assetsale.buyer");
+          $state.go("assetsale.buyer",{t:t});
         break;
          case "fulfilmentagency":
           $scope.tabValue = 'fulfilmentagency';
-          $state.go("assetsale.fulfilmentagency");
+          $state.go("assetsale.fulfilmentagency",{t:t});
         break;
       } 
     }
 
-   /* function getBidProducts(filter){
-    	filter.userid=Auth.getCurrentUser()._id;
-    	productSvc.getProductOnSellerId(filter)
-						.then(function(res) {
-							console.log("res", res);
-							vm.bidListing=res;
-						})
-						.catch(function(err) {
-
-						});
-    
-    }*/
+    //loading start
+  Auth.isLoggedInAsync(function(loggedIn) {
+    if(loggedIn)
+      init();
+    else
+      $state.go('main');
+  });
 
 	}
 })();

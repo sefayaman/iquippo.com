@@ -1,0 +1,61 @@
+<table cellpadding="5" style="width:80%;font-size:12px; margin:0 auto; padding: 20px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
+	<tr>
+		<td valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
+	</tr>
+    <tr>
+        <td style="font-size:16px;"><h3>Dear {{user.fname}} {{user.lname}},</h3></td>   
+    </tr>
+    
+  <tr>
+    <td style="color:#01395c; padding-bottom:10px;">       
+        <table border="0" cellspacing="0" cellpadding="0" width="80%" bgcolor="#ffffff">
+        <tr>            
+            <td>
+                <table border="0" cellspacing="1" cellpadding="1" style="font-size:13px;line-height:20px;color:#333333; text-align: left; margin: 5px 0;">
+                    <tr>
+                        <td>You have withdrawn the bid of <strong>INR {{bidAmount}}</strong> for the below mentioned asset -</td>  
+                    </tr>
+                     <tr>
+                        <td><strong>{{product.name}}</strong></td>
+                    </tr>
+                    <tr>
+                        <td><b>Brand :</b> {{product.brand}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Model :</b> {{product.model}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Category :</b>{{product.category}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Asset ID :</b>{{product.assetId}}</td>
+                    </tr>
+                </table>                
+            </td>
+            <td align="center">
+                <img width="200" height="165" src="{{awsBaseImagePath}}/assets/uploads/{{product.assetDir}}/{{product.primaryImg}}" style="border: 3px solid #ccc;">
+                <p style="font-weight: bold; margin: 15px 15px 5px 0;">
+                    <a href="{{serverPath}}/productdetail/{{product.proData._id}}" style="font-size:14px; color: #004394; background:#ccc; padding: 10px 20px;" > Click to View </a>
+                </p>
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+    <tr>
+        <td style="color:#01395c;">
+         In case of any queries, kindly contact us at:
+         <p style="margin: 0;">Phone: +913366022059 / 66245500</p>  
+         <p style="margin: 0;">Email: customercare@iquippo.com</p>  
+        </td>
+    </tr>
+    <tr>
+        <td style="color:#01395c;font-weight:bold;">
+          	<p style="margin: 0;">Thank You.</p>
+            <p style="margin: 0;">Team iQuippo</p>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 11px;">This is an auto generated mail, kindly do not reply to this email.</td>
+    </tr>
+</table>

@@ -51,7 +51,7 @@ var ProductSchema = new Schema({
   parkingChargePerDay:Number,
   addressOfAsset:String,
   reservePrice:Number,
-  taxRate:Number,
+  parkingPaymentTo:{type:String,default:'Seller'},
   deleted: {
     type: Boolean,
     default: false
@@ -86,7 +86,15 @@ var ProductSchema = new Schema({
   auction:{},
   valuationStamp:String,
   inquiryCounter : {type:Number,default:0},
+  /*Field related to asset sale*/
+  bidReceived:Boolean,
+  bidCount:{type:Number,default:0},
+  highestBid:{type:Number,default:0},
   buyerInfo:{},
+  bidRequestApproved:{type:Boolean,default:false},
+  cooling:{type:Boolean,default:false},
+  coolingStartDate:Date,
+  coolingEndDate : Date,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
 });

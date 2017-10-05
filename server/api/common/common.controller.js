@@ -27,6 +27,9 @@ var Brand = require('./../brand/brand.model');
 var Model = require('./../model/model.model');
 var Product = require('./../product/product.model');
 var config = require('./../../config/environment');
+var path = require('path');
+var utility = require('./../../components/utility.js');
+
 
 var SearchSuggestion = require('./searchsuggestion.model');
 var SavedSearch = require('./savedsearch.model');
@@ -119,6 +122,12 @@ function postOtpRequest(fn, data, req, res) {
 
 exports.compileHtml = function(req, res) {
 	var dataObj = req.body.data;
+        /* J.K s3 URL for email templete.*/
+        /*if (dataObj.serverPath) {
+            dataObj.serverPath = config.serverPath;
+        }*/
+
+     dataObj.awsBaseImagePath = config.awsUrl + '/' + config.awsBucket; // J.K email templete s3 image url update 
 	var tplName = req.body.templateName;
 	if (!tplName || !dataObj)
 		return res.status(404).send("template not found");
@@ -143,6 +152,8 @@ exports.compileTemplate = function(dataObj, serverPath, tplName, cb) {
 		}
 		var tempFun = handlebars.compile(data);
 		dataObj.serverPath = serverPath;
+		dataObj.awsBaseImagePath = config.awsUrl + '/' + config.awsBucket; // J.K email templete s3 image url update 
+
 		var text = tempFun(dataObj);
 		cb(true, text);
 	});
@@ -1206,43 +1217,76 @@ function buildSuggestion(req, res, suggestions) {
 	}
 }
 
-exports.rotate = function(req, res) {
-	var imgPath = config.uploadPath + req.body.imgPath;
-    lwip.open(imgPath,function(err,image){
-     	if(err)
-     		throw err;
+exports.downloadFromS3 = function(req, res, next) {
+	var dirName = req.body.imgPath && req.body.imgPath.split('/');
+	dirName = dirName[0];
 
-     	image.batch()
-	    .rotate(-90,"white")
-		.writeFile(imgPath, function(e) {
-			if (e) {
-				throw e;
-			} else
-				res.send("done");
-		}); 	
-    })
-	// image.batch()
-	/*gm(config.uploadPath + imgPath)
-=======
-     	image.batch().rotate(-90,"white")
+	if(fs.existsSync(config.uploadPath + dirName)){
+		req.dirName = dirName;
+		return next();		
+	}
+
+	var opts = {
+		localDir: config.uploadPath + dirName,
+		prefix: 'assets/uploads/' + dirName
+	};
+	utility.downloadFromS3(opts, function(err, s3res) {
+		if (err) {
+			debug(err);
+			return next(err);
+		}
+		req.dirName = dirName;
+		return next();
+	});
+
+}
+
+exports.uploadToS3 = function(req, res, next) {
+	var dirName = req.dirName;
+	if(!dirName)
+		return next(new Error('Invalid delete directory'));
+
+	var opts = {
+		prefix : 'assets/uploads/' + dirName,
+		dirName : dirName
+	};
+
+	utility.deleteFromS3(opts,function(err,data){
+		if(err){
+			debug(err);
+			return next(new Error('Problem while replacing Directory'));
+		}
+		var dirName = req.dirName;
+		var localDirPath = config.uploadPath + dirName;
+
+		utility.uploadFileS3(localDirPath,dirName,function(uploadErr,uploadResp){
+			if(uploadErr){
+				debug(err);
+				return next(new Error('Error while uploading new updated directory'));
+			}
+			return res.send('done');
+		})
+	})
+
+}
+
+exports.rotate = function(req, res,next) {
+	var imgPath = config.uploadPath + req.body.imgPath;
+
+	lwip.open(imgPath, function(err, image) {
+		if (err)
+			return next(err);
+
+		image.batch()
+			.rotate(-90, "white")
 			.writeFile(imgPath, function(e) {
 				if (e) {
-					throw e;
-				} else{
-					res.send("done");
+					return next(e);
+				} else {
+					return next();
 				}
-			}); 	
-    })
-	/*var imgPath = req.body.imgPath;
-	gm(config.uploadPath + imgPath)
->>>>>>> d3c20c5957f1b55aa6716bb4391562ba723bc84b
-		.rotate("white", -90)
-		.write(config.uploadPath + imgPath, function(e) {
-			if (e) {
-				return handleError(res, e);
-			} else
-				res.send("done");
-		});*/
+			});
+	});
 }
 
 exports.saveAsImage = function(req, res) {
@@ -1261,7 +1305,7 @@ exports.saveAsImage = function(req, res) {
 		fsExtra.copy(filePath, originalFilePath, function(err, result) {
 			console.log("-----------", err);
 			saveImage(req, res, filePath, extPart);
-		})
+		});
 
 	}
 
@@ -1736,8 +1780,8 @@ exports.searchState = function(req, res) {
 		};
 	}
 
-	if(req.body.stateName){
-		filter.name=req.body.stateName;
+	if (req.body.stateName) {
+		filter.name = req.body.stateName;
 	}
 
 	if (req.body.country)
@@ -1804,7 +1848,7 @@ exports.importLocation = function(req, res, next) {
 	try {
 		workbook = xslx.readFile(importPath + fileName);
 	} catch (e) {
-		
+
 		//debug(e);
 		return next(new APIError(400, 'Error while parsing excel sheet'));
 	}
@@ -1833,23 +1877,27 @@ exports.importLocation = function(req, res, next) {
 	var hd = getHeaders(worksheet);
 	var headers = ['Country', 'State', 'Location', 'Country Code']
 	if (!validateHeader(hd, headers)) {
-		return res.json({message:"Wrong template"});
+		return res.json({
+			message: "Wrong template"
+		});
 	}
 
 	var err;
 
 	data = data.filter(function(x) {
 		Object.keys(x).forEach(function(key) {
-				
-				if (field_map[key]) {
-					x[field_map[key]] = x[key] && x[key].replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-				}
-				x.rowCount = x.__rowNum__
-					//x.type = type;
-				delete x[key];
-			})
-	    
-	 		//console.log("data filter",data);
+
+			if (field_map[key]) {
+				x[field_map[key]] = x[key] && x[key].replace(/\w\S*/g, function(txt) {
+					return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+				});
+			}
+			x.rowCount = x.__rowNum__
+				//x.type = type;
+			delete x[key];
+		})
+
+		//console.log("data filter",data);
 
 		err = validateData(x);
 		if (err.length)
@@ -1861,25 +1909,24 @@ exports.importLocation = function(req, res, next) {
 			return x;
 	});
 
-	var dupRowNums = data.filter(function(x){
+	var dupRowNums = data.filter(function(x) {
 		return x.rowCount;
 	});
 
-	data = _.uniq(data,function(e){
-		return e.country,e.state,e.location,e.countryCode,e.rowCount;
+	data = _.uniq(data, function(e) {
+		return e.country, e.state, e.location, e.countryCode, e.rowCount;
 	});
 
-	data.forEach(function(x){
-		dupRowNums.splice(dupRowNums.indexOf(x.rowCount),1);	
+	data.forEach(function(x) {
+		dupRowNums.splice(dupRowNums.indexOf(x.rowCount), 1);
 	});
 
-	dupRowNums.forEach(function(x){
+	dupRowNums.forEach(function(x) {
 		errObj.push({
-			Error : 'Duplicate Row in excel',
-			rowCount : x
+			Error: 'Duplicate Row in excel',
+			rowCount: x
 		})
 	});
-	
 
 
 
@@ -1890,7 +1937,7 @@ exports.importLocation = function(req, res, next) {
 		});
 	}
 
-    
+
 
 	async.forEachLimit(data, 5, intialize, finalize);
 
@@ -1906,34 +1953,43 @@ exports.importLocation = function(req, res, next) {
 			user: info.user
 		}
 
-		async.series([fetchCountries,fetchState,fetchLocation],insertData);
+		async.series([fetchCountries, fetchState, fetchLocation], insertData);
 
-		function fetchCountries(callback){
+		function fetchCountries(callback) {
 			Country.find(query, function(err, countries) {
 				if (err || !countries)
-					return callback(err ||'Error while fetching countries');
-				
-				if(!countries.length){
-					Country.create({name:info.country,countryCode:info.countryCode},function(err,resp){
-						if(err || !resp)
+					return callback(err || 'Error while fetching countries');
+
+				if (!countries.length) {
+					Country.create({
+						name: info.country,
+						countryCode: info.countryCode
+					}, function(err, resp) {
+						if (err || !resp)
 							return callback(err || 'Error while creating new country');
 						return callback();
 					})
 				} else {
 					return callback();
 				}
-				
+
 			})
 		}
 
-		function fetchState(callback){
-			State.find({name : info.state,country:info.country}, function(err, states) {
+		function fetchState(callback) {
+			State.find({
+				name: info.state,
+				country: info.country
+			}, function(err, states) {
 				if (err || !states)
 					return callback(err || 'Error while fetching states');
-				
-				if(!states.length){
-					State.create({name:info.state,country:info.country},function(err,resp){
-						if(err || !resp)
+
+				if (!states.length) {
+					State.create({
+						name: info.state,
+						country: info.country
+					}, function(err, resp) {
+						if (err || !resp)
 							return callback(err || 'Error while creating new state');
 						return callback();
 					})
@@ -1943,16 +1999,23 @@ exports.importLocation = function(req, res, next) {
 			})
 		}
 
-		function fetchLocation(callback){
-			City.find({name : info.location,"state.name":stateObj.name,"state.country":stateObj.country}, function(err, cities) {
+		function fetchLocation(callback) {
+			City.find({
+				name: info.location,
+				"state.name": stateObj.name,
+				"state.country": stateObj.country
+			}, function(err, cities) {
 				if (err || !cities)
 					return callback(err || 'Error while fetching countries');
-				
-				if(cities.length)
+
+				if (cities.length)
 					return callback(('Duplicate entry'));
-				else{
-					City.create({name:info.location,state:stateObj},function(err,resp){
-						if(err || !resp)
+				else {
+					City.create({
+						name: info.location,
+						state: stateObj
+					}, function(err, resp) {
+						if (err || !resp)
 							return callback(err || 'Error while creating new city');
 						successCount++;
 						return callback();
@@ -1961,11 +2024,11 @@ exports.importLocation = function(req, res, next) {
 			})
 		}
 
-		function insertData(err){
-			if(err){
+		function insertData(err) {
+			if (err) {
 				errObj.push({
-					Error : err,
-					rowCount : info.rowCount
+					Error: err,
+					rowCount: info.rowCount
 				});
 			}
 
@@ -1977,7 +2040,7 @@ exports.importLocation = function(req, res, next) {
 	function finalize(err) {
 		return res.json({
 			errObj: errObj,
-			message: successCount +' '+ 'records uploaded successfully' 
+			message: successCount + ' ' + 'records uploaded successfully'
 		});
 	}
 }

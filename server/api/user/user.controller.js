@@ -24,6 +24,11 @@ var validationError = function(res, err) {
   return res.status(422).json(err);
 }; 
 
+var externalValidationError = function(res, err) {
+    console.log(err.errors.email.properties);
+  return res.status(422).json(err);
+};
+
 /**
  * Get list of users
  * restriction: 'admin'
@@ -730,7 +735,7 @@ exports.createUserReq = function(req, res, next) {
   }
 
   function intialize(data, cb) {
-    console.log("I am here");
+    
 
     data.createdBy = req.body.user;
     data.createdAt = new Date();
@@ -755,12 +760,14 @@ exports.createUserReq = function(req, res, next) {
         });
         return cb();
       }
-
+      
       var tplData={};
       var tplName="";
         tplData.fname=data.fname;
         tplData.lname=data.lname;
         tplData.email=data.email;
+        tplData.mobile = data.mobile;
+        tplData.customerId = doc.customerId;
         //tplData.serverPath=config.serverPath;
         tplData.password=data.password;
         tplName=USER_REG_REQ;
@@ -797,6 +804,22 @@ exports.create = function(req, res, next) {
   });
 };
 
+
+/**
+ * Create/Register user API by external/third party //URL: http://localhost:8100/api/users/external_register
+ */
+exports.externalCreate = function (req, res) {
+  
+    //console.log(req.body);
+    var newUser = new User(req.body);
+    newUser.createdAt = new Date();
+    newUser.updatedAt = new Date();
+    
+    newUser.save(function(err, user) { 
+        if (err) return externalValidationError(res, err);
+        res.json(user);
+    });
+};
 
 /**
  * Get a single user
@@ -870,6 +893,10 @@ exports.getUser = function(req, res) {
     typeFilter.$ne = "admin";
     filter.role= typeFilter;
   }
+	if(req.body.onlyUser) {
+      filter["role"] = {$in: ['customer', 'channelpartner']};
+      //filter["createdBy.role"] = {$ne:"channelpartner"};
+    }
   if (arr.length > 0)
     filter.$or = arr;
   var result = {};
@@ -1565,7 +1592,7 @@ exports.exportUsers = function(req, res) {
   var filter = {};
   filter.deleted = false;
   if (req.body.userId) {
-    filter.createdBy._id = req.body.userId;
+    filter['createdBy._id'] = req.body.userId;
   }
   if (req.body.enterpriseId) {
     filter.enterpriseId = req.body.enterpriseId;
@@ -1600,8 +1627,8 @@ function getProductData(req, res, users, userIds) {
   filter.deleted = false;
   filter.status = true;
   if (userIds){
-    filter.seller={};
-  filter.seller._id = {
+    //filter.seller={};
+  filter['seller._id'] = {
       $in: userIds
     };
   }  
@@ -1621,7 +1648,7 @@ function getProductData(req, res, users, userIds) {
     },
     function(err, products) {
       if (err) return handleError(err);;
-      for (var i = 0; i < users.length; i++) {
+      /*for (var i = 0; i < users.length; i++) {
         var countFlag = false;
         for (var j = 0; j < products.length; j++) {
           if (users[i]._id == products[j]._id) {
@@ -1636,7 +1663,7 @@ function getProductData(req, res, users, userIds) {
           users[i].have_products = "No";
         }
         //console.log("users[" + i +"]" + users[i]._id + " # " + users[i].total_products+ "#" + users[i].have_products);
-      }
+      }*/console.log("users====",users);
       var ws_name = "users"
       var wb = new Workbook();
       var ws = excel_from_data(users);

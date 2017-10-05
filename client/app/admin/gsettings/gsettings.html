@@ -23,9 +23,17 @@
 						<option value="vpurpose">Valuation Purpose Master</option>
 						<option value="assetgroup">Asset Group Master</option>
 						<option value="vatmaster">GST Tax Master</option>
+						<option value="kyc">KYC Document Master</option>
+						<option value="charge">Asset Sale Charge Master</option>
+						<option value="saleProcesssMaster">Sale Process</option>
+						<option value="markup">Markup Price Master</option>
+						<option value="emdmaster">EMD Master</option>
 						<option value="assetcount">Asset Count</option>
 						<option value="emd">EMD Auction Master</option>
 						<option value="lot">Lot Master</option>
+
+						<!-- <option value="promotion">Promotions</option>
+						<option value="leaddata">Lead Data</option> -->
 						<!-- <option  value="asset-type" ui-sref= "yardassettype" >Asset Type</option>
 						<option value="yard-services">Yard Management - Services</option>
 						<option value="yard-amenities">Yard Management – Amenities </option> -->
@@ -35,47 +43,47 @@
 			</div>
 			<!--Select category  -->
 			<!-- <div ng-if="gsettingVm.tabValue == 'sc'">
-						<form name="subCategoryForm" novalidate class="subCategoryForm">
-									<h4>Add New Sub Category</h4>
-									<legend></legend>
-									<div class="row">
-												<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
-															<select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
-																		<option value="">Select Category</option>
-																		<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
-															</select>
-															<i class="caret"></i>
-												</div>
-												<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
-															<input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
-												</div>
-												<div class="form-group col-sm-2 pull-right">
-															<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
-															<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
-												</div>
-												
-									</div>
-						</form>
-						<div class="table-responsive">
-									<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
-												<thead>
-															<th>Category</th>
-															<th>Sub Category</th>
-															<th>Action</th>
-															
-												</thead>
-												<tbody>
-															<tr ng-repeat="sc in gsettingVm.subCategoryList">
-																		<td>{{sc.category.name}}</td>
-																		<td>{{sc.name}}</td>
-																		<td>
-																					<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
-																					<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
-																		</td>
-															</tr>
-												</tbody>
-									</table>
+					<form name="subCategoryForm" novalidate class="subCategoryForm">
+						<h4>Add New Sub Category</h4>
+						<legend></legend>
+						<div class="row">
+							<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.categoryname.$invalid && submitted}">
+								<select class="form-control" name="categoryname" ng-model="gsettingVm.subCategory.category._id" required>
+									<option value="">Select Category</option>
+									<option value="{{cat._id}}" ng-repeat="cat in gsettingVm.allCategory">{{cat.name}}</option>
+								</select>
+								<i class="caret"></i>
+							</div>
+							<div class="form-group col-sm-4" ng-class="{'has-error': subCategoryForm.subcategoryname.$invalid && submitted}">
+								<input id="subcategoryname" name="subcategoryname" ng-model="gsettingVm.subCategory.name" type="text" class="form-control" placeholder="Enter Sub Category Name" required>
+							</div>
+							<div class="form-group col-sm-2 pull-right">
+								<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.saveSubCategory(subCategoryForm)" ng-if="!gsettingVm.subCatEdit">Save</button>
+								<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateSubCategory(subCategoryForm)" ng-if="gsettingVm.subCatEdit">Update</button>
+							</div>
+									
 						</div>
+					</form>	
+					<div class="table-responsive">
+						<table datatable="ng" dt-options="dtOptions" class="table table-bordred table-striped">
+							<thead>
+										<th>Category</th>
+										<th>Sub Category</th>
+										<th>Action</th>
+										
+							</thead>
+							<tbody>
+								<tr ng-repeat="sc in gsettingVm.subCategoryList">
+									<td>{{sc.category.name}}</td>
+									<td>{{sc.name}}</td>
+									<td>
+										<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.subCategoryEditClick($index)" ><i class="fa fa-pencil"></i> </a>
+										<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="gsettingVm.deleteSubCategory($index)"><i class="fa fa-trash"></i> </a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 			</div>
 			
 			<div class="clearfix form-group"></div> -->
@@ -297,7 +305,7 @@
 			<uib-tabset justified="true" class="asset-auction">
 			<uib-tab heading="Auction" select="gsettingVm.onActionTabClick('auctionmaster')">
 			<!-- <form name="invMasterForm" novalidate class="invMasterForm"> -->
-			<p>Download the <a href="/download/templates/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
+			<p>Download the <a href="{{templateDir}}/{{gsettingVm.auctionDateTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
 			
 			<div class="row form-group">
 				<div class="col-sm-8">
@@ -464,6 +472,7 @@
 						<div class="panel-heading">
 							<h3 class="panel-title">Bid Increment</h3>
 						</div>
+
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-sm-3 form-group">									
@@ -511,6 +520,15 @@
 					
 					
 					<div class="row form-group">						
+
+						<div class="col-sm-3">	
+							<select class="form-control" name="allowBid" ng-model="gsettingVm.auctionData.allowBid">
+								<option value="">Allow Bid</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select>
+						</div>
+
 						<div class="col-sm-2 pull-right">
 							<button class="btn btn-primary btn-block" ng-click="gsettingVm.saveAuctionMaster(auctionDateForm)" ng-if="!gsettingVm.auctionEdit"> Save </button>
 							<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateAuctionMaster(auctionDateForm)" ng-if="gsettingVm.auctionEdit">Update</button>
@@ -1042,7 +1060,7 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-2">
-					Hyperlink :
+					Express Interest :
 					<div class="row">
 						<div class="col-xs-6 col-sm-6">
 							<input type="radio" name="hyperlink" ng-model="gsettingVm.banner.hyperlink" value="Yes"> Yes
@@ -1095,6 +1113,13 @@
 						{{gsettingVm.banner.mobileImg}}
 					</div>
 				</div>
+				<div class="form-group col-sm-offset-1 col-sm-3">
+					<div>Hyperlink</div>
+					<input type="checkbox" name="Bannerhyperlink" ng-model="gsettingVm.banner.isClickable" ng-true-value="'Yes'"> Yes
+				</div>
+				<div class="form-group col-sm-3" ng-class="{'has-error': bannerForm.linkUrl.$invalid && submitted}">
+					<input type="url" name="linkUrl" ng-model="gsettingVm.banner.linkUrl" ng-if="gsettingVm.banner.isClickable === 'Yes'" ng-required="gsettingVm.banner.isClickable === 'Yes'" class="form-control" placeholder="Enter url">
+				</div>
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-offset-10 col-sm-2">
@@ -1108,11 +1133,12 @@
 						<tr>
 							<th>Image</th>
 							<th>Promo Code</th>
-							<th>Hyperlink</th>
+							<th>Express Interest</th>
 							<th>Ticker</th>
 							<th>Banner start date</th>
 							<th>Banner end date</th>
 							<th>Show in mobile</th>
+							<th>Hyperlink</th>
 							<th>Sequence</th>
 							<th>Action</th>
 						</tr>
@@ -1127,6 +1153,7 @@
 							<td>{{banner.sDate | date:'MM/dd/yyyy'}}</td>
 							<td>{{banner.eDate | date:'MM/dd/yyyy'}}</td>
 							<td>{{banner.showInMobile}}</td>
+							<td>{{banner.linkUrl}}</td>
 							<td>{{banner.sequence}}</td>
 							<td>
 								<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="gsettingVm.editBanner($index)"><i class="fa fa-edit"></i> </a>
@@ -1145,7 +1172,7 @@
 			<div class="row">
 				<div class="col-sm-8">
 					<h4>Technical Information</h4>
-					<p>Download the <a href="/download/templates/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
+					<p>Download the <a href="{{templateDir}}/{{gsettingVm.productTechInfoTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory. System will accept only 100 records in a single file.</p>
 				</div>
 				<div class="col-xs-12 col-sm-1 padd-left">
 					<h3><button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.addTechnicalInfoClicked()"><i class="fa" ng-class="{'fa-minus': isTechCollapsed, 'fa-plus': !isTechCollapsed}"></i> Add New</button></h3>
@@ -1627,7 +1654,7 @@
 	<!-- Asset group master -->
 	<div ng-if="gsettingVm.tabValue == 'assetgroup'" ng-controller="AssetGroupCtrl as assetGroupVm">
 		<ul class="list-instrct">
-			<li>Download the <a href="/download/templates/{{assetGroupVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory.</li>
+			<li>Download the <a href="{{templateDir}}/{{assetGroupVm.uploadTemplate}}" target="_blank">template</a> and fill all fields. (*) mark fields are mandatory.</li>
 			<li>System will accept only 100 records in a single file.</li>
 		</ul>
 		<div class="row">
@@ -1735,64 +1762,79 @@
 	<div ng-if="gsettingVm.tabValue == 'vatmaster'" ng-controller="VatTaxMasterCtrl as vatVm">
 		<div class="row">
 			<div class="col-sm-6">
+
 				<h4>Add New GST Tax</h4>
-			</div>
-			<!-- 	    			<div class="col-sm-offset-4 col-sm-2 text-right">
+			</div>	
+			<!-- <div class="col-sm-offset-4 col-sm-2 text-right">
 				<h4>
+
 				<span class="btn btn-success btn-block fileinput-button">
-						<input type="file" name="template_update">
-						<span>
-									<i class="fa fa-file-excel-o"></i> Import Excel
-						</span>
-				</span>
-				</h4>
-			</div> -->
-			<div class="col-sm-offset-2 col-sm-2">
-				<!-- <span class="btn btn-default fileinput-button">
-					<input type="file" id="upload" name="upload" data-filetype="doc" file-upload required>
-					<span><i class="fa fa-upload"></i> Import Excel</span>
-				</span>
-				<span>{{uploadedExcel}}</span> -->
-			</div>
-			<div class="col-sm-2">
-				<!-- <button type="button" class="btn btn-primary btn-block" ng-click="assetGroupVm.submitUploadTemp()">Submit Excel</button> -->
-			</div>
-			
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div>	 -->
 		</div>
 		<legend></legend>
 		<div>
 		<form class="assetGroupForm" name="vatForm" >
 			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':vatForm.taxType.$invalid && submitted}">
+					<!-- <input type="text" class="form-control" name="vatType" ng-model="vatVm.dataModel.vatType" placeholder="*Tax Type" required> -->
+					<select class="form-control" name="taxType" ng-model="vatVm.dataModel.taxType" required>
+		              <option value="">*Tax Type</option>
+		              <option ng-repeat="vat in vatVm.taxType" value="{{vat.name}}">{{vat.name}}</option>
+		            </select>
+		            <i class="caret"></i>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group" ng-class="{'has-error':vatForm.effectiveFromDate.$invalid && submitted}">
+					
+					<input type="text" name="effectiveFromDate" id="taxfrom" class="form-control" ng-model="vatVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" ng-disabled="vatVm.dataModel.taxType == 'Default'" ng-required="vatVm.dataModel.taxType != 'Default'">
+					<label class="input-group-addon" for="taxfrom"><i class="fa fa-calendar"></i></label>
+		              <!-- <custom-datepicker placeholder="*Effective From Date" name="effectiveFromDate" ng-model="vatVm.dataModel.effectiveFromDate" myid="fromdate" required></custom-datepicker> -->
+		            </div>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group" ng-class="{'has-error':vatForm.effectiveToDate.$invalid && submitted}">
+		              <input type="text" name="effectiveToDate" id="taxto" class="form-control" ng-model="vatVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" ng-disabled="vatVm.dataModel.taxType == 'Default'" ng-required="vatVm.dataModel.taxType != 'Default'">
+		            <label class="input-group-addon" for="taxto"><i class="fa fa-calendar"></i></label>
+		            </div>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':vatForm.group.$invalid && submitted}" >
+					<select class="form-control" name="group" ng-model="vatVm.dataModel.group" ng-change="vatVm.getCategory(vatVm.dataModel.group)" ng-disabled="vatVm.dataModel.taxType == 'Default'" ng-required="vatVm.dataModel.taxType != 'Default'">
+						<option value="">*Asset Group</option>
+						<option value="{{group._id}}" ng-repeat="group in allGroup">{{group.name}}</option>
+					</select>
+				</div>							
+			</div>
+			<div class="row form-group">	
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.category.$invalid && submitted}">
-					<select class="form-control" name="category" ng-model="vatVm.dataModel.category"  ng-change="vatVm.getBrand(vatVm.dataModel.category)" required>
+					<select class="form-control" name="category" ng-disabled="vatVm.dataModel.taxType == 'Default'" ng-model="vatVm.dataModel.category" ng-required="vatVm.dataModel.taxType != 'Default'">
 						<option value="">*Asset Category</option>
-						<option value="{{ct._id}}" ng-repeat="ct in categoryList">{{ct.name}}</option>
+						<option value="{{ct._id}}" ng-repeat="ct in vatVm.categoryList">{{ct.name}}</option>
 					</select>
-				</div>
-				<div class="col-sm-3" ng-class="{'has-error':vatForm.brand.$invalid && submitted}">
-					<select class="form-control" name="brand" ng-model="vatVm.dataModel.brand" ng-change="vatVm.getModel(vatVm.dataModel.brand)" required>
-						<option value="">*Asset Brand</option>
-						<option value="{{br._id}}" ng-repeat="br in brandList">{{br.name}}</option>
-					</select>
-				</div>
-				<div class="col-sm-3" ng-class="{'has-error':vatForm.model.$invalid && submitted}">
-					<select class="form-control" name="model"ng-model="vatVm.dataModel.model"  required>
-						<option value="">*Asset Model</option>
-						<option value="{{md._id}}" ng-repeat="md in modelList">{{md.name}}</option>
-					</select>
-				</div>
+				</div>					
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.state.$invalid && submitted}">
-					<select class="form-control" name="state" ng-model="vatVm.dataModel.state" required>
+					<select class="form-control" name="state" ng-model="vatVm.dataModel.state" ng-required="vatVm.dataModel.taxType != 'Default'" ng-disabled="vatVm.dataModel.taxType == 'Default'">
 						<option value="">*State</option>
 						<option value="{{st._id}}" ng-repeat="st in stateList">{{st.name}}</option>
+						<!-- <option value="Other">Other</option> -->
 					</select>
 				</div>
-			</div>
-			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':vatForm.amount.$invalid && submitted}">
-					<input type="text" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="Enter Rate" required>
+					<input type="number" min="0" class="form-control" name="amount" ng-model="vatVm.dataModel.amount" placeholder="*Enter Rate" required>
 				</div>
-				<div class="col-sm-offset-7 col-sm-2">
+				<div class="col-sm-offset-1 col-sm-2">
 					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="vatVm.update(vatForm)">Update</button>
 					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="vatVm.save(vatForm)">Save</button>
 				</div>
@@ -1801,8 +1843,11 @@
 		</div>	
 		<legend></legend>
 		<div class="row">
-			<div class="col-sm-3 pull-right">
-				<div class="tablesearch text-right form-group">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
 					Search: <input type="text" placeholder="Search..." ng-model="vatVm.searchStr" ng-change="vatVm.searchFn()" ng-model-options="{debounce:500}">
 				</div>
 			</div>
@@ -1811,9 +1856,11 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>						
-						<th>Asset Category</th>						
-						<th>Asset Brand</th>						
-						<th>Asset Model</th>						
+						<th>Tax Type</th>						
+						<th>Effective From Date</th>						
+						<th>Effective To Date</th>
+						<th>Group</th>										
+						<th>Category</th>				
 						<th>State</th>						
 						<th>Rate</th>						
 						<th>Action</th>
@@ -1821,9 +1868,11 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="vat in vatVm.filteredList">
+						<td>{{vat.taxType}}</td>
+						<td>{{vat.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
+						<td>{{vat.effectiveToDate | date:'MM/dd/yyyy'}}</td>
+						<td>{{vat.group.name}}</td>
 						<td>{{vat.category.name}}</td>
-						<td>{{vat.brand.name}}</td>
-						<td>{{vat.model.name}}</td>
 						<td>{{vat.state.name}}</td>
 						<td>{{vat.amount}}</td>
 						<td>
@@ -1832,6 +1881,586 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+	</div>
+
+	<!-- KYC Document master -->
+	<div ng-if="gsettingVm.tabValue == 'kyc'" ng-controller="KYCMasterCtrl as kycVm">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Add New KYC Document</h4>
+			</div>
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div> -->			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="" name="kycForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':kycForm.kycType.$invalid && submitted}">
+					<select class="form-control" name="kycType" ng-model="kycVm.dataModel.kycType" required>
+		              <option value="">*KYC Type</option>
+		              <option ng-repeat="kyc in KYCType" value="{{kyc.name}}">{{kyc.name}}</option>
+		            </select>
+		            <i class="caret"></i>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':kycForm.docName.$invalid && submitted}">
+					<input type="text" class="form-control" name="docName" ng-model="kycVm.dataModel.docName" placeholder="*Document Name" required>
+				</div>
+				<div class="col-sm-offset-4 col-sm-2">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="kycVm.update(kycForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="kycVm.save(kycForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="kycVm.searchStr" ng-change="kycVm.fireCommand(true)" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>KYC Type</th>						
+						<th>Document Name</th>			
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="kyc in kycVm.filteredList">
+						<td>{{kyc.kycType}}</td>
+						<td>{{kyc.docName}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="kycVm.editClicked(kyc)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="kycVm.destroy(kyc._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="kycVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		</div>
+	</div>
+
+	<!-- Asset sale charge master -->
+	<div ng-if="gsettingVm.tabValue == 'charge'" ng-controller="AssetSaleChargeMasterCtrl as assetSaleChargeVm">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Add New Asset Sale Charge</h4>
+			</div>
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div> -->			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="" name="assetSaleForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="userRole" ng-model="assetSaleChargeVm.dataModel.userRole" ng-change="assetSaleChargeVm.getUserOnRole(assetSaleChargeVm.dataModel.userRole)" required>
+						<option value="">*Select Type</option>
+						<option value="enterprise">Enterprise</option>
+						<!-- <option value="channelpartner">Channel Partner</option> -->
+						<option value="customer">Seller</option>
+						<option value="default">Default</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3" ng-class="{'has-error':assetSaleForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="assetSaleChargeVm.dataModel.enterpriseId" required>
+						<option value="">*Enterprise Name</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in assetSaleChargeVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
+					</select>
+				</div> -->
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.userId.$invalid && submitted}" ng-if="assetSaleChargeVm.dataModel.userRole == 'enterprise'">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="assetSaleChargeVm.onUserChange(container.userId, assetSaleChargeVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in assetSaleChargeVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.mobile.$invalid && submitted}" ng-if="assetSaleChargeVm.dataModel.userRole == 'customer'">
+					<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in assetSaleChargeVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="assetSaleChargeVm.findSingleUser()" typeahead-on-select="assetSaleChargeVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveFromDate.$invalid && submitted}">
+		              <input type="text" name="effectiveFromDate" id="chargefrom" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveFromDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective From Date" ng-disabled="assetSaleChargeVm.dataModel.userRole == 'default'" ng-required="assetSaleChargeVm.dataModel.userRole != 'default'">
+		              <label for="chargefrom" class="input-group-addon">
+		              	<i class="fa fa-calendar"></i>
+		              </label>
+		            </div>
+				</div>
+				<div class="col-sm-3">
+					<div class="input-group" ng-class="{'has-error':assetSaleForm.effectiveToDate.$invalid && submitted}">
+		              <input type="text" name="effectiveToDate" id="chargeto" class="form-control" ng-model="assetSaleChargeVm.dataModel.effectiveToDate" datetime-picker readonly date-format="MM/dd/yyyy" date-only placeholder="*Effective To Date" ng-disabled="assetSaleChargeVm.dataModel.userRole == 'default'" ng-required="assetSaleChargeVm.dataModel.userRole != 'default'">
+		              <label for="chargeto" class="input-group-addon">
+		              	<i class="fa fa-calendar"></i>
+		              </label>
+		            </div>
+				</div>				
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.categoryId.$invalid && submitted}">
+					<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="assetSaleChargeVm.onCategoryChange(container.categoryId)" ng-disabled="assetSaleChargeVm.dataModel.userRole == 'default'" ng-required="assetSaleChargeVm.dataModel.userRole != 'default'">
+						<option value="">*Asset Category</option>
+						<option value="All">All</option>
+						<option value="{{ct._id}}" ng-repeat="ct in assetSaleChargeVm.categoryList">{{ct.name}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.chargeBasis.$invalid && submitted}">
+					<!-- <input type="number" class="form-control" name="rateOfInterest" ng-model="assetSaleChargeVm.dataModel.rateOfInterest" placeholder="*Enter Rate (%)" required> -->
+					<select class="form-control" name="chargeBasis" ng-model="assetSaleChargeVm.dataModel.chargeBasis" required>
+						<option value="">*Select Charge Basis</option>
+						<option value="flat">Flat</option>
+						<option value="percent">%</option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':assetSaleForm.amount.$invalid && submitted}">
+					<!-- <input type="text" class="form-control" name="flatPerTrx" ng-model="assetSaleChargeVm.dataModel.flatPerTrx" placeholder="Flat per Transaction"> -->
+					<input type="number" class="form-control" name="amount" ng-model="assetSaleChargeVm.dataModel.amount" placeholder="*Amount" required />
+				</div>
+				<div class="col-sm-offset-1 col-sm-2">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="assetSaleChargeVm.update(assetSaleForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="assetSaleChargeVm.save(assetSaleForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="assetSaleChargeVm.searchStr" ng-change="assetSaleChargeVm.fireCommand(true)" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Type</th>						
+						<th>User</th>					
+						<th>Effective From Date</th>			
+						<th>Effective To Date</th>			
+						<th>Asset Category</th>			
+						<th>Charge Basis(%)</th>			
+						<th>Amount</th>			
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="assetSale in assetSaleChargeVm.filteredList">
+						<td>
+							<span ng-if="assetSale.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="assetSale.userRole == 'customer'">Seller</span>
+							<span ng-if="assetSale.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="assetSale.userRole != 'default'">{{assetSale.user.name}} ({{assetSale.user.mobile}})</span>
+							<span ng-if="assetSale.userRole == 'default'">Default</span>
+						</td>
+						<td>{{assetSale.effectiveFromDate | date:'MM/dd/yyyy'}}</td>
+						<td>{{assetSale.effectiveToDate | date:'MM/dd/yyyy'}}</td>
+						<td>{{assetSale.category.name}}</td>
+						<td>{{assetSale.chargeBasis}}</td>
+						<td>{{assetSale.amount}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="assetSaleChargeVm.editClicked(assetSale)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="assetSaleChargeVm.destroy(assetSale._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="assetSaleChargeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		</div>
+	</div>
+	<!-- Sale Process Master -->
+	<div ng-if="gsettingVm.tabValue == 'saleProcesssMaster'" ng-controller="SaleProcesssMasterCtrl as saleProcesssVm">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Sale Process Master</h4>
+			</div>
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div> -->			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="" name="saleProcesssMasterForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="userRole" ng-model="saleProcesssVm.dataModel.userRole" ng-change="saleProcesssVm.getUserOnRole(saleProcesssVm.dataModel.userRole)" required>
+						<option value="">*Select Type</option>
+						<option value="enterprise">Enterprise</option>
+						<!-- <option value="channelpartner">Channel Partner</option> -->
+						<option value="customer">Seller</option>
+						<option value="default">Default</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="saleProcesssVm.dataModel.enterpriseId" required>
+						<option value="">*Enterprise Name</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in saleProcesssVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
+					</select>
+				</div> -->
+				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.userId.$invalid && submitted}" ng-if="saleProcesssVm.dataModel.userRole == 'enterprise'">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="saleProcesssVm.onUserChange(container.userId, saleProcesssVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in saleProcesssVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.mobile.$invalid && submitted}" ng-if="saleProcesssVm.dataModel.userRole == 'customer'">
+					<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in saleProcesssVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="saleProcesssVm.findSingleUser()" typeahead-on-select="saleProcesssVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
+				</div>
+				<div class="col-sm-3">
+					<select class="form-control" name="functionality" ng-model="saleProcesssVm.dataModel.functionality">
+						<option value="">Functionality</option>
+						<option value="assetsale">Asset Sale</option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<select class="form-control" name="buyNowPriceApproval" ng-model="saleProcesssVm.dataModel.buyNowPriceApproval">
+						<option value="">Buy Now Price Approval Required</option>
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+					</select>					
+				</div>				
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<label>Negotiated Sale Approval Required</label>
+					<select class="form-control" name="negotiatedSaleApproval" ng-model="saleProcesssVm.dataModel.negotiatedSaleApproval">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+					</select>					
+				</div>
+				<div class="col-sm-3">
+					<label>Cooling Period</label>
+					<div class="row">
+						<div class="col-sm-6 padd-right" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriodIn.$invalid && submitted}">
+							<select class="form-control" name="coolingPeriodIn" ng-model="saleProcesssVm.dataModel.coolingPeriodIn" required>
+								<option value="">*Cooling In</option>
+								<option value="Days">Days</option>
+								<option value="Hours">Hours</option>
+							</select>
+						</div>
+						<div class="col-sm-6 padd-left" ng-class="{'has-error':saleProcesssMasterForm.coolingPeriod.$invalid && submitted}">
+							<input type="number" class="form-control" name="coolingPeriod" ng-model="saleProcesssVm.dataModel.coolingPeriod" min="0" placeholder="*Cooling Period" ng-pattern="/^\d+$/" required>
+						</div>
+					</div>					
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.emdPeriod.$invalid && submitted}">
+					<label>EMD Period</label>
+					<input type="number" class="form-control" name="emdPeriod" ng-model="saleProcesssVm.dataModel.emdPeriod" min="0" placeholder="*EMD Period" ng-pattern="/^\d+$/" required>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':saleProcesssMasterForm.fullPaymentPeriod.$invalid && submitted}">
+					<label>Full Payment Period</label>
+					<input type="number" class="form-control" name="fullPaymentPeriod" ng-model="saleProcesssVm.dataModel.fullPaymentPeriod" min="0" placeholder="*Full Payment Period" ng-pattern="/^\d+$/" required>
+				</div>				
+			</div>
+			<div class="row form-group">
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="saleProcesssVm.update(saleProcesssMasterForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="saleProcesssVm.save(saleProcesssMasterForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="saleProcesssVm.searchStr" ng-change="saleProcesssVm.fireCommand(true)" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Type</th>						
+						<th>User</th>						
+						<th>Asset Sale</th>			
+						<th>Buy Now Price Approval Required</th>			
+						<th>Negotiated Sale Approval Required</th>			
+						<th>Cooling Period </th>			
+						<th>EMD Period </th>			
+						<th>Full Payment Period </th>			
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="ent in saleProcesssVm.filteredList">
+						<!-- <td>{{ent.enterpriseId}}</td> -->
+						<td>
+							<span ng-if="ent.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="ent.userRole == 'customer'">Seller</span>
+							<span ng-if="ent.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="ent.userRole != 'default'">{{ent.user.name}} ({{ent.user.mobile}})</span>
+							<span ng-if="ent.userRole == 'default'">Default</span>
+						</td>
+						<!-- <td ng-if="ent.userRole != 'default'">{{ent.user.name}} ({{ent.user.mobile}})</td>
+						<td ng-if="ent.userRole == 'default'">Default</td> -->
+						<td>{{ent.functionality}}</td>
+						<td>{{ent.buyNowPriceApproval}}</td>
+						<td>{{ent.negotiatedSaleApproval}}</td>
+						<td>{{ent.coolingPeriod}}</td>
+						<td>{{ent.emdPeriod}}</td>
+						<td>{{ent.fullPaymentPeriod}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="saleProcesssVm.editClicked(ent)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="saleProcesssVm.destroy(ent._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="saleProcesssVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		</div>
+	</div>
+	<!-- Markup price master -->
+	<div ng-if="gsettingVm.tabValue == 'markup'" ng-controller="MarkupPriceMasterCtrl as markupVm">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4>Add New Markup Price</h4>
+			</div>
+			<!-- <div class="col-sm-offset-2 col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Import Excel
+					</span>
+				</span>				
+			</div>	
+			<div class="col-sm-2">				
+				<span class="btn btn-success btn-block fileinput-button">
+					<input type="file" name="template_update">
+					<span>
+						<i class="fa fa-file-excel-o"></i> Export Excel
+					</span>
+				</span>				
+			</div> -->			
+		</div>
+		<legend></legend>
+		<div>
+		<form class="" name="markupForm" >			
+			<div class="row form-group">
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.userRole.$invalid && submitted}">
+					<select class="form-control" name="userRole" ng-model="markupVm.dataModel.userRole" ng-change="markupVm.getUserOnRole(markupVm.dataModel.userRole)" required>
+						<option value="">*Select Type</option>
+						<option value="enterprise">Enterprise</option>
+						<!-- <option value="channelpartner">Channel Partner</option> -->
+						<option value="customer">Seller</option>
+						<option value="default">Default</option>
+					</select>
+				</div>
+				<!-- <div class="col-sm-3" ng-class="{'has-error':markupForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="markupVm.dataModel.enterpriseId" required>
+						<option value="">*Enterprise Name</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in markupVm.enterprises">{{ent.fname}} {{ent.lname}}({{ent.enterpriseId}}) </option>
+					</select>
+				</div> -->
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.userId.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'enterprise' || markupVm.dataModel.userRole == ''">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="markupVm.onUserChange(container.userId, markupVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in markupVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
+					</select>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.mobile.$invalid && submitted}" ng-if="markupVm.dataModel.userRole == 'customer'">
+					<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in markupVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="markupVm.findSingleUser()" typeahead-on-select="markupVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
+				</div>
+				<div class="col-sm-3" ng-class="{'has-error':markupForm.price.$invalid && submitted}">
+					<input type="text" class="form-control" name="price" ng-model="markupVm.dataModel.price" placeholder="*Price in %" required>
+				</div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="markupVm.update(markupForm)">Update</button>
+					<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="markupVm.save(markupForm)">Save</button>
+				</div>
+			</div>
+		</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="markupVm.searchStr" ng-change="markupVm.fireCommand(true)" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Type</th>						
+						<th>User</th>				
+						<th>price in %</th>			
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="markup in markupVm.filteredList">
+						<!-- <td>{{markup.enterpriseId}}</td> -->
+						<td>
+							<span ng-if="markup.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="markup.userRole == 'customer'">Seller</span>
+							<span ng-if="markup.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="markup.userRole != 'default'">{{markup.user.name}} ({{markup.user.mobile}})</span>
+							<span ng-if="markup.userRole == 'default'">Default</span>
+						</td>
+						<!-- <td ng-if="markup.userRole != 'default'">{{markup.user.name}} ({{markup.user.mobile}})</td>
+						<td ng-if="markup.userRole == 'default'">Default</td> -->
+						<td>{{markup.price}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="markupVm.editClicked(markup)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="markupVm.destroy(markup._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="kycVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+		</div>
+	</div>
+	<!-- EMD Amount Master -->
+	<div ng-if="gsettingVm.tabValue == 'emdmaster'" ng-controller="EmdChargeMasterCtrl as emdChargeVm">
+		<h4>Add New EMD Amount</h4>
+		<legend></legend>
+		<div>
+			<form class="" name="emdChargeForm" >			
+				<div class="row form-group">
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.userRole.$invalid && submitted}">
+						<select class="form-control" name="userRole" ng-model="emdChargeVm.dataModel.userRole" ng-change="emdChargeVm.getUserOnRole(emdChargeVm.dataModel.userRole)" required>
+							<option value="">*Select Type</option>
+							<option value="enterprise">Enterprise</option>
+							<!-- <option value="channelpartner">Channel Partner</option> -->
+							<option value="customer">Seller</option>
+							<option value="default">Default</option>
+						</select>
+					</div>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.userId.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'enterprise'">
+					<select class="form-control" name="userId" ng-model="container.userId" ng-change="emdChargeVm.onUserChange(container.userId, emdChargeVm.dataModel.userRole)" required>
+						<option value="">*Select User</option>
+						<option value="{{user._id}}" ng-repeat="user in emdChargeVm.users">{{user.fname}} {{user.lname}}({{user.mobile}}) </option>
+					</select>
+					</div>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.mobile.$invalid && submitted}" ng-if="emdChargeVm.dataModel.userRole == 'customer'">
+						<input type="text" class="form-control" placeholder="*Mobile No." ng-model="container.mobile" name="mobile" uib-typeahead="mobile for mobile in emdChargeVm.userSearch($viewValue)" typeahead-focus-first = "false" typeahead-wait-ms="200" ng-change="emdChargeVm.findSingleUser()" typeahead-on-select="emdChargeVm.findSingleUser()" ng-model-options="{debounce:1000}" autocomplete="off" required>
+					</div>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.categoryId.$invalid && submitted}">
+						<select class="form-control" name="categoryId" ng-model="container.categoryId" ng-change="emdChargeVm.onCategoryChange(container.categoryId)" ng-disabled="emdChargeVm.dataModel.userRole == 'default'" ng-required="emdChargeVm.dataModel.userRole != 'default'">
+							<option value="">*Asset Category</option>
+							<option value="All">All</option>
+							<option value="{{ct._id}}" ng-repeat="ct in emdChargeVm.categoryList">{{ct.name}}</option>
+						</select>
+					</div>
+					<div class="col-sm-3" ng-class="{'has-error':emdChargeForm.amount.$invalid && submitted}">
+						<input type="number" class="form-control" name="amount" ng-model="emdChargeVm.dataModel.emdCharge" placeholder="*EMD amount" min="0" required />
+					</div>					
+				</div>
+				<div class="row form-group">
+					<div class="col-sm-2 pull-right">
+						<button type="button" class="btn btn-block btn-primary" ng-if="isEdit" ng-click="emdChargeVm.update(emdChargeForm)">Update</button>
+						<button type="button" class="btn btn-block btn-primary" ng-if="!isEdit" ng-click="emdChargeVm.save(emdChargeForm)">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>	
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-6">
+				<!-- Showing : 2 Records -->
+			</div>
+			<div class="col-sm-offset-3 col-sm-3 text-right">
+				<div class="tablesearch form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="emdChargeVm.searchStr" ng-change="emdChargeVm.fireCommand(true)" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>						
+						<th>Type</th>						
+						<th>User</th>				
+						<th>Category</th>			
+						<th>EMD Amount</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="emd in emdChargeVm.filteredList">
+						<td>
+							<span ng-if="emd.userRole == 'enterprise'">Enterprise</span>
+							<span ng-if="emd.userRole == 'customer'">Seller</span>
+							<span ng-if="emd.userRole == 'default'">Default</span>
+						</td>
+						<td>
+							<span ng-if="emd.userRole != 'default'">{{emd.user.name}} ({{emd.user.mobile}})</span>
+							<span ng-if="emd.userRole == 'default'">Default</span>
+						</td>
+						<!-- <td ng-if="emd.userRole != 'Other'">{{emd.user.name}} ({{emd.user.mobile}})</td>
+						<td ng-if="emd.userRole == 'Other'">Other</td> -->
+						<td>{{emd.category.name}}</td>
+						<td>{{emd.emdCharge}}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-primary" ng-click="emdChargeVm.editClicked(emd)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-sm btn-danger" ng-click="emdChargeVm.destroy(emd._id)"><i class="fa fa-trash"></i></button></td>
+					</tr>
+				</tbody>
+			</table>
+			<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="emdChargeVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 		</div>
 	</div>
 
@@ -2182,4 +2811,127 @@
 			</div>
 		</div>
     </div>
+=======
+	<!--- Add promotion -->
+    <div ng-if="gsettingVm.tabValue == 'promotion'" ng-controller="CountCtrl as countVm">
+    	<h4>Add Promotion</h4>
+    	<legend></legend>
+		<form class="form-group" name="financeDataForm">
+			<div class="row form-group">
+				<div class="col-sm-3">
+					<select class="form-control"  ng-model="gsettingVm.financeData.type">
+						<!--<option>Select Type</option>-->
+						<option value="promotion" selected="selected">Promotion</option>
+						<option value="financePartner">Finance Partner</option>
+						<option value="otherPartner">Other Partners</option>
+						<option value="tabMenu">Tab Menu</option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<span class="btn btn-warning fileinput-button">
+						<span>Browse image...</span>
+						<input type="file" name="file" onchange="angular.element(this).scope().updateFinanceMasterImage(this.files,this)" accept="image/*" ng-model="gsettingVm.financeData.file">
+					</span>
+					<span>
+						{{gsettingVm.financeData.image}}
+					</span>
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" name="url" placeholder="Website Url" ng-model="gsettingVm.financeData.url">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" placeholder="Start Date(mm/dd/yyyy)" ng-model="gsettingVm.financeData.startDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<input type="text" class="form-control" placeholder="End Date(mm/dd/yyyy)" ng-model="gsettingVm.financeData.endDate" datetime-picker date-format="MM/dd/yyyy" date-only readonly/>
+				</div>
+				<div class="col-sm-2 pull-right">
+					<button type="button" class="btn btn-primary btn-block" ng-click="gsettingVm.saveFinanceMaster(financeDataForm)" ng-if="!gsettingVm.financeEdit">Save</button>
+					<button type="button" class="btn btn-primary btn-md btn-block" ng-click="gsettingVm.updateFinanceMaster(financeDataForm)" ng-if="gsettingVm.financeEdit">Update</button>
+						
+				</div>
+			</div>
+		</form>
+		<legend></legend>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'financemaster')" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Image</th>
+						<th>Website Url</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Auction</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="finance in gsettingVm.finances">
+						<td ng-if="finance.type == 'promotion'">Promotion</td>
+						<td ng-if="finance.type == 'financePartner'">Finance Partner</td>
+						<td ng-if="finance.type == 'otherPartner'">Other Partner</td>
+						<td ng-if="finance.type == 'tabMenu'">Tab Menu</td>
+						<td><img width="50" height="50" src="assets/uploads/financemaster/{{finance.image}}" ></td>
+						<td>{{finance.url}}</td>
+						<td>{{finance.startDate}}</td>
+						<td>{{finance.endDate}}</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-sm" ng-click="gsettingVm.editFinanceMaster($index)"><i class="fa fa-pencil"></i></button>
+							<button type="button" class="btn btn-danger btn-sm"  ng-click="gsettingVm.deleteFinanceMaster($index)" ><i class="fa fa-trash"></i></button>
+						
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'financemaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+	<!--- Listing Lead Data -->
+    <div ng-if="gsettingVm.tabValue == 'leaddata'" ng-controller="CountCtrl as countVm">
+    	<h4>Listing Lead Data</h4>
+    	<button class="btn btn-success btn-md btn-block" ng-click="gsettingVm.leadExportExcel()"><i class="fa fa-file-excel-o"></i> Export</button>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="gsettingVm.searchStr" ng-change="gsettingVm.fireCommand(true,null,'leadmaster')" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Lead Id</th>
+						<th>Customer Name</th>
+						<th>Mobile</th>
+						<th>Asset Name</th>
+						<th>Offer Detail</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr  ng-repeat="lead in gsettingVm.leads">
+						<td>{{lead.leadId}}</td>
+						<td>{{lead.customerName}}</td>
+						<td>{{lead.mobile}}</td>
+						<td>{{lead.assetName}}</td>
+						<td>{{lead.offerDetail}}</td>
+						<td>{{lead.status}}</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination total-items="gsettingVm.totalItems" ng-model="gsettingVm.currentPage" items-per-page="gsettingVm.itemsPerPage" max-size="gsettingVm.maxSize" ng-change="gsettingVm.fireCommand(false,null,'leadmaster')" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>
+
 </div>
