@@ -32,9 +32,7 @@
      	}
        LotSvc.getData({auctionId:$scope.currentAuction.auctionId,distinct:true}).then(function(res){
             vm.lotList = res;   
-
             console.log("lotslist",res);
-            
          });
     }
 
@@ -71,6 +69,7 @@
                   vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
                   closeDialog();
                    EmdSvc.getAmount(vm.dataModel).then(function(result){
+                    console.log("The amount is",result);
                          if(Auth.getCurrentUser().email)
                          dataObj.user.email = Auth.getCurrentUser().email;
                          save(dataObj,result);

@@ -13,7 +13,7 @@
     $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
    console.log("url",$scope.asWidgetURLSCE);
 
-
+   $scope.displayBid=query.displayBid;
    $scope.asAuctionId=query.auctionId;
    $scope.asLotId=query.lotId;
    $scope.asUserId=query.userId;
