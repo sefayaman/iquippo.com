@@ -47,7 +47,7 @@ exports.getAll = function(req, res) {
   var filter = {};
   if(req.query.auctionId){
     filter.auctionId = req.query.auctionId;
-    console.log("filter.auctionId",filter.auctionId);
+    
     }
   AuctionRequest.find(filter,function(err, auctions) {
     if (err) {
@@ -958,7 +958,7 @@ exports.createAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
-        console.log("auctionData",req.body);
+        
         Utility.sendAuctionData(req,res);
         return res.status(201).json({
           errorCode: 0,
@@ -978,7 +978,7 @@ exports.getAssetInfo=function(req,res){
   if(err){
     return handleError(res,err);
   }
-  console.log("auctionData",results);
+  
   if(results.length > 0){
     if(results[0].auctionType === 'S')
     data.auctionType=results[0].auctionType;
@@ -1005,12 +1005,12 @@ UserModel.find(filter,function(err,res){
   if(err) return handleError(res,err);
   if(res.length > 0){
    userData=res[0];
-   console.log("fetched User",userData);
+   
    Utility.sendUserInfo(userData,function(err,asData){
   if(err){
     return handleError(res,err);
   }
-  console.log("AsDATA",asData);
+  
   return res.status(200).json(asData);
 });
   }
@@ -1040,11 +1040,47 @@ exports.updateAuctionMasterproduct = function(req, res) {
       });
     
   }
+  // Remove field from Auction Master
+  exports.removeAuctionMasterproduct = function(req, res) {
+      var _id = req.body._id;
+      if(req.body.flag==1){
+        AuctionMaster.update({
+            _id: _id
+          }, {
+          $unset: {"static_increment":1}
+          }, function(err) {
+                if (err) {
+                  return handleError(res, err);
+                }
+                res.status(200).json({
+                  errorCode: 0,
+                  message: "Auction Data Successfully deleted."
+                });
+            
+          });
+      }
+      if(req.body.flag==2){
+        AuctionMaster.update({
+            _id: _id
+          }, {
+          $unset: {"bidIncrement":1}
+          }, function(err) {
+                if (err) {
+                  return handleError(res, err);
+                }
+                res.status(200).json({
+                  errorCode: 0,
+                  message: "Auction Data Successfully deleted."
+                });
+            
+          });
+      }
+  }
 // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
   var _id = req.body._id;
 
-  console.log("_id",_id);
+  //console.log("_id",_id);
   if (req.body._id) {
     delete req.body._id;
   }
@@ -1101,7 +1137,7 @@ function updateAuctionRequest(data, id) {
     if (err) {
       console.log("Error with updating auction request");
     }
-    console.log("Auction Request Updated");
+    //console.log("Auction Request Updated");
   });
 }
 
@@ -1373,7 +1409,7 @@ exports.auctiondetail = function(req, res) {
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
-  console.log("fhghg",queryObj);
+  //console.log("fhghg",queryObj);
         if (req.body._id){
         filter._id = req.body._id;
         }
@@ -1389,12 +1425,12 @@ exports.getAuctionMaster = function(req, res) {
 
         if(req.query.auctionId){
         filter.auctionId = req.query.auctionId;
-        console.log("filter.auctionId",filter.auctionId);
+        
         }
 
         if(req.query._id){
         filter._id = req.query._id;
-        console.log("filter._id",filter);
+        
         }
 
         if(queryObj.dbauctionId){
@@ -1411,7 +1447,7 @@ exports.getAuctionMaster = function(req, res) {
       return handleError(res, err);
     }
 
-    console.log("auctions",auctions);
+   
     return res.status(200).json(auctions);
   });
 }

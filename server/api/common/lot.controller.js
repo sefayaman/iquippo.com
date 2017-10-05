@@ -11,19 +11,15 @@ exports.create = function(req, res, next) {
   aysnc.series({ 
     fetchAuction: function(callback) {
       if (req.body && req.body.auctionId) {
-        //console.log("I am here");
         AuctionMaster.find({
           "auctionId": req.body.auctionId
         }, function(err, auctions) {
           if (err)
             return callback(err);
-          console.log("-----",auctions);
-          //console.log("auctions",auctions[0]);
           //req.body.lastMintBid = auctions[0].lastMinBid || "";
           //req.body.extendedTo = auctions[0].extendedTo || "";
           if(auctions.length > 0)
           req.body.auctionId = auctions[0].auctionId;
-          //console.log("req.body after",req.body);
           return callback();
         });
       } else
@@ -52,7 +48,6 @@ exports.create = function(req, res, next) {
 exports.updateLotData = function(req, res) {
 
   req.body.updatedAt = new Date();
-  console.log("-----++++",req.body);
   delete req.body._id;
   Lot.update({
     _id: req.params.id
@@ -71,7 +66,6 @@ exports.updateLotData = function(req, res) {
 exports.updateProductLotData = function(req, res) {
   
     req.body.updatedAt = new Date();
-    console.log("-----++++",req.params);
     Lot.update({
       "_id": req.params.id
     }, {
@@ -89,7 +83,6 @@ exports.updateProductLotData = function(req, res) {
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
-  console.log("get Lot Data",req.query);
    if(req.query.auctionId && req.query.distinct){
   filter.auctionId=req.query.auctionId;
 query = Lot.find(filter).distinct('lotNumber');
@@ -102,7 +95,6 @@ else if(req.query){
  if(req.query.lotNumber)
   filter.lotNumber=req.query.lotNumber;
  
- console.log("the filter");
  query = Lot.find(filter);
 
 }
@@ -133,5 +125,50 @@ exports.destroy = function(req, res, next) {
       });
     });
   });
+
+};
+exports.removeLotData = function(req, res) {
+
+  //req.body.updatedAt = new Date();
+  
+  delete req.body._id;
+  if(req.body.flag==1){
+      Lot.update({
+        _id: req.params.id
+      }, {
+        $unset: {"static_increment":1}
+      }, function(err) {
+        if (err) {
+          res.status(err.status || 500).send(err);
+        }
+        Util.sendLotData(req,res);
+        return res.status(200).json(req.body);
+      });
+  }
+  if(req.body.flag==2){
+    Lot.update({
+    _id: req.params.id
+  }, {
+    $unset: {"bidIncrement":1}
+  }, function(err) {
+    if (err) {
+      res.status(err.status || 500).send(err);
+    }
+    Util.sendLotData(req,res);
+    return res.status(200).json(req.body);
+  });
+  }
+  
+  /*Lot.update({
+    _id: req.params.id
+  }, {
+    $unset: field
+  }, function(err) {
+    if (err) {
+      res.status(err.status || 500).send(err);
+    }
+    Util.sendLotData(req,res);
+    return res.status(200).json(req.body);
+  });*/
 
 };
