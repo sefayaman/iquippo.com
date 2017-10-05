@@ -90,6 +90,8 @@ var EnterpriseValuationSchema = new Schema({
 EnterpriseValuationSchema.pre('save',function(next){
   var self = this;
   var cprefix = 'EV';
+  if(self.uniqueControlNo)
+      return next();
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
     var date = new Date();
