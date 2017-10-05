@@ -4,27 +4,24 @@
 <body>
 <table style="width:80%; margin:0 auto;padding:15px; font-family:Verdana, Geneva, sans-serif;border: 5px solid rgba(128, 128, 128, 0.28);">
 	<tr>
-		<td style="height:70px;" valign="top"><img src="{{serverPath}}/assets/images/srei-logo-img.png"></td>
+		<td style="height:70px;" valign="top"><img src="{{awsBaseImagePath}}/assets/images/srei-logo-img.png"></td>
 	</tr>
   <tr>
 		<td style="font-size:20px; color:#FF4342; padding-bottom:20px;">Hello {{fname}} {{lname}},</td>	
 	</tr>
     <tr>
-            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">
-                Welcome to iQuippo.com - your trusted partner for all Equipment needs.
-            </td>
-        </tr>
-        <tr>
-            <td style="color:#01395c; font-size:13px; padding-bottom:10px;">
-                You can access your account with the following details:
-            </td>
-        </tr>
-        <tr>
+        <td style="color:#01395c; font-size:13px; padding-bottom:10px;">
+            Welcome to iQuippo.com - your trusted partner for all Equipment needs.
+            Your Unique User ID is <strong>{{customerId}}</strong>. You can access your account with the following details:
+        </td>
+    </tr>
+        
+    <tr>
         <td>
-          <table style="width:60%; margin:0 auto;padding:15px; font-family:Verdana, Geneva, sans-serif;">
+          <table style="width:95%; margin:0 auto;padding:15px; font-family:Verdana, Geneva, sans-serif;">
             <tr>
               <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Username:</strong></td>
-              <td  style="color:#01395c; font-size:13px; padding-bottom:10px;">{{mobile}}</td>
+              <td  style="color:#01395c; font-size:13px; padding-bottom:10px;">{{mobile}} / {{email}} / {{customerId}}</td>
             </tr>
             <tr>
               <td style="color:#01395c; font-size:13px; padding-bottom:10px;"><strong>Password:</strong></td>

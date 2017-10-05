@@ -10,7 +10,8 @@ angular.module('admin').factory("VatTaxSvc",VatTaxSvc);
     svc.save = save;
     svc.update = update;
     svc.destroy = destroy;
-     
+    svc.getGstOnProduct = getGstOnProduct;
+
    function get(filter){
       var path = svcPath; 
       var queryParam = "";
@@ -36,6 +37,23 @@ angular.module('admin').factory("VatTaxSvc",VatTaxSvc);
             throw err;
           });
      }
+
+    function getGstOnProduct(data) {
+      var path = svcPath; 
+      var queryParam = "";
+      if(data)
+          queryParam = $httpParamSerializer(data);
+      if(queryParam)
+        path = path + "/getgstonproduct?" + queryParam;
+      return $http.get(path)
+      .then(function(res){
+        return res.data;
+      })
+      .catch(function(err){
+        if(err)
+        throw err;
+      });
+    }
 
      function save(data){
         return $http.post(svcPath,data)

@@ -1,0 +1,169 @@
+<section class="banner form-group">
+  <div class="overlay"></div>
+  <div id="slides_control">
+    <uib-carousel interval="mainVm.myInterval" no-wrap="noWrapSlides">
+      <uib-slide data-ng-repeat="slide in mainVm.slides">
+        <img  data-ng-src="assets/images/{{slide.webImg}}" data-ng-if="slide.default">
+         <img  data-ng-src="{{uploadImagePrefix}}banner/{{slide.webImg}}" data-ng-if="!slide.default">
+      </uib-slide>
+    </uib-carousel>
+  </div>
+</section>
+
+<div class="container"> 
+  <div class="row text-center">
+    <div class="col-sm-3">
+      <img src="/assets/images/personal-loan.png" class="form-group">
+      <h4>Input personal and loan details</h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="/assets/images/verify.png" class="form-group">
+      <h4>Verify through phone/email</h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="/assets/images/loanoffer.png" class="form-group">
+      <h4>Generate instant loan offer</h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="/assets/images/verifyloan.png" class="form-group">
+      <h4>Verification and Loan disbursement </h4>
+    </div>
+  </div> 
+  <div class="form-group"></div>  
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="promotion-slider">
+        <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+          <uib-slide ng-repeat="promotionData in financingVm.getAllData | filter : {type : 'promotion'} ">
+            <img src="assets/uploads/financemaster/{{promotionData.image}}" class="img-responsive">
+          </uib-slide>
+         <!-- <uib-slide>
+            <img src="https://www.holasunholidays.ca/wp-content/uploads/2017/05/Bonus-Excursion-2017-v3.jpg" class="img-responsive">
+          </uib-slide>
+          <uib-slide>
+            <img src="http://amazonsportswear.ca/wp-content/uploads/2013/09/Ogio-Backpack.jpg" class="img-responsive">
+          </uib-slide>
+          <uib-slide>
+            <img src="http://cdn.srilanka-promotions.com/wp-content/uploads/2015/03/Adidas-18-Mar-2015-300x500.jpg" class="img-responsive">
+          </uib-slide>-->
+        </uib-carousel>
+      </div>
+    </div>
+    <div class="col-sm-8"> 
+      <ul class="finance-menu form-group">
+        <li ng-repeat="tabMenuData in financingVm.getAllData | filter : {type : 'tabMenu'} ">
+          <a href="javascript:void(0);">
+            <img src="assets/uploads/financemaster/{{tabMenuData.image}}" alt=""> CME
+          </a>
+        </li>
+        <!--<li>
+          <a href="javascript:void(0);">
+            <img src="http://www.free-icons-download.net/images/medical-scanning-device-icons-56738.png" alt=""> Medical Equipment
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0);">
+            <img src="http://bioformacion.es/wp-content/uploads/2016/04/Lego-Serious-Play-800x750.png" alt="">
+            Other
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0);">
+            <img src="http://cdn.neiglobal.com/content/congress/2017/images/2017-Congress-OverviewHeaderIcon-60x60-3xretina.png" alt="">
+            Other
+          </a>
+        </li>
+         <li>
+          <a href="javascript:void(0);">
+            <img src="https://www.torchlightlullaby.com/wp-content/uploads/2013/08/quote-xxl.png" alt="">
+            Other
+          </a>
+        </li>-->
+        <!-- <li>
+          <a href="javascript:void(0);">
+            <img src="https://www.shareicon.net/data/256x256/2016/09/23/833202_education_512x512.png" alt="">
+            Other
+          </a>
+        </li> -->
+        <!-- <li class="pull-right">
+          <a href="javascript:void(0);">
+            <i class="fa fa-angle-right fa-3x"></i>
+          </a>
+        </li> -->
+      </ul>
+      <div class="form-group clearfix"></div>
+      <div class="row">
+        <div class="col-sm-3 pull-right form-group">
+          <input type="search" ng-model="financingVm.searchStr" ng-change="financingVm.fireCommand(true,null,'leadmaster')" class="form-control"  placeholder="Search Lead Id">
+        </div>
+      </div> 
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Lead ID</th>
+              <th>Customer Name:</th>
+              <th>Mobile No</th>
+              <th>Asset Name</th>
+              <th>Offer Details</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-if="financingVm.leads">
+              <td>{{financingVm.leads.leadId}}</td>
+              <td>{{financingVm.leads.customerName}}</td>
+              <td>{{financingVm.leads.mobile}}</td>
+              <td>{{financingVm.leads.assetName}}</td>
+              <td>{{financingVm.leads.offerDetail}}</td>
+              <td>{{financingVm.leads.status}}</td>
+            </tr>
+            <tr ng-if="!financingVm.leads">
+              <td colspan="6" >Record not found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="well">
+        <div class="row">
+          <div class="col-sm-6">
+            <p><strong>Lead ID:</strong> 1234</p>
+            <p><strong>Customer Name:</strong> Suman Kumar</p>
+            <p><strong>Mobile No:</strong> 5544228841</p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Asset Name:</strong> 1234</p>
+            <p><strong>Offer Details:</strong></p>
+            <p><strong>Status:</strong> 5544228841</p>
+          </div>
+        </div>
+      </div>  -->       
+    </div>
+    <div class="col-sm-2 text-center">
+
+      <img ng-repeat="partnerData in financingVm.getAllData | filter : {type : 'financePartner'} " src="assets/uploads/financemaster/{{partnerData.image}}" width="140">
+      <!--<img  src="assets/images/partner-logo-img.jpg" width="140">-->
+      
+      <hr>
+      <img ng-repeat="otherPartnerData in financingVm.getAllData | filter : {type : 'otherPartner'} " src="assets/uploads/financemaster/{{otherPartnerData.image}}" width="140">
+      <img src="assets/images/srei-logo.png" width="140">
+      <!-- <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Finance Partner</h3>
+        </div>
+        <div class="panel-body">
+          <img src="assets/images/partner-logo-img.jpg" class="img-responsive">
+        </div>
+      </div> -->
+      <!-- <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Other Partner</h3>
+        </div>
+        <div class="panel-body">          
+          <img src="assets/images/srei-logo.png" class="img-responsive">
+        </div>
+      </div> -->
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+<div>  
+	<div class="row form-group">
+		<div class="col-sm-12 text-right">
+			<button class="btn btn-success" ng-click="bidproductVm.exportExcel()"><i class="fa fa-file-excel-o"></i> Export Excel</button>
+    		<button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('all')"><i class="fa fa-file-excel-o"></i> All Export Excel</button>
+
+    		<button class="btn btn-success" ng-if="isAdmin()" ng-click="bidproductVm.exportExcel('payment')"><i class="fa fa-file-excel-o"></i> All Payment Export Excel</button>
+		</div>
+	</div>
+<legend></legend>
+   <div class="btn-group enterprise-value form-group">   
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'actionable'}" ng-click="onTabChange('actionable',1)">Pending for Approval</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'saleinprocess'}" ng-click="onTabChange('saleinprocess',2)">Sale In Progress</button>
+    <button type="button" class="btn active" ng-class="{'btn-primary': bidproductVm.activeBid == 'closed'}" ng-click="onTabChange('closed',3)">Closed</button>
+   </div>
+
+   	<!-- Approved Bid -->
+	<div ng-if="['actionable','saleinprocess'].indexOf(bidproductVm.activeBid) !== -1">
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{bidproductVm.dataList.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>			   			
+			   			<th>Asset Id</th>
+			   			<th>Asset Name</th>
+			   			<th>Reserve Price</th>	
+			   			<!-- <th ng-if="isAdmin()">Buyer Name</th>
+			   			<th ng-if="isAdmin()">Buyer Location</th>
+			   			<th ng-if="isAdmin()">Buyer Mobile No.</th>
+			   			<th ng-if="isAdmin()">Buyer Email Id</th>	 -->
+			   			<!-- <th>Parking Charges</th> -->
+			   			<th>Buy Now Price</th>	
+			   			<th>No. of Bids</th>	
+			   			<th>Highest Bid</th>	
+						<th>Asset Location</th>
+			   			<th ng-if="isAdmin()">Asset Status</th>	
+			   			<th>Action</th>		   			
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="product in bidproductVm.dataList">			   			
+			   			<td>{{product.assetId}}</td>
+			   			<td>{{product.name}}</td>
+			   			<td>{{product.reservePrice}}</td>	
+			   			<!-- <td ng-if="isAdmin()">{{}}</td>
+			   			<td ng-if="isAdmin()">{{}}</td>
+			   			<td ng-if="isAdmin()">{{}}</td>
+			   			<td ng-if="isAdmin()">{{}}</td> -->
+			   			<!-- <td>{{}}</td> -->
+			   			<td>{{product.grossPrice}}</td>
+			   			<td>{{product.bidCount}}</td>
+			   			<td>{{product.highestBid}}</td>
+			   			<td>{{product.city}}</td>
+			   			<td ng-if="isAdmin()">{{product.assetStatus}}</td>	
+			   			<td>
+			   				<!-- seller action -->
+			   				<a href="/assetsale/bidrequests?productId={{product._id}}&assetId={{product.assetId}}" class="btn btn-sm btn-primary" uib-popover="View Bids" popover-trigger="mouseenter"><i class="fa fa-eye"></i></a>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview','actionable')"><i class="fa fa-info"></i></button>			   				
+			   			</td>			   			
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+        <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">
+	  </uib-pagination>
+	
+	</div>
+   <!-- Closed Bid -->
+	<div ng-if="bidproductVm.activeBid == 'closed'">
+		<div class="row form-group">
+		   	<div class="col-sm-9">
+		   		Showing : {{bidproductVm.dataList.length}}
+		   	</div>
+		   	<div class="col-sm-3 tablesearch text-right">
+		        Search: <input type="text" placeholder="Search..." ng-model="bidproductVm.searchStr" ng-change="bidproductVm.fireCommand(true)" ng-model-options="{debounce:500}">
+		      </div>
+		   </div>
+		   <div class="table-responsive">
+		   	<table class="table table-bordered">
+		   		<thead>
+		   			<tr>
+		   				<th>Ticket Id</th>
+			   			<th>Asset Id</th>
+			   			<th>Asset Name</th>
+			   			<th>Asset Location</th>
+			   			<th ng-if="!isAdmin()">Ageing of Asset</th>
+			   			<th ng-if="isAdmin()">Buyer Name</th>
+			   			<th ng-if="isAdmin()">Buyer Location</th>
+			   			<th ng-if="isAdmin()">Buyer Mobile No.</th>
+			   			<th ng-if="isAdmin()">Buyer Email Id</th>	
+			   			<th>Buy Now Price</th>	
+			   			<th>Reserve Price</th>	
+			   			<th>Bid Amount</th>
+			   			<th>Offer Status</th>
+			   			<th>Bid Status</th>
+			   			<th>Deal Status</th>
+			   			<th>Asset Status</th>
+			   			<th>Action</th>
+			   		</tr>
+		   		</thead>
+		   		<tbody>
+		   			<tr ng-repeat="product in bidproductVm.dataList">		
+		   				<td>{{product.ticketId}}</td>	   			
+			   			<td>{{product.product.proData.assetId}}</td>
+			   			<td>{{product.product.proData.name}}</td>
+			   			<td>{{product.product.proData.city}}</td>			   			
+			   			<td ng-if="!isAdmin()">{{product.ageingOfAsset}}</td>
+			   			<td ng-if="isAdmin()">{{product.user.fname}} {{product.user.lname}}</td>
+			   			<td ng-if="isAdmin()">{{product.user.city}}</td>
+			   			<td ng-if="isAdmin()">{{product.user.mobile}}</td>
+			   			<td ng-if="isAdmin()">{{product.user.email}}</td>
+			   			<td>{{product.product.proData.grossPrice || 0}}</td>
+			   			<td>{{product.product.proData.reservePrice || 0}}</td>
+			   			<td>{{product.bidAmount || 0}}</td>
+			   			<td>{{product.offerStatus}}</td>
+			   			<td ng-if="!isFAgencyPartner()">{{product.bidStatus}}</td>
+			   			<td>{{product.dealStatus}}</td>
+			   			<td>{{product.product.proData.assetStatus}}</td>
+			   			<td>
+							<button type="button" class="btn btn-sm btn-info" uib-popover="More Information" popover-trigger="mouseenter" ng-click="bidproductVm.openDialog(product,'bidProductDetailPopup','product-preview', 'closed')"><i class="fa fa-info"></i></button>	
+			   			</td>
+			   		</tr>
+		   		</tbody>
+		   	</table>
+		   </div>	
+		<uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="bidproductVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
+	</div>  
+</div>

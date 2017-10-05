@@ -1,0 +1,167 @@
+<div>
+  <div class="modal-header">
+      <button type="button" class="close" ng-click="reqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Details</h4>
+    </div>
+    <div class="modal-body">
+      
+      <table class="table table-bordred">               
+        <tr>
+          <td class="col-sm-2"><b>Ticket Id:</b></td>
+          <td class="col-sm-4">{{bidData.ticketId}}</td>
+          <td class="col-sm-2"><b>Asset Id:</b></td>
+          <td class="col-sm-4">{{bidData.product.assetId}}</td>                  
+        </tr>
+        <tr>
+          <td><b>Category:</b></td>
+          <td>{{bidData.product.category}}</td>
+          <td><b>Brand:</b></td>
+          <td>{{bidData.product.brand}}</td>                  
+        </tr>
+        <tr>
+          <td><b>Model:</b></td>
+          <td>{{bidData.product.model}}</td>
+          <td><b>Manufacturing Year:</b></td>
+          <td>{{bidData.product.mfgYear}}</td>
+        </tr>                 
+        <tr>
+          <td><b>Asset Country:</b></td>
+          <td>{{bidData.product.country}}</td>
+          <td><b>Asset State:</b></td>
+          <td>{{bidData.product.state}}</td>
+        </tr>
+
+         <tr>
+          <td><b>Asset Location:</b></td>
+          <td>{{bidData.product.city}}</td>
+          <td><b>Asset Description:</b></td>
+          <td>{{currentProduct.comment}}</td>
+        </tr>
+
+        <tr>
+          <td><b>Offer Type:</b></td>
+          <td>{{bidData.offerType}}</td>
+          <td><b>Bid Amount:</b></td>
+          <!-- <td>{{bidData.bidAmount}}</td> -->
+          <td>
+            <table class="table">
+              <tr>
+                <th>TCS</th>
+                <th>Parking <span ng-if="bidData.parkingPaymentTo == 'Yard'">(* Pay to yard)</span></th>
+                <th>Total</th>
+              </tr>
+              <tr>
+                <td>{{bidData.tcs || 0}}</td>
+                <td>{{bidData.parkingCharge || 0}}</td>
+                <td>{{bidData.bidAmount || 0}}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td><b>Offer Status:</b></td>
+          <td>{{bidData.offerStatus}}</td>
+          <td><b>Deal Status:</b></td>
+          <td>{{bidData.dealStatus}}</td>                  
+        </tr>
+        <tr>
+            <td><b>EMD Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr ng-repeat="payment in bidData.emdPayment.paymentsDetail">
+                  <td>{{payment.bankName}}</td>
+                  <td>{{payment.paymentMode}}</td>
+                  <td>{{payment.instrumentNo}}</td>
+                  <td>{{payment.amount}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><b>Full Payment Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr ng-repeat="payment in bidData.fullPayment.paymentsDetail">
+                  <td>{{payment.bankName}}</td>
+                  <td>{{payment.paymentMode}}</td>
+                  <td>{{payment.instrumentNo}}</td>
+                  <td>{{payment.amount}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        <tr>
+          <td><b>Invoice in Favour of:</b></td>
+          <td colspan="3">
+          	<table class="table">
+          		<tr>
+          			<th>Name</th>
+          			<th>Country</th>
+          			<th>State</th>
+          			<th>Location</th>
+          			<th>Address</th>
+          			<th>Email</th>
+          			<th>Mobile No.</th>
+          		</tr>
+          		<tr>
+          			<td>{{bidData.invoiceDetail.fname}} {{bidData.invoiceDetail.lname}}</td>
+          			<td>{{bidData.invoiceDetail.country}}</td>
+          			<td>{{bidData.invoiceDetail.state}}</td>
+          			<td>{{bidData.invoiceDetail.city}}</td>
+          			<td>{{bidData.invoiceDetail.address}}</td>
+          			<td>{{bidData.invoiceDetail.email}}</td>
+          			<td>{{bidData.invoiceDetail.mobile}}</td>
+          		</tr>
+          	</table>
+          </td>                         
+        </tr>
+        <tr>
+        	<td><b>KYC Documents:</b></td>
+          	<td colspan="3">
+          		<table class="table">
+          			<tr>
+          				<th>Kyc Type</th>
+          				<th>Name</th>
+                  <th>Link</th>
+          			</tr>
+          			<tr ng-repeat="kyc in bidData.kyc">
+          				<td>{{kyc.type}}</td>
+          				<td>{{kyc.name}}</td>
+                  <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+          			</tr>
+          		</table>
+          	</td>
+        </tr>
+        <tr>
+          <td><b>Delivery Order:</b></td>
+          <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{bidData.deliveryOrder}}" target="_blank">{{bidData.deliveryOrder}}</a></td>
+          <td><b>Date of Delivery:</b></td>
+          <td>{{bidData.dateOfDelivery | date:'MM/dd/yyyy'}}</td>                    
+        </tr>
+        <tr>
+          <td><b>Asset Delivery Confirmation:</b></td>
+          <td><span ng-if="bidData.dealStatus == 'Closed'">Yes</span></td>
+          <td><b>Rating:</b></td>
+          <td>{{}}</td>                  
+        </tr>
+        <tr>
+          <td><b>Feedback:</b></td>
+          <td colspan="3">{{bidData.comment}}</td>
+        </tr>
+      </table>
+    </div>
+            
+</div>

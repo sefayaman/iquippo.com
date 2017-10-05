@@ -87,7 +87,7 @@ exports.create = function(req, res, next) {
 
 function _getRecord(data, cb) {
   var filter = {};
-  filter.kycDoc = data.kycDoc;
+  filter.kycType = data.kycType;
   filter.docName = data.docName;
   Model.find(filter, function(err, result) {
     cb(err, result);

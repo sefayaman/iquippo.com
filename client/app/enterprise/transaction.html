@@ -1,18 +1,18 @@
 <div>
   <div  ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
     Download the 
-    <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplateUpload}}" target="_blank" ng-if="isEnterprise()||isEnterpriseUser()">template</a>
-    <a href="/download/templates/{{enterpriseTransactionVm.adminTemplateUpload}}" target="_blank" ng-if ="isAdmin()">template</a>
+    <a href="{{templateDir}}/{{enterpriseTransactionVm.enterpriseTemplateUpload}}" target="_blank" ng-if="isEnterprise()||isEnterpriseUser()">template</a>
+    <a href="{{templateDir}}/{{enterpriseTransactionVm.adminTemplateUpload}}" target="_blank" ng-if ="isAdmin()">template</a>
      for Upload Request which is visible to Enterprise only. Maximum 99 rows
   </div>
   <div  ng-if="isEnterprise() || isEnterpriseUser() || isAdmin()">
     Download the 
-    <a href="/download/templates/{{enterpriseTransactionVm.enterpriseTemplateUpdate}}" target="_blank" ng-if="isEnterprise()||isEnterpriseUser()">template</a>
-    <a href="/download/templates/{{enterpriseTransactionVm.adminTemplateUpdate}}" target="_blank" ng-if="isAdmin()">template</a>
+    <a href="{{templateDir}}/{{enterpriseTransactionVm.enterpriseTemplateUpdate}}" target="_blank" ng-if="isEnterprise()||isEnterpriseUser()">template</a>
+    <a href="{{templateDir}}/{{enterpriseTransactionVm.adminTemplateUpdate}}" target="_blank" ng-if="isAdmin()">template</a>
      for Update Request which is visible to Enterprise only. Maximum 99 rows
   </div>
   <div  ng-if="isPartner() || isAdmin()">
-    Download the <a href="/download/templates/{{enterpriseTransactionVm.agencyTemplate}}" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
+    Download the <a href="{{templateDir}}/{{enterpriseTransactionVm.agencyTemplate}}" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
   <div class="row">
     <div class="col-sm-6">
       <h4>Add New Request  </h4>

@@ -21,6 +21,7 @@
     $scope.type = "";
     vm.images = [];
     vm.uploadTemplate = "Bulk_upload_auction.xlsx";
+    $scope.uploadImagePrefix = $rootScope.templateDir;
 
     $scope.uploadZip = uploadZip;
 

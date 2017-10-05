@@ -121,7 +121,7 @@ function handleError(res, err) {
 }
 
 function getNotifications(){
-  notification.find({counter:{$lte:3},createdAt:{$lt:new Date()}}).limit(5).exec(function (err, data) {
+  notification.find({counter:{$lte:3},createdAt:{$lt:new Date()}}).limit(1).exec(function (err, data) {
       if (err) { 
         return console.log(err);
          setTimeout(function () { getNotifications(); }, 5000); //sleep 

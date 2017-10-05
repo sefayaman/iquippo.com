@@ -1,0 +1,161 @@
+<div>
+  <div class="modal-header">
+      <button type="button" class="close" ng-click="bidReqDetailVm.closeDialog()" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Details</h4>
+    </div>
+    <div class="modal-body">
+      <!-- admin request details  popup-->
+      <table class="table table-bordred">               
+        <tbody>
+          <tr>
+            <td class="col-sm-2"><b>Ticket Id:</b></td>
+            <td class="col-sm-4">{{bidData.ticketId}}</td>
+            <td class="col-sm-2"><b>Offer Type:</b></td>
+            <td class="col-sm-4">{{bidData.offerType}}</td>                  
+          </tr>
+          <tr>
+            <td><b>Bid Amount:</b></td>
+            <!-- <td>{{bidData.bidAmount}}</td> -->
+            <td>
+              <table class="table">
+                <tr>
+                  <th>TCS</th>
+                  <th>Parking <small ng-if="bidData.parkingPaymentTo == 'Yard'">(* Pay to yard)</small></th>
+                  <th>Total</th>
+                </tr>
+                <tr>
+                  <td>{{bidData.tcs || 0}}</td>
+                  <td>{{bidData.parkingCharge || 0}}</td>
+                  <td>{{bidData.bidAmount || 0}}</td>
+                </tr>
+              </table>
+            </td>
+            <td><b>Offer Status:</b></td>
+            <td>{{bidData.offerStatus}}</td>                  
+          </tr>
+        </tbody>
+          <!-- not for seller -->
+          <tr ng-if="isFAgencyPartner() || isAdmin()">
+            <td><b>Seller Name:</b></td>
+            <td>{{bidData.product.seller.name}}</td>
+            <td><b>Seller Contact No.:</b></td>
+            <td>{{bidData.product.seller.mobile}}</td>                  
+          </tr>  
+          <!-- end not for seller -->
+          <tr>
+            <td><b>Bid Status:</b></td>
+            <td>{{bidData.bidStatus}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>            
+            <td><b>EMD Amount:</b></td>
+            <td>{{bidData.emdAmount}} </td> 
+            <td><b>Full Payment Amount:</b></td>
+            <td>{{bidData.fullPaymentAmount || 0}}</td>
+          </tr>
+          <tr>
+            <td><b>EMD Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr ng-repeat="payment in bidData.emdPayment.paymentsDetail">
+                  <td>{{payment.bankName}}</td>
+                  <td>{{payment.paymentMode}}</td>
+                  <td>{{payment.instrumentNo}}</td>
+                  <td>{{payment.amount}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr> 
+            <td><b>Full Payment Details:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Bank Name</th>
+                  <th>Mode of Payment</th>
+                  <th>Instrument No</th>
+                  <th>Amount</th>
+                </tr>
+                <tr ng-repeat="payment in bidData.fullPayment.paymentsDetail">
+                  <td>{{payment.bankName}}</td>
+                  <td>{{payment.paymentMode}}</td>
+                  <td>{{payment.instrumentNo}}</td>
+                  <td>{{payment.amount}}</td>
+                </tr>
+              </table>
+            </td>            
+          </tr>
+          <tr>
+            <td><b>Invoice in Favour of:</b></td>
+            <td colspan="3">
+              <table class="table">
+                <tr>
+                  <th>Name</th>
+                  <th>Country</th>
+                  <th>State</th>
+                  <th>Location</th>
+                  <th>Address</th>
+                  <th>Email</th>
+                  <th>Mobile No.</th>
+                </tr>
+                <tr>
+                  <td>{{bidData.invoiceDetail.fname}} {{bidData.invoiceDetail.lname}}</td>
+                  <td>{{bidData.invoiceDetail.country}}</td>
+                  <td>{{bidData.invoiceDetail.state}}</td>
+                  <td>{{bidData.invoiceDetail.city}}</td>
+                  <td>{{bidData.invoiceDetail.address}}</td>
+                  <td>{{bidData.invoiceDetail.email}}</td>
+                  <td>{{bidData.invoiceDetail.mobile}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td><b>KYC Document:</b></td>
+            <td>
+              <table class="table">
+                <tr>
+                  <th>Kyc Type</th>
+                  <th>Kyc Name</th>
+                  <th>Document Link</th>
+                </tr>
+                <tr ng-repeat="kyc in bidData.kyc">
+                  <td>{{kyc.type}}</td>
+                  <td>{{kyc.name}}</td>
+                  <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+                </tr>
+              </table>
+            </td>
+            <td><b>Delivery Order:</b></td>
+            <td><a href="{{uploadImagePrefix}}{{bidData.product.assetDir}}/{{bidData.deliveryOrder}}" target="_blank">{{bidData.deliveryOrder}}</a></td>
+          </tr>
+          <tr>
+            <td><b>Date of Delivery: </b></td>
+            <td>{{bidData.dateOfDelivery | date:'MM/dd/yyyy'}}</td>
+            <td><b>Deal Status:</b></td>
+            <td>{{bidData.dealStatus}} </td>
+          </tr>
+          <tr ng-if="isAdmin()">
+            <td><b>Trade Type: </b></td><!--only for admin  -->
+            <td>{{bidData.product.proData.tradeType}}</td>
+            <td><b>Asset Status:</b></td>
+            <td>{{bidData.product.proData.assetStatus}} </td>
+          </tr>
+          <tr>
+            <td><b>Feedback</b></td>
+            <td colspan="3">{{bidData.comment}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-danger" ng-click="bidReqDetailVm.closeDialog()">Close</button> 
+    </div>        
+</div>

@@ -24,7 +24,7 @@ exports.get = function(req, res) {
   }
 
   var query = Model.find(filter).populate({
-    path: 'category',
+    path: 'category.categoryId',
     match: filter
   });
   query.exec(function(err, result) {
@@ -41,7 +41,7 @@ exports.search = function(req, res) {
   var date=new Date();
 
   if (body.categoryId) {
-    filter.category = body.categoryId;
+    filter['category.categoryId'] = body.categoryId;
   }
   if (body.enterpriseId)
     filter.enterpriseId = body.enterpriseId;
@@ -62,16 +62,7 @@ exports.search = function(req, res) {
 };
 
 exports.create = function(req, res, next) {
-  var model = new Model(req.body);
-    model.save(function(err, st) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(200).json({
-        message: "Asset sale charge saved sucessfully"
-      });
-    });
-  /*_getRecord(req.body, function(err, result) {
+  _getRecord(req.body, function(err, result) {
     if (err) {
       return handleError(res, err);
     }
@@ -91,16 +82,21 @@ exports.create = function(req, res, next) {
         message: "Asset sale charge saved sucessfully"
       });
     });
-  }*/
+  }
 };
 
 function _getRecord(data, cb) {
   var filter = {};
-  filter.category = data.category;
-  filter.group = data.group;
-  //filter.brand = data.brand;
-  //filter.model = data.model;
-  filter.state = data.state;
+  if(data.userRole)
+    filter.userRole = data.userRole;
+  if(data.enterpriseId)
+    filter.enterpriseId = data.enterpriseId;
+  if(data.user && data.user.userId)
+    filter['user.userId'] = data.user.userId;
+  if(data.category && data.category.categoryId)
+    filter['category.categoryId'] = data.category.categoryId;
+  if(data.category && data.category.name == "All")
+    filter['category.name'] = "All";
   Model.find(filter, function(err, result) {
     cb(err, result);
   });
@@ -111,24 +107,14 @@ exports.update = function(req, res, next) {
     delete req.body._id;
   }
   req.body.updatedAt = new Date();
-  Model.update({
-      _id: req.params.id
-    }, {
-      $set: req.body
-    }, function(err) {
-      if (err) {
-        return handleError(res, err);
-      }
-      return res.status(200).json(req.body);
-    });
-  /*_getRecord(req.body, function(err, result) {
+  _getRecord(req.body, function(err, result) {
     if (err) {
       return handleError(res, err);
     }
     if (result.length === 0 || (result.length === 1 && result[0]._id.toString() === req.params.id))
       return update();
     else
-      return next(new ApiError(409, "Vat tax already exits!!!"));
+      return next(new ApiError(409, "Asset sale charge already exits!!!"));
   });
 
   function update() {
@@ -142,7 +128,7 @@ exports.update = function(req, res, next) {
       }
       return res.status(200).json(req.body);
     });
-  }*/
+  }
 };
 
 exports.destroy = function(req, res, next) {
