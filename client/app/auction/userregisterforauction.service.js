@@ -12,6 +12,7 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
     svc.getFilterOnRegisterUser = getFilterOnRegisterUser;
     //svc.update = update;
     //svc.destroy = destroy;
+    svc.checkUserRegis = checkUserRegis;
     
    function get(filter){
       var path = svcPath; 
@@ -38,6 +39,20 @@ angular.module('admin').factory("userRegForAuctionSvc", userRegForAuctionSvc);
           throw err;
         });
      }
+
+     function checkUserRegis(data){
+         // var path = '/api/auction/checkUserRegis';
+
+          return $http.post(svcPath + '/checkUserRegis',data)
+          .then(function(res){
+            return res.data;
+          })
+          .catch(function(err){
+            throw err;
+          });
+
+
+      }
 
      function validateUser(data) {
       return $http.post(svcPath + '/validateuser',data);
