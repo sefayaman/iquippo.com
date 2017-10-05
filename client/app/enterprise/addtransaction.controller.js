@@ -295,9 +295,9 @@ function AddTransactionCtrl($scope, $stateParams, $rootScope, Modal, Auth, $stat
         update(formFlag);
     }
 
-    function save() {
+    function save(formFlag) {
       
-      setData();
+      setData(formFlag);
       vm.enterpriseValuation.createdBy = {};
       vm.enterpriseValuation.createdBy._id = Auth.getCurrentUser()._id;
       vm.enterpriseValuation.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
