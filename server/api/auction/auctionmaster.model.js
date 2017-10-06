@@ -27,7 +27,7 @@ var AuctionMasterSchema = new Schema({
 	emdTax:String,
 	factorCreditlimit:Number,
 	taxApplicability:String,
-	bidIncrementType:String,
+	static_increment:String,
 	bidIncrement:Object,
 	lastMinuteBid:Number,
 	extendedTo:Number,

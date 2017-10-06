@@ -1133,25 +1133,33 @@
             Bid Increment
           </div>
           <div class="col-sm-7 form-group">
-            <div class="row">
+            <!--<div class="row">
               <div class="col-sm-3">
                 <input type="radio" name="increment" ng-model="bidinfo.increment" value="Static"> Static
               </div>
               <div class="col-sm-4">
                 <input type="radio" name="increment" ng-model="bidinfo.increment" value="Range"> Bid Range
               </div>
-            </div>
+            </div>-->
+            <div class="row">
+								<div class="col-xs-6 ">
+									<input type="checkbox" name="staticIncrement" ng-model="lot.staticIncrement" ng-change ="checkBidIncrement(lot.staticIncrement,'static')" value="Static"> Static
+								</div>
+								<div class="col-xs-6">
+									<input type="checkbox" name="rangeIncrement" ng-model="lot.rangeIncrement" ng-change ="checkBidIncrement(lot.rangeIncrement,'bid')" value="Range"> Bid Range
+								</div>
+							</div>
           </div>
         </div>
-        <div class="row" ng-if="bidinfo.increment == 'Static'">
+        <div class="row" ng-if="lot.staticIncrement == true">
             <div class="col-sm-5 form-group">
               Bid Static Increment
             </div>
             <div class="col-sm-7 form-group">                   
-              <input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Bid Increment">
+              <input type="text" class="form-control" ng-model="lot.static_increment" name="" value="" placeholder="Bid Increment">
             </div>
           </div>
-        <div class="row" ng-if="bidinfo.increment == 'Range'">
+        <div class="row" ng-if="lot.rangeIncrement == true">
           <div class="col-sm-5 form-group">
             Bid Range Increment
           </div>

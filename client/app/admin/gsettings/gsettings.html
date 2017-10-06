@@ -478,24 +478,24 @@
 								<div class="col-sm-3 form-group">									
 									<div class="row">
 										<div class="col-xs-6 ">
-											<input type="radio" name="increment" ng-model="gsettingVm.auctionData.increment" value="Static"> Static
+											<input type="checkbox" name="staticIncrement" ng-model="gsettingVm.auctionData.staticIncrement" ng-change ="gsettingVm.checkBidIncrementAuction(gsettingVm.auctionData.staticIncrement,'static')" value="Static"> Static
 										</div>
 										<div class="col-xs-6">
-											<input type="radio" name="increment" ng-model="gsettingVm.auctionData.increment" value="Range"> Bid Range
+											<input type="checkbox" name="rangeIncrement" ng-model="gsettingVm.auctionData.rangeIncrement" ng-change ="gsettingVm.checkBidIncrementAuction(gsettingVm.auctionData.rangeIncrement,'bid')" value="Range"> Bid Range
 										</div>
 									</div>
 								</div>								
 							</div>
-							<div ng-if="gsettingVm.auctionData.increment == 'Static'">
+							<div ng-if="gsettingVm.auctionData.staticIncrement == true">
 								<legend></legend>
 								<h5>Bid Static Increment</h5>
 								<div class="row">
 									<div class="col-sm-3 form-group">										
-										<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Bid Increment">
+										<input type="text" class="form-control" ng-model="gsettingVm.auctionData.static_increment" name="" value="" placeholder="Static Increment">
 									</div>
 								</div>
 							</div>
-							<div ng-if="gsettingVm.auctionData.increment == 'Range'">
+							<div ng-if="gsettingVm.auctionData.rangeIncrement == true">
 								<legend></legend>
 								<h5>Bid Range Increment</h5>
 								<div class="row" ng-repeat="bidinfo in gsettingVm.auctionData.bidInfo">
@@ -776,27 +776,35 @@
 					</div>
 					<div class="panel-body">
 						<div class="row">
-							<div class="col-sm-3 form-group">									
+							<div class="col-sm-3 form-group">	
 								<div class="row">
+								<div class="col-xs-6 ">
+									<input type="checkbox" name="staticIncrement" ng-model="gsettingVm.auctionProduct.staticIncrement" ng-change ="gsettingVm.checkBidIncrement(gsettingVm.auctionProduct.staticIncrement,'static')" ng-value="Static"> Static
+								</div>
+								<div class="col-xs-6">
+									<input type="checkbox" name="rangeIncrement" ng-model="gsettingVm.auctionProduct.rangeIncrement" ng-change ="gsettingVm.checkBidIncrement(gsettingVm.auctionProduct.rangeIncrement,'bid')" ng-value="Range"> Bid Range
+								</div>
+						</div>								
+								<!--<div class="row">
 									<div class="col-xs-6 ">
-										<input type="radio" name="increment" ng-model="gsettingVm.auctionData.increment" value="Static"> Static
+										<input type="checkbox" name="increment" ng-model="gsettingVm.auctionData.increment" value="Static"> Static
 									</div>
 									<div class="col-xs-6">
-										<input type="radio" name="increment" ng-model="gsettingVm.auctionData.increment" value="Range"> Bid Range
+										<input type="checkbox" name="increment" ng-model="gsettingVm.auctionData.increment" value="Range"> Bid Range
 									</div>
-								</div>
+								</div>-->
 							</div>								
 						</div>
-						<div ng-if="gsettingVm.auctionData.increment == 'Static'">
+						<div ng-if="gsettingVm.auctionProduct.staticIncrement == true">
 							<legend></legend>
 							<h5>Bid Static Increment</h5>
 							<div class="row">
 								<div class="col-sm-3 form-group">										
-									<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Bid Increment">
+									<input type="text" class="form-control" ng-model="gsettingVm.auctionProduct.static_increment" name="" value="" placeholder="Bid Increment">
 								</div>
 							</div>
 						</div>
-						<div ng-if="gsettingVm.auctionData.increment == 'Range'">
+						<div ng-if="gsettingVm.auctionProduct.rangeIncrement == true">
 							<legend></legend>
 							<h5>Bid Range Increment</h5>
 							<div class="row" ng-repeat="bidinfo in gsettingVm.auctionProduct.bidInfo">
@@ -2706,24 +2714,24 @@
 						<div class="col-sm-3 form-group">									
 							<div class="row">
 								<div class="col-xs-6 ">
-									<input type="radio" name="increment" ng-model="gsettingVm.auctionData.increment" value="Static"> Static
+									<input type="checkbox" name="staticIncrement" ng-model="lotVm.dataModel.staticIncrement" ng-change ="checkBidIncrement(lotVm.dataModel.staticIncrement,'static')" value="Static"> Static
 								</div>
 								<div class="col-xs-6">
-									<input type="radio" name="increment" ng-model="gsettingVm.auctionData.increment" value="Range"> Bid Range
+									<input type="checkbox" name="rangeIncrement" ng-model="lotVm.dataModel.rangeIncrement" ng-change ="checkBidIncrement(lotVm.dataModel.rangeIncrement,'bid')" value="Range"> Bid Range
 								</div>
 							</div>
 						</div>								
 					</div>
-					<div ng-if="gsettingVm.auctionData.increment == 'Static'">
+					<div ng-if="lotVm.dataModel.staticIncrement == true">
 						<legend></legend>
 						<h5>Bid Static Increment</h5>
 						<div class="row">
 							<div class="col-sm-3 form-group">										
-								<input type="text" class="form-control" ng-model="bidinfo.bidIncrement" name="" value="" placeholder="Bid Increment">
+								<input type="text" class="form-control" ng-model="lotVm.dataModel.static_increment" name="" value="" placeholder="Bid Increment">
 							</div>
 						</div>
 					</div>
-					<div ng-if="gsettingVm.auctionData.increment == 'Range'">
+					<div ng-if="lotVm.dataModel.rangeIncrement == true">
 						<legend></legend>
 						<h5>Bid Range Increment</h5>
 						<div class="row" ng-repeat="bidinfo in lotVm.dataModel.bidInfo">
