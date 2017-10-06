@@ -31,7 +31,7 @@ var saveAs = saveAs
 			return view.URL || view.webkitURL || view;
 		}
 		, URL = view.URL || view.webkitURL || view
-		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, save_link = doc.createElementNS("https://www.w3.org/1999/xhtml", "a")
 		, can_use_save_link = !view.externalHost && "download" in save_link
 		, click = function(node) {
 			var event = doc.createEvent("MouseEvents");
@@ -150,7 +150,7 @@ var saveAs = saveAs
 				// this means `doc` and `save_link` are unusable and need to be recreated
 				// `view` is usable though:
 				doc = view.document;
-				save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a");
+				save_link = doc.createElementNS("https://www.w3.org/1999/xhtml", "a");
 				save_link.href = object_url;
 				save_link.download = name;
 				var event = doc.createEvent("MouseEvents");
