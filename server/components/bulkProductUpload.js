@@ -9,12 +9,6 @@ var gm = require('gm').subClass({
 });
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
-var mongoose = require('mongoose');
-mongoose.createConnection(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-  console.error('MongoDB connection error: ' + err);
-  process.exit(-1);
-});
 var IncomingProduct = require('./incomingproduct.model');
 var Product = require('./../api/product/product.model');
 var Model = require('./../api/model/model.model');
