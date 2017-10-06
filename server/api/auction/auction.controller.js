@@ -623,8 +623,6 @@ exports.update = function(req, res) {
     if (err) {
       return handleError(res, err);
     }
-    console.log("auctions Result",auctions[0]._id);
-    console.log("id in params",req.params.id);
     /*if (auctions.length == 0) {
       return res.status(404).send("Not Found.");
     }*/

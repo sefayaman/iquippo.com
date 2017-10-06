@@ -1627,7 +1627,7 @@
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
               $scope.lotsaved.assetDir = $scope.product.assetDir;
               $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-              $scope.lotsaved.userId = product.seller._id;
+              $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
               $scope.lotsaved.startDate=$scope.lot.startDate;
               $scope.lotsaved.endDate=$scope.lot.endDate;
@@ -1651,7 +1651,7 @@
                     $scope.lotsaved.auctionId = result.items[0].auctionId;
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                     $scope.lotsaved.assetDir= $scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.isAdmin()._id;
+                    $scope.lotsaved.userId = Auth.isAdmin().customerId;
                     $scope.lotsaved.primaryImg = $scope.product.primaryImg;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
@@ -1832,7 +1832,7 @@
                 $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
                 $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = product.seller._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
@@ -1858,7 +1858,7 @@
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                     $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                     $scope.lotsaved.assetDir=$scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.getCurrentUser()._id;
+                    $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate= $scope.lot.endDate;
@@ -1902,7 +1902,7 @@
                 $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
                 $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = product.seller._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
@@ -1928,7 +1928,7 @@
                 $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                 $scope.lotsaved.primaryImg=$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = Auth.getCurrentUser()._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
