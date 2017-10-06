@@ -125,7 +125,7 @@
             <td>
               <span ng-if="!enterpriseValuation.onHold && !enterpriseValuation.cancelled">{{enterpriseValuation.status}}</span>
               <span ng-if="enterpriseValuation.onHold && !enterpriseValuation.cancelled">Hold - {{enterpriseValuation.onHoldMsg}}</span>
-              <span ng-if="enterpriseValuation.cancelled">Cancelled</span>
+              <span ng-if="enterpriseValuation.cancelled">Request Cancelled</span>
             </td>
             <td>{{enterpriseValuation.remarks}}</td>
             <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>
@@ -135,7 +135,7 @@
                 <a ng-if="!enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank" uib-popover="Download" popover-trigger="mouseenter"><i class="fa fa-download"></i> </a>
                 <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank" uib-popover="Download" popover-trigger="mouseenter"><i class="fa fa-download"></i> </a>
                 <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && isAdmin()" uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash"></i> </a>
-                <a class="btn btn-info btn-md" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) <= 6" href="javascript:void(0);" ng-click="enterpriseTransactionVm.cancelEnterprise(enterpriseValuation)" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
+                <a class="btn btn-info btn-md" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) <= 6 && !isValuationPartner()" href="javascript:void(0);" ng-click="enterpriseTransactionVm.cancelEnterprise(enterpriseValuation)" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
                 <a class="btn btn-success btn-md" href="javascript:void(0);" uib-popover="Re-Submit" popover-trigger="mouseenter" ng-if= "enterpriseValuation.onHold" ng-click="enterpriseTransactionVm.openCommentModal(enterpriseValuation)"><i class="fa fa-send"></i> </a>
                 </span>
 

@@ -285,8 +285,6 @@
   }
 
   function changeBidStatus(bid,action,cb){
-    if(bid.mailSend === 'No')
-      delete bid.mailSend;
     switch(action){
       case 'approve':
         setStatus(bid,bidStatuses[7],'bidStatus','bidStatuses');

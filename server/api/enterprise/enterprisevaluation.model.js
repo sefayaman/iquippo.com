@@ -103,6 +103,8 @@ EnterpriseValuationSchema.pre('save',function(next){
   var cprefix = 'EV';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
+    if(self.uniqueControlNo)
+      return next();  
     var date = new Date();
     var dateStr = date.getDate()+ "" + (date.getMonth() + 1)+ "" + date.getFullYear();
     self.uniqueControlNo = cprefix + dateStr + seqnum;

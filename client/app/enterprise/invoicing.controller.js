@@ -303,7 +303,8 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           updateValuationRequest();
         })
         .catch(function(err){
-          Modal.alert("There is some issue in invoice generation.Please refresh your page and try again.")
+          if(err.data)
+            Modal.alert(err.data);
         })
       }
 
@@ -316,7 +317,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
             fireCommand(true);
             if($scope.close)
               $scope.close();
-          })
+          });
       }
 
       function calculateInvoice(){
