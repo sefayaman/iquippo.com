@@ -56,7 +56,7 @@ var fieldMap = {
 	'contact_person':'contactPerson',
 	'contact_no':'contactPersonTelNo',
 	'distance_from_office': 'disFromCustomerOffice',
-	'customerSeekingFinance':'customerSeekingFinance',
+	'customerSeekingFinance':'nameOfCustomerSeeking',
 	'invoiceDate':'customerInvoiceDate',
 	'invoiceValue':'customerInvoiceValue',
 	'iquippo_j_status': 'jobStatus',
