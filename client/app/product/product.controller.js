@@ -1053,9 +1053,6 @@
            $scope.lot.cerification = result[0].certification;
            $scope.lot.paymentstatus = result[0].paymentstatus;
            $scope.lot.static_increment = result[0].static_increment;
-
-           //console.log("sxsassasxs",$scope.lot.cerification);
-
          });
        }
       filter = {};
@@ -1686,7 +1683,7 @@
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
               $scope.lotsaved.assetDir = $scope.product.assetDir;
-              $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+              $scope.lotsaved.primaryImg= $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
               $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
               $scope.lotsaved.startDate=$scope.lot.startDate;
@@ -1713,7 +1710,8 @@
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                     $scope.lotsaved.assetDir= $scope.product.assetDir;
                     $scope.lotsaved.userId = Auth.isAdmin().customerId;
-                    $scope.lotsaved.primaryImg = $scope.product.primaryImg;
+                    //$scope.lotsaved.primaryImg = $scope.product.primaryImg;
+                    $scope.lotsaved.primaryImg= $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate = $scope.lot.endDate;
@@ -1888,7 +1886,8 @@
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0].auctionId;
                 $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
-                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+               // $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg= $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
                 $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
@@ -1915,7 +1914,8 @@
                     $scope.lotsaved.assetDesc = $scope.product.name;
                     $scope.lotsaved.auctionId = result.items[0].auctionId;
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-                    $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                    //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                    $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                     $scope.lotsaved.assetDir=$scope.product.assetDir;
                     $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
@@ -1960,7 +1960,8 @@
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0].auctionId;
                 $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
-                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
                 $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
@@ -1987,7 +1988,8 @@
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0].auctionId;
                 $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
                 $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;

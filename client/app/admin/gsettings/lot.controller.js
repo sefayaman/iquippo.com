@@ -222,7 +222,7 @@
 
 
           function getLotData(){
-
+            
               LotSvc.getData()
               .then(function(result){
 
