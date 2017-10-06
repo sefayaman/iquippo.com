@@ -1171,6 +1171,8 @@ exports.changePassword = function(req, res, next) {
     if (user.authenticate(oldPass)) {
       user.password = newPass;
       user.updatedAt = new Date();
+      user.passwordUpdatedAt = new Date(); //J.K for Password update N number of Days.
+      user.isRegisterNewUser = 'no'; // J.K for new register users flag update.
       user.save(function(err) {
         if (err) return validationError(res, err);
         res.status(200).send('OK');
@@ -1187,6 +1189,8 @@ exports.resetPassword = function(req, res) {
   User.findById(userId, function(err, user) {
     user.password = newPass;
     user.updatedAt = new Date();
+    user.passwordUpdatedAt = new Date(); //J.K for Password update N number of Days.
+    user.isRegisterNewUser = 'no'; // J.K for new register users flag update.
     user.save(function(err) {
       if (err) return validationError(res, err);
       res.status(200).send('OK');

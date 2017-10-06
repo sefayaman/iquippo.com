@@ -82,7 +82,9 @@ var UserSchema = new Schema({
   },
   FAPartnerId:String,
   createdAt: Date,
-  updatedAt: Date, 
+  updatedAt: Date,
+  passwordUpdatedAt: { type:Date, default: Date.now()}, //J.K for Password update N number of Days.
+  isRegisterNewUser:{type: String, default: 'yes'}, //J.K for new register users flag set.
   salt: String,
   google: {},
   facebook: {},

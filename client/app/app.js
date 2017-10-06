@@ -236,6 +236,7 @@ angular.module('sreizaoApp',[
      /*Loading cart and other data if user is logged in*/
    Auth.isLoggedInAsync(function(loggedIn){
      if(loggedIn){
+
          if(Auth.getCurrentUser()._id){
            CartSvc.loadCart();
         }
@@ -262,7 +263,17 @@ angular.module('sreizaoApp',[
             $cookieStore.remove('refUserId'); 
             $cookieStore.remove('promoCode');
           });
-        } 
+        }
+        /*J.K Check password expire Start*/ 
+            var noOfDays = 1;
+            var pwdUpdateDate = Auth.getCurrentUser().passwordUpdatedAt;
+            var isRegisterNewUserFlag = Auth.getCurrentUser().isRegisterNewUser;
+            var currentDateForPwdUpdate = moment(Date.now());
+            var pwdUpdatedDays = currentDateForPwdUpdate.diff(pwdUpdateDate, 'days');
+            if(pwdUpdatedDays >= noOfDays || isRegisterNewUserFlag === 'yes'){
+              Modal.openDialog('settings');
+            }
+        /*J.K Check password expire End*/ 
      }
    });
 

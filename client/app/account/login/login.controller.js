@@ -3,7 +3,7 @@
 
 angular.module('account').controller('LoginCtrl', LoginCtrl);
 
-  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope,$uibModal,$uibModalInstance, $state,MarketingSvc) {
+  function LoginCtrl($scope, Auth, $location, CartSvc,$window,$rootScope,Modal,$uibModal,$uibModalInstance, $state,MarketingSvc) {
     var vm = this;
     var facebookConversionSent = false;
     vm.user = {};
@@ -44,6 +44,7 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
                   $window.sessionStorage.currentUser = Auth.getCurrentUser()._id;
                   dataLayer.push({'userID': $window.sessionStorage.currentUser});
                  CartSvc.loadCart();
+                  
               }
               if(Auth.isAdmin()){
                 if(!Auth.doNotRedirect)
@@ -52,7 +53,18 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
               if(Auth.postLoginCallback)
                   Auth.postLoginCallback();
               if($state.current.name === "valuation")
-                $rootScope.$broadcast('callValuationRequest');
+                  $rootScope.$broadcast('callValuationRequest');
+                
+                  /*J.K Check password expire Start*/ 
+                    var noOfDays = 1;
+                    var pwdUpdateDate = Auth.getCurrentUser().passwordUpdatedAt;
+                    var isRegisterNewUserFlag = Auth.getCurrentUser().isRegisterNewUser;
+                    var currentDateForPwdUpdate = moment(Date.now());
+                    var pwdUpdatedDays = currentDateForPwdUpdate.diff(pwdUpdateDate, 'days');
+                    if(pwdUpdatedDays >= noOfDays || isRegisterNewUserFlag === 'yes'){
+                      Modal.openDialog('settings');
+                    }
+                 /*J.K Check password expire End*/ 
            }
          });
 
