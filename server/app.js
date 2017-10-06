@@ -10,7 +10,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 
 var express = require('express');
-var mongoose = require('mongoose');
 var config = require('./config/environment');
 var path = require('path');
 var fs = require('fs');
@@ -29,18 +28,11 @@ var gm = require('gm');
 var lwip = require('lwip');
 var task = require('./components/task.js');
 var valReqSubmitter = require('./components/evaluationrequestsubmitter.js');
-//var taskRunner = require('./components/taskRunner.js');
+var taskRunner = require('./components/taskRunner.js');
 var assetSaleTracker = require('./components/assetsaletracker.js');
 var BulkProductUpload = require('./components/bulkProductUpload.js');
 var utility = require('./components/utility.js');
 var path = require('path');
-
-// Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-  console.error('MongoDB connection error: ' + err);
-  process.exit(-1);
-});
 
 // Setup server
 var app = express();
