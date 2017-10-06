@@ -15,32 +15,55 @@ var notificationSchema = new Schema({
   subject: String,
   content: String,
   countryCode: String,
-  counter: String,
+  counter: Number,
   document: String,
+  isSent: Boolean,
   createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
     type: Date,
     default: Date.now
   }
 });
 
-var notificationBackup = new Schema({
-  notificationType: String,
-  from: String,
-  to: String,
-  cc: String,
-  subject: String,
-  content: String,
-  countryCode: String,
-  counter: String,
-  document: String,
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+// on every save, add the date
+notificationSchema.pre('save', function(next) {
+  // get the current date
+  var currentDate = new Date();
+
+  // change the updated_at field to current date
+  this.updatedAt = currentDate;
+
+  // if created_at doesn't exist, add to that field
+  if (!this.createdAt)
+    this.createdAt = currentDate;
+
+  next();
+});
+
+notificationSchema.index({
+  notificationType: 1,
+  from: 1,
+  to: 1,
+  cc: 1,
+  subject: 1,
+  isSent: 1
+}, {
+  unique: true,
+  name: "unique_email"
 });
 
 var notification = mongoose.model('Notification', notificationSchema, 'notification');
-var backup = mongoose.model('Backup', notificationBackup, 'backup');
+
+notification.on('index', function(err) {
+    if (err) {
+        console.error('User index error: %s', err);
+    } else {
+        console.info('User indexing complete');
+    }
+});
 
 exports.create = function(req, res) {
   var data = req.body;
@@ -48,7 +71,7 @@ exports.create = function(req, res) {
     delete data.countryCode;
   }
   data['counter'] = 0;
-  data['createdAt'] = new Date();
+  data.isSent = false;
   notification.create(req.body, function(err, data) {
     if (err) {
       return handleError(res, err);
@@ -98,7 +121,6 @@ exports.emailer = function(req, res) {
   data.notificationType = "email";
   if (mailData.document)
     data.document = mailData.document;
-  data.createdAt = new Date();
   req.counter = 0;
   req.users = mailData.allToEmails;
   createEmail(req, res, data);
@@ -107,6 +129,7 @@ exports.emailer = function(req, res) {
 function createEmail(req, res, data) {
   if (req.counter < req.users.length) {
     data.to = req.users[req.counter];
+    data.isSent = false;
     notification.create(data, function(err, dt) {
       if (err) {
         return handleError(res, err);
@@ -125,7 +148,7 @@ function createEmail(req, res, data) {
 
 exports.pushNotification = function(data, cb) {
   data['counter'] = 0;
-  data['createdAt'] = new Date();
+  data.isSent = false;
   notification.create(data, function(err, data) {
     if (err) {
       if (cb)
@@ -151,7 +174,8 @@ function getNotifications() {
     },
     createdAt: {
       $lt: new Date()
-    }
+    },
+    isSent: false
   }).limit(1).exec(function(err, data) {
     if (err) {
       return console.log(err);
@@ -190,20 +214,16 @@ function sendNotification(data) {
 
 function updateNotification(result, data) {
   if (result) {
-    backup.create(data[0], function(backupErr, backupResp) {
-      if(backupErr){
-        console.log('Error while creating a backup but will continue');
+    notification.findOneAndUpdate({
+      _id: data[0]._id
+    }, {
+      isSent: true
+    }, function(err) {
+      if (err) {
+        console.log("Error with updating notification");
       }
-      console.log('Backup Created');
-      notification.remove({
-        _id: data[0]._id
-      }, function(err) {
-        if (err) {
-          console.log("Error with removing notification");
-        }
-        data.shift();
-        sendNotification(data);
-      });
+      data.shift();
+      sendNotification(data);
     });
   } else {
     notification.findOneAndUpdate({
