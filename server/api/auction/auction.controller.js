@@ -1050,11 +1050,16 @@ exports.updateAuctionMasterproduct = function(req, res) {
   // Remove field from Auction Master
   exports.removeAuctionMasterproduct = function(req, res) {
       var _id = req.body._id;
+      var field = {};
       if(req.body.flag==1){
-        AuctionMaster.update({
+        field = {"static_increment":1};
+      }if(req.body.flag==2){
+        field = {"bidIncrement":1};
+      }
+      AuctionMaster.update({
             _id: _id
           }, {
-          $unset: {"static_increment":1}
+          $unset: field //{"static_increment":1}
           }, function(err) {
                 if (err) {
                   return handleError(res, err);
@@ -1065,29 +1070,10 @@ exports.updateAuctionMasterproduct = function(req, res) {
                 });
             
           });
-      }
-      if(req.body.flag==2){
-        AuctionMaster.update({
-            _id: _id
-          }, {
-          $unset: {"bidIncrement":1}
-          }, function(err) {
-                if (err) {
-                  return handleError(res, err);
-                }
-                res.status(200).json({
-                  errorCode: 0,
-                  message: "Auction Data Successfully deleted."
-                });
-            
-          });
-      }
   }
 // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
   var _id = req.body._id;
-
-  //console.log("_id",_id);
   if (req.body._id) {
     delete req.body._id;
   }

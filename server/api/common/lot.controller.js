@@ -7,7 +7,6 @@ var aysnc= require('async');
 var ApiError = require('../../components/_error');
 var Util=require('../../components/utility');
 exports.create = function(req, res, next) {
-  //console.log("req.body", req.body);
   aysnc.series({ 
     fetchAuction: function(callback) {
       if (req.body && req.body.auctionId) {
@@ -39,7 +38,6 @@ exports.create = function(req, res, next) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    //console.log("results proceed",results.saveLot);
     Util.sendLotData(req,res);
     return res.status(200).json(results.saveLot);
   });
@@ -102,7 +100,6 @@ else if(req.query){
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    //console.log("ressults",result);
     return res.json(result);
   });
 };
@@ -128,47 +125,22 @@ exports.destroy = function(req, res, next) {
 
 };
 exports.removeLotData = function(req, res) {
-
   //req.body.updatedAt = new Date();
-  
-  delete req.body._id;
+  var field = {};
   if(req.body.flag==1){
-      Lot.update({
+    field = {"static_increment":1};
+  }if(req.body.flag==2){
+    field = {"bidIncrement":1};
+  }
+   Lot.update({
         _id: req.params.id
       }, {
-        $unset: {"static_increment":1}
+        $unset: field // {"static_increment":1}
       }, function(err) {
         if (err) {
           res.status(err.status || 500).send(err);
         }
-        Util.sendLotData(req,res);
+        //Util.sendLotData(req,res);
         return res.status(200).json(req.body);
       });
-  }
-  if(req.body.flag==2){
-    Lot.update({
-    _id: req.params.id
-  }, {
-    $unset: {"bidIncrement":1}
-  }, function(err) {
-    if (err) {
-      res.status(err.status || 500).send(err);
-    }
-    Util.sendLotData(req,res);
-    return res.status(200).json(req.body);
-  });
-  }
-  
-  /*Lot.update({
-    _id: req.params.id
-  }, {
-    $unset: field
-  }, function(err) {
-    if (err) {
-      res.status(err.status || 500).send(err);
-    }
-    Util.sendLotData(req,res);
-    return res.status(200).json(req.body);
-  });*/
-
 };
