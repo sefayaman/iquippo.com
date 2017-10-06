@@ -81,7 +81,6 @@ function BuyerProductBidRequestCtrl($scope, $state,$stateParams, Auth, Modal, Pa
 		];*/
 	
 	function update(bid,action){
-
 		AssetSaleSvc.setStatus(bid,dealStatuses[11],'dealStatus','dealStatuses');
 		AssetSaleSvc.setStatus(bid,dealStatuses[12],'dealStatus','dealStatuses');
 		AssetSaleSvc.update(bid,action)
