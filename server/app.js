@@ -351,7 +351,7 @@ app.post('/api/quippovaluaion', function(req, res) {
 });
 
 app.post('/api/currency', function(req, response) {
-  var url = "http://api.fixer.io/latest?base=RUB";
+  var url = "https://api.fixer.io/latest?base=RUB";
   http.get(url, function(res) {
     var str = "";
     res.on('data', function(chunk) {
