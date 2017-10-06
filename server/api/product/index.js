@@ -30,8 +30,8 @@ router.post('/updateinquiry', controller.updateInquiryCounter);
 router.post('/categorywisecount', controller.categoryWiseCount);
 router.post('/incomingproducts', controller.incomingProduct);
 router.post('/deleteincomingproduct', controller.deleteIncomingProduct);
-router.post('/incomingproduct', controller.getIncomingProduct);
-router.post('/unlockincomingproduct', controller.unIncomingProduct);
+//router.post('/incomingproduct', controller.getIncomingProduct);
+//router.post('/unlockincomingproduct', controller.unIncomingProduct);
 router.post('/statuswisecount', controller.statusWiseCount);
 router.post('/createauction', controller.createOrUpdateAuction);
 
