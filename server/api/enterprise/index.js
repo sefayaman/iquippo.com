@@ -19,7 +19,7 @@ router.post('/submitrequest',auth.isAuthenticated(),controller.submitRequest);
 router.put('/:id',auth.isAuthenticated(),controller.validateUpdate,controller.update);
 router.post('/upload/excel',auth.isAuthenticated(),controller.bulkUpload);
 router.put('/upload/excel',auth.isAuthenticated(),controller.bulkModify);
-//router.post('/bulkUpdate',auth.isAuthenticated(),controller.bulkUpdate);
+router.post('/bulkUpdate',auth.isAuthenticated(),controller.bulkUpdate);
 router.post('/createinvoice',auth.hasRole('admin'),controller.createInvoice);
 router.post('/updateinvoice',auth.hasRole('admin'),controller.updateInvoice);
 router.get('/generateinvoice/:invoiceNo',auth.hasRole('admin'),controller.generateInvoice);
