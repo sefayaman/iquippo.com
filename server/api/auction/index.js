@@ -22,6 +22,7 @@ router.get('/auctionmaster/auctiondetail', controller.auctiondetail);
 router.post('/auctionmaster/save', controller.createAuctionMaster);
 router.put('/auctionmaster/:id', controller.updateAuctionMaster);
 router.put('/auctionmasterproduct/:id', controller.updateAuctionMasterproduct);
+router.put('/removeauctionmasterproduct/:id', controller.removeAuctionMasterproduct);
 router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
@@ -34,6 +35,7 @@ router.post('/sendusertoas/asset',controller.sendUserToAs);
 
 //router.get('/userregforauction', userRegForAuction.get);
 router.post('/userregforauction', userRegForAuction.create);
+router.post('/userregforauction/checkUserRegis',userRegForAuction.checkUserRegis);
 router.post('/userregforauction/filterregisteruser', userRegForAuction.getFilterOnRegisterUser);
 //router.put('/userregforauction/:id', userRegForAuction.update);
 //router.delete('/userregforauction/:id', userRegForAuction.destroy);

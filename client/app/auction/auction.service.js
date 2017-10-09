@@ -1,38 +1,38 @@
-(function() {
-  'use strict';
+(function(){
+'use strict';
 
-  angular.module('sreizaoApp').factory("AuctionSvc", AuctionSvc);
+angular.module('sreizaoApp').factory("AuctionSvc",AuctionSvc);
+function AuctionSvc($http,$q,notificationSvc,Auth){
+  var auctionId="";
+  var svc = {};
+  //svc.auctionData = null;
+  var path = "/api/auction";
 
-  function AuctionSvc($http, $q, notificationSvc, Auth,$httpParamSerializer) {
-    var auctionId = "";
-    var svc = {};
-    //svc.auctionData = null;
-    var path = "/api/auction";
+  svc.getAll = getAll;
+  svc.save = save;
+  svc.update = update;
+  svc.delAuction = delAuction;
+  svc.getOnFilter = getOnFilter;
+  svc.export = exportAuction;
+  svc.sendNotification = sendNotification;
+  svc.updateStatus = updateStatus;
+  svc.getTotalItemsCount=getTotalItemsCount;
+  svc.getAuctionData=getAuctionData;
+  svc.getLatLong=getLatLong;
+  svc.getTotalAuctionItemsCount=getTotalAuctionItemsCount;
+  svc.getAuctionItemData=getAuctionItemData;
+  svc.liveAuctionRoomData = liveAuctionRoomData;
+  svc.getAuctionDateData=getAuctionDateData;  
+  svc.getAuctionWiseProductData = getAuctionWiseProductData;
+  svc.getOnId = getOnId;
+  svc.getAuctionExpire = getAuctionExpire;
+  svc.checkForAsset=checkForAsset; 
+  svc.getAuctionInfoForProduct = getAuctionInfoForProduct;
+  svc.sendUserToAs=sendUserToAs;
 
-    svc.getAll = getAll;
-    svc.save = save;
-    svc.update = update;
-    svc.delAuction = delAuction;
-    svc.getOnFilter = getOnFilter;
-    svc.export = exportAuction;
-    svc.sendNotification = sendNotification;
-    svc.updateStatus = updateStatus;
-    svc.getTotalItemsCount = getTotalItemsCount;
-    svc.getAuctionData = getAuctionData;
-    svc.getLatLong = getLatLong;
-    svc.getTotalAuctionItemsCount = getTotalAuctionItemsCount;
-    svc.getAuctionItemData = getAuctionItemData;
-    svc.liveAuctionRoomData = liveAuctionRoomData;
-    svc.getAuctionDateData = getAuctionDateData;
-    svc.getAuctionWiseProductData = getAuctionWiseProductData;
-    svc.getOnId = getOnId;
-    svc.getAuctionExpire = getAuctionExpire;
-    svc.checkForAsset=checkForAsset;
-    svc.sendUserToAs=sendUserToAs;
-
-    function getAll() {
-      return $http.get(path)
-        .then(function(res) {
+  function getAll(){
+        return $http.get(path)
+        .then(function(res){
           return res.data
         })
         .catch(function(err) {
@@ -252,20 +252,16 @@ throw err;
         });
     }
 
-
-   function getAuctionInfoForProduct(filter) {
-      return $http.post(path + "/getauctiondata", filter)
-        .then(function(res) {
-          return res.data
-        })
-        .catch(function(err){
-          throw err;
-        })
-      }
-
     function getAuctionExpire(data) {
       //console.log("the filter",filter);
       return $http.get(path + "/auctionmaster/auctiondetail?auctionId=" + data._id + '&auctiontype=' + data.auctionType)
+        .then(function(res) {
+          return res.data;
+        });
+      }
+
+   function getAuctionInfoForProduct(filter) {
+      return $http.post(path + "/getauctiondata", filter)
         .then(function(res) {
           return res.data;
         })
@@ -273,7 +269,6 @@ throw err;
           throw err
         })
     }
-
 
     function getAuctionWiseProductData(filter) {
       return $http.post(path + "/auctionmaster/getauctionwiseproductdata", filter)

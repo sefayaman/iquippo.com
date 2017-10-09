@@ -15,6 +15,7 @@ var LotSchema = new Schema({
   startDate:Date,
   endDate:Date, 
   bidIncrement:Object,
+  static_increment:String,
   lastMintBid:String,
   extendedTo:String,
   createdBy:{},

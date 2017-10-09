@@ -72,7 +72,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         var CountryStateInfo = {};
         for(var i=0;i < locationCache.length; i++){
           if(locationCache[i].name == city){
-            console.log(locationCache[i]);
+            //console.log(locationCache[i]);
             CountryStateInfo.state = locationCache[i].state.name;
             CountryStateInfo.country = locationCache[i].state.country;
             break;
@@ -492,6 +492,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
     svc.updateAuctionMaster = updateAuctionMaster;
     svc.getFilterOnAuctionMaster = getFilterOnAuctionMaster;
     svc.updateAuctionMasterProduct =updateAuctionMasterProduct;
+    svc.removeAuctionMasterProduct = removeAuctionMasterProduct;
     var auctionMasterCache = [];
     
     function get(filter){
@@ -519,7 +520,7 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
         }) 
     }
     
-    function saveAuctionMaster(data){console.log("data======",data);
+    function saveAuctionMaster(data){
       return $http.post(path + "/save", data)
         .then(function(res){
           return res.data;
@@ -541,6 +542,16 @@ angular.module('admin').factory("LocationSvc",LocationSvc);
 
     function updateAuctionMasterProduct(data){
       var path = "/api/auction/auctionmasterproduct"
+      return $http.put(path + "/" + data._id, data)
+       .then(function(res){
+         return res.data;
+       })
+       .catch(function(err){
+         throw err;
+       });
+   }
+   function removeAuctionMasterProduct(data){
+      var path = "/api/auction/removeauctionmasterproduct"
       return $http.put(path + "/" + data._id, data)
        .then(function(res){
          return res.data;

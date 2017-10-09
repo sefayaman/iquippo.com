@@ -95,7 +95,9 @@
     $scope.auctionselect = false;
      $scope.lot.bidInfo=[{}];
     $scope.bidIncrementObj = {};
-
+    //$scope.checkBidIncrement = checkBidIncrement;
+   $scope.lot.staticIncrement=false;
+    $scope.lot.rangeIncrement=false;
 
     $scope.listInAuction = function(data){
         if(data ==true){
@@ -327,22 +329,22 @@
                     AuctionSvc.getAuctionExpire(auctionexpiredata).then(function(result){
                     $scope.date = new Date();
                     if(result!=""){
-                      console.log("hhuhu",result);
+                     
                     $scope.auctionReq.auctionexpire ="expire";
                     $scope.auctionReq.auctionname = result[0].name;
                     $scope.isExpire = true;
                     }else{
                     $scope.isExpire = false;
 
-                      console.log("ghjtretuu",result);
                     }
 
                     });
-                    
+                   
                     LotSvc.getData(filter)
                     .then(function(res){
                       if(res.length > 0){
                       //console.log("LOT info",res[0]);
+                      $scope.lot._id=res[0]._id;
                       if(res[0].lotNumber)
                       $scope.lot.lotNumber=res[0].lotNumber;
                        if(res[0].startingPrice)
@@ -351,6 +353,12 @@
                         $scope.lotDate=true;
                       $scope.lot.startDate=res[0].startDate;
                       $scope.lot.endDate=res[0].endDate;
+                      $scope.lot.static_increment = res[0].static_increment;
+
+                      if(res[0].static_increment)
+                       $scope.lot.staticIncrement = true;
+                       if(res[0].bidIncrement)
+                       $scope.lot.rangeIncrement = true;
                     }
                       $scope.lot._id=res[0]._id;
                       if(res[0].auctionId)
@@ -364,6 +372,8 @@
                                   var arr = item.split('-');
                                   $scope.lot.bidInfo[index] = {bidFrom:arr[0],bidTo:arr[1],bidIncrement:res[0].bidIncrement[item]};
                               });
+                          }else{
+                             $scope.lot.bidInfo = [{}];
                           }
                       }
                       else
@@ -1027,9 +1037,10 @@
       if($stateParams.id && !Auth.isAdmin()) {
           var auctiond ={};
           auctiond._id = $scope.product.auction._id;
+          
           $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
           AuctionMasterSvc.get(auctiond).then(function(result){
-           console.log("result Data",result[0]);
+          
            $scope.lot.auctname = result[0].name;
           $scope.lot.auctionId = result[0].auctionId;
           $scope.lot.emdTax = result[0].emdTax;
@@ -1041,9 +1052,7 @@
            $scope.lot.extendedTo = result[0].extendedTo;
            $scope.lot.cerification = result[0].certification;
            $scope.lot.paymentstatus = result[0].paymentstatus;
-
-           //console.log("sxsassasxs",$scope.lot.cerification);
-
+           $scope.lot.static_increment = result[0].static_increment;
          });
        }
       filter = {};
@@ -1102,7 +1111,7 @@
                 Modal.confirm("Do you want iquippo_certification?", function(ret){
                   if (ret == "yes") {
                     $scope.auctionReq.paymentDue = 'Yes';
-                    console.log("yeesss",$scope.auctionReq.paymentDue);
+                   
 
                     var certification ="Yes";
                     var paymentstatus ="Pending";
@@ -1228,7 +1237,7 @@
 
 
     function postAuction(productObj) {
-    console.log ("prod",productObj);
+     
       var stsObj = {};
       if (!productObj.auction)
         productObj.auction = {};
@@ -1553,8 +1562,56 @@
          
       }
     }
-
-
+    $scope.checkBidIncrement = function(checkbox,val){
+        if(val == 'static'){
+            if(checkbox == true){
+              $scope.lot.staticIncrement = true;
+            }else{
+              $scope.lot.staticIncrement = false;
+              if($scope.isEdit &&  $scope.lot.static_increment){
+                deleteDocumentField($scope.lot._id,1);
+                //delete $scope.lot.static_increment;
+              }
+            }
+        }
+        if(val == 'bid'){
+            if(checkbox == true){
+            $scope.lot.rangeIncrement = true;
+            }else{
+             $scope.lot.rangeIncrement = false;
+              if($scope.isEdit && $scope.lot.bidInfo[0].bidFrom){
+                deleteDocumentField($scope.lot._id,2);
+                $scope.lot.bidInfo=[{}];
+                //delete $scope.lot.bidIncrement;
+                //delete $scope.lot.bidInfo;
+              }
+            }
+        }
+    } 
+    function deleteDocumentField(id,flag){
+              $scope.lot.flag = flag;
+              Modal.confirm("Are you sure want to delete value?",function(ret){
+              if(ret == "yes")
+             LotSvc.removeLotData($scope.lot)
+              .then(function(){
+              
+              Modal.alert('Data deleted successfully!');
+                if(flag==2){
+                  delete $scope.lot.bidIncrement;
+                  delete $scope.lot.bidInfo;
+                  $scope.lot.bidInfo = [{}];
+                }
+                if(flag==1){
+                  delete $scope.lot.static_increment;
+                }
+              })
+              .catch(function(err){
+              if(err.data)
+              Modal.alert(err.data); 
+            });
+            
+              });
+          } 
     function addProduct(cb) {
       
       $scope.lotCreation=true;
@@ -1626,12 +1683,13 @@
               $scope.lotsaved.auctionId = result.items[0].auctionId;
               $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
               $scope.lotsaved.assetDir = $scope.product.assetDir;
-              $scope.lotsaved.primaryImg=$scope.product.primaryImg;
-              $scope.lotsaved.userId = product.seller._id;
+              $scope.lotsaved.primaryImg= $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
+              $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
               $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
               $scope.lotsaved.startDate=$scope.lot.startDate;
               $scope.lotsaved.endDate=$scope.lot.endDate;
               $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+              $scope.lotsaved.static_increment=$scope.lot.static_increment;
               //bid data
                $scope.lot.bidInfo.forEach(function(item) {
                  var range = item.bidFrom+"-"+item.bidTo;
@@ -1651,12 +1709,14 @@
                     $scope.lotsaved.auctionId = result.items[0].auctionId;
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
                     $scope.lotsaved.assetDir= $scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.isAdmin()._id;
-                    $scope.lotsaved.primaryImg = $scope.product.primaryImg;
+                    $scope.lotsaved.userId = Auth.isAdmin().customerId;
+                    //$scope.lotsaved.primaryImg = $scope.product.primaryImg;
+                    $scope.lotsaved.primaryImg= $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate = $scope.lot.endDate;
                     $scope.lotsaved.reservePrice = $scope.product.reservePrice; 
+                    $scope.lotsaved.static_increment=$scope.lot.static_increment
                     //bid data
                     $scope.lot.bidInfo.forEach(function(item) {
                     var range = item.bidFrom+"-"+item.bidTo;
@@ -1740,13 +1800,9 @@
                 filter.lotNumber = lotNumber;
                filter.auctionId = result.items[0].auctionId;
 
-
-               console.log("filter",filter);
-
                 LotSvc.getData(filter)
                 .then(function(res){
                 if(res.length >0){
-                 // console.log("lotDAta",res);
                 if(res[0] && res[0].startDate && res[0].endDate){
                  //$scope.lotDate = true;
                  $scope.lot.startDate = res[0].startDate;
@@ -1830,13 +1886,15 @@
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0].auctionId;
                 $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
-                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+               // $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg= $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = product.seller._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                $scope.lotsaved.static_increment=$scope.lot.static_increment
                 //$scope.lotsaved._id = $scope.lot._id;
                 //bid data
                 $scope.lot.bidInfo.forEach(function(item) {
@@ -1856,13 +1914,15 @@
                     $scope.lotsaved.assetDesc = $scope.product.name;
                     $scope.lotsaved.auctionId = result.items[0].auctionId;
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-                    $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                    //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                    $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                     $scope.lotsaved.assetDir=$scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.getCurrentUser()._id;
+                    $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                     $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                     $scope.lotsaved.startDate = $scope.lot.startDate;
                     $scope.lotsaved.endDate= $scope.lot.endDate;
                     $scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                    $scope.lotsaved.static_increment=$scope.lot.static_increment
                     //$scope.lotsaved._id = $scope.lot._id;
                       //bid data
                      $scope.lot.bidInfo.forEach(function(item) {
@@ -1900,14 +1960,16 @@
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0].auctionId;
                 $scope.lotsaved.lotNumber = $scope.lot.lotNumber;
-                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = product.seller._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
+                $scope.lotsaved.static_increment=$scope.lot.static_increment
                 //bid data
                $scope.lot.bidInfo.forEach(function(item) {
                  var range = item.bidFrom+"-"+item.bidTo;
@@ -1926,14 +1988,16 @@
                 $scope.lotsaved.assetDesc = $scope.product.name;
                 $scope.lotsaved.auctionId = result.items[0].auctionId;
                 $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
-                $scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
+                $scope.lotsaved.primaryImg=$rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
                 $scope.lotsaved.assetDir=$scope.product.assetDir;
-                $scope.lotsaved.userId = Auth.getCurrentUser()._id;
+                $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
                 $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
                 $scope.lotsaved.startDate=$scope.lot.startDate;
                 $scope.lotsaved.endDate=$scope.lot.endDate;
                 $scope.lotsaved.reservePrice=$scope.product.reservePrice;
                 $scope.lotsaved._id = $scope.lot._id;
+                $scope.lotsaved.static_increment=$scope.lot.static_increment
                   //bid data
                $scope.lot.bidInfo.forEach(function(item) {
                  var range = item.bidFrom+"-"+item.bidTo;

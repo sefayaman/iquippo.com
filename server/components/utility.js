@@ -154,8 +154,8 @@ function deleteFromS3(opts, cb) {
 
 
 
-//AA:Upload a directory to S3
 
+//AA:Upload a directory to S3
 exports.sendAuctionData=sendAuctionData;
 exports.sendLotData=sendLotData;
 exports.sendUserInfo=sendUserInfo;

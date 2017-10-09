@@ -51,6 +51,10 @@ var Modals = {
     tplUrl : "app/auction/userregisterforauction.html",
     Ctrl : 'userRegForAuctionCtrl as auctionRegVm'
   },
+  auctionRegislogin : {
+    tplUrl : "app/auction/auctloginregis.html",
+    Ctrl : 'AuctionRegisCtrl as auctionRegisVm'
+  },
   invoiceDetails : {
     tplUrl : "app/assetsale/invoicedetails.html",
     Ctrl : 'invoiceDetailsCtrl as invoiceDetailsVm'
@@ -95,7 +99,6 @@ var Modals = {
   auctionRegislogin : {
     tplUrl : "app/auction/auctloginregis.html",
     Ctrl : 'AuctionRegisCtrl as auctionRegisVm'
-
   }
 };
 

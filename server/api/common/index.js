@@ -143,6 +143,7 @@ router.get('/bulkupload/request/fetch',bulkUploadCtrl.fetch,bulkUploadCtrl.rende
 router.post('/bulkupload/request/delete',bulkUploadCtrl.delete);
 
 //counts on dashboard//
+router.put('/removelotdata/:id', auth.hasRole('admin'),lotCtrl.removeLotData);
 router.post('/assetlisted', auth.hasRole('admin'),countCtrl.create);
 router.get('/assetlisted',countCtrl.getAssetCount);
 router.put('/assetlisted/:id', auth.hasRole('admin'),countCtrl.updateAssetListed);
@@ -156,7 +157,6 @@ router.delete('/lot/:id',auth.hasRole('admin'), lotCtrl.destroy);
 router.post('/lot',lotCtrl.create);
 router.put('/lot/:id', auth.hasRole('admin'),lotCtrl.updateLotData);
 router.put('/lot/updateproductlot/:id', auth.hasRole('admin'),lotCtrl.updateProductLotData);
-
 //Valuation Cancellation Fee master
 router.get('/valuationcancellationfee',auth.hasRole('admin'),valuationCancellationCtrl.get);
 router.get('/findcancellationfee',valuationCancellationCtrl.getValuationRequest,valuationCancellationCtrl.getCancellationFee);
