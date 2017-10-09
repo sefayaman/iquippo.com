@@ -37,6 +37,7 @@ router.post('/sendusertoas/asset',controller.sendUserToAs);
 router.post('/userregforauction', userRegForAuction.create);
 router.post('/userregforauction/checkUserRegis',userRegForAuction.checkUserRegis);
 router.post('/userregforauction/filterregisteruser', userRegForAuction.getFilterOnRegisterUser);
+router.post('/userregforauction/senddata',userRegForAuction.sendUserToAs);
 //router.put('/userregforauction/:id', userRegForAuction.update);
 //router.delete('/userregforauction/:id', userRegForAuction.destroy);
 router.post('/userregforauction/validateuser', userRegForAuction.validateUser);

@@ -3,7 +3,7 @@
 'use strict';
 angular.module('sreizaoApp').controller('PaymentResponseCtrl',PaymentResponseCtrl);
 
-function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,BuyContactSvc,$cookieStore) {
+function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,PaymentSvc,Auth,ValuationSvc,AuctionSvc,userRegForAuctionSvc,BuyContactSvc,$cookieStore) {
  	var vm = this;
  	vm.payTransaction = null;
  	vm.enablePayment = false;
@@ -11,7 +11,7 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
 	var auctionReq = null;
 	var auctionreqseller = null;
  	vm.success = true;
-
+  var dataToSendToAs={};
  	function init(){
  		
  		var tid = $stateParams.tid;
@@ -29,6 +29,27 @@ function PaymentResponseCtrl($scope,Modal,$stateParams,$state,notificationSvc,Pa
  				Modal.alert("Invalid payment access");
  			}
  			vm.payTransaction = result[0];
+       if(vm.payTransaction.requestType == "UserRegAuc" && vm.payTransaction.status == "completed")
+       {
+          dataToSendToAs.user={};
+          dataToSendToAs.user={
+            userId:vm.payTransaction.user.customerId,
+            lname:vm.payTransaction.user.lname,
+            fname:vm.payTransaction.user.fname,
+            email:vm.payTransaction.user.email,
+            mobile:vm.payTransaction.user.mobile
+          };
+          dataToSendToAs.amountPaid=vm.payTransaction.totalAmount;
+          dataToSendToAs.selectedLots=vm.payTransaction.selectedLots;
+          userRegForAuctionSvc.sendUserData(dataToSendToAs)
+          .then(function(res){
+           return res;
+          })
+          .catch(function(err){
+
+          });
+       }
+
  			if(vm.payTransaction.paymentMode == 'online' && !Auth.isAdmin()){
 	 			if(vm.payTransaction.statusCode == 0)
 	 				PaymentSvc.updateStatus(vm.payTransaction,transactionStatuses[5].code);

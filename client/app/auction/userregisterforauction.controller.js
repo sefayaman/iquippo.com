@@ -258,6 +258,8 @@
                         console.log("The total Amount", result);
                         if (Auth.getCurrentUser().email)
                           dataObj.user.email = Auth.getCurrentUser().email;
+                        dataObj.user.customerId=Auth.getCurrentUser().customerId;
+                        dataObj.selectedLots=vm.dataModel.selectedLots;
                         save(dataObj, result[0].amount);
                       })
                       .catch(function(err) {});
@@ -283,6 +285,7 @@
 
     function save(dataObj, amount) {
       dataObj.totalAmount = amount;
+      dataObj.requestType = "UserRegAuc";
       userRegForAuctionSvc.save(dataObj)
         .then(function(result) {
           $rootScope.loading = false;
@@ -292,12 +295,10 @@
             if (isGo == 'no')
               return;
             $rootScope.loading = true;
-
             if (result && result.errorCode != 0) {
               $state.go('main');
               return;
-            }
-
+             }
             if (result.transactionId) {
               $rootScope.loading = false;
               $state.go('payment', {
@@ -305,7 +306,6 @@
               });
             }
           });
-
         })
         .catch(function(err) {
           if (err.data)
