@@ -2593,7 +2593,7 @@
 			        	<label>Select Auction Id</label>
 		 		       	<select class="form-control" name="auctionId" ng-model="emdVm.dataModel.auctionId"  ng-change="onSelectAuction(emdVm.dataModel.auctionId)" required> 
 							 <option value=""> Select Auction Id </option> 
-					        <option value="{{product.auctionId}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
+					        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
 				       	</select>
 					</div>
 					
@@ -2603,7 +2603,7 @@
 					</div>
                     <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
                     <label>Select the lot</label>
-						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in emdVm.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
+						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in emdVm.dataModel.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
 			           
 					    </select>
 			            

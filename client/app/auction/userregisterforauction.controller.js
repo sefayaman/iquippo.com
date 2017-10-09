@@ -212,7 +212,7 @@
       
       userRegForAuctionSvc.checkUserRegis(dataObj)
       .then(function(result){
-       if(result){
+       if(result.data){
         closeDialog();
           if(result.data =="done"){
 
@@ -240,10 +240,7 @@
                      });
                      }
                    });
-           
-           
             }
-
         }else{
            if (auctionData.emdTax == "overall") {
             
@@ -254,19 +251,17 @@
                     save(dataObj, vm.emdAmount);
             
                   } else {
-                    vm.dataModel.auctionId = auctionData.auctionId;
+                    vm.dataModel.auctionId = auctionData._id;
                     vm.dataModel.selectedLots = lotData;
                     EmdSvc.getAmount(vm.dataModel)
                       .then(function(result) {
                         console.log("The total Amount", result);
                         if (Auth.getCurrentUser().email)
                           dataObj.user.email = Auth.getCurrentUser().email;
-                        save(dataObj, result);
+                        save(dataObj, result[0].amount);
                       })
                       .catch(function(err) {});
                   }
-            
-
         }
       });
 

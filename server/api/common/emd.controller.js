@@ -38,14 +38,15 @@ exports.updateEmdData = function(req, res) {
 };
 
 exports.getEmdData = function(req, res) {
+  console.log("req query",req.query);
   var filter = {};
-  if (req.body.auctionId) {
-    filter.auctionId = req.body.auctionId;
+  if (req.body._id) {
+    filter["auctionId"] = req.body._id;
   }
   if (req.body.selectedLots && req.body.selectedLots.lotNumber) {
     //console.log("selectedLots",req.body.selectedLots);
     filter["selectedLots.lotNumber"] = {
-      $eq: req.body.selectedLots.lotNumber
+      $in: req.body.selectedLots.lotNumber
     }
   }
   console.log("filter for checking EmdData", filter);
@@ -62,6 +63,9 @@ exports.getEmdData = function(req, res) {
 exports.getEmdAmountData = function(req, res, callback) {
 
   console.log("getEmdAmountData", req.query);
+  var arr=[]
+  if(req.query.selectedLots)
+    arr.push(req.query.selectedLots);
   var filter = {};
   if (req.query.auctionId) {
     filter.auctionId = req.query.auctionId;
@@ -69,7 +73,7 @@ exports.getEmdAmountData = function(req, res, callback) {
   if (req.query.selectedLots) {
     //console.log("selectedLots",req.body.selectedLots);
     filter["selectedLots.lotNumber"] = {
-      $eq: req.query.selectedLots
+      $in: arr
     }
   }
   console.log("filter for checking EmdData", filter);
@@ -82,8 +86,8 @@ exports.getEmdAmountData = function(req, res, callback) {
   } else {
 
     var lots = [data];
-    console.log("lots", lots);
   }
+  console.log("lots", lots);
  async.series([function(next){
   fetchEmdAmount(filter,res,next);
 },function(next){

@@ -141,29 +141,21 @@ exports.checkUserRegis = function(req,res){
                       if(err){
                         return handleError(err,res);
                       }
-                      
                           var message ={};
                           if(payment[0].status =="completed"){
                               message.data = "done";
-
                             }else{
                               message.data = "undone";
-
                             }
                             message.lotNumber = data[0].lotNumber;
                             message.transactionId = data[0].transactionId;
                             message.errorCode = 0;
-                            return  res.status(200).json(message);
-                        
+                            return  res.status(200).json(message);                        
                     });
-
            }else{
-
             return  res.status(200).json({message:"No Data"});
-           }
-         
-       });
- 
+          }
+       }); 
 };
 
 exports.create = function(req, res,next) {
@@ -234,8 +226,16 @@ function _getRecord(data,cb){
     filter['user._id'] = data.user._id;
   if(data.user.mobile)
     filter['user.mobile'] = data.user.mobile;
+  if(data.lotNumber){
+
+    filter['lotNumber'] ={
+      $in:data.lotNumber
+    } 
+  }
   Model.find(filter,function(err,result){
-    cb(err,result);
+    if(err) cb(err);
+    console.log("result data",result);
+    return cb(null,result);
   });
 }
 

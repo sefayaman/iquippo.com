@@ -57,7 +57,7 @@
             userRegForAuctionSvc.checkUserRegis(dataObj)
             .then(function(result){
 
-             if(result){
+             if(result.data){
               closeDialog();
                 if(result.data =="done"){
 
@@ -100,7 +100,7 @@
                                   save(dataObj,vm.emdamount);
                               
                               }else{
-                                    vm.dataModel.auctionId = $scope.currentAuction.auctionId;
+                                    vm.dataModel.auctionId = $scope.currentAuction._id;
                   
                                     vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
                                     closeDialog();
@@ -108,7 +108,9 @@
                                     
                                            if(Auth.getCurrentUser().email)
                                            dataObj.user.email = Auth.getCurrentUser().email;
-                                           save(dataObj,result);
+
+                                         console.log("result",result);
+                                           save(dataObj,result[0].amount);
                                        }).catch(function(err){
                                      });
                                }
