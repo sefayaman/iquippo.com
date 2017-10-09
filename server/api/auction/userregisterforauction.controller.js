@@ -158,6 +158,12 @@ exports.checkUserRegis = function(req,res){
        }); 
 };
 
+exports.sendUserToAs=function(req,res){
+  console.log("req.body",req.body);
+  Utility.sendUserInfo(req.body);;
+};
+
+
 exports.create = function(req, res,next) {
 
    _getRecord(req.body,function(err,result){
@@ -180,7 +186,7 @@ exports.create = function(req, res,next) {
      // req.body.payment.createdAt = new Date();
       //req.body.payment.updatedAt = new Date();
       //req.body.payment.totalAmount = req.body.totalAmount;
-     
+       console.log("req.body",req.body);     
        PaymentTransaction.create(req.body, function(err, payment) {
           if(err){return handleError(err,res)}
             else{
