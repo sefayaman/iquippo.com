@@ -187,7 +187,7 @@
               <ul>
                 <li ng-repeat="link in currentProduct.videoLinks">
                     <!-- {{link.uri}} -->
-                     <object style="width:100%;height:100%;height: 90px;width:100px; float: none; clear: both; margin: 2px auto;" data="http://img.youtube.com/vi/{{link.uri.split('=')[1]}}/0.jpg" frameborder="0" >
+                     <object style="width:100%;height:100%;height: 90px;width:100px; float: none; clear: both; margin: 2px auto;" data="https://img.youtube.com/vi/{{link.uri.split('=')[1]}}/0.jpg" frameborder="0" >
                </object>
                 <a href="#" class="videos-icon" ng-click="productDetailVm.playVideo($index)"><img src="assets/images/utube.png"></a>
                     <!-- <i class="fa fa-youtube-play fa-2x"></i> -->

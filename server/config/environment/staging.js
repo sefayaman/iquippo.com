@@ -28,7 +28,7 @@ module.exports = {
   ccAvenueWorkingKey:"BCCD36E2D20659D5F76B99973880340D",
   mailConfig : { MailHost: "smtp.gmail.com", MailPort: "465", Mailusername: "iquippo.uat@gmail.com", Mailpassword: "pass12345678",from:"iquippo.uat@gmail.com"},
   qpvalURL:"http://13.126.19.255/valuation/api.php",
-  REDIRECT_URL:"http://finance-uat.iquippo.com/customer-portal-iquippo/sso",
+  REDIRECT_URL:"https://finance-uat.iquippo.com/customer-portal-iquippo/sso",
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
