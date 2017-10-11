@@ -47,6 +47,7 @@ exports.signUp = function(req, res, next) {
   console.log("username::::" + req.body.name);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
+  newUser.isRegisterNewUser = 'yes';//J.K for new register users flag value set.
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
     var token = jwt.sign({
@@ -740,6 +741,7 @@ exports.createUserReq = function(req, res, next) {
     data.createdBy = req.body.user;
     data.createdAt = new Date();
     data.updatedAt = new Date();
+    data.isRegisterNewUser = 'yes';//J.K for new register users flag value set.
     data.agree = true;
 
     console.log("DATAs",data);
@@ -796,6 +798,7 @@ exports.create = function(req, res, next) {
   var newUser = new User(req.body);
   newUser.createdAt = new Date();
   newUser.updatedAt = new Date();
+  newUser.isRegisterNewUser = 'yes';//J.K for new register users flag value set.
 
 
   newUser.save(function(err, user) {
@@ -814,6 +817,7 @@ exports.externalCreate = function (req, res) {
     var newUser = new User(req.body);
     newUser.createdAt = new Date();
     newUser.updatedAt = new Date();
+    newUser.isRegisterNewUser = 'yes';//J.K for new register users flag value set.
     
     newUser.save(function(err, user) { 
         if (err) return externalValidationError(res, err);

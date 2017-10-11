@@ -56,12 +56,13 @@ angular.module('account').controller('LoginCtrl', LoginCtrl);
                   $rootScope.$broadcast('callValuationRequest');
                 
                   /*J.K Check password expire Start*/ 
-                    var noOfDays = 1;
+                    var noOfDays = 60;
                     var pwdUpdateDate = Auth.getCurrentUser().passwordUpdatedAt;
                     var isRegisterNewUserFlag = Auth.getCurrentUser().isRegisterNewUser;
                     var currentDateForPwdUpdate = moment(Date.now());
                     var pwdUpdatedDays = currentDateForPwdUpdate.diff(pwdUpdateDate, 'days');
-                    if(pwdUpdatedDays >= noOfDays || isRegisterNewUserFlag === 'yes'){
+                    if(pwdUpdatedDays > noOfDays || isRegisterNewUserFlag === 'yes'){
+                      $rootScope.pwdResetStatus = false; // To Disable Close button 
                       Modal.openDialog('settings');
                     }
                  /*J.K Check password expire End*/ 
