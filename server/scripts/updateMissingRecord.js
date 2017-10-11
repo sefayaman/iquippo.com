@@ -22,51 +22,18 @@ mongoose.connection.on('error', function(err) {
   process.exit(-1);
 });
 
-
 var fieldMap = {
-	'iquippo_uniquecontrolno':'uniqueControlNo',
-	'iquippo_jobid' : 'jobId',
-	'iquippo_requesttype':'requestType',
-	'iquippo_purpose':'purpose',
-	'agency_name':'agencyName',
-	'iquippo_enterprise':'enterpriseName',
-	'iquippo_customer_transaction_id':'customerTransactionId',
-	'iquippo_customer_valuation_no':'customerValuationNo ',
-	'contactpersontelno':'customerPartyNo',
-	'client_name':'customerPartyName ',
-	'iquippo_session_user_id':'userName',
-	'asset_no':'assetId',
-	'iquippo_repo_date':'repoDate',
-	'group_id':'valuerGroupId',
-	'typeOfAsset_id':'valuerAssetId',
-	'description':'assetDescription',
-	'engine_no':'engineNo',
-	'chassis_no':'chassisNo',
-	'iquippo_registration_no':'registrationNo',
-	'serial_no':'serialNo',
-	'year_of_mfg':'yearOfManufacturing',
-	'iquippo_category':'category',
-	'make':'brand',
-	'model' :'model',
-	'iquippo_yardParked' : 'yardParked',
-	'country':'country',
-	'state':'state',
-	'city':'city',
-	'contact_person':'contactPerson',
-	'contact_no':'contactPersonTelNo',
-	'distance_from_office': 'disFromCustomerOffice',
-	'customerSeekingFinance':'nameOfCustomerSeeking',
-	'invoiceDate':'customerInvoiceDate',
-	'invoiceValue':'customerInvoiceValue',
-	'iquippo_j_status': 'jobStatus',
-	'iquippo_request_date':'requestDate',
-	'created_date':'submittedToAgencyDate',
-	'iquippo_updated_date':'reportSubmissionDate',
-	'iquippo_updated_date':'reportDate',
-	'report_no':'reportNo',
-	'report_Url' : 'reportURL',
-	'assesed_value':'assessedValue'
+  'iquippo_uniquecontrolno':'uniqueControlNo',
+  'iquippo_jobid' : 'jobId',
+  'contactpersontelno':'customerPartyNo',
+  'iquippo_request_date':'requestDate',
+  'created_date':'submittedToAgencyDate',
+  'iquippo_updated_date':'reportSubmissionDate',
+  'iquippo_updated_date':'reportDate',
+  'invoiceDate':'customerInvoiceDate',
+  'iquippo_repo_date':'repoDate'
 }
+
 
 function init(processCb) {
 
@@ -103,29 +70,41 @@ function init(processCb) {
     function validateValuationRequest(callback){
     	if(!row.uniqueControlNo)
     		return callback("Missing unique control no.");
-		EnterpriseValuation.find({uniqueControlNo:row.uniqueControlNo,deleted:false},function(err,result){
-			if(err || !result)
-				return callback('Error while validating valuation request.');
-			if(result.length)
-				return callback('Unique control no -'+ row.uniqueControlNo + ' already exist.');
-			return callback();
-		});  	
+  		EnterpriseValuation.find({uniqueControlNo:row.uniqueControlNo,deleted:false},function(err,result){
+  			if(err || !result)
+  				return callback('Error while validating valuation request.');
+  			if(!result.length)
+  				return callback('Enyerprise valuation request is not found.');
+  			return callback();
+  		});  	
     }
 
     function validateUser(callback){
     	if(!row.customerPartyNo)
-    		return callback("User is missing");
+    		return callback();
     	UserModel.find({mobile:row.customerPartyNo,deleted:false},function(err,users){
     		if(err) 
     			return callback("Error in validating user");
     		if(!users.length)
     			return callback("User not found");
     		row.user = users[0];
+        row.customerPartyNo = row.user.mobile;
+        row.userName = (row.user.fname || "") + " " + (row.user.mname || "") +(row.user.mname ? " " : "") + (row.user.lname || "");
+        row.legalEntityName = (row.user.company || "");
+        row.createdBy = {
+          name : row.user.fname + " " + row.user.lname,
+          _id : row.user._id + "",
+          email : row.user.email,
+          mobile : row.user.mobile,
+          role : row.user.role
+        };
     		return callback();
     	});
     }
 
     function validateEnterprise(callback){
+      if(!row.enterpriseName)
+        return callback();
 
       UserModel.find({"enterprise" : true,status:true,deleted:false}).exec(function(err,result){
         if(err)
@@ -140,7 +119,6 @@ function init(processCb) {
       	if(enterprises.length !== 1)
       		return callback('Invalid enterprise');
         row.enterprise = {
-
           email : enterprises[0].email,
           mobile : enterprises[0].mobile,
           _id : enterprises[0]._id + "",
@@ -148,11 +126,14 @@ function init(processCb) {
           employeeCode : enterprises[0].employeeCode,
           name : (enterprises[0].fname || "") + " "+ (enterprises[0].lname || "")
         };
+        row.customerPartyName = row.enterprise.name;
         return callback();
       });
     }
 
     function validateRequestType(callback){
+      if(!row.requestType)
+        return callback();
       if(['Valuation','Inspection'].indexOf(row.requestType) < 0)
         return callback('Invalid Request Type');
       return callback();
@@ -162,7 +143,7 @@ function init(processCb) {
     	var dateFields = ['requestDate','submittedToAgencyDate','reportSubmissionDate','reportDate','invoiceDate','repoDate'];
     	dateFields.forEach(function(key){
     		if(row[key] && row[key] !== '0000-00-00 00:00:00')
-    			row[key] = new Date(row[key]);
+    			row[key] = new Date(_.trim(row[key]));
     		else
     			delete row[key];
     	});
@@ -186,6 +167,9 @@ function init(processCb) {
 
     function validatePurpose(callback){
 
+      if(!row.purpose)
+        return callback();
+
       if(row.purpose == "Financing")
         return callback();
 
@@ -202,7 +186,8 @@ function init(processCb) {
 
     function validateAgency(callback){
      	if(!row.agencyName)
-     		return callback("Agency is missing");
+     		return callback();
+
       vendorModel.find({entityName : row.agencyName,deleted:false,status:true},function(err,result){
         if(err || !result)
           return callback('Error while validating Agency');
@@ -230,6 +215,7 @@ function init(processCb) {
           delete row.model;
           return callback();
         }
+
        commonFunc.fetchBrand({name:row.brand},function(err,brands){
           if(err || !brands)
             return callback('Error while validating brand');
@@ -268,6 +254,9 @@ function init(processCb) {
     }
 
     function validateCountry(callback){
+
+      if(!row.country)
+        return callback();
 
       var countryParams = {
         name : row.country
@@ -319,72 +308,22 @@ function init(processCb) {
         });
         return cb();
       }
-      var user = row.user;
-      row.customerPartyName = row.enterprise.name;
-      row.customerPartyNo = row.user.mobile;
-      row.userName = (row.user.fname || "") + " " + (row.user.mname || "") +(row.user.mname ? " " : "") + (row.user.lname || "");
-      row.legalEntityName = (row.user.company || "");
-      row.createdBy = {
-        name : user.fname + " " + user.lname,
-        _id : user._id,
-        email : user.email,
-        mobile : user.mobile,
-        role : user.role
-      };
-
-      row.statuses = [{
-        createdAt : row.requestDate,
-        status : EnterpriseValuationStatuses[0],
-        userId : row.user._id
-      }];
       row.createdAt = row.requestDate;
       row.updatedAt = row.requestDate;
-      row.statuses = [{
-        createdAt : row.submittedToAgencyDate,
-        status : EnterpriseValuationStatuses[2],
-        userId : row.user._id
-      }];
-      row.status = EnterpriseValuationStatuses[2];
-	  if(row.jobStatus == 'Updated' && row.reportURL){
-			row.statuses = [{
-	        createdAt : row.reportSubmissionDate,
-	        status : EnterpriseValuationStatuses[6],
-	        userId : row.user._id
-	      }];
-	     row.status = EnterpriseValuationStatuses[6];
-	     row.valuationReport = {external:true,filename:row.reportURL};  	
-      }else{
-      	delete row.assessedValue;
-      	delete row.reportSubmissionDate
-      	delete row.reportDate;
-      	delete row.reportNo;
-      }
-
-      var filter = {
-      	valuerGroupId:row.valuerGroupId,
-      	valuerAssetId:row.valuerAssetId,
-      	valuerCode:row.agency.partnerId,
-      	enterpriseId:row.enterprise.enterpriseId
-      };
-      AssetGroupModel.find(filter,function(err,result){
-      	if(err || !result.length){
-	  		 errObj.push({
-	          Error: 'Error in getting asset category',
-	          rowCount: row.rowCount
-	        });
-	  		 return cb();
-      	}
-      	row.assetCategory = result[0].assetCategory;
-	      EnterpriseValuation.create(row, function(err, enterpriseData) {
-	          if(err || !enterpriseData) { 
-	            errObj.push({
-	              Error: err,
-	              rowCount: row.rowCount
-	            });
-	          }
-	          return cb(err);
-	      });
-      });
+      var unc = row.uniqueControlNo;
+      delete row.uniqueControlNo;
+      delete row.jobId;
+      delete row.user;
+      //console.log("update field >>>",row);
+      EnterpriseValuation.update({uniqueControlNo:unc},{$set:row},function(err, enterpriseData) {
+            if(err || !enterpriseData) { 
+              errObj.push({
+                Error: err,
+                rowCount: row.rowCount
+              });
+            }
+            return cb(err);
+        });
     }
   }
 }
@@ -400,7 +339,7 @@ if (require.main === module) {
 			if(errList.length)
 				util.log("Some record have issue.Please see error message");
 			else
-				util.log("All record inserted successfully");
+				util.log("All record updated successfully");
 			return process.exit(0);
 		});
 	}());

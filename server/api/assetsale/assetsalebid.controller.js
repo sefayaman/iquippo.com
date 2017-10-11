@@ -131,11 +131,11 @@ exports.getBidOrBuyCalculation = function(req, res) {
 
 // Updates an existing record in the DB.
 exports.update = function(req, res,next) {
-
   async.eachLimit(req.bids,5,_update,function(err){
   	if(err)return handleError(res, err);
-	sendStatusMail(req.bids[0]);
-	var bidArr = [];
+  	if(['approve','deliveryaccept','doissued','emdpayment','fullpayment','reject'].indexOf(req.query.action) !== -1)
+  		sendStatusMail(req.bids[0]);
+  	var bidArr = [];
 	if(req.bidLost){
 		req.bids.forEach(function(item,index){
 			if(!index)
@@ -149,15 +149,15 @@ exports.update = function(req, res,next) {
 	next();
 });
 
-  function _update(bid,cb){ 
-  	  var bidId = bid._id;
-	  if(bid._id) { delete bid._id; }
-	  bid.updatedAt = new Date();
-	   AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
-	        cb(err);
-	  });
-  }
-}
+	function _update(bid,cb){
+		var bidId = bid._id;
+		if(bid._id) { delete bid._id; }
+		bid.updatedAt = new Date();
+		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
+			cb(err);
+		});
+	}
+	}
 
 function sendStatusMail(bid) {
 	var bidArr = [];
@@ -191,8 +191,7 @@ function sendStatusMail(bid) {
 }
 
 exports.validateUpdate = function(req,res,next){
-	
-	if(['approve','deliveryaccept','emdpayment','fullpayment'].indexOf(req.query.action) !== -1)
+	if(['approve','deliveryaccept','emdpayment','fullpayment','reject'].indexOf(req.query.action) !== -1)
 		async.parallel([validateBid,validateOtherBids,validateProduct],onComplete);
 	else
 		async.parallel([validateBid,validateProduct],onComplete);
@@ -252,6 +251,7 @@ exports.validateUpdate = function(req,res,next){
 						AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
 						req.bids.push(item);
 					});
+					req.bidLost = true;
 					next();
 				});
 			//}
@@ -264,6 +264,7 @@ exports.validateUpdate = function(req,res,next){
 					AssetSaleUtil.setStatus(item,dealStatuses[5],'dealStatus','dealStatuses',req.user._id);
 					req.bids.push(item);
 				});
+				req.bidLost = true;
 			//if(req.bid.fullPayment.remainingPayment == 0)
 				next();
 			//else
@@ -288,10 +289,73 @@ exports.validateUpdate = function(req,res,next){
 				req.bids.push(item);
 			});*/
 			next();
+		} else if(req.query.action === 'reject') {
+			if(req.bid.dealStatus == dealStatuses[6]){
+				var selBid = null;
+				if(!req.bid.autoApprove)
+					selBid = nextApprovableBid(req.bid,req.otherBids);
+				getSaleProcessMaster(function(entData){
+					if(selBid){
+						selBid.emdStartDate = new Date();
+						if(entData.emdPeriod)
+						  selBid.emdEndDate = new Date().addDays(entData.emdPeriod || 0);
+						selBid.product.prevTradeType = req.bid.product.prevTradeType;
+						AssetSaleUtil.setStatus(selBid,bidStatuses[7],'bidStatus','bidStatuses');
+						AssetSaleUtil.setStatus(selBid,dealStatuses[6],'dealStatus','dealStatuses');
+						req.bids.push(selBid);
+						AssetSaleUtil.sendNotification([{action:"APPROVE",ticketId:selBid.ticketId}]);
+					}else{
+						req.updateProduct = true;
+						req.otherBids.forEach(function(item){
+						  AssetSaleUtil.setStatus(item,dealStatuses[0],'dealStatus','dealStatuses');
+						  AssetSaleUtil.setStatus(item,bidStatuses[0],'bidStatus','bidStatuses');
+						  req.bids.push(item);
+						});
+						var bidCount = req.otherBids.length || 0;
+						var highestBid = 0;
+						if(req.otherBids.length)
+							highestBid = getMaxBid(req.otherBids).bidAmount || 0;
+						var bidRec = true;
+						if(bidCount === 0)
+							bidRec = false;
+						req.product.tradeType = req.bid.product.prevTradeType;
+						req.product.bidReceived = bidRec;
+						req.product.bidRequestApproved = false;
+						req.product.bidCount = bidCount;
+						req.product.highestBid = highestBid;
+					}
+					next();
+				});
+			} else {
+				if(req.bid.dealStatus === dealStatuses[0] && req.bid.bidStatus === bidStatuses[7] && req.bid.lastAccepted)
+					req.bids[0].lastAccepted = false;
+				next();
+			}
 		}
 		else
 			next();
 		
+	}
+
+	function nextApprovableBid(bid,otherBids){
+	  var selBid = null;
+	  if(bid.lastAccepted || !otherBids.length || bid.autoApprove)
+	    return selBid;
+	  otherBids.sort(function(a,b){
+	    return a.bidAmount - b.bidAmount;
+	  });
+	  otherBids.reverse();
+	  selBid = otherBids[0];
+	  return selBid;
+	}
+
+	function getMaxBid(bids){
+	  var maxBid = bids[0];
+	  for(var i=0;i < bids.length ; i++){
+	    if(maxBid.bidAmount < bids[i].bidAmount)
+	      maxBid = bids[i];
+	  }
+	  return maxBid;
 	}
 
 	function getSaleProcessMaster(cb){
@@ -529,12 +593,12 @@ exports.submitBid = function(req, res) {
 		delete bid._id;
 		AssetSaleBid.update({_id:bidId},{$set:bid},function(err){
 			if(err) console.log("Error in prevoius bid update",err);
-			var bidArr = [];
+			/*var bidArr = [];
 			var bidObj = {};
 			bidObj.ticketId = bid.ticketId;
 			bidObj.action = "BIDCHANGED";
 			bidArr.push(bidObj);
-			AssetSaleUtil.sendNotification(bidArr);
+			AssetSaleUtil.sendNotification(bidArr);*/
 			return cb();
 		});
 	}
@@ -544,9 +608,11 @@ exports.submitBid = function(req, res) {
 		AssetSaleBid.create(data, function(err, result) {
 			if (err)
 				return callback(err);
-			if(req.query.typeOfRequest !== "changeBid") {
+			//if(req.query.typeOfRequest !== "changeBid") {
 				var bidArr = [];
 				var bidObj = {};
+				if(req.query.typeOfRequest === "changeBid")
+					bidObj.action = "BIDCHANGED";
 				if(req.query.typeOfRequest === "buynow")
 					bidObj.action = "BUYNOW";
 				if(req.query.typeOfRequest === "submitBid")
@@ -554,7 +620,7 @@ exports.submitBid = function(req, res) {
 				bidObj.ticketId = result.ticketId;
 				bidArr.push(bidObj);
 				AssetSaleUtil.sendNotification(bidArr);
-			}
+			//}
 			return callback();
 		});
 	}
@@ -572,7 +638,7 @@ exports.withdrawBid = function(req, res) {
 		bidObj.action = "BIDWITHDRAW";
 		bidArr.push(bidObj);
 		AssetSaleUtil.sendNotification(bidArr);
-		return res.json({msg: "Bid withdraw Successfully!"});
+		return res.json({msg: "Bid withdrawn Successfully!"});
 	});
 
 	function getBid(callback){
@@ -904,7 +970,8 @@ exports.exportExcel = function(req,res){
 	var user = req.user;
 	var queryParam = req.query;
 	var fieldsMap = {};
-	filter.bidChanged = false;
+	if(!req.query.bidChanged)
+		filter.bidChanged = false;
 	
 	if(req.query.actionable === 'y')
 		filter.status = true;
@@ -945,7 +1012,6 @@ exports.exportExcel = function(req,res){
 		filter.bidStatus = queryParam.bidStatus;
 	if(req.sellers && req.sellers.length)
   		filter['product.seller._id'] = {$in:req.sellers || []};
-	 	
   	var query = AssetSaleBid.find(filter).populate('user product.proData');
 	query.exec(function(err,resList){
 		if(err) return handleError(res,err);
@@ -984,8 +1050,10 @@ exports.exportExcel = function(req,res){
 			if(keyObj.type && keyObj.type == 'boolean')
 			  val = val?'YES':'NO';
 			if(keyObj.type && keyObj.type == 'date' && val)
-			val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
-			if(keyObj.key && queryParam.seller === 'y') {
+				val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+			if(keyObj.type && keyObj.type == 'datetime' && val)
+				val = moment(val).utcOffset('+0530').format('hh:mm a');
+			/*if(keyObj.key && queryParam.seller === 'y' && (keyObj.key === 'buyerName' || keyObj.key === 'buyerMobile' || keyObj.key === 'buyerEmail')) {
 				if(item.user && keyObj.key === 'buyerName' &&  dealStatuses.indexOf(item.dealStatus) > 8)
 				    val = item.user.fname + " " + item.user.lname;
 				else if(item.user && item.user.mobile && keyObj.key === 'buyerMobile' && dealStatuses.indexOf(item.dealStatus) > 8)
@@ -994,20 +1062,8 @@ exports.exportExcel = function(req,res){
 					val = item.user.email;
 				else
 					val = "";
-			}
-			/*if(keyObj.key && keyObj.key === 'buyerMobile' && queryParam.seller === 'y') {
-				if(item.user && dealStatuses.indexOf(item.dealStatus) > 8)
-				    val = item.user.mobile;
-				else
-					val = "";
-			}
-			if(keyObj.key && keyObj.key === 'buyerEmail' && queryParam.seller === 'y') {
-				if(item.user && item.user.email && dealStatuses.indexOf(item.dealStatus) > 8)
-				    val = item.user.email;
-				else
-					val = "";
 			}*/
-			if(keyObj.key && keyObj.key === 'buyerName' && item.user && queryParam.seller !== 'y')
+			if(keyObj.key && keyObj.key === 'buyerName' && item.user)
 				val = item.user.fname + " " + item.user.lname;
 			if(keyObj.key && keyObj.key == 'fullPaymentAmount')
 				val = item.fullPaymentAmount;

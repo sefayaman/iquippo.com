@@ -594,7 +594,7 @@ exports.validateUpdate = function(req,res,next){
 
   var _id = req.body._id;
   var filter = {};
-  filter.product = _id;
+  filter['product.proData'] = _id;
   filter.offerStatus = offerStatuses[0];
   AssetSaleModel.find(filter,function(err,resultArr){
     if(err)return next(err);
@@ -1103,12 +1103,12 @@ exports.exportProducts = function(req, res) {
         }
         fetchResults();
       })
-    } /*else if(req.user.role === 'enterprise' && req.user.enterprise){
+    } else if(req.user.role === 'enterprise' && req.user.enterprise){
       filter["seller._id"] = {
           "$in": req.sellers || []
         }
         return fetchResults();
-    }*/ else {
+    } else {
       filter["seller._id"] = req.body.userid;
       fetchResults();
     }
@@ -1138,7 +1138,8 @@ exports.exportProducts = function(req, res) {
           if (colData && Object.keys(colData).length) {
             Object.keys(colData).forEach(function(y) {
               if (mapedFields[y] && (extraCols.indexOf(y) < 0)) {
-                obj[mapedFields[y]] = x[y];
+                if(x[y])
+                  obj[mapedFields[y]] = x[y];
                 ['category', 'brand', 'model'].forEach(function(u) {
                   if (x[u])
                     obj[mapedFields[u]] = x[u].name;
@@ -1488,7 +1489,6 @@ exports.validateExcelData = function(req, res, next) {
   var user = req.body.user;
   var reqType = req.reqType;
   var type = req.body.type;
-
   if(!reqType)
     return next(new APIError(400,'Invalid request type'));
 
@@ -1601,11 +1601,7 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateForBid(callback){
-      var ret = true;
-      if(ret)
-        return callback();
-      
-      if(row.tradeType !== 'RENT' || !row.assetId )
+      if(row.tradeType !== 'RENT' || !row.assetId)
         return callback();
 
       Product.find({assetId:row.assetId,deleted:false},function(err,prds){
@@ -1617,7 +1613,7 @@ exports.validateExcelData = function(req, res, next) {
           return callback('Error')
         };
         var filter = {};
-        filter.product = prds[0]._id;
+        filter['product.proData'] = prds[0]._id;
         filter.offerStatus = offerStatuses[0];
         AssetSaleModel.find(filter,function(err,resultArr){
           if(err){
@@ -1663,11 +1659,9 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validatePrice(callback){
-      
       if(row.tradeType && row.tradeType.toLowerCase() === 'rent')
         return callback();
-
-      var isCustomer = true; //['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      var isCustomer = ['enterprise','admin'].indexOf(req.body.user.role) === -1? true:false;
       var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";

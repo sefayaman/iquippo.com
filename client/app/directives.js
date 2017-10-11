@@ -87,7 +87,7 @@ angular.module('sreizaoApp')
     link: function (scope) {
       scope.$watch('videoid', function (newVal) {
            if (newVal) {
-               scope.url = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + newVal+"?autoplay=1");
+               scope.url = $sce.trustAsResourceUrl("https://www.youtube.com/embed/" + newVal+"?autoplay=1");
            }
         });
        //scope.url = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + scope.videoId);

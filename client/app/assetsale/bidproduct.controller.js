@@ -19,7 +19,7 @@ function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSv
 		$scope.$parent.tabValue = Auth.isAdmin()?'administrator':'seller';
 		if(!Auth.isAdmin())
 		 	initFilter.userid = Auth.getCurrentUser()._id;
-		if(Auth.isEnterprise()|| (Auth.isEnterpriseUser() && Auth.isBuySaleApprover())){
+		if(Auth.isEnterprise() || Auth.isEnterpriseUser()){
 			delete initFilter.userid;
 			initFilter.enterpriseId = Auth.getCurrentUser().enterpriseId;
 		}
@@ -39,6 +39,7 @@ function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSv
 
 	function onTabChange(tab,tabVal) {
 		vm.activeBid = tab;
+		vm.searchStr = "";
 		$state.go($state.current.name,{t:tabVal},{location:'replace',notify:false});
 		fireCommand(true);
 	}
@@ -49,7 +50,9 @@ function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSv
 		var filter = angular.copy(initFilter);
 		if (vm.searchStr) {
 			filter.isSearch = true;
-			filter.searchstr = encodeURIComponent(vm.searchStr);
+			filter.searchstr = vm.searchStr;
+			if(vm.activeBid === 'closed')
+				filter.searchStr = vm.searchStr;
 		}
 		
 		if(vm.activeBid === 'actionable'){
@@ -105,13 +108,15 @@ function BidProductCtrl($scope, $rootScope, $state,$stateParams, Auth, productSv
 	              exportFilter.productIds.push(item._id);
 	            });
 			}
+			exportFilter.actionable = 'y';
 		} else {
 			exportFilter.actionable = 'n';
-			exportFilter.dealStatuses = dealStatuses[12];
+			//exportFilter.dealStatuses = dealStatuses[12];
 		}
 		if(allReport === 'all'){
 			exportFilter = {};
 			angular.copy(initFilter, exportFilter);
+			exportFilter.bidChanged = true;
 		}
 		if(allReport === 'payment'){
 			exportFilter = {};
