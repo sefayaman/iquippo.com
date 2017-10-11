@@ -31,6 +31,7 @@ var AuctionMasterSchema = new Schema({
 	bidIncrement:Object,
 	lastMinuteBid:Number,
 	extendedTo:Number,
+	status:{type:Boolean,default:true},
 	contactName:String,
 	contactNumber:String,
 	allowBid:String,

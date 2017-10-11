@@ -552,6 +552,7 @@ exports.getOnFilter = function(req, res) {
     var cityRegex = new RegExp(req.body.location, 'i');
     filter['product.city'] = {$regex:cityRegex};
   }
+ console.log("data ayuct",req.body);
 
   if (req.body._id)
     filter["_id"] = req.body._id;
@@ -944,6 +945,7 @@ exports.exportAuction = function(req, res) {
 
 // Creates a new AuctionMaster in the DB.
 exports.createAuctionMaster = function(req, res) {
+  var options={};
   var filter = {}
   if (!req.body.auctionId)
     return res.status(401).send('Insufficient data');
@@ -963,8 +965,12 @@ exports.createAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
-        
-        Utility.sendAuctionData(req,res);
+        options.dataToSend=req.body;
+        options.dataType="auctionData";
+        Utility.sendCompiledData(options,function(err,result){
+          if(err) return handleError(res,err);
+          console.log("auctions data sent",result);
+        });
         return res.status(201).json({
           errorCode: 0,
           message: ""
@@ -1002,7 +1008,7 @@ exports.getAssetInfo=function(req,res){
 });
   };
 
-exports.sendUserToAs=function(req,res){
+/*exports.sendUserToAs=function(req,res){
 var userData={};
 var filter={};
 filter._id=req.body._id;
@@ -1023,7 +1029,7 @@ UserModel.find(filter,function(err,res){
     return res.status(500).json({"message":"no user Data"});
   }
 })
-};
+};*/
 
 
 
@@ -1071,6 +1077,7 @@ exports.updateAuctionMasterproduct = function(req, res) {
   }
 // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
+  var options={};
   var _id = req.body._id;
   if (req.body._id) {
     delete req.body._id;
@@ -1102,7 +1109,12 @@ exports.updateAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
-        Utility.sendAuctionData(req,res);
+        options.dataToSend=req.body;
+        options.dataType="auctionData";
+        Utility.sendCompiledData(options,function(err,result){
+          if(err) return handleError(res,err);
+          console.log("auctions data sent",result);
+        });
         updateAuctionRequest(req.body, _id);
         return res.status(200).json({
           errorCode: 0,

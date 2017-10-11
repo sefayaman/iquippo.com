@@ -290,13 +290,16 @@
     function getAuctionWiseProductData(result) {  
         var filter = {};      
         var auctionIds = [];
-        //console.log("result auctionWise",result); 
+        console.log("result auctionWise",result); 
         if(result && result.items) {     
           result.items.forEach(function(item) { 
           auctionIds[auctionIds.length] = item._id;
         });
         filter.auctionIds = auctionIds; 
-        filter.status = "request_approved";  
+        if($stateParams.type ==="S"){
+          filter.status = "request_approved";  
+        }
+      
         filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
 
         //console.log("view")

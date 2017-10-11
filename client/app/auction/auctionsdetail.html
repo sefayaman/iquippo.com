@@ -174,7 +174,7 @@
               <div class="col-sm-6">
                 <div class="media form-group">
                     <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
-                      <img class="media-object" ng-if="lot.primaryImg" src="{{uploadImagePrefix}}{{lot.assetDir}}/{{lot.primaryImg}}" alt="Image">                
+                      <img class="media-object" ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" alt="Image">                
                       <img class="media-object" ng-if="!lot.primaryImg" src="assets/uploads/auctionmaster/upcoming_12.jpg" alt="Image" height="100">                
                     </a>
                  

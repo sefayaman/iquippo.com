@@ -29,7 +29,7 @@
             angular.copy(result.items[0], $scope.currentAuction);	
           });
      	}
-       LotSvc.getData({auctionId:$scope.currentAuction.auctionId,distinct:true}).then(function(res){
+       LotSvc.getData({auctionId:$scope.currentAuction._id,distinct:true}).then(function(res){
             vm.lotList = res;   
          });
     }

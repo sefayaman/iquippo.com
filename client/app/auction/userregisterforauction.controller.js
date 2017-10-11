@@ -31,7 +31,7 @@
       }
 
       LotSvc.getData({
-        auctionId: $scope.currentAuction.auctionId,
+        auctionId: $scope.currentAuction._id,
         distinct: true
       }).then(function(res) {
         vm.lotList = res;

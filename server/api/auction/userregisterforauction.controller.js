@@ -159,8 +159,19 @@ exports.checkUserRegis = function(req,res){
 };
 
 exports.sendUserToAs=function(req,res){
+  var options={};
   console.log("req.body",req.body);
-  Utility.sendUserInfo(req.body);;
+  options.dataToSend=req.body;
+  options.dataType="userInfo";
+  Utility.sendCompiledData(options,function(err,result){
+    if(err) return handleError(res,err);
+     if(result){
+      return res.status(200).json(result);
+     }
+     else{
+      return new ApiError(409,"data not sent successfully");
+     }
+  });
 };
 
 
