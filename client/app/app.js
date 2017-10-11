@@ -108,6 +108,10 @@ angular.module('sreizaoApp',[
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
     var DevEnvironment = false;
 
+     $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+  // Send this header only in post requests. Specifies you are sending a JSON object
+     $http.defaults.headers.post['dataType'] = 'json';
+
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;

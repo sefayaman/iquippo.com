@@ -5,8 +5,10 @@ var trim = require('trim');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug')('server.components.utility');
+var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
+var AuctionMaster = require('../api/auction/auctionmaster.model');
 var AWS = require('aws-sdk');
 var util = require('util');
 var bucket = config.awsBucket;
@@ -25,7 +27,7 @@ var options = {
 };
 
 var client = s3.createClient(options);
-var request=require('request');
+var request = require('request');
 
 exports.toIST = toIST;
 exports.paginatedResult = paginatedResult;
@@ -151,195 +153,132 @@ function deleteFromS3(opts, cb) {
 
 }
 
+exports.sendCompiledData = sendCompiledData;
 
-exports.sendAuctionData=sendAuctionData;
-exports.sendLotData=sendLotData;
-exports.sendUserInfo=sendUserInfo;
 
-function sendAuctionData(req,res){
-  if(req && req.body && req.body.startDate && req.body.endDate){
-    req.body.startDate=req.body.startDate.toString();
-    req.body.endDate=req.body.endDate.toString();
+function sendCompiledData(options, cb) {
+  //var dataFormat = "";
+  console.log("totalData", options);
+  //filter._id = emdDataAs.auctionId
+  console.log(options.dataToSend, options.dataType)
+  async.series([function(next) {
+    fetchAuctionId(options, next);
+  }, function(next) {
+    compileData(options, next);
+  }, function(next) {
+    sendData(options, next);
+  }], function(err, results) {
+    if (err) {
+      console.log(err);
+      console.log(results);
+      return cb(null, results);
+    }
+  });
+}
+
+function compileData(options, callback) {
+  console.log("options compile", options);
+  switch (options.dataType) {
+    case "userInfo":
+      //dataFormat = "users";
+      callback(null, options);
+      break;
+    case "lotData":
+      // dataFormat = "lots";
+      if (options.dataToSend.assetDir)
+        delete options.dataToSend.assetDir;
+      if (!options.dataToSend.emdAmount)
+        options.dataToSend.emdAmount = "";
+       callback(null, options);
+      break;
+    case "emdData":
+      //dataFormat = "emd";
+      callback(null, options);
+      break;
+    case "auctionsData":
+      // dataFormat = "auctions";
+      if (options.dataToSend._id)
+        delete options.dataToSend._id;
+      if (options.dataToSend.auctionOwner && options.dataToSend.auctionOwnerMobile) {
+        delete options.dataToSend.auctionOwner;
+        delete options.dataToSend.auctionOwnerMobile;
+      }
+      if (options.dataToSend.bidInfo)
+        delete options.dataToSend.bidInfo;
+      callback(null, options);
+      break;
   }
-  req.body.primaryImg="http://s3.ap-south-1.amazonaws.com/iquppo-image-upload/assets/uploads/1495866315358/Belaz_240T_-_2068_x_1468_75.jpg";
-  if(req.body._id)
-    delete req.body._id;
-  if(req.body.auctionOwner && req.body.auctionOwnerMobile){
-    delete req.body.auctionOwner;
-    delete req.body.auctionOwnerMobile;
-  }
-  if(req.body.bidInfo)
-    delete req.body.bidInfo;
-  var auctionsData=[];
-  auctionsData.push(req.body);
-  console.log("auctionsData",auctionsData);
-  /*var auctionsData=[{
-    //"_id" : "59af77f012667780104fffe1",
-    "name" : "RockSteel",
-    "auctionId" : "5680",
-    "startDate":"2017-09-13T04:21:00.000Z",
-    "endDate" : "2017-09-16T04:21:00.000Z",
-    "auctionOwnerMobile" : "8697733634",
-    "insStartDate" : "2017-09-09T04:21:00.000Z",
-    "insEndDate" : "2017-09-12T04:21:00.000Z",
-    "regEndDate" : "2017-09-11T18:30:00.000Z",
-    "city" : "Allahabad",
-    "auctionType" : "A",
-    "emdTax" : "lotWise",
-    "taxApplicability" : "included",
-    "bidIncrement" : 10000,
-    "lastMinuteBid" : 45,
-    "extendedTo" : 60,
-    "auctionOwner" : "Balaji Andhavarapu",
-    "state" : "Uttar Pradesh",
-    "updatedAt" : "2017-09-06T04:22:08.634Z",
-    "createdAt" : "2017-09-06T04:22:08.634Z" 
-}];*/
-var  auctionsData=JSON.stringify(auctionsData);
-var data = {
-  "auctions":auctionsData
-};
-request.post({
-  url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-auction",
-  form:data
-},function(err,httpres,data){
-  if(err) throw err;
-  console.log("response",data);
-  try{
-  data = JSON.parse(data);
-  console.log("Data",data);
-  /*res.json({data:data,
-    message:"Your auction has been created"});*/
-}
-catch(err){
-  handleError(res,err);
-}
-console.log(data);
-});
 }
 
-function sendLotData(req,res){
-if(req && req.body && req.body.startDate && req.body.endDate){
-  req.body.startDate=req.body.startDate.toString();
-  req.body.endDate=req.body.endDate.toString();
+
+function fetchAuctionId(options, callback) {
+  var filter = {};
+  console.log("auctions", options);
+  if (options.dataToSend.auctionId)
+    filter._id = options.dataToSend.auctionId;
+  if (options.dataToSend.startDate && options.dataToSend.endDate) {
+    options.dataToSend.startDate = options.dataToSend.startDate.toString();
+    options.dataToSend.endDate = options.dataToSend.endDate.toString();
+  }
+  if (options.dataToSend.updatedAt)
+    delete options.dataToSend.updatedAt;
+  AuctionMaster.find(filter, function(err, result) {
+    if (err) {
+      return callback(err);
+    }
+    if (result.length > 0) {
+      options.dataToSend.auctionId = result[0].auctionId;
+      console.log("optionsData", options.dataToSend);
+      return callback(null, options.dataToSend);
+    } else {
+      return callback(err);
+    }
+  });
 }
-if(req.body.updatedAt)
-delete req.body.updatedAt;
-if(req.body.assetDir)
-delete req.body.assetDir;
-if(req.body.primaryImg)
-delete req.body.primaryImg;
-if(!req.body.emdAmount)
-  req.body.emdAmount="";
-if(req.body._id){
-  req.body.lot_id=req.body._id;
-delete req.body._id;
-   }
-var lotData=[];
-lotData.push(req.body);
- 
-/*var lotData=[];
-lotData.push({ 
-"lot_id":"",
-"assetDesc":"Backhoe Loader Ashok Leyland BHL435",
-"emdAmount":"4500",
-"assetId":"1502690241346",
-"auctionId":"564674",
-"endDate":"2017-09-28T08:17:00.000Z",
-"lotNumber":"856",
-"userId":"589183a407ca290e48df2b1f",
-"reservePrice":320000,
-"startDate":"2017-09-19T08:17:00.000Z",
-"startingPrice":5600
-});
-*/
-console.log("lotData",lotData);
-lotData=JSON.stringify(lotData);
-var data =  {"lots":lotData
-};
-request.post({
-  url:"http://auctionsoftwaremarketplace.com:3007/api_call/new-lots",
-  form:data
-},function(err,httpres,asData){
-  if(err){
-      console.log(err); 
-    } else{
-      try{
+
+
+function sendData(options, callback) {
+  var serviceData = [];
+  serviceData.push(options.dataToSend);
+  serviceData = JSON.stringify(serviceData);
+  var dataFormat = {
+    "userInfo": "users",
+    "lotData": "lots",
+    "auctionData": "auctions",
+    "emdData": "emd"
+  };
+  var format = "";
+  format = dataFormat[options.dataType];
+  var data = {};
+  data[format] = serviceData;
+  console.log("serviceDatas", data);
+
+  var obj = {
+    "userInfo": 'registered-user-update',
+    "lotData": 'new-lots',
+    "auctionData": 'new-auction',
+  };
+
+  var url = 'http://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
+  request.post({
+    url: url,
+    form: data
+  }, function(err, httpres, asData) {
+    if (err) {
+      callback(err);
+    } else {
+      try {
         console.log(asData);
-      //asData = JSON.parse(asData);
-      //res.json(data);      
+        callback(null, {
+          message: "data updated successfully"
+        });
+      } catch (err) {
+        callback(err);
+      }
     }
-    catch(err){
-     // handleError(res,err);
-    }
-  }
-});
+  });
 }
 
-function sendUserInfo(user,cb){
-  var userData=[];
-  userData.push(user);
-    /*var userData=
-    // {"_id" : "59ae41ab7e1bc33158217363",
-    {
-    "_id" : "596db5e0005b85184c791d43",
-    "updatedAt" : temp,
-    "createdAt" : temp,
-     "mname":"abd",
-    "email":"abc@gmail.com",
-    "phone":"9717017982",
-    "address":"adbv",
-    "company":"hfjfj",
-    "location":"singapore Malaysia",
-    "fname" : "Polish",
-    "lname" : "Panda",
-    "hashedPassword" : "hsyfWaJ1j7U3rFqRC1gVDthaqmUAqCsc8c9fJktJQKDuBMrAz7ftd5g9R2fP9hwBoRAdYLTRcw6eYNBE02T3Vw==",
-    "salt" : "Lzvg0+O5uWVRuBtMB3BxFw==",
-    "country" : "India",
-    "state" : "Assam",
-    "city" : "Dibrugarh",
-    "mobile" : "9717017982",
-    "agree" : true,
-    "otp" : "795706",
-    "isPartner" : false,
-    "isManpower" : false,
-    "deleted" : false,
-    "profileStatus" : "complete",
-    "mobileVerified" : true,
-    "emailVerified" : false,
-    "status" : true,
-    "availedServices" : [],
-    "role" : "customer",
-    "userType" : "individual"
-};*/
-//please send dummy values in those required fields. I will change the code for future
-//go ahead
-//please add those values
-
-  userData=JSON.stringify(userData);
- var data = {
-  "users":userData
- };
- console.log("users",data);
-request.post({
-  url:"http://auctionsoftwaremarketplace.com:3007/api_call/registered-user-update",
-  form:data
-},function(err,httpres,asData){
-  if(err){
-      console.log(err); 
-    } else{
-      try{
-        console.log(asData);
-        cb(null,"data updated successfully");
-      //asData = JSON.parse(asData);
-      //res.json(data);      
-    }
-    catch(err){
-     // handleError(res,err);
-    }
-  }
-});
-}
 
 function uploadDirToS3(localDirPath, cb) {
   var params = {

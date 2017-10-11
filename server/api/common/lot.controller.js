@@ -3,11 +3,12 @@
 var _ = require('lodash');
 var Lot = require('./lot.model');
 var AuctionMaster = require('../auction/auctionmaster.model');
-var aysnc= require('async');
+var async= require('async');
 var ApiError = require('../../components/_error');
 var Util=require('../../components/utility');
 exports.create = function(req, res, next) {
-  aysnc.series({ 
+  var options={};
+  async.series({ 
     fetchAuction: function(callback) {
       if (req.body && req.body.auctionId) {
         AuctionMaster.find({
@@ -38,13 +39,18 @@ exports.create = function(req, res, next) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    Util.sendLotData(req,res);
+    options.dataToSend=req.body;
+    options.dataType="lotData";
+    Util.sendCompiledData(options,function(err,result){
+      if(err) return handleError(res,err);
+      console.log(result);
+    });
     return res.status(200).json(results.saveLot);
   });
 };
 
 exports.updateLotData = function(req, res) {
-
+  var options={};
   req.body.updatedAt = new Date();
   delete req.body._id;
   Lot.update({
@@ -55,14 +61,19 @@ exports.updateLotData = function(req, res) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    Util.sendLotData(req,res);
+    options.dataToSend=req.body;
+    options.dataType="lotData";
+    Util.sendCompiledData(options,function(err,result){
+      if(err) return handleError(res,err);
+      console.log(result);
+    });
     return res.status(200).json(req.body);
   });
 
 };
 
 exports.updateProductLotData = function(req, res) {
-  
+   var options={};
     req.body.updatedAt = new Date();
     Lot.update({
       "_id": req.params.id
@@ -72,10 +83,14 @@ exports.updateProductLotData = function(req, res) {
       if (err) {
         res.status(err.status || 500).send(err);
       }
-      Util.sendLotData(req,res);
+    options.dataToSend=req.body;
+    options.dataType="lotData";
+      Util.sendCompiledData(options,function(err,result){
+      if(err) return handleError(res,err);
+      console.log(result);
+    });
       return res.status(200).json(req.body);
     });
-  
   };
 
 exports.getLotData = function(req, res) {
@@ -83,6 +98,7 @@ exports.getLotData = function(req, res) {
   var query={};
    if(req.query.auctionId && req.query.distinct){
   filter.auctionId=req.query.auctionId;
+  console.log("the filter",filter);
 query = Lot.find(filter).distinct('lotNumber');
    }
 else if(req.query){
@@ -144,3 +160,7 @@ exports.removeLotData = function(req, res) {
         return res.status(200).json(req.body);
       });
 };
+
+function handleError(res,err){
+    return res.status(500).json(err);
+}

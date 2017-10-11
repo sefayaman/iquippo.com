@@ -1002,7 +1002,7 @@
                 Auction Name :{{auctionReq.auctionname}}<br/>
                 List In auction :
                 <input type="checkbox" name="listinupcommingdata" ng-model="auctionReq.listinupcommingdata" value="checked" ng-change ="checkauction(auctionReq.listinupcommingdata)"><br/>
-                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" ng-if="auctionselect">
+                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" ng-if="auctionselect" ng-change="onAuctionSelection(auctionReq.dbAuctionId)">
                     <option value="">Select Auction</option>
                     <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
                   </select>
@@ -1015,7 +1015,7 @@
             <div class="row" ng-if="!isExpire">
               <div class="form-group col-sm-5">Auction</div>
               <div class="col-sm-7 form-group">
-                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId">
+                <select class="form-control" name="auctionDate" ng-model="auctionReq.dbAuctionId" ng-change="onAuctionSelection(auctionReq.dbAuctionId)">
                   <option value="">Select Auction</option>
                   <option  ng-repeat="act in auctions" value="{{act._id}}">{{act.name}}({{act.startDate|date:MM/dd/yyyy}}-{{act.endDate|date:MM/dd/yyyy}})</option>
                 </select>
@@ -1024,7 +1024,7 @@
               
             </div>
         </div>
-        <div class="row" ng-if="isCustomer()">
+        <div class="row" ng-if="!isAdmin()">
           <div class="form-group col-sm-5">Auction </div>
           <div class="form-group col-sm-7">
             <input type="text" name="auctname" class="form-control" ng-model="lot.auctname" min="0" placeholder="auctname" required>
@@ -1044,34 +1044,38 @@
               </div>
           </div>
         </div>-->
-          <div class="row" ng-if="isCustomer()">
+          <div class="row" ng-if="!isAdmin()">
             <div class="form-group col-sm-5">EMD Amount </div>
             <div class="form-group col-sm-7">
               <input type="number" name="emdAmount" class="form-control" ng-model="lot.emdAmount" min="0" placeholder="EMD Amount">
             </div>
            </div>
         
-        <div class="row" ng-if="isCustomer()">
+        <div class="row" ng-if="!isAdmin()">
           <input type="hidden" name="certification" class="form-control" ng-model="lot.cerification" placeholder="lot.cerification">
         </div>
          
         <div class="row">
           <div class="form-group col-sm-5">Lot Number<span class="text-warning">*</span></div>
-          <div class="form-group col-sm-7" ng-class="{'has-error': form.lotId.$invalid && submitted}">
-            <input type="text" name="lotId" ng-value="product.lotId" ng-model="lot.lotNumber" class="form-control" placeholder="Enter Lot Number" ng-blur="checkForLot(lot.lotNumber,auctionReq.dbAuctionId)"/>
-          </div>
+          <div class="col-sm-7 form-group">
+                <select class="form-control" name="auctionDate" ng-model="lot.lotNumber" ng-change="checkForLot(lot.lotNumber,auctionReq.dbAuctionId)">
+                  <option value="">Select Lot</option>
+                  <option  ng-repeat="lot in lots" value="{{lot}}">{{lot}}</option>
+                </select>
+                <i class="caret"></i>
+              </div>
         </div>
         <div class="row">
           <div class="form-group col-sm-5">Lot Start Date and End Date</div>
           <div class="col-sm-3 form-group" ng-class="{'has-error': lot.startDate.$invalid && submitted }">
             <div class="input-group">
-              <input class="form-control" id="lotstart" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required/>
+              <input class="form-control" id="lotstart" datetime-picker readonly name="startDate" ng-model="lot.startDate" placeholder="Lot Start Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" disabled />
               <label class="input-group-addon" for="lotstart"><i class="fa fa-calendar"></i></label>
             </div>
           </div>
           <div class="col-sm-3 form-group" ng-class="{'has-error': lot.endDate.$invalid && submitted }">            
             <div class="input-group">
-              <input class="form-control" id="lotend" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" ng-disabled="lotDate" required/>
+              <input class="form-control" id="lotend" datetime-picker readonly name="endDate" ng-model="lot.endDate" placeholder="Lot End Date &amp; Time*" date-format="MM/dd/yyyy hh:mm a" disabled/>
               <label class="input-group-addon" for="lotend"><i class="fa fa-calendar"></i></label>
             </div>  
           </div>
@@ -1183,7 +1187,7 @@
         </div>
       
 
-         <div class="row" ng-if="isCustomer()">
+         <div class="row" ng-if="!isAdmin()">
           <div class="col-sm-5 form-group">
             Start Date of Auction
           </div>
@@ -1196,7 +1200,7 @@
         </div>
   
 
-        <div class="row" ng-if="isCustomer()">
+        <div class="row" ng-if="!isAdmin()">
           <div class="col-sm-5 form-group">
             End Date of Auction
           </div>

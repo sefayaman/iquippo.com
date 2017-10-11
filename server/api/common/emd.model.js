@@ -7,6 +7,7 @@ var EmdSchema = new Schema({
   auctionId:String,
   auctionName:String,
   selectedLots:[],
+  status:{type:Boolean,default:true},
   amount:String,
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
