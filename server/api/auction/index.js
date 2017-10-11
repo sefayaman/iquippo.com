@@ -8,7 +8,7 @@ var auth = require('../../auth/auth.service');
 //var auctionDetailController=require('./auctionDetail.controller');
 
 var router = express.Router();
-
+router.get('/changeauctiontype', controller.changeAuctionType);
 router.get('/', controller.getAll);
 router.get('/:id', controller.getOnId);
 router.post('/', controller.create);
@@ -18,11 +18,15 @@ router.post('/onfilter', controller.getOnFilter);
 router.post('/export', controller.exportAuction);
 router.post('/getauctiondata', controller.getAuctionInfoForProduct);
 router.get('/auctionmaster/get', controller.getAuctionMaster);
+router.get('/auctionmaster/auctiondetail', controller.auctiondetail);
 router.post('/auctionmaster/save', controller.createAuctionMaster);
 router.put('/auctionmaster/:id', controller.updateAuctionMaster);
+router.put('/auctionmasterproduct/:id', controller.updateAuctionMasterproduct);
 router.post('/auctionmaster', controller.importAuctionMaster);
 router.delete('/auctionmaster/:id', controller.deleteAuctionMaster);
 router.post('/auctionmaster/onauctionmasterfilter', controller.getFilterOnAuctionMaster);
+router.get('/checkforasset/asset',controller.getAssetInfo);
+router.post('/sendusertoas/asset',controller.sendUserToAs);
 //router.get('/auctionmaster/getAuctionCount', auctionDateController.count);
 //router.get('/auctionmaster/fetchAuctionData',auctionDateController.fetch,auctionDateController.renderJson);
 //router.get('/auctionmaster/getAuctionItemsCount',auctionDetailController.count);

@@ -71,7 +71,7 @@ angular.module('sreizaoApp')
         }
       })
       .state('productdetail', {
-        url: '/productdetail/:id',
+        url: '/productdetail/:id?assetListedInAuction',
         templateUrl: 'app/product/productdetail.html',
         controller: 'ProductDetailCtrl as productDetailVm',
         layout:'client'
@@ -370,10 +370,22 @@ angular.module('sreizaoApp')
           $rootScope.metaDescription=pagesTitles.viewauctions.meta;
         }
       })
-      .state('assetinacuction', {
+      .state('assetinauction', {
         url: '/assetinauction',
         templateUrl: 'app/auction/auctionsdetail.html',
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
+        layout:'client'
+      })
+      .state('auctionlot', {
+        url: '/buyerdashboard',
+        templateUrl: 'app/auction/buyerdashboard.html',
+        authenticate:true,
+        layout:'admin'
+      })
+      .state('auctionlive', {
+        url: '/liveauction',
+        templateUrl: 'app/auction/liveauction.html',
+        controller:'LiveAuctionCtrl as liveAuctionVm',
         layout:'client'
       })
       .state('valuationrequests', {

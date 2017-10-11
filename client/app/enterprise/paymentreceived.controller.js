@@ -5,7 +5,7 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
  	var vm = this;
 
  	//var selectedItems = [];
- 	var statuses = [EnterpriseValuationStatuses[5]];
+ 	var statuses = [EnterpriseValuationStatuses[7]];
 
 
  	$scope.pager = PagerSvc.getPager();
@@ -134,9 +134,9 @@ function EnterprisePaymentReceivedCtrl($scope, $rootScope,$uibModal,Modal,Auth, 
         .then(function(valList){
           valList.forEach(function(item){
             item.paymentReceived = true;
-            EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[6],true);
+            EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[8],true);
             if(isCompleted)
-              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[8]);
+              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[10]);
           });
           EnterpriseSvc.bulkUpdate(valList);
         })

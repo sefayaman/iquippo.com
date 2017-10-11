@@ -4,7 +4,7 @@ angular.module('sreizaoApp').controller('EnterprisePaymentMadeCtrl',EnterprisePa
 function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $state,notificationSvc, EnterpriseSvc, userSvc,PagerSvc) {
  	var vm = this;
 
-  var statuses = [EnterpriseValuationStatuses[5]];
+  var statuses = [EnterpriseValuationStatuses[7]];
   
    var checkdetailObj = {
           bankName:"",
@@ -143,9 +143,9 @@ function EnterprisePaymentMadeCtrl($scope, $rootScope,$uibModal,Modal,Auth, $sta
         .then(function(valList){
           valList.forEach(function(item){
             item.paymentMade = true;
-            EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[7],true);
+            EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[9],true);
             if(isCompleted)
-              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[8]);
+              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[10]);
           });
           EnterpriseSvc.bulkUpdate(valList);
         })

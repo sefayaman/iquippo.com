@@ -13,6 +13,8 @@ var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
 var PaymentMasterModel = require('../common/paymentmaster.model');
+var PaymentTransactionModel=require('../payment/payment.model');
+var UserModel=require('../user/user.model');
 var vendorModel = require('../vendor/vendor.model');
 
 // Get list of auctions
@@ -42,7 +44,12 @@ var dateUtil = {
 }
 
 exports.getAll = function(req, res) {
-  AuctionRequest.find(function(err, auctions) {
+  var filter = {};
+  if(req.query.auctionId){
+    filter.auctionId = req.query.auctionId;
+    console.log("filter.auctionId",filter.auctionId);
+    }
+  AuctionRequest.find(filter,function(err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -956,6 +963,8 @@ exports.createAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
+        console.log("auctionData",req.body);
+        Utility.sendAuctionData(req,res);
         return res.status(201).json({
           errorCode: 0,
           message: ""
@@ -966,9 +975,81 @@ exports.createAuctionMaster = function(req, res) {
 
 };
 
+exports.getAssetInfo=function(req,res){
+  var filter={};
+  var data={};
+  filter._id=req.query.dbAuctionId;
+  AuctionMaster.find(filter,function(err,results){
+  if(err){
+    return handleError(res,err);
+  }
+  console.log("auctionData",results);
+  if(results.length > 0){
+    if(results[0].auctionType === 'S')
+    data.auctionType=results[0].auctionType;
+  filter={};
+  filter.assetId=req.query.assetId;
+  Product.update(filter,{$set:{"status":true}},function(err,resproduct){
+   if(err){
+    return handleError(res,err);
+   }
+   return res.status(200).json({"message":"userActive"});
+  });
+  }
+  else{
+  return res.status(500).json({"message":"No Auction Data"});
+}
+});
+  };
+
+exports.sendUserToAs=function(req,res){
+var userData={};
+var filter={};
+filter._id=req.body._id;
+UserModel.find(filter,function(err,res){
+  if(err) return handleError(res,err);
+  if(res.length > 0){
+   userData=res[0];
+   console.log("fetched User",userData);
+   Utility.sendUserInfo(userData,function(err,asData){
+  if(err){
+    return handleError(res,err);
+  }
+  console.log("AsDATA",asData);
+  return res.status(200).json(asData);
+});
+  }
+  else{
+    return res.status(500).json({"message":"no user Data"});
+  }
+})
+};
+
+
+
+exports.updateAuctionMasterproduct = function(req, res) {
+  var _id = req.body._id;
+  AuctionMaster.update({
+        _id: _id
+      }, {
+        $set: req.body
+      }, function(err) {
+            if (err) {
+              return handleError(res, err);
+            }
+            res.status(200).json({
+              errorCode: 0,
+              message: "Auction Data Successfully saved."
+            });
+         
+      });
+    
+  }
 // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
   var _id = req.body._id;
+
+  console.log("_id",_id);
   if (req.body._id) {
     delete req.body._id;
   }
@@ -999,6 +1080,7 @@ exports.updateAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
+        Utility.sendAuctionData(req,res);
         updateAuctionRequest(req.body, _id);
         return res.status(200).json({
           errorCode: 0,
@@ -1044,9 +1126,9 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter["user.mobile"] = req.body.mobile;
   if(req.body.auctionId)
     filter.auctionId = req.body.auctionId;
-  if(req.body.statusType){
+  /*if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
-  }
+  }*/
    var currentDate = new Date();
   if (req.body.auctionType === 'closed'){
     //var currentDate = new Date();
@@ -1058,6 +1140,16 @@ exports.getFilterOnAuctionMaster = function(req, res) {
     filter.endDate={
     '$gt': currentDate
     };
+
+    filter.auctionType = {'$ne':"S"};
+
+  }else if(req.body.auctionType === 'expireauction') {
+    //var currentDate = new Date();
+    filter.endDate={
+    '$lt': currentDate
+    };
+    filter["_id"] = req.body._id;
+
   }else if(req.body.auctionType === 'upcomingauctions') {
     //var currentDate = new Date();
     filter.endDate={
@@ -1066,6 +1158,16 @@ exports.getFilterOnAuctionMaster = function(req, res) {
    filter.startDate={
     '$gt': currentDate
     };
+
+    filter.auctionType = {'$ne': "S"};
+
+
+    
+  }
+  else if(req.body.auctionType === 'S') {
+    //var currentDate = new Date();
+  
+   filter.auctionType="S";
     
   }
 
@@ -1251,20 +1353,60 @@ exports.getAuctionWiseProductData = function(req, res) {
 
 }
 
+exports.auctiondetail = function(req, res) {
+  var filter = {};
+  var queryObj = req.query;
+
+     
+   var currentDate = new Date();
+
+    filter.endDate ={
+    '$lt': currentDate
+    };
+
+    filter._id = queryObj.auctionId;
+      var query = AuctionMaster.find(filter);
+      query.exec(function(err, auctions) {
+      if (err) {
+           console.log("err", err);
+          return handleError(res, err);
+      }
+      return res.status(200).json(auctions);
+      });
+}
+
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
-  if (req.body._id)
-    filter._id = req.body._id;
+  console.log("fhghg",queryObj);
+        if (req.body._id){
+        filter._id = req.body._id;
+        }
 
-  if (queryObj.yetToStartDate)
-    filter['startDate'] = {
-      '$gt': new Date()
-    }
+        if (queryObj.yetToStartDate){
+        filter.endDate={
+        '$gt': new Date()
+        };
 
-    if(queryObj.dbauctionId){
-      filter._id=queryObj.dbauctionId;
-    }
+        filter.auctionType = {'$ne':"S"};
+        }
+
+
+        if(req.query.auctionId){
+        filter.auctionId = req.query.auctionId;
+        console.log("filter.auctionId",filter.auctionId);
+        }
+
+        if(req.query._id){
+        filter._id = req.query._id;
+        console.log("filter._id",filter);
+        }
+
+        if(queryObj.dbauctionId){
+        filter._id=queryObj.dbauctionId;
+        }
+
+
   var query = AuctionMaster.find(filter).sort({
     createdAt: -1
   })
@@ -1273,6 +1415,8 @@ exports.getAuctionMaster = function(req, res) {
       console.log("err", err);
       return handleError(res, err);
     }
+
+    console.log("auctions",auctions);
     return res.status(200).json(auctions);
   });
 }
@@ -1569,6 +1713,35 @@ function importAuctionMaster(req, res, data) {
     });
   }
 }
+exports.changeAuctionType = function(req, res) {
+  var filter = {};
+  
+  AuctionMaster.find(filter,function(err, auctions) {
+    var auctionType={};
+        auctions.forEach(function(doc) {
+            if(doc){
+              if(doc.auctionType=='live'){
+                 auctionType='L';
+                 doc.update({$set:{auctionType:auctionType}},function(err){
+                //return res.status(200).json(req.body);
+              });
+              }
+              if(doc.auctionType=='online'){
+                 auctionType='A';
+                 doc.update({$set:{auctionType:auctionType}},function(err){
+                //return res.status(200).json(req.body);
+              });
+
+              }
+              
+            }
+          });
+    if (err) {
+      return handleError(res, err);
+    }
+    //return res.status(200).json(auctions);
+  });
+};
 /* end of auctionmaster */
 function handleError(res, err) {
   return res.status(500).send(err);
@@ -1646,5 +1819,5 @@ exports.getAuctionWiseProductData = function(req, res) {
   .catch(function(err){
     return handleError(res, err);
   });
-
+  
 }

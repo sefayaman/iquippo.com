@@ -34,11 +34,12 @@ angular.module('sreizaoApp',[
    'nvd3',
    'timer'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider,$sceProvider) {
     $urlRouterProvider
       .otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    $sceProvider.enabled(false);
 
     $locationProvider.html5Mode(true);
     if (!$httpProvider.defaults.headers.get) {
@@ -211,6 +212,7 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
     $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
+    $rootScope.isValuationPartner = Auth.isValuationPartner;
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     

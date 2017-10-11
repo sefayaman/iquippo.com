@@ -39,7 +39,7 @@ function ValuationListingCtrl($scope,$stateParams,$state,Modal,Auth,ValuationSvc
 
 	 			if($stateParams.mode=="myrequest"){
 	 				mode = "user";
-	 			}else if($stateParams.mode == "valuationpartner" && Auth.isPartner()){
+	 			}else if($stateParams.mode == "valuationpartner" && Auth.isValuationPartner()){
 	 				mode = "agency";
 	 			}else{
 	 				goToUserMode();

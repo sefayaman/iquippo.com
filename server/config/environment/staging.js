@@ -19,6 +19,7 @@ module.exports = {
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://appUser:iQuippoAppUser^*$!2K17@newuatdb1.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@newuatdb2.iquippo.com:28018,appUser:iQuippoAppUser^*$!2K17@newuatdb3.iquippo.com:28018/sreiglobaldb'
+
   },
   uploadPath: "./../public/assets/uploads/",
   templatePath:'./../public/assets',
@@ -32,7 +33,7 @@ module.exports = {
   awsEndpoint: 's3.ap-south-1.amazonaws.com',
   awsAccessKeyId: 'AKIAIEW6UDFVW7GEQAGQ',
   awsSecretAccessKey: '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',
-  awsBucket: 'iquippo-image-upload',
+  awsBucket: 'iquippo-image-upload-dev',
   awsUrl: 'https://s3.ap-south-1.amazonaws.com/'
   
 

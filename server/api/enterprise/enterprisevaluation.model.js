@@ -43,6 +43,8 @@ var EnterpriseValuationSchema = new Schema({
   disFromCustomerOffice:String,
   customerInvoiceDate:Date,
   customerInvoiceValue:Number,
+  invoiceDoc:{},
+  rcDoc:{},
   /* Valuation agency  field */
   submittedToAgencyDate:Date,
   jobId:String,
@@ -77,11 +79,20 @@ var EnterpriseValuationSchema = new Schema({
   /*Common fields*/
   assetDir:String,
   remarks:String,
+  auditLogs:[{}],
   deleted:{type:Boolean,default:false},
+  cancelled:{type:Boolean,default:false},
+  cancellationFee:Number,
+  cancelledBy:{},
+  onHold:{type:Boolean,default:false},
+  onHoldDate:Date,
+  onHoldMsg:String,
+  userComment:String,
   status:{type:String,default:"Request Initiated"},
   statuses:[],
   createdBy:{},
   nameOfCustomerSeeking : String,
+  resubmit:{type:Boolean,default:false},
   reportSubmissionDate:Date,
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}
@@ -92,6 +103,8 @@ EnterpriseValuationSchema.pre('save',function(next){
   var cprefix = 'EV';
   var sequence = seqGenerator.sequence();
   sequence.next(function(seqnum){
+    if(self.uniqueControlNo)
+      return next();  
     var date = new Date();
     var dateStr = date.getDate()+ "" + (date.getMonth() + 1)+ "" + date.getFullYear();
     self.uniqueControlNo = cprefix + dateStr + seqnum;

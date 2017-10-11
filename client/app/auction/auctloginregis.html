@@ -1,0 +1,27 @@
+<div>
+
+  <div class="modal-body">
+       <button type="button" class="close" ng-click="auctionRegisVm.closeDialog()" aria-hidden="true">&times;</button>
+  
+    <div ng-if="true">
+      <p>Kindly Select Lot Number</p>
+     <div>
+        <form class="form" name="form" novalidate>
+          <div class="row">
+            <div class="col-sm-offset-2 col-sm-8 form-group" ng-class="{'has-error': form.userId.$invalid && form.submitted }">
+
+                <select class="form-control form-group" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in auctionRegisVm.lotList" ng-model="auctionRegisVm.dataToSend.selectedLots" multiple>
+              </select>
+              <div class="text-right">
+                <button type="button" class="btn btn-danger" ng-click="auctionRegisVm.openAuctionModel(form)">Submit</button>
+              </div>
+
+              
+            </div>
+          </div>
+        </form>
+      </div>
+    
+    </div>    
+  </div>  
+</div>

@@ -3,7 +3,7 @@
 
   angular.module('sreizaoApp').controller('ViewAuctionCtrl', ViewAuctionCtrl);
 
-  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc, AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc) {
+  function ViewAuctionCtrl($scope, $rootScope, $location, Modal, Auth,PagerSvc,LotSvc,AuctionSvc, UtilSvc, LocationSvc, $stateParams, $state, $uibModal, uiGmapGoogleMapApi, uiGmapIsReady, userRegForAuctionSvc,EmdSvc) {
     var vm = this;
     //pagination variables
     var prevPage = 0;
@@ -13,7 +13,8 @@
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;
-    $scope.pager=PagerSvc.getPager();
+    vm.dataModel = {};
+    $scope.pager = PagerSvc.getPager();
 
     var listingCount = {};
     vm.show=false;
@@ -28,36 +29,74 @@
     vm.fireCommand = fireCommand;
     vm.fireCommandType = fireCommandType;
     vm.getProductData = getProductData;
+    vm.emdamount = null;
     $scope.auctionType = 'upcoming';
     $scope.auctionOnMap = false;
+    vm.lotList=[];
     
     var dataToSend = {};
     var query = $location.search();
     var filter = {};
-    vm.openBidModal = openBidModal;
+    vm.openAuctionLot = openAuctionLot;
+    vm.openAuctionModel =openAuctionModel;
+    $scope.currentAuction ={};
+    vm.auctionId ="";
 
+    function openAuctionLot(auction){
+      Auth.isLoggedInAsync(function(loggedIn) {
+        if (loggedIn) {
+           var auctionRegislogin = $rootScope.$new();
+           auctionRegislogin.currentAuction = auction;
+            Modal.openDialog('auctionRegislogin',auctionRegislogin);
+        }else{
+            var regUserAuctionScope = $rootScope.$new();
+            regUserAuctionScope.currentAuction = auction;
+            Modal.openDialog('auctionRegistration', regUserAuctionScope);
+        }
+      });
+    }
 
-    // bid summary
-    function openBidModal(auction){
+    function openAuctionModel(lotData){
+      // console.log('currentscope',$scope.currentAuction);
       Auth.isLoggedInAsync(function(loggedIn) {
           if (loggedIn) {
             var dataObj = {};
             dataObj.auction = {};
             dataObj.user = {};
-            dataObj.auction.dbAuctionId = auction._id;
-            dataObj.auction.name = auction.name;
-            dataObj.auction.auctionId = auction.auctionId;
-            dataObj.auction.emdAmount = auction.emdAmount;
-            dataObj.auction.auctionOwnerMobile = auction.auctionOwnerMobile;
+            dataObj.auction.dbAuctionId = $scope.currentAuction._id;
+            dataObj.auction.name = $scope.currentAuction.name;
+            dataObj.auction.auctionId = $scope.currentAuction.auctionId;
+            dataObj.auction.emdAmount = $scope.currentAuction.emdAmount;
+            dataObj.auction.auctionOwnerMobile = $scope.currentAuction.auctionOwnerMobile;
+
             dataObj.user._id = Auth.getCurrentUser()._id;
             dataObj.user.fname = Auth.getCurrentUser().fname;
             dataObj.user.lname = Auth.getCurrentUser().lname;
             dataObj.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
             dataObj.user.mobile = Auth.getCurrentUser().mobile;
-            if(Auth.getCurrentUser().email)
-              dataObj.user.email = Auth.getCurrentUser().email;
-            save(dataObj);
+
+            if($scope.currentAuction.emdTax =="overall"){
+              vm.emdamount = $scope.currentAuction.emdAmount;
+              if(Auth.getCurrentUser().email)
+                dataObj.user.email = Auth.getCurrentUser().email;
+                save(dataObj,vm.emdamount);
+            
+            }else{
+              vm.dataModel.auctionId = $scope.currentAuction.auctionId;
+              EmdSvc.getData(vm.dataModel).then(function(result){
+                // console.log("dataObj",dataObj);
+               if(Auth.getCurrentUser().email)
+                dataObj.user.email = Auth.getCurrentUser().email;
+                save(dataObj,result[0].amount);
+              })
+              .catch(function(err){
+               });
+          
+            }
+           
+            
           } else {
+             closeDialog();
             var regUserAuctionScope = $rootScope.$new();
             regUserAuctionScope.currentAuction = auction;
             Modal.openDialog('auctionRegistration', regUserAuctionScope);
@@ -65,10 +104,12 @@
         });
     }
     
-    function save(dataObj){
+    function save(dataObj,amount){
       userRegForAuctionSvc.save(dataObj)
       .then(function(){
-          Modal.alert('Your request has been successfully submitted!');
+        
+          //console.log("emd",amount);
+          Modal.alert('Your emd amount is' + amount);
       })
       .catch(function(err){
          if(err.data)
@@ -88,20 +129,31 @@
     };
 
     function init() {
-      //dataToSend.pagination = true;
-      //dataToSend.itemsPerPage = vm.itemsPerPage;
-      filter = {};
-      if ($stateParams.type) {
-        $scope.auctionType = $stateParams.type;
-        filter.auctionType = $stateParams.type;
-      }
-      //angular.copy(dataToSend, filter);
-      filter.pagination=true;
-      getAuctions(filter);
 
+
+
+       //console.log("auctio123n",$scope.currentAuction.auctionId);
+      
+
+       LotSvc.getData({auctionId:$scope.currentAuction.auctionId}).then(function(res){
+            vm.lotList = res;   
+            
+            //console.log(vm.lotList);
+           // fetchClassifiedBidPage();
+         });
+
+      filter = {};
+
+      if ($stateParams.type){
+            $scope.auctionType = $stateParams.type;
+           filter.auctionType = $stateParams.type;
+      }
+      filter.pagination = true;
+      getAuctions(filter);
     }
 
     init();
+  
 
     function getAuctions(filter) {
       // filter.prevPage = prevPage;
@@ -113,6 +165,8 @@
       if(!filter.auctionType)
         filter.auctionType = $stateParams.type;
       filter.addAuctionType = true;
+
+      //console.log("auction filter",filter);
 
       AuctionSvc.getAuctionDateData(filter).then(function(result) {
         getAuctionWiseProductData(result); 
@@ -235,7 +289,8 @@
     }
     function getAuctionWiseProductData(result) {  
         var filter = {};      
-        var auctionIds = []; 
+        var auctionIds = [];
+        //console.log("result auctionWise",result); 
         if(result && result.items) {     
           result.items.forEach(function(item) { 
           auctionIds[auctionIds.length] = item._id;
@@ -243,12 +298,17 @@
         filter.auctionIds = auctionIds; 
         filter.status = "request_approved";  
         filter.isClosed = $scope.auctionType == 'closed' ? 'y' : 'n';
+
+        //console.log("view")
         AuctionSvc.getAuctionWiseProductData(filter) 
         .then(function(data) { 
         $scope.getConcatData = data; 
+        //console.log("qsjsjw",$scope.getConcatData);
         vm.auctionListing = result.items;
          vm.totalItems = result.totalItems;
          $scope.pager.update(result.items,result.totalItems); 
+
+         //console.log("sellerlsit",vm.auctionListing);
         if(vm.auctionListing.length < 1){   
             vm.show = true;            
         }else{ 
@@ -259,6 +319,10 @@
           } 
     }
     function getProductData(id, type) { 
+
+         //console.log("id",id);
+         //console.log("type",type);
+         //console.log("getConact",$scope.getConcatData);
             if (angular.isUndefined($scope.getConcatData)) {  
                 if (type == "total_products") 
                   return 0;        
@@ -267,7 +331,6 @@
                   // if (type == "total_sold")  
                         //   return 0;    
             } else {  
-                 
                      var totalItemsInAuction = 0;
                        //var totalSaleValue = 0;
                        //var totalsold = 0;

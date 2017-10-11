@@ -90,6 +90,12 @@ var Modals = {
   DoUpload:{
     tplUrl:'app/assetsale/doupload.html',
     Ctrl:'DoUploadCtrl as doUploadVm'
+  },
+
+  auctionRegislogin : {
+    tplUrl : "app/auction/auctloginregis.html",
+    Ctrl : 'AuctionRegisCtrl as auctionRegisVm'
+
   }
 };
 
@@ -313,7 +319,9 @@ var transactionStatuses = [
 }
 ];
 
-var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+//var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+
 var TaxList =  ["Service Tax","Swatch Bharat Cess","Krishi Kalyan Cess"];
 
 var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
