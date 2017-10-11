@@ -552,6 +552,7 @@ exports.getOnFilter = function(req, res) {
     var cityRegex = new RegExp(req.body.location, 'i');
     filter['product.city'] = {$regex:cityRegex};
   }
+ console.log("data ayuct",req.body);
 
   if (req.body._id)
     filter["_id"] = req.body._id;
