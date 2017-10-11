@@ -144,7 +144,7 @@ function init(processCb) {
     	var dateFields = ['requestDate','submittedToAgencyDate','reportSubmissionDate','reportDate','invoiceDate','repoDate'];
     	dateFields.forEach(function(key){
     		if(row[key] && row[key] !== '0000-00-00 00:00:00')
-    			row[key] = new Date(row[key]);
+    			row[key] = new Date(_.trim(row[key]));
     		else
     			delete row[key];
     	});
@@ -314,7 +314,8 @@ function init(processCb) {
       var unc = row.uniqueControlNo;
       delete row.uniqueControlNo;
       delete row.jobId;
-      console.log("#####",row);
+      delete row.user;
+      console.log("update field >>>",row);
       EnterpriseValuation.update({uniqueControlNo:unc},{$set:row},function(err, enterpriseData) {
             if(err || !enterpriseData) { 
               errObj.push({
