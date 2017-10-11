@@ -37,7 +37,7 @@ var path = require('path');
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
+  mongoose.connection.on('error', function(err) {
   console.error('MongoDB connection error: ' + err);
   process.exit(-1);
 });
@@ -331,6 +331,10 @@ app.post('/api/updateproductmaster', function(req, res) {
   BulkProductUpload.updateProductMaster(req, res);
 });
 
+app.post('/api/getdevenvironment', function(req, res) {
+  return res.status(200).json({"mode":app.get('env')});
+});
+
 app.post('/api/quippovaluaion', function(req, res) {
   var bodyData = req.body;
 
@@ -347,7 +351,7 @@ app.post('/api/quippovaluaion', function(req, res) {
 });
 
 app.post('/api/currency', function(req, response) {
-  var url = "http://api.fixer.io/latest?base=RUB";
+  var url = "https://api.fixer.io/latest?base=RUB";
   http.get(url, function(res) {
     var str = "";
     res.on('data', function(chunk) {

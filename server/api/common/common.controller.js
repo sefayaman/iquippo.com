@@ -122,6 +122,12 @@ function postOtpRequest(fn, data, req, res) {
 
 exports.compileHtml = function(req, res) {
 	var dataObj = req.body.data;
+        /* J.K s3 URL for email templete.*/
+        /*if (dataObj.serverPath) {
+            dataObj.serverPath = config.serverPath;
+        }*/
+
+     dataObj.awsBaseImagePath = config.awsUrl + '/' + config.awsBucket; // J.K email templete s3 image url update 
 	var tplName = req.body.templateName;
 	if (!tplName || !dataObj)
 		return res.status(404).send("template not found");
@@ -146,6 +152,8 @@ exports.compileTemplate = function(dataObj, serverPath, tplName, cb) {
 		}
 		var tempFun = handlebars.compile(data);
 		dataObj.serverPath = serverPath;
+		dataObj.awsBaseImagePath = config.awsUrl + '/' + config.awsBucket; // J.K email templete s3 image url update 
+
 		var text = tempFun(dataObj);
 		cb(true, text);
 	});

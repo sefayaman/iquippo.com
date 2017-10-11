@@ -1,7 +1,6 @@
 'use strict';
 
 var fs = require('fs');
-
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
 var UploadRequestModel = require('../api/common/uploadrequest/uploadrequest.model');

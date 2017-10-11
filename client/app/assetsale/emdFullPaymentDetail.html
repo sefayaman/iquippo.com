@@ -4,9 +4,12 @@
     <h4 class="modal-title">{{formType}} Amount (If not online)</h4>
   </div>
   <div class="modal-body">
-    <table class="table" ng-if="emdFullPaymentVm.visibleFlag">
+    <table class="table">
       <tr>
-        <td>Total Bid Amount :</td>
+        <td>
+          <spne  ng-if="formType == 'EMD'">Total EMD Amount :</spne>
+          <spne  ng-if="formType != 'EMD'">Total Bid Amount :</spne>
+        </td>
         <td ng-if="formType == 'EMD'">{{bidData.emdAmount || 0}}</td>
         <td ng-if="formType != 'EMD'">{{bidData.bidAmount || 0}}</td>
       </tr>
@@ -38,7 +41,7 @@
             <input type="text" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.instrumentNo" name="instrumentNo" placeholder="Instrument No" ng-required="emdFullPaymentVm.emdFullPaymentInfo.paymentMode !== 'Cash'" ng-disabled="emdFullPaymentVm.emdFullPaymentInfo.paymentMode === 'Cash'">
           </div>
           <div class="col-sm-6 form-group" ng-class="{'has-error':paymentDetailForm.amount.$invalid && submitted}">
-            <input type="number" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.amount" name="amount" placeholder="Amount" required>
+            <input type="number" class="form-control" ng-model="emdFullPaymentVm.emdFullPaymentInfo.amount" name="amount" min="0" placeholder="Amount" required>
           </div>
         </div>
         <div class="row">

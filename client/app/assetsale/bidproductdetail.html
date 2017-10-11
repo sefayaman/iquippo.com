@@ -27,7 +27,7 @@
           <tr>
             <td><b>Asset State:</b></td>
             <td>{{bidReqDetailVm.product.state}}</td>
-            <td><b>Location:</b></td>
+            <td><b>Asset Location:</b></td>
             <td>{{bidReqDetailVm.product.city}}</td>
           </tr>
         </tbody>
@@ -113,7 +113,7 @@
             <td>{{data.product.proData.state}}</td>            
           </tr>
           <tr>
-            <td><b>Location:</b></td>
+            <td><b>Asset Location:</b></td>
             <td>{{data.product.proData.city}}</td>
             <td><b>Offer Type:</b></td>
             <td>{{data.offerType}} </td>
@@ -278,7 +278,7 @@
                 <tr ng-repeat="kyc in data.kyc">
                   <td>{{kyc.type}}</td>
                   <td>{{kyc.name}}</td>
-                  <td><a href="{{uploadImagePrefix}}{{data.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
+                  <td class="text-ellips"><a href="{{uploadImagePrefix}}{{data.product.assetDir}}/{{kyc.docName}}" target="_blank">{{kyc.docName}}</a></td>
                 </tr>
               </table>
             </td>

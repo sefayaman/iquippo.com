@@ -119,9 +119,9 @@
 			   			<td ng-if="!isFAgencyPartner()">{{bid.assetStatus}}</td>
 			   			<td ng-if="!isFAgencyPartner() && !isAdmin()">
 			   				<!-- seller action -->
-			   				<button class="btn btn-sm btn-success" uib-popover="Approved" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE') && isBuySaleApprover()" ng-click="productBidRequestVm.update(bid,'approve')"><i class="fa fa-check"></i></button>
+							<button class="btn btn-sm btn-success" uib-popover="Approved" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'APPROVE') && isBuySaleApprover()" ng-click="productBidRequestVm.update(bid,'approve')" ng-disabled="approvFlag"><i class="fa fa-check"></i></button>
 
-			   				<button class="btn btn-sm btn-danger" uib-popover="Reject" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')"><i class="fa fa-close"></i></button>
+							<button class="btn btn-sm btn-danger" uib-popover="Reject" popover-trigger="mouseenter" ng-if="productBidRequestVm.validateAction(bid,'REJECT')" ng-click="productBidRequestVm.update(bid,'reject')" ng-disabled="approvFlag"><i class="fa fa-close"></i></button>
 
 			   				<button class="btn bts-sm btn-default active" uib-popover="DO Upload" ng-click="productBidRequestVm.openDialog(bid,'DoUpload','', 'doIssued')" ng-if="productBidRequestVm.validateAction(bid,'DOISSUED')" popover-trigger="mouseenter">
 					           <i class="fa fa-upload"></i>
