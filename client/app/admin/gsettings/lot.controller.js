@@ -254,10 +254,11 @@
                 auctionIds[auctionIds.length] = item._id;
               });
               filter.auctionIds = auctionIds; 
-    
+               
               AuctionSvc.getAuctionWiseProductData(filter).then(function(data) { 
               $scope.getConcatData = data; 
               vm.auctionListing = result.items;
+              console.log("auctioss",vm.auctionListing);
               })  
             .catch(function() {});  
             

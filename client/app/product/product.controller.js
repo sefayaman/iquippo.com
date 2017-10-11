@@ -359,14 +359,10 @@
                     }
 
                     });
-<<<<<<< HEAD
                     
                     console.log("auctiondata",$scope.auctionReq);
                     //onAuctionSelection({auctionId:$scope.auctionReq._id});
                    console.log("filter",filter);
-=======
-
->>>>>>> aa220c18f78f95620d5990371692ed6ac64f4109
                     LotSvc.getData(filter)
                     .then(function(res){
                       console.log("lot data edit",res);
@@ -1067,10 +1063,9 @@
       $scope.tabObj.step2 = true;
       if($stateParams.id && !Auth.isAdmin()) {
           var auctiond ={};
-
-          console.log("vhgjhh",$scope.auctionReq.dbAuctionId);
-          auctiond._id = $scope.auctionReq.dbAuctionId;
+          auctiond._id = $scope.product.auction._id;
           
+          $scope.auctionReq.dbAuctionId = $scope.product.auction._id;
           AuctionMasterSvc.get(auctiond).then(function(result){
           
            $scope.lot.auctname = result[0].name;
@@ -1124,9 +1119,7 @@
        if(Auth.isAdmin()){
              addOrUpdate(postAuction);
         }else{
-
-          var lotdata = $scope.lot;
-
+           var lotdata = $scope.lot;
           if(lotdata.emdTax=="overall"){
              $scope.isEditdata ==true;
             }
@@ -1216,10 +1209,12 @@
 
                   AuctionMasterSvc.updateAuctionMasterProduct(master)
                   .then(function(res){
-
-                      addOrUpdate(postAuction);
-
-                  });
+                    //console.log("kjkj",res);
+                  
+                        addOrUpdate(postAuction);
+                    
+  
+                 });
           
                  
           
@@ -1351,19 +1346,15 @@
         }
       }
 
+      if ($scope.valuationReq.valuate) {
+        createValuationRequest(productObj, "Listing in auction");
+      }
 
-      
+      $scope.valuationReq.isAuction = true;
+      var paymentTransaction = createPaymentObj(productObj, "Auction Listing");
 
-            if($scope.valuationReq.valuate) {
-              createValuationRequest(productObj, "Listing in auction");
-            }
-                $scope.valuationReq.isAuction = true;
-            var paymentTransaction = createPaymentObj(productObj, "Auction Listing");
-
-            var serverObj = {};
-            serverObj['auction'] = $scope.auctionReq;
-      
-
+      var serverObj = {};
+      serverObj['auction'] = $scope.auctionReq;
       if ($scope.valuationReq.valuate)
         serverObj['valuation'] = $scope.valuationReq;
       if (paymentTransaction){
@@ -1376,32 +1367,14 @@
 
       productSvc.createOrUpdateAuction(serverObj)
         .then(function(res) {
-
-                  if(!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && $scope.auctionReq.cerification =="Yes"){
-                
-                              if(paymentTransaction && res.transactionId){
-                                      $state.go("payment", {
-                                      tid: res.transactionId
-                                    });
-                              }else{
-                                  $state.go('productlisting');
-                              }
-                        
-                    }else if(!Auth.isAdmin() && productObj.auctionListing && $scope.auctionReq.cerification =="Yes"){
-                                if(paymentTransaction && res.transactionId){
-                                    $state.go("payment", {
-                                    tid: res.transactionId
-                                    });
-                                }
-                                else{
-                                    $state.go('productlisting');
-                                }   
-                    }else{
-
-                          $state.go('productlisting');
-                    }
-                
-         })
+          //goto payment if payment are necessary
+          if (paymentTransaction && res.transactionId)
+            $state.go("payment", {
+              tid: res.transactionId
+            });
+          else
+            $state.go('productlisting');
+        })
         .catch(function(err) {
           //error handling
         })
@@ -1487,22 +1460,21 @@
       var payObj = null;
       var createTraction = false;
       var certified = $scope.auctionReq.cerification;
-
-     if(Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing) {
-       /* payObj = {};
+      if (Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing) {
+        payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreq";
         payObj.charge = pyMaster.fees || 0;
         paymentTransaction.totalAmount += payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
-        createTraction = true;*/
+        createTraction = true;
       }
 
-      if(!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing  && certified =="Yes") {
+      if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing  && certified =="Yes") {
         payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreqseller";
-        payObj.charge = pyMaster.fees || 0;
+        payObj.charge = "5000" || 0;
         paymentTransaction.totalAmount = payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
@@ -1512,21 +1484,21 @@
         payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreqseller";
-        payObj.charge = pyMaster.fees || 0;
+        payObj.charge = "5000" || 0;
         paymentTransaction.totalAmount = payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
         createTraction = true;
       }
 
       
-      if(!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && certified =="No") {
-       /* payObj = {};
+      if (!Auth.isAdmin() && !productObj.auction._id && productObj.auctionListing && certified =="No") {
+        payObj = {};
         var pyMaster = PaymentMasterSvc.getPaymentMasterOnSvcCode("Auction");
         payObj.type = "auctionreqData";
         payObj.charge = pyMaster.fees || 0;
         paymentTransaction.totalAmount = payObj.charge;
         paymentTransaction.payments[paymentTransaction.payments.length] = payObj;
-        createTraction = true;*/
+        createTraction = true;
       }
 
       if ($scope.valuationReq.valuate) {
@@ -1569,6 +1541,8 @@
           paymentTransaction.paymentMode = "offline";
         }else if(!Auth.isAdmin() && certified =="Yes") {
           paymentTransaction.paymentMode = "online";
+        }else if(!Auth.isAdmin() && certified =="No") {
+          paymentTransaction.paymentMode = "offline";
         }
         else{
           paymentTransaction.paymentMode = "online";
@@ -1703,7 +1677,7 @@
      // $scope.product.auctId = $scope.auctionReq.dbAuctionId;
       //product.auction = {};
 
-     // product.auction.id = $scope.auctionReq.dbAuctionId;
+      product.auction.id = $scope.auctionReq.dbAuctionId;
 
       productSvc.addProduct(product).then(function(result){
 
@@ -1923,7 +1897,7 @@
       $rootScope.loading = true;
       $scope.product.auctId = $scope.auctionReq.dbAuctionId;
 
-     // product.auction.id = $scope.auctionReq.dbAuctionId;
+      product.auction.id = $scope.auctionReq.dbAuctionId;
 
       productSvc.updateProduct(product).then(function(result) {
         $rootScope.loading = false;

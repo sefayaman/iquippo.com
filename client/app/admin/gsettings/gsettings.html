@@ -2673,7 +2673,7 @@
 				<div class="col-sm-3" ng-class="{'has-error':lotVm.auctionId.$invalid && submitted}">
 			       	<select class="form-control" name="auctionId" ng-model="lotVm.dataModel.auctionId"  required> 
 						<option value=""> Select Auction  Id </option> 
-						<option value="{{product.auctionId}}"  ng-repeat="product in lotVm.auctionListing">{{product.auctionId}}</option>
+						<option value="{{product._id}}"  ng-repeat="product in lotVm.auctionListing">{{product.name}}</option>
 			   		</select>				
 				</div>
 				<div class="col-sm-3" ng-class="{'has-error':lotVm.assetId.$invalid && submitted}">
