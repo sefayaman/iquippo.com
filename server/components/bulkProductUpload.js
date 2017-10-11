@@ -9,12 +9,6 @@ var gm = require('gm').subClass({
 });
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
-var mongoose = require('mongoose');
-mongoose.createConnection(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-  console.error('MongoDB connection error: ' + err);
-  process.exit(-1);
-});
 var IncomingProduct = require('./incomingproduct.model');
 var Product = require('./../api/product/product.model');
 var Model = require('./../api/model/model.model');
@@ -54,16 +48,9 @@ bulkProductUpload.commitProduct = function(taskData, cb) {
 function getProduct(assetIds, zipEntryObj, taskData, cb) {
   if (assetIds.length > 0) {
     var assetId = assetIds[0];
-    IncomingProduct.findOneAndUpdate({
+    IncomingProduct.findOne({
       assetId: assetId,
-      'user._id': taskData.user._id,
-      lock: {
-        $ne: true
-      }
-    }, {
-      $set: {
-        lock: true
-      }
+      'user._id': taskData.user._id
     }, function(err, incPrd) {
       if (err || !incPrd) {
         assetIds.splice(0, 1);
@@ -104,13 +91,13 @@ function extractEntryAndMapImages(assetIds, product, zipEntryObj, taskData, cb) 
     //product.assetDir = product.assetId;
     taskData.imgCounter = 0;
   } catch (e) {
-    IncomingProduct.update({
+    /*IncomingProduct.update({
       _id: product._id
     }, {
       $set: {
         lock: false
       }
-    });
+    }).exec();*/
     console.log("error in extracting.", e);
     ret = true;
   }
@@ -161,8 +148,18 @@ function placeWaterMark(assetIds, product, zipEntryObj, taskData, cb) {
     utility.uploadFileS3(localFilePath, dirName, function(err, data) {
 
       if (err) {
-        console.log(err)
-        return cb(true, taskData);
+        console.log("Error : Moveing images directory to s3", err);
+       /* IncomingProduct.update({
+        _id: product._id
+        }, {
+          $set: {
+            lock: false
+          }
+        }).exec();*/
+        assetIds.splice(0, 1);
+        getProduct(assetIds, zipEntryObj, taskData, cb);
+        return;
+        //return cb(true, taskData);
       }
       return commitProduct(assetIds, product, zipEntryObj, taskData, cb);
     });
@@ -176,13 +173,13 @@ function commitProduct(assetIds, product, zipEntryObj, taskData, cb) {
     _id: product._id
   }, function(err, dt) {
     if (err) {
-      IncomingProduct.update({
+      /*IncomingProduct.update({
         _id: product._id
       }, {
         $set: {
           lock: false
         }
-      });
+      }).exec();*/
       console.log("error in deleting product")
     }
     delete product._id;

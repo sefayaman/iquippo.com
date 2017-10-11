@@ -158,15 +158,19 @@
         function uploadDoc(files,_this,flag) {
             if (files.length == 0)
                 return;
-
+            $rootScope.loading = true;
             uploadSvc.upload(files[0], auctionDir).then(function(result) {
                 //vm.auctionData.docDir = result.data.assetDir;
+                $rootScope.loading = false;
                 if(flag==1){
                     vm.auctionData.docName = result.data.filename;
                 }
                 if(flag==2){
                     vm.auctionData.docNameProxy = result.data.filename;
                 }
+            })
+            .catch(function(){
+                $rootScope.loading = false;
             });
 
         }
@@ -1200,8 +1204,13 @@
         function updateAuctionMasterImage(files) {
             if (files.length == 0)
                 return;
+            $rootScope.loading = true;
             uploadSvc.upload(files[0], auctionmasterDir).then(function(result) {
+                $rootScope.loading = false;
                 vm.auctionData.primaryImg = result.data.filename;
+            })
+            .catch(function(){
+                $rootScope.loading = false;
             });
         }
 

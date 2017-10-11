@@ -44,14 +44,14 @@ exports.deleteFromS3 = deleteFromS3;
 
 
 Date.prototype.addDays = function(days) {
-  //this.setDate(this.getDate() + parseInt(days));
-  this.setMinutes(this.getMinutes() + parseInt(days));
+  this.setDate(this.getDate() + parseInt(days));
+  //this.setMinutes(this.getMinutes() + parseInt(days));
   return this;
 };
 
 Date.prototype.addHours = function(hours) {
-  this.setMinutes(this.getMinutes() + parseInt(hours));
-  //this.setHours(this.getHours() + parseInt(hours));
+  //this.setMinutes(this.getMinutes() + parseInt(hours));
+  this.setHours(this.getHours() + parseInt(hours));
   return this;
 };
 
@@ -69,7 +69,7 @@ function uploadFileS3(localFilePath, dirName, cb) {
       Prefix: "assets/uploads/" + dirName
     }
   };
-
+  
   var uploader = client.uploadDir(params);
   uploader.on('error', function(err) {
     if (err) {

@@ -1,16 +1,8 @@
 'use strict';
 
 var fs = require('fs');
-
 var AdmZip = require('adm-zip');
 var config = require('./../config/environment');
-var mongoose = require('mongoose');
-mongoose.createConnection(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
-	console.error('MongoDB connection error: ' + err);
-	process.exit(-1);
-});
-
 var UploadRequestModel = require('../api/common/uploadrequest/uploadrequest.model');
 var AuctionController = require('../api/auction/auction.controller');
 var APIError = require('./_error');
