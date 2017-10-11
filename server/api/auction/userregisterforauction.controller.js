@@ -101,6 +101,80 @@ exports.validateUser = function(req, res){
   });
 };
 
+
+exports.checkUserRegis = function(req,res){
+
+  var filter = {};
+
+  if(req.body.auction.dbAuctionId){
+    filter['auction.dbAuctionId'] = req.body.auction.dbAuctionId;
+  }
+
+  if(req.body.user._id){
+
+    filter['user._id'] = req.body.user._id;
+
+  }
+  if(req.body.user.mobile){
+
+    filter['user.mobile'] = req.body.user.mobile;
+
+  }
+  if(req.body.lotNumber){
+
+    filter['lotNumber'] ={
+      $in:req.body.lotNumber
+    } 
+
+  }
+    console.log("filterdata",filter);
+
+  var query = Model.find(filter);
+
+  query.exec(
+     function(err, data){
+        if(data.length > 0){
+                  var filter ={};
+                  filter['_id'] = data[0].transactionId;
+
+                  PaymentTransaction.find(filter, function(err, payment) {
+                      if(err){
+                        return handleError(err,res);
+                      }
+                          var message ={};
+                          if(payment[0].status =="completed"){
+                              message.data = "done";
+                            }else{
+                              message.data = "undone";
+                            }
+                            message.lotNumber = data[0].lotNumber;
+                            message.transactionId = data[0].transactionId;
+                            message.errorCode = 0;
+                            return  res.status(200).json(message);                        
+                    });
+           }else{
+            return  res.status(200).json({message:"No Data"});
+          }
+       }); 
+};
+
+exports.sendUserToAs=function(req,res){
+  var options={};
+  console.log("req.body",req.body);
+  options.dataToSend=req.body;
+  options.dataType="userInfo";
+  Utility.sendCompiledData(options,function(err,result){
+    if(err) return handleError(res,err);
+     if(result){
+      return res.status(200).json(result);
+     }
+     else{
+      return new ApiError(409,"data not sent successfully");
+     }
+  });
+};
+
+
 exports.create = function(req, res,next) {
 
    _getRecord(req.body,function(err,result){
@@ -123,7 +197,7 @@ exports.create = function(req, res,next) {
      // req.body.payment.createdAt = new Date();
       //req.body.payment.updatedAt = new Date();
       //req.body.payment.totalAmount = req.body.totalAmount;
-     
+       console.log("req.body",req.body);     
        PaymentTransaction.create(req.body, function(err, payment) {
           if(err){return handleError(err,res)}
             else{
@@ -169,8 +243,16 @@ function _getRecord(data,cb){
     filter['user._id'] = data.user._id;
   if(data.user.mobile)
     filter['user.mobile'] = data.user.mobile;
+  if(data.lotNumber){
+
+    filter['lotNumber'] ={
+      $in:data.lotNumber
+    } 
+  }
   Model.find(filter,function(err,result){
-    cb(err,result);
+    if(err) cb(err);
+    console.log("result data",result);
+    return cb(null,result);
   });
 }
 

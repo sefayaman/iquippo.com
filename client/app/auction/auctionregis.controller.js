@@ -19,7 +19,6 @@
 
     function init() {
 
-      console.log("sdfd",$scope);
      if($scope._id) {
   		var filter = {};
     	filter._id = $scope._id;
@@ -30,9 +29,8 @@
             angular.copy(result.items[0], $scope.currentAuction);	
           });
      	}
-       LotSvc.getData({auctionId:$scope.currentAuction.auctionId,distinct:true}).then(function(res){
+       LotSvc.getData({auctionId:$scope.currentAuction._id,distinct:true}).then(function(res){
             vm.lotList = res;   
-            console.log("lotslist",res);
          });
     }
 
@@ -54,28 +52,75 @@
             dataObj.user.countryCode = LocationSvc.getCountryCode(Auth.getCurrentUser().country);
             dataObj.user.mobile = Auth.getCurrentUser().mobile;
             dataObj.lotNumber =  vm.dataToSend.selectedLots;
+                   
 
-            if($scope.currentAuction.emdTax =="overall"){
+            userRegForAuctionSvc.checkUserRegis(dataObj)
+            .then(function(result){
 
-              vm.emdamount = $scope.currentAuction.emdAmount;
+             if(result.data){
               closeDialog();
-              if(Auth.getCurrentUser().email)
-                dataObj.user.email = Auth.getCurrentUser().email;
-                save(dataObj,vm.emdamount);
-            
-            }else{
-                  vm.dataModel.auctionId = $scope.currentAuction.auctionId;
+                if(result.data =="done"){
 
-                  vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
-                  closeDialog();
-                   EmdSvc.getAmount(vm.dataModel).then(function(result){
-                         if(Auth.getCurrentUser().email)
-                         dataObj.user.email = Auth.getCurrentUser().email;
-                         save(dataObj,result);
-                     }).catch(function(err){
-                   });
-             }
-           
+                   Modal.alert("You have already registered for this auction with lotnumbers" +" "+ result.lotNumber); 
+                 }
+
+                 if(result.data =="undone"){
+
+                      Modal.confirm("You have done partial registration, payment part is pending with lotnumbers "+" "+ result.lotNumber,function(isGo){
+                           if(isGo == 'no')
+                             return;
+                           $rootScope.loading = true;
+                          
+                            if(result && result.errorCode != 0) { 
+                                 //Modal.alert(result.message, true);  
+                                 $state.go('main');
+                                 return;
+                           }
+                           
+                           if(result.transactionId){
+
+                             $rootScope.loading = false;
+                             $state.go('payment', {
+                               tid: result.transactionId
+                           });
+                           }
+                         });
+                 
+                 
+                  }
+
+              }else{
+
+                if($scope.currentAuction.emdTax =="overall"){
+                  
+                                vm.emdamount = $scope.currentAuction.emdAmount;
+                                closeDialog();
+                                if(Auth.getCurrentUser().email)
+                                  dataObj.user.email = Auth.getCurrentUser().email;
+                                  save(dataObj,vm.emdamount);
+                              
+                              }else{
+                                    vm.dataModel.auctionId = $scope.currentAuction._id;
+                  
+                                    vm.dataModel.selectedLots = vm.dataToSend.selectedLots;
+                                    closeDialog();
+                                     EmdSvc.getAmount(vm.dataModel).then(function(result){
+                                    
+                                           if(Auth.getCurrentUser().email)
+                                           dataObj.user.email = Auth.getCurrentUser().email;
+
+                                         console.log("result",result);
+                                           save(dataObj,result[0].amount);
+                                       }).catch(function(err){
+                                     });
+                               }
+                             
+
+              }
+            });
+
+
+          
             
           } else {
              closeDialog();

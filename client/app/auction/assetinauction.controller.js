@@ -130,17 +130,15 @@
           });
         $scope.auctionId = query.auctionId;
         filter.auctionId = query.auctionId;
-        getAuctionById();
         filter.status = "request_approved";
+        getAuctionById(filter);
         vm.lotListing = [];
-
-        getAssetsInAuction(filter);
       }
 
       init();
       //load();
 
-      function getAuctionById() {
+      function getAuctionById(filter) {
         var filter = {};
         filter._id = query.id;
         AuctionSvc.getAuctionDateData(filter)
@@ -159,7 +157,12 @@
             $scope.docType = res.items[0].docType;
             $scope.contactName = res.items[0].contactName;
             $scope.contactNumber = res.items[0].contactNumber;
-
+             if(res.items[0].auctionType === 'S'){
+              filter.status="request_approved";
+             }
+             filter={};
+             filter.auctionId=res.items[0].auctionId;
+             getAssetsInAuction(filter);
           })
           .catch(function(err) {
 
@@ -287,7 +290,7 @@
               filter = {};
               var lotArr = [];
               var lotDataArr = [];
-              filter.auctionId = $scope.auctionId;
+              filter._id = query.id;
               filter.listing = true;
               console.log("vm.lotListing early", vm.lotListing);
               LotSvc.getData(filter).then(function(res) {
@@ -311,6 +314,7 @@
                       lot.lotNumber = data.lotNumber;
                       lot.assetDesc.push(data.assetId);
                       lot.amount = lot.amount + data.startingPrice;
+                      lot.primaryImg=data.primaryImg;
                       vm.lotListing.push(lot);
                     }
                     // if(doc.auctionType=='live'){

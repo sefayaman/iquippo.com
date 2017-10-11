@@ -309,6 +309,10 @@ exports.paymentResponse = function(req,res){
 function sendPaymentRes(req,res,resPayment){
   var status = resPayment.order_status.toString().toLowerCase().trim();
   console.log("########param1", resPayment.merchant_param1);
+  if(req.query)
+  console.log("******",req.query);
+if(req.body)
+  console.log("------",req.body);
   if(resPayment.merchant_param3 == "mobapp"){
     if (status != 'success')
       res.redirect('http://mobile?payment=failed');

@@ -3,7 +3,7 @@
 
     angular.module('admin').controller('EmdCtrl', EmdCtrl);
 
-    function EmdCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,EmdSvc){
+    function EmdCtrl($scope,$state,Modal,Auth,PagerSvc,$filter,LotSvc,AuctionSvc,AuctionMasterSvc,EmdSvc){
           var vm  = this;
           vm.dataModel = {};
           vm.duplicate = {};
@@ -18,7 +18,7 @@
           vm.update = update;
           vm.destroy = destroy;
           vm.searchFn = searchFn;
-          vm.lotList=[];
+          vm.dataModel.lotList=[];
         
           function init(){
               getAuctions();
@@ -28,12 +28,12 @@
           }         
 
           function getLotData(filter){
-            console.log("filter",filter);
+            //console.log("filter",filter);
             LotSvc.getData(filter)
             .then(function(res){
-              console.log("res",res);
-            vm.lotList=res;
-            console.log("list",vm.lotList);          
+              //console.log("res",res);
+            vm.dataModel.lotList=res;
+            //console.log("list",vm.lotList);          
             });
           }
 
@@ -45,8 +45,10 @@
 
           function onSelectAuction(data) {
             var filter={};
-            filter.auctionId  = data;
+            filter._id  = data;
+            console.log("filter",filter);
             AuctionSvc.getAuctionDateData(filter).then(function(res) {
+              console.log("items",res);
             vm.auctionName = res.items[0].name;
             getLotData({auctionId:res.items[0].auctionId,distinct:true});
             }).catch(function(err){
@@ -79,21 +81,23 @@
               vm.dataModel.createdBy.name = Auth.getCurrentUser().fname + " " + Auth.getCurrentUser().lname;
               console.log("vm.dataModel",vm.dataModel);
               
-               vm.duplicate.auctionId = vm.dataModel.auctionId
+               vm.duplicate._id = vm.dataModel.auctionId
                vm.duplicate.selectedLots = vm.dataModel.selectedLots;
                console.log("vm.duplicate",vm.duplicate);
                
                EmdSvc.getData(vm.duplicate).then(function(result){
                    vm.filteredduplicate = "exist";
 
-                   if(result!=""){
+                   if(result.length > 0){
                        Modal.alert('Data already exist with same auction id and lot number!');
+                       vm.dataModel={};
                        return;
                    }else{
                        EmdSvc.saveEmd(vm.dataModel).then(function(){
                         vm.dataModel = {};
                         getEmdData();
                         Modal.alert('Data saved successfully!');
+                        vm.dataModel={};  
                         })
                     .catch(function(err){
                        if(err.data)
@@ -132,6 +136,7 @@
               $scope.isEdit = false;
               getEmdData();
               Modal.alert('Data updated successfully!');
+              vm.dataModel={};
               })
               .catch(function(err){
               if(err.data)
@@ -147,6 +152,7 @@
               .then(function(){
               getEmdData();
               Modal.alert('Data deleted successfully!');
+              vm.dataModel={};
               })
               .catch(function(err){
               console.log("purpose err",err);
@@ -154,12 +160,20 @@
               });
           }
           function getEmdData(){
+              var filter={};
               EmdSvc.getData()
               .then(function(result){
 
               vm.EmdData = result;
               result.forEach(function(x){
-               x.lots=x.selectedLots.toString();
+                console.log("I am X",x);
+                filter._id=x.auctionId;
+                AuctionMasterSvc.get(filter)
+                .then(function(res){
+                  console.log("auctions",res);
+                  x.auctionId=res[0].auctionId;
+                  x.lots=x.selectedLots.toString();
+                })
               });
               vm.filteredList = result;
               console.log(vm.EmdData);

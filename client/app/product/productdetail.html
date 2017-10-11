@@ -487,10 +487,10 @@
               </uib-accordion>
               
           </div>
-          
           <div class="col-sm-5 col-md-7 panel-group" >
-            <div class="panel panel-primary asset-sale" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
-            <form novalidate class="assetSale" name="assetSale" ng-if="!assetListedInAuction">
+            <div class="panel panel-primary asset-sale" ng-if="(currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE') && assetListedInAuction !='true'">
+            <form novalidate class="assetSale" name="assetSale">
+
                 <div class="panel-heading">
                   <div class="row">
                     <div class="col-sm-9">
@@ -595,6 +595,7 @@
               </form>
             </div>           
             <!-- <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+<<<<<<< HEAD
 =======
           <div class="col-sm-5 col-md-7 panel-group">
 =======
@@ -602,6 +603,8 @@
 >>>>>>> iquippo_auction_module
            
             <div class="panel panel-primary" ng-if="(currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE') && assetListedInAuction !='true'">
+>>>>>>> iquippo_auction_module
+=======
 >>>>>>> iquippo_auction_module
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>

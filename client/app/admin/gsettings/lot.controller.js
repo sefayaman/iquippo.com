@@ -19,7 +19,7 @@
           vm.dataModel.bidInfo = [{}];
           vm.checkForLot = checkForLot;
           vm.bidIncrementObj = {};
-        
+	  vm.dataModel.staticIncrement = false;        
           function init(){
               getAuctions();
               getLotData();
@@ -27,7 +27,26 @@
           }         
 
           
-          
+        $scope.checkBidIncrement = function(checkbox,val){
+                if(val == 'static'){
+                    if(checkbox == true){
+                    vm.dataModel.staticIncrement = true;
+                    }else{
+                    vm.dataModel.staticIncrement = false;
+                    if($scope.isEdit && vm.dataModel.static_increment)
+                    deleteDocumentField(vm.dataModel._id,1);
+                    }
+                }
+               if(val == 'bid'){
+                   if(checkbox == true){
+                    vm.dataModel.rangeIncrement = true;
+                    }else{
+                    vm.dataModel.rangeIncrement = false;
+                    if($scope.isEdit && vm.dataModel.bidInfo[0].bidFrom)
+                    deleteDocumentField(vm.dataModel._id,2);
+                    }
+                }
+            }          
           function searchFn(type){
              vm.filteredList = $filter('filter')(vm.LotData,vm.searchStr);
           }
@@ -48,7 +67,17 @@
             vm.dataModel.startDate = rowData.startDate;
             vm.dataModel.endDate = rowData.endDate;
             vm.dataModel.bidIncrement = rowData.bidIncrement;
-            vm.dataModel.bidInfo = [];
+	    vm.dataModel.static_increment = rowData.static_increment;
+            if(vm.dataModel.static_increment){
+                vm.dataModel.staticIncrement = true;
+            }else{
+                vm.dataModel.staticIncrement = false;
+            }
+            if(vm.dataModel.bidIncrement){
+                vm.dataModel.rangeIncrement = true;
+            }else{
+                vm.dataModel.rangeIncrement = false;
+            }            vm.dataModel.bidInfo = [];
             if (vm.dataModel.bidIncrement){
                 var range = Object.keys(vm.dataModel.bidIncrement);
                Object.keys(vm.dataModel.bidIncrement).forEach(function(item,index) {
@@ -73,13 +102,21 @@
                vm.duplicate.auctionId = vm.dataModel.auctionId
                vm.duplicate.assetId = vm.dataModel.assetId;
                vm.duplicate.lotNumber = vm.dataModel.lotNumber;
-               vm.dataModel.bidInfo.forEach(function(item) {
-                 var range = item.bidFrom+"-"+item.bidTo;
-                 vm.bidIncrementObj[range] = item.bidIncrement;
-                });
-                vm.dataModel.bidIncrement = '';
-                vm.dataModel.bidIncrement = vm.bidIncrementObj;
-               LotSvc.getData(vm.duplicate).then(function(result){
+		/*if(vm.dataModel.rangeIncrement == true){
+                    vm.dataModel.bidInfo.forEach(function(item) {
+                        var range = item.bidFrom+"-"+item.bidTo;
+                        vm.bidIncrementObj[range] = item.bidIncrement;
+                        });
+                    vm.dataModel.bidIncrement = '';
+                    vm.dataModel.bidIncrement = vm.bidIncrementObj;
+               }else{
+                   delete vm.dataModel.bidIncrement;
+               }
+               if(vm.dataModel.staticIncrement == true){
+                    vm.dataModel.static_increment;
+               }else{
+                   delete vm.dataModel.static_increment;
+               }*/               LotSvc.getData(vm.duplicate).then(function(result){
                    vm.filteredduplicate = "exist";
 
                    if(result!=""){
@@ -115,7 +152,22 @@
                 });
                 vm.dataModel.bidIncrement = '';
                 vm.dataModel.bidIncrement = vm.bidIncrementObj;
-                
+                if(vm.dataModel.rangeIncrement == true){
+                    vm.dataModel.bidInfo.forEach(function(item) {
+                        var range = item.bidFrom+"-"+item.bidTo;
+                        vm.bidIncrementObj[range] = item.bidIncrement;
+                        });
+                    vm.dataModel.bidIncrement = '';
+                    vm.dataModel.bidIncrement = vm.bidIncrementObj;
+               }else{
+                   //delete vm.dataModel.bidIncrement;
+                   vm.dataModel.bidIncrement = '';
+               }
+               if(vm.dataModel.staticIncrement == true){
+                    vm.dataModel.static_increment;
+               }else{
+                   delete vm.dataModel.static_increment;
+               }
               LotSvc.update(vm.dataModel)
               .then(function(){
               vm.dataModel = {};
@@ -128,7 +180,31 @@
               Modal.alert(err.data); 
               });
           }
-     
+     	function deleteDocumentField(id,flag){
+              vm.dataModel.flag = flag;
+              Modal.confirm("Are you sure want to delete?",function(ret){
+              if(ret == "yes")
+             LotSvc.removeLotData(vm.dataModel)
+              .then(function(){
+              //vm.dataModel = {};
+              //$scope.isEdit = false;
+             // getLotData();
+              Modal.alert('Data updated successfully!');
+              if(flag==2){
+                  delete vm.dataModel.bidIncrement;
+                  delete vm.dataModel.bidInfo;
+                  vm.dataModel.bidInfo = [{}];
+                }
+                if(flag==1){
+                  delete vm.dataModel.static_increment;
+                }
+              })
+              .catch(function(err){
+              if(err.data)
+              Modal.alert(err.data); 
+              });
+              });
+          } 
 
           function destroy(id){
               Modal.confirm("Are you sure want to delete?",function(ret){
@@ -146,7 +222,7 @@
 
 
           function getLotData(){
-
+            
               LotSvc.getData()
               .then(function(result){
 
@@ -178,10 +254,11 @@
                 auctionIds[auctionIds.length] = item._id;
               });
               filter.auctionIds = auctionIds; 
-    
+               
               AuctionSvc.getAuctionWiseProductData(filter).then(function(data) { 
               $scope.getConcatData = data; 
               vm.auctionListing = result.items;
+              console.log("auctioss",vm.auctionListing);
               })  
             .catch(function() {});  
             

@@ -60,7 +60,7 @@
     </div> 
     <div class="col-sm-9">
       <div class="row callLocation">
-        <div class="col-sm-6">
+        <div class="col-sm-5">
         <h4>{{auctionTypeValue | titleCase}} {{auctionName}} - {{auctionCity}}</h4>
         </div>
         <div class="col-xs-3 visible-xs filter-btn form-group">        
@@ -68,7 +68,7 @@
             <i class="fa fa-filter"></i> Filter
           </button>
         </div>         
-        <div class="col-xs-12 col-sm-6 text-right padd-left">
+        <div class="col-xs-12 col-sm-7 text-right padd-left">
           <a ng-if="auctionOrientation === 'L'" ng-disabled="lot.assetDesc.length > 1" href="/liveauction?auctionId={{auctionId}}&lotNumber={{lot.lotNumber}}"  class="btn btn-sm btn-danger">View Live Auction</a>
           <a href="javascript:void(0);" ng-if="auctionType !='closedAuctions'" ng-click="auctionDetailsVm.openBidModal(product)" class="btn btn-default btn-sm active">Register Now</a>
           <a href="{{uploadImagePrefix}}{{auctionDir}}/{{docName}}" class="btn btn-sm btn-default active" ng-if="docType == 'bidProxy'" target="_blank"><i class="fa fa-file-text-o"></i> Proxy Form</a>
@@ -174,7 +174,7 @@
               <div class="col-sm-6">
                 <div class="media form-group">
                     <a  ng-if="auctionDateVm.getProductData(product._id, 'total_products') != 0" class="pull-left" href="/assetinauction?auctionType={{product.auctionValue}}&auctionId={{product.auctionId}}&id={{product._id}}">
-                      <img class="media-object" ng-if="lot.primaryImg" src="{{uploadImagePrefix}}{{lot.assetDir}}/{{lot.primaryImg}}" alt="Image">                
+                      <img class="media-object" ng-if="lot.primaryImg" ng-src="{{lot.primaryImg}}" alt="Image">                
                       <img class="media-object" ng-if="!lot.primaryImg" src="assets/uploads/auctionmaster/upcoming_12.jpg" alt="Image" height="100">                
                     </a>
                  

@@ -3,6 +3,7 @@
   angular.module('sreizaoApp').controller('ProductDetailCtrl', ProductDetailCtrl);
   angular.module('sreizaoApp').controller('PriceTrendSurveyCtrl', PriceTrendSurveyCtrl);
 
+
   function ProductDetailCtrl($scope,AssetSaleSvc, AuctionSvc, AuctionMasterSvc, vendorSvc, NegotiationSvc, $stateParams, $rootScope, PaymentMasterSvc, $uibModal, $http, Auth, productSvc, notificationSvc, Modal, CartSvc, ProductTechInfoSvc,LocationSvc, BuyContactSvc, userSvc, PriceTrendSvc, ValuationSvc, $state,$sce,$location) {
     var vm = this;
    var query=$location.search();

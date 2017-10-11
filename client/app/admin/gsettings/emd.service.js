@@ -24,6 +24,7 @@
             }
 
             function getData(filter){
+                console.log("filter emd",filter);
                 return $http.post(svcPath+"/emd/getData",filter)
                 .then(function(res){
                     return res.data;
