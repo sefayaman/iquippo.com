@@ -1,4 +1,3 @@
-'use strict';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var _ = require('lodash');
 var EnterpriseValuation = require('./../api/enterprise/enterprisevaluation.model');
@@ -315,7 +314,7 @@ function init(processCb) {
       delete row.uniqueControlNo;
       delete row.jobId;
       delete row.user;
-      console.log("update field >>>",row);
+      //console.log("update field >>>",row);
       EnterpriseValuation.update({uniqueControlNo:unc},{$set:row},function(err, enterpriseData) {
             if(err || !enterpriseData) { 
               errObj.push({

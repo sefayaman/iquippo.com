@@ -1,4 +1,3 @@
-'use strict';
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var _ = require('lodash');
 var EnterpriseValuation = require('./../api/enterprise/enterprisevaluation.model');
