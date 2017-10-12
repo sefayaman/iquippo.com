@@ -105,8 +105,7 @@ angular.module('sreizaoApp',[
     $rootScope.KYCType = KYCType;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
-    var DevEnvironment = false;
-
+    
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;

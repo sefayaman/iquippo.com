@@ -289,7 +289,7 @@ exports.validateUpdate = function(req,res,next){
 			});*/
 			next();
 		} else if(req.query.action === 'reject') {
-			if(req.bid.dealStatus == dealStatuses[6]){
+			if(req.bid.dealStatus === dealStatuses[6]){
 				var selBid = null;
 				if(!req.bid.autoApprove)
 					selBid = nextApprovableBid(req.bid,req.otherBids);
@@ -328,6 +328,7 @@ exports.validateUpdate = function(req,res,next){
 			} else {
 				if(req.bid.dealStatus === dealStatuses[0] && req.bid.bidStatus === bidStatuses[7] && req.bid.lastAccepted)
 					req.bids[0].lastAccepted = false;
+				req.bids[0].status = false;
 				next();
 			}
 		}
