@@ -1279,7 +1279,7 @@ exports.submitRequest = function(req,res){
     return res.status(400).send("Invalid request");
   
   var fieldMap = fieldsConfig.SUBMITTED_TO_AGENCY_FIELD;
-  EnterpriseValuation.find({_id:{$in:ids}},function(err,valReqs){
+  EnterpriseValuation.find({_id:{$in:ids},deleted:false},function(err,valReqs){
     if(err) return handleError(res, err);
     if(!valReqs.length)
       return res.status(200).send("No record found to submit");
@@ -1293,6 +1293,8 @@ exports.submitRequest = function(req,res){
       if(type === 'Mjobcreation' && item.jobId)
         return;
       if(type === 'Mjobupdation' && !item.jobId)
+        return;
+      if(item.cancelled)
         return;
       var obj = {};
       keys.forEach(function(key){
