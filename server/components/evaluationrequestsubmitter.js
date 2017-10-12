@@ -78,7 +78,7 @@ function getEnterpriseRequest(enterprisers){
 
   var currDate = new Date();
   currDate.setMinutes(currDate.getMinutes() - 20);
-  ValuationModel.find({'enterprise.enterpriseId':enterprisers[0].enterpriseId,requestType:{$in:services},status:EnterpriseValuationStatuses[0],createdAt:{$lt:currDate},deleted:false},function(err,entReqs){
+  ValuationModel.find({'enterprise.enterpriseId':enterprisers[0].enterpriseId,requestType:{$in:services},status:EnterpriseValuationStatuses[0],createdAt:{$lt:currDate},deleted:false,cancelled:false,onHold:false},function(err,entReqs){
     if(err){
       enterprisers.splice(0,1);
       getEnterpriseRequest(enterprisers);
@@ -123,6 +123,10 @@ function submitRequest(reqs,cb){
     reqs.forEach(function(item){
       if(item.jobId || item.deleted)
          return;
+       if(item.onHold)
+        return;
+      if(item.cancelled)
+        return;
       var obj = {};
       keys.forEach(function(key){
         obj[key] = _.get(item,Field_MAP[key]);
