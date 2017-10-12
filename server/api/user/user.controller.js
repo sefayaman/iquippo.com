@@ -20,6 +20,7 @@ var async = require('async');
 var APIError = require('../../components/_error');
 var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 var Seqgen = require('./../../components/seqgenerator').sequence();
+var AppSetting = require('../common/setting.model');
 var validationError = function(res, err) {
   return res.status(422).json(err);
 }; 
@@ -1620,6 +1621,24 @@ exports.exportUsers = function(req, res) {
       // var wbout = xlsx.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
       // res.end(wbout);
     });
+}
+
+exports.exportUsersList = function(req, res) {
+  AppSetting.find({
+		key: 'user_list_file_name'
+	}, function(err, result) {
+		if (err) {
+			return handleError(result, err)
+		} else{
+      var downloadDir = 'downloads/user-exports';
+      var s3Url = config.awsUrl;
+      var s3Bucket = config.awsBucket;
+      var path = s3Url+s3Bucket+'/'+downloadDir+'/'+result[0].value;
+     
+      return res.status(200).json(path);
+      
+    }
+  })
 }
 
 function getProductData(req, res, users, userIds) {
