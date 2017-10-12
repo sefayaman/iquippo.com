@@ -241,8 +241,6 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
                 return item.jobId;
             });
           }
-          console.log("success arr",res.successArr.length);
-          console.log("arr length",arrSubmitToAgency.length);
           if(arrSubmitToAgency.length){
             submitToAgency(arrSubmitToAgency,'Mjobupdation');
             return;
@@ -337,7 +335,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         if(action == 'add'){
           selectedItems = [];
           vm.enterpriseValuationListing.forEach(function(item){
-            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1 && !item.onHold)
+            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1 && !item.onHold && !item.cancelled)
                 selectedItems.push(item);
           })
           
