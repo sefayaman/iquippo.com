@@ -217,7 +217,7 @@ function updateNotification(result, data) {
     notification.findOneAndUpdate({
       _id: data[0]._id
     }, {
-      isSent: true
+      counter : 7
     }, function(err) {
       if (err) {
         console.log("Error with updating notification");

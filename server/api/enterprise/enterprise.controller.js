@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Seq = require("seq");
+var request = require('request');
 var EnterpriseValuation = require('./enterprisevaluation.model');
 var EnterpriseValuationInvoice = require('./enterprisevaluationinvoice.model');
 
@@ -21,7 +22,8 @@ var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','MM/DD/YY','YYYY/MM/DD',moment.
 var fieldsConfig = require('./fieldsConfig');
 var purposeModel = require('../common/valuationpurpose.model');
 var AssetGroupModel = require('./assetgroup.model');
-var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
+var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection In Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+//var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner'];
 var validRequestType = ['Valuation','Inspection'];
 var UserModel = require('../user/user.model');
 var fs = require('fs');
@@ -177,8 +179,8 @@ exports.getOnId = function(req, res) {
 // Creates a new valuation in the DB.
 exports.create = function(req, res, next){
 
-    var mandatoryParams =  ['agency.partnerId','agency.partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'];
-    var vehicleParamsArr = ['engineNo','chassisNo','registrationNo','serialNo'];
+    var mandatoryParams =  ['agency.partnerId','enterprise.enterpriseId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'];
+    var vehicleParamsArr = ['engineNo','chassisNo'];
 
     var returnVal = mandatoryParams.every(function(key){  
         var val = _.get(req.body,key,"");
@@ -201,102 +203,12 @@ exports.create = function(req, res, next){
     var bodyData = req.body;
     delete bodyData.requestDate;
     EnterpriseValuation.create(bodyData, function(err, enterpriseData) {
-      //return cb(err,enterpriseData);
       if(err){
         return handleError(res, err);
       }
       return res.status(201).json(enterpriseData);
     });
 
-}
-
-function _getAssetGroupCategory(assetCategory,partnerId,enterpriseId,cb){
-  var exTerm = "";
-  var lkTerm = "";
-  try{
-    exTerm = {$regex: new RegExp( "^"+ assetCategory + "$", 'i')}
-    lkTerm = {$regex: new RegExp( "^"+ assetCategory, 'i')}
-  }catch(err){
-    cb(err);
-  }
-
-    var filter = {};
-    //filter.status = true;
-    filter['enterpriseId'] = enterpriseId;
-    filter['valuerCode'] = partnerId;
-  async.parallel([equalMatch,likeMatch],onComplete);
-
-  function likeMatch(callback){
-    filter['assetCategory'] = lkTerm;
-    AssetGroupModel.find(filter,function(err,likeRes){
-      if(err){return callback(err)};
-      callback(null,likeRes);
-    });
-  }
-
-  function equalMatch(callback){
-    filter['assetCategory'] = exTerm;
-    AssetGroupModel.find(filter,function(err,eqRes){
-      if(err){return callback(err)};
-      callback(null,eqRes);
-    });
-  }
-
-  function onComplete(err,results){
-    if(err){return cb(err)}
-    if(results.length > 0 && results[0].length > 0)
-      cb(null,{data:results[0][0],found:true});
-    else if(results.length > 1 && results[1].length > 0)
-      cb(null,{data:results[1][0],found:false});
-    else
-      cb(null,{data:{},found:false});
-  }
-}
-
-function _createAssetGroupCategory(userData,assetCategory,enterpriseId,partnerId){
-  
-  var assetGroup = {};
-  assetGroup.status = false;
-  assetGroup.deleted = false;
-
- assetGroup.createdBy = userData;
-  assetGroup.updatedBy = userData;
-  assetGroup.assetCategory = assetCategory;
-
-  async.parallel([getEnterprise,getAgency],finalize);
-
-  function getEnterprise(callback){
-    if(!enterpriseId)
-      return callback("There is no enterpriseId");
-
-    UserModel.find({enterpriseId : enterpriseId,"enterprise" : true}).exec(function(err,result){
-      if(err){return callback(err);}
-      assetGroup.enterpriseId = enterpriseId;
-      if(result && result.length > 0)
-      assetGroup.enterpriseName = result[0].fname + " " + result[0].mname;
-      return callback();
-    });
-  }
-
-  function getAgency(callback){
-    if(!enterpriseId)
-       return callback("There is no partnerId");
-
-    vendorModel.find({partnerId :partnerId},function(err,result){
-      if(err){return callback(err);}
-      if(result && result.length > 0)
-          assetGroup.valuerName = result[0].entityName;
-      assetGroup.valuerCode = partnerId;
-      return callback();
-    });
-  }
-
-  function finalize(){
-    AssetGroupModel.create(assetGroup,function(err,result){
-      if(err)
-        console.log("err in asset group creation",err);
-    });
-  }
 }
 
 function validateData(options,obj){
@@ -342,7 +254,7 @@ function validateData(options,obj){
   });
 
   if(!found && madnatorySpecialParams.length > 0){
-    err = "Atleast one of these four Parameter required " + msgStr;
+    err = "Atleast one of these two Parameter required " + msgStr;
   }
   return err;
 }
@@ -427,7 +339,7 @@ exports.bulkUpload = function(req, res) {
     numericCols : ['customerInvoiceValue'],
     dateParams : ['customerInvoiceDate','repoDate'],
     madnatoryParams : ['partnerId','purpose','requestType','assetCategory',"yardParked",'country','state','city','contactPerson','contactPersonTelNo','assetDescription'],
-    madnatorySpecialParams : ['engineNo','chassisNo','registrationNo','serialNo']
+    madnatorySpecialParams : ['chassisNo','registrationNo']
   };
   
   if(user.role == 'admin')
@@ -799,7 +711,7 @@ exports.bulkUpload = function(req, res) {
             emailData.subject = reqData.requestType + " " + 'Request Approved for Unique Control No. - ' + reqData.uniqueControlNo;
             tplData.status = "submitted";
           }
-          if(reqData.status === EnterpriseValuationStatuses[4]) {
+          if(reqData.status === EnterpriseValuationStatuses[6]) {
             tmplName = VALUATION_REPORT_SUBMISSION;
             emailData.cc = reqData.enterprise.email;
             emailData.subject = 'Valuation Report as an attachment for Unique Control No. - ' + reqData.uniqueControlNo;
@@ -812,7 +724,7 @@ exports.bulkUpload = function(req, res) {
           tplData.uniqueControlNo = reqData.uniqueControlNo;
           tplData.name = reqData.createdBy.name;
           tplData.requestType = reqData.requestType;
-          if(reqData.status === EnterpriseValuationStatuses[4]) {
+          if(reqData.status === EnterpriseValuationStatuses[6]) {
             sendMail(tplData, emailData, tmplName);
           } else if(reqData.status === EnterpriseValuationStatuses[0] || reqData.status === EnterpriseValuationStatuses[2]){
             var approverUsers = [];
@@ -848,13 +760,13 @@ exports.bulkUpload = function(req, res) {
       }else{
           emailData.content =  retData;
           notification.pushNotification(emailData,function(pushed){
-          console.log("Email send.");
         });
       }
     });
   }
   
 exports.pushNotification = pushNotification;
+
 exports.bulkModify = function(req, res) {
   var body = req.body;
   ['fileName','user'].forEach(function(x){
@@ -889,6 +801,7 @@ exports.bulkModify = function(req, res) {
     errObj = errObj.concat(parsedResult.errObj);
   var uploadData = parsedResult.uploadData;
   var totalCount = parsedResult.totalCount;
+  var successArr = [];
 
   if(totalCount > 99){
     var result = {
@@ -999,8 +912,8 @@ exports.bulkModify = function(req, res) {
           return callback('Invalid Valuation request');
 
         
-        var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
-        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
+        var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[6]];
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[5]];
         
         row.valData = result[0];
         if(updateType == 'agency'){
@@ -1249,11 +1162,11 @@ exports.bulkModify = function(req, res) {
       delete row.valData;
       if(updateType == 'agency'){
         row.reportSubmissionDate = new Date();
-        row.status = EnterpriseValuationStatuses[4];
+        row.status = EnterpriseValuationStatuses[6];
         row.statuses = valReq.statuses;
         row.statuses.push({
             createdAt : new Date(),
-            status : EnterpriseValuationStatuses[4],
+            status : EnterpriseValuationStatuses[6],
             userId : user._id
         });
 
@@ -1285,10 +1198,13 @@ exports.bulkModify = function(req, res) {
           if(err){
             console.log(err);
           }
-          if(results && updateType == 'agency')
+          if(results && results.length && updateType == 'agency')
             pushNotification(results[0]);
+          if(results && results.length){
+            successArr[successArr.length] = results[0];
+          }
+          return cb();
         })
-        return cb();
       });
     }
   }
@@ -1296,10 +1212,11 @@ exports.bulkModify = function(req, res) {
 
   function finalize(err){
     debug(err);
-
     return res.json({
       msg : (totalCount - errObj.length) + ' out of ' + totalCount + ' updated sucessfully',
-      errObj : errObj 
+      errObj : errObj,
+      successArr:successArr
+
     });
   }
 };
@@ -1310,36 +1227,314 @@ exports.update = function(req, res) {
   
   var bodyData = req.body.data;
   var user = req.body.user;
-
   if(bodyData._id) { delete bodyData._id; }
   bodyData.updatedAt = new Date();
-  EnterpriseValuation.findById(req.params.id, function (err, enterprise) {
-    if (err) { return handleError(res, err); }
-    if(!enterprise) { return res.status(404).send('Not Found'); }
-
-    var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1]];
-    var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3]];
-    if(user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId)
-      return update();
-    else if(user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)
-      return update();
-    else if(user.role == 'admin')
-      return update();
-    else
-      return res.status(401).send('User does not have privilege to update record');
+  bodyData.auditLogs = [req.enterprise];
+  EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
+      if (err) { return handleError(res, err); }
+      return res.status(200).send("Enterprise valuation updated sucessfully");
   });
 
-  function update(){
-    if(bodyData.status === EnterpriseValuationStatuses[4]){
-      bodyData.reportDate = new Date()
-      bodyData.reportSubmissionDate = new Date();
-    }
-     EnterpriseValuation.update({_id:req.params.id},{$set:bodyData},function(err){
-        if (err) { return handleError(res, err); }
-        return res.status(200).json({errorCode:0, message:"Enterprise valuation updated sucessfully"});
+};
+
+exports.validateUpdate = function(req,res,next){
+  
+  var user = req.body.user;
+  var bodyData = req.body.data;
+  var updateType = req.body.updateType;
+  var enterpriseValidStatus = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[6]];
+  var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[4],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
+  EnterpriseValuation.findById(req.params.id,function(err,enterprise){
+    if (err) { return handleError(res, err); }
+    if(!enterprise) { return res.status(404).send('Not Found'); }
+    req.enterprise = enterprise;
+    if(updateType === 'agency'){
+      if(user.role == 'admin' || (user.isPartner && user.partnerInfo && user.partnerInfo._id == enterprise.agency._id && agencyValidStatus.indexOf(enterprise.status) != -1)){
+        if(bodyData.status === EnterpriseValuationStatuses[6]){
+          bodyData.reportDate = new Date();
+          bodyData.reportSubmissionDate = new Date();
+        }
+        return next();
+      }else
+        return res.status(401).send('User does not have privilege to update record');  
+    }else if(updateType === 'enterprise'){
+      if(user.role === 'admin' || (user.role == 'enterprise' && enterpriseValidStatus.indexOf(enterprise.status) != -1 && enterprise.enterprise.enterpriseId == user.enterpriseId))
+        return next();
+      else
+        return res.status(401).send('User does not have privilege to update record !!!'); 
+
+    }else
+      return res.status(400).send('Invalid update request !!!');
+
+  });
+}
+
+exports.submitRequest = function(req,res){
+
+  var ids = req.body;
+  var type = req.query.type;
+  if(['Mjobcreation','Mjobupdation'].indexOf(type) === -1)
+    return res.status(400).send("Invalid type parameter");
+  if(!ids.length)
+    return res.status(400).send("Invalid request");
+  
+  var fieldMap = fieldsConfig.SUBMITTED_TO_AGENCY_FIELD;
+  EnterpriseValuation.find({_id:{$in:ids}},function(err,valReqs){
+    if(err) return handleError(res, err);
+    if(!valReqs.length)
+      return res.status(200).send("No record found to submit");
+      postRequest(valReqs);
+  });
+
+  function postRequest(valReqs){
+    var dataArr = [];
+    var keys = Object.keys(fieldMap);
+    valReqs.forEach(function(item){
+      if(type === 'Mjobcreation' && item.jobId)
+        return;
+      if(type === 'Mjobupdation' && !item.jobId)
+        return;
+      var obj = {};
+      keys.forEach(function(key){
+        obj[key] = _.get(item,fieldMap[key],"");
+      })
+
+      if(obj.brand && obj.brand == "Other")
+        obj.brand = item.otherBrand;
+
+      if(obj.model && obj.model == "Other")
+        obj.model = item.otherModel;
+
+      if(type === 'Mjobupdation' && item.jobId)
+        obj.jobId = item.jobId;
+
+      var s3Path = "";
+      if(item.assetDir)
+        s3Path = config.awsUrl + config.awsBucket + "/" + item.assetDir + "/";
+      if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
+          obj.invoiceDoc = s3Path + item.invoiceDoc.filename;
+      if(s3Path && item.rcDoc && item.rcDoc.filename)
+      obj.rcDoc = s3Path + item.rcDoc.filename;
+      dataArr[dataArr.length] = obj;
+    });
+
+    if(!dataArr.length)
+      return res.status(200).send("There is no request to post.");
+    request({
+        url: config.qpvalURL + "?type=" + type,
+        method: "POST",
+        json: true, 
+        body: dataArr
+    }, function (error, response, body){
+      if(error)
+         return res.status(412).send("Unable to post request to agency.Please contact support team.");
+      if(response.statusCode == 200){
+          requestPostProcessing(valReqs,response.body);
+      }else{
+        return res.status(412).send("Unable to post request to agency.Please contact support team");
+      }
+
     });
   }
-};
+
+  function requestPostProcessing(valReqs,resList){
+    
+    valReqs.forEach(function(valReq){
+      var resItem = getResOnUniqueControlNo(valReq.uniqueControlNo,resList);
+      if(!resItem){
+        valReq.resubmit = true;
+        return;
+      }
+
+      if(type === 'Mjobcreation'){
+        if(resItem.success == "true"){
+          valReq.jobId = resItem.jobId;
+          valReq.submittedToAgencyDate = new Date();
+          setStatus(valReq,EnterpriseValuationStatuses[2]);
+        }else{
+          valReq.remarks = resItem.msg || "Unable to submit";
+          valReq.resubmit = true;
+          setStatus(valReq,EnterpriseValuationStatuses[1]);
+        }
+
+        return;
+      }
+
+      if(type === 'Mjobupdation' && resItem.success == "true")
+        setStatus(valReq,EnterpriseValuationStatuses[2]);
+      else
+        valReq.resubmit = true;
+
+    });
+    async.eachLimit(valReqs,5,update,function(err){
+      if(err)
+        return handleError(res,err);
+      return res.status(200).send("Valuation request submitted successfully !!!");
+    })
+  }
+
+  function update(valReq,cb){
+    var _id = valReq._id;
+    delete valReq._id;
+    EnterpriseValuation.update({_id:_id},{$set:valReq},function(err,retVal){
+      if(!err && type === 'Mjobcreation')
+        pushNotification(valReq);
+      return cb(err);
+    }); 
+  }
+
+  function getResOnUniqueControlNo(unCtrlNo,resList){
+    var retVal = null;
+      if(!resList || !resList.length)
+        return retVal;
+      resList.some(function(item){
+        if(item && item.uniqueControlNo == unCtrlNo){
+          retVal = item
+          return false;
+        }
+      });
+      return retVal;
+  }
+
+   function setStatus(entValuation,status){
+      entValuation.status = status;
+      var stObj = {};
+      stObj.status = status;
+      stObj.createdAt = new Date();
+      stObj.userId = req.user._id;
+      if(!entValuation.statuses)
+        entValuation.statuses = [];
+      entValuation.statuses.push(stObj);
+    }
+
+}
+
+exports.resumeRequest = function(req,res){
+  
+  var bodyData = req.body;
+  if(!bodyData._id)
+    return res.status(400).send("Invalid resume request request !!!");
+
+  EnterpriseValuation.findById(bodyData._id,function(err,entReq){
+    if(err) return handleError(res, err);
+    if(!entReq)
+      return res.status(404).send("Valuation request not found !!!");
+    if(!entReq.onHold)
+      return res.status(401).send("Request is not on hold !!!");
+    if(req.user.role == 'admin')
+      return resumeRequestAtQVAPL();
+    if(entReq.enterprise.enterpriseId === req.user.enterpriseId)
+      resumeRequestAtQVAPL();
+    else
+      return res.status(401).send("Invalid resume request !!!");
+  });
+
+  function resumeRequestAtQVAPL(){
+    if(!bodyData.jobId)
+      return res.status(401).send("Invalid resume request !!!");
+    var FIELD_MAP = fieldsConfig.SUBMITTED_TO_AGENCY_FIELD;
+    var servObj = {};
+    var keys = Object.keys(FIELD_MAP);
+    keys.forEach(function(key){
+      servObj[key] = _.get(bodyData,FIELD_MAP[key],"");
+    });
+    var s3Path = "";
+    if(bodyData.assetDir)
+      s3Path = config.awsUrl + config.awsBucket + "/" + bodyData.assetDir + "/";
+    if(s3Path && bodyData.invoiceDoc&& bodyData.invoiceDoc.filename)
+        servObj.invoiceDoc = s3Path + bodyData.invoiceDoc.filename;
+    if(s3Path && bodyData.rcDoc && bodyData.rcDoc.filename)
+        servObj.rcDoc = s3Path + bodyData.rcDoc.filename;
+    if(bodyData.userComment)
+        servObj.comment = bodyData.userComment;
+      servObj.jobId = bodyData.jobId;
+      request({
+          url: config.qpvalURL + "?type=jobResume",
+          method: "POST",
+          json: true, 
+          body: [servObj]
+      }, function (error, response, body){
+        if(error)
+          return res.status(412).send("Unable to resume request.Please contact support team");  
+        if(response.statusCode == 200 && response.body.length && response.body[0] && response.body[0].success === 'true'){
+            bodyData.onHold = false;
+            update();
+        }else{
+          return res.status(412).send("Unable to resume request.Please contact support team");
+        }
+
+    });
+  }
+
+  function update(){
+    var _id = bodyData._id;
+    delete bodyData._id;
+    EnterpriseValuation.update({_id:_id},{$set:bodyData},function(err,retVal){
+      if(err) return handleError(res, err);
+      return res.status(200).send("Valuation request resumed successfully !!!");
+    }); 
+  }
+}
+
+exports.cancelRequest = function(req,res){
+  
+  var bodyData = req.body;
+  if(!bodyData._id)
+    return res.status(400).send("Invalid cancel request !!!");
+  if(req.user.role == 'admin')
+    return cancelRequestAtQVAPL();
+
+  EnterpriseValuation.findById(bodyData._id,function(err,entReq){
+    if(err) return handleError(res, err);
+    if(!entReq)
+      return res.status(404).send("Valuation request not found !!!");
+    if(entReq.enterprise.enterpriseId === req.user.enterpriseId)
+      cancelRequestAtQVAPL();
+    else
+      return res.status(401).send("Invalid cancel request !!!");
+  });
+
+  function cancelRequestAtQVAPL(){
+    if(!bodyData.jobId || bodyData.cancelled)
+      return update();
+
+    var serverData = {};
+    serverData.uniqueControlNo = bodyData.uniqueControlNo;
+    serverData.jobId = bodyData.jobId;
+    serverData.cancellationFee = bodyData.cancellationFee || 0; 
+    request({
+        url: config.qpvalURL + "?type=cancel",
+        method: "POST",
+        json: true, 
+        body: [serverData]
+    }, function (error, response, body){
+      if(error)
+        return res.status(412).send("Unable to cancel request.Please contact support team");  
+      if(response.statusCode == 200 && response.body.length && response.body[0] && response.body[0].success === 'true'){
+          update();
+      }else{
+        return res.status(412).send("Unable to cancel request.Please contact support team");
+      }
+
+    });
+  }
+
+  function update(){
+    var updateData = {};
+    updateData.cancelled = true;
+    updateData.cancellationFee = bodyData.cancellationFee || 0; 
+    updateData.cancelledBy = {
+      userId:req.user._id,
+      name:req.user.fname || "" + " " + req.user.lname || "",
+      createdAt : new Date() 
+    }
+    EnterpriseValuation.update({_id:bodyData._id},{$set:updateData},function(err,retVal){
+      if(err) return handleError(res, err);
+      return res.status(200).send("Valuation request cancelled successfully !!!");
+    }); 
+  }
+
+}
 
 exports.bulkUpdate = function(req,res){
   var dataArr = req.body;
@@ -1519,7 +1714,6 @@ exports.updateInvoice = function(req, res) {
   function update(invoice){
     EnterpriseValuationInvoice.update({_id:_id},{$set:invoice},function(err,retVal){
         if (err) { return handleError(res, err); }
-        console.log("invoice",invoice);
         return res.status(200).json(invoice);
     });
   }
@@ -1537,47 +1731,35 @@ exports.updateInvoice = function(req, res) {
   }
 };
 
-var parameters = {
-  jobID:{key:"jobId",required:true},
-  unique_controll_no:{key:"uniqueControlNo",required:true},
-  reportNo:{key:"reportNo",required:true},
-  assetNo:{key:"assetNo"},
-  imeiNo:{key:"gpsIMEINo"},
-  hmr_Kmr:{key:"hmr_kmr"},
-  assessed_Value:{key:"assessedValue",type:'numeric'},
-  inspection_By:{key:"inspectionBy"},
-  physical_Condition:{key:"physicalCondition"},
-  gps_Installed:{key:"gpsInstalled",type:"boolean"},
-  gps_Device_No:{key:"gpsDeviceNo"},
-  yearOfManufacturing:{key:"agencyYearOfManufacturing"},
-  engineNo:{key:"agencyEngineNo"},
-  serialNo:{key:"agencySerialNo"},
-  chasisNo:{key:"agencyChassisNo"},
-  registrationNo:{key:"agencyRegistrationNo"},
-  overallGeneralCondition:{key:"overallGeneralCondition"},
-  report_url:{key:"valuationReport",type:"file",required:true},
-  general_image_url:{key:"generalImage",type:"file"},
-  engine_image_url:{key:"engineImage",type:"file"},
-  hydraulic_image_url:{key:"hydraulicImage",type:"file"},
-  cabin_image_url:{key:"cabinImage",type:"file"},
-  under_carriage_tyre_image_url:{key:"underCarriageImage",type:"file"},
-  other_image_url:{key:"otherImage",type:"file"}
-}
-
 exports.updateFromAgency = function(req,res){
-  
+  var validActions = ['reportupload','putonhold','statusupdate'];  
   var bodyData = req.body;
-   var generalCond = req.body.overallGeneralCondition;
-  if(generalCond){
-   var bufferObj = new Buffer(generalCond, 'base64');
-   req.body.overallGeneralCondition = bufferObj.toString('utf8');
-  }
-
+  var action = req.query.action;
 
   var result = {};
   result['success'] = true;
   result['jobID'] = bodyData.jobID;
   result['unique_controll_no']= bodyData.unique_controll_no;
+
+  if(validActions.indexOf(action) === -1){
+    result['success'] = false;
+    result['msg'] = "Invalid action";
+    return sendResponse();
+  }
+
+   var generalCond = req.body.overallGeneralCondition;
+  if(generalCond){
+   var bufferObj = new Buffer(generalCond, 'base64');
+   req.body.overallGeneralCondition = bufferObj.toString('utf8');
+  }
+  var parameters = null;
+  if(action == 'putonhold')
+    parameters = fieldsConfig.PUT_ON_HOLD;
+  else if(action == 'statusupdate')
+    parameters = fieldsConfig.STATUS_UPDATE;
+  else
+    parameters = fieldsConfig.REPORT_UPLOAD;
+
   var msg = validateRequest(bodyData);
   if(msg){
     result['msg'] = msg;
@@ -1585,15 +1767,24 @@ exports.updateFromAgency = function(req,res){
     return sendResponse();
   }
 
+  if(action === 'statusupdate'){
+    bodyData.status = Utility.convertQVAPLStatus(bodyData.status);
+    if(!bodyData.status){
+      result['success'] = false;
+      result['msg'] = "Invalid status";
+      return sendResponse();
+    }
+  }
+
   checkRecordInDB(bodyData.unique_controll_no,function(msg,valReq){
     if(msg){
        result['msg'] = msg;
-       result['status'] = false;
+       result['success'] = false;
        return sendResponse();
     }else
         update(valReq);      
 
-  })
+  });
 
   function update(valReq){
 
@@ -1608,28 +1799,46 @@ exports.updateFromAgency = function(req,res){
           valObj.filename = val;
           val = valObj;
          }
-        updateObj[parameters[key].key] = val;
-       
+         if(val)
+          updateObj[parameters[key].key] = val;
       });
 
-      updateObj.status = EnterpriseValuationStatuses[4];
-      updateObj.statuses = valReq.statuses;
-      updateObj.reportDate = new Date();
-      updateObj.reportSubmissionDate = new Date();
-      var stsObj = {};
-      stsObj.createdAt = new Date();
-      stsObj.userId = "IQVL";
-      stsObj.status = EnterpriseValuationStatuses[4];
-      if(updateObj.statuses)
-        updateObj.statuses[updateObj.statuses.length] = stsObj;
+      if(action === 'putonhold'){
+        updateObj.onHold = true;
+        updateObj.onHoldDate = new Date();
+      }else if(action === 'statusupdate'){
+        if([EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[4]].indexOf(updateObj.status) === -1){
+          result['msg'] = "Invalid status update";
+          result['success'] = false;
+          return sendResponse();
+       }
+        updateObj.statuses = valReq.statuses;
+       var stsObj = {};       stsObj.createdAt = new Date();
+       stsObj.userId = "IQVL";
+       stsObj.status = updateObj.status;
+       if(updateObj.statuses)
+          updateObj.statuses[updateObj.statuses.length] = stsObj;
+       }
+      else{
+        updateObj.status = EnterpriseValuationStatuses[6];
+        updateObj.statuses = valReq.statuses;
+        updateObj.reportDate = new Date();
+        updateObj.reportSubmissionDate = new Date();
+        var stsObj = {};
+        stsObj.createdAt = new Date();
+        stsObj.userId = "IQVL";
+        stsObj.status = EnterpriseValuationStatuses[6];
+        if(updateObj.statuses)
+          updateObj.statuses[updateObj.statuses.length] = stsObj;
+      }
 
-       //return sendResponse();
       EnterpriseValuation.update({_id:valReq._id},{$set:updateObj},function(err){
           if(err){
              result['success'] = false;
              result['msg'] = "System error at iQuippo";
           }
-          pushNotification(valReq);
+          if(action === 'reportupload')
+            pushNotification(valReq);
           return sendResponse();
       });
   }
@@ -1847,7 +2056,6 @@ exports.exportExcel = function(req,res){
 }
 
 function exportExcel(req,res,fieldMap,jsonArr){
-  console.log( req.protocol + "://"+ req.headers.host );
   var queryParam = req.query;
   var role = queryParam.role;
   var dataArr = [];
@@ -1864,15 +2072,22 @@ function exportExcel(req,res,fieldMap,jsonArr){
   dataArr.push(allowedHeaders);
   jsonArr.forEach(function(item,idx){
     dataArr[idx + 1] = [];
+    if(item.deleted)
+        item.status = "Deleted";
+    else if(item.cancelled)
+      item.status = "Request Cancelled";
+    else if(item.onHold)
+      item.status = "Hold - " + item.onHoldMsg;
+
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
-      if(keyObj.key == 'status' && item.deleted)
-          item.status = "Deleted";
       var val = _.get(item,keyObj.key,"");
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
         val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+      if(keyObj.type && keyObj.type == 'datetime' && val)
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY HH:mm');
       if(keyObj.type && keyObj.type == 'url' && val){
         if(val.filename){
           if(val.external === true)

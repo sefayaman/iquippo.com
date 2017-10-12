@@ -11,7 +11,7 @@
     <a href="{{templateDir}}/{{enterpriseTransactionVm.adminTemplateUpdate}}" target="_blank" ng-if="isAdmin()">template</a>
      for Update Request which is visible to Enterprise only. Maximum 99 rows
   </div>
-  <div  ng-if="isPartner() || isAdmin()">
+  <div  ng-if="isValuationPartner() || isAdmin()">
     Download the <a href="{{templateDir}}/{{enterpriseTransactionVm.agencyTemplate}}" target="_blank">template</a> for Upload report data which is visible to Agency only.</div>
   <div class="row">
     <div class="col-sm-6">
@@ -45,7 +45,7 @@
           </span>
            <span>{{modifiedExcel}}</span>
       </div>
-      <div class="col-sm-2" ng-if="isAdmin() || isPartner()">
+      <div class="col-sm-2" ng-if="isAdmin() || isValuationPartner()">
           <span class="btn btn-default fileinput-button">
            <input type="file" id="reportupload" name="modify"  data-filetype="doc" file-upload required ng-if="refresh">
             <span><i class="fa fa-upload"></i> Upload Report Data</span>
@@ -59,15 +59,18 @@
     <legend></legend>
     <div class="row">
       <div class="col-sm-2">
-        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency()" ng-if="enterpriseTransactionVm.isSubmitAllowed()">Submit to Agency</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="enterpriseTransactionVm.submitToAgency(null,'Mjobcreation')" ng-if="enterpriseTransactionVm.isSubmitAllowed()">Submit to Agency</button>
       </div>
        <div class="form-group col-sm-2">
                     <select class="form-control" name="statusType" ng-model="enterpriseTransactionVm.statusType" ng-change="enterpriseTransactionVm.fireCommand(true)">
                       <option value="">Select Status Type</option>
                       <option value="Request Initiated">Request Initiated</option>
                       <option value="Request Submitted">Request Submitted</option>
+                      <option value="Inspection In Progress">Inspection In Progress</option>
+                      <option value="Inspection Completed">Inspection Completed</option>
                       <option value="Invoice Generated">Invoice Generated</option>
                       <option value="Valuation Report Submitted">Valuation Report Submitted</option>
+                      <option value="Request Cancelled">Request Cancelled</option>
                     </select>
                     <i class="caret"></i>
                   </div>
@@ -111,7 +114,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="enterpriseValuation in enterpriseTransactionVm.enterpriseValuationListing">
-            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1 ||  !enterpriseTransactionVm.isSubmitAllowed(enterpriseValuation.requestType)"></td>            
+            <td><input type="checkbox" ng-checked="enterpriseTransactionVm.selectAllReq" ng-click="enterpriseTransactionVm.updateSelection($event,enterpriseValuation)" ng-hide="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) > 1 ||  !enterpriseTransactionVm.isSubmitAllowed(enterpriseValuation.requestType) || enterpriseValuation.onHold"></td>            
             <td>{{enterpriseValuation.uniqueControlNo}}</td>
             <td>{{enterpriseValuation.requestType}}</td>
             <td>{{enterpriseValuation.purpose}}</td>
@@ -121,14 +124,22 @@
             <td>{{enterpriseValuation.jobId}}</td>
             <td><a href="javascript:void(0);" title=""> {{enterpriseValuation.assetId}}</a></td>
             <td>{{enterpriseValuation.requestDate | date:'MM/dd/yyyy'}}</td>
-            <td>{{enterpriseValuation.status}}</td>
+            <td>
+              <span ng-if="!enterpriseValuation.onHold && !enterpriseValuation.cancelled">{{enterpriseValuation.status}}</span>
+              <span ng-if="enterpriseValuation.onHold && !enterpriseValuation.cancelled">Hold - {{enterpriseValuation.onHoldMsg}}</span>
+              <span ng-if="enterpriseValuation.cancelled">Request Cancelled</span>
+            </td>
             <td>{{enterpriseValuation.remarks}}</td>
             <td><a href="javascript:void(0);" title="Detail" ng-click="enterpriseTransactionVm.showDetail(enterpriseValuation)"> More..</a></td>
             <td>
-              <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)" ng-if="enterpriseTransactionVm.isEditAllowed(enterpriseValuation.requestType, enterpriseValuation.status)"><i class="fa fa-pencil"></i> </a>
-              <a ng-if="!enterpriseValuation.valuationReport.external&&enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="/download/{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank"><i class="fa fa-download"></i> </a>
-              <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && isAdmin()"><i class="fa fa-trash"></i> </a>
+              <span ng-if="!enterpriseValuation.cancelled">
+                <a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.editEnterpriseRequest(enterpriseValuation)" ng-if="enterpriseTransactionVm.isEditAllowed(enterpriseValuation)" uib-popover="Edit" popover-trigger="mouseenter"><i class="fa fa-pencil"></i> </a>
+                <a ng-if="!enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" href="{{uploadImagePrefix}}{{enterpriseValuation.assetDir}}/{{enterpriseValuation.valuationReport.filename}}"  target="_blank" uib-popover="Download" popover-trigger="mouseenter"><i class="fa fa-download"></i> </a>
+                <a ng-if="enterpriseValuation.valuationReport.external && enterpriseValuation.valuationReport.filename" class="btn btn-default btn-md" ng-href="{{enterpriseValuation.valuationReport.filename}}"  target="_blank" uib-popover="Download" popover-trigger="mouseenter"><i class="fa fa-download"></i> </a>
+                <a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="enterpriseTransactionVm.deleteEnterprise(enterpriseValuation)" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) < 2 && isAdmin()" uib-popover="Delete" popover-trigger="mouseenter"><i class="fa fa-trash"></i> </a>
+                <a class="btn btn-info btn-md" ng-if="EnterpriseValuationStatuses.indexOf(enterpriseValuation.status) <= 6 && !isValuationPartner()" href="javascript:void(0);" ng-click="enterpriseTransactionVm.cancelEnterprise(enterpriseValuation)" uib-popover="Cancel" popover-trigger="mouseenter"><i class="fa fa-close"></i> </a>
+                <a class="btn btn-success btn-md" href="javascript:void(0);" uib-popover="Re-Submit" popover-trigger="mouseenter" ng-if= "enterpriseValuation.onHold" ng-click="enterpriseTransactionVm.openCommentModal(enterpriseValuation)"><i class="fa fa-send"></i> </a>
+                </span>
 
             </td>
             
@@ -138,3 +149,20 @@
     </div>
     <uib-pagination total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" ng-change="enterpriseTransactionVm.fireCommand()" class="pagination-sm" rotate="false">  </uib-pagination>
 </div>
+
+<script type="text/ng-template" id="usercomment.html">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Comments</h4>
+  </div>
+  <form name="usercommentForm" novalidate>
+    <div class="modal-body">
+      <div class="col-sm-offset-1 col-sm-10" ng-class="{'has-error': usercommentForm.comment.$invalid && submitted}">
+        <textarea class="form-control" ng-model="dataModel.userComment" name="comment" required></textarea>
+      </div>
+    </div>
+    <div class="modal-footer text-right">
+      <button class="btn btn-danger btn-md" ng-click="submit(usercommentForm)">Submit</button>
+    </div>
+  </form>
+</script>

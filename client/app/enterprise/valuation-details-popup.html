@@ -8,15 +8,20 @@
               <table class="table table-bordred">               
                 <tr>
                   <td class="col-sm-3"><b>Unique Control No:</b></td>
-                  <td class="col-sm-3">{{valuation.uniqueControlNo}}</td>
-                  <td class="col-sm-3"><b>Request Type:</b></td>
-                  <td class="col-sm-3">{{valuation.requestType}}</td>                  
+                  <td class="col-sm-9" colspan="3">{{valuation.uniqueControlNo}}</td>
+                                   
                 </tr>
                 <tr>
+                  <td><b>Request Type:</b></td>
+                  <td>{{valuation.requestType}}</td>
                   <td><b>Purpose:</b></td>
-                  <td>{{valuation.purpose}}</td>
+                  <td>{{valuation.purpose}}</td>                                
+                </tr>
+                <tr>
+                  <td><b>Name of Original Owner:</b></td>
+                  <td>{{valuation.originalOwner}}</td>    
                   <td><b>Name of the Customer seeking Finance:</b></td>
-                  <td>{{valuation.nameOfCustomerSeeking}}</td>                  
+                  <td>{{valuation.nameOfCustomerSeeking}}</td>    
                 </tr>
                 <tr>
                   <td><b>Agency Name:</b></td>
@@ -41,15 +46,15 @@
                 <tr>
                   <td><b>Remark:</b></td>
                   <td>{{valuation.remark}}</td>
-                  <td><b>Customer No:</b></td>
-                  <td>{{valuation.customerPartyNo}}</td>
+                  <td><b>Enterprise:</b></td>
+                  <td>{{valuation.customerPartyName}}</td>
                 </tr>
 
-                <tr>
-                  <td><b>Customer Name:</b></td>
-                  <td>{{valuation.customerPartyName}}</td>
+                <tr>                  
                    <td><b>User:</b></td>
-                  <td>{{valuation.userName}}</td>                  
+                  <td>{{valuation.userName}}</td> 
+                  <td><b>Mobile No:</b></td>
+                  <td>{{valuation.customerPartyNo}}</td>                 
                 </tr>
 
                 <tr>
@@ -63,6 +68,12 @@
                   <td>{{valuation.customerInvoiceDate | date:'MM/dd/yyyy'}}</td>
                   <td><b>Customer Invoice Value:</b></td>
                   <td>{{valuation.customerInvoiceValue}}</td>                    
+                </tr>
+                <tr>
+                  <td><b>Invoice:</b></td>
+                  <td><a href="javascript:void(0);" ng-click="downloadFile(valuation.invoiceDoc,valuation.assetDir)">{{valuation.invoiceDoc.filename}}</a></td>
+                  <td><b>RC:</b></td>
+                  <td><a href="javascript:void(0);" ng-click="downloadFile(valuation.rcDoc,valuation.assetDir)">{{valuation.rcDoc.filename}}</a> </td>                    
                 </tr>
                 <tr>
                   <td><b>Asset Category:</b></td>
@@ -120,16 +131,13 @@
                   <td><b>Contact Person Tel No:</b></td>
                   <td>{{valuation.contactPersonTelNo}}</td>                  
                 </tr>
-                <tr>
-                    
-                </tr>
               </table>
                 <!-- <tr>
                   
                   <td><b>Integrated:</b></td>
                   <td>{{valuation.uniqueControllNO}}</td>
                 </tr> -->
-              <table class="table table-bordred" ng-if="EnterpriseValuationStatuses.indexOf(valuation.status) > 3">
+              <table class="table table-bordred" ng-if="EnterpriseValuationStatuses.indexOf(valuation.status) > 5">
               
                 <tr>
                   <td class="col-sm-3"><b>Report No.:</b></td>
