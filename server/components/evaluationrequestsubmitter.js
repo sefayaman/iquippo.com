@@ -17,6 +17,7 @@ var Field_MAP = {
     purpose : "purpose",
     agencyName : "agency.name",
     enterprise:"enterprise.name",
+    enterpriseId:"enterprise.enterpriseId",
     customerTransactionId : "customerTransactionId",
     customerValuationNo : "customerValuationNo",
     customerPartyNo : "customerPartyNo",
@@ -46,7 +47,8 @@ var Field_MAP = {
     disFromCustomerOffice:"disFromCustomerOffice",
     customerSeekingFinance:"nameOfCustomerSeeking",
     invoiceDate:"customerInvoiceDate",
-    invoiceValue:"customerInvoiceValue"
+    invoiceValue:"customerInvoiceValue",
+    originalOwner :'originalOwner'
   };
 
   //qpvalURL
@@ -131,15 +133,27 @@ function submitRequest(reqs,cb){
 
       if(obj.model && obj.model == "Other")
         obj.model = item.otherModel;
-      
+
+      var s3Path = "";
+      if(item.assetDir)
+        s3Path = config.awsUrl + config.awsBucket + "/" + item.assetDir + "/";
+      if(s3Path && item.invoiceDoc&& item.invoiceDoc.filename)
+          obj.invoiceDoc = s3Path + item.invoiceDoc.filename;
+      if(s3Path && item.rcDoc && item.rcDoc.filename)
+          obj.invoiceDoc = s3Path + item.rcDoc.filename;
+
       dataArr[dataArr.length] = obj;
+
     });
     request({
-        url: config.qpvalURL,
+        url: config.qpvalURL + "?type=Mjobcreation",
         method: "POST",
         json: true, 
         body: dataArr
     }, function (error, response, body){
+      if(error)
+          return cb("Error from server",null);
+        
       if(response.statusCode == 200){
         cb(null,response.body);
       }else{

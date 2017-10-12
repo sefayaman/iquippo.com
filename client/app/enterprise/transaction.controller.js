@@ -27,9 +27,11 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
   vm.editEnterpriseRequest = editEnterpriseRequest;
   vm.deleteEnterprise = deleteEnterprise;
+  vm.cancelEnterprise = cancelEnterprise;
   vm.fireCommand = fireCommand;
   vm.updateSelection = updateSelection;
   vm.submitToAgency = submitToAgency;
+  vm.openCommentModal = openCommentModal;
   vm.enterpriseTemplateUpload = 'Enterprise_Valuation_Template.xlsx';
   vm.enterpriseTemplateUpdate = 'Enterprise_Valuation_Update_Template.xlsx';
   vm.adminTemplateUpload = 'Admin_Valuation_Template.xlsx';
@@ -53,7 +55,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       $scope.pager.copy(filter);
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner()){
+      if(Auth.isValuationPartner()){
         filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
         filter['status'] = EnterpriseValuationStatuses.slice(2,EnterpriseValuationStatuses.length);
       }
@@ -185,7 +187,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
           Modal.alert(message);
           if(arrSubmitToAgency.length){
-            submitToAgency(arrSubmitToAgency);
+            submitToAgency(arrSubmitToAgency,'Mjobcreation');
             return;
           }
           fireCommand(true);
@@ -233,6 +235,18 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
             notificationSvc.sendNotification(template, data, serData, 'email');
             message += " Error details have been sent on registered email id.";
           }
+          var arrSubmitToAgency = [];
+          if(res.successArr && res.successArr.length){
+            arrSubmitToAgency = res.successArr.filter(function(item){
+                return item.jobId;
+            });
+          }
+          console.log("success arr",res.successArr.length);
+          console.log("arr length",arrSubmitToAgency.length);
+          if(arrSubmitToAgency.length){
+            submitToAgency(arrSubmitToAgency,'Mjobupdation');
+            return;
+          }
           fireCommand(true);
          return Modal.alert(message);
         }).catch(function(err){
@@ -269,6 +283,39 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
       
     }
 
+    function cancelEnterprise(valReq){
+      $rootScope.loading = true;      
+      EnterpriseSvc.getCancellationFee(valReq)
+      .then(function(result){
+        $rootScope.loading = false;
+        var amount = result.amount || 0;
+        var msg = "A cancellation charge of Rs " + amount + " will be charged. Are you sure you want to cancel the valuation request.";
+        Modal.confirm(msg,function(retVal){
+          if(retVal == 'yes')
+            proceedToCancel(valReq,result);
+        })
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
+        if(err.data)
+          Modal.alert(err.data);
+      });
+    }
+
+    function proceedToCancel(valReq,cancelFee){
+      $rootScope.loading = true;
+      EnterpriseSvc.cancelEnterprise(valReq,cancelFee)
+      .then(function(res){
+        $rootScope.loading = false;
+        fireCommand(true);
+        Modal.alert("Request cancelled succesfully", true);
+      })
+      .catch(function(err){
+        $rootScope.loading = false;
+        Modal.alert("There are some issue in request cancellation.Please try again or contact support team.");
+      });
+    }
+
     function updateSelection(event,item){
         var checkbox = event.target;
         var index = -1
@@ -290,7 +337,7 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         if(action == 'add'){
           selectedItems = [];
           vm.enterpriseValuationListing.forEach(function(item){
-            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1)
+            if(EnterpriseValuationStatuses.indexOf(item.status) <= 1 && !item.onHold)
                 selectedItems.push(item);
           })
           
@@ -318,17 +365,21 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
 
      }
 
-      function isEditAllowed(requestType, status){
-        if(Auth.isAdmin() || Auth.isPartner())
+      function isEditAllowed(valReq){
+        if(valReq.onHold || valReq.cancelled)
+          return false;
+        var agencyValidStatus = [EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[3],EnterpriseValuationStatuses[4],EnterpriseValuationStatuses[5],EnterpriseValuationStatuses[6]];
+        if(Auth.isValuationPartner() && agencyValidStatus.indexOf(valReq.status) !== -1)
           return true;
-          var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser();
-          if(validRole && Auth.isServiceAvailed(requestType) && EnterpriseValuationStatuses.indexOf(status) < 2)
+          var validRole = Auth.isEnterprise() || Auth.isEnterpriseUser() || Auth.isAdmin();
+          var validStatuses = [EnterpriseValuationStatuses[0],EnterpriseValuationStatuses[1],EnterpriseValuationStatuses[2],EnterpriseValuationStatuses[6]];
+          if(validRole && Auth.isServiceAvailed(valReq.requestType) && validStatuses.indexOf(valReq.status) !== -1)
             return true;
           else
             return false;
      }
 
-     function submitToAgency(selItems){
+     function submitToAgency(selItems,type){
         //api integration
         if(selItems)
           selectedItems = selItems;
@@ -337,15 +388,20 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
           Modal.alert('Please select entries to be updated');
           return;
         }
+        var ids = [];
+        selectedItems.forEach(function(item){
+          ids.push(item._id);
+        });
 
-        EnterpriseSvc.submitToAgency(selectedItems)
+        EnterpriseSvc.submitToAgency(ids,type)
         .then(function(resList){
           vm.selectAllReq = "";
           selectedItems = [];
           fireCommand(true);    
         })
         .catch(function(err){
-          Modal.alert("error occured in integration");
+          if(err)
+            Modal.alert("Error occured in integration");
         })
       
     }
@@ -369,11 +425,45 @@ function EnterpriseTransactionCtrl($scope, $rootScope, Modal,$uibModal,uploadSvc
         };
     }
 
+    function openCommentModal(enterpriseVal){
+      var scope = $rootScope.$new();
+      scope.dataModel = {};
+       var commentModal = $uibModal.open({
+          animation: true,
+            templateUrl: "usercomment.html",
+            scope: scope,
+            size: 'lg'
+        });
+
+        scope.close = function () {
+          commentModal.dismiss('cancel');
+        };
+        scope.submit = function(form){
+          if(form.$invalid){
+            scope.submitted = true;
+            return;
+          }
+          enterpriseVal.userComment = scope.dataModel.userComment;
+          scope.close();
+          $rootScope.loading = true;
+          EnterpriseSvc.resumeRequest(enterpriseVal)
+          .then(function(res){
+            $rootScope.loading = false;
+            fireCommand(true);
+          })
+          .catch(function(err){
+            $rootScope.loading = false;
+            if(err.data)
+              Modal.alert(err.data);
+          });
+        }
+    }
+
     function exportExcel(){
       var filter = {};
        if(Auth.isEnterprise() || Auth.isEnterpriseUser())
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
+      if(Auth.isValuationPartner())
           filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
       if(selectedItems && selectedItems.length > 0){
         var ids = [];
