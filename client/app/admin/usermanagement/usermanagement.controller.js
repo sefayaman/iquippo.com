@@ -11,7 +11,7 @@ angular.module('sreizaoApp')
     vm.maxSize = 6;
     var first_id = null;
     var last_id = null;  
-
+    vm.userExportLink = '';
     vm.userList = [];
     //vm.globleUsers = [];
     vm.getUsersOnRole = [];
@@ -30,6 +30,7 @@ angular.module('sreizaoApp')
     vm.getProductData = getProductData;
     $scope.getConcatData = [];
     $scope.userInfo = {};
+    vm.getUserExportFileName = getUserExportFileName;
     $scope.$on('updateUserList',function(){
       fireCommand(true);
    });
@@ -163,6 +164,7 @@ angular.module('sreizaoApp')
           dataToSend.itemsPerPage = vm.itemsPerPage;
           getUser(dataToSend);
         }
+        getUserExportFileName();
       });
 
     }
@@ -183,11 +185,24 @@ angular.module('sreizaoApp')
           first_id = vm.userList[0]._id;
           last_id = vm.userList[vm.userList.length - 1]._id;
         }
+       
       })
       .catch(function(err){
         Modal.alert("Error in geting user");
       })
     }
+    
+     function getUserExportFileName(){
+
+      userSvc.getUserExportFileName().then(function(result){
+        vm.userExportLink =result;
+       })
+      .catch(function(err){
+        Modal.alert("Error in geting user");
+      })
+    }
+
+
     function getProductData(id, type){
       if(angular.isUndefined($scope.getConcatData)) {
         if(type == "total_products")
@@ -281,7 +296,7 @@ angular.module('sreizaoApp')
     }
 
      function exportExcel(){
-      var dataToSend ={};
+      /*var dataToSend ={};
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
         dataToSend["userId"] = Auth.getCurrentUser()._id;
       }
@@ -295,6 +310,16 @@ angular.module('sreizaoApp')
       console.log("data==",res.data);
         var data = res.data;
         saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
+      },
+      function(res){
+        console.log(res)
+      })*/
+      var dataToSend ={};
+      $http.post('/api/users/userlistxlsx', dataToSend)
+      .then(function(res){console.log("res===",res);
+      console.log("data==",res.data);
+        var data = res.data;
+        //saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
       },
       function(res){
         console.log(res)

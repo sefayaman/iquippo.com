@@ -330,6 +330,15 @@
                 throw err;
               });
       };
+      userService.getUserExportFileName = function(){
+        return $http.post(path + "/userlistxlsx")
+              .then(function(res){
+                return res.data;
+              })
+              .catch(function(err){
+                throw err;
+              });
+      };
 
       userService.deleteUser = function(userid){
         return $http.delete(path + "/" + userid)

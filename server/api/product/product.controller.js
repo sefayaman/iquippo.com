@@ -595,7 +595,7 @@ exports.validateUpdate = function(req,res,next){
 
   var _id = req.body._id;
   var filter = {};
-  filter.product = _id;
+  filter['product.proData'] = _id;
   filter.offerStatus = offerStatuses[0];
   AssetSaleModel.find(filter,function(err,resultArr){
     if(err)return next(err);
@@ -1525,7 +1525,6 @@ exports.validateExcelData = function(req, res, next) {
   var user = req.body.user;
   var reqType = req.reqType;
   var type = req.body.type;
-
   if(!reqType)
     return next(new APIError(400,'Invalid request type'));
 
@@ -1638,7 +1637,6 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validateForBid(callback){
-
       if(row.tradeType !== 'RENT' || !row.assetId)
         return callback();
 
@@ -1651,7 +1649,7 @@ exports.validateExcelData = function(req, res, next) {
           return callback('Error')
         };
         var filter = {};
-        filter.product = prds[0]._id;
+        filter['product.proData'] = prds[0]._id;
         filter.offerStatus = offerStatuses[0];
         AssetSaleModel.find(filter,function(err,resultArr){
           if(err){
@@ -1697,11 +1695,9 @@ exports.validateExcelData = function(req, res, next) {
     }
 
     function validatePrice(callback){
-      
       if(row.tradeType && row.tradeType.toLowerCase() === 'rent')
         return callback();
-
-      var isCustomer = ['enterprise','admin'].indexOf(req.user.role) === -1? true:false;
+      var isCustomer = ['enterprise','admin'].indexOf(req.body.user.role) === -1? true:false;
       var obj = {};
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";

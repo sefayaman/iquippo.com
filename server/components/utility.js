@@ -41,18 +41,19 @@ exports.uploadDirToS3 = uploadDirToS3;
 exports.uploadZipFileToS3 = uploadZipFileToS3;
 exports.downloadFromS3 = downloadFromS3;
 exports.deleteFromS3 = deleteFromS3;
+exports.uploadFileOnS3 = uploadFileOnS3;
 
 
 
 Date.prototype.addDays = function(days) {
-  //this.setDate(this.getDate() + parseInt(days));
-  this.setMinutes(this.getMinutes() + parseInt(days));
+  this.setDate(this.getDate() + parseInt(days));
+  //this.setMinutes(this.getMinutes() + parseInt(days));
   return this;
 };
 
 Date.prototype.addHours = function(hours) {
-  this.setMinutes(this.getMinutes() + parseInt(hours));
-  //this.setHours(this.getHours() + parseInt(hours));
+  //this.setMinutes(this.getMinutes() + parseInt(hours));
+  this.setHours(this.getHours() + parseInt(hours));
   return this;
 };
 
@@ -70,7 +71,7 @@ function uploadFileS3(localFilePath, dirName, cb) {
       Prefix: "assets/uploads/" + dirName
     }
   };
-
+  
   var uploader = client.uploadDir(params);
   uploader.on('error', function(err) {
     if (err) {
@@ -80,6 +81,32 @@ function uploadFileS3(localFilePath, dirName, cb) {
   });
 
   uploader.on('end', function() {
+    return cb();
+  });
+}
+function uploadFileOnS3(localFilePath, dirName, cb) {
+  var params = {
+    localFile: localFilePath,
+    s3Params: {
+      Bucket: config.awsBucket,
+      Key: dirName
+    }
+  };
+ 
+  var uploader = client.uploadFile(params);
+  uploader.on('error', function(err) {
+    if (err) {
+      debug(err);
+      return cb(err);
+    }
+  });
+    /*uploader.on('progress', function() {
+    console.log("progress", uploader.progressMd5Amount,
+      uploader.progressAmount, uploader.progressTotal);
+  });*/
+
+  uploader.on('end', function() {
+    //console.log("done uploading");
     return cb();
   });
 }
