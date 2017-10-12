@@ -1932,7 +1932,7 @@
                 });
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-
+                console.log("lotSaved",$scope.lotsaved);
                 LotSvc.saveLot($scope.lotsaved)
                 .then(function(result){
                   //console.log("lot saved",result);
@@ -1960,6 +1960,7 @@
                       });
                       $scope.lotsaved.bidIncrement = '';
                       $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
+                      console.log("lotSaved",$scope.lotsaved);
                     LotSvc.saveLot($scope.lotsaved)
                     .then(function(result){
                       //console.log("result",result);
@@ -2006,6 +2007,7 @@
                 });
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
+                console.log("lotSaved",$scope.lotsaved);
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
                   //console.log("lot update",result);
@@ -2034,6 +2036,7 @@
                 });
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
+                console.log("lotSaved",$scope.lotsaved);
                 LotSvc.updateProductLot($scope.lotsaved)
                 .then(function(result){
                   //console.log("update lot admin",result);
