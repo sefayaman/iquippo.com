@@ -487,8 +487,9 @@
               </uib-accordion>
               
           </div>
-          <div class="col-sm-7 col-md-7 panel-group" >
-            <div class="panel panel-primary asset-sale" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+          <div class="col-sm-5 col-md-7 panel-group" >
+            <div class="panel panel-primary asset-sale" ng-if="(currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE') && assetListedInAuction !='true'">
+
             <form novalidate class="assetSale" name="assetSale">
 
                 <div class="panel-heading">

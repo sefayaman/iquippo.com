@@ -8,10 +8,11 @@
 
       var query = $location.search();
       //$scope.auctionName=$location.search().auctionName;
-      console.log("query", query);
-      var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/{{lot.auctionId}}/{{lot.lotNumber}}/{{userId}}";
+      //console.log("query", query);
+      console.log("userId",Auth.getCurrentUser()._id);
+      var aswidgetUrl="http://auctionsoftwaremarketplace.com:3007/bidwidget/{{lot.auctionId}}/{{lot.id}}/{{userId}}";
       $scope.asWidgetURLSCE = $sce.trustAsResourceUrl(aswidgetUrl);
-      console.log("url",$scope.asWidgetURLSCE);
+      console.log("url",aswidgetUrl);
 
       $scope.auctionType = $location.search().auctionType;
       $scope.auctionTypeValue = $location.search().auctionTypeValue;
@@ -290,9 +291,10 @@
               filter = {};
               var lotArr = [];
               var lotDataArr = [];
-              filter._id = query.id;
+              filter.auctionId = query.id;
               filter.listing = true;
               console.log("vm.lotListing early", vm.lotListing);
+              console.log("filter lots",filter);
               LotSvc.getData(filter).then(function(res) {
                 console.log("LotData", res);
                 temp = res;
@@ -302,7 +304,7 @@
                   lot.assetDesc = [];
                   lot.amount = 0;
                   console.log("vm.lotListing", vm.lotListing);
-                  if (data) {
+                  if (data.assetId) {
                     var pos = vm.lotListing.map(function(e) {
                       return e.lotNumber;
                     }).indexOf(data.lotNumber);
@@ -311,11 +313,16 @@
                       vm.lotListing[pos].amount = vm.lotListing[pos].amount + data.startingPrice;
                     } else {
                       console.log("lotNumberNot found");
+                      lot.auctionId=data.auctionId;
+                      lot.id=data._id;
                       lot.lotNumber = data.lotNumber;
                       lot.assetDesc.push(data.assetId);
                       lot.amount = lot.amount + data.startingPrice;
                       lot.primaryImg=data.primaryImg;
+                      lot.url="http://auctionsoftwaremarketplace.com:3007/bidwidget/"+query.auctionId+"/"+lot.id+"/"+$scope.userId;
+                      console.log("url lot",lot.url);
                       vm.lotListing.push(lot);
+                      console.log("lot",lot);
                     }
                     // if(doc.auctionType=='live'){
 
