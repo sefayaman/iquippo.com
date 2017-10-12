@@ -313,7 +313,9 @@ var transactionStatuses = [
 }
 ];
 
-var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+//var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+var EnterpriseValuationStatuses = ['Request Initiated','Request Failed','Request Submitted','Inspection In Progress','Inspection Completed','Valuation Report Failed','Valuation Report Submitted','Invoice Generated','Payment Received','Payment Made to valuation Partner','Completed'];
+
 var TaxList =  ["Service Tax","Swatch Bharat Cess","Krishi Kalyan Cess"];
 
 var offerStatuses=['Bid Received','Bid Changed','Bid Withdraw'];
@@ -485,7 +487,7 @@ var HOME_BANNER =  [{
 var serverPath = location.protocol +"//" + location.host; 
 //var serverPath = "http://14.141.64.180:8100"; 
 var supportMail = "info@iquippo.com";
-//var DevEnvironment = false; 
+var DevEnvironment = false; 
 var supportContact = "011 66025672";
 /*if(location.host.indexOf('iquippo.com') == -1){
   supportMail = "iquippo.uat@gmail.com";

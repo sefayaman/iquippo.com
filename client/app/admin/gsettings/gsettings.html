@@ -21,6 +21,7 @@
 						<option value="svcfeemaster">Service Fee Master</option>
 						<option value="svctaxmaster">Service Tax Master</option>
 						<option value="vpurpose">Valuation Purpose Master</option>
+						<option value="vcancellation">Valuation Cancellation Charge</option>
 						<option value="assetgroup">Asset Group Master</option>
 						<option value="vatmaster">GST Tax Master</option>
 						<option value="kyc">KYC Document Master</option>
@@ -1475,6 +1476,83 @@
 		</div>
 		<uib-pagination  total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" rotate="false"></uib-pagination>
 	</div>
+	<!-- Valuation Cancellation Charge start -->
+	<div ng-if="gsettingVm.tabValue == 'vcancellation'" ng-controller="ValuationCancellationCtrl as vcancellationVm">
+		<form name="vcancellationForm" novalidate class="purpose">
+			<div class="row">
+				<div class="col-sm-6">
+					<h4>Add Valuation Cancellation Charge</h4>
+				</div>
+				<div class="col-sm-6 text-right">
+					<!-- <h4>
+						<button class="btn btn-success"> <i class="fa fa-file-excel-o"></i> Export</button>
+					</h4> -->
+				</div>
+			</div>
+			<legend></legend>
+			<div class="row">
+				<div class="col-sm-3 form-group" ng-class="{'has-error':vcancellationForm.enterpriseId.$invalid && submitted}">
+					<select class="form-control" name="enterpriseId" ng-model="vcancellationVm.dataModel.enterprise.enterpriseId" ng-change="vcancellationVm.onEnterpriseChange()" required>
+						<option value="">* Select Enterprise ID</option>
+						<option value="{{ent.enterpriseId}}" ng-repeat="ent in vcancellationVm.enterprises">{{ent.fname}} {{ent.mname}} {{ent.lname}}({{ent.enterpriseId}})</option>
+					</select>
+				</div>
+				<div class="col-sm-3 form-group">
+					<input type="text" class="form-control" placeholder="Enterprise Name" ng-model="vcancellationVm.dataModel.enterprise.name" disabled>
+				</div>
+				<div class="col-sm-3 form-group" ng-class="{'has-error':vcancellationForm.valstatus.$invalid && submitted}">
+					<select class="form-control" name="valstatus" ng-model="vcancellationVm.dataModel.valuationStatus" required>
+						<option value="">* Status</option>
+						<option value="{{status}}" ng-repeat="status in vcancellationVm.EnterpriseValuationStatuses">{{status}}</option>
+					</select>
+				</div>
+				<div class="col-sm-3 form-group" ng-class="{'has-error':vcancellationForm.feeamount.$invalid && submitted}">
+					<input type="number" name="feeamount" ng-model="vcancellationVm.dataModel.amount" class="form-control" min="0" name="" value="" placeholder="* Charges" required>
+				</div>
+				<div class="form-group col-sm-offset-10 col-sm-2 text-right">
+					<button type="button" class="btn btn-primary btn-block" ng-click="vcancellationVm.update(vcancellationForm)" ng-if="edit">Update</button>
+					<button type="button" class="btn btn-primary btn-block" ng-click="vcancellationVm.save(vcancellationForm)" ng-if="!edit">Save</button>
+				</div>
+			</div>
+			
+			<legend></legend>
+		</form>
+		<div class="row">
+			<div class="col-sm-3 pull-right">
+				<div class="tablesearch text-right form-group">
+					Search: <input type="text" placeholder="Search..." ng-model="vcancellationVm.searchStr" ng-change="vcancellationVm.searchFn()" ng-model-options="{debounce:500}">
+				</div>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordred table-striped">
+				<thead>
+					<tr >
+						<th>Enterprise ID</th>
+						<th>Enterprise Name</th>
+						<th>Status</th>
+						<th>Charges</th>
+						<th>Action</th>
+					</tr>
+					
+				</thead>
+				<tbody>
+					<tr ng-repeat="vlc in vcancellationVm.filteredList | startFrom:(pager.currentPage -1 )*pager.itemsPerPage | limitTo:pager.itemsPerPage">
+						<td>{{vlc.enterprise.enterpriseId}}</td>
+						<td>{{vlc.enterprise.name}}</td>
+						<td>{{vlc.valuationStatus}}</td>
+						<td>{{vlc.amount}}</td>
+						<td>
+							<a class="btn btn-primary btn-md" href="javascript:void(0);" ng-click="vcancellationVm.editClicked(vlc)"><i class="fa fa-pencil"></i> </a>
+							<a class="btn btn-danger btn-md" href="javascript:void(0);" ng-click="vcancellationVm.destroy(vlc._id)"><i class="fa fa-trash"></i> </a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<uib-pagination  total-items="pager.totalItems" ng-model="pager.currentPage" items-per-page="pager.itemsPerPage" max-size="6" rotate="false"></uib-pagination>
+	</div>
+	<!-- Valuation Cancellation Charge end -->
 	<!-- Asset group master -->
 	<div ng-if="gsettingVm.tabValue == 'assetgroup'" ng-controller="AssetGroupCtrl as assetGroupVm">
 		<ul class="list-instrct">
