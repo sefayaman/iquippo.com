@@ -254,7 +254,7 @@ function validateData(options,obj){
   });
 
   if(!found && madnatorySpecialParams.length > 0){
-    err = "Atleast one of these four Parameter required " + msgStr;
+    err = "Atleast one of these two Parameter required " + msgStr;
   }
   return err;
 }
