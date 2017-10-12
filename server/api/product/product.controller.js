@@ -1702,7 +1702,7 @@ exports.validateExcelData = function(req, res, next) {
       row.priceOnRequest = row.priceOnRequest || "";
       obj.currencyType = row.currencyType || "INR";
       obj.grossPrice = row.grossPrice;
-      obj.priceOnRequest = row.priceOnRequest.toLowerCase() !== 'yes'? true:false; 
+      obj.priceOnRequest = row.priceOnRequest.toLowerCase() === 'yes'? true:false; 
       if(isCustomer){
          if(!obj.grossPrice)
             obj.priceOnRequest = true;

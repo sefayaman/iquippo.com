@@ -539,7 +539,13 @@ console.log("assetListedInAuction",$scope.assetListedInAuction);
             AuctionSvc.getAuctionInfoForProduct(auctionFilter)
               .then(function(aucts) {
                 $scope.auctionsData = aucts;
+                if($scope.auctionsData.allowBid)
+                  $scope.allowBid = $scope.auctionsData.allowBid;
+                else
+                  $scope.allowBid = 'Yes';
               });
+          } else {
+            $scope.allowBid = 'Yes';
           }
           if($scope.currentProduct.state) {
             var stateFilter = {};
