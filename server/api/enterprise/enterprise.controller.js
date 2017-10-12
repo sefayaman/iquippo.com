@@ -2072,15 +2072,22 @@ function exportExcel(req,res,fieldMap,jsonArr){
   dataArr.push(allowedHeaders);
   jsonArr.forEach(function(item,idx){
     dataArr[idx + 1] = [];
+    if(item.deleted)
+        item.status = "Deleted";
+    else if(item.cancelled)
+      item.status = "Request Cancelled";
+    else if(item.onHold)
+      item.status = "Hold - " + item.onHoldMsg;
+
     allowedHeaders.forEach(function(header){
       var keyObj = fieldMap[header];
-      if(keyObj.key == 'status' && item.deleted)
-          item.status = "Deleted";
       var val = _.get(item,keyObj.key,"");
       if(keyObj.type && keyObj.type == 'boolean')
           val = val?'YES':'NO';
       if(keyObj.type && keyObj.type == 'date' && val)
         val = moment(val).utcOffset('+0530').format('MM/DD/YYYY');
+      if(keyObj.type && keyObj.type == 'datetime' && val)
+        val = moment(val).utcOffset('+0530').format('MM/DD/YYYY HH:mm');
       if(keyObj.type && keyObj.type == 'url' && val){
         if(val.filename){
           if(val.external === true)

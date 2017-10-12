@@ -408,7 +408,7 @@
 				</div>
 				<div class="col-sm-3 form-group">
 					<label>Name of Original Owner</label>
-					<input type="text" class="form-control" placeholder="Name of Original Owner">
+					<input type="text" name="originalOwner" class="form-control" ng-model="addTransactionVm.enterpriseValuation.originalOwner" placeholder="Name of Original Owner" ng-disabled="!editEnterpriseField('originalOwner')">
 				</div>
 				<div class="col-sm-3 form-group">
 					<label>Name of Customer seeking Finance</label>

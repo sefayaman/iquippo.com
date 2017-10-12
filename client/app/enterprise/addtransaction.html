@@ -37,7 +37,7 @@
         <div class="row"> 
           <div class="col-sm-4 form-group">
             <label>Name of Original Owner</label>
-            <input type="text" name="" class="form-control" placeholder="Name of Original Owner">
+            <input type="text" name="originalOwner" class="form-control" ng-model="addTransactionVm.enterpriseValuation.originalOwner" placeholder="Name of Original Owner" ng-disabled="!editEnterpriseField('originalOwner')">
           </div> 
            <div class="col-sm-4 form-group">
             <label>Name of Customer seeking Finance</label>
@@ -331,6 +331,12 @@
               <input type="text" class="form-control" name="gpsIMEINo"  ng-model="addTransactionVm.enterpriseValuation.gpsIMEINo" ng-disabled="!editAgencyField()" value="" placeholder="IMIE No." />
             </div>
             
+          </div>
+          <div class="row">
+            <div class="col-sm-12 form-group">
+              <label>Overall General Condition</label>
+              <textarea name="" class="form-control" ng-disabled="!editAgencyField()" ng-model="addTransactionVm.enterpriseValuation.overallGeneralCondition" placeholder="Overall General Condition" rows="10" cols="100"></textarea>
+            </div>
           </div>
           <h5 class="form-group"><strong>Upload Asset Images</strong></h5>
           <div class="row form-group">
