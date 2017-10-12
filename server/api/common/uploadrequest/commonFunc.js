@@ -104,7 +104,7 @@ function fetchBrand(brand, cb) {
 			filter['category.name'] = brand.category;
 	}
 
-	console.log("fetch brand",filter);
+	//console.log("fetch brand",filter);
 
 	BrandModel.find(filter).exec(function(err, brandData) {
 		if (err) {

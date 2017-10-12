@@ -105,8 +105,7 @@ angular.module('sreizaoApp',[
     $rootScope.KYCType = KYCType;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
-    var DevEnvironment = false;
-
+    
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
       $rootScope.loading = $rootScope.loadingCount !=0;
@@ -211,6 +210,7 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
     $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
+    $rootScope.isValuationPartner = Auth.isValuationPartner;
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     

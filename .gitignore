@@ -7,7 +7,7 @@ node_modules
 client/.DS_Store
 .idea
 client/bower_components
-client/assets/uploads/1*
+client/assets/uploads/*
 client/assets/uploads/temp/*
 client/assets/uploads/templates/*
 client/assets/uploads/report/*

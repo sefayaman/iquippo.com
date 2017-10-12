@@ -146,7 +146,6 @@ function placeWaterMark(assetIds, product, zipEntryObj, taskData, cb) {
     var localFilePath = config.uploadPath + product.assetDir;
     var dirName = product.assetDir;
     utility.uploadFileS3(localFilePath, dirName, function(err, data) {
-
       if (err) {
         console.log("Error : Moveing images directory to s3", err);
        /* IncomingProduct.update({
@@ -164,11 +163,9 @@ function placeWaterMark(assetIds, product, zipEntryObj, taskData, cb) {
       return commitProduct(assetIds, product, zipEntryObj, taskData, cb);
     });
   }
-
 }
 
 function commitProduct(assetIds, product, zipEntryObj, taskData, cb) {
-
   IncomingProduct.remove({
     _id: product._id
   }, function(err, dt) {
@@ -180,17 +177,20 @@ function commitProduct(assetIds, product, zipEntryObj, taskData, cb) {
           lock: false
         }
       }).exec();*/
-      console.log("error in deleting product")
+      console.log("error in deleting product");
+      assetIds.splice(0, 1);
+      getProduct(assetIds, zipEntryObj, taskData, cb);
+      return;
     }
+    product = product.toObject();
     delete product._id;
     product.createdAt = new Date();
     product.updatedAt = new Date();
     product.relistingDate = new Date();
-
     Product.create(product, function(err, prd) {
 
       if (err) {
-        console.log('error in creating product')
+        console.log('error in creating product');
       }
       if (!err) taskData.uploadedProducts.push(product.assetId);
       //create app notificaton data
