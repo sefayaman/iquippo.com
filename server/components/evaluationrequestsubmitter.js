@@ -47,7 +47,8 @@ var Field_MAP = {
     disFromCustomerOffice:"disFromCustomerOffice",
     customerSeekingFinance:"nameOfCustomerSeeking",
     invoiceDate:"customerInvoiceDate",
-    invoiceValue:"customerInvoiceValue"
+    invoiceValue:"customerInvoiceValue",
+    originalOwner :'originalOwner'
   };
 
   //qpvalURL

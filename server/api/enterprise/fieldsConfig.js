@@ -43,7 +43,8 @@ module.exports = {
 		'gpsInstalled' : 'GPS_Installed',
 		'gpsDeviceNo' : 'GPS_Device_No',
 		'gpsIMEINo' : 'IMIE_No',
-		'reportUrl' : 'Report_URL'
+		'reportUrl' : 'Report_URL',
+		'originalOwner':'Original_Owner'
 
 	},
 	'REPORT_UPLOAD' :{
@@ -119,7 +120,8 @@ module.exports = {
 		    'disFromCustomerOffice':'disFromCustomerOffice',
 		    'customerSeekingFinance':'nameOfCustomerSeeking',
 		    'invoiceDate':'customerInvoiceDate',
-		    'invoiceValue':'customerInvoiceValue'
+		    'invoiceValue':'customerInvoiceValue',
+		    'originalOwner':'originalOwner'
 	 },
 	'ENTERPRISE': {
 		'UPLOAD': {
@@ -149,7 +151,8 @@ module.exports = {
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
 			'Invoice Value':'customerInvoiceValue',
-			'Customer_Seeking_Finance':'nameOfCustomerSeeking'
+			'Customer_Seeking_Finance':'nameOfCustomerSeeking',
+			'Original_Owner' : 'originalOwner'
 		},
 		'MODIFY': {
 			'Unique_Control_No*': 'uniqueControlNo',
@@ -179,7 +182,8 @@ module.exports = {
 			'Distance_from_Customer_Office': 'disFromCustomerOffice',
 			'Invoice Date':'customerInvoiceDate',
 			'Invoice Value':'customerInvoiceValue',
-			'Customer_Seeking_Finance':'nameOfCustomerSeeking'
+			'Customer_Seeking_Finance':'nameOfCustomerSeeking',
+			'Original_Owner' : 'originalOwner'
 		},
 		'EXPORT': {
 			'TRANSACTION': {},
@@ -222,6 +226,7 @@ module.exports = {
 		"Request Type":{key:"requestType"},
 		"Purpose":{key:"purpose"},
 		"Customer Seeking Finance":{key:"nameOfCustomerSeeking"},
+		'Original Owner' : {key:"originalOwner"},
 		"Agency Name":{key:"agency.name"},
 		"Enterprise ID":{key:"enterprise.enterpriseId"},
 		"Enterprise Owner":{key:"customerPartyName"},
@@ -229,6 +234,7 @@ module.exports = {
 		"User Mobile":{key:"customerPartyNo"},
 		"User Legal Entity":{key:"legalEntityName"},
 		"Request Date":{key:"requestDate",type:'date'},
+		"Request Date With time":{key:"requestDate",type:'datetime'},
 		"Referance/FI Number":{key:"customerTransactionId"},
 		"Asset No":{key:"assetId"},
 		"Repo. Date":{key:"repoDate",type:'date'},
