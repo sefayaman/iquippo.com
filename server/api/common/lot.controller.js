@@ -94,6 +94,15 @@ exports.updateProductLotData = function(req, res) {
     });
   };
 
+exports.updatelotsisdeleted=function(req,res){
+  Lot.update({},{$set:{"isDeleted":false}},{multi: true})
+  .exec(function(err,result){
+    if(err) return handleError(res,err);
+    return res.status(200).json({message:"updated Successfully"});
+  });
+}
+
+
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
