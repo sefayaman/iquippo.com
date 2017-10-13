@@ -13,7 +13,7 @@ exports.create = function(req, res) {
     saveLot: function(callback) {
       //console.log("I am here save");
       if(req.body.hasOwnProperty('auctionId')){
-        req.body.auction_Id=req.body.auctionId;
+        req.body.auction_id=req.body.auctionId;
        delete req.body.auctionId;
       }
       var model = new Lot(req.body);
@@ -46,7 +46,7 @@ exports.updateLotData = function(req, res) {
   var options={};
   req.body.updatedAt = new Date();
   if(req.body.hasOwnProperty('auctionId')){
-        req.body.auction_Id=req.body.auctionId;
+        req.body.auction_id=req.body.auctionId;
        delete req.body.auctionId;
       }
   delete req.body._id;
@@ -73,7 +73,7 @@ exports.updateProductLotData = function(req, res) {
    var options={};
     req.body.updatedAt = new Date();
     if(req.body.hasOwnProperty('auctionId')){
-        req.body.auction_Id=req.body.auctionId;
+        req.body.auction_id=req.body.auctionId;
        delete req.body.auctionId;
       }
     Lot.update({
@@ -110,13 +110,13 @@ exports.getLotData = function(req, res) {
   if(req.query.hasOwnProperty('isDeleted'))
     filter.isDeleted=req.query.isDeleted;
    if(req.query.auctionId && req.query.distinct){
-  filter.auction_Id=req.query.auctionId;
+  filter.auction_id=req.query.auctionId;
   console.log("the filter",filter);
 query = Lot.find(filter).distinct('lotNumber');
    }
 else if(req.query){
   if(req.query.auctionId)
-  filter.auction_Id=req.query.auctionId;
+  filter.auction_id=req.query.auctionId;
   if(req.query.assetId)
   filter.assetId=req.query.assetId;
  if(req.query.lotNumber)

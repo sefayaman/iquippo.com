@@ -2595,7 +2595,7 @@
 			        	<label>Select Auction Id</label>
 		 		       	<select class="form-control" name="auctionId" ng-model="emdVm.dataModel.auctionId"  ng-change="onSelectAuction(emdVm.dataModel.auctionId)" required> 
 							 <option value=""> Select Auction Id </option> 
-					        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.auctionId}}</option>
+					        <option value="{{product._id}}"  ng-repeat="product in emdVm.auctionListing">{{product.name}}</option>
 				       	</select>
 					</div>
 					
