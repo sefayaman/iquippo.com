@@ -1682,7 +1682,8 @@ function getProductData(req, res, users, userIds) {
           users[i].have_products = "No";
         }
         //console.log("users[" + i +"]" + users[i]._id + " # " + users[i].total_products+ "#" + users[i].have_products);
-      }*/console.log("users====",users);
+      }*/
+        //console.log("users====",users);
       var ws_name = "users"
       var wb = new Workbook();
       var ws = excel_from_data(users);
