@@ -75,7 +75,11 @@ function exportUsers(res) {
       data.key = 'user_list_file_name';
       data.value = filename;
       var dirName = 'downloads/user-exports/'+filename;
+      var localDir = config.uploadPath+'user-exports';
       var localFilePath = config.uploadPath+'user-exports/'+filename;
+      if (!fs.existsSync(localDir)){
+         fs.mkdirSync(localDir);
+      }
      
       fs.writeFile(localFilePath, wbout,"binary",function(err) {
             if (err) {
