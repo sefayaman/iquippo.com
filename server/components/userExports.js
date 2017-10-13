@@ -76,7 +76,10 @@ function exportUsers(res) {
       data.value = filename;
       var dirName = 'downloads/user-exports/'+filename;
       var localFilePath = config.uploadPath+'user-exports/'+filename;
-     
+      var localDir = config.uploadPath+'user-exports';
+      if (!fs.existsSync(localDir)){
+          fs.mkdirSync(localDir);
+        }
       fs.writeFile(localFilePath, wbout,"binary",function(err) {
             if (err) {
                 console.log(err);
