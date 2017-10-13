@@ -947,6 +947,7 @@
             filter.currentPage = vm.currentPage;
             filter.first_id = first_id;
             filter.last_id = last_id;
+            filter.isDeleted=false;
 
             AuctionMasterSvc.getFilterOnAuctionMaster(filter)
                 .then(function(result) {

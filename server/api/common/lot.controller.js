@@ -6,29 +6,17 @@ var AuctionMaster = require('../auction/auctionmaster.model');
 var async= require('async');
 var ApiError = require('../../components/_error');
 var Util=require('../../components/utility');
-exports.create = function(req, res, next) {
+exports.create = function(req, res) {
+  //console.log("I am here 1",req.body);
   var options={};
   async.series({ 
-    fetchAuction: function(callback) {
-      if (req.body && req.body.auctionId) {
-        AuctionMaster.find({
-          "auctionId": req.body.auctionId
-        }, function(err, auctions) {
-          if (err)
-            return callback(err);
-          //req.body.lastMintBid = auctions[0].lastMinBid || "";
-          //req.body.extendedTo = auctions[0].extendedTo || "";
-          if(auctions.length > 0)
-          req.body.auctionId = auctions[0].auctionId;
-          return callback();
-        });
-      } else
-        return callback(err);
-    },
     saveLot: function(callback) {
+      //console.log("I am here save");
       var model = new Lot(req.body);
       model.save(function(err, st) {
-        if (err) throw callback(err);
+        if (err) return callback(err);
+        options.dataToSend=st;
+        //console.log("I am here savelot");
         return callback(null, {
           message: "Data saved successfully",
           lotData:st
@@ -39,7 +27,8 @@ exports.create = function(req, res, next) {
     if (err) {
       res.status(err.status || 500).send(err);
     }
-    options.dataToSend=req.body;
+     console.log("results",results);
+    //console.log("options data lot",options);
     options.dataType="lotData";
     Util.sendCompiledData(options,function(err,result){
       if(err) return handleError(res,err);
@@ -72,6 +61,10 @@ exports.updateLotData = function(req, res) {
 
 };
 
+exports.deleteLotMaster = function(req, res) {
+  
+};
+
 exports.updateProductLotData = function(req, res) {
    var options={};
     req.body.updatedAt = new Date();
@@ -96,14 +89,16 @@ exports.updateProductLotData = function(req, res) {
 exports.getLotData = function(req, res) {
   var filter = {};
   var query={};
-   if(req.query.auctionId && req.query.distinct){
-  filter.auctionId=req.query.auctionId;
+  if(req.query.hasOwnProperty('isDeleted'))
+    filter.isDeleted=req.query.isDeleted;
+   if(req.query.auction_Id && req.query.distinct){
+  filter.auction_Id=req.query.auction_Id;
   console.log("the filter",filter);
 query = Lot.find(filter).distinct('lotNumber');
    }
 else if(req.query){
-  if(req.query.auctionId)
-  filter.auctionId=req.query.auctionId;
+  if(req.query.auction_Id)
+  filter.auction_Id=req.query.auction_Id;
   if(req.query.assetId)
   filter.assetId=req.query.assetId;
  if(req.query.lotNumber)
@@ -121,23 +116,34 @@ else if(req.query){
 };
 
 
-exports.destroy = function(req, res, next) {
-  Lot.findById(req.params.id, function(err, oneRow) {
-    if (err) {
-      res.status(err.status || 500).send(err);
-    }
-    if (!oneRow) {
-      return next(new ApiError(404, "Not found"));
-    }
-    oneRow.remove(function(err) {
+exports.destroy = function(req, res) {
+ var options={};
+  console.log("id",req.params.id);
+  Lot.update({
+      _id: req.params.id
+    },{
+      "$set":{"isDeleted":true}
+
+    })
+    .exec(function(err, doc) {
       if (err) {
-        res.status(err.status || 500).send(err);
+        return handleError(res, err);
       }
-      return res.status(204).send({
-        message: "Data Successfully deleted!!!"
+      options={};
+      options.dataToSend={
+       "_id":req.params.id,
+       "isDeleted":true
+      }
+      options.dataType="lotData";
+      Util.sendCompiledData(options,function(err,result){
+        if(err) return handleError(res,err);
+        console.log("result",result);
+      });
+      return res.status(200).send({
+        errorCode: 0,
+        message: "Lot master deleted sucessfully!!!"
       });
     });
-  });
 
 };
 exports.removeLotData = function(req, res) {

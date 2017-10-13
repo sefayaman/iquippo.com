@@ -13,8 +13,8 @@ var config = require('./../../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var Product = require('./../product/product.model');
 var PaymentMasterModel = require('../common/paymentmaster.model');
-var PaymentTransactionModel=require('../payment/payment.model');
-var UserModel=require('../user/user.model');
+var PaymentTransactionModel = require('../payment/payment.model');
+var UserModel = require('../user/user.model');
 var vendorModel = require('../vendor/vendor.model');
 
 // Get list of auctions
@@ -24,32 +24,34 @@ var async = require('async');
 var debug = require('debug')('api.auction');
 var uploadReqCtrl = require('../common/uploadrequest/uploadrequest.controller');
 var moment = require('moment');
-var validDateFormat = ['DD/MM/YYYY','MM/DD/YYYY','YYYY/MM/DD'];
-var validTimeFormat = ['DD/MM/YYYY h:mmA','DD/MM/YYYY h:mm A','MM/DD/YYYY h:mm A'];
+var validDateFormat = ['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY/MM/DD'];
+var validTimeFormat = ['DD/MM/YYYY h:mmA', 'DD/MM/YYYY h:mm A', 'MM/DD/YYYY h:mm A'];
 
 var dateUtil = {
   validateAndFormatDate: function(dateString, format) {
     var dateFormat = format || 'YYYY-MM-DD HH:mm:ss';
-    var formattedDate = moment(dateString,format).format(dateFormat);
+    var formattedDate = moment(dateString, format).format(dateFormat);
     if (formattedDate === 'Invalid date') {
       formattedDate = null;
     }
     return formattedDate;
   },
   isValidDateTime: function(dateTimeString, format) {
-    if(!dateTimeString)
-      return {_isValid : false}
-    return moment(dateTimeString,format);
+    if (!dateTimeString)
+      return {
+        _isValid: false
+      }
+    return moment(dateTimeString, format);
   }
 }
 
 exports.getAll = function(req, res) {
   var filter = {};
-  if(req.query.auctionId){
+  if (req.query.auctionId) {
     filter.auctionId = req.query.auctionId;
-    
-    }
-  AuctionRequest.find(filter,function(err, auctions) {
+
+  }
+  AuctionRequest.find(filter, function(err, auctions) {
     if (err) {
       return handleError(res, err);
     }
@@ -111,7 +113,7 @@ exports.getAuctionInfoForProduct = function(req, res) {
   });
 };
 
-function _create(data,cb){
+function _create(data, cb) {
 
   var assetIdExist = false;
   if (!data.product.assetId)
@@ -157,7 +159,7 @@ function _create(data,cb){
       data.createdAt = new Date();
       data.updatedAt = new Date();
       AuctionRequest.create(data, function(err, auction) {
-        if(err){
+        if (err) {
           return new Error('Unable to create auction : ', data.auctionId)
         }
         return cb({
@@ -242,8 +244,8 @@ function validateData(data) {
       missingParams.push(x);
   });
 
-  if(data.isSold && data.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() === 'yes' ){
-    if(!data.saleVal)
+  if (data.isSold && data.isSold.replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() === 'yes') {
+    if (!data.saleVal)
       missingParams.push('Sale Value');
   }
 
@@ -283,17 +285,17 @@ exports.bulkCreate = function(data, cb) {
     //AA:If the length of data is non zero
     //insert data asynchronously in mongodb
     async.eachLimit(data, 5, iteration, finalize);
-  }else{
+  } else {
     console.log('No data for create');
     return {
-      errObj :errObj,
-      sucessObj : sucessObj
+      errObj: errObj,
+      sucessObj: sucessObj
     }
   }
 
   function iteration(auctionData, next) {
-    _create(auctionData,function(response){
-    // AuctionRequest.create(auctionData, function(err, auction) {
+    _create(auctionData, function(response) {
+      // AuctionRequest.create(auctionData, function(err, auction) {
       if (response instanceof Error) {
         errObj.push({
           data: auctionData,
@@ -392,39 +394,39 @@ exports.bulkUpload = function(req, res, next) {
         rowCount: x.__rowNum__
       });
     } else {
-      if(assetIdMap[obj.assetId]){
+      if (assetIdMap[obj.assetId]) {
         errObj.push({
-          Error : 'Duplicate Asset Id in uploaded sheet',
-          rowCount : obj.rowCount
+          Error: 'Duplicate Asset Id in uploaded sheet',
+          rowCount: obj.rowCount
         })
-      }else{
-        
+      } else {
+
         assetIdMap[obj.assetId] = obj.auctionId;
         obj.user = user;
-        
-        ['isSold','originalInvoice'].forEach(function(x){
-          if(obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes'){
+
+        ['isSold', 'originalInvoice'].forEach(function(x) {
+          if (obj[x] && obj[x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase() !== 'yes') {
             obj[x] = false;
           }
         })
 
-        if(!obj.isSold){
+        if (!obj.isSold) {
           obj.saleVal = '';
         }
 
-        if(!obj.originalInvoice){
+        if (!obj.originalInvoice) {
           obj.invioceDate = '';
         }
-        
+
         uploadData.push(obj);
-      } 
+      }
     }
   });
 
-  if(!uploadData.length){
-     var result = {
-        errObj : errObj
-     };
+  if (!uploadData.length) {
+    var result = {
+      errObj: errObj
+    };
 
     return res.json(result);
   }
@@ -548,11 +550,13 @@ exports.getOnFilter = function(req, res) {
     filter['$or'] = orFilter;
   }
 
-  if(req.body.location){
+  if (req.body.location) {
     var cityRegex = new RegExp(req.body.location, 'i');
-    filter['product.city'] = {$regex:cityRegex};
+    filter['product.city'] = {
+      $regex: cityRegex
+    };
   }
- console.log("data ayuct",req.body);
+  console.log("data ayuct", req.body);
 
   if (req.body._id)
     filter["_id"] = req.body._id;
@@ -566,29 +570,31 @@ exports.getOnFilter = function(req, res) {
     filter["transactionId"] = req.body.tid;
   if (req.body.assetId)
     filter["product.assetId"] = req.body.assetId;
-  if(req.body.category)
-    filter["product.category"]=req.body.category;
-  if(req.body.brand)
-    filter["product.brand"]=req.body.brand;
-  if(req.body.model)
-    filter["product.model"]=req.body.model;
-  if(req.body.notInSoldPro)
-    filter["product.isSold"] = { $ne: true};
-  
-  if(req.body.mfgYear){
+  if (req.body.category)
+    filter["product.category"] = req.body.category;
+  if (req.body.brand)
+    filter["product.brand"] = req.body.brand;
+  if (req.body.model)
+    filter["product.model"] = req.body.model;
+  if (req.body.notInSoldPro)
+    filter["product.isSold"] = {
+      $ne: true
+    };
+
+  if (req.body.mfgYear) {
     var mfgYear = false;
     var mfgFilter = {};
-    if(req.body.mfgYear.min){
+    if (req.body.mfgYear.min) {
       mfgFilter['$gte'] = req.body.mfgYear.min;
       mfgYear = true;
     }
-    if(req.body.mfgYear.max){
+    if (req.body.mfgYear.max) {
       mfgFilter['$lte'] = req.body.mfgYear.max;
       mfgYear = true;
     }
-    if(mfgYear)
+    if (mfgYear)
       filter["product.mfgYear"] = mfgFilter;
- }
+  }
 
   if (req.body.status)
     filter["status"] = req.body.status;
@@ -619,7 +625,7 @@ exports.update = function(req, res) {
   req.body.updatedAt = new Date();
   AuctionRequest.find({
     "product.assetId": req.body.product.assetId,
-    "status" : "request_approved"
+    "status": "request_approved"
   }, function(err, auctions) {
     if (err) {
       return handleError(res, err);
@@ -641,7 +647,7 @@ exports.update = function(req, res) {
       if (err) {
         return handleError(res, err);
       }
-      if(!req.body.external && req.body.product.isSold)
+      if (!req.body.external && req.body.product.isSold)
         updateProduct(req.body);
       return res.status(200).json(req.body)
     });
@@ -649,20 +655,28 @@ exports.update = function(req, res) {
 };
 
 function updateProduct(data) {
-  Product.find({assetId: data.product.assetId}, function(err, product) {
+  Product.find({
+    assetId: data.product.assetId
+  }, function(err, product) {
     var proData = {};
     proData.isSold = true;
     proData.assetStatus = "sold";
     var stObj = {};
-    if(data.user && data.user._id)
+    if (data.user && data.user._id)
       stObj.userId = data.user._id;
     stObj.status = "sold";
     stObj.createdAt = new Date();
-    if(!proData.assetStatuses)
+    if (!proData.assetStatuses)
       proData.assetStatuses = [];
     proData.assetStatuses[proData.assetStatuses.length] = stObj;
-    Product.update({assetId:data.product.assetId},{$set:proData},function(err){
-      if (err) { console.log("err", err); }
+    Product.update({
+      assetId: data.product.assetId
+    }, {
+      $set: proData
+    }, function(err) {
+      if (err) {
+        console.log("err", err);
+      }
       console.log("Product Updated");
     });
   });
@@ -945,7 +959,7 @@ exports.exportAuction = function(req, res) {
 
 // Creates a new AuctionMaster in the DB.
 exports.createAuctionMaster = function(req, res) {
-  var options={};
+  var options = {};
   var filter = {}
   if (!req.body.auctionId)
     return res.status(401).send('Insufficient data');
@@ -965,11 +979,17 @@ exports.createAuctionMaster = function(req, res) {
         if (err) {
           return handleError(res, err);
         }
-        options.dataToSend=req.body;
-        options.dataType="auctionData";
-        Utility.sendCompiledData(options,function(err,result){
-          if(err) return handleError(res,err);
-          console.log("auctions data sent",result);
+        console.log("auctionData",auctionData);
+        AuctionMaster.find({
+          "auctionId": req.body.auctionId
+        }, function(err, result) {
+          options.dataToSend = auctionData;
+          options.dataType = "auctionData";
+          console.log("options",options);
+          Utility.sendCompiledData(options, function(err, result) {
+            if (err) return handleError(res, err);
+            console.log("auctions data sent", result);
+          });
         });
         return res.status(201).json({
           errorCode: 0,
@@ -981,32 +1001,39 @@ exports.createAuctionMaster = function(req, res) {
 
 };
 
-exports.getAssetInfo=function(req,res){
-  var filter={};
-  var data={};
-  filter._id=req.query.dbAuctionId;
-  AuctionMaster.find(filter,function(err,results){
-  if(err){
-    return handleError(res,err);
-  }
-  
-  if(results.length > 0){
-    if(results[0].auctionType === 'S')
-    data.auctionType=results[0].auctionType;
-  filter={};
-  filter.assetId=req.query.assetId;
-  Product.update(filter,{$set:{"status":true}},function(err,resproduct){
-   if(err){
-    return handleError(res,err);
-   }
-   return res.status(200).json({"message":"userActive"});
+exports.getAssetInfo = function(req, res) {
+  var filter = {};
+  var data = {};
+  filter._id = req.query.dbAuctionId;
+  AuctionMaster.find(filter, function(err, results) {
+    if (err) {
+      return handleError(res, err);
+    }
+
+    if (results.length > 0) {
+      if (results[0].auctionType === 'S')
+        data.auctionType = results[0].auctionType;
+      filter = {};
+      filter.assetId = req.query.assetId;
+      Product.update(filter, {
+        $set: {
+          "status": true
+        }
+      }, function(err, resproduct) {
+        if (err) {
+          return handleError(res, err);
+        }
+        return res.status(200).json({
+          "message": "userActive"
+        });
+      });
+    } else {
+      return res.status(500).json({
+        "message": "No Auction Data"
+      });
+    }
   });
-  }
-  else{
-  return res.status(500).json({"message":"No Auction Data"});
-}
-});
-  };
+};
 
 /*exports.sendUserToAs=function(req,res){
 var userData={};
@@ -1034,51 +1061,57 @@ UserModel.find(filter,function(err,res){
 
 
 exports.updateAuctionMasterproduct = function(req, res) {
-  var _id = req.body._id;
-  AuctionMaster.update({
-        _id: _id
-      }, {
-        $set: req.body
-      }, function(err) {
-            if (err) {
-              return handleError(res, err);
-            }
-            res.status(200).json({
-              errorCode: 0,
-              message: "Auction Data Successfully saved."
-            });
-         
+    var _id = req.body._id;
+    AuctionMaster.update({
+      _id: _id
+    }, {
+      $set: req.body
+    }, function(err) {
+      if (err) {
+        return handleError(res, err);
+      }
+      res.status(200).json({
+        errorCode: 0,
+        message: "Auction Data Successfully saved."
       });
-    
+
+    });
+
   }
   // Remove field from Auction Master
-  exports.removeAuctionMasterproduct = function(req, res) {
-      var _id = req.body._id;
-      var field = {};
-      if(req.body.flag==1){
-        field = {"static_increment":1};
-      }if(req.body.flag==2){
-        field = {"bidIncrement":1};
+exports.removeAuctionMasterproduct = function(req, res) {
+    var _id = req.body._id;
+    var field = {};
+    if (req.body.flag == 1) {
+      field = {
+        "static_increment": 1
+      };
+    }
+    if (req.body.flag == 2) {
+      field = {
+        "bidIncrement": 1
+      };
+    }
+    AuctionMaster.update({
+      _id: _id
+    }, {
+      $unset: field //{"static_increment":1}
+    }, function(err) {
+      if (err) {
+        return handleError(res, err);
       }
-      AuctionMaster.update({
-            _id: _id
-          }, {
-          $unset: field //{"static_increment":1}
-          }, function(err) {
-                if (err) {
-                  return handleError(res, err);
-                }
-                res.status(200).json({
-                  errorCode: 0,
-                  message: "Auction Data Successfully deleted."
-                });
-            
-          });
+      res.status(200).json({
+        errorCode: 0,
+        message: "Auction Data Successfully deleted."
+      });
+
+    });
   }
-// Creates a AuctionMaster in the DB.
+  // Creates a AuctionMaster in the DB.
 exports.updateAuctionMaster = function(req, res) {
-  var options={};
+  var options = {};
   var _id = req.body._id;
+  console.log("details",req.body);
   if (req.body._id) {
     delete req.body._id;
   }
@@ -1105,15 +1138,16 @@ exports.updateAuctionMaster = function(req, res) {
         _id: _id
       }, {
         $set: req.body
-      }, function(err) {
+      }, function(err,resultData) {
         if (err) {
           return handleError(res, err);
         }
-        options.dataToSend=req.body;
-        options.dataType="auctionData";
-        Utility.sendCompiledData(options,function(err,result){
-          if(err) return handleError(res,err);
-          console.log("auctions data sent",result);
+        options.dataToSend = req.body;
+        options.dataToSend._id=_id;
+        options.dataType = "auctionData";
+        Utility.sendCompiledData(options, function(err, result) {
+          if (err) return handleError(res, err);
+          console.log("auctions data sent", result);
         });
         updateAuctionRequest(req.body, _id);
         return res.status(200).json({
@@ -1144,65 +1178,72 @@ function updateAuctionRequest(data, id) {
   });
 }
 
- 
+
 
 //search AucyionMaster based on filter 
 exports.getFilterOnAuctionMaster = function(req, res) {
+  //console.log("I am here",req.body);
   var searchStrReg = new RegExp(req.body.searchStr, 'i');
   var filter = {};
   if (req.body._id)
     filter["_id"] = req.body._id;
   if (req.body.userId)
     filter["user._id"] = req.body.userId;
-  if(req.body.statusType)
-    filter["auctionType"]=req.body.statusType;
+  if (req.body.statusType)
+    filter["auctionType"] = req.body.statusType;
   if (req.body.mobile)
     filter["user.mobile"] = req.body.mobile;
-  if(req.body.auctionId)
+  if (req.body.auctionId)
     filter.auctionId = req.body.auctionId;
+  if(req.body.hasOwnProperty('isDeleted')){
+    filter.isDeleted=req.body.isDeleted;
+  }
   /*if(req.body.statusType){
     filter["auctionType"]=req.body.statusType;
   }*/
-   var currentDate = new Date();
-  if (req.body.auctionType === 'closed'){
+  var currentDate = new Date();
+  if (req.body.auctionType === 'closed') {
     //var currentDate = new Date();
-    filter.endDate={
+    filter.endDate = {
       '$lt': currentDate
     }
-  } else if(req.body.auctionType === 'upcoming') {
+  } else if (req.body.auctionType === 'upcoming') {
     //var currentDate = new Date();
-    filter.endDate={
-    '$gt': currentDate
+    filter.endDate = {
+      '$gt': currentDate
     };
 
-    filter.auctionType = {'$ne':"S"};
+    filter.auctionType = {
+      '$ne': "S"
+    };
 
-  }else if(req.body.auctionType === 'expireauction') {
+  } else if (req.body.auctionType === 'expireauction') {
     //var currentDate = new Date();
-    filter.endDate={
-    '$lt': currentDate
+    filter.endDate = {
+      '$lt': currentDate
     };
     filter["_id"] = req.body._id;
 
-  }else if(req.body.auctionType === 'upcomingauctions') {
+  } else if (req.body.auctionType === 'upcomingauctions') {
     //var currentDate = new Date();
-    filter.endDate={
-    '$gt': currentDate
+    filter.endDate = {
+      '$gt': currentDate
     };
-   filter.startDate={
-    '$gt': currentDate
+    filter.startDate = {
+      '$gt': currentDate
     };
 
-    filter.auctionType = {'$ne': "S"};
+    filter.auctionType = {
+      '$ne': "S"
+    };
 
 
-    
-  }
-  else if(req.body.auctionType === 'S') {
+
+  } else if (req.body.auctionType === 'S') {
     //var currentDate = new Date();
-  
-   filter.auctionType="S";
-    
+
+    filter.auctionType = "S";
+
   }
 
   var arr = [];
@@ -1252,138 +1293,148 @@ exports.getFilterOnAuctionMaster = function(req, res) {
 
   var result = {};
 
-if (req.body.pagination && !req.body.statusType) {
-    return Utility.paginatedResult(req, res, AuctionMaster, filter, {},function(results){
-      if(req.body.addAuctionType) {
-      result= auctionListing(results);
-       return res.status(200).json(result);
-      }
-      else{
+  if (req.body.pagination && !req.body.statusType) {
+    return Utility.paginatedResult(req, res, AuctionMaster, filter, {}, function(results) {
+      if (req.body.addAuctionType) {
+        result = auctionListing(results);
+        return res.status(200).json(result);
+      } else {
         return res.status(200).json(results);
-      } 
+      }
     });
-}
-
- var query = AuctionMaster.find(filter);
+  }
+   console.log("get auction data",filter);
+  var query = AuctionMaster.find(filter);
   query.exec(
     function(err, items) {
       if (err) {
         return handleError(res, err);
       }
-      var result={};
-      if(req.body.addAuctionType) {
-        result.items=items;
-       result=auctionListing(result);
-       return res.status(200).json(result);
-      }
-     else {
-        result.items=items;
+      var result = {};
+      if (req.body.addAuctionType) {
+        result.items = items;
+        result = auctionListing(result);
+        return res.status(200).json(result);
+      } else {
+        result.items = items;
         return res.status(200).json(result);
       }
     });
 };
 
-function auctionListing(results){
-       var tempArr = [];
-       var result={};
-        if(results) {
-        results.items.forEach(function(auction) {
-          auction = auction.toObject();
-          var currentDate = new Date();
-          var startDate = auction.startDate;
-          var endDate = auction.endDate;
-          auction.endTimer = endDate.getTime();
-          var d = new Date();
-          auction.startTimer = d.getTime();
-          
-          if (startDate > currentDate) {
-            auction.auctionValue = "upcomingAuctions";
-          } else if (startDate < currentDate && endDate > currentDate) {
-            auction.auctionValue = "ongoingAuctions";
-          } else if (endDate < currentDate) {
-            auction.auctionValue = "closedAuctions";
-          }
-          tempArr[tempArr.length] = auction;
-        })
+function auctionListing(results) {
+  var tempArr = [];
+  var result = {};
+  if (results) {
+    results.items.forEach(function(auction) {
+      auction = auction.toObject();
+      var currentDate = new Date();
+      var startDate = auction.startDate;
+      var endDate = auction.endDate;
+      auction.endTimer = endDate.getTime();
+      var d = new Date();
+      auction.startTimer = d.getTime();
+
+      if (startDate > currentDate) {
+        auction.auctionValue = "upcomingAuctions";
+      } else if (startDate < currentDate && endDate > currentDate) {
+        auction.auctionValue = "ongoingAuctions";
+      } else if (endDate < currentDate) {
+        auction.auctionValue = "closedAuctions";
       }
-        result.items=tempArr;
-        result.totalItems=results.totalItems;
-        return result;
-      }
+      tempArr[tempArr.length] = auction;
+    })
+  }
+  result.items = tempArr;
+  result.totalItems = results.totalItems;
+  return result;
+}
+
+exports.updateauctionsisdeleted=function(req,res){
+  AuctionMaster.update({},{$set:{"isDeleted":false}},{multi: true})
+  .exec(function(err,result){
+    if(err) return handleError(res,err);
+    return res.status(200).json({message:"updated Successfully"});
+  });
+}
 
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
-  if(req.body.auctionIds)
-    filter['dbAuctionId'] = {$in:req.body.auctionIds};
-  if(req.body.status)
+  if (req.body.auctionIds)
+    filter['dbAuctionId'] = {
+      $in: req.body.auctionIds
+    };
+  if (req.body.status)
     filter['status'] = req.body.status;
   var isClosed = req.body.isClosed;
-  var auctions=[];
-  var isSoldCount=0;
+  var auctions = [];
+  var isSoldCount = 0;
   var result1 = [];
   var result2 = [];
   Seq()
-  .par(function(){
-    var self = this;
-    var query = AuctionRequest.aggregate([{"$match":filter},{
-    "$group": {
-         _id: "$dbAuctionId",
-      total_products: {
-           $sum: 1
-         }
-      }
-    }]);
-    query.exec(
-            function(err, result) {
-                  if (err) {
-                      return next(err);
-                  }
-             result1 = result;
-             self();
-   });
+    .par(function() {
+      var self = this;
+      var query = AuctionRequest.aggregate([{
+        "$match": filter
+      }, {
+        "$group": {
+          _id: "$dbAuctionId",
+          total_products: {
+            $sum: 1
+          }
+        }
+      }]);
+      query.exec(
+        function(err, result) {
+          if (err) {
+            return next(err);
+          }
+          result1 = result;
+          self();
+        });
 
-  })
-  .par(function(){
-    var self = this;
-      if(isClosed === 'n')
-       return  self();
-     filter['product.isSold'] = true;
+    })
+    .par(function() {
+      var self = this;
+      if (isClosed === 'n')
+        return self();
+      filter['product.isSold'] = true;
       var query2 = AuctionRequest.aggregate([{
-            "$match": filter,
-        }, {
-             "$group": {
-                  _id: "$dbAuctionId",
-                  isSoldCount: {
-                      "$sum": 1
-        },
-               sumOfInsale: {
-                      $sum: "$product.saleVal"
-                 }
-           }
-        }]);
-        query2.exec(
-               function(err, isSoldCount) {
-                    result2 = isSoldCount;
-                  self();    
+        "$match": filter,
+      }, {
+        "$group": {
+          _id: "$dbAuctionId",
+          isSoldCount: {
+            "$sum": 1
+          },
+          sumOfInsale: {
+            $sum: "$product.saleVal"
+          }
+        }
+      }]);
+      query2.exec(
+        function(err, isSoldCount) {
+          result2 = isSoldCount;
+          self();
 
-      });
-  })
-  .seq(function(){
-          
-      result1.forEach(function(x){
-                         result2.some(function(y){
-                    if(x._id === y._id){
-                    x.isSoldCount = y.isSoldCount;
-                     x.sumOfInsale = y.sumOfInsale;
-                     return true;
-                   }
-             })
+        });
+    })
+    .seq(function() {
+
+      result1.forEach(function(x) {
+        result2.some(function(y) {
+          if (x._id === y._id) {
+            x.isSoldCount = y.isSoldCount;
+            x.sumOfInsale = y.sumOfInsale;
+            return true;
+          }
         })
+      })
       return res.status(200).json(result1);
-  })
-  .catch(function(err){
-    return handleError(res, err);
-  });
+    })
+    .catch(function(err) {
+      return handleError(res, err);
+    });
 
 }
 
@@ -1391,54 +1442,56 @@ exports.auctiondetail = function(req, res) {
   var filter = {};
   var queryObj = req.query;
 
-     
-   var currentDate = new Date();
 
-    filter.endDate ={
+  var currentDate = new Date();
+
+  filter.endDate = {
     '$lt': currentDate
-    };
+  };
 
-    filter._id = queryObj.auctionId;
-      var query = AuctionMaster.find(filter);
-      query.exec(function(err, auctions) {
-      if (err) {
-           console.log("err", err);
-          return handleError(res, err);
-      }
-      return res.status(200).json(auctions);
-      });
+  filter._id = queryObj.auctionId;
+  var query = AuctionMaster.find(filter);
+  query.exec(function(err, auctions) {
+    if (err) {
+      console.log("err", err);
+      return handleError(res, err);
+    }
+    return res.status(200).json(auctions);
+  });
 }
 
 exports.getAuctionMaster = function(req, res) {
   var filter = {};
   var queryObj = req.query;
   //console.log("fhghg",queryObj);
-        if (req.body._id){
-        filter._id = req.body._id;
-        }
+  if (req.body._id) {
+    filter._id = req.body._id;
+  }
 
-        if (queryObj.yetToStartDate){
-        filter.endDate={
-        '$gt': new Date()
-        };
+  if (queryObj.yetToStartDate) {
+    filter.endDate = {
+      '$gt': new Date()
+    };
 
-        filter.auctionType = {'$ne':"S"};
-        }
+    filter.auctionType = {
+      '$ne': "S"
+    };
+  }
 
 
-        if(req.query.auctionId){
-        filter.auctionId = req.query.auctionId;
-        
-        }
+  if (req.query.auctionId) {
+    filter.auctionId = req.query.auctionId;
 
-        if(req.query._id){
-        filter._id = req.query._id;
-        
-        }
+  }
 
-        if(queryObj.dbauctionId){
-        filter._id=queryObj.dbauctionId;
-        }
+  if (req.query._id) {
+    filter._id = req.query._id;
+
+  }
+
+  if (queryObj.dbauctionId) {
+    filter._id = queryObj.dbauctionId;
+  }
 
 
   var query = AuctionMaster.find(filter).sort({
@@ -1450,23 +1503,38 @@ exports.getAuctionMaster = function(req, res) {
       return handleError(res, err);
     }
 
-   
+
     return res.status(200).json(auctions);
   });
 }
 
 exports.deleteAuctionMaster = function(req, res) {
-  AuctionMaster.find({_id: req.params.id})
-    .remove()
-      .exec(function(err, doc) {
-        if (err) {
-          return handleError(res, err);
-        }
-       return res.status(200).send({
-           errorCode: 0,
-           message: "Payment master deleted sucessfully!!!"
-        });
-  });
+  console.log("id",req.params.id);
+  AuctionMaster.update({
+      _id: req.params.id
+    },{
+      "$set":{"isDeleted":true}
+
+    })
+    .exec(function(err, doc) {
+      if (err) {
+        return handleError(res, err);
+      }
+      options={};
+      options.dataToSend={
+       "_id":req.params.id,
+       "isDeleted":true
+      }
+      options.dataType="auctionData";
+      utility.sendCompiledData(options,function(err,result){
+        if(err) return handleError(res,err);
+        console.log("result",result);
+      });
+      return res.status(200).send({
+        errorCode: 0,
+        message: "Auction master deleted sucessfully!!!"
+      });
+    });
 };
 
 exports.importAuctionMaster = function(req, res) {
@@ -1485,10 +1553,10 @@ exports.importAuctionMaster = function(req, res) {
   if (data.length === 0) {
     return res.status(500).send("There is no data in the file.");
   }
-  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*','Auction_Start_Time*','Auction_End_Time*','Auction_Owner_Mobile*'];
-  var date_params = ['Auction_Start_Date*','Auction_End_Date*'];
-  var time_params = ['Auction_Start_Time*','Auction_End_Time*'];
-   var time_params = ['Emd_Amount','Terms_Of_Auction','Contact_Person_Name','Contact_Person_No.'];
+  var headers = ['Auction_Name*', 'Auction_Start_Date*', 'Auction_End_Date*', 'Auction_ID*', 'Auction_Start_Time*', 'Auction_End_Time*', 'Auction_Owner_Mobile*'];
+  var date_params = ['Auction_Start_Date*', 'Auction_End_Date*'];
+  var time_params = ['Auction_Start_Time*', 'Auction_End_Time*'];
+  var time_params = ['Emd_Amount', 'Terms_Of_Auction', 'Contact_Person_Name', 'Contact_Person_No.'];
   var err = false;
   var hd = getHeaders(worksheet);
   if (!validateHeader(hd, headers)) {
@@ -1497,41 +1565,41 @@ exports.importAuctionMaster = function(req, res) {
 
   req.errors = [];
   req.totalRecords = data.length;
-  data = data.filter(function(x){
-    headers.forEach(function(head){
-      if(!x[head]){
+  data = data.filter(function(x) {
+    headers.forEach(function(head) {
+      if (!x[head]) {
         req.errors[req.errors.length] = {
-         rowCount : x.__rowNum__,
-         AuctionID : x['Auction_ID*'] || '',
-         message : 'Missing mandatory params : '+ head
-       }
-       err = true;
-      }
-     
-      if(date_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head],validDateFormat)._isValid){
-        req.errors[req.errors.length] = {
-         rowCount : x.__rowNum__,
-         AuctionID : x['Auction_ID*'] || '',
-         message : 'Invalid Date format : '+ head
-       }
-       err = true;
+          rowCount: x.__rowNum__,
+          AuctionID: x['Auction_ID*'] || '',
+          message: 'Missing mandatory params : ' + head
+        }
+        err = true;
       }
 
-      if(time_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head],'h:mmA')._isValid){
+      if (date_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head], validDateFormat)._isValid) {
         req.errors[req.errors.length] = {
-         rowCount : x.__rowNum__,
-         AuctionID : x['Auction_ID*'] || '',
-         message : 'Invalid Time format : '+ head
-       }
-       err = true;
+          rowCount: x.__rowNum__,
+          AuctionID: x['Auction_ID*'] || '',
+          message: 'Invalid Date format : ' + head
+        }
+        err = true;
+      }
+
+      if (time_params.indexOf(head) > -1 && !dateUtil.isValidDateTime(x[head], 'h:mmA')._isValid) {
+        req.errors[req.errors.length] = {
+          rowCount: x.__rowNum__,
+          AuctionID: x['Auction_ID*'] || '',
+          message: 'Invalid Time format : ' + head
+        }
+        err = true;
       }
     })
 
-    if(!err){
+    if (!err) {
       return x;
     }
-  })  
-  
+  })
+
   if (!data.length) {
     return res.status(201).json({
       errorCode: 1,
@@ -1591,42 +1659,42 @@ function importAuctionMaster(req, res, data) {
   if (req.counter < req.numberOfCount) {
     var auctionData = {};
     var field_map = {
-      'Auction_ID*' : 'auctionId',
-      'Auction_Name*' : 'name',
+      'Auction_ID*': 'auctionId',
+      'Auction_Name*': 'name',
       'Auction_Owner': 'auctionOwner',
-      'Auction_Owner_Mobile*':'auctionOwnerMobile',
-      'Auction_Start_Date*' : 'startDate',
-      'Auction_Start_Time*' : 'startTime',
-      'Auction_End_Date*' : 'endDate',
-      'Auction_End_Time*' : 'endTime',
+      'Auction_Owner_Mobile*': 'auctionOwnerMobile',
+      'Auction_Start_Date*': 'startDate',
+      'Auction_Start_Time*': 'startTime',
+      'Auction_End_Date*': 'endDate',
+      'Auction_End_Time*': 'endTime',
       'Inspection_Start_Date': 'insStartDate',
-      'Inspection_Start_Time':'insStartTime',
+      'Inspection_Start_Time': 'insStartTime',
       'Inspection_End_Date': 'insEndDate',
       'Inspection_End_Time': 'insEndTime',
       'Registration_End_Date': 'regEndDate',
       'Address_of_Auction': 'auctionAddr',
       'Emd_Amount': 'emdAmount',
       'Auction_Type': 'auctionType',
-      'Location' : 'city',
-      'Terms_Of_Auction' : 'termAuction',
-      'Contact_Person_Name' : 'contactName',
-      'Contact_Person_No.' : 'contactNumber'
+      'Location': 'city',
+      'Terms_Of_Auction': 'termAuction',
+      'Contact_Person_Name': 'contactName',
+      'Contact_Person_No.': 'contactNumber'
     };
 
     var timeMap = {
-      'startDate' : 'startTime',
-      'endDate' : 'endTime',
-      'insStartDate' : 'insStartTime',
-      'insEndDate' : 'insEndTime'
+      'startDate': 'startTime',
+      'endDate': 'endTime',
+      'insStartDate': 'insStartTime',
+      'insEndDate': 'insEndTime'
     }
 
-     Object.keys(field_map).some(function(x){
-      if(data[req.counter][x]){
+    Object.keys(field_map).some(function(x) {
+      if (data[req.counter][x]) {
         auctionData[field_map[x]] = data[req.counter][x];
 
-        if(x === 'Auction_Type'){
+        if (x === 'Auction_Type') {
           auctionData.auctionType = data[req.counter][x].replace(/[^a-zA-Z ]/g, "").trim().toLowerCase();
-          if(auctionData.auctionType !== 'live' && auctionData.auctionType !== 'online'){
+          if (auctionData.auctionType !== 'live' && auctionData.auctionType !== 'online') {
             errorObj.rowCount = req.counter + 2;
             errorObj.AuctionID = auctionData.auctionId;
             errorObj.message = "Wrong value of auction type";
@@ -1639,34 +1707,34 @@ function importAuctionMaster(req, res, data) {
       }
     })
 
-    var dateObj = ['startDate','endDate','insStartDate','insEndDate','regEndDate'];
-    dateObj.forEach(function(x){
-      if(auctionData[x]){
-        var date = dateUtil.isValidDateTime(auctionData[x],validDateFormat);
-        if(date._isValid){
-          auctionData[x] = moment(auctionData[x],date._f).format('MM/DD/YYYY');
-          if(auctionData[timeMap[x]]) {
-            date =  dateUtil.isValidDateTime((auctionData[x] + ' '+auctionData[timeMap[x]]),validTimeFormat);
-            if(date._isValid){
+    var dateObj = ['startDate', 'endDate', 'insStartDate', 'insEndDate', 'regEndDate'];
+    dateObj.forEach(function(x) {
+      if (auctionData[x]) {
+        var date = dateUtil.isValidDateTime(auctionData[x], validDateFormat);
+        if (date._isValid) {
+          auctionData[x] = moment(auctionData[x], date._f).format('MM/DD/YYYY');
+          if (auctionData[timeMap[x]]) {
+            date = dateUtil.isValidDateTime((auctionData[x] + ' ' + auctionData[timeMap[x]]), validTimeFormat);
+            if (date._isValid) {
               auctionData[x] = date._d;
             }
           }
-          auctionData[x]  = new Date(auctionData[x]);
-        }else{
+          auctionData[x] = new Date(auctionData[x]);
+        } else {
           delete auctionData[x];
         }
       }
     })
 
     auctionData.groupId = req.groupId;
-    
-    if(!ret){
+
+    if (!ret) {
       importAuctionMaster(req, res, data);
       return;
     }
 
-    if(auctionData.emdAmount){
-      if(isNaN(auctionData.emdAmount)){
+    if (auctionData.emdAmount) {
+      if (isNaN(auctionData.emdAmount)) {
         errorObj.rowCount = req.counter + 2;
         errorObj.AuctionID = auctionData.auctionId;
         errorObj.message = "Wrong value of EMD Amount";
@@ -1685,7 +1753,7 @@ function importAuctionMaster(req, res, data) {
       if (err)
         handleError(err);
 
-      if (auction && auction.length){
+      if (auction && auction.length) {
         errorObj.rowCount = req.counter + 2;
         errorObj.AuctionID = auctionData.auctionId;
         errorObj.message = "Auction with this AuctionID is already exist in Auction Master";
@@ -1695,16 +1763,16 @@ function importAuctionMaster(req, res, data) {
         return;
       }
 
-      if(auctionData.auctionOwnerMobile){
+      if (auctionData.auctionOwnerMobile) {
         vendorModel.find({
-          'user.mobile' : auctionData.auctionOwnerMobile,
-          services : 'Auction'
-        }).exec(function(err,vendor){
-          if(err || !vendor){
+          'user.mobile': auctionData.auctionOwnerMobile,
+          services: 'Auction'
+        }).exec(function(err, vendor) {
+          if (err || !vendor) {
             handleError(err || 'Error while searching vendor');
           }
 
-          if(!vendor.length){
+          if (!vendor.length) {
             errorObj.rowCount = req.counter + 2;
             errorObj.AuctionID = auctionData.auctionId;
             errorObj.message = "Auction owner is not exist";
@@ -1713,21 +1781,21 @@ function importAuctionMaster(req, res, data) {
             importAuctionMaster(req, res, data);
             return;
           }
-          
+
           //auctionData.auctionOwner = vendor[0].user.fname + ' ' + vendor[0].user.lname;
           auctionData.auctionOwner = vendor[0].entityName;
           insertData();
-         })
-      }else{
+        })
+      } else {
         insertData();
       }
 
-      function insertData(){
+      function insertData() {
         // PaymentMasterModel.findOne({serviceCode:'Auction'},function(error,regAmount){
         //   if(error)
         //      auctionData.emdAmount = 0;
         //   auctionData.regCharges = Number(regAmount.fees);
-          AuctionMaster.create(auctionData, function(err, act) {
+        AuctionMaster.create(auctionData, function(err, act) {
             if (err) {
               return handleError(res, err)
             } else {
@@ -1736,40 +1804,48 @@ function importAuctionMaster(req, res, data) {
               importAuctionMaster(req, res, data);
             }
           })
-        //})
+          //})
       }
     })
   } else {
     res.status(200).json({
       errorCode: 0,
-      errObj : req.errors,
-      message: req.successCount.toString() + " out of " + req.totalRecords.toString() + " Uploaded Successfully" 
+      errObj: req.errors,
+      message: req.successCount.toString() + " out of " + req.totalRecords.toString() + " Uploaded Successfully"
     });
   }
 }
 exports.changeAuctionType = function(req, res) {
   var filter = {};
-  
-  AuctionMaster.find(filter,function(err, auctions) {
-    var auctionType={};
-        auctions.forEach(function(doc) {
-            if(doc){
-              if(doc.auctionType=='live'){
-                 auctionType='L';
-                 doc.update({$set:{auctionType:auctionType}},function(err){
-                //return res.status(200).json(req.body);
-              });
-              }
-              if(doc.auctionType=='online'){
-                 auctionType='A';
-                 doc.update({$set:{auctionType:auctionType}},function(err){
-                //return res.status(200).json(req.body);
-              });
 
-              }
-              
+  AuctionMaster.find(filter, function(err, auctions) {
+    var auctionType = {};
+    auctions.forEach(function(doc) {
+      if (doc) {
+        if (doc.auctionType == 'live') {
+          auctionType = 'L';
+          doc.update({
+            $set: {
+              auctionType: auctionType
             }
+          }, function(err) {
+            //return res.status(200).json(req.body);
           });
+        }
+        if (doc.auctionType == 'online') {
+          auctionType = 'A';
+          doc.update({
+            $set: {
+              auctionType: auctionType
+            }
+          }, function(err) {
+            //return res.status(200).json(req.body);
+          });
+
+        }
+
+      }
+    });
     if (err) {
       return handleError(res, err);
     }
@@ -1782,76 +1858,80 @@ function handleError(res, err) {
 }
 exports.getAuctionWiseProductData = function(req, res) {
   var filter = {};
-  if(req.body.auctionIds)
-    filter['dbAuctionId'] = {$in:req.body.auctionIds};
-  if(req.body.status)
+  if (req.body.auctionIds)
+    filter['dbAuctionId'] = {
+      $in: req.body.auctionIds
+    };
+  if (req.body.status)
     filter['status'] = req.body.status;
   var isClosed = req.body.isClosed;
-  var auctions=[];
-  var isSoldCount=0;
+  var auctions = [];
+  var isSoldCount = 0;
   var result1 = [];
   var result2 = [];
   Seq()
-  .par(function(){
-    var self = this;
-    var query = AuctionRequest.aggregate([{"$match":filter},{
-    "$group": {
-         _id: "$dbAuctionId",
-      total_products: {
-           $sum: 1
-         }
-      }
-    }]);
-    query.exec(
-            function(err, result) {
-                  if (err) {
-                      return next(err);
-                  }
-             result1 = result;
-             self();
-   });
+    .par(function() {
+      var self = this;
+      var query = AuctionRequest.aggregate([{
+        "$match": filter
+      }, {
+        "$group": {
+          _id: "$dbAuctionId",
+          total_products: {
+            $sum: 1
+          }
+        }
+      }]);
+      query.exec(
+        function(err, result) {
+          if (err) {
+            return next(err);
+          }
+          result1 = result;
+          self();
+        });
 
-  })
-  .par(function(){
-    var self = this;
-      if(isClosed === 'n')
-       return  self();
-     filter['product.isSold'] = true;
+    })
+    .par(function() {
+      var self = this;
+      if (isClosed === 'n')
+        return self();
+      filter['product.isSold'] = true;
       var query2 = AuctionRequest.aggregate([{
-            "$match": filter,
-        }, {
-             "$group": {
-                  _id: "$dbAuctionId",
-                  isSoldCount: {
-                      "$sum": 1
-        },
-               sumOfInsale: {
-                      $sum: "$product.saleVal"
-                 }
-           }
-        }]);
-        query2.exec(
-               function(err, isSoldCount) {
-                    result2 = isSoldCount;
-                  self();
+        "$match": filter,
+      }, {
+        "$group": {
+          _id: "$dbAuctionId",
+          isSoldCount: {
+            "$sum": 1
+          },
+          sumOfInsale: {
+            $sum: "$product.saleVal"
+          }
+        }
+      }]);
+      query2.exec(
+        function(err, isSoldCount) {
+          result2 = isSoldCount;
+          self();
 
-      });
-  })
-  .seq(function(){
+        });
+    })
+    .seq(function() {
 
-      result1.forEach(function(x){
-                         result2.some(function(y){
-                    if(x._id === y._id){
-                    x.isSoldCount = y.isSoldCount;
-                     x.sumOfInsale = y.sumOfInsale;
-                     return true;
-                   }
-             })
+      result1.forEach(function(x) {
+        result2.some(function(y) {
+          if (x._id === y._id) {
+            x.isSoldCount = y.isSoldCount;
+            x.sumOfInsale = y.sumOfInsale;
+            return true;
+          }
         })
+      })
       return res.status(200).json(result1);
-  })
-  .catch(function(err){
-    return handleError(res, err);
-  });
-  
+    })
+    .catch(function(err) {
+      return handleError(res, err);
+    });
+
 }
