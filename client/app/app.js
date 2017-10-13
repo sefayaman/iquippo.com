@@ -34,11 +34,12 @@ angular.module('sreizaoApp',[
    'nvd3',
    'timer'
 ])
-  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider) {
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider,uiGmapGoogleMapApiProvider,$sceProvider) {
     $urlRouterProvider
       .otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    $sceProvider.enabled(false);
 
     $locationProvider.html5Mode(true);
     if (!$httpProvider.defaults.headers.get) {
@@ -105,7 +106,9 @@ angular.module('sreizaoApp',[
     $rootScope.KYCType = KYCType;
     
     $rootScope.loadingCount = $rootScope.loadingCount + 2;
-    var DevEnvironment = false;
+     $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+  // Send this header only in post requests. Specifies you are sending a JSON object
+     $http.defaults.headers.post['dataType'] = 'json';
 
     groupSvc.getAllGroup().then(function(response){
       $rootScope.loadingCount --;
@@ -211,6 +214,7 @@ angular.module('sreizaoApp',[
     $rootScope.isServiceApprover = Auth.isServiceApprover;
     $rootScope.isAuctionPartner = Auth.isAuctionPartner;
     $rootScope.isFAgencyPartner = Auth.isFAgencyPartner;
+    $rootScope.isValuationPartner = Auth.isValuationPartner;
     $rootScope.isBuySaleApprover = Auth.isBuySaleApprover;
     $rootScope.isBuySaleViewOnly = Auth.isBuySaleViewOnly;
     
@@ -236,6 +240,7 @@ angular.module('sreizaoApp',[
      /*Loading cart and other data if user is logged in*/
    Auth.isLoggedInAsync(function(loggedIn){
      if(loggedIn){
+
          if(Auth.getCurrentUser()._id){
            CartSvc.loadCart();
         }
@@ -262,7 +267,18 @@ angular.module('sreizaoApp',[
             $cookieStore.remove('refUserId'); 
             $cookieStore.remove('promoCode');
           });
-        } 
+        }
+        /*J.K Check password expire Start*/ 
+            var noOfDays = 60;
+            var pwdUpdateDate = Auth.getCurrentUser().passwordUpdatedAt;
+            var isRegisterNewUserFlag = Auth.getCurrentUser().isRegisterNewUser;
+            var currentDateForPwdUpdate = moment(Date.now());
+            var pwdUpdatedDays = currentDateForPwdUpdate.diff(pwdUpdateDate, 'days');
+            if(pwdUpdatedDays > noOfDays || isRegisterNewUserFlag === 'yes'){
+              $rootScope.pwdResetStatus = false; // To Disable Close button 
+              Modal.openDialog('settings');
+            }
+        /*J.K Check password expire End*/ 
      }
    });
 

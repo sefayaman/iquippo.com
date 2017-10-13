@@ -80,6 +80,8 @@ angular.module('sreizaoApp')
           controller: Modals[modalType].Ctrl,
           windowClass: modalClass,
           scope: scope,
+          backdrop: 'static',
+          keyboard: false,
           size: 'lg'
         });
         return  modalInstance;

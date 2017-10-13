@@ -487,9 +487,11 @@
               </uib-accordion>
               
           </div>
-          <div class="col-sm-7 col-md-7 panel-group" >
-            <div class="panel panel-primary asset-sale" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+          <div class="col-sm-5 col-md-7 panel-group" >
+            <div class="panel panel-primary asset-sale" ng-if="(currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE') && assetListedInAuction !='true'">
+
             <form novalidate class="assetSale" name="assetSale">
+
                 <div class="panel-heading">
                   <div class="row">
                     <div class="col-sm-9">
@@ -556,13 +558,13 @@
                              </div>
                            </div>
                            <div class="col-sm-5 text-right padd-left">
-                             <button type="button" ng-if="userBids == 0 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+                             <button type="button" ng-if="(!isLoggedIn() || userBids == 0) && allowBid != 'No'" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">
                               Place Bid
                              </button>
 
-                             <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
-                             <button type="button" ng-if="userBids >= 1 && (auctionsData.allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdraw</button>
-                             <button type="button" ng-if="auctionsData.allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
+                             <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'placebid',assetSale)" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Change Bid</button>
+                             <button type="button" ng-if="isLoggedIn() && userBids >= 1 && (allowBid != 'No')" class="btn btn-primary" ng-click="productDetailVm.withdrawBid()" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE'">Withdraw</button>
+                             <button type="button" ng-if="allowBid == 'No'" ng-disabled="currentProduct.assetStatus == 'sold' || currentProduct.tradeType == 'NOT_AVAILABLE' || auctionsData.visibleBuyNow == false" class="btn btn-primary" ng-click="productDetailVm.openBidModal(productDetailVm.bidAmount,'proxybid',assetSale)">Proxy Bid</button>
                            </div>
                          </div>
                        </div>
@@ -594,6 +596,17 @@
               </form>
             </div>           
             <!-- <div class="panel panel-primary" ng-if="currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE'">
+<<<<<<< HEAD
+=======
+          <div class="col-sm-5 col-md-7 panel-group">
+=======
+          <div class="col-sm-5 col-md-7 panel-group"L>
+>>>>>>> iquippo_auction_module
+           
+            <div class="panel panel-primary" ng-if="(currentProduct.tradeType == 'SELL' || currentProduct.tradeType == 'BOTH' || currentProduct.tradeType == 'NOT_AVAILABLE') && assetListedInAuction !='true'">
+>>>>>>> iquippo_auction_module
+=======
+>>>>>>> iquippo_auction_module
               <div class="panel-heading">
                 <h3 class="panel-title">{{trade}}</h3>
               </div>
@@ -690,6 +703,12 @@
                       <button type="submit" class="btn btn-warning" ng-click="productDetailVm.addProductToCart(currentProduct)">Add to Cart</button>
                     </div>
                     <small>* Other Terms &amp; Conditions applied.</small>
+              </div>
+            </div>
+
+            <div class="panel panel-default" ng-if="assetListedInAuction && displayBid === 'true'">
+              <div class="panel-body" ng-disabled="true">
+                <iframe ng-src="{{asWidgetURLSCE}}" style="width: 100%; height: 300px; border: 1px solid #eee;"></iframe>
               </div>
             </div>
     

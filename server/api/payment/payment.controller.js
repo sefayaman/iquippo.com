@@ -290,12 +290,14 @@ exports.paymentResponse = function(req,res){
     paymentVal.tracking_id = resPayment.tracking_id;
     payment.ccAvenueRes = paymentVal;
 
-      if(status == "success")
+      if(status == "success"){
         payment.statusCode = 0;
+      }
           
       payment.save(function(err,pys){
         if(err) { return handleError(res, err); }
         else{
+          console.log("payment",payment);
           sendPaymentRes(req,res,resPayment);
         }
 
@@ -307,6 +309,10 @@ exports.paymentResponse = function(req,res){
 function sendPaymentRes(req,res,resPayment){
   var status = resPayment.order_status.toString().toLowerCase().trim();
   console.log("########param1", resPayment.merchant_param1);
+  if(req.query)
+  console.log("******",req.query);
+if(req.body)
+  console.log("------",req.body);
   if(resPayment.merchant_param3 == "mobapp"){
     if (status != 'success')
       res.redirect('http://mobile?payment=failed');

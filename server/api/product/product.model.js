@@ -82,6 +82,7 @@ var ProductSchema = new Schema({
   specialOffers:String,
   rent:{},
   auctionListing:{type:Boolean,default:false},
+  portalListing:{type:Boolean,default:true},
   auction:{},
   valuationStamp:String,
   inquiryCounter : {type:Number,default:0},

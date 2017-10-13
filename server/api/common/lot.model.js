@@ -1,0 +1,28 @@
+'use strict';
+
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+
+var LotSchema = new Schema({
+  user_Id:String,
+  lotNumber:String,
+  primaryImg:String,
+  auction_Id:String,
+  assetId:String,
+  assetDesc:String,
+  startingPrice:Number,
+  reservePrice:Number,
+  startDate:Date,
+  endDate:Date, 
+  bidIncrement:Object,
+  static_increment:String,
+  lastMintBid:String,
+  extendedTo:String,
+  status:{type:Boolean,default:true},
+  isDeleted:{type:Boolean,default:false},
+  createdBy:{},
+  createdAt: {type:Date,default:Date.now},
+  updatedAt: {type:Date,default:Date.now}
+});
+
+module.exports = mongoose.model('Lot', LotSchema);

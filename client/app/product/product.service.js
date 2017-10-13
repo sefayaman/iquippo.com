@@ -120,6 +120,7 @@
         
         return $http.post(path + "/search",filter)
           .then(function(res){
+            ///console.log("productData",res);
             if(filter.pagination)
                 updateCache(res.data.products);
               else
@@ -132,6 +133,7 @@
       };
 
       function addProduct(product){
+        console.log("productsvc",product);
         return $http.post(path,product)
         .then(function(res){
           featuredProductCache = [];

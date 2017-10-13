@@ -17,16 +17,18 @@
       <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <link rel="stylesheet" href="bower_components/DataTables/media/css/jquery.dataTables.css" />
       <link rel="stylesheet" href="bower_components/Hover/css/hover.css" />
-      <link rel="stylesheet" href="bower_components/angular-datatables/dist/css/angular-datatables.css" />
       <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
       <link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
 
-<link rel="stylesheet" href="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.css"/>
-
+    <link rel="stylesheet" href="bower_components/angularjs-datetime-picker/angularjs-datetime-picker.css"/>
     <link rel="stylesheet" href="app/app.css">
+
+    <!-- <link rel="stylesheet" href="http://auctionsoftwaremarketplace.com:3007/css/auctionstyle.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="http://auctionsoftwaremarketplace.com:3007/css/bootstrap.min.css"> -->
+<!-- <link rel="stylesheet" href="http://auctionsoftwaremarketplace.com:3007/css/embedauction.css" /> -->
     <!-- Hotjar Tracking Code for http://www.iquippo.com -->
     <!--
     DevloperName : Nishnat
@@ -44,6 +46,12 @@
       })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
   </script> -->
   <!-- Hotjar Tracking Code for http://iquippo.com/ -->
+<!-- <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
+<!-- <script type="text/javascript" src="http://auctionsoftwaremarketplace.com:3007/js/auctionscript.js"></script> -->
+<!-- <script type="text/javascript" src="http://auctionsoftwaremarketplace.com:3007/js/kinetic.js"></script> -->
+<!-- <script type="text/javascript" src="http://auctionsoftwaremarketplace.com:3007/js/jquery.final-countdown.js"></script> -->
+<!-- <script src="http://auctionsoftw aremarketplace.com:3007/socket.io/socket.io.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
 <script>
     (function(h,o,t,j,a,r){
         h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -217,14 +225,24 @@
           <script src="app/admin/gsettings/count.service.js"></script>
           <script src="app/admin/gsettings/emdcharge.controller.js"></script>
           <script src="app/admin/gsettings/emdcharge.service.js"></script>
+          <script src="app/admin/gsettings/emd.controller.js"></script>
+          <script src="app/admin/gsettings/emd.service.js"></script>
+          <script src="app/admin/gsettings/emdcharge.controller.js"></script>
+          <script src="app/admin/gsettings/emdcharge.service.js"></script>
           <script src="app/admin/gsettings/gsettings.controller.js"></script>
           <script src="app/admin/gsettings/gsettings.service.js"></script>
           <script src="app/admin/gsettings/kycmaster.controller.js"></script>
           <script src="app/admin/gsettings/kycmaster.service.js"></script>
+          <script src="app/admin/gsettings/lot.controller.js"></script>
+          <script src="app/admin/gsettings/lot.service.js"></script>
           <script src="app/admin/gsettings/markuppricemaster.controller.js"></script>
           <script src="app/admin/gsettings/markuppricemaster.service.js"></script>
           <script src="app/admin/gsettings/saleprocessmaster.controller.js"></script>
           <script src="app/admin/gsettings/saleprocessmaster.service.js"></script>
+          <script src="app/admin/gsettings/lot.controller.js"></script>
+          <script src="app/admin/gsettings/lot.service.js"></script>
+          <script src="app/admin/gsettings/markuppricemaster.controller.js"></script>
+          <script src="app/admin/gsettings/markuppricemaster.service.js"></script>
           <script src="app/admin/gsettings/servicefee.service.js"></script>
           <script src="app/admin/gsettings/servicefeemaster.controller.js"></script>
           <script src="app/admin/gsettings/servicetax.service.js"></script>
@@ -263,10 +281,22 @@
           <script src="app/assetsale/productbidrequest.controller.js"></script>
           <script src="app/assetsale/selectpaymenttype.controller.js"></script>
           <script src="app/assetsale/viewproductorrequestdetail.controller.js"></script>
+          <script src="app/assetsale/adminprobiddashboard.controller.js"></script>
+          <script src="app/assetsale/assetSale.service.js"></script>
+          <script src="app/assetsale/assetbidpopup.controller.js"></script>
+          <script src="app/assetsale/assetsale.controller.js"></script>
+          <script src="app/assetsale/assetsale.js"></script>
+          <script src="app/assetsale/assetsalebuyerdashboard.controller.js"></script>
+          <script src="app/assetsale/assetsalesellerdashboard.controller.js"></script>
+          <script src="app/assetsale/fagencydashboard.controller.js"></script>
+          <script src="app/assetsale/sellerdetails.controller.js"></script>
           <script src="app/auction/assetinauction.controller.js"></script>
           <script src="app/auction/auction.service.js"></script>
           <script src="app/auction/auctionlisting.controller.js"></script>
+          <script src="app/auction/auctionregis.controller.js"></script>
           <script src="app/auction/auctionregreport.controller.js"></script>
+          <script src="app/auction/liveauction.controller.js"></script>
+          <script src="app/auction/liveauctionintegration.js"></script>
           <script src="app/auction/userregisterforauction.controller.js"></script>
           <script src="app/auction/userregisterforauction.service.js"></script>
           <script src="app/auction/viewauction.controller.js"></script>

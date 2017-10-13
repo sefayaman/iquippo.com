@@ -45,6 +45,11 @@
                 </div>
                 <div class="col-xs-4 col-sm-4">
                   <span ng-if="py.type=='auctionreq'">Auction (quippoauctions.com)</span>
+                 
+                  <span ng-if="py.type=='auctionreqData'">Auction (quippoauctions.com)</span>
+                  
+                  <span ng-if="py.type=='auctionreqseller'">Quippo Certification Amount</span>
+                  
                   <span ng-if="py.type=='valuationreq'">Valuation (Agency Name)</span>
                   <span ng-if="py.type=='sparebuy'">Spares - Buy</span>
                 </div>
@@ -71,7 +76,8 @@
                   
                   <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode != 'online' && !isAdmin()" ng-click="paymentVm.confirmPurchase()">Confirm Purchase</button>
                   <button class="btn btn-success" ng-if = "paymentVm.enablePayment && isAdmin()" ng-click="paymentVm.confirmPayment()">Confirm Payment</button>
-                  <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online'&& !isAdmin()" ng-click="paymentVm.payNow()">Proceed to Payment</button>
+                  <button class="btn btn-success" ng-if = "paymentVm.enablePayment && !isAdmin() && paymentVm.payTransaction.paymentMode != 'online'" ng-click="paymentVm.confirmPayment()"> Confirm Payment </button>
+                  <button class="btn btn-success" ng-if = "paymentVm.enablePayment && paymentVm.payTransaction.paymentMode == 'online'&& !isAdmin()" ng-click="paymentVm.payNow()"> Proceed to Payment </button>
                 </div>
           </div>
          <div class="page-wrapper" ng-if="ccAvenue">

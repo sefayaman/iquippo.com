@@ -46,9 +46,11 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 // Setup server
 var app = express();
 var server = require('http').createServer(app);
+var socket=require('socket.io');
 
 require('./config/express')(app);
 require('./routes')(app);
+
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -315,6 +317,19 @@ app.post('/api/sms', function(req, res) {
   sms.sendSMS(data, req, res);
   return res.status(200).send('');
 
+});
+
+//socket setup
+var io=socket(server);
+
+io.on('connection',function(socket){
+ console.log(" I am connected");
+
+ socket.on('hello',function(data){
+  console.log("data",data);
+  
+  io.sockets.emit("hello",data.msg);
+ })
 });
 
 app.post('/api/notification', function(req, res) {

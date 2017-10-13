@@ -5,8 +5,10 @@ var trim = require('trim');
 var config = require('../config/environment');
 var importPath = config.uploadPath + config.importDir + "/";
 var debug = require('debug')('server.components.utility');
+var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
+var AuctionMaster = require('../api/auction/auctionmaster.model');
 var AWS = require('aws-sdk');
 var util = require('util');
 var bucket = config.awsBucket;
@@ -26,8 +28,10 @@ var options = {
 };
 
 var client = s3.createClient(options);
+var request = require('request');
 
 exports.toIST = toIST;
+exports.convertQVAPLStatus = convertQVAPLStatus;
 exports.paginatedResult = paginatedResult;
 exports.getWorkbook = getWorkbook;
 exports.excel_from_data = excel_from_data;
@@ -178,11 +182,133 @@ function deleteFromS3(opts, cb) {
 
 }
 
-//AA:Upload a directory to S3
+function isEmpty(myObject) {
+    for(var key in myObject) {
+        if (myObject.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+exports.sendCompiledData = sendCompiledData;
+
+
+function sendCompiledData(options, cb) {
+  //var dataFormat = "";
+  console.log("totalData", options);
+  //filter._id = emdDataAs.auctionId
+  //console.log(options.dataToSend, options.dataType)
+   if(options.dataToSend.__v === 0)
+    delete options.dataToSend.__v;
+ /* if (options.dataToSend.auctionId && options.dataType!=="auctionData"){
+    filter._id = options.dataToSend.auctionId;
+  }*/
+  if (options.dataToSend.startDate && options.dataToSend.endDate) {
+    options.dataToSend.startDate = options.dataToSend.startDate.toString();
+    options.dataToSend.endDate = options.dataToSend.endDate.toString();
+  }
+  if (options.dataToSend && options.dataToSend.updatedAt &&  options.dataToSend.createdAt){
+    delete options.dataToSend.updatedAt;
+    delete options.dataToSend.createdAt;
+  }
+  async.series([function(next) {
+    compileData(options, next);
+  }, function(next) {
+    sendData(options, next);
+  }], function(err, results) {
+    if (err) {
+      console.log(err);
+      console.log(results);
+      return cb(null, results);
+    }
+  });
+}
+
+
+function compileData(options, callback) {
+  console.log("options compile", options);
+  switch (options.dataType) {
+    case "userInfo":
+      //dataFormat = "users";
+      callback(null, options);
+      break;
+    case "lotData":
+      // dataFormat = "lots";
+      if (options.dataToSend.assetDir)
+        delete options.dataToSend.assetDir;
+      if (!options.dataToSend.emdAmount)
+        options.dataToSend.emdAmount = "";
+
+       callback(null, options);
+      break;
+    case "emdData":
+      //dataFormat = "emd";
+      callback(null, options);
+      break;
+    case "auctionData":
+      // dataFormat = "auctions";
+      if(isEmpty(options.dataToSend.bidIncrement)){
+        delete options.dataToSend.bidIncrement;
+      }
+      if(options.dataToSend.bidInfo)
+        delete options.dataToSend.bidInfo;
+      if (options.dataToSend.auctionOwner && options.dataToSend.auctionOwnerMobile) {
+        delete options.dataToSend.auctionOwner;
+        delete options.dataToSend.auctionOwnerMobile;
+      }
+       callback(null, options);
+      break;
+  }
+}
+
+function sendData(options, callback) {
+  var serviceData = [];
+  serviceData.push(options.dataToSend);
+  serviceData = JSON.stringify(serviceData);
+  var dataFormat = {
+    "userInfo": "users",
+    "lotData": "lots",
+    "auctionData": "auctions",
+    "emdData": "emd"
+  };
+  var format = "";
+  format = dataFormat[options.dataType];
+  var data = {};
+  data[format] = serviceData;
+  console.log("serviceDatas", data);
+
+  var obj = {
+    "userInfo": 'registered-user-update',
+    "lotData": 'new-lots',
+    "auctionData": 'new-auction',
+  };
+
+  var url = 'http://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];
+  request.post({
+    url: url,
+    form: data
+  }, function(err, httpres, asData) {
+    if (err) {
+      callback(err);
+    } else {
+      try {
+        console.log(asData);
+        callback(null, {
+          message: "data updated successfully"
+        });
+      } catch (err) {
+        callback(err);
+      }
+    }
+  });
+}
+
+
 function uploadDirToS3(localDirPath, cb) {
   var params = {
     localDir: localDirPath,
-
     s3Params: {
       Bucket: config.awsBucket,
       Prefix: "assets/"
@@ -242,6 +368,20 @@ function deleteS3File(fileName) {
         }
     });
 }
+
+function convertQVAPLStatus(qvaplStatus){
+  
+  var statusMapping = {
+    created : "Request Submitted",
+    assign :  "Request Submitted",
+    accept: "Inspection In Progress",
+    complete : "Inspection Completed",
+    updated : "Valuation Report Submitted",
+    cancel : 'Cancelled'
+  }
+  return statusMapping[qvaplStatus];
+}
+
 function toIST(value) {
   if (!value)
     return '';

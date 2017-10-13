@@ -20,7 +20,7 @@ module.exports = {
 	'Location*': 'city',
 	//seller information start  need to check from user
 	'Seller_Mobile*': 'seller_mobile',
-	'Seller_Email_Address*': 'seller_email',
+	'Seller_Email_Address': 'seller_email',
 	'Seller_Name' : 'seller_name',
 	//seller information start  end
 	'Motor_Operating_Hours': 'motorOperatingHour',
@@ -86,8 +86,8 @@ module.exports = {
 	//Extra field added for asset sale
 	'Parked_Since' : 'repoDate',
 	'Valuation_Amount' : 'valuationAmount',
-	'Address_Of_Asset' : 'addressOfAsset',
+	'Parking_Charge_Payment_To(Yard/Seller)':'parkingPaymentTo',
 	'Parking_Charge_Per_Day' : 'parkingChargePerDay',
-	'Reserve_Price' : 'reservePrice',
-	'Parking_Charge_Payment_To(Yard/Seller)':'parkingPaymentTo'
+	'Address_Of_Asset' : 'addressOfAsset',
+	'Reserve_Price' : 'reservePrice'
 }
