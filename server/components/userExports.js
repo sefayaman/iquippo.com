@@ -12,10 +12,6 @@ var passport = require('passport');
 //var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 var xlsx = require('xlsx');
-var Product = require('../api/product/product.model');
-var CityModel = require('../api/common/location.model');
-var Vendor = require('../api/vendor/vendor.model');
-var ManpowerUser = require('../api/manpower/manpower.model');
 var Utility = require('./utility.js');
 //var userFieldsMap = require('../../config/user_temp_field_map');
 //var Utillity = require('./../../components/utility');
@@ -27,35 +23,34 @@ var USER_REG_REQ="userRegEmailFromAdminChannelPartner";
 var Seqgen = require('./seqgenerator').sequence();
 var validationError = function(res, err) {
   return res.status(422).json(err);
-}; 
+};  
 var $http = require('http');
 var fs = require('fs');
-var dateFormat = require('dateformat');
+var dateFormat = require('dateformat');  
 var AppSetting = require('../api/common/setting.model');
+var path = require('path');
 
 function createExportsFile(){
   
   setInterval(function () { 
-    exportUsers();
-    console.log('second passed'); 
-}, 100000);
-      /*  setTimeout(function () { createExportsFile(); }, 1*24*60*60*1000); //sleep 1*24*60*60*1000
-      }
-      else {
-        //console.log("searchData##", data);
-          getMatchingProductList(data);
-      }*/
- 
+   exportUsers();
+  }, 600000);
+}
+//set timer for delete file
+function deleteExportsFile(){
+  setInterval(function () { 
+    deleteLocalExportFile();
+    deleteS3ExportFile();
+  }, 900000);//1*24*60*60*1000 for 1 day
 }
 
 function exportUsers(res) {
   var filter = {};
-  
   var query = User.find(filter).sort({
     createdAt: -1
   });
   query.exec(
-    function(err, users) {//console.log("users====",users);
+    function(err, users) {
       if (err) {
         return handleError(res, err);
       }
@@ -73,20 +68,16 @@ function exportUsers(res) {
         bookSST: true,
         type: 'binary'
       });
-      //console.log("======kkkk====",wbout);
-     // saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
-     // res.end(wbout);
-     var date =dateFormat(new Date(), "yyyy-mm-dd-h:MM:ss");
-     //var date = 'gsuyf9999';
-     
+      
+      var date =dateFormat(new Date(), "yyyy-mm-dd-h:MM:ss");
       var data = {};
       var filename = USER_EXPORT_FILE_NAME+'_'+date+".xlsx"
-       data.key = 'user_list_file_name';
+      data.key = 'user_list_file_name';
       data.value = filename;
       var dirName = 'downloads/user-exports/'+filename;
-      var localFilePath = config.uploadPath+filename;
+      var localFilePath = config.uploadPath+'user-exports/'+filename;
      
-      fs.writeFile(config.uploadPath+filename, wbout,"binary",function(err) {
+      fs.writeFile(localFilePath, wbout,"binary",function(err) {
             if (err) {
                 console.log(err);
             } else {
@@ -118,7 +109,6 @@ var key = data.key;
 				if (err) {
 					return handleError(res, err)
 				} else {
-					
 					//res.status(200).send("done");
 				}
 			});
@@ -139,14 +129,41 @@ var key = data.key;
 				if (err) {
 					return handleError(res, err)
 				} else {
-					console.log("updated", dt);
+					//console.log("updated", dt);
 					//res.status(200).send("done");
 				}
 			})
 		}
 	});
   }
+function deleteLocalExportFile(){
+  var uploadsDir = config.uploadPath+'user-exports';
+    fs.readdir(uploadsDir, function(err, files) {
+      files.forEach(function(file, index) {
+        fs.stat(path.join(uploadsDir, file), function(err, stat) {
+          var endTime, now;
+          if (err) {
+            return console.error(err);
+          }
+          now = new Date().getTime();
+          endTime = new Date(stat.ctime).getTime() + 3600000;
+          if (now > endTime) {
+            fs.unlink(uploadsDir+'/'+file, function(error) {
+                if (error) {
+                    throw error;
+                }
+            });
+          }
+        });
+      });
+    });
 
+}
+//delete s3 file
+function deleteS3ExportFile(){
+  var uploadsDir = config.uploadPath+'user-exports';
+   Utility.getListObjectS3();
+}
 
 function handleError(res, err) {
   return res.status(500).send(err);
@@ -413,10 +430,10 @@ function addNoCacheHeader(res) {
    res.header('Expires', '-1');
    res.header('Pragma', 'no-cache');
 }
-//exportUsers();
 exports.start = function(){
-  console.log("Save Search service started");
+  //console.log("Save Search service started");
   createExportsFile();
+  deleteExportsFile();
 }
 
 

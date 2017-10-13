@@ -296,7 +296,7 @@ angular.module('sreizaoApp')
     }
 
      function exportExcel(){
-      /*var dataToSend ={};
+      var dataToSend ={};
       if(Auth.getCurrentUser()._id && Auth.getCurrentUser().role == 'channelpartner') {
         dataToSend["userId"] = Auth.getCurrentUser()._id;
       }
@@ -304,26 +304,15 @@ angular.module('sreizaoApp')
       if(Auth.isEnterprise()){
         dataToSend["enterpriseId"] = Auth.getCurrentUser().enterpriseId;
       }
-
       $http.post('/api/users/export', dataToSend)
-      .then(function(res){console.log("res===",res);
-      console.log("data==",res.data);
+      .then(function(res){
         var data = res.data;
         saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
       },
       function(res){
-        console.log(res)
-      })*/
-      var dataToSend ={};
-      $http.post('/api/users/userlistxlsx', dataToSend)
-      .then(function(res){console.log("res===",res);
-      console.log("data==",res.data);
-        var data = res.data;
-        //saveAs(new Blob([s2ab(data)],{type:"application/octet-stream"}), "userlist_"+ new Date().getTime() +".xlsx")
-      },
-      function(res){
-        console.log(res)
+        //console.log(res)
       })
+      
      }
     
     function deleteUser(user){
