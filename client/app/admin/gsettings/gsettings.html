@@ -2673,7 +2673,7 @@
 		<form class="techInformationForm" name="lotform" novalidate>
 			<div class="row form-group">
 				<div class="col-sm-3" ng-class="{'has-error':lotVm.auctionId.$invalid && submitted}">
-			       	<select class="form-control" name="auctionId" ng-model="lotVm.dataModel.auction_Id"  required> 
+			       	<select class="form-control" name="auctionId" ng-model="lotVm.dataModel.auctionId"  required> 
 						<option value=""> Select Auction  Id </option> 
 						<option value="{{product._id}}"  ng-repeat="product in lotVm.auctionListing">{{product.name}}</option>
 			   		</select>				
@@ -2683,7 +2683,7 @@
 				</div>
 
 				 <div class="col-sm-3" ng-class="{'has-error':lotVm.lotNumber.$invalid && submitted}">
-					<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auction_Id)" ng-disabled="!lotVm.dataModel.auction_Id" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
+					<input type="text" class="form-control" name="lotNumber" ng-model="lotVm.dataModel.lotNumber" ng-blur="lotVm.checkForLot(lotVm.dataModel.lotNumber,lotVm.dataModel.auctionId)" ng-disabled="!lotVm.dataModel.auctionId" value="{{lotVm.lotNumber}}" placeholder="Enter Lot Number">
 					
 				</div>
 				 <div class="col-sm-3" ng-class="{'has-error':lotVm.assetDesc.$invalid && submitted}">
