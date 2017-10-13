@@ -8,7 +8,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
   var selectedItems = [];
   var selectedFee = null;
   vm.serviceList = [{name:"Valuation"},{name:"Inspection"}];
-  var statuses = [EnterpriseValuationStatuses[4]]
+  var statuses = [EnterpriseValuationStatuses[6]]
  	
   //$scope.taxList = TaxList;
   $scope.EnterpriseValuationStatuses = EnterpriseValuationStatuses;
@@ -107,7 +107,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       filter.pagination = true;
       if(Auth.isEnterprise() || Auth.isEnterpriseUser())
         filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
+      if(Auth.isValuationPartner())
         filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
 
       EnterpriseSvc.getInvoice(filter)
@@ -284,7 +284,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         $scope.invoice.paymentReceivedDetail = {remainingAmount:$scope.invoice.totalAmount,paymentDetails:[checkdetailObj]};
         $scope.invoice.paymentMadeDetail = {remainingAmount:$scope.invoice.totalAmount,paymentDetails:[checkdetailObj]};
 
-        EnterpriseSvc.setStatus($scope.invoice,EnterpriseValuationStatuses[5]);
+        EnterpriseSvc.setStatus($scope.invoice,EnterpriseValuationStatuses[7]);
         $scope.invoice.uniqueControlNos = [];
         selectedItems.forEach(function(item){
           $scope.invoice.uniqueControlNos.push(item.uniqueControlNo);
@@ -295,7 +295,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
         EnterpriseSvc.generateInvoice($scope.invoice)
         .then(function(genInvoice){
            selectedItems.forEach(function(item){
-              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[5]);
+              EnterpriseSvc.setStatus(item,EnterpriseValuationStatuses[7]);
               item.invoiceNo =  genInvoice.invoiceNo;
               item.generateInvoiceDate = true;
               item.invoiceDate =  new Date();
@@ -303,7 +303,8 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
           updateValuationRequest();
         })
         .catch(function(err){
-          Modal.alert("There is some issue in invoice generation.Please refresh your page and try again.")
+          if(err.data)
+            Modal.alert(err.data);
         })
       }
 
@@ -316,7 +317,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
             fireCommand(true);
             if($scope.close)
               $scope.close();
-          })
+          });
       }
 
       function calculateInvoice(){
@@ -413,7 +414,7 @@ function EnterpriseInvoiceCtrl($scope, $rootScope,$timeout,$uibModal,Modal,Auth,
       var filter = {};
        if(Auth.isEnterprise() || Auth.isEnterpriseUser())
           filter['enterpriseId'] = Auth.getCurrentUser().enterpriseId;
-      if(Auth.isPartner())
+      if(Auth.isValuationPartner())
           filter['agencyId'] = Auth.getCurrentUser().partnerInfo._id;
       if(selectedItems && selectedItems.length > 0){
         var ids = [];
