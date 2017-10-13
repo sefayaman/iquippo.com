@@ -46,7 +46,7 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 // Setup server
 var app = express();
 var server = require('http').createServer(app);
-var socket=require('socket.io');
+//var socket=require('socket.io');
 
 require('./config/express')(app);
 require('./routes')(app);
@@ -320,7 +320,7 @@ app.post('/api/sms', function(req, res) {
 });
 
 //socket setup
-var io=socket(server);
+/*var io=socket(server);
 
 io.on('connection',function(socket){
  console.log(" I am connected");
@@ -330,7 +330,7 @@ io.on('connection',function(socket){
   
   io.sockets.emit("hello",data.msg);
  })
-});
+});*/
 
 app.post('/api/notification', function(req, res) {
   notification.create(req, res);
