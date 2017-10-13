@@ -4,10 +4,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var LotSchema = new Schema({
-  customerId:String,
+  user_Id:String,
   lotNumber:String,
   primaryImg:String,
-  auctionId:String,
+  auction_Id:String,
   assetId:String,
   assetDesc:String,
   startingPrice:Number,
@@ -19,6 +19,7 @@ var LotSchema = new Schema({
   lastMintBid:String,
   extendedTo:String,
   status:{type:Boolean,default:true},
+  isDeleted:{type:Boolean,default:false},
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

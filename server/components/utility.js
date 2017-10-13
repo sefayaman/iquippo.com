@@ -153,6 +153,16 @@ function deleteFromS3(opts, cb) {
 
 }
 
+function isEmpty(myObject) {
+    for(var key in myObject) {
+        if (myObject.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 exports.sendCompiledData = sendCompiledData;
 
 
@@ -160,10 +170,21 @@ function sendCompiledData(options, cb) {
   //var dataFormat = "";
   console.log("totalData", options);
   //filter._id = emdDataAs.auctionId
-  console.log(options.dataToSend, options.dataType)
+  //console.log(options.dataToSend, options.dataType)
+   if(options.dataToSend.__v === 0)
+    delete options.dataToSend.__v;
+ /* if (options.dataToSend.auctionId && options.dataType!=="auctionData"){
+    filter._id = options.dataToSend.auctionId;
+  }*/
+  if (options.dataToSend.startDate && options.dataToSend.endDate) {
+    options.dataToSend.startDate = options.dataToSend.startDate.toString();
+    options.dataToSend.endDate = options.dataToSend.endDate.toString();
+  }
+  if (options.dataToSend && options.dataToSend.updatedAt &&  options.dataToSend.createdAt){
+    delete options.dataToSend.updatedAt;
+    delete options.dataToSend.createdAt;
+  }
   async.series([function(next) {
-    fetchAuctionId(options, next);
-  }, function(next) {
     compileData(options, next);
   }, function(next) {
     sendData(options, next);
@@ -189,53 +210,28 @@ function compileData(options, callback) {
         delete options.dataToSend.assetDir;
       if (!options.dataToSend.emdAmount)
         options.dataToSend.emdAmount = "";
+
        callback(null, options);
       break;
     case "emdData":
       //dataFormat = "emd";
       callback(null, options);
       break;
-    case "auctionsData":
+    case "auctionData":
       // dataFormat = "auctions";
-      if (options.dataToSend._id)
-        delete options.dataToSend._id;
+      if(isEmpty(options.dataToSend.bidIncrement)){
+        delete options.dataToSend.bidIncrement;
+      }
+      if(options.dataToSend.bidInfo)
+        delete options.dataToSend.bidInfo;
       if (options.dataToSend.auctionOwner && options.dataToSend.auctionOwnerMobile) {
         delete options.dataToSend.auctionOwner;
         delete options.dataToSend.auctionOwnerMobile;
       }
-      if (options.dataToSend.bidInfo)
-        delete options.dataToSend.bidInfo;
-      callback(null, options);
+       callback(null, options);
       break;
   }
 }
-
-
-function fetchAuctionId(options, callback) {
-  var filter = {};
-  console.log("auctions", options);
-  if (options.dataToSend.auctionId)
-    filter._id = options.dataToSend.auctionId;
-  if (options.dataToSend.startDate && options.dataToSend.endDate) {
-    options.dataToSend.startDate = options.dataToSend.startDate.toString();
-    options.dataToSend.endDate = options.dataToSend.endDate.toString();
-  }
-  if (options.dataToSend.updatedAt)
-    delete options.dataToSend.updatedAt;
-  AuctionMaster.find(filter, function(err, result) {
-    if (err) {
-      return callback(err);
-    }
-    if (result.length > 0) {
-      options.dataToSend.auctionId = result[0].auctionId;
-      console.log("optionsData", options.dataToSend);
-      return callback(null, options.dataToSend);
-    } else {
-      return callback(err);
-    }
-  });
-}
-
 
 function sendData(options, callback) {
   var serviceData = [];

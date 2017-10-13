@@ -97,7 +97,9 @@
               }
               vm.dataModel.createdBy = {};
               vm.dataModel.createdBy = Auth.getCurrentUser().email;
-              vm.dataModel.customerId = Auth.getCurrentUser().customerId;
+              vm.dataModel.user_Id = Auth.getCurrentUser()._id;
+
+              console.log("Lot data Model",vm.dataModel);
               
                vm.duplicate.auctionId = vm.dataModel.auctionId
                vm.duplicate.assetId = vm.dataModel.assetId;
@@ -222,8 +224,9 @@
 
 
           function getLotData(){
-            
-              LotSvc.getData()
+            var filter={}
+            filter.isDeleted=false;
+              LotSvc.getData(filter)
               .then(function(result){
 
               vm.LotData = result;
