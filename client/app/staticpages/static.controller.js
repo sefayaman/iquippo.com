@@ -358,7 +358,7 @@
       }
 
       var ret = false;
-      if ($scope.valuationQuote.country && $scope.valuationQuote.mobile) {
+      /*if ($scope.valuationQuote.country && $scope.valuationQuote.mobile) {
         var value = UtilSvc.validateMobile($scope.valuationQuote.country, $scope.valuationQuote.mobile);
         if (!value) {
           form.mobile.$invalid = true;
@@ -367,7 +367,7 @@
           form.mobile.$invalid = false;
           ret = false;
         }
-      }
+      }*/
 
       if ($scope.valuationQuote.schedule == 'yes') {
         if (angular.isUndefined($scope.valuationQuote.scheduleDate))
