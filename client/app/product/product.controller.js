@@ -138,7 +138,6 @@
    }
 
    function fetchLot(filter){
-    filter.distinct=true;
     LotSvc.getData(filter)
     .then(function(res){
      return $scope.lots=res;
@@ -368,6 +367,7 @@
                       console.log("lot data edit",res);
                       if(res.length > 0){
                       //console.log("LOT info",res[0]);
+                      $scope.lot=res[0];
                       $scope.lot._id=res[0]._id;
                       if(res[0].lotNumber){
                       $scope.lot.lotNumber=res[0].lotNumber;
@@ -1111,10 +1111,10 @@
     }
 
     function secondStep(form, product) {
-      if(form.$invalid){
+      /*if(form.$invalid){
            $scope.auctSubmitted = true;
            return;
-      }
+      }*/
 
        if(Auth.isAdmin()){
              addOrUpdate(postAuction);
@@ -1724,7 +1724,7 @@
                 });
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-              LotSvc.saveLot($scope.lotsaved)
+              productSvc.saveAssetMap($scope.lotsaved)
               .then(function(result){
               });
 
@@ -1751,7 +1751,7 @@
                     });
                     $scope.lotsaved.bidIncrement = '';
                     $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-                    LotSvc.saveLot($scope.lotsaved)
+                    productSvc.saveAssetMap($scope.lotsaved)
                     .then(function(result){
                     });
                  
@@ -1933,35 +1933,39 @@
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                 console.log("lotSaved",$scope.lotsaved);
-                LotSvc.saveLot($scope.lotsaved)
+                productSvc.saveAssetMap($scope.lotsaved)
                 .then(function(result){
                   //console.log("lot saved",result);
                 });
 
               }else{
+                alert("works");
                     $scope.lotsaved.assetId = $scope.product.assetId;
                     $scope.lotsaved.assetDesc = $scope.product.name;
-                    $scope.lotsaved.auctionId = result.items[0]._id;
+                    $scope.lotsaved.auction_Id = result.items[0]._id;
                     $scope.lotsaved.lotNumber =$scope.lot.lotNumber;
+                    $scope.lotsaved.lot_id=$scope.lot._id;
+                    $scope.lotsaved.images=$scope.product.images;
+                    $scope.lotsaved.seller=$scope.product.seller;
                     //$scope.lotsaved.primaryImg=$scope.product.primaryImg;
-                    $scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
-                    $scope.lotsaved.assetDir=$scope.product.assetDir;
-                    $scope.lotsaved.userId = Auth.getCurrentUser().customerId;
-                    $scope.lotsaved.startingPrice = $scope.lot.startingPrice;
-                    $scope.lotsaved.startDate = $scope.lot.startDate;
-                    $scope.lotsaved.endDate= $scope.lot.endDate;
-                    $scope.lotsaved.reservePrice=$scope.product.reservePrice;
-                    $scope.lotsaved.static_increment=$scope.lot.static_increment
+                    //$scope.lotsaved.primaryImg = $rootScope.uploadImagePrefix+$scope.product.assetId+"/"+$scope.product.primaryImg;
+                    //$scope.lotsaved.assetDir=$scope.product.assetDir;
+                    //$scope.lotsaved.userId = Auth.getCurrentUser().customerId;
+                    //$scope.lotsaved.startingPrice = $scope.lot.startingPrice;
+                    //$scope.lotsaved.startDate = $scope.lot.startDate;
+                    //$scope.lotsaved.endDate= $scope.lot.endDate;
+                    //$scope.lotsaved.reservePrice=$scope.product.reservePrice;
+                    //$scope.lotsaved.static_increment=$scope.lot.static_increment
                     //$scope.lotsaved._id = $scope.lot._id;
                       //bid data
-                     $scope.lot.bidInfo.forEach(function(item) {
+                     /*$scope.lot.bidInfo.forEach(function(item) {
                       var range = item.bidFrom+"-"+item.bidTo;
                       $scope.bidIncrementObj[range] = item.bidIncrement;
                       });
                       $scope.lotsaved.bidIncrement = '';
                       $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
-                      console.log("lotSaved",$scope.lotsaved);
-                    LotSvc.saveLot($scope.lotsaved)
+                      console.log("lotSaved",$scope.lotsaved);*/
+                    productSvc.saveAssetMap($scope.lotsaved)
                     .then(function(result){
                       //console.log("result",result);
                     });
@@ -2008,7 +2012,7 @@
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                 console.log("lotSaved",$scope.lotsaved);
-                LotSvc.updateProductLot($scope.lotsaved)
+                productSvc.updateAssetMap($scope.lotsaved)
                 .then(function(result){
                   //console.log("lot update",result);
                 });
@@ -2037,7 +2041,7 @@
                 $scope.lotsaved.bidIncrement = '';
                 $scope.lotsaved.bidIncrement = $scope.bidIncrementObj;
                 console.log("lotSaved",$scope.lotsaved);
-                LotSvc.updateProductLot($scope.lotsaved)
+                productSvc.updateAssetMap($scope.lotsaved)
                 .then(function(result){
                   //console.log("update lot admin",result);
                 });

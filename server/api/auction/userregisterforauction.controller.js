@@ -133,7 +133,7 @@ exports.checkUserRegis = function(req,res){
 
   query.exec(
      function(err, data){
-        if(data.length > 0){
+        if(data && data.length > 0){
                   var filter ={};
                   filter['_id'] = data[0].transactionId;
 

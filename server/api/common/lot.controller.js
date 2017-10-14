@@ -109,22 +109,15 @@ exports.getLotData = function(req, res) {
   console.log("req.query",req.query);
   if(req.query.hasOwnProperty('isDeleted'))
     filter.isDeleted=req.query.isDeleted;
-   if(req.query.auctionId && req.query.distinct){
+   if(req.query.auctionId){
   filter.auction_id=req.query.auctionId;
+}
   console.log("the filter",filter);
-query = Lot.find(filter).distinct('lotNumber');
-   }
-else if(req.query){
-  if(req.query.auctionId)
-  filter.auction_id=req.query.auctionId;
-  if(req.query.assetId)
-  filter.assetId=req.query.assetId;
+
  if(req.query.lotNumber)
   filter.lotNumber=req.query.lotNumber;
  
  query = Lot.find(filter);
-
-}
   query.exec(function(err, result) {
     if (err) {
       res.status(err.status || 500).send(err);

@@ -202,6 +202,7 @@ function compileData(options, callback) {
   switch (options.dataType) {
     case "userInfo":
       //dataFormat = "users";
+      console.log("users are here");
       callback(null, options);
       break;
     case "lotData":
@@ -211,6 +212,10 @@ function compileData(options, callback) {
        callback(null, options);
       break;
     case "emdData":
+       if(options.dataToSend.auctionId){
+        options.dataToSend.auction_id=options.dataToSend.auctionId;
+      delete options.dataToSend.auctionId;
+    }
       //dataFormat = "emd";
       callback(null, options);
       break;
@@ -231,6 +236,9 @@ function compileData(options, callback) {
       }
        callback(null, options);
       break;
+      case "assetData" :
+      callback(null,options);
+      break;
   }
 }
 
@@ -242,7 +250,8 @@ function sendData(options, callback) {
     "userInfo": "users",
     "lotData": "lots",
     "auctionData": "auctions",
-    "emdData": "emd"
+    "emdData": "emd",
+    "assetData":"assets"
   };
   var format = "";
   format = dataFormat[options.dataType];
@@ -254,6 +263,8 @@ function sendData(options, callback) {
     "userInfo": 'registered-user-update',
     "lotData": 'new-lots',
     "auctionData": 'new-auction',
+    "emdData":'emd',
+    "assetData":'assetdata'
   };
 
   var url = 'http://auctionsoftwaremarketplace.com:3007/api_call/' + obj[options.dataType];

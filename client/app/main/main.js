@@ -376,6 +376,11 @@ angular.module('sreizaoApp')
         controller: 'AssetInAuctionCtrl as auctionDetailsVm',
         layout:'client'
       })
+      .state('offlinepayment',{
+        url:'/offlinepayment',
+        templateUrl:'app/payment/offlinepayment.html',
+        layout:'admin'
+      })
       .state('auctionlot', {
         url: '/buyerdashboard',
         templateUrl: 'app/auction/buyerdashboard.html',

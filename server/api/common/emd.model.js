@@ -4,11 +4,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var EmdSchema = new Schema({
-  auctionId:String,
-  auctionName:String,
+  auction_id:String,
   selectedLots:[],
   status:{type:Boolean,default:true},
-  amount:String,
+  emdAmount:String,
+  isDeleted:{type:Boolean,default:false},
   createdBy:{},
   createdAt: {type:Date,default:Date.now},
   updatedAt: {type:Date,default:Date.now}

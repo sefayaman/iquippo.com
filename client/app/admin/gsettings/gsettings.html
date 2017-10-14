@@ -2605,7 +2605,7 @@
 					</div>
                     <div class="col-sm-3" ng-class="{'has-error':emdVm.selectedLots.$invalid && submitted}">
                     <label>Select the lot</label>
-						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots as lots for lots in emdVm.dataModel.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
+						<select class="form-control" name="selectedLots" id="selectedLots" style="height: 80px;" ng-options="lots.lotNumber as lots.lotNumber for lots in emdVm.dataModel.lotList" ng-model="emdVm.dataModel.selectedLots.lotNumber" multiple>
 			           
 					    </select>
 			            
@@ -2614,7 +2614,7 @@
                    </div>
 					<div class="col-sm-3 form-group" ng-class="{'has-error':emdVm.amount.$invalid && submitted}">
 						<label>EMD Amount</label>
-		 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.amount" placeholder="Enter Emd Amount" required>
+		 		       	<input type="text" class="form-control" name="amount" ng-model="emdVm.dataModel.emdAmount" placeholder="Enter Emd Amount" required>
 					</div>
 					<div class="col-sm-2 pull-right">
 				       <button type="button" class="btn btn-block btn-primary"   ng-if="isEdit" ng-click="emdVm.update(emdform)">Update</button>

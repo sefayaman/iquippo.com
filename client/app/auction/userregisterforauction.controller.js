@@ -16,7 +16,9 @@
     vm.onLocationChange = onLocationChange;
     $scope.getCountryWiseState = getCountryWiseState;
     $scope.getStateWiseLocation = getStateWiseLocation;
-
+     var query=$scope.params;
+     console.log("emdTax",query.emdTax);
+     $scope.emdTax=query.emdTax;
     function init() {
       if ($scope._id) {
         var filter = {};
@@ -31,8 +33,7 @@
       }
 
       LotSvc.getData({
-        auctionId: $scope.currentAuction._id,
-        distinct: true
+        auctionId: $scope.currentAuction._id
       }).then(function(res) {
         vm.lotList = res;
 
